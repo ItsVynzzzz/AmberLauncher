@@ -139,7 +139,7 @@ fun NuxButton(
         !enabled -> NuxColors.GrayNeutral.copy(alpha = 0.6f)
         filled && (contentColor == Color.Unspecified || contentColor.luminance() > 0.6f) -> NuxColors.Ink
         !filled && backgroundColor.alpha < 0.5f && contentColor != Color.Unspecified &&
-            contentColor.luminance() < 0.25f -> NuxColors.DarkGray
+            contentColor.luminance() < 0.05f -> NuxColors.DarkGray
         contentColor == Color.Unspecified -> NuxColors.DarkGray
         else -> contentColor
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -122,1142 +123,452 @@ fun SettingsScreen(
         SettingsManager.updateSettings(context, updated)
     }
 
+    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol). Isi tiap tab digulir sendiri-sendiri.
+    var section by remember { mutableIntStateOf(0) }
+    val contentScroll = rememberScrollState()
+    LaunchedEffect(section) { contentScroll.scrollTo(0) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(NuxColors.Background)
-            .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 14.dp)
     ) {
-        // =========================================================================
-        // 1. TOP HEADER BAR (Minimalist Cyber-Glass matching Home, Accounts & Mods)
-        // =========================================================================
+        // Judul + tombol Tentang
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 6.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // Back to Dashboard Button (Standard 26.dp)
-                Box(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .clickable { onNavigateBack() }
-                        .padding(horizontal = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Kembali",
-                            tint = NuxColors.SageGreen,
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "DASHBOARD",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 9.sp,
-                            letterSpacing = 0.5.sp
-                        )
-                    }
-                }
-
+            Column {
                 Text(
-                    text = "PENGATURAN",
+                    text = "Pengaturan",
                     color = NuxColors.DarkGray,
                     fontWeight = FontWeight.Black,
-                    fontSize = 14.sp,
-                    letterSpacing = 0.8.sp
+                    fontSize = 24.sp,
+                    letterSpacing = (-0.3).sp
                 )
-
+                Text(
+                    text = "${totalRamMb / 1024} GB RAM · $cpuCores inti CPU",
+                    color = NuxColors.GrayNeutral,
+                    fontSize = 12.sp
+                )
             }
-
-            // Hardware Specs Badges
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+            NuxButton(
+                onClick = { showAboutDialog = true },
+                backgroundColor = Color.Transparent,
+                cornerRadius = 22.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SoftLime, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .clickable { showAboutDialog = true }
-                        .padding(horizontal = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "TENTANG & LISENSI",
-                        color = NuxColors.DarkGray,
-                        fontSize = 9.5.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "${totalRamMb / 1024} GB RAM",
-                        color = NuxColors.SageGreen,
-                        fontSize = 9.5.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .padding(horizontal = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "$cpuCores CORES",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 9.5.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Tentang & lisensi",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
-        // =========================================================================
-        // 2. MAIN CONTENT PANELS (Preferensi Game)
-        // =========================================================================
-        run {
-            // =====================================================================
-            // PREFERENSI GAME (Memori/Java/Grafis + Kontrol/Mouse)
-            // =====================================================================
-            Row(
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            // Tab samping
+            Column(
+                modifier = Modifier.width(156.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                SettingTab(icon = Icons.Outlined.Memory, label = "Memori", selected = section == 0) { section = 0 }
+                SettingTab(icon = Icons.Outlined.Speed, label = "Grafis", selected = section == 1) { section = 1 }
+                SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Isi tab
+            Column(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .fillMaxHeight()
+                    .verticalScroll(contentScroll)
             ) {
-                // LEFT COLUMN: Memory & Java + Graphics
-                NuxCard(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    backgroundColor = NuxColors.SurfaceElevated,
-                    borderColor = NuxColors.CardBorder,
-                    borderWidth = 1.dp,
-                    cornerRadius = 8.dp,
-                    fillMaxHeight = true
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(12.dp)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
+                when (section) {
+                    0 -> {
                         // Profil khusus perangkat: hanya muncul di HP yang terdaftar (Oppo A3x 4G),
                         // di HP lain tidak menggambar apa pun.
                         DeviceProfileCard()
 
-                        // Section 1: Java Memory (RAM)
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Outlined.Memory,
-                                contentDescription = null,
-                                tint = NuxColors.SageGreen,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "ALOKASI RAM & JVM MEMORY",
-                                fontWeight = FontWeight.Black,
-                                fontSize = 12.sp,
-                                color = NuxColors.DarkGray
-                            )
-                        }
-
-                        // RAM Slider & Value Display
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Maksimum RAM (-Xmx)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Box(
+                        val ramTooBig = ramMb > (totalRamMb * 0.75f)
+                        SettingSliderRow(
+                            title = "Memori game (RAM)",
+                            desc = if (ramTooBig) {
+                                "Terlalu besar untuk HP ini, game dan HP bisa jadi lambat."
+                            } else {
+                                "Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat."
+                            },
+                            valueText = "${String.format("%.1f", ramMb / 1024f)} GB",
+                            value = ramMb.toFloat(),
+                            valueRange = 512f..maxAllocatableRam.toFloat(),
+                            steps = ((maxAllocatableRam - 512) / 128) - 1,
+                            onValueChange = {
+                                ramMb = ((it / 128).roundToInt() * 128).coerceIn(512, maxAllocatableRam)
+                                commitSettings()
+                            },
+                            warn = ramTooBig,
+                            footer = {
+                                Row(
                                     modifier = Modifier
-                                        .background(
-                                            if (ramMb > (totalRamMb * 0.75f)) NuxColors.Coral.copy(alpha = 0.2f) else NuxColors.YellowPale,
-                                            RoundedCornerShape(4.dp)
-                                        )
-                                        .border(
-                                            1.dp,
-                                            if (ramMb > (totalRamMb * 0.75f)) NuxColors.Coral.copy(alpha = 0.4f) else NuxColors.CardBorder,
-                                            RoundedCornerShape(4.dp)
-                                        )
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                                        .padding(top = 8.dp)
+                                        .horizontalScroll(rememberScrollState()),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Text(
-                                        text = "$ramMb MB (${String.format("%.1f", ramMb / 1024f)} GB)",
-                                        color = if (ramMb > (totalRamMb * 0.75f)) NuxColors.Coral else NuxColors.SageGreen,
-                                        fontSize = 9.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Slider(
-                                value = ramMb.toFloat(),
-                                onValueChange = {
-                                    ramMb = ((it / 128).roundToInt() * 128).coerceIn(512, maxAllocatableRam)
-                                    commitSettings()
-                                },
-                                valueRange = 512f..maxAllocatableRam.toFloat(),
-                                steps = ((maxAllocatableRam - 512) / 128) - 1,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = NuxColors.MintGreen,
-                                    activeTrackColor = NuxColors.ForestGreen,
-                                    inactiveTrackColor = NuxColors.CardBorder
-                                )
-                            )
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            // Quick RAM Presets
-                            Text(
-                                text = "Preset Cepat:",
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = NuxColors.GrayNeutral
-                            )
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                listOf(1024, 1536, 2048, 3072, 4096).forEach { preset ->
-                                    if (preset <= maxAllocatableRam) {
-                                        val isSelected = ramMb == preset
-                                        Box(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .height(24.dp)
-                                                .clip(RoundedCornerShape(4.dp))
-                                                .background(
-                                                    if (isSelected) NuxColors.ForestGreen else NuxColors.SurfaceElevated,
-                                                    RoundedCornerShape(4.dp)
-                                                )
-                                                .border(
-                                                    1.dp,
-                                                    if (isSelected) NuxColors.MintGreen else NuxColors.CardBorder,
-                                                    RoundedCornerShape(4.dp)
-                                                )
-                                                .clickable {
+                                    listOf(
+                                        1024 to "1 GB",
+                                        1536 to "1,5 GB",
+                                        2048 to "2 GB",
+                                        3072 to "3 GB",
+                                        4096 to "4 GB"
+                                    ).forEach { (preset, label) ->
+                                        if (preset <= maxAllocatableRam) {
+                                            SettingChip(
+                                                text = label,
+                                                selected = ramMb == preset,
+                                                onClick = {
                                                     ramMb = preset
                                                     commitSettings()
-                                                },
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = if (preset >= 1024) "${preset / 1024}G" else "${preset}M",
-                                                fontSize = 10.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
+                                                }
                                             )
                                         }
                                     }
                                 }
                             }
-                        }
+                        )
 
-                        // Custom JVM Arguments
-                        Column {
-                            Text(
-                                text = "Custom JVM Arguments (Opsional)",
-                                fontSize = 10.5.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = NuxColors.GrayNeutral
+                        SettingDivider()
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 14.dp)
+                        ) {
+                            SettingRowText(
+                                title = "Argumen JVM tambahan",
+                                desc = "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan."
                             )
-                            Spacer(modifier = Modifier.height(3.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             NuxTextField(
                                 value = customJvmArgs,
                                 onValueChange = {
                                     customJvmArgs = it
                                     commitSettings()
                                 },
-                                placeholder = "Contoh: -XX:+UseG1GC -Dminecraft.applet.TargetDirectory=..."
+                                placeholder = "Contoh: -XX:+UseG1GC"
                             )
                         }
+                    }
 
-                        HorizontalDivider(color = NuxColors.CardBorder, thickness = 0.5.dp)
-
-                        // Section 2: Graphics & Rendering
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Outlined.Speed,
-                                contentDescription = null,
-                                tint = NuxColors.SageGreen,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "GRAFIK & OPTIMASI MINECRAFT",
-                                fontWeight = FontWeight.Black,
-                                fontSize = 12.sp,
-                                color = NuxColors.DarkGray
-                            )
-                        }
-
-                        // Renderer Selection Card
+                    1 -> {
                         val activeRendererInfo = remember(selectedRenderer) {
                             NuxRendererRegistry.findRendererById(selectedRenderer)
                         }
 
-                        Column(
+                        // Renderer aktif + tombol ganti / konfigurasi
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(NuxColors.SurfaceInput)
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
+                                .padding(vertical = 14.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Top Row: Section label & GANTI button
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Renderer Grafik (Backend)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
+                                    text = "Renderer",
+                                    color = NuxColors.DarkGray,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    if (activeRendererInfo.isConfigurable) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(24.dp)
-                                                .clip(RoundedCornerShape(4.dp))
-                                                .background(NuxColors.SurfaceElevated)
-                                                .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                                .clickable {
-                                                    selectedConfigRenderer = activeRendererInfo
-                                                    showRendererConfigDialog = true
-                                                },
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Settings,
-                                                contentDescription = "Konfigurasi Renderer",
-                                                tint = NuxColors.SageGreen,
-                                                modifier = Modifier.size(14.dp)
-                                            )
-                                        }
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .height(24.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(NuxColors.SurfaceElevated)
-                                            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                            .clickable { showRendererDialog = true }
-                                            .padding(horizontal = 8.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = "GANTI",
-                                            fontSize = 9.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = NuxColors.SageGreen
-                                        )
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            // Active Renderer Name & Badge
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Text(
-                                    text = activeRendererInfo.displayName,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Black,
-                                    color = NuxColors.SageGreen
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                                Row(
+                                    modifier = Modifier.padding(top = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Text(
+                                        text = activeRendererInfo.displayName,
+                                        color = NuxColors.Yellow,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                    NuxBadge(
                                         text = activeRendererInfo.badge,
-                                        fontSize = 8.5.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = NuxColors.SageGreen,
-                                        maxLines = 1
+                                        textColor = NuxColors.SageGreen
                                     )
                                 }
-                            }
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = activeRendererInfo.summary,
-                                fontSize = 9.5.sp,
-                                color = NuxColors.GrayNeutral,
-                                lineHeight = 13.sp
-                            )
-                        }
-
-                        // Auto Optimize options.txt Switch
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Auto-Optimize options.txt",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "Otomatis optimasi setting visual (Clouds, Shadows) untuk FPS maksimal",
-                                    fontSize = 9.5.sp,
-                                    color = NuxColors.GrayNeutral
+                                    text = activeRendererInfo.summary,
+                                    color = NuxColors.GrayNeutral,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp,
+                                    modifier = Modifier.padding(top = 4.dp)
                                 )
                             }
-                            Switch(
-                                checked = autoOptimizeMC,
-                                onCheckedChange = {
-                                    autoOptimizeMC = it
-                                    commitSettings()
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = NuxColors.Ink,
-                                    checkedTrackColor = NuxColors.ForestGreen,
-                                    uncheckedTrackColor = NuxColors.SurfaceElevated
-                                )
-                            )
-                        }
-
-                        // Resolution Scaling
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "Skala Resolusi Layar",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "$resolutionRatio%",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Black,
-                                    color = NuxColors.SageGreen
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                listOf(50, 75, 100, 125).forEach { ratio ->
-                                    val isSelected = resolutionRatio == ratio
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(24.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(
-                                                if (isSelected) NuxColors.ForestGreen else NuxColors.SurfaceElevated,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (isSelected) NuxColors.MintGreen else NuxColors.CardBorder,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .clickable {
-                                                resolutionRatio = ratio
-                                                commitSettings()
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = "$ratio%",
-                                            fontSize = 10.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // Driver Vulkan Selector
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Text(
-                                text = "Driver Vulkan",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = NuxColors.DarkGray
-                            )
-                            Text(
-                                text = "Pilih implementasi driver Vulkan yang digunakan sistem/game",
-                                fontSize = 9.5.sp,
-                                color = NuxColors.GrayNeutral
-                            )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                listOf("auto" to "Auto", "system" to "Sistem", "turnip" to "Turnip").forEach { (id, label) ->
-                                    val isSelected = vulkanDriver == id
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(24.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(
-                                                if (isSelected) NuxColors.ForestGreen else NuxColors.SurfaceElevated,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (isSelected) NuxColors.MintGreen else NuxColors.CardBorder,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .clickable {
-                                                vulkanDriver = id
-                                                commitSettings()
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = label,
-                                            fontSize = 9.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // API Grafis Selector
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Text(
-                                text = "API Grafis",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = NuxColors.DarkGray
-                            )
-                            Text(
-                                text = "Atur API grafis yang digunakan oleh Minecraft modern 26.2+",
-                                fontSize = 9.5.sp,
-                                color = NuxColors.GrayNeutral
-                            )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                listOf("DEFAULT" to "Default", "OPENGL" to "OpenGL", "VULKAN" to "Vulkan").forEach { (id, label) ->
-                                    val isSelected = graphicsApi == id
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .height(24.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(
-                                                if (isSelected) NuxColors.ForestGreen else NuxColors.SurfaceElevated,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (isSelected) NuxColors.MintGreen else NuxColors.CardBorder,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .clickable {
-                                                graphicsApi = id
-                                                commitSettings()
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = label,
-                                            fontSize = 9.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // Gunakan Driver Vulkan Sistem (Zink)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Gunakan Driver Vulkan Sistem",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "Paksa menggunakan driver Vulkan bawaan sistem HP (bukan Turnip). Mempengaruhi perender Zink.",
-                                    fontSize = 9.5.sp,
-                                    color = NuxColors.GrayNeutral
-                                )
-                            }
-                            Switch(
-                                checked = zinkPreferSystemDriver,
-                                onCheckedChange = { checked ->
-                                    if (checked && NuxVersionUtils.isAdrenoGPU()) {
-                                        showAdrenoWarningDialog = true
-                                    } else {
-                                        zinkPreferSystemDriver = checked
-                                        commitSettings()
-                                    }
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = NuxColors.Ink,
-                                    checkedTrackColor = NuxColors.ForestGreen,
-                                    uncheckedTrackColor = NuxColors.SurfaceElevated
-                                )
-                            )
-                        }
-
-                        // Sinkronisasi Vertikal Zink (V-Sync)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Sinkronisasi Vertikal Zink",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "Aktifkan sinkronisasi vertikal (V-Sync) untuk perender Kopper Zink via antarmuka sistem.",
-                                    fontSize = 9.5.sp,
-                                    color = NuxColors.GrayNeutral
-                                )
-                            }
-                            Switch(
-                                checked = vsyncInZink,
-                                onCheckedChange = {
-                                    vsyncInZink = it
-                                    commitSettings()
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = NuxColors.Ink,
-                                    checkedTrackColor = NuxColors.ForestGreen,
-                                    uncheckedTrackColor = NuxColors.SurfaceElevated
-                                )
-                            )
-                        }
-                    }
-                }
-
-                // RIGHT COLUMN: In-Game Mouse & Touch Controls
-                NuxCard(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    backgroundColor = NuxColors.SurfaceElevated,
-                    borderColor = NuxColors.CardBorder,
-                    borderWidth = 1.dp,
-                    cornerRadius = 8.dp,
-                    fillMaxHeight = true
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(12.dp)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        // Header for Mouse settings
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Outlined.Mouse,
-                                contentDescription = null,
-                                tint = NuxColors.SageGreen,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "KONTROL MOUSE & SENTUHAN IN-GAME",
-                                fontWeight = FontWeight.Black,
-                                fontSize = 12.sp,
-                                color = NuxColors.DarkGray
-                            )
-                        }
-
-                        Text(
-                            text = "Pengaturan mode mouse untuk menu Minecraft (Inventory, Pause Menu, Chat, Crafting).",
-                            fontSize = 9.5.sp,
-                            color = NuxColors.GrayNeutral
-                        )
-
-                        // CUSTOM CONTROLS / GUI EDITOR ACTION CARD
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Column(modifier = Modifier.fillMaxWidth()) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            if (activeRendererInfo.isConfigurable) {
+                                NuxButton(
+                                    onClick = {
+                                        selectedConfigRenderer = activeRendererInfo
+                                        showRendererConfigDialog = true
+                                    },
+                                    backgroundColor = Color.Transparent,
+                                    cornerRadius = 22.dp,
+                                    contentPadding = PaddingValues(0.dp),
+                                    modifier = Modifier.size(44.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Outlined.Tune,
-                                        contentDescription = null,
-                                        tint = NuxColors.SageGreen,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Text(
-                                        text = "KUSTOMISASI KONTROL VIRTUAL",
-                                        fontWeight = FontWeight.Black,
-                                        fontSize = 11.sp,
-                                        color = NuxColors.DarkGray
+                                        imageVector = Icons.Default.Settings,
+                                        contentDescription = "Konfigurasi renderer",
+                                        modifier = Modifier.size(20.dp)
                                     )
                                 }
-                                Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                            NuxButton(
+                                onClick = { showRendererDialog = true },
+                                backgroundColor = Color.Transparent,
+                                cornerRadius = 22.dp,
+                                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp)
+                            ) {
                                 Text(
-                                    text = "Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan mapping input key Minecraft.",
-                                    fontSize = 9.5.sp,
-                                    color = NuxColors.GrayNeutral,
-                                    lineHeight = 12.sp
+                                    text = "Ganti",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                NuxButton(
-                                    onClick = onOpenGuiEditor,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(34.dp),
-                                    backgroundColor = NuxColors.ForestGreen,
-                                    contentColor = NuxColors.DarkGray,
-                                    cornerRadius = 6.dp
-                                ) {
-                                    Icon(Icons.Outlined.Edit, contentDescription = null, tint = NuxColors.Ink, modifier = Modifier.size(14.dp))
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("BUKA GUI EDITOR", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
-                                }
                             }
                         }
 
-                        // Mouse Control Mode Selection (SLIDE vs CLICK)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            // Trackpad / Slide Card
-                            val isSlide = mouseMode == "SLIDE"
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .background(
-                                        if (isSlide) NuxColors.YellowPale else NuxColors.SurfaceInput,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .border(
-                                        1.dp,
-                                        if (isSlide) NuxColors.MintGreen else NuxColors.CardBorder,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .clickable {
-                                        mouseMode = "SLIDE"
-                                        commitSettings()
-                                    }
-                                    .padding(8.dp)
-                            ) {
-                                Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.TouchApp,
-                                            contentDescription = null,
-                                            tint = if (isSlide) NuxColors.SageGreen else NuxColors.DarkGray,
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Text(
-                                            text = "SLIDE (Trackpad)",
-                                            fontSize = 10.5.sp,
-                                            fontWeight = FontWeight.Black,
-                                            color = if (isSlide) NuxColors.SageGreen else NuxColors.DarkGray
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(3.dp))
-                                    Text(
-                                        text = "Geser jari untuk kursor virtual, ketuk layar untuk klik item.",
-                                        fontSize = 9.sp,
-                                        color = NuxColors.GrayNeutral,
-                                        lineHeight = 11.sp
-                                    )
-                                }
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Optimasi otomatis options.txt",
+                            desc = "Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.",
+                            checked = autoOptimizeMC,
+                            onCheckedChange = {
+                                autoOptimizeMC = it
+                                commitSettings()
                             }
-
-                            // Direct Touch / Click Card
-                            val isClick = mouseMode == "CLICK"
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .background(
-                                        if (isClick) NuxColors.YellowPale else NuxColors.SurfaceInput,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .border(
-                                        1.dp,
-                                        if (isClick) NuxColors.MintGreen else NuxColors.CardBorder,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .clickable {
-                                        mouseMode = "CLICK"
-                                        commitSettings()
-                                    }
-                                    .padding(8.dp)
-                            ) {
-                                Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.NearMe,
-                                            contentDescription = null,
-                                            tint = if (isClick) NuxColors.SageGreen else NuxColors.DarkGray,
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(4.dp))
-                                        Text(
-                                            text = "CLICK (Direct)",
-                                            fontSize = 10.5.sp,
-                                            fontWeight = FontWeight.Black,
-                                            color = if (isClick) NuxColors.SageGreen else NuxColors.DarkGray
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(3.dp))
-                                    Text(
-                                        text = "Sentuh tombol atau slot menu langsung di mana jari menekan.",
-                                        fontSize = 9.sp,
-                                        color = NuxColors.GrayNeutral,
-                                        lineHeight = 11.sp
-                                    )
-                                }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Skala resolusi layar",
+                            desc = "Lebih kecil = FPS lebih tinggi, gambar lebih buram.",
+                            options = listOf(50 to "50%", 75 to "75%", 100 to "100%", 125 to "125%"),
+                            selected = resolutionRatio,
+                            onSelect = {
+                                resolutionRatio = it
+                                commitSettings()
                             }
-                        }
-
-                        // In-Game Camera Look Sensitivity
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Sensitivitas Kamera Game (Rotasi)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                                ) {
-                                    Text(
-                                        text = "$captureSensitivity%",
-                                        color = NuxColors.SageGreen,
-                                        fontSize = 9.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Driver Vulkan",
+                            desc = "Pilih implementasi driver Vulkan yang dipakai sistem/game.",
+                            options = listOf("auto" to "Auto", "system" to "Sistem", "turnip" to "Turnip"),
+                            selected = vulkanDriver,
+                            onSelect = {
+                                vulkanDriver = it
+                                commitSettings()
                             }
-                            Slider(
-                                value = captureSensitivity.toFloat(),
-                                onValueChange = {
-                                    captureSensitivity = it.roundToInt()
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "API grafis",
+                            desc = "Atur API grafis yang dipakai Minecraft modern 26.2+.",
+                            options = listOf("DEFAULT" to "Default", "OPENGL" to "OpenGL", "VULKAN" to "Vulkan"),
+                            selected = graphicsApi,
+                            onSelect = {
+                                graphicsApi = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Gunakan driver Vulkan sistem",
+                            desc = "Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.",
+                            checked = zinkPreferSystemDriver,
+                            onCheckedChange = { checked ->
+                                if (checked && NuxVersionUtils.isAdrenoGPU()) {
+                                    showAdrenoWarningDialog = true
+                                } else {
+                                    zinkPreferSystemDriver = checked
                                     commitSettings()
-                                },
-                                valueRange = 50f..300f,
-                                steps = 25,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = NuxColors.MintGreen,
-                                    activeTrackColor = NuxColors.ForestGreen,
-                                    inactiveTrackColor = NuxColors.CardBorder
-                                )
-                            )
-                        }
-
-                        // Virtual Cursor Sensitivity
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Sensitivitas Kursor Virtual (Menu)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                                ) {
-                                    Text(
-                                        text = "$cursorSensitivity%",
-                                        color = NuxColors.SageGreen,
-                                        fontSize = 9.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
                                 }
                             }
-                            Slider(
-                                value = cursorSensitivity.toFloat(),
-                                onValueChange = {
-                                    cursorSensitivity = it.roundToInt()
-                                    commitSettings()
-                                },
-                                valueRange = 50f..300f,
-                                steps = 25,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = NuxColors.MintGreen,
-                                    activeTrackColor = NuxColors.ForestGreen,
-                                    inactiveTrackColor = NuxColors.CardBorder
-                                )
-                            )
-                        }
-
-                        // Virtual Cursor Size with Preview
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(10.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "Ukuran Kursor Virtual",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "${mouseSizeDp}dp",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Black,
-                                    color = NuxColors.SageGreen
-                                )
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "V-Sync Zink",
+                            desc = "Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.",
+                            checked = vsyncInZink,
+                            onCheckedChange = {
+                                vsyncInZink = it
+                                commitSettings()
                             }
-                            Slider(
-                                value = mouseSizeDp.toFloat(),
-                                onValueChange = {
-                                    mouseSizeDp = it.roundToInt()
-                                    commitSettings()
-                                },
-                                valueRange = 16f..48f,
-                                steps = 16,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = NuxColors.MintGreen,
-                                    activeTrackColor = NuxColors.ForestGreen,
-                                    inactiveTrackColor = NuxColors.CardBorder
-                                )
-                            )
-                        }
+                        )
+                    }
 
-                        // Physical Mouse Mode Card (Zalith Style: Auto-Hide Virtual Cursor)
+                    else -> {
+                        // Editor tata letak tombol kontrol virtual
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                                .padding(horizontal = 10.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                                .padding(vertical = 14.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Mode Mouse Fisik (Auto-Hide)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = NuxColors.DarkGray
-                                )
-                                Text(
-                                    text = "Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung",
-                                    fontSize = 9.sp,
-                                    color = NuxColors.GrayNeutral
-                                )
-                            }
-                            Switch(
-                                checked = physicalMouseMode,
-                                onCheckedChange = {
-                                    physicalMouseMode = it
-                                    commitSettings()
-                                },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = NuxColors.Ink,
-                                    checkedTrackColor = NuxColors.ForestGreen,
-                                    uncheckedThumbColor = Color.Gray,
-                                    uncheckedTrackColor = NuxColors.CardBorder
-                                )
+                            SettingRowText(
+                                title = "Kustomisasi kontrol virtual",
+                                desc = "Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.",
+                                modifier = Modifier.weight(1f)
                             )
-                        }
-
-                        // Device Info & Reset Buttons
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
+                            Spacer(modifier = Modifier.width(12.dp))
                             NuxButton(
-                                onClick = {
-                                    SettingsManager.resetToDefaults(context)
-                                    val reset = SettingsManager.settings.value
-                                    ramMb = reset.ramMb
-                                    initialHeapMb = reset.initialHeapMb
-                                    customJvmArgs = reset.customJvmArgs
-                                    defaultRuntime = reset.defaultJavaRuntime
-                                    mouseMode = reset.mouseControlMode
-                                    cursorSensitivity = reset.cursorSensitivity
-                                    captureSensitivity = reset.captureSensitivity
-                                    mouseSizeDp = reset.mouseSizeDp
-                                    physicalMouseMode = reset.physicalMouseMode
-                                    resolutionRatio = reset.resolutionRatio
-                                    autoOptimizeMC = reset.autoOptimizeMinecraft
-                                    sustainedPerf = reset.sustainedPerformanceMode
-                                    Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(34.dp),
-                                backgroundColor = NuxColors.Coral.copy(alpha = 0.15f),
-                                contentColor = NuxColors.Coral,
-                                borderColor = NuxColors.Coral.copy(alpha = 0.35f),
-                                cornerRadius = 6.dp
+                                onClick = onOpenGuiEditor,
+                                backgroundColor = NuxColors.Yellow,
+                                cornerRadius = 22.dp,
+                                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp)
                             ) {
-                                Text(
-                                    text = "RESET DEFAULT",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.5.sp,
-                                    color = NuxColors.Coral
+                                Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
                                 )
-                            }
-
-                            NuxButton(
-                                onClick = {
-                                    commitSettings()
-                                    Toast.makeText(context, "Semua pengaturan tersimpan!", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(34.dp),
-                                backgroundColor = NuxColors.ForestGreen,
-                                contentColor = NuxColors.DarkGray,
-                                cornerRadius = 6.dp
-                            ) {
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "SIMPAN",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 10.5.sp,
-                                    color = NuxColors.Ink
+                                    text = "Buka editor",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Black
                                 )
                             }
                         }
+
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Mode mouse di menu",
+                            desc = if (mouseMode == "CLICK") {
+                                "Sentuh tombol atau slot menu langsung di mana jari menekan."
+                            } else {
+                                "Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik."
+                            },
+                            options = listOf("SLIDE" to "Slide (trackpad)", "CLICK" to "Click (langsung)"),
+                            selected = mouseMode,
+                            onSelect = {
+                                mouseMode = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSliderRow(
+                            title = "Sensitivitas kamera",
+                            desc = "Kecepatan memutar pandangan di dalam game.",
+                            valueText = "$captureSensitivity%",
+                            value = captureSensitivity.toFloat(),
+                            valueRange = 50f..300f,
+                            steps = 25,
+                            onValueChange = {
+                                captureSensitivity = it.roundToInt()
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSliderRow(
+                            title = "Sensitivitas kursor virtual",
+                            desc = "Kecepatan kursor saat berada di menu Minecraft.",
+                            valueText = "$cursorSensitivity%",
+                            value = cursorSensitivity.toFloat(),
+                            valueRange = 50f..300f,
+                            steps = 25,
+                            onValueChange = {
+                                cursorSensitivity = it.roundToInt()
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSliderRow(
+                            title = "Ukuran kursor virtual",
+                            valueText = "${mouseSizeDp}dp",
+                            value = mouseSizeDp.toFloat(),
+                            valueRange = 16f..48f,
+                            steps = 16,
+                            onValueChange = {
+                                mouseSizeDp = it.roundToInt()
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Mode mouse fisik (auto-hide)",
+                            desc = "Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.",
+                            checked = physicalMouseMode,
+                            onCheckedChange = {
+                                physicalMouseMode = it
+                                commitSettings()
+                            }
+                        )
                     }
                 }
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
+
+        // Pita bawah: semua perubahan langsung tersimpan, tombol reset ke bawaan
+        SettingDivider()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Perubahan tersimpan otomatis",
+                color = NuxColors.GrayNeutral,
+                fontSize = 12.sp,
+                modifier = Modifier.weight(1f)
+            )
+            NuxButton(
+                onClick = {
+                    SettingsManager.resetToDefaults(context)
+                    val reset = SettingsManager.settings.value
+                    ramMb = reset.ramMb
+                    initialHeapMb = reset.initialHeapMb
+                    customJvmArgs = reset.customJvmArgs
+                    defaultRuntime = reset.defaultJavaRuntime
+                    mouseMode = reset.mouseControlMode
+                    cursorSensitivity = reset.cursorSensitivity
+                    captureSensitivity = reset.captureSensitivity
+                    mouseSizeDp = reset.mouseSizeDp
+                    physicalMouseMode = reset.physicalMouseMode
+                    resolutionRatio = reset.resolutionRatio
+                    autoOptimizeMC = reset.autoOptimizeMinecraft
+                    sustainedPerf = reset.sustainedPerformanceMode
+                    Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
+                },
+                backgroundColor = Color.Transparent,
+                contentColor = NuxColors.ErrorRed,
+                borderColor = NuxColors.ErrorRed.copy(alpha = 0.45f),
+                cornerRadius = 22.dp,
+                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = "Reset default",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
 
         // Renderer Selection Dialog (Landscape Optimized with NuxDialog)
         if (showRendererDialog) {

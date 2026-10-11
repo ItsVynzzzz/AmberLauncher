@@ -158,7 +158,7 @@ fun AccountsScreen(
                     .height(26.dp)
                     .clip(RoundedCornerShape(6.dp))
                     .background(NuxColors.YellowPale, RoundedCornerShape(6.dp))
-                    .border(1.dp, NuxColors.Ink, RoundedCornerShape(6.dp))
+                    .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(6.dp))
                     .clickable { showAddAccountDialog = true }
                     .padding(horizontal = 9.dp),
                 contentAlignment = Alignment.Center
@@ -419,7 +419,7 @@ fun AccountsScreen(
                                         )
                                         .border(
                                             width = 1.dp,
-                                            color = if (isCurrent) NuxColors.Ink else NuxColors.DarkGray.copy(alpha = 0.14f),
+                                            color = if (isCurrent) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.14f),
                                             shape = itemShape
                                         )
                                         .clickable {
@@ -506,7 +506,7 @@ fun AccountsScreen(
                                                 Icon(
                                                     imageVector = Icons.Default.Check,
                                                     contentDescription = "Aktif",
-                                                    tint = NuxColors.DarkGray,
+                                                    tint = NuxColors.Ink,
                                                     modifier = Modifier.size(13.dp)
                                                 )
                                             }
@@ -845,7 +845,7 @@ private fun AddAccountModal(
                             modifier = Modifier
                                 .size(46.dp)
                                 .background(NuxColors.SurfaceInput, RoundedCornerShape(12.dp))
-                                .border(1.dp, NuxColors.Ink, RoundedCornerShape(12.dp)),
+                                .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(12.dp)),
                             contentAlignment = Alignment.Center
                         ) {
                             if (offlineName.trim().isNotBlank()) {
@@ -908,7 +908,7 @@ private fun AddAccountModal(
                             Icon(
                                 imageVector = Icons.Outlined.Check,
                                 contentDescription = null,
-                                tint = NuxColors.DarkGray,
+                                tint = NuxColors.Ink,
                                 modifier = Modifier.size(15.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))

@@ -1822,32 +1822,31 @@ fun GameScreen(
                 ) {
                     NuxCard(
                         modifier = Modifier
-                            .width(360.dp)
+                            .width(380.dp)
                             .wrapContentHeight(),
-                        backgroundColor = NuxColors.SurfaceWhite,
-                        shadowOffset = 5.dp,
-                        cornerRadius = NuxSizes.CornerRadiusLarge,
+                        backgroundColor = NuxColors.Panel,
+                        cornerRadius = 24.dp,
                         fillMaxHeight = false
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(18.dp)
+                                .padding(22.dp)
                         ) {
                             Text(
                                 text = "KELUAR DARI MINECRAFT?",
                                 color = NuxColors.DarkGray,
                                 fontWeight = FontWeight.Black,
-                                fontSize = 15.sp
+                                fontSize = 18.sp
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Proses JVM Minecraft akan dihentikan dan Anda akan kembali ke menu launcher.",
                                 color = NuxColors.GrayNeutral,
-                                fontSize = 12.sp,
-                                lineHeight = 16.sp
+                                fontSize = 14.sp,
+                                lineHeight = 20.sp
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End,
@@ -1855,15 +1854,15 @@ fun GameScreen(
                             ) {
                                 NuxButton(
                                     onClick = { showExitConfirmDialog = false },
-                                    backgroundColor = NuxColors.SurfaceWhite,
+                                    backgroundColor = NuxColors.SurfaceElevated,
                                     contentColor = NuxColors.DarkGray,
-                                    shadowOffset = 2.dp,
-                                    cornerRadius = 8.dp,
-                                    modifier = Modifier.height(36.dp)
+                                    cornerRadius = 14.dp,
+                                    contentPadding = PaddingValues(horizontal = 20.dp),
+                                    modifier = Modifier.height(46.dp)
                                 ) {
-                                    Text("BATAL", fontWeight = FontWeight.Black, fontSize = 11.sp)
+                                    Text("BATAL", fontWeight = FontWeight.Black, fontSize = 14.sp)
                                 }
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(12.dp))
                                 NuxButton(
                                     onClick = {
                                         showExitConfirmDialog = false
@@ -1871,11 +1870,11 @@ fun GameScreen(
                                     },
                                     backgroundColor = NuxColors.Coral,
                                     contentColor = Color.White,
-                                    shadowOffset = 2.dp,
-                                    cornerRadius = 8.dp,
-                                    modifier = Modifier.height(36.dp)
+                                    cornerRadius = 14.dp,
+                                    contentPadding = PaddingValues(horizontal = 20.dp),
+                                    modifier = Modifier.height(46.dp)
                                 ) {
-                                    Text("KELUAR ✕", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color.White)
+                                    Text("KELUAR ✕", fontWeight = FontWeight.Black, fontSize = 14.sp, color = Color.White)
                                 }
                             }
                         }

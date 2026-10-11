@@ -35,6 +35,7 @@ import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
+import com.israadev.nuxlauncher.ui.components.NuxWindowDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.launch
@@ -79,7 +80,7 @@ fun NuxAddonImportDialog(
     var importTotal by remember { mutableStateOf(0) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    Dialog(
+    NuxWindowDialog(
         onDismissRequest = {
             if (!isImporting) {
                 NuxAddonImportManager.clearPendingImport()
@@ -103,8 +104,8 @@ fun NuxAddonImportDialog(
                 modifier = Modifier
                     .width(520.dp)
                     .fillMaxHeight(0.92f),
-                backgroundColor = NuxColors.SurfaceElevated,
-                borderColor = NuxColors.Ink,
+                backgroundColor = NuxColors.Panel,
+                borderColor = NuxColors.CardBorder,
                 cornerRadius = NuxSizes.CornerRadiusLarge,
                 fillMaxHeight = false
             ) {
@@ -125,7 +126,7 @@ fun NuxAddonImportDialog(
                                     .size(32.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(NuxColors.YellowPale)
-                                    .border(1.dp, NuxColors.Ink, RoundedCornerShape(8.dp)),
+                                    .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(text = "📥", fontSize = 16.sp)
@@ -378,7 +379,7 @@ fun NuxAddonImportDialog(
                                     .fillMaxWidth()
                                     .clip(progressShape)
                                     .background(NuxColors.SoftLime, progressShape)
-                                    .border(1.dp, NuxColors.Ink, progressShape)
+                                    .border(1.dp, NuxColors.CardBorder, progressShape)
                                     .padding(12.dp)
                             ) {
                                 Column {
@@ -530,13 +531,13 @@ fun NuxAddonImportDialog(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     CircularProgressIndicator(
                                         modifier = Modifier.size(16.dp),
-                                        color = NuxColors.DarkGray,
+                                        color = NuxColors.Ink,
                                         strokeWidth = 2.dp
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "MEMASANG...",
-                                        color = NuxColors.DarkGray,
+                                        color = NuxColors.Ink,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 11.sp
                                     )
@@ -544,7 +545,7 @@ fun NuxAddonImportDialog(
                             } else {
                                 Text(
                                     text = "PASANG SEKARANG",
-                                    color = NuxColors.DarkGray,
+                                    color = NuxColors.Ink,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 11.sp
                                 )

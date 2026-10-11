@@ -1,6 +1,7 @@
 package com.israadev.nuxlauncher.ui.theme
 
 import android.content.res.Configuration
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -87,6 +88,31 @@ fun NuxResponsiveTheme(
     CompositionLocalProvider(
         LocalNuxScale provides metrics,
         LocalDensity provides responsiveDensity
+    ) {
+        content()
+    }
+}
+
+/**
+ * Pembesar teks untuk layar selain Home (Akun, Mod, Pengaturan, dan semua dialog).
+ * Hanya mengalikan skala huruf (sp), ukuran dp tidak berubah, jadi kotak dan jarak tetap sama
+ * tetapi tulisan lebih mudah dibaca di layar HP yang kecil. Dibatasi 1.3x supaya tidak pecah
+ * bila pengguna sudah memakai ukuran huruf sistem yang besar. Warna isi bawaan (teks/ikon tanpa
+ * warna) juga disetel ke putih hangat supaya tidak hitam di atas latar gelap.
+ */
+@Composable
+fun NuxReadable(
+    boost: Float = 1.18f,
+    content: @Composable () -> Unit
+) {
+    val current = LocalDensity.current
+    val readable = Density(
+        density = current.density,
+        fontScale = min(current.fontScale * boost, 1.3f)
+    )
+    CompositionLocalProvider(
+        LocalDensity provides readable,
+        LocalContentColor provides NuxColors.DarkGray
     ) {
         content()
     }

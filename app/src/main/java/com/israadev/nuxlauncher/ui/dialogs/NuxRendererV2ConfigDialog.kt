@@ -65,6 +65,7 @@ import com.israadev.nuxlauncher.core.renderer.v2.NuxRendererV2Manager
 import com.israadev.nuxlauncher.core.renderer.v2.RendererV2Data
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
+import com.israadev.nuxlauncher.ui.components.NuxWindowDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 
@@ -93,7 +94,7 @@ fun NuxRendererV2ConfigDialog(
         }
     }
 
-    Dialog(
+    NuxWindowDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -111,8 +112,8 @@ fun NuxRendererV2ConfigDialog(
                 modifier = Modifier
                     .width(580.dp)
                     .fillMaxHeight(0.94f),
-                backgroundColor = NuxColors.SurfaceElevated,
-                borderColor = NuxColors.Ink,
+                backgroundColor = NuxColors.Panel,
+                borderColor = NuxColors.CardBorder,
                 cornerRadius = NuxSizes.CornerRadiusLarge,
                 fillMaxHeight = false
             ) {
@@ -133,7 +134,7 @@ fun NuxRendererV2ConfigDialog(
                                     .size(34.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(NuxColors.YellowPale)
-                                    .border(1.dp, NuxColors.Ink, RoundedCornerShape(8.dp)),
+                                    .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(8.dp)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
@@ -197,7 +198,7 @@ fun NuxRendererV2ConfigDialog(
                                     .fillMaxWidth()
                                     .clip(cardShape)
                                     .background(NuxColors.SurfaceElevated, cardShape)
-                                    .border(1.dp, NuxColors.Ink, cardShape)
+                                    .border(1.dp, NuxColors.CardBorder, cardShape)
                                     .clickable {
                                         try {
                                             val launchIntent = context.packageManager.getLaunchIntentForPackage(activePkg)
@@ -350,7 +351,7 @@ fun NuxRendererV2ConfigDialog(
                         ) {
                             Text(
                                 text = "SIMPAN & TUTUP",
-                                color = NuxColors.DarkGray,
+                                color = NuxColors.Ink,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 11.sp
                             )
@@ -376,7 +377,7 @@ private fun SelectableEnvItemCard(unit: EnvSettingUnit.Selectable) {
             .fillMaxWidth()
             .clip(cardShape)
             .background(NuxColors.SurfaceWhite, cardShape)
-            .border(1.dp, if (unit.isEnabled) NuxColors.Ink else NuxColors.DarkGray.copy(alpha = 0.19f), cardShape)
+            .border(1.dp, if (unit.isEnabled) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.19f), cardShape)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
@@ -515,7 +516,7 @@ private fun ToggleableEnvItemCard(unit: EnvSettingUnit.Toggleable) {
             .fillMaxWidth()
             .clip(cardShape)
             .background(NuxColors.SurfaceWhite, cardShape)
-            .border(1.dp, if (unit.isEnabled) NuxColors.Ink else NuxColors.DarkGray.copy(alpha = 0.19f), cardShape)
+            .border(1.dp, if (unit.isEnabled) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.19f), cardShape)
             .clickable { unit.setToggle(!unit.isEnabled) }
             .padding(12.dp)
     ) {
@@ -605,9 +606,10 @@ private fun CustomizableEnvItemCard(unit: EnvSettingUnit.Customizable) {
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = NuxColors.ForestGreen,
-                    unfocusedBorderColor = NuxColors.DarkGray.copy(alpha = 0.16f),
-                    focusedContainerColor = NuxColors.DarkGray,
-                    unfocusedContainerColor = NuxColors.DarkGray
+                    unfocusedBorderColor = NuxColors.CardBorder,
+                    focusedContainerColor = NuxColors.SurfaceInput,
+                    unfocusedContainerColor = NuxColors.SurfaceInput,
+                    cursorColor = NuxColors.Yellow
                 ),
                 shape = RoundedCornerShape(8.dp)
             )

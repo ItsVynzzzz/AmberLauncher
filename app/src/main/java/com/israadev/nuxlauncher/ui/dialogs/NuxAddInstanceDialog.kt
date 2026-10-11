@@ -258,7 +258,7 @@ fun NuxAddInstanceDialog(
                                                 fontSize = 11.5.sp,
                                                 fontWeight = FontWeight.SemiBold
                                             ),
-                                            cursorBrush = SolidColor(NuxColors.Ink),
+                                            cursorBrush = SolidColor(NuxColors.Yellow),
                                             modifier = Modifier.fillMaxWidth()
                                         )
                                     }
@@ -436,7 +436,7 @@ fun NuxAddInstanceDialog(
                                         .fillMaxWidth()
                                         .clip(innerBezelShape)
                                         .background(NuxColors.SoftLime)
-                                        .border(1.dp, NuxColors.Ink, innerBezelShape)
+                                        .border(1.dp, NuxColors.CardBorder, innerBezelShape)
                                         .padding(horizontal = 8.dp, vertical = 5.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
@@ -500,7 +500,7 @@ fun NuxAddInstanceDialog(
                                     )
                                     .border(
                                         1.dp,
-                                        if (canCreate) NuxColors.Ink else NuxColors.DarkGray.copy(alpha = 0.20f),
+                                        if (canCreate) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.20f),
                                         RoundedCornerShape(10.dp)
                                     )
                                     .clickable(enabled = canCreate) {
@@ -530,7 +530,7 @@ fun NuxAddInstanceDialog(
                                             selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
                                             else -> "Buat Instance Sekarang"
                                         },
-                                        color = if (canCreate) NuxColors.DarkGray else NuxColors.GrayNeutral,
+                                        color = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
                                         fontWeight = FontWeight.Black,
                                         fontSize = 11.sp,
                                         letterSpacing = 0.2.sp
@@ -547,7 +547,7 @@ fun NuxAddInstanceDialog(
                                         Icon(
                                             imageVector = Icons.Default.ArrowForward,
                                             contentDescription = null,
-                                            tint = if (canCreate) NuxColors.DarkGray else NuxColors.GrayNeutral,
+                                            tint = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
                                             modifier = Modifier.size(11.dp)
                                         )
                                     }
@@ -639,7 +639,7 @@ fun NuxAddInstanceDialog(
                                             fontSize = 10.5.sp,
                                             fontWeight = FontWeight.Medium
                                         ),
-                                        cursorBrush = SolidColor(NuxColors.Ink),
+                                        cursorBrush = SolidColor(NuxColors.Yellow),
                                         modifier = Modifier.weight(1f),
                                         decorationBox = { innerTextField ->
                                             if (searchQuery.isEmpty()) {
@@ -795,7 +795,7 @@ fun NuxAddInstanceDialog(
                                                         Icon(
                                                             imageVector = Icons.Default.Check,
                                                             contentDescription = "Selected",
-                                                            tint = NuxColors.DarkGray,
+                                                            tint = NuxColors.Ink,
                                                             modifier = Modifier.size(11.dp)
                                                         )
                                                     }

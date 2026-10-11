@@ -179,7 +179,7 @@ fun NuxAboutDialog(
                                 ),
                                 CircleShape
                             )
-                            .border(1.2.dp, NuxColors.Ink, CircleShape)
+                            .border(1.2.dp, NuxColors.CardBorder, CircleShape)
                             .padding(2.5.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -215,7 +215,7 @@ fun NuxAboutDialog(
                                 text = "v1.0.6",
                                 backgroundColor = NuxColors.YellowPale,
                                 textColor = NuxColors.SageGreen,
-                                borderColor = NuxColors.Ink
+                                borderColor = NuxColors.CardBorder
                             )
                         }
                         Text(
@@ -266,7 +266,7 @@ fun NuxAboutDialog(
                 ).forEach { (tabKey, title) ->
                     val isSelected = activeTab == tabKey
                     val textColor by animateColorAsState(
-                        targetValue = if (isSelected) NuxColors.DarkGray else NuxColors.LightGray,
+                        targetValue = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral,
                         animationSpec = tween(150),
                         label = "tabText"
                     )
@@ -473,7 +473,7 @@ fun NuxAboutDialog(
                                                     modifier = Modifier
                                                         .clip(RoundedCornerShape(4.dp))
                                                         .background(NuxColors.YellowPale)
-                                                        .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                                         .padding(horizontal = 4.dp, vertical = 1.dp)
                                                 ) {
                                                     Text(
@@ -658,7 +658,7 @@ private fun UpstreamProjectCard(
                         modifier = Modifier
                             .clip(RoundedCornerShape(4.dp))
                             .background(NuxColors.YellowPale)
-                            .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                             .padding(horizontal = 5.dp, vertical = 1.dp)
                     ) {
                         Text(

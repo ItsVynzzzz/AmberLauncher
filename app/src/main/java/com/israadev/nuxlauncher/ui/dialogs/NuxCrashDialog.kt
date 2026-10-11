@@ -365,7 +365,7 @@ fun NuxCrashDialog(
                                         )
                                         .border(
                                             1.dp,
-                                            if (uploadSuccessUrl != null) NuxColors.Ink else NuxColors.ErrorRed.copy(alpha = 0.40f),
+                                            if (uploadSuccessUrl != null) NuxColors.Yellow else NuxColors.ErrorRed.copy(alpha = 0.40f),
                                             RoundedCornerShape(10.dp)
                                         )
                                         .clickable {
@@ -428,11 +428,11 @@ fun NuxCrashDialog(
                                                 fontSize = 11.sp
                                             )
                                         } else if (uploadSuccessUrl != null) {
-                                            Icon(imageVector = Icons.Default.OpenInNew, contentDescription = null, tint = NuxColors.DarkGray, modifier = Modifier.size(13.dp))
+                                            Icon(imageVector = Icons.Default.OpenInNew, contentDescription = null, tint = NuxColors.Ink, modifier = Modifier.size(13.dp))
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Text(
                                                 text = "BUKA TAUTAN MCLO.GS",
-                                                color = NuxColors.DarkGray,
+                                                color = NuxColors.Ink,
                                                 fontWeight = FontWeight.Black,
                                                 fontSize = 11.sp
                                             )

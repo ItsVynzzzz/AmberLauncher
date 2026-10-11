@@ -324,7 +324,7 @@ fun NuxWardrobeDialog(
                                 Icon(
                                     imageVector = Icons.Outlined.RotateRight,
                                     contentDescription = "Putar Otomatis",
-                                    tint = NuxColors.DarkGray,
+                                    tint = if (isAutoRotating) NuxColors.Ink else NuxColors.DarkGray,
                                     modifier = Modifier.size(14.dp)
                                 )
                             }
@@ -374,7 +374,7 @@ fun NuxWardrobeDialog(
                             ) {
                                 Text(
                                     text = label,
-                                    color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral,
+                                    color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral,
                                     fontSize = 9.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -422,7 +422,7 @@ fun NuxWardrobeDialog(
                                     Icon(
                                         imageVector = Icons.Outlined.Person,
                                         contentDescription = null,
-                                        tint = if (activeTab == "skin") NuxColors.DarkGray else NuxColors.GrayNeutral,
+                                        tint = if (activeTab == "skin") NuxColors.Ink else NuxColors.GrayNeutral,
                                         modifier = Modifier.size(13.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
@@ -1024,7 +1024,7 @@ fun NuxWardrobeDialog(
                                         .height(32.dp)
                                 ) {
                                     if (isProcessing) {
-                                        CircularProgressIndicator(modifier = Modifier.size(13.dp), color = NuxColors.DarkGray, strokeWidth = 2.dp)
+                                        CircularProgressIndicator(modifier = Modifier.size(13.dp), color = NuxColors.Ink, strokeWidth = 2.dp)
                                         Spacer(modifier = Modifier.width(5.dp))
                                     } else {
                                         Icon(

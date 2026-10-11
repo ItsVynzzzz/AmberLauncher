@@ -58,7 +58,7 @@ fun NuxDownloadProgressDialog(
                         )
                     )
                 )
-                .border(1.dp, NuxColors.Ink, outerShape)
+                .border(1.dp, NuxColors.CardBorder, outerShape)
                 .padding(20.dp)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -74,7 +74,7 @@ fun NuxDownloadProgressDialog(
                                 .size(32.dp)
                                 .clip(CircleShape)
                                 .background(NuxColors.YellowPale)
-                                .border(1.dp, NuxColors.Ink, CircleShape),
+                                .border(1.dp, NuxColors.CardBorder, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -108,7 +108,7 @@ fun NuxDownloadProgressDialog(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
                             .background(NuxColors.YellowPale)
-                            .border(1.dp, NuxColors.Ink, RoundedCornerShape(8.dp))
+                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(8.dp))
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(

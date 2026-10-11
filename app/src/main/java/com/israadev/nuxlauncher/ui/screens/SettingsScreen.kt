@@ -317,7 +317,7 @@ fun SettingsScreen(
                                         )
                                         .border(
                                             1.dp,
-                                            if (ramMb > (totalRamMb * 0.75f)) NuxColors.Coral.copy(alpha = 0.4f) else NuxColors.Ink,
+                                            if (ramMb > (totalRamMb * 0.75f)) NuxColors.Coral.copy(alpha = 0.4f) else NuxColors.CardBorder,
                                             RoundedCornerShape(4.dp)
                                         )
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
@@ -389,7 +389,7 @@ fun SettingsScreen(
                                                 text = if (preset >= 1024) "${preset / 1024}G" else "${preset}M",
                                                 fontSize = 10.sp,
                                                 fontWeight = FontWeight.Bold,
-                                                color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                                                color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                                             )
                                         }
                                     }
@@ -467,7 +467,7 @@ fun SettingsScreen(
                                                 .size(24.dp)
                                                 .clip(RoundedCornerShape(4.dp))
                                                 .background(NuxColors.SurfaceElevated)
-                                                .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                                .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                                 .clickable {
                                                     selectedConfigRenderer = activeRendererInfo
                                                     showRendererConfigDialog = true
@@ -520,7 +520,7 @@ fun SettingsScreen(
                                 Box(
                                     modifier = Modifier
                                         .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
@@ -633,7 +633,7 @@ fun SettingsScreen(
                                             text = "$ratio%",
                                             fontSize = 10.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                                         )
                                     }
                                 }
@@ -687,7 +687,7 @@ fun SettingsScreen(
                                             text = label,
                                             fontSize = 9.5.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                                         )
                                     }
                                 }
@@ -741,7 +741,7 @@ fun SettingsScreen(
                                             text = label,
                                             fontSize = 9.5.sp,
                                             fontWeight = FontWeight.Bold,
-                                            color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                                         )
                                     }
                                 }
@@ -912,9 +912,9 @@ fun SettingsScreen(
                                     contentColor = NuxColors.DarkGray,
                                     cornerRadius = 6.dp
                                 ) {
-                                    Icon(Icons.Outlined.Edit, contentDescription = null, tint = NuxColors.DarkGray, modifier = Modifier.size(14.dp))
+                                    Icon(Icons.Outlined.Edit, contentDescription = null, tint = NuxColors.Ink, modifier = Modifier.size(14.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("BUKA GUI EDITOR", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.DarkGray)
+                                    Text("BUKA GUI EDITOR", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
                                 }
                             }
                         }
@@ -1039,7 +1039,7 @@ fun SettingsScreen(
                                 Box(
                                     modifier = Modifier
                                         .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
@@ -1088,7 +1088,7 @@ fun SettingsScreen(
                                 Box(
                                     modifier = Modifier
                                         .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                        .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                         .padding(horizontal = 6.dp, vertical = 2.dp)
                                 ) {
                                     Text(
@@ -1250,7 +1250,7 @@ fun SettingsScreen(
                                     text = "SIMPAN",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 10.5.sp,
-                                    color = NuxColors.DarkGray
+                                    color = NuxColors.Ink
                                 )
                             }
                         }
@@ -1371,7 +1371,7 @@ fun SettingsScreen(
                                                 },
                                                 colors = RadioButtonDefaults.colors(
                                                     selectedColor = NuxColors.ForestGreen,
-                                                    unselectedColor = NuxColors.CardBorder
+                                                    unselectedColor = NuxColors.GrayNeutral
                                                 ),
                                                 modifier = Modifier.size(18.dp)
                                             )
@@ -1390,7 +1390,7 @@ fun SettingsScreen(
                                                         .size(22.dp)
                                                         .clip(RoundedCornerShape(4.dp))
                                                         .background(NuxColors.SurfaceElevated)
-                                                        .border(1.dp, NuxColors.Ink, RoundedCornerShape(4.dp))
+                                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
                                                         .clickable {
                                                             selectedConfigRenderer = rendererItem
                                                             showRendererDialog = false
@@ -1420,7 +1420,7 @@ fun SettingsScreen(
                                                     text = rendererItem.badge,
                                                     fontSize = 8.5.sp,
                                                     fontWeight = FontWeight.Bold,
-                                                    color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                                                    color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                                                 )
                                             }
                                         }

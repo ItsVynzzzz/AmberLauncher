@@ -162,7 +162,7 @@ private fun DeviceProfileCardContent(profile: DeviceProfile) {
                             text = label,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral
+                            color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral
                         )
                     }
                 }

@@ -243,7 +243,7 @@ private fun ErrorContent(
                     modifier = Modifier
                         .size(34.dp)
                         .background(NuxColors.SurfaceWhite, NuxSizes.ShapeSmall)
-                        .border(1.5.dp, NuxColors.DarkGray, NuxSizes.ShapeSmall)
+                        .border(1.dp, NuxColors.CardBorder, NuxSizes.ShapeSmall)
                 ) {
                     Icon(
                         imageVector = Icons.Default.ScreenRotation,
@@ -258,7 +258,7 @@ private fun ErrorContent(
                     modifier = Modifier
                         .size(34.dp)
                         .background(NuxColors.SurfaceWhite, NuxSizes.ShapeSmall)
-                        .border(1.5.dp, NuxColors.DarkGray, NuxSizes.ShapeSmall)
+                        .border(1.dp, NuxColors.CardBorder, NuxSizes.ShapeSmall)
                         .clickable { onExit() },
                     contentAlignment = Alignment.Center
                 ) {
@@ -456,7 +456,7 @@ private fun CrashDetailCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(NuxColors.SurfaceWhite, NuxSizes.ShapeSmall)
-            .border(1.5.dp, NuxColors.DarkGray, NuxSizes.ShapeSmall)
+            .border(1.dp, NuxColors.CardBorder, NuxSizes.ShapeSmall)
             .padding(10.dp)
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -709,7 +709,7 @@ private fun TerminalLogViewer(
                 fontSize = 10.sp,
                 letterSpacing = 0.5.sp
             )
-            NuxBadge(text = logFileName, backgroundColor = NuxColors.DarkGray, textColor = Color.White)
+            NuxBadge(text = logFileName, backgroundColor = NuxColors.SurfaceElevated, textColor = NuxColors.DarkGray)
         }
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -719,7 +719,7 @@ private fun TerminalLogViewer(
                 .fillMaxWidth()
                 .weight(1f)
                 .background(Color(0xFF141414), NuxSizes.ShapeSmall)
-                .border(1.5.dp, NuxColors.DarkGray, NuxSizes.ShapeSmall)
+                .border(1.dp, NuxColors.CardBorder, NuxSizes.ShapeSmall)
                 .padding(8.dp)
         ) {
             val verticalScroll = rememberScrollState()

@@ -25,6 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
+import com.israadev.nuxlauncher.ui.components.NuxWindowDialog
 import com.israadev.nuxlauncher.ui.theme.LocalNuxScale
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 
@@ -37,7 +38,7 @@ fun NuxRendererWarningDialog(
 ) {
     val isTablet = LocalNuxScale.current.isTablet
 
-    Dialog(
+    NuxWindowDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -56,8 +57,8 @@ fun NuxRendererWarningDialog(
                     .fillMaxWidth(if (isTablet) 0.54f else 0.70f)
                     .widthIn(min = 340.dp, max = 480.dp)
                     .wrapContentHeight(),
-                backgroundColor = NuxColors.SurfaceElevated,
-                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+                backgroundColor = NuxColors.Panel,
+                borderColor = NuxColors.CardBorder,
                 cornerRadius = 18.dp,
                 fillMaxHeight = false
             ) {
@@ -187,8 +188,8 @@ fun NuxRendererWarningDialog(
                     ) {
                         NuxButton(
                             onClick = onDismiss,
-                            backgroundColor = NuxColors.SurfaceElevated,
-                            borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+                            backgroundColor = NuxColors.Panel,
+                            borderColor = NuxColors.CardBorder,
                             contentColor = NuxColors.DarkGray,
                             modifier = Modifier
                                 .weight(1f)

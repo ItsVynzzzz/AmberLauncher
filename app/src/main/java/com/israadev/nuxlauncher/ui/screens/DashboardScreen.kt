@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.ui.dialogs.NuxDownloadProgressDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxEditInstanceDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxRendererWarningDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
+import com.israadev.nuxlauncher.ui.theme.NuxReadable
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import java.io.File
 import kotlinx.coroutines.Dispatchers
@@ -287,6 +288,12 @@ fun DashboardScreen() {
                         )
                     )
                 }
+                // Latar layar Akun/Mod/Pengaturan: hitam hangat dengan sedikit cahaya kuning di atas.
+                val cardFill = remember {
+                    Brush.verticalGradient(
+                        listOf(Color(0xFF1A1606), NuxColors.Background, NuxColors.Background)
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -297,23 +304,29 @@ fun DashboardScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(cardShape)
-                            .background(NuxColors.Background, cardShape)
+                            .background(cardFill, cardShape)
                             .border(1.dp, cardEdge, cardShape)
                     ) {
                         when (currentTab) {
-                            "accounts" -> AccountsScreen(
-                                onNavigateBack = { currentTab = "home" },
-                                modifier = Modifier.fillMaxSize()
-                            )
-                            "mods" -> ModsScreen(
-                                onNavigateBack = { currentTab = "home" },
-                                modifier = Modifier.fillMaxSize()
-                            )
-                            "settings" -> SettingsScreen(
-                                onNavigateBack = { currentTab = "home" },
-                                onOpenGuiEditor = { currentTab = "gui_editor" },
-                                modifier = Modifier.fillMaxSize()
-                            )
+                            "accounts" -> NuxReadable {
+                                AccountsScreen(
+                                    onNavigateBack = { currentTab = "home" },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            "mods" -> NuxReadable {
+                                ModsScreen(
+                                    onNavigateBack = { currentTab = "home" },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            "settings" -> NuxReadable {
+                                SettingsScreen(
+                                    onNavigateBack = { currentTab = "home" },
+                                    onOpenGuiEditor = { currentTab = "gui_editor" },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
                             else -> {
                                 val rendererLabel = remember(launcherSettings.selectedRenderer) {
                                     val info = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
@@ -1134,7 +1147,7 @@ private fun BackgroundDialog(
             ) {
                 Text(
                     text = "LATAR BELAKANG",
-                    color = NuxColors.Ink,
+                    color = NuxColors.DarkGray,
                     fontWeight = FontWeight.Black,
                     fontSize = 17.sp,
                     letterSpacing = 0.5.sp,
@@ -1143,7 +1156,7 @@ private fun BackgroundDialog(
                 PickerIconButton(
                     icon = Icons.Default.Close,
                     description = "Tutup",
-                    tint = NuxColors.Ink,
+                    tint = NuxColors.DarkGray,
                     onClick = onDismiss
                 )
             }
@@ -1186,7 +1199,7 @@ private fun BackgroundDialog(
                 NuxButton(
                     onClick = onReset,
                     backgroundColor = NuxColors.SurfaceWhite,
-                    contentColor = NuxColors.Ink,
+                    contentColor = NuxColors.DarkGray,
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
                 ) {
@@ -1232,7 +1245,7 @@ private fun InstancePickerDialog(
             ) {
                 Text(
                     text = "PILIH INSTANCE",
-                    color = NuxColors.Ink,
+                    color = NuxColors.DarkGray,
                     fontWeight = FontWeight.Black,
                     fontSize = 17.sp,
                     letterSpacing = 0.5.sp,
@@ -1241,7 +1254,7 @@ private fun InstancePickerDialog(
                 PickerIconButton(
                     icon = Icons.Default.Close,
                     description = "Tutup",
-                    tint = NuxColors.Ink,
+                    tint = NuxColors.DarkGray,
                     onClick = onDismiss
                 )
             }
@@ -1272,7 +1285,7 @@ private fun InstancePickerDialog(
                                 .background(if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
                                 .border(
                                     NuxSizes.BorderWidth,
-                                    if (isSelected) NuxColors.Ink else NuxColors.LightGray,
+                                    if (isSelected) NuxColors.Yellow else NuxColors.LightGray,
                                     rowShape
                                 )
                                 .clickable { onSelect(inst) }
@@ -1282,7 +1295,7 @@ private fun InstancePickerDialog(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = inst.name,
-                                    color = NuxColors.Ink,
+                                    color = NuxColors.DarkGray,
                                     fontWeight = FontWeight.Black,
                                     fontSize = 15.sp,
                                     maxLines = 1,
@@ -1298,13 +1311,13 @@ private fun InstancePickerDialog(
                             PickerIconButton(
                                 icon = Icons.Outlined.Folder,
                                 description = "Buka folder",
-                                tint = NuxColors.Ink,
+                                tint = NuxColors.DarkGray,
                                 onClick = { onOpenFolder(inst) }
                             )
                             PickerIconButton(
                                 icon = Icons.Outlined.Tune,
                                 description = "Ubah instance",
-                                tint = NuxColors.Ink,
+                                tint = NuxColors.DarkGray,
                                 onClick = { onEdit(inst) }
                             )
                             PickerIconButton(

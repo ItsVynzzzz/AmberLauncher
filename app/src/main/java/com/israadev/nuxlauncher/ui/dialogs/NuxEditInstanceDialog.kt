@@ -41,6 +41,7 @@ import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
 import com.israadev.nuxlauncher.ui.components.NuxBadge
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
+import com.israadev.nuxlauncher.ui.components.NuxWindowDialog
 import com.israadev.nuxlauncher.ui.theme.LocalNuxScale
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
@@ -62,7 +63,7 @@ fun NuxEditInstanceDialog(
         JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
     }
 
-    Dialog(
+    NuxWindowDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             usePlatformDefaultWidth = false,
@@ -81,8 +82,8 @@ fun NuxEditInstanceDialog(
                     .fillMaxWidth(if (isTablet) 0.62f else 0.80f)
                     .widthIn(min = 360.dp, max = 520.dp)
                     .wrapContentHeight(),
-                backgroundColor = NuxColors.SurfaceElevated,
-                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+                backgroundColor = NuxColors.Panel,
+                borderColor = NuxColors.CardBorder,
                 cornerRadius = 18.dp,
                 fillMaxHeight = false
             ) {
@@ -110,7 +111,7 @@ fun NuxEditInstanceDialog(
                                         ),
                                         CircleShape
                                     )
-                                    .border(1.2.dp, NuxColors.Ink, CircleShape)
+                                    .border(1.2.dp, NuxColors.CardBorder, CircleShape)
                                     .padding(2.5.dp),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -218,7 +219,7 @@ fun NuxEditInstanceDialog(
                                         fontSize = 11.5.sp,
                                         fontWeight = FontWeight.SemiBold
                                     ),
-                                    cursorBrush = SolidColor(NuxColors.Ink),
+                                    cursorBrush = SolidColor(NuxColors.Yellow),
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }
@@ -249,7 +250,7 @@ fun NuxEditInstanceDialog(
                                     text = "Rekomendasi: ${JavaRuntimeManager.getRuntimeDisplayName(autoRecommendedRuntime)}",
                                     backgroundColor = NuxColors.YellowPale,
                                     textColor = NuxColors.SageGreen,
-                                    borderColor = NuxColors.Ink
+                                    borderColor = NuxColors.CardBorder
                                 )
                             }
 
@@ -439,8 +440,8 @@ fun NuxEditInstanceDialog(
                                 ) {
                                     NuxButton(
                                         onClick = { showDeleteConfirm = false },
-                                        backgroundColor = NuxColors.SurfaceElevated,
-                                        borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+                                        backgroundColor = NuxColors.Panel,
+                                        borderColor = NuxColors.CardBorder,
                                         contentColor = NuxColors.DarkGray,
                                         modifier = Modifier
                                             .weight(1f)
@@ -480,8 +481,8 @@ fun NuxEditInstanceDialog(
                         // BATAL BUTTON (Dark Obsidian Glass + High-contrast White Text)
                         NuxButton(
                             onClick = onDismiss,
-                            backgroundColor = NuxColors.SurfaceElevated,
-                            borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+                            backgroundColor = NuxColors.Panel,
+                            borderColor = NuxColors.CardBorder,
                             contentColor = NuxColors.DarkGray,
                             modifier = Modifier
                                 .weight(1f)
@@ -522,13 +523,13 @@ fun NuxEditInstanceDialog(
                             Icon(
                                 imageVector = Icons.Outlined.Check,
                                 contentDescription = null,
-                                tint = NuxColors.DarkGray,
+                                tint = NuxColors.Ink,
                                 modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(
                                 text = "SIMPAN PERUBAHAN",
-                                color = NuxColors.DarkGray,
+                                color = NuxColors.Ink,
                                 fontWeight = FontWeight.Black,
                                 fontSize = 10.sp,
                                 letterSpacing = 0.4.sp

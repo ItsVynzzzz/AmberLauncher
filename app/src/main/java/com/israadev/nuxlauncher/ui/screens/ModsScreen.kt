@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -407,55 +408,166 @@ fun ModsScreen(
         }
     }
 
+    // Apakah hasil pencarian ini sudah terpasang di instance aktif
+    fun isHitInstalled(hit: ModrinthSearchHit): Boolean = installedItems.any { inst ->
+        val titleMatches = inst.name.equals(hit.title, ignoreCase = true)
+        val slugMatches = !hit.slug.isNullOrBlank() && inst.filename.contains(hit.slug, ignoreCase = true)
+        val idMatches = inst.id.equals(hit.projectId, ignoreCase = true)
+        titleMatches || slugMatches || idMatches
+    }
+
+    // Buka jendela detail untuk satu proyek Modrinth
+    fun openDetail(hit: ModrinthSearchHit) {
+        val inst = selectedInstance ?: return
+        detailModalHit = hit
+        detailProject = null
+        detailTab = "overview"
+        compatibleVersions = emptyList()
+        selectedVersion = null
+        isDetailLoading = true
+        scope.launch {
+            val pRes = NuxModManager.getProjectDetails(hit.projectId)
+            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
+            detailProject = pRes.getOrNull()
+            val vers = vRes.getOrNull() ?: emptyList()
+            compatibleVersions = vers
+            selectedVersion = vers.firstOrNull()
+            isDetailLoading = false
+        }
+    }
+
+    // Pasang cepat dari daftar (versi paling cocok + dependensi)
+    fun quickInstall(hit: ModrinthSearchHit) {
+        val inst = selectedInstance ?: return
+        scope.launch {
+            downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mencari versi...")
+            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
+            val compList = vRes.getOrNull()
+            if (compList.isNullOrEmpty()) {
+                Toast.makeText(context, "Tidak ada versi cocok untuk ${inst.mcVersion}!", Toast.LENGTH_SHORT).show()
+                downloadingProjectIds = downloadingProjectIds - hit.projectId
+                return@launch
+            }
+
+            val targetVer = compList.first()
+            downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mengunduh...")
+
+            val targetWorld = if (activeType == "datapacks") selectedWorld else null
+            val downRes = NuxModManager.downloadVersionAndDependencies(
+                context = context,
+                instance = inst,
+                version = targetVer,
+                itemType = activeType,
+                worldName = targetWorld,
+                onProgress = { status ->
+                    downloadingProjectIds = downloadingProjectIds + (hit.projectId to status)
+                }
+            )
+
+            downloadingProjectIds = downloadingProjectIds - hit.projectId
+
+            if (downRes.isSuccess) {
+                val downloaded = downRes.getOrNull() ?: emptyList()
+                val depCount = (downloaded.size - 1).coerceAtLeast(0)
+                val msg = if (activeType == "modpacks") {
+                    "Modpack ${hit.title} berhasil dipasang!"
+                } else if (depCount > 0) {
+                    "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
+                } else {
+                    "Berhasil memasang ${hit.title}!"
+                }
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                reloadInstalled()
+            } else {
+                Toast.makeText(context, "Gagal mengunduh: ${downRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    // Pasang dari jendela detail (versi yang dipilih)
+    fun installFromDetail(hit: ModrinthSearchHit) {
+        val ver = selectedVersion ?: compatibleVersions.firstOrNull()
+        val inst = selectedInstance
+        if (ver == null || inst == null) return
+        scope.launch {
+            isDetailInstalling = true
+            detailProgressText = "Memulai pengunduhan..."
+
+            val targetWorld = if (activeType == "datapacks") selectedWorld else null
+            val res = NuxModManager.downloadVersionAndDependencies(
+                context = context,
+                instance = inst,
+                version = ver,
+                itemType = activeType,
+                worldName = targetWorld,
+                onProgress = { status ->
+                    detailProgressText = status
+                }
+            )
+
+            isDetailInstalling = false
+
+            if (res.isSuccess) {
+                val files = res.getOrNull() ?: emptyList()
+                val depCount = (files.size - 1).coerceAtLeast(0)
+                val msg = if (activeType == "modpacks") {
+                    "Modpack ${hit.title} berhasil dipasang!"
+                } else if (depCount > 0) {
+                    "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
+                } else {
+                    "Berhasil memasang ${hit.title}!"
+                }
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                reloadInstalled()
+            } else {
+                Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(NuxColors.Background)
-            .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 12.dp)
     ) {
         if (selectedInstance == null) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                NuxCard(
-                    modifier = Modifier.width(320.dp),
-                    backgroundColor = NuxColors.SurfaceElevated,
-                    borderColor = NuxColors.CardBorder,
-                    cornerRadius = 8.dp
+                Column(
+                    modifier = Modifier.width(340.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier.padding(18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Icon(
+                        imageVector = Icons.Outlined.ExtensionOff,
+                        contentDescription = null,
+                        tint = NuxColors.GrayNeutral,
+                        modifier = Modifier.size(44.dp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Belum ada instance",
+                        fontWeight = FontWeight.Black,
+                        fontSize = 18.sp,
+                        color = NuxColors.DarkGray
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Pilih atau buat instance di Home untuk mulai memasang mod.",
+                        color = NuxColors.GrayNeutral,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    NuxButton(
+                        onClick = { onNavigateBack() },
+                        backgroundColor = NuxColors.Yellow,
+                        cornerRadius = 22.dp,
+                        contentPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ExtensionOff,
-                            contentDescription = null,
-                            tint = NuxColors.SageGreen,
-                            modifier = Modifier.size(36.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Belum Ada Instance",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = NuxColors.DarkGray
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Pilih atau buat instance di Dashboard untuk mulai memasang mod.",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 11.sp,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        NuxButton(
-                            onClick = { onNavigateBack() },
-                            backgroundColor = NuxColors.ForestGreen,
-                            cornerRadius = 6.dp
-                        ) {
-                            Text("KEMBALI KE DASHBOARD", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
-                        }
+                        Text("Kembali ke Home", fontWeight = FontWeight.Black, fontSize = 14.sp)
                     }
                 }
             }
@@ -465,1061 +577,441 @@ fun ModsScreen(
         val currentInst = selectedInstance!!
 
         // =========================================================================
-        // ROW 1: MINIMALIST CYBER-GLASS TOP NAVIGATION BAR
+        // BARIS ATAS: judul, instance aktif, sakelar Terpasang / Jelajah
         // =========================================================================
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 6.dp),
+                .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left Group: Back Button + Segmented Switcher (Terpasang vs Jelajah)
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.weight(1f, fill = false),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Back Button (Matching Dashboard & Accounts)
-                Box(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .clickable { onNavigateBack() }
-                        .padding(horizontal = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Kembali",
-                            tint = NuxColors.SageGreen,
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "DASHBOARD",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 9.sp,
-                            letterSpacing = 0.5.sp
-                        )
-                    }
-                }
-
-                // Segmented Mode Tabs: [ Terpasang (X) | Jelajah Modrinth ]
+                Text(
+                    text = "Mod",
+                    color = NuxColors.DarkGray,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 24.sp,
+                    letterSpacing = (-0.3).sp
+                )
+                Spacer(modifier = Modifier.width(14.dp))
+                val instShape = RoundedCornerShape(22.dp)
                 Row(
                     modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
-                        .padding(2.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val isInstalled = mainMode == "installed"
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(if (isInstalled) NuxColors.YellowPale else Color.Transparent)
-                            .border(
-                                1.dp,
-                                if (isInstalled) NuxColors.Yellow else Color.Transparent,
-                                RoundedCornerShape(4.dp)
-                            )
-                            .clickable { mainMode = "installed" }
-                            .padding(horizontal = 9.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "TERPASANG (${installedItems.size})",
-                            color = if (isInstalled) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                            fontWeight = if (isInstalled) FontWeight.Black else FontWeight.SemiBold,
-                            fontSize = 9.5.sp
-                        )
-                    }
-
-                    val isBrowse = mainMode == "browse"
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(if (isBrowse) NuxColors.YellowPale else Color.Transparent)
-                            .border(
-                                1.dp,
-                                if (isBrowse) NuxColors.Yellow else Color.Transparent,
-                                RoundedCornerShape(4.dp)
-                            )
-                            .clickable { mainMode = "browse" }
-                            .padding(horizontal = 9.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "JELAJAH MODRINTH",
-                            color = if (isBrowse) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                            fontWeight = if (isBrowse) FontWeight.Black else FontWeight.SemiBold,
-                            fontSize = 9.5.sp
-                        )
-                    }
-                }
-            }
-
-            // Right Group: Instance Selector Dropdown Pill
-            Box {
-                Row(
-                    modifier = Modifier
-                        .height(26.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp))
+                        .weight(1f, fill = false)
+                        .height(44.dp)
+                        .clip(instShape)
+                        .background(NuxColors.SurfaceElevated, instShape)
+                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, instShape)
                         .clickable { if (instances.size > 1) showInstanceMenu = true }
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Inventory2,
                         contentDescription = null,
-                        tint = NuxColors.SageGreen,
-                        modifier = Modifier.size(12.dp)
+                        tint = NuxColors.Yellow,
+                        modifier = Modifier.size(18.dp)
                     )
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${currentInst.name} (${currentInst.mcVersion} · ${currentInst.loader.uppercase()})",
+                        text = "${currentInst.name} · ${currentInst.mcVersion} · ${currentInst.loader.uppercase()}",
                         color = NuxColors.DarkGray,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 9.5.sp,
+                        fontSize = 13.sp,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
                     if (instances.size > 1) {
-                        Spacer(modifier = Modifier.width(3.dp))
+                        Spacer(modifier = Modifier.width(2.dp))
                         Icon(
                             imageVector = Icons.Outlined.ArrowDropDown,
-                            contentDescription = null,
+                            contentDescription = "Ganti instance",
                             tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(13.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
                 }
+            }
 
-                DropdownMenu(
-                    expanded = showInstanceMenu,
-                    onDismissRequest = { showInstanceMenu = false }
-                ) {
-                    instances.forEach { inst ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = "${inst.name} (${inst.mcVersion} · ${inst.loader.uppercase()})",
-                                    fontWeight = if (inst.id == selectedInstance?.id) FontWeight.Black else FontWeight.Normal,
-                                    fontSize = 11.5.sp
-                                )
-                            },
-                            onClick = {
-                                InstanceManager.selectInstance(inst)
-                                showInstanceMenu = false
-                            }
-                        )
-                    }
-                }
+            Spacer(modifier = Modifier.width(12.dp))
+
+            val segShape = RoundedCornerShape(22.dp)
+            Row(
+                modifier = Modifier
+                    .clip(segShape)
+                    .background(NuxColors.SurfaceElevated, segShape)
+                    .border(NuxSizes.GlassBorder, NuxColors.CardBorder, segShape)
+                    .padding(3.dp),
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ModsModeTab(
+                    text = "Terpasang (${installedItems.size})",
+                    selected = mainMode == "installed",
+                    onClick = { mainMode = "installed" }
+                )
+                ModsModeTab(
+                    text = "Jelajah",
+                    selected = mainMode == "browse",
+                    onClick = { mainMode = "browse" }
+                )
             }
         }
 
         // =========================================================================
-        // ROW 2: ADDON TYPES + SEARCH & ACTIONS TOOLBAR
+        // ISI: rel jenis addon di kiri, pencarian + daftar di kanan
         // =========================================================================
-        val addonTypes = listOf(
-            "mods" to "⚡ Mods",
-            "modpacks" to "📦 Modpacks",
-            "resourcepacks" to "🎨 Resource Packs",
-            "shaderpacks" to "✨ Shaders",
-            "datapacks" to "🗺️ Datapacks"
-        )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Left: Addon Type Pills
-            LazyRow(
-                modifier = Modifier.weight(1f, fill = false),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.width(158.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                items(addonTypes) { (typeId, typeLabel) ->
-                    val isSelected = activeType == typeId
-                    Box(
-                        modifier = Modifier
-                            .height(25.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(
-                                if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceElevated.copy(alpha = 0.7f),
-                                RoundedCornerShape(5.dp)
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = if (isSelected) NuxColors.Yellow else NuxColors.CardBorder,
-                                shape = RoundedCornerShape(5.dp)
-                            )
-                            .clickable {
-                                activeType = typeId
-                                selectedCategory = "Semua"
-                            }
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = typeLabel,
-                            color = if (isSelected) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            fontSize = 9.5.sp
-                        )
-                    }
+                listOf(
+                    Triple("mods", "Mod", Icons.Outlined.Extension),
+                    Triple("modpacks", "Modpack", Icons.Outlined.Inventory2),
+                    Triple("resourcepacks", "Resource", Icons.Outlined.Palette),
+                    Triple("shaderpacks", "Shader", Icons.Outlined.AutoAwesome),
+                    Triple("datapacks", "Datapack", Icons.Outlined.Storage)
+                ).forEach { (typeId, typeLabel, typeIcon) ->
+                    SettingTab(
+                        icon = typeIcon,
+                        label = typeLabel,
+                        selected = activeType == typeId,
+                        onClick = {
+                            activeType = typeId
+                            selectedCategory = "Semua"
+                        }
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Right: Search Input + Mode-specific controls
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
             ) {
-                if (mainMode == "browse") {
-                    // Search Bar
-                    CompactSearchBar(
-                        value = browseQuery,
-                        onValueChange = { onQueryChanged(it) },
-                        placeholder = "Cari di Modrinth...",
-                        modifier = Modifier.width(160.dp)
-                    )
-
-                    // World Selector (Datapacks only)
-                    if (activeType == "datapacks") {
-                        Box {
-                            Row(
-                                modifier = Modifier
-                                    .height(25.dp)
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .background(NuxColors.SurfaceElevated, RoundedCornerShape(5.dp))
-                                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                    .clickable { if (worlds.isNotEmpty()) showWorldMenu = true }
-                                    .padding(horizontal = 7.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Public,
-                                    contentDescription = null,
-                                    tint = NuxColors.SageGreen,
-                                    modifier = Modifier.size(12.dp)
-                                )
-                                Spacer(modifier = Modifier.width(3.dp))
-                                Text(
-                                    text = if (worlds.isNotEmpty()) "World: $selectedWorld" else "Tidak Ada World",
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 9.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                if (worlds.isNotEmpty()) {
-                                    Spacer(modifier = Modifier.width(2.dp))
-                                    Icon(
-                                        imageVector = Icons.Outlined.ArrowDropDown,
-                                        contentDescription = null,
-                                        tint = NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(12.dp)
-                                    )
-                                }
-                            }
-
-                            DropdownMenu(
-                                expanded = showWorldMenu,
-                                onDismissRequest = { showWorldMenu = false }
-                            ) {
-                                worlds.forEach { w ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(
-                                                text = w.displayName,
-                                                fontWeight = if (w.folderName == selectedWorld) FontWeight.Black else FontWeight.Normal,
-                                                fontSize = 11.sp
-                                            )
-                                        },
-                                        onClick = {
-                                            selectedWorld = w.folderName
-                                            showWorldMenu = false
-                                            reloadInstalled()
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                // Cari + filter
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (mainMode == "browse") {
+                        ModsSearchBar(
+                            value = browseQuery,
+                            onValueChange = { onQueryChanged(it) },
+                            placeholder = "Cari di Modrinth...",
+                            modifier = Modifier.weight(1f)
+                        )
+                    } else {
+                        ModsSearchBar(
+                            value = installedSearch,
+                            onValueChange = { installedSearch = it },
+                            placeholder = "Cari di ${installedItems.size} item...",
+                            modifier = Modifier.weight(1f)
+                        )
                     }
 
-                    // Version Filter Toggle Pill
-                    Box(
-                        modifier = Modifier
-                            .height(25.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(
-                                if (filterByGameVersion) NuxColors.YellowPale else NuxColors.SurfaceElevated,
-                                RoundedCornerShape(5.dp)
-                            )
-                            .border(
-                                1.dp,
-                                if (filterByGameVersion) NuxColors.Yellow else NuxColors.CardBorder,
-                                RoundedCornerShape(5.dp)
-                            )
-                            .clickable {
+                    if (activeType == "datapacks") {
+                        ModsFilterChip(
+                            icon = Icons.Outlined.Public,
+                            text = if (worlds.isNotEmpty()) "World: $selectedWorld" else "Tidak ada world",
+                            selected = false,
+                            onClick = { if (worlds.isNotEmpty()) showWorldMenu = true }
+                        )
+                    }
+
+                    if (mainMode == "browse") {
+                        ModsFilterChip(
+                            icon = if (filterByGameVersion) Icons.Outlined.Check else Icons.Outlined.Close,
+                            text = if (filterByGameVersion) currentInst.mcVersion else "Semua versi",
+                            selected = filterByGameVersion,
+                            onClick = {
                                 filterByGameVersion = !filterByGameVersion
                                 currentPage = 1
                                 performSearch(1)
                             }
-                            .padding(horizontal = 7.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        )
+                    } else {
+                        NuxButton(
+                            onClick = {
+                                if (selectedInstance == null) {
+                                    Toast.makeText(context, "Pilih instance terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    filePicker.launch(getMimeTypesForType(activeType))
+                                }
+                            },
+                            backgroundColor = NuxColors.Yellow,
+                            cornerRadius = 22.dp,
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                        ) {
                             Icon(
-                                imageVector = if (filterByGameVersion) Icons.Outlined.Check else Icons.Outlined.Close,
+                                imageVector = Icons.Outlined.FileUpload,
                                 contentDescription = null,
-                                tint = if (filterByGameVersion) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                modifier = Modifier.size(10.dp)
+                                modifier = Modifier.size(18.dp)
                             )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(
-                                text = if (filterByGameVersion) currentInst.mcVersion else "Semua Versi",
-                                color = if (filterByGameVersion) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Impor", fontWeight = FontWeight.Black, fontSize = 13.sp)
+                        }
+                    }
+                }
+
+                // Kategori (hanya mode Jelajah)
+                if (mainMode == "browse") {
+                    val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        items(categories) { cat ->
+                            SettingChip(
+                                text = cat.label,
+                                selected = selectedCategory == cat.id,
+                                onClick = {
+                                    selectedCategory = cat.id
+                                    currentPage = 1
+                                    performSearch(1)
+                                }
                             )
+                        }
+                    }
+                }
+
+                // =====================================================================
+                // DAFTAR
+                // =====================================================================
+                if (mainMode == "installed") {
+                    val filteredInstalled = remember(installedItems, installedSearch) {
+                        if (installedSearch.isBlank()) installedItems
+                        else installedItems.filter {
+                            it.name.contains(installedSearch, ignoreCase = true) ||
+                                it.filename.contains(installedSearch, ignoreCase = true)
+                        }
+                    }
+
+                    if (isInstalledLoading) {
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                        }
+                    } else if (filteredInstalled.isEmpty()) {
+                        Box(
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = Icons.Outlined.FolderOpen,
+                                    contentDescription = null,
+                                    tint = NuxColors.GrayNeutral,
+                                    modifier = Modifier.size(38.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = if (activeType == "datapacks" && worlds.isEmpty())
+                                        "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
+                                    else if (installedSearch.isBlank())
+                                        "Belum ada ${activeType} terpasang di instance ini"
+                                    else "Tidak ada item yang cocok",
+                                    color = NuxColors.DarkGray,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                NuxButton(
+                                    onClick = { mainMode = "browse" },
+                                    backgroundColor = NuxColors.Yellow,
+                                    cornerRadius = 22.dp,
+                                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp)
+                                ) {
+                                    Text("Jelajahi Modrinth", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                                }
+                            }
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp)
+                        ) {
+                            items(filteredInstalled, key = { it.id }) { item ->
+                                InstalledItemRow(
+                                    item = item,
+                                    onToggle = {
+                                        scope.launch {
+                                            val targetWorld = if (activeType == "datapacks") selectedWorld else null
+                                            NuxModManager.toggleItemEnabled(context, currentInst, activeType, item, targetWorld)
+                                            reloadInstalled()
+                                        }
+                                    },
+                                    onDelete = { itemToDelete = item }
+                                )
+                            }
                         }
                     }
                 } else {
-                    // Installed mode: Search + World Selector + Import
-                    CompactSearchBar(
-                        value = installedSearch,
-                        onValueChange = { installedSearch = it },
-                        placeholder = "Cari di ${installedItems.size} item...",
-                        modifier = Modifier.width(160.dp)
-                    )
-
-                    if (activeType == "datapacks") {
-                        Box {
-                            Row(
-                                modifier = Modifier
-                                    .height(25.dp)
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .background(NuxColors.SurfaceElevated, RoundedCornerShape(5.dp))
-                                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                    .clickable { if (worlds.isNotEmpty()) showWorldMenu = true }
-                                    .padding(horizontal = 7.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                    // ==========================================
+                    // JELAJAH MODRINTH
+                    // ==========================================
+                    if (isSearching) {
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 13.sp)
+                            }
+                        }
+                    } else if (searchErrorMessage != null) {
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(horizontal = 24.dp)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Outlined.Public,
+                                    imageVector = Icons.Outlined.CloudOff,
                                     contentDescription = null,
-                                    tint = NuxColors.SageGreen,
-                                    modifier = Modifier.size(12.dp)
+                                    tint = NuxColors.ErrorRed,
+                                    modifier = Modifier.size(38.dp)
                                 )
-                                Spacer(modifier = Modifier.width(3.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = if (worlds.isNotEmpty()) "World: $selectedWorld" else "Tidak Ada World",
+                                    text = "Gagal memuat dari Modrinth",
                                     color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 9.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
                                 )
-                                if (worlds.isNotEmpty()) {
-                                    Spacer(modifier = Modifier.width(2.dp))
-                                    Icon(
-                                        imageVector = Icons.Outlined.ArrowDropDown,
-                                        contentDescription = null,
-                                        tint = NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(12.dp)
-                                    )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = searchErrorMessage ?: "Terjadi kesalahan jaringan",
+                                    color = NuxColors.GrayNeutral,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                NuxButton(
+                                    onClick = { performSearch(currentPage) },
+                                    backgroundColor = NuxColors.Yellow,
+                                    cornerRadius = 22.dp,
+                                    contentPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+                                ) {
+                                    Text("Coba lagi", fontWeight = FontWeight.Black, fontSize = 14.sp)
                                 }
                             }
-
-                            DropdownMenu(
-                                expanded = showWorldMenu,
-                                onDismissRequest = { showWorldMenu = false }
-                            ) {
-                                worlds.forEach { w ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(
-                                                text = w.displayName,
-                                                fontWeight = if (w.folderName == selectedWorld) FontWeight.Black else FontWeight.Normal,
-                                                fontSize = 11.sp
-                                            )
-                                        },
+                        }
+                    } else if (searchHits.isEmpty()) {
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Icon(
+                                    imageVector = Icons.Outlined.SearchOff,
+                                    contentDescription = null,
+                                    tint = NuxColors.GrayNeutral,
+                                    modifier = Modifier.size(38.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = if (filterByGameVersion) {
+                                        "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
+                                    } else {
+                                        "Tidak ada hasil ditemukan untuk kata kunci ini"
+                                    },
+                                    color = NuxColors.DarkGray,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Coba ubah kata kunci atau nonaktifkan filter versi",
+                                    color = NuxColors.GrayNeutral,
+                                    fontSize = 12.sp
+                                )
+                                if (filterByGameVersion) {
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    NuxButton(
                                         onClick = {
-                                            selectedWorld = w.folderName
-                                            showWorldMenu = false
-                                            reloadInstalled()
-                                        }
-                                    )
+                                            filterByGameVersion = false
+                                            currentPage = 1
+                                            performSearch(1)
+                                        },
+                                        backgroundColor = NuxColors.Yellow,
+                                        cornerRadius = 22.dp,
+                                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("Cari di semua versi Minecraft", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                                    }
                                 }
                             }
                         }
-                    }
-
-                    // Import Button
-                    Box(
-                        modifier = Modifier
-                            .height(25.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(NuxColors.YellowPale, RoundedCornerShape(5.dp))
-                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                            .clickable {
-                                if (selectedInstance == null) {
-                                    Toast.makeText(context, "Pilih instance terlebih dahulu!", Toast.LENGTH_SHORT).show()
-                                    return@clickable
-                                }
-                                val mimeTypes = getMimeTypesForType(activeType)
-                                filePicker.launch(mimeTypes)
-                            }
-                            .padding(horizontal = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Outlined.FileUpload,
-                                contentDescription = "Impor",
-                                tint = NuxColors.SageGreen,
-                                modifier = Modifier.size(12.dp)
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(
-                                text = "+ IMPOR",
-                                color = NuxColors.SageGreen,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        // =========================================================================
-        // ROW 3: CATEGORY SUB-FILTERS (BROWSE MODE ONLY, COMPACT 22DP)
-        // =========================================================================
-        if (mainMode == "browse") {
-            val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 5.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                items(categories) { cat ->
-                    val isSelected = selectedCategory == cat.id
-                    Box(
-                        modifier = Modifier
-                            .height(22.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(
-                                if (isSelected) NuxColors.YellowPale else NuxColors.DarkGray.copy(alpha = 0.03f),
-                                RoundedCornerShape(4.dp)
-                            )
-                            .border(
-                                1.dp,
-                                if (isSelected) NuxColors.Yellow else NuxColors.CardBorder.copy(alpha = 0.4f),
-                                RoundedCornerShape(4.dp)
-                            )
-                            .clickable {
-                                selectedCategory = cat.id
-                                currentPage = 1
-                                performSearch(1)
-                            }
-                            .padding(horizontal = 7.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = cat.label,
-                            color = if (isSelected) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            fontSize = 8.5.sp
-                        )
-                    }
-                }
-            }
-        }
-
-        // =========================================================================
-        // MOD LIST / INSTALLED CARDS
-        // =========================================================================
-        if (mainMode == "installed") {
-            val filteredInstalled = remember(installedItems, installedSearch) {
-                if (installedSearch.isBlank()) installedItems
-                else installedItems.filter {
-                    it.name.contains(installedSearch, ignoreCase = true) ||
-                            it.filename.contains(installedSearch, ignoreCase = true)
-                }
-            }
-
-            if (isInstalledLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = NuxColors.SageGreen, modifier = Modifier.size(24.dp))
-                }
-            } else if (filteredInstalled.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Outlined.FolderOpen,
-                            contentDescription = null,
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = if (activeType == "datapacks" && worlds.isEmpty())
-                                "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
-                            else if (installedSearch.isBlank())
-                                "Belum ada ${activeType} terpasang di instance ini"
-                            else "Tidak ada item yang cocok",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        NuxButton(
-                            onClick = { mainMode = "browse" },
-                            backgroundColor = NuxColors.ForestGreen,
-                            cornerRadius = 6.dp
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(bottom = 16.dp)
                         ) {
-                            Text("JELAJAHI MODRINTH", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
-                        }
-                    }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    items(filteredInstalled, key = { it.id }) { item ->
-                        NuxCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            backgroundColor = if (item.isEnabled) NuxColors.SurfaceElevated else NuxColors.SurfaceElevated.copy(alpha = 0.6f),
-                            borderColor = NuxColors.CardBorder,
-                            shadowOffset = 0.dp,
-                            cornerRadius = 8.dp,
-                            borderWidth = 1.dp
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 10.dp, vertical = 7.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
+                            items(searchHits, key = { it.projectId }) { hit ->
+                                ModrinthHitRow(
+                                    hit = hit,
+                                    isInstalled = isHitInstalled(hit),
+                                    isDownloading = downloadingProjectIds.containsKey(hit.projectId),
+                                    downloadStatus = downloadingProjectIds[hit.projectId] ?: "",
+                                    onOpen = { openDetail(hit) },
+                                    onInstall = { quickInstall(hit) }
+                                )
+                            }
+
+                            // Halaman
+                            item {
+                                val totalPages = ((totalHits + 17) / 18).coerceAtLeast(1)
                                 Row(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 6.dp),
+                                    horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(
-                                                if (item.isEnabled) NuxColors.YellowPale else NuxColors.DarkGray.copy(alpha = 0.05f),
-                                                RoundedCornerShape(6.dp)
-                                            )
-                                            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp)),
-                                        contentAlignment = Alignment.Center
+                                    NuxButton(
+                                        onClick = { performSearch(currentPage - 1) },
+                                        backgroundColor = Color.Transparent,
+                                        enabled = currentPage > 1,
+                                        cornerRadius = 22.dp,
+                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
                                     ) {
-                                        Text(
-                                            text = item.name.take(2).uppercase(),
-                                            fontWeight = FontWeight.Black,
-                                            color = if (item.isEnabled) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                            fontSize = 11.sp
-                                        )
+                                        Text("Sebelumnya", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                                     }
-
-                                    Spacer(modifier = Modifier.width(10.dp))
-
-                                    Column {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Text(
-                                                text = item.name,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 12.sp,
-                                                color = if (item.isEnabled) NuxColors.DarkGray else NuxColors.GrayNeutral,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                            if (!item.isEnabled) {
-                                                Spacer(modifier = Modifier.width(6.dp))
-                                                Box(
-                                                    modifier = Modifier
-                                                        .background(NuxColors.DarkGray.copy(alpha = 0.10f), RoundedCornerShape(3.dp))
-                                                        .padding(horizontal = 4.dp, vertical = 1.dp)
-                                                ) {
-                                                    Text(
-                                                        text = "NONAKTIF",
-                                                        fontSize = 8.sp,
-                                                        fontWeight = FontWeight.Bold,
-                                                        color = NuxColors.GrayNeutral
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        Text(
-                                            text = "${item.filename} · ${formatBytes(item.sizeBytes)}",
-                                            fontSize = 9.5.sp,
-                                            color = NuxColors.GrayNeutral,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                    }
-                                }
-
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Switch(
-                                        checked = item.isEnabled,
-                                        onCheckedChange = {
-                                            scope.launch {
-                                                val targetWorld = if (activeType == "datapacks") selectedWorld else null
-                                                NuxModManager.toggleItemEnabled(context, currentInst, activeType, item, targetWorld)
-                                                reloadInstalled()
-                                            }
-                                        },
-                                        modifier = Modifier.scale(0.75f),
-                                        colors = SwitchDefaults.colors(
-                                            checkedThumbColor = NuxColors.Ink,
-                                            checkedTrackColor = NuxColors.ForestGreen,
-                                            uncheckedThumbColor = NuxColors.GrayNeutral,
-                                            uncheckedTrackColor = NuxColors.DarkGray.copy(alpha = 0.15f)
-                                        )
-                                    )
-
-                                    Spacer(modifier = Modifier.width(4.dp))
-
-                                    Box(
-                                        modifier = Modifier
-                                            .size(26.dp)
-                                            .clip(RoundedCornerShape(5.dp))
-                                            .background(NuxColors.ErrorRed.copy(alpha = 0.12f), RoundedCornerShape(5.dp))
-                                            .border(1.dp, NuxColors.ErrorRed.copy(alpha = 0.35f), RoundedCornerShape(5.dp))
-                                            .clickable { itemToDelete = item },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Delete,
-                                            contentDescription = "Hapus",
-                                            tint = NuxColors.ErrorRed,
-                                            modifier = Modifier.size(13.dp)
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            // ==========================================
-            // BROWSE MODRINTH
-            // ==========================================
-            if (isSearching) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = NuxColors.SageGreen, modifier = Modifier.size(24.dp))
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 11.sp)
-                    }
-                }
-            } else if (searchErrorMessage != null) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.CloudOff,
-                            contentDescription = null,
-                            tint = NuxColors.ErrorRed,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = "Gagal Memuat dari Modrinth",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.5.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = searchErrorMessage ?: "Terjadi kesalahan jaringan",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 10.sp,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        NuxButton(
-                            onClick = { performSearch(currentPage) },
-                            backgroundColor = NuxColors.ForestGreen,
-                            cornerRadius = 6.dp
-                        ) {
-                            Text("COBA LAGI", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
-                        }
-                    }
-                }
-            } else if (searchHits.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Outlined.SearchOff,
-                            contentDescription = null,
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(32.dp)
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = if (filterByGameVersion) {
-                                "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
-                            } else {
-                                "Tidak ada hasil ditemukan untuk kata kunci ini"
-                            },
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Coba ubah kata kunci atau nonaktifkan filter versi",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 10.sp
-                        )
-                        if (filterByGameVersion) {
-                            Spacer(modifier = Modifier.height(10.dp))
-                            NuxButton(
-                                onClick = {
-                                    filterByGameVersion = false
-                                    currentPage = 1
-                                    performSearch(1)
-                                },
-                                backgroundColor = NuxColors.ForestGreen,
-                                cornerRadius = 6.dp
-                            ) {
-                                Text("CARI DI SEMUA VERSI MINECRAFT", fontWeight = FontWeight.Bold, fontSize = 10.sp, color = NuxColors.Ink)
-                            }
-                        }
-                    }
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                    contentPadding = PaddingValues(bottom = 20.dp)
-                ) {
-                    items(searchHits, key = { it.projectId }) { hit ->
-                        val isInstalled = installedItems.any { inst ->
-                            val titleMatches = inst.name.equals(hit.title, ignoreCase = true)
-                            val slugMatches = !hit.slug.isNullOrBlank() && inst.filename.contains(hit.slug, ignoreCase = true)
-                            val idMatches = inst.id.equals(hit.projectId, ignoreCase = true)
-                            titleMatches || slugMatches || idMatches
-                        }
-
-                        val isDownloading = downloadingProjectIds.containsKey(hit.projectId)
-                        val downloadStatus = downloadingProjectIds[hit.projectId] ?: ""
-
-                        NuxCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    detailModalHit = hit
-                                    detailProject = null
-                                    detailTab = "overview"
-                                    compatibleVersions = emptyList()
-                                    selectedVersion = null
-                                    isDetailLoading = true
-                                    scope.launch {
-                                        val pRes = NuxModManager.getProjectDetails(hit.projectId)
-                                        val vRes = NuxModManager.getCompatibleVersions(hit.projectId, currentInst, activeType)
-                                        detailProject = pRes.getOrNull()
-                                        val vers = vRes.getOrNull() ?: emptyList()
-                                        compatibleVersions = vers
-                                        selectedVersion = vers.firstOrNull()
-                                        isDetailLoading = false
-                                    }
-                                },
-                            backgroundColor = NuxColors.SurfaceElevated,
-                            borderColor = NuxColors.CardBorder,
-                            shadowOffset = 0.dp,
-                            cornerRadius = 8.dp,
-                            borderWidth = 1.dp
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 10.dp, vertical = 7.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Project Icon (38dp)
-                                NuxNetworkImage(
-                                    model = hit.iconUrl,
-                                    contentDescription = hit.title,
-                                    modifier = Modifier
-                                        .size(38.dp)
-                                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(6.dp)),
-                                    fallbackInitials = hit.title.take(2).uppercase(),
-                                    shape = RoundedCornerShape(6.dp),
-                                    maxSidePx = 192
-                                )
-
-                                Spacer(modifier = Modifier.width(10.dp))
-
-                                // Info Column
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
-                                            text = hit.title,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 12.sp,
-                                            color = NuxColors.DarkGray,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                        if (!hit.author.isNullOrBlank()) {
-                                            Spacer(modifier = Modifier.width(5.dp))
-                                            Text(
-                                                text = "by ${hit.author}",
-                                                fontSize = 9.5.sp,
-                                                color = NuxColors.GrayNeutral,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
-                                        if (hit.projectType == "modpack") {
-                                            Spacer(modifier = Modifier.width(5.dp))
-                                            Box(
-                                                modifier = Modifier
-                                                    .background(NuxColors.YellowPale, RoundedCornerShape(3.dp))
-                                                    .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(3.dp))
-                                                    .padding(horizontal = 4.dp, vertical = 1.dp)
-                                            ) {
-                                                Text("PACK", fontSize = 8.sp, fontWeight = FontWeight.Bold, color = NuxColors.SageGreen)
-                                            }
-                                        }
-                                    }
-
-                                    Spacer(modifier = Modifier.height(1.dp))
-
+                                    Spacer(modifier = Modifier.width(14.dp))
                                     Text(
-                                        text = hit.description ?: "Tidak ada deskripsi",
-                                        fontSize = 10.sp,
-                                        color = NuxColors.GrayNeutral.copy(alpha = 0.85f),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
+                                        text = "$currentPage / $totalPages",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 13.sp,
+                                        color = NuxColors.GrayNeutral
                                     )
-
-                                    Spacer(modifier = Modifier.height(3.dp))
-
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                    Spacer(modifier = Modifier.width(14.dp))
+                                    NuxButton(
+                                        onClick = { performSearch(currentPage + 1) },
+                                        backgroundColor = Color.Transparent,
+                                        enabled = currentPage < totalPages,
+                                        cornerRadius = 22.dp,
+                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
                                     ) {
-                                        Box(
-                                            modifier = Modifier
-                                                .background(NuxColors.DarkGray.copy(alpha = 0.05f), RoundedCornerShape(3.dp))
-                                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder.copy(alpha = 0.5f), RoundedCornerShape(3.dp))
-                                                .padding(horizontal = 4.dp, vertical = 1.dp)
-                                        ) {
-                                            Text(
-                                                text = "📥 ${formatCompactNumber(hit.downloads)}",
-                                                fontSize = 8.5.sp,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = NuxColors.GrayNeutral
-                                            )
-                                        }
-
-                                        hit.categories?.take(2)?.forEach { cat ->
-                                            Box(
-                                                modifier = Modifier
-                                                    .background(NuxColors.DarkGray.copy(alpha = 0.03f), RoundedCornerShape(3.dp))
-                                                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder.copy(alpha = 0.4f), RoundedCornerShape(3.dp))
-                                                    .padding(horizontal = 4.dp, vertical = 1.dp)
-                                            ) {
-                                                Text(
-                                                    text = cat,
-                                                    fontSize = 8.5.sp,
-                                                    fontWeight = FontWeight.Normal,
-                                                    color = NuxColors.GrayNeutral.copy(alpha = 0.8f)
-                                                )
-                                            }
-                                        }
+                                        Text("Selanjutnya", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                                     }
                                 }
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                // Action Button
-                                if (isDownloading) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        CircularProgressIndicator(
-                                            color = NuxColors.SageGreen,
-                                            modifier = Modifier.size(14.dp),
-                                            strokeWidth = 2.dp
-                                        )
-                                        Spacer(modifier = Modifier.height(2.dp))
-                                        Text(
-                                            text = downloadStatus.ifBlank { "Unduh..." },
-                                            fontSize = 8.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = NuxColors.SageGreen
-                                        )
-                                    }
-                                } else if (isInstalled) {
-                                    Box(
-                                        modifier = Modifier
-                                            .height(26.dp)
-                                            .clip(RoundedCornerShape(5.dp))
-                                            .background(NuxColors.YellowPale, RoundedCornerShape(5.dp))
-                                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                            .padding(horizontal = 8.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Check,
-                                                contentDescription = null,
-                                                tint = NuxColors.SageGreen,
-                                                modifier = Modifier.size(11.dp)
-                                            )
-                                            Spacer(modifier = Modifier.width(3.dp))
-                                            Text(
-                                                text = "TERPASANG",
-                                                color = NuxColors.SageGreen,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 9.sp
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    val buttonLabel = if (hit.projectType == "modpack") "+ PASANG PACK" else "+ PASANG"
-                                    Box(
-                                        modifier = Modifier
-                                            .height(26.dp)
-                                            .clip(RoundedCornerShape(5.dp))
-                                            .background(NuxColors.ForestGreen, RoundedCornerShape(5.dp))
-                                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                            .clickable {
-                                                scope.launch {
-                                                    downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mencari versi...")
-                                                    val vRes = NuxModManager.getCompatibleVersions(hit.projectId, currentInst, activeType)
-                                                    val compList = vRes.getOrNull()
-                                                    if (compList.isNullOrEmpty()) {
-                                                        Toast.makeText(context, "Tidak ada versi cocok untuk ${currentInst.mcVersion}!", Toast.LENGTH_SHORT).show()
-                                                        downloadingProjectIds = downloadingProjectIds - hit.projectId
-                                                        return@launch
-                                                    }
-
-                                                    val targetVer = compList.first()
-                                                    downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mengunduh...")
-
-                                                    val targetWorld = if (activeType == "datapacks") selectedWorld else null
-                                                    val downRes = NuxModManager.downloadVersionAndDependencies(
-                                                        context = context,
-                                                        instance = currentInst,
-                                                        version = targetVer,
-                                                        itemType = activeType,
-                                                        worldName = targetWorld,
-                                                        onProgress = { status ->
-                                                            downloadingProjectIds = downloadingProjectIds + (hit.projectId to status)
-                                                        }
-                                                    )
-
-                                                    downloadingProjectIds = downloadingProjectIds - hit.projectId
-
-                                                    if (downRes.isSuccess) {
-                                                        val downloaded = downRes.getOrNull() ?: emptyList()
-                                                        val depCount = (downloaded.size - 1).coerceAtLeast(0)
-                                                        val msg = if (activeType == "modpacks") {
-                                                            "Modpack ${hit.title} berhasil dipasang!"
-                                                        } else if (depCount > 0) {
-                                                            "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
-                                                        } else {
-                                                            "Berhasil memasang ${hit.title}!"
-                                                        }
-                                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                                                        reloadInstalled()
-                                                    } else {
-                                                        Toast.makeText(context, "Gagal mengunduh: ${downRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
-                                                    }
-                                                }
-                                            }
-                                            .padding(horizontal = 10.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = buttonLabel,
-                                            color = NuxColors.Ink,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 9.5.sp
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Pagination
-                    item {
-                        val totalPages = ((totalHits + 17) / 18).coerceAtLeast(1)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .background(if (currentPage > 1) NuxColors.SurfaceElevated else NuxColors.DarkGray.copy(alpha = 0.03f), RoundedCornerShape(5.dp))
-                                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                    .clickable(enabled = currentPage > 1) { performSearch(currentPage - 1) }
-                                    .padding(horizontal = 9.dp, vertical = 4.dp)
-                            ) {
-                                Text("« SEBELUMNYA", fontWeight = FontWeight.Bold, fontSize = 9.5.sp, color = if (currentPage > 1) NuxColors.DarkGray else NuxColors.GrayNeutral.copy(alpha = 0.35f))
-                            }
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Text(
-                                text = "$currentPage / $totalPages",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.5.sp,
-                                color = NuxColors.GrayNeutral
-                            )
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
-                                    .background(if (currentPage < totalPages) NuxColors.SurfaceElevated else NuxColors.DarkGray.copy(alpha = 0.03f), RoundedCornerShape(5.dp))
-                                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-                                    .clickable(enabled = currentPage < totalPages) { performSearch(currentPage + 1) }
-                                    .padding(horizontal = 9.dp, vertical = 4.dp)
-                            ) {
-                                Text("SELANJUTNYA »", fontWeight = FontWeight.Bold, fontSize = 9.5.sp, color = if (currentPage < totalPages) NuxColors.DarkGray else NuxColors.GrayNeutral.copy(alpha = 0.35f))
                             }
                         }
                     }
@@ -1528,52 +1020,92 @@ fun ModsScreen(
         }
     }
 
-    // --- 4. DELETE CONFIRMATION DIALOG ---
+    // --- PILIH INSTANCE ---
+    if (showInstanceMenu) {
+        ModsPickerDialog(
+            title = "Pilih instance",
+            options = instances.map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
+            selectedId = selectedInstance?.id,
+            onPick = { id ->
+                instances.firstOrNull { it.id == id }?.let { InstanceManager.selectInstance(it) }
+                showInstanceMenu = false
+            },
+            onDismiss = { showInstanceMenu = false }
+        )
+    }
+
+    // --- PILIH WORLD (DATAPACK) ---
+    if (showWorldMenu) {
+        ModsPickerDialog(
+            title = "Pilih world",
+            options = worlds.map { it.folderName to it.displayName },
+            selectedId = selectedWorld,
+            onPick = { id ->
+                selectedWorld = id
+                showWorldMenu = false
+                reloadInstalled()
+            },
+            onDismiss = { showWorldMenu = false }
+        )
+    }
+    // --- DIALOG HAPUS ---
     itemToDelete?.let { item ->
-        NuxDialog(onDismissRequest = { itemToDelete = null }) {
+        NuxDialog(
+            onDismissRequest = { itemToDelete = null },
+            modifier = Modifier
+                .fillMaxWidth(0.6f)
+                .wrapContentHeight()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(18.dp),
+                    .padding(horizontal = 22.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.WarningAmber,
-                    contentDescription = null,
-                    tint = NuxColors.ErrorRed,
-                    modifier = Modifier.size(34.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(NuxColors.ErrorRed.copy(alpha = 0.18f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.WarningAmber,
+                        contentDescription = null,
+                        tint = NuxColors.ErrorRed,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = if (activeType == "modpacks") "Hapus Modpack?" else "Hapus ${item.category}?",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
+                    text = if (activeType == "modpacks") "Hapus modpack?" else "Hapus ${item.category}?",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 18.sp,
                     color = NuxColors.DarkGray
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = if (activeType == "modpacks") {
                         "Yakin ingin menghapus modpack \"${item.name}\"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance."
                     } else {
                         "Yakin ingin menghapus \"${item.name}\" dari instance ini?"
                     },
-                    fontSize = 11.sp,
+                    fontSize = 13.sp,
+                    lineHeight = 18.sp,
                     color = NuxColors.GrayNeutral,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(18.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     NuxButton(
                         onClick = { itemToDelete = null },
-                        backgroundColor = NuxColors.SurfaceElevated,
-                        borderColor = NuxColors.CardBorder,
-                        cornerRadius = 6.dp,
+                        backgroundColor = Color.Transparent,
+                        cornerRadius = 22.dp,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("BATAL", fontWeight = FontWeight.Bold, fontSize = 10.5.sp, color = NuxColors.DarkGray)
+                        Text("Batal", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                     }
                     NuxButton(
                         onClick = {
@@ -1593,48 +1125,52 @@ fun ModsScreen(
                             }
                         },
                         backgroundColor = NuxColors.ErrorRed,
-                        borderColor = NuxColors.CardBorder,
                         contentColor = NuxColors.DarkGray,
-                        cornerRadius = 6.dp,
+                        cornerRadius = 22.dp,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("HAPUS", fontWeight = FontWeight.Bold, fontSize = 10.5.sp, color = NuxColors.DarkGray)
+                        Text("Hapus", fontWeight = FontWeight.Black, fontSize = 14.sp)
                     }
                 }
             }
         }
     }
 
-    // --- 4.5 MODPACK IMPORT PROGRESS DIALOG ---
+    // --- PROGRES IMPOR MODPACK ---
     if (isImportingModpack) {
-        NuxDialog(onDismissRequest = { /* Tidak bisa ditutup saat sedang mengunduh */ }) {
+        NuxDialog(
+            onDismissRequest = { /* Tidak bisa ditutup saat sedang mengunduh */ },
+            modifier = Modifier
+                .fillMaxWidth(0.6f)
+                .wrapContentHeight()
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp),
+                    .padding(horizontal = 22.dp, vertical = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
-                        .size(46.dp)
+                        .size(52.dp)
                         .clip(CircleShape)
                         .background(NuxColors.YellowPale)
-                        .border(1.dp, NuxColors.CardBorder, CircleShape),
+                        .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = NuxColors.SageGreen,
+                        modifier = Modifier.size(26.dp),
+                        color = NuxColors.Yellow,
                         strokeWidth = 2.5.dp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Mengimpor & Memasang Modpack",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
+                    text = "Mengimpor & memasang modpack",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 17.sp,
                     color = NuxColors.DarkGray
                 )
 
@@ -1642,8 +1178,8 @@ fun ModsScreen(
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = modpackImportName,
-                        fontSize = 11.sp,
-                        color = NuxColors.SageGreen,
+                        fontSize = 13.sp,
+                        color = NuxColors.Yellow,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -1654,7 +1190,7 @@ fun ModsScreen(
 
                 Text(
                     text = if (modpackImportStatus.isNotBlank()) modpackImportStatus else "Membaca daftar mod dan mengunduh file...",
-                    fontSize = 11.sp,
+                    fontSize = 13.sp,
                     color = NuxColors.GrayNeutral,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     maxLines = 2,
@@ -1662,7 +1198,7 @@ fun ModsScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 if (modpackImportTotal > 0) {
                     val progressRatio = (modpackImportCurrent.toFloat() / modpackImportTotal.toFloat()).coerceIn(0f, 1f)
@@ -1670,24 +1206,24 @@ fun ModsScreen(
                         progress = { progressRatio },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(6.dp)
-                            .clip(RoundedCornerShape(3.dp)),
-                        color = NuxColors.SageGreen,
+                            .height(8.dp)
+                            .clip(RoundedCornerShape(4.dp)),
+                        color = NuxColors.Yellow,
                         trackColor = NuxColors.SurfaceElevated
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "$modpackImportCurrent / $modpackImportTotal file mod",
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         color = NuxColors.GrayNeutral
                     )
                 } else {
                     LinearProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(6.dp)
-                            .clip(RoundedCornerShape(3.dp)),
-                        color = NuxColors.SageGreen,
+                            .height(8.dp)
+                            .clip(RoundedCornerShape(4.dp)),
+                        color = NuxColors.Yellow,
                         trackColor = NuxColors.SurfaceElevated
                     )
                 }
@@ -1695,645 +1231,44 @@ fun ModsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Launcher sedang membaca daftar mod dan mengunduh modpack seperti di versi Windows. Mohon tunggu.",
-                    fontSize = 9.5.sp,
-                    color = NuxColors.GrayNeutral.copy(alpha = 0.6f),
+                    text = "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.",
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp,
+                    color = NuxColors.GrayNeutral.copy(alpha = 0.75f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
         }
     }
 
-    // --- 5. MODRINTH PROJECT DETAIL MODAL ---
+    // --- DETAIL PROYEK MODRINTH ---
     detailModalHit?.let { hit ->
-        val isHitInstalled = installedItems.any { inst ->
-            val titleMatches = inst.name.equals(hit.title, ignoreCase = true)
-            val slugMatches = !hit.slug.isNullOrBlank() && inst.filename.contains(hit.slug, ignoreCase = true)
-            val idMatches = inst.id.equals(hit.projectId, ignoreCase = true)
-            titleMatches || slugMatches || idMatches
-        }
-
-        NuxDialog(
-            onDismissRequest = {
-                if (!isDetailInstalling) detailModalHit = null
-            },
-            modifier = Modifier.fillMaxWidth(0.92f),
-            fillMaxHeight = true
-        ) {
-            val modalOuterShape = RoundedCornerShape(20.dp)
-            val modalInnerShape = RoundedCornerShape(14.dp)
-            val subCardShape = RoundedCornerShape(10.dp)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(modalOuterShape)
-                    .background(
-                        androidx.compose.ui.graphics.Brush.verticalGradient(
-                            listOf(NuxColors.SurfaceElevated, NuxColors.SurfaceInput)
-                        )
-                    )
-                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.36f), modalOuterShape)
-                    .padding(14.dp)
-            ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    // 1. Header Bar
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(
-                            modifier = Modifier.weight(1f),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(subCardShape)
-                                    .background(NuxColors.SurfaceElevated)
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), subCardShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                NuxNetworkImage(
-                                    model = hit.iconUrl,
-                                    contentDescription = hit.title,
-                                    modifier = Modifier.fillMaxSize(),
-                                    fallbackInitials = hit.title.take(2).uppercase(),
-                                    shape = subCardShape,
-                                    maxSidePx = 192
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = hit.title,
-                                        fontWeight = FontWeight.Black,
-                                        fontSize = 15.sp,
-                                        color = NuxColors.DarkGray,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(
-                                                when (hit.projectType) {
-                                                    "mod" -> NuxColors.YellowPale
-                                                    "modpack" -> Color(0xFF8B5CF6).copy(alpha = 0.18f)
-                                                    "resourcepack" -> NuxColors.SkyBlue.copy(alpha = 0.18f)
-                                                    else -> NuxColors.Amber.copy(alpha = 0.18f)
-                                                }
-                                            )
-                                            .border(
-                                                1.dp,
-                                                when (hit.projectType) {
-                                                    "mod" -> NuxColors.Yellow
-                                                    "modpack" -> Color(0xFF8B5CF6).copy(alpha = 0.5f)
-                                                    "resourcepack" -> NuxColors.SkyBlue.copy(alpha = 0.5f)
-                                                    else -> NuxColors.Amber.copy(alpha = 0.5f)
-                                                },
-                                                RoundedCornerShape(6.dp)
-                                            )
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(
-                                            text = hit.projectType.uppercase(),
-                                            fontSize = 8.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = when (hit.projectType) {
-                                                "mod" -> NuxColors.MintGreen
-                                                "modpack" -> Color(0xFFA78BFA)
-                                                "resourcepack" -> Color(0xFF7DD3FC)
-                                                else -> NuxColors.Amber
-                                            }
-                                        )
-                                    }
-                                }
-                                Spacer(modifier = Modifier.height(3.dp))
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        text = "oleh ${hit.author ?: "Komunitas"}",
-                                        fontSize = 10.sp,
-                                        color = NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "·",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 10.sp
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(
-                                        text = "📥 ${formatCompactNumber(hit.downloads)}",
-                                        fontSize = 10.sp,
-                                        color = NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
-                            }
-                        }
-
-                        // Close Pill Button
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(NuxColors.SurfaceElevated)
-                                .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), CircleShape)
-                                .clickable(enabled = !isDetailInstalling) { detailModalHit = null },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Close,
-                                contentDescription = "Tutup",
-                                tint = NuxColors.GrayNeutral,
-                                modifier = Modifier.size(14.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // 2. Segmented Tab Switcher (Double Bezel)
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(NuxColors.SurfaceInput)
-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), RoundedCornerShape(10.dp))
-                            .padding(3.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            val isTabOverview = detailTab == "overview"
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isTabOverview) NuxColors.SurfaceElevated else Color.Transparent)
-                                    .border(
-                                        width = if (isTabOverview) 1.dp else 0.dp,
-                                        color = if (isTabOverview) NuxColors.DarkGray.copy(alpha = 0.40f) else Color.Transparent,
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .clickable { detailTab = "overview" },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Description,
-                                        contentDescription = null,
-                                        tint = if (isTabOverview) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "RINGKASAN & GALERI",
-                                        fontSize = 10.sp,
-                                        fontWeight = if (isTabOverview) FontWeight.Black else FontWeight.SemiBold,
-                                        color = if (isTabOverview) NuxColors.DarkGray else NuxColors.GrayNeutral
-                                    )
-                                }
-                            }
-
-                            val isTabVersions = detailTab == "versions"
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isTabVersions) NuxColors.SurfaceElevated else Color.Transparent)
-                                    .border(
-                                        width = if (isTabVersions) 1.dp else 0.dp,
-                                        color = if (isTabVersions) NuxColors.DarkGray.copy(alpha = 0.40f) else Color.Transparent,
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .clickable { detailTab = "versions" },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Layers,
-                                        contentDescription = null,
-                                        tint = if (isTabVersions) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "VERSI KOMPATIBEL (${compatibleVersions.size})",
-                                        fontSize = 10.sp,
-                                        fontWeight = if (isTabVersions) FontWeight.Black else FontWeight.SemiBold,
-                                        color = if (isTabVersions) NuxColors.DarkGray else NuxColors.GrayNeutral
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // 3. Detail Content Scrollable (Inner Core)
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .clip(modalInnerShape)
-                            .background(NuxColors.SurfaceInput)
-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), modalInnerShape)
-                            .padding(10.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            if (isDetailLoading) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(140.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    CircularProgressIndicator(color = NuxColors.SageGreen, modifier = Modifier.size(26.dp))
-                                }
-                            } else if (detailTab == "overview") {
-                                // TAB 1: OVERVIEW & GALLERY
-                                val galleryList = detailProject?.gallery ?: emptyList()
-                                if (galleryList.isNotEmpty()) {
-                                    Text(
-                                        text = "TANGKAPAN LAYAR",
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 9.sp,
-                                        color = NuxColors.GrayNeutral,
-                                        letterSpacing = 0.8.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(6.dp))
-                                    LazyRow(
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        items(galleryList) { gal ->
-                                            Box(
-                                                modifier = Modifier
-                                                    .width(170.dp)
-                                                    .height(96.dp)
-                                                    .clip(RoundedCornerShape(8.dp))
-                                                    .background(NuxColors.SurfaceWhite)
-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.30f), RoundedCornerShape(8.dp))
-                                                    .clickable { previewGalleryUrl = gal.url }
-                                            ) {
-                                                NuxNetworkImage(
-                                                    model = gal.url,
-                                                    contentDescription = gal.title ?: "Screenshot",
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    shape = RoundedCornerShape(8.dp),
-                                                    maxSidePx = 400,
-                                                    showSpinner = true
-                                                )
-                                            }
-                                        }
-                                    }
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                }
-
-                                Text(
-                                    text = "DESKRIPSI LENGKAP",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 9.sp,
-                                    color = NuxColors.GrayNeutral,
-                                    letterSpacing = 0.8.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = detailProject?.description ?: hit.description ?: "Tidak ada ringkasan deskripsi.",
-                                    fontSize = 11.5.sp,
-                                    color = NuxColors.GrayNeutral,
-                                    lineHeight = 17.sp
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                // Category & Loader Tags
-                                val allLoaders = (detailProject?.loaders ?: hit.categories ?: emptyList()).distinct()
-                                if (allLoaders.isNotEmpty()) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                    ) {
-                                        allLoaders.take(5).forEach { tag ->
-                                            Box(
-                                                modifier = Modifier
-                                                    .background(NuxColors.SurfaceElevated, RoundedCornerShape(6.dp))
-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.30f), RoundedCornerShape(6.dp))
-                                                    .padding(horizontal = 7.dp, vertical = 3.dp)
-                                            ) {
-                                                Text(
-                                                    text = tag.uppercase(),
-                                                    fontSize = 8.5.sp,
-                                                    color = NuxColors.GrayNeutral,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                // TAB 2: COMPATIBLE VERSIONS ONLY
-                                if (compatibleVersions.isEmpty()) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(NuxColors.ErrorRed.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
-                                            .border(1.dp, NuxColors.ErrorRed.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
-                                            .padding(12.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = "⚠️ Tidak Ada Versi yang Didukung",
-                                                color = NuxColors.ErrorRed,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 11.sp
-                                            )
-                                            Spacer(modifier = Modifier.height(3.dp))
-                                            Text(
-                                                text = "Mod ini tidak memiliki rilis yang cocok dengan Minecraft ${selectedInstance?.mcVersion ?: ""} (${(selectedInstance?.loader ?: "Vanilla").uppercase()}).",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 10.sp,
-                                                lineHeight = 14.sp
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                                        compatibleVersions.forEach { ver ->
-                                            val isPicked = selectedVersion?.id == ver.id
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(RoundedCornerShape(8.dp))
-                                                    .background(
-                                                        if (isPicked) NuxColors.YellowPale else NuxColors.SurfaceWhite,
-                                                        RoundedCornerShape(8.dp)
-                                                    )
-                                                    .border(
-                                                        width = 1.dp,
-                                                        color = if (isPicked) NuxColors.ForestGreen else NuxColors.DarkGray.copy(alpha = 0.16f),
-                                                        shape = RoundedCornerShape(8.dp)
-                                                    )
-                                                    .clickable { selectedVersion = ver }
-                                                    .padding(horizontal = 10.dp, vertical = 7.dp)
-                                            ) {
-                                                Row(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Row(
-                                                        verticalAlignment = Alignment.CenterVertically,
-                                                        modifier = Modifier.weight(1f)
-                                                    ) {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .size(14.dp)
-                                                                .clip(CircleShape)
-                                                                .background(if (isPicked) NuxColors.ForestGreen else Color.Transparent)
-                                                                .border(1.5.dp, if (isPicked) NuxColors.MintGreen else NuxColors.DarkGray.copy(alpha = 0.25f), CircleShape)
-                                                        )
-                                                        Spacer(modifier = Modifier.width(9.dp))
-                                                        Column {
-                                                            Text(
-                                                                text = ver.name.ifBlank { ver.versionNumber },
-                                                                fontWeight = FontWeight.Bold,
-                                                                fontSize = 11.5.sp,
-                                                                color = NuxColors.DarkGray,
-                                                                maxLines = 1,
-                                                                overflow = TextOverflow.Ellipsis
-                                                            )
-                                                            Text(
-                                                                text = "Versi: ${ver.versionNumber} · MC: ${ver.gameVersions.joinToString(", ")}",
-                                                                fontSize = 9.sp,
-                                                                color = NuxColors.GrayNeutral
-                                                            )
-                                                        }
-                                                    }
-
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .background(
-                                                                when (ver.versionType) {
-                                                                    "release" -> NuxColors.YellowPale
-                                                                    "beta" -> NuxColors.Amber.copy(alpha = 0.2f)
-                                                                    else -> NuxColors.ErrorRed.copy(alpha = 0.15f)
-                                                                },
-                                                                RoundedCornerShape(4.dp)
-                                                            )
-                                                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                                                    ) {
-                                                        Text(
-                                                            text = ver.versionType.uppercase(),
-                                                            fontSize = 8.5.sp,
-                                                            fontWeight = FontWeight.Bold,
-                                                            color = when (ver.versionType) {
-                                                                "release" -> NuxColors.MintGreen
-                                                                "beta" -> NuxColors.Amber
-                                                                else -> NuxColors.ErrorRed
-                                                            }
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(NuxColors.SurfaceWhite, RoundedCornerShape(8.dp))
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), RoundedCornerShape(8.dp))
-                                    .padding(8.dp)
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.AutoFixHigh,
-                                        contentDescription = null,
-                                        tint = NuxColors.SageGreen,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = if (hit.projectType == "modpack")
-                                            "Modpack akan diekstrak langsung ke instance (overrides, konfigurasi, dan modpack manifest)."
-                                        else
-                                            "Auto-Download Dependensi aktif: dependensi wajib akan otomatis ikut terpasang.",
-                                        fontSize = 9.sp,
-                                        color = NuxColors.GrayNeutral
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // 4. Bottom Action Area
-                    if (isDetailInstalling) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator(color = NuxColors.SageGreen, modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = detailProgressText.ifBlank { "Sedang mengunduh dan memasang..." },
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.5.sp,
-                                color = NuxColors.SageGreen
-                            )
-                        }
-                    } else {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            NuxButton(
-                                onClick = { detailModalHit = null },
-                                backgroundColor = NuxColors.SurfaceElevated,
-                                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
-                                cornerRadius = 10.dp,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text("TUTUP", fontWeight = FontWeight.Bold, fontSize = 10.5.sp, color = NuxColors.GrayNeutral)
-                            }
-
-                            if (isHitInstalled) {
-                                Box(
-                                    modifier = Modifier
-                                        .weight(2f)
-                                        .height(38.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(NuxColors.YellowPale)
-                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(10.dp)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Check,
-                                            contentDescription = null,
-                                            tint = NuxColors.SageGreen,
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = "SUDAH TERPASANG",
-                                            color = NuxColors.SageGreen,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 11.sp
-                                        )
-                                    }
-                                }
-                            } else {
-                                val canInstall = compatibleVersions.isNotEmpty()
-                                Box(
-                                    modifier = Modifier
-                                        .weight(2f)
-                                        .height(38.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .background(
-                                            if (canInstall) androidx.compose.ui.graphics.Brush.horizontalGradient(
-                                                listOf(NuxColors.ForestGreen, NuxColors.ForestGreen)
-                                            ) else androidx.compose.ui.graphics.Brush.horizontalGradient(
-                                                listOf(NuxColors.SurfaceElevated, NuxColors.SurfaceWhite)
-                                            )
-                                        )
-                                        .border(
-                                            1.dp,
-                                            if (canInstall) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.20f),
-                                            RoundedCornerShape(10.dp)
-                                        )
-                                        .clickable(enabled = canInstall) {
-                                            val ver = selectedVersion ?: compatibleVersions.firstOrNull()
-                                            val inst = selectedInstance
-                                            if (ver != null && inst != null) {
-                                                scope.launch {
-                                                    isDetailInstalling = true
-                                                    detailProgressText = "Memulai pengunduhan..."
-
-                                                    val targetWorld = if (activeType == "datapacks") selectedWorld else null
-                                                    val res = NuxModManager.downloadVersionAndDependencies(
-                                                        context = context,
-                                                        instance = inst,
-                                                        version = ver,
-                                                        itemType = activeType,
-                                                        worldName = targetWorld,
-                                                        onProgress = { status ->
-                                                            detailProgressText = status
-                                                        }
-                                                    )
-
-                                                    isDetailInstalling = false
-
-                                                    if (res.isSuccess) {
-                                                        val files = res.getOrNull() ?: emptyList()
-                                                        val depCount = (files.size - 1).coerceAtLeast(0)
-                                                        val msg = if (activeType == "modpacks") {
-                                                            "Modpack ${hit.title} berhasil dipasang!"
-                                                        } else if (depCount > 0) {
-                                                            "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
-                                                        } else {
-                                                            "Berhasil memasang ${hit.title}!"
-                                                        }
-                                                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                                                        reloadInstalled()
-                                                    } else {
-                                                        Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
-                                                    }
-                                                }
-                                            }
-                                        },
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Download,
-                                            contentDescription = null,
-                                            tint = if (canInstall) NuxColors.Ink else NuxColors.GrayNeutral,
-                                            modifier = Modifier.size(14.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = if (hit.projectType == "modpack") "PASANG MODPACK" else "PASANG KE INSTANCE",
-                                            color = if (canInstall) NuxColors.Ink else NuxColors.GrayNeutral,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 11.sp
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        ModDetailDialog(
+            hit = hit,
+            project = detailProject,
+            versions = compatibleVersions,
+            selectedVersion = selectedVersion,
+            isLoading = isDetailLoading,
+            isInstalling = isDetailInstalling,
+            progressText = detailProgressText,
+            isInstalled = isHitInstalled(hit),
+            tab = detailTab,
+            instance = selectedInstance,
+            onTab = { detailTab = it },
+            onPickVersion = { selectedVersion = it },
+            onOpenGallery = { previewGalleryUrl = it },
+            onInstall = { installFromDetail(hit) },
+            onClose = { detailModalHit = null }
+        )
     }
 
-    // --- 5.5 MODAL PREVIEW GALERI GAMBAR FULLSCREEN ---
+    // --- PRATINJAU GAMBAR ---
     previewGalleryUrl?.let { url ->
         NuxDialog(onDismissRequest = { previewGalleryUrl = null }) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -2342,33 +1277,27 @@ fun ModsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Tangkapan Layar",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
+                        text = "Tangkapan layar",
+                        fontWeight = FontWeight.Black,
+                        fontSize = 16.sp,
                         color = NuxColors.DarkGray
                     )
-                    Box(
-                        modifier = Modifier
-                            .size(26.dp)
-                            .clip(CircleShape)
-                            .background(NuxColors.SurfaceElevated, CircleShape)
-                            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, CircleShape)
-                            .clickable { previewGalleryUrl = null },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Outlined.Close, contentDescription = "Tutup", tint = NuxColors.DarkGray, modifier = Modifier.size(13.dp))
-                    }
+                    ModsIconButton(
+                        icon = Icons.Outlined.Close,
+                        description = "Tutup",
+                        onClick = { previewGalleryUrl = null }
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 NuxNetworkImage(
                     model = url,
-                    contentDescription = "Preview Gambar",
+                    contentDescription = "Pratinjau gambar",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(240.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(8.dp)),
-                    shape = RoundedCornerShape(8.dp),
+                        .height(250.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp)),
+                    shape = RoundedCornerShape(14.dp),
                     maxSidePx = 1280,
                     showSpinner = true
                 )
@@ -2377,39 +1306,892 @@ fun ModsScreen(
     }
 }
 
+// ============================================================================
+// BAHAN PENYUSUN LAYAR MOD
+// ============================================================================
+
+/** Tombol sakelar atas (Terpasang / Jelajah). Terpilih = isian kuning, teks Ink. */
+@Composable
+private fun ModsModeTab(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(19.dp)
+    Box(
+        modifier = Modifier
+            .height(38.dp)
+            .clip(shape)
+            .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
+            fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+            fontSize = 13.sp,
+            maxLines = 1
+        )
+    }
+}
+
+/** Chip filter setinggi 44dp di samping kolom cari (versi game, world). */
+@Composable
+private fun ModsFilterChip(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(22.dp)
+    Row(
+        modifier = Modifier
+            .height(44.dp)
+            .clip(shape)
+            .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceElevated, shape)
+            .border(
+                NuxSizes.GlassBorder,
+                if (selected) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
+                shape
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (selected) NuxColors.Yellow else NuxColors.GrayNeutral,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = text,
+            color = if (selected) NuxColors.Yellow else NuxColors.DarkGray,
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.widthIn(max = 150.dp)
+        )
+    }
+}
+
+/** Tombol ikon bulat 44dp. */
+@Composable
+private fun ModsIconButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    description: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    tint: Color = NuxColors.GrayNeutral,
+    ring: Boolean = true,
+    enabled: Boolean = true
+) {
+    Box(
+        modifier = modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .then(
+                if (ring) {
+                    Modifier
+                        .background(NuxColors.SurfaceElevated, CircleShape)
+                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, CircleShape)
+                } else {
+                    Modifier
+                }
+            )
+            .clickable(enabled = enabled) { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            tint = tint,
+            modifier = Modifier.size(20.dp)
+        )
+    }
+}
+
+/** Baris addon yang sudah terpasang: inisial, nama, berkas, saklar aktif, tombol hapus. */
+@Composable
+private fun InstalledItemRow(
+    item: InstalledModItem,
+    onToggle: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val shape = RoundedCornerShape(18.dp)
+    val badgeShape = RoundedCornerShape(12.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(
+                if (item.isEnabled) NuxColors.SurfaceWhite else NuxColors.SurfaceWhite.copy(alpha = 0.5f),
+                shape
+            )
+            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
+            .padding(start = 12.dp, end = 6.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(46.dp)
+                .clip(badgeShape)
+                .background(if (item.isEnabled) NuxColors.YellowPale else NuxColors.SurfaceElevated, badgeShape)
+                .border(
+                    NuxSizes.GlassBorder,
+                    if (item.isEnabled) NuxColors.Yellow.copy(alpha = 0.45f) else NuxColors.CardBorder,
+                    badgeShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = item.name.take(2).uppercase(),
+                fontWeight = FontWeight.Black,
+                color = if (item.isEnabled) NuxColors.Yellow else NuxColors.GrayNeutral,
+                fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = item.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = if (item.isEnabled) NuxColors.DarkGray else NuxColors.GrayNeutral,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                if (!item.isEnabled) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    NuxBadge(
+                        text = "NONAKTIF",
+                        backgroundColor = NuxColors.SurfaceElevated,
+                        textColor = NuxColors.GrayNeutral
+                    )
+                }
+            }
+            Text(
+                text = "${item.filename} · ${formatBytes(item.sizeBytes)}",
+                fontSize = 12.sp,
+                color = NuxColors.GrayNeutral,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Switch(
+            checked = item.isEnabled,
+            onCheckedChange = { onToggle() },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = NuxColors.Ink,
+                checkedTrackColor = NuxColors.Yellow,
+                uncheckedThumbColor = NuxColors.GrayNeutral,
+                uncheckedTrackColor = NuxColors.SurfaceElevated
+            )
+        )
+
+        ModsIconButton(
+            icon = Icons.Outlined.Delete,
+            description = "Hapus",
+            onClick = onDelete,
+            tint = NuxColors.ErrorRed,
+            ring = false
+        )
+    }
+}
+
+/** Baris hasil pencarian Modrinth: ikon, judul, deskripsi, lencana, tombol Pasang. */
+@Composable
+private fun ModrinthHitRow(
+    hit: ModrinthSearchHit,
+    isInstalled: Boolean,
+    isDownloading: Boolean,
+    downloadStatus: String,
+    onOpen: () -> Unit,
+    onInstall: () -> Unit
+) {
+    val shape = RoundedCornerShape(18.dp)
+    val iconShape = RoundedCornerShape(14.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(NuxColors.SurfaceWhite, shape)
+            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
+            .clickable { onOpen() }
+            .padding(start = 12.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        NuxNetworkImage(
+            model = hit.iconUrl,
+            contentDescription = hit.title,
+            modifier = Modifier
+                .size(56.dp)
+                .border(NuxSizes.GlassBorder, NuxColors.CardBorder, iconShape),
+            fallbackInitials = hit.title.take(2).uppercase(),
+            shape = iconShape,
+            maxSidePx = 192
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = hit.title,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 15.sp,
+                    color = NuxColors.DarkGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                if (hit.projectType == "modpack") {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    NuxBadge(
+                        text = "PACK",
+                        backgroundColor = NuxColors.YellowPale,
+                        textColor = NuxColors.Yellow
+                    )
+                }
+            }
+
+            Text(
+                text = hit.description ?: "Tidak ada deskripsi",
+                fontSize = 12.sp,
+                color = NuxColors.GrayNeutral,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                NuxBadge(
+                    text = "📥 ${formatCompactNumber(hit.downloads)}",
+                    backgroundColor = NuxColors.SurfaceElevated,
+                    textColor = NuxColors.GrayNeutral
+                )
+                if (!hit.author.isNullOrBlank()) {
+                    Text(
+                        text = "oleh ${hit.author}",
+                        fontSize = 12.sp,
+                        color = NuxColors.GrayNeutral,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.width(10.dp))
+
+        if (isDownloading) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator(
+                    color = NuxColors.Yellow,
+                    modifier = Modifier.size(22.dp),
+                    strokeWidth = 2.dp
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
+                    text = downloadStatus.ifBlank { "Unduh..." },
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = NuxColors.Yellow,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.widthIn(max = 96.dp)
+                )
+            }
+        } else if (isInstalled) {
+            val okShape = RoundedCornerShape(20.dp)
+            Row(
+                modifier = Modifier
+                    .clip(okShape)
+                    .background(NuxColors.YellowPale, okShape)
+                    .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Check,
+                    contentDescription = null,
+                    tint = NuxColors.Yellow,
+                    modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Terpasang",
+                    color = NuxColors.Yellow,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+            }
+        } else {
+            NuxButton(
+                onClick = onInstall,
+                backgroundColor = NuxColors.Yellow,
+                cornerRadius = 22.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = if (hit.projectType == "modpack") "Pasang pack" else "Pasang",
+                    fontWeight = FontWeight.Black,
+                    fontSize = 13.sp
+                )
+            }
+        }
+    }
+}
+
+/** Daftar pilihan dalam dialog kaca (pengganti menu tarik-turun): instance dan world. */
+@Composable
+private fun ModsPickerDialog(
+    title: String,
+    options: List<Pair<String, String>>,
+    selectedId: String?,
+    onPick: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    NuxDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier
+            .fillMaxWidth(0.55f)
+            .wrapContentHeight()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp, vertical = 18.dp)
+        ) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Black,
+                fontSize = 18.sp,
+                color = NuxColors.DarkGray
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Column(
+                modifier = Modifier
+                    .heightIn(max = 230.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                options.forEach { (id, label) ->
+                    val picked = id == selectedId
+                    val rowShape = RoundedCornerShape(16.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 48.dp)
+                            .clip(rowShape)
+                            .background(if (picked) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
+                            .border(
+                                NuxSizes.GlassBorder,
+                                if (picked) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
+                                rowShape
+                            )
+                            .clickable { onPick(id) }
+                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (picked) NuxColors.Yellow else NuxColors.DarkGray,
+                            fontWeight = if (picked) FontWeight.Black else FontWeight.Bold,
+                            fontSize = 14.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (picked) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Outlined.Check,
+                                contentDescription = null,
+                                tint = NuxColors.Yellow,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**
- * Ultra-Compact Cyber-Glass Search Bar for Mobile Landscape layout
+ * Jendela detail dua panel: kiri = identitas proyek + tombol pasang (selalu terlihat),
+ * kanan = tab Ringkasan / Versi yang bisa digulir.
  */
 @Composable
-private fun CompactSearchBar(
+private fun ModDetailDialog(
+    hit: ModrinthSearchHit,
+    project: ModrinthProject?,
+    versions: List<ModrinthVersion>,
+    selectedVersion: ModrinthVersion?,
+    isLoading: Boolean,
+    isInstalling: Boolean,
+    progressText: String,
+    isInstalled: Boolean,
+    tab: String,
+    instance: Instance?,
+    onTab: (String) -> Unit,
+    onPickVersion: (ModrinthVersion) -> Unit,
+    onOpenGallery: (String) -> Unit,
+    onInstall: () -> Unit,
+    onClose: () -> Unit
+) {
+    val typeColor = when (hit.projectType) {
+        "mod" -> NuxColors.Yellow
+        "modpack" -> NuxColors.PurpleDark
+        "resourcepack" -> NuxColors.SkyBlueDark
+        else -> NuxColors.AmberDark
+    }
+
+    NuxDialog(
+        onDismissRequest = { if (!isInstalling) onClose() },
+        modifier = Modifier.fillMaxWidth(0.92f),
+        fillMaxHeight = true
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // ---------------- KIRI ----------------
+            Column(
+                modifier = Modifier
+                    .weight(0.36f)
+                    .fillMaxHeight()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    NuxNetworkImage(
+                        model = hit.iconUrl,
+                        contentDescription = hit.title,
+                        modifier = Modifier
+                            .size(72.dp)
+                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(18.dp)),
+                        fallbackInitials = hit.title.take(2).uppercase(),
+                        shape = RoundedCornerShape(18.dp),
+                        maxSidePx = 192
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = hit.title,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 20.sp,
+                        lineHeight = 24.sp,
+                        color = NuxColors.DarkGray,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "oleh ${hit.author ?: "Komunitas"}",
+                        fontSize = 12.sp,
+                        color = NuxColors.GrayNeutral
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        NuxBadge(
+                            text = hit.projectType.uppercase(),
+                            backgroundColor = typeColor.copy(alpha = 0.16f),
+                            textColor = typeColor,
+                            borderColor = typeColor.copy(alpha = 0.4f)
+                        )
+                        NuxBadge(
+                            text = "📥 ${formatCompactNumber(hit.downloads)}",
+                            backgroundColor = NuxColors.SurfaceElevated,
+                            textColor = NuxColors.GrayNeutral
+                        )
+                    }
+                    if (selectedVersion != null && !isInstalled) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "Versi dipilih",
+                            fontSize = 11.sp,
+                            color = NuxColors.GrayNeutral
+                        )
+                        Text(
+                            text = selectedVersion.name.ifBlank { selectedVersion.versionNumber },
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = NuxColors.DarkGray,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                if (isInstalling) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator(
+                            color = NuxColors.Yellow,
+                            modifier = Modifier.size(22.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = progressText.ifBlank { "Sedang mengunduh dan memasang..." },
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = NuxColors.Yellow,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                } else if (isInstalled) {
+                    val okShape = RoundedCornerShape(24.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .clip(okShape)
+                            .background(NuxColors.YellowPale, okShape)
+                            .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Check,
+                            contentDescription = null,
+                            tint = NuxColors.Yellow,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Sudah terpasang",
+                            color = NuxColors.Yellow,
+                            fontWeight = FontWeight.Black,
+                            fontSize = 14.sp
+                        )
+                    }
+                } else {
+                    NuxButton(
+                        onClick = onInstall,
+                        backgroundColor = NuxColors.Yellow,
+                        enabled = versions.isNotEmpty(),
+                        cornerRadius = 24.dp,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Download,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (hit.projectType == "modpack") "Pasang modpack" else "Pasang ke instance",
+                            fontWeight = FontWeight.Black,
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+
+            // ---------------- KANAN ----------------
+            Column(
+                modifier = Modifier
+                    .weight(0.64f)
+                    .fillMaxHeight()
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        SettingChip(
+                            text = "Ringkasan",
+                            selected = tab == "overview",
+                            onClick = { onTab("overview") }
+                        )
+                        SettingChip(
+                            text = "Versi (${versions.size})",
+                            selected = tab == "versions",
+                            onClick = { onTab("versions") }
+                        )
+                    }
+                    ModsIconButton(
+                        icon = Icons.Outlined.Close,
+                        description = "Tutup",
+                        onClick = onClose,
+                        enabled = !isInstalling
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    if (isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(140.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                        }
+                    } else if (tab == "overview") {
+                        val galleryList = project?.gallery ?: emptyList()
+                        if (galleryList.isNotEmpty()) {
+                            Text(
+                                text = "Tangkapan layar",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp,
+                                color = NuxColors.GrayNeutral
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                items(galleryList) { gal ->
+                                    Box(
+                                        modifier = Modifier
+                                            .width(190.dp)
+                                            .height(108.dp)
+                                            .clip(RoundedCornerShape(14.dp))
+                                            .background(NuxColors.SurfaceWhite)
+                                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp))
+                                            .clickable { onOpenGallery(gal.url) }
+                                    ) {
+                                        NuxNetworkImage(
+                                            model = gal.url,
+                                            contentDescription = gal.title ?: "Screenshot",
+                                            modifier = Modifier.fillMaxSize(),
+                                            shape = RoundedCornerShape(14.dp),
+                                            maxSidePx = 400,
+                                            showSpinner = true
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(14.dp))
+                        }
+
+                        Text(
+                            text = "Deskripsi",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = NuxColors.GrayNeutral
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = project?.description ?: hit.description ?: "Tidak ada ringkasan deskripsi.",
+                            fontSize = 14.sp,
+                            color = NuxColors.DarkGray.copy(alpha = 0.88f),
+                            lineHeight = 20.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        val allLoaders = (project?.loaders ?: hit.categories ?: emptyList()).distinct()
+                        if (allLoaders.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                allLoaders.take(6).forEach { tag ->
+                                    NuxBadge(
+                                        text = tag.uppercase(),
+                                        backgroundColor = NuxColors.SurfaceElevated,
+                                        textColor = NuxColors.GrayNeutral
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        if (versions.isEmpty()) {
+                            val warnShape = RoundedCornerShape(14.dp)
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(NuxColors.ErrorRed.copy(alpha = 0.12f), warnShape)
+                                    .border(NuxSizes.GlassBorder, NuxColors.ErrorRed.copy(alpha = 0.4f), warnShape)
+                                    .padding(14.dp)
+                            ) {
+                                Text(
+                                    text = "Tidak ada versi yang didukung",
+                                    color = NuxColors.ErrorRed,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Proyek ini tidak punya rilis yang cocok dengan Minecraft ${instance?.mcVersion ?: ""} (${(instance?.loader ?: "vanilla").uppercase()}).",
+                                    color = NuxColors.GrayNeutral,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp
+                                )
+                            }
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                versions.forEach { ver ->
+                                    val isPicked = selectedVersion?.id == ver.id
+                                    val rowShape = RoundedCornerShape(16.dp)
+                                    val verColor = when (ver.versionType) {
+                                        "release" -> NuxColors.Yellow
+                                        "beta" -> NuxColors.AmberDark
+                                        else -> NuxColors.ErrorRed
+                                    }
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(rowShape)
+                                            .background(if (isPicked) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
+                                            .border(
+                                                NuxSizes.GlassBorder,
+                                                if (isPicked) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
+                                                rowShape
+                                            )
+                                            .clickable { onPickVersion(ver) }
+                                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .clip(CircleShape)
+                                                .background(if (isPicked) NuxColors.Yellow else Color.Transparent)
+                                                .border(
+                                                    NuxSizes.GlassBorder,
+                                                    if (isPicked) NuxColors.Yellow else NuxColors.GrayNeutral,
+                                                    CircleShape
+                                                ),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            if (isPicked) {
+                                                Icon(
+                                                    imageVector = Icons.Outlined.Check,
+                                                    contentDescription = null,
+                                                    tint = NuxColors.Ink,
+                                                    modifier = Modifier.size(12.dp)
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.width(12.dp))
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(
+                                                text = ver.name.ifBlank { ver.versionNumber },
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 14.sp,
+                                                color = NuxColors.DarkGray,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                            Text(
+                                                text = "Versi ${ver.versionNumber} · MC ${ver.gameVersions.joinToString(", ")}",
+                                                fontSize = 12.sp,
+                                                color = NuxColors.GrayNeutral,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        NuxBadge(
+                                            text = ver.versionType.uppercase(),
+                                            backgroundColor = verColor.copy(alpha = 0.16f),
+                                            textColor = verColor,
+                                            borderColor = verColor.copy(alpha = 0.4f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = if (hit.projectType == "modpack") {
+                            "Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest)."
+                        } else {
+                            "Dependensi wajib ikut terpasang otomatis."
+                        },
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                        color = NuxColors.GrayNeutral
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+/** Kolom cari berbentuk pil 44dp dengan ikon kaca pembesar dan tombol hapus teks. */
+@Composable
+private fun ModsSearchBar(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier
 ) {
+    val shape = RoundedCornerShape(22.dp)
     Row(
         modifier = modifier
-            .height(25.dp)
-            .clip(RoundedCornerShape(5.dp))
-            .background(NuxColors.SurfaceInput, RoundedCornerShape(5.dp))
-            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(5.dp))
-            .padding(horizontal = 7.dp),
+            .height(44.dp)
+            .clip(shape)
+            .background(NuxColors.SurfaceInput, shape)
+            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
+            .padding(start = 14.dp, end = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Outlined.Search,
             contentDescription = null,
             tint = NuxColors.GrayNeutral,
-            modifier = Modifier.size(13.dp)
+            modifier = Modifier.size(20.dp)
         )
-        Spacer(modifier = Modifier.width(5.dp))
-        Box(modifier = Modifier.weight(1f)) {
+        Spacer(modifier = Modifier.width(8.dp))
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.CenterStart
+        ) {
             if (value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    color = NuxColors.GrayNeutral.copy(alpha = 0.5f),
-                    fontSize = 9.5.sp,
-                    fontWeight = FontWeight.Normal,
+                    color = NuxColors.GrayNeutral.copy(alpha = 0.7f),
+                    fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -2419,8 +2201,8 @@ private fun CompactSearchBar(
                 onValueChange = onValueChange,
                 textStyle = TextStyle(
                     color = NuxColors.DarkGray,
-                    fontSize = 9.5.sp,
-                    fontWeight = FontWeight.Normal
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
                 ),
                 cursorBrush = SolidColor(NuxColors.Yellow),
                 singleLine = true,
@@ -2428,14 +2210,20 @@ private fun CompactSearchBar(
             )
         }
         if (value.isNotEmpty()) {
-            Icon(
-                imageVector = Icons.Outlined.Close,
-                contentDescription = "Hapus",
-                tint = NuxColors.GrayNeutral,
+            Box(
                 modifier = Modifier
-                    .size(12.dp)
-                    .clickable { onValueChange("") }
-            )
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .clickable { onValueChange("") },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "Hapus teks",
+                    tint = NuxColors.GrayNeutral,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
         }
     }
 }

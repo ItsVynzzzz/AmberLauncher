@@ -1,0 +1,38 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index f9cecf5d94e2028c3a30086c2d2a048068a90ddb..b11990b8b6b66ffddfef259b4e153253ad01e8c1 100644
+GIT binary patch
+delta 60
+zcmcb+n|<*f_J%EtZ^eX4@=KF597{?Ple1m(5|eULQ>HI0Vidt5zWu%!<G*77@{}0f
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index dc49fb6c813d77e300c60dd31678ce8527e3975a..dbbfb2090cfaa64d0859e305d754bc2e3e108511 100644
+GIT binary patch
+delta 220
+zcmXYqF%H5&3<M<v4H8gL(paJ=51@jEmM<*93Wsxd(ZxqZ#UJ1!NW6@O8VBKKW$$|D
+zKKV?aGPo55?X%>%I3bid2?EvJK}lG1zd?~nVKyBd)wm*&#5RVCT3GJD$-{*eZPCF(
+z9_pygjRnVKV*t;gs<>r)gy#fOcZ86WtUEJ(&tFs1%O9@MA7X8spvhEO(HKcMow54W
+ZUSQ{#%hN^`r99rF`C~Dfz2aaw`~n(9O^W~k
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index ac84644817f063a78c08cc6bf033935013acf81b..079d533f53e98884a62cd5295a965eda563899a3 100644
+GIT binary patch
+delta 370
+zcmX@Qm~sDd#trw`luGhTlQSGkN)nT^UGox?a#B;Q6rA$&b5axY6l@hrib_*A-(=gv
+z${m7GH<{5}QV3Ju<`$kSe17`+3c-nqB??KYMY)NYc?ufYrA5X0MG7UUMcJi!$(fou
+z3MGjdK*Liq6><_Q6N?mpoXSLn+|=CC?9v>Cq|BT|pj>8EW?pt;-sF$6nv)}>jWiV0
+z)D$!nlM@R{N{doc{PN2cYHAdcON)w9^GcAMra8G$Q)jY(D9hvnQk<I)OFQwo10Cd@
+zT2h(~wXGQ0akdHtAWN;GZa}pg<idc|y!1q%l|YvyYU@s3tI3TL5FpDE#5gAFTk=o7
+d!)ZF%Q%ehMxr3Y%SlmF?bdn6q<~3T9>Hyxwg2ey;
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index cab4a3484b3d60da4041dbefcea16cf8fdbf485c..660685d52e49fa16a0449cf2dfc9b269df8e58c6 100644
+GIT binary patch
+delta 369
+zcmbRHh-vK$rVVrXxl8g(lQSGkN)nT^Cnxa83L)`b^AeMCQd1@yh$v$b-aL_i8;266
+zas^ujBtadn$p+a{n?ohuyG;J;qR$;rnq8Wskds=TSTfncUANvlwWKs#A+aQ}RG}m>
+zBQZ}QB~u}>C^b<bJHI$TFI^!gu`;npp)?PqDmOJ3q+3tHH?br$8>qIpv;Zg#6wgaf
+zPc2R@QpirsO)W}PD9KDo%vQ+EE-iuSu~sNZ%udV%x-2&-KS!YeY>pDpaaR`0OzuhL
+zLJ5Y2?(&nl+>BAg419M?Zb;If%#*;kxiNM(uNsmcfj%w*T3@1vBnAt+hlS#s?XvH?
+F0su7pi(LQ!
+
+# FIN part=1/1 files=4

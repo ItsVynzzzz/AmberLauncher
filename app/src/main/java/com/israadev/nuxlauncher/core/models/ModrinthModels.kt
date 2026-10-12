@@ -101,7 +101,8 @@ data class InstalledModItem(
     val category: String,
     val isEnabled: Boolean,
     val sizeBytes: Long,
-    val itemType: String
+    val itemType: String,
+    val filePath: String = ""
 )
 
 /**

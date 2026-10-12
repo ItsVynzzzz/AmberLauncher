@@ -189,7 +189,8 @@ object NuxModManager {
                     category = itemType.replaceFirstChar { it.uppercase() },
                     isEnabled = isEnabled,
                     sizeBytes = if (file.isFile) file.length() else 0L,
-                    itemType = itemType
+                    itemType = itemType,
+                    filePath = file.absolutePath
                 )
             )
         }

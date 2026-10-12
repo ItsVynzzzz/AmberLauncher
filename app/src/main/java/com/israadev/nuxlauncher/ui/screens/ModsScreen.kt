@@ -1425,7 +1425,6 @@ private fun InstalledItemRow(
     onDelete: () -> Unit
 ) {
     val shape = RoundedCornerShape(16.dp)
-    val badgeShape = RoundedCornerShape(10.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -1438,25 +1437,11 @@ private fun InstalledItemRow(
             .padding(start = 10.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(badgeShape)
-                .background(if (item.isEnabled) NuxColors.YellowPale else NuxColors.SurfaceElevated, badgeShape)
-                .border(
-                    NuxSizes.GlassBorder,
-                    if (item.isEnabled) NuxColors.Yellow.copy(alpha = 0.45f) else NuxColors.CardBorder,
-                    badgeShape
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = item.name.take(2).uppercase(),
-                fontWeight = FontWeight.Black,
-                color = if (item.isEnabled) NuxColors.Yellow else NuxColors.GrayNeutral,
-                fontSize = 13.sp
-            )
-        }
+        ModIcon(
+            item = item,
+            size = 40.dp,
+            dimmed = !item.isEnabled
+        )
 
         Spacer(modifier = Modifier.width(10.dp))
 

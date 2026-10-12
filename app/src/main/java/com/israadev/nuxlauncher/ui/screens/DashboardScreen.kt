@@ -997,7 +997,7 @@ private fun rememberFreeRamMb(): Int {
 private const val BG_FILE_NAME = "home_bg"
 private const val BG_MAX_BYTES = 30L * 1024 * 1024
 private const val BG_MAX_SIDE = 1600
-private const val BG_MAX_SIDE_ANIM = 960   // GIF/WebP bergerak: lebih kecil agar CPU HP kentang kuat
+private const val BG_ANIM_SIDE = 1280   // GIF/WebP bergerak: sisi terpanjang pas dengan lebar panel Home (tidak diperbesar kasar)
 
 /** Status unduhan; hanya dibaca oleh dialog unduhan. */
 private class DownloadUiState {
@@ -1018,8 +1018,10 @@ private fun DownloadDialogHost(name: String, state: DownloadUiState) {
 private class BgState(val drawable: Drawable?)
 
 /**
- * Decode foto/GIF/WebP jadi Drawable. Gambar dikecilkan (sisi terpanjang <= 1600 px)
- * supaya hemat RAM; GIF/WebP animasi menjadi AnimatedImageDrawable (Android 9 ke atas).
+ * Decode foto/GIF/WebP jadi Drawable. Foto dikecilkan (sisi terpanjang <= 1600 px) supaya hemat RAM.
+ * GIF/WebP animasi menjadi AnimatedImageDrawable (Android 9 ke atas) dan diubah ukurannya saat
+ * decode ke sisi terpanjang 1280 px, kira-kira selebar panel Home. Kalau lebih kecil dari itu ikut
+ * diperhalus saat decode, bukan diperbesar kasar oleh ImageView (itu yang tampak kotak-kotak).
  */
 private fun decodeBackground(file: File): Drawable? = try {
     if (Build.VERSION.SDK_INT >= 28) {
@@ -1030,9 +1032,11 @@ private fun decodeBackground(file: File): Drawable? = try {
             val mime = info.mimeType
             val maybeAnimated = mime.equals("image/gif", ignoreCase = true) ||
                 mime.equals("image/webp", ignoreCase = true)
-            val cap = if (maybeAnimated) BG_MAX_SIDE_ANIM else BG_MAX_SIDE
-            if (longSide > cap) {
-                val scale = cap.toFloat() / longSide
+            val target = if (maybeAnimated) BG_ANIM_SIDE else BG_MAX_SIDE
+            // Foto: hanya dikecilkan. GIF/WebP: dibawa ke ukuran target (naik atau turun).
+            val needsResize = if (maybeAnimated) longSide != target else longSide > target
+            if (needsResize) {
+                val scale = target.toFloat() / longSide
                 decoder.setTargetSize(maxOf(1, (w * scale).toInt()), maxOf(1, (h * scale).toInt()))
             }
         }

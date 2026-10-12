@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -94,29 +95,36 @@ fun NuxResponsiveTheme(
 }
 
 /**
- * Pembesar teks untuk layar selain Home (Akun, Mod, Pengaturan, dan semua dialog).
- * Hanya mengalikan skala huruf (sp), ukuran dp tidak berubah, jadi kotak dan jarak tetap sama
- * tetapi tulisan lebih mudah dibaca di layar HP yang kecil. Dibatasi 1.3x supaya tidak pecah
- * bila pengguna sudah memakai ukuran huruf sistem yang besar. Warna isi bawaan (teks/ikon tanpa
- * warna) juga disetel ke putih hangat supaya tidak hitam di atas latar gelap.
+ * Pengatur skala untuk layar selain Home (Akun, Mod, Pengaturan, dan dialog).
+ * - scale: pengali kerapatan (dp dan sp ikut mengecil/membesar bersama). 0.9 = semua 10% lebih
+ *   kecil dari skala dasar, jadi muat lebih banyak baris dan tidak terasa raksasa.
+ * - boost: pengali huruf saja (dipakai dialog lama yang hurufnya masih kecil). Dibatasi 1.3x.
+ * Warna isi bawaan (teks/ikon tanpa warna) juga disetel ke putih hangat supaya tidak hitam di
+ * atas latar gelap.
  */
 @Composable
 fun NuxReadable(
-    boost: Float = 1.18f,
+    scale: Float = 0.9f,
+    boost: Float = 1f,
     content: @Composable () -> Unit
 ) {
     val current = LocalDensity.current
     val readable = Density(
-        density = current.density,
+        density = current.density * scale,
         fontScale = min(current.fontScale * boost, 1.3f)
     )
+    val alreadyScaled = LocalNuxScaled.current
     CompositionLocalProvider(
         LocalDensity provides readable,
-        LocalContentColor provides NuxColors.DarkGray
+        LocalContentColor provides NuxColors.DarkGray,
+        LocalNuxScaled provides (alreadyScaled || scale != 1f)
     ) {
         content()
     }
 }
+
+/** True bila sudah berada di dalam layar yang diskalakan NuxReadable (dialog tidak perlu mengecilkan lagi). */
+val LocalNuxScaled = compositionLocalOf { false }
 
 // -------------------------------------------------------------------------
 // Ergonomic Responsive Extensions for Dp, Int, Float, and TextUnit

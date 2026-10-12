@@ -37,6 +37,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import com.israadev.nuxlauncher.ui.theme.LocalNuxScale
+import com.israadev.nuxlauncher.ui.theme.LocalNuxScaled
 import com.israadev.nuxlauncher.ui.theme.NuxReadable
 import com.israadev.nuxlauncher.ui.theme.resp
 
@@ -175,7 +176,7 @@ fun NuxButton(
                 indication = null,
                 onClick = onClick
             )
-            .defaultMinSize(minHeight = (44.dp).resp())
+            .defaultMinSize(minHeight = (40.dp).resp())
             .padding(contentPadding),
         contentAlignment = Alignment.Center
     ) {
@@ -290,7 +291,7 @@ fun NuxWindowDialog(
     content: @Composable () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest, properties = properties) {
-        NuxReadable {
+        NuxReadable(scale = 1f, boost = 1.18f) {
             content()
         }
     }
@@ -298,15 +299,18 @@ fun NuxWindowDialog(
 
 /**
  * Dialog kaca: panel gelap hampir buram dengan tepi gradien putih tipis di atas latar redup.
- * Teks di dalamnya otomatis sedikit lebih besar (NuxReadable) supaya nyaman dibaca di HP.
+ * compact = true: dialog gaya baru (huruf sudah pas, ikut skala layar 0.9 seperti Akun/Mod/Pengaturan).
+ * compact = false: dialog lama yang hurufnya kecil, diberi pembesar huruf (NuxReadable boost).
  */
 @Composable
 fun NuxDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     fillMaxHeight: Boolean = false,
+    compact: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    val inScaledScreen = LocalNuxScaled.current
     val isTablet = LocalNuxScale.current.isTablet
     val defaultWidthFraction = if (isTablet) 0.82f else 0.96f
     val dialogEdge = remember {
@@ -326,7 +330,10 @@ fun NuxDialog(
             decorFitsSystemWindows = false
         )
     ) {
-        NuxReadable {
+        NuxReadable(
+            scale = if (compact && !inScaledScreen) 0.9f else 1f,
+            boost = if (compact) 1f else 1.18f
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

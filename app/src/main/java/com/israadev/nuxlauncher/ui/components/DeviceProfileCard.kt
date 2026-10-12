@@ -61,7 +61,7 @@ private fun DeviceProfileCardContent(profile: DeviceProfile) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 14.dp, vertical = 8.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -75,14 +75,14 @@ private fun DeviceProfileCardContent(profile: DeviceProfile) {
                     Text(
                         text = "Profil perangkat",
                         fontWeight = FontWeight.Black,
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         color = NuxColors.DarkGray
                     )
                     Text(
                         text = "${profile.displayName} · ${profile.specSummary}",
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = NuxColors.GrayNeutral,
-                        lineHeight = 17.sp
+                        lineHeight = 15.sp
                     )
                 }
             }
@@ -136,20 +136,20 @@ private fun DeviceProfileCardContent(profile: DeviceProfile) {
                         } else {
                             "Heap game ${settings.ramMb} MB (batas profil $cap MB)."
                         },
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = NuxColors.GrayNeutral,
-                        lineHeight = 17.sp,
-                        modifier = Modifier.padding(bottom = 6.dp)
+                        lineHeight = 15.sp,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
                 }
             }
 
             Text(
                 text = "Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM · PANAS · Hz).",
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 color = NuxColors.GrayNeutral,
-                lineHeight = 17.sp,
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
+                lineHeight = 15.sp,
+                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
             )
         }
     }

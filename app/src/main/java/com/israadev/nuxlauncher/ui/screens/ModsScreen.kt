@@ -528,7 +528,7 @@ fun ModsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 20.dp, end = 20.dp, top = 14.dp, bottom = 12.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 10.dp)
     ) {
         if (selectedInstance == null) {
             Box(
@@ -536,38 +536,38 @@ fun ModsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(
-                    modifier = Modifier.width(340.dp),
+                    modifier = Modifier.width(300.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.ExtensionOff,
                         contentDescription = null,
                         tint = NuxColors.GrayNeutral,
-                        modifier = Modifier.size(44.dp)
+                        modifier = Modifier.size(36.dp)
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Belum ada instance",
                         fontWeight = FontWeight.Black,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = NuxColors.DarkGray
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Pilih atau buat instance di Home untuk mulai memasang mod.",
                         color = NuxColors.GrayNeutral,
-                        fontSize = 13.sp,
-                        lineHeight = 18.sp,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     NuxButton(
                         onClick = { onNavigateBack() },
                         backgroundColor = NuxColors.Yellow,
-                        cornerRadius = 22.dp,
-                        contentPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+                        cornerRadius = 20.dp,
+                        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
                     ) {
-                        Text("Kembali ke Home", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                        Text("Kembali ke Home", fontWeight = FontWeight.Black, fontSize = 13.sp)
                     }
                 }
             }
@@ -582,7 +582,7 @@ fun ModsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .padding(bottom = 6.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -594,34 +594,34 @@ fun ModsScreen(
                     text = "Mod",
                     color = NuxColors.DarkGray,
                     fontWeight = FontWeight.Black,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     letterSpacing = (-0.3).sp
                 )
-                Spacer(modifier = Modifier.width(14.dp))
-                val instShape = RoundedCornerShape(22.dp)
+                Spacer(modifier = Modifier.width(10.dp))
+                val instShape = RoundedCornerShape(19.dp)
                 Row(
                     modifier = Modifier
                         .weight(1f, fill = false)
-                        .height(44.dp)
+                        .height(38.dp)
                         .clip(instShape)
                         .background(NuxColors.SurfaceElevated, instShape)
                         .border(NuxSizes.GlassBorder, NuxColors.CardBorder, instShape)
                         .clickable { if (instances.size > 1) showInstanceMenu = true }
-                        .padding(horizontal = 14.dp),
+                        .padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Inventory2,
                         contentDescription = null,
                         tint = NuxColors.Yellow,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "${currentInst.name} · ${currentInst.mcVersion} · ${currentInst.loader.uppercase()}",
                         color = NuxColors.DarkGray,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
@@ -632,22 +632,22 @@ fun ModsScreen(
                             imageVector = Icons.Outlined.ArrowDropDown,
                             contentDescription = "Ganti instance",
                             tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-            val segShape = RoundedCornerShape(22.dp)
+            val segShape = RoundedCornerShape(19.dp)
             Row(
                 modifier = Modifier
                     .clip(segShape)
                     .background(NuxColors.SurfaceElevated, segShape)
                     .border(NuxSizes.GlassBorder, NuxColors.CardBorder, segShape)
-                    .padding(3.dp),
-                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    .padding(2.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ModsModeTab(
@@ -670,11 +670,11 @@ fun ModsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
-                modifier = Modifier.width(158.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                modifier = Modifier.width(128.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 listOf(
                     Triple("mods", "Mod", Icons.Outlined.Extension),
@@ -704,8 +704,8 @@ fun ModsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        .padding(bottom = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (mainMode == "browse") {
@@ -754,16 +754,16 @@ fun ModsScreen(
                                 }
                             },
                             backgroundColor = NuxColors.Yellow,
-                            cornerRadius = 22.dp,
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                            cornerRadius = 20.dp,
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.FileUpload,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Impor", fontWeight = FontWeight.Black, fontSize = 13.sp)
+                            Text("Impor", fontWeight = FontWeight.Black, fontSize = 12.sp)
                         }
                     }
                 }
@@ -774,8 +774,8 @@ fun ModsScreen(
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            .padding(bottom = 6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         items(categories) { cat ->
@@ -818,9 +818,9 @@ fun ModsScreen(
                                     imageVector = Icons.Outlined.FolderOpen,
                                     contentDescription = null,
                                     tint = NuxColors.GrayNeutral,
-                                    modifier = Modifier.size(38.dp)
+                                    modifier = Modifier.size(32.dp)
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(6.dp))
                                 Text(
                                     text = if (activeType == "datapacks" && worlds.isEmpty())
                                         "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
@@ -829,25 +829,25 @@ fun ModsScreen(
                                     else "Tidak ada item yang cocok",
                                     color = NuxColors.DarkGray,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
+                                    fontSize = 13.sp,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                 )
-                                Spacer(modifier = Modifier.height(12.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
                                 NuxButton(
                                     onClick = { mainMode = "browse" },
                                     backgroundColor = NuxColors.Yellow,
-                                    cornerRadius = 22.dp,
-                                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp)
+                                    cornerRadius = 20.dp,
+                                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
                                 ) {
-                                    Text("Jelajahi Modrinth", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                                    Text("Jelajahi Modrinth", fontWeight = FontWeight.Black, fontSize = 13.sp)
                                 }
                             }
                         }
                     } else {
                         LazyColumn(
                             modifier = Modifier.weight(1f).fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(bottom = 16.dp)
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
                             items(filteredInstalled, key = { it.id }) { item ->
                                 InstalledItemRow(
@@ -873,7 +873,7 @@ fun ModsScreen(
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
                                 Spacer(modifier = Modifier.height(8.dp))
-                                Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 13.sp)
+                                Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 12.sp)
                             }
                         }
                     } else if (searchErrorMessage != null) {
@@ -886,31 +886,31 @@ fun ModsScreen(
                                     imageVector = Icons.Outlined.CloudOff,
                                     contentDescription = null,
                                     tint = NuxColors.ErrorRed,
-                                    modifier = Modifier.size(38.dp)
+                                    modifier = Modifier.size(32.dp)
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(6.dp))
                                 Text(
                                     text = "Gagal memuat dari Modrinth",
                                     color = NuxColors.DarkGray,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
+                                    fontSize = 13.sp
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = searchErrorMessage ?: "Terjadi kesalahan jaringan",
                                     color = NuxColors.GrayNeutral,
-                                    fontSize = 12.sp,
-                                    lineHeight = 17.sp,
+                                    fontSize = 11.sp,
+                                    lineHeight = 16.sp,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                 )
-                                Spacer(modifier = Modifier.height(12.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
                                 NuxButton(
                                     onClick = { performSearch(currentPage) },
                                     backgroundColor = NuxColors.Yellow,
-                                    cornerRadius = 22.dp,
-                                    contentPadding = PaddingValues(horizontal = 22.dp, vertical = 6.dp)
+                                    cornerRadius = 20.dp,
+                                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
                                 ) {
-                                    Text("Coba lagi", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                                    Text("Coba lagi", fontWeight = FontWeight.Black, fontSize = 13.sp)
                                 }
                             }
                         }
@@ -921,9 +921,9 @@ fun ModsScreen(
                                     imageVector = Icons.Outlined.SearchOff,
                                     contentDescription = null,
                                     tint = NuxColors.GrayNeutral,
-                                    modifier = Modifier.size(38.dp)
+                                    modifier = Modifier.size(32.dp)
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(6.dp))
                                 Text(
                                     text = if (filterByGameVersion) {
                                         "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
@@ -932,17 +932,17 @@ fun ModsScreen(
                                     },
                                     color = NuxColors.DarkGray,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
+                                    fontSize = 13.sp,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "Coba ubah kata kunci atau nonaktifkan filter versi",
                                     color = NuxColors.GrayNeutral,
-                                    fontSize = 12.sp
+                                    fontSize = 11.sp
                                 )
                                 if (filterByGameVersion) {
-                                    Spacer(modifier = Modifier.height(12.dp))
+                                    Spacer(modifier = Modifier.height(10.dp))
                                     NuxButton(
                                         onClick = {
                                             filterByGameVersion = false
@@ -950,10 +950,10 @@ fun ModsScreen(
                                             performSearch(1)
                                         },
                                         backgroundColor = NuxColors.Yellow,
-                                        cornerRadius = 22.dp,
-                                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 6.dp)
+                                        cornerRadius = 20.dp,
+                                        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
                                     ) {
-                                        Text("Cari di semua versi Minecraft", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                                        Text("Cari di semua versi Minecraft", fontWeight = FontWeight.Black, fontSize = 13.sp)
                                     }
                                 }
                             }
@@ -961,8 +961,8 @@ fun ModsScreen(
                     } else {
                         LazyColumn(
                             modifier = Modifier.weight(1f).fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(bottom = 16.dp)
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
                             items(searchHits, key = { it.projectId }) { hit ->
                                 ModrinthHitRow(
@@ -981,7 +981,7 @@ fun ModsScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = 6.dp),
+                                        .padding(vertical = 4.dp),
                                     horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -989,27 +989,27 @@ fun ModsScreen(
                                         onClick = { performSearch(currentPage - 1) },
                                         backgroundColor = Color.Transparent,
                                         enabled = currentPage > 1,
-                                        cornerRadius = 22.dp,
-                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                                        cornerRadius = 20.dp,
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
                                     ) {
-                                        Text("Sebelumnya", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                        Text("Sebelumnya", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                     }
-                                    Spacer(modifier = Modifier.width(14.dp))
+                                    Spacer(modifier = Modifier.width(10.dp))
                                     Text(
                                         text = "$currentPage / $totalPages",
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 13.sp,
+                                        fontSize = 12.sp,
                                         color = NuxColors.GrayNeutral
                                     )
-                                    Spacer(modifier = Modifier.width(14.dp))
+                                    Spacer(modifier = Modifier.width(10.dp))
                                     NuxButton(
                                         onClick = { performSearch(currentPage + 1) },
                                         backgroundColor = Color.Transparent,
                                         enabled = currentPage < totalPages,
-                                        cornerRadius = 22.dp,
-                                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                                        cornerRadius = 20.dp,
+                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
                                     ) {
-                                        Text("Selanjutnya", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                        Text("Selanjutnya", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                     }
                                 }
                             }
@@ -1054,17 +1054,18 @@ fun ModsScreen(
             onDismissRequest = { itemToDelete = null },
             modifier = Modifier
                 .fillMaxWidth(0.6f)
-                .wrapContentHeight()
+                .wrapContentHeight(),
+            compact = true
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 20.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(40.dp)
                         .background(NuxColors.ErrorRed.copy(alpha = 0.18f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
@@ -1072,14 +1073,14 @@ fun ModsScreen(
                         imageVector = Icons.Outlined.WarningAmber,
                         contentDescription = null,
                         tint = NuxColors.ErrorRed,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = if (activeType == "modpacks") "Hapus modpack?" else "Hapus ${item.category}?",
                     fontWeight = FontWeight.Black,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = NuxColors.DarkGray
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -1089,12 +1090,12 @@ fun ModsScreen(
                     } else {
                         "Yakin ingin menghapus \"${item.name}\" dari instance ini?"
                     },
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp,
                     color = NuxColors.GrayNeutral,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -1102,10 +1103,10 @@ fun ModsScreen(
                     NuxButton(
                         onClick = { itemToDelete = null },
                         backgroundColor = Color.Transparent,
-                        cornerRadius = 22.dp,
+                        cornerRadius = 20.dp,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Batal", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
                     NuxButton(
                         onClick = {
@@ -1126,10 +1127,10 @@ fun ModsScreen(
                         },
                         backgroundColor = NuxColors.ErrorRed,
                         contentColor = NuxColors.DarkGray,
-                        cornerRadius = 22.dp,
+                        cornerRadius = 20.dp,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Hapus", fontWeight = FontWeight.Black, fontSize = 14.sp)
+                        Text("Hapus", fontWeight = FontWeight.Black, fontSize = 13.sp)
                     }
                 }
             }
@@ -1142,35 +1143,36 @@ fun ModsScreen(
             onDismissRequest = { /* Tidak bisa ditutup saat sedang mengunduh */ },
             modifier = Modifier
                 .fillMaxWidth(0.6f)
-                .wrapContentHeight()
+                .wrapContentHeight(),
+            compact = true
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 20.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
                     modifier = Modifier
-                        .size(52.dp)
+                        .size(44.dp)
                         .clip(CircleShape)
                         .background(NuxColors.YellowPale)
                         .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(26.dp),
+                        modifier = Modifier.size(22.dp),
                         color = NuxColors.Yellow,
                         strokeWidth = 2.5.dp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = "Mengimpor & memasang modpack",
                     fontWeight = FontWeight.Black,
-                    fontSize = 17.sp,
+                    fontSize = 15.5.sp,
                     color = NuxColors.DarkGray
                 )
 
@@ -1178,7 +1180,7 @@ fun ModsScreen(
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = modpackImportName,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         color = NuxColors.Yellow,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
@@ -1186,11 +1188,11 @@ fun ModsScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = if (modpackImportStatus.isNotBlank()) modpackImportStatus else "Membaca daftar mod dan mengunduh file...",
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     color = NuxColors.GrayNeutral,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     maxLines = 2,
@@ -1198,7 +1200,7 @@ fun ModsScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 if (modpackImportTotal > 0) {
                     val progressRatio = (modpackImportCurrent.toFloat() / modpackImportTotal.toFloat()).coerceIn(0f, 1f)
@@ -1206,34 +1208,34 @@ fun ModsScreen(
                         progress = { progressRatio },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(8.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .height(6.dp)
+                            .clip(RoundedCornerShape(3.dp)),
                         color = NuxColors.Yellow,
                         trackColor = NuxColors.SurfaceElevated
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "$modpackImportCurrent / $modpackImportTotal file mod",
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = NuxColors.GrayNeutral
                     )
                 } else {
                     LinearProgressIndicator(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(8.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .height(6.dp)
+                            .clip(RoundedCornerShape(3.dp)),
                         color = NuxColors.Yellow,
                         trackColor = NuxColors.SurfaceElevated
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
                     text = "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.",
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp,
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
                     color = NuxColors.GrayNeutral.copy(alpha = 0.75f),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
@@ -1264,11 +1266,11 @@ fun ModsScreen(
 
     // --- PRATINJAU GAMBAR ---
     previewGalleryUrl?.let { url ->
-        NuxDialog(onDismissRequest = { previewGalleryUrl = null }) {
+        NuxDialog(onDismissRequest = { previewGalleryUrl = null }, compact = true) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(14.dp),
+                    .padding(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -1279,7 +1281,7 @@ fun ModsScreen(
                     Text(
                         text = "Tangkapan layar",
                         fontWeight = FontWeight.Black,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         color = NuxColors.DarkGray
                     )
                     ModsIconButton(
@@ -1294,7 +1296,7 @@ fun ModsScreen(
                     contentDescription = "Pratinjau gambar",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .height(220.dp)
                         .clip(RoundedCornerShape(14.dp))
                         .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
@@ -1317,27 +1319,27 @@ private fun ModsModeTab(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(19.dp)
+    val shape = RoundedCornerShape(17.dp)
     Box(
         modifier = Modifier
-            .height(38.dp)
+            .height(34.dp)
             .clip(shape)
             .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
             .clickable { onClick() }
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 14.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
             fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             maxLines = 1
         )
     }
 }
 
-/** Chip filter setinggi 44dp di samping kolom cari (versi game, world). */
+/** Chip filter setinggi 38dp di samping kolom cari (versi game, world). */
 @Composable
 private fun ModsFilterChip(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -1345,10 +1347,10 @@ private fun ModsFilterChip(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(19.dp)
     Row(
         modifier = Modifier
-            .height(44.dp)
+            .height(38.dp)
             .clip(shape)
             .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceElevated, shape)
             .border(
@@ -1357,29 +1359,29 @@ private fun ModsFilterChip(
                 shape
             )
             .clickable { onClick() }
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = if (selected) NuxColors.Yellow else NuxColors.GrayNeutral,
-            modifier = Modifier.size(18.dp)
+            modifier = Modifier.size(16.dp)
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = text,
             color = if (selected) NuxColors.Yellow else NuxColors.DarkGray,
             fontWeight = FontWeight.Bold,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.widthIn(max = 150.dp)
+            modifier = Modifier.widthIn(max = 130.dp)
         )
     }
 }
 
-/** Tombol ikon bulat 44dp. */
+/** Tombol ikon bulat 38dp. */
 @Composable
 private fun ModsIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -1392,7 +1394,7 @@ private fun ModsIconButton(
 ) {
     Box(
         modifier = modifier
-            .size(44.dp)
+            .size(38.dp)
             .clip(CircleShape)
             .then(
                 if (ring) {
@@ -1410,7 +1412,7 @@ private fun ModsIconButton(
             imageVector = icon,
             contentDescription = description,
             tint = tint,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(18.dp)
         )
     }
 }
@@ -1422,8 +1424,8 @@ private fun InstalledItemRow(
     onToggle: () -> Unit,
     onDelete: () -> Unit
 ) {
-    val shape = RoundedCornerShape(18.dp)
-    val badgeShape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(16.dp)
+    val badgeShape = RoundedCornerShape(10.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -1433,12 +1435,12 @@ private fun InstalledItemRow(
                 shape
             )
             .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
-            .padding(start = 12.dp, end = 6.dp, top = 8.dp, bottom = 8.dp),
+            .padding(start = 10.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(46.dp)
+                .size(40.dp)
                 .clip(badgeShape)
                 .background(if (item.isEnabled) NuxColors.YellowPale else NuxColors.SurfaceElevated, badgeShape)
                 .border(
@@ -1452,18 +1454,18 @@ private fun InstalledItemRow(
                 text = item.name.take(2).uppercase(),
                 fontWeight = FontWeight.Black,
                 color = if (item.isEnabled) NuxColors.Yellow else NuxColors.GrayNeutral,
-                fontSize = 14.sp
+                fontSize = 13.sp
             )
         }
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(10.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     color = if (item.isEnabled) NuxColors.DarkGray else NuxColors.GrayNeutral,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -1480,7 +1482,7 @@ private fun InstalledItemRow(
             }
             Text(
                 text = "${item.filename} · ${formatBytes(item.sizeBytes)}",
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 color = NuxColors.GrayNeutral,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -1520,8 +1522,8 @@ private fun ModrinthHitRow(
     onOpen: () -> Unit,
     onInstall: () -> Unit
 ) {
-    val shape = RoundedCornerShape(18.dp)
-    val iconShape = RoundedCornerShape(14.dp)
+    val shape = RoundedCornerShape(16.dp)
+    val iconShape = RoundedCornerShape(12.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -1529,28 +1531,28 @@ private fun ModrinthHitRow(
             .background(NuxColors.SurfaceWhite, shape)
             .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
             .clickable { onOpen() }
-            .padding(start = 12.dp, end = 10.dp, top = 10.dp, bottom = 10.dp),
+            .padding(start = 10.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         NuxNetworkImage(
             model = hit.iconUrl,
             contentDescription = hit.title,
             modifier = Modifier
-                .size(56.dp)
+                .size(44.dp)
                 .border(NuxSizes.GlassBorder, NuxColors.CardBorder, iconShape),
             fallbackInitials = hit.title.take(2).uppercase(),
             shape = iconShape,
             maxSidePx = 192
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(10.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = hit.title,
                     fontWeight = FontWeight.Black,
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     color = NuxColors.DarkGray,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -1568,13 +1570,13 @@ private fun ModrinthHitRow(
 
             Text(
                 text = hit.description ?: "Tidak ada deskripsi",
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 color = NuxColors.GrayNeutral,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(3.dp))
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -1588,7 +1590,7 @@ private fun ModrinthHitRow(
                 if (!hit.author.isNullOrBlank()) {
                     Text(
                         text = "oleh ${hit.author}",
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = NuxColors.GrayNeutral,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -1619,40 +1621,40 @@ private fun ModrinthHitRow(
                 )
             }
         } else if (isInstalled) {
-            val okShape = RoundedCornerShape(20.dp)
+            val okShape = RoundedCornerShape(16.dp)
             Row(
                 modifier = Modifier
                     .clip(okShape)
                     .background(NuxColors.YellowPale, okShape)
                     .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape)
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                    .padding(horizontal = 10.dp, vertical = 5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Check,
                     contentDescription = null,
                     tint = NuxColors.Yellow,
-                    modifier = Modifier.size(15.dp)
+                    modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "Terpasang",
                     color = NuxColors.Yellow,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
+                    fontSize = 11.sp
                 )
             }
         } else {
             NuxButton(
                 onClick = onInstall,
                 backgroundColor = NuxColors.Yellow,
-                cornerRadius = 22.dp,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+                cornerRadius = 20.dp,
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
             ) {
                 Text(
                     text = if (hit.projectType == "modpack") "Pasang pack" else "Pasang",
                     fontWeight = FontWeight.Black,
-                    fontSize = 13.sp
+                    fontSize = 12.sp
                 )
             }
         }
@@ -1672,63 +1674,33 @@ private fun ModsPickerDialog(
         onDismissRequest = onDismiss,
         modifier = Modifier
             .fillMaxWidth(0.55f)
-            .wrapContentHeight()
+            .wrapContentHeight(),
+        compact = true
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 22.dp, vertical = 18.dp)
+                .padding(horizontal = 20.dp, vertical = 14.dp)
         ) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Black,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = NuxColors.DarkGray
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Column(
                 modifier = Modifier
-                    .heightIn(max = 230.dp)
+                    .heightIn(max = 220.dp)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 options.forEach { (id, label) ->
-                    val picked = id == selectedId
-                    val rowShape = RoundedCornerShape(16.dp)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 48.dp)
-                            .clip(rowShape)
-                            .background(if (picked) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
-                            .border(
-                                NuxSizes.GlassBorder,
-                                if (picked) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
-                                rowShape
-                            )
-                            .clickable { onPick(id) }
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = label,
-                            color = if (picked) NuxColors.Yellow else NuxColors.DarkGray,
-                            fontWeight = if (picked) FontWeight.Black else FontWeight.Bold,
-                            fontSize = 14.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
-                        if (picked) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Icon(
-                                imageVector = Icons.Outlined.Check,
-                                contentDescription = null,
-                                tint = NuxColors.Yellow,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    }
+                    NuxPickRow(
+                        label = label,
+                        selected = id == selectedId,
+                        onClick = { onPick(id) }
+                    )
                 }
             }
         }
@@ -1767,13 +1739,14 @@ private fun ModDetailDialog(
     NuxDialog(
         onDismissRequest = { if (!isInstalling) onClose() },
         modifier = Modifier.fillMaxWidth(0.92f),
-        fillMaxHeight = true
+        fillMaxHeight = true,
+        compact = true
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // ---------------- KIRI ----------------
             Column(
@@ -1791,18 +1764,18 @@ private fun ModDetailDialog(
                         model = hit.iconUrl,
                         contentDescription = hit.title,
                         modifier = Modifier
-                            .size(72.dp)
-                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(18.dp)),
+                            .size(56.dp)
+                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp)),
                         fallbackInitials = hit.title.take(2).uppercase(),
-                        shape = RoundedCornerShape(18.dp),
+                        shape = RoundedCornerShape(14.dp),
                         maxSidePx = 192
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = hit.title,
                         fontWeight = FontWeight.Black,
-                        fontSize = 20.sp,
-                        lineHeight = 24.sp,
+                        fontSize = 17.sp,
+                        lineHeight = 22.sp,
                         color = NuxColors.DarkGray,
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
@@ -1810,7 +1783,7 @@ private fun ModDetailDialog(
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "oleh ${hit.author ?: "Komunitas"}",
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         color = NuxColors.GrayNeutral
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1839,7 +1812,7 @@ private fun ModDetailDialog(
                         )
                         Text(
                             text = selectedVersion.name.ifBlank { selectedVersion.versionNumber },
-                            fontSize = 13.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = NuxColors.DarkGray,
                             maxLines = 2,
@@ -1848,7 +1821,7 @@ private fun ModDetailDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 if (isInstalling) {
                     Column(
@@ -1864,18 +1837,18 @@ private fun ModDetailDialog(
                         Text(
                             text = progressText.ifBlank { "Sedang mengunduh dan memasang..." },
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
+                            fontSize = 11.sp,
                             color = NuxColors.Yellow,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
                 } else if (isInstalled) {
-                    val okShape = RoundedCornerShape(24.dp)
+                    val okShape = RoundedCornerShape(20.dp)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp)
+                            .height(40.dp)
                             .clip(okShape)
                             .background(NuxColors.YellowPale, okShape)
                             .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape),
@@ -1886,14 +1859,14 @@ private fun ModDetailDialog(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = null,
                             tint = NuxColors.Yellow,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = "Sudah terpasang",
                             color = NuxColors.Yellow,
                             fontWeight = FontWeight.Black,
-                            fontSize = 14.sp
+                            fontSize = 13.sp
                         )
                     }
                 } else {
@@ -1901,19 +1874,19 @@ private fun ModDetailDialog(
                         onClick = onInstall,
                         backgroundColor = NuxColors.Yellow,
                         enabled = versions.isNotEmpty(),
-                        cornerRadius = 24.dp,
+                        cornerRadius = 20.dp,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Download,
                             contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = if (hit.projectType == "modpack") "Pasang modpack" else "Pasang ke instance",
                             fontWeight = FontWeight.Black,
-                            fontSize = 14.sp
+                            fontSize = 13.sp
                         )
                     }
                 }
@@ -1931,7 +1904,7 @@ private fun ModDetailDialog(
                 ) {
                     Row(
                         modifier = Modifier.weight(1f),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         SettingChip(
                             text = "Ringkasan",
@@ -1952,7 +1925,7 @@ private fun ModDetailDialog(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Column(
                     modifier = Modifier
@@ -1975,7 +1948,7 @@ private fun ModDetailDialog(
                             Text(
                                 text = "Tangkapan layar",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp,
+                                fontSize = 11.sp,
                                 color = NuxColors.GrayNeutral
                             )
                             Spacer(modifier = Modifier.height(6.dp))
@@ -1986,42 +1959,42 @@ private fun ModDetailDialog(
                                 items(galleryList) { gal ->
                                     Box(
                                         modifier = Modifier
-                                            .width(190.dp)
-                                            .height(108.dp)
-                                            .clip(RoundedCornerShape(14.dp))
+                                            .width(160.dp)
+                                            .height(92.dp)
+                                            .clip(RoundedCornerShape(12.dp))
                                             .background(NuxColors.SurfaceWhite)
-                                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp))
+                                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(12.dp))
                                             .clickable { onOpenGallery(gal.url) }
                                     ) {
                                         NuxNetworkImage(
                                             model = gal.url,
                                             contentDescription = gal.title ?: "Screenshot",
                                             modifier = Modifier.fillMaxSize(),
-                                            shape = RoundedCornerShape(14.dp),
+                                            shape = RoundedCornerShape(12.dp),
                                             maxSidePx = 400,
                                             showSpinner = true
                                         )
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(14.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                         }
 
                         Text(
                             text = "Deskripsi",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
+                            fontSize = 11.sp,
                             color = NuxColors.GrayNeutral
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = project?.description ?: hit.description ?: "Tidak ada ringkasan deskripsi.",
-                            fontSize = 14.sp,
+                            fontSize = 13.sp,
                             color = NuxColors.DarkGray.copy(alpha = 0.88f),
-                            lineHeight = 20.sp
+                            lineHeight = 18.sp
                         )
 
-                        Spacer(modifier = Modifier.height(14.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         val allLoaders = (project?.loaders ?: hit.categories ?: emptyList()).distinct()
                         if (allLoaders.isNotEmpty()) {
@@ -2042,33 +2015,33 @@ private fun ModDetailDialog(
                         }
                     } else {
                         if (versions.isEmpty()) {
-                            val warnShape = RoundedCornerShape(14.dp)
+                            val warnShape = RoundedCornerShape(12.dp)
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(NuxColors.ErrorRed.copy(alpha = 0.12f), warnShape)
                                     .border(NuxSizes.GlassBorder, NuxColors.ErrorRed.copy(alpha = 0.4f), warnShape)
-                                    .padding(14.dp)
+                                    .padding(12.dp)
                             ) {
                                 Text(
                                     text = "Tidak ada versi yang didukung",
                                     color = NuxColors.ErrorRed,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
+                                    fontSize = 13.sp
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "Proyek ini tidak punya rilis yang cocok dengan Minecraft ${instance?.mcVersion ?: ""} (${(instance?.loader ?: "vanilla").uppercase()}).",
                                     color = NuxColors.GrayNeutral,
-                                    fontSize = 12.sp,
-                                    lineHeight = 17.sp
+                                    fontSize = 11.sp,
+                                    lineHeight = 16.sp
                                 )
                             }
                         } else {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                 versions.forEach { ver ->
                                     val isPicked = selectedVersion?.id == ver.id
-                                    val rowShape = RoundedCornerShape(16.dp)
+                                    val rowShape = RoundedCornerShape(14.dp)
                                     val verColor = when (ver.versionType) {
                                         "release" -> NuxColors.Yellow
                                         "beta" -> NuxColors.AmberDark
@@ -2085,12 +2058,12 @@ private fun ModDetailDialog(
                                                 rowShape
                                             )
                                             .clickable { onPickVersion(ver) }
-                                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                                            .padding(horizontal = 10.dp, vertical = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(18.dp)
+                                                .size(16.dp)
                                                 .clip(CircleShape)
                                                 .background(if (isPicked) NuxColors.Yellow else Color.Transparent)
                                                 .border(
@@ -2105,23 +2078,23 @@ private fun ModDetailDialog(
                                                     imageVector = Icons.Outlined.Check,
                                                     contentDescription = null,
                                                     tint = NuxColors.Ink,
-                                                    modifier = Modifier.size(12.dp)
+                                                    modifier = Modifier.size(11.dp)
                                                 )
                                             }
                                         }
-                                        Spacer(modifier = Modifier.width(12.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
                                                 text = ver.name.ifBlank { ver.versionNumber },
                                                 fontWeight = FontWeight.Bold,
-                                                fontSize = 14.sp,
+                                                fontSize = 13.sp,
                                                 color = NuxColors.DarkGray,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
                                             )
                                             Text(
                                                 text = "Versi ${ver.versionNumber} · MC ${ver.gameVersions.joinToString(", ")}",
-                                                fontSize = 12.sp,
+                                                fontSize = 11.sp,
                                                 color = NuxColors.GrayNeutral,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
@@ -2140,15 +2113,15 @@ private fun ModDetailDialog(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = if (hit.projectType == "modpack") {
                             "Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest)."
                         } else {
                             "Dependensi wajib ikut terpasang otomatis."
                         },
-                        fontSize = 12.sp,
-                        lineHeight = 17.sp,
+                        fontSize = 11.sp,
+                        lineHeight = 16.sp,
                         color = NuxColors.GrayNeutral
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -2158,7 +2131,7 @@ private fun ModDetailDialog(
     }
 }
 
-/** Kolom cari berbentuk pil 44dp dengan ikon kaca pembesar dan tombol hapus teks. */
+/** Kolom cari berbentuk pil 38dp dengan ikon kaca pembesar dan tombol hapus teks. */
 @Composable
 private fun ModsSearchBar(
     value: String,
@@ -2166,23 +2139,23 @@ private fun ModsSearchBar(
     placeholder: String,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(19.dp)
     Row(
         modifier = modifier
-            .height(44.dp)
+            .height(38.dp)
             .clip(shape)
             .background(NuxColors.SurfaceInput, shape)
             .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
-            .padding(start = 14.dp, end = 6.dp),
+            .padding(start = 12.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = Icons.Outlined.Search,
             contentDescription = null,
             tint = NuxColors.GrayNeutral,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(18.dp)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.CenterStart
@@ -2191,7 +2164,7 @@ private fun ModsSearchBar(
                 Text(
                     text = placeholder,
                     color = NuxColors.GrayNeutral.copy(alpha = 0.7f),
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -2201,7 +2174,7 @@ private fun ModsSearchBar(
                 onValueChange = onValueChange,
                 textStyle = TextStyle(
                     color = NuxColors.DarkGray,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
                 ),
                 cursorBrush = SolidColor(NuxColors.Yellow),
@@ -2212,7 +2185,7 @@ private fun ModsSearchBar(
         if (value.isNotEmpty()) {
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(30.dp)
                     .clip(CircleShape)
                     .clickable { onValueChange("") },
                 contentAlignment = Alignment.Center
@@ -2221,7 +2194,7 @@ private fun ModsSearchBar(
                     imageVector = Icons.Outlined.Close,
                     contentDescription = "Hapus teks",
                     tint = NuxColors.GrayNeutral,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(16.dp)
                 )
             }
         }

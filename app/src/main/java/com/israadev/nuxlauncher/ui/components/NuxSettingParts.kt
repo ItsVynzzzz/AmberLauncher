@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -62,16 +66,16 @@ fun SettingRowText(
         Text(
             text = title,
             color = NuxColors.DarkGray,
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
         if (!desc.isNullOrBlank()) {
             Text(
                 text = desc,
                 color = NuxColors.GrayNeutral,
-                fontSize = 12.sp,
-                lineHeight = 17.sp,
-                modifier = Modifier.padding(top = 2.dp)
+                fontSize = 11.sp,
+                lineHeight = 15.sp,
+                modifier = Modifier.padding(top = 1.dp)
             )
         }
     }
@@ -85,10 +89,10 @@ fun SettingChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(19.dp)
+    val shape = RoundedCornerShape(17.dp)
     Box(
         modifier = modifier
-            .height(38.dp)
+            .height(34.dp)
             .clip(shape)
             .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
             .border(
@@ -97,13 +101,13 @@ fun SettingChip(
                 shape
             )
             .clickable { onClick() }
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 14.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
             maxLines = 1
         )
@@ -122,7 +126,7 @@ fun SettingSwitchRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 14.dp),
+            .padding(vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
@@ -152,10 +156,10 @@ fun <T> SettingChoiceRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 14.dp)
+            .padding(vertical = 9.dp)
     ) {
         SettingRowText(title = title, desc = desc)
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -187,7 +191,7 @@ fun SettingSliderRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 14.dp)
+            .padding(vertical = 9.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
@@ -195,7 +199,7 @@ fun SettingSliderRow(
             Text(
                 text = valueText,
                 color = if (warn) NuxColors.ErrorRed else NuxColors.Yellow,
-                fontSize = 15.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Black
             )
         }
@@ -230,7 +234,7 @@ fun SettingTab(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(42.dp)
             .clip(shape)
             .background(if (selected) NuxColors.YellowPale else Color.Transparent, shape)
             .border(
@@ -239,22 +243,107 @@ fun SettingTab(
                 shape
             )
             .clickable { onClick() }
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = if (selected) NuxColors.Yellow else NuxColors.GrayNeutral,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(18.dp)
         )
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = label,
             color = if (selected) NuxColors.Yellow else NuxColors.DarkGray,
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
             maxLines = 1
         )
+    }
+}
+
+/** Tombol ikon bulat 44dp (tutup, hapus, dll). ring = lingkaran kaca di belakang ikon. */
+@Composable
+fun NuxIconButton(
+    icon: ImageVector,
+    description: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    tint: Color = NuxColors.GrayNeutral,
+    ring: Boolean = true,
+    enabled: Boolean = true
+) {
+    Box(
+        modifier = modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .then(
+                if (ring) {
+                    Modifier
+                        .background(NuxColors.SurfaceElevated, CircleShape)
+                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, CircleShape)
+                } else {
+                    Modifier
+                }
+            )
+            .clickable(enabled = enabled) { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            tint = tint,
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
+
+/** Baris pilihan satu-dari-banyak dalam dialog (daftar versi, loader). Terpilih = tint kuning + centang. */
+@Composable
+fun NuxPickRow(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    trailing: (@Composable () -> Unit)? = null
+) {
+    val shape = RoundedCornerShape(16.dp)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 42.dp)
+            .clip(shape)
+            .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceWhite, shape)
+            .border(
+                NuxSizes.GlassBorder,
+                if (selected) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
+                shape
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = if (selected) NuxColors.Yellow else NuxColors.DarkGray,
+            fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+            fontSize = 13.sp,
+            maxLines = 2,
+            modifier = Modifier.weight(1f)
+        )
+        if (trailing != null) {
+            Spacer(modifier = Modifier.width(8.dp))
+            trailing()
+        }
+        if (selected) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Icon(
+                imageVector = Icons.Outlined.Check,
+                contentDescription = null,
+                tint = NuxColors.Yellow,
+                modifier = Modifier.size(18.dp)
+            )
+        }
     }
 }

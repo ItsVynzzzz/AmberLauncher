@@ -131,7 +131,7 @@ fun SettingsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 20.dp, end = 20.dp, top = 14.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp)
     ) {
         // Judul + tombol Tentang
         Row(
@@ -144,36 +144,36 @@ fun SettingsScreen(
                     text = "Pengaturan",
                     color = NuxColors.DarkGray,
                     fontWeight = FontWeight.Black,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     letterSpacing = (-0.3).sp
                 )
                 Text(
                     text = "${totalRamMb / 1024} GB RAM · $cpuCores inti CPU",
                     color = NuxColors.GrayNeutral,
-                    fontSize = 12.sp
+                    fontSize = 11.sp
                 )
             }
             NuxButton(
                 onClick = { showAboutDialog = true },
                 backgroundColor = Color.Transparent,
-                cornerRadius = 22.dp,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+                cornerRadius = 20.dp,
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "Tentang & lisensi",
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Row(
             modifier = Modifier
@@ -182,15 +182,15 @@ fun SettingsScreen(
         ) {
             // Tab samping
             Column(
-                modifier = Modifier.width(156.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                modifier = Modifier.width(128.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 SettingTab(icon = Icons.Outlined.Memory, label = "Memori", selected = section == 0) { section = 0 }
                 SettingTab(icon = Icons.Outlined.Speed, label = "Grafis", selected = section == 1) { section = 1 }
                 SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
             // Isi tab
             Column(
@@ -256,13 +256,13 @@ fun SettingsScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 14.dp)
+                                .padding(vertical = 9.dp)
                         ) {
                             SettingRowText(
                                 title = "Argumen JVM tambahan",
                                 desc = "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan."
                             )
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
                             NuxTextField(
                                 value = customJvmArgs,
                                 onValueChange = {
@@ -283,14 +283,14 @@ fun SettingsScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 14.dp),
+                                .padding(vertical = 9.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Renderer",
                                     color = NuxColors.DarkGray,
-                                    fontSize = 15.sp,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Row(
@@ -301,7 +301,7 @@ fun SettingsScreen(
                                     Text(
                                         text = activeRendererInfo.displayName,
                                         color = NuxColors.Yellow,
-                                        fontSize = 14.sp,
+                                        fontSize = 13.sp,
                                         fontWeight = FontWeight.Black
                                     )
                                     NuxBadge(
@@ -312,8 +312,8 @@ fun SettingsScreen(
                                 Text(
                                     text = activeRendererInfo.summary,
                                     color = NuxColors.GrayNeutral,
-                                    fontSize = 12.sp,
-                                    lineHeight = 17.sp,
+                                    fontSize = 11.sp,
+                                    lineHeight = 15.sp,
                                     modifier = Modifier.padding(top = 4.dp)
                                 )
                             }
@@ -325,9 +325,9 @@ fun SettingsScreen(
                                         showRendererConfigDialog = true
                                     },
                                     backgroundColor = Color.Transparent,
-                                    cornerRadius = 22.dp,
+                                    cornerRadius = 20.dp,
                                     contentPadding = PaddingValues(0.dp),
-                                    modifier = Modifier.size(44.dp)
+                                    modifier = Modifier.size(38.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Settings,
@@ -340,12 +340,12 @@ fun SettingsScreen(
                             NuxButton(
                                 onClick = { showRendererDialog = true },
                                 backgroundColor = Color.Transparent,
-                                cornerRadius = 22.dp,
-                                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp)
+                                cornerRadius = 20.dp,
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = "Ganti",
-                                    fontSize = 13.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -425,7 +425,7 @@ fun SettingsScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 14.dp),
+                                .padding(vertical = 9.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             SettingRowText(
@@ -437,8 +437,8 @@ fun SettingsScreen(
                             NuxButton(
                                 onClick = onOpenGuiEditor,
                                 backgroundColor = NuxColors.Yellow,
-                                cornerRadius = 22.dp,
-                                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 6.dp)
+                                cornerRadius = 20.dp,
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Edit,
@@ -448,7 +448,7 @@ fun SettingsScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Buka editor",
-                                    fontSize = 13.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Black
                                 )
                             }
@@ -528,13 +528,13 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp),
+                .height(46.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Perubahan tersimpan otomatis",
                 color = NuxColors.GrayNeutral,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 modifier = Modifier.weight(1f)
             )
             NuxButton(
@@ -558,12 +558,12 @@ fun SettingsScreen(
                 backgroundColor = Color.Transparent,
                 contentColor = NuxColors.ErrorRed,
                 borderColor = NuxColors.ErrorRed.copy(alpha = 0.45f),
-                cornerRadius = 22.dp,
-                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp)
+                cornerRadius = 20.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
             ) {
                 Text(
                     text = "Reset default",
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
             }

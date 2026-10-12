@@ -22,7 +22,9 @@ android {
         applicationId = "com.itsvynzzzz.nuxlite"
         minSdk = 26
         targetSdk = 34
-        versionCode = 10
+        // Nomor versi naik sendiri di setiap build GitHub Actions (nomor run), jadi Android selalu
+        // menganggapnya pembaruan yang lebih baru dari yang sudah terpasang. Build lokal tetap 10.
+        versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.let { 100 + it } ?: 10
         versionName = "1.0.9"
 
 
@@ -37,10 +39,29 @@ android {
         }
     }
 
+    // Kunci tanda tangan tetap milik repo (signing/debug.keystore, dibuat sekali oleh GitHub Actions).
+    // Dipakai langsung dari repo, tidak bergantung folder ~/.android di mesin build, supaya semua
+    // APK memakai tanda tangan yang sama dan bisa saling menimpa sebagai pembaruan.
+    val fixedKeystore = rootProject.file("signing/debug.keystore")
+    signingConfigs {
+        if (fixedKeystore.exists()) {
+            create("nuxFixed") {
+                storeFile = fixedKeystore
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (fixedKeystore.exists()) {
+                signingConfigs.getByName("nuxFixed")
+            } else {
+                signingConfigs.getByName("debug")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

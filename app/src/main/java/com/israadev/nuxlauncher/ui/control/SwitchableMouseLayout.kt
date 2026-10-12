@@ -43,6 +43,7 @@ fun SwitchableMouseLayout(
     controlMode: MouseControlMode,
     cursorPosition: Offset,
     cursorSensitivity: Float = 1.0f,
+    touchAttackEnabled: Boolean = true,
     requestPointerCapture: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
@@ -75,6 +76,7 @@ fun SwitchableMouseLayout(
     val currentCursorMode by rememberUpdatedState(cursorMode)
     val currentCursorPos by rememberUpdatedState(cursorPosition)
     val currentSensitivity by rememberUpdatedState(cursorSensitivity)
+    val currentTouchAttack by rememberUpdatedState(touchAttackEnabled)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
@@ -158,7 +160,8 @@ fun SwitchableMouseLayout(
                                     longPressJob?.cancel()
                                     longPressJob = launch {
                                         delay(viewConfiguration.longPressTimeoutMillis)
-                                        if (!isDragging && activePointerId == downEvent.id) {
+                                        // Saat bermain (kursor terkunci), tahan di layar hanya memukul bila diizinkan
+                                        if (!isDragging && activePointerId == downEvent.id && (!capturedNow || currentTouchAttack)) {
                                             longPressTriggered = true
                                             val targetPos = if (capturedNow) {
                                                 Offset.Zero
@@ -214,7 +217,10 @@ fun SwitchableMouseLayout(
                                         currentOnLongPressEnd()
                                     } else if (!isDragging) {
                                         if (currentCursorMode == CURSOR_DISABLED) {
-                                            CallbackBridge.putMouseEvent(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
+                                            // Ketuk layar saat bermain = pukul; hanya bila diizinkan di Pengaturan
+                                            if (currentTouchAttack) {
+                                                CallbackBridge.putMouseEvent(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
+                                            }
                                         } else {
                                             val clickPos = if (currentControlMode == MouseControlMode.CLICK) {
                                                 upChange.position

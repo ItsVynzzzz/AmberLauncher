@@ -1420,6 +1420,7 @@ fun GameScreen(
             controlMode = mouseControlMode,
             cursorPosition = Offset(cursorX, cursorY),
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
+            touchAttackEnabled = launcherSettings.touchAttackEnabled,
             requestPointerCapture = !launcherSettings.physicalMouseMode,
             onCursorPositionChange = { newPos ->
                 cursorX = newPos.x

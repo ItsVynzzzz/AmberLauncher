@@ -14,6 +14,9 @@ data class LauncherSettings(
     val mouseControlMode: String = "SLIDE", // "SLIDE" (Trackpad) or "CLICK" (Direct Touch)
     val cursorSensitivity: Int = 100, // 50% - 300%
     val captureSensitivity: Int = 125, // 50% - 300% (Camera look speed)
+    // Pukul/hancurkan lewat ketukan atau tahan di layar kosong saat bermain. Bawaan mati supaya
+    // menggeser kamera tidak ikut memukul; pukul lewat tombol kontrol tetap bekerja.
+    val touchAttackEnabled: Boolean = false,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used

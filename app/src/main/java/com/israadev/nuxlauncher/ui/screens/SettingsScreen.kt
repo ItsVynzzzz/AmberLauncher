@@ -79,6 +79,7 @@ fun SettingsScreen(
     var mouseMode by remember(currentSettings.mouseControlMode) { mutableStateOf(currentSettings.mouseControlMode) }
     var cursorSensitivity by remember(currentSettings.cursorSensitivity) { mutableIntStateOf(currentSettings.cursorSensitivity) }
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
+    var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -109,6 +110,7 @@ fun SettingsScreen(
             mouseControlMode = mouseMode,
             cursorSensitivity = cursorSensitivity,
             captureSensitivity = captureSensitivity,
+            touchAttackEnabled = touchAttack,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -470,6 +472,16 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSwitchRow(
+                            title = "Pukul lewat layar",
+                            desc = "Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.",
+                            checked = touchAttack,
+                            onCheckedChange = {
+                                touchAttack = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -548,6 +560,7 @@ fun SettingsScreen(
                     mouseMode = reset.mouseControlMode
                     cursorSensitivity = reset.cursorSensitivity
                     captureSensitivity = reset.captureSensitivity
+                    touchAttack = reset.touchAttackEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio

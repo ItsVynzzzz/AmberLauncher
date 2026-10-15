@@ -1299,7 +1299,7 @@ fun CustomGuiEditorScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text("Reset Layout GUI?", fontWeight = FontWeight.Black, fontSize = 16.sp, color = Color.White)
-                    Text("Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar NUX.", fontSize = 12.sp, color = Color(0xFFE9E4CC))
+                    Text("Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.", fontSize = 12.sp, color = Color(0xFFE9E4CC))
 
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         NuxButton(

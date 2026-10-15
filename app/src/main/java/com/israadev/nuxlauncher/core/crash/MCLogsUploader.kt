@@ -62,7 +62,7 @@ object MCLogsUploader {
             val request = Request.Builder()
                 .url(API_URL)
                 .post(formBody)
-                .header("User-Agent", "NUX-Launcher-Android/1.0")
+                .header("User-Agent", "AmberLauncher/1.0")
                 .build()
 
             val response = client.newCall(request).execute()

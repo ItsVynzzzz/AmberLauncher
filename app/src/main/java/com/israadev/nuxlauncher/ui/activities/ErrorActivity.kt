@@ -185,7 +185,7 @@ private fun ErrorContent(
     val isLauncherCrash = crashType == GameCrashInfo.CRASH_TYPE_LAUNCHER
     val exitDetailMessage = remember(isLauncherCrash, isSignal, exitCode) {
         if (isLauncherCrash) {
-            "Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke tim pengembang NUX."
+            "Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher."
         } else {
             CrashUtils.getExitMessage(exitCode, isSignal)
         }
@@ -468,7 +468,7 @@ private fun CrashDetailCard(
                 letterSpacing = 0.5.sp
             )
             Text(
-                text = if (isLauncherCrash) "Aplikasi NUX Launcher Android" else "$instanceName (Minecraft $mcVersion)",
+                text = if (isLauncherCrash) "Aplikasi AmberLauncher" else "$instanceName (Minecraft $mcVersion)",
                 color = NuxColors.DarkGray,
                 fontWeight = FontWeight.Black,
                 fontSize = 12.5.sp

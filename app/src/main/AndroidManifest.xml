@@ -41,7 +41,7 @@
         <activity-alias
             android:name=".ImportModActivity"
             android:targetActivity=".MainActivity"
-            android:label="NUX Launcher — Mod"
+            android:label="AmberLauncher — Mod"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>
@@ -70,7 +70,7 @@
         <activity-alias
             android:name=".ImportModpackActivity"
             android:targetActivity=".MainActivity"
-            android:label="NUX Launcher — Modpack"
+            android:label="AmberLauncher — Modpack"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>
@@ -108,7 +108,7 @@
         <activity-alias
             android:name=".ImportResourcepackActivity"
             android:targetActivity=".MainActivity"
-            android:label="NUX Launcher — Resource Pack"
+            android:label="AmberLauncher — Resource Pack"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>
@@ -136,7 +136,7 @@
         <activity-alias
             android:name=".ImportShaderpackActivity"
             android:targetActivity=".MainActivity"
-            android:label="NUX Launcher — Shaderpack"
+            android:label="AmberLauncher — Shaderpack"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>

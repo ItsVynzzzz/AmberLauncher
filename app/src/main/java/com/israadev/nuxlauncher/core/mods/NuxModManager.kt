@@ -35,7 +35,7 @@ object NuxModManager {
         .followRedirects(true)
         .build()
 
-    private const val USER_AGENT = "NUX-Launcher/1.4.0 (contact@nuxlauncher.site)"
+    private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/NuxLite)"
     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
 
     /**

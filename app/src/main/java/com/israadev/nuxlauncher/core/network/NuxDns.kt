@@ -75,7 +75,7 @@ object NuxDns : Dns {
         conn.connectTimeout = 4000
         conn.readTimeout = 4000
         conn.setRequestProperty("Accept", "application/dns-json")
-        conn.setRequestProperty("User-Agent", "NuxLauncher/1.4.0")
+        conn.setRequestProperty("User-Agent", "AmberLauncher/1.0")
 
         if (conn.responseCode == 200) {
             val responseText = conn.inputStream.bufferedReader().use { it.readText() }

@@ -338,13 +338,27 @@ fun NuxAboutDialog(
                                     }
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = "NUX Launcher merupakan Versi Modifikasi Tidak Resmi (Unofficial Modified Version) yang dibangun dan diadaptasi berdasarkan proyek Zalith Launcher 2 dan PojavLauncher. Program ini BUKAN aplikasi resmi dari Zalith Launcher Team maupun Mojang Studios.",
+                                        text = "AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Program ini BUKAN aplikasi resmi dari Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.",
                                         color = NuxColors.GrayNeutral,
                                         fontSize = 8.5.sp,
                                         lineHeight = 12.5.sp
                                     )
                                 }
                             }
+
+                            // AmberLauncher (proyek ini)
+                            UpstreamProjectCard(
+                                title = "AmberLauncher",
+                                copyright = "Copyright © 2026 ItsVynzzzz",
+                                license = "GNU General Public License v3.0 (GPL-3.0)",
+                                description = "Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.",
+                                url = "https://github.com/ItsVynzzzz/NuxLite",
+                                onOpenUrl = { url ->
+                                    try {
+                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                    } catch (_: Exception) {}
+                                }
+                            )
 
                             // Core Upstream Credits Header
                             Row(
@@ -384,7 +398,7 @@ fun NuxAboutDialog(
                             UpstreamProjectCard(
                                 title = "PojavLauncher",
                                 copyright = "Copyright © 2020-present PojavLauncherTeam & Contributors",
-                                license = "GNU General Public License v3.0 (GPL-3.0)",
+                                license = "GNU Lesser General Public License v3.0 (LGPL-3.0)",
                                 description = "Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.",
                                 url = "https://github.com/PojavLauncherTeam/PojavLauncher",
                                 onOpenUrl = { url ->
@@ -394,12 +408,12 @@ fun NuxAboutDialog(
                                 }
                             )
 
-                            // 3. NUX Launcher Open Source Repository
+                            // 3. NUX Launcher (proyek asal fork ini)
                             UpstreamProjectCard(
-                                title = "NUX Launcher (Source Code)",
+                                title = "NUX Launcher (sumber asal fork)",
                                 copyright = "Copyright © 2026 IsraaDeveloper & Contributors",
                                 license = "GNU General Public License v3.0 (GPL-3.0)",
-                                description = "Repositori kode sumber terbuka NUX Launcher. Dilisensikan bebas di bawah ketentuan GNU GPL-3.0.",
+                                description = "Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.",
                                 url = "https://github.com/IsraaDeveloper/nuxlabs",
                                 onOpenUrl = { url ->
                                     try {

@@ -141,7 +141,7 @@ fun NuxAddonImportDialog(
                                     letterSpacing = 0.5.sp
                                 )
                                 Text(
-                                    text = "NUX Addon Installer",
+                                    text = "Pemasang Addon",
                                     color = NuxColors.SageGreen,
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.SemiBold

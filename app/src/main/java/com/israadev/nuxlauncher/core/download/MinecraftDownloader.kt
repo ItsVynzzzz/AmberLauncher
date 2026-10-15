@@ -312,7 +312,7 @@ class MinecraftDownloader(
                 try {
                     val request = Request.Builder()
                         .url(candidateUrl)
-                        .header("User-Agent", "NuxLauncher/1.0 (Android)")
+                        .header("User-Agent", "AmberLauncher/1.0 (Android)")
                         .build()
                     val response = client.newCall(request).execute()
                     if (!response.isSuccessful) {

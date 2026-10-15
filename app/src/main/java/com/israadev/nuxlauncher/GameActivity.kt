@@ -370,7 +370,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         // Setup exit callback
         ZLNativeInvoker.onExitCallback = { exitCode, isSignal ->
             runOnUiThread {
-                liveLogs.add("[NUX Engine] Game process ended (code: $exitCode, signal: $isSignal)")
+                liveLogs.add("[Amber Engine] Game process ended (code: $exitCode, signal: $isSignal)")
                 handleGameExit(exitCode, isSignal)
             }
         }
@@ -498,7 +498,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
         try {
             LoggerBridge.start(logFile.absolutePath)
-            LoggerBridge.appendTitle("NUX Launcher Game Session")
+            LoggerBridge.appendTitle("AmberLauncher Game Session")
             LoggerBridge.append("▷ Starting $instanceName ($mcVersion) on $runtimeName")
         } catch (e: Throwable) {
             liveLogs.add("[LoggerBridge Init] ${e.message}")
@@ -602,14 +602,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     private fun startGameJVM() {
-        thread(name = "NUX-JVM-Thread") {
+        thread(name = "Amber-JVM-Thread") {
             try {
                 val nativeLibDir = applicationInfo.nativeLibraryDir
                 val runtimeHome = File(runtimeHomePath)
                 val gameDir = File(gameDirPath)
                 val assetsDir = File(assetsDirPath)
 
-                liveLogs.add("[NUX Launcher] Menyiapkan environment JVM...")
+                liveLogs.add("[AmberLauncher] Menyiapkan environment JVM...")
 
                 val activeSettings = SettingsManager.settings.value
                 val (targetWidth, targetHeight) = getScaledDisplayDimensions()
@@ -639,12 +639,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
                 // Verify & Ensure OpenJDK Runtime is fully installed
                 if (!com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.isRuntimeInstalled(this@GameActivity, runtimeName)) {
-                    liveLogs.add("[NUX Runtime] Mempersiapkan OpenJDK ($runtimeName)...")
-                    LoggerBridge.append("▷ [NUX Runtime] Runtime $runtimeName missing or incomplete, extracting from assets...")
+                    liveLogs.add("[Amber Runtime] Mempersiapkan OpenJDK ($runtimeName)...")
+                    LoggerBridge.append("▷ [Amber Runtime] Runtime $runtimeName missing or incomplete, extracting from assets...")
                     val extRes = kotlinx.coroutines.runBlocking {
                         com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.extractRuntime(this@GameActivity, runtimeName) { msg ->
-                            liveLogs.add("[NUX Runtime] $msg")
-                            LoggerBridge.append("▷ [NUX Runtime] $msg")
+                            liveLogs.add("[Amber Runtime] $msg")
+                            LoggerBridge.append("▷ [Amber Runtime] $msg")
                         }
                     }
                     if (extRes.isFailure) {
@@ -653,7 +653,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         LoggerBridge.append("[ERROR] Gagal mengekstrak OpenJDK: $errMsg")
                         throw Exception("Gagal menyiapkan OpenJDK ($runtimeName): $errMsg")
                     }
-                    liveLogs.add("[NUX Runtime] OpenJDK ($runtimeName) siap digunakan!")
+                    liveLogs.add("[Amber Runtime] OpenJDK ($runtimeName) siap digunakan!")
                 }
 
                 // Combined Library Path (Include Java runtime libraries for pojavexec dlopen)
@@ -1055,7 +1055,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add("-Dos.name=Linux")
                 jvmArgs.add("-Dos.version=Android-${Build.VERSION.RELEASE}")
                 jvmArgs.add("-Duser.home=${gameDir.parentFile?.absolutePath ?: gameDir.absolutePath}")
-                jvmArgs.add("-Dnet.minecraft.clientmodname=NUX-Launcher")
+                jvmArgs.add("-Dnet.minecraft.clientmodname=AmberLauncher")
                 jvmArgs.add("-Dlog4j2.formatMsgNoLookups=true")
                 jvmArgs.add("-Djava.rmi.server.useCodebaseOnly=true")
                 jvmArgs.add("-Dcom.sun.jndi.rmi.object.trustURLCodebase=false")
@@ -1212,9 +1212,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     loaderVersion = loaderVersion,
                     installedMods = installedMods
                 )
-                liveLogs.add("[NUX Engine] Memulai eksekusi VMLauncher.launchJVM()...")
+                liveLogs.add("[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...")
                 val exitCode = VMLauncher.launchJVM(jvmArgs.toTypedArray())
-                liveLogs.add("[NUX Engine] JVM selesai dengan kode keluar: $exitCode")
+                liveLogs.add("[Amber Engine] JVM selesai dengan kode keluar: $exitCode")
                 runOnUiThread {
                     handleGameExit(exitCode, false)
                 }

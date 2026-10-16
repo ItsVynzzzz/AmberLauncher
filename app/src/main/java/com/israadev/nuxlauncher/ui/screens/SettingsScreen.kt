@@ -517,7 +517,7 @@ fun SettingsScreen(
                         SettingDivider()
                         SettingSwitchRow(
                             title = "Ambient",
-                            desc = "Cahaya lembut di sekitar kartu Beranda yang mengikuti warna GIF atau video. Tidak berlaku untuk foto.",
+                            desc = "Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.",
                             checked = ambientOn,
                             onCheckedChange = {
                                 ambientOn = it

@@ -236,7 +236,7 @@ private class HomeVideoController(private val file: File) {
 /**
  * Video latar yang diputar berulang tanpa henti, tanpa suara kecuali [volume] > 0. Jeda otomatis
  * saat aplikasi tidak di layar depan. Bila [ambient] tidak null, warna tepi bingkai dikirim ke
- * sana tiap detik untuk efek cahaya.
+ * sana beberapa kali per detik untuk efek cahaya.
  */
 @Composable
 fun HomeVideoLayer(
@@ -271,7 +271,7 @@ fun HomeVideoLayer(
             delay(400)
             while (true) {
                 controller.sample()?.let { ambient.colors = it }
-                delay(1000)
+                delay(AmbientSampler.INTERVAL_MS)
             }
         }
     }

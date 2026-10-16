@@ -363,7 +363,11 @@ fun DashboardScreen() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .onGloballyPositioned { cardBounds = it.boundsInRoot() }
+                            .onGloballyPositioned {
+                                val r = it.boundsInRoot()
+                                cardBounds = r
+                                if (r.height > 0f) ambientState.aspect = r.width / r.height
+                            }
                             .clip(cardShape)
                             .background(cardFill, cardShape)
                             .border(1.dp, cardEdge, cardShape)
@@ -1291,7 +1295,7 @@ private fun HomeStillBackground(
                 }
             }
 
-            // Cahaya ambient dari GIF: ambil warna tepi bingkai yang sedang tampil tiap detik.
+            // Cahaya ambient dari GIF: ambil warna bingkai yang sedang tampil beberapa kali per detik.
             val resumed = rememberIsResumed()
             if (ambient != null && animate && resumed && Build.VERSION.SDK_INT >= 28 && drawable is AnimatedImageDrawable) {
                 val sampleBitmap = remember(drawable) { AmbientSampler.newBitmap() }
@@ -1300,11 +1304,11 @@ private fun HomeStillBackground(
                     delay(400)
                     while (true) {
                         try {
-                            AmbientSampler.fromDrawable(drawable, sampleBitmap, samplePixels)
+                            AmbientSampler.fromDrawable(drawable, sampleBitmap, samplePixels, ambient.aspect)
                                 ?.let { ambient.colors = it }
                         } catch (_: Throwable) {
                         }
-                        delay(1000)
+                        delay(AmbientSampler.INTERVAL_MS)
                     }
                 }
             }

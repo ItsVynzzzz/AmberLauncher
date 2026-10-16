@@ -62,6 +62,7 @@ import kotlin.math.roundToInt
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onOpenGuiEditor: () -> Unit = {},
+    onChangeBackground: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -97,6 +98,13 @@ fun SettingsScreen(
     var selectedConfigRenderer by remember { mutableStateOf<NuxRendererInfo?>(null) }
     var showAdrenoWarningDialog by remember { mutableStateOf(false) }
 
+    var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
+    var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
+    var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
+    var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
+    var ambientOn by remember(currentSettings.homeAmbientEnabled) { mutableStateOf(currentSettings.homeAmbientEnabled) }
+    var ambientIntensity by remember(currentSettings.homeAmbientIntensity) { mutableIntStateOf(currentSettings.homeAmbientIntensity) }
+
     val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
     val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.85f).toInt().coerceAtLeast(1024) }
     val cpuCores = remember { SettingsManager.getCpuCoreCount() }
@@ -120,12 +128,18 @@ fun SettingsScreen(
             vulkanDriver = vulkanDriver,
             graphicsApi = graphicsApi,
             zinkPreferSystemDriver = zinkPreferSystemDriver,
-            vsyncInZink = vsyncInZink
+            vsyncInZink = vsyncInZink,
+            homeBgAnimate = bgAnimate,
+            homeBgPauseOnPowerSave = bgPauseOnPowerSave,
+            homeBgSound = bgSound,
+            homeBgVolume = bgVolume,
+            homeAmbientEnabled = ambientOn,
+            homeAmbientIntensity = ambientIntensity
         )
         SettingsManager.updateSettings(context, updated)
     }
 
-    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol). Isi tiap tab digulir sendiri-sendiri.
+    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol, 3 = Tampilan). Isi tiap tab digulir sendiri-sendiri.
     var section by remember { mutableIntStateOf(0) }
     val contentScroll = rememberScrollState()
     LaunchedEffect(section) { contentScroll.scrollTo(0) }
@@ -190,6 +204,7 @@ fun SettingsScreen(
                 SettingTab(icon = Icons.Outlined.Memory, label = "Memori", selected = section == 0) { section = 0 }
                 SettingTab(icon = Icons.Outlined.Speed, label = "Grafis", selected = section == 1) { section = 1 }
                 SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
+                SettingTab(icon = Icons.Outlined.Palette, label = "Tampilan", selected = section == 3) { section = 3 }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -422,6 +437,108 @@ fun SettingsScreen(
                         )
                     }
 
+                    3 -> {
+                        // Latar Beranda: foto (paling ringan), GIF, atau video; suara dan ambient
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 9.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SettingRowText(
+                                title = "Latar Beranda",
+                                desc = "Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.",
+                                modifier = Modifier.weight(1f)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            NuxButton(
+                                onClick = onChangeBackground,
+                                backgroundColor = NuxColors.Yellow,
+                                cornerRadius = 20.dp,
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Image,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Ganti latar",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Black
+                                )
+                            }
+                        }
+
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Gerakkan GIF dan video",
+                            desc = "Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.",
+                            checked = bgAnimate,
+                            onCheckedChange = {
+                                bgAnimate = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Jeda saat Hemat Baterai",
+                            desc = "GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.",
+                            checked = bgPauseOnPowerSave,
+                            onCheckedChange = {
+                                bgPauseOnPowerSave = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Suara video",
+                            desc = "Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.",
+                            checked = bgSound,
+                            onCheckedChange = {
+                                bgSound = it
+                                commitSettings()
+                            }
+                        )
+                        if (bgSound) {
+                            SettingSliderRow(
+                                title = "Volume video",
+                                valueText = "$bgVolume%",
+                                value = bgVolume.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 19,
+                                onValueChange = {
+                                    bgVolume = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
+                                    commitSettings()
+                                }
+                            )
+                        }
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Ambient",
+                            desc = "Cahaya lembut di sekitar kartu Beranda yang mengikuti warna GIF atau video. Tidak berlaku untuk foto.",
+                            checked = ambientOn,
+                            onCheckedChange = {
+                                ambientOn = it
+                                commitSettings()
+                            }
+                        )
+                        if (ambientOn) {
+                            val level = listOf(30, 60, 90).minByOrNull { kotlin.math.abs(it - ambientIntensity) } ?: 60
+                            SettingChoiceRow(
+                                title = "Kekuatan ambient",
+                                desc = null,
+                                options = listOf(30 to "Halus", 60 to "Sedang", 90 to "Kuat"),
+                                selected = level,
+                                onSelect = {
+                                    ambientIntensity = it
+                                    commitSettings()
+                                }
+                            )
+                        }
+                    }
+
                     else -> {
                         // Editor tata letak tombol kontrol virtual
                         Row(
@@ -566,6 +683,12 @@ fun SettingsScreen(
                     resolutionRatio = reset.resolutionRatio
                     autoOptimizeMC = reset.autoOptimizeMinecraft
                     sustainedPerf = reset.sustainedPerformanceMode
+                    bgAnimate = reset.homeBgAnimate
+                    bgPauseOnPowerSave = reset.homeBgPauseOnPowerSave
+                    bgSound = reset.homeBgSound
+                    bgVolume = reset.homeBgVolume
+                    ambientOn = reset.homeAmbientEnabled
+                    ambientIntensity = reset.homeAmbientIntensity
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
                 },
                 backgroundColor = Color.Transparent,

@@ -35,5 +35,13 @@ data class LauncherSettings(
     // di HP lain nilai-nilai ini diabaikan sepenuhnya.
     val deviceProfileEnabled: Boolean = true,
     val deviceProfileGcMode: String = "balanced", // "balanced", "serial", "default"
-    val deviceProfileLockRefresh: Boolean = true
+    val deviceProfileLockRefresh: Boolean = true,
+
+    // Latar Beranda (foto / GIF / video)
+    val homeBgAnimate: Boolean = true, // false = GIF dan video tampil diam (paling hemat)
+    val homeBgPauseOnPowerSave: Boolean = true, // jeda GIF/video saat mode Hemat Baterai HP menyala
+    val homeBgSound: Boolean = false, // suara video, bawaan mati
+    val homeBgVolume: Int = 50, // 0 - 100
+    val homeAmbientEnabled: Boolean = true, // cahaya di sekitar kartu Beranda (hanya GIF/video)
+    val homeAmbientIntensity: Int = 60 // 20 - 100
 )

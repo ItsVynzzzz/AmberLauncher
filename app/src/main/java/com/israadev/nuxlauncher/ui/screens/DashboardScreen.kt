@@ -14,6 +14,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -74,12 +75,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -92,6 +96,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.israadev.nuxlauncher.R
 import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.background.BgImportResult
+import com.israadev.nuxlauncher.core.background.HomeVideo
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
 import com.israadev.nuxlauncher.core.instance.InstanceManager
@@ -103,10 +109,16 @@ import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.ui.components.AmbientGlow
+import com.israadev.nuxlauncher.ui.components.AmbientSampler
+import com.israadev.nuxlauncher.ui.components.AmbientState
 import com.israadev.nuxlauncher.ui.components.HomeInfo
+import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NuxSidebar
+import com.israadev.nuxlauncher.ui.components.rememberIsResumed
+import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAddInstanceDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAddonImportDialog
@@ -156,21 +168,56 @@ fun DashboardScreen() {
 
     val downloader = remember { MinecraftDownloader(context) }
 
-    // Latar belakang Home yang bisa diganti (foto atau GIF dari galeri)
+    // Latar belakang Home yang bisa diganti (foto, GIF, atau video dari galeri). Untuk video,
+    // bgFile berisi satu bingkai diam (poster) dan videonya disimpan terpisah di bgVideoFile.
     val bgFile = remember { File(context.filesDir, BG_FILE_NAME) }
+    val bgVideoFile = remember { HomeVideo.file(context) }
     var hasCustomBg by remember { mutableStateOf(bgFile.exists()) }
+    var hasVideoBg by remember { mutableStateOf(bgFile.exists() && bgVideoFile.exists()) }
     var bgVersion by remember { mutableIntStateOf(0) }
     var showBgDialog by remember { mutableStateOf(false) }
-    val pickBackground = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+    // Animasi latar (GIF/video) boleh jalan atau tidak, plus suara video dan cahaya ambient.
+    val powerSave = rememberPowerSaveMode()
+    val animateBackground = launcherSettings.homeBgAnimate &&
+        !(launcherSettings.homeBgPauseOnPowerSave && powerSave)
+    val ambientActive = animateBackground && launcherSettings.homeAmbientEnabled
+    val videoVolume = if (launcherSettings.homeBgSound) {
+        val p = launcherSettings.homeBgVolume.coerceIn(0, 100) / 100f
+        p * p
+    } else {
+        0f
+    }
+    val ambientState = remember { AmbientState() }
+    var cardBounds by remember { mutableStateOf<Rect?>(null) }
+
+    val pickBackground = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
+            Toast.makeText(context, "Memproses berkas...", Toast.LENGTH_SHORT).show()
             scope.launch {
-                val ok = withContext(Dispatchers.IO) { importBackground(context, uri, bgFile) }
-                if (ok) {
-                    hasCustomBg = true
-                    bgVersion++
-                    Toast.makeText(context, "Latar belakang diganti", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Gambar tidak bisa dipakai (maksimal 30 MB, format foto atau GIF)", Toast.LENGTH_LONG).show()
+                val result = withContext(Dispatchers.IO) { importMedia(context, uri, bgFile, bgVideoFile) }
+                when (result) {
+                    BgImportResult.IMAGE, BgImportResult.VIDEO -> {
+                        hasCustomBg = bgFile.exists()
+                        hasVideoBg = bgVideoFile.exists()
+                        bgVersion++
+                        val msg = if (result == BgImportResult.VIDEO) {
+                            "Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan"
+                        } else {
+                            "Latar belakang diganti"
+                        }
+                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                    }
+                    BgImportResult.TOO_BIG -> Toast.makeText(
+                        context,
+                        "Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    BgImportResult.UNSUPPORTED -> Toast.makeText(
+                        context,
+                        "Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -269,6 +316,19 @@ fun DashboardScreen() {
                 .fillMaxSize()
                 .background(NuxColors.Ink)
         ) {
+            // Cahaya ambient di sekeliling kartu: hanya di Home dan hanya saat GIF/video bergerak.
+            LaunchedEffect(ambientActive, currentTab) {
+                if (!ambientActive || currentTab != "home") ambientState.colors = null
+            }
+            if (currentTab == "home" && ambientActive) {
+                AmbientGlow(
+                    state = ambientState,
+                    intensity = launcherSettings.homeAmbientIntensity,
+                    bounds = cardBounds,
+                    cornerRadius = 24.dp
+                )
+            }
+
             Row(modifier = Modifier.fillMaxSize()) {
                 NuxSidebar(
                     activeTab = currentTab,
@@ -303,6 +363,7 @@ fun DashboardScreen() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
+                            .onGloballyPositioned { cardBounds = it.boundsInRoot() }
                             .clip(cardShape)
                             .background(cardFill, cardShape)
                             .border(1.dp, cardEdge, cardShape)
@@ -324,6 +385,10 @@ fun DashboardScreen() {
                                 SettingsScreen(
                                     onNavigateBack = { currentTab = "home" },
                                     onOpenGuiEditor = { currentTab = "gui_editor" },
+                                    onChangeBackground = {
+                                        currentTab = "home"
+                                        showBgDialog = true
+                                    },
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
@@ -351,6 +416,10 @@ fun DashboardScreen() {
                                     onEditInstance = { showEditInstanceDialog = true },
                                     backgroundFile = if (hasCustomBg) bgFile else null,
                                     backgroundVersion = bgVersion,
+                                    backgroundVideo = if (hasVideoBg && hasCustomBg) bgVideoFile else null,
+                                    animateBackground = animateBackground,
+                                    videoVolume = videoVolume,
+                                    ambient = if (ambientActive) ambientState else null,
                                     onChangeBackground = { showBgDialog = true },
                                     modifier = Modifier.fillMaxSize()
                                 )
@@ -372,12 +441,14 @@ fun DashboardScreen() {
                 hasCustom = hasCustomBg,
                 onPick = {
                     showBgDialog = false
-                    pickBackground.launch("image/*")
+                    pickBackground.launch(arrayOf("image/*", "video/*"))
                 },
                 onReset = {
                     showBgDialog = false
                     bgFile.delete()
+                    bgVideoFile.delete()
                     hasCustomBg = false
+                    hasVideoBg = false
                     bgVersion++
                     Toast.makeText(context, "Latar belakang dikembalikan ke bawaan", Toast.LENGTH_SHORT).show()
                 },
@@ -539,6 +610,10 @@ private fun HomeScene(
     onEditInstance: () -> Unit,
     backgroundFile: File?,
     backgroundVersion: Int,
+    backgroundVideo: File?,
+    animateBackground: Boolean,
+    videoVolume: Float,
+    ambient: AmbientState?,
     onChangeBackground: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -559,10 +634,14 @@ private fun HomeScene(
     val nameShadow = remember { Shadow(NuxColors.Ink.copy(alpha = 0.45f), Offset(0f, 2f), 14f) }
 
     Box(modifier = modifier) {
-        // Latar gambar/GIF memenuhi panel
+        // Latar foto/GIF/video memenuhi panel
         HomeBackground(
             customFile = backgroundFile,
             version = backgroundVersion,
+            videoFile = backgroundVideo,
+            animate = animateBackground,
+            videoVolume = videoVolume,
+            ambient = ambient,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -1080,9 +1159,107 @@ private fun importBackground(context: Context, uri: Uri, target: File): Boolean 
     }
 }
 
-/** Latar Home: gambar bawaan, atau foto/GIF pilihan pengguna bila ada. */
+/**
+ * Memasang berkas pilihan sebagai latar. Video disimpan bersama poster-nya; foto/GIF menghapus
+ * video lama supaya tidak ada dua latar sekaligus.
+ */
+private fun importMedia(context: Context, uri: Uri, imageTarget: File, videoTarget: File): BgImportResult {
+    val mime = try {
+        context.contentResolver.getType(uri)
+    } catch (_: Throwable) {
+        null
+    }
+    if (mime != null && mime.startsWith("video/")) {
+        return HomeVideo.importVideo(context, uri, videoTarget, imageTarget)
+    }
+    if (importBackground(context, uri, imageTarget)) {
+        videoTarget.delete()
+        return BgImportResult.IMAGE
+    }
+    // Jenis berkas tidak dikenali oleh pemilih file: coba sebagai video sebelum menyerah.
+    if (mime == null || mime == "application/octet-stream") {
+        val result = HomeVideo.importVideo(context, uri, videoTarget, imageTarget)
+        if (result != BgImportResult.UNSUPPORTED) return result
+    }
+    return BgImportResult.UNSUPPORTED
+}
+
+/**
+ * Latar Home: gambar bawaan, foto/GIF pilihan pengguna, atau video. Video diputar di bawah dan
+ * posternya (satu bingkai diam) menutupinya sampai bingkai pertama tampil; bila video gagal diputar
+ * atau animasi dimatikan, poster itu tetap jadi latarnya.
+ */
 @Composable
-private fun HomeBackground(customFile: File?, version: Int, modifier: Modifier = Modifier) {
+private fun HomeBackground(
+    customFile: File?,
+    version: Int,
+    videoFile: File?,
+    animate: Boolean,
+    videoVolume: Float,
+    ambient: AmbientState?,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    var videoFailed by remember(videoFile, version) { mutableStateOf(false) }
+    var videoReady by remember(videoFile, version) { mutableStateOf(false) }
+    LaunchedEffect(videoFailed) {
+        if (videoFailed) {
+            Toast.makeText(
+                context,
+                "Video tidak bisa diputar di HP ini, latar memakai gambar diam",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    if (videoFile != null && animate && !videoFailed) {
+        val posterAlpha by animateFloatAsState(
+            targetValue = if (videoReady) 0f else 1f,
+            animationSpec = tween(durationMillis = 450),
+            label = "homeVideoPoster"
+        )
+        Box(modifier = modifier) {
+            HomeVideoLayer(
+                file = videoFile,
+                volume = videoVolume,
+                playing = true,
+                ambient = ambient,
+                onFrameReady = { videoReady = it },
+                onFailed = { videoFailed = true },
+                modifier = Modifier.fillMaxSize()
+            )
+            if (posterAlpha > 0.01f) {
+                HomeStillBackground(
+                    customFile = customFile,
+                    version = version,
+                    animate = false,
+                    ambient = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer { alpha = posterAlpha }
+                )
+            }
+        }
+    } else {
+        HomeStillBackground(
+            customFile = customFile,
+            version = version,
+            animate = animate,
+            ambient = ambient,
+            modifier = modifier
+        )
+    }
+}
+
+/** Gambar bawaan, atau foto/GIF pilihan pengguna bila ada (GIF bergerak bila [animate]). */
+@Composable
+private fun HomeStillBackground(
+    customFile: File?,
+    version: Int,
+    animate: Boolean,
+    ambient: AmbientState?,
+    modifier: Modifier = Modifier
+) {
     if (customFile == null) {
         Image(
             painter = painterResource(id = R.drawable.mc_hero_bg),
@@ -1113,13 +1290,32 @@ private fun HomeBackground(customFile: File?, version: Int, modifier: Modifier =
                     if (Build.VERSION.SDK_INT >= 28 && drawable is AnimatedImageDrawable) drawable.stop()
                 }
             }
+
+            // Cahaya ambient dari GIF: ambil warna tepi bingkai yang sedang tampil tiap detik.
+            val resumed = rememberIsResumed()
+            if (ambient != null && animate && resumed && Build.VERSION.SDK_INT >= 28 && drawable is AnimatedImageDrawable) {
+                val sampleBitmap = remember(drawable) { AmbientSampler.newBitmap() }
+                val samplePixels = remember(drawable) { AmbientSampler.newPixels() }
+                LaunchedEffect(drawable, ambient) {
+                    delay(400)
+                    while (true) {
+                        try {
+                            AmbientSampler.fromDrawable(drawable, sampleBitmap, samplePixels)
+                                ?.let { ambient.colors = it }
+                        } catch (_: Throwable) {
+                        }
+                        delay(1000)
+                    }
+                }
+            }
+
             AndroidView(
                 factory = { ctx -> ImageView(ctx).apply { scaleType = ImageView.ScaleType.CENTER_CROP } },
                 update = { iv ->
                     iv.setImageDrawable(drawable)
                     if (Build.VERSION.SDK_INT >= 28 && drawable is AnimatedImageDrawable) {
                         drawable.repeatCount = AnimatedImageDrawable.REPEAT_INFINITE
-                        drawable.start()
+                        if (animate) drawable.start() else drawable.stop()
                     }
                 },
                 modifier = modifier
@@ -1128,7 +1324,7 @@ private fun HomeBackground(customFile: File?, version: Int, modifier: Modifier =
     }
 }
 
-/** Dialog kecil: pilih foto/GIF dari galeri atau kembali ke latar bawaan. */
+/** Dialog kecil: pilih foto, GIF, atau video dari galeri, atau kembali ke latar bawaan. */
 @Composable
 private fun BackgroundDialog(
     hasCustom: Boolean,
@@ -1168,8 +1364,9 @@ private fun BackgroundDialog(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Pilih foto atau GIF dari galeri untuk jadi latar Home. " +
-                    "Gambar dikecilkan otomatis agar ringan. GIF yang bergerak memakai baterai sedikit lebih banyak.",
+                text = "Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps " +
+                    "(MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. " +
+                    "Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.",
                 color = NuxColors.GrayNeutral,
                 fontSize = 12.sp,
                 lineHeight = 17.sp
@@ -1191,7 +1388,7 @@ private fun BackgroundDialog(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "PILIH FOTO / GIF",
+                    text = "PILIH FOTO / GIF / VIDEO",
                     fontWeight = FontWeight.Black,
                     fontSize = 15.sp,
                     letterSpacing = 0.5.sp

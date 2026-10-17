@@ -5,7 +5,9 @@ import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.ui.activities.ErrorActivity
 import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
-import com.israadev.nuxlauncher.ui.dialogs.InGameSettingsDialog
+import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
+import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
+import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
 import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -1306,7 +1308,6 @@ fun GameScreen(
     var showExitConfirmDialog by remember { mutableStateOf(false) }
     var currentFps by remember { mutableIntStateOf(0) }
     var fpsMode by remember { mutableStateOf(FpsMode.NORMAL) }
-    val listState = rememberLazyListState()
     val context = LocalContext.current
     val hapticView = LocalView.current
 
@@ -1506,107 +1507,22 @@ fun GameScreen(
             )
         }
 
-        // 3. HUD / Live Debug Console Layer (Obsidian Cyber-Glass)
+        // 3. Panel log mesin (hanya saat dibuka; daftar log dibaca di dalam panelnya saja)
         if (isConsoleVisible) {
-            Column(
+            GameConsolePanel(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(16.dp)
-                    .width(if (isConsoleExpanded) 420.dp else 300.dp)
-                    .background(Color(0xF2111111), RoundedCornerShape(12.dp))
-                    .border(1.5.dp, Color(0x38E9E4CC), RoundedCornerShape(12.dp))
-                    .padding(12.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Clickable FPS badge in console (Klik untuk membuka menu in-game)
-                    Box(
-                        modifier = Modifier.clickable { showInGameSettingsDialog = true }
-                    ) {
-                        NuxBadge(
-                            text = if (currentFps > 0) "$currentFps FPS" else "FPS: --",
-                            backgroundColor = when {
-                                currentFps >= 50 -> Color(0xFF10B981)
-                                currentFps >= 25 -> Color(0xFFF59E0B)
-                                currentFps > 0 -> Color(0xFFEF4444)
-                                else -> Color(0xFF8C8774)
-                            },
-                            textColor = Color.White
-                        )
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .clickable { isConsoleExpanded = !isConsoleExpanded }
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = if (isConsoleExpanded) "▲ KECILKAN" else "▼ LOG LENGKAP",
-                                color = Color(0xFFE9E4CC),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .clickable {
-                                    isConsoleVisible = false
-                                    fpsMode = FpsMode.NORMAL
-                                }
-                                .padding(horizontal = 4.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "✕",
-                                color = Color(0xFFB8B4A4),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        }
-                    }
+                    .padding(16.dp),
+                fps = { currentFps },
+                logs = liveLogs,
+                expanded = isConsoleExpanded,
+                onToggleExpanded = { isConsoleExpanded = !isConsoleExpanded },
+                onFpsClick = { showInGameSettingsDialog = true },
+                onClose = {
+                    isConsoleVisible = false
+                    fpsMode = FpsMode.NORMAL
                 }
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                if (isConsoleExpanded) {
-                    // Gulir otomatis ke baris terbaru (hanya aktif saat log lengkap tampil)
-                    LaunchedEffect(liveLogs.size, liveLogs.lastOrNull()) {
-                        if (liveLogs.isNotEmpty()) {
-                            listState.scrollToItem(liveLogs.size - 1)
-                        }
-                    }
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp)
-                    ) {
-                        items(liveLogs) { log ->
-                            Text(
-                                text = log,
-                                color = Color(0xFFE9E4CC),
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 9.sp,
-                                lineHeight = 12.sp
-                            )
-                        }
-                    }
-                } else {
-                    liveLogs.takeLast(4).forEach { log ->
-                        Text(
-                            text = log,
-                            color = Color(0xFFE9E4CC),
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 9.sp,
-                            maxLines = 1,
-                            lineHeight = 12.sp
-                        )
-                    }
-                }
-            }
+            )
         }
 
         // 4. Tombol layar (gaya dan logikanya ada di ui/control/ControlOverlay.kt)
@@ -1631,86 +1547,22 @@ fun GameScreen(
             }
         )
 
-        // Exit Confirmation Dialog
+        // Konfirmasi keluar
         if (showExitConfirmDialog) {
-            Dialog(
-                onDismissRequest = { showExitConfirmDialog = false },
-                properties = DialogProperties(usePlatformDefaultWidth = false)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    NuxCard(
-                        modifier = Modifier
-                            .width(380.dp)
-                            .wrapContentHeight(),
-                        backgroundColor = NuxColors.Panel,
-                        cornerRadius = 24.dp,
-                        fillMaxHeight = false
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(22.dp)
-                        ) {
-                            Text(
-                                text = "KELUAR DARI MINECRAFT?",
-                                color = NuxColors.DarkGray,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 18.sp
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Proses JVM Minecraft akan dihentikan dan Anda akan kembali ke menu launcher.",
-                                color = NuxColors.GrayNeutral,
-                                fontSize = 14.sp,
-                                lineHeight = 20.sp
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                NuxButton(
-                                    onClick = { showExitConfirmDialog = false },
-                                    backgroundColor = NuxColors.SurfaceElevated,
-                                    contentColor = NuxColors.DarkGray,
-                                    cornerRadius = 14.dp,
-                                    contentPadding = PaddingValues(horizontal = 20.dp),
-                                    modifier = Modifier.height(46.dp)
-                                ) {
-                                    Text("BATAL", fontWeight = FontWeight.Black, fontSize = 14.sp)
-                                }
-                                Spacer(modifier = Modifier.width(12.dp))
-                                NuxButton(
-                                    onClick = {
-                                        showExitConfirmDialog = false
-                                        onExit()
-                                    },
-                                    backgroundColor = NuxColors.Coral,
-                                    contentColor = Color.White,
-                                    cornerRadius = 14.dp,
-                                    contentPadding = PaddingValues(horizontal = 20.dp),
-                                    modifier = Modifier.height(46.dp)
-                                ) {
-                                    Text("KELUAR ✕", fontWeight = FontWeight.Black, fontSize = 14.sp, color = Color.White)
-                                }
-                            }
-                        }
-                    }
+            ExitConfirmDialog(
+                onCancel = { showExitConfirmDialog = false },
+                onConfirm = {
+                    showExitConfirmDialog = false
+                    onExit()
                 }
-            }
+            )
         }
 
-        // In-Game Settings Modal (tahan tombol ✕ atau ketuk tombol FPS untuk membuka)
-        InGameSettingsDialog(
+        // Menu dalam game (tahan tombol X atau ketuk lencana FPS untuk membuka)
+        GameMenuSheet(
             visible = showInGameSettingsDialog,
             onDismissRequest = { showInGameSettingsDialog = false },
-            currentFps = if (showInGameSettingsDialog) currentFps else 0,
+            fps = { currentFps },
             instanceName = instanceName,
             mcVersion = mcVersion,
             currentResolutionRatio = launcherSettings.resolutionRatio,

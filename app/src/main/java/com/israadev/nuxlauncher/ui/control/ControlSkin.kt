@@ -163,7 +163,7 @@ private fun DrawScope.drawControlLabel(
 
 /**
  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
- * inventory, chat, pause, keyboard, eye, close, chev_up, chev_down.
+ * inventory, chat, pause, keyboard, eye, close, sliders, terminal, power, chev_up, chev_down, chev_right.
  */
 fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
     val x0 = cx - s / 2f
@@ -238,6 +238,23 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
             line(p(0.28f, 0.28f), p(0.72f, 0.72f))
             line(p(0.72f, 0.28f), p(0.28f, 0.72f))
         }
+        "sliders" -> {
+            line(p(0.18f, 0.28f), p(0.82f, 0.28f))
+            line(p(0.18f, 0.50f), p(0.82f, 0.50f))
+            line(p(0.18f, 0.72f), p(0.82f, 0.72f))
+            drawCircle(color, 0.08f * s, p(0.36f, 0.28f))
+            drawCircle(color, 0.08f * s, p(0.64f, 0.50f))
+            drawCircle(color, 0.08f * s, p(0.44f, 0.72f))
+        }
+        "terminal" -> {
+            poly(false, floatArrayOf(0.26f, 0.34f, 0.44f, 0.50f, 0.26f, 0.66f))
+            line(p(0.52f, 0.68f), p(0.76f, 0.68f))
+        }
+        "power" -> {
+            drawArc(color, -60f, 300f, false, p(0.22f, 0.26f), Size(0.56f * s, 0.56f * s), style = stroke)
+            line(p(0.5f, 0.14f), p(0.5f, 0.46f))
+        }
+        "chev_right" -> poly(false, floatArrayOf(0.38f, 0.22f, 0.66f, 0.50f, 0.38f, 0.78f))
         "chev_up" -> poly(false, floatArrayOf(0.22f, 0.62f, 0.5f, 0.34f, 0.78f, 0.62f))
         "chev_down" -> poly(false, floatArrayOf(0.22f, 0.38f, 0.5f, 0.66f, 0.78f, 0.38f))
     }

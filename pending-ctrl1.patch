@@ -944,10 +944,10 @@ index 0000000..d9ac307
 +}
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
 new file mode 100644
-index 0000000..522a035
+index 0000000..45f15b0
 --- /dev/null
 +++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
-@@ -0,0 +1,314 @@
+@@ -0,0 +1,313 @@
 +package com.israadev.nuxlauncher.ui.control
 +
 +import android.graphics.Paint
@@ -1124,10 +1124,11 @@ index 0000000..522a035
 +    fun p(u: Float, v: Float) = Offset(x0 + u * s, y0 + v * s)
 +    fun line(a: Offset, b: Offset, width: Float = sw) =
 +        drawLine(color, a, b, strokeWidth = width, cap = StrokeCap.Round)
-+    fun poly(closed: Boolean, vararg pts: Offset) {
++    // Titik diberikan sebagai pasangan u, v (0..1) dalam FloatArray; Offset tidak boleh jadi vararg.
++    fun poly(closed: Boolean, uv: FloatArray) {
 +        val path = Path()
-+        path.moveTo(pts[0].x, pts[0].y)
-+        for (i in 1 until pts.size) path.lineTo(pts[i].x, pts[i].y)
++        path.moveTo(x0 + uv[0] * s, y0 + uv[1] * s)
++        for (i in 1 until uv.size / 2) path.lineTo(x0 + uv[2 * i] * s, y0 + uv[2 * i + 1] * s)
 +        if (closed) path.close()
 +        drawPath(path, color, style = stroke)
 +    }
@@ -1135,11 +1136,11 @@ index 0000000..522a035
 +    when (name) {
 +        "jump" -> {
 +            line(p(0.5f, 0.82f), p(0.5f, 0.26f))
-+            poly(false, p(0.26f, 0.50f), p(0.5f, 0.26f), p(0.74f, 0.50f))
++            poly(false, floatArrayOf(0.26f, 0.50f, 0.5f, 0.26f, 0.74f, 0.50f))
 +        }
 +        "sneak" -> {
 +            line(p(0.5f, 0.18f), p(0.5f, 0.74f))
-+            poly(false, p(0.26f, 0.50f), p(0.5f, 0.74f), p(0.74f, 0.50f))
++            poly(false, floatArrayOf(0.26f, 0.50f, 0.5f, 0.74f, 0.74f, 0.50f))
 +        }
 +        "attack" -> {
 +            line(p(0.30f, 0.70f), p(0.80f, 0.20f), sw * 1.35f)
@@ -1149,10 +1150,8 @@ index 0000000..522a035
 +        "use" -> {
 +            poly(
 +                true,
-+                p(0.50f, 0.20f), p(0.76f, 0.35f), p(0.76f, 0.65f),
-+                p(0.50f, 0.80f), p(0.24f, 0.65f), p(0.24f, 0.35f)
-+            )
-+            poly(false, p(0.24f, 0.35f), p(0.50f, 0.50f), p(0.76f, 0.35f))
++                floatArrayOf(0.50f, 0.20f, 0.76f, 0.35f, 0.76f, 0.65f, 0.50f, 0.80f, 0.24f, 0.65f, 0.24f, 0.35f))
++            poly(false, floatArrayOf(0.24f, 0.35f, 0.50f, 0.50f, 0.76f, 0.35f))
 +            line(p(0.50f, 0.50f), p(0.50f, 0.80f))
 +        }
 +        "inventory" -> {
@@ -1165,7 +1164,7 @@ index 0000000..522a035
 +        }
 +        "chat" -> {
 +            drawRoundRect(color, p(0.18f, 0.22f), Size(0.64f * s, 0.42f * s), CornerRadius(0.09f * s), stroke)
-+            poly(false, p(0.34f, 0.64f), p(0.32f, 0.80f), p(0.52f, 0.64f))
++            poly(false, floatArrayOf(0.34f, 0.64f, 0.32f, 0.80f, 0.52f, 0.64f))
 +        }
 +        "pause" -> {
 +            val bar = Size(0.14f * s, 0.52f * s)
@@ -1189,8 +1188,8 @@ index 0000000..522a035
 +            line(p(0.28f, 0.28f), p(0.72f, 0.72f))
 +            line(p(0.72f, 0.28f), p(0.28f, 0.72f))
 +        }
-+        "chev_up" -> poly(false, p(0.22f, 0.62f), p(0.5f, 0.34f), p(0.78f, 0.62f))
-+        "chev_down" -> poly(false, p(0.22f, 0.38f), p(0.5f, 0.66f), p(0.78f, 0.38f))
++        "chev_up" -> poly(false, floatArrayOf(0.22f, 0.62f, 0.5f, 0.34f, 0.78f, 0.62f))
++        "chev_down" -> poly(false, floatArrayOf(0.22f, 0.38f, 0.5f, 0.66f, 0.78f, 0.38f))
 +    }
 +}
 +

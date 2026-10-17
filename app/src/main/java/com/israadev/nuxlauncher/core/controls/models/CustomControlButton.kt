@@ -29,5 +29,7 @@ data class CustomControlButton(
     val macroCommand: String = "",      // e.g. "/gamemode creative", "/home"
     val macroComboKey: Int = 0,        // Backward compatibility for single key
     val macroComboKeys: List<Int> = emptyList(), // Multi-key sequence executed from top to bottom
-    val macroTurboIntervalMs: Long = 100L // Auto-click speed interval in ms
+    val macroTurboIntervalMs: Long = 100L, // Auto-click speed interval in ms
+    // Nama ikon gambar (jump, sneak, attack, use, inventory, chat, pause, ...); kosong = tampilkan nama sebagai teks
+    val icon: String = ""
 )

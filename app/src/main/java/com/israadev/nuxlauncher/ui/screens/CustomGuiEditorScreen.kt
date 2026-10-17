@@ -22,6 +22,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import com.israadev.nuxlauncher.ui.control.drawControlButton
+import com.israadev.nuxlauncher.ui.control.drawControlJoystick
+import com.israadev.nuxlauncher.ui.control.drawControlScroll
+import com.israadev.nuxlauncher.ui.control.skinSpecFor
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -139,45 +144,20 @@ fun CustomGuiEditorScreen(
             val leftDp = with(density) { leftPx.toDp() }
             val topDp = with(density) { topPx.toDp() }
 
-            val btnBg = if (isSelected) {
-                Color(0xCCFFD60A)
-            } else if (btn.isSystem) {
-                when (btn.systemAction) {
-                    "FPS" -> Color(0x80000000)
-                    "HIDE_GUI" -> Color(0x73000000)
-                    "CLOSE" -> Color(0x80EF4444).copy(alpha = 0.35f)
-                    "KEYBOARD" -> Color(0x73000000)
-                    else -> Color(0x73000000)
-                }
-            } else {
-                Color(0x73000000)
-            }
-
-            val btnBorderColor = if (isSelected) {
-                Color.White
-            } else if (btn.isSystem) {
-                when (btn.systemAction) {
-                    "HIDE_GUI" -> Color(0x38E9E4CC)
-                    "CLOSE" -> Color(0x80EF4444)
-                    "FPS" -> Color(0x38E9E4CC)
-                    "KEYBOARD" -> Color(0x38E9E4CC)
-                    else -> Color(0x38E9E4CC)
-                }
-            } else {
-                Color(0x38E9E4CC)
-            }
+            val spec = remember(btn) { skinSpecFor(btn) }
 
             Box(
                 modifier = Modifier
                     .offset(x = leftDp, y = topDp)
                     .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
-                    .alpha(btn.opacity)
-                    .background(btnBg, RoundedCornerShape(btn.cornerRadiusDp.dp))
-                    .border(
-                        if (isSelected) 2.2.dp else 1.5.dp,
-                        btnBorderColor,
-                        RoundedCornerShape(btn.cornerRadiusDp.dp)
-                    )
+                    // Gambar yang sama persis dengan di dalam game (ControlSkin).
+                    .drawBehind {
+                        when {
+                            btn.isJoystick -> drawControlJoystick(btn.opacity, Offset.Zero, false, false, isSelected)
+                            btn.isScroll -> drawControlScroll(spec, false, isSelected)
+                            else -> drawControlButton(spec, false, isSelected)
+                        }
+                    }
                     .pointerInput(btn.id) {
                         detectTapGestures {
                             manualFlipSide = null
@@ -207,170 +187,8 @@ fun CustomGuiEditorScreen(
                                 }
                             }
                         )
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                if (btn.isJoystick) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Canvas(modifier = Modifier.fillMaxSize()) {
-                            val r = size.minDimension / 2f
-                            val c = Offset(size.width / 2f, size.height / 2f)
-
-                            // Outer ring
-                            drawCircle(
-                                color = if (isSelected) Color(0xFFFFD60A) else Color(0x60E9E4CC),
-                                radius = r - 2.dp.toPx(),
-                                center = c,
-                                style = Stroke(width = 2.dp.toPx())
-                            )
-                            // Crosshairs
-                            drawLine(
-                                color = Color(0x35E9E4CC),
-                                start = Offset(c.x, c.y - r * 0.7f),
-                                end = Offset(c.x, c.y + r * 0.7f),
-                                strokeWidth = 1.dp.toPx()
-                            )
-                            drawLine(
-                                color = Color(0x35E9E4CC),
-                                start = Offset(c.x - r * 0.7f, c.y),
-                                end = Offset(c.x + r * 0.7f, c.y),
-                                strokeWidth = 1.dp.toPx()
-                            )
-
-                            // Center knob
-                            val knobRadius = r * 0.38f
-                            drawCircle(
-                                color = if (isSelected) Color(0xCCFFD60A) else Color(0xCC1D1D1D),
-                                radius = knobRadius,
-                                center = c
-                            )
-                            drawCircle(
-                                color = if (isSelected) Color(0xFFFFD60A) else Color(0xFFE9E4CC),
-                                radius = knobRadius,
-                                center = c,
-                                style = Stroke(width = 1.5.dp.toPx())
-                            )
-                            drawCircle(
-                                color = if (isSelected) Color(0xFF111111) else Color(0xFFFFE566),
-                                radius = 3.5.dp.toPx(),
-                                center = c
-                            )
-                        }
-                        Text("W", color = Color(0xFFFFE566), fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.align(Alignment.TopCenter).padding(top = 4.dp))
-                        Text("S", color = Color(0xFFFFE566), fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 4.dp))
-                        Text("A", color = Color(0xFFFFE566), fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.align(Alignment.CenterStart).padding(start = 5.dp))
-                        Text("D", color = Color(0xFFFFE566), fontSize = 8.sp, fontWeight = FontWeight.Black, modifier = Modifier.align(Alignment.CenterEnd).padding(end = 5.dp))
                     }
-                } else if (btn.isScroll) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = "▲",
-                            color = if (isSelected) Color(0xFFFFD60A) else Color(0xFFE9E4CC),
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Black
-                        )
-                        Text(
-                            text = btn.name,
-                            color = if (isSelected) Color(0xFF111111) else Color.White,
-                            fontWeight = FontWeight.Black,
-                            fontSize = 9.sp,
-                            maxLines = 1
-                        )
-                        Text(
-                            text = "▼",
-                            color = if (isSelected) Color(0xFFFFD60A) else Color(0xFFE9E4CC),
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Black
-                        )
-                    }
-                } else if (btn.isSystem) {
-                    when (btn.systemAction) {
-                        "FPS" -> {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp)
-                            ) {
-                                Box(modifier = Modifier.size(7.dp).background(Color(0xFFFFD60A), CircleShape))
-                                Spacer(modifier = Modifier.width(5.dp))
-                                Text("FPS: --", color = Color.White, fontWeight = FontWeight.Black, fontSize = 10.sp, maxLines = 1)
-                            }
-                        }
-                        "KEYBOARD" -> {
-                            Text(
-                                text = "KEYBOARD",
-                                color = if (isSelected) Color(0xFF111111) else Color.White,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 10.sp,
-                                maxLines = 1
-                            )
-                        }
-                        "HIDE_GUI" -> {
-                            Text(
-                                text = "HIDE GUI",
-                                color = if (isSelected) Color(0xFF111111) else Color(0xFFE9E4CC),
-                                fontWeight = FontWeight.Black,
-                                fontSize = 10.sp,
-                                maxLines = 1
-                            )
-                        }
-                        "CLOSE" -> {
-                            Text(
-                                text = "✕",
-                                color = Color(0xFFFCA5A5),
-                                fontWeight = FontWeight.Black,
-                                fontSize = 13.sp
-                            )
-                        }
-                        else -> {
-                            Text(
-                                text = btn.name,
-                                color = Color.White,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 11.sp,
-                                maxLines = 1
-                            )
-                        }
-                    }
-                } else {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = btn.name,
-                            color = if (isSelected) Color(0xFF111111) else Color.White,
-                            fontWeight = FontWeight.Black,
-                            fontSize = if (btn.name.length > 5) 10.sp else 12.sp,
-                            maxLines = 1
-                        )
-                        if (btn.isToggle) {
-                            Text(
-                                text = "TOGGLE",
-                                color = if (isSelected) Color(0xFF111111) else Color(0xFFE9E4CC),
-                                fontSize = 7.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        if (btn.isMacro) {
-                            Text(
-                                text = when (btn.macroType) {
-                                    "COMMAND" -> "⚡CMD"
-                                    "COMBO" -> "⚡CMB"
-                                    "TURBO" -> "⚡TRB"
-                                    else -> "⚡MAC"
-                                },
-                                color = if (isSelected) Color(0xFF111111) else Color(0xFFFFD60A),
-                                fontSize = 7.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                        }
-                    }
-                }
-            }
+            )
         }
 
         // 3. TOP ACTION BAR (Clean & Un-clipped Floating Header)

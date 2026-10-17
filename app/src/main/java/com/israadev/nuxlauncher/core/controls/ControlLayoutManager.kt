@@ -30,7 +30,15 @@ object ControlLayoutManager {
                 val json = file.readText()
                 val loaded = parseButtons(json)
                 if (!loaded.isNullOrEmpty()) {
-                    _buttons.value = loaded
+                    // Layout bawaan versi lama yang belum pernah diubah: ganti ke layout baru.
+                    // Layout yang sudah diatur pengguna tidak disentuh.
+                    if (loaded == legacyDefaultButtons()) {
+                        val fresh = getDefaultButtons()
+                        _buttons.value = fresh
+                        save(context, fresh)
+                    } else {
+                        _buttons.value = loaded
+                    }
                     return
                 }
             } catch (e: Exception) {
@@ -41,6 +49,12 @@ object ControlLayoutManager {
         // Data internal tidak ada (mis. aplikasi baru dipasang ulang): coba pulihkan dari cadangan.
         val restored = readBackup()
         if (restored != null) {
+            if (restored == legacyDefaultButtons()) {
+                val fresh = getDefaultButtons()
+                _buttons.value = fresh
+                save(context, fresh)
+                return
+            }
             _buttons.value = restored
             // Salin ke penyimpanan internal tanpa membuat cadangan baru.
             try { file.writeText(gson.toJson(restored)) } catch (_: Exception) {}
@@ -110,7 +124,108 @@ object ControlLayoutManager {
         return null
     }
 
+    /**
+     * Tata letak bawaan: sedikit tombol, besar, mudah dijangkau jempol.
+     * Kiri: joystick + jongkok. Kanan: serang, pakai, lompat, gulir hotbar.
+     * Atas: lencana FPS, ESC/chat/inventori/F5 di tengah, tombol sistem kecil di kanan.
+     */
     fun getDefaultButtons(): List<CustomControlButton> {
+        return listOf(
+            CustomControlButton(
+                id = "sys_fps", name = "FPS",
+                xPercent = 11f, yPercent = 9f, widthDp = 84, heightDp = 26,
+                opacity = 0.9f, cornerRadiusDp = 13,
+                isSystem = true, systemAction = "FPS"
+            ),
+
+            // Tombol pintas di tengah atas
+            CustomControlButton(
+                id = "key_esc", name = "ESC", icon = "pause",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_ESCAPE,
+                xPercent = 41f, yPercent = 9f, widthDp = 38, heightDp = 34,
+                opacity = 0.9f, cornerRadiusDp = 12
+            ),
+            CustomControlButton(
+                id = "key_t", name = "CHAT", icon = "chat",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_T,
+                xPercent = 47f, yPercent = 9f, widthDp = 38, heightDp = 34,
+                opacity = 0.9f, cornerRadiusDp = 12
+            ),
+            CustomControlButton(
+                id = "key_inv", name = "INV", icon = "inventory",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_E,
+                xPercent = 53f, yPercent = 9f, widthDp = 38, heightDp = 34,
+                opacity = 0.9f, cornerRadiusDp = 12
+            ),
+            CustomControlButton(
+                id = "key_f5", name = "F5",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_F5,
+                xPercent = 59f, yPercent = 9f, widthDp = 38, heightDp = 34,
+                opacity = 0.9f, cornerRadiusDp = 12
+            ),
+
+            // Tombol sistem kecil di kanan atas
+            CustomControlButton(
+                id = "sys_keyboard", name = "KEYBOARD",
+                xPercent = 87f, yPercent = 9f, widthDp = 32, heightDp = 32,
+                opacity = 0.9f, cornerRadiusDp = 16,
+                isSystem = true, systemAction = "KEYBOARD"
+            ),
+            CustomControlButton(
+                id = "sys_hide_gui", name = "HIDE GUI",
+                xPercent = 91.5f, yPercent = 9f, widthDp = 32, heightDp = 32,
+                opacity = 0.9f, cornerRadiusDp = 16,
+                isSystem = true, systemAction = "HIDE_GUI"
+            ),
+            CustomControlButton(
+                id = "sys_close", name = "X",
+                xPercent = 96f, yPercent = 9f, widthDp = 32, heightDp = 32,
+                opacity = 0.9f, cornerRadiusDp = 16,
+                isSystem = true, systemAction = "CLOSE"
+            ),
+
+            // Kiri: gerak
+            CustomControlButton(
+                id = "joy_move", name = "JOYSTICK", isJoystick = true,
+                xPercent = 15f, yPercent = 70f, widthDp = 120, heightDp = 120,
+                opacity = 0.9f, cornerRadiusDp = 60
+            ),
+            CustomControlButton(
+                id = "key_sneak", name = "SNEAK", icon = "sneak",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, isToggle = true,
+                xPercent = 29.5f, yPercent = 82f, widthDp = 52, heightDp = 52,
+                opacity = 0.9f, cornerRadiusDp = 26
+            ),
+
+            // Kanan: aksi utama di sekitar jempol
+            CustomControlButton(
+                id = "mouse_attack", name = "SERANG", icon = "attack",
+                isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT,
+                xPercent = 84f, yPercent = 62f, widthDp = 72, heightDp = 72,
+                opacity = 0.9f, cornerRadiusDp = 36
+            ),
+            CustomControlButton(
+                id = "mouse_use", name = "PAKAI", icon = "use",
+                isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT,
+                xPercent = 75.5f, yPercent = 84f, widthDp = 60, heightDp = 60,
+                opacity = 0.9f, cornerRadiusDp = 30
+            ),
+            CustomControlButton(
+                id = "key_jump", name = "JUMP", icon = "jump",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_SPACE,
+                xPercent = 92f, yPercent = 80f, widthDp = 70, heightDp = 70,
+                opacity = 0.9f, cornerRadiusDp = 35
+            ),
+            CustomControlButton(
+                id = "widget_scroll", name = "HOTBAR", isScroll = true,
+                xPercent = 96.5f, yPercent = 36f, widthDp = 40, heightDp = 92,
+                opacity = 0.9f, cornerRadiusDp = 14
+            )
+        )
+    }
+
+    /** Tata letak bawaan versi lama; dipakai hanya untuk mengenali layout yang belum pernah diubah pengguna. */
+    private fun legacyDefaultButtons(): List<CustomControlButton> {
         return listOf(
             // Top-Left FPS Indicator
             CustomControlButton(

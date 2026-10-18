@@ -1,40 +1,45 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.OpenInNew
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.israadev.nuxlauncher.ui.components.NuxBadge
-import com.israadev.nuxlauncher.ui.components.NuxButton
-import com.israadev.nuxlauncher.ui.components.NuxCard
+import com.israadev.nuxlauncher.AppLinks
+import com.israadev.nuxlauncher.ui.components.AmberButton
+import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
+import com.israadev.nuxlauncher.ui.components.AmberIcon
+import com.israadev.nuxlauncher.ui.components.AmberSegmented
 import com.israadev.nuxlauncher.ui.components.NuxDialog
-import com.israadev.nuxlauncher.ui.theme.LocalNuxScale
-import com.israadev.nuxlauncher.ui.theme.NuxColors
-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+import com.israadev.nuxlauncher.ui.components.amberTap
+import com.israadev.nuxlauncher.ui.theme.Amber
+
+private const val COPY = "Copyright \u00A9"
+private const val GPL_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
+
+private data class AboutProject(
+    val title: String,
+    val copyright: String,
+    val license: String,
+    val description: String,
+    val url: String
+)
 
 private data class OpenSourceLibrary(
     val name: String,
@@ -44,73 +49,104 @@ private data class OpenSourceLibrary(
     val url: String
 )
 
+private val PROJECTS = listOf(
+    AboutProject(
+        title = "AmberLauncher",
+        copyright = "$COPY 2026 ItsVynzzzz",
+        license = "GNU General Public License v3.0 (GPL-3.0)",
+        description = "Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.",
+        url = "https://github.com/ItsVynzzzz/NuxLite"
+    ),
+    AboutProject(
+        title = "Zalith Launcher 2",
+        copyright = "$COPY 2024-2026 MovTery & Contributors",
+        license = "GNU General Public License v3.0 (GPL-3.0)",
+        description = "Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.",
+        url = "https://github.com/ZalithLauncher/ZalithLauncher2"
+    ),
+    AboutProject(
+        title = "PojavLauncher",
+        copyright = "$COPY 2020-present PojavLauncherTeam & Contributors",
+        license = "GNU Lesser General Public License v3.0 (LGPL-3.0)",
+        description = "Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.",
+        url = "https://github.com/PojavLauncherTeam/PojavLauncher"
+    ),
+    AboutProject(
+        title = "NUX Launcher (sumber asal fork)",
+        copyright = "$COPY 2026 IsraaDeveloper & Contributors",
+        license = "GNU General Public License v3.0 (GPL-3.0)",
+        description = "Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.",
+        url = "https://github.com/IsraaDeveloper/nuxlabs"
+    )
+)
+
 private val LIBRARIES = listOf(
     OpenSourceLibrary(
         name = "Zalith Launcher 2",
-        copyright = "Copyright © 2024-2026 MovTery & Contributors",
+        copyright = "$COPY 2024-2026 MovTery & Contributors",
         license = "GPL-3.0 License",
         role = "Arsitektur runtime JVM, ZLBridge JNI, integrasi SDL3, direct gamepad, dan optimasi Android",
         url = "https://github.com/ZalithLauncher/ZalithLauncher2"
     ),
     OpenSourceLibrary(
         name = "PojavLauncher",
-        copyright = "Copyright © 2020-present PojavLauncherTeam & Contributors",
-        license = "GPL-3.0 License",
+        copyright = "$COPY 2020-present PojavLauncherTeam & Contributors",
+        license = "LGPL-3.0 License",
         role = "Mesin peluncuran Java Minecraft Android, LWJGL 3 Android Natives, GLFW Stub",
         url = "https://github.com/PojavLauncherTeam/PojavLauncher"
     ),
     OpenSourceLibrary(
         name = "MobileGlues",
-        copyright = "Copyright © 2023-2026 MobileGlues Team",
+        copyright = "$COPY 2023-2026 MobileGlues Team",
         license = "LGPL-2.1 License",
         role = "Penerjemah modern OpenGL 4.0 ke OpenGL ES 3.2 untuk Minecraft 1.17+",
         url = "https://github.com/FCL-Team/MobileGlues"
     ),
     OpenSourceLibrary(
         name = "LWJGL - Lightweight Java Game Library",
-        copyright = "Copyright © 2012-present LWJGL All rights reserved",
+        copyright = "$COPY 2012-present LWJGL All rights reserved",
         license = "BSD 3-Clause License",
         role = "Pustaka binding grafis, audio (OpenAL), dan jendela game Java",
         url = "https://github.com/LWJGL/lwjgl3"
     ),
     OpenSourceLibrary(
         name = "SDL3 & sdl2-compat",
-        copyright = "Copyright © 1997-2026 Sam Lantinga",
+        copyright = "$COPY 1997-2026 Sam Lantinga",
         license = "Zlib License",
         role = "Manajemen surface rendering native, touch input, dan audio output",
         url = "https://github.com/libsdl-org/SDL"
     ),
     OpenSourceLibrary(
         name = "Mesa 3D (Zink / Turnip / VirGL)",
-        copyright = "Copyright © The Mesa Authors",
+        copyright = "$COPY The Mesa Authors",
         license = "MIT License",
         role = "Vulkan-to-OpenGL translation & driver akselerasi GPU mobile",
         url = "https://mesa3d.org/"
     ),
     OpenSourceLibrary(
         name = "ANGLE",
-        copyright = "Copyright © 2018 The ANGLE Project Authors",
+        copyright = "$COPY 2018 The ANGLE Project Authors",
         license = "BSD 3-Clause License",
         role = "Mesin penerjemah OpenGL ES berbasis backend Vulkan",
         url = "http://angleproject.org/"
     ),
     OpenSourceLibrary(
         name = "ByteHook",
-        copyright = "Copyright © 2020-2024 ByteDance, Inc.",
+        copyright = "$COPY 2020-2024 ByteDance, Inc.",
         license = "MIT License",
         role = "Dynamic binary instrumentation dan hook Android library",
         url = "https://github.com/bytedance/bhook"
     ),
     OpenSourceLibrary(
         name = "Jetpack Compose & Material 3",
-        copyright = "Copyright © The Android Open Source Project",
+        copyright = "$COPY The Android Open Source Project",
         license = "Apache 2.0",
         role = "Toolkit UI modern, deklaratif, dan responsif",
         url = "https://developer.android.com/jetpack/compose"
     ),
     OpenSourceLibrary(
         name = "Modrinth API",
-        copyright = "Copyright © Rinth, Inc. & Community",
+        copyright = "$COPY Rinth, Inc. & Community",
         license = "Open API / AGPL",
         role = "Katalog publik mod, modpack, shaderpack, dan resource pack",
         url = "https://modrinth.com"
@@ -124,513 +160,248 @@ private val LIBRARIES = listOf(
     ),
     OpenSourceLibrary(
         name = "skinview3d",
-        copyright = "Copyright © Kent Rasmussen & contributors",
+        copyright = "$COPY Kent Rasmussen & contributors",
         license = "MIT License",
         role = "Viewer interaktif 3D skin & jubah Minecraft berbasis WebGL",
         url = "https://github.com/bs-community/skinview3d"
     ),
     OpenSourceLibrary(
         name = "OkHttp & Okio",
-        copyright = "Copyright © Square, Inc.",
+        copyright = "$COPY Square, Inc.",
         license = "Apache 2.0",
         role = "Klien HTTP jaringan performa tinggi",
         url = "https://github.com/square/okhttp"
     )
 )
 
+private fun openLink(context: Context, url: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    } catch (e: Exception) {
+        // Tidak ada peramban: tidak ada yang bisa dilakukan, biarkan dialog tetap terbuka.
+    }
+}
+
+private fun appVersionName(context: Context): String {
+    return try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
+    } catch (e: Exception) {
+        ""
+    }
+}
+
 /**
- * Dialog Komprehensif Tentang Aplikasi & Atribusi Lisensi Open Source (GPL-3.0 & Zalith Compliance)
- * Redesigned with High-End Double-Bezel Architecture & Fluid Responsiveness
+ * Dialog Tentang: ringkasan proyek, daftar pustaka open source, dan ketentuan GPL-3.0 (termasuk
+ * syarat tambahan Zalith). Di layar lebar tabnya jadi menu samping, di layar sempit jadi segmen
+ * di atas. Tombol Buy Me a Coffee hanya muncul kalau AppLinks.DONATE_URL diisi.
  */
 @Composable
 fun NuxAboutDialog(
     onDismissRequest: () -> Unit
 ) {
     val context = LocalContext.current
-    val isTablet = LocalNuxScale.current.isTablet
-    var activeTab by remember { mutableStateOf("overview") } // "overview", "libraries", "gpl"
+    var tab by remember { mutableIntStateOf(0) }
+    val scroll = rememberScrollState()
+    LaunchedEffect(tab) { scroll.scrollTo(0) }
+
+    val version = remember(context) { appVersionName(context) }
+    val onOpen: (String) -> Unit = remember(context) { { url: String -> openLink(context, url) } }
+    val donateUrl = AppLinks.DONATE_URL.trim()
+    val onDonate: (() -> Unit)? = if (donateUrl.isNotEmpty()) ({ onOpen(donateUrl) }) else null
+    val tabs = remember { listOf("Ringkasan", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
 
     NuxDialog(
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.fillMaxWidth(if (isTablet) 0.82f else 0.94f),
-        fillMaxHeight = true
+        modifier = Modifier.widthIn(max = 720.dp),
+        fillMaxHeight = true,
+        compact = true
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 14.dp, vertical = 10.dp)
-        ) {
-            // ==========================================
-            // 1. TOP HEADER BAR (Double-Bezel Aura)
-            // ==========================================
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Outer bezel icon ring
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            if (maxWidth >= 520.dp) {
+                Row(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .width(208.dp)
+                            .fillMaxHeight()
+                            .padding(horizontal = 12.dp, vertical = 14.dp)
+                    ) {
+                        Brand(version)
+                        Spacer(modifier = Modifier.height(14.dp))
+                        tabs.forEachIndexed { index, label ->
+                            RailTab(label = label, selected = index == tab) { tab = index }
+                            Spacer(modifier = Modifier.height(2.dp))
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (onDonate != null) {
+                            DonateButton(onClick = onDonate, modifier = Modifier.fillMaxWidth())
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                        CloseButton(onClick = onDismissRequest, modifier = Modifier.fillMaxWidth())
+                    }
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
-                            .background(
-                                Brush.radialGradient(
-                                    listOf(NuxColors.YellowPale, Color.Transparent)
-                                ),
-                                CircleShape
-                            )
-                            .border(1.2.dp, NuxColors.CardBorder, CircleShape)
-                            .padding(2.5.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(NuxColors.SurfaceWhite, CircleShape)
-                                .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = null,
-                                tint = NuxColors.SageGreen,
-                                modifier = Modifier.size(15.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "TENTANG & LISENSI OPEN SOURCE",
-                                color = NuxColors.DarkGray,
-                                fontWeight = FontWeight.Black,
-                                fontSize = 12.sp,
-                                letterSpacing = 0.6.sp
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            NuxBadge(
-                                text = "v1.0.6",
-                                backgroundColor = NuxColors.YellowPale,
-                                textColor = NuxColors.SageGreen,
-                                borderColor = NuxColors.CardBorder
-                            )
-                        }
-                        Text(
-                            text = "Atribusi hak cipta, kepatuhan GNU GPL-3.0, dan proyek hulu",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 8.5.sp
-                        )
-                    }
-                }
-
-                // Minimalist Close Button
-                Box(
-                    modifier = Modifier
-                        .size(26.dp)
-                        .clip(CircleShape)
-                        .background(NuxColors.SurfaceWhite, CircleShape)
-                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), CircleShape)
-                        .clickable { onDismissRequest() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "Tutup",
-                        tint = NuxColors.GrayNeutral,
-                        modifier = Modifier.size(13.dp)
+                            .width(1.dp)
+                            .fillMaxHeight()
+                            .background(Amber.Line)
                     )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // ==========================================
-            // 2. SEGMENTED TAB SWITCHER (Machined Pill Track)
-            // ==========================================
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(9.dp))
-                    .background(NuxColors.SurfaceInput)
-                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.27f), RoundedCornerShape(9.dp))
-                    .padding(2.5.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                listOf(
-                    "overview" to "RINGKASAN & PROYEK HULU",
-                    "libraries" to "DAFTAR LISENSI LENGKAP (${LIBRARIES.size})",
-                    "gpl" to "KETENTUAN GNU GPL-3.0"
-                ).forEach { (tabKey, title) ->
-                    val isSelected = activeTab == tabKey
-                    val textColor by animateColorAsState(
-                        targetValue = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral,
-                        animationSpec = tween(150),
-                        label = "tabText"
-                    )
-
-                    Box(
+                    AboutContent(
+                        tab = tab,
+                        onOpen = onOpen,
+                        scroll = scroll,
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(7.dp))
-                            .background(
-                                if (isSelected) Brush.horizontalGradient(
-                                    listOf(NuxColors.ForestGreen, NuxColors.ForestGreen)
-                                ) else Brush.horizontalGradient(
-                                    listOf(Color.Transparent, Color.Transparent)
-                                )
-                            )
-                            .clickable { activeTab = tabKey }
-                            .padding(vertical = 5.5.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = title,
-                            color = textColor,
-                            fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
-                            fontSize = 8.5.sp,
-                            letterSpacing = 0.3.sp
-                        )
+                            .fillMaxHeight()
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(14.dp)
+                ) {
+                    Brand(version)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    AmberSegmented(options = tabs, selected = tab, onSelect = { tab = it })
+                    AboutContent(
+                        tab = tab,
+                        onOpen = onOpen,
+                        scroll = scroll,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (onDonate != null) {
+                            DonateButton(onClick = onDonate, modifier = Modifier.weight(1f))
+                        }
+                        CloseButton(onClick = onDismissRequest, modifier = Modifier.weight(1f))
                     }
                 }
             }
+        }
+    }
+}
 
-            Spacer(modifier = Modifier.height(8.dp))
+@Composable
+private fun AboutContent(
+    tab: Int,
+    onOpen: (String) -> Unit,
+    scroll: ScrollState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .verticalScroll(scroll)
+            .padding(horizontal = 18.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        when (tab) {
+            0 -> OverviewTab(onOpen)
+            1 -> LibrariesTab(onOpen)
+            else -> LicenseTab(onOpen)
+        }
+    }
+}
 
-            // ==========================================
-            // 3. SCROLLABLE CONTENT BODY (Double-Bezel)
-            // ==========================================
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                when (activeTab) {
-                    "overview" -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            // Unofficial Notice Box (Zalith & GPL 7(c) Compliance)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(NuxColors.SurfaceWhite)
-                                    .border(1.dp, NuxColors.Amber.copy(alpha = 0.45f), RoundedCornerShape(10.dp))
-                                    .padding(9.dp)
-                            ) {
-                                Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text("⚠️", fontSize = 11.sp)
-                                        Spacer(modifier = Modifier.width(6.dp))
-                                        Text(
-                                            text = "PEMBERITAHUAN VERSI MODIFIKASI TIDAK RESMI",
-                                            color = NuxColors.AmberDark,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 9.sp,
-                                            letterSpacing = 0.5.sp
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Program ini BUKAN aplikasi resmi dari Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 8.5.sp,
-                                        lineHeight = 12.5.sp
-                                    )
-                                }
-                            }
+@Composable
+private fun OverviewTab(onOpen: (String) -> Unit) {
+    AboutTitle(
+        title = "Tentang AmberLauncher",
+        subtitle = "Peluncur Minecraft Java untuk Android, ringan dan sederhana."
+    )
+    Notice(
+        title = "Unofficial Modified Version",
+        body = "AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.",
+        highlight = true
+    )
+    SubHeading("Proyek dan hak cipta")
+    for (project in PROJECTS) {
+        ProjectRow(project, onOpen)
+    }
+    Notice(
+        title = "Penafian Minecraft",
+        body = "Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.",
+        highlight = false
+    )
+}
 
-                            // AmberLauncher (proyek ini)
-                            UpstreamProjectCard(
-                                title = "AmberLauncher",
-                                copyright = "Copyright © 2026 ItsVynzzzz",
-                                license = "GNU General Public License v3.0 (GPL-3.0)",
-                                description = "Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.",
-                                url = "https://github.com/ItsVynzzzz/NuxLite",
-                                onOpenUrl = { url ->
-                                    try {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                    } catch (_: Exception) {}
-                                }
-                            )
+@Composable
+private fun LibrariesTab(onOpen: (String) -> Unit) {
+    AboutTitle(
+        title = "Pustaka open source",
+        subtitle = "Ketuk untuk membuka halaman proyeknya."
+    )
+    for (lib in LIBRARIES) {
+        LibraryRow(lib, onOpen)
+    }
+}
 
-                            // Core Upstream Credits Header
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(top = 2.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(5.dp)
-                                        .background(NuxColors.MintGreen, CircleShape)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "PROYEK HULU UTAMA (CORE UPSTREAM):",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 8.5.sp,
-                                    fontWeight = FontWeight.Black,
-                                    letterSpacing = 0.6.sp
-                                )
-                            }
+@Composable
+private fun LicenseTab(onOpen: (String) -> Unit) {
+    AboutTitle(
+        title = "GNU GPL-3.0",
+        subtitle = "Lisensi yang menaungi AmberLauncher."
+    )
+    Body("Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.")
+    SubHeading("Empat kebebasan perangkat lunak bebas")
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Numbered(1, "Kebebasan untuk menjalankan program untuk keperluan apa pun.")
+        Numbered(2, "Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.")
+        Numbered(3, "Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.")
+        Numbered(4, "Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.")
+    }
+    SubHeading("Ketentuan tambahan (GPLv3 Pasal 7)")
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Bullet("Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.")
+        Bullet("Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.")
+        Bullet("Hak cipta penulis asli (Copyright \u00A9 MovTery & PojavLauncherTeam) tidak boleh dihapus.")
+    }
+    Spacer(modifier = Modifier.height(2.dp))
+    AmberButton(
+        text = "Baca teks lisensi lengkap",
+        onClick = { onOpen(GPL_URL) },
+        modifier = Modifier.fillMaxWidth(),
+        style = AmberButtonStyle.Ghost,
+        icon = "external"
+    )
+}
 
-                            // 1. Zalith Launcher 2 Card (Double-Bezel)
-                            UpstreamProjectCard(
-                                title = "Zalith Launcher 2",
-                                copyright = "Copyright © 2024-2026 MovTery & Contributors",
-                                license = "GNU General Public License v3.0 (GPL-3.0)",
-                                description = "Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.",
-                                url = "https://github.com/ZalithLauncher/ZalithLauncher2",
-                                onOpenUrl = { url ->
-                                    try {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                    } catch (_: Exception) {}
-                                }
-                            )
+// ---------------------------------------------------------------------------------------------
+// Bagian kecil
+// ---------------------------------------------------------------------------------------------
 
-                            // 2. PojavLauncher Card (Double-Bezel)
-                            UpstreamProjectCard(
-                                title = "PojavLauncher",
-                                copyright = "Copyright © 2020-present PojavLauncherTeam & Contributors",
-                                license = "GNU Lesser General Public License v3.0 (LGPL-3.0)",
-                                description = "Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.",
-                                url = "https://github.com/PojavLauncherTeam/PojavLauncher",
-                                onOpenUrl = { url ->
-                                    try {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                    } catch (_: Exception) {}
-                                }
-                            )
-
-                            // 3. NUX Launcher (proyek asal fork ini)
-                            UpstreamProjectCard(
-                                title = "NUX Launcher (sumber asal fork)",
-                                copyright = "Copyright © 2026 IsraaDeveloper & Contributors",
-                                license = "GNU General Public License v3.0 (GPL-3.0)",
-                                description = "Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.",
-                                url = "https://github.com/IsraaDeveloper/nuxlabs",
-                                onOpenUrl = { url ->
-                                    try {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                    } catch (_: Exception) {}
-                                }
-                            )
-
-                            // Disclaimer Card
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(NuxColors.SurfaceWhite)
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.27f), RoundedCornerShape(10.dp))
-                                    .padding(9.dp)
-                            ) {
-                                Column {
-                                    Text(
-                                        text = "PENAFIAN RESMI MINECRAFT & MOJANG (DISCLAIMER):",
-                                        color = NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 8.sp,
-                                        letterSpacing = 0.5.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(3.dp))
-                                    Text(
-                                        text = "BUKAN PRODUK RESMI MINECRAFT. TIDAK DISETUJUI OLEH ATAU TERKAIT DENGAN MOJANG STUDIOS ATAU MICROSOFT. Minecraft adalah merek dagang terdaftar milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server resmi distribusi Mojang.",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 7.5.sp,
-                                        lineHeight = 11.5.sp
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-
-                    "libraries" -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            LIBRARIES.forEach { lib ->
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(9.dp))
-                                        .background(NuxColors.SurfaceWhite)
-                                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.28f), RoundedCornerShape(9.dp))
-                                        .padding(horizontal = 9.dp, vertical = 7.dp)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Text(
-                                                    text = lib.name,
-                                                    color = NuxColors.DarkGray,
-                                                    fontWeight = FontWeight.Black,
-                                                    fontSize = 9.5.sp
-                                                )
-                                                Spacer(modifier = Modifier.width(6.dp))
-                                                Box(
-                                                    modifier = Modifier
-                                                        .clip(RoundedCornerShape(4.dp))
-                                                        .background(NuxColors.YellowPale)
-                                                        .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                                                        .padding(horizontal = 4.dp, vertical = 1.dp)
-                                                ) {
-                                                    Text(
-                                                        text = lib.license,
-                                                        color = NuxColors.SageGreen,
-                                                        fontSize = 7.sp,
-                                                        fontWeight = FontWeight.Bold
-                                                    )
-                                                }
-                                            }
-                                            Spacer(modifier = Modifier.height(2.dp))
-                                            Text(
-                                                text = lib.copyright,
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 8.sp,
-                                                fontWeight = FontWeight.Medium
-                                            )
-                                            Text(
-                                                text = lib.role,
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 7.5.sp
-                                            )
-                                        }
-
-                                        // Action Link Button
-                                        Box(
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(6.dp))
-                                                .background(NuxColors.SurfaceElevated)
-                                                .border(1.dp, NuxColors.SkyBlue.copy(alpha = 0.20f), RoundedCornerShape(6.dp))
-                                                .clickable {
-                                                    try {
-                                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(lib.url)))
-                                                    } catch (_: Exception) {}
-                                                }
-                                                .padding(horizontal = 6.dp, vertical = 3.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Text("Link", color = NuxColors.SkyBlueDark, fontSize = 7.5.sp, fontWeight = FontWeight.Bold)
-                                                Spacer(modifier = Modifier.width(2.dp))
-                                                Icon(
-                                                    imageVector = Icons.Outlined.OpenInNew,
-                                                    contentDescription = "Buka Link",
-                                                    tint = NuxColors.SkyBlueDark,
-                                                    modifier = Modifier.size(10.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-
-                    "gpl" -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(NuxColors.SurfaceWhite)
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.28f), RoundedCornerShape(10.dp))
-                                    .padding(10.dp)
-                            ) {
-                                Column {
-                                    Text(
-                                        text = "GNU GENERAL PUBLIC LICENSE v3.0 (GPL-3.0)",
-                                        color = NuxColors.DarkGray,
-                                        fontWeight = FontWeight.Black,
-                                        fontSize = 10.sp,
-                                        letterSpacing = 0.5.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.\n\n" +
-                                                "Prinsip 4 Kebebasan Perangkat Lunak Bebas:\n" +
-                                                "1. Kebebasan untuk menjalankan program untuk keperluan apa pun.\n" +
-                                                "2. Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.\n" +
-                                                "3. Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.\n" +
-                                                "4. Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.\n\n" +
-                                                "Ketentuan Tambahan Sesuai GPLv3 Pasal 7:\n" +
-                                                "• Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.\n" +
-                                                "• Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.\n" +
-                                                "• Hak cipta penulis asli (Copyright © MovTery & PojavLauncherTeam) tidak boleh dihapus.",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 8.5.sp,
-                                        lineHeight = 12.5.sp
-                                    )
-                                }
-                            }
-
-                            NuxButton(
-                                onClick = {
-                                    try {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.gnu.org/licenses/gpl-3.0.html")))
-                                    } catch (_: Exception) {}
-                                },
-                                backgroundColor = NuxColors.SurfaceElevated,
-                                contentColor = NuxColors.SkyBlueDark,
-                                borderColor = NuxColors.SkyBlue.copy(alpha = 0.20f),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(32.dp)
-                            ) {
-                                Icon(Icons.Outlined.OpenInNew, contentDescription = null, tint = NuxColors.SkyBlueDark, modifier = Modifier.size(13.dp))
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text("BACA TEKS LISENSI RESMI GNU GPL-3.0 LENGKAP", color = NuxColors.SkyBlueDark, fontSize = 8.5.sp, fontWeight = FontWeight.Bold)
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            // ==========================================
-            // 4. FOOTER CLOSE BUTTON (Cyber Glass Pill)
-            // ==========================================
-            NuxButton(
-                onClick = onDismissRequest,
-                backgroundColor = NuxColors.SurfaceElevated,
-                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
-                contentColor = NuxColors.DarkGray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(32.dp)
-            ) {
+@Composable
+private fun Brand(version: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Amber.Yellow),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "A",
+                color = Amber.Ink,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Black
+            )
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        Column {
+            Text(
+                text = "AmberLauncher",
+                color = Amber.Text,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+            if (version.isNotBlank()) {
                 Text(
-                    text = "TUTUP",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 10.sp,
-                    letterSpacing = 0.5.sp
+                    text = "Versi $version",
+                    color = Amber.TextDim,
+                    fontSize = 12.5.sp,
+                    maxLines = 1
                 )
             }
         }
@@ -638,89 +409,272 @@ fun NuxAboutDialog(
 }
 
 @Composable
-private fun UpstreamProjectCard(
-    title: String,
-    copyright: String,
-    license: String,
-    description: String,
-    url: String,
-    onOpenUrl: (String) -> Unit
-) {
-    Box(
+private fun RailTab(label: String, selected: Boolean, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(10.dp)
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .background(NuxColors.SurfaceWhite)
-            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.30f), RoundedCornerShape(10.dp))
-            .padding(9.dp)
+            .height(40.dp)
+            .clip(shape)
+            .background(if (selected) Amber.YellowTint else Color.Transparent)
+            .amberTap(onClick)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = title,
-                        color = NuxColors.DarkGray,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 10.5.sp
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(NuxColors.YellowPale)
-                            .border(1.dp, NuxColors.CardBorder, RoundedCornerShape(4.dp))
-                            .padding(horizontal = 5.dp, vertical = 1.dp)
-                    ) {
-                        Text(
-                            text = license,
-                            color = NuxColors.SageGreen,
-                            fontSize = 7.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+        Box(
+            modifier = Modifier
+                .width(3.dp)
+                .height(16.dp)
+                .background(
+                    if (selected) Amber.Yellow else Color.Transparent,
+                    RoundedCornerShape(2.dp)
+                )
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = label,
+            color = if (selected) Amber.Yellow else Amber.TextDim,
+            fontSize = 15.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            maxLines = 1
+        )
+    }
+}
 
-                // Interactive GitHub Pill Button
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(NuxColors.SurfaceElevated)
-                        .border(1.dp, NuxColors.SkyBlue.copy(alpha = 0.20f), RoundedCornerShape(6.dp))
-                        .clickable { onOpenUrl(url) }
-                        .padding(horizontal = 6.dp, vertical = 2.5.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("GitHub", color = NuxColors.SkyBlueDark, fontSize = 8.sp, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.width(3.dp))
-                        Icon(
-                            imageVector = Icons.Outlined.OpenInNew,
-                            contentDescription = null,
-                            tint = NuxColors.SkyBlueDark,
-                            modifier = Modifier.size(10.dp)
-                        )
-                    }
-                }
-            }
+@Composable
+private fun DonateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    AmberButton(
+        text = "Buy me a coffee",
+        onClick = onClick,
+        modifier = modifier,
+        style = AmberButtonStyle.Primary,
+        icon = "coffee"
+    )
+}
 
-            Spacer(modifier = Modifier.height(3.dp))
+@Composable
+private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    AmberButton(
+        text = "Tutup",
+        onClick = onClick,
+        modifier = modifier,
+        style = AmberButtonStyle.Ghost
+    )
+}
+
+@Composable
+private fun AboutTitle(title: String, subtitle: String) {
+    Column {
+        Text(
+            text = title,
+            color = Amber.Text,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = subtitle,
+            color = Amber.TextDim,
+            fontSize = 14.sp,
+            lineHeight = 20.sp
+        )
+    }
+}
+
+@Composable
+private fun SubHeading(text: String) {
+    Text(
+        text = text,
+        color = Amber.Yellow,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(top = 4.dp)
+    )
+}
+
+@Composable
+private fun Body(text: String) {
+    Text(
+        text = text,
+        color = Amber.TextDim,
+        fontSize = 14.sp,
+        lineHeight = 21.sp
+    )
+}
+
+@Composable
+private fun Notice(title: String, body: String, highlight: Boolean) {
+    val shape = RoundedCornerShape(12.dp)
+    val fill = if (highlight) Amber.YellowTint else Amber.Fill
+    val line = if (highlight) Amber.Yellow.copy(alpha = 0.40f) else Amber.Line
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(fill)
+            .border(1.dp, line, shape)
+            .padding(12.dp)
+    ) {
+        Text(
+            text = title,
+            color = if (highlight) Amber.Yellow else Amber.Text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = body,
+            color = Amber.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp
+        )
+    }
+}
+
+@Composable
+private fun ProjectRow(project: AboutProject, onOpen: (String) -> Unit) {
+    val shape = RoundedCornerShape(12.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(Amber.Fill)
+            .border(1.dp, Amber.Line, shape)
+            .amberTap { onOpen(project.url) }
+            .padding(12.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = copyright,
-                color = NuxColors.GrayNeutral,
-                fontSize = 8.sp,
-                fontWeight = FontWeight.SemiBold
+                text = project.title,
+                color = Amber.Text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
             )
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+            AmberIcon("external", 16.dp, Amber.TextDim)
+        }
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = project.copyright,
+            color = Amber.TextFaint,
+            fontSize = 12.sp
+        )
+        Text(
+            text = project.license,
+            color = Amber.TextFaint,
+            fontSize = 12.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = project.description,
+            color = Amber.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp
+        )
+    }
+}
+
+@Composable
+private fun LibraryRow(lib: OpenSourceLibrary, onOpen: (String) -> Unit) {
+    val shape = RoundedCornerShape(12.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(Amber.Fill)
+            .border(1.dp, Amber.Line, shape)
+            .amberTap { onOpen(lib.url) }
+            .padding(12.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = description,
-                color = NuxColors.GrayNeutral,
-                fontSize = 7.5.sp,
-                lineHeight = 11.sp
+                text = lib.name,
+                color = Amber.Text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Chip(lib.license.removeSuffix(" License"))
+        }
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = lib.copyright,
+            color = Amber.TextFaint,
+            fontSize = 12.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = lib.role,
+            color = Amber.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp
+        )
+    }
+}
+
+@Composable
+private fun Chip(text: String) {
+    Box(
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(Amber.YellowTint)
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        Text(
+            text = text,
+            color = Amber.Yellow,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
+        )
+    }
+}
+
+@Composable
+private fun Numbered(number: Int, text: String) {
+    Row(verticalAlignment = Alignment.Top) {
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .background(Amber.YellowTint, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = number.toString(),
+                color = Amber.Yellow,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
             )
         }
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = text,
+            color = Amber.TextDim,
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun Bullet(text: String) {
+    Row(verticalAlignment = Alignment.Top) {
+        Box(
+            modifier = Modifier
+                .padding(top = 7.dp, start = 7.dp)
+                .size(6.dp)
+                .background(Amber.Yellow, CircleShape)
+        )
+        Spacer(modifier = Modifier.width(13.dp))
+        Text(
+            text = text,
+            color = Amber.TextDim,
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+            modifier = Modifier.weight(1f)
+        )
     }
 }

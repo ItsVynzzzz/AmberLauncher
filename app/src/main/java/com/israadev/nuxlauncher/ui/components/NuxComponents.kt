@@ -1,8 +1,5 @@
 package com.israadev.nuxlauncher.ui.components
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,15 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -42,29 +35,11 @@ import com.israadev.nuxlauncher.ui.theme.NuxReadable
 import com.israadev.nuxlauncher.ui.theme.resp
 
 /**
- * Bayangan keras ala kartun: persegi bulat warna solid yang digeser ke kanan-bawah,
- * tanpa blur. Digambar di belakang komponen sehingga murah untuk GPU kecil.
+ * Kartu kaca: isian transparan tipis, tepi putih tipis (atau gradien lewat borderBrush), tanpa
+ * bayangan. [shadowColor] dan [shadowOffset] dipertahankan supaya pemanggil lama tetap
+ * dikompilasi, nilainya tidak dipakai lagi.
  */
-private fun Modifier.hardShadow(color: Color, offset: Dp, cornerRadius: Dp): Modifier =
-    if (offset.value <= 0f || color.alpha <= 0f) {
-        this
-    } else {
-        this.drawBehind {
-            val o = offset.toPx()
-            val r = cornerRadius.toPx()
-            drawRoundRect(
-                color = color,
-                topLeft = Offset(o, o),
-                size = size,
-                cornerRadius = CornerRadius(r, r)
-            )
-        }
-    }
-
-/**
- * Kartu kaca: isian transparan tipis, tepi putih tipis (atau gradien lewat borderBrush),
- * tanpa bayangan. Bayangan keras hanya muncul kalau pemanggil mengisi shadowOffset.
- */
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun NuxCard(
     modifier: Modifier = Modifier,
@@ -88,7 +63,6 @@ fun NuxCard(
 
     Box(
         modifier = cardModifier
-            .hardShadow(shadowColor, shadowOffset, cornerRadius)
             .background(backgroundColor, shape)
             .then(edge)
             .clip(shape)
@@ -98,12 +72,15 @@ fun NuxCard(
 }
 
 /**
- * Tombol dengan dua gaya, dipilih otomatis dari warna isiannya:
- * - isian terang solid (kuning/putih): tombol utama, tepi tinta tebal dan bayangan keras seperti PLAY,
- *   teks otomatis Ink supaya selalu terbaca;
- * - selain itu (kaca/transparan/gelap): tombol kaca, tepi putih tipis tanpa bayangan.
- * Warna teks dan tepi bisa diisi pemanggil; kalau dibiarkan, dipilih sesuai gaya.
+ * Tombol AmberLauncher, gayanya dipilih otomatis dari warna isiannya:
+ * - isian terang solid (kuning/putih): tombol utama, datar tanpa tepi dan tanpa bayangan, teks
+ *   otomatis Ink supaya selalu terbaca;
+ * - selain itu (kaca/transparan/gelap): tombol kaca, tepi putih tipis.
+ * Umpan balik tekan digambar hanya di fase gambar (lapisan gelap/terang tipis), jadi menyentuh
+ * tombol tidak menyusun ulang layar. [shadowOffset] dipertahankan supaya pemanggil lama tetap
+ * dikompilasi, nilainya tidak dipakai lagi.
  */
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun NuxButton(
     onClick: () -> Unit,
@@ -112,28 +89,18 @@ fun NuxButton(
     contentColor: Color = Color.Unspecified,
     borderColor: Color = Color.Unspecified,
     enabled: Boolean = true,
-    shadowOffset: Dp = NuxSizes.ShadowOffset,
-    cornerRadius: Dp = (14.dp).resp(),
+    shadowOffset: Dp = 0.dp,
+    cornerRadius: Dp = (12.dp).resp(),
     contentPadding: PaddingValues = PaddingValues(horizontal = (14.dp).resp(), vertical = (6.dp).resp()),
     content: @Composable RowScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val press by animateFloatAsState(
-        targetValue = if (isPressed && enabled) 1f else 0f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "btnPress"
-    )
+    val pressedState = interactionSource.collectIsPressedAsState()
 
     val filled = backgroundColor.alpha >= 0.9f && backgroundColor.luminance() > 0.45f
     val edgeColor = when {
-        !enabled -> NuxColors.LightGray
+        !enabled -> NuxColors.CardBorder
         borderColor != Color.Unspecified -> borderColor
-        filled -> NuxColors.Ink
         else -> NuxColors.CardBorder
     }
     val textColor = when {
@@ -145,31 +112,18 @@ fun NuxButton(
         else -> contentColor
     }
     val shape = RoundedCornerShape(cornerRadius)
-    val shadowSize = if (filled) shadowOffset else 0.dp
-    val activeShadow = if (enabled) shadowSize * (1f - press) else 0.dp
+    val pressTint = if (filled) Color.Black.copy(alpha = 0.14f) else Color.White.copy(alpha = 0.10f)
+    val edge = if (filled && enabled) Modifier else Modifier.border(NuxSizes.GlassBorder, edgeColor, shape)
 
     Box(
         modifier = modifier
-            .graphicsLayer {
-                val shift = if (enabled) shadowSize.toPx() * press else 0f
-                translationX = shift
-                translationY = shift
-                if (!filled) {
-                    compositingStrategy = CompositingStrategy.ModulateAlpha
-                    alpha = 1f - 0.22f * press
-                }
-            }
-            .hardShadow(edgeColor, activeShadow, cornerRadius)
             .clip(shape)
-            .background(
-                if (enabled) backgroundColor else NuxColors.SurfaceWhite,
-                shape
-            )
-            .border(
-                width = if (filled && enabled) NuxSizes.BorderWidth else NuxSizes.GlassBorder,
-                color = edgeColor,
-                shape = shape
-            )
+            .background(if (enabled) backgroundColor else NuxColors.SurfaceWhite, shape)
+            .then(edge)
+            .drawWithContent {
+                drawContent()
+                if (enabled && pressedState.value) drawRect(pressTint)
+            }
             .clickable(
                 enabled = enabled,
                 interactionSource = interactionSource,

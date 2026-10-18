@@ -186,8 +186,8 @@ private fun DrawScope.drawControlLabel(
 
 /**
  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
- * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, chev_up, chev_down,
- * chev_right.
+ * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, coffee, external,
+ * trash, warning, download, chev_up, chev_down, chev_right.
  */
 fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
     val x0 = cx - s / 2f
@@ -293,6 +293,39 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
         "power" -> {
             drawArc(color, -60f, 300f, false, p(0.22f, 0.26f), Size(0.56f * s, 0.56f * s), style = stroke)
             line(p(0.5f, 0.14f), p(0.5f, 0.46f))
+        }
+        "coffee" -> {
+            // Cangkir (badan bersudut miring di bawah), pegangan, alas, dan dua uap.
+            poly(
+                true,
+                floatArrayOf(0.20f, 0.44f, 0.66f, 0.44f, 0.66f, 0.62f, 0.56f, 0.76f, 0.30f, 0.76f, 0.20f, 0.62f))
+            drawArc(color, -90f, 180f, false, p(0.50f, 0.48f), Size(0.30f * s, 0.20f * s), style = stroke)
+            line(p(0.14f, 0.86f), p(0.72f, 0.86f))
+            line(p(0.34f, 0.18f), p(0.34f, 0.32f))
+            line(p(0.52f, 0.18f), p(0.52f, 0.32f))
+        }
+        "external" -> {
+            // Kotak terbuka di kanan-atas dengan panah keluar.
+            poly(false, floatArrayOf(0.44f, 0.24f, 0.22f, 0.24f, 0.22f, 0.78f, 0.76f, 0.78f, 0.76f, 0.56f))
+            line(p(0.50f, 0.50f), p(0.80f, 0.20f))
+            poly(false, floatArrayOf(0.58f, 0.20f, 0.80f, 0.20f, 0.80f, 0.42f))
+        }
+        "trash" -> {
+            line(p(0.20f, 0.30f), p(0.80f, 0.30f))
+            poly(false, floatArrayOf(0.40f, 0.30f, 0.40f, 0.20f, 0.60f, 0.20f, 0.60f, 0.30f))
+            poly(false, floatArrayOf(0.28f, 0.30f, 0.32f, 0.80f, 0.68f, 0.80f, 0.72f, 0.30f))
+            line(p(0.43f, 0.46f), p(0.43f, 0.66f))
+            line(p(0.57f, 0.46f), p(0.57f, 0.66f))
+        }
+        "warning" -> {
+            poly(true, floatArrayOf(0.50f, 0.20f, 0.82f, 0.76f, 0.18f, 0.76f))
+            line(p(0.50f, 0.42f), p(0.50f, 0.58f))
+            drawCircle(color, 0.035f * s, p(0.50f, 0.67f))
+        }
+        "download" -> {
+            line(p(0.50f, 0.20f), p(0.50f, 0.60f))
+            poly(false, floatArrayOf(0.32f, 0.44f, 0.50f, 0.62f, 0.68f, 0.44f))
+            poly(false, floatArrayOf(0.24f, 0.72f, 0.24f, 0.82f, 0.76f, 0.82f, 0.76f, 0.72f))
         }
         "chev_right" -> poly(false, floatArrayOf(0.38f, 0.22f, 0.66f, 0.50f, 0.38f, 0.78f))
         "chev_up" -> poly(false, floatArrayOf(0.22f, 0.62f, 0.5f, 0.34f, 0.78f, 0.62f))

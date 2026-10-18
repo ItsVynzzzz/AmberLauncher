@@ -622,6 +622,16 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 val activeSettings = SettingsManager.settings.value
                 val (targetWidth, targetHeight) = getScaledDisplayDimensions()
 
+                // Jarak pandang awal mengikuti RAM HP. HP 4 GB ke bawah tetap 2 chunk seperti biasa;
+                // HP yang lebih besar mendapat nilai lebih lega. Hanya dipakai bila options.txt belum
+                // punya nilainya (pertama kali instance dijalankan), jadi pilihan pemain tidak ditimpa.
+                val totalRamForOptions = SettingsManager.getTotalDeviceMemoryMb(this@GameActivity)
+                val defaultRenderDistance = when {
+                    totalRamForOptions >= 7000 -> "6"
+                    totalRamForOptions >= 5000 -> "4"
+                    else -> "2"
+                }
+
                 // Setup & Optimize Minecraft options.txt (Zalith pure behavior)
                 MCOptions.setup(this@GameActivity, gameDir)
                 MCOptions.apply {
@@ -635,7 +645,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         if (!containsKey("clouds")) set("clouds", "false")
                         if (!containsKey("renderClouds")) set("renderClouds", "false")
                         if (!containsKey("entityShadows")) set("entityShadows", "false")
-                        if (!containsKey("renderDistance")) set("renderDistance", "2")
+                        if (!containsKey("renderDistance")) set("renderDistance", defaultRenderDistance)
                         if (!containsKey("simulationDistance")) set("simulationDistance", "5")
                     }
 

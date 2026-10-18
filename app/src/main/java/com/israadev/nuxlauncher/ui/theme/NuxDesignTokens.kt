@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
- * NuxLite Yellow & Black Palette (gaya kaca gelap, sama dengan Home)
+ * AmberLauncher Yellow & Black Palette (gaya kaca gelap, sama dengan Home)
  * Latar hitam, permukaan kaca transparan bertepi putih tipis, teks putih, kuning hanya sebagai aksen.
  * Kuning dipakai sebagai isian (tombol utama, pil terpilih) dan di atasnya selalu teks Ink (hitam).
  * Nama properti lama dipertahankan sebagai alias supaya kode lain tidak perlu diubah:

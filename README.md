@@ -16,7 +16,7 @@
 
 ## Tentang
 
-AmberLauncher dibuat untuk HP Android kelas menengah ke bawah (misalnya RAM 4 GB, penyimpanan 64 GB): tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya disesuaikan dengan kemampuan perangkat. Tema visualnya gelap transparan dengan aksen kuning amber.
+AmberLauncher dibuat supaya tetap lancar di HP Android kelas menengah ke bawah, dan tentu juga jalan di HP yang lebih kuat: tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya (RAM game dan jarak pandang) disesuaikan dengan RAM perangkat. Tema visualnya gelap transparan dengan aksen kuning amber. Untuk saat ini launcher ini berfokus pada **Fabric**.
 
 Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **Zalith Launcher 2** dan **PojavLauncher**. Lihat bagian [Lisensi dan Kredit](#lisensi-dan-kredit).
 
@@ -25,14 +25,14 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Beranda kaca gelap** yang minimalis, dengan latar yang bisa diganti.
 - **Banyak instance terpisah**: tiap profil punya versi, mod, dan pengaturan sendiri.
 - **Mod, resource pack, shader, dan datapack dari Modrinth**: cari dan pasang langsung dari dalam aplikasi, plus pemasangan file manual.
-- **Modloader Fabric**: pilih Vanilla atau Fabric saat membuat instance.
-- **Profil perangkat**: setelan RAM, resolusi, dan renderer yang disarankan menurut kemampuan HP.
+- **Fokus Fabric**: pilih Vanilla atau Fabric saat membuat instance. Pencarian mod dan modpack otomatis disaring untuk Fabric, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
+- **Setelan awal sesuai HP**: RAM game dan jarak pandang awal menyesuaikan RAM perangkat. Model yang sudah diuji (saat ini Oppo A3x 4G) mendapat profil performa khusus; di HP lain launcher berjalan dengan setelan biasa.
 - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
 - **Akun**: Microsoft, Ely.by, dan offline.
 - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
 
-Belum ada dan masih direncanakan: pemasang Forge, NeoForge, dan Quilt, serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
+Belum ada: Forge, NeoForge, dan Quilt (untuk sekarang fokusnya Fabric, ke depannya bisa berubah), serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
 
 > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
 
@@ -40,9 +40,25 @@ Belum ada dan masih direncanakan: pemasang Forge, NeoForge, dan Quilt, serta und
 
 APK hasil build ada di halaman **Releases** repo ini (tiap build lolos membuat rilis *pre-release* otomatis) dan di tab **Actions** sebagai artifact selama 14 hari. Unduh APK-nya di HP, izinkan pemasangan dari sumber ini, lalu pasang.
 
-Kebutuhan: Android 8.0 (API 26) atau lebih baru, CPU arm64-v8a.
+**Kebutuhan:** Android 8.0 (API 26) atau lebih baru dan CPU 64-bit (arm64-v8a), yang dimiliki hampir semua HP keluaran beberapa tahun terakhir. RAM 3 GB ke atas disarankan; 4 GB atau lebih terasa lebih nyaman. Siapkan ruang kosong beberapa GB untuk aplikasi, Java bawaan, dan data game.
 
-Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder dipertahankan agar data lama tetap terbaca).
+### Cara mulai
+
+1. Buka AmberLauncher. Di Android 11 ke atas akan muncul penjelasan izin penyimpanan; izinkan agar data tersimpan di folder `nuxlauncher` (boleh dilewati, datanya lalu disimpan di folder privat aplikasi).
+2. Buka **Akun** dan tambahkan akun: Microsoft untuk bermain online, atau offline untuk bermain sendiri.
+3. Buat **instance** baru: pilih versi Minecraft, lalu Vanilla atau Fabric (pilih Fabric bila ingin memakai mod).
+4. Di **Home**, tekan **UNDUH** dan tunggu sampai selesai (butuh internet; pertama kali bisa beberapa ratus MB), lalu tekan **PLAY**.
+5. Mod, resource pack, dan shader dipasang lewat menu **Mod**.
+
+### Bila ada masalah
+
+- **Game tertutup sendiri atau crash**: jangan beri RAM game lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di **Pengaturan**. Laporan crash bisa dilihat dari dalam aplikasi.
+- **FPS rendah**: kecilkan jarak pandang di dalam game, turunkan rasio resolusi, atau coba renderer lain di **Pengaturan**.
+- **Mod tidak jalan**: pastikan instance memakai Fabric dan versi Minecraft-nya sama dengan versi mod.
+
+### Lokasi data
+
+Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder dipertahankan agar data lama tetap terbaca). Bila izin penyimpanan tidak diberikan, datanya ada di folder privat aplikasi. Lokasi mengikuti izin: kalau izin diubah setelah instance dibuat, instance lama tetap berada di lokasi sebelumnya dan baru terlihat lagi setelah izinnya dikembalikan.
 
 ## Build sendiri
 
@@ -57,8 +73,8 @@ Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder diper
 Prasyarat: JDK 17, Android SDK (compile SDK 37, min SDK 26), dan NDK bila ikut mengompilasi kode native.
 
 ```bash
-git clone https://github.com/ItsVynzzzz/NuxLite.git
-cd NuxLite
+git clone https://github.com/ItsVynzzzz/AmberLauncher.git
+cd AmberLauncher
 cp local.properties.example local.properties   # lalu isi sdk.dir
 chmod +x gradlew
 ./gradlew assembleRelease

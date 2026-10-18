@@ -25,6 +25,9 @@ data class WorldInfo(
     val iconFile: File? = null
 )
 
+/** Modpack tidak cocok dengan instance atau loader yang didukung; pesannya aman ditampilkan ke pengguna. */
+private class ModpackIncompatibleException(message: String) : Exception(message)
+
 object NuxModManager {
 
     private val gson = Gson()
@@ -35,8 +38,20 @@ object NuxModManager {
         .followRedirects(true)
         .build()
 
-    private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/NuxLite)"
+    private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
+
+    /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
+    private const val SUPPORTED_LOADER = "fabric"
+
+    /**
+     * Loader yang dipakai untuk menyaring mod dan modpack. Instance Vanilla (atau tanpa instance)
+     * ikut disaring ke loader yang didukung, supaya pengguna tidak memasang mod Forge yang pasti gagal.
+     */
+    private fun effectiveLoader(instance: Instance?): String {
+        val loader = instance?.loader?.trim()?.lowercase().orEmpty()
+        return if (loader.isEmpty() || loader == "vanilla") SUPPORTED_LOADER else loader
+    }
 
     /**
      * Membaca daftar dunia (saves) yang ada di dalam instance
@@ -438,12 +453,9 @@ object NuxModManager {
                 facets.add(listOf("versions:${instance.mcVersion}"))
             }
 
-            // 4. Loader filter (Auto-Loader dari instance)
-            if ((itemType == "mods" || itemType == "modpacks") && instance != null && instance.loader.isNotBlank()) {
-                val loaderLower = instance.loader.lowercase()
-                if (loaderLower != "vanilla") {
-                    facets.add(listOf("categories:$loaderLower"))
-                }
+            // 4. Loader filter (loader instance; Vanilla atau tanpa instance memakai loader yang didukung)
+            if (itemType == "mods" || itemType == "modpacks") {
+                facets.add(listOf("categories:${effectiveLoader(instance)}"))
             }
 
             val facetsJson = gson.toJson(facets)
@@ -544,12 +556,8 @@ object NuxModManager {
 
             // Cek kompatibilitas Loader jika tipe mods atau modpacks
             val matchesLoader = if (itemType == "mods" || itemType == "modpacks") {
-                val instLoader = instance.loader.lowercase()
-                if (instLoader == "vanilla" || instLoader.isBlank()) {
-                    true
-                } else {
-                    v.loaders.any { it.equals(instLoader, ignoreCase = true) }
-                }
+                val instLoader = effectiveLoader(instance)
+                v.loaders.any { it.equals(instLoader, ignoreCase = true) }
             } else {
                 true
             }
@@ -753,6 +761,8 @@ object NuxModManager {
 
                     zip.getInputStream(indexEntry).bufferedReader().use { reader ->
                         val indexJson = JsonParser.parseReader(reader).asJsonObject
+                        // Tolak modpack yang tidak cocok sebelum ada file yang diunduh
+                        checkModpackCompatibility(indexJson, instance)
                         if (indexJson.has("name")) {
                             packTitle = indexJson.get("name").asString
                         }
@@ -874,7 +884,45 @@ object NuxModManager {
             onProgress("Selesai! $installedModCount mod berhasil dipasang.", installedRelativeFiles.size, installedRelativeFiles.size)
         } catch (e: Exception) {
             android.util.Log.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
+            if (e is ModpackIncompatibleException) {
+                // Modpack ditolak: buang arsipnya supaya tidak tampil sebagai modpack yang terpasang
+                try {
+                    mrpackFile.delete()
+                } catch (_: Exception) {
+                }
+            }
             throw e
+        }
+    }
+
+    /**
+     * Memeriksa modpack Modrinth sebelum ada file yang diunduh: loader dan versi Minecraft-nya harus
+     * cocok dengan instance. Bila tidak cocok, dilempar [ModpackIncompatibleException] dengan pesan jelas.
+     */
+    private fun checkModpackCompatibility(indexJson: com.google.gson.JsonObject, instance: Instance) {
+        val deps = indexJson.getAsJsonObject("dependencies") ?: return
+
+        val otherLoader = listOf("forge" to "Forge", "neoforge" to "NeoForge", "quilt-loader" to "Quilt")
+            .firstOrNull { deps.has(it.first) }
+        val needsFabric = deps.has("fabric-loader")
+
+        if (!needsFabric && otherLoader != null) {
+            throw ModpackIncompatibleException(
+                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric."
+            )
+        }
+        if (needsFabric && !instance.loader.equals("fabric", ignoreCase = true)) {
+            throw ModpackIncompatibleException(
+                "Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu."
+            )
+        }
+
+        val packMc = deps.get("minecraft")?.takeIf { it.isJsonPrimitive }?.asString
+        if (!packMc.isNullOrBlank() && instance.mcVersion.isNotBlank() && packMc != instance.mcVersion) {
+            throw ModpackIncompatibleException(
+                "Modpack ini untuk Minecraft $packMc, sedangkan instance ini memakai ${instance.mcVersion}. " +
+                    "Pilih atau buat instance dengan versi yang sama."
+            )
         }
     }
 

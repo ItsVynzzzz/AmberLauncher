@@ -33,16 +33,7 @@ object SettingsManager {
             }
         }
 
-        // Recommend default RAM based on device's capacity (safe default ~ 1/3 to 1/2 of RAM)
-        val totalRam = getTotalDeviceMemoryMb(context)
-        val defaultRam = when {
-            totalRam >= 12000 -> 4096
-            totalRam >= 8000 -> 3072
-            totalRam >= 6000 -> 2560
-            totalRam >= 4000 -> 2048
-            else -> 1280
-        }
-        val initialSettings = LauncherSettings(ramMb = defaultRam)
+        val initialSettings = LauncherSettings(ramMb = recommendedRamMb(getTotalDeviceMemoryMb(context)))
         _settings.value = initialSettings
         save(context)
     }
@@ -53,15 +44,24 @@ object SettingsManager {
     }
 
     fun resetToDefaults(context: Context) {
-        val totalRam = getTotalDeviceMemoryMb(context)
-        val defaultRam = when {
-            totalRam >= 8000 -> 3072
-            totalRam >= 4000 -> 2048
-            else -> 1280
-        }
-        val defaultSettings = LauncherSettings(ramMb = defaultRam)
+        val defaultSettings = LauncherSettings(ramMb = recommendedRamMb(getTotalDeviceMemoryMb(context)))
         _settings.value = defaultSettings
         save(context)
+    }
+
+    /**
+     * RAM game (MB) yang disarankan untuk HP dengan total RAM [totalRamMb]. Dipakai saat pertama
+     * kali dibuka dan saat reset, supaya hasilnya selalu sama. HP 4 GB (melapor sekitar 3700 MB)
+     * tetap mendapat 1280 MB seperti sebelumnya; HP di bawah 3 GB mendapat 1024 MB agar tidak
+     * kehabisan memori.
+     */
+    fun recommendedRamMb(totalRamMb: Int): Int = when {
+        totalRamMb >= 12000 -> 4096
+        totalRamMb >= 8000 -> 3072
+        totalRamMb >= 6000 -> 2560
+        totalRamMb >= 4000 -> 2048
+        totalRamMb >= 3000 -> 1280
+        else -> 1024
     }
 
     private fun save(context: Context) {

@@ -1,4 +1,4 @@
-# ==== Aturan R8 untuk NuxLite ====
+# ==== Aturan R8 untuk AmberLauncher ====
 # Tujuan: memangkas kode pustaka yang tidak terpakai (terutama ribuan ikon
 # material-icons-extended) supaya APK lebih kecil dan aplikasi lebih ringan dimuat.
 # Kode aplikasi sendiri TIDAK diubah/dibuang/diganti namanya, karena kode native

@@ -55,7 +55,7 @@ private val PROJECTS = listOf(
         copyright = "$COPY 2026 ItsVynzzzz",
         license = "GNU General Public License v3.0 (GPL-3.0)",
         description = "Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.",
-        url = "https://github.com/ItsVynzzzz/NuxLite"
+        url = "https://github.com/ItsVynzzzz/AmberLauncher"
     ),
     AboutProject(
         title = "Zalith Launcher 2",

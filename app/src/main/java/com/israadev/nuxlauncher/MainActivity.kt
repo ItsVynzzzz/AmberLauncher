@@ -26,6 +26,7 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
 import com.israadev.nuxlauncher.ui.screens.DashboardScreen
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxResponsiveTheme
@@ -37,6 +38,11 @@ class MainActivity : ComponentActivity() {
     private val bgExecutor: java.util.concurrent.ExecutorService =
         java.util.concurrent.Executors.newSingleThreadExecutor()
     private var storageWasGranted = false
+
+    private companion object {
+        const val PREFS_NAME = "amber_launcher_prefs"
+        const val KEY_STORAGE_INTRO_DONE = "storage_intro_done"
+    }
 
     private fun storageAccessGranted(): Boolean =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -52,6 +58,11 @@ class MainActivity : ComponentActivity() {
         hideSystemBars()
         checkAndRequestStoragePermissions()
         storageWasGranted = storageAccessGranted()
+
+        // Android 11 ke atas: jelaskan dulu alasan izinnya, cukup satu kali (tidak menagih tiap dibuka).
+        val showStorageIntro = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            !Environment.isExternalStorageManager() &&
+            !getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(KEY_STORAGE_INTRO_DONE, false)
 
         handleIncomingAddonIntent(intent)
 
@@ -79,6 +90,14 @@ class MainActivity : ComponentActivity() {
                         color = NuxColors.Background
                     ) {
                         DashboardScreen()
+                        AmberStorageIntro(
+                            initiallyVisible = showStorageIntro,
+                            onOpenSettings = {
+                                markStorageIntroDone()
+                                openAllFilesAccessSettings()
+                            },
+                            onFinished = { markStorageIntroDone() }
+                        )
                     }
                 }
             }
@@ -146,20 +165,34 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun checkAndRequestStoragePermissions() {
+    private fun markStorageIntroDone() {
+        try {
+            getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putBoolean(KEY_STORAGE_INTRO_DONE, true).apply()
+        } catch (_: Exception) {
+        }
+    }
+
+    /** Membuka halaman izin "akses semua file" (Android 11 ke atas). Aman bila halamannya tidak ada. */
+    private fun openAllFilesAccessSettings() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                    data = Uri.parse("package:$packageName")
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
                 try {
-                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                        data = Uri.parse("package:$packageName")
-                    }
-                    startActivity(intent)
-                } catch (e: Exception) {
-                    val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                    startActivity(intent)
+                    startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                } catch (_: Exception) {
                 }
             }
-        } else {
+        }
+    }
+
+    private fun checkAndRequestStoragePermissions() {
+        // Android 11 ke atas ditangani dialog penjelasan (AmberStorageIntro); di bawahnya memakai
+        // dialog izin standar Android.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             val permissions = arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE

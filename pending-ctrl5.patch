@@ -1,0 +1,881 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt b/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt
+new file mode 100644
+index 0000000..1b0f1fa
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt
+@@ -0,0 +1,12 @@
++package com.israadev.nuxlauncher
++
++/**
++ * Tautan yang dipakai di dalam aplikasi. Ubah di sini saja.
++ */
++object AppLinks {
++    /**
++     * Tautan dukungan (tombol Buy me a coffee di dialog Tentang).
++     * Kalau dikosongkan, tombolnya otomatis disembunyikan.
++     */
++    const val DONATE_URL = "https://sociabuzz.com/amberlauncher/tribe"
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt
+new file mode 100644
+index 0000000..ce0dfac
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt
+@@ -0,0 +1,159 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ColumnScope
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.RowScope
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material3.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.Dp
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.ui.theme.Amber
++
++/** Gaya tombol AmberLauncher: utama (kuning), bahaya (merah), dan kaca (hanya garis tepi). */
++enum class AmberButtonStyle { Primary, Danger, Ghost }
++
++/**
++ * Tombol datar AmberLauncher. Tanpa bayangan, tanpa animasi pegas; umpan balik tekan hanya
++ * lapisan putih tipis yang digambar di fase gambar (lihat [amberTap]).
++ */
++@Composable
++fun AmberButton(
++    text: String,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    style: AmberButtonStyle = AmberButtonStyle.Primary,
++    icon: String? = null,
++    enabled: Boolean = true,
++    height: Dp = 44.dp
++) {
++    val shape = RoundedCornerShape(12.dp)
++    val fill = when (style) {
++        AmberButtonStyle.Primary -> Amber.Yellow
++        AmberButtonStyle.Danger -> Amber.Danger
++        AmberButtonStyle.Ghost -> Color.Transparent
++    }
++    val ink = when {
++        !enabled -> Amber.TextFaint
++        style == AmberButtonStyle.Ghost -> Amber.Text
++        else -> Amber.Ink
++    }
++    val base = modifier
++        .height(height)
++        .clip(shape)
++        .background(if (enabled) fill else Amber.Fill)
++    val framed = if (style == AmberButtonStyle.Ghost || !enabled) {
++        base.border(1.dp, Amber.LineStrong, shape)
++    } else {
++        base
++    }
++    val tappable = if (enabled) framed.amberTap(onClick) else framed
++
++    Row(
++        modifier = tappable.padding(horizontal = 14.dp),
++        horizontalArrangement = Arrangement.Center,
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        if (icon != null) {
++            AmberIcon(icon, 18.dp, ink)
++            Spacer(modifier = Modifier.width(8.dp))
++        }
++        Text(
++            text = text,
++            color = ink,
++            fontSize = 14.sp,
++            fontWeight = FontWeight.Bold,
++            maxLines = 1
++        )
++    }
++}
++
++/**
++ * Kerangka dialog kecil (konfirmasi, peringatan, proses): ikon berwarna + judul, isi, lalu baris
++ * tombol (boleh kosong untuk dialog proses). Memakai NuxDialog sehingga tepi kaca dan latar redupnya sama dengan dialog lain.
++ */
++@Composable
++fun AmberAlert(
++    onDismissRequest: () -> Unit,
++    title: String,
++    icon: String,
++    accent: Color,
++    modifier: Modifier = Modifier,
++    actions: (@Composable RowScope.() -> Unit)? = null,
++    content: @Composable ColumnScope.() -> Unit
++) {
++    NuxDialog(
++        onDismissRequest = onDismissRequest,
++        modifier = Modifier.widthIn(max = 460.dp),
++        compact = true
++    ) {
++        Column(
++            modifier = modifier
++                .fillMaxWidth()
++                .padding(20.dp)
++        ) {
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Box(
++                    modifier = Modifier
++                        .size(40.dp)
++                        .clip(RoundedCornerShape(12.dp))
++                        .background(accent.copy(alpha = 0.16f)),
++                    contentAlignment = Alignment.Center
++                ) {
++                    AmberIcon(icon, 22.dp, accent)
++                }
++                Spacer(modifier = Modifier.width(12.dp))
++                Text(
++                    text = title,
++                    color = Amber.Text,
++                    fontSize = 19.sp,
++                    fontWeight = FontWeight.Bold,
++                    modifier = Modifier.weight(1f)
++                )
++            }
++            Spacer(modifier = Modifier.height(14.dp))
++            content()
++            if (actions != null) {
++                Spacer(modifier = Modifier.height(20.dp))
++                Row(
++                    modifier = Modifier.fillMaxWidth(),
++                    horizontalArrangement = Arrangement.spacedBy(10.dp),
++                    content = actions
++                )
++            }
++        }
++    }
++}
++
++/** Kotak info kecil di dalam dialog (nama instance, dsb.): isian kaca + tepi tipis. */
++@Composable
++fun AmberInfoBox(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
++    val shape = RoundedCornerShape(12.dp)
++    Column(
++        modifier = modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .background(Amber.Fill)
++            .border(1.dp, Amber.Line, shape)
++            .padding(12.dp),
++        content = content
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+index 6030ea7..58bc626 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+@@ -1,8 +1,5 @@
+ package com.israadev.nuxlauncher.ui.components
+ 
+-import androidx.compose.animation.core.Spring
+-import androidx.compose.animation.core.animateFloatAsState
+-import androidx.compose.animation.core.spring
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+ import androidx.compose.foundation.clickable
+@@ -18,15 +15,11 @@ import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.draw.drawBehind
+-import androidx.compose.ui.geometry.CornerRadius
+-import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.draw.drawWithContent
+ import androidx.compose.ui.graphics.Brush
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.CompositingStrategy
+ import androidx.compose.ui.graphics.luminance
+ import androidx.compose.ui.graphics.SolidColor
+-import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.Dp
+@@ -42,29 +35,11 @@ import com.israadev.nuxlauncher.ui.theme.NuxReadable
+ import com.israadev.nuxlauncher.ui.theme.resp
+ 
+ /**
+- * Bayangan keras ala kartun: persegi bulat warna solid yang digeser ke kanan-bawah,
+- * tanpa blur. Digambar di belakang komponen sehingga murah untuk GPU kecil.
+- */
+-private fun Modifier.hardShadow(color: Color, offset: Dp, cornerRadius: Dp): Modifier =
+-    if (offset.value <= 0f || color.alpha <= 0f) {
+-        this
+-    } else {
+-        this.drawBehind {
+-            val o = offset.toPx()
+-            val r = cornerRadius.toPx()
+-            drawRoundRect(
+-                color = color,
+-                topLeft = Offset(o, o),
+-                size = size,
+-                cornerRadius = CornerRadius(r, r)
+-            )
+-        }
+-    }
+-
+-/**
+- * Kartu kaca: isian transparan tipis, tepi putih tipis (atau gradien lewat borderBrush),
+- * tanpa bayangan. Bayangan keras hanya muncul kalau pemanggil mengisi shadowOffset.
++ * Kartu kaca: isian transparan tipis, tepi putih tipis (atau gradien lewat borderBrush), tanpa
++ * bayangan. [shadowColor] dan [shadowOffset] dipertahankan supaya pemanggil lama tetap
++ * dikompilasi, nilainya tidak dipakai lagi.
+  */
++@Suppress("UNUSED_PARAMETER")
+ @Composable
+ fun NuxCard(
+     modifier: Modifier = Modifier,
+@@ -88,7 +63,6 @@ fun NuxCard(
+ 
+     Box(
+         modifier = cardModifier
+-            .hardShadow(shadowColor, shadowOffset, cornerRadius)
+             .background(backgroundColor, shape)
+             .then(edge)
+             .clip(shape)
+@@ -98,12 +72,15 @@ fun NuxCard(
+ }
+ 
+ /**
+- * Tombol dengan dua gaya, dipilih otomatis dari warna isiannya:
+- * - isian terang solid (kuning/putih): tombol utama, tepi tinta tebal dan bayangan keras seperti PLAY,
+- *   teks otomatis Ink supaya selalu terbaca;
+- * - selain itu (kaca/transparan/gelap): tombol kaca, tepi putih tipis tanpa bayangan.
+- * Warna teks dan tepi bisa diisi pemanggil; kalau dibiarkan, dipilih sesuai gaya.
++ * Tombol AmberLauncher, gayanya dipilih otomatis dari warna isiannya:
++ * - isian terang solid (kuning/putih): tombol utama, datar tanpa tepi dan tanpa bayangan, teks
++ *   otomatis Ink supaya selalu terbaca;
++ * - selain itu (kaca/transparan/gelap): tombol kaca, tepi putih tipis.
++ * Umpan balik tekan digambar hanya di fase gambar (lapisan gelap/terang tipis), jadi menyentuh
++ * tombol tidak menyusun ulang layar. [shadowOffset] dipertahankan supaya pemanggil lama tetap
++ * dikompilasi, nilainya tidak dipakai lagi.
+  */
++@Suppress("UNUSED_PARAMETER")
+ @Composable
+ fun NuxButton(
+     onClick: () -> Unit,
+@@ -112,28 +89,18 @@ fun NuxButton(
+     contentColor: Color = Color.Unspecified,
+     borderColor: Color = Color.Unspecified,
+     enabled: Boolean = true,
+-    shadowOffset: Dp = NuxSizes.ShadowOffset,
+-    cornerRadius: Dp = (14.dp).resp(),
++    shadowOffset: Dp = 0.dp,
++    cornerRadius: Dp = (12.dp).resp(),
+     contentPadding: PaddingValues = PaddingValues(horizontal = (14.dp).resp(), vertical = (6.dp).resp()),
+     content: @Composable RowScope.() -> Unit
+ ) {
+     val interactionSource = remember { MutableInteractionSource() }
+-    val isPressed by interactionSource.collectIsPressedAsState()
+-
+-    val press by animateFloatAsState(
+-        targetValue = if (isPressed && enabled) 1f else 0f,
+-        animationSpec = spring(
+-            dampingRatio = Spring.DampingRatioLowBouncy,
+-            stiffness = Spring.StiffnessMedium
+-        ),
+-        label = "btnPress"
+-    )
++    val pressedState = interactionSource.collectIsPressedAsState()
+ 
+     val filled = backgroundColor.alpha >= 0.9f && backgroundColor.luminance() > 0.45f
+     val edgeColor = when {
+-        !enabled -> NuxColors.LightGray
++        !enabled -> NuxColors.CardBorder
+         borderColor != Color.Unspecified -> borderColor
+-        filled -> NuxColors.Ink
+         else -> NuxColors.CardBorder
+     }
+     val textColor = when {
+@@ -145,31 +112,18 @@ fun NuxButton(
+         else -> contentColor
+     }
+     val shape = RoundedCornerShape(cornerRadius)
+-    val shadowSize = if (filled) shadowOffset else 0.dp
+-    val activeShadow = if (enabled) shadowSize * (1f - press) else 0.dp
++    val pressTint = if (filled) Color.Black.copy(alpha = 0.14f) else Color.White.copy(alpha = 0.10f)
++    val edge = if (filled && enabled) Modifier else Modifier.border(NuxSizes.GlassBorder, edgeColor, shape)
+ 
+     Box(
+         modifier = modifier
+-            .graphicsLayer {
+-                val shift = if (enabled) shadowSize.toPx() * press else 0f
+-                translationX = shift
+-                translationY = shift
+-                if (!filled) {
+-                    compositingStrategy = CompositingStrategy.ModulateAlpha
+-                    alpha = 1f - 0.22f * press
+-                }
+-            }
+-            .hardShadow(edgeColor, activeShadow, cornerRadius)
+             .clip(shape)
+-            .background(
+-                if (enabled) backgroundColor else NuxColors.SurfaceWhite,
+-                shape
+-            )
+-            .border(
+-                width = if (filled && enabled) NuxSizes.BorderWidth else NuxSizes.GlassBorder,
+-                color = edgeColor,
+-                shape = shape
+-            )
++            .background(if (enabled) backgroundColor else NuxColors.SurfaceWhite, shape)
++            .then(edge)
++            .drawWithContent {
++                drawContent()
++                if (enabled && pressedState.value) drawRect(pressTint)
++            }
+             .clickable(
+                 enabled = enabled,
+                 interactionSource = interactionSource,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+index 9bab557..969db4c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+@@ -186,8 +186,8 @@ private fun DrawScope.drawControlLabel(
+ 
+ /**
+  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
+- * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, chev_up, chev_down,
+- * chev_right.
++ * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, coffee, external,
++ * trash, warning, download, chev_up, chev_down, chev_right.
+  */
+ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
+     val x0 = cx - s / 2f
+@@ -294,6 +294,39 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
+             drawArc(color, -60f, 300f, false, p(0.22f, 0.26f), Size(0.56f * s, 0.56f * s), style = stroke)
+             line(p(0.5f, 0.14f), p(0.5f, 0.46f))
+         }
++        "coffee" -> {
++            // Cangkir (badan bersudut miring di bawah), pegangan, alas, dan dua uap.
++            poly(
++                true,
++                floatArrayOf(0.20f, 0.44f, 0.66f, 0.44f, 0.66f, 0.62f, 0.56f, 0.76f, 0.30f, 0.76f, 0.20f, 0.62f))
++            drawArc(color, -90f, 180f, false, p(0.50f, 0.48f), Size(0.30f * s, 0.20f * s), style = stroke)
++            line(p(0.14f, 0.86f), p(0.72f, 0.86f))
++            line(p(0.34f, 0.18f), p(0.34f, 0.32f))
++            line(p(0.52f, 0.18f), p(0.52f, 0.32f))
++        }
++        "external" -> {
++            // Kotak terbuka di kanan-atas dengan panah keluar.
++            poly(false, floatArrayOf(0.44f, 0.24f, 0.22f, 0.24f, 0.22f, 0.78f, 0.76f, 0.78f, 0.76f, 0.56f))
++            line(p(0.50f, 0.50f), p(0.80f, 0.20f))
++            poly(false, floatArrayOf(0.58f, 0.20f, 0.80f, 0.20f, 0.80f, 0.42f))
++        }
++        "trash" -> {
++            line(p(0.20f, 0.30f), p(0.80f, 0.30f))
++            poly(false, floatArrayOf(0.40f, 0.30f, 0.40f, 0.20f, 0.60f, 0.20f, 0.60f, 0.30f))
++            poly(false, floatArrayOf(0.28f, 0.30f, 0.32f, 0.80f, 0.68f, 0.80f, 0.72f, 0.30f))
++            line(p(0.43f, 0.46f), p(0.43f, 0.66f))
++            line(p(0.57f, 0.46f), p(0.57f, 0.66f))
++        }
++        "warning" -> {
++            poly(true, floatArrayOf(0.50f, 0.20f, 0.82f, 0.76f, 0.18f, 0.76f))
++            line(p(0.50f, 0.42f), p(0.50f, 0.58f))
++            drawCircle(color, 0.035f * s, p(0.50f, 0.67f))
++        }
++        "download" -> {
++            line(p(0.50f, 0.20f), p(0.50f, 0.60f))
++            poly(false, floatArrayOf(0.32f, 0.44f, 0.50f, 0.62f, 0.68f, 0.44f))
++            poly(false, floatArrayOf(0.24f, 0.72f, 0.24f, 0.82f, 0.76f, 0.82f, 0.76f, 0.72f))
++        }
+         "chev_right" -> poly(false, floatArrayOf(0.38f, 0.22f, 0.66f, 0.50f, 0.38f, 0.78f))
+         "chev_up" -> poly(false, floatArrayOf(0.22f, 0.62f, 0.5f, 0.34f, 0.78f, 0.62f))
+         "chev_down" -> poly(false, floatArrayOf(0.22f, 0.38f, 0.5f, 0.66f, 0.78f, 0.38f))
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index 12d556a00fb72d82e637ba4acbcbc1f7b77a8613..c1fc2af58060a7c64003508dc25d4ce9e06aefc9 100644
+GIT binary patch
+literal 23615
+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
+K{DFUKdH5e%r-T~-
+
+literal 36886
+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
+SQ4Z*&ql0tknawt{p#BdS`UP<S
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt
+index d3f79ade6b3d7440e54cd0ddd71dd196dd55e724..6739469a3f876f636b1f849d510ba1c8b20a9949 100644
+GIT binary patch
+literal 2676
+zcmcImOOM+&5WeeI41BT|TPB+nEf64W<8|8vX;L7YwwGSUB4tlZkt!b>Z-V{r9a5I1
+ztgKC1v^v-_=Nrz<H!n9>?r@`^w6!4b5T&{nChj#xQ*M<Lk%T1FcH@hJ>c+YNXr!|w
+z_kxug>y@Z6D9513;;q_;Nmym0kr>Dtq4CDXAR3gC%w|%<MH8r2;xZe;wN{f*_VbmM
+zRFQJ`VFEiSDr<uHi9h~OwAoHO%y(wI4>wxn*nYiMuG04XeI}xzAbit7CYdd*W9qC_
+z+KU&)2Q=j|yh$Z?DYI^r30^#_*UCN9${l0)CyL7$f;FG@^MuJ(^D5EuZ`5Cy$}a8x
+zOH{*FasG3hMe*S5tbj9kX-!40Mo+NCCVHR)djj6tdTlk-%HfuU<_4kWLXH|FfhR-f
+z@DBMkki;FJ#KR3teuLnZ+2A`AY~(@l!)0G|RW$HA?pI2ypt@YGa$C#`;HUH833Sr)
+zd~VHU>+BPlFW{^1;5ROgPP8IlllMbWv4D?R@ftN~%iZXHA*0|atRrc86&$zA0g~)u
+z(<me7vsVl%9aaHmi>yBocD{+a{9QTE?KgtV0RD^*A1=Rz`}A9XL}Z(;M6c$H{vxVi
+zel*kq55{<`ytZMf(d<}Z;QPSE+0g9Z{Pc~z)!Q8FZIQqFW@vMg?y=@T@*DM6R6a0~
+z$D=k42^A>l#PRI;C*}10tcOr(O+o~RemgkFvgA%=NwzLlXg13AYFMUm=ULvSHCanf
+zMz>wmJKKub9iCCi))E8ifvrx?MWw0SG2}!n9f$`@9)^tS=Aw9?$KCv*TJ#=v_&nnn
+zJn$^{xA=K$eK^)sg7^HVUjv2dP%^Qf3FXi!W7qz(Q0`_Yxu2d-lRFV>TWiAt&XFHx
+z*`55RJvhn6v8oN$Y8-B9wRK%4^41w+(gwSt52<J`zTsta8quyd#`L>REUlJfbdCEo
+zXHubFjHULl^;nt$>z1JSQEO^E`3c4nwf7Ry54f?-F$*iI$FLz0k53Zuzl7En!|4FK
+z_PtVdM3DS<0MCJI_#8Z5t4+!|NHnlZn_&}qpitUQT~+W40qz(esa<b8ZfoR)pS9Y}
+zwI<J3(@xcE)Wl$Mr@6j>z9DsAkEqjJ4$t$v;H*Eo7|BmH<>Bw#JlG}`(jy_8epa+^
+Ix5aJoH$;9H6#xJL
+
+literal 10413
+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
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
+index e8a17755362f138162c21492eaa3145bcb782b0c..39eaa02bf2cead8499ff12839dc7d8d884da6e3d 100644
+GIT binary patch
+literal 3706
+zcmb_fZExE)5dN-TK^Pk#2QKqcY``+CSlldFfu<Yct;IglA}zC~NR6aoyFvc@?nud!
+zBHM_8`GYNy&mHge;kjhlisgc2rl8VU#<+N-y4omK>1-)1tt91=DU-V-kws~&Croo|
+zB;QaFDvcAAX<0BYjfNH5yox(zn7?r|&%Ai8s9y`A4}uq_(mWnCH<k<g8l+-dQ+ax0
+zEz`Lug!U&$P0i*6^n+QSfL=(Y?%C#x<bHXA*iy)Rd5RAu<6P?eHAlE5D+PToZKlKw
+zpAQN_zJ-OlcuW5ho5R-FN_$y=%1|k6t`2L2Lc38i*GDr1pnJpRLLSLIR;*=fnkiWx
+zw7&r%aw?Wm^JCClm_m5F1wX77_JMI(xmO9y<hP?Pdx#!g813mDe0@2dTQEA{o!=@E
+z0{_ROunTph>_DW_(o=pk6anIPkYi*JdR{{pIeJsfg}qV2?(%<3&@Z9+qD+#UpPeP-
+zjNArhA*BTtaRi#XT9TXrj7*t_b|ouOu&))<giBbTGfNaKy9%~AtZJ#4)LTZD48OUY
+zvy2hPm`CkUNqLl-kgt$3ATHo3CtIyva<)R;wgR1`Lgk<Z>F#F|HyLLHsza`rH<p0I
+zW#ySg^;-nDXVlWr7L|Jg%lJzHcb@#(ss05V^Qqe0nzaUc<bPU|Tj5*`M4AxzNbSJ)
+zOnibsT$7o%(7cnd191xIYZACME*2mT4Bkf?eJfodoqG`fR>Jvfl8(uncjRxV1@a4d
+zdQQgVDd>D;D#pbN4m**`d)ytZLd(GMT=>sSRRW-mH9-2pX5xcRFBTJWxfn;gP+)g4
+z%u11gNTBzWS2mFNJrJODuzdByMMp@nxlph=;;ISHD406l8C>Fl8a+u5S^*ilytr75
+zsW%_APsd4+Zfmx6>t(P&?aQUsB`>`~???AgU2VmVT7=Au4(8W6?rgEFHanO>{}Bp%
+z7bDfA1E1j<X^q2$qNY61+OQw(-X3WudWc^dE58AqFx9#BK)CZpXC=$TRD_JQwxcvq
+zikBJ4Hf)TN%`<%uaToS;jZxcRJ&JWbz<0bC`flJV@)zjq)_DJP1Z74+ufeHEFoEZW
+z801VOSAbpqNL{%f5eXGAExXdGQGAFl*yf|uz(SyJxNB;jg<bTkp<VhLRB-8}8%pfU
+z**egB3N5mW8oJwmI~upqcXjE1->E9pfuDZZVsQ-(``-h%r#S18BLyOZc@ZLd1s71?
+z&Gzki7YvxT`W3S$h&yofnGo6>=1sZ(C`7*Km!Xz8R;8C0151NA4ijl-Flx=;+0l*?
+zHMKT7%`XBTMCQ|2*LOgFLp2CSPF{mA4(gk(aXthxtC^Wo*sa9C0hE&qlCH@+0<3qy
+z1VjZhaFPzT>{Wy?{JgHBA~t@b$zVBlX1bn44`OIva8y?apW&awZn6Re-9al2afn*T
+zIk|e#K3z@w<JneNgB`BW_>UsJg#1rx=0QT3kiA)N4;uDs&2ja`Oyyz<bH$20g*#&_
+zS-FDI1^8RUS%=aQdG7aVKkj(Ktt|SGZX3TH@Sg(9e-CVfE%DP}zr%J{eZ8kK-JS+L
+M-j6YE&&hN0AH57>fdBvi
+
+literal 9048
+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
+B)!+aC
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt
+index 1d8d9f33764ee075612e654c75c9e4c027d0cc01..0c62b55ac41e43026478589314a44d4c5991fd31 100644
+GIT binary patch
+literal 2841
+zcmbVO+iu%N5Pj!YEQ~xzhP#2{qG$~?7umf8h}|Gg8{~0BE~Sa~!tN!O8u;HkyA(xA
+zB<&=65G2mootd*|&a#4h4NJjtqc}PXP>9c5hmC}w^OdkXATJQ4S-LDkRT=9U=)xK-
+zHk=k!#tB}UpbPM5G?%b7!Sf1=0`+oqg#s@uZF|n&i;W+J*`Pft!7o!HSV%Dnr8=)o
+zfh7w25XMtFs#kmdJAHi+xLl2=r#%zi`K=VG(!V|nTS{~HP>P_@^P+kb;`WeH@^fPa
+zw?Y@f(ox)m&AZ+2*Sa)Kg3;AfemWs7w0HcKS_u0}3cK(3TNciP_eOtD%6jE(r0{!|
+z$4=*F^EFHTN|07kpIP?w^fY6q>@CSmFTsOm4#2aDn2dC?E$AgHutJF|=COb^{VT#c
+z&|@o{LPpvPYeom|kX@q|xrNd*)X3|N6`*Ebc&OL{9WW&%=ug3~K}W>X?B!)E+cId@
+zIlm8JHPv;MCTo&0`ZULU(Z$8?&r(?B|HMj+zF@aL_EbMM`qJnUt-4^7Df{6$`<v9)
+zgszbKaIPE5rtC}Fua!fcK9*qgZpAzCZxGJ2U)x9Zo)P8IOF^L%;<o0prY|?SS)a5x
+z%#Dt)ySmp-1oE6DNwHJ}|0pDlRJ#!JXeEx~b*V9F{3LWOr?%!gL{-sX$82*tYuU-w
+z#EB@0`I;d6F58R^NbMYiP>q@JyW|m*Svl?FlQ9suQ&|!^|6^sGPdqnUPY?ce7L2#@
+zK56R{kgP~kkMy*YLBGa_dgABb)YV&y3hefvleVw>^t{nm>^pV28{ng}jJ7}8c{2)h
+z^SFv`lp9c@-&k&>u?_jjo%@*R^tbq5l<Vv#?y6x#eGL$%y%YG{$fA!{uz5pP5Vbk$
+zN6qebplIx`xh(i^Qex%MjSv^9dXSHk)_$JsePBQjeMYWO^~>y%az02(x6P5F>(d@C
+zy_v<mL6B)4d#n>VSU9lSp)NVQ77Er5Xae*W8mCo@KxXbik$;o5+dzObMp6MwK1?^=
+zI-D_bg20xf9Y)seR-C<Q{Q1QZd0#<Xm$V;yq)8IRpUEib?4Qkg@u4Byy(3M$siK^o
+z(K|ysOzkf$*<?Qu@jj;)tp(j$eoHTGH^$GSJxr$Exf?!}__R5ht8~#t=HgX%!Jd2>
+zPH}%kRNUi`tYh<zi1_L9H7v4-7@E9Wp>TNm4p^T3(qlR1eVpl^4~ULyTC!_Z-)HyP
+E|7jLZsQ>@~
+
+literal 10463
+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
+QD&Bsx{#AZ^K6pO(507m2;Q#;t
+
+
+
+# FIN part=1/1 files=8

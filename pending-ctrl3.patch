@@ -1,0 +1,1112 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 9845786..e0ea37d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -43,14 +43,17 @@ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material3.Text
+ import androidx.compose.runtime.*
++import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.Job
+ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.isActive
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.alpha
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.drawBehind
+ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Brush
+ import androidx.compose.ui.graphics.Color
+@@ -60,6 +63,7 @@ import androidx.compose.ui.graphics.StrokeJoin
+ import androidx.compose.ui.graphics.drawscope.Fill
+ import androidx.compose.ui.graphics.drawscope.Stroke
+ import androidx.compose.ui.graphics.drawscope.scale
++import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.input.pointer.pointerInteropFilter
+ import androidx.compose.ui.input.pointer.positionChange
+@@ -1309,7 +1313,6 @@ fun GameScreen(
+     var currentFps by remember { mutableIntStateOf(0) }
+     var fpsMode by remember { mutableStateOf(FpsMode.NORMAL) }
+     val context = LocalContext.current
+-    val hapticView = LocalView.current
+ 
+     // Handler siklus 3-klik tombol FPS
+     val cycleFpsMode: () -> Unit = {
+@@ -1336,6 +1339,9 @@ fun GameScreen(
+     var perfText by remember { mutableStateOf("") }
+     var perfWarn by remember { mutableStateOf(false) }
+ 
++    // Info RAM/panas hanya tampil di teks FPS, jadi hanya dihitung saat teks FPS terlihat.
++    val wantPerfHint by rememberUpdatedState(isControlVisible || fpsMode == FpsMode.PINNED)
++
+     // Periodically update FPS counter from native engine
+     LaunchedEffect(Unit) {
+         var tick = 0
+@@ -1344,8 +1350,11 @@ fun GameScreen(
+                 currentFps = CallbackBridge.getCurrentFps()
+             } catch (_: Throwable) {
+             }
+-            if (tick % 4 == 0) {
+-                val hint = try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
++            if (tick % 6 == 0 && wantPerfHint) {
++                // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
++                val hint = withContext(Dispatchers.Default) {
++                    try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
++                }
+                 if (hint.first != perfText) perfText = hint.first
+                 if (hint.second != perfWarn) perfWarn = hint.second
+             }
+@@ -1420,7 +1429,7 @@ fun GameScreen(
+             screenHeight = screenHeight,
+             cursorMode = gameCursorMode,
+             controlMode = mouseControlMode,
+-            cursorPosition = Offset(cursorX, cursorY),
++            cursorPosition = { Offset(cursorX, cursorY) },
+             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
+             touchAttackEnabled = launcherSettings.touchAttackEnabled,
+             requestPointerCapture = !launcherSettings.physicalMouseMode,
+@@ -1495,14 +1504,16 @@ fun GameScreen(
+             // Sembunyikan mouse virtual jika mouse fisik eksternal terhubung & sedang digunakan
+             false
+         } else {
+-            gameCursorMode == CURSOR_ENABLED && cursorX > 0f && cursorY > 0f
++            gameCursorMode == CURSOR_ENABLED
+         }
+ 
++        // Posisi kursor dibaca hanya saat menggeser lapisan kursor (lihat VirtualCursorPointer),
++        // jadi menggerakkan kursor tidak menyusun ulang layar game.
+         if (shouldShowPointer) {
+             VirtualCursorPointer(
+-                x = cursorX,
+-                y = cursorY,
+-                isPressed = isMousePressed,
++                x = { cursorX },
++                y = { cursorY },
++                isPressed = { isMousePressed },
+                 cursorSizeDp = launcherSettings.mouseSizeDp
+             )
+         }
+@@ -1540,11 +1551,7 @@ fun GameScreen(
+             onFpsClick = { showInGameSettingsDialog = true },
+             onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+             onToggleControls = { isControlVisible = !isControlVisible },
+-            onExitTap = { showExitConfirmDialog = true },
+-            onExitHold = {
+-                hapticView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+-                showInGameSettingsDialog = true
+-            }
++            onOpenMenu = { showInGameSettingsDialog = true }
+         )
+ 
+         // Konfirmasi keluar
+@@ -1558,7 +1565,7 @@ fun GameScreen(
+             )
+         }
+ 
+-        // Menu dalam game (tahan tombol X atau ketuk lencana FPS untuk membuka)
++        // Menu dalam game (ketuk gerigi atau angka FPS untuk membuka; keluar lewat tombol merah di dalamnya)
+         GameMenuSheet(
+             visible = showInGameSettingsDialog,
+             onDismissRequest = { showInGameSettingsDialog = false },
+@@ -1609,7 +1616,7 @@ fun GameScreen(
+                 CallbackBridge.sendKeyPress(keycode, true)
+                 CallbackBridge.sendKeyPress(keycode, false)
+             },
+-            onForceExitRequest = {
++            onExitRequest = {
+                 showExitConfirmDialog = true
+             },
+             onOpenCustomGui = {
+@@ -1621,66 +1628,56 @@ fun GameScreen(
+     }
+ }
+ 
++/**
++ * Kursor panah untuk menu game. Posisinya diberikan lewat lambda dan hanya dibaca saat lapisan
++ * digeser (tanpa menyusun ulang dan tanpa menggambar ulang panahnya); bentuk panah dibuat sekali.
++ * Belum ada posisi (0, 0) = tidak terlihat.
++ */
+ @Composable
+ fun VirtualCursorPointer(
+-    x: Float,
+-    y: Float,
+-    isPressed: Boolean = false,
++    x: () -> Float,
++    y: () -> Float,
++    isPressed: () -> Boolean = { false },
+     cursorSizeDp: Int = 24,
+     modifier: Modifier = Modifier
+ ) {
+-    val density = LocalDensity.current
+-    val xDp = with(density) { x.toDp() }
+-    val yDp = with(density) { y.toDp() }
++    val d = LocalDensity.current.density
++    val arrow = remember(d) {
++        Path().apply {
++            moveTo(0f, 0f)
++            lineTo(0f, 22f * d)
++            lineTo(5.5f * d, 16.5f * d)
++            lineTo(10.5f * d, 24.5f * d)
++            lineTo(13.5f * d, 23f * d)
++            lineTo(8.5f * d, 15f * d)
++            lineTo(15.5f * d, 15f * d)
++            close()
++        }
++    }
++    val arrowShadow = remember(arrow, d) {
++        Path().apply { addPath(arrow, Offset(2f * d, 2f * d)) }
++    }
++    val outline = remember(d) {
++        Stroke(width = 1.8f * d, cap = StrokeCap.Round, join = StrokeJoin.Round)
++    }
+ 
+     Box(
+         modifier = modifier
+-            .offset(x = xDp, y = yDp)
+             .size(cursorSizeDp.dp)
+-    ) {
+-        Canvas(modifier = Modifier.fillMaxSize()) {
+-            val scale = (cursorSizeDp / 24f) * (if (isPressed) 0.88f else 1.0f)
+-            scale(scale, pivot = Offset.Zero) {
+-                // Classic standard desktop arrow cursor
+-                val path = Path().apply {
+-                    moveTo(0f, 0f)
+-                    lineTo(0f, 22f * density.density)
+-                    lineTo(5.5f * density.density, 16.5f * density.density)
+-                    lineTo(10.5f * density.density, 24.5f * density.density)
+-                    lineTo(13.5f * density.density, 23f * density.density)
+-                    lineTo(8.5f * density.density, 15f * density.density)
+-                    lineTo(15.5f * density.density, 15f * density.density)
+-                    close()
+-                }
+-
+-                // 1. Drop shadow
+-                val shadowPath = Path().apply {
+-                    addPath(path, Offset(2f * density.density, 2f * density.density))
++            .graphicsLayer {
++                val px = x()
++                val py = y()
++                translationX = px
++                translationY = py
++                alpha = if (px > 0f && py > 0f) 1f else 0f
++            }
++            .drawBehind {
++                val k = (cursorSizeDp / 24f) * (if (isPressed()) 0.88f else 1.0f)
++                scale(k, pivot = Offset.Zero) {
++                    drawPath(path = arrowShadow, color = Color.Black.copy(alpha = 0.45f), style = Fill)
++                    drawPath(path = arrow, color = Color.White, style = Fill)
++                    drawPath(path = arrow, color = Color.Black, style = outline)
+                 }
+-                drawPath(
+-                    path = shadowPath,
+-                    color = Color.Black.copy(alpha = 0.45f),
+-                    style = Fill
+-                )
+-
+-                // 2. White fill
+-                drawPath(
+-                    path = path,
+-                    color = Color.White,
+-                    style = Fill
+-                )
+-
+-                // 3. Crisp black outline
+-                drawPath(
+-                    path = path,
+-                    color = Color.Black,
+-                    style = Stroke(
+-                        width = 1.8f * density.density,
+-                        cap = StrokeCap.Round,
+-                        join = StrokeJoin.Round
+-                    )
+-                )
+             }
+-        }
+-    }
++    )
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+index 0f80ad9..cd9bb22 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+@@ -178,10 +178,10 @@ object ControlLayoutManager {
+                 isSystem = true, systemAction = "HIDE_GUI"
+             ),
+             CustomControlButton(
+-                id = "sys_close", name = "X",
++                id = "sys_close", name = "MENU",
+                 xPercent = 96f, yPercent = 9f, widthDp = 32, heightDp = 32,
+                 opacity = 0.9f, cornerRadiusDp = 16,
+-                isSystem = true, systemAction = "CLOSE"
++                isSystem = true, systemAction = "MENU"
+             ),
+ 
+             // Kiri: gerak
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
+index eb5fd96..75127cb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
+@@ -21,7 +21,7 @@ data class CustomControlButton(
+     val isToggle: Boolean = false,
+     val isScroll: Boolean = false,
+     val isSystem: Boolean = false,
+-    val systemAction: String = "", // "FPS", "KEYBOARD", "HIDE_GUI", "CLOSE"
++    val systemAction: String = "", // "FPS", "KEYBOARD", "HIDE_GUI", "MENU" ("CLOSE" = nama lama MENU)
+     val isJoystick: Boolean = false, // Virtual analog WASD joystick
+     // Macro Settings
+     val isMacro: Boolean = false,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt
+index b6c91b99b3cb8cc1e133f216fe8f627592d568c2..d8935c8516604fb9cfb9d9fad6d68f71108bcda5 100644
+GIT binary patch
+delta 99
+zcmew#-5#@nl~XD+J3mh$J+&w^JyRjEB(YQ>F)uwkQNb-Bc=8243G>|4yiz>{@6?>q
+z#3F^1#G*`v^u*j$g`Cv##1e&){M@Ac9EIG}qQne^luV#}PGT;Qn^(FyjdP|700=E3
+A%m4rY
+
+delta 110
+zcmZpV`5(Q3l{4|toT&;anF=|Hm5D_PrFkW#*$UaIIi-n3ItnF;8HsrcAO#Td+|=Bp
+s((FWqg4De9#FEmY#5_HPko?@F{2T?hfMA8J()2_HOf{SHIA^K=0Cc%3lK=n!
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index d9ac307..84cf91e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -1,21 +1,15 @@
+ package com.israadev.nuxlauncher.ui.control
+ 
+-import androidx.compose.foundation.background
+-import androidx.compose.foundation.border
+ import androidx.compose.foundation.gestures.awaitEachGesture
+ import androidx.compose.foundation.gestures.awaitFirstDown
+ import androidx.compose.foundation.gestures.detectTapGestures
+-import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.defaultMinSize
+ import androidx.compose.foundation.layout.offset
+-import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+-import androidx.compose.foundation.shape.CircleShape
+-import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material3.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.DisposableEffect
+@@ -31,8 +25,10 @@ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.drawBehind
+ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.Shadow
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.platform.LocalDensity
++import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.dp
+@@ -58,8 +54,9 @@ import kotlin.math.sin
+ /**
+  * Lapisan semua tombol layar di atas game. Tiap tombol hanya satu simpul yang menggambar dirinya
+  * sendiri di kanvas ([ControlSkin]); posisi dihitung saat tata letak, bukan saat penyusunan.
+- * Angka FPS dibaca lewat lambda di dalam lencana FPS saja, jadi pembaruan 2x per detik tidak
+- * menyusun ulang tombol lain.
++ * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
++ * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
++ * merah di dalam menu.
+  */
+ @Composable
+ fun GameControlsLayer(
+@@ -76,8 +73,7 @@ fun GameControlsLayer(
+     onFpsClick: () -> Unit,
+     onToggleKeyboard: () -> Unit,
+     onToggleControls: () -> Unit,
+-    onExitTap: () -> Unit,
+-    onExitHold: () -> Unit
++    onOpenMenu: () -> Unit
+ ) {
+     val density = LocalDensity.current
+     buttons.forEach { btn ->
+@@ -99,7 +95,7 @@ fun GameControlsLayer(
+                             FpsMode.SHOW_LOG -> false
+                         }
+                         if (show) {
+-                            FpsPill(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
++                            FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
+                         }
+                     }
+                     "KEYBOARD" -> if (controlsVisible) {
+@@ -107,9 +103,9 @@ fun GameControlsLayer(
+                     }
+                     // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
+                     "HIDE_GUI" -> SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+-                    // Ketuk = keluar (tetap ada konfirmasi), tahan = pengaturan in-game.
+-                    "CLOSE" -> if (controlsVisible) {
+-                        SystemIconButton(btn, place, onTap = onExitTap, onLongPress = onExitHold)
++                    // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
++                    "MENU", "CLOSE" -> if (controlsVisible) {
++                        SystemIconButton(btn, place, onTap = onOpenMenu)
+                     }
+                 }
+             } else if (controlsVisible) {
+@@ -124,9 +120,17 @@ fun GameControlsLayer(
+     }
+ }
+ 
+-/** Lencana FPS kecil: titik warna, angka FPS, dan info RAM/panas. Ketuk membuka menu in-game. */
++private val FpsTextStyle = TextStyle(
++    fontFeatureSettings = "tnum",
++    shadow = Shadow(color = Color.Black.copy(alpha = 0.60f), offset = Offset(0f, 1f), blurRadius = 3f)
++)
++
++/**
++ * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
++ * kuning, merah muda). Info RAM atau panas hanya muncul bila HP mulai mepet. Ketuk membuka menu.
++ */
+ @Composable
+-private fun FpsPill(
++private fun FpsText(
+     btn: CustomControlButton,
+     modifier: Modifier,
+     pinned: Boolean,
+@@ -135,94 +139,82 @@ private fun FpsPill(
+     perfWarn: () -> Boolean,
+     onClick: () -> Unit
+ ) {
+-    val k = btn.opacity.coerceIn(0.1f, 1f)
+-    val shape = RoundedCornerShape(btn.cornerRadiusDp.dp)
+     val click by rememberUpdatedState(onClick)
+     val value = fps()
+-    val extra = perfText()
+     val warn = perfWarn()
++    val extra = if (warn) perfText() else ""
++    val tint = when {
++        value <= 0 -> Color.White.copy(alpha = 0.45f)
++        value >= 50 -> Color.White.copy(alpha = 0.86f)
++        value >= 25 -> ControlSkin.YellowSoft
++        else -> Color(0xFFFFA399)
++    }
+ 
+-    Row(
++    Box(
+         modifier = modifier
+             .defaultMinSize(minWidth = btn.widthDp.dp, minHeight = btn.heightDp.dp)
+-            .background(Color.Black.copy(alpha = 0.42f * (0.4f + 0.6f * k)), shape)
+-            .border(
+-                1.dp,
+-                if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.28f),
+-                shape
+-            )
+-            .pointerInput(Unit) { detectTapGestures { click() } }
+-            .padding(horizontal = 10.dp, vertical = 4.dp),
+-        verticalAlignment = Alignment.CenterVertically,
+-        horizontalArrangement = Arrangement.Center
++            .pointerInput(Unit) { detectTapGestures { click() } },
++        contentAlignment = Alignment.Center
+     ) {
+-        Box(
+-            modifier = Modifier
+-                .size(7.dp)
+-                .background(
+-                    when {
+-                        value >= 50 -> Color(0xFF34D399)
+-                        value >= 25 -> Color(0xFFFFD60A)
+-                        value > 0 -> Color(0xFFFF5A4D)
+-                        else -> Color(0xFF8C8774)
+-                    },
+-                    CircleShape
+-                )
+-        )
+-        Spacer(modifier = Modifier.width(6.dp))
+-        Text(
+-            text = if (value > 0) "$value FPS" else "-- FPS",
+-            color = if (pinned) ControlSkin.YellowSoft else Color.White,
+-            fontWeight = FontWeight.Black,
+-            fontSize = 11.sp,
+-            maxLines = 1
+-        )
+-        if (extra.isNotEmpty()) {
+-            Spacer(modifier = Modifier.width(6.dp))
++        Row(verticalAlignment = Alignment.Bottom) {
++            Text(
++                text = if (value > 0) "$value" else "--",
++                color = tint,
++                style = FpsTextStyle,
++                fontWeight = FontWeight.Medium,
++                fontSize = 14.sp,
++                maxLines = 1
++            )
++            Spacer(modifier = Modifier.width(3.dp))
+             Text(
+-                text = extra,
+-                color = if (warn) Color(0xFFFFD60A) else Color.White.copy(alpha = 0.60f),
+-                fontWeight = FontWeight.Bold,
+-                fontSize = 9.sp,
++                text = "FPS",
++                color = if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f),
++                style = FpsTextStyle,
++                fontWeight = FontWeight.Medium,
++                fontSize = 8.sp,
++                letterSpacing = 0.8.sp,
+                 maxLines = 1
+             )
++            if (extra.isNotEmpty()) {
++                Spacer(modifier = Modifier.width(6.dp))
++                Text(
++                    text = extra,
++                    color = ControlSkin.Yellow.copy(alpha = 0.85f),
++                    style = FpsTextStyle,
++                    fontWeight = FontWeight.Medium,
++                    fontSize = 8.sp,
++                    maxLines = 1
++                )
++            }
+         }
+     }
+ }
+ 
+-/** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, keluar). */
++/** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, gerigi menu). */
+ @Composable
+ private fun SystemIconButton(
+     btn: CustomControlButton,
+     modifier: Modifier,
+     active: Boolean = false,
+     slash: Boolean = false,
+-    onTap: () -> Unit,
+-    onLongPress: (() -> Unit)? = null
++    onTap: () -> Unit
+ ) {
+     var pressed by remember { mutableStateOf(false) }
+     val spec = remember(btn, slash) { skinSpecFor(btn, slash = slash) }
+     val tap by rememberUpdatedState(onTap)
+-    val hold by rememberUpdatedState(onLongPress)
+-    val hasHold = onLongPress != null
+ 
+     Box(
+         modifier = modifier
+             .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
+             .drawBehind { drawControlButton(spec, pressed || active) }
+-            .pointerInput(hasHold) {
++            .pointerInput(Unit) {
+                 detectTapGestures(
+                     onPress = {
+                         pressed = true
+                         tryAwaitRelease()
+                         pressed = false
+                     },
+-                    onTap = { tap() },
+-                    onLongPress = if (hasHold) {
+-                        { _ -> hold?.invoke() }
+-                    } else {
+-                        null
+-                    }
++                    onTap = { tap() }
+                 )
+             }
+     )
+@@ -268,7 +260,7 @@ fun CustomVirtualButton(
+ 
+                             while (true) {
+                                 val event = awaitPointerEvent()
+-                                val change = event.changes.firstOrNull { it.id == down.id } ?: break
++                                val change = event.changes.firstFast { it.id == down.id } ?: break
+                                 if (!change.pressed) {
+                                     if (!hasDragged) {
+                                         // Ketuk: setengah atas gulir naik, setengah bawah gulir turun
+@@ -337,7 +329,7 @@ fun CustomVirtualButton(
+                     try {
+                         while (true) {
+                             val event = awaitPointerEvent()
+-                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
++                            val change = event.changes.firstFast { it.id == down.id } ?: break
+                             if (!change.pressed) {
+                                 change.consume()
+                                 break
+@@ -626,7 +618,7 @@ fun CustomVirtualJoystick(
+ 
+                         while (true) {
+                             val event = awaitPointerEvent()
+-                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
++                            val change = event.changes.firstFast { it.id == down.id } ?: break
+                             if (!change.pressed) {
+                                 break
+                             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+index 8737752..9bab557 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+@@ -17,13 +17,16 @@ import androidx.compose.ui.graphics.nativeCanvas
+ import androidx.compose.ui.graphics.toArgb
+ import androidx.compose.ui.unit.dp
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import kotlin.math.cos
+ import kotlin.math.max
+ import kotlin.math.min
++import kotlin.math.sin
+ 
+ /**
+- * Tampilan semua tombol layar: kaca tipis dengan garis putih, berubah kuning saat ditekan.
+- * Dipakai bersama oleh game dan editor tata letak supaya yang terlihat di editor sama persis
+- * dengan di dalam game.
++ * Tampilan semua tombol layar: kaca sangat tipis dengan garis halus, berubah kuning lembut saat
++ * ditekan. Tombol sistem (menu, keyboard, sembunyikan GUI) tanpa garis sama sekali: hanya ikon di
++ * atas bulatan gelap tipis. Dipakai bersama oleh game dan editor tata letak supaya yang terlihat
++ * di editor sama persis dengan di dalam game.
+  *
+  * Semua digambar langsung di kanvas (tanpa lapisan transparansi per tombol, tanpa gambar atau
+  * font tambahan) dan status tekan dibaca hanya saat menggambar, jadi menekan tombol tidak
+@@ -33,8 +36,6 @@ object ControlSkin {
+     val Ink = Color(0xFF111111)
+     val Yellow = Color(0xFFFFD60A)
+     val YellowSoft = Color(0xFFFFE566)
+-    val Danger = Color(0xFFFF5A4D)
+-    val DangerSoft = Color(0xFFFFA399)
+ }
+ 
+ /** Ringkasan satu tombol untuk digambar. */
+@@ -43,7 +44,7 @@ class SkinSpec(
+     val label: String,
+     val icon: String,
+     val primary: Boolean,
+-    val danger: Boolean,
++    val system: Boolean,
+     val opacity: Float,
+     val cornerDp: Float,
+     val slash: Boolean = false
+@@ -51,11 +52,13 @@ class SkinSpec(
+ 
+ fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boolean = false): SkinSpec {
+     val icon = iconOverride ?: when {
++        b.isSystem && (b.systemAction == "CLOSE" || b.systemAction == "MENU") -> "gear"
+         b.icon.isNotBlank() -> b.icon
+         b.isSystem -> when (b.systemAction) {
+             "KEYBOARD" -> "keyboard"
+             "HIDE_GUI" -> "eye"
+-            "CLOSE" -> "close"
++            // "CLOSE" adalah nama lama tombol keluar; sekarang tombol ini hanya membuka menu.
++            "CLOSE", "MENU" -> "gear"
+             else -> ""
+         }
+         else -> ""
+@@ -64,16 +67,18 @@ fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boo
+         label = b.name,
+         icon = icon,
+         primary = !b.isSystem && b.heightDp >= 56,
+-        danger = b.isSystem && b.systemAction == "CLOSE",
++        system = b.isSystem,
+         opacity = b.opacity.coerceIn(0.1f, 1f),
+         cornerDp = b.cornerRadiusDp.toFloat(),
+         slash = slash
+     )
+ }
+ 
++// Huruf bobot sedang dengan jarak antarhuruf sedikit renggang: lebih tenang daripada huruf tebal.
+ private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+-    typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
++    typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+     textAlign = Paint.Align.CENTER
++    letterSpacing = 0.06f
+ }
+ 
+ /** Tombol biasa: isian kaca, garis putih; ditekan atau aktif = kuning penuh. */
+@@ -84,13 +89,12 @@ fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Bool
+     val h = size.height
+     val k = spec.opacity
+     val glyph = when {
+-        pressed && spec.danger -> Color.White
++        spec.system -> if (pressed) ControlSkin.Yellow else Color.White.copy(alpha = 0.58f + 0.32f * k)
+         pressed -> ControlSkin.Ink
+-        spec.danger -> ControlSkin.DangerSoft
+-        else -> Color.White.copy(alpha = 0.35f + 0.65f * k)
++        else -> Color.White.copy(alpha = 0.45f + 0.40f * k)
+     }
+     if (spec.icon.isNotEmpty()) {
+-        val s = min(w, h) * (if (spec.primary) 0.52f else 0.58f)
++        val s = min(w, h) * (if (spec.primary) 0.52f else if (spec.system) 0.56f else 0.58f)
+         drawControlIcon(spec.icon, w / 2f, h / 2f, s, glyph, spec.slash)
+     } else {
+         drawControlLabel(spec.label, w / 2f, h / 2f, w * 0.86f, h, glyph)
+@@ -104,12 +108,12 @@ fun DrawScope.drawControlScroll(spec: SkinSpec, pressed: Boolean, selected: Bool
+     val w = size.width
+     val h = size.height
+     val k = spec.opacity
+-    val glyph = if (pressed) ControlSkin.Ink else Color.White.copy(alpha = 0.35f + 0.65f * k)
++    val glyph = if (pressed) ControlSkin.Ink else Color.White.copy(alpha = 0.45f + 0.40f * k)
+     val s = min(w * 0.56f, h * 0.24f)
+     drawControlIcon("chev_up", w / 2f, h * 0.22f, s, glyph)
+     drawControlIcon("chev_down", w / 2f, h * 0.78f, s, glyph)
+     if (spec.label.isNotEmpty()) {
+-        drawControlLabel(spec.label.take(6), w / 2f, h / 2f, w * 0.92f, h * 0.5f, glyph.copy(alpha = glyph.alpha * 0.75f))
++        drawControlLabel(spec.label.take(6), w / 2f, h / 2f, w * 0.80f, h * 0.5f, glyph.copy(alpha = glyph.alpha * 0.75f))
+     }
+ }
+ 
+@@ -118,20 +122,39 @@ private fun DrawScope.drawButtonBase(spec: SkinSpec, pressed: Boolean, selected:
+     val h = size.height
+     val k = spec.opacity
+     val radius = min(spec.cornerDp.dp.toPx(), min(w, h) / 2f)
+-    val accent = if (spec.danger) ControlSkin.Danger else ControlSkin.Yellow
++
++    if (spec.system) {
++        // Tombol sistem: bulatan gelap tipis tanpa garis; saat ditekan atau aktif jadi tint kuning.
++        val ghost = when {
++            pressed -> ControlSkin.Yellow.copy(alpha = 0.26f)
++            selected -> ControlSkin.Yellow.copy(alpha = 0.16f)
++            else -> Color.Black.copy(alpha = 0.20f * (0.4f + 0.6f * k))
++        }
++        drawRoundRect(color = ghost, cornerRadius = CornerRadius(radius))
++        if (selected) {
++            val ow = 1.6f.dp.toPx()
++            drawRoundRect(
++                color = ControlSkin.Yellow,
++                topLeft = Offset(ow / 2f, ow / 2f),
++                size = Size(w - ow, h - ow),
++                cornerRadius = CornerRadius(max(radius - ow / 2f, 0f)),
++                style = Stroke(width = ow)
++            )
++        }
++        return
++    }
+ 
+     val fill = when {
+-        pressed -> accent.copy(alpha = 0.55f + 0.40f * k)
+-        selected -> ControlSkin.Yellow.copy(alpha = 0.22f)
+-        else -> Color.Black.copy(alpha = (if (spec.primary) 0.46f else 0.36f) * (0.4f + 0.6f * k))
++        pressed -> ControlSkin.Yellow.copy(alpha = 0.34f + 0.30f * k)
++        selected -> ControlSkin.Yellow.copy(alpha = 0.18f)
++        else -> Color.Black.copy(alpha = (if (spec.primary) 0.30f else 0.22f) * (0.4f + 0.6f * k))
+     }
+     val edge = when {
+-        pressed -> if (spec.danger) ControlSkin.DangerSoft else ControlSkin.YellowSoft
++        pressed -> ControlSkin.YellowSoft.copy(alpha = 0.85f)
+         selected -> ControlSkin.Yellow
+-        spec.danger -> ControlSkin.Danger.copy(alpha = 0.40f + 0.30f * k)
+-        else -> Color.White.copy(alpha = (if (spec.primary) 0.34f else 0.28f) + 0.22f * k)
++        else -> Color.White.copy(alpha = (if (spec.primary) 0.22f else 0.16f) + 0.14f * k)
+     }
+-    val sw = (if (selected) 2.4f else if (spec.primary) 1.6f else 1.4f).dp.toPx()
++    val sw = (if (selected) 2.2f else if (spec.primary) 1.3f else 1.2f).dp.toPx()
+ 
+     drawRoundRect(color = fill, cornerRadius = CornerRadius(radius))
+     drawRoundRect(
+@@ -153,7 +176,7 @@ private fun DrawScope.drawControlLabel(
+ ) {
+     val shown = text.take(9)
+     val len = max(shown.length, 1)
+-    val size = min(maxH * 0.40f, maxW / (len * 0.62f)).coerceIn(8.dp.toPx(), 15.dp.toPx())
++    val size = min(maxH * 0.36f, maxW / (len * 0.74f)).coerceIn(8.dp.toPx(), 13.dp.toPx())
+     labelPaint.textSize = size
+     labelPaint.color = color.toArgb()
+     val fm = labelPaint.fontMetrics
+@@ -163,12 +186,13 @@ private fun DrawScope.drawControlLabel(
+ 
+ /**
+  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
+- * inventory, chat, pause, keyboard, eye, close, sliders, terminal, power, chev_up, chev_down, chev_right.
++ * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, chev_up, chev_down,
++ * chev_right.
+  */
+ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
+     val x0 = cx - s / 2f
+     val y0 = cy - s / 2f
+-    val sw = s * 0.085f
++    val sw = s * 0.078f
+     val stroke = Stroke(width = sw, cap = StrokeCap.Round, join = StrokeJoin.Round)
+ 
+     fun p(u: Float, v: Float) = Offset(x0 + u * s, y0 + v * s)
+@@ -238,6 +262,22 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
+             line(p(0.28f, 0.28f), p(0.72f, 0.72f))
+             line(p(0.72f, 0.28f), p(0.28f, 0.72f))
+         }
++        "gear" -> {
++            // Cincin, lubang tengah, dan delapan gigi pendek di sekelilingnya.
++            val c = p(0.5f, 0.5f)
++            drawCircle(color, 0.23f * s, c, style = stroke)
++            drawCircle(color, 0.08f * s, c, style = stroke)
++            for (i in 0 until 8) {
++                val a = i * (Math.PI / 4.0)
++                val ca = cos(a).toFloat()
++                val sa = sin(a).toFloat()
++                line(
++                    Offset(c.x + ca * 0.32f * s, c.y + sa * 0.32f * s),
++                    Offset(c.x + ca * 0.42f * s, c.y + sa * 0.42f * s),
++                    sw * 1.7f
++                )
++            }
++        }
+         "sliders" -> {
+             line(p(0.18f, 0.28f), p(0.82f, 0.28f))
+             line(p(0.18f, 0.50f), p(0.82f, 0.50f))
+@@ -274,14 +314,14 @@ fun DrawScope.drawControlJoystick(
+     val k = opacity.coerceIn(0.1f, 1f)
+     val c = Offset(size.width / 2f, size.height / 2f)
+     val r = min(size.width, size.height) / 2f
+-    val sw = (if (sprint || selected) 2.4f else 1.5f).dp.toPx()
++    val sw = (if (sprint || selected) 2.2f else 1.2f).dp.toPx()
+ 
+-    drawCircle(color = Color.Black.copy(alpha = 0.30f * (0.4f + 0.6f * k)), radius = r, center = c)
++    drawCircle(color = Color.Black.copy(alpha = 0.20f * (0.4f + 0.6f * k)), radius = r, center = c)
+     drawCircle(
+         color = when {
+             sprint || selected -> ControlSkin.Yellow
+-            touching -> Color.White.copy(alpha = 0.55f)
+-            else -> Color.White.copy(alpha = 0.26f + 0.16f * k)
++            touching -> Color.White.copy(alpha = 0.34f)
++            else -> Color.White.copy(alpha = 0.16f + 0.12f * k)
+         },
+         radius = r - sw / 2f,
+         center = c,
+@@ -289,10 +329,10 @@ fun DrawScope.drawControlJoystick(
+     )
+ 
+     // Empat tanda arah kecil di dekat tepi
+-    val tick = Color.White.copy(alpha = 0.22f + 0.28f * k)
++    val tick = Color.White.copy(alpha = 0.16f + 0.22f * k)
+     val tr = r * 0.80f
+     val ts = r * 0.07f
+-    val tw = 1.6f.dp.toPx()
++    val tw = 1.3f.dp.toPx()
+     fun chevron(dx: Float, dy: Float) {
+         val m = Offset(c.x + dx * tr, c.y + dy * tr)
+         val px = -dy
+@@ -310,15 +350,15 @@ fun DrawScope.drawControlJoystick(
+     val kr = r * 0.36f
+     val kc = c + knob
+     drawCircle(
+-        color = if (touching) ControlSkin.Yellow.copy(alpha = 0.55f + 0.40f * k) else Color.White.copy(alpha = 0.16f + 0.10f * k),
++        color = if (touching) ControlSkin.Yellow.copy(alpha = 0.40f + 0.30f * k) else Color.White.copy(alpha = 0.12f + 0.08f * k),
+         radius = kr,
+         center = kc
+     )
+     drawCircle(
+-        color = if (touching) ControlSkin.YellowSoft else Color.White.copy(alpha = 0.50f + 0.40f * k),
+-        radius = kr - 1.dp.toPx(),
++        color = if (touching) ControlSkin.YellowSoft.copy(alpha = 0.85f) else Color.White.copy(alpha = 0.34f + 0.30f * k),
++        radius = kr - 0.75f.dp.toPx(),
+         center = kc,
+-        style = Stroke(width = 2.dp.toPx())
++        style = Stroke(width = 1.5f.dp.toPx())
+     )
+ 
+     // Kunci lari aktif: dua panah naik di dalam kenop (digambar setelah kenop supaya tidak tertutup)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index 079d533..8129cf6 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+@@ -41,7 +41,8 @@ fun SwitchableMouseLayout(
+     screenHeight: Float,
+     cursorMode: Int,
+     controlMode: MouseControlMode,
+-    cursorPosition: Offset,
++    // Lambda supaya posisi kursor dibaca hanya saat jari bergerak, bukan saat menyusun ulang.
++    cursorPosition: () -> Offset,
+     cursorSensitivity: Float = 1.0f,
+     touchAttackEnabled: Boolean = true,
+     requestPointerCapture: Boolean = false,
+@@ -135,10 +136,12 @@ fun SwitchableMouseLayout(
+                         while (true) {
+                             val event = awaitPointerEvent()
+ 
+-                            // Touch Down
+-                            event.changes.filter { it.changedToDown() }.forEach { downEvent ->
+-                                if (downEvent.type != PointerType.Touch) {
+-                                    return@forEach
++                            // Touch Down (perulangan biasa: tanpa membuat daftar baru di tiap kejadian sentuh)
++                            val changes = event.changes
++                            for (ci in changes.indices) {
++                                val downEvent = changes[ci]
++                                if (!downEvent.changedToDown() || downEvent.type != PointerType.Touch) {
++                                    continue
+                                 }
+ 
+                                 checkPhysicalMouseMode(false)
+@@ -168,7 +171,7 @@ fun SwitchableMouseLayout(
+                                             } else if (currentControlMode == MouseControlMode.CLICK) {
+                                                 startPosition
+                                             } else {
+-                                                currentCursorPos
++                                                currentCursorPos()
+                                             }
+                                             currentOnLongPress(targetPos)
+                                         }
+@@ -178,7 +181,7 @@ fun SwitchableMouseLayout(
+ 
+                             // Touch Move
+                             activePointerId?.let { pointerId ->
+-                                event.changes.firstOrNull { it.id == pointerId && it.positionChanged() && !it.isConsumed }?.let { moveChange ->
++                                event.changes.firstFast { it.id == pointerId && it.positionChanged() && !it.isConsumed }?.let { moveChange ->
+                                     val distanceFromStart = (moveChange.position - startPosition).getDistance()
+                                     if (!isDragging && distanceFromStart > viewConfiguration.touchSlop) {
+                                         isDragging = true
+@@ -194,8 +197,9 @@ fun SwitchableMouseLayout(
+                                         if (currentControlMode == MouseControlMode.SLIDE) {
+                                             if (isDragging || longPressTriggered) {
+                                                 val delta = moveChange.positionChange()
+-                                                val newX = (currentCursorPos.x + delta.x * currentSensitivity).coerceIn(0f, screenWidth)
+-                                                val newY = (currentCursorPos.y + delta.y * currentSensitivity).coerceIn(0f, screenHeight)
++                                                val cur = currentCursorPos()
++                                                val newX = (cur.x + delta.x * currentSensitivity).coerceIn(0f, screenWidth)
++                                                val newY = (cur.y + delta.y * currentSensitivity).coerceIn(0f, screenHeight)
+                                                 val newPos = Offset(newX, newY)
+                                                 currentOnCursorPositionChange(newPos)
+                                                 sendScaledCursor(newX, newY)
+@@ -211,7 +215,7 @@ fun SwitchableMouseLayout(
+ 
+                             // Touch Up
+                             activePointerId?.let { pointerId ->
+-                                event.changes.firstOrNull { it.id == pointerId && it.changedToUpIgnoreConsumed() }?.let { upChange ->
++                                event.changes.firstFast { it.id == pointerId && it.changedToUpIgnoreConsumed() }?.let { upChange ->
+                                     longPressJob?.cancel()
+                                     if (longPressTriggered) {
+                                         currentOnLongPressEnd()
+@@ -225,7 +229,7 @@ fun SwitchableMouseLayout(
+                                             val clickPos = if (currentControlMode == MouseControlMode.CLICK) {
+                                                 upChange.position
+                                             } else {
+-                                                currentCursorPos
++                                                currentCursorPos()
+                                             }
+                                             currentOnTap(clickPos)
+                                         }
+@@ -235,7 +239,7 @@ fun SwitchableMouseLayout(
+                                 }
+                             }
+ 
+-                            if (!event.changes.any { it.pressed }) {
++                            if (!event.changes.anyPressed()) {
+                                 activePointerId = null
+                                 isDragging = false
+                                 longPressJob?.cancel()
+@@ -307,6 +311,22 @@ fun SwitchableMouseLayout(
+     )
+ }
+ 
++/** Pengganti firstOrNull untuk jalur sentuhan: perulangan berindeks tanpa membuat iterator. */
++internal inline fun List<PointerInputChange>.firstFast(predicate: (PointerInputChange) -> Boolean): PointerInputChange? {
++    for (i in indices) {
++        val c = this[i]
++        if (predicate(c)) return c
++    }
++    return null
++}
++
++internal fun List<PointerInputChange>.anyPressed(): Boolean {
++    for (i in indices) {
++        if (this[i].pressed) return true
++    }
++    return false
++}
++
+ @Composable
+ private fun SimpleMouseCapture(
+     enabled: Boolean,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index 7e6d806..a19f675 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -92,7 +92,7 @@ fun GameMenuSheet(
+     onToggleControlVisibility: () -> Unit,
+     onRequestKeyboard: () -> Unit,
+     onSendKeycode: (Int) -> Unit,
+-    onForceExitRequest: () -> Unit,
++    onExitRequest: () -> Unit,
+     onOpenCustomGui: () -> Unit
+ ) {
+     if (!visible) return
+@@ -335,17 +335,17 @@ fun GameMenuSheet(
+                         }
+                     }
+ 
+-                    SectionTitle("SISTEM")
+-                    DangerRow(
+-                        title = "Paksa berhenti",
+-                        subtitle = "Hentikan game jika macet atau tidak merespons",
+-                        onClick = {
+-                            onDismissRequest()
+-                            onForceExitRequest()
+-                        }
+-                    )
+                     Spacer(modifier = Modifier.height(10.dp))
+                 }
++
++                // Satu-satunya jalan keluar dari game: tombol merah yang selalu terlihat di dasar panel.
++                Spacer(modifier = Modifier.height(8.dp))
++                ExitButton(
++                    onClick = {
++                        onDismissRequest()
++                        onExitRequest()
++                    }
++                )
+             }
+         }
+     }
+@@ -498,39 +498,27 @@ private fun KeyChip(
+     }
+ }
+ 
++/** Tombol keluar: merah penuh, tulisan gelap seperti tombol kuning di tempat lain. */
+ @Composable
+-private fun DangerRow(
+-    title: String,
+-    subtitle: String,
+-    onClick: () -> Unit
+-) {
++private fun ExitButton(onClick: () -> Unit) {
+     val shape = RoundedCornerShape(14.dp)
+     Row(
+         modifier = Modifier
+             .fillMaxWidth()
++            .height(46.dp)
+             .clip(shape)
+-            .background(Amber.DangerTint)
+-            .border(1.dp, Amber.Danger.copy(alpha = 0.40f), shape)
+-            .amberTap(onClick)
+-            .padding(horizontal = 12.dp, vertical = 11.dp),
+-        verticalAlignment = Alignment.CenterVertically
++            .background(Amber.Danger)
++            .amberTap(onClick),
++        verticalAlignment = Alignment.CenterVertically,
++        horizontalArrangement = Arrangement.Center
+     ) {
+-        AmberIcon("power", 20.dp, Amber.DangerSoft)
+-        Spacer(modifier = Modifier.width(10.dp))
+-        Column(modifier = Modifier.weight(1f)) {
+-            Text(
+-                text = title,
+-                color = Amber.DangerSoft,
+-                fontSize = 12.5.sp,
+-                fontWeight = FontWeight.Bold
+-            )
+-            Text(
+-                text = subtitle,
+-                color = Amber.TextDim,
+-                fontSize = 11.sp,
+-                lineHeight = 15.sp
+-            )
+-        }
+-        AmberIcon("chev_right", 16.dp, Amber.DangerSoft)
++        AmberIcon("power", 18.dp, Amber.Ink)
++        Spacer(modifier = Modifier.width(8.dp))
++        Text(
++            text = "Keluar dari game",
++            color = Amber.Ink,
++            fontSize = 13.5.sp,
++            fontWeight = FontWeight.Bold
++        )
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index 466df68..dfc864b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -509,7 +509,7 @@ fun CustomGuiEditorScreen(
+                                         "FPS" -> "Indikator FPS In-Game"
+                                         "KEYBOARD" -> "Toggle Keyboard Layar"
+                                         "HIDE_GUI" -> "Sembunyikan/Tampilkan GUI"
+-                                        "CLOSE" -> "Keluar dari Permainan"
++                                        "MENU", "CLOSE" -> "Buka Menu (pengaturan dan keluar)"
+                                         else -> "Aksi Sistem Launcher"
+                                     }
+                                     Text(actionDesc, color = Color(0xFFFFE566), fontWeight = FontWeight.Bold, fontSize = 11.sp)
+diff --git a/app/src/main/java/com/movtery/zalithlauncher/bridge/ZLBridgeStates.kt b/app/src/main/java/com/movtery/zalithlauncher/bridge/ZLBridgeStates.kt
+index f3fd16d..0a7e242 100644
+--- a/app/src/main/java/com/movtery/zalithlauncher/bridge/ZLBridgeStates.kt
++++ b/app/src/main/java/com/movtery/zalithlauncher/bridge/ZLBridgeStates.kt
+@@ -14,7 +14,7 @@ object ZLBridgeStates {
+     @JvmStatic
+     fun changeCursorMode(mode: Int) {
+         require(mode in 0..1)
+-        Log.d("NUX_INPUT", "changeCursorMode: mode=$mode (0=DISABLED/inGame, 1=ENABLED/menu)")
++        Log.d("AMBER_INPUT", "changeCursorMode: mode=$mode (0=DISABLED/inGame, 1=ENABLED/menu)")
+         this._cursorMode.update { mode }
+     }
+ 
+diff --git a/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java b/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
+index 3896e41..ea13a72 100644
+--- a/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
++++ b/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
+@@ -92,7 +92,7 @@ public class CallbackBridge {
+     @Keep
+     public static boolean notifyLauncher(int type, int... action) {
+         if (action == null || action.length == 0) {
+-            LoggerBridge.append("NuxLauncher: SDL notification has no action");
++            LoggerBridge.append("AmberLauncher: SDL notification has no action");
+             return false;
+         }
+         switch (type) {
+@@ -102,13 +102,13 @@ public class CallbackBridge {
+                         return true;
+                     }
+                     try {
+-                        LoggerBridge.append("NuxLauncher: loading SDL3");
++                        LoggerBridge.append("AmberLauncher: loading SDL3");
+                         System.loadLibrary("SDL3");
+-                        LoggerBridge.append("NuxLauncher: loading SDL2");
++                        LoggerBridge.append("AmberLauncher: loading SDL2");
+                         System.loadLibrary("SDL2");
+-                        LoggerBridge.append("NuxLauncher: setting up SDL JNI");
++                        LoggerBridge.append("AmberLauncher: setting up SDL JNI");
+                         SdlBridge.setupJNI();
+-                        LoggerBridge.append("NuxLauncher: binding SDL surface");
++                        LoggerBridge.append("AmberLauncher: binding SDL surface");
+                         SdlBridge.setSdlEnabled(true);
+                         SDLSurface surface = SDLActivity.getSDLSurface();
+                         if (surface != null) {
+@@ -117,14 +117,14 @@ public class CallbackBridge {
+                                 surface.nativeResize(windowWidth, windowHeight);
+                             }
+                         }
+-                        LoggerBridge.append("NuxLauncher: SDL support enabled!");
++                        LoggerBridge.append("AmberLauncher: SDL support enabled!");
+                         return true;
+                     } catch (Throwable e) {
+                         SdlBridge.setSdlEnabled(false);
+                         SdlBridge.clearSdlInitialized();
+                         StringWriter trace = new StringWriter();
+                         e.printStackTrace(new PrintWriter(trace));
+-                        LoggerBridge.append("NuxLauncher: SDL launcher integration is unavailable:\n" + trace);
++                        LoggerBridge.append("AmberLauncher: SDL launcher integration is unavailable:\n" + trace);
+                     }
+                 }
+                 break;
+@@ -149,7 +149,7 @@ public class CallbackBridge {
+             if (clipboard == null) return "";
+             switch (type) {
+                 case CLIPBOARD_COPY:
+-                    ClipData clip = ClipData.newPlainText("NUX_CLIP", copyContent);
++                    ClipData clip = ClipData.newPlainText("AMBER_CLIP", copyContent);
+                     clipboard.setPrimaryClip(clip);
+                     return copyContent;
+                 case CLIPBOARD_PASTE:
+@@ -167,13 +167,13 @@ public class CallbackBridge {
+ 
+     @Keep
+     public static void onGrabStateChanged(final boolean grabbing) {
+-        Log.i("NUX_INPUT", "Grab callback received: " + grabbing);
++        Log.i("AMBER_INPUT", "Grab callback received: " + grabbing);
+         isGrabbing = grabbing;
+         deltaX = 0f;
+         deltaY = 0f;
+         postFrameCallbackDelayed((time) -> {
+             if (isGrabbing != grabbing) return;
+-            Log.i("NUX_INPUT", "Grab changed : " + grabbing);
++            Log.i("AMBER_INPUT", "Grab changed : " + grabbing);
+             synchronized (grabListener) {
+                 grabListener.accept(isGrabbing);
+             }
+@@ -226,7 +226,7 @@ public class CallbackBridge {
+ 
+     @Keep
+     public static void onDirectInputEnable() {
+-        Log.i("NUX_INPUT", "Direct input enabled");
++        Log.i("AMBER_INPUT", "Direct input enabled");
+     }
+ 
+     public static void sendCursorPos(float x, float y) {
+
+
+# FIN part=1/1 files=11

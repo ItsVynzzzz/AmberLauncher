@@ -1,0 +1,302 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index e0ea37d..63ad1e9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -24,6 +24,7 @@ import android.view.SurfaceHolder
+ import android.view.SurfaceView
+ import android.view.View
+ import android.view.ViewGroup
++import android.view.ViewTreeObserver
+ import android.view.WindowManager
+ import android.view.inputmethod.InputMethodManager
+ import android.widget.Toast
+@@ -1242,6 +1243,9 @@ enum class FpsMode {
+     SHOW_LOG   // Siklus 2: Memunculkan log in-game (isConsoleVisible = true)
+ }
+ 
++/** Jendela UI digambar lebih dari ini per detik = dianggap sibuk dan dilaporkan di samping FPS. */
++private const val UI_BUSY_PER_SEC = 12
++
+ /**
+  * Info kondisi HP yang ditampilkan di samping angka FPS supaya penyebab FPS rendah terbaca
+  * langsung di layar: "sisa RAM xxxMB" (memori kosong HP; kalau tinggal sedikit sistem mulai
+@@ -1342,15 +1346,37 @@ fun GameScreen(
+     // Info RAM/panas hanya tampil di teks FPS, jadi hanya dihitung saat teks FPS terlihat.
+     val wantPerfHint by rememberUpdatedState(isControlVisible || fpsMode == FpsMode.PINNED)
+ 
+-    // Periodically update FPS counter from native engine
++    // Hitung berapa kali jendela UI digambar per detik. Saat bermain angkanya harus nyaris nol
++    // (hanya satu kali per detik untuk teks FPS); kalau tinggi, UI ikut berebut CPU/GPU dengan
++    // game dan angkanya muncul di samping FPS ("UI n/s"), jadi penyebab FPS turun bisa terbaca.
++    val uiDraws = remember { IntArray(1) }
++    var uiBusy by remember { mutableIntStateOf(0) }
++    val rootView = LocalView.current
++    DisposableEffect(rootView) {
++        val listener = ViewTreeObserver.OnDrawListener { uiDraws[0]++ }
++        val vto = rootView.viewTreeObserver
++        if (vto.isAlive) vto.addOnDrawListener(listener)
++        onDispose {
++            val t = rootView.viewTreeObserver
++            if (t.isAlive) t.removeOnDrawListener(listener)
++        }
++    }
++
++    // Periodically update FPS counter from native engine (1x per detik: tiap angka baru = satu
++    // penggambaran UI, jadi tidak perlu lebih sering dari yang bisa dibaca mata)
+     LaunchedEffect(Unit) {
+         var tick = 0
++        var lastDraws = uiDraws[0]
+         while (isActive) {
+             try {
+                 currentFps = CallbackBridge.getCurrentFps()
+             } catch (_: Throwable) {
+             }
+-            if (tick % 6 == 0 && wantPerfHint) {
++            val draws = uiDraws[0]
++            val busy = if (draws - lastDraws > UI_BUSY_PER_SEC) draws - lastDraws else 0
++            lastDraws = draws
++            if (busy != uiBusy) uiBusy = busy
++            if (tick % 3 == 0 && wantPerfHint) {
+                 // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
+                 val hint = withContext(Dispatchers.Default) {
+                     try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
+@@ -1359,7 +1385,7 @@ fun GameScreen(
+                 if (hint.second != perfWarn) perfWarn = hint.second
+             }
+             tick++
+-            delay(500)
++            delay(1000)
+         }
+     }
+ 
+@@ -1546,8 +1572,14 @@ fun GameScreen(
+             consoleVisible = isConsoleVisible,
+             keyboardActive = isKeyboardRequested,
+             fps = { currentFps },
+-            perfText = { perfText },
+-            perfWarn = { perfWarn },
++            perfText = {
++                if (uiBusy > 0) {
++                    if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
++                } else {
++                    perfText
++                }
++            },
++            perfWarn = { perfWarn || uiBusy > 0 },
+             onFpsClick = { showInGameSettingsDialog = true },
+             onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+             onToggleControls = { isControlVisible = !isControlVisible },
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index 84cf91e..9f4faa8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -1,16 +1,13 @@
+ package com.israadev.nuxlauncher.ui.control
+ 
++import android.graphics.Paint
++import android.graphics.Typeface
+ import androidx.compose.foundation.gestures.awaitEachGesture
+ import androidx.compose.foundation.gestures.awaitFirstDown
+ import androidx.compose.foundation.gestures.detectTapGestures
+ import androidx.compose.foundation.layout.Box
+-import androidx.compose.foundation.layout.Row
+-import androidx.compose.foundation.layout.Spacer
+-import androidx.compose.foundation.layout.defaultMinSize
+ import androidx.compose.foundation.layout.offset
+ import androidx.compose.foundation.layout.size
+-import androidx.compose.foundation.layout.width
+-import androidx.compose.material3.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.runtime.getValue
+@@ -20,19 +17,18 @@ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.rememberCoroutineScope
+ import androidx.compose.runtime.rememberUpdatedState
+ import androidx.compose.runtime.setValue
+-import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.drawBehind
+ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.Shadow
++import androidx.compose.ui.graphics.drawscope.DrawScope
++import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
++import androidx.compose.ui.graphics.nativeCanvas
++import androidx.compose.ui.graphics.toArgb
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.platform.LocalDensity
+-import androidx.compose.ui.text.TextStyle
+-import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.dp
+-import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.FpsMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+@@ -120,14 +116,17 @@ fun GameControlsLayer(
+     }
+ }
+ 
+-private val FpsTextStyle = TextStyle(
+-    fontFeatureSettings = "tnum",
+-    shadow = Shadow(color = Color.Black.copy(alpha = 0.60f), offset = Offset(0f, 1f), blurRadius = 3f)
+-)
++private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
++    typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
++    fontFeatureSettings = "tnum"
++}
+ 
+ /**
+  * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
+- * kuning, merah muda). Info RAM atau panas hanya muncul bila HP mulai mepet. Ketuk membuka menu.
++ * kuning, merah muda). Info RAM, panas, atau beban UI hanya muncul bila perlu. Ketuk membuka menu.
++ *
++ * Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang teks ini, tanpa
++ * menyusun ulang atau mengukur ulang tata letak.
+  */
+ @Composable
+ private fun FpsText(
+@@ -140,52 +139,57 @@ private fun FpsText(
+     onClick: () -> Unit
+ ) {
+     val click by rememberUpdatedState(onClick)
+-    val value = fps()
+-    val warn = perfWarn()
+-    val extra = if (warn) perfText() else ""
++    Box(
++        modifier = modifier
++            .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
++            .drawBehind { drawFpsReadout(fps(), pinned, if (perfWarn()) perfText() else "") }
++            .pointerInput(Unit) { detectTapGestures { click() } }
++    )
++}
++
++private fun drawFpsPiece(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color, shadowPx: Float) {
++    fpsPaint.textSize = size
++    fpsPaint.letterSpacing = spacing
++    fpsPaint.color = Color.Black.copy(alpha = color.alpha * 0.55f).toArgb()
++    cv.drawText(s, x, y + shadowPx, fpsPaint)
++    fpsPaint.color = color.toArgb()
++    cv.drawText(s, x, y, fpsPaint)
++}
++
++private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String) {
+     val tint = when {
+         value <= 0 -> Color.White.copy(alpha = 0.45f)
+         value >= 50 -> Color.White.copy(alpha = 0.86f)
+         value >= 25 -> ControlSkin.YellowSoft
+         else -> Color(0xFFFFA399)
+     }
+-
+-    Box(
+-        modifier = modifier
+-            .defaultMinSize(minWidth = btn.widthDp.dp, minHeight = btn.heightDp.dp)
+-            .pointerInput(Unit) { detectTapGestures { click() } },
+-        contentAlignment = Alignment.Center
+-    ) {
+-        Row(verticalAlignment = Alignment.Bottom) {
+-            Text(
+-                text = if (value > 0) "$value" else "--",
+-                color = tint,
+-                style = FpsTextStyle,
+-                fontWeight = FontWeight.Medium,
+-                fontSize = 14.sp,
+-                maxLines = 1
+-            )
+-            Spacer(modifier = Modifier.width(3.dp))
+-            Text(
+-                text = "FPS",
+-                color = if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f),
+-                style = FpsTextStyle,
+-                fontWeight = FontWeight.Medium,
+-                fontSize = 8.sp,
+-                letterSpacing = 0.8.sp,
+-                maxLines = 1
++    val numSize = 14.dp.toPx()
++    val labSize = 8.dp.toPx()
++    val gap = 3.dp.toPx()
++    val shadow = 1.dp.toPx()
++    val num = if (value > 0) value.toString() else "--"
++
++    fpsPaint.textSize = numSize
++    fpsPaint.letterSpacing = 0f
++    val numW = fpsPaint.measureText(num)
++    fpsPaint.textSize = labSize
++    fpsPaint.letterSpacing = 0.1f
++    val labW = fpsPaint.measureText("FPS")
++    val x0 = (size.width - (numW + gap + labW)) / 2f
++    val base = size.height / 2f + numSize * 0.36f
++
++    drawIntoCanvas { c ->
++        val cv = c.nativeCanvas
++        drawFpsPiece(cv, num, x0, base, numSize, 0f, tint, shadow)
++        drawFpsPiece(
++            cv, "FPS", x0 + numW + gap, base, labSize, 0.1f,
++            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f), shadow
++        )
++        if (extra.isNotEmpty()) {
++            drawFpsPiece(
++                cv, extra, x0 + numW + gap + labW + 6.dp.toPx(), base, labSize, 0f,
++                ControlSkin.Yellow.copy(alpha = 0.85f), shadow
+             )
+-            if (extra.isNotEmpty()) {
+-                Spacer(modifier = Modifier.width(6.dp))
+-                Text(
+-                    text = extra,
+-                    color = ControlSkin.Yellow.copy(alpha = 0.85f),
+-                    style = FpsTextStyle,
+-                    fontWeight = FontWeight.Medium,
+-                    fontSize = 8.sp,
+-                    maxLines = 1
+-                )
+-            }
+         }
+     }
+ }
+@@ -523,6 +527,12 @@ fun CustomVirtualJoystick(
+     var isTouching by remember { mutableStateOf(false) }
+     var sprint by remember { mutableStateOf(false) }
+ 
++    // Posisi kenop yang terakhir digambar. Kenop hanya digambar ulang bila bergeser cukup jauh:
++    // jari yang ditahan hampir selalu bergetar 1-2 piksel, dan tiap penggambaran ulang berarti
++    // satu frame UI penuh yang berebut GPU dan CPU dengan game.
++    val shown = remember { FloatArray(2) }
++    val knobStepPx = with(density) { 2.5.dp.toPx() }
++
+     // Status tombol arah disimpan biasa (bukan state) supaya menggeser kenop tidak menyusun ulang.
+     val keys = remember { BooleanArray(4) } // W, A, S, D
+     val ctrlDown = remember { BooleanArray(1) }
+@@ -557,6 +567,8 @@ fun CustomVirtualJoystick(
+     fun releaseAll() {
+         updateKeys(false, false, false, false)
+         setSprint(false)
++        shown[0] = 0f
++        shown[1] = 0f
+         knobOffset = Offset.Zero
+         isTouching = false
+     }
+@@ -584,13 +596,14 @@ fun CustomVirtualJoystick(
+                             val clampedDist = dist.coerceAtMost(maxDragDistance)
+                             val angleRad = atan2(rawDelta.y.toDouble(), rawDelta.x.toDouble())
+ 
+-                            knobOffset = if (dist > 0f) {
+-                                Offset(
+-                                    (cos(angleRad) * clampedDist).toFloat(),
+-                                    (sin(angleRad) * clampedDist).toFloat()
+-                                )
+-                            } else {
+-                                Offset.Zero
++                            val kx = if (dist > 0f) (cos(angleRad) * clampedDist).toFloat() else 0f
++                            val ky = if (dist > 0f) (sin(angleRad) * clampedDist).toFloat() else 0f
++                            val ddx = kx - shown[0]
++                            val ddy = ky - shown[1]
++                            if (ddx * ddx + ddy * ddy >= knobStepPx * knobStepPx) {
++                                shown[0] = kx
++                                shown[1] = ky
++                                knobOffset = Offset(kx, ky)
+                             }
+ 
+                             val deadzone = maxDragDistance * 0.20f
+
+
+# FIN part=1/1 files=2

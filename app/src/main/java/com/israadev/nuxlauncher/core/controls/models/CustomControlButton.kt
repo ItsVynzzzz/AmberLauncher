@@ -21,7 +21,7 @@ data class CustomControlButton(
     val isToggle: Boolean = false,
     val isScroll: Boolean = false,
     val isSystem: Boolean = false,
-    val systemAction: String = "", // "FPS", "KEYBOARD", "HIDE_GUI", "CLOSE"
+    val systemAction: String = "", // "FPS", "KEYBOARD", "HIDE_GUI", "MENU" ("CLOSE" = nama lama MENU)
     val isJoystick: Boolean = false, // Virtual analog WASD joystick
     // Macro Settings
     val isMacro: Boolean = false,

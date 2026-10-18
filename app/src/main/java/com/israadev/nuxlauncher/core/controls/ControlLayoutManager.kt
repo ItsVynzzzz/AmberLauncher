@@ -178,10 +178,10 @@ object ControlLayoutManager {
                 isSystem = true, systemAction = "HIDE_GUI"
             ),
             CustomControlButton(
-                id = "sys_close", name = "X",
+                id = "sys_close", name = "MENU",
                 xPercent = 96f, yPercent = 9f, widthDp = 32, heightDp = 32,
                 opacity = 0.9f, cornerRadiusDp = 16,
-                isSystem = true, systemAction = "CLOSE"
+                isSystem = true, systemAction = "MENU"
             ),
 
             // Kiri: gerak

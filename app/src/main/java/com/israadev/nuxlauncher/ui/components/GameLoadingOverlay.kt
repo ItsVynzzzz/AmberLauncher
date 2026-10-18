@@ -50,7 +50,7 @@ import com.israadev.nuxlauncher.ui.theme.NuxColors
 import kotlinx.coroutines.delay
 
 private val GAME_TIPS = listOf(
-    "Ketuk ✕ di layar untuk keluar, tahan ✕ untuk membuka pengaturan. Tombol FPS juga membuka pengaturan.",
+    "Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.",
     "Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.",
     "Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.",
     "Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.",

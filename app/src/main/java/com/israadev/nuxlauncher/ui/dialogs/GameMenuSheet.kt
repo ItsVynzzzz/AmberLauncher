@@ -92,7 +92,7 @@ fun GameMenuSheet(
     onToggleControlVisibility: () -> Unit,
     onRequestKeyboard: () -> Unit,
     onSendKeycode: (Int) -> Unit,
-    onForceExitRequest: () -> Unit,
+    onExitRequest: () -> Unit,
     onOpenCustomGui: () -> Unit
 ) {
     if (!visible) return
@@ -335,17 +335,17 @@ fun GameMenuSheet(
                         }
                     }
 
-                    SectionTitle("SISTEM")
-                    DangerRow(
-                        title = "Paksa berhenti",
-                        subtitle = "Hentikan game jika macet atau tidak merespons",
-                        onClick = {
-                            onDismissRequest()
-                            onForceExitRequest()
-                        }
-                    )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
+
+                // Satu-satunya jalan keluar dari game: tombol merah yang selalu terlihat di dasar panel.
+                Spacer(modifier = Modifier.height(8.dp))
+                ExitButton(
+                    onClick = {
+                        onDismissRequest()
+                        onExitRequest()
+                    }
+                )
             }
         }
     }
@@ -498,39 +498,27 @@ private fun KeyChip(
     }
 }
 
+/** Tombol keluar: merah penuh, tulisan gelap seperti tombol kuning di tempat lain. */
 @Composable
-private fun DangerRow(
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit
-) {
+private fun ExitButton(onClick: () -> Unit) {
     val shape = RoundedCornerShape(14.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(46.dp)
             .clip(shape)
-            .background(Amber.DangerTint)
-            .border(1.dp, Amber.Danger.copy(alpha = 0.40f), shape)
-            .amberTap(onClick)
-            .padding(horizontal = 12.dp, vertical = 11.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .background(Amber.Danger)
+            .amberTap(onClick),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        AmberIcon("power", 20.dp, Amber.DangerSoft)
-        Spacer(modifier = Modifier.width(10.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                color = Amber.DangerSoft,
-                fontSize = 12.5.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = subtitle,
-                color = Amber.TextDim,
-                fontSize = 11.sp,
-                lineHeight = 15.sp
-            )
-        }
-        AmberIcon("chev_right", 16.dp, Amber.DangerSoft)
+        AmberIcon("power", 18.dp, Amber.Ink)
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "Keluar dari game",
+            color = Amber.Ink,
+            fontSize = 13.5.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

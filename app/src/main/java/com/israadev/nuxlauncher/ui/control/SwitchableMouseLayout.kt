@@ -41,7 +41,8 @@ fun SwitchableMouseLayout(
     screenHeight: Float,
     cursorMode: Int,
     controlMode: MouseControlMode,
-    cursorPosition: Offset,
+    // Lambda supaya posisi kursor dibaca hanya saat jari bergerak, bukan saat menyusun ulang.
+    cursorPosition: () -> Offset,
     cursorSensitivity: Float = 1.0f,
     touchAttackEnabled: Boolean = true,
     requestPointerCapture: Boolean = false,
@@ -135,10 +136,12 @@ fun SwitchableMouseLayout(
                         while (true) {
                             val event = awaitPointerEvent()
 
-                            // Touch Down
-                            event.changes.filter { it.changedToDown() }.forEach { downEvent ->
-                                if (downEvent.type != PointerType.Touch) {
-                                    return@forEach
+                            // Touch Down (perulangan biasa: tanpa membuat daftar baru di tiap kejadian sentuh)
+                            val changes = event.changes
+                            for (ci in changes.indices) {
+                                val downEvent = changes[ci]
+                                if (!downEvent.changedToDown() || downEvent.type != PointerType.Touch) {
+                                    continue
                                 }
 
                                 checkPhysicalMouseMode(false)
@@ -168,7 +171,7 @@ fun SwitchableMouseLayout(
                                             } else if (currentControlMode == MouseControlMode.CLICK) {
                                                 startPosition
                                             } else {
-                                                currentCursorPos
+                                                currentCursorPos()
                                             }
                                             currentOnLongPress(targetPos)
                                         }
@@ -178,7 +181,7 @@ fun SwitchableMouseLayout(
 
                             // Touch Move
                             activePointerId?.let { pointerId ->
-                                event.changes.firstOrNull { it.id == pointerId && it.positionChanged() && !it.isConsumed }?.let { moveChange ->
+                                event.changes.firstFast { it.id == pointerId && it.positionChanged() && !it.isConsumed }?.let { moveChange ->
                                     val distanceFromStart = (moveChange.position - startPosition).getDistance()
                                     if (!isDragging && distanceFromStart > viewConfiguration.touchSlop) {
                                         isDragging = true
@@ -194,8 +197,9 @@ fun SwitchableMouseLayout(
                                         if (currentControlMode == MouseControlMode.SLIDE) {
                                             if (isDragging || longPressTriggered) {
                                                 val delta = moveChange.positionChange()
-                                                val newX = (currentCursorPos.x + delta.x * currentSensitivity).coerceIn(0f, screenWidth)
-                                                val newY = (currentCursorPos.y + delta.y * currentSensitivity).coerceIn(0f, screenHeight)
+                                                val cur = currentCursorPos()
+                                                val newX = (cur.x + delta.x * currentSensitivity).coerceIn(0f, screenWidth)
+                                                val newY = (cur.y + delta.y * currentSensitivity).coerceIn(0f, screenHeight)
                                                 val newPos = Offset(newX, newY)
                                                 currentOnCursorPositionChange(newPos)
                                                 sendScaledCursor(newX, newY)
@@ -211,7 +215,7 @@ fun SwitchableMouseLayout(
 
                             // Touch Up
                             activePointerId?.let { pointerId ->
-                                event.changes.firstOrNull { it.id == pointerId && it.changedToUpIgnoreConsumed() }?.let { upChange ->
+                                event.changes.firstFast { it.id == pointerId && it.changedToUpIgnoreConsumed() }?.let { upChange ->
                                     longPressJob?.cancel()
                                     if (longPressTriggered) {
                                         currentOnLongPressEnd()
@@ -225,7 +229,7 @@ fun SwitchableMouseLayout(
                                             val clickPos = if (currentControlMode == MouseControlMode.CLICK) {
                                                 upChange.position
                                             } else {
-                                                currentCursorPos
+                                                currentCursorPos()
                                             }
                                             currentOnTap(clickPos)
                                         }
@@ -235,7 +239,7 @@ fun SwitchableMouseLayout(
                                 }
                             }
 
-                            if (!event.changes.any { it.pressed }) {
+                            if (!event.changes.anyPressed()) {
                                 activePointerId = null
                                 isDragging = false
                                 longPressJob?.cancel()
@@ -305,6 +309,22 @@ fun SwitchableMouseLayout(
             }
         }
     )
+}
+
+/** Pengganti firstOrNull untuk jalur sentuhan: perulangan berindeks tanpa membuat iterator. */
+internal inline fun List<PointerInputChange>.firstFast(predicate: (PointerInputChange) -> Boolean): PointerInputChange? {
+    for (i in indices) {
+        val c = this[i]
+        if (predicate(c)) return c
+    }
+    return null
+}
+
+internal fun List<PointerInputChange>.anyPressed(): Boolean {
+    for (i in indices) {
+        if (this[i].pressed) return true
+    }
+    return false
 }
 
 @Composable

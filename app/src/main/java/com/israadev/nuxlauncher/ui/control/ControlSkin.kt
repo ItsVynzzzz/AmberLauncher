@@ -17,13 +17,16 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sin
 
 /**
- * Tampilan semua tombol layar: kaca tipis dengan garis putih, berubah kuning saat ditekan.
- * Dipakai bersama oleh game dan editor tata letak supaya yang terlihat di editor sama persis
- * dengan di dalam game.
+ * Tampilan semua tombol layar: kaca sangat tipis dengan garis halus, berubah kuning lembut saat
+ * ditekan. Tombol sistem (menu, keyboard, sembunyikan GUI) tanpa garis sama sekali: hanya ikon di
+ * atas bulatan gelap tipis. Dipakai bersama oleh game dan editor tata letak supaya yang terlihat
+ * di editor sama persis dengan di dalam game.
  *
  * Semua digambar langsung di kanvas (tanpa lapisan transparansi per tombol, tanpa gambar atau
  * font tambahan) dan status tekan dibaca hanya saat menggambar, jadi menekan tombol tidak
@@ -33,8 +36,6 @@ object ControlSkin {
     val Ink = Color(0xFF111111)
     val Yellow = Color(0xFFFFD60A)
     val YellowSoft = Color(0xFFFFE566)
-    val Danger = Color(0xFFFF5A4D)
-    val DangerSoft = Color(0xFFFFA399)
 }
 
 /** Ringkasan satu tombol untuk digambar. */
@@ -43,7 +44,7 @@ class SkinSpec(
     val label: String,
     val icon: String,
     val primary: Boolean,
-    val danger: Boolean,
+    val system: Boolean,
     val opacity: Float,
     val cornerDp: Float,
     val slash: Boolean = false
@@ -51,11 +52,13 @@ class SkinSpec(
 
 fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boolean = false): SkinSpec {
     val icon = iconOverride ?: when {
+        b.isSystem && (b.systemAction == "CLOSE" || b.systemAction == "MENU") -> "gear"
         b.icon.isNotBlank() -> b.icon
         b.isSystem -> when (b.systemAction) {
             "KEYBOARD" -> "keyboard"
             "HIDE_GUI" -> "eye"
-            "CLOSE" -> "close"
+            // "CLOSE" adalah nama lama tombol keluar; sekarang tombol ini hanya membuka menu.
+            "CLOSE", "MENU" -> "gear"
             else -> ""
         }
         else -> ""
@@ -64,16 +67,18 @@ fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boo
         label = b.name,
         icon = icon,
         primary = !b.isSystem && b.heightDp >= 56,
-        danger = b.isSystem && b.systemAction == "CLOSE",
+        system = b.isSystem,
         opacity = b.opacity.coerceIn(0.1f, 1f),
         cornerDp = b.cornerRadiusDp.toFloat(),
         slash = slash
     )
 }
 
+// Huruf bobot sedang dengan jarak antarhuruf sedikit renggang: lebih tenang daripada huruf tebal.
 private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-    typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
     textAlign = Paint.Align.CENTER
+    letterSpacing = 0.06f
 }
 
 /** Tombol biasa: isian kaca, garis putih; ditekan atau aktif = kuning penuh. */
@@ -84,13 +89,12 @@ fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Bool
     val h = size.height
     val k = spec.opacity
     val glyph = when {
-        pressed && spec.danger -> Color.White
+        spec.system -> if (pressed) ControlSkin.Yellow else Color.White.copy(alpha = 0.58f + 0.32f * k)
         pressed -> ControlSkin.Ink
-        spec.danger -> ControlSkin.DangerSoft
-        else -> Color.White.copy(alpha = 0.35f + 0.65f * k)
+        else -> Color.White.copy(alpha = 0.45f + 0.40f * k)
     }
     if (spec.icon.isNotEmpty()) {
-        val s = min(w, h) * (if (spec.primary) 0.52f else 0.58f)
+        val s = min(w, h) * (if (spec.primary) 0.52f else if (spec.system) 0.56f else 0.58f)
         drawControlIcon(spec.icon, w / 2f, h / 2f, s, glyph, spec.slash)
     } else {
         drawControlLabel(spec.label, w / 2f, h / 2f, w * 0.86f, h, glyph)
@@ -104,12 +108,12 @@ fun DrawScope.drawControlScroll(spec: SkinSpec, pressed: Boolean, selected: Bool
     val w = size.width
     val h = size.height
     val k = spec.opacity
-    val glyph = if (pressed) ControlSkin.Ink else Color.White.copy(alpha = 0.35f + 0.65f * k)
+    val glyph = if (pressed) ControlSkin.Ink else Color.White.copy(alpha = 0.45f + 0.40f * k)
     val s = min(w * 0.56f, h * 0.24f)
     drawControlIcon("chev_up", w / 2f, h * 0.22f, s, glyph)
     drawControlIcon("chev_down", w / 2f, h * 0.78f, s, glyph)
     if (spec.label.isNotEmpty()) {
-        drawControlLabel(spec.label.take(6), w / 2f, h / 2f, w * 0.92f, h * 0.5f, glyph.copy(alpha = glyph.alpha * 0.75f))
+        drawControlLabel(spec.label.take(6), w / 2f, h / 2f, w * 0.80f, h * 0.5f, glyph.copy(alpha = glyph.alpha * 0.75f))
     }
 }
 
@@ -118,20 +122,39 @@ private fun DrawScope.drawButtonBase(spec: SkinSpec, pressed: Boolean, selected:
     val h = size.height
     val k = spec.opacity
     val radius = min(spec.cornerDp.dp.toPx(), min(w, h) / 2f)
-    val accent = if (spec.danger) ControlSkin.Danger else ControlSkin.Yellow
+
+    if (spec.system) {
+        // Tombol sistem: bulatan gelap tipis tanpa garis; saat ditekan atau aktif jadi tint kuning.
+        val ghost = when {
+            pressed -> ControlSkin.Yellow.copy(alpha = 0.26f)
+            selected -> ControlSkin.Yellow.copy(alpha = 0.16f)
+            else -> Color.Black.copy(alpha = 0.20f * (0.4f + 0.6f * k))
+        }
+        drawRoundRect(color = ghost, cornerRadius = CornerRadius(radius))
+        if (selected) {
+            val ow = 1.6f.dp.toPx()
+            drawRoundRect(
+                color = ControlSkin.Yellow,
+                topLeft = Offset(ow / 2f, ow / 2f),
+                size = Size(w - ow, h - ow),
+                cornerRadius = CornerRadius(max(radius - ow / 2f, 0f)),
+                style = Stroke(width = ow)
+            )
+        }
+        return
+    }
 
     val fill = when {
-        pressed -> accent.copy(alpha = 0.55f + 0.40f * k)
-        selected -> ControlSkin.Yellow.copy(alpha = 0.22f)
-        else -> Color.Black.copy(alpha = (if (spec.primary) 0.46f else 0.36f) * (0.4f + 0.6f * k))
+        pressed -> ControlSkin.Yellow.copy(alpha = 0.34f + 0.30f * k)
+        selected -> ControlSkin.Yellow.copy(alpha = 0.18f)
+        else -> Color.Black.copy(alpha = (if (spec.primary) 0.30f else 0.22f) * (0.4f + 0.6f * k))
     }
     val edge = when {
-        pressed -> if (spec.danger) ControlSkin.DangerSoft else ControlSkin.YellowSoft
+        pressed -> ControlSkin.YellowSoft.copy(alpha = 0.85f)
         selected -> ControlSkin.Yellow
-        spec.danger -> ControlSkin.Danger.copy(alpha = 0.40f + 0.30f * k)
-        else -> Color.White.copy(alpha = (if (spec.primary) 0.34f else 0.28f) + 0.22f * k)
+        else -> Color.White.copy(alpha = (if (spec.primary) 0.22f else 0.16f) + 0.14f * k)
     }
-    val sw = (if (selected) 2.4f else if (spec.primary) 1.6f else 1.4f).dp.toPx()
+    val sw = (if (selected) 2.2f else if (spec.primary) 1.3f else 1.2f).dp.toPx()
 
     drawRoundRect(color = fill, cornerRadius = CornerRadius(radius))
     drawRoundRect(
@@ -153,7 +176,7 @@ private fun DrawScope.drawControlLabel(
 ) {
     val shown = text.take(9)
     val len = max(shown.length, 1)
-    val size = min(maxH * 0.40f, maxW / (len * 0.62f)).coerceIn(8.dp.toPx(), 15.dp.toPx())
+    val size = min(maxH * 0.36f, maxW / (len * 0.74f)).coerceIn(8.dp.toPx(), 13.dp.toPx())
     labelPaint.textSize = size
     labelPaint.color = color.toArgb()
     val fm = labelPaint.fontMetrics
@@ -163,12 +186,13 @@ private fun DrawScope.drawControlLabel(
 
 /**
  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
- * inventory, chat, pause, keyboard, eye, close, sliders, terminal, power, chev_up, chev_down, chev_right.
+ * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, chev_up, chev_down,
+ * chev_right.
  */
 fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
     val x0 = cx - s / 2f
     val y0 = cy - s / 2f
-    val sw = s * 0.085f
+    val sw = s * 0.078f
     val stroke = Stroke(width = sw, cap = StrokeCap.Round, join = StrokeJoin.Round)
 
     fun p(u: Float, v: Float) = Offset(x0 + u * s, y0 + v * s)
@@ -238,6 +262,22 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
             line(p(0.28f, 0.28f), p(0.72f, 0.72f))
             line(p(0.72f, 0.28f), p(0.28f, 0.72f))
         }
+        "gear" -> {
+            // Cincin, lubang tengah, dan delapan gigi pendek di sekelilingnya.
+            val c = p(0.5f, 0.5f)
+            drawCircle(color, 0.23f * s, c, style = stroke)
+            drawCircle(color, 0.08f * s, c, style = stroke)
+            for (i in 0 until 8) {
+                val a = i * (Math.PI / 4.0)
+                val ca = cos(a).toFloat()
+                val sa = sin(a).toFloat()
+                line(
+                    Offset(c.x + ca * 0.32f * s, c.y + sa * 0.32f * s),
+                    Offset(c.x + ca * 0.42f * s, c.y + sa * 0.42f * s),
+                    sw * 1.7f
+                )
+            }
+        }
         "sliders" -> {
             line(p(0.18f, 0.28f), p(0.82f, 0.28f))
             line(p(0.18f, 0.50f), p(0.82f, 0.50f))
@@ -274,14 +314,14 @@ fun DrawScope.drawControlJoystick(
     val k = opacity.coerceIn(0.1f, 1f)
     val c = Offset(size.width / 2f, size.height / 2f)
     val r = min(size.width, size.height) / 2f
-    val sw = (if (sprint || selected) 2.4f else 1.5f).dp.toPx()
+    val sw = (if (sprint || selected) 2.2f else 1.2f).dp.toPx()
 
-    drawCircle(color = Color.Black.copy(alpha = 0.30f * (0.4f + 0.6f * k)), radius = r, center = c)
+    drawCircle(color = Color.Black.copy(alpha = 0.20f * (0.4f + 0.6f * k)), radius = r, center = c)
     drawCircle(
         color = when {
             sprint || selected -> ControlSkin.Yellow
-            touching -> Color.White.copy(alpha = 0.55f)
-            else -> Color.White.copy(alpha = 0.26f + 0.16f * k)
+            touching -> Color.White.copy(alpha = 0.34f)
+            else -> Color.White.copy(alpha = 0.16f + 0.12f * k)
         },
         radius = r - sw / 2f,
         center = c,
@@ -289,10 +329,10 @@ fun DrawScope.drawControlJoystick(
     )
 
     // Empat tanda arah kecil di dekat tepi
-    val tick = Color.White.copy(alpha = 0.22f + 0.28f * k)
+    val tick = Color.White.copy(alpha = 0.16f + 0.22f * k)
     val tr = r * 0.80f
     val ts = r * 0.07f
-    val tw = 1.6f.dp.toPx()
+    val tw = 1.3f.dp.toPx()
     fun chevron(dx: Float, dy: Float) {
         val m = Offset(c.x + dx * tr, c.y + dy * tr)
         val px = -dy
@@ -310,15 +350,15 @@ fun DrawScope.drawControlJoystick(
     val kr = r * 0.36f
     val kc = c + knob
     drawCircle(
-        color = if (touching) ControlSkin.Yellow.copy(alpha = 0.55f + 0.40f * k) else Color.White.copy(alpha = 0.16f + 0.10f * k),
+        color = if (touching) ControlSkin.Yellow.copy(alpha = 0.40f + 0.30f * k) else Color.White.copy(alpha = 0.12f + 0.08f * k),
         radius = kr,
         center = kc
     )
     drawCircle(
-        color = if (touching) ControlSkin.YellowSoft else Color.White.copy(alpha = 0.50f + 0.40f * k),
-        radius = kr - 1.dp.toPx(),
+        color = if (touching) ControlSkin.YellowSoft.copy(alpha = 0.85f) else Color.White.copy(alpha = 0.34f + 0.30f * k),
+        radius = kr - 0.75f.dp.toPx(),
         center = kc,
-        style = Stroke(width = 2.dp.toPx())
+        style = Stroke(width = 1.5f.dp.toPx())
     )
 
     // Kunci lari aktif: dua panah naik di dalam kenop (digambar setelah kenop supaya tidak tertutup)

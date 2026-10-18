@@ -1,21 +1,15 @@
 package com.israadev.nuxlauncher.ui.control
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,8 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -58,8 +54,9 @@ import kotlin.math.sin
 /**
  * Lapisan semua tombol layar di atas game. Tiap tombol hanya satu simpul yang menggambar dirinya
  * sendiri di kanvas ([ControlSkin]); posisi dihitung saat tata letak, bukan saat penyusunan.
- * Angka FPS dibaca lewat lambda di dalam lencana FPS saja, jadi pembaruan 2x per detik tidak
- * menyusun ulang tombol lain.
+ * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
+ * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
+ * merah di dalam menu.
  */
 @Composable
 fun GameControlsLayer(
@@ -76,8 +73,7 @@ fun GameControlsLayer(
     onFpsClick: () -> Unit,
     onToggleKeyboard: () -> Unit,
     onToggleControls: () -> Unit,
-    onExitTap: () -> Unit,
-    onExitHold: () -> Unit
+    onOpenMenu: () -> Unit
 ) {
     val density = LocalDensity.current
     buttons.forEach { btn ->
@@ -99,7 +95,7 @@ fun GameControlsLayer(
                             FpsMode.SHOW_LOG -> false
                         }
                         if (show) {
-                            FpsPill(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
+                            FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
                         }
                     }
                     "KEYBOARD" -> if (controlsVisible) {
@@ -107,9 +103,9 @@ fun GameControlsLayer(
                     }
                     // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
                     "HIDE_GUI" -> SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
-                    // Ketuk = keluar (tetap ada konfirmasi), tahan = pengaturan in-game.
-                    "CLOSE" -> if (controlsVisible) {
-                        SystemIconButton(btn, place, onTap = onExitTap, onLongPress = onExitHold)
+                    // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
+                    "MENU", "CLOSE" -> if (controlsVisible) {
+                        SystemIconButton(btn, place, onTap = onOpenMenu)
                     }
                 }
             } else if (controlsVisible) {
@@ -124,9 +120,17 @@ fun GameControlsLayer(
     }
 }
 
-/** Lencana FPS kecil: titik warna, angka FPS, dan info RAM/panas. Ketuk membuka menu in-game. */
+private val FpsTextStyle = TextStyle(
+    fontFeatureSettings = "tnum",
+    shadow = Shadow(color = Color.Black.copy(alpha = 0.60f), offset = Offset(0f, 1f), blurRadius = 3f)
+)
+
+/**
+ * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
+ * kuning, merah muda). Info RAM atau panas hanya muncul bila HP mulai mepet. Ketuk membuka menu.
+ */
 @Composable
-private fun FpsPill(
+private fun FpsText(
     btn: CustomControlButton,
     modifier: Modifier,
     pinned: Boolean,
@@ -135,94 +139,82 @@ private fun FpsPill(
     perfWarn: () -> Boolean,
     onClick: () -> Unit
 ) {
-    val k = btn.opacity.coerceIn(0.1f, 1f)
-    val shape = RoundedCornerShape(btn.cornerRadiusDp.dp)
     val click by rememberUpdatedState(onClick)
     val value = fps()
-    val extra = perfText()
     val warn = perfWarn()
+    val extra = if (warn) perfText() else ""
+    val tint = when {
+        value <= 0 -> Color.White.copy(alpha = 0.45f)
+        value >= 50 -> Color.White.copy(alpha = 0.86f)
+        value >= 25 -> ControlSkin.YellowSoft
+        else -> Color(0xFFFFA399)
+    }
 
-    Row(
+    Box(
         modifier = modifier
             .defaultMinSize(minWidth = btn.widthDp.dp, minHeight = btn.heightDp.dp)
-            .background(Color.Black.copy(alpha = 0.42f * (0.4f + 0.6f * k)), shape)
-            .border(
-                1.dp,
-                if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.28f),
-                shape
-            )
-            .pointerInput(Unit) { detectTapGestures { click() } }
-            .padding(horizontal = 10.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+            .pointerInput(Unit) { detectTapGestures { click() } },
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier
-                .size(7.dp)
-                .background(
-                    when {
-                        value >= 50 -> Color(0xFF34D399)
-                        value >= 25 -> Color(0xFFFFD60A)
-                        value > 0 -> Color(0xFFFF5A4D)
-                        else -> Color(0xFF8C8774)
-                    },
-                    CircleShape
-                )
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = if (value > 0) "$value FPS" else "-- FPS",
-            color = if (pinned) ControlSkin.YellowSoft else Color.White,
-            fontWeight = FontWeight.Black,
-            fontSize = 11.sp,
-            maxLines = 1
-        )
-        if (extra.isNotEmpty()) {
-            Spacer(modifier = Modifier.width(6.dp))
+        Row(verticalAlignment = Alignment.Bottom) {
             Text(
-                text = extra,
-                color = if (warn) Color(0xFFFFD60A) else Color.White.copy(alpha = 0.60f),
-                fontWeight = FontWeight.Bold,
-                fontSize = 9.sp,
+                text = if (value > 0) "$value" else "--",
+                color = tint,
+                style = FpsTextStyle,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
                 maxLines = 1
             )
+            Spacer(modifier = Modifier.width(3.dp))
+            Text(
+                text = "FPS",
+                color = if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f),
+                style = FpsTextStyle,
+                fontWeight = FontWeight.Medium,
+                fontSize = 8.sp,
+                letterSpacing = 0.8.sp,
+                maxLines = 1
+            )
+            if (extra.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = extra,
+                    color = ControlSkin.Yellow.copy(alpha = 0.85f),
+                    style = FpsTextStyle,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 8.sp,
+                    maxLines = 1
+                )
+            }
         }
     }
 }
 
-/** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, keluar). */
+/** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, gerigi menu). */
 @Composable
 private fun SystemIconButton(
     btn: CustomControlButton,
     modifier: Modifier,
     active: Boolean = false,
     slash: Boolean = false,
-    onTap: () -> Unit,
-    onLongPress: (() -> Unit)? = null
+    onTap: () -> Unit
 ) {
     var pressed by remember { mutableStateOf(false) }
     val spec = remember(btn, slash) { skinSpecFor(btn, slash = slash) }
     val tap by rememberUpdatedState(onTap)
-    val hold by rememberUpdatedState(onLongPress)
-    val hasHold = onLongPress != null
 
     Box(
         modifier = modifier
             .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
             .drawBehind { drawControlButton(spec, pressed || active) }
-            .pointerInput(hasHold) {
+            .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = {
                         pressed = true
                         tryAwaitRelease()
                         pressed = false
                     },
-                    onTap = { tap() },
-                    onLongPress = if (hasHold) {
-                        { _ -> hold?.invoke() }
-                    } else {
-                        null
-                    }
+                    onTap = { tap() }
                 )
             }
     )
@@ -268,7 +260,7 @@ fun CustomVirtualButton(
 
                             while (true) {
                                 val event = awaitPointerEvent()
-                                val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                val change = event.changes.firstFast { it.id == down.id } ?: break
                                 if (!change.pressed) {
                                     if (!hasDragged) {
                                         // Ketuk: setengah atas gulir naik, setengah bawah gulir turun
@@ -337,7 +329,7 @@ fun CustomVirtualButton(
                     try {
                         while (true) {
                             val event = awaitPointerEvent()
-                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                            val change = event.changes.firstFast { it.id == down.id } ?: break
                             if (!change.pressed) {
                                 change.consume()
                                 break
@@ -626,7 +618,7 @@ fun CustomVirtualJoystick(
 
                         while (true) {
                             val event = awaitPointerEvent()
-                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                            val change = event.changes.firstFast { it.id == down.id } ?: break
                             if (!change.pressed) {
                                 break
                             }

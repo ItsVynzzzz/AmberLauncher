@@ -14,7 +14,7 @@ object ZLBridgeStates {
     @JvmStatic
     fun changeCursorMode(mode: Int) {
         require(mode in 0..1)
-        Log.d("NUX_INPUT", "changeCursorMode: mode=$mode (0=DISABLED/inGame, 1=ENABLED/menu)")
+        Log.d("AMBER_INPUT", "changeCursorMode: mode=$mode (0=DISABLED/inGame, 1=ENABLED/menu)")
         this._cursorMode.update { mode }
     }
 

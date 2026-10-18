@@ -509,7 +509,7 @@ fun CustomGuiEditorScreen(
                                         "FPS" -> "Indikator FPS In-Game"
                                         "KEYBOARD" -> "Toggle Keyboard Layar"
                                         "HIDE_GUI" -> "Sembunyikan/Tampilkan GUI"
-                                        "CLOSE" -> "Keluar dari Permainan"
+                                        "MENU", "CLOSE" -> "Buka Menu (pengaturan dan keluar)"
                                         else -> "Aksi Sistem Launcher"
                                     }
                                     Text(actionDesc, color = Color(0xFFFFE566), fontWeight = FontWeight.Bold, fontSize = 11.sp)

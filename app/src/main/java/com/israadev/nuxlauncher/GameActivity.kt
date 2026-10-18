@@ -43,14 +43,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -60,6 +63,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.input.pointer.positionChange
@@ -1309,7 +1313,6 @@ fun GameScreen(
     var currentFps by remember { mutableIntStateOf(0) }
     var fpsMode by remember { mutableStateOf(FpsMode.NORMAL) }
     val context = LocalContext.current
-    val hapticView = LocalView.current
 
     // Handler siklus 3-klik tombol FPS
     val cycleFpsMode: () -> Unit = {
@@ -1336,6 +1339,9 @@ fun GameScreen(
     var perfText by remember { mutableStateOf("") }
     var perfWarn by remember { mutableStateOf(false) }
 
+    // Info RAM/panas hanya tampil di teks FPS, jadi hanya dihitung saat teks FPS terlihat.
+    val wantPerfHint by rememberUpdatedState(isControlVisible || fpsMode == FpsMode.PINNED)
+
     // Periodically update FPS counter from native engine
     LaunchedEffect(Unit) {
         var tick = 0
@@ -1344,8 +1350,11 @@ fun GameScreen(
                 currentFps = CallbackBridge.getCurrentFps()
             } catch (_: Throwable) {
             }
-            if (tick % 4 == 0) {
-                val hint = try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
+            if (tick % 6 == 0 && wantPerfHint) {
+                // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
+                val hint = withContext(Dispatchers.Default) {
+                    try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
+                }
                 if (hint.first != perfText) perfText = hint.first
                 if (hint.second != perfWarn) perfWarn = hint.second
             }
@@ -1420,7 +1429,7 @@ fun GameScreen(
             screenHeight = screenHeight,
             cursorMode = gameCursorMode,
             controlMode = mouseControlMode,
-            cursorPosition = Offset(cursorX, cursorY),
+            cursorPosition = { Offset(cursorX, cursorY) },
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
             requestPointerCapture = !launcherSettings.physicalMouseMode,
@@ -1495,14 +1504,16 @@ fun GameScreen(
             // Sembunyikan mouse virtual jika mouse fisik eksternal terhubung & sedang digunakan
             false
         } else {
-            gameCursorMode == CURSOR_ENABLED && cursorX > 0f && cursorY > 0f
+            gameCursorMode == CURSOR_ENABLED
         }
 
+        // Posisi kursor dibaca hanya saat menggeser lapisan kursor (lihat VirtualCursorPointer),
+        // jadi menggerakkan kursor tidak menyusun ulang layar game.
         if (shouldShowPointer) {
             VirtualCursorPointer(
-                x = cursorX,
-                y = cursorY,
-                isPressed = isMousePressed,
+                x = { cursorX },
+                y = { cursorY },
+                isPressed = { isMousePressed },
                 cursorSizeDp = launcherSettings.mouseSizeDp
             )
         }
@@ -1540,11 +1551,7 @@ fun GameScreen(
             onFpsClick = { showInGameSettingsDialog = true },
             onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
             onToggleControls = { isControlVisible = !isControlVisible },
-            onExitTap = { showExitConfirmDialog = true },
-            onExitHold = {
-                hapticView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                showInGameSettingsDialog = true
-            }
+            onOpenMenu = { showInGameSettingsDialog = true }
         )
 
         // Konfirmasi keluar
@@ -1558,7 +1565,7 @@ fun GameScreen(
             )
         }
 
-        // Menu dalam game (tahan tombol X atau ketuk lencana FPS untuk membuka)
+        // Menu dalam game (ketuk gerigi atau angka FPS untuk membuka; keluar lewat tombol merah di dalamnya)
         GameMenuSheet(
             visible = showInGameSettingsDialog,
             onDismissRequest = { showInGameSettingsDialog = false },
@@ -1609,7 +1616,7 @@ fun GameScreen(
                 CallbackBridge.sendKeyPress(keycode, true)
                 CallbackBridge.sendKeyPress(keycode, false)
             },
-            onForceExitRequest = {
+            onExitRequest = {
                 showExitConfirmDialog = true
             },
             onOpenCustomGui = {
@@ -1621,66 +1628,56 @@ fun GameScreen(
     }
 }
 
+/**
+ * Kursor panah untuk menu game. Posisinya diberikan lewat lambda dan hanya dibaca saat lapisan
+ * digeser (tanpa menyusun ulang dan tanpa menggambar ulang panahnya); bentuk panah dibuat sekali.
+ * Belum ada posisi (0, 0) = tidak terlihat.
+ */
 @Composable
 fun VirtualCursorPointer(
-    x: Float,
-    y: Float,
-    isPressed: Boolean = false,
+    x: () -> Float,
+    y: () -> Float,
+    isPressed: () -> Boolean = { false },
     cursorSizeDp: Int = 24,
     modifier: Modifier = Modifier
 ) {
-    val density = LocalDensity.current
-    val xDp = with(density) { x.toDp() }
-    val yDp = with(density) { y.toDp() }
+    val d = LocalDensity.current.density
+    val arrow = remember(d) {
+        Path().apply {
+            moveTo(0f, 0f)
+            lineTo(0f, 22f * d)
+            lineTo(5.5f * d, 16.5f * d)
+            lineTo(10.5f * d, 24.5f * d)
+            lineTo(13.5f * d, 23f * d)
+            lineTo(8.5f * d, 15f * d)
+            lineTo(15.5f * d, 15f * d)
+            close()
+        }
+    }
+    val arrowShadow = remember(arrow, d) {
+        Path().apply { addPath(arrow, Offset(2f * d, 2f * d)) }
+    }
+    val outline = remember(d) {
+        Stroke(width = 1.8f * d, cap = StrokeCap.Round, join = StrokeJoin.Round)
+    }
 
     Box(
         modifier = modifier
-            .offset(x = xDp, y = yDp)
             .size(cursorSizeDp.dp)
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val scale = (cursorSizeDp / 24f) * (if (isPressed) 0.88f else 1.0f)
-            scale(scale, pivot = Offset.Zero) {
-                // Classic standard desktop arrow cursor
-                val path = Path().apply {
-                    moveTo(0f, 0f)
-                    lineTo(0f, 22f * density.density)
-                    lineTo(5.5f * density.density, 16.5f * density.density)
-                    lineTo(10.5f * density.density, 24.5f * density.density)
-                    lineTo(13.5f * density.density, 23f * density.density)
-                    lineTo(8.5f * density.density, 15f * density.density)
-                    lineTo(15.5f * density.density, 15f * density.density)
-                    close()
-                }
-
-                // 1. Drop shadow
-                val shadowPath = Path().apply {
-                    addPath(path, Offset(2f * density.density, 2f * density.density))
-                }
-                drawPath(
-                    path = shadowPath,
-                    color = Color.Black.copy(alpha = 0.45f),
-                    style = Fill
-                )
-
-                // 2. White fill
-                drawPath(
-                    path = path,
-                    color = Color.White,
-                    style = Fill
-                )
-
-                // 3. Crisp black outline
-                drawPath(
-                    path = path,
-                    color = Color.Black,
-                    style = Stroke(
-                        width = 1.8f * density.density,
-                        cap = StrokeCap.Round,
-                        join = StrokeJoin.Round
-                    )
-                )
+            .graphicsLayer {
+                val px = x()
+                val py = y()
+                translationX = px
+                translationY = py
+                alpha = if (px > 0f && py > 0f) 1f else 0f
             }
-        }
-    }
+            .drawBehind {
+                val k = (cursorSizeDp / 24f) * (if (isPressed()) 0.88f else 1.0f)
+                scale(k, pivot = Offset.Zero) {
+                    drawPath(path = arrowShadow, color = Color.Black.copy(alpha = 0.45f), style = Fill)
+                    drawPath(path = arrow, color = Color.White, style = Fill)
+                    drawPath(path = arrow, color = Color.Black, style = outline)
+                }
+            }
+    )
 }

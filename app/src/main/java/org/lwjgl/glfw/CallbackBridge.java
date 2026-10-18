@@ -92,7 +92,7 @@ public class CallbackBridge {
     @Keep
     public static boolean notifyLauncher(int type, int... action) {
         if (action == null || action.length == 0) {
-            LoggerBridge.append("NuxLauncher: SDL notification has no action");
+            LoggerBridge.append("AmberLauncher: SDL notification has no action");
             return false;
         }
         switch (type) {
@@ -102,13 +102,13 @@ public class CallbackBridge {
                         return true;
                     }
                     try {
-                        LoggerBridge.append("NuxLauncher: loading SDL3");
+                        LoggerBridge.append("AmberLauncher: loading SDL3");
                         System.loadLibrary("SDL3");
-                        LoggerBridge.append("NuxLauncher: loading SDL2");
+                        LoggerBridge.append("AmberLauncher: loading SDL2");
                         System.loadLibrary("SDL2");
-                        LoggerBridge.append("NuxLauncher: setting up SDL JNI");
+                        LoggerBridge.append("AmberLauncher: setting up SDL JNI");
                         SdlBridge.setupJNI();
-                        LoggerBridge.append("NuxLauncher: binding SDL surface");
+                        LoggerBridge.append("AmberLauncher: binding SDL surface");
                         SdlBridge.setSdlEnabled(true);
                         SDLSurface surface = SDLActivity.getSDLSurface();
                         if (surface != null) {
@@ -117,14 +117,14 @@ public class CallbackBridge {
                                 surface.nativeResize(windowWidth, windowHeight);
                             }
                         }
-                        LoggerBridge.append("NuxLauncher: SDL support enabled!");
+                        LoggerBridge.append("AmberLauncher: SDL support enabled!");
                         return true;
                     } catch (Throwable e) {
                         SdlBridge.setSdlEnabled(false);
                         SdlBridge.clearSdlInitialized();
                         StringWriter trace = new StringWriter();
                         e.printStackTrace(new PrintWriter(trace));
-                        LoggerBridge.append("NuxLauncher: SDL launcher integration is unavailable:\n" + trace);
+                        LoggerBridge.append("AmberLauncher: SDL launcher integration is unavailable:\n" + trace);
                     }
                 }
                 break;
@@ -149,7 +149,7 @@ public class CallbackBridge {
             if (clipboard == null) return "";
             switch (type) {
                 case CLIPBOARD_COPY:
-                    ClipData clip = ClipData.newPlainText("NUX_CLIP", copyContent);
+                    ClipData clip = ClipData.newPlainText("AMBER_CLIP", copyContent);
                     clipboard.setPrimaryClip(clip);
                     return copyContent;
                 case CLIPBOARD_PASTE:
@@ -167,13 +167,13 @@ public class CallbackBridge {
 
     @Keep
     public static void onGrabStateChanged(final boolean grabbing) {
-        Log.i("NUX_INPUT", "Grab callback received: " + grabbing);
+        Log.i("AMBER_INPUT", "Grab callback received: " + grabbing);
         isGrabbing = grabbing;
         deltaX = 0f;
         deltaY = 0f;
         postFrameCallbackDelayed((time) -> {
             if (isGrabbing != grabbing) return;
-            Log.i("NUX_INPUT", "Grab changed : " + grabbing);
+            Log.i("AMBER_INPUT", "Grab changed : " + grabbing);
             synchronized (grabListener) {
                 grabListener.accept(isGrabbing);
             }
@@ -226,7 +226,7 @@ public class CallbackBridge {
 
     @Keep
     public static void onDirectInputEnable() {
-        Log.i("NUX_INPUT", "Direct input enabled");
+        Log.i("AMBER_INPUT", "Direct input enabled");
     }
 
     public static void sendCursorPos(float x, float y) {

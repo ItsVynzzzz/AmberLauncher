@@ -1,16 +1,13 @@
 package com.israadev.nuxlauncher.ui.control
 
+import android.graphics.Paint
+import android.graphics.Typeface
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -20,19 +17,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -120,14 +116,17 @@ fun GameControlsLayer(
     }
 }
 
-private val FpsTextStyle = TextStyle(
-    fontFeatureSettings = "tnum",
-    shadow = Shadow(color = Color.Black.copy(alpha = 0.60f), offset = Offset(0f, 1f), blurRadius = 3f)
-)
+private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+    fontFeatureSettings = "tnum"
+}
 
 /**
  * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
- * kuning, merah muda). Info RAM atau panas hanya muncul bila HP mulai mepet. Ketuk membuka menu.
+ * kuning, merah muda). Info RAM, panas, atau beban UI hanya muncul bila perlu. Ketuk membuka menu.
+ *
+ * Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang teks ini, tanpa
+ * menyusun ulang atau mengukur ulang tata letak.
  */
 @Composable
 private fun FpsText(
@@ -140,52 +139,57 @@ private fun FpsText(
     onClick: () -> Unit
 ) {
     val click by rememberUpdatedState(onClick)
-    val value = fps()
-    val warn = perfWarn()
-    val extra = if (warn) perfText() else ""
+    Box(
+        modifier = modifier
+            .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
+            .drawBehind { drawFpsReadout(fps(), pinned, if (perfWarn()) perfText() else "") }
+            .pointerInput(Unit) { detectTapGestures { click() } }
+    )
+}
+
+private fun drawFpsPiece(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color, shadowPx: Float) {
+    fpsPaint.textSize = size
+    fpsPaint.letterSpacing = spacing
+    fpsPaint.color = Color.Black.copy(alpha = color.alpha * 0.55f).toArgb()
+    cv.drawText(s, x, y + shadowPx, fpsPaint)
+    fpsPaint.color = color.toArgb()
+    cv.drawText(s, x, y, fpsPaint)
+}
+
+private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String) {
     val tint = when {
         value <= 0 -> Color.White.copy(alpha = 0.45f)
         value >= 50 -> Color.White.copy(alpha = 0.86f)
         value >= 25 -> ControlSkin.YellowSoft
         else -> Color(0xFFFFA399)
     }
+    val numSize = 14.dp.toPx()
+    val labSize = 8.dp.toPx()
+    val gap = 3.dp.toPx()
+    val shadow = 1.dp.toPx()
+    val num = if (value > 0) value.toString() else "--"
 
-    Box(
-        modifier = modifier
-            .defaultMinSize(minWidth = btn.widthDp.dp, minHeight = btn.heightDp.dp)
-            .pointerInput(Unit) { detectTapGestures { click() } },
-        contentAlignment = Alignment.Center
-    ) {
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text(
-                text = if (value > 0) "$value" else "--",
-                color = tint,
-                style = FpsTextStyle,
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-                maxLines = 1
+    fpsPaint.textSize = numSize
+    fpsPaint.letterSpacing = 0f
+    val numW = fpsPaint.measureText(num)
+    fpsPaint.textSize = labSize
+    fpsPaint.letterSpacing = 0.1f
+    val labW = fpsPaint.measureText("FPS")
+    val x0 = (size.width - (numW + gap + labW)) / 2f
+    val base = size.height / 2f + numSize * 0.36f
+
+    drawIntoCanvas { c ->
+        val cv = c.nativeCanvas
+        drawFpsPiece(cv, num, x0, base, numSize, 0f, tint, shadow)
+        drawFpsPiece(
+            cv, "FPS", x0 + numW + gap, base, labSize, 0.1f,
+            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f), shadow
+        )
+        if (extra.isNotEmpty()) {
+            drawFpsPiece(
+                cv, extra, x0 + numW + gap + labW + 6.dp.toPx(), base, labSize, 0f,
+                ControlSkin.Yellow.copy(alpha = 0.85f), shadow
             )
-            Spacer(modifier = Modifier.width(3.dp))
-            Text(
-                text = "FPS",
-                color = if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f),
-                style = FpsTextStyle,
-                fontWeight = FontWeight.Medium,
-                fontSize = 8.sp,
-                letterSpacing = 0.8.sp,
-                maxLines = 1
-            )
-            if (extra.isNotEmpty()) {
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = extra,
-                    color = ControlSkin.Yellow.copy(alpha = 0.85f),
-                    style = FpsTextStyle,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 8.sp,
-                    maxLines = 1
-                )
-            }
         }
     }
 }
@@ -523,6 +527,12 @@ fun CustomVirtualJoystick(
     var isTouching by remember { mutableStateOf(false) }
     var sprint by remember { mutableStateOf(false) }
 
+    // Posisi kenop yang terakhir digambar. Kenop hanya digambar ulang bila bergeser cukup jauh:
+    // jari yang ditahan hampir selalu bergetar 1-2 piksel, dan tiap penggambaran ulang berarti
+    // satu frame UI penuh yang berebut GPU dan CPU dengan game.
+    val shown = remember { FloatArray(2) }
+    val knobStepPx = with(density) { 2.5.dp.toPx() }
+
     // Status tombol arah disimpan biasa (bukan state) supaya menggeser kenop tidak menyusun ulang.
     val keys = remember { BooleanArray(4) } // W, A, S, D
     val ctrlDown = remember { BooleanArray(1) }
@@ -557,6 +567,8 @@ fun CustomVirtualJoystick(
     fun releaseAll() {
         updateKeys(false, false, false, false)
         setSprint(false)
+        shown[0] = 0f
+        shown[1] = 0f
         knobOffset = Offset.Zero
         isTouching = false
     }
@@ -584,13 +596,14 @@ fun CustomVirtualJoystick(
                             val clampedDist = dist.coerceAtMost(maxDragDistance)
                             val angleRad = atan2(rawDelta.y.toDouble(), rawDelta.x.toDouble())
 
-                            knobOffset = if (dist > 0f) {
-                                Offset(
-                                    (cos(angleRad) * clampedDist).toFloat(),
-                                    (sin(angleRad) * clampedDist).toFloat()
-                                )
-                            } else {
-                                Offset.Zero
+                            val kx = if (dist > 0f) (cos(angleRad) * clampedDist).toFloat() else 0f
+                            val ky = if (dist > 0f) (sin(angleRad) * clampedDist).toFloat() else 0f
+                            val ddx = kx - shown[0]
+                            val ddy = ky - shown[1]
+                            if (ddx * ddx + ddy * ddy >= knobStepPx * knobStepPx) {
+                                shown[0] = kx
+                                shown[1] = ky
+                                knobOffset = Offset(kx, ky)
                             }
 
                             val deadzone = maxDragDistance * 0.20f

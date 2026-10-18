@@ -24,6 +24,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -1242,6 +1243,9 @@ enum class FpsMode {
     SHOW_LOG   // Siklus 2: Memunculkan log in-game (isConsoleVisible = true)
 }
 
+/** Jendela UI digambar lebih dari ini per detik = dianggap sibuk dan dilaporkan di samping FPS. */
+private const val UI_BUSY_PER_SEC = 12
+
 /**
  * Info kondisi HP yang ditampilkan di samping angka FPS supaya penyebab FPS rendah terbaca
  * langsung di layar: "sisa RAM xxxMB" (memori kosong HP; kalau tinggal sedikit sistem mulai
@@ -1342,15 +1346,37 @@ fun GameScreen(
     // Info RAM/panas hanya tampil di teks FPS, jadi hanya dihitung saat teks FPS terlihat.
     val wantPerfHint by rememberUpdatedState(isControlVisible || fpsMode == FpsMode.PINNED)
 
-    // Periodically update FPS counter from native engine
+    // Hitung berapa kali jendela UI digambar per detik. Saat bermain angkanya harus nyaris nol
+    // (hanya satu kali per detik untuk teks FPS); kalau tinggi, UI ikut berebut CPU/GPU dengan
+    // game dan angkanya muncul di samping FPS ("UI n/s"), jadi penyebab FPS turun bisa terbaca.
+    val uiDraws = remember { IntArray(1) }
+    var uiBusy by remember { mutableIntStateOf(0) }
+    val rootView = LocalView.current
+    DisposableEffect(rootView) {
+        val listener = ViewTreeObserver.OnDrawListener { uiDraws[0]++ }
+        val vto = rootView.viewTreeObserver
+        if (vto.isAlive) vto.addOnDrawListener(listener)
+        onDispose {
+            val t = rootView.viewTreeObserver
+            if (t.isAlive) t.removeOnDrawListener(listener)
+        }
+    }
+
+    // Periodically update FPS counter from native engine (1x per detik: tiap angka baru = satu
+    // penggambaran UI, jadi tidak perlu lebih sering dari yang bisa dibaca mata)
     LaunchedEffect(Unit) {
         var tick = 0
+        var lastDraws = uiDraws[0]
         while (isActive) {
             try {
                 currentFps = CallbackBridge.getCurrentFps()
             } catch (_: Throwable) {
             }
-            if (tick % 6 == 0 && wantPerfHint) {
+            val draws = uiDraws[0]
+            val busy = if (draws - lastDraws > UI_BUSY_PER_SEC) draws - lastDraws else 0
+            lastDraws = draws
+            if (busy != uiBusy) uiBusy = busy
+            if (tick % 3 == 0 && wantPerfHint) {
                 // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
                 val hint = withContext(Dispatchers.Default) {
                     try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
@@ -1359,7 +1385,7 @@ fun GameScreen(
                 if (hint.second != perfWarn) perfWarn = hint.second
             }
             tick++
-            delay(500)
+            delay(1000)
         }
     }
 
@@ -1546,8 +1572,14 @@ fun GameScreen(
             consoleVisible = isConsoleVisible,
             keyboardActive = isKeyboardRequested,
             fps = { currentFps },
-            perfText = { perfText },
-            perfWarn = { perfWarn },
+            perfText = {
+                if (uiBusy > 0) {
+                    if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
+                } else {
+                    perfText
+                }
+            },
+            perfWarn = { perfWarn || uiBusy > 0 },
             onFpsClick = { showInGameSettingsDialog = true },
             onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
             onToggleControls = { isControlVisible = !isControlVisible },

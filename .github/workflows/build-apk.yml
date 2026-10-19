@@ -23,6 +23,9 @@ jobs:
       - name: Ambil kode
         uses: actions/checkout@v5
 
+      - name: Periksa keaslian Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
       - name: Pasang JDK 17
         uses: actions/setup-java@v5
         with:
@@ -36,22 +39,31 @@ jobs:
           yes | "$SDKM" --licenses > /dev/null || true
           "$SDKM" "platforms;android-37" || echo "Platform 37 tidak terpasang manual, Gradle akan mengunduh sendiri"
 
-      - name: Siapkan kunci tanda tangan tetap
+      - name: Siapkan kunci tanda tangan rilis (dari Secrets)
+        env:
+          AMBER_KEYSTORE_BASE64: ${{ secrets.AMBER_KEYSTORE_BASE64 }}
+          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
+          IS_FORK: ${{ github.event.repository.fork }}
         run: |
-          if [ ! -f signing/debug.keystore ]; then
-            mkdir -p signing
-            keytool -genkeypair -keystore signing/debug.keystore \
-              -storepass android -keypass android -alias androiddebugkey \
-              -keyalg RSA -keysize 2048 -validity 10000 \
-              -dname "CN=Android Debug,O=Android,C=US"
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -f signing/debug.keystore
-            git commit -m "Tambah kunci tanda tangan tetap"
-            git push
+          if [ -n "$AMBER_KEYSTORE_BASE64" ] && [ -n "$AMBER_KEYSTORE_PASSWORD" ]; then
+            KEYSTORE_PATH="$RUNNER_TEMP/amber-release.p12"
+            printf '%s' "$AMBER_KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$KEYSTORE_PATH"
+            chmod 600 "$KEYSTORE_PATH"
+            PASS="$(printf '%s' "$AMBER_KEYSTORE_PASSWORD" | tr -d ' \r\n')"
+            if ! keytool -list -v -keystore "$KEYSTORE_PATH" -storetype PKCS12 -storepass "$PASS" -alias amber > "$RUNNER_TEMP/keytool.txt" 2>&1; then
+              echo "::error::Kunci rilis tidak bisa dibuka. Periksa isi Secrets AMBER_KEYSTORE_BASE64 dan AMBER_KEYSTORE_PASSWORD (harus persis sama dengan isi file yang diberikan)."
+              exit 1
+            fi
+            echo "Kunci rilis terpasang. Sidik jari sertifikat:"
+            grep -E "SHA256:" "$RUNNER_TEMP/keytool.txt" || true
+            rm -f "$RUNNER_TEMP/keytool.txt"
+            echo "AMBER_KEYSTORE_FILE=$KEYSTORE_PATH" >> "$GITHUB_ENV"
+          elif [ "$IS_FORK" = "true" ]; then
+            echo "Kunci rilis tidak ada (wajar untuk fork). APK ditandatangani kunci debug."
+          else
+            echo "::error::Kunci tanda tangan rilis belum dipasang. Isi Secrets AMBER_KEYSTORE_BASE64 dan AMBER_KEYSTORE_PASSWORD di Settings > Secrets and variables > Actions."
+            exit 1
           fi
-          mkdir -p ~/.android
-          cp signing/debug.keystore ~/.android/debug.keystore
 
       - name: Terapkan patch pending-*.patch (jika ada)
         id: patch
@@ -97,6 +109,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build APK release
+        env:
+          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --stacktrace
@@ -108,6 +122,11 @@ jobs:
           mkdir -p dist
           cp "$APK" "dist/MyLauncher-build${{ github.run_number }}.apk"
           ls -lh dist
+          APKSIGNER=$(ls -d "${ANDROID_HOME:-/usr/local/lib/android/sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1)
+          if [ -n "$APKSIGNER" ]; then
+            echo "Sidik jari tanda tangan APK:"
+            "$APKSIGNER" verify --print-certs "dist/MyLauncher-build${{ github.run_number }}.apk" | grep -i "SHA-256" || true
+          fi
 
       - name: Simpan sebagai artifact
         uses: actions/upload-artifact@v4
@@ -117,12 +136,14 @@ jobs:
           retention-days: 14
 
       - name: Buat Release agar APK bisa diunduh langsung dari HP
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ github.run_number }}
-          name: Build ${{ github.run_number }}
-          files: dist/*.apk
-          prerelease: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-${{ github.run_number }}"
+          if ! gh release create "$TAG" dist/*.apk --title "Build ${{ github.run_number }}" --notes "APK build nomor ${{ github.run_number }}." --prerelease; then
+            # Bila dijalankan ulang dan rilisnya sudah ada, cukup timpa berkas APK-nya
+            gh release upload "$TAG" dist/*.apk --clobber
+          fi
 
       - name: Simpan perubahan patch ke repo (hanya jika build lolos)
         if: steps.patch.outputs.applied == 'true'

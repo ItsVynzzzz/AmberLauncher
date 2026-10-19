@@ -50,6 +50,10 @@ APK hasil build ada di halaman **Releases** repo ini (tiap build lolos membuat r
 4. Di **Home**, tekan **UNDUH** dan tunggu sampai selesai (butuh internet; pertama kali bisa beberapa ratus MB), lalu tekan **PLAY**.
 5. Mod, resource pack, dan shader dipasang lewat menu **Mod**.
 
+### Sudah pernah memasang build lama?
+
+ID aplikasi diganti menjadi `com.itsvynzzzz.amberlauncher`, jadi versi ini terpasang sebagai aplikasi terpisah dan tidak menimpa yang lama. Data game di folder `nuxlauncher` tetap terbaca, tetapi akun perlu ditambahkan lagi. Aplikasi lama boleh dihapus setelah semuanya aman.
+
 ### Bila ada masalah
 
 - **Game tertutup sendiri atau crash**: jangan beri RAM game lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di **Pengaturan**. Laporan crash bisa dilihat dari dalam aplikasi.
@@ -67,6 +71,8 @@ Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder diper
 1. Fork atau pakai repo ini, aktifkan **Actions**.
 2. Dorong ke cabang `main` atau jalankan workflow **Build APK** secara manual.
 3. Ambil APK dari **Releases** atau artifact hasil build.
+
+Fork tanpa kunci tanda tangan sendiri menghasilkan APK bertanda tangan kunci debug, cukup untuk dicoba tetapi jangan dibagikan sebagai rilis. Untuk membagikannya, buat kunci pribadi lalu isi Secrets `AMBER_KEYSTORE_BASE64` (isi keystore PKCS12, alias `amber`, dalam base64) dan `AMBER_KEYSTORE_PASSWORD`. Kunci itu harus dicadangkan di tempat aman: bila hilang, pengguna tidak bisa memperbarui aplikasi dan harus memasang ulang.
 
 ### Lewat Android Studio / Gradle
 
@@ -110,11 +116,14 @@ Karena proyek hulunya berlisensi GPL-3.0, seluruh hasil turunannya juga harus te
 
 Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan [Ely.by](https://ely.by) atas sistem skin dan autentikasinya.
 
-## Privasi
+## Privasi dan keamanan
 
 - Kata sandi akun Microsoft tidak pernah disimpan; login memakai jendela OAuth resmi Microsoft.
-- Aset dan pustaka Minecraft diunduh langsung dari server resmi Mojang.
-- Kunci API, kunci tanda tangan, dan rahasia lain tidak boleh dimasukkan ke repo (lihat `local.properties.example`, berkas `local.properties` diabaikan git).
+- Aset dan pustaka Minecraft diunduh langsung dari server resmi Mojang, lalu isinya dicocokkan dengan sidik jari (SHA-1) resmi.
+- Semua sambungan internet memakai HTTPS. Server akun offline dan skin hanya bisa dijangkau dari HP itu sendiri.
+- Log yang dibagikan atau diunggah dibersihkan dari token dan kata sandi lebih dulu.
+- Kunci API, kunci tanda tangan, dan rahasia lain tidak boleh dimasukkan ke repo.
+- Cara memastikan APK asli dan cara melapor celah keamanan ada di [SECURITY.md](SECURITY.md).
 
 ## Penafian
 

@@ -20,7 +20,9 @@ data class VersionItem(
     val type: String,
     val url: String,
     val time: String,
-    val releaseTime: String
+    val releaseTime: String,
+    /** Sidik jari (SHA-1) berkas version.json dari manifest resmi Mojang; dipakai untuk memverifikasi unduhan. */
+    val sha1: String? = null
 )
 
 /**

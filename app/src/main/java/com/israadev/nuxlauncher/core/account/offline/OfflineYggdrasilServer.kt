@@ -5,7 +5,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import com.israadev.nuxlauncher.core.network.LimitedInputStream
 import java.io.*
+import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.security.KeyPair
@@ -26,6 +28,11 @@ class OfflineYggdrasilServer(
 ) {
     companion object {
         private const val TAG = "OfflineYggdrasil"
+
+        /** Batas total permintaan (header + isi) dan isi permintaan yang diterima server lokal ini. */
+        private const val MAX_REQUEST_BYTES = 256L * 1024L
+        private const val MAX_BODY_BYTES = 64 * 1024
+
         var activeInstance: OfflineYggdrasilServer? = null
             private set
     }
@@ -92,7 +99,8 @@ class OfflineYggdrasilServer(
         }
 
         try {
-            val socket = ServerSocket(preferredPort)
+            // Hanya menerima koneksi dari HP ini sendiri (loopback), bukan dari Wi-Fi atau jaringan lain.
+            val socket = ServerSocket(preferredPort, 50, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1)))
             serverSocket = socket
             isRunning.set(true)
             activeInstance = this
@@ -140,7 +148,8 @@ class OfflineYggdrasilServer(
     private fun handleClient(socket: Socket) {
         try {
             socket.soTimeout = 10000
-            val input = socket.getInputStream()
+            // Kiriman dibatasi supaya permintaan tanpa akhir tidak menghabiskan memori.
+            val input = LimitedInputStream(socket.getInputStream(), MAX_REQUEST_BYTES)
             val output = socket.getOutputStream()
             val reader = BufferedReader(InputStreamReader(input, Charsets.UTF_8))
 
@@ -167,6 +176,8 @@ class OfflineYggdrasilServer(
                     }
                 }
             }
+
+            if (contentLength > MAX_BODY_BYTES) return
 
             // Read body if POST
             var body = ""
@@ -196,8 +207,8 @@ class OfflineYggdrasilServer(
                         }
                         add("skinDomains", skinDomains)
                         val meta = JsonObject().apply {
-                          addProperty("serverName", "NuxLauncher_Offline")
-                          addProperty("implementationName", "NUX")
+                          addProperty("serverName", "AmberLauncher_Offline")
+                          addProperty("implementationName", "AmberLauncher")
                           addProperty("implementationVersion", "1.0")
                           addProperty("feature.non_email_login", true)
                         }

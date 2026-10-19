@@ -52,7 +52,19 @@ object CrashUtils {
                 return
             }
 
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+            // Log disalin (dengan token/kata sandi disamarkan) ke folder cache khusus berbagi, supaya
+            // FileProvider tidak perlu membuka folder data pribadi.
+            val shareDir = File(context.cacheDir, "shared_logs").apply { mkdirs() }
+            val shareCopy = File(shareDir, file.name)
+            file.useLines(Charsets.UTF_8) { lines ->
+                shareCopy.bufferedWriter(Charsets.UTF_8).use { writer ->
+                    for (line in lines) {
+                        writer.write(LogRedactor.redactLine(line))
+                        writer.newLine()
+                    }
+                }
+            }
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", shareCopy)
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_STREAM, uri)

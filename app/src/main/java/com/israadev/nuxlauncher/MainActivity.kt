@@ -221,6 +221,9 @@ class MainActivity : ComponentActivity() {
             intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
         }) ?: return
 
+        // Intent ini bisa dikirim aplikasi apa pun: tolak alamat yang menunjuk ke data pribadi launcher
+        if (!NuxAddonImportManager.isAcceptableSource(this, uri)) return
+
         val aliasClass = intent.component?.className
         val fileName = NuxAddonImportManager.getFileName(this, uri)
         val resolvedType = NuxAddonImportManager.resolveTypeFromAliasOrFile(this, uri, aliasClass)

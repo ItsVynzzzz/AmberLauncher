@@ -8,6 +8,7 @@ import com.israadev.nuxlauncher.core.models.AssetIndexContent
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.Library
 import com.israadev.nuxlauncher.core.models.VersionDetail
+import com.israadev.nuxlauncher.core.utils.SafePaths
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,8 +20,12 @@ import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+
+/** Isi unduhan tidak cocok dengan sidik jari resmi: jangan dicoba ulang dari alamat yang sama. */
+private class HashMismatchException(message: String) : IOException(message)
 
 class MinecraftDownloader(
     private val context: Context,
@@ -62,7 +67,7 @@ class MinecraftDownloader(
             // 1. Save version.json
             val versionJsonFile = File(versionDir, "${instance.mcVersion}.json")
             if (!versionJsonFile.exists()) {
-                downloadFile(versionItem.url, versionJsonFile)
+                downloadFile(versionItem.url, versionJsonFile, expectedSha1 = versionItem.sha1)
             }
 
             // 2. Download Client JAR
@@ -75,6 +80,7 @@ class MinecraftDownloader(
                     url = clientUrl,
                     targetFile = clientJar,
                     expectedSize = expectedClientSize,
+                    expectedSha1 = detail.downloads?.client?.sha1,
                     onProgress = { bytesRead, totalBytes ->
                         val total = if (totalBytes > 0) totalBytes else expectedClientSize
                         val mbRead = bytesRead / (1024 * 1024f)
@@ -105,13 +111,15 @@ class MinecraftDownloader(
                         semaphore.withPermit {
                             val artifact = lib.downloads?.artifact
                             if (artifact?.url != null && artifact.path != null) {
-                                val targetFile = File(libDir, artifact.path)
+                                // Path dari manifest harus tetap di dalam folder libraries
+                                val targetFile = SafePaths.resolveInside(libDir, artifact.path)
                                 val expectedSize = artifact.size ?: 0L
-                                val needsDownload = !targetFile.exists() || targetFile.length() == 0L || (expectedSize > 0L && targetFile.length() != expectedSize)
-                                if (needsDownload) {
+                                val needsDownload = targetFile != null &&
+                                    (!targetFile.exists() || targetFile.length() == 0L || (expectedSize > 0L && targetFile.length() != expectedSize))
+                                if (targetFile != null && needsDownload) {
                                     targetFile.parentFile?.mkdirs()
                                     try {
-                                        downloadFile(artifact.url, targetFile, expectedSize)
+                                        downloadFile(artifact.url, targetFile, expectedSize, expectedSha1 = artifact.sha1)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }
@@ -133,9 +141,9 @@ class MinecraftDownloader(
                 val assetsDir = InstanceManager.getAssetsDir(context)
                 val indexesDir = File(assetsDir, "indexes")
                 if (!indexesDir.exists()) indexesDir.mkdirs()
-                val indexFile = File(indexesDir, "${assetIndex.id}.json")
+                val indexFile = File(indexesDir, SafePaths.fileName("${assetIndex.id}.json"))
                 if (!indexFile.exists() || indexFile.length() == 0L) {
-                    downloadFile(assetIndex.url, indexFile)
+                    downloadFile(assetIndex.url, indexFile, expectedSha1 = assetIndex.sha1)
                 }
 
                 // Download objects (paralel, 24 thread)
@@ -154,15 +162,18 @@ class MinecraftDownloader(
                             async {
                                 semaphore.withPermit {
                                     val hash = entry.value.hash
-                                    val prefix = hash.substring(0, 2)
-                                    val targetObj = File(objectsDir, "$prefix/$hash")
-                                    val expectedSize = entry.value.size
-                                    if (!targetObj.exists() || targetObj.length() == 0L || (expectedSize > 0L && targetObj.length() != expectedSize)) {
-                                        targetObj.parentFile?.mkdirs()
-                                        val objUrl = "https://resources.download.minecraft.net/$prefix/$hash"
-                                        try {
-                                            downloadFile(objUrl, targetObj, expectedSize)
-                                        } catch (_: Exception) {}
+                                    // Nama aset adalah SHA-1 isinya (40 karakter hex); selain itu dilewati agar tidak jadi path aneh
+                                    if (hash.length == 40 && hash.all { it in '0'..'9' || it in 'a'..'f' }) {
+                                        val prefix = hash.substring(0, 2)
+                                        val targetObj = File(objectsDir, "$prefix/$hash")
+                                        val expectedSize = entry.value.size
+                                        if (!targetObj.exists() || targetObj.length() == 0L || (expectedSize > 0L && targetObj.length() != expectedSize)) {
+                                            targetObj.parentFile?.mkdirs()
+                                            val objUrl = "https://resources.download.minecraft.net/$prefix/$hash"
+                                            try {
+                                                downloadFile(objUrl, targetObj, expectedSize, expectedSha1 = hash)
+                                            } catch (_: Exception) {}
+                                        }
                                     }
                                     val count = downloadedAssets.incrementAndGet()
                                     val p = 0.65f + (count.toFloat() / totalObjects) * 0.27f
@@ -198,7 +209,7 @@ class MinecraftDownloader(
                     ?: throw IllegalStateException("Gagal memuat profil Fabric: ${profileRes.exceptionOrNull()?.message}")
 
                 // Simpan file profil Fabric
-                val fabricJsonFile = File(versionDir, "fabric-$loaderVer.json")
+                val fabricJsonFile = File(versionDir, SafePaths.fileName("fabric-$loaderVer.json"))
                 fabricJsonFile.writeText(gson.toJson(profile))
 
                 // Unduh seluruh library Fabric (Parallel with 32 concurrent workers)
@@ -211,8 +222,9 @@ class MinecraftDownloader(
                         async {
                             sem.withPermit {
                                 val relPath = com.israadev.nuxlauncher.core.fabric.FabricService.artifactToPath(lib.name)
-                                if (relPath != null) {
-                                    val targetFile = File(libDir, relPath)
+                                // Koordinat library dari server tidak boleh membawa path keluar dari folder libraries
+                                val targetFile = if (relPath != null) SafePaths.resolveInside(libDir, relPath) else null
+                                if (targetFile != null) {
                                     val expectedSize = lib.size ?: 0L
                                     val needsLibDownload = !targetFile.exists() || targetFile.length() == 0L || (expectedSize > 0L && targetFile.length() != expectedSize)
                                     if (needsLibDownload) {
@@ -221,7 +233,7 @@ class MinecraftDownloader(
                                         var success = false
                                         for (u in candidateUrls) {
                                             try {
-                                                downloadFile(u, targetFile, expectedSize)
+                                                downloadFile(u, targetFile, expectedSize, expectedSha1 = lib.sha1)
                                                 if (targetFile.exists() && targetFile.length() > 0L) {
                                                     success = true
                                                     break
@@ -294,18 +306,28 @@ class MinecraftDownloader(
     /**
      * Mengunduh file secara cepat menggunakan buffer 64KB dan retry otomatis jika terjadi gangguan jaringan.
      * Menggunakan mirror BMCLAPI berkecepatan tinggi dengan fallback otomatis ke server resmi Mojang.
+     *
+     * Hanya alamat HTTPS yang dipakai. Unduhan selalu ditulis ke berkas sementara dulu dan baru dipindah
+     * setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak. Bila [expectedSha1]
+     * diberikan, isi unduhan dicocokkan dengan sidik jari resmi (mirror yang isinya berbeda ditolak,
+     * lalu dicoba alamat berikutnya).
      */
     private fun downloadFile(
         url: String,
         targetFile: File,
         expectedSize: Long = 0L,
         onProgress: ((bytesRead: Long, totalBytes: Long) -> Unit)? = null,
-        retries: Int = 3
+        retries: Int = 3,
+        expectedSha1: String? = null
     ) {
-        val candidateUrls = getMirrorUrls(url)
+        val candidateUrls = getMirrorUrls(url).filter { it.startsWith("https://", ignoreCase = true) }
+        if (candidateUrls.isEmpty()) {
+            throw IOException("Alamat unduhan ditolak karena tidak memakai HTTPS: $url")
+        }
+        val wantedSha1 = expectedSha1?.trim()?.lowercase()
+            ?.takeIf { hash -> hash.length == 40 && hash.all { it in '0'..'9' || it in 'a'..'f' } }
         var lastError: Exception? = null
-        val isLargeFile = expectedSize > 5 * 1024 * 1024L
-        val tempFile = if (isLargeFile) File(targetFile.parentFile, "${targetFile.name}.part_${System.nanoTime()}") else targetFile
+        val tempFile = File(targetFile.parentFile, "${targetFile.name}.part_${System.nanoTime()}")
 
         for (candidateUrl in candidateUrls) {
             for (attempt in 1..retries) {
@@ -324,6 +346,7 @@ class MinecraftDownloader(
                     val totalLength = if (body.contentLength() > 0) body.contentLength() else expectedSize
                     targetFile.parentFile?.mkdirs()
 
+                    val digest = if (wantedSha1 != null) MessageDigest.getInstance("SHA-1") else null
                     var bytesCopied = 0L
                     var lastReportTime = 0L
                     FileOutputStream(tempFile).use { output ->
@@ -332,6 +355,7 @@ class MinecraftDownloader(
                             var read: Int
                             while (input.read(buffer).also { read = it } != -1) {
                                 output.write(buffer, 0, read)
+                                digest?.update(buffer, 0, read)
                                 bytesCopied += read
                                 if (onProgress != null) {
                                     val now = System.currentTimeMillis()
@@ -346,27 +370,28 @@ class MinecraftDownloader(
                     }
                     onProgress?.invoke(bytesCopied, totalLength)
 
-                    if (isLargeFile) {
-                        if (tempFile.exists() && tempFile.length() > 0L) {
-                            if (targetFile.exists()) targetFile.delete()
-                            if (tempFile.renameTo(targetFile)) {
-                                return
-                            } else {
-                                tempFile.copyTo(targetFile, overwrite = true)
-                                tempFile.delete()
-                                return
-                            }
+                    if (digest != null) {
+                        val actual = digest.digest().joinToString("") { "%02x".format(it) }
+                        if (actual != wantedSha1) {
+                            throw HashMismatchException("Isi unduhan tidak cocok dengan sidik jari resmi: $candidateUrl")
                         }
-                    } else {
-                        if (targetFile.exists() && targetFile.length() > 0L) {
+                    }
+
+                    if (tempFile.exists() && tempFile.length() > 0L) {
+                        if (targetFile.exists()) targetFile.delete()
+                        if (tempFile.renameTo(targetFile)) {
+                            return
+                        } else {
+                            tempFile.copyTo(targetFile, overwrite = true)
+                            tempFile.delete()
                             return
                         }
                     }
                 } catch (e: Exception) {
                     lastError = e
-                    if (isLargeFile) {
-                        try { tempFile.delete() } catch (_: Exception) {}
-                    }
+                    try { tempFile.delete() } catch (_: Exception) {}
+                    // Isi yang salah tidak akan benar di percobaan ulang: langsung ke alamat berikutnya
+                    if (e is HashMismatchException) break
                     if (attempt < retries) {
                         Thread.sleep(100L * attempt)
                     }

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Hanya folder yang memang perlu dibagikan: salinan log (cache), folder data game di penyimpanan
+    bersama, dan folder data game cadangan. Data pribadi launcher (akun, pengaturan) tidak termasuk.
+-->
 <paths>
-    <files-path name="internal_files" path="." />
+    <cache-path name="shared_logs" path="shared_logs/" />
+    <files-path name="internal_game_data" path="nuxlauncher/" />
     <external-files-path name="external_files" path="." />
-    <external-path name="external_storage" path="." />
-    <root-path name="root" path="." />
+    <external-path name="shared_game_data" path="nuxlauncher/" />
 </paths>

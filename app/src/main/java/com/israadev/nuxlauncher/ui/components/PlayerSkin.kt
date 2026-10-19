@@ -47,8 +47,9 @@ class PlayerSkin(
             settings.apply {
                 javaScriptEnabled = true
                 domStorageEnabled = true
-                allowFileAccess = true
-                allowContentAccess = true
+                // Halaman ini hanya memuat aset lewat WebViewAssetLoader (https), tidak perlu akses berkas/konten
+                allowFileAccess = false
+                allowContentAccess = false
                 loadWithOverviewMode = true
                 useWideViewPort = true
             }
@@ -112,7 +113,8 @@ class PlayerSkin(
 
     fun loadSkinUrl(url: String, model: String = "classic") {
         val modelParam = if (model.lowercase() == "slim") "slim" else "default"
-        webview?.evaluateJavascript("loadSkin('$url', '$modelParam')", null)
+        // Alamat bisa datang dari server skin: dikutip aman supaya tanda ' di dalamnya tidak menyuntik skrip
+        webview?.evaluateJavascript("loadSkin(${org.json.JSONObject.quote(url)}, '$modelParam')", null)
     }
 
     fun loadCape(file: File?) {
@@ -135,7 +137,7 @@ class PlayerSkin(
     fun loadCapeUrl(url: String?) {
         if (!url.isNullOrBlank()) {
             val safeUrl = if (url.startsWith("http://")) url.replace("http://", "https://") else url
-            webview?.evaluateJavascript("loadCape('$safeUrl')", null)
+            webview?.evaluateJavascript("loadCape(${org.json.JSONObject.quote(safeUrl)})", null)
         } else {
             webview?.evaluateJavascript("loadCape(null)", null)
         }

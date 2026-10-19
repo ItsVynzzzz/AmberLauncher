@@ -182,7 +182,9 @@ private suspend fun loadImageBitmap(context: Context, model: Any?, targetPx: Int
             is Uri -> withContext(Dispatchers.IO) { decodeSampledFromUri(context, model, targetPx) }
             is String -> when {
                 model.startsWith("http://") || model.startsWith("https://") -> {
-                    val request = Request.Builder().url(model).build()
+                    // Gambar selalu lewat HTTPS (alamat http:// dinaikkan), supaya tidak bisa disadap atau diganti
+                    val secureUrl = if (model.startsWith("http://")) "https://" + model.removePrefix("http://") else model
+                    val request = Request.Builder().url(secureUrl).build()
                     val bytes = imageHttpClient(context).newCall(request).awaitImageBytes(IMAGE_MAX_DOWNLOAD_BYTES)
                     if (bytes == null || bytes.isEmpty()) {
                         null

@@ -1142,8 +1142,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         .forEach { jvmArgs.add(it) }
                 }
 
-                val nuxPatcher = File(com.israadev.nuxlauncher.core.instance.InstanceManager.getNuxDir(this), "components/launcher/MioLibPatcher.jar")
-                val patcherJar = if (nuxPatcher.exists()) nuxPatcher else File(filesDir, "components/launcher/MioLibPatcher.jar")
+                // Hanya salinan pribadi yang diekstrak dari aset aplikasi yang dipakai sebagai agent. Berkas di
+                // penyimpanan bersama bisa diganti aplikasi lain, dan agent berjalan dengan hak penuh di dalam game.
+                val patcherJar = File(filesDir, "components/launcher/MioLibPatcher.jar")
                 if (patcherJar.exists()) {
                     jvmArgs.add("-javaagent:${patcherJar.absolutePath}")
                     LoggerBridge.append("▷ Enabled MioLibPatcher bytecode agent")

@@ -312,6 +312,9 @@ fun NuxMicrosoftAuthDialog(
                                 javaScriptEnabled = true
                                 domStorageEnabled = true
                                 databaseEnabled = true
+                                // Halaman login Microsoft tidak butuh akses ke berkas atau konten di HP
+                                allowFileAccess = false
+                                allowContentAccess = false
                                 cacheMode = WebSettings.LOAD_NO_CACHE
                                 useWideViewPort = true
                                 loadWithOverviewMode = true

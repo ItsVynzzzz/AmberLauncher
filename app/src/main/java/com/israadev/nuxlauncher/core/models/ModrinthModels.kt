@@ -75,7 +75,9 @@ data class ModrinthVersionFile(
     val url: String = "",
     val filename: String = "",
     val primary: Boolean = false,
-    val size: Long = 0
+    val size: Long = 0,
+    /** Sidik jari berkas dari Modrinth (kunci "sha1" dan "sha512"), dipakai untuk memastikan unduhan utuh. */
+    val hashes: Map<String, String>? = null
 )
 
 /**

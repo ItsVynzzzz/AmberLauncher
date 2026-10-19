@@ -12,6 +12,8 @@ local.properties
 # Keystores & credentials
 *.keystore
 *.jks
+*.p12
+*.pfx
 *.key
 google-services.json
 

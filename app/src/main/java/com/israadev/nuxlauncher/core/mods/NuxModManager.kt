@@ -8,6 +8,7 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
+import com.israadev.nuxlauncher.core.utils.SafePaths
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -28,6 +29,13 @@ data class WorldInfo(
 /** Modpack tidak cocok dengan instance atau loader yang didukung; pesannya aman ditampilkan ke pengguna. */
 private class ModpackIncompatibleException(message: String) : Exception(message)
 
+/** Satu berkas di dalam modrinth.index.json yang sudah lolos pemeriksaan path dan alamat. */
+private data class MrpackFileEntry(
+    val url: String,
+    val relPath: String,
+    val hashes: Map<String, String>
+)
+
 object NuxModManager {
 
     private val gson = Gson()
@@ -36,9 +44,14 @@ object NuxModManager {
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .followRedirects(true)
+        // Jangan ikuti pengalihan dari HTTPS ke HTTP polos (isi unduhan bisa diganti di jalan)
+        .followSslRedirects(false)
         .build()
 
     private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
+
+    /** Batas total isi yang boleh diekstrak dari satu modpack (cegah arsip "bom" yang memenuhi penyimpanan). */
+    private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
 
     /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
@@ -115,6 +128,8 @@ object NuxModManager {
 
         for (file in files) {
             if (file.isDirectory && itemType != "datapacks") continue
+            // Sisa unduhan yang terputus bukan item yang terpasang
+            if (file.isFile && file.name.endsWith(".part")) continue
 
             val originalFilename = file.name
             val isEnabled = !originalFilename.endsWith(".disabled")
@@ -243,9 +258,9 @@ object NuxModManager {
                     // Dinonaktifkan: rename semua mod jar milik modpack menjadi .disabled
                     for (relPath in fileList) {
                         if (relPath.startsWith("mods/") || relPath.endsWith(".jar", ignoreCase = true)) {
-                            val activeFile = File(gameDir, relPath)
+                            val activeFile = resolveModpackFile(gameDir, relPath) ?: continue
+                            val disabledFile = resolveModpackFile(gameDir, "$relPath.disabled") ?: continue
                             if (activeFile.exists()) {
-                                val disabledFile = File(gameDir, "$relPath.disabled")
                                 activeFile.renameTo(disabledFile)
                             }
                         }
@@ -258,9 +273,9 @@ object NuxModManager {
                     // Diaktifkan: rename semua mod jar .disabled milik modpack kembali ke normal
                     for (relPath in fileList) {
                         if (relPath.startsWith("mods/") || relPath.endsWith(".jar", ignoreCase = true)) {
-                            val disabledFile = File(gameDir, "$relPath.disabled")
+                            val disabledFile = resolveModpackFile(gameDir, "$relPath.disabled") ?: continue
+                            val activeFile = resolveModpackFile(gameDir, relPath) ?: continue
                             if (disabledFile.exists()) {
-                                val activeFile = File(gameDir, relPath)
                                 disabledFile.renameTo(activeFile)
                             }
                         }
@@ -315,13 +330,15 @@ object NuxModManager {
                 val fileList = (manifest?.installedFiles ?: getModpackInstalledFilesFromArchive(file)).toMutableSet()
 
                 // 2. Hapus HANYA file-file yang terpasang oleh modpack ini (baik aktif maupun disabled)
+                // Daftar ini bisa berasal dari berkas yang diubah orang lain: hanya path di dalam folder instance
+                // (dan bukan dunia/saves) yang boleh dihapus.
                 for (relPath in fileList) {
-                    val activeFile = File(gameDir, relPath)
-                    if (activeFile.exists()) {
+                    val activeFile = resolveModpackFile(gameDir, relPath)
+                    if (activeFile != null && activeFile.exists()) {
                         if (activeFile.isDirectory) activeFile.deleteRecursively() else activeFile.delete()
                     }
-                    val disabledFile = File(gameDir, "$relPath.disabled")
-                    if (disabledFile.exists()) {
+                    val disabledFile = resolveModpackFile(gameDir, "$relPath.disabled")
+                    if (disabledFile != null && disabledFile.exists()) {
                         if (disabledFile.isDirectory) disabledFile.deleteRecursively() else disabledFile.delete()
                     }
                 }
@@ -370,9 +387,11 @@ object NuxModManager {
             context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                 val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 if (nameIndex != -1 && cursor.moveToFirst()) {
-                    fileName = cursor.getString(nameIndex)
+                    fileName = cursor.getString(nameIndex) ?: fileName
                 }
             }
+            // Nama berkas datang dari aplikasi lain: buang bagian folder ("../") sebelum dipakai sebagai path
+            fileName = SafePaths.fileName(fileName)
 
             // Validasi format ekstensi file sesuai tipe
             val lowerName = fileName.lowercase()
@@ -654,7 +673,8 @@ object NuxModManager {
 
                 // 1. Pilih primary file atau file pertama
                 val primaryFile = targetVer.files.firstOrNull { it.primary } ?: targetVer.files.first()
-                val filename = primaryFile.filename
+                // Nama berkas datang dari respons server: pastikan tidak berisi folder ("../")
+                val filename = SafePaths.fileName(primaryFile.filename)
 
                 if (targetVer.projectId.isNotBlank() && visitedProjects.contains(targetVer.projectId)) {
                     return
@@ -670,6 +690,7 @@ object NuxModManager {
                     val destFile = File(targetDir, filename)
 
                     downloadFile(primaryFile.url, destFile)
+                    verifyHashes(destFile, primaryFile.hashes)
                     installedFilenames.add(filename.lowercase())
                     downloadedFiles.add(filename)
 
@@ -719,7 +740,7 @@ object NuxModManager {
 
                         if (depVersionObj != null && depVersionObj.files.isNotEmpty()) {
                             val depPrimary = depVersionObj.files.firstOrNull { it.primary } ?: depVersionObj.files.first()
-                            if (!installedFilenames.contains(depPrimary.filename.lowercase())) {
+                            if (!installedFilenames.contains(SafePaths.fileName(depPrimary.filename).lowercase())) {
                                 onProgress("Menyelesaikan dependensi: ${depPrimary.filename}...")
                                 resolveAndDownload(depVersionObj)
                             }
@@ -749,6 +770,9 @@ object NuxModManager {
             val installedRelativeFiles = mutableListOf<String>()
             var packTitle = mrpackFile.nameWithoutExtension
             var packVersion = ""
+            var skippedFiles = 0
+            var failedFiles = 0
+            var extractedBytes = 0L
 
             ZipFile(mrpackFile).use { zip ->
                 // 1. Cari modrinth.index.json
@@ -757,7 +781,7 @@ object NuxModManager {
 
                 if (indexEntry != null) {
                     val prefix = if (indexEntry.name.contains("/")) indexEntry.name.substringBeforeLast("/") + "/" else ""
-                    val filesToDownload = mutableListOf<Pair<String, String>>() // Pair(downloadUrl, relativePath)
+                    val filesToDownload = mutableListOf<MrpackFileEntry>()
 
                     zip.getInputStream(indexEntry).bufferedReader().use { reader ->
                         val indexJson = JsonParser.parseReader(reader).asJsonObject
@@ -773,16 +797,37 @@ object NuxModManager {
                         if (indexJson.has("files")) {
                             val files = indexJson.getAsJsonArray("files")
                             for (element in files) {
-                                val fileObj = element.asJsonObject
-                                val env = fileObj.getAsJsonObject("env")
-                                if (env != null && env.has("client") && env.get("client").asString.equals("unsupported", ignoreCase = true)) {
-                                    continue
-                                }
-                                val relPath = fileObj.get("path")?.asString ?: continue
-                                val downloads = fileObj.getAsJsonArray("downloads")
-                                if (downloads != null && downloads.size() > 0) {
+                                try {
+                                    val fileObj = element.asJsonObject
+                                    val env = fileObj.getAsJsonObject("env")
+                                    if (env != null && env.has("client") && env.get("client").asString.equals("unsupported", ignoreCase = true)) {
+                                        continue
+                                    }
+                                    val relPath = fileObj.get("path")?.asString ?: continue
+                                    val downloads = fileObj.getAsJsonArray("downloads")
+                                    if (downloads == null || downloads.size() == 0) continue
                                     val dlUrl = downloads.get(0).asString
-                                    filesToDownload.add(Pair(dlUrl, relPath))
+
+                                    // Path harus tetap di dalam folder instance, dan sumber unduhan harus HTTPS
+                                    // dari host modpack yang dikenal. Selain itu dilewati.
+                                    if (resolveModpackFile(gameDir, relPath) == null ||
+                                        !SafePaths.isAllowedModpackDownloadUrl(dlUrl)
+                                    ) {
+                                        skippedFiles++
+                                        android.util.Log.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
+                                        continue
+                                    }
+
+                                    val hashes = mutableMapOf<String, String>()
+                                    val hashObj = fileObj.getAsJsonObject("hashes")
+                                    if (hashObj != null) {
+                                        for ((algo, value) in hashObj.entrySet()) {
+                                            if (value.isJsonPrimitive) hashes[algo.lowercase()] = value.asString
+                                        }
+                                    }
+                                    filesToDownload.add(MrpackFileEntry(dlUrl, relPath.replace('\\', '/'), hashes))
+                                } catch (e: Exception) {
+                                    skippedFiles++
                                 }
                             }
                         }
@@ -791,19 +836,26 @@ object NuxModManager {
                     val totalFiles = filesToDownload.size
                     onProgress("Membaca daftar modpack ($totalFiles mod ditemukan)...", 0, totalFiles)
                     var currentIdx = 0
-                    for ((dlUrl, relPath) in filesToDownload) {
+                    for (entry in filesToDownload) {
                         currentIdx++
-                        val targetFile = File(gameDir, relPath)
-                        installedRelativeFiles.add(relPath)
+                        val targetFile = resolveModpackFile(gameDir, entry.relPath)
+                        if (targetFile == null) {
+                            skippedFiles++
+                            continue
+                        }
                         if (!targetFile.exists()) {
                             targetFile.parentFile?.mkdirs()
                             onProgress("Mengunduh mod ($currentIdx/$totalFiles): ${targetFile.name}...", currentIdx, totalFiles)
                             try {
-                                downloadFile(dlUrl, targetFile)
+                                downloadFile(entry.url, targetFile)
+                                verifyHashes(targetFile, entry.hashes)
+                                installedRelativeFiles.add(entry.relPath)
                             } catch (e: Exception) {
-                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: $dlUrl", e)
+                                failedFiles++
+                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: ${entry.url}", e)
                             }
                         } else {
+                            installedRelativeFiles.add(entry.relPath)
                             onProgress("Mod sudah ada ($currentIdx/$totalFiles): ${targetFile.name}", currentIdx, totalFiles)
                         }
                     }
@@ -822,17 +874,17 @@ object NuxModManager {
                             else -> null
                         }
                         if (rel != null && rel.isNotBlank() && !rel.startsWith("saves/")) {
-                            val outFile = File(gameDir, rel)
+                            val outFile = resolveModpackFile(gameDir, rel)
+                            if (outFile == null) {
+                                skippedFiles++
+                                android.util.Log.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
+                                continue
+                            }
                             installedRelativeFiles.add(rel)
                             if (entry.isDirectory) {
                                 outFile.mkdirs()
                             } else {
-                                outFile.parentFile?.mkdirs()
-                                zip.getInputStream(entry).use { input ->
-                                    FileOutputStream(outFile).use { output ->
-                                        input.copyTo(output)
-                                    }
-                                }
+                                extractedBytes = extractZipEntry(zip, entry, outFile, extractedBytes)
                             }
                         }
                     }
@@ -846,27 +898,23 @@ object NuxModManager {
                         val name = entry.name
                         if (entry.isDirectory) continue
 
-                        val (outFile, relPath) = when {
+                        val relPath: String? = when {
                             name.startsWith("mods/") || name.startsWith("config/") ||
                             name.startsWith("shaderpacks/") || name.startsWith("resourcepacks/") ||
-                            name.startsWith("datapacks/") -> {
-                                Pair(File(gameDir, name), name)
-                            }
-                            name.endsWith(".jar", ignoreCase = true) && !name.contains("/") -> {
-                                Pair(File(File(gameDir, "mods"), name), "mods/$name")
-                            }
-                            else -> Pair(null, null)
+                            name.startsWith("datapacks/") -> name
+                            name.endsWith(".jar", ignoreCase = true) && !name.contains("/") -> "mods/" + SafePaths.fileName(name)
+                            else -> null
                         }
+                        if (relPath == null) continue
 
-                        if (outFile != null && relPath != null) {
-                            installedRelativeFiles.add(relPath)
-                            outFile.parentFile?.mkdirs()
-                            zip.getInputStream(entry).use { input ->
-                                FileOutputStream(outFile).use { output ->
-                                    input.copyTo(output)
-                                }
-                            }
+                        val outFile = resolveModpackFile(gameDir, relPath)
+                        if (outFile == null) {
+                            skippedFiles++
+                            android.util.Log.w("NuxModManager", "Isi arsip dilewati (path tidak aman): $name")
+                            continue
                         }
+                        installedRelativeFiles.add(relPath)
+                        extractedBytes = extractZipEntry(zip, entry, outFile, extractedBytes)
                     }
                 }
             }
@@ -881,7 +929,13 @@ object NuxModManager {
             saveModpackManifest(gameDir, manifest)
 
             val installedModCount = installedRelativeFiles.count { it.startsWith("mods/") || it.endsWith(".jar", ignoreCase = true) }
-            onProgress("Selesai! $installedModCount mod berhasil dipasang.", installedRelativeFiles.size, installedRelativeFiles.size)
+            val problemCount = failedFiles + skippedFiles
+            val doneMessage = if (problemCount == 0) {
+                "Selesai! $installedModCount mod berhasil dipasang."
+            } else {
+                "Selesai dengan catatan: $installedModCount mod terpasang, $problemCount file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang."
+            }
+            onProgress(doneMessage, installedRelativeFiles.size, installedRelativeFiles.size)
         } catch (e: Exception) {
             android.util.Log.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
             if (e is ModpackIncompatibleException) {
@@ -926,22 +980,106 @@ object NuxModManager {
         }
     }
 
+    /**
+     * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
+     * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
+     */
     private fun downloadFile(url: String, destFile: File) {
+        if (!url.trim().startsWith("https://", ignoreCase = true)) {
+            throw java.io.IOException("Alamat unduhan ditolak karena tidak memakai HTTPS")
+        }
         val request = Request.Builder()
-            .url(url)
+            .url(url.trim())
             .header("User-Agent", USER_AGENT)
             .build()
 
-        val response = httpClient.newCall(request).execute()
-        if (!response.isSuccessful) {
-            throw Exception("Gagal mengunduh file: HTTP ${response.code}")
+        val partFile = File(destFile.parentFile, destFile.name + ".part")
+        try {
+            httpClient.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    throw Exception("Gagal mengunduh file: HTTP ${response.code}")
+                }
+                val body = response.body ?: throw Exception("Body stream kosong")
+                body.byteStream().use { input ->
+                    FileOutputStream(partFile).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            }
+            if (destFile.exists()) destFile.delete()
+            if (!partFile.renameTo(destFile)) {
+                throw java.io.IOException("Gagal menyimpan file unduhan")
+            }
+        } catch (e: Exception) {
+            partFile.delete()
+            throw e
+        }
+    }
+
+    /**
+     * Mencocokkan sidik jari (sha512, atau sha1 bila tidak ada) berkas dengan yang diumumkan sumbernya.
+     * Bila tidak cocok, berkas dihapus dan dilempar IOException. Tanpa sidik jari, tidak ada yang diperiksa.
+     */
+    private fun verifyHashes(file: File, hashes: Map<String, String>?) {
+        val map = hashes ?: return
+        val sha512 = map["sha512"]?.trim().orEmpty()
+        val sha1 = map["sha1"]?.trim().orEmpty()
+        val algorithm: String
+        val expected: String
+        when {
+            sha512.isNotEmpty() -> { algorithm = "SHA-512"; expected = sha512 }
+            sha1.isNotEmpty() -> { algorithm = "SHA-1"; expected = sha1 }
+            else -> return
         }
 
-        response.body?.byteStream()?.use { input ->
-            FileOutputStream(destFile).use { output ->
-                input.copyTo(output)
+        val digest = java.security.MessageDigest.getInstance(algorithm)
+        file.inputStream().use { input ->
+            val buffer = ByteArray(64 * 1024)
+            while (true) {
+                val read = input.read(buffer)
+                if (read < 0) break
+                digest.update(buffer, 0, read)
             }
-        } ?: throw Exception("Body stream kosong")
+        }
+        val actual = digest.digest().joinToString("") { "%02x".format(it) }
+        if (!actual.equals(expected, ignoreCase = true)) {
+            file.delete()
+            throw java.io.IOException("Berkas ${file.name} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.")
+        }
+    }
+
+    /**
+     * Menyalin satu entri zip ke [outFile] dan mengembalikan total byte yang sudah diekstrak.
+     * Berhenti dengan IOException bila total melewati [MAX_MODPACK_EXTRACT_BYTES] (arsip "bom").
+     */
+    private fun extractZipEntry(zip: ZipFile, entry: java.util.zip.ZipEntry, outFile: File, usedBytes: Long): Long {
+        var total = usedBytes
+        outFile.parentFile?.mkdirs()
+        zip.getInputStream(entry).use { input ->
+            FileOutputStream(outFile).use { output ->
+                val buffer = ByteArray(64 * 1024)
+                while (true) {
+                    val read = input.read(buffer)
+                    if (read < 0) break
+                    total += read
+                    if (total > MAX_MODPACK_EXTRACT_BYTES) {
+                        throw java.io.IOException("Isi modpack terlalu besar, pemasangan dibatalkan.")
+                    }
+                    output.write(buffer, 0, read)
+                }
+            }
+        }
+        return total
+    }
+
+    /**
+     * File di dalam [gameDir] untuk path milik modpack. Null bila path tidak aman (keluar folder instance)
+     * atau menyentuh dunia permainan (saves), supaya modpack tidak bisa menimpa atau menghapus dunia.
+     */
+    private fun resolveModpackFile(gameDir: File, relPath: String): File? {
+        val normalized = relPath.replace('\\', '/')
+        if (normalized == "saves" || normalized.startsWith("saves/")) return null
+        return SafePaths.resolveInside(gameDir, relPath)
     }
 
     fun getModpackMetadataFile(gameDir: File, cleanFilename: String): File {
@@ -1029,6 +1167,7 @@ object NuxModManager {
         } catch (e: Exception) {
             android.util.Log.e("NuxModManager", "Error getModpackInstalledFilesFromArchive: ${e.message}", e)
         }
-        return files.distinct()
+        // Path dari arsip luar tidak boleh keluar dari folder instance (mis. "../../")
+        return files.distinct().filter { SafePaths.isSafeRelative(it) }
     }
 }

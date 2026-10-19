@@ -128,7 +128,7 @@ private val LIBRARIES = listOf(
         copyright = "$COPY 2018 The ANGLE Project Authors",
         license = "BSD 3-Clause License",
         role = "Mesin penerjemah OpenGL ES berbasis backend Vulkan",
-        url = "http://angleproject.org/"
+        url = "https://angleproject.org/"
     ),
     OpenSourceLibrary(
         name = "ByteHook",

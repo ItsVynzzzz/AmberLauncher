@@ -55,8 +55,9 @@ object MCLogsUploader {
                 content
             }
 
+            // Log diunggah ke layanan publik: samarkan token dan kata sandi lebih dulu
             val formBody = FormBody.Builder()
-                .add("content", trimmedContent)
+                .add("content", LogRedactor.redact(trimmedContent))
                 .build()
 
             val request = Request.Builder()

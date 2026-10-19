@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.mods
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.israadev.nuxlauncher.core.utils.SafePaths
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
@@ -35,14 +36,45 @@ object NuxAddonImportManager {
                 context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                     val nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                     if (nameIdx != -1 && cursor.moveToFirst()) {
-                        name = cursor.getString(nameIdx)
+                        name = cursor.getString(nameIdx) ?: name
                     }
                 }
             } else if (uri.scheme == "file") {
                 name = uri.lastPathSegment ?: "addon_file"
             }
         } catch (_: Exception) {}
-        return name
+        // Nama berkas dari aplikasi lain tidak dipercaya: buang folder dan karakter aneh
+        return SafePaths.fileName(name)
+    }
+
+    /**
+     * Apakah [uri] dari aplikasi lain boleh dibaca untuk impor. Berkas pribadi launcher sendiri (data akun,
+     * pengaturan) tidak boleh bisa "diimpor" oleh aplikasi lain lewat intent: alamat file:// hanya diterima
+     * bila berada di penyimpanan bersama /storage/ (di luar folder data aplikasi ini), dan content:// milik launcher
+     * sendiri ditolak.
+     */
+    fun isAcceptableSource(context: Context, uri: Uri): Boolean {
+        return when (uri.scheme?.lowercase()) {
+            "content" -> {
+                val authority: String = uri.authority ?: ""
+                val ownAuthority: String = context.packageName + ".provider"
+                authority.isNotBlank() && !authority.equals(ownAuthority, ignoreCase = true)
+            }
+            "file" -> try {
+                val path = uri.path
+                if (path.isNullOrBlank()) {
+                    false
+                } else {
+                    val canonical = File(path).canonicalPath
+                    val ownExternal = context.getExternalFilesDir(null)?.parentFile?.canonicalPath
+                    canonical.startsWith("/storage/") &&
+                        !(ownExternal != null && canonical.startsWith(ownExternal + File.separator))
+                }
+            } catch (_: Exception) {
+                false
+            }
+            else -> false
+        }
     }
 
     fun resolveTypeFromAliasOrFile(context: Context, uri: Uri, aliasClass: String?): String {

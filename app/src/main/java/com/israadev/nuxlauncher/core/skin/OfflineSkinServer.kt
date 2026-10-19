@@ -3,7 +3,9 @@ package com.israadev.nuxlauncher.core.skin
 import android.util.Base64
 import android.util.Log
 import com.israadev.nuxlauncher.core.models.UserAccount
+import com.israadev.nuxlauncher.core.network.LimitedInputStream
 import java.io.*
+import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.security.KeyPair
@@ -14,6 +16,10 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "OfflineSkinServer"
+
+/** Batas total permintaan (header + isi) dan isi permintaan yang diterima server lokal ini. */
+private const val MAX_REQUEST_BYTES = 256L * 1024L
+private const val MAX_BODY_BYTES = 64 * 1024
 
 class OfflineSkinServer {
     private var serverSocket: ServerSocket? = null
@@ -44,7 +50,8 @@ class OfflineSkinServer {
     fun start(): Int {
         if (isRunning.get()) return port
 
-        val socket = ServerSocket(0)
+        // Hanya menerima koneksi dari HP ini sendiri (loopback), bukan dari Wi-Fi atau aplikasi lain lewat jaringan.
+        val socket = ServerSocket(0, 50, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1)))
         port = socket.localPort
         serverSocket = socket
         isRunning.set(true)
@@ -121,7 +128,11 @@ class OfflineSkinServer {
 
     private fun handleClient(socket: Socket) {
         try {
-            val input = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
+            // Koneksi yang diam tidak ditahan selamanya, dan kiriman dibatasi (cegah kehabisan memori).
+            socket.soTimeout = 10000
+            val input = BufferedReader(
+                InputStreamReader(LimitedInputStream(socket.getInputStream(), MAX_REQUEST_BYTES), Charsets.UTF_8)
+            )
             val output = BufferedOutputStream(socket.getOutputStream())
 
             val requestLine = input.readLine() ?: return
@@ -141,6 +152,8 @@ class OfflineSkinServer {
                 }
             }
 
+            if (contentLength > MAX_BODY_BYTES) return
+
             var requestBody = ""
             if (contentLength > 0) {
                 val chars = CharArray(contentLength)
@@ -157,7 +170,7 @@ class OfflineSkinServer {
                 path == "/" || path == "/api" -> {
                     // Yggdrasil metadata conforming to authlib-injector specification
                     val pem = exportPublicKeyToPEM()
-                    val json = """{"skinDomains":["127.0.0.1","localhost"],"meta":{"serverName":"NUX-Launcher_Offline","implementationName":"NUX-Launcher","implementationVersion":"1.0","feature.non_email_login":true},"signaturePublickey":"$pem"}"""
+                    val json = """{"skinDomains":["127.0.0.1","localhost"],"meta":{"serverName":"AmberLauncher_Offline","implementationName":"AmberLauncher","implementationVersion":"1.0","feature.non_email_login":true},"signaturePublickey":"$pem"}"""
                     sendResponse(output, 200, "application/json", json.toByteArray(Charsets.UTF_8))
                 }
                 path == "/status" -> {

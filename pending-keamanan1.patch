@@ -1,0 +1,973 @@
+diff --git a/.gitignore b/.gitignore
+index 8005a3f..7166d00 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -12,6 +12,8 @@ local.properties
+ # Keystores & credentials
+ *.keystore
+ *.jks
++*.p12
++*.pfx
+ *.key
+ google-services.json
+ 
+diff --git a/README.md b/README.md
+index 1845f16..41cf58d 100644
+--- a/README.md
++++ b/README.md
+@@ -50,6 +50,10 @@ APK hasil build ada di halaman **Releases** repo ini (tiap build lolos membuat r
+ 4. Di **Home**, tekan **UNDUH** dan tunggu sampai selesai (butuh internet; pertama kali bisa beberapa ratus MB), lalu tekan **PLAY**.
+ 5. Mod, resource pack, dan shader dipasang lewat menu **Mod**.
+ 
++### Sudah pernah memasang build lama?
++
++ID aplikasi diganti menjadi `com.itsvynzzzz.amberlauncher`, jadi versi ini terpasang sebagai aplikasi terpisah dan tidak menimpa yang lama. Data game di folder `nuxlauncher` tetap terbaca, tetapi akun perlu ditambahkan lagi. Aplikasi lama boleh dihapus setelah semuanya aman.
++
+ ### Bila ada masalah
+ 
+ - **Game tertutup sendiri atau crash**: jangan beri RAM game lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di **Pengaturan**. Laporan crash bisa dilihat dari dalam aplikasi.
+@@ -68,6 +72,8 @@ Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder diper
+ 2. Dorong ke cabang `main` atau jalankan workflow **Build APK** secara manual.
+ 3. Ambil APK dari **Releases** atau artifact hasil build.
+ 
++Fork tanpa kunci tanda tangan sendiri menghasilkan APK bertanda tangan kunci debug, cukup untuk dicoba tetapi jangan dibagikan sebagai rilis. Untuk membagikannya, buat kunci pribadi lalu isi Secrets `AMBER_KEYSTORE_BASE64` (isi keystore PKCS12, alias `amber`, dalam base64) dan `AMBER_KEYSTORE_PASSWORD`. Kunci itu harus dicadangkan di tempat aman: bila hilang, pengguna tidak bisa memperbarui aplikasi dan harus memasang ulang.
++
+ ### Lewat Android Studio / Gradle
+ 
+ Prasyarat: JDK 17, Android SDK (compile SDK 37, min SDK 26), dan NDK bila ikut mengompilasi kode native.
+@@ -110,11 +116,14 @@ Karena proyek hulunya berlisensi GPL-3.0, seluruh hasil turunannya juga harus te
+ 
+ Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan [Ely.by](https://ely.by) atas sistem skin dan autentikasinya.
+ 
+-## Privasi
++## Privasi dan keamanan
+ 
+ - Kata sandi akun Microsoft tidak pernah disimpan; login memakai jendela OAuth resmi Microsoft.
+-- Aset dan pustaka Minecraft diunduh langsung dari server resmi Mojang.
+-- Kunci API, kunci tanda tangan, dan rahasia lain tidak boleh dimasukkan ke repo (lihat `local.properties.example`, berkas `local.properties` diabaikan git).
++- Aset dan pustaka Minecraft diunduh langsung dari server resmi Mojang, lalu isinya dicocokkan dengan sidik jari (SHA-1) resmi.
++- Semua sambungan internet memakai HTTPS. Server akun offline dan skin hanya bisa dijangkau dari HP itu sendiri.
++- Log yang dibagikan atau diunggah dibersihkan dari token dan kata sandi lebih dulu.
++- Kunci API, kunci tanda tangan, dan rahasia lain tidak boleh dimasukkan ke repo.
++- Cara memastikan APK asli dan cara melapor celah keamanan ada di [SECURITY.md](SECURITY.md).
+ 
+ ## Penafian
+ 
+diff --git a/SECURITY.md b/SECURITY.md
+new file mode 100644
+index 0000000..b825b12
+--- /dev/null
++++ b/SECURITY.md
+@@ -0,0 +1,30 @@
++# Keamanan
++
++## Memastikan APK asli
++
++Unduh AmberLauncher hanya dari halaman **Releases** repo ini. APK resmi memakai:
++
++- ID aplikasi: `com.itsvynzzzz.amberlauncher`
++- Sidik jari sertifikat tanda tangan (SHA-256):
++  `B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F`
++
++Cara memeriksanya dari komputer: `apksigner verify --print-certs AmberLauncher.apk`. APK dari tempat lain, atau yang sidik jarinya berbeda, jangan dipasang.
++
++## Melaporkan celah keamanan
++
++Gunakan tab **Security** di repo ini, lalu pilih **Report a vulnerability** agar laporannya tidak terbaca publik. Mohon jangan menaruh rincian teknis celah di Issue terbuka. Sertakan versi aplikasi, langkah yang menimbulkan masalah, dan dampaknya.
++
++## Perlindungan yang ada
++
++- Berkas dari luar (nama berkas, isi modpack, daftar unduhan) diperiksa agar tidak bisa menulis atau menghapus berkas di luar folder instance, dan modpack hanya boleh mengunduh dari sumber HTTPS yang dikenal.
++- Unduhan mod dan game dicocokkan dengan sidik jari resmi; unduhan yang terputus tidak ditinggalkan sebagai berkas rusak.
++- Server lokal untuk akun offline dan skin hanya menerima sambungan dari HP itu sendiri, dengan batas ukuran dan waktu.
++- Aplikasi lain tidak bisa memakai launcher untuk menyalin berkas pribadinya (data akun dan pengaturan) lewat fitur impor.
++- Cadangan otomatis Android dimatikan agar data akun tidak ikut tersalin ke luar HP.
++- Kunci tanda tangan rilis bersifat pribadi dan hanya ada di GitHub Secrets.
++
++## Batasan yang perlu diketahui
++
++- Mod, modpack, dan shader dari pihak ketiga adalah kode yang dijalankan bersama game. Pasang hanya dari sumber yang dipercaya.
++- Data game disimpan di folder `nuxlauncher` pada penyimpanan bersama. Aplikasi lain yang punya izin akses semua berkas di HP bisa membacanya. Data akun tetap di folder privat aplikasi.
++- Token akun disimpan di folder privat aplikasi tanpa enkripsi tambahan. Perlindungannya adalah isolasi aplikasi bawaan Android.
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index 63efd0a..c501291 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -1,4 +1,5 @@
+ import java.util.Properties
++import java.io.File
+ import java.io.FileInputStream
+ 
+ plugins {
+@@ -14,12 +15,36 @@ if (localPropertiesFile.exists()) {
+     }
+ }
+ 
++// Kunci tanda tangan rilis (pribadi, tidak disimpan di repo). GitHub Actions memasangnya dari Secrets:
++//   AMBER_KEYSTORE_FILE     = jalur berkas keystore PKCS12 (alias "amber")
++//   AMBER_KEYSTORE_PASSWORD = kata sandi keystore (sekaligus kata sandi kunci)
++val releaseKeystoreFile: File? = System.getenv("AMBER_KEYSTORE_FILE")
++    ?.takeIf { it.isNotBlank() }
++    ?.let { File(it) }
++    ?.takeIf { it.isFile }
++val releaseKeystorePassword: String? = System.getenv("AMBER_KEYSTORE_PASSWORD")
++    ?.trim()
++    ?.takeIf { it.isNotEmpty() }
++val hasReleaseKey = releaseKeystoreFile != null && releaseKeystorePassword != null
++
++// Di repo resmi, APK tidak boleh dibuat tanpa kunci rilis. Tanpa pagar ini, APK bertanda tangan kunci
++// debug yang tidak rahasia bisa ikut terbit dan dipalsukan orang lain. Fork dan build lokal tetap
++// bisa jalan dengan kunci debug.
++val isOfficialRepoBuild = System.getenv("GITHUB_REPOSITORY").equals("ItsVynzzzz/AmberLauncher", ignoreCase = true)
++if (isOfficialRepoBuild && !hasReleaseKey) {
++    throw GradleException(
++        "Kunci tanda tangan rilis belum terpasang. Isi Secrets AMBER_KEYSTORE_BASE64 dan " +
++            "AMBER_KEYSTORE_PASSWORD di Settings > Secrets and variables > Actions, " +
++            "lalu pastikan berkas workflow terbaru (build-apk.yml) sudah diunggah."
++    )
++}
++
+ android {
+     namespace = "com.israadev.nuxlauncher"
+     compileSdk = 37
+ 
+     defaultConfig {
+-        applicationId = "com.itsvynzzzz.nuxlite"
++        applicationId = "com.itsvynzzzz.amberlauncher"
+         minSdk = 26
+         targetSdk = 34
+         // Nomor versi naik sendiri di setiap build GitHub Actions (nomor run), jadi Android selalu
+@@ -39,17 +64,14 @@ android {
+         }
+     }
+ 
+-    // Kunci tanda tangan tetap milik repo (signing/debug.keystore, dibuat sekali oleh GitHub Actions).
+-    // Dipakai langsung dari repo, tidak bergantung folder ~/.android di mesin build, supaya semua
+-    // APK memakai tanda tangan yang sama dan bisa saling menimpa sebagai pembaruan.
+-    val fixedKeystore = rootProject.file("signing/debug.keystore")
+     signingConfigs {
+-        if (fixedKeystore.exists()) {
+-            create("nuxFixed") {
+-                storeFile = fixedKeystore
+-                storePassword = "android"
+-                keyAlias = "androiddebugkey"
+-                keyPassword = "android"
++        if (hasReleaseKey) {
++            create("amberRelease") {
++                storeFile = releaseKeystoreFile
++                storeType = "pkcs12"
++                storePassword = releaseKeystorePassword
++                keyAlias = "amber"
++                keyPassword = releaseKeystorePassword
+             }
+         }
+     }
+@@ -57,9 +79,10 @@ android {
+     buildTypes {
+         release {
+             isMinifyEnabled = true
+-            signingConfig = if (fixedKeystore.exists()) {
+-                signingConfigs.getByName("nuxFixed")
++            signingConfig = if (hasReleaseKey) {
++                signingConfigs.getByName("amberRelease")
+             } else {
++                // Hanya untuk fork dan build lokal (kunci debug bawaan Android)
+                 signingConfigs.getByName("debug")
+             }
+             proguardFiles(
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 4a6ba4f..47dc048 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -16,7 +16,7 @@
+ 
+     <application
+         android:name=".NuxApplication"
+-        android:allowBackup="true"
++        android:allowBackup="false"
+         android:icon="@mipmap/ic_launcher"
+         android:label="@string/app_name"
+         android:roundIcon="@mipmap/ic_launcher_round"
+@@ -24,7 +24,7 @@
+         android:theme="@style/Theme.NuxLauncher"
+         android:requestLegacyExternalStorage="true"
+         android:allowNativeHeapPointerTagging="false"
+-        android:usesCleartextTraffic="true">
++        android:networkSecurityConfig="@xml/network_security_config">
+ 
+         <activity
+             android:name=".MainActivity"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 593bcdaf87927008c6c50c9ea50106d99e6d0d9a..6851a24bc3dec19bf89252481ba35edc48db372c 100644
+GIT binary patch
+delta 231
+zcmX|*F>V4u3`HwC%B1%JqU8iMR484V)cYrE&6=6DMl(aP5_cfdN}MAIi6d|nXgCB$
+zQBql!-+%u1{cQT4{ami?VnJ)@2r7u8P)b=GI-wEjsS^&RW(4Yxg;2N>Qj~!5Pb35g
+z6?X78;aO`#E6&DPe)`zGxWqcjknr?7&IJR=NrBxxv|8%V86o;+&-7RHq&JARcC3a{
+iZ&l2;?Ja6p#6TVcH`DR_I!~xyJ?D31TAmKK&-MY8p;p%b
+
+delta 144
+zcmbO{f%Q#4>xN^`CM&412<4Sl1SFOuXQUP>*ebYX=A>#&E)<Z{$jmD)Nz6-5)$@ch
+zd=v8$(^HG|(o;+PN-JD4i!@3yGK)1QpMGu)GRL$4Vu)8F$eheH1r3D3dZ`te#U;fW
+Unwkm-L50+u;?&K1pNAy?09@HNg#Z8m
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 9c9a1ff..68bcd96 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -221,6 +221,9 @@ class MainActivity : ComponentActivity() {
+             intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+         }) ?: return
+ 
++        // Intent ini bisa dikirim aplikasi apa pun: tolak alamat yang menunjuk ke data pribadi launcher
++        if (!NuxAddonImportManager.isAcceptableSource(this, uri)) return
++
+         val aliasClass = intent.component?.className
+         val fileName = NuxAddonImportManager.getFileName(this, uri)
+         val resolvedType = NuxAddonImportManager.resolveTypeFromAliasOrFile(this, uri, aliasClass)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/offline/OfflineYggdrasilServer.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/offline/OfflineYggdrasilServer.kt
+index 0a758fe..795e6ee 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/account/offline/OfflineYggdrasilServer.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/account/offline/OfflineYggdrasilServer.kt
+@@ -5,7 +5,9 @@ import com.google.gson.Gson
+ import com.google.gson.JsonArray
+ import com.google.gson.JsonObject
+ import com.google.gson.JsonPrimitive
++import com.israadev.nuxlauncher.core.network.LimitedInputStream
+ import java.io.*
++import java.net.InetAddress
+ import java.net.ServerSocket
+ import java.net.Socket
+ import java.security.KeyPair
+@@ -26,6 +28,11 @@ class OfflineYggdrasilServer(
+ ) {
+     companion object {
+         private const val TAG = "OfflineYggdrasil"
++
++        /** Batas total permintaan (header + isi) dan isi permintaan yang diterima server lokal ini. */
++        private const val MAX_REQUEST_BYTES = 256L * 1024L
++        private const val MAX_BODY_BYTES = 64 * 1024
++
+         var activeInstance: OfflineYggdrasilServer? = null
+             private set
+     }
+@@ -92,7 +99,8 @@ class OfflineYggdrasilServer(
+         }
+ 
+         try {
+-            val socket = ServerSocket(preferredPort)
++            // Hanya menerima koneksi dari HP ini sendiri (loopback), bukan dari Wi-Fi atau jaringan lain.
++            val socket = ServerSocket(preferredPort, 50, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1)))
+             serverSocket = socket
+             isRunning.set(true)
+             activeInstance = this
+@@ -140,7 +148,8 @@ class OfflineYggdrasilServer(
+     private fun handleClient(socket: Socket) {
+         try {
+             socket.soTimeout = 10000
+-            val input = socket.getInputStream()
++            // Kiriman dibatasi supaya permintaan tanpa akhir tidak menghabiskan memori.
++            val input = LimitedInputStream(socket.getInputStream(), MAX_REQUEST_BYTES)
+             val output = socket.getOutputStream()
+             val reader = BufferedReader(InputStreamReader(input, Charsets.UTF_8))
+ 
+@@ -168,6 +177,8 @@ class OfflineYggdrasilServer(
+                 }
+             }
+ 
++            if (contentLength > MAX_BODY_BYTES) return
++
+             // Read body if POST
+             var body = ""
+             if (contentLength > 0) {
+@@ -196,8 +207,8 @@ class OfflineYggdrasilServer(
+                         }
+                         add("skinDomains", skinDomains)
+                         val meta = JsonObject().apply {
+-                          addProperty("serverName", "NuxLauncher_Offline")
+-                          addProperty("implementationName", "NUX")
++                          addProperty("serverName", "AmberLauncher_Offline")
++                          addProperty("implementationName", "AmberLauncher")
+                           addProperty("implementationVersion", "1.0")
+                           addProperty("feature.non_email_login", true)
+                         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashUtils.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashUtils.kt
+index 7aac9f5..b892521 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashUtils.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashUtils.kt
+@@ -52,7 +52,19 @@ object CrashUtils {
+                 return
+             }
+ 
+-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
++            // Log disalin (dengan token/kata sandi disamarkan) ke folder cache khusus berbagi, supaya
++            // FileProvider tidak perlu membuka folder data pribadi.
++            val shareDir = File(context.cacheDir, "shared_logs").apply { mkdirs() }
++            val shareCopy = File(shareDir, file.name)
++            file.useLines(Charsets.UTF_8) { lines ->
++                shareCopy.bufferedWriter(Charsets.UTF_8).use { writer ->
++                    for (line in lines) {
++                        writer.write(LogRedactor.redactLine(line))
++                        writer.newLine()
++                    }
++                }
++            }
++            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", shareCopy)
+             val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                 type = "text/plain"
+                 putExtra(Intent.EXTRA_STREAM, uri)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/LogRedactor.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/LogRedactor.kt
+new file mode 100644
+index 0000000..b033224
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/LogRedactor.kt
+@@ -0,0 +1,44 @@
++package com.israadev.nuxlauncher.core.crash
++
++/**
++ * Menyamarkan token dan kata sandi di dalam teks log sebelum log dibagikan atau diunggah,
++ * supaya akun pengguna tidak bocor lewat log yang ditempel di forum atau layanan pastebin.
++ */
++object LogRedactor {
++
++    // Argumen peluncuran game: --accessToken xxx, --session xxx, dan sejenisnya
++    private val ARG_PATTERN = Regex("""(?i)(--(?:accessToken|session|xuid|clientId))\s+\S+""")
++
++    // Pasangan kunci-nilai: access_token=xxx, "refresh_token": "xxx", password: xxx
++    private val KEY_VALUE_PATTERN =
++        Regex("""(?i)((?:access|refresh|client|id)[_-]?token|authorization|password|secret)(["']?\s*[:=]\s*["']?)[^\s"',;}&]+""")
++
++    // Header Authorization: seluruh nilainya (Bearer, Basic, dan sejenisnya) sampai akhir baris
++    private val AUTH_HEADER_PATTERN = Regex("""(?i)(authorization["']?\s*[:=]\s*)[^\r\n]+""")
++
++    // Header "Bearer xxx"
++    private val BEARER_PATTERN = Regex("""(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{8,}""")
++
++    // Token berbentuk JWT (tiga bagian base64 dipisah titik)
++    private val JWT_PATTERN = Regex("""eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{4,}""")
++
++    // Pemeriksaan cepat: baris tanpa kata-kata ini tidak perlu diproses regex sama sekali
++    private val HINTS = listOf("token", "--session", "--xuid", "--clientid", "authorization", "password", "secret", "bearer", "eyj")
++
++    fun redactLine(line: String): String {
++        val lower = line.lowercase()
++        if (HINTS.none { lower.contains(it) }) return line
++
++        var result = line
++        result = ARG_PATTERN.replace(result) { "${it.groupValues[1]} ***" }
++        result = AUTH_HEADER_PATTERN.replace(result) { "${it.groupValues[1]}***" }
++        result = BEARER_PATTERN.replace(result) { "${it.groupValues[1]}***" }
++        result = KEY_VALUE_PATTERN.replace(result) { "${it.groupValues[1]}${it.groupValues[2]}***" }
++        result = JWT_PATTERN.replace(result, "***")
++        return result
++    }
++
++    fun redact(text: String): String {
++        return text.lineSequence().joinToString("\n") { redactLine(it) }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
+index 14cbc94..3d1c4b8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
+@@ -55,8 +55,9 @@ object MCLogsUploader {
+                 content
+             }
+ 
++            // Log diunggah ke layanan publik: samarkan token dan kata sandi lebih dulu
+             val formBody = FormBody.Builder()
+-                .add("content", trimmedContent)
++                .add("content", LogRedactor.redact(trimmedContent))
+                 .build()
+ 
+             val request = Request.Builder()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+index 00bfbf1ad151fce42e7bd524e01b97488a85cd75..6c6bc12ffac7ef576b1749e2ea7b499937355f19 100644
+GIT binary patch
+delta 2488
+zcmb7GO>7%Q6qfVTALG!XB(6x2^J3*^H+9wts#-OzlQ?aYxU{q=X$3-vj=f`h;`OdI
+zGn*f!RfITj<G@r!f(slFCqygXxFEPA8VMxe0s<j%qj2Dec(c1sOj8i};@vm1Z{GXf
+z_r5ou-HrY9VeH=5F;$7Bj`)%}!dfO}dX31cP_K3zZ~hXy5laeM@;Q^6))guQsn83o
+zLWNXQoiA=@$H$={82GO3SBVRf*`x*~ujJLhrfvmIg4wJFtAsP)RMgotJ_idnD|tl%
+zzJsq|>viIgI+3uc4FVr67|+HVoUIW_q2v%DV2Oz86((?7sd{lETcQogJlCj)kxj$0
+z<jk#@Fb##P7dIYRHk)sBesXXq19YQ7OOo2lRWb!RSfgB^mx82qOQ5Nlf8w2vMEfR{
+zN~F4QC8Ktd{mNU2H-GNwJ8(9e1&vi0eVw?hjKDyZa9@C=k~F|(xQJ;%*>h~l!C^&?
+zsZyZ`45|0bZuMtxBDo8?g%Ekp8ZEd8o9gMi(=Q3HP`SVy3PU+?eaC^(QT%u$W~lf3
+zJT<kHR&xVgYA_prs%;0jl-lC0iAlBE|3PYB#)L~&CM6l98~C{QWS5$lJlvc~e%pCs
+zFP<_U{5+{sBR#x@_)}SMZMtDG`?j?zJU4ABYv6U*?|*M=0O<XJwa%M}7P=xp&<zj`
+zOBI%v@)J|Q1amhD7$+y8MmVWSM5;<R%(Eb<LzoLp`Us^%*NH@$R0xllwn`A-hAshd
+zsfwjWH5T(#B#Gr9{m`Dv0eT%B#j2o@AbeZs4bbP<<d|iRof(5$w^|mWE#)z|t$r&!
+zqi!aTs++xC>O^W@X?S$Cc<P1VS=$qdL+Z=ax!`?npj#asd|SbMTzxc{-`(^3;40d>
+z)yMr4>S6C8^(JKc_o1aj3yRQ~>QUBYMLkHSnsY<v4`v=$h%za1R+<=gJc5k6L3vb(
+z=DWs^9XAl<=RA+w%*9R$*|r(-Q&5gXkAN$B4y{6+){A7Fgb3EC<0G&^C;l5-7g-q$
+zPMv`H5hqR9i?p4>)W8rfFrLBQ4?Zw~I)Vl~4mu#BuKJ=kvx^zx+B}l^uH)%_K%uie
+z#_ICm=gq<F_dVNj(7$oi2Ti0%NS0Pst}TahVzUOR5oW>lNU1cj98D_eJ4`^0LXq+s
+z5y-eYb+PLR*uLI?5>~{9#+?o3+N9b#2}z7Ds+yrxY!jA2T|+XqlrRu6<Z;87S_}eR
+z#8-*xR3Q$2RYV%I)}bgEq-Mc9a|pcLE<CTaj<XrY$7;mQ=x*6PMvEwl?KUp_li-3;
+zXPkRH1R`oRbXKG`=E$VykXoj7Oaw}x%n^#gxxPePO)J`#4gOooT=rdcB=`Af<OJ)`
+zo<U2KXHjUie5sw>>4b&4qMKazqS`s#Kbyw1Dz3-rc~l47DY;KgxE-E{9yRAm#I+Ge
+zNw0GpR7_l~H{_;any?jD-^>l3$%o^kRe>lqttiwbQ3;Uong<Y2V;Y8i?x2R<Kh?Xv
+zhE-W7?%q^rPh!@>xl%XGS<CU(DKBA=hPfM@rXKDfHCiZRO1hn4VkT6a|0+Yr9;-vB
+zM2BWh#c?n-f)S8YYUXnD*BPhts)M!Da~Q$W;IxIl+mnBr*A|Wu94nHzB~<f3chl|N
+zh=Z;9()>;=5xSkV{Dw`Mf1Llc<3MP^9vwzK>^@hLK4O)N&bPu<!?adC=B{|*1UAy>
+zd<)Velh1CXt+K~)VjE1FYG~-V?%F;aKH3Y$x)*t%x~P_ytK3_EWYo7tdHVleH`JZ{
+zNFXf_l1Vj}KNd{O9~Ksa|LkHudOxgQTRf>Q7eGB6fk3hkEEUx9l7+Urs^`+e3M#8U
+zJG!0d)(^WH`GgXI6hrOAVTA0!YYm!$i_J9X>y7a7MuQTwucLzN1i~>yv8x}Su?a;^
+MNv*Y0)h~VZ7fHEErT_o{
+
+delta 682
+zcmZXSO=uHQ6or||q)ltuPV>{4HbY<2w2dJhW74!jZ7|rRDA7z(blEnVXPGjlk_l2O
+z1>NeV?GdpHe?X|XQkaeCCT;{lXrZ`p(T$3@a8VTZ&OC!eT^-)#-E+Tt-uv`~dwrLC
+z{+`1d-fc+y1rD!lBDQUl#)j~s6&t<8xaC~sA@{W#g)UDE9{B~aR;n)2T2|F4nIfj(
+ztM?AR$JTK&EZ8fQmUW~$132(`AP=_SzV9J!o*lu<;~^|01Nbl;hS(!wKH~bLb&r#s
+z>mCuy<1XWh|0mxQ3|%kjI<1|ql<A7Bme=GZeYt{zJ_%0)i$+YkW;1#0cs!7{xbSVD
+z$aE{#h4aCrg@euDJriPv)z=1>ASL1mI6EMR`c0@|+~^Xp9!jy{7O>@G0gMd|wL**f
+zxpq98@EH%HZ+YhT<7hWN&-B6sCI99?!<u?=TCGM&m1;_<hEiz6GBmbgA9*&-TC+ZC
+zM_zFm`-yiQ@SfU3=kx@&GvlMGp0k2&<Vshr(n~d3o>f;VNs%OpkYlm<SVMBy$s88d
+z%Ou>?bp&5BIgwCJr%h}|JgeCZ;mi(axO2DpLro1xdjpI|P_iI-2hJ&JrckC>GP_DY
+zQ*lx<H+EvK&<3fHX0^G3{MQ}pIqRZ>C26H<_5Aj9V?S{My9&WVq?`53N8F9?;Mgn%
+TtziGd3Kp}>isaiM&hGsJvE%6L
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+index 8530b36..379a06f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+@@ -20,7 +20,9 @@ data class VersionItem(
+     val type: String,
+     val url: String,
+     val time: String,
+-    val releaseTime: String
++    val releaseTime: String,
++    /** Sidik jari (SHA-1) berkas version.json dari manifest resmi Mojang; dipakai untuk memverifikasi unduhan. */
++    val sha1: String? = null
+ )
+ 
+ /**
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
+index c6d3749..2ea50c4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
+@@ -75,7 +75,9 @@ data class ModrinthVersionFile(
+     val url: String = "",
+     val filename: String = "",
+     val primary: Boolean = false,
+-    val size: Long = 0
++    val size: Long = 0,
++    /** Sidik jari berkas dari Modrinth (kunci "sha1" dan "sha512"), dipakai untuk memastikan unduhan utuh. */
++    val hashes: Map<String, String>? = null
+ )
+ 
+ /**
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
+index 4bfd1f2..a81261c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
+@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.mods
+ import android.content.Context
+ import android.net.Uri
+ import android.provider.OpenableColumns
++import com.israadev.nuxlauncher.core.utils.SafePaths
+ import kotlinx.coroutines.flow.MutableStateFlow
+ import kotlinx.coroutines.flow.asStateFlow
+ import java.io.File
+@@ -35,14 +36,45 @@ object NuxAddonImportManager {
+                 context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                     val nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                     if (nameIdx != -1 && cursor.moveToFirst()) {
+-                        name = cursor.getString(nameIdx)
++                        name = cursor.getString(nameIdx) ?: name
+                     }
+                 }
+             } else if (uri.scheme == "file") {
+                 name = uri.lastPathSegment ?: "addon_file"
+             }
+         } catch (_: Exception) {}
+-        return name
++        // Nama berkas dari aplikasi lain tidak dipercaya: buang folder dan karakter aneh
++        return SafePaths.fileName(name)
++    }
++
++    /**
++     * Apakah [uri] dari aplikasi lain boleh dibaca untuk impor. Berkas pribadi launcher sendiri (data akun,
++     * pengaturan) tidak boleh bisa "diimpor" oleh aplikasi lain lewat intent: alamat file:// hanya diterima
++     * bila berada di penyimpanan bersama /storage/ (di luar folder data aplikasi ini), dan content:// milik launcher
++     * sendiri ditolak.
++     */
++    fun isAcceptableSource(context: Context, uri: Uri): Boolean {
++        return when (uri.scheme?.lowercase()) {
++            "content" -> {
++                val authority: String = uri.authority ?: ""
++                val ownAuthority: String = context.packageName + ".provider"
++                authority.isNotBlank() && !authority.equals(ownAuthority, ignoreCase = true)
++            }
++            "file" -> try {
++                val path = uri.path
++                if (path.isNullOrBlank()) {
++                    false
++                } else {
++                    val canonical = File(path).canonicalPath
++                    val ownExternal = context.getExternalFilesDir(null)?.parentFile?.canonicalPath
++                    canonical.startsWith("/storage/") &&
++                        !(ownExternal != null && canonical.startsWith(ownExternal + File.separator))
++                }
++            } catch (_: Exception) {
++                false
++            }
++            else -> false
++        }
+     }
+ 
+     fun resolveTypeFromAliasOrFile(context: Context, uri: Uri, aliasClass: String?): String {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index 08a6d7f31b83c9ef431d62945676c4739a68c135..6e2bafa4352cf033902070146d67dece3a6abb09 100644
+GIT binary patch
+delta 6760
+zcmb_hTWl298J3OB#elh)s{tQxY?!r|SuY~D1p@{gNXjkPD5QYsS<l!Wc6Mf%i!UK$
+ziIPT;lv@sIBS8vCm69S=BwD3OX%kg_YSkC|lBcR9id0oqA9!h1_5S^5X4bpQMS1AH
+ztas*||NQ@V{{Q<g{`znAXFr<up;mY4@2i^w-!MIOfDh~Yxj!mity@_duY0DxnC|Lg
+z1KbZ-PIvR%W17J<Zt?;v*qUot{-|nLnm(Z(_iT$za%+TnfyPIfX`8mk9KE2sM&9Gx
+zVh-eDuf=FP_f^)FZgN~>jQcts`<xA#-1FET*Wp9?XAD#Cw|w{Dq|(Ij8RI4kTr<lC
+ze4ILxDnE2}lN7%H#VGeibuY{IaA#ArDcZcbsdRgqQddl;*>g}B8X0+*4`uPgG)D12
+z<F3JW4G!)fV0m5s!5nFjVt57%EG?i_Im6=s1QM_tz#NBVR#K`)I;+FBY1-oho_Rpm
+z3|AlWJ!P1io*pg{mp@o2?lt6!as%PK4Jdfbw|y8(=SVnnwy6U*L(hA@%k!aX9^D9T
+zfS_W^kUj#$x$7AYOXTcABHUR3_*O6~4VyFy4!5A4gq^gDp&t^*8k;hGhmP&pw_|_b
+z_HP~QKQwrtZ~Ne}Z7&Y?53pXAIrex@&u-SmGCk`zl)p>QH~wSJ1`-s10OtS!5~Cxv
+z_jT6^{J>+mAWuO1dO_6PSSeQa&gwKgx@ERz4I9R{YVm@u>XzocVECg-LUp+7Cz7SD
+z3y-xnySitaWBQ)ZVsR<6WE$I&761MuA?_`15It`;iaXin+GR{ll$Z6SXNuL?G?vdS
+z4XHQkAGMZ5p3W?&T~c`}iQBtzu2{3NLyG)$=8rRW1A!fU*yk=YEF<&|L=E?FozkJA
+z5R$-XMv%j$*)D~Q$qg&Z;8K%33KK&pTUS0ELyK?7Rw#Hv9JRnQc-rG*x|ghWlTq#j
+zo+|E+EfIq~-48aSTU=k!05qEBu=ZYN1*S=tfCs;<HJPbTii;;3#lDTRtJap5Z~T15
+zEL?%Sy1k<B?H0k-H;e1Ho5cL}4HQ~?5#(jkfMdf<2?BRa14Lp(M&|;0lj9=>j6=X^
+zy326+YC4f*o}SaqpaAE0c%B>dn~&g|n4}zKgc11<&eP$olEIp>z*FO=irBn!X{mAh
+z57zB@gkEql$F@8i;*RNV7KeB~6t$RdXb3yp9ff42hT^OCMF6-#Tz6)-#mrf8EF!GH
+z-AQtCRjl?}fqJ7bPqdZ(>bzdB;1FYYa+hQ&MbkZ>)}<&c%bO&HiN0W|`0UCoar%c1
+zr8m4%)7l3drRmQ8aHF)ELMd6={mT0d#R?Y!iMq_o8;+xEbeIRYda7`w1;ZS#9`RnE
+z01XZKy0&f74@K;5suJ>T!y)NPfrz{`_q989^Q$?1a<j-h-68|`!^9!+o!4fS&VTpI
+zdcnq5<KdhL(grbhW}{q05Py88Ur@~b=gbB9?A+O;xcA1?`rn@&l+SzK9Hez!nmulr
+zHrHTd<l!&B%*qc{&v;2!lJu@e{Ogm)<gr8|e|WQ9ESy+QzbTq2vmh*8@RzUq+#!+=
+zvtQ%~hULMthj4Ecn_f_Wo0JJK+$gh%`08pq>Gvdr$|xAMJ-<xg5h3Jti<>GN(1{K}
+zl>v@3^>OYSs@xB|YU2}>G`qsW=$M(^?NdHtczu+GbS)y!9T74IT~pD_gRbbi(kkue
+z%Tvvj-qGD1ixcxMET|h7?H3k3MK@d4J64Y=6p`sLuSfBM=(mzt))D1r#0sH2Q-l{c
+zUF_>#Ag;Hz&}DaqsT$r`2z;J1b)@Wl!?j6U^t~JEi5)X&$G+Tg@#&eB)5G2J03cL;
+zb+L`f1MZDAwkzBmu~Sq;1bPzWj60S4k#2l<azOXRiA^i8dKnSplX97Ac+a7vp{O!^
+zV+`BEa}JXzl>l{zxCbXX3cckHv2W=b2_$=OMb-CXZ?$A=B0wT<rdWiI>gtZkhjeA_
+zkt1tUY;AgNG8LVd6n$z!9J?_~+&$j|u?_d%(FqA=n6w(i7jONhQJN)geNRtRCr%lc
+zBOr$zhMQt?l`5`f+KHKFb9Y3SB*c0Jd!0gSX6;!g)~&(?whOWlNR?hY*HJek6cdP>
+z=ToF#M-{Ol8Aej$^CXNQwN^3zm09BRD=Vg#_2`W4oLfOcksHptu(kPQbd+nJN~D-L
+z(Y7eUxm8?T+5wVmt(0}`;@r}&F6?ZmjhR`Od*%!?#SW^Col|Qpg>2dJ*F6jJj|;A9
+zzprt4;$G>D=gxLYpnB4cFmsj2mR1vJ;{3ad#9Nmqw%<pj(F5>jKe?sylHo+4rC6jb
+zepk}3gpp{FtyjdIG%MZy{@nWcH6`&DvH9aC#OY6eE4IG9if%|apEinL{A}~81Pt=h
+z3DzBE&6=cXwJnkG9ud#Xkwh3Vso1)3nP{5`dHTPisTSW$nKaoss}|q~dQ%zTZUQ(g
+zVZRByZDl|F?8>J96O>C!``=URIkg&&YlDXh+wH*e5#JT=2(T(ivMTe@PR+LTJ-X-d
+z5voQEI9jzV$~b&^i#U62gQ(xIrkDWT>mG_4jk*tu4WU#*N&$1q++rdZgSbOQa9zkl
+zNUI)drWEU_k~~bzJc9bjWDro1JJ@zRM`a~#VgWi7lv{?$8P_-~EPzOve)0iTqH3Z^
+zaASpd<=X5y6_%vLylcx!UtC)_Q{0_BuP7^gb{PHGQEHD4$JNVGmF<!>tju{TI~esz
+z8giLwc(gVufjw$Xzzv)!vd&L3Eij=ow?aU>P!YOhgM;o8WwNLH$cpq0u=a2xg<cD}
+z_`$74Sg-*oADtrM5!a2;;YjB^uSN%@#n<omchEhx!yXmgWkE@*$m*^iH6o+F?|9jC
+zTI@gDx!WIg?QtAF##O^spWW9#F{C@bVOvU~PqwvXonW+WqHxS}7kND*3AALgl8uUj
+z=EXw!V8e{)RB_~k1HIJs$Ryj#BwNSW5=?-Mo}t)?%0<~T!6V~lNo+~BioSu)d1~P4
+z>?G2QtZ8-eyPYkPd(;=YBm*q?@lNrV_L<;~g<-jMxJA_8RK=g#=giO9+N7F8afhy1
+z=LJRVz1k^?R~Jl!2IBfVX>s?Rq&R)MiwgZ#0<Nr$K4Ez1ag(@BC@A`FtZ0+K#x^0%
+z5jzgr<t>8GU7URcraPrS!&k!oRTla&!igmL>JoADc4q^fK<9}c-RLS>L-vrJr_$Xs
+zG$W7OLNl*;qx|vA`cxPk_>l>tAaoYQLNfNvC=lZ=tq>HXC|TQ~L5m%SZKEIxx61=l
+zk$@uHR(4^sCL}UL>+P}%Us2g0w;W!fUMfx^h{@<+Cmfu_$EBseqC1fDlHtH&Re6@8
+zKPx>ZRg5Z!2aZ0rB-zO_XAxf&P}TNEJE)&?bw6;UC`9i-OG4zZ3TqE1!e5D_TjE%;
+z-Ts2(Pb%@?qfp+Jso0Zw#Ex(S6;>`<|3W;=snS!Qa4<m8wc3|r>&Gp{P$!gZdu=~b
+zhOOI-04U3ZCW(Pvee2)?iH%62p)fp+j5}36j2b39%zP7RnNZd|saYs2!%j7cFORp(
+zh=3F)o?G;yObo^df&z;qd3gFz0AnZBC|B%|Z&lPv&qghUtXU-<F|c8ui+LL+DpRq!
+z>M4?*3x<c$dh{~t%KBWFPbyDrh-NlZ`^mQPQA!kw?*`&h%VLWD<p^^PTcu#cDA$xw
+zTvB{wFWw^GZel$M5d4|10*VA;00zU<z`+ntk9MY54;8mui(<6tR?`TniN-O&S8u#2
+z+zY}zZX4F19nR^L1bY9IEYaDsej<S(nu}?nV)#iQOXtx?(n=^y)lWdAr^I(Eo<G}B
+zH!Lo0T3&nvv1|*cnH?u7a3qbMVlpp;{D4d$$20Lz5A-obB^5D`GF>L3@Da@^D9fs#
+zCMYSscz+@CWpi;7Q$>&w&FnzoAR|<EGI2&F(oxA2V7U>!ki%Lzb&yj)qT!Gb!l`O`
+z3>eb_gCV03TCN`|XeJ^!yGZlI0x~DHlI-xFht2wqGNodMn2e9OpLrfosAgHz_D2<K
+zHgt2EDyxGqSH<go*gjb<Wh1s?$W-AdA<K5#)(Cn=`l@0nH=2p|PAzT{|Gd0TJaP4L
+zaqgWgIq_59JOappYN8-&o|Z{pe?TOl30orAy6JNfC{v*zPOMuzHyqb?_eysc3ov)P
+zv%G=H+uO_@iZyD$m5(YWD%%ZIGA24#q!*8)ZNp4mdKvPYX5>)oneZ1(2-=q-oiAAh
+zp8`Lq<DicFqfxwyygmEY{6?v@xOZr2ktzxZf(z1A|8UeD9z~Y*gM2uREEw>~xcgDr
+zUK$w65|Y~fICG)jXG$LPI+`JcbG&#u5)n{W7+aLh;jsaR+L&S%QJU(Aa0A0>M46mu
+zrZ7oyIA)=7!xe^?9JgaPjk3$4Mxs<p1JQ?j?8DpOV(f=CT@(C}kl9k@h$gd$jZ93B
+zh%g`Cy;l)c<sPIVX=8$69z`#vhtkCLpDx`IrVKfdEenXAP0e#6Q;;SMO;^gze56ZK
+zwB1@EuKuK@^y1Aw&)*l%u)@i!{0D)&pa@X;uZ8H&<dT|;V@kpBRFs!$T25p|_U9}^
+c6Gpfs7<x)6!=t|sphl-zNd;M-YC6^QKZ1i2^8f$<
+
+delta 1110
+zcmZ8g`)^BO7*4CS>pD)iwYsk6^u*}qtnH|4=tkINh{Ywyh*f$_ldi3<BbCfG#3HfU
+z6Q)IM<{p>v1u;K}#Wm&{#!oU?;s<|#1Y^GQb=}7K;d@Wc`@YZne9!Zq#+#%1zAHPt
+z3KCbWSCZ$dd<C|R36WFkA3AiO&mdC`<+<47G@|ix4xA<x_T;GGD4vCCiwc_-YMNbY
+z^g0D}7wPdPha+2x+mu5eT4Q?bD$(J!OGLFxKLSTXe!0G?@xb96kuVH`I|gGqB=^1{
+zu+(rT1$^boXEpSlG?p}|6<XY!mWS&H#*x1AmLf*(bA5VtDD12Cgrj9XzhvJ+kASCE
+zBKqx}N(>~@NLKW&Hr*?QDw9=qSfd8=XMaLPejoa#m{aNTh3Bn`gnfY;kxxdq+g89k
+z9K4*ed4oFw{-DRZChQmau;lkdeA}f;Ph=~;EX-nBg-lr}dle`54<A!9PP>kju=x1M
+zV#YtSsR?;;E4b5nR6QNb^*60%ab2vE)pW$P6Rq?4K)v73PoB)Drq<c(d^;sd$IUzO
+zcDIf7WE>SBnk{s=2EAn}j5*F_C%O7lEM<ZPc$h1I`)Fi?W9_uzw1EPQ#*&t2oXz`R
+zvEhU?WZgg_7ke*TWoBe!e3D`mEykgQh?jgCVk<1DPGsZi$x;mi5kww*&zxp%0;9yO
+z(2`51DpbvF&gPS5Y(3inPgg$r&*|9hWx3*A0$%5vaKCFVIwqPhyR$&vD@ImUXpl6C
+zwXauZ+Jf~F*;^)m@?y)+%!K2@3*4?S%9v($d%4C|L%m<*3yZwG1O=4X0)dq<NLjEq
+zA4Y?}=tgUgU>k1xw^yhQdg}z*odW6ZS;VZqu~IXRHOW5FG(D-vX7F}-6*RJ5=0Udn
+z2si24u#G9bWkR)yqidOzS6=p%G;;f}G}%m=UW*ZPJEt(&hJ7qTY^jAzy)vLcLyHcr
+zSEnmP{7IO|yK9*mJi1eg8C4>rDkGk)wd3d7Ogycc56y-`WZWyq;li=wL%~3uWZxY0
+zMoa9QqY;U&z2vF2p>0_novX+DWrfrdD{eeU$H9Ac((@#X{`Zg6Sn`QW)AICb&^BoQ
+E0<qnp!vFvP
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/network/LimitedInputStream.kt b/app/src/main/java/com/israadev/nuxlauncher/core/network/LimitedInputStream.kt
+new file mode 100644
+index 0000000..4ff7a3c
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/network/LimitedInputStream.kt
+@@ -0,0 +1,26 @@
++package com.israadev.nuxlauncher.core.network
++
++import java.io.FilterInputStream
++import java.io.InputStream
++
++/**
++ * Membatasi total byte yang boleh dibaca dari satu koneksi. Dipakai server lokal supaya kiriman
++ * tanpa akhir (satu baris panjang tanpa baris baru) tidak menghabiskan memori. Setelah batas
++ * tercapai, pembacaan dianggap selesai (EOF).
++ */
++class LimitedInputStream(input: InputStream, private var remaining: Long) : FilterInputStream(input) {
++
++    override fun read(): Int {
++        if (remaining <= 0L) return -1
++        val value = super.read()
++        if (value >= 0) remaining--
++        return value
++    }
++
++    override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
++        if (remaining <= 0L) return -1
++        val count = super.read(buffer, offset, minOf(length.toLong(), remaining).toInt())
++        if (count > 0) remaining -= count.toLong()
++        return count
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/OfflineSkinServer.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/OfflineSkinServer.kt
+index 5454fce..4dfe05f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/OfflineSkinServer.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/OfflineSkinServer.kt
+@@ -3,7 +3,9 @@ package com.israadev.nuxlauncher.core.skin
+ import android.util.Base64
+ import android.util.Log
+ import com.israadev.nuxlauncher.core.models.UserAccount
++import com.israadev.nuxlauncher.core.network.LimitedInputStream
+ import java.io.*
++import java.net.InetAddress
+ import java.net.ServerSocket
+ import java.net.Socket
+ import java.security.KeyPair
+@@ -15,6 +17,10 @@ import java.util.concurrent.atomic.AtomicBoolean
+ 
+ private const val TAG = "OfflineSkinServer"
+ 
++/** Batas total permintaan (header + isi) dan isi permintaan yang diterima server lokal ini. */
++private const val MAX_REQUEST_BYTES = 256L * 1024L
++private const val MAX_BODY_BYTES = 64 * 1024
++
+ class OfflineSkinServer {
+     private var serverSocket: ServerSocket? = null
+     private val isRunning = AtomicBoolean(false)
+@@ -44,7 +50,8 @@ class OfflineSkinServer {
+     fun start(): Int {
+         if (isRunning.get()) return port
+ 
+-        val socket = ServerSocket(0)
++        // Hanya menerima koneksi dari HP ini sendiri (loopback), bukan dari Wi-Fi atau aplikasi lain lewat jaringan.
++        val socket = ServerSocket(0, 50, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1)))
+         port = socket.localPort
+         serverSocket = socket
+         isRunning.set(true)
+@@ -121,7 +128,11 @@ class OfflineSkinServer {
+ 
+     private fun handleClient(socket: Socket) {
+         try {
+-            val input = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
++            // Koneksi yang diam tidak ditahan selamanya, dan kiriman dibatasi (cegah kehabisan memori).
++            socket.soTimeout = 10000
++            val input = BufferedReader(
++                InputStreamReader(LimitedInputStream(socket.getInputStream(), MAX_REQUEST_BYTES), Charsets.UTF_8)
++            )
+             val output = BufferedOutputStream(socket.getOutputStream())
+ 
+             val requestLine = input.readLine() ?: return
+@@ -141,6 +152,8 @@ class OfflineSkinServer {
+                 }
+             }
+ 
++            if (contentLength > MAX_BODY_BYTES) return
++
+             var requestBody = ""
+             if (contentLength > 0) {
+                 val chars = CharArray(contentLength)
+@@ -157,7 +170,7 @@ class OfflineSkinServer {
+                 path == "/" || path == "/api" -> {
+                     // Yggdrasil metadata conforming to authlib-injector specification
+                     val pem = exportPublicKeyToPEM()
+-                    val json = """{"skinDomains":["127.0.0.1","localhost"],"meta":{"serverName":"NUX-Launcher_Offline","implementationName":"NUX-Launcher","implementationVersion":"1.0","feature.non_email_login":true},"signaturePublickey":"$pem"}"""
++                    val json = """{"skinDomains":["127.0.0.1","localhost"],"meta":{"serverName":"AmberLauncher_Offline","implementationName":"AmberLauncher","implementationVersion":"1.0","feature.non_email_login":true},"signaturePublickey":"$pem"}"""
+                     sendResponse(output, 200, "application/json", json.toByteArray(Charsets.UTF_8))
+                 }
+                 path == "/status" -> {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt b/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt
+new file mode 100644
+index 0000000..c30bc70
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt
+@@ -0,0 +1,69 @@
++package com.israadev.nuxlauncher.core.utils
++
++import java.io.File
++import java.net.URI
++
++/**
++ * Pelindung path dan alamat unduhan. Nama berkas, path relatif, dan alamat yang datang dari luar
++ * (aplikasi lain, isi modpack, respons server) tidak boleh dipakai mentah-mentah, supaya tidak bisa
++ * menulis atau menghapus berkas di luar folder instance lewat "../" atau mengunduh dari sumber asing.
++ */
++object SafePaths {
++
++    /** Nama berkas aman: tanpa folder, tanpa karakter kontrol atau terlarang, dan tidak kosong. */
++    fun fileName(raw: String?): String {
++        val base = (raw ?: "").replace('\\', '/').substringAfterLast('/')
++        val cleaned = base
++            .filter { it >= ' ' && it != '\u007f' && it !in "<>:\"|?*" }
++            .trim()
++            .trim('.')
++            .trim()
++        return if (cleaned.isEmpty()) "addon_file" else cleaned.takeLast(150)
++    }
++
++    /**
++     * True bila [rel] aman dipakai sebagai path relatif: tidak kosong, bukan path absolut,
++     * tanpa karakter NUL dan tanpa bagian "..".
++     */
++    fun isSafeRelative(rel: String?): Boolean {
++        if (rel.isNullOrBlank() || rel.indexOf('\u0000') >= 0) return false
++        val normalized = rel.replace('\\', '/')
++        if (normalized.startsWith("/")) return false
++        return normalized.split('/').none { it == ".." }
++    }
++
++    /**
++     * Mengubah [rel] (path relatif dari luar) menjadi File di dalam [base]. Mengembalikan null bila
++     * path itu mencoba keluar dari [base] (path absolut, "..", symlink) atau menunjuk ke [base] sendiri.
++     */
++    fun resolveInside(base: File, rel: String?): File? {
++        if (!isSafeRelative(rel)) return null
++        return try {
++            val baseCanon = base.canonicalFile
++            val target = File(baseCanon, rel!!.replace('\\', '/')).canonicalFile
++            if (target.path.startsWith(baseCanon.path + File.separator)) target else null
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    /** Host yang dibolehkan Modrinth sebagai sumber berkas di dalam modpack. */
++    private val MODPACK_HOSTS = setOf(
++        "cdn.modrinth.com",
++        "github.com",
++        "raw.githubusercontent.com",
++        "gitlab.com"
++    )
++
++    /** True bila [url] memakai https dan menuju salah satu host modpack yang dibolehkan. */
++    fun isAllowedModpackDownloadUrl(url: String?): Boolean {
++        if (url.isNullOrBlank()) return false
++        return try {
++            val uri = URI(url.trim())
++            val host = uri.host?.lowercase() ?: return false
++            uri.scheme.equals("https", ignoreCase = true) && host in MODPACK_HOSTS
++        } catch (_: Exception) {
++            false
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxNetworkImage.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxNetworkImage.kt
+index fed4d88..cd96779 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxNetworkImage.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxNetworkImage.kt
+@@ -182,7 +182,9 @@ private suspend fun loadImageBitmap(context: Context, model: Any?, targetPx: Int
+             is Uri -> withContext(Dispatchers.IO) { decodeSampledFromUri(context, model, targetPx) }
+             is String -> when {
+                 model.startsWith("http://") || model.startsWith("https://") -> {
+-                    val request = Request.Builder().url(model).build()
++                    // Gambar selalu lewat HTTPS (alamat http:// dinaikkan), supaya tidak bisa disadap atau diganti
++                    val secureUrl = if (model.startsWith("http://")) "https://" + model.removePrefix("http://") else model
++                    val request = Request.Builder().url(secureUrl).build()
+                     val bytes = imageHttpClient(context).newCall(request).awaitImageBytes(IMAGE_MAX_DOWNLOAD_BYTES)
+                     if (bytes == null || bytes.isEmpty()) {
+                         null
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
+index 411c1c9..e00b3b7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
+@@ -47,8 +47,9 @@ class PlayerSkin(
+             settings.apply {
+                 javaScriptEnabled = true
+                 domStorageEnabled = true
+-                allowFileAccess = true
+-                allowContentAccess = true
++                // Halaman ini hanya memuat aset lewat WebViewAssetLoader (https), tidak perlu akses berkas/konten
++                allowFileAccess = false
++                allowContentAccess = false
+                 loadWithOverviewMode = true
+                 useWideViewPort = true
+             }
+@@ -112,7 +113,8 @@ class PlayerSkin(
+ 
+     fun loadSkinUrl(url: String, model: String = "classic") {
+         val modelParam = if (model.lowercase() == "slim") "slim" else "default"
+-        webview?.evaluateJavascript("loadSkin('$url', '$modelParam')", null)
++        // Alamat bisa datang dari server skin: dikutip aman supaya tanda ' di dalamnya tidak menyuntik skrip
++        webview?.evaluateJavascript("loadSkin(${org.json.JSONObject.quote(url)}, '$modelParam')", null)
+     }
+ 
+     fun loadCape(file: File?) {
+@@ -135,7 +137,7 @@ class PlayerSkin(
+     fun loadCapeUrl(url: String?) {
+         if (!url.isNullOrBlank()) {
+             val safeUrl = if (url.startsWith("http://")) url.replace("http://", "https://") else url
+-            webview?.evaluateJavascript("loadCape('$safeUrl')", null)
++            webview?.evaluateJavascript("loadCape(${org.json.JSONObject.quote(safeUrl)})", null)
+         } else {
+             webview?.evaluateJavascript("loadCape(null)", null)
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index c3ccaf1..7fd4fa2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+@@ -128,7 +128,7 @@ private val LIBRARIES = listOf(
+         copyright = "$COPY 2018 The ANGLE Project Authors",
+         license = "BSD 3-Clause License",
+         role = "Mesin penerjemah OpenGL ES berbasis backend Vulkan",
+-        url = "http://angleproject.org/"
++        url = "https://angleproject.org/"
+     ),
+     OpenSourceLibrary(
+         name = "ByteHook",
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
+index 223d445..d928e1f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
+@@ -312,6 +312,9 @@ fun NuxMicrosoftAuthDialog(
+                                 javaScriptEnabled = true
+                                 domStorageEnabled = true
+                                 databaseEnabled = true
++                                // Halaman login Microsoft tidak butuh akses ke berkas atau konten di HP
++                                allowFileAccess = false
++                                allowContentAccess = false
+                                 cacheMode = WebSettings.LOAD_NO_CACHE
+                                 useWideViewPort = true
+                                 loadWithOverviewMode = true
+diff --git a/app/src/main/res/xml/file_paths.xml b/app/src/main/res/xml/file_paths.xml
+index cb2beb5..7736e33 100644
+--- a/app/src/main/res/xml/file_paths.xml
++++ b/app/src/main/res/xml/file_paths.xml
+@@ -1,7 +1,11 @@
+ <?xml version="1.0" encoding="utf-8"?>
++<!--
++    Hanya folder yang memang perlu dibagikan: salinan log (cache), folder data game di penyimpanan
++    bersama, dan folder data game cadangan. Data pribadi launcher (akun, pengaturan) tidak termasuk.
++-->
+ <paths>
+-    <files-path name="internal_files" path="." />
++    <cache-path name="shared_logs" path="shared_logs/" />
++    <files-path name="internal_game_data" path="nuxlauncher/" />
+     <external-files-path name="external_files" path="." />
+-    <external-path name="external_storage" path="." />
+-    <root-path name="root" path="." />
++    <external-path name="shared_game_data" path="nuxlauncher/" />
+ </paths>
+diff --git a/app/src/main/res/xml/network_security_config.xml b/app/src/main/res/xml/network_security_config.xml
+new file mode 100644
+index 0000000..f9692e9
+--- /dev/null
++++ b/app/src/main/res/xml/network_security_config.xml
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<network-security-config>
++    <!-- Semua sambungan internet wajib HTTPS. Pengecualian hanya untuk server lokal di HP ini sendiri
++         (akun offline dan skin), yang tidak keluar dari perangkat. -->
++    <base-config cleartextTrafficPermitted="false" />
++    <domain-config cleartextTrafficPermitted="true">
++        <domain includeSubdomains="false">127.0.0.1</domain>
++        <domain includeSubdomains="false">localhost</domain>
++    </domain-config>
++</network-security-config>
+diff --git a/local.properties.example b/local.properties.example
+index c169b4a..751543a 100644
+--- a/local.properties.example
++++ b/local.properties.example
+@@ -1,8 +1,2 @@
+-## Location of the Android SDK
++## Lokasi Android SDK (hanya perlu bila membangun di komputer sendiri)
+ sdk.dir=C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+-
+-## NUX Backend Server URL (Optional: Leave empty for standalone/offline build)
+-# nux.server.url=https://your-custom-backend.com
+-
+-## OpenRouter / Gemini AI API Key (Optional: for AI Crash Diagnostics fallback)
+-# nux.ai.api.key=sk-or-v1-your-key-here
+diff --git a/signing/debug.keystore b/signing/debug.keystore
+deleted file mode 100644
+index e45c3635d0b93c1cac2d50a214bd2c00f2726a9c..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 2666
+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
+
+
+
+# FIN part=1/1 files=27

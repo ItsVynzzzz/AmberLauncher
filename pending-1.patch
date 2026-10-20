@@ -1,0 +1,813 @@
+diff --git a/VERSION b/VERSION
+new file mode 100644
+index 0000000..a67658d
+--- /dev/null
++++ b/VERSION
+@@ -0,0 +1 @@
++0.1.0-beta
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index c501291..96abfa8 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -7,6 +7,13 @@ plugins {
+     alias(libs.plugins.kotlin.compose)
+ }
+ 
++// Dasar nama versi dari berkas VERSION di akar repo. Ubah isinya (mis. 0.2.0-beta atau 1.0.0) untuk
++// naik ke seri versi berikutnya; nomor build di belakangnya otomatis mulai dari 1 lagi.
++fun baseVersionName(): String =
++    rootProject.file("VERSION").takeIf { it.isFile }
++        ?.readText()?.trim()?.takeIf { it.isNotEmpty() }
++        ?: "0.1.0-beta"
++
+ val localProperties = Properties()
+ val localPropertiesFile = rootProject.file("local.properties")
+ if (localPropertiesFile.exists()) {
+@@ -47,10 +54,15 @@ android {
+         applicationId = "com.itsvynzzzz.amberlauncher"
+         minSdk = 26
+         targetSdk = 34
+-        // Nomor versi naik sendiri di setiap build GitHub Actions (nomor run), jadi Android selalu
+-        // menganggapnya pembaruan yang lebih baru dari yang sudah terpasang. Build lokal tetap 10.
++        // versionCode (dipakai Android untuk menentukan pembaruan) naik sendiri di setiap build GitHub
++        // Actions lewat nomor run, jadi JANGAN direset walau nama versi dimulai ulang: Android menolak
++        // memasang APK dengan versionCode lebih kecil dari yang sudah terpasang. Build lokal tetap 10.
+         versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.let { 100 + it } ?: 10
+-        versionName = "1.0.9"
++        // Nama versi yang dilihat pengguna: dasarnya dari berkas VERSION di akar repo (mis. 0.1.0-beta).
++        // GitHub Actions menambahkan nomor build di belakangnya lewat AMBER_VERSION_NAME (0.1.0-beta.7);
++        // build lokal diberi akhiran ".dev" supaya tidak pernah dianggap pembaruan.
++        versionName = System.getenv("AMBER_VERSION_NAME")?.trim()?.takeIf { it.isNotEmpty() }
++            ?: "${baseVersionName()}.dev"
+ 
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+diff --git a/app/src/main/assets/lang/en/update.tsv b/app/src/main/assets/lang/en/update.tsv
+new file mode 100644
+index 0000000..a9a41b8
+--- /dev/null
++++ b/app/src/main/assets/lang/en/update.tsv
+@@ -0,0 +1,6 @@
++# Pembaruan aplikasi (pop-up versi baru dari GitHub)
++Pembaruan tersedia	Update available
++Versi {0} sudah tersedia. Kamu memakai versi {1}.	Version {0} is available. You are on version {1}.
++Yang baru	What's new
++Lewati	Skip
++Unduh	Download
+diff --git a/app/src/main/assets/lang/es/update.tsv b/app/src/main/assets/lang/es/update.tsv
+new file mode 100644
+index 0000000..fc54d89
+--- /dev/null
++++ b/app/src/main/assets/lang/es/update.tsv
+@@ -0,0 +1,6 @@
++# Pembaruan aplikasi (pop-up versi baru dari GitHub)
++Pembaruan tersedia	Actualizaci\u00f3n disponible
++Versi {0} sudah tersedia. Kamu memakai versi {1}.	La versi\u00f3n {0} ya est\u00e1 disponible. Est\u00e1s usando la versi\u00f3n {1}.
++Yang baru	Novedades
++Lewati	Omitir
++Unduh	Descargar
+diff --git a/app/src/main/assets/skinview/skinview.js b/app/src/main/assets/skinview/skinview.js
+index 9c3ff6a..e85d38b 100644
+--- a/app/src/main/assets/skinview/skinview.js
++++ b/app/src/main/assets/skinview/skinview.js
+@@ -285,6 +285,11 @@ function loadSkin(skinUrl, model = "auto-detect") {
+         }
+         skinViewer.loadSkin(skinUrl, { model: model }).catch(function(err) {
+             console.warn("loadSkin error:", err);
++            // Alamat jauh bisa gagal (CORS/jaringan): tampilkan Steve daripada model yang kosong
++            var fallback = "https://appassets.androidplatform.net/assets/steve.png";
++            if (skinUrl !== fallback) {
++                skinViewer.loadSkin(fallback, { model: model }).catch(function() {});
++            }
+         });
+     } catch(e) {
+         console.warn("loadSkin exception:", e);
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt b/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt
+index 1b0f1fa..8c7c225 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/AppLinks.kt
+@@ -9,4 +9,10 @@ object AppLinks {
+      * Kalau dikosongkan, tombolnya otomatis disembunyikan.
+      */
+     const val DONATE_URL = "https://sociabuzz.com/amberlauncher/tribe"
++
++    /**
++     * Repo GitHub tempat rilis APK diterbitkan ("pemilik/nama"). Dipakai pengecek pembaruan
++     * (core/update/UpdateChecker) untuk membaca daftar Release.
++     */
++    const val GITHUB_REPO = "ItsVynzzzz/AmberLauncher"
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index db0b106..313e69c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -27,6 +27,7 @@ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
+ import com.israadev.nuxlauncher.core.mods.PendingAddonImport
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
++import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
+ import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
+ import com.israadev.nuxlauncher.ui.screens.DashboardScreen
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+@@ -100,6 +101,8 @@ class MainActivity : ComponentActivity() {
+                                 },
+                                 onFinished = { markStorageIntroDone() }
+                             )
++                            // Jangan menumpuk dengan dialog izin penyimpanan di pembukaan pertama
++                            AmberUpdatePrompt(enabled = !showStorageIntro)
+                         }
+                     }
+                 }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index e62535c..dc5a50f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -22,7 +22,7 @@ data class LauncherSettings(
+     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used
+ 
+     // Graphics & Performance
+-    val resolutionRatio: Int = 100, // 50% - 125%
++    val resolutionRatio: Int = 100, // 40% - 125%, kelipatan 5 (slider di Pengaturan dan menu dalam game)
+     val autoOptimizeMinecraft: Boolean = true,
+     val sustainedPerformanceMode: Boolean = false,
+     val selectedRenderer: String = "auto", // "auto", "krypton", "mobileglues", "gl4es", "zink", "freedreno"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+index 94334ac..d98b9d6 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+@@ -12,8 +12,11 @@ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ import java.io.File
+ import java.io.FileOutputStream
++import java.io.IOException
++import java.util.concurrent.ConcurrentHashMap
+ 
+ import android.util.LruCache
++import com.google.gson.JsonParser
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.models.UserAccount
+ import okhttp3.OkHttpClient
+@@ -191,65 +194,188 @@ object SkinUtils {
+         getSteveHeadBitmap(context, targetSize)
+     }
+ 
+-    suspend fun ensureSkinAndCapeCached(context: Context, account: UserAccount): UserAccount = withContext(Dispatchers.IO) {
+-        var updatedAccount = account
+-        val client = OkHttpClient.Builder()
+-            .connectTimeout(15, TimeUnit.SECONDS)
+-            .readTimeout(15, TimeUnit.SECONDS)
+-            .build()
++    // ---- Skin & jubah Ely.by ----
++
++    private const val ELY_SKINSYSTEM = "https://skinsystem.ely.by"
++    private const val ELY_TEXTURE_TTL_MS = 30L * 60 * 1000 // cek ulang skin paling cepat tiap 30 menit
++    private const val ELY_MISSING_RETRY_MS = 10L * 60 * 1000 // akun tanpa skin: jangan tanya server terus-menerus
++    private const val MAX_TEXTURE_BYTES = 2_000_000
++
++    // Pengalihan (redirect) diikuti manual di downloadTexture supaya alamat http:// bisa dinaikkan ke https://.
++    private val textureClient = OkHttpClient.Builder()
++        .connectTimeout(15, TimeUnit.SECONDS)
++        .readTimeout(15, TimeUnit.SECONDS)
++        .followRedirects(false)
++        .followSslRedirects(false)
++        .build()
++
++    private val elyMissingUntil = ConcurrentHashMap<String, Long>()
++
++    private enum class TextureFetch { SAVED, NOT_FOUND, FAILED }
++
++    private class ElyTextures(val skinUrl: String?, val capeUrl: String?, val slim: Boolean?)
++
++    /** Minta alamat skin/jubah (dan model slim/classic) ke Ely.by. Null bila gagal atau tidak ada data. */
++    private fun fetchElyTextures(encodedName: String): ElyTextures? {
++        return try {
++            val request = Request.Builder().url("$ELY_SKINSYSTEM/textures/$encodedName").build()
++            textureClient.newCall(request).execute().use { resp ->
++                if (!resp.isSuccessful) return null
++                val body = resp.body?.string().orEmpty()
++                if (body.isBlank()) return null
++                val root = JsonParser.parseString(body).asJsonObject
++                val skin = root.getAsJsonObject("SKIN")
++                val cape = root.getAsJsonObject("CAPE")
++                ElyTextures(
++                    skinUrl = skin?.get("url")?.asString,
++                    capeUrl = cape?.get("url")?.asString,
++                    slim = skin?.getAsJsonObject("metadata")?.get("model")?.asString
++                        ?.let { it.equals("slim", ignoreCase = true) }
++                )
++            }
++        } catch (_: Exception) {
++            null
++        }
++    }
+ 
+-        if (account.safeAccountType == "elyby") {
+-            val skinFile = getSkinFileForAccount(context, account.id)
+-            // Download skin if missing or empty
+-            if (!skinFile.exists() || skinFile.length() <= 0) {
+-                runCatching {
+-                    val skinUrl = "https://skinsystem.ely.by/skins/${account.username}.png"
+-                    val req = Request.Builder().url(skinUrl).build()
+-                    client.newCall(req).execute().use { resp ->
+-                        if (resp.isSuccessful && resp.body != null) {
+-                            resp.body!!.byteStream().use { input ->
+-                                FileOutputStream(skinFile).use { output ->
+-                                    input.copyTo(output)
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
++    private fun looksLikePng(bytes: ByteArray): Boolean =
++        bytes.size > 8 &&
++            bytes[0] == 0x89.toByte() &&
++            bytes[1] == 0x50.toByte() && // P
++            bytes[2] == 0x4E.toByte() && // N
++            bytes[3] == 0x47.toByte() // G
++
++    private fun writeAtomically(target: File, bytes: ByteArray): Boolean {
++        val tmp = File(target.parentFile, "${target.name}.${System.nanoTime()}.tmp")
++        return try {
++            tmp.writeBytes(bytes)
++            tmp.renameTo(target) || run {
++                target.delete()
++                tmp.renameTo(target)
+             }
++        } catch (_: IOException) {
++            false
++        } finally {
++            if (tmp.exists()) tmp.delete()
++        }
++    }
+ 
+-            // Check cape / cloak
+-            val capeFile = getCapeFileForAccount(context, account.id)
+-            runCatching {
+-                val capeUrl = "https://skinsystem.ely.by/cloaks/${account.username}.png"
+-                val req = Request.Builder().url(capeUrl).build()
+-                client.newCall(req).execute().use { resp ->
+-                    if (resp.isSuccessful && resp.body != null) {
+-                        val bytes = resp.body!!.bytes()
+-                        if (bytes.isNotEmpty()) {
+-                            FileOutputStream(capeFile).use { out ->
+-                                out.write(bytes)
++    /**
++     * Mengunduh satu tekstur PNG ke [target]. Server skin Ely.by menjawab dengan redirect, dan alamat
++     * tujuannya bisa berupa http://. Aplikasi ini melarang cleartext (network_security_config), jadi
++     * redirect diikuti manual dan setiap http:// dinaikkan ke https:// sebelum diminta.
++     * SAVED = tersimpan, NOT_FOUND = pemain memang tidak punya tekstur itu, FAILED = jaringan/respon bermasalah.
++     */
++    private fun downloadTexture(startUrl: String, target: File): TextureFetch {
++        var url = startUrl
++        for (hop in 0 until 5) {
++            val secureUrl = if (url.startsWith("http://")) "https://" + url.removePrefix("http://") else url
++            val request = try {
++                Request.Builder().url(secureUrl).build()
++            } catch (_: IllegalArgumentException) {
++                return TextureFetch.FAILED
++            }
++
++            val outcome: TextureFetch? = try {
++                textureClient.newCall(request).execute().use { resp ->
++                    when {
++                        resp.isRedirect -> {
++                            val next = resp.header("Location")?.let { resp.request.url.resolve(it)?.toString() }
++                            if (next == null) {
++                                TextureFetch.FAILED
++                            } else {
++                                url = next
++                                null
+                             }
+-                        } else {
+-                            if (capeFile.exists()) capeFile.delete()
+                         }
+-                    } else {
+-                        if (capeFile.exists()) capeFile.delete()
++                        resp.code == 404 || resp.code == 204 -> TextureFetch.NOT_FOUND
++                        resp.isSuccessful -> {
++                            val bytes = resp.body?.bytes()
++                            when {
++                                bytes == null -> TextureFetch.FAILED
++                                bytes.isEmpty() -> TextureFetch.NOT_FOUND
++                                bytes.size > MAX_TEXTURE_BYTES || !looksLikePng(bytes) -> TextureFetch.FAILED
++                                writeAtomically(target, bytes) -> TextureFetch.SAVED
++                                else -> TextureFetch.FAILED
++                            }
++                        }
++                        else -> TextureFetch.FAILED
+                     }
+                 }
+-            }.onFailure {
+-                if (capeFile.exists()) capeFile.delete()
++            } catch (_: IOException) {
++                TextureFetch.FAILED
++            }
++            if (outcome != null) return outcome
++        }
++        return TextureFetch.FAILED
++    }
++
++    /**
++     * Menyegarkan skin dan jubah Ely.by di berkas lokal. Alamat tekstur diminta dulu lewat /textures
++     * (sekaligus memberi model slim/classic); bila itu tidak membuahkan hasil dipakai /skins dan /cloaks.
++     * Mengembalikan true bila skin slim, false bila classic, null bila tidak diketahui dari server.
++     */
++    private fun refreshElyByTextures(account: UserAccount, skinFile: File, capeFile: File): Boolean? {
++        val encodedName = Uri.encode(account.username)
++        val textures = fetchElyTextures(encodedName)
++
++        var skinResult = textures?.skinUrl?.let { downloadTexture(it, skinFile) } ?: TextureFetch.NOT_FOUND
++        if (skinResult != TextureFetch.SAVED) {
++            skinResult = downloadTexture("$ELY_SKINSYSTEM/skins/$encodedName.png", skinFile)
++        }
++
++        var capeResult = textures?.capeUrl?.let { downloadTexture(it, capeFile) } ?: TextureFetch.NOT_FOUND
++        if (capeResult != TextureFetch.SAVED) {
++            capeResult = downloadTexture("$ELY_SKINSYSTEM/cloaks/$encodedName.png", capeFile)
++        }
++
++        when (skinResult) {
++            TextureFetch.SAVED -> {
++                elyMissingUntil.remove(account.id)
++                invalidateHeadCache()
+             }
++            TextureFetch.NOT_FOUND -> {
++                if (skinFile.exists()) skinFile.delete()
++                elyMissingUntil[account.id] = System.currentTimeMillis() + ELY_MISSING_RETRY_MS
++                invalidateHeadCache()
++            }
++            TextureFetch.FAILED -> Unit // jaringan bermasalah: pertahankan berkas lama, coba lagi nanti
++        }
++        if (capeResult == TextureFetch.NOT_FOUND && capeFile.exists()) capeFile.delete()
++
++        return if (skinResult == TextureFetch.SAVED) textures?.slim else null
++    }
++
++    suspend fun ensureSkinAndCapeCached(context: Context, account: UserAccount): UserAccount = withContext(Dispatchers.IO) {
++        var updatedAccount = account
++
++        if (account.safeAccountType == "elyby") {
++            val skinFile = getSkinFileForAccount(context, account.id)
++            val capeFile = getCapeFileForAccount(context, account.id)
+ 
+-            // Detect model (classic vs slim)
+-            val isSlim = if (skinFile.exists()) isSlimModel(skinFile) else false
+-            val finalSkinPath = if (skinFile.exists() && skinFile.length() > 0) skinFile.absolutePath else null
+-            val finalCapePath = if (capeFile.exists() && capeFile.length() > 0) capeFile.absolutePath else null
++            val now = System.currentTimeMillis()
++            val skinFresh = skinFile.exists() && skinFile.length() > 0 &&
++                now - skinFile.lastModified() < ELY_TEXTURE_TTL_MS
++            val recentlyMissing = (elyMissingUntil[account.id] ?: 0L) > now
++
++            // Unduh bila belum ada atau sudah lama, supaya skin yang diganti di ely.by ikut berubah
++            val shouldRefresh = !skinFresh && !recentlyMissing
++            val slimFromServer = if (shouldRefresh) refreshElyByTextures(account, skinFile, capeFile) else null
++
++            val hasSkin = skinFile.exists() && skinFile.length() > 0
++            val hasCape = capeFile.exists() && capeFile.length() > 0
++            val isSlim = when {
++                !hasSkin -> false
++                slimFromServer != null -> slimFromServer
++                shouldRefresh -> isSlimModel(skinFile)
++                else -> account.safeSkinModel == "slim"
++            }
+ 
+             updatedAccount = updatedAccount.copy(
+-                customSkinPath = finalSkinPath,
+-                customCapePath = finalCapePath,
++                customSkinPath = if (hasSkin) skinFile.absolutePath else null,
++                customCapePath = if (hasCape) capeFile.absolutePath else null,
+                 skinModel = if (isSlim) "slim" else "classic",
+-                skinUrl = "https://skinsystem.ely.by/skins/${account.username}.png"
++                skinUrl = "$ELY_SKINSYSTEM/skins/${account.username}.png"
+             )
+ 
+             if (updatedAccount != account) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/AppVersion.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/AppVersion.kt
+new file mode 100644
+index 0000000..a67cc3b
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/AppVersion.kt
+@@ -0,0 +1,65 @@
++package com.israadev.nuxlauncher.core.update
++
++/**
++ * Nomor versi gaya semver, mis. 0.1.0-beta.7 (tag GitHub boleh berawalan "v"). Urutannya mengikuti
++ * aturan semver, tanpa ketergantungan Android sehingga mudah diuji:
++ *
++ *  - 1.0.0 lebih baru daripada 1.0.0-beta.2 (rilis penuh mengalahkan versi berlabel),
++ *  - 0.1.0-beta.10 lebih baru daripada 0.1.0-beta.9 (bagian angka dibandingkan sebagai angka),
++ *  - 0.1.0-beta.dev (build lokal) dianggap lebih baru daripada semua 0.1.0-beta.<angka>,
++ *    jadi build lokal tidak pernah ditawari "pembaruan".
++ */
++class AppVersion private constructor(
++    private val core: List<Long>,
++    private val label: List<String>
++) : Comparable<AppVersion> {
++
++    override fun compareTo(other: AppVersion): Int {
++        for (i in 0 until 3) {
++            val c = core[i].compareTo(other.core[i])
++            if (c != 0) return c
++        }
++        if (label.isEmpty() || other.label.isEmpty()) {
++            return when {
++                label.isEmpty() && other.label.isEmpty() -> 0
++                label.isEmpty() -> 1
++                else -> -1
++            }
++        }
++        for (i in 0 until minOf(label.size, other.label.size)) {
++            val a = label[i]
++            val b = other.label[i]
++            val an = a.toLongOrNull()
++            val bn = b.toLongOrNull()
++            val c = when {
++                an != null && bn != null -> an.compareTo(bn)
++                an != null -> -1 // bagian angka selalu lebih kecil daripada bagian teks
++                bn != null -> 1
++                else -> a.compareTo(b)
++            }
++            if (c != 0) return c
++        }
++        return label.size.compareTo(other.label.size)
++    }
++
++    override fun equals(other: Any?): Boolean = other is AppVersion && compareTo(other) == 0
++
++    override fun hashCode(): Int = 31 * core.hashCode() + label.hashCode()
++
++    override fun toString(): String =
++        core.joinToString(".") + if (label.isEmpty()) "" else "-" + label.joinToString(".")
++
++    companion object {
++        private val PATTERN =
++            Regex("""^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$""")
++
++        /** Mengurai "v0.1.0-beta.7" atau "0.1.0-beta.7". Null bila bukan nomor versi (mis. tag "build-12"). */
++        fun parse(text: String?): AppVersion? {
++            val m = PATTERN.matchEntire(text?.trim().orEmpty()) ?: return null
++            val core = (1..3).map { m.groupValues[it].toLongOrNull() ?: return null }
++            val label = m.groupValues[4].takeIf { it.isNotEmpty() }?.split('.') ?: emptyList()
++            if (label.any { it.isEmpty() }) return null
++            return AppVersion(core, label)
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt
+new file mode 100644
+index 0000000..16c46f8
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt
+@@ -0,0 +1,161 @@
++package com.israadev.nuxlauncher.core.update
++
++import android.content.Context
++import com.google.gson.JsonObject
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.AppLinks
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import okhttp3.OkHttpClient
++import okhttp3.Request
++import java.util.concurrent.TimeUnit
++
++/** Satu rilis baru di GitHub yang bisa ditawarkan ke pengguna. */
++data class AppUpdate(
++    /** Tag rilis, mis. "v0.1.0-beta.7". */
++    val tag: String,
++    /** Tag tanpa awalan "v", mis. "0.1.0-beta.7". */
++    val versionName: String,
++    /** Isi catatan rilis (teks mentah dari GitHub). */
++    val notes: String,
++    /** Halaman rilis di GitHub. */
++    val pageUrl: String,
++    /** Alamat langsung berkas APK, bila rilis memilikinya. */
++    val downloadUrl: String?
++)
++
++/**
++ * Mengecek rilis terbaru di GitHub Releases ([AppLinks.GITHUB_REPO]) dan membandingkannya dengan
++ * versi yang terpasang. Tanpa login: batas GitHub 60 permintaan per jam per jaringan, jadi
++ * pengecekan otomatis dibatasi sekali per 6 jam. Kegagalan jaringan diam-diam diabaikan.
++ *
++ * Daftar rilis dibaca lewat /releases (bukan /releases/latest) karena /latest tidak menyertakan
++ * pra-rilis, sedangkan versi beta ditandai pra-rilis oleh workflow.
++ */
++object UpdateChecker {
++    private const val PREFS_NAME = "amber_launcher_prefs"
++    private const val KEY_LAST_CHECK = "update_last_check"
++    private const val KEY_SKIPPED_TAG = "update_skipped_tag"
++    private const val CHECK_INTERVAL_MS = 6L * 60 * 60 * 1000
++    private const val MAX_NOTES_CHARS = 1200
++
++    private val client = OkHttpClient.Builder()
++        .connectTimeout(10, TimeUnit.SECONDS)
++        .readTimeout(15, TimeUnit.SECONDS)
++        .build()
++
++    fun currentVersionName(context: Context): String = try {
++        context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
++    } catch (_: Exception) {
++        ""
++    }
++
++    /**
++     * Mengecek GitHub bila sudah lewat 6 jam dari pengecekan terakhir. Mengembalikan rilis yang lebih
++     * baru daripada versi terpasang dan belum dilewati pengguna, atau null (tidak ada, belum
++     * waktunya, atau jaringan gagal; kalau gagal, pengecekan diulang saat aplikasi dibuka lagi).
++     */
++    suspend fun checkIfDue(context: Context): AppUpdate? = withContext(Dispatchers.IO) {
++        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++        val now = System.currentTimeMillis()
++        if (now - prefs.getLong(KEY_LAST_CHECK, 0L) < CHECK_INTERVAL_MS) return@withContext null
++
++        val currentName = currentVersionName(context)
++        val current = AppVersion.parse(currentName) ?: return@withContext null
++
++        val result = fetchLatest(currentName)
++        if (result.isFailure) return@withContext null
++        prefs.edit().putLong(KEY_LAST_CHECK, now).apply()
++
++        val latest = result.getOrNull() ?: return@withContext null
++        val latestVersion = AppVersion.parse(latest.tag) ?: return@withContext null
++        if (latestVersion <= current) return@withContext null
++        if (prefs.getString(KEY_SKIPPED_TAG, null) == latest.tag) return@withContext null
++        latest
++    }
++
++    /** Pengguna memilih "Lewati": versi ini tidak ditawarkan lagi, versi yang lebih baru tetap. */
++    fun skip(context: Context, tag: String) {
++        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++            .edit().putString(KEY_SKIPPED_TAG, tag).apply()
++    }
++
++    /** Catatan rilis dirapikan untuk pop-up: tanpa judul/tautan Markdown, butir "- " jadi "• ". */
++    fun readableNotes(raw: String): String =
++        raw.lineSequence()
++            .map { it.trimEnd() }
++            .filterNot { it.startsWith("#") || it.contains("https://") }
++            .map { line ->
++                val plain = line.replace("**", "")
++                if (plain.startsWith("- ")) "• " + plain.drop(2) else plain
++            }
++            .joinToString("\n")
++            .replace(Regex("\n{3,}"), "\n\n")
++            .trim()
++            .take(MAX_NOTES_CHARS)
++
++    /** Rilis dengan nomor versi tertinggi (pra-rilis ikut dihitung). Result gagal = jaringan/respon bermasalah. */
++    private fun fetchLatest(userAgentVersion: String): Result<AppUpdate?> = runCatching {
++        val request = Request.Builder()
++            .url("https://api.github.com/repos/${AppLinks.GITHUB_REPO}/releases?per_page=20")
++            .header("Accept", "application/vnd.github+json")
++            .header("X-GitHub-Api-Version", "2022-11-28")
++            .header("User-Agent", "AmberLauncher/$userAgentVersion")
++            .build()
++
++        client.newCall(request).execute().use { resp ->
++            if (!resp.isSuccessful) error("GitHub membalas ${resp.code}")
++            val body = resp.body?.string().orEmpty()
++
++            var best: Pair<AppVersion, AppUpdate>? = null
++            for (element in JsonParser.parseString(body).asJsonArray) {
++                if (!element.isJsonObject) continue
++                val release = element.asJsonObject
++                if (release.bool("draft")) continue
++
++                val tag = release.str("tag_name") ?: continue
++                val version = AppVersion.parse(tag) ?: continue // tag lama "build-12" dilewati
++                val pageUrl = release.str("html_url")?.takeIf { isOfficialUrl(it) } ?: continue
++
++                var downloadUrl: String? = null
++                val assets = release.get("assets")
++                if (assets != null && assets.isJsonArray) {
++                    for (asset in assets.asJsonArray) {
++                        if (!asset.isJsonObject) continue
++                        val name = asset.asJsonObject.str("name") ?: continue
++                        val url = asset.asJsonObject.str("browser_download_url") ?: continue
++                        if (name.endsWith(".apk", ignoreCase = true) && isOfficialUrl(url)) {
++                            downloadUrl = url
++                            break
++                        }
++                    }
++                }
++
++                val update = AppUpdate(
++                    tag = tag,
++                    versionName = tag.removePrefix("v"),
++                    notes = release.str("body").orEmpty(),
++                    pageUrl = pageUrl,
++                    downloadUrl = downloadUrl
++                )
++                val currentBest = best
++                if (currentBest == null || version > currentBest.first) best = version to update
++            }
++            best?.second
++        }
++    }
++
++    // Hanya tautan ke repo resmi yang dibuka, apa pun isi balasan server.
++    private fun isOfficialUrl(url: String): Boolean =
++        url.startsWith("https://github.com/${AppLinks.GITHUB_REPO}/", ignoreCase = true)
++
++    private fun JsonObject.str(name: String): String? {
++        val value = get(name) ?: return null
++        return if (value.isJsonPrimitive) value.asString else null
++    }
++
++    private fun JsonObject.bool(name: String): Boolean {
++        val value = get(name) ?: return false
++        return value.isJsonPrimitive && value.asBoolean
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
+index e00b3b7..2d6d240 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PlayerSkin.kt
+@@ -154,6 +154,10 @@ class PlayerSkin(
+ 
+         if (skinFile != null && skinFile.exists() && skinFile.length() > 0) {
+             loadSkin(skinFile, model)
++        } else if (account.safeAccountType == "elyby") {
++            // Skin Ely.by diunduh ke berkas oleh SkinUtils. Memuat alamat jarak jauh langsung ke WebView
++            // gagal (CORS + redirect) dan membuat model kosong, jadi sementara tampilkan Steve.
++            loadSkin(null, model)
+         } else if (!account.skinUrl.isNullOrBlank()) {
+             val safeSkinUrl = if (account.skinUrl.startsWith("http://")) {
+                 account.skinUrl.replace("http://", "https://")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt
+new file mode 100644
+index 0000000..df23ab5
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt
+@@ -0,0 +1,142 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import android.content.Context
++import android.content.Intent
++import android.net.Uri
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.heightIn
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.update.AppUpdate
++import com.israadev.nuxlauncher.core.update.UpdateChecker
++import com.israadev.nuxlauncher.ui.components.AmberAlert
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.AmberInfoBox
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.Amber
++
++/**
++ * Pop-up "Pembaruan tersedia". Saat aplikasi dibuka, rilis terbaru di GitHub dicek di latar
++ * (paling sering sekali per 6 jam, lihat [UpdateChecker]). Kalau ada versi yang lebih baru, muncul
++ * dialog berisi catatan perubahan dengan pilihan Unduh, Lewati, atau Nanti. Unduh membuka APK
++ * rilis di peramban; Android yang menanyakan izin pemasangannya.
++ *
++ * [enabled] false menahan pengecekan, mis. selagi dialog izin penyimpanan sedang tampil.
++ */
++@Composable
++fun AmberUpdatePrompt(enabled: Boolean) {
++    val context = LocalContext.current
++    var update by remember { mutableStateOf<AppUpdate?>(null) }
++
++    LaunchedEffect(enabled) {
++        if (enabled && update == null) {
++            update = UpdateChecker.checkIfDue(context.applicationContext)
++        }
++    }
++
++    val info = update
++    if (info != null) {
++        UpdateDialog(
++            info = info,
++            onLater = { update = null },
++            onSkip = {
++                UpdateChecker.skip(context, info.tag)
++                update = null
++            },
++            onDownload = {
++                openUrl(context, info.downloadUrl ?: info.pageUrl)
++                update = null
++            }
++        )
++    }
++}
++
++@Composable
++private fun UpdateDialog(
++    info: AppUpdate,
++    onLater: () -> Unit,
++    onSkip: () -> Unit,
++    onDownload: () -> Unit
++) {
++    val context = LocalContext.current
++    val current = remember { UpdateChecker.currentVersionName(context) }
++    val notes = remember(info) { UpdateChecker.readableNotes(info.notes) }
++
++    AmberAlert(
++        onDismissRequest = onLater,
++        title = "Pembaruan tersedia",
++        icon = "download",
++        accent = Amber.Yellow,
++        actions = {
++            AmberButton(
++                text = "Nanti",
++                onClick = onLater,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Ghost
++            )
++            AmberButton(
++                text = "Lewati",
++                onClick = onSkip,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Ghost
++            )
++            AmberButton(
++                text = "Unduh",
++                onClick = onDownload,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary
++            )
++        }
++    ) {
++        Text(
++            text = "Versi ${info.versionName} sudah tersedia. Kamu memakai versi $current.",
++            color = Amber.Text,
++            fontSize = 14.sp,
++            lineHeight = 21.sp
++        )
++        if (notes.isNotBlank()) {
++            AmberInfoBox(modifier = Modifier.padding(top = 12.dp)) {
++                Text(
++                    text = "Yang baru",
++                    color = Amber.Yellow,
++                    fontSize = 12.sp,
++                    fontWeight = FontWeight.Bold
++                )
++                Column(
++                    modifier = Modifier
++                        .padding(top = 6.dp)
++                        .heightIn(max = 160.dp)
++                        .verticalScroll(rememberScrollState())
++                ) {
++                    Text(
++                        text = notes,
++                        color = Amber.TextDim,
++                        fontSize = 13.sp,
++                        lineHeight = 19.sp
++                    )
++                }
++            }
++        }
++    }
++}
++
++private fun openUrl(context: Context, url: String) {
++    try {
++        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
++    } catch (_: Exception) {
++        // Tidak ada peramban: tidak ada yang bisa dilakukan.
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 4fc82fd..7eb2503 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -382,13 +382,16 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
+-                        SettingChoiceRow(
++                        // Rentang 40-125% kelipatan 5, sama dengan slider "Resolusi render" di menu dalam game.
++                        SettingSliderRow(
+                             title = "Skala resolusi layar",
+                             desc = "Lebih kecil = FPS lebih tinggi, gambar lebih buram.",
+-                            options = listOf(50 to "50%", 75 to "75%", 100 to "100%", 125 to "125%"),
+-                            selected = resolutionRatio,
+-                            onSelect = {
+-                                resolutionRatio = it
++                            valueText = "$resolutionRatio%",
++                            value = resolutionRatio.toFloat(),
++                            valueRange = 40f..125f,
++                            steps = 16,
++                            onValueChange = {
++                                resolutionRatio = (it / 5f).roundToInt() * 5
+                                 commitSettings()
+                             }
+                         )
+# FIN part=1/1 files=14

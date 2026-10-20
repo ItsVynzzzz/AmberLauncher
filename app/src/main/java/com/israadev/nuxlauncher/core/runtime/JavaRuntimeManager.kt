@@ -14,6 +14,11 @@ import java.io.InputStream
 object JavaRuntimeManager {
 
     fun getDeviceArch(): String {
+        // Aplikasi ini hanya membawa pustaka arm64-v8a, jadi di HP mana pun yang berhasil
+        // memasangnya, prosesnya berjalan 64-bit. Jangan mengandalkan SUPPORTED_ABIS.first():
+        // sebagian HP mendaftarkan armeabi-v7a lebih dulu walau aplikasinya berjalan 64-bit,
+        // sehingga Java 32-bit (yang tidak disertakan) dicari dan penyiapan OpenJDK gagal.
+        if (android.os.Process.is64Bit()) return "arm64"
         val abi = Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"
         return when {
             abi.contains("arm64") -> "arm64"

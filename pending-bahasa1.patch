@@ -1,0 +1,967 @@
+diff --git a/app/src/main/assets/lang/en/common.tsv b/app/src/main/assets/lang/en/common.tsv
+new file mode 100644
+index 0000000..5a87908
+--- /dev/null
++++ b/app/src/main/assets/lang/en/common.tsv
+@@ -0,0 +1,27 @@
++# Kata umum
++Tutup	Close
++TUTUP	CLOSE
++Batal	Cancel
++BATAL	CANCEL
++Hapus	Delete
++Keluar	Exit
++Ganti	Change
++Nanti	Later
++Pengaturan	Settings
++Akun	Accounts
++Mod	Mods
++Tentang & Lisensi	About & License
++Tentang & lisensi	About & license
++Bahasa	Language
++Ikuti sistem	Follow system
++Seimbang	Balanced
++Bawaan	Default
++Sistem	System
++Halus	Subtle
++Sedang	Medium
++Kuat	Strong
++Buka folder	Open folder
++Buka pengaturan	Open settings
++Ubah instance	Edit instance
++Hapus instance	Delete instance
++Lihat log	View log
+diff --git a/app/src/main/assets/lang/en/game.tsv b/app/src/main/assets/lang/en/game.tsv
+new file mode 100644
+index 0000000..8b90508
+--- /dev/null
++++ b/app/src/main/assets/lang/en/game.tsv
+@@ -0,0 +1,58 @@
++# Menu in-game, loading, dan dialog kecil
++Tombol	Buttons
++Atur tombol	Edit buttons
++TAMPILAN	DISPLAY
++Resolusi render	Render resolution
++Hemat 50%	Saver 50%
++Seimbang 75%	Balanced 75%
++Penuh 100%	Full 100%
++Pin FPS di layar	Pin FPS on screen
++Tetap tampil saat tombol layar disembunyikan	Stays visible when the on-screen buttons are hidden
++KAMERA DAN KURSOR	CAMERA AND CURSOR
++Kecepatan kamera	Camera speed
++Kecepatan kursor	Cursor speed
++Mode sentuh	Touch mode
++Geser	Slide
++Ketuk	Tap
++Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Slide: the screen acts as a trackpad. Tap: your finger becomes the cursor directly.
++PINTAS	SHORTCUTS
++Kamera	Camera
++Jeda	Pause
++Pemain	Players
++Sembunyi HUD	Hide HUD
++Keluar dari game	Exit game
++Keluar dari game?	Exit game?
++Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft will be stopped and you will return to the launcher. Unsaved worlds may be lost.
++sisa RAM	free RAM
++PANAS	HOT
++Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	Tap the gear icon or the FPS number on screen to open the menu. Exit the game with the red button inside the menu.
++Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	Bugs are normal, because nothing is perfect except God Almighty.
++Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	Turn off Vertical Sync (VSync) in the Renderer settings if you get stuttering or a black blank screen after the Mojang logo.
++Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	If the Minecraft screen looks cropped or vertical, enable your phone's auto-rotate and hold the screen in landscape before pressing Play.
++Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	Use the MobileGlues renderer for the best battery efficiency and shaderpack compatibility.
++Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	If Minecraft crashes on startup with a Mali/Adreno GPU, try enabling 'DISABLE_SUBGROUP' in the renderer settings.
++Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	Enable OpenGL NoError in the MobileGlues settings to improve FPS while playing.
++Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	Use the HIDE GUI button to hide the on-screen buttons when playing with a physical keyboard and mouse.
++Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	Set RAM to suit your phone: 2GB\u20133GB is plenty for Minecraft 1.20+ without heavy modpacks.
++Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Change the cursor sensitivity in the Controls settings to aim and look around more accurately.
++Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	Choose the Turnip Vulkan driver on Snapdragon devices for the best graphics performance and stability.
++Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	You can adjust the position and size of the control buttons as you like in the button customization menu.
++Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	Use the Import Addon feature to install modpacks (.mrpack), mods (.jar), and resource packs instantly!
++Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	Tap the ESC button on screen to open the pause menu or go back to the previous menu.
++Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Press the F3 button to see coordinates, biome, and the FPS performance graph in the game.
++Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	Enable Fullscreen mode in Settings to ignore the notch/front camera and widen your view.
++Memuat Minecraft {0}	Loading Minecraft {0}
++Tutup loading	Close loading
++Menyiapkan mesin Java dan grafis...	Preparing the Java and graphics engine...
++Izin penyimpanan	Storage permission
++AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher stores worlds, mods, and settings in the nuxlauncher folder on your phone's storage, so they are easy to back up and move.
++Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android will open a settings page. Turn on all-files access for AmberLauncher, then come back here.
++Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	If you choose Later, the game still works. Its data is kept in the app's private folder, which is not easy to open from a file manager.
++Hapus instance?	Delete instance?
++Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	All worlds, mods, saves, and configuration in this instance will be permanently deleted and cannot be restored.
++Perender tidak cocok	Incompatible renderer
++Tetap jalankan	Run anyway
++Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	This renderer is not officially supported for Minecraft {0}. Forcing it may cause graphical glitches, a frozen screen, or a game crash. Continue?
++Dukungan resmi: {0}	Official support: {0}
++Mengunduh game	Downloading game
++Menyiapkan file game...	Preparing game files...
+diff --git a/app/src/main/assets/lang/en/home.tsv b/app/src/main/assets/lang/en/home.tsv
+new file mode 100644
+index 0000000..b81c843
+--- /dev/null
++++ b/app/src/main/assets/lang/en/home.tsv
+@@ -0,0 +1,33 @@
++# Beranda dan sidebar
++Memproses berkas...	Processing file...
++Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan	Video set as background. Sound and ambient are set in Settings > Display
++Latar belakang diganti	Background changed
++Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px	Too large: photos or GIFs up to 30 MB, videos up to 200 MB and 2560 px resolution
++Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	This file cannot be used. Use a photo, a GIF, or an MP4 (H.264) video
++Silakan buat atau pilih akun terlebih dahulu!	Please create or select an account first!
++Menyiapkan OpenJDK ({0})...	Preparing OpenJDK ({0})...
++Instalasi selesai! Tekan PLAY untuk bermain.	Installation complete! Press PLAY to start playing.
++Gagal mengunduh: {0}	Download failed: {0}
++Meluncurkan {0}...	Launching {0}...
++Gagal menyiapkan OpenJDK: {0}	Failed to prepare OpenJDK: {0}
++Membuka folder instance...	Opening instance folder...
++Latar belakang dikembalikan ke bawaan	Background restored to default
++Instance {0} berhasil dibuat!	Instance {0} created!
++Instance {0} berhasil dihapus!	Instance {0} deleted!
++Tambah akun	Add account
++Ganti akun	Switch account
++Ganti latar belakang	Change background
++Ganti instance	Switch instance
++UNDUH	DOWNLOAD
++Buka folder instance	Open instance folder
++Belum ada instance	No instances yet
++Buat instance Minecraft pertamamu untuk mulai bermain.	Create your first Minecraft instance to start playing.
++TAMBAH	ADD
++Video tidak bisa diputar di HP ini, latar memakai gambar diam	This phone can't play the video, so the background uses a still image
++LATAR BELAKANG	BACKGROUND
++Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps (MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.	Photos are the lightest. GIFs move with little load. Videos are the smoothest and can be HD 60 fps (MP4 H.264, up to 200 MB), but use more battery. Video sound, ambient, and battery saver are set in Settings > Display.
++PILIH FOTO / GIF / VIDEO	CHOOSE PHOTO / GIF / VIDEO
++KEMBALI KE BAWAAN	RESTORE DEFAULT
++PILIH INSTANCE	CHOOSE INSTANCE
++Belum ada instance. Buat yang pertama di bawah.	No instances yet. Create your first one below.
++TAMBAH INSTANCE	ADD INSTANCE
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+new file mode 100644
+index 0000000..1fbd6b3
+--- /dev/null
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -0,0 +1,78 @@
++# Pengaturan dan profil perangkat
++{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} CPU cores
++Memori	Memory
++Grafis	Graphics
++Kontrol	Controls
++Tampilan	Display
++Memori game (RAM)	Game memory (RAM)
++Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Too large for this phone; the game and the phone may become slow.
++Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Java memory limit (-Xmx). Bigger is not always faster.
++1,5 GB	1.5 GB
++Argumen JVM tambahan	Extra JVM arguments
++Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Optional, for advanced users. Wrong values can stop the game from running.
++Contoh: -XX:+UseG1GC	Example: -XX:+UseG1GC
++Konfigurasi renderer	Renderer settings
++Optimasi otomatis options.txt	Auto-optimize options.txt
++Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Automatically turns off clouds and shadows for higher FPS.
++Skala resolusi layar	Screen resolution scale
++Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Smaller = higher FPS, blurrier image.
++Driver Vulkan	Vulkan driver
++Pilih implementasi driver Vulkan yang dipakai sistem/game.	Choose the Vulkan driver implementation used by the system/game.
++API grafis	Graphics API
++Atur API grafis yang dipakai Minecraft modern 26.2+.	Sets the graphics API used by modern Minecraft 26.2+.
++Gunakan driver Vulkan sistem	Use the system Vulkan driver
++Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	Force the phone's built-in Vulkan driver (not Turnip). Affects the Zink renderer.
++V-Sync Zink	Zink V-Sync
++Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Vertical sync for the Kopper Zink renderer through the system interface.
++Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Language of the launcher text. Follow system uses your phone's language.
++Latar Beranda	Home background
++Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Photos are the lightest, GIFs move with little load, videos are the smoothest (HD, up to 60 fps) but use more battery.
++Ganti latar	Change background
++Gerakkan GIF dan video	Animate GIFs and videos
++Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	Turn off to show a still image only. Saves the most battery and RAM.
++Jeda saat Hemat Baterai	Pause in Battery Saver
++GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIFs and videos pause automatically while the phone's Battery Saver mode is on.
++Suara video	Video sound
++Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Off by default. Automatically muted when another app is playing audio.
++Volume video	Video volume
++Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	A soft glow on the sidebar and the edges of the Home cards. Its color follows the GIF or video. Does not apply to photos.
++Kekuatan ambient	Ambient strength
++Kustomisasi kontrol virtual	Customize virtual controls
++Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Change button layout, size, transparency, hotbar scrolling, and Minecraft key mapping.
++Buka editor	Open editor
++Mode mouse di menu	Mouse mode in menus
++Sentuh tombol atau slot menu langsung di mana jari menekan.	Touch buttons or menu slots directly where your finger presses.
++Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Slide your finger to move the virtual cursor, tap the screen to click.
++Click (langsung)	Click (direct)
++Pukul lewat layar	Attack by touching the screen
++Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Tap or hold an empty area of the screen to attack. Turn off so dragging the camera does not attack too; use the attack button instead.
++Sensitivitas kamera	Camera sensitivity
++Kecepatan memutar pandangan di dalam game.	How fast the view turns in the game.
++Sensitivitas kursor virtual	Virtual cursor sensitivity
++Kecepatan kursor saat berada di menu Minecraft.	Cursor speed while in Minecraft menus.
++Ukuran kursor virtual	Virtual cursor size
++Mode mouse fisik (auto-hide)	Physical mouse mode (auto-hide)
++Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Automatically hide the virtual cursor when an external mouse is connected.
++Perubahan tersimpan otomatis	Changes are saved automatically
++Pengaturan di-reset ke default!	Settings were reset to default!
++Reset default	Reset to default
++PILIH RENDERER GRAFIK	CHOOSE GRAPHICS RENDERER
++Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Match the graphics backend to your Minecraft version and your device's GPU
++Renderer diubah ke: {0}	Renderer changed to: {0}
++Konfigurasi {0}	{0} settings
++Kesesuaian: {0}	Compatibility: {0}
++PERINGATAN DRIVER ADRENO	ADRENO DRIVER WARNING
++Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	The launcher detected that your device uses an Adreno GPU. Enabling this option can make the Zink renderer stop working or crash. Are you sure you want to enable it?
++AKTIFKAN	ENABLE
++Profil perangkat	Device profile
++Profil performa HP ini	Performance profile for this phone
++Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Limits the heap, tunes GC, and locks the screen to 60 Hz. Turn off to compare FPS.
++Mode GC (pembersih memori Java)	GC mode (Java memory cleaner)
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: lightest on the processor, slightly longer GC pauses.
++Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	Default: no extra GC flags from the profile (heap limit and screen only).
++Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	Balanced: G1 with short pauses and limited memory. Try this first.
++Kunci layar {0} Hz	Lock screen to {0} Hz
++Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	A 90 Hz screen is locked to 60 Hz while playing for smoother motion. The FPS HUD shows the active Hz.
++Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Game heap: you chose {0} MB, using {1} MB. This phone has {2} MB of RAM; a larger heap makes the phone swap memory and lowers FPS.
++Heap game {0} MB (batas profil {1} MB).	Game heap {0} MB (profile limit {1} MB).
++Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (free RAM \u00b7 HOT \u00b7 Hz).
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 6851a24..778203d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -8,6 +8,7 @@ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
+ import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
+ import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
+ import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
++import com.israadev.nuxlauncher.ui.i18n.Tr
+ import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
+ import androidx.core.view.WindowCompat
+ import androidx.core.view.WindowInsetsCompat
+@@ -1297,7 +1298,13 @@ private fun buildPerfHint(context: Context): Pair<String, Boolean> {
+         }
+     } catch (_: Throwable) {
+     }
+-    return Pair(text, warn)
++    return Pair(localizeHint(text), warn)
++}
++
++/** Menerjemahkan kata di teks kondisi HP bila bahasa bukan Indonesia (HUD digambar langsung, bukan lewat Text). */
++private fun localizeHint(text: String): String {
++    if (text.isEmpty() || Tr.effective == Tr.ID) return text
++    return text.replace("sisa RAM", Tr.t("sisa RAM")).replace("PANAS", Tr.t("PANAS"))
+ }
+ 
+ @Composable
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 68bcd96..db0b106 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -27,6 +27,7 @@ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
+ import com.israadev.nuxlauncher.core.mods.PendingAddonImport
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
++import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
+ import com.israadev.nuxlauncher.ui.screens.DashboardScreen
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+ import com.israadev.nuxlauncher.ui.theme.NuxResponsiveTheme
+@@ -83,21 +84,23 @@ class MainActivity : ComponentActivity() {
+         }
+ 
+         setContent {
+-            NuxResponsiveTheme {
+-                MaterialTheme {
+-                    Surface(
+-                        modifier = Modifier.fillMaxSize(),
+-                        color = NuxColors.Background
+-                    ) {
+-                        DashboardScreen()
+-                        AmberStorageIntro(
+-                            initiallyVisible = showStorageIntro,
+-                            onOpenSettings = {
+-                                markStorageIntroDone()
+-                                openAllFilesAccessSettings()
+-                            },
+-                            onFinished = { markStorageIntroDone() }
+-                        )
++            AmberLanguageHost {
++                NuxResponsiveTheme {
++                    MaterialTheme {
++                        Surface(
++                            modifier = Modifier.fillMaxSize(),
++                            color = NuxColors.Background
++                        ) {
++                            DashboardScreen()
++                            AmberStorageIntro(
++                                initiallyVisible = showStorageIntro,
++                                onOpenSettings = {
++                                    markStorageIntroDone()
++                                    openAllFilesAccessSettings()
++                                },
++                                onFinished = { markStorageIntroDone() }
++                            )
++                        }
+                     }
+                 }
+             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/NuxApplication.kt b/app/src/main/java/com/israadev/nuxlauncher/NuxApplication.kt
+index e9892c2..db6d744 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/NuxApplication.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/NuxApplication.kt
+@@ -4,12 +4,19 @@ import android.app.Application
+ import android.util.Log
+ import com.israadev.nuxlauncher.core.crash.CrashManager
+ import com.israadev.nuxlauncher.ui.activities.ErrorActivity
++import com.israadev.nuxlauncher.ui.i18n.Tr
+ 
+ class NuxApplication : Application() {
+ 
+     override fun onCreate() {
+         super.onCreate()
+ 
++        // Bahasa tampilan (Indonesia / English). Dipanggil di tiap proses, termasuk proses game.
++        try {
++            Tr.init(this)
++        } catch (_: Throwable) {
++        }
++
+         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+             try {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt
+index ce0dfac..84fd0e9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberDialogs.kt
+@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.layout.widthIn
+ import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
+index 1cdb31d..d00e567 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
+@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
+index 5f0345d..940eb24 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
+@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.width
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.outlined.Memory
+ import androidx.compose.material3.Icon
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.collectAsState
+ import androidx.compose.runtime.getValue
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt
+index d8935c8..ff17647 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt
+@@ -29,7 +29,7 @@ import androidx.compose.material.icons.filled.Close
+ import androidx.compose.material.icons.filled.Terminal
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.LinearProgressIndicator
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+index 58bc626..432ca86 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+@@ -8,7 +8,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.text.BasicTextField
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.remember
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+index 528b89e..e966b32 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+@@ -25,7 +25,7 @@ import androidx.compose.material3.Slider
+ import androidx.compose.material3.SliderDefaults
+ import androidx.compose.material3.Switch
+ import androidx.compose.material3.SwitchDefaults
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSidebar.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSidebar.kt
+index 7a57676..332edbf 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSidebar.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSidebar.kt
+@@ -21,7 +21,7 @@ import androidx.compose.material.icons.outlined.Info
+ import androidx.compose.material.icons.outlined.Person
+ import androidx.compose.material.icons.outlined.Settings
+ import androidx.compose.material3.Icon
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberStorageIntro.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberStorageIntro.kt
+index 3bb7baf..ab9556f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberStorageIntro.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberStorageIntro.kt
+@@ -1,7 +1,7 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
+index 60e4fb8..b496187 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
+@@ -18,7 +18,7 @@ import androidx.compose.foundation.lazy.items
+ import androidx.compose.foundation.lazy.rememberLazyListState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.ui.Alignment
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index a19f675..a7d0d8b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -29,7 +29,7 @@ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.verticalScroll
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.SideEffect
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt
+index abeb6ad..bac2ed5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDeleteInstanceDialog.kt
+@@ -1,6 +1,6 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
+index 39eaa02..c7588c6 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
+@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.shape.CircleShape
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt
+index 0c62b55..51074ab 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxRendererWarningDialog.kt
+@@ -1,7 +1,7 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.text.font.FontWeight
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/AmberText.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/AmberText.kt
+new file mode 100644
+index 0000000..2ab9dde
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/AmberText.kt
+@@ -0,0 +1,78 @@
++package com.israadev.nuxlauncher.ui.i18n
++
++import androidx.compose.material3.LocalTextStyle
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.CompositionLocalProvider
++import androidx.compose.runtime.staticCompositionLocalOf
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.text.TextLayoutResult
++import androidx.compose.ui.text.TextStyle
++import androidx.compose.ui.text.font.FontFamily
++import androidx.compose.ui.text.font.FontStyle
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.text.style.TextDecoration
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.TextUnit
++
++/**
++ * Penanda bahasa untuk Compose. Nilainya berubah saat bahasa diganti, sehingga seluruh layar
++ * yang membaca teks digambar ulang satu kali tanpa memulai ulang aplikasi.
++ */
++private val LocalAmberLanguage = staticCompositionLocalOf { 0 }
++
++/** Dipasang sekali di akar UI (MainActivity). */
++@Composable
++fun AmberLanguageHost(content: @Composable () -> Unit) {
++    CompositionLocalProvider(LocalAmberLanguage provides Tr.version.intValue) {
++        content()
++    }
++}
++
++/**
++ * Pengganti `androidx.compose.material3.Text` yang menerjemahkan teks ke bahasa pilihan.
++ * Parameternya sama persis, jadi cukup mengganti import-nya. Terjemahan terjadi di titik gambar
++ * teks, sehingga semua teks yang lewat komponen mana pun ikut diterjemahkan.
++ */
++@Composable
++fun Text(
++    text: String,
++    modifier: Modifier = Modifier,
++    color: Color = Color.Unspecified,
++    fontSize: TextUnit = TextUnit.Unspecified,
++    fontStyle: FontStyle? = null,
++    fontWeight: FontWeight? = null,
++    fontFamily: FontFamily? = null,
++    letterSpacing: TextUnit = TextUnit.Unspecified,
++    textDecoration: TextDecoration? = null,
++    textAlign: TextAlign? = null,
++    lineHeight: TextUnit = TextUnit.Unspecified,
++    overflow: TextOverflow = TextOverflow.Clip,
++    softWrap: Boolean = true,
++    maxLines: Int = Int.MAX_VALUE,
++    minLines: Int = 1,
++    onTextLayout: ((TextLayoutResult) -> Unit)? = null,
++    style: TextStyle = LocalTextStyle.current
++) {
++    val language = LocalAmberLanguage.current
++    androidx.compose.material3.Text(
++        text = if (language >= 0) Tr.t(text) else text,
++        modifier = modifier,
++        color = color,
++        fontSize = fontSize,
++        fontStyle = fontStyle,
++        fontWeight = fontWeight,
++        fontFamily = fontFamily,
++        letterSpacing = letterSpacing,
++        textDecoration = textDecoration,
++        textAlign = textAlign,
++        lineHeight = lineHeight,
++        overflow = overflow,
++        softWrap = softWrap,
++        maxLines = maxLines,
++        minLines = minLines,
++        onTextLayout = onTextLayout,
++        style = style
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Toast.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Toast.kt
+new file mode 100644
+index 0000000..762871f
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Toast.kt
+@@ -0,0 +1,20 @@
++package com.israadev.nuxlauncher.ui.i18n
++
++import android.content.Context
++
++/**
++ * Pengganti `android.widget.Toast` yang menerjemahkan pesan ke bahasa pilihan. Cukup mengganti
++ * import-nya; cara memanggilnya tidak berubah.
++ */
++object Toast {
++    const val LENGTH_SHORT = android.widget.Toast.LENGTH_SHORT
++    const val LENGTH_LONG = android.widget.Toast.LENGTH_LONG
++
++    fun makeText(context: Context, text: CharSequence?, duration: Int): android.widget.Toast {
++        val shown: CharSequence? = if (text == null) null else Tr.t(text.toString())
++        return android.widget.Toast.makeText(context, shown, duration)
++    }
++
++    fun makeText(context: Context, resId: Int, duration: Int): android.widget.Toast =
++        android.widget.Toast.makeText(context, resId, duration)
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+new file mode 100644
+index 0000000..5cd1303
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+@@ -0,0 +1,108 @@
++package com.israadev.nuxlauncher.ui.i18n
++
++import android.content.Context
++import androidx.compose.runtime.mutableIntStateOf
++import java.util.Locale
++
++/**
++ * Bahasa tampilan launcher. Teks asli aplikasi berbahasa Indonesia; bahasa lain dimuat dari
++ * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
++ * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
++ *
++ * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], atau [EN]. Bila HP memakai bahasa selain
++ * Indonesia, pilihan [SYSTEM] jatuh ke bahasa Inggris.
++ */
++object Tr {
++    const val SYSTEM = "system"
++    const val ID = "id"
++    const val EN = "en"
++
++    private const val PREFS_NAME = "amber_launcher_prefs"
++    private const val KEY_LANGUAGE = "language"
++
++    /** null = teks asli (Indonesia). */
++    @Volatile
++    private var translator: Translator? = null
++
++    /** Pilihan pengguna saat ini: [SYSTEM], [ID], atau [EN]. */
++    @Volatile
++    var choice: String = SYSTEM
++        private set
++
++    /** Bahasa yang benar-benar dipakai: [ID] atau [EN]. */
++    @Volatile
++    var effective: String = ID
++        private set
++
++    /** Naik setiap kali bahasa berubah. Dibaca hanya di akar UI agar layar digambar ulang sekali. */
++    internal val version = mutableIntStateOf(0)
++
++    /** Dipanggil sekali saat proses aplikasi dimulai (tiap proses, termasuk proses game). */
++    fun init(context: Context) {
++        val saved = try {
++            context.applicationContext
++                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++                .getString(KEY_LANGUAGE, SYSTEM)
++        } catch (_: Throwable) {
++            SYSTEM
++        }
++        choice = normalize(saved)
++        apply(context)
++    }
++
++    /** Mengganti bahasa, menyimpannya, dan membuat seluruh layar menyesuaikan. */
++    fun setLanguage(context: Context, newChoice: String) {
++        val c = normalize(newChoice)
++        if (c == choice) return
++        choice = c
++        try {
++            context.applicationContext
++                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++                .edit()
++                .putString(KEY_LANGUAGE, c)
++                .apply()
++        } catch (_: Throwable) {
++        }
++        apply(context)
++        version.intValue = version.intValue + 1
++    }
++
++    /** Menerjemahkan satu teks. Teks yang tidak ada di kamus dikembalikan apa adanya. */
++    fun t(text: String): String {
++        val tr = translator ?: return text
++        return tr.translate(text)
++    }
++
++    private fun normalize(value: String?): String =
++        if (value == ID || value == EN) value else SYSTEM
++
++    private fun resolve(c: String): String {
++        if (c == ID || c == EN) return c
++        val lang = Locale.getDefault().language
++        return if (lang == "in" || lang == "id") ID else EN
++    }
++
++    private fun apply(context: Context) {
++        val lang = resolve(choice)
++        effective = lang
++        translator = if (lang == ID) null else load(context, lang)
++    }
++
++    private fun load(context: Context, lang: String): Translator? {
++        return try {
++            val assets = context.applicationContext.assets
++            val dir = "lang/$lang"
++            val names = (assets.list(dir) ?: emptyArray()).filter { it.endsWith(".tsv") }.sorted()
++            if (names.isEmpty()) return null
++            val lines = ArrayList<String>(1024)
++            for (name in names) {
++                assets.open("$dir/$name").bufferedReader(Charsets.UTF_8).use { reader ->
++                    reader.forEachLine { lines.add(it) }
++                }
++            }
++            Translator.parse(lines)
++        } catch (_: Throwable) {
++            null
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt
+new file mode 100644
+index 0000000..f3675cb
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt
+@@ -0,0 +1,168 @@
++package com.israadev.nuxlauncher.ui.i18n
++
++/**
++ * Penerjemah teks sederhana tanpa ketergantungan Android, sehingga mudah diuji.
++ *
++ * Teks asli aplikasi ditulis dalam bahasa Indonesia. Kamus bahasa lain berisi pasangan
++ * "teks Indonesia -> terjemahan", satu pasangan per baris, dipisah satu karakter TAB:
++ *
++ *     Simpan<TAB>Save
++ *     Instance {0} berhasil dibuat!<TAB>Instance {0} created!
++ *
++ * - Baris kosong dan baris berawalan # diabaikan.
++ * - Di dalam teks, \n = baris baru, \t = TAB, \\ = garis miring, \uXXXX = karakter unicode.
++ * - {0}, {1}, ... adalah isian yang berubah-ubah (nama instance, angka, dan sebagainya).
++ *   Kuncinya dicocokkan sebagai pola dan isiannya disalin ke terjemahan.
++ *
++ * Teks yang tidak ada di kamus dikembalikan apa adanya (tetap Indonesia), jadi kamus yang
++ * belum lengkap tidak pernah merusak tampilan.
++ */
++class Translator private constructor(
++    private val exact: Map<String, String>,
++    private val templates: List<Template>
++) {
++
++    /** Satu pola berisian: [anchor] = potongan teks tetap terpanjang, untuk menyaring cepat. */
++    private class Template(
++        val regex: Regex,
++        val anchor: String,
++        val parts: List<Any>
++    ) {
++        fun render(match: MatchResult): String {
++            val sb = StringBuilder()
++            for (p in parts) {
++                if (p is Int) {
++                    val g = match.groups[p + 1]
++                    if (g != null) sb.append(g.value)
++                } else {
++                    sb.append(p as String)
++                }
++            }
++            return sb.toString()
++        }
++    }
++
++    /** Hasil pencocokan pola yang sudah pernah dihitung (hemat kerja untuk teks yang berulang). */
++    private val memo = HashMap<String, String>()
++
++    val size: Int get() = exact.size + templates.size
++
++    fun translate(text: String): String {
++        if (text.isEmpty()) return text
++        val hit = exact[text]
++        if (hit != null) return hit
++        if (templates.isEmpty()) return text
++        return translateByTemplate(text)
++    }
++
++    @Synchronized
++    private fun translateByTemplate(text: String): String {
++        val cached = memo[text]
++        if (cached != null) return cached
++        var result = text
++        for (t in templates) {
++            if (t.anchor.isNotEmpty() && !text.contains(t.anchor)) continue
++            val m = t.regex.matchEntire(text) ?: continue
++            result = t.render(m)
++            break
++        }
++        if (memo.size >= MEMO_MAX) memo.clear()
++        memo[text] = result
++        return result
++    }
++
++    companion object {
++        private const val MEMO_MAX = 512
++        private val PLACEHOLDER = Regex("\\{(\\d+)\\}")
++
++        /** Membaca baris-baris kamus (lihat penjelasan di atas) menjadi sebuah [Translator]. */
++        fun parse(lines: List<String>): Translator {
++            val exact = HashMap<String, String>()
++            val templates = ArrayList<Template>()
++            for (raw in lines) {
++                if (raw.isEmpty() || raw[0] == '#') continue
++                val tab = raw.indexOf('\t')
++                if (tab <= 0) continue
++                val key = unescape(raw.substring(0, tab))
++                val value = unescape(raw.substring(tab + 1))
++                if (value.isEmpty()) continue
++                if (PLACEHOLDER.containsMatchIn(key)) {
++                    val t = buildTemplate(key, value)
++                    if (t != null) templates.add(t)
++                } else {
++                    exact[key] = value
++                }
++            }
++            return Translator(exact, templates)
++        }
++
++        private fun buildTemplate(key: String, value: String): Template? {
++            val pattern = StringBuilder("^")
++            var anchor = ""
++            var last = 0
++            var groups = 0
++            for (m in PLACEHOLDER.findAll(key)) {
++                val literal = key.substring(last, m.range.first)
++                if (literal.length > anchor.length) anchor = literal
++                pattern.append(Regex.escape(literal)).append("(.+?)")
++                groups++
++                last = m.range.last + 1
++            }
++            val tail = key.substring(last)
++            if (tail.length > anchor.length) anchor = tail
++            pattern.append(Regex.escape(tail)).append("$")
++
++            val parts = ArrayList<Any>()
++            var pos = 0
++            for (m in PLACEHOLDER.findAll(value)) {
++                if (m.range.first > pos) parts.add(value.substring(pos, m.range.first))
++                val index = m.groupValues[1].toInt()
++                if (index >= groups) return null
++                parts.add(index)
++                pos = m.range.last + 1
++            }
++            if (pos < value.length) parts.add(value.substring(pos))
++
++            val regex = try {
++                Regex(pattern.toString(), RegexOption.DOT_MATCHES_ALL)
++            } catch (_: Exception) {
++                return null
++            }
++            return Template(regex, anchor, parts)
++        }
++
++        /** Mengubah \n, \t, \\ dan \uXXXX di dalam satu bidang kamus menjadi karakter aslinya. */
++        fun unescape(s: String): String {
++            if (s.indexOf('\\') < 0) return s
++            val sb = StringBuilder(s.length)
++            var i = 0
++            while (i < s.length) {
++                val c = s[i]
++                if (c != '\\' || i + 1 >= s.length) {
++                    sb.append(c)
++                    i++
++                    continue
++                }
++                val n = s[i + 1]
++                when (n) {
++                    'n' -> { sb.append('\n'); i += 2 }
++                    't' -> { sb.append('\t'); i += 2 }
++                    '\\' -> { sb.append('\\'); i += 2 }
++                    'u' -> {
++                        val hex = if (i + 6 <= s.length) s.substring(i + 2, i + 6) else ""
++                        val code = hex.toIntOrNull(16)
++                        if (code != null) {
++                            sb.append(code.toChar())
++                            i += 6
++                        } else {
++                            sb.append(c)
++                            i++
++                        }
++                    }
++                    else -> { sb.append(c); i++ }
++                }
++            }
++            return sb.toString()
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 972075c..971b2c3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
+ import android.net.Uri
+ import android.os.Build
+ import android.widget.ImageView
+-import android.widget.Toast
++import com.israadev.nuxlauncher.ui.i18n.Toast
+ import androidx.activity.compose.rememberLauncherForActivityResult
+ import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.compose.animation.core.Animatable
+@@ -56,7 +56,7 @@ import androidx.compose.material.icons.outlined.Info
+ import androidx.compose.material.icons.outlined.Tune
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.LocalTextStyle
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.runtime.LaunchedEffect
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 4da088e..aec6ece 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -3,7 +3,7 @@ package com.israadev.nuxlauncher.ui.screens
+ import android.media.MediaMetadataRetriever
+ import android.net.Uri
+ import android.os.Build
+-import android.widget.Toast
++import com.israadev.nuxlauncher.ui.i18n.Toast
+ import androidx.activity.compose.rememberLauncherForActivityResult
+ import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.compose.foundation.Image
+@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.Close
+ import androidx.compose.material.icons.filled.Settings
+ import androidx.compose.material.icons.outlined.*
+ import androidx.compose.material3.*
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Tr
+ import androidx.compose.runtime.*
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+@@ -98,6 +100,7 @@ fun SettingsScreen(
+     var selectedConfigRenderer by remember { mutableStateOf<NuxRendererInfo?>(null) }
+     var showAdrenoWarningDialog by remember { mutableStateOf(false) }
+ 
++    var appLanguage by remember { mutableStateOf(Tr.choice) }
+     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
+     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
+     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
+@@ -438,6 +441,23 @@ fun SettingsScreen(
+                     }
+ 
+                     3 -> {
++                        // Bahasa tampilan. Berlaku langsung, tanpa memulai ulang aplikasi.
++                        SettingChoiceRow(
++                            title = "Bahasa",
++                            desc = "Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.",
++                            options = listOf(
++                                Tr.SYSTEM to "Ikuti sistem",
++                                Tr.ID to "Bahasa Indonesia",
++                                Tr.EN to "English"
++                            ),
++                            selected = appLanguage,
++                            onSelect = {
++                                appLanguage = it
++                                Tr.setLanguage(context, it)
++                            }
++                        )
++                        SettingDivider()
++
+                         // Latar Beranda: foto (paling ringan), GIF, atau video; suara dan ambient
+                         Row(
+                             modifier = Modifier
+
+
+# FIN part=1/1 files=26

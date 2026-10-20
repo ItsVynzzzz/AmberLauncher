@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Ambil kode
         uses: actions/checkout@v5
+        with:
+          # Riwayat dan tag lengkap dibutuhkan untuk menentukan nomor versi dan catatan perubahan
+          fetch-depth: 0
 
       - name: Periksa keaslian Gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
@@ -105,12 +108,36 @@ jobs:
           fi
           echo "applied=true" >> "$GITHUB_OUTPUT"
 
+      # Dijalankan setelah patch diterapkan, supaya berkas VERSION dari patch ikut terbaca.
+      # Nomor build = nomor terakhir pada tag v<VERSION>.<n> ditambah 1 (mulai dari 1). Run yang
+      # dibatalkan atau gagal tidak memakai nomor karena tag baru dibuat di langkah Release.
+      - name: Tentukan nomor versi
+        run: |
+          BASE=""
+          if [ -f VERSION ]; then
+            BASE="$(tr -d ' \r\n' < VERSION)"
+          fi
+          BASE="${BASE:-0.1.0-beta}"
+          PREFIX="v${BASE}."
+          LAST="$(git tag -l "${PREFIX}*" | sed "s/^${PREFIX}//" | grep -E '^[0-9]+$' | sort -n | tail -n 1 || true)"
+          NEXT=$(( ${LAST:-0} + 1 ))
+          VERSION_NAME="${BASE}.${NEXT}"
+          # Tag rilis terdekat sebelumnya (seri versi apa pun) sebagai batas catatan perubahan
+          PREV_TAG="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
+          {
+            echo "VERSION_NAME=${VERSION_NAME}"
+            echo "RELEASE_TAG=v${VERSION_NAME}"
+            echo "PREV_TAG=${PREV_TAG}"
+          } >> "$GITHUB_ENV"
+          echo "Versi build ini: ${VERSION_NAME} (sebelumnya: ${PREV_TAG:-belum ada})"
+
       - name: Pasang Gradle dan cache
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build APK release
         env:
           AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
+          AMBER_VERSION_NAME: ${{ env.VERSION_NAME }}
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --stacktrace
@@ -120,29 +147,55 @@ jobs:
           APK=$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)
           test -n "$APK"
           mkdir -p dist
-          cp "$APK" "dist/MyLauncher-build${{ github.run_number }}.apk"
+          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}.apk"
           ls -lh dist
           APKSIGNER=$(ls -d "${ANDROID_HOME:-/usr/local/lib/android/sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1)
           if [ -n "$APKSIGNER" ]; then
             echo "Sidik jari tanda tangan APK:"
-            "$APKSIGNER" verify --print-certs "dist/MyLauncher-build${{ github.run_number }}.apk" | grep -i "SHA-256" || true
+            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}.apk" | grep -i "SHA-256" || true
           fi
 
       - name: Simpan sebagai artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MyLauncher-build${{ github.run_number }}
+          name: AmberLauncher-${{ env.VERSION_NAME }}
           path: dist/*.apk
           retention-days: 14
 
-      - name: Buat Release agar APK bisa diunduh langsung dari HP
+      # Catatan perubahan diambil dari judul commit sejak rilis sebelumnya, jadi tulis judul commit
+      # yang jelas. Judul bawaan GitHub (mis. "Add files via upload") dan commit bot disaring.
+      - name: Buat Release dengan catatan perubahan
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="build-${{ github.run_number }}"
-          if ! gh release create "$TAG" dist/*.apk --title "Build ${{ github.run_number }}" --notes "APK build nomor ${{ github.run_number }}." --prerelease; then
+          NOTES="$RUNNER_TEMP/release-notes.md"
+          if [ -n "$PREV_TAG" ]; then
+            LOG="$(git log --no-merges --pretty='%s' "${PREV_TAG}..HEAD" || true)"
+          else
+            LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
+          fi
+          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \(build lolos\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
+          {
+            echo "## Yang berubah di ${VERSION_NAME}"
+            echo
+            if [ -n "$LOG" ]; then
+              printf '%s\n' "$LOG" | sed 's/^/- /'
+            else
+              echo "- Perbaikan dan peningkatan kecil."
+            fi
+            if [ -n "$PREV_TAG" ]; then
+              echo
+              echo "Perubahan lengkap: https://github.com/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${RELEASE_TAG}"
+            fi
+          } > "$NOTES"
+          cat "$NOTES"
+
+          # Versi dengan tanda "-" (mis. 0.1.0-beta.3) ditandai pra-rilis
+          PRE=""
+          case "$VERSION_NAME" in *-*) PRE="--prerelease" ;; esac
+          if ! gh release create "$RELEASE_TAG" dist/*.apk --target "$GITHUB_SHA" --title "AmberLauncher ${VERSION_NAME}" --notes-file "$NOTES" $PRE; then
             # Bila dijalankan ulang dan rilisnya sudah ada, cukup timpa berkas APK-nya
-            gh release upload "$TAG" dist/*.apk --clobber
+            gh release upload "$RELEASE_TAG" dist/*.apk --clobber
           fi
 
       - name: Simpan perubahan patch ke repo (hanya jika build lolos)

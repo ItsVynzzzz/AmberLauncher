@@ -3,7 +3,7 @@ package com.israadev.nuxlauncher.ui.screens
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
+import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -98,6 +100,7 @@ fun SettingsScreen(
     var selectedConfigRenderer by remember { mutableStateOf<NuxRendererInfo?>(null) }
     var showAdrenoWarningDialog by remember { mutableStateOf(false) }
 
+    var appLanguage by remember { mutableStateOf(Tr.choice) }
     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
@@ -438,6 +441,23 @@ fun SettingsScreen(
                     }
 
                     3 -> {
+                        // Bahasa tampilan. Berlaku langsung, tanpa memulai ulang aplikasi.
+                        SettingChoiceRow(
+                            title = "Bahasa",
+                            desc = "Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.",
+                            options = listOf(
+                                Tr.SYSTEM to "Ikuti sistem",
+                                Tr.ID to "Bahasa Indonesia",
+                                Tr.EN to "English"
+                            ),
+                            selected = appLanguage,
+                            onSelect = {
+                                appLanguage = it
+                                Tr.setLanguage(context, it)
+                            }
+                        )
+                        SettingDivider()
+
                         // Latar Beranda: foto (paling ringan), GIF, atau video; suara dan ambient
                         Row(
                             modifier = Modifier

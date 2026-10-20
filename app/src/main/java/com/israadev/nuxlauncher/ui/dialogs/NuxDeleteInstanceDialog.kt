@@ -1,6 +1,6 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
-import androidx.compose.material3.Text
+import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

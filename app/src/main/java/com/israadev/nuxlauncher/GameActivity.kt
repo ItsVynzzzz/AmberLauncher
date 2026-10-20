@@ -8,6 +8,7 @@ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
 import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
 import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
 import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -1297,7 +1298,13 @@ private fun buildPerfHint(context: Context): Pair<String, Boolean> {
         }
     } catch (_: Throwable) {
     }
-    return Pair(text, warn)
+    return Pair(localizeHint(text), warn)
+}
+
+/** Menerjemahkan kata di teks kondisi HP bila bahasa bukan Indonesia (HUD digambar langsung, bukan lewat Text). */
+private fun localizeHint(text: String): String {
+    if (text.isEmpty() || Tr.effective == Tr.ID) return text
+    return text.replace("sisa RAM", Tr.t("sisa RAM")).replace("PANAS", Tr.t("PANAS"))
 }
 
 @Composable

@@ -4,11 +4,18 @@ import android.app.Application
 import android.util.Log
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.ui.activities.ErrorActivity
+import com.israadev.nuxlauncher.ui.i18n.Tr
 
 class NuxApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Bahasa tampilan (Indonesia / English). Dipanggil di tiap proses, termasuk proses game.
+        try {
+            Tr.init(this)
+        } catch (_: Throwable) {
+        }
 
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->

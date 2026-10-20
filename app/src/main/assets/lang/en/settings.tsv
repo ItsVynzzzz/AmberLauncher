@@ -1,0 +1,78 @@
+# Pengaturan dan profil perangkat
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} CPU cores
+Memori	Memory
+Grafis	Graphics
+Kontrol	Controls
+Tampilan	Display
+Memori game (RAM)	Game memory (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Too large for this phone; the game and the phone may become slow.
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Java memory limit (-Xmx). Bigger is not always faster.
+1,5 GB	1.5 GB
+Argumen JVM tambahan	Extra JVM arguments
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Optional, for advanced users. Wrong values can stop the game from running.
+Contoh: -XX:+UseG1GC	Example: -XX:+UseG1GC
+Konfigurasi renderer	Renderer settings
+Optimasi otomatis options.txt	Auto-optimize options.txt
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Automatically turns off clouds and shadows for higher FPS.
+Skala resolusi layar	Screen resolution scale
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Smaller = higher FPS, blurrier image.
+Driver Vulkan	Vulkan driver
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	Choose the Vulkan driver implementation used by the system/game.
+API grafis	Graphics API
+Atur API grafis yang dipakai Minecraft modern 26.2+.	Sets the graphics API used by modern Minecraft 26.2+.
+Gunakan driver Vulkan sistem	Use the system Vulkan driver
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	Force the phone's built-in Vulkan driver (not Turnip). Affects the Zink renderer.
+V-Sync Zink	Zink V-Sync
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Vertical sync for the Kopper Zink renderer through the system interface.
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Language of the launcher text. Follow system uses your phone's language.
+Latar Beranda	Home background
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Photos are the lightest, GIFs move with little load, videos are the smoothest (HD, up to 60 fps) but use more battery.
+Ganti latar	Change background
+Gerakkan GIF dan video	Animate GIFs and videos
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	Turn off to show a still image only. Saves the most battery and RAM.
+Jeda saat Hemat Baterai	Pause in Battery Saver
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIFs and videos pause automatically while the phone's Battery Saver mode is on.
+Suara video	Video sound
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Off by default. Automatically muted when another app is playing audio.
+Volume video	Video volume
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	A soft glow on the sidebar and the edges of the Home cards. Its color follows the GIF or video. Does not apply to photos.
+Kekuatan ambient	Ambient strength
+Kustomisasi kontrol virtual	Customize virtual controls
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Change button layout, size, transparency, hotbar scrolling, and Minecraft key mapping.
+Buka editor	Open editor
+Mode mouse di menu	Mouse mode in menus
+Sentuh tombol atau slot menu langsung di mana jari menekan.	Touch buttons or menu slots directly where your finger presses.
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Slide your finger to move the virtual cursor, tap the screen to click.
+Click (langsung)	Click (direct)
+Pukul lewat layar	Attack by touching the screen
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Tap or hold an empty area of the screen to attack. Turn off so dragging the camera does not attack too; use the attack button instead.
+Sensitivitas kamera	Camera sensitivity
+Kecepatan memutar pandangan di dalam game.	How fast the view turns in the game.
+Sensitivitas kursor virtual	Virtual cursor sensitivity
+Kecepatan kursor saat berada di menu Minecraft.	Cursor speed while in Minecraft menus.
+Ukuran kursor virtual	Virtual cursor size
+Mode mouse fisik (auto-hide)	Physical mouse mode (auto-hide)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Automatically hide the virtual cursor when an external mouse is connected.
+Perubahan tersimpan otomatis	Changes are saved automatically
+Pengaturan di-reset ke default!	Settings were reset to default!
+Reset default	Reset to default
+PILIH RENDERER GRAFIK	CHOOSE GRAPHICS RENDERER
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Match the graphics backend to your Minecraft version and your device's GPU
+Renderer diubah ke: {0}	Renderer changed to: {0}
+Konfigurasi {0}	{0} settings
+Kesesuaian: {0}	Compatibility: {0}
+PERINGATAN DRIVER ADRENO	ADRENO DRIVER WARNING
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	The launcher detected that your device uses an Adreno GPU. Enabling this option can make the Zink renderer stop working or crash. Are you sure you want to enable it?
+AKTIFKAN	ENABLE
+Profil perangkat	Device profile
+Profil performa HP ini	Performance profile for this phone
+Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Limits the heap, tunes GC, and locks the screen to 60 Hz. Turn off to compare FPS.
+Mode GC (pembersih memori Java)	GC mode (Java memory cleaner)
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: lightest on the processor, slightly longer GC pauses.
+Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	Default: no extra GC flags from the profile (heap limit and screen only).
+Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	Balanced: G1 with short pauses and limited memory. Try this first.
+Kunci layar {0} Hz	Lock screen to {0} Hz
+Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	A 90 Hz screen is locked to 60 Hz while playing for smoother motion. The FPS HUD shows the active Hz.
+Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Game heap: you chose {0} MB, using {1} MB. This phone has {2} MB of RAM; a larger heap makes the phone swap memory and lowers FPS.
+Heap game {0} MB (batas profil {1} MB).	Game heap {0} MB (profile limit {1} MB).
+Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (free RAM \u00b7 HOT \u00b7 Hz).

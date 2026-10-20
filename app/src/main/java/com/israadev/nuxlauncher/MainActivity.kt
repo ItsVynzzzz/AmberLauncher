@@ -27,6 +27,7 @@ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
+import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
 import com.israadev.nuxlauncher.ui.screens.DashboardScreen
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxResponsiveTheme
@@ -83,21 +84,23 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            NuxResponsiveTheme {
-                MaterialTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = NuxColors.Background
-                    ) {
-                        DashboardScreen()
-                        AmberStorageIntro(
-                            initiallyVisible = showStorageIntro,
-                            onOpenSettings = {
-                                markStorageIntroDone()
-                                openAllFilesAccessSettings()
-                            },
-                            onFinished = { markStorageIntroDone() }
-                        )
+            AmberLanguageHost {
+                NuxResponsiveTheme {
+                    MaterialTheme {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = NuxColors.Background
+                        ) {
+                            DashboardScreen()
+                            AmberStorageIntro(
+                                initiallyVisible = showStorageIntro,
+                                onOpenSettings = {
+                                    markStorageIntroDone()
+                                    openAllFilesAccessSettings()
+                                },
+                                onFinished = { markStorageIntroDone() }
+                            )
+                        }
                     }
                 }
             }

@@ -382,13 +382,16 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
-                        SettingChoiceRow(
+                        // Rentang 40-125% kelipatan 5, sama dengan slider "Resolusi render" di menu dalam game.
+                        SettingSliderRow(
                             title = "Skala resolusi layar",
                             desc = "Lebih kecil = FPS lebih tinggi, gambar lebih buram.",
-                            options = listOf(50 to "50%", 75 to "75%", 100 to "100%", 125 to "125%"),
-                            selected = resolutionRatio,
-                            onSelect = {
-                                resolutionRatio = it
+                            valueText = "$resolutionRatio%",
+                            value = resolutionRatio.toFloat(),
+                            valueRange = 40f..125f,
+                            steps = 16,
+                            onValueChange = {
+                                resolutionRatio = (it / 5f).roundToInt() * 5
                                 commitSettings()
                             }
                         )

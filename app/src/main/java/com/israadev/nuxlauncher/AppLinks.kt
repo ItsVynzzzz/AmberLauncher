@@ -9,4 +9,10 @@ object AppLinks {
      * Kalau dikosongkan, tombolnya otomatis disembunyikan.
      */
     const val DONATE_URL = "https://sociabuzz.com/amberlauncher/tribe"
+
+    /**
+     * Repo GitHub tempat rilis APK diterbitkan ("pemilik/nama"). Dipakai pengecek pembaruan
+     * (core/update/UpdateChecker) untuk membaca daftar Release.
+     */
+    const val GITHUB_REPO = "ItsVynzzzz/AmberLauncher"
 }

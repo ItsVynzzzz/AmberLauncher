@@ -12,8 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 
 import android.util.LruCache
+import com.google.gson.JsonParser
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.models.UserAccount
 import okhttp3.OkHttpClient
@@ -191,65 +194,188 @@ object SkinUtils {
         getSteveHeadBitmap(context, targetSize)
     }
 
+    // ---- Skin & jubah Ely.by ----
+
+    private const val ELY_SKINSYSTEM = "https://skinsystem.ely.by"
+    private const val ELY_TEXTURE_TTL_MS = 30L * 60 * 1000 // cek ulang skin paling cepat tiap 30 menit
+    private const val ELY_MISSING_RETRY_MS = 10L * 60 * 1000 // akun tanpa skin: jangan tanya server terus-menerus
+    private const val MAX_TEXTURE_BYTES = 2_000_000
+
+    // Pengalihan (redirect) diikuti manual di downloadTexture supaya alamat http:// bisa dinaikkan ke https://.
+    private val textureClient = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .followRedirects(false)
+        .followSslRedirects(false)
+        .build()
+
+    private val elyMissingUntil = ConcurrentHashMap<String, Long>()
+
+    private enum class TextureFetch { SAVED, NOT_FOUND, FAILED }
+
+    private class ElyTextures(val skinUrl: String?, val capeUrl: String?, val slim: Boolean?)
+
+    /** Minta alamat skin/jubah (dan model slim/classic) ke Ely.by. Null bila gagal atau tidak ada data. */
+    private fun fetchElyTextures(encodedName: String): ElyTextures? {
+        return try {
+            val request = Request.Builder().url("$ELY_SKINSYSTEM/textures/$encodedName").build()
+            textureClient.newCall(request).execute().use { resp ->
+                if (!resp.isSuccessful) return null
+                val body = resp.body?.string().orEmpty()
+                if (body.isBlank()) return null
+                val root = JsonParser.parseString(body).asJsonObject
+                val skin = root.getAsJsonObject("SKIN")
+                val cape = root.getAsJsonObject("CAPE")
+                ElyTextures(
+                    skinUrl = skin?.get("url")?.asString,
+                    capeUrl = cape?.get("url")?.asString,
+                    slim = skin?.getAsJsonObject("metadata")?.get("model")?.asString
+                        ?.let { it.equals("slim", ignoreCase = true) }
+                )
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun looksLikePng(bytes: ByteArray): Boolean =
+        bytes.size > 8 &&
+            bytes[0] == 0x89.toByte() &&
+            bytes[1] == 0x50.toByte() && // P
+            bytes[2] == 0x4E.toByte() && // N
+            bytes[3] == 0x47.toByte() // G
+
+    private fun writeAtomically(target: File, bytes: ByteArray): Boolean {
+        val tmp = File(target.parentFile, "${target.name}.${System.nanoTime()}.tmp")
+        return try {
+            tmp.writeBytes(bytes)
+            tmp.renameTo(target) || run {
+                target.delete()
+                tmp.renameTo(target)
+            }
+        } catch (_: IOException) {
+            false
+        } finally {
+            if (tmp.exists()) tmp.delete()
+        }
+    }
+
+    /**
+     * Mengunduh satu tekstur PNG ke [target]. Server skin Ely.by menjawab dengan redirect, dan alamat
+     * tujuannya bisa berupa http://. Aplikasi ini melarang cleartext (network_security_config), jadi
+     * redirect diikuti manual dan setiap http:// dinaikkan ke https:// sebelum diminta.
+     * SAVED = tersimpan, NOT_FOUND = pemain memang tidak punya tekstur itu, FAILED = jaringan/respon bermasalah.
+     */
+    private fun downloadTexture(startUrl: String, target: File): TextureFetch {
+        var url = startUrl
+        for (hop in 0 until 5) {
+            val secureUrl = if (url.startsWith("http://")) "https://" + url.removePrefix("http://") else url
+            val request = try {
+                Request.Builder().url(secureUrl).build()
+            } catch (_: IllegalArgumentException) {
+                return TextureFetch.FAILED
+            }
+
+            val outcome: TextureFetch? = try {
+                textureClient.newCall(request).execute().use { resp ->
+                    when {
+                        resp.isRedirect -> {
+                            val next = resp.header("Location")?.let { resp.request.url.resolve(it)?.toString() }
+                            if (next == null) {
+                                TextureFetch.FAILED
+                            } else {
+                                url = next
+                                null
+                            }
+                        }
+                        resp.code == 404 || resp.code == 204 -> TextureFetch.NOT_FOUND
+                        resp.isSuccessful -> {
+                            val bytes = resp.body?.bytes()
+                            when {
+                                bytes == null -> TextureFetch.FAILED
+                                bytes.isEmpty() -> TextureFetch.NOT_FOUND
+                                bytes.size > MAX_TEXTURE_BYTES || !looksLikePng(bytes) -> TextureFetch.FAILED
+                                writeAtomically(target, bytes) -> TextureFetch.SAVED
+                                else -> TextureFetch.FAILED
+                            }
+                        }
+                        else -> TextureFetch.FAILED
+                    }
+                }
+            } catch (_: IOException) {
+                TextureFetch.FAILED
+            }
+            if (outcome != null) return outcome
+        }
+        return TextureFetch.FAILED
+    }
+
+    /**
+     * Menyegarkan skin dan jubah Ely.by di berkas lokal. Alamat tekstur diminta dulu lewat /textures
+     * (sekaligus memberi model slim/classic); bila itu tidak membuahkan hasil dipakai /skins dan /cloaks.
+     * Mengembalikan true bila skin slim, false bila classic, null bila tidak diketahui dari server.
+     */
+    private fun refreshElyByTextures(account: UserAccount, skinFile: File, capeFile: File): Boolean? {
+        val encodedName = Uri.encode(account.username)
+        val textures = fetchElyTextures(encodedName)
+
+        var skinResult = textures?.skinUrl?.let { downloadTexture(it, skinFile) } ?: TextureFetch.NOT_FOUND
+        if (skinResult != TextureFetch.SAVED) {
+            skinResult = downloadTexture("$ELY_SKINSYSTEM/skins/$encodedName.png", skinFile)
+        }
+
+        var capeResult = textures?.capeUrl?.let { downloadTexture(it, capeFile) } ?: TextureFetch.NOT_FOUND
+        if (capeResult != TextureFetch.SAVED) {
+            capeResult = downloadTexture("$ELY_SKINSYSTEM/cloaks/$encodedName.png", capeFile)
+        }
+
+        when (skinResult) {
+            TextureFetch.SAVED -> {
+                elyMissingUntil.remove(account.id)
+                invalidateHeadCache()
+            }
+            TextureFetch.NOT_FOUND -> {
+                if (skinFile.exists()) skinFile.delete()
+                elyMissingUntil[account.id] = System.currentTimeMillis() + ELY_MISSING_RETRY_MS
+                invalidateHeadCache()
+            }
+            TextureFetch.FAILED -> Unit // jaringan bermasalah: pertahankan berkas lama, coba lagi nanti
+        }
+        if (capeResult == TextureFetch.NOT_FOUND && capeFile.exists()) capeFile.delete()
+
+        return if (skinResult == TextureFetch.SAVED) textures?.slim else null
+    }
+
     suspend fun ensureSkinAndCapeCached(context: Context, account: UserAccount): UserAccount = withContext(Dispatchers.IO) {
         var updatedAccount = account
-        val client = OkHttpClient.Builder()
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build()
 
         if (account.safeAccountType == "elyby") {
             val skinFile = getSkinFileForAccount(context, account.id)
-            // Download skin if missing or empty
-            if (!skinFile.exists() || skinFile.length() <= 0) {
-                runCatching {
-                    val skinUrl = "https://skinsystem.ely.by/skins/${account.username}.png"
-                    val req = Request.Builder().url(skinUrl).build()
-                    client.newCall(req).execute().use { resp ->
-                        if (resp.isSuccessful && resp.body != null) {
-                            resp.body!!.byteStream().use { input ->
-                                FileOutputStream(skinFile).use { output ->
-                                    input.copyTo(output)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Check cape / cloak
             val capeFile = getCapeFileForAccount(context, account.id)
-            runCatching {
-                val capeUrl = "https://skinsystem.ely.by/cloaks/${account.username}.png"
-                val req = Request.Builder().url(capeUrl).build()
-                client.newCall(req).execute().use { resp ->
-                    if (resp.isSuccessful && resp.body != null) {
-                        val bytes = resp.body!!.bytes()
-                        if (bytes.isNotEmpty()) {
-                            FileOutputStream(capeFile).use { out ->
-                                out.write(bytes)
-                            }
-                        } else {
-                            if (capeFile.exists()) capeFile.delete()
-                        }
-                    } else {
-                        if (capeFile.exists()) capeFile.delete()
-                    }
-                }
-            }.onFailure {
-                if (capeFile.exists()) capeFile.delete()
-            }
 
-            // Detect model (classic vs slim)
-            val isSlim = if (skinFile.exists()) isSlimModel(skinFile) else false
-            val finalSkinPath = if (skinFile.exists() && skinFile.length() > 0) skinFile.absolutePath else null
-            val finalCapePath = if (capeFile.exists() && capeFile.length() > 0) capeFile.absolutePath else null
+            val now = System.currentTimeMillis()
+            val skinFresh = skinFile.exists() && skinFile.length() > 0 &&
+                now - skinFile.lastModified() < ELY_TEXTURE_TTL_MS
+            val recentlyMissing = (elyMissingUntil[account.id] ?: 0L) > now
+
+            // Unduh bila belum ada atau sudah lama, supaya skin yang diganti di ely.by ikut berubah
+            val shouldRefresh = !skinFresh && !recentlyMissing
+            val slimFromServer = if (shouldRefresh) refreshElyByTextures(account, skinFile, capeFile) else null
+
+            val hasSkin = skinFile.exists() && skinFile.length() > 0
+            val hasCape = capeFile.exists() && capeFile.length() > 0
+            val isSlim = when {
+                !hasSkin -> false
+                slimFromServer != null -> slimFromServer
+                shouldRefresh -> isSlimModel(skinFile)
+                else -> account.safeSkinModel == "slim"
+            }
 
             updatedAccount = updatedAccount.copy(
-                customSkinPath = finalSkinPath,
-                customCapePath = finalCapePath,
+                customSkinPath = if (hasSkin) skinFile.absolutePath else null,
+                customCapePath = if (hasCape) capeFile.absolutePath else null,
                 skinModel = if (isSlim) "slim" else "classic",
-                skinUrl = "https://skinsystem.ely.by/skins/${account.username}.png"
+                skinUrl = "$ELY_SKINSYSTEM/skins/${account.username}.png"
             )
 
             if (updatedAccount != account) {

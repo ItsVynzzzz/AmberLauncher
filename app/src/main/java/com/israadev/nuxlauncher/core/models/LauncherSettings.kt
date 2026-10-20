@@ -22,7 +22,7 @@ data class LauncherSettings(
     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used
 
     // Graphics & Performance
-    val resolutionRatio: Int = 100, // 50% - 125%
+    val resolutionRatio: Int = 100, // 40% - 125%, kelipatan 5 (slider di Pengaturan dan menu dalam game)
     val autoOptimizeMinecraft: Boolean = true,
     val sustainedPerformanceMode: Boolean = false,
     val selectedRenderer: String = "auto", // "auto", "krypton", "mobileglues", "gl4es", "zink", "freedreno"

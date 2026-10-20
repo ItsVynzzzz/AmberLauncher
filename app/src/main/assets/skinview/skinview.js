@@ -285,6 +285,11 @@ function loadSkin(skinUrl, model = "auto-detect") {
         }
         skinViewer.loadSkin(skinUrl, { model: model }).catch(function(err) {
             console.warn("loadSkin error:", err);
+            // Alamat jauh bisa gagal (CORS/jaringan): tampilkan Steve daripada model yang kosong
+            var fallback = "https://appassets.androidplatform.net/assets/steve.png";
+            if (skinUrl !== fallback) {
+                skinViewer.loadSkin(fallback, { model: model }).catch(function() {});
+            }
         });
     } catch(e) {
         console.warn("loadSkin exception:", e);

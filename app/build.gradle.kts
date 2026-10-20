@@ -7,6 +7,13 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// Dasar nama versi dari berkas VERSION di akar repo. Ubah isinya (mis. 0.2.0-beta atau 1.0.0) untuk
+// naik ke seri versi berikutnya; nomor build di belakangnya otomatis mulai dari 1 lagi.
+fun baseVersionName(): String =
+    rootProject.file("VERSION").takeIf { it.isFile }
+        ?.readText()?.trim()?.takeIf { it.isNotEmpty() }
+        ?: "0.1.0-beta"
+
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -47,10 +54,15 @@ android {
         applicationId = "com.itsvynzzzz.amberlauncher"
         minSdk = 26
         targetSdk = 34
-        // Nomor versi naik sendiri di setiap build GitHub Actions (nomor run), jadi Android selalu
-        // menganggapnya pembaruan yang lebih baru dari yang sudah terpasang. Build lokal tetap 10.
+        // versionCode (dipakai Android untuk menentukan pembaruan) naik sendiri di setiap build GitHub
+        // Actions lewat nomor run, jadi JANGAN direset walau nama versi dimulai ulang: Android menolak
+        // memasang APK dengan versionCode lebih kecil dari yang sudah terpasang. Build lokal tetap 10.
         versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.let { 100 + it } ?: 10
-        versionName = "1.0.9"
+        // Nama versi yang dilihat pengguna: dasarnya dari berkas VERSION di akar repo (mis. 0.1.0-beta).
+        // GitHub Actions menambahkan nomor build di belakangnya lewat AMBER_VERSION_NAME (0.1.0-beta.7);
+        // build lokal diberi akhiran ".dev" supaya tidak pernah dianggap pembaruan.
+        versionName = System.getenv("AMBER_VERSION_NAME")?.trim()?.takeIf { it.isNotEmpty() }
+            ?: "${baseVersionName()}.dev"
 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

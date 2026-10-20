@@ -27,6 +27,7 @@ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
+import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
 import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
 import com.israadev.nuxlauncher.ui.screens.DashboardScreen
 import com.israadev.nuxlauncher.ui.theme.NuxColors
@@ -100,6 +101,8 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onFinished = { markStorageIntroDone() }
                             )
+                            // Jangan menumpuk dengan dialog izin penyimpanan di pembukaan pertama
+                            AmberUpdatePrompt(enabled = !showStorageIntro)
                         }
                     }
                 }

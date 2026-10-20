@@ -154,6 +154,10 @@ class PlayerSkin(
 
         if (skinFile != null && skinFile.exists() && skinFile.length() > 0) {
             loadSkin(skinFile, model)
+        } else if (account.safeAccountType == "elyby") {
+            // Skin Ely.by diunduh ke berkas oleh SkinUtils. Memuat alamat jarak jauh langsung ke WebView
+            // gagal (CORS + redirect) dan membuat model kosong, jadi sementara tampilkan Steve.
+            loadSkin(null, model)
         } else if (!account.skinUrl.isNullOrBlank()) {
             val safeSkinUrl = if (account.skinUrl.startsWith("http://")) {
                 account.skinUrl.replace("http://", "https://")

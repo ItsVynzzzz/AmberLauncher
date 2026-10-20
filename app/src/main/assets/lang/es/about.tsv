@@ -1,0 +1,42 @@
+# Dialog Tentang dan Lisensi
+Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.	Este launcher. Su c\u00f3digo fuente es abierto y se puede estudiar, modificar y compartir de nuevo bajo los mismos t\u00e9rminos de la GPL-3.0.
+Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.	Arquitectura del puente JNI nativo (ZLBridge), integraci\u00f3n de la superficie SDL3, entrada directa de mandos, gesti\u00f3n de la resoluci\u00f3n DNS y optimizaciones para ejecutar OpenJDK en m\u00f3viles.
+Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.	El proyecto pionero para ejecutar Minecraft Java Edition en Android. Aporta el port de LWJGL 3, los stubs de GLFW y AWT y la integraci\u00f3n de renderizadores gr\u00e1ficos para m\u00f3viles.
+NUX Launcher (sumber asal fork)	NUX Launcher (origen del fork)
+Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.	El proyecto original del que AmberLauncher es un fork. C\u00f3digo abierto bajo la GNU GPL-3.0.
+Arsitektur runtime JVM, ZLBridge JNI, integrasi SDL3, direct gamepad, dan optimasi Android	Arquitectura del runtime de JVM, ZLBridge JNI, integraci\u00f3n de SDL3, mando directo y optimizaciones para Android
+Mesin peluncuran Java Minecraft Android, LWJGL 3 Android Natives, GLFW Stub	Motor de ejecuci\u00f3n de Minecraft Java en Android, binarios nativos de LWJGL 3 para Android y stub de GLFW
+Penerjemah modern OpenGL 4.0 ke OpenGL ES 3.2 untuk Minecraft 1.17+	Traductor moderno de OpenGL 4.0 a OpenGL ES 3.2 para Minecraft 1.17+
+Pustaka binding grafis, audio (OpenAL), dan jendela game Java	Biblioteca de enlaces para gr\u00e1ficos, audio (OpenAL) y ventanas en juegos Java
+Manajemen surface rendering native, touch input, dan audio output	Gesti\u00f3n nativa de la superficie de renderizado, entrada t\u00e1ctil y salida de audio
+Vulkan-to-OpenGL translation & driver akselerasi GPU mobile	Traducci\u00f3n de Vulkan a OpenGL y controladores de aceleraci\u00f3n de GPU para m\u00f3viles
+Mesin penerjemah OpenGL ES berbasis backend Vulkan	Motor de traducci\u00f3n de OpenGL ES basado en un backend Vulkan
+Dynamic binary instrumentation dan hook Android library	Instrumentaci\u00f3n binaria din\u00e1mica y enganche (hook) de bibliotecas de Android
+Toolkit UI modern, deklaratif, dan responsif	Toolkit de interfaz moderno, declarativo y adaptable
+Katalog publik mod, modpack, shaderpack, dan resource pack	Cat\u00e1logo p\u00fablico de mods, modpacks, paquetes de shaders y paquetes de recursos
+Editor teks dan log penampil performa tinggi	Editor de texto y visor de registros de alto rendimiento
+Viewer interaktif 3D skin & jubah Minecraft berbasis WebGL	Visor 3D interactivo de skins y capas de Minecraft basado en WebGL
+Klien HTTP jaringan performa tinggi	Cliente HTTP de red de alto rendimiento
+Ringkasan	Resumen
+Pustaka ({0})	Bibliotecas ({0})
+Tentang AmberLauncher	Acerca de AmberLauncher
+Peluncur Minecraft Java untuk Android, ringan dan sederhana.	Un launcher de Minecraft Java para Android, ligero y sencillo.
+AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.	AmberLauncher es un launcher independiente modificado a partir de NUX Launcher, que a su vez proviene de Zalith Launcher 2 y PojavLauncher. Esta aplicaci\u00f3n no es una aplicaci\u00f3n oficial del equipo de Zalith Launcher, de NUX Launcher ni de Mojang Studios.
+Proyek dan hak cipta	Proyectos y derechos de autor
+Penafian Minecraft	Aviso sobre Minecraft
+Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.	No es un producto oficial de Minecraft. No est\u00e1 aprobado por Mojang Studios ni por Microsoft, ni est\u00e1 asociado con ellos. Minecraft es una marca registrada de Mojang AB / Microsoft Corporation. Todos los recursos del juego se descargan directamente de los servidores de distribuci\u00f3n oficiales de Mojang.
+Pustaka open source	Bibliotecas de c\u00f3digo abierto
+Ketuk untuk membuka halaman proyeknya.	Toca para abrir la p\u00e1gina del proyecto.
+Lisensi yang menaungi AmberLauncher.	La licencia que ampara a AmberLauncher.
+Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.	Este proyecto est\u00e1 licenciado bajo los t\u00e9rminos de la Licencia P\u00fablica General de GNU versi\u00f3n 3.0.
+Empat kebebasan perangkat lunak bebas	Las cuatro libertades esenciales del software
+Kebebasan untuk menjalankan program untuk keperluan apa pun.	La libertad de ejecutar el programa con cualquier prop\u00f3sito.
+Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.	La libertad de estudiar c\u00f3mo funciona el programa y adaptarlo a tus necesidades.
+Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.	La libertad de redistribuir copias para ayudar a los dem\u00e1s.
+Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.	La libertad de mejorar el programa y publicar tus mejoras para el p\u00fablico.
+Ketentuan tambahan (GPLv3 Pasal 7)	T\u00e9rminos adicionales (GPLv3, secci\u00f3n 7)
+Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.	Las versiones modificadas no deben hacer un uso indebido del nombre comercial 'ZalithLauncher' ni de 'ZL'.
+Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.	Las versiones modificadas deben indicar que se trata de una 'Unofficial Modified Version'.
+Hak cipta penulis asli (Copyright \u00a9 MovTery & PojavLauncherTeam) tidak boleh dihapus.	No se debe eliminar el copyright de los autores originales (Copyright \u00a9 MovTery y PojavLauncherTeam).
+Baca teks lisensi lengkap	Leer el texto completo de la licencia
+Versi {0}	Versi\u00f3n {0}

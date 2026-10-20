@@ -1,0 +1,42 @@
+# Dialog Tentang dan Lisensi
+Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.	This launcher. Its source code is open and may be studied, changed, and shared again under the same GPL-3.0 terms.
+Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.	Native JNI bridge architecture (ZLBridge), SDL3 surface integration, direct gamepad input, DNS resolution handling, and mobile OpenJDK execution optimizations.
+Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.	The pioneering project for running Minecraft Java Edition on Android. Provides the LWJGL 3 port, GLFW stubs, AWT stubs, and mobile graphics renderer integration.
+NUX Launcher (sumber asal fork)	NUX Launcher (original source of the fork)
+Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.	The original project that AmberLauncher was forked from. Open source under GNU GPL-3.0.
+Arsitektur runtime JVM, ZLBridge JNI, integrasi SDL3, direct gamepad, dan optimasi Android	JVM runtime architecture, ZLBridge JNI, SDL3 integration, direct gamepad, and Android optimizations
+Mesin peluncuran Java Minecraft Android, LWJGL 3 Android Natives, GLFW Stub	Minecraft Java launching engine for Android, LWJGL 3 Android natives, GLFW stub
+Penerjemah modern OpenGL 4.0 ke OpenGL ES 3.2 untuk Minecraft 1.17+	Modern OpenGL 4.0 to OpenGL ES 3.2 translator for Minecraft 1.17+
+Pustaka binding grafis, audio (OpenAL), dan jendela game Java	Graphics, audio (OpenAL), and window bindings library for Java games
+Manajemen surface rendering native, touch input, dan audio output	Native rendering surface management, touch input, and audio output
+Vulkan-to-OpenGL translation & driver akselerasi GPU mobile	Vulkan-to-OpenGL translation and mobile GPU acceleration drivers
+Mesin penerjemah OpenGL ES berbasis backend Vulkan	OpenGL ES translation engine built on a Vulkan backend
+Dynamic binary instrumentation dan hook Android library	Dynamic binary instrumentation and Android library hooking
+Toolkit UI modern, deklaratif, dan responsif	Modern, declarative, and responsive UI toolkit
+Katalog publik mod, modpack, shaderpack, dan resource pack	Public catalog of mods, modpacks, shaderpacks, and resource packs
+Editor teks dan log penampil performa tinggi	High-performance text editor and log viewer
+Viewer interaktif 3D skin & jubah Minecraft berbasis WebGL	Interactive WebGL 3D viewer for Minecraft skins and capes
+Klien HTTP jaringan performa tinggi	High-performance HTTP networking client
+Ringkasan	Summary
+Pustaka ({0})	Libraries ({0})
+Tentang AmberLauncher	About AmberLauncher
+Peluncur Minecraft Java untuk Android, ringan dan sederhana.	A Minecraft Java launcher for Android, light and simple.
+AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.	AmberLauncher is an independent launcher modified from NUX Launcher, which itself comes from Zalith Launcher 2 and PojavLauncher. This app is not an official app of the Zalith Launcher Team, NUX Launcher, or Mojang Studios.
+Proyek dan hak cipta	Projects and copyright
+Penafian Minecraft	Minecraft disclaimer
+Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.	Not an official Minecraft product. Not approved by or associated with Mojang Studios or Microsoft. Minecraft is a trademark of Mojang AB / Microsoft Corporation. All game assets are downloaded directly from Mojang's official distribution servers.
+Pustaka open source	Open source libraries
+Ketuk untuk membuka halaman proyeknya.	Tap to open the project's page.
+Lisensi yang menaungi AmberLauncher.	The license that covers AmberLauncher.
+Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.	This project is licensed under the terms of the GNU General Public License version 3.0.
+Empat kebebasan perangkat lunak bebas	The four essential software freedoms
+Kebebasan untuk menjalankan program untuk keperluan apa pun.	The freedom to run the program for any purpose.
+Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.	The freedom to study how the program works and adapt it to your needs.
+Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.	The freedom to redistribute copies to help others.
+Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.	The freedom to improve the program and release your improvements to the public.
+Ketentuan tambahan (GPLv3 Pasal 7)	Additional terms (GPLv3 Section 7)
+Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.	Modified versions must not misuse the trade name 'ZalithLauncher' or 'ZL'.
+Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.	Modified versions must state that this is an 'Unofficial Modified Version'.
+Hak cipta penulis asli (Copyright \u00a9 MovTery & PojavLauncherTeam) tidak boleh dihapus.	The original authors' copyright (Copyright \u00a9 MovTery & PojavLauncherTeam) must not be removed.
+Baca teks lisensi lengkap	Read the full license text
+Versi {0}	Version {0}

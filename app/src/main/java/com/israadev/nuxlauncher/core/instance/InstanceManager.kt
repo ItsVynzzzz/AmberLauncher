@@ -178,7 +178,7 @@ object InstanceManager {
                 setDataAndType(fileUri, "resource/folder")
                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            val chooser = android.content.Intent.createChooser(chooserIntent, "Buka Folder").apply {
+            val chooser = android.content.Intent.createChooser(chooserIntent, com.israadev.nuxlauncher.ui.i18n.Tr.t("Buka Folder")).apply {
                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(chooser)
@@ -192,13 +192,13 @@ object InstanceManager {
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
             val clip = android.content.ClipData.newPlainText("Folder Path", folder.absolutePath)
             clipboard.setPrimaryClip(clip)
-            android.widget.Toast.makeText(
+            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
                 context,
                 "Lokasi folder disalin ke clipboard:\n${folder.absolutePath}",
-                android.widget.Toast.LENGTH_LONG
+                com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
             ).show()
         } catch (_: Exception) {
-            android.widget.Toast.makeText(context, "Folder: ${folder.absolutePath}", android.widget.Toast.LENGTH_LONG).show()
+            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(context, "Folder: ${folder.absolutePath}", com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG).show()
         }
     }
 

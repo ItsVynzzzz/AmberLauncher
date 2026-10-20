@@ -1,0 +1,65 @@
+# Tambah/Ubah instance, unduhan, Java
+Semua	Todas
+INSTANCE ARCHITECT	ARQUITECTO DE INSTANCIAS
+Buat Instance Baru	Crear nueva instancia
+NAMA INSTANCE	NOMBRE DE LA INSTANCIA
+Default: {0} {1}	Predeterminado: {0} {1}
+MOD LOADER ENGINE	MOTOR DE MOD LOADER
+Memuat loader Fabric...	Cargando el loader de Fabric...
+\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f Fabric a\u00fan no est\u00e1 disponible para {0}
+SPESIFIKASI TARGET	ESPECIFICACIONES DE DESTINO
+Memuat Fabric...	Cargando Fabric...
+Fabric Tidak Tersedia	Fabric no disponible
+Buat Instance Sekarang	Crear instancia ahora
+Cari versi ({0})...	Buscar versi\u00f3n ({0})...
+DAFTAR VERSI	LISTA DE VERSIONES
+{0} versi ditemukan	{0} versiones encontradas
+Memuat manifest Mojang...	Cargando el manifiesto de Mojang...
+Tidak ada versi yang cocok	No hay versiones que coincidan
+Auto ({0})	Autom\u00e1tico ({0})
+Nama	Nombre
+Nama instance	Nombre de la instancia
+Lihat mod	Ver mods
+{0} terpasang	{0} instalados
+Hapus '{0}'?	\u00bfEliminar '{0}'?
+Semua world, mod, dan file instance dihapus permanen.	Todos los mundos, mods y archivos de la instancia se eliminar\u00e1n de forma permanente.
+Ya, hapus	S\u00ed, eliminar
+Nama instance tidak boleh kosong	El nombre de la instancia no puede estar vac\u00edo
+Instance berhasil diperbarui!	\u00a1Instancia actualizada!
+Simpan	Guardar
+Mengambil metadata versi {0}...	Obteniendo los metadatos de la versi\u00f3n {0}...
+Versi {0} tidak ditemukan di manifest Mojang	No se encontr\u00f3 la versi\u00f3n {0} en el manifiesto de Mojang
+Membaca konfigurasi versi...	Leyendo la configuraci\u00f3n de la versi\u00f3n...
+Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	Descargando el cliente de Minecraft ({0} / {1} MB - {2}%)...
+Mengunduh libraries ({0}/{1})...	Descargando bibliotecas ({0}/{1})...
+Memverifikasi asset index {0}...	Verificando el \u00edndice de recursos {0}...
+Mengunduh aset game ({0}/{1})...	Descargando recursos del juego ({0}/{1})...
+Menyiapkan Fabric Loader...	Preparando Fabric Loader...
+Tidak dapat menemukan Fabric loader untuk versi {0}	No se encontr\u00f3 un loader de Fabric para la versi\u00f3n {0}
+Mengambil profil Fabric ({0})...	Obteniendo el perfil de Fabric ({0})...
+Gagal memuat profil Fabric: {~0}	No se pudo cargar el perfil de Fabric: {0}
+Mengunduh library Fabric ({0}/{1})...	Descargando bibliotecas de Fabric ({0}/{1})...
+Instalasi selesai!	\u00a1Instalaci\u00f3n completada!
+Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	Direcci\u00f3n de descarga rechazada porque no usa HTTPS: {0}
+Isi unduhan tidak cocok dengan sidik jari resmi: {0}	El contenido descargado no coincide con la huella oficial: {0}
+Failed to download {0}: {1}	No se pudo descargar {0}: {1}
+Failed to download {0}	No se pudo descargar {0}
+Empty body for {0}	Respuesta vac\u00eda para {0}
+HTTP Error {0} from {1}	Error HTTP {0} de {1}
+HTTP Error {0}	Error HTTP {0}
+Empty response body	Respuesta vac\u00eda
+Tidak dapat memuat versi Fabric untuk {0}	No se pudieron cargar las versiones de Fabric para {0}
+Gagal memuat profil Fabric untuk {0} ({1})	No se pudo cargar el perfil de Fabric para {0} ({1})
+Mengekstrak Java Runtime ({0} universal)...	Extrayendo el runtime de Java ({0} universal)...
+Mengekstrak runtime universal ({0})	Extrayendo el runtime universal ({0})
+Mengekstrak Java Runtime ({0} bin-{1})...	Extrayendo el runtime de Java ({0} bin-{1})...
+Mengekstrak native binary ({0} {1})	Extrayendo el binario nativo ({0} {1})
+Memverifikasi izin sistem OpenJDK...	Verificando los permisos del sistema de OpenJDK...
+Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	La verificaci\u00f3n de OpenJDK {0} est\u00e1 incompleta tras la extracci\u00f3n.
+Ekstraksi OpenJDK {0} selesai!	\u00a1Extracci\u00f3n de OpenJDK {0} completada!
+Membongkar bytecode Java 8: {0} ({1}/{2})...	Descomprimiendo el bytecode de Java 8: {0} ({1}/{2})...
+Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	El perfil de Fabric ({0}) a\u00fan no est\u00e1 instalado. \u00a1Toca el bot\u00f3n DESCARGAR en la instancia!
+Lokasi folder disalin ke clipboard:\n{0}	Ubicaci\u00f3n de la carpeta copiada al portapapeles:\n{0}
+Folder: {0}	Carpeta: {0}
+Buka Folder	Abrir carpeta
+Unable to resolve host "{0}": System DNS and Fallback DoH failed	No se pudo resolver el host "{0}": fallaron el DNS del sistema y el DoH de respaldo

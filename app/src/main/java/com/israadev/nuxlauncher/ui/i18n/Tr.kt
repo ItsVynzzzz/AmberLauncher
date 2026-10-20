@@ -9,13 +9,18 @@ import java.util.Locale
  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
  *
- * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], atau [EN]. Bila HP memakai bahasa selain
- * Indonesia, pilihan [SYSTEM] jatuh ke bahasa Inggris.
+ * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], [EN], atau [ES]. Pada pilihan [SYSTEM], HP
+ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol memakai Spanyol, dan bahasa lain
+ * jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
  */
 object Tr {
     const val SYSTEM = "system"
     const val ID = "id"
     const val EN = "en"
+    const val ES = "es"
+
+    /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
+    private val DICTIONARY_LANGS = setOf(EN, ES)
 
     private const val PREFS_NAME = "amber_launcher_prefs"
     private const val KEY_LANGUAGE = "language"
@@ -24,12 +29,12 @@ object Tr {
     @Volatile
     private var translator: Translator? = null
 
-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], atau [EN]. */
+    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], atau [ES]. */
     @Volatile
     var choice: String = SYSTEM
         private set
 
-    /** Bahasa yang benar-benar dipakai: [ID] atau [EN]. */
+    /** Bahasa yang benar-benar dipakai: [ID], [EN], atau [ES]. */
     @Volatile
     var effective: String = ID
         private set
@@ -73,13 +78,20 @@ object Tr {
         return tr.translate(text)
     }
 
-    private fun normalize(value: String?): String =
-        if (value == ID || value == EN) value else SYSTEM
+    private fun normalize(value: String?): String = when {
+        value == null -> SYSTEM
+        value == ID || value in DICTIONARY_LANGS -> value
+        else -> SYSTEM
+    }
 
     private fun resolve(c: String): String {
-        if (c == ID || c == EN) return c
+        if (c == ID || c in DICTIONARY_LANGS) return c
         val lang = Locale.getDefault().language
-        return if (lang == "in" || lang == "id") ID else EN
+        return when {
+            lang == "in" || lang == "id" -> ID
+            lang in DICTIONARY_LANGS -> lang
+            else -> EN
+        }
     }
 
     private fun apply(context: Context) {

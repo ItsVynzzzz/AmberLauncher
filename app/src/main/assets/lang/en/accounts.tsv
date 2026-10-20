@@ -1,0 +1,94 @@
+# Akun, login Microsoft dan Ely.by
+Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	Ely.by account skins and capes are managed directly at https://account.ely.by
+Belum ada akun tersimpan	No saved accounts yet
+{0} akun tersimpan \u00b7 ketuk untuk berganti	Saved accounts: {0} \u00b7 tap to switch
+Profil aktif	Active profile
+Skin & Jubah	Skin & Cape
+Belum ada profil aktif	No active profile yet
+Pilih atau tambahkan akun untuk mulai bermain.	Choose or add an account to start playing.
+Tambahkan akun Offline, Microsoft, atau Ely.by.	Add an Offline, Microsoft, or Ely.by account.
+Aktif	Active
+Gunakan	Use
+Akun {0} berhasil ditambahkan!	Account {0} added!
+Hapus akun?	Delete account?
+Hapus profil '{0}' ({1}) dari perangkat ini?	Delete profile '{0}' ({1}) from this device?
+Profil '{0}' dihapus	Profile '{0}' deleted
+Akun resmi Microsoft	Official Microsoft account
+Akun terverifikasi Ely.by	Verified Ely.by account
+Akun offline / lokal	Offline / local account
+Pilih cara masuk ke Minecraft	Choose how to sign in to Minecraft
+Lokal \u00b7 tanpa login	Local \u00b7 no sign-in
+Resmi \u00b7 akun Mojang	Official \u00b7 Mojang account
+Browser \u00b7 skin & jubah	Browser \u00b7 skin & cape
+Nama pemain (Steve, Alex...)	Player name (Steve, Alex...)
+Username tidak boleh kosong	Username cannot be empty
+Simpan akun	Save account
+Masuk dengan akun Microsoft / Xbox	Sign in with a Microsoft / Xbox account
+Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	The authorization window opens right inside the launcher, so you don't need to leave the app.
+Gagal memulai otorisasi Microsoft.	Failed to start Microsoft authorization.
+Menghubungi...	Connecting...
+Masuk dengan Microsoft	Sign in with Microsoft
+Menunggu otorisasi di browser Ely.by...	Waiting for authorization in the Ely.by browser...
+Kode disalin	Code copied
+Salin	Copy
+Buka lagi	Open again
+Masuk dengan akun Ely.by	Sign in with an Ely.by account
+Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	The browser opens automatically to confirm your Ely.by account, without typing a password.
+Buka browser Ely.by	Open Ely.by in browser
+Menunggu otorisasi akun di halaman web Microsoft...	Waiting for account authorization on the Microsoft web page...
+Kode '{0}' telah disalin!	Code '{0}' copied!
+Token diterima! Memproses autentikasi Minecraft & Xbox...	Token received! Processing Minecraft & Xbox authentication...
+Gagal memproses autentikasi Minecraft.	Failed to process Minecraft authentication.
+Otorisasi Microsoft gagal.	Microsoft authorization failed.
+LOGIN AKUN MICROSOFT	MICROSOFT ACCOUNT SIGN-IN
+Masuk dan konfirmasi langsung di jendela aman ini	Sign in and confirm right here in this secure window
+Kode '{0}' disalin!	Code '{0}' copied!
+KODE:	CODE:
+Salin Kode	Copy code
+Buka di Browser Eksternal	Open in external browser
+Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	Tap 'Continue' on the page above after entering the code
+Gagal memulai otorisasi Ely.by.	Failed to start Ely.by authorization.
+Otorisasi Ely.by gagal.	Ely.by authorization failed.
+Terjadi kesalahan saat login Ely.by.	An error occurred while signing in to Ely.by.
+Gagal memulai login Ely.by Device Code ({0}): {1}	Failed to start Ely.by Device Code sign-in ({0}): {1}
+Login dibatalkan oleh pengguna.	Sign-in was canceled by the user.
+Menunggu konfirmasi di browser...	Waiting for confirmation in the browser...
+Memperlambat polling...	Slowing down polling...
+Waktu otorisasi Ely.by habis.	Ely.by authorization timed out.
+Mengambil informasi akun Ely.by...	Fetching Ely.by account info...
+Gagal mengambil info akun Ely.by ({0})	Failed to fetch Ely.by account info ({0})
+Mengambil UUID Minecraft untuk {0}...	Fetching the Minecraft UUID for {0}...
+Gagal login ke Ely.by (HTTP {0}): {1}	Failed to sign in to Ely.by (HTTP {0}): {1}
+Profil Ely.by tidak ditemukan dalam respon.	The Ely.by profile was not found in the response.
+Gagal memulai login Microsoft (HTTP {0}): {1}	Failed to start Microsoft sign-in (HTTP {0}): {1}
+Token berhasil diterima! Menghubungkan ke Xbox Live...	Token received! Connecting to Xbox Live...
+Menunggu otorisasi di halaman web...	Waiting for authorization on the web page...
+Memperlambat frekuensi polling...	Slowing down polling frequency...
+Kode login kedaluwarsa. Silakan mulai ulang.	The sign-in code has expired. Please start again.
+Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	The authorization code has already been used or has expired. Tap Sign in to get a new code.
+Otorisasi ditolak ({0}): {1}	Authorization denied ({0}): {1}
+Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	The network connection dropped repeatedly while waiting. Please check your internet connection.
+Waktu otorisasi habis (timeout). Silakan coba lagi.	Authorization timed out. Please try again.
+Autentikasi dengan Xbox Live...	Authenticating with Xbox Live...
+Gagal autentikasi Xbox Live (HTTP {0}): {1}	Xbox Live authentication failed (HTTP {0}): {1}
+Gagal memperoleh token Xbox Live atau UserHash.	Failed to obtain the Xbox Live token or UserHash.
+Meminta otorisasi XSTS Minecraft...	Requesting Minecraft XSTS authorization...
+Akun ini telah dilarang/diblokir dari Xbox Live.	This account has been banned or blocked from Xbox Live.
+Akun dibatasi oleh kontrol orang tua (Restricted).	The account is restricted by parental controls (Restricted).
+Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	This Microsoft account does not have an Xbox profile yet. Please create a gamertag at xbox.com first.
+Akun belum menyetujui Ketentuan Layanan Xbox Live.	The account has not accepted the Xbox Live Terms of Service.
+Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	Xbox Live is not available in your account's country/region.
+Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	The account requires adult age verification (Proof of Age).
+Batas waktu bermain harian Xbox Live telah tercapai.	The daily Xbox Live play time limit has been reached.
+Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	This is a child account. A parent must link it to a family group (Family Safety).
+Otorisasi XSTS gagal (HTTP {0}): {1}	XSTS authorization failed (HTTP {0}): {1}
+Gagal memperoleh token XSTS.	Failed to obtain the XSTS token.
+Menghubungkan ke Mojang Minecraft Services...	Connecting to Mojang Minecraft Services...
+Gagal login ke layanan Minecraft ({0}): {1}	Failed to sign in to the Minecraft service ({0}): {1}
+Layanan Minecraft tidak mengembalikan token akses.	The Minecraft service did not return an access token.
+Mengambil profil pemain Minecraft Java...	Fetching the Minecraft Java player profile...
+Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	This Microsoft account does not own a Minecraft: Java Edition license.
+Gagal mengambil profil Minecraft ({0}): {1}	Failed to fetch the Minecraft profile ({0}): {1}
+Tidak ada refresh token tersimpan.	No refresh token is saved.
+Gagal memperbarui token Microsoft ({0}): {1}	Failed to refresh the Microsoft token ({0}): {1}
+Token pembaruan kosong.	The refresh token is empty.

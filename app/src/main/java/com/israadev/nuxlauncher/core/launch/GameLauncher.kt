@@ -55,10 +55,10 @@ object GameLauncher {
             }
 
             if (fabricProfile == null) {
-                android.widget.Toast.makeText(
+                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
                     context,
                     "Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
-                    android.widget.Toast.LENGTH_LONG
+                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
                 ).show()
                 return
             }

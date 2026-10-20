@@ -1,0 +1,58 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	Botones
+Atur tombol	Editar botones
+TAMPILAN	PANTALLA
+Resolusi render	Resoluci\u00f3n de render
+Hemat 50%	Ahorro 50%
+Seimbang 75%	Equilibrado 75%
+Penuh 100%	Completo 100%
+Pin FPS di layar	Fijar FPS en pantalla
+Tetap tampil saat tombol layar disembunyikan	Se mantiene visible al ocultar los botones de la pantalla
+KAMERA DAN KURSOR	C\u00c1MARA Y CURSOR
+Kecepatan kamera	Velocidad de la c\u00e1mara
+Kecepatan kursor	Velocidad del cursor
+Mode sentuh	Modo t\u00e1ctil
+Geser	Deslizar
+Ketuk	Tocar
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Deslizar: la pantalla act\u00faa como trackpad. Tocar: tu dedo se convierte directamente en el cursor.
+PINTAS	ATAJOS
+Kamera	C\u00e1mara
+Jeda	Pausa
+Pemain	Jugadores
+Sembunyi HUD	Ocultar HUD
+Keluar dari game	Salir del juego
+Keluar dari game?	\u00bfSalir del juego?
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft se detendr\u00e1 y volver\u00e1s al launcher. Los mundos sin guardar se pueden perder.
+sisa RAM	RAM libre
+PANAS	CALOR
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	Toca el icono de engranaje o el n\u00famero de FPS en la pantalla para abrir el men\u00fa. Sal del juego con el bot\u00f3n rojo que est\u00e1 dentro del men\u00fa.
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	Los errores son normales, porque nada es perfecto excepto Dios todopoderoso.
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	Desactiva la sincronizaci\u00f3n vertical (VSync) en los ajustes del renderizador si notas tirones o una pantalla negra despu\u00e9s del logo de Mojang.
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	Si la pantalla de Minecraft se ve recortada o vertical, activa la rotaci\u00f3n autom\u00e1tica del tel\u00e9fono y ponlo en horizontal antes de tocar Jugar.
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	Usa el renderizador MobileGlues para obtener la mejor eficiencia de bater\u00eda y compatibilidad con paquetes de shaders.
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	Si Minecraft se cierra al iniciar con una GPU Mali/Adreno, prueba a activar 'DISABLE_SUBGROUP' en los ajustes del renderizador.
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	Activa OpenGL NoError en los ajustes de MobileGlues para mejorar los FPS mientras juegas.
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	Usa el bot\u00f3n HIDE GUI para ocultar los botones virtuales de la pantalla cuando juegues con teclado y rat\u00f3n f\u00edsicos.
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	Ajusta la RAM seg\u00fan las caracter\u00edsticas del tel\u00e9fono: de 2 GB a 3 GB es m\u00e1s que suficiente para Minecraft 1.20+ sin modpacks pesados.
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Cambia la sensibilidad del cursor en los ajustes de Controles para apuntar y mirar a tu alrededor con m\u00e1s precisi\u00f3n.
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	Elige el controlador Vulkan Turnip en dispositivos Snapdragon para lograr el mejor rendimiento gr\u00e1fico y la m\u00e1xima estabilidad.
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	Puedes ajustar la posici\u00f3n y el tama\u00f1o de los botones de control como quieras en el men\u00fa de personalizaci\u00f3n de botones.
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	Usa la funci\u00f3n Importar addon para instalar modpacks (.mrpack), mods (.jar) y paquetes de recursos al instante.
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	Toca el bot\u00f3n ESC en la pantalla para abrir el men\u00fa de pausa o volver al men\u00fa anterior.
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Toca el bot\u00f3n F3 para ver las coordenadas, el bioma y el gr\u00e1fico de rendimiento de FPS dentro del juego.
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	Activa el modo de pantalla completa en Ajustes para ignorar la muesca o la c\u00e1mara frontal y ampliar la vista.
+Memuat Minecraft {0}	Cargando Minecraft {0}
+Tutup loading	Cerrar la carga
+Menyiapkan mesin Java dan grafis...	Preparando el motor de Java y de gr\u00e1ficos...
+Izin penyimpanan	Permiso de almacenamiento
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher guarda los mundos, los mods y los ajustes en la carpeta nuxlauncher del almacenamiento del tel\u00e9fono, para que sea f\u00e1cil hacer copias de seguridad y moverlos.
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android abrir\u00e1 una p\u00e1gina de ajustes. Activa el permiso de acceso a todos los archivos para AmberLauncher y vuelve aqu\u00ed.
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	Si eliges M\u00e1s tarde, el juego sigue funcionando. Sus datos se guardan en la carpeta privada de la aplicaci\u00f3n, que no es f\u00e1cil de abrir desde un administrador de archivos.
+Hapus instance?	\u00bfEliminar instancia?
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	Todos los mundos, mods, partidas guardadas y configuraciones de esta instancia se eliminar\u00e1n de forma permanente y no se podr\u00e1n recuperar.
+Perender tidak cocok	Renderizador incompatible
+Tetap jalankan	Ejecutar de todos modos
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Este renderizador no tiene soporte oficial para Minecraft {0}. Forzarlo puede provocar fallos gr\u00e1ficos, una pantalla congelada o que el juego se cierre. \u00bfContinuar?
+Dukungan resmi: {0}	Soporte oficial: {0}
+Mengunduh game	Descargando el juego
+Menyiapkan file game...	Preparando los archivos del juego...

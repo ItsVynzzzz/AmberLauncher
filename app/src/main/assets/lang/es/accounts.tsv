@@ -1,0 +1,96 @@
+# Akun, login Microsoft dan Ely.by
+Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	Los skins y las capas de las cuentas de Ely.by se gestionan directamente en https://account.ely.by
+Belum ada akun tersimpan	A\u00fan no hay cuentas guardadas
+{0} akun tersimpan \u00b7 ketuk untuk berganti	Cuentas guardadas: {0} \u00b7 toca para cambiar
+Profil aktif	Perfil activo
+Skin & Jubah	Skin y capa
+Belum ada profil aktif	A\u00fan no hay un perfil activo
+Pilih atau tambahkan akun untuk mulai bermain.	Elige o a\u00f1ade una cuenta para empezar a jugar.
+Tambahkan akun Offline, Microsoft, atau Ely.by.	A\u00f1ade una cuenta Offline, de Microsoft o de Ely.by.
+Aktif	Activo
+Gunakan	Usar
+Akun {0} berhasil ditambahkan!	\u00a1Cuenta {0} a\u00f1adida!
+Hapus akun?	\u00bfEliminar cuenta?
+Hapus profil '{0}' ({1}) dari perangkat ini?	\u00bfEliminar el perfil '{0}' ({1}) de este dispositivo?
+Profil '{0}' dihapus	Perfil '{0}' eliminado
+Akun resmi Microsoft	Cuenta oficial de Microsoft
+Akun terverifikasi Ely.by	Cuenta verificada de Ely.by
+Akun offline / lokal	Cuenta offline / local
+Pilih cara masuk ke Minecraft	Elige c\u00f3mo iniciar sesi\u00f3n en Minecraft
+Lokal \u00b7 tanpa login	Local \u00b7 sin iniciar sesi\u00f3n
+Resmi \u00b7 akun Mojang	Oficial \u00b7 cuenta de Mojang
+Browser \u00b7 skin & jubah	Navegador \u00b7 skin y capa
+Nama pemain (Steve, Alex...)	Nombre del jugador (Steve, Alex...)
+Username tidak boleh kosong	El nombre de usuario no puede estar vac\u00edo
+Simpan akun	Guardar cuenta
+Masuk dengan akun Microsoft / Xbox	Inicia sesi\u00f3n con una cuenta de Microsoft / Xbox
+Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	La ventana de autorizaci\u00f3n se abre dentro del launcher, sin necesidad de salir de la aplicaci\u00f3n.
+Gagal memulai otorisasi Microsoft.	No se pudo iniciar la autorizaci\u00f3n de Microsoft.
+Menghubungi...	Conectando...
+Masuk dengan Microsoft	Iniciar sesi\u00f3n con Microsoft
+Menunggu otorisasi di browser Ely.by...	Esperando la autorizaci\u00f3n en el navegador de Ely.by...
+Kode disalin	C\u00f3digo copiado
+Salin	Copiar
+Buka lagi	Abrir de nuevo
+Masuk dengan akun Ely.by	Inicia sesi\u00f3n con una cuenta de Ely.by
+Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	El navegador se abre autom\u00e1ticamente para confirmar tu cuenta de Ely.by, sin escribir la contrase\u00f1a.
+Buka browser Ely.by	Abrir Ely.by en el navegador
+Menunggu otorisasi akun di halaman web Microsoft...	Esperando la autorizaci\u00f3n de la cuenta en la p\u00e1gina web de Microsoft...
+Kode '{0}' telah disalin!	\u00a1C\u00f3digo '{0}' copiado!
+Token diterima! Memproses autentikasi Minecraft & Xbox...	\u00a1Token recibido! Procesando la autenticaci\u00f3n de Minecraft y Xbox...
+Gagal memproses autentikasi Minecraft.	No se pudo procesar la autenticaci\u00f3n de Minecraft.
+Otorisasi Microsoft gagal.	La autorizaci\u00f3n de Microsoft fall\u00f3.
+LOGIN AKUN MICROSOFT	INICIO DE SESI\u00d3N CON CUENTA MICROSOFT
+Masuk dan konfirmasi langsung di jendela aman ini	Inicia sesi\u00f3n y confirma aqu\u00ed mismo, en esta ventana segura
+Kode '{0}' disalin!	\u00a1C\u00f3digo '{0}' copiado!
+KODE:	C\u00d3DIGO:
+Salin Kode	Copiar c\u00f3digo
+Buka di Browser Eksternal	Abrir en el navegador externo
+Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	Toca 'Continuar' en la p\u00e1gina de arriba despu\u00e9s de introducir el c\u00f3digo
+Gagal memulai otorisasi Ely.by.	No se pudo iniciar la autorizaci\u00f3n de Ely.by.
+Otorisasi Ely.by gagal.	La autorizaci\u00f3n de Ely.by fall\u00f3.
+Terjadi kesalahan saat login Ely.by.	Ocurri\u00f3 un error al iniciar sesi\u00f3n en Ely.by.
+Gagal memulai login Ely.by Device Code ({0}): {1}	No se pudo iniciar el inicio de sesi\u00f3n con c\u00f3digo de dispositivo de Ely.by ({0}): {1}
+Login dibatalkan oleh pengguna.	El usuario cancel\u00f3 el inicio de sesi\u00f3n.
+Menunggu konfirmasi di browser...	Esperando la confirmaci\u00f3n en el navegador...
+Memperlambat polling...	Reduciendo la frecuencia de consulta...
+Ely.by OAuth Error: {0}	Error de OAuth de Ely.by: {0}
+Waktu otorisasi Ely.by habis.	Se agot\u00f3 el tiempo de autorizaci\u00f3n de Ely.by.
+Mengambil informasi akun Ely.by...	Obteniendo la informaci\u00f3n de la cuenta de Ely.by...
+Gagal mengambil info akun Ely.by ({0})	No se pudo obtener la informaci\u00f3n de la cuenta de Ely.by ({0})
+Mengambil UUID Minecraft untuk {0}...	Obteniendo el UUID de Minecraft de {0}...
+Gagal login ke Ely.by (HTTP {0}): {1}	No se pudo iniciar sesi\u00f3n en Ely.by (HTTP {0}): {1}
+Profil Ely.by tidak ditemukan dalam respon.	No se encontr\u00f3 el perfil de Ely.by en la respuesta.
+Gagal memulai login Microsoft (HTTP {0}): {1}	No se pudo iniciar el inicio de sesi\u00f3n de Microsoft (HTTP {0}): {1}
+Token berhasil diterima! Menghubungkan ke Xbox Live...	\u00a1Token recibido! Conectando con Xbox Live...
+Menunggu otorisasi di halaman web...	Esperando la autorizaci\u00f3n en la p\u00e1gina web...
+Memperlambat frekuensi polling...	Reduciendo la frecuencia de consulta...
+Kode login kedaluwarsa. Silakan mulai ulang.	El c\u00f3digo de inicio de sesi\u00f3n ha caducado. Vuelve a empezar.
+Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	El c\u00f3digo de autorizaci\u00f3n ya se us\u00f3 o ha caducado. Toca Iniciar sesi\u00f3n para obtener uno nuevo.
+Otorisasi ditolak ({0}): {1}	Autorizaci\u00f3n denegada ({0}): {1}
+Microsoft OAuth Error: {0}	Error de OAuth de Microsoft: {0}
+Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	La conexi\u00f3n de red se interrumpi\u00f3 varias veces durante la espera. Revisa tu conexi\u00f3n a internet.
+Waktu otorisasi habis (timeout). Silakan coba lagi.	Se agot\u00f3 el tiempo de autorizaci\u00f3n. Int\u00e9ntalo de nuevo.
+Autentikasi dengan Xbox Live...	Autenticando con Xbox Live...
+Gagal autentikasi Xbox Live (HTTP {0}): {1}	Fall\u00f3 la autenticaci\u00f3n de Xbox Live (HTTP {0}): {1}
+Gagal memperoleh token Xbox Live atau UserHash.	No se pudo obtener el token de Xbox Live o el UserHash.
+Meminta otorisasi XSTS Minecraft...	Solicitando la autorizaci\u00f3n XSTS de Minecraft...
+Akun ini telah dilarang/diblokir dari Xbox Live.	Esta cuenta ha sido vetada o bloqueada en Xbox Live.
+Akun dibatasi oleh kontrol orang tua (Restricted).	La cuenta est\u00e1 restringida por el control parental (Restricted).
+Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	Esta cuenta de Microsoft a\u00fan no tiene un perfil de Xbox. Crea primero un gamertag en xbox.com.
+Akun belum menyetujui Ketentuan Layanan Xbox Live.	La cuenta no ha aceptado los T\u00e9rminos de servicio de Xbox Live.
+Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	Xbox Live no est\u00e1 disponible en el pa\u00eds o la regi\u00f3n de tu cuenta.
+Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	La cuenta requiere verificaci\u00f3n de mayor\u00eda de edad (Proof of Age).
+Batas waktu bermain harian Xbox Live telah tercapai.	Se alcanz\u00f3 el l\u00edmite diario de tiempo de juego de Xbox Live.
+Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	Es una cuenta de menor de edad (Child Account). Un padre o tutor debe vincularla a un grupo familiar (Family Safety).
+Otorisasi XSTS gagal (HTTP {0}): {1}	Fall\u00f3 la autorizaci\u00f3n XSTS (HTTP {0}): {1}
+Gagal memperoleh token XSTS.	No se pudo obtener el token XSTS.
+Menghubungkan ke Mojang Minecraft Services...	Conectando con Mojang Minecraft Services...
+Gagal login ke layanan Minecraft ({0}): {1}	No se pudo iniciar sesi\u00f3n en el servicio de Minecraft ({0}): {1}
+Layanan Minecraft tidak mengembalikan token akses.	El servicio de Minecraft no devolvi\u00f3 un token de acceso.
+Mengambil profil pemain Minecraft Java...	Obteniendo el perfil de jugador de Minecraft Java...
+Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	Esta cuenta de Microsoft no tiene una licencia de Minecraft: Java Edition.
+Gagal mengambil profil Minecraft ({0}): {1}	No se pudo obtener el perfil de Minecraft ({0}): {1}
+Tidak ada refresh token tersimpan.	No hay ning\u00fan token de actualizaci\u00f3n guardado.
+Gagal memperbarui token Microsoft ({0}): {1}	No se pudo actualizar el token de Microsoft ({0}): {1}
+Token pembaruan kosong.	El token de actualizaci\u00f3n est\u00e1 vac\u00edo.

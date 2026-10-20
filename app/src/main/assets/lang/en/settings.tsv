@@ -75,4 +75,4 @@ Kunci layar {0} Hz	Lock screen to {0} Hz
 Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	A 90 Hz screen is locked to 60 Hz while playing for smoother motion. The FPS HUD shows the active Hz.
 Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Game heap: you chose {0} MB, using {1} MB. This phone has {2} MB of RAM; a larger heap makes the phone swap memory and lowers FPS.
 Heap game {0} MB (batas profil {1} MB).	Game heap {0} MB (profile limit {1} MB).
-Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (free RAM \u00b7 HOT \u00b7 Hz).
+Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (RAM left \u00b7 HOT \u00b7 Hz).

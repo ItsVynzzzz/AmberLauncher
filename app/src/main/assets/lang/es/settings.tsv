@@ -1,0 +1,78 @@
+# Pengaturan dan profil perangkat
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB de RAM \u00b7 {1} n\u00facleos de CPU
+Memori	Memoria
+Grafis	Gr\u00e1ficos
+Kontrol	Controles
+Tampilan	Apariencia
+Memori game (RAM)	Memoria del juego (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Demasiado para este tel\u00e9fono; el juego y el tel\u00e9fono pueden ir lentos.
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	L\u00edmite de memoria de Java (-Xmx). M\u00e1s no siempre es m\u00e1s r\u00e1pido.
+1,5 GB	1,5 GB
+Argumen JVM tambahan	Argumentos extra de JVM
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Opcional, para usuarios avanzados. Un valor incorrecto puede impedir que el juego arranque.
+Contoh: -XX:+UseG1GC	Ejemplo: -XX:+UseG1GC
+Konfigurasi renderer	Ajustes del renderizador
+Optimasi otomatis options.txt	Optimizar options.txt autom\u00e1ticamente
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Desactiva autom\u00e1ticamente las nubes y las sombras para lograr m\u00e1s FPS.
+Skala resolusi layar	Escala de resoluci\u00f3n de pantalla
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Menor = m\u00e1s FPS, imagen m\u00e1s borrosa.
+Driver Vulkan	Controlador Vulkan
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	Elige la implementaci\u00f3n del controlador Vulkan que usan el sistema y el juego.
+API grafis	API gr\u00e1fica
+Atur API grafis yang dipakai Minecraft modern 26.2+.	Define la API gr\u00e1fica que usa Minecraft moderno 26.2+.
+Gunakan driver Vulkan sistem	Usar el controlador Vulkan del sistema
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	Fuerza el controlador Vulkan integrado del tel\u00e9fono (no Turnip). Afecta al renderizador Zink.
+V-Sync Zink	V-Sync de Zink
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Sincronizaci\u00f3n vertical para el renderizador Kopper Zink mediante la interfaz del sistema.
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Idioma del texto del launcher. Seguir al sistema usa el idioma de tu tel\u00e9fono.
+Latar Beranda	Fondo de inicio
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Las fotos son lo m\u00e1s ligero, los GIF se mueven con poca carga y los v\u00eddeos son lo m\u00e1s fluido (HD, hasta 60 fps), pero gastan m\u00e1s bater\u00eda.
+Ganti latar	Cambiar fondo
+Gerakkan GIF dan video	Animar GIF y v\u00eddeos
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	Desact\u00edvalo para mostrar solo una imagen fija. Es lo que menos bater\u00eda y RAM gasta.
+Jeda saat Hemat Baterai	Pausar con el ahorro de bater\u00eda
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	Los GIF y los v\u00eddeos se pausan solos mientras el modo de ahorro de bater\u00eda del tel\u00e9fono est\u00e1 activo.
+Suara video	Sonido del v\u00eddeo
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Desactivado por defecto. Se silencia solo si otra aplicaci\u00f3n est\u00e1 reproduciendo audio.
+Volume video	Volumen del v\u00eddeo
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	Un brillo suave en la barra lateral y en los bordes de las tarjetas de inicio. Su color sigue al del GIF o del v\u00eddeo. No se aplica a las fotos.
+Kekuatan ambient	Intensidad de la luz ambiental
+Kustomisasi kontrol virtual	Personalizar los controles virtuales
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Cambia la disposici\u00f3n y el tama\u00f1o de los botones, la transparencia, el desplazamiento de la barra de acceso r\u00e1pido y la asignaci\u00f3n de teclas de Minecraft.
+Buka editor	Abrir editor
+Mode mouse di menu	Modo de rat\u00f3n en los men\u00fas
+Sentuh tombol atau slot menu langsung di mana jari menekan.	Toca los botones o las casillas del men\u00fa justo donde presiona tu dedo.
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Desliza el dedo para mover el cursor virtual y toca la pantalla para hacer clic.
+Click (langsung)	Clic (directo)
+Pukul lewat layar	Atacar tocando la pantalla
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Toca o mant\u00e9n pulsada una zona vac\u00eda de la pantalla para atacar. Desact\u00edvalo para que al mover la c\u00e1mara no se ataque tambi\u00e9n; usa el bot\u00f3n de ataque.
+Sensitivitas kamera	Sensibilidad de la c\u00e1mara
+Kecepatan memutar pandangan di dalam game.	Velocidad con la que gira la vista dentro del juego.
+Sensitivitas kursor virtual	Sensibilidad del cursor virtual
+Kecepatan kursor saat berada di menu Minecraft.	Velocidad del cursor en los men\u00fas de Minecraft.
+Ukuran kursor virtual	Tama\u00f1o del cursor virtual
+Mode mouse fisik (auto-hide)	Modo de rat\u00f3n f\u00edsico (ocultar autom\u00e1ticamente)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Oculta autom\u00e1ticamente el cursor virtual cuando hay un rat\u00f3n externo conectado.
+Perubahan tersimpan otomatis	Los cambios se guardan autom\u00e1ticamente
+Pengaturan di-reset ke default!	\u00a1Los ajustes se restablecieron a los valores predeterminados!
+Reset default	Restablecer valores predeterminados
+PILIH RENDERER GRAFIK	ELEGIR RENDERIZADOR GR\u00c1FICO
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Adapta el motor gr\u00e1fico a tu versi\u00f3n de Minecraft y a la GPU de tu dispositivo
+Renderer diubah ke: {0}	Renderizador cambiado a: {0}
+Konfigurasi {0}	Ajustes de {0}
+Kesesuaian: {0}	Compatibilidad: {0}
+PERINGATAN DRIVER ADRENO	ADVERTENCIA SOBRE EL CONTROLADOR ADRENO
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	El launcher detect\u00f3 que tu dispositivo usa una GPU Adreno. Activar esta opci\u00f3n puede hacer que el renderizador Zink deje de funcionar o se cierre. \u00bfSeguro que quieres activarla?
+AKTIFKAN	ACTIVAR
+Profil perangkat	Perfil del dispositivo
+Profil performa HP ini	Perfil de rendimiento de este tel\u00e9fono
+Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Limita el heap, ajusta el GC y fija la pantalla a 60 Hz. Desact\u00edvalo para comparar los FPS.
+Mode GC (pembersih memori Java)	Modo de GC (limpiador de memoria de Java)
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: el m\u00e1s ligero para el procesador, con pausas de GC algo m\u00e1s largas.
+Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	Predeterminado: sin opciones de GC adicionales del perfil (solo el l\u00edmite de heap y la pantalla).
+Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	Equilibrado: G1 con pausas cortas y memoria limitada. Prueba este primero.
+Kunci layar {0} Hz	Fijar pantalla a {0} Hz
+Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90 Hz se fija a 60 Hz mientras juegas para que el movimiento sea m\u00e1s uniforme. El HUD de FPS muestra los Hz activos.
+Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap del juego: elegiste {0} MB y se usan {1} MB. Este tel\u00e9fono tiene {2} MB de RAM; un heap mayor hace que el tel\u00e9fono use memoria de intercambio y bajan los FPS.
+Heap game {0} MB (batas profil {1} MB).	Heap del juego {0} MB (l\u00edmite del perfil {1} MB).
+Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Se aplica la pr\u00f3xima vez que inicies el juego. El efecto se ve en el HUD de FPS (RAM libre \u00b7 CALOR \u00b7 Hz).

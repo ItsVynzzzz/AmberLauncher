@@ -2,7 +2,7 @@ package com.israadev.nuxlauncher.ui.screens
 
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
+import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -22,7 +22,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -755,7 +755,7 @@ private fun AddAccountModal(
             ) {
                 ProviderCard(
                     title = "Offline",
-                    description = "Gratis · tanpa login",
+                    description = "Lokal · tanpa login",
                     isSelected = selectedTab == "offline",
                     accentColor = NuxColors.Yellow,
                     icon = Icons.Outlined.Person,

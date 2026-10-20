@@ -13,6 +13,8 @@ package com.israadev.nuxlauncher.ui.i18n
  * - Di dalam teks, \n = baris baru, \t = TAB, \\ = garis miring, \uXXXX = karakter unicode.
  * - {0}, {1}, ... adalah isian yang berubah-ubah (nama instance, angka, dan sebagainya).
  *   Kuncinya dicocokkan sebagai pola dan isiannya disalin ke terjemahan.
+ * - {~0}, {~1}, ... di KUNCI berarti isian itu sendiri juga diterjemahkan lewat kamus (untuk
+ *   pesan galat yang dibungkus pesan lain). Di terjemahan tetap ditulis {0}, {1}, ...
  *
  * Teks yang tidak ada di kamus dikembalikan apa adanya (tetap Indonesia), jadi kamus yang
  * belum lengkap tidak pernah merusak tampilan.
@@ -26,20 +28,26 @@ class Translator private constructor(
     private class Template(
         val regex: Regex,
         val anchor: String,
-        val parts: List<Any>
-    ) {
-        fun render(match: MatchResult): String {
-            val sb = StringBuilder()
-            for (p in parts) {
-                if (p is Int) {
-                    val g = match.groups[p + 1]
-                    if (g != null) sb.append(g.value)
-                } else {
-                    sb.append(p as String)
+        val parts: List<Any>,
+        val nested: Set<Int>,
+        /** Jumlah huruf tetap di kunci. Pola yang lebih spesifik (lebih besar) dicoba lebih dulu. */
+        val weight: Int
+    )
+
+    private fun render(t: Template, match: MatchResult, depth: Int): String {
+        val sb = StringBuilder()
+        for (p in t.parts) {
+            if (p is Int) {
+                val g = match.groups[p + 1]
+                if (g != null) {
+                    if (depth < MAX_DEPTH && p in t.nested) sb.append(translateAt(g.value, depth + 1))
+                    else sb.append(g.value)
                 }
+            } else {
+                sb.append(p as String)
             }
-            return sb.toString()
         }
+        return sb.toString()
     }
 
     /** Hasil pencocokan pola yang sudah pernah dihitung (hemat kerja untuk teks yang berulang). */
@@ -47,23 +55,25 @@ class Translator private constructor(
 
     val size: Int get() = exact.size + templates.size
 
-    fun translate(text: String): String {
+    fun translate(text: String): String = translateAt(text, 0)
+
+    private fun translateAt(text: String, depth: Int): String {
         if (text.isEmpty()) return text
         val hit = exact[text]
         if (hit != null) return hit
         if (templates.isEmpty()) return text
-        return translateByTemplate(text)
+        return translateByTemplate(text, depth)
     }
 
     @Synchronized
-    private fun translateByTemplate(text: String): String {
+    private fun translateByTemplate(text: String, depth: Int): String {
         val cached = memo[text]
         if (cached != null) return cached
         var result = text
         for (t in templates) {
             if (t.anchor.isNotEmpty() && !text.contains(t.anchor)) continue
             val m = t.regex.matchEntire(text) ?: continue
-            result = t.render(m)
+            result = render(t, m, depth)
             break
         }
         if (memo.size >= MEMO_MAX) memo.clear()
@@ -73,7 +83,9 @@ class Translator private constructor(
 
     companion object {
         private const val MEMO_MAX = 512
-        private val PLACEHOLDER = Regex("\\{(\\d+)\\}")
+        private const val MAX_DEPTH = 2
+        private val PLACEHOLDER = Regex("\\{(~?)(\\d+)\\}")
+        private val VALUE_PLACEHOLDER = Regex("\\{(\\d+)\\}")
 
         /** Membaca baris-baris kamus (lihat penjelasan di atas) menjadi sebuah [Translator]. */
         fun parse(lines: List<String>): Translator {
@@ -93,7 +105,9 @@ class Translator private constructor(
                     exact[key] = value
                 }
             }
-            return Translator(exact, templates)
+            // Pola yang lebih spesifik dicoba lebih dulu, supaya "Versi {0}" tidak menimpa
+            // "Versi {0} tidak ditemukan". sortedByDescending stabil: urutan sama tetap seperti di kamus.
+            return Translator(exact, templates.sortedByDescending { it.weight })
         }
 
         private fun buildTemplate(key: String, value: String): Template? {
@@ -101,20 +115,25 @@ class Translator private constructor(
             var anchor = ""
             var last = 0
             var groups = 0
+            var weight = 0
+            val nested = HashSet<Int>()
             for (m in PLACEHOLDER.findAll(key)) {
                 val literal = key.substring(last, m.range.first)
                 if (literal.length > anchor.length) anchor = literal
+                weight += literal.length
                 pattern.append(Regex.escape(literal)).append("(.+?)")
+                if (m.groupValues[1] == "~") nested.add(m.groupValues[2].toInt())
                 groups++
                 last = m.range.last + 1
             }
             val tail = key.substring(last)
             if (tail.length > anchor.length) anchor = tail
+            weight += tail.length
             pattern.append(Regex.escape(tail)).append("$")
 
             val parts = ArrayList<Any>()
             var pos = 0
-            for (m in PLACEHOLDER.findAll(value)) {
+            for (m in VALUE_PLACEHOLDER.findAll(value)) {
                 if (m.range.first > pos) parts.add(value.substring(pos, m.range.first))
                 val index = m.groupValues[1].toInt()
                 if (index >= groups) return null
@@ -128,7 +147,7 @@ class Translator private constructor(
             } catch (_: Exception) {
                 return null
             }
-            return Template(regex, anchor, parts)
+            return Template(regex, anchor, parts, nested, weight)
         }
 
         /** Mengubah \n, \t, \\ dan \uXXXX di dalam satu bidang kamus menjadi karakter aslinya. */

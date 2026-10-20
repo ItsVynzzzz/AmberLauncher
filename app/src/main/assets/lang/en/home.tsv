@@ -7,9 +7,9 @@ Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	This file can
 Silakan buat atau pilih akun terlebih dahulu!	Please create or select an account first!
 Menyiapkan OpenJDK ({0})...	Preparing OpenJDK ({0})...
 Instalasi selesai! Tekan PLAY untuk bermain.	Installation complete! Press PLAY to start playing.
-Gagal mengunduh: {0}	Download failed: {0}
+Gagal mengunduh: {~0}	Download failed: {0}
 Meluncurkan {0}...	Launching {0}...
-Gagal menyiapkan OpenJDK: {0}	Failed to prepare OpenJDK: {0}
+Gagal menyiapkan OpenJDK: {~0}	Failed to prepare OpenJDK: {0}
 Membuka folder instance...	Opening instance folder...
 Latar belakang dikembalikan ke bawaan	Background restored to default
 Instance {0} berhasil dibuat!	Instance {0} created!

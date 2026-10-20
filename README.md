@@ -40,7 +40,12 @@ Belum ada: Forge, NeoForge, dan Quilt (untuk sekarang fokusnya Fabric, ke depann
 
 APK hasil build ada di halaman **Releases** repo ini (tiap build lolos membuat rilis *pre-release* otomatis) dan di tab **Actions** sebagai artifact selama 14 hari. Unduh APK-nya di HP, izinkan pemasangan dari sumber ini, lalu pasang.
 
-**Kebutuhan:** Android 8.0 (API 26) atau lebih baru dan CPU 64-bit (arm64-v8a), yang dimiliki hampir semua HP keluaran beberapa tahun terakhir. RAM 3 GB ke atas disarankan; 4 GB atau lebih terasa lebih nyaman. Siapkan ruang kosong beberapa GB untuk aplikasi, Java bawaan, dan data game.
+**Kebutuhan:** Android 8.0 (API 26) atau lebih baru. RAM 3 GB ke atas disarankan; 4 GB atau lebih terasa lebih nyaman. Siapkan ruang kosong beberapa GB untuk aplikasi, Java bawaan, dan data game.
+
+**Pilih APK yang cocok dengan HP-mu.** Tiap rilis punya dua berkas:
+
+- `AmberLauncher-<versi>.apk` untuk CPU 64-bit (arm64-v8a). Hampir semua HP keluaran beberapa tahun terakhir memakai ini, jadi pilih yang ini bila ragu.
+- `AmberLauncher-<versi>-32bit.apk` hanya untuk HP lama yang CPU-nya 32-bit (armeabi-v7a). Versi ini lebih terbatas: RAM untuk game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia, jadi FPS bisa lebih rendah daripada versi 64-bit.
 
 ### Cara mulai
 

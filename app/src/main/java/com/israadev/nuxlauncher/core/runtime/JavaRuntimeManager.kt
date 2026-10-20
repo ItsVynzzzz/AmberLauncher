@@ -19,13 +19,14 @@ object JavaRuntimeManager {
         // sebagian HP mendaftarkan armeabi-v7a lebih dulu walau aplikasinya berjalan 64-bit,
         // sehingga Java 32-bit (yang tidak disertakan) dicari dan penyiapan OpenJDK gagal.
         if (android.os.Process.is64Bit()) return "arm64"
-        val abi = Build.SUPPORTED_ABIS.firstOrNull() ?: "arm64-v8a"
+        // Proses 32-bit (APK 32-bit). Di HP 64-bit SUPPORTED_ABIS.first() tetap arm64-v8a walau
+        // proses ini 32-bit, jadi yang dilihat hanya daftar ABI 32-bit milik HP.
+        val abi = Build.SUPPORTED_32_BIT_ABIS.firstOrNull()
+            ?: Build.SUPPORTED_ABIS.firstOrNull()
+            ?: "armeabi-v7a"
         return when {
-            abi.contains("arm64") -> "arm64"
-            abi.contains("armeabi") || abi.contains("arm") -> "arm"
-            abi.contains("x86_64") -> "x86_64"
             abi.contains("x86") -> "x86"
-            else -> "arm64"
+            else -> "arm"
         }
     }
 

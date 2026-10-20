@@ -124,7 +124,11 @@ object UpdateChecker {
                         if (!asset.isJsonObject) continue
                         val name = asset.asJsonObject.str("name") ?: continue
                         val url = asset.asJsonObject.str("browser_download_url") ?: continue
-                        if (name.endsWith(".apk", ignoreCase = true) && isOfficialUrl(url)) {
+                        // Rilis membawa dua APK: "...-32bit.apk" untuk HP 32-bit dan satunya (tanpa
+                        // "32bit") untuk 64-bit. Ambil yang cocok dengan proses aplikasi ini.
+                        val isArm32Apk = name.contains("32bit", ignoreCase = true)
+                        val wantsArm32 = !android.os.Process.is64Bit()
+                        if (name.endsWith(".apk", ignoreCase = true) && isOfficialUrl(url) && isArm32Apk == wantsArm32) {
                             downloadUrl = url
                             break
                         }

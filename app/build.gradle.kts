@@ -46,6 +46,11 @@ if (isOfficialRepoBuild && !hasReleaseKey) {
     )
 }
 
+// APK 32-bit (armeabi-v7a) dibangun terpisah oleh scripts/build-arm32.sh dengan AMBER_ABI=arm32.
+// Tanpa variabel itu (build biasa dan APK 64-bit) semua pengaturan di bawah sama persis seperti
+// sebelumnya: hanya arm64-v8a, tanpa build native.
+val buildArm32 = System.getenv("AMBER_ABI") == "arm32"
+
 android {
     namespace = "com.israadev.nuxlauncher"
     compileSdk = 37
@@ -72,7 +77,18 @@ android {
 
         ndk {
             abiFilters.clear()
-            abiFilters.add("arm64-v8a")
+            abiFilters.add(if (buildArm32) "armeabi-v7a" else "arm64-v8a")
+        }
+    }
+
+    if (buildArm32) {
+        // Pustaka jembatan (pojavexec, exithook, dst.) untuk 32-bit dibangun dari kode C yang
+        // disalin ke src/main/jni oleh scripts/build-arm32.sh. Versi NDK sama dengan proyek hulu.
+        ndkVersion = "25.2.9519653"
+        externalNativeBuild {
+            ndkBuild {
+                path = file("src/main/jni/Android.mk")
+            }
         }
     }
 
@@ -115,6 +131,8 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        // Dibutuhkan Android.mk untuk menautkan bytehook; hanya aktif di build 32-bit.
+        prefab = buildArm32
     }
 
     packaging {
@@ -123,6 +141,7 @@ android {
         }
         jniLibs {
             useLegacyPackaging = true
+            if (buildArm32) pickFirsts += listOf("**/libbytehook.so")
         }
     }
 }

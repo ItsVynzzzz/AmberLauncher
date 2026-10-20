@@ -704,7 +704,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 LoggerBridge.append("▷ [Renderer] Library: $rendererSoName, Selection: ${activeSettings.selectedRenderer}, IsPlugin: ${targetRenderer.isPlugin}")
 
                 val runtimeHomeStr = runtimeHome.absolutePath
-                val libDirName = if (Build.SUPPORTED_ABIS.any { it.contains("64") }) "lib64" else "lib"
+                // Ditentukan dari bitness proses ini (bukan daftar ABI HP): APK 32-bit di HP 64-bit
+                // tetap perlu /system/lib, bukan /system/lib64.
+                val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
 
                 // 1. Runtime linker library path (Dipakai oleh ZLBridge.setLdLibraryPath untuk memperbarui Android Bionic Linker)
                 val runtimeLdPaths = mutableListOf<String>()
@@ -1127,6 +1129,17 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     } else {
                         LoggerBridge.append("▷ [Profil] ${deviceProfile.displayName} dikenali, profil DIMATIKAN di Pengaturan")
                     }
+                }
+                if (!android.os.Process.is64Bit()) {
+                    // Proses 32-bit hanya punya ruang alamat 3-4 GB, dan sebagian sudah terpakai
+                    // pustaka dan driver grafis. Heap lebih besar dari ini membuat JVM gagal start
+                    // ("Could not reserve enough space"). Tidak berlaku di APK 64-bit.
+                    val heapCap32Mb = 1280
+                    if (heapMaxMb > heapCap32Mb) {
+                        LoggerBridge.append("▷ [JVM] Proses 32-bit: heap maksimum dibatasi $heapCap32Mb MB (diminta $heapMaxMb MB)")
+                        heapMaxMb = heapCap32Mb
+                    }
+                    if (heapInitMb > heapMaxMb) heapInitMb = heapMaxMb
                 }
                 jvmArgs.add("-Xms${heapInitMb}M")
                 jvmArgs.add("-Xmx${heapMaxMb}M")

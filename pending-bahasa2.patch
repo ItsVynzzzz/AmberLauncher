@@ -1,0 +1,927 @@
+diff --git a/app/src/main/assets/lang/en/about.tsv b/app/src/main/assets/lang/en/about.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..eb98827aa584bbe903124b5f7050949965380f5b
+GIT binary patch
+literal 5627
+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
+D5i{5V
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/en/accounts.tsv b/app/src/main/assets/lang/en/accounts.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d69de2eeb6bc4b20a67fb988fe7f3e23660a7e1
+GIT binary patch
+literal 7255
+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
+Rc|gl3g71SyJTouy{{fCX_g(-1
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/en/game.tsv b/app/src/main/assets/lang/en/game.tsv
+index 8b905085238681c67f20aaefa9a2c36603c1be49..058a2d612863039905b7a61be32f90d6d6e7502b 100644
+GIT binary patch
+delta 21
+ccmZ3bw@PorHfD|>M_+}U)U=Y#`<Qct0a(ljzyJUM
+
+delta 21
+ccmZ3bw@PorHfD~rqSRD{AV=TL`<Qct0a~R8w*UYD
+
+diff --git a/app/src/main/assets/lang/en/home.tsv b/app/src/main/assets/lang/en/home.tsv
+index b81c8436a0dfbc63024351b8508e0a0c876bd4df..74d0af8aa5d5688d1ad0b8636660da0d353c6a32 100644
+GIT binary patch
+delta 20
+bcmZ1_v_@!yDKlf;WK-sF#=6Zt%=1_QMPLSK
+
+delta 16
+XcmZ1@v`T1$Df47A=J3sZ%=1_QFti12
+
+diff --git a/app/src/main/assets/lang/en/instances.tsv b/app/src/main/assets/lang/en/instances.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..a3ff11c4a311a4af1027ce1ab067e08f88e8841b
+GIT binary patch
+literal 3287
+zcmai0-*4MC5Pp{aiVKFJE08)}ABLhYgBv@o+r$ZCCqse0oFqDCEt7&oCG~>tZ{K$$
+zCI3jX0fp+2cgH*4_kG7-XwK`5mnS#)kT#8DldEHDP0=pd9MdPh=X9plEhodWOy9Tc
+zXcEonJ=bk=S}S&nrs|>JNT<V#Ax);U`EYtVPP!k2<#Bo;!5o#A3sut@XSL1;gF$kR
+z1#Rx)O5Ddr`n7%Y2fzN>F4XHqx0|W5U6WIFqYBMP*R?BpeElQ&nXzujSVyQtmz<S~
+zHp<b$*5Z)PuEw*;+2r$ZHlg|O`onmhg#QRTr`S0i&L@}CS(o>72}`D7kLJ4I70qLE
+zNnE`#eF6v9I8!UG+1zzk+28NfKBT8yYr01)O}`=EmvU7z#dW?6tJXCAMmidvA$htT
+zU(Y6q|6We%d@`G-aE(z4?a+Z0o1|Zp7z>M@cSWw*=!I$=UD$6(Y_~mOg*po<JJibs
+z#}hViq1@(nl}s%xUA~mY`XX>tI^{Jd_$dFYM_tm_ZDj9UF9DOaEs|ReY~e@at3cB$
+zZsfWoe-GKRR7LuctG1yRSbXtkGE$`iD8pX?zw}`1vN)DN$5gPPg$5M7KOj#9j*|eD
+zs!^LV1HpUnX}lA@Y>KUexHt5mVU?-g&6OJ}{NcqQ{ldrOqb6Sz+{5~Q(d0Z>GFz%8
+zt!!ga*WNu)&PLFSGt|0ro3!7}RK4Uzmq;B+XW*hf+WNLt0a_ME=}fOHG<(MP3hgy_
+z;5&TQ%AsMdYZ-1$ntY~WuljAFNo<_ZMcRGq!6=s>a_<3!M0#9A<RsqM8u6tE4n*`&
+z!$p!?s%Y2y2?8_D8Fyh8`mU`}VMsvoyH-IXx{UJ9$Z2aNH!09-7v-f^1_0JZ<uxyy
+zCkdU<<L^J{;yt~h$2UKI^=um12P0}E7~Psjf8pHEymn41bykC<0D~Bx;D9G#e{LeR
+zq7uE(E2)y32D+q8p}xnfmfO>djU@JTb0-59M>JMFpMl@?LH5&>C>zZc^q|vL5n@%#
+zbzjx0LS;BUYFNJ&IbU!k991SLN@pgw32hIm?0Y2zC8xG63opeBR7rebegHLJUjS=W
+zTd=J&?`5z@Ys@Z~g-ehYq#yW>1?qm_>;-v8kN+T}GfV_kkh6Z=bO*#Zu)%!TA}Ta-
+z(^);+?3m3nJ@@o2rQZ!?qT!CSWyu0!=;pc-?K(<_C3MntqZs6Jw!~b)tWbs{_fQ+J
+zSkuS({A%VCPC7Uf7e%d_hHCXq<&XkMNX~5o&2v;(z*S^L{@yyL6XX?Ve>}nKIHU{0
+zVW`oCUePxhNeI2x;lw#;TtpIWBYWNV6t|0o&NVuLw%<X$fhZR)H%yKWMZQe|F7Xbx
+zbA5{)0aw=pZycsqnC8!SeEUWKNkGxV-isC;;3z&3g1rZVS~adl59C!u*T_ys&LO&%
+zWVrO)AAg5g?u0r2W4af%juHD{p3g6nop9T&&e+poFU->;Gi_dVy0jDQKMnUn8i4a&
+z5#n&Y@mYzG?q&9j3Bv4(oc<fS-{=N!5W1|C`84`0N^{!_U0kGQ<85Rd>!txS8ez1z
+z3v$^Ria>`!R05<cu0SlON<3#{w;DZ2c8$>|NNyhJhPR<M9p?yh0=lJQ_b^h@ap*W`
+zu^XbN?(X8&ZHL6DKEq50X(`({mD@rENWAq7@Yp)RDDtqmF%{>l9yM=!m#4Pr)l*Fb
+z!Q-nqJdg%7!-H3p-Qk6auSG5;-AqR}AE}b}TKD=nN`%7)@b|!?_;~h~^3IaS^MI~O
+zg`q<Zw=KjOUH&yazZ{MzYn_9L;h!w`;nQ>LN8G}eG8hUCq5uagC1bkEEZ4=muSRCX
+eS+FQ=>`!hh9TZvu9$4cYy}}gnF22R_cls}zwQU#x
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index 1fbd6b3111eee3c2f00dd994a355379977fa4b19..fc56d82c69fc688873c3342977e7f8f92a9c7973 100644
+GIT binary patch
+delta 40
+ocmaED^4esBx0FJVqpw0vYFddxOsRoElDUG1e+ZmerK!gS036B;K>z>%
+
+delta 40
+ocmaED^4esBx0FI!QEI9}kfX0cOsRoElDUG1e+ZmerK!gS03G-YH~;_u
+
+diff --git a/app/src/main/assets/lang/es/about.tsv b/app/src/main/assets/lang/es/about.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..da7329532a6e99ca7d468fd72e629a8b66adf779
+GIT binary patch
+literal 6273
+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
+aqP=#^P_p&ZVCEWX!<;eGZzD1DVE%s|2B@_F
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/accounts.tsv b/app/src/main/assets/lang/es/accounts.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..16d83295e5c0ac7ec0d0c2744ee830eeddfcadc5
+GIT binary patch
+literal 8425
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/common.tsv b/app/src/main/assets/lang/es/common.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..743c703420496c1f5c27830fe8f830c6690796cc
+GIT binary patch
+literal 781
+zcmaJ<+m6#f41M-|#Yjj9-WKr%(<HlFnwBa}kyhfxN!-+QG6{1L+C}_3PPavc2Ogq{
+zeSAH~Z}bWy>NKQ5)hVV4GV&h1s`vGN3t3TBrcw)uv5=u_$qKeGwJ9Mpo2)1WeZ(mR
+zC@c@`1YMC$=wXMJy?Q_wSu%%)1=^gg_1AQFM<0TY=sQwday`c6(SiAvLZqO~DLKdz
+zxrjln#}4ERs-A7v>$ke(KrS$tmVAr4BmJx`x8z#Jn=t#oumv75AS^o`2UN>bimU@m
+z`vG>;C-xfc#er%^JT%f9itmXnHy*oDSowi6^wv{Hk^H>9cz2f?=LdxxE9C5?x|J&3
+zTw_h0jJZk};XaX%q!#If`Y_s#JebBy?-u<;5nqw%hM_Zx7oPSF9yPllw6p|8$HM5<
+zmKJAWuD0M8g{~fnDEWv{+p&i)<h7?>ruL(H90!7><CaIYEzJ{r+CPZUYjR1Zce8#6
+z*?^v#Q6z+#T05^^N}cLjBc~?ykkcf}wtP<c=u|~cmXtMLfA~f6{2#CWdH3rtWOk^W
+z4w!8Gm*~8>H~X@NZB^t&T~zDk#^j%skyDdHfik`5`RwMS5$Y|=mAs2G%W1;yy$lwt
+JboVzt^&4ma3$OqH
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/game.tsv b/app/src/main/assets/lang/es/game.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..f0e405cdb9de898f1a725a6d0e218d300dd8e6e6
+GIT binary patch
+literal 6742
+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
+XDx&5^?Osl+pyvNwuG;U$rSSa^P~%e@
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/home.tsv b/app/src/main/assets/lang/es/home.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..d7b60ed09ef24608f912c8fc798fa2bf2742586e
+GIT binary patch
+literal 2619
+zcmai0O>f&q5IvK>VuD^0Kw#t~4bU6{P!??~mSsVfQxxcBNUo%{$R)evx>bVoxA)DG
+zlpV)KE|$sN`Fiu_4S%7DvTSmuoDDTPS1H@@N|m*(8r4v$?4Fw_ih`xBGS%Q}MQpR3
+zzOV2${0xhVa$Pfyw$#9U%bE&q*+z8Z*mj<|OtmsCZgT4^erT!8R{lrWkF@5p)&-m3
+z^Pg@!R=GG;P0MMaGL48?RaUgA5Imx!pr$hN_JBB4xG&UuXPhYFI|oZc%1|u-qKc0c
+z*KCnMra7ETZYZqay`-G$Et^&cXX2eQam9HRu9YpgaJbj7{eajl>TcQ5`Rt5J-Z#2L
+zxVK}vnvCe)qi}rtW-PBgqE<Ck;TlbEetkct`k!E`N^T?qZ3TDLxo)WPj(3dIk6w>h
+zG}ImRjt|ti&9vOuyfu`oAwY<JqGQzRocEOK2Kb{pd)5&x<;RyYl4zr@pf35V<vV(L
+z5xsf;?p3g;1jpJbxOFIBS^-@9uG1}iI>WsqXME-rUeWzAV|wH-yg_S$HKmT*E+(3-
+zcf@<xv;bPAc*=R_3il!qAAGX3x>Obov5EnXD)bh~AZq5oBYpvnnuF$A{9f0}e41X;
+z%dg{auR5+O^xJdw=~*~4fVe;pP-B7S>KC+D;$=CH|3HM+0XAhz)+Xw6=}jKs1|91{
+zwVX4ItBmQ>?RmT+iAfk8^#$Y)&oK!Fm7uvZx!Zl9um6s}1&OtlB^>0c$=Gg%Tu2+`
+z6wYK0y)*JGRm_YAUxk(3iwBQS3h!MHZG%B=JpguqW{6RyZZC~1a%D*i5++j;D^6uR
+zV2O!BS~ZFjQsJq;rCG-PhuPVyGUY-`)_X-M|IHZUZj`{$hXF>x$SGIocBzdFm<JWn
+zr8of`4A($K3rPkN^mjD-OF{)8{=b$xu3huIDd^+F!WvSOa>u<O_VaVXxwbv8fHB0t
+zGc!2#S^%+9-yeE$I||70nwO{Eet`CP2p>lv!`sF5_9B=jH>dFmya^}IG{tuWSv}ti
+zOnKo-0vv-|)fa<Cm<n=n7!EWy2!O#Ga-u73RAzb8Qmt&uC6}(}ed!7a#F71{GJCB<
+z=VTU-q0kPL^T^91+7r{A1F55M9bZl2i!Q7DB%aPz{j&I8nVg6**1^RR3F=X|IWRR4
+zQ>3z$X3061K_Vj5s={l`Z$P_}N;{PT-EEb-41H9^BN>9kHJv8WUrx!H?~<sR7ZZs1
+z7JFi&@30r*HD-8{%;U>=aUPsqFQ(Vwndp8EhGSD${9zM$xdTR9K(YrC^744r?Ze(+
+zhXvC3HQ;slVoKNno4TQwqK;l{M-RKC6ZcmmYPr@&1X9Mx$VT-VnX)<Xepswtxlv-b
+zTSq?94#>3_#Lns`>oyAJSQWC{8ri8-R8)GnP8t%ywOF@voXO6^Mkt-S2U;0!)}ne|
+zzq%U_%KxLMP2sw2?R$l<3}_Fq;OEeIyypM~2#Q51OVK=J=8NmP%8x$>@+YnT;p5;S
+z1mIl-2^I!F_9Nx}<ijBfm$Uiog3hkj*Yw(B@|r%+rpa}X%#-uk>dA>@nB_PQFB6Qy
+zd`6cEP2%6<coD3Un{_;yC#T7ZmaAl%tdrH%Y!QQTU69!V7Z#_<;JSaF#m`KBM1H;x
+t@-@>>v`mzU@eax^d2F7Og^2us1EyiXIpw=*7+pH%;9YbxJiJ6A{{f4hYtjG!
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/instances.tsv b/app/src/main/assets/lang/es/instances.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..74905c7bcd11e81a60c4eb5fd60dfb1cd15825e6
+GIT binary patch
+literal 4330
+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
+IxyWt&Fa5{ARsaA1
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..43c1e0f314c5a01f2208eed9f4b7d7ad8ffecea5
+GIT binary patch
+literal 7873
+zcmZ{p+iu)O5{9qIr|4jTg@njlE5T-A8^L0%!)PMO8c4D?2==Cj?3rl|hn(=BSPJs)
+z`&D(%N!DK2lA6ux>Z-r~I`D61?5dgV`o>nK;NPmLr@k~R$HHu3yY$buf0^M&b33>;
+z|Lxzto&3xEdHk30Rp-sg_;V5;7w+YbN_J0eUb?z9JZ5ux?Ur@plkmf)!^Td1n+zM-
+z>W-&AuiNypuDYf!lauh%wduWGu6${$WU#W0cUA6flw@Xh>C6GT9j=9PRB0Z1H><;X
+zdheRjmc5y{);6ZEx_)6U#$3Q3h1ccQEKGcB&4VqxDeZD%yDT|%OWS%|)P{4dac$>J
+z=So%f-L$Ui4`y@Lll;2((5!k_xXSp(l&<RPHcLO+&bDT$MliqFM{5q={JQ*ln3*d#
+z@$;x+=L@?qty8T_eUQ7AD0HPq7fX*KSTqQ-^6Q?k>tN2-RJCcnTdo?1@@BbSj^<wZ
+zqR!IeqkrPwB>YGR&8%Od^e<noO($lUi`l~>S1|5thb82|FW2eKs`Yhc%cE%36-b)(
+zl{HH{_f2N*Y-#7lw?5bwbtk>;g3)JoX7Lj{sw}x#<x!9tx^H{@%xPGtddB{3W<FQu
+z(Ux_C-}1U?T;AaoF|hH=l`Amv?>)C%yWTdymz69P7}fLl=FP9azW@Gn>xRd}ljQ6H
+ztCaQrsvvLbXG8)TH?AsN<C<jf(BpSOa2Xf9sMK)#&I>+F-PKFm`PS5|)K!~xUpubE
+zQ+77HtH$>14Q}Xs4tA@~36yz#0SfIOF$gF2iRj~x*5v}d%@J+C;*mKY-vKItOy{w=
+z7p%56?>vxt?F=9d8hS#&Jn8Rky_|5*0PM1!H7L5l2hy|jZh>#Oaa)%?mn=E9NzU3_
+zR<U|`kbAkz^hc<}A*<?aS=uy!dEs(+<mYd6)u@|rUbw&ndoMGhx5BwU?<sMFZ|w{;
+zZZw<V`nt7QdfNC$*O)JTiQU#zA#RCF>DZT82W*s1tSo*icHc2#U{m;&U06?);N#^#
+zgiW&Ktn@R-g?HZGy=Q6iz)U;GDfs#phk=qH%wp*^9J6#V9vO@*Y!`kFAb{~~I)Hr5
+zcEi4A*S>N&FLq{G1IWt!@Kg4~_u}s<PejX?^47YTm#^0G-E>Hd3f%S$64XvU3rnK-
+zE0>fIh?h&pb^%=m>+Q>#fMSHhs0Wi?j=Arf%C8_ffG)YF>F3+{GQat1ktOH7Yo4Ll
+zSI;HaIE)7miw657djQ964j4?~1tMTSQo|AHmp6A$Rjz*|@pnKg$ESDv*VGjW0GNO)
+ziN-RL+L{Q=WxXOP>I*>k4~R_g-YmIev`UsBC>KG`c8eI5N7%$9@<O*=sY`eanE`wJ
+zY^L^EuN;jo31n_Dd*>Dqk_2U6<#Pwsjut)nIP8<Wpr{u1X7|N7OGbr<q@w-4!kuEt
+z?dx}L)<dBv8ILl6S-j!b@0qUOw|tgfk<A+OQ3{2^Cg*jf4wA$Qo2Tb+7FRCeC)4ns
+zt&YrabWV<IX1uaM17*1NvqxXJ%?oo9c54nUPLD$B`01^guG&LV(#r2#4-*l*kw<Lx
+zWI@sutTyHB*0gnH%6dy464p(9#9FJGv}DlUJ;E<w-K^@|8pw7gfh$`cHAD-v`c~Am
+z>`9(ML2L}>qJ~FOIMt*$)^>TzqH2%_c@1&0I1lqBCnQ;q87U`<Ivt8-Bxb}?QkSSz
+zl0gL#HoEw<t5<p*6Gy0Oh%T*^L;zGK91Eb9rnL_?GvnZkxnvtdeWSLMGpL@{`6H+(
+zi8i2hS-0f-22-*knLQHn)QiNkR_rTzmy@xQ3XQkKh*B}CA+q!rR}dtYgD>=W3L!Z@
+z8C!7HsQm$(oeRAKj6F%|o-G7Fa|nGW?MkHtwuK+}#R~_a*%K)XTtu(G;#^5xO5So!
+z>Lf}`ZcVXMicnSPb=6`#?No$PB&r3DjizG?tUHPs8y$HEH$)oS!i%U@#*```GdJsM
+zf_jvqmAcp1RS6+!682IO;Ix@UK`-&QBs&B9P5wvxiZoa_;li3C%n{QRpcKu)jmW8`
+zh!d&#4o_`0ZyZfP(dXC!X|{(0vh)je0JU}iWcWj}ez}9k^aR48Iw9pw`c4R{C8!mK
+zz^rq`?!q<@N#u;o{Kqzx#I3k#=9R;wTojKJ9ep@0Gxu5%<N4Aq`pC-?<5@ykIB9$d
+z45=9(DF6w13w$X5B)|Y!DS23k0DRU>p_LquTDYWna8i#0o4{EZs|SlxWwz9TPWVu6
+zDCz{p+&V2YpE#2(YDFWbMc&EMOShoT<;oJ<U?~|v<`uTEg&c;0W&gZ>Xv_4H3bS5@
+z?6U~91vke~woJyZfyW44DJA6+F)wqExP=DkGfdBYprMi*Eez5owUp%xY3q&*?yg!X
+ztx@90w4|uAH1oQ{PDi2XBQtlBwZog+(jkikB}x~*UDYk*E&!LBFZ4Xbo-Q0~paeU2
+zb>&)^mQ)pwRsbGJNa2E2X`iizS$JpdF^psLoRZV*v?xNypcRi)J7{HV=W;PRzilcV
+zGNhzq@@Q96x&sYr8T})@7J69LJw5}N;H^(s((@auF)LS!Na3;G$+qbo4(ze6nlzxY
+zEo;g#B%oL|YkMsuX?ozt2O1Z7<lx{extE->V-Zj!8s}VwIyv+do1<u2fq^MV1P~JS
+zwX{T%b_*wc+R(LBA1Z&t_A||-Liaej1-20qM`q!q&DEkk#>)Z@QJN4a1wRN?2sbTj
+zsikpEz9$94cX|P-^FnDK_Rnq3{v7(Cz2g6cIanLwFp&jwKtm?<bC{07AeDyJOQDAt
+zbe1%$qJ>`Y?OHm4BU)?ZchY%^r)=Y_S=0o<Z0|n8e~6~4j5#p2M%WXxh^-b>^V}}9
+z(?TvdM&J3siBk1PpRQC+a2DkPS5*doM@`U|ttE3w=6e=zJlb5Jv4)d&R1bzhbFP+|
+zK*nL`HknGIgi(UEc{hkUCbL`Z)Op%j*(8m(2AO+TeOOmwlX?SEjt)CXF2XCceO`zx
+zTsYA+62}hT>>P!Wb((;6*C_=1OG*j$F36Tk?a{O3i!19~#YlyO%A(!OE4P9*se7p6
+znAY$kcHS>l+C$V!)m|cQN4E%Qtr;MG@j?vSooL@tP!x#p{U(ORS34B(Sy}N#$RrGz
+zc6e+fEJoBWebB^tATNFPn>h)N(bKm?G7a8`E-4f1ye}nJzt)-`;zQD9^`sMk{W#wC
+z{SQ2i>_zQQULz$yfK3Zj;2%aPdc><Iyb{@YkIQRAwg%f~m;b(s>{_ynv{FJmWT0N>
+zKzbe>H8>&nO108zRmB`*BGVd}bw;ftCFN@uMGzQ^gGT=bf^!`_g>$AB^L&?x#q9AF
+zl5Cv0AdzjIos`THsH+jIbgGjeG9WBjI22y`3RT<h(pwc8B_{k8-h~YQ&nxM8bTzs#
+zw`ZSD&u-6d&G2?`KDtcKuFi&|+qgXXZE$)ck3_-z_<VG7gU_fp)MFEyFQ}7ZcQ5fE
+zfwX~}`MVj8KX1pW$)K<+;s&@bv0}q}iWD7way|GSGHy3Hb{D!3GWWMCkabB7Atgfq
+zHFpmaD;C9HnD)J4IExiz9nzQSi26!8X{!(SMqaXcJMEHpiN{tiYO5gYq{jW7kK__W
+zjL&XIpN50`!6$QiJNkkV2dCKcCK;Ua$Nkx-lhMH3-F&<~GiO)k<mS`;?ah^1H0+~~
+z3|*|`O>yUf3Xm=eMq>QD>}6TUirN=p%Rxa;PGx&7re1V@Di3OAky6G{&Y+>Z^F-x2
+zkw?f<6NJ`1qys2rO5E^{W*a6f?L0Hgmls%W039-gSx{`#xbnYfus(@u_1}z$@I%yE
+zRL&zeD?#r2MfqD2h`?a2`anl@<XoZ9n(3!tK<bY$(hLb!$QGCc<)i;(Tmi-&bpFc?
+zbZ*LwQG!oGq;Xl8(odzOhnPjk?>$clmoOlti2ipvxV#^oUk*McgOmHwm%(j1elhl!
+z!c)Ej2(Rv<Y`bq-H*{TLlD^%o>iTVM#|>W$&BGMjo4K>ABh1h6Yj{G%BA3Ccj2Wew
+zzIfhd_I15OM_UzmM4T!!%H)cJLM%mL!W$Y}!xMr<x>Sjmb$vnfM9Hrw=v>e(?XHw;
+zIt10C5m^T-I9kGT4i@ASh7R1f#4lS)s8K!^NbePQX_X+Oc_I16+wwiS>`X*rX-2n2
+znAOzc57H+ij2_P~d>2O>=>I@8FkXs6gggRk(1GhzBh(+PBZ~rB)Hu?%T02`Uk`Zf5
+zzKU$$lwpT{m5}!HJ!MC=vSwP^nW(Uy{u5AK7qNnd1Bx=bH5z@&4Y9d)59+kTEE(_7
+z@q3ymiA#ZK=(<FMLWV;mFI~~kOe$9g45%Mk>CG1oJwogMwGR)a!0>{E*?TiQUh}OQ
+zj_(hJBRqgd^b)y2b<NC4Jz;tw{Lq&@GhSk%^o+m@J^~;{CqOa;kOr%f+dXZ3h+{!n
+zAtRKghg8CcpjG23FUgOWJHVBXVHeNIIlyanVHeh6Izjh4K{r7a5U+>~vyr8h_C8Gb
+z!;CD9w#d&Me)0KKXX%j9X3B#contFGNjJO$c2F2jf*LduBKo)U4f#sOO|=JzWJ7Vf
+z4&Ii!dxMp}@)GZ`%UP+KAYDE}FhG+Dkwy&4gqa7Jx)5y0I32{xB;HmKxme-)BOPa)
+zy32RO>yMcZiUN<AKYx&=4*^?ou&3YcaHxJf3L_nwJSHC@62;x33PjS=bLq*Oa`Zh6
+z>Si+CkEi2T?4i@1_3>xlP!v4_EnHMa!kJMPg?JUzTG}UqTsT_U71ZvJq@~3Sx@r8&
+z^tuT(5{FNi#f52v63oU<YxNF7Y{hsBDiT`zx7uvp50_0itzSz&#*vAZ(c%tluixB+
+zLLoHiiU?>r79eF865A*%{?hTy8gd6rg{`_tScfmb<H4uF-THIz#WM=t(UXKxh!C#U
+zG}9lyGA^W?c~(2=jD@hrUix`fp%kW6;*v1D;h`KF(RCmrL<v*3KI>#~MJX1wkb~3z
+E0oNe2)&Kwi
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index f03599f..966de96 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -178,7 +178,7 @@ object InstanceManager {
+                 setDataAndType(fileUri, "resource/folder")
+                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+             }
+-            val chooser = android.content.Intent.createChooser(chooserIntent, "Buka Folder").apply {
++            val chooser = android.content.Intent.createChooser(chooserIntent, com.israadev.nuxlauncher.ui.i18n.Tr.t("Buka Folder")).apply {
+                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+             }
+             context.startActivity(chooser)
+@@ -192,13 +192,13 @@ object InstanceManager {
+             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+             val clip = android.content.ClipData.newPlainText("Folder Path", folder.absolutePath)
+             clipboard.setPrimaryClip(clip)
+-            android.widget.Toast.makeText(
++            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                 context,
+                 "Lokasi folder disalin ke clipboard:\n${folder.absolutePath}",
+-                android.widget.Toast.LENGTH_LONG
++                com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
+             ).show()
+         } catch (_: Exception) {
+-            android.widget.Toast.makeText(context, "Folder: ${folder.absolutePath}", android.widget.Toast.LENGTH_LONG).show()
++            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(context, "Folder: ${folder.absolutePath}", com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG).show()
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+index 3bef961..2ad1eda 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+@@ -55,10 +55,10 @@ object GameLauncher {
+             }
+ 
+             if (fabricProfile == null) {
+-                android.widget.Toast.makeText(
++                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                     context,
+                     "Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
+-                    android.widget.Toast.LENGTH_LONG
++                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
+                 ).show()
+                 return
+             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index 7fd4fa2..c07b500 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+@@ -11,7 +11,7 @@ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.verticalScroll
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.*
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
+index 24dce8c..63176b0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
+@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Check
+ import androidx.compose.material.icons.filled.Close
+ import androidx.compose.material.icons.filled.Search
+ import androidx.compose.material3.*
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.*
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+index 1fc71e2..586e628 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+@@ -1,6 +1,6 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+-import android.widget.Toast
++import com.israadev.nuxlauncher.ui.i18n.Toast
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+ import androidx.compose.foundation.clickable
+@@ -27,7 +27,7 @@ import androidx.compose.material.icons.outlined.DeleteOutline
+ import androidx.compose.material.icons.outlined.Extension
+ import androidx.compose.material.icons.outlined.Folder
+ import androidx.compose.material3.Icon
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
+index d928e1f..1137291 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxMicrosoftAuthDialog.kt
+@@ -11,7 +11,7 @@ import android.webkit.CookieManager
+ import android.webkit.WebSettings
+ import android.webkit.WebView
+ import android.webkit.WebViewClient
+-import android.widget.Toast
++import com.israadev.nuxlauncher.ui.i18n.Toast
+ import androidx.compose.animation.AnimatedVisibility
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+@@ -27,7 +27,7 @@ import androidx.compose.material.icons.outlined.OpenInNew
+ import androidx.compose.material3.CircularProgressIndicator
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.LinearProgressIndicator
+-import androidx.compose.material3.Text
++import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.*
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+index 5cd1303..6891d9a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+@@ -9,13 +9,18 @@ import java.util.Locale
+  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
+  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
+  *
+- * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], atau [EN]. Bila HP memakai bahasa selain
+- * Indonesia, pilihan [SYSTEM] jatuh ke bahasa Inggris.
++ * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], [EN], atau [ES]. Pada pilihan [SYSTEM], HP
++ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol memakai Spanyol, dan bahasa lain
++ * jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
+  */
+ object Tr {
+     const val SYSTEM = "system"
+     const val ID = "id"
+     const val EN = "en"
++    const val ES = "es"
++
++    /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
++    private val DICTIONARY_LANGS = setOf(EN, ES)
+ 
+     private const val PREFS_NAME = "amber_launcher_prefs"
+     private const val KEY_LANGUAGE = "language"
+@@ -24,12 +29,12 @@ object Tr {
+     @Volatile
+     private var translator: Translator? = null
+ 
+-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], atau [EN]. */
++    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], atau [ES]. */
+     @Volatile
+     var choice: String = SYSTEM
+         private set
+ 
+-    /** Bahasa yang benar-benar dipakai: [ID] atau [EN]. */
++    /** Bahasa yang benar-benar dipakai: [ID], [EN], atau [ES]. */
+     @Volatile
+     var effective: String = ID
+         private set
+@@ -73,13 +78,20 @@ object Tr {
+         return tr.translate(text)
+     }
+ 
+-    private fun normalize(value: String?): String =
+-        if (value == ID || value == EN) value else SYSTEM
++    private fun normalize(value: String?): String = when {
++        value == null -> SYSTEM
++        value == ID || value in DICTIONARY_LANGS -> value
++        else -> SYSTEM
++    }
+ 
+     private fun resolve(c: String): String {
+-        if (c == ID || c == EN) return c
++        if (c == ID || c in DICTIONARY_LANGS) return c
+         val lang = Locale.getDefault().language
+-        return if (lang == "in" || lang == "id") ID else EN
++        return when {
++            lang == "in" || lang == "id" -> ID
++            lang in DICTIONARY_LANGS -> lang
++            else -> EN
++        }
+     }
+ 
+     private fun apply(context: Context) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt
+index f3675cb..f0abfa5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Translator.kt
+@@ -13,6 +13,8 @@ package com.israadev.nuxlauncher.ui.i18n
+  * - Di dalam teks, \n = baris baru, \t = TAB, \\ = garis miring, \uXXXX = karakter unicode.
+  * - {0}, {1}, ... adalah isian yang berubah-ubah (nama instance, angka, dan sebagainya).
+  *   Kuncinya dicocokkan sebagai pola dan isiannya disalin ke terjemahan.
++ * - {~0}, {~1}, ... di KUNCI berarti isian itu sendiri juga diterjemahkan lewat kamus (untuk
++ *   pesan galat yang dibungkus pesan lain). Di terjemahan tetap ditulis {0}, {1}, ...
+  *
+  * Teks yang tidak ada di kamus dikembalikan apa adanya (tetap Indonesia), jadi kamus yang
+  * belum lengkap tidak pernah merusak tampilan.
+@@ -26,20 +28,26 @@ class Translator private constructor(
+     private class Template(
+         val regex: Regex,
+         val anchor: String,
+-        val parts: List<Any>
+-    ) {
+-        fun render(match: MatchResult): String {
+-            val sb = StringBuilder()
+-            for (p in parts) {
+-                if (p is Int) {
+-                    val g = match.groups[p + 1]
+-                    if (g != null) sb.append(g.value)
+-                } else {
+-                    sb.append(p as String)
++        val parts: List<Any>,
++        val nested: Set<Int>,
++        /** Jumlah huruf tetap di kunci. Pola yang lebih spesifik (lebih besar) dicoba lebih dulu. */
++        val weight: Int
++    )
++
++    private fun render(t: Template, match: MatchResult, depth: Int): String {
++        val sb = StringBuilder()
++        for (p in t.parts) {
++            if (p is Int) {
++                val g = match.groups[p + 1]
++                if (g != null) {
++                    if (depth < MAX_DEPTH && p in t.nested) sb.append(translateAt(g.value, depth + 1))
++                    else sb.append(g.value)
+                 }
++            } else {
++                sb.append(p as String)
+             }
+-            return sb.toString()
+         }
++        return sb.toString()
+     }
+ 
+     /** Hasil pencocokan pola yang sudah pernah dihitung (hemat kerja untuk teks yang berulang). */
+@@ -47,23 +55,25 @@ class Translator private constructor(
+ 
+     val size: Int get() = exact.size + templates.size
+ 
+-    fun translate(text: String): String {
++    fun translate(text: String): String = translateAt(text, 0)
++
++    private fun translateAt(text: String, depth: Int): String {
+         if (text.isEmpty()) return text
+         val hit = exact[text]
+         if (hit != null) return hit
+         if (templates.isEmpty()) return text
+-        return translateByTemplate(text)
++        return translateByTemplate(text, depth)
+     }
+ 
+     @Synchronized
+-    private fun translateByTemplate(text: String): String {
++    private fun translateByTemplate(text: String, depth: Int): String {
+         val cached = memo[text]
+         if (cached != null) return cached
+         var result = text
+         for (t in templates) {
+             if (t.anchor.isNotEmpty() && !text.contains(t.anchor)) continue
+             val m = t.regex.matchEntire(text) ?: continue
+-            result = t.render(m)
++            result = render(t, m, depth)
+             break
+         }
+         if (memo.size >= MEMO_MAX) memo.clear()
+@@ -73,7 +83,9 @@ class Translator private constructor(
+ 
+     companion object {
+         private const val MEMO_MAX = 512
+-        private val PLACEHOLDER = Regex("\\{(\\d+)\\}")
++        private const val MAX_DEPTH = 2
++        private val PLACEHOLDER = Regex("\\{(~?)(\\d+)\\}")
++        private val VALUE_PLACEHOLDER = Regex("\\{(\\d+)\\}")
+ 
+         /** Membaca baris-baris kamus (lihat penjelasan di atas) menjadi sebuah [Translator]. */
+         fun parse(lines: List<String>): Translator {
+@@ -93,7 +105,9 @@ class Translator private constructor(
+                     exact[key] = value
+                 }
+             }
+-            return Translator(exact, templates)
++            // Pola yang lebih spesifik dicoba lebih dulu, supaya "Versi {0}" tidak menimpa
++            // "Versi {0} tidak ditemukan". sortedByDescending stabil: urutan sama tetap seperti di kamus.
++            return Translator(exact, templates.sortedByDescending { it.weight })
+         }
+ 
+         private fun buildTemplate(key: String, value: String): Template? {
+@@ -101,20 +115,25 @@ class Translator private constructor(
+             var anchor = ""
+             var last = 0
+             var groups = 0
++            var weight = 0
++            val nested = HashSet<Int>()
+             for (m in PLACEHOLDER.findAll(key)) {
+                 val literal = key.substring(last, m.range.first)
+                 if (literal.length > anchor.length) anchor = literal
++                weight += literal.length
+                 pattern.append(Regex.escape(literal)).append("(.+?)")
++                if (m.groupValues[1] == "~") nested.add(m.groupValues[2].toInt())
+                 groups++
+                 last = m.range.last + 1
+             }
+             val tail = key.substring(last)
+             if (tail.length > anchor.length) anchor = tail
++            weight += tail.length
+             pattern.append(Regex.escape(tail)).append("$")
+ 
+             val parts = ArrayList<Any>()
+             var pos = 0
+-            for (m in PLACEHOLDER.findAll(value)) {
++            for (m in VALUE_PLACEHOLDER.findAll(value)) {
+                 if (m.range.first > pos) parts.add(value.substring(pos, m.range.first))
+                 val index = m.groupValues[1].toInt()
+                 if (index >= groups) return null
+@@ -128,7 +147,7 @@ class Translator private constructor(
+             } catch (_: Exception) {
+                 return null
+             }
+-            return Template(regex, anchor, parts)
++            return Template(regex, anchor, parts, nested, weight)
+         }
+ 
+         /** Mengubah \n, \t, \\ dan \uXXXX di dalam satu bidang kamus menjadi karakter aslinya. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index a80b569ba51d6854285c04d2b31f0bf737ee2170..9d7411bb5802c212a1d094ceb179a5366233ef45 100644
+GIT binary patch
+delta 74
+zcmeyjfO+ad<_VdTS8_=5mS*Z@8d~J(h2$p|mrVZ1B02Fi*Tw}E%pge~xMXStSZ;Fw
+SOHMVbPkwe{&gMh)djbF`y&R<g
+
+delta 80
+zcmbQbkon&N<_Vc1iFqkS`I#wt<(VnzsU><L`H96PlRq*_PQ1&taZ?5J<e!X!e7T7w
+isYRKIImUV+sTE+^%^55?)okuXi6xoEn{U?d2><{ok|5Lo
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index aec6ece..4fc82fd 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -448,7 +448,8 @@ fun SettingsScreen(
+                             options = listOf(
+                                 Tr.SYSTEM to "Ikuti sistem",
+                                 Tr.ID to "Bahasa Indonesia",
+-                                Tr.EN to "English"
++                                Tr.EN to "English",
++                                Tr.ES to "Espa\u00f1ol"
+                             ),
+                             selected = appLanguage,
+                             onSelect = {
+
+
+# FIN part=1/1 files=23

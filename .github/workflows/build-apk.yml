@@ -17,7 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    # APK 32-bit dibangun setelah APK 64-bit (Gradle kedua + NDK), jadi batas waktunya dilonggarkan
+    timeout-minutes: 80
 
     steps:
       - name: Ambil kode
@@ -155,6 +156,17 @@ jobs:
             "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}.apk" | grep -i "SHA-256" || true
           fi
 
+      # APK 32-bit dibangun terpisah (scripts/build-arm32.sh, ada setelah patch 32-bit diterapkan) dan
+      # TIDAK boleh menggagalkan APK 64-bit: bila langkah ini gagal, rilis tetap terbit dengan APK
+      # 64-bit saja dan penyebabnya bisa dibaca di log langkah ini. Skrip bekerja di salinan repo,
+      # jadi pohon kerja asli tidak berubah.
+      - name: Bangun APK 32-bit (armeabi-v7a)
+        if: hashFiles('scripts/build-arm32.sh') != ''
+        continue-on-error: true
+        env:
+          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
+        run: bash scripts/build-arm32.sh
+
       - name: Simpan sebagai artifact
         uses: actions/upload-artifact@v4
         with:
@@ -182,6 +194,10 @@ jobs:
               printf '%s\n' "$LOG" | sed 's/^/- /'
             else
               echo "- Perbaikan dan peningkatan kecil."
+            fi
+            if ls dist/*-32bit.apk > /dev/null 2>&1; then
+              echo
+              echo "Pilih APK: AmberLauncher-${VERSION_NAME}.apk untuk HP 64-bit (hampir semua HP). Berkas yang berakhiran -32bit.apk hanya untuk HP lama dengan CPU 32-bit."
             fi
             if [ -n "$PREV_TAG" ]; then
               echo

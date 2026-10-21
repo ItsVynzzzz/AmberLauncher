@@ -1,0 +1,65 @@
+# Tambah/Ubah instance, unduhan, Java
+Semua	T\u1ea5t c\u1ea3
+Buat Instance Baru	T\u1ea1o instance m\u1edbi
+NAMA INSTANCE	T\u00caN INSTANCE
+Memuat loader Fabric...	\u0110ang t\u1ea3i Fabric loader...
+\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f Fabric ch\u01b0a kh\u1ea3 d\u1ee5ng cho {0}
+SPESIFIKASI TARGET	TH\u00d4NG S\u1ed0 M\u1ee4C TI\u00caU
+Memuat Fabric...	\u0110ang t\u1ea3i Fabric...
+Fabric Tidak Tersedia	Fabric kh\u00f4ng kh\u1ea3 d\u1ee5ng
+Buat Instance Sekarang	T\u1ea1o instance ngay
+Cari versi ({0})...	T\u00ecm phi\u00ean b\u1ea3n ({0})...
+DAFTAR VERSI	DANH S\u00c1CH PHI\u00caN B\u1ea2N
+{0} versi ditemukan	T\u00ecm th\u1ea5y {0} phi\u00ean b\u1ea3n
+Memuat manifest Mojang...	\u0110ang t\u1ea3i manifest c\u1ee7a Mojang...
+Tidak ada versi yang cocok	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n ph\u00f9 h\u1ee3p
+Nama	T\u00ean
+Nama instance	T\u00ean instance
+Lihat mod	Xem mod
+{0} terpasang	\u0110\u00e3 c\u00e0i {0}
+Hapus '{0}'?	X\u00f3a '{0}'?
+Semua world, mod, dan file instance dihapus permanen.	T\u1ea5t c\u1ea3 th\u1ebf gi\u1edbi, mod v\u00e0 t\u1ec7p c\u1ee7a instance s\u1ebd b\u1ecb x\u00f3a v\u0129nh vi\u1ec5n.
+Ya, hapus	C\u00f3, x\u00f3a
+Nama instance tidak boleh kosong	T\u00ean instance kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ec3 tr\u1ed1ng
+Instance berhasil diperbarui!	\u0110\u00e3 c\u1eadp nh\u1eadt instance!
+Simpan	L\u01b0u
+Mengambil metadata versi {0}...	\u0110ang l\u1ea5y si\u00eau d\u1eef li\u1ec7u c\u1ee7a phi\u00ean b\u1ea3n {0}...
+Versi {0} tidak ditemukan di manifest Mojang	Kh\u00f4ng t\u00ecm th\u1ea5y phi\u00ean b\u1ea3n {0} trong manifest c\u1ee7a Mojang
+Membaca konfigurasi versi...	\u0110ang \u0111\u1ecdc c\u1ea5u h\u00ecnh phi\u00ean b\u1ea3n...
+Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	\u0110ang t\u1ea3i client Minecraft ({0} / {1} MB - {2}%)...
+Mengunduh libraries ({0}/{1})...	\u0110ang t\u1ea3i th\u01b0 vi\u1ec7n ({0}/{1})...
+Memverifikasi asset index {0}...	\u0110ang x\u00e1c minh asset index {0}...
+Mengunduh aset game ({0}/{1})...	\u0110ang t\u1ea3i t\u00e0i nguy\u00ean game ({0}/{1})...
+Menyiapkan Fabric Loader...	\u0110ang chu\u1ea9n b\u1ecb Fabric Loader...
+Tidak dapat menemukan Fabric loader untuk versi {0}	Kh\u00f4ng t\u00ecm th\u1ea5y Fabric loader cho phi\u00ean b\u1ea3n {0}
+Mengambil profil Fabric ({0})...	\u0110ang l\u1ea5y h\u1ed3 s\u01a1 Fabric ({0})...
+Gagal memuat profil Fabric: {~0}	Kh\u00f4ng th\u1ec3 t\u1ea3i h\u1ed3 s\u01a1 Fabric: {0}
+Mengunduh library Fabric ({0}/{1})...	\u0110ang t\u1ea3i th\u01b0 vi\u1ec7n Fabric ({0}/{1})...
+Instalasi selesai!	C\u00e0i \u0111\u1eb7t xong!
+Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	\u0110\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng b\u1ecb t\u1eeb ch\u1ed1i v\u00ec kh\u00f4ng d\u00f9ng HTTPS: {0}
+Isi unduhan tidak cocok dengan sidik jari resmi: {0}	N\u1ed9i dung t\u1ea3i xu\u1ed1ng kh\u00f4ng kh\u1edbp v\u1edbi m\u00e3 b\u0103m (hash) ch\u00ednh th\u1ee9c: {0}
+Tidak dapat memuat versi Fabric untuk {0}	Kh\u00f4ng th\u1ec3 t\u1ea3i c\u00e1c phi\u00ean b\u1ea3n Fabric cho {0}
+Gagal memuat profil Fabric untuk {0} ({1})	Kh\u00f4ng th\u1ec3 t\u1ea3i h\u1ed3 s\u01a1 Fabric cho {0} ({1})
+Mengekstrak Java Runtime ({0} universal)...	\u0110ang gi\u1ea3i n\u00e9n Java Runtime ({0} universal)...
+Mengekstrak runtime universal ({0})	\u0110ang gi\u1ea3i n\u00e9n runtime universal ({0})
+Mengekstrak Java Runtime ({0} bin-{1})...	\u0110ang gi\u1ea3i n\u00e9n Java Runtime ({0} bin-{1})...
+Mengekstrak native binary ({0} {1})	\u0110ang gi\u1ea3i n\u00e9n t\u1ec7p nh\u1ecb ph\u00e2n g\u1ed1c ({0} {1})
+Memverifikasi izin sistem OpenJDK...	\u0110ang x\u00e1c minh quy\u1ec1n h\u1ec7 th\u1ed1ng c\u1ee7a OpenJDK...
+Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	Vi\u1ec7c x\u00e1c minh OpenJDK {0} ch\u01b0a \u0111\u1ea7y \u0111\u1ee7 sau khi gi\u1ea3i n\u00e9n.
+Ekstraksi OpenJDK {0} selesai!	\u0110\u00e3 gi\u1ea3i n\u00e9n xong OpenJDK {0}!
+Membongkar bytecode Java 8: {0} ({1}/{2})...	\u0110ang gi\u1ea3i n\u00e9n bytecode Java 8: {0} ({1}/{2})...
+Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	H\u1ed3 s\u01a1 Fabric ({0}) ch\u01b0a \u0111\u01b0\u1ee3c c\u00e0i. H\u00e3y nh\u1ea5n n\u00fat T\u1ea2I XU\u1ed0NG tr\u00ean instance!
+Lokasi folder disalin ke clipboard:\n{0}	\u0110\u00e3 sao ch\u00e9p v\u1ecb tr\u00ed th\u01b0 m\u1ee5c v\u00e0o b\u1ed9 nh\u1edb t\u1ea1m:\n{0}
+Buka Folder	M\u1edf th\u01b0 m\u1ee5c
+INSTANCE ARCHITECT	TR\u00ccNH T\u1ea0O INSTANCE
+Default: {0} {1}	M\u1eb7c \u0111\u1ecbnh: {0} {1}
+MOD LOADER ENGINE	TR\u00ccNH N\u1ea0P MOD
+Auto ({0})	T\u1ef1 \u0111\u1ed9ng ({0})
+Failed to download {0}: {1}	Kh\u00f4ng th\u1ec3 t\u1ea3i {0}: {1}
+Failed to download {0}	Kh\u00f4ng th\u1ec3 t\u1ea3i {0}
+Empty body for {0}	Ph\u1ea3n h\u1ed3i tr\u1ed1ng cho {0}
+HTTP Error {0} from {1}	L\u1ed7i HTTP {0} t\u1eeb {1}
+HTTP Error {0}	L\u1ed7i HTTP {0}
+Empty response body	Ph\u1ea3n h\u1ed3i tr\u1ed1ng
+Folder: {0}	Th\u01b0 m\u1ee5c: {0}
+Unable to resolve host "{0}": System DNS and Fallback DoH failed	Kh\u00f4ng th\u1ec3 ph\u00e2n gi\u1ea3i m\u00e1y ch\u1ee7 "{0}": DNS h\u1ec7 th\u1ed1ng v\u00e0 DoH d\u1ef1 ph\u00f2ng \u0111\u1ec1u th\u1ea5t b\u1ea1i

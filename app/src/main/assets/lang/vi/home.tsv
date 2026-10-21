@@ -1,0 +1,33 @@
+# Beranda dan sidebar
+Memproses berkas...	\u0110ang x\u1eed l\u00fd t\u1ec7p...
+Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan	\u0110\u00e3 \u0111\u1eb7t video l\u00e0m h\u00ecnh n\u1ec1n. \u00c2m thanh v\u00e0 \u00e1nh s\u00e1ng m\u00f4i tr\u01b0\u1eddng \u0111\u01b0\u1ee3c ch\u1ec9nh trong C\u00e0i \u0111\u1eb7t > Giao di\u1ec7n
+Latar belakang diganti	\u0110\u00e3 \u0111\u1ed5i h\u00ecnh n\u1ec1n
+Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px	Qu\u00e1 l\u1edbn: \u1ea3nh ho\u1eb7c GIF t\u1ed1i \u0111a 30 MB, video t\u1ed1i \u0111a 200 MB v\u00e0 \u0111\u1ed9 ph\u00e2n gi\u1ea3i 2560 px
+Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	Kh\u00f4ng d\u00f9ng \u0111\u01b0\u1ee3c t\u1ec7p n\u00e0y. H\u00e3y d\u00f9ng \u1ea3nh, GIF ho\u1eb7c video MP4 (H.264)
+Silakan buat atau pilih akun terlebih dahulu!	H\u00e3y t\u1ea1o ho\u1eb7c ch\u1ecdn t\u00e0i kho\u1ea3n tr\u01b0\u1edbc!
+Menyiapkan OpenJDK ({0})...	\u0110ang chu\u1ea9n b\u1ecb OpenJDK ({0})...
+Instalasi selesai! Tekan PLAY untuk bermain.	C\u00e0i \u0111\u1eb7t xong! Nh\u1ea5n CH\u01a0I \u0111\u1ec3 b\u1eaft \u0111\u1ea7u.
+Gagal mengunduh: {~0}	T\u1ea3i xu\u1ed1ng th\u1ea5t b\u1ea1i: {0}
+Meluncurkan {0}...	\u0110ang kh\u1edfi ch\u1ea1y {0}...
+Gagal menyiapkan OpenJDK: {~0}	Kh\u00f4ng th\u1ec3 chu\u1ea9n b\u1ecb OpenJDK: {0}
+Membuka folder instance...	\u0110ang m\u1edf th\u01b0 m\u1ee5c instance...
+Latar belakang dikembalikan ke bawaan	\u0110\u00e3 kh\u00f4i ph\u1ee5c h\u00ecnh n\u1ec1n m\u1eb7c \u0111\u1ecbnh
+Instance {0} berhasil dibuat!	\u0110\u00e3 t\u1ea1o instance {0}!
+Instance {0} berhasil dihapus!	\u0110\u00e3 x\u00f3a instance {0}!
+Tambah akun	Th\u00eam t\u00e0i kho\u1ea3n
+Ganti akun	\u0110\u1ed5i t\u00e0i kho\u1ea3n
+Ganti latar belakang	\u0110\u1ed5i h\u00ecnh n\u1ec1n
+Ganti instance	\u0110\u1ed5i instance
+UNDUH	T\u1ea2I XU\u1ed0NG
+Buka folder instance	M\u1edf th\u01b0 m\u1ee5c instance
+Belum ada instance	Ch\u01b0a c\u00f3 instance n\u00e0o
+Buat instance Minecraft pertamamu untuk mulai bermain.	H\u00e3y t\u1ea1o instance Minecraft \u0111\u1ea7u ti\u00ean c\u1ee7a b\u1ea1n \u0111\u1ec3 b\u1eaft \u0111\u1ea7u ch\u01a1i.
+TAMBAH	TH\u00caM
+Video tidak bisa diputar di HP ini, latar memakai gambar diam	\u0110i\u1ec7n tho\u1ea1i n\u00e0y kh\u00f4ng ph\u00e1t \u0111\u01b0\u1ee3c video n\u00ean h\u00ecnh n\u1ec1n d\u00f9ng \u1ea3nh t\u0129nh
+LATAR BELAKANG	H\u00ccNH N\u1ec0N
+Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps (MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.	\u1ea2nh nh\u1eb9 nh\u1ea5t. GIF chuy\u1ec3n \u0111\u1ed9ng v\u1edbi t\u1ea3i nh\u1eb9. Video m\u01b0\u1ee3t nh\u1ea5t v\u00e0 c\u00f3 th\u1ec3 l\u00e0 HD 60 fps (MP4 H.264, t\u1ed1i \u0111a 200 MB), nh\u01b0ng t\u1ed1n pin h\u01a1n. \u00c2m thanh video, \u00e1nh s\u00e1ng m\u00f4i tr\u01b0\u1eddng v\u00e0 ti\u1ebft ki\u1ec7m pin \u0111\u01b0\u1ee3c ch\u1ec9nh trong C\u00e0i \u0111\u1eb7t > Giao di\u1ec7n.
+PILIH FOTO / GIF / VIDEO	CH\u1eccN \u1ea2NH / GIF / VIDEO
+KEMBALI KE BAWAAN	KH\u00d4I PH\u1ee4C M\u1eb6C \u0110\u1ecaNH
+PILIH INSTANCE	CH\u1eccN INSTANCE
+Belum ada instance. Buat yang pertama di bawah.	Ch\u01b0a c\u00f3 instance n\u00e0o. H\u00e3y t\u1ea1o instance \u0111\u1ea7u ti\u00ean b\u00ean d\u01b0\u1edbi.
+TAMBAH INSTANCE	TH\u00caM INSTANCE

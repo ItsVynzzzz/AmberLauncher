@@ -1,0 +1,58 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	N\u00fat
+Atur tombol	Ch\u1ec9nh n\u00fat
+TAMPILAN	GIAO DI\u1ec6N
+Resolusi render	\u0110\u1ed9 ph\u00e2n gi\u1ea3i k\u1ebft xu\u1ea5t
+Hemat 50%	Ti\u1ebft ki\u1ec7m 50%
+Seimbang 75%	C\u00e2n b\u1eb1ng 75%
+Penuh 100%	\u0110\u1ea7y \u0111\u1ee7 100%
+Pin FPS di layar	Ghim FPS tr\u00ean m\u00e0n h\u00ecnh
+Tetap tampil saat tombol layar disembunyikan	V\u1eabn hi\u1ec3n th\u1ecb khi c\u00e1c n\u00fat tr\u00ean m\u00e0n h\u00ecnh b\u1ecb \u1ea9n
+KAMERA DAN KURSOR	CAMERA V\u00c0 CON TR\u1ece
+Kecepatan kamera	T\u1ed1c \u0111\u1ed9 camera
+Kecepatan kursor	T\u1ed1c \u0111\u1ed9 con tr\u1ecf
+Mode sentuh	Ch\u1ebf \u0111\u1ed9 c\u1ea3m \u1ee9ng
+Geser	Tr\u01b0\u1ee3t
+Ketuk	Ch\u1ea1m
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Tr\u01b0\u1ee3t: m\u00e0n h\u00ecnh ho\u1ea1t \u0111\u1ed9ng nh\u01b0 trackpad. Ch\u1ea1m: ng\u00f3n tay tr\u1edf th\u00e0nh con tr\u1ecf tr\u1ef1c ti\u1ebfp.
+PINTAS	PH\u00cdM T\u1eaeT
+Kamera	Camera
+Jeda	T\u1ea1m d\u1eebng
+Pemain	Ng\u01b0\u1eddi ch\u01a1i
+Sembunyi HUD	\u1ea8n HUD
+Keluar dari game	Tho\u00e1t game
+Keluar dari game?	Tho\u00e1t game?
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft s\u1ebd b\u1ecb d\u1eebng v\u00e0 b\u1ea1n quay l\u1ea1i launcher. Th\u1ebf gi\u1edbi ch\u01b0a l\u01b0u c\u00f3 th\u1ec3 b\u1ecb m\u1ea5t.
+sisa RAM	RAM c\u00f2n
+PANAS	N\u00d3NG
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	Ch\u1ea1m v\u00e0o bi\u1ec3u t\u01b0\u1ee3ng b\u00e1nh r\u0103ng ho\u1eb7c s\u1ed1 FPS tr\u00ean m\u00e0n h\u00ecnh \u0111\u1ec3 m\u1edf menu. Tho\u00e1t game b\u1eb1ng n\u00fat \u0111\u1ecf trong menu.
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	L\u1ed7i (bug) l\u00e0 chuy\u1ec7n b\u00ecnh th\u01b0\u1eddng, v\u00ec kh\u00f4ng g\u00ec ho\u00e0n h\u1ea3o ngo\u00e0i \u0110\u1ea5ng To\u00e0n N\u0103ng.
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	H\u00e3y t\u1eaft Vertical Sync (VSync) trong c\u00e0i \u0111\u1eb7t Tr\u00ecnh k\u1ebft xu\u1ea5t n\u1ebfu b\u1ecb gi\u1eadt ho\u1eb7c m\u00e0n h\u00ecnh \u0111en tr\u1ed1ng sau logo Mojang.
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	N\u1ebfu m\u00e0n h\u00ecnh Minecraft b\u1ecb c\u1eaft ho\u1eb7c hi\u1ec3n th\u1ecb d\u1ecdc, h\u00e3y b\u1eadt t\u1ef1 \u0111\u1ed9ng xoay c\u1ee7a \u0111i\u1ec7n tho\u1ea1i v\u00e0 \u0111\u1eb7t m\u00e0n h\u00ecnh n\u1eb1m ngang (Landscape) tr\u01b0\u1edbc khi nh\u1ea5n CH\u01a0I.
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	H\u00e3y d\u00f9ng tr\u00ecnh k\u1ebft xu\u1ea5t MobileGlues \u0111\u1ec3 ti\u1ebft ki\u1ec7m pin v\u00e0 t\u01b0\u01a1ng th\u00edch shaderpack t\u1ed1t nh\u1ea5t.
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	N\u1ebfu Minecraft b\u1ecb crash khi kh\u1edfi \u0111\u1ed9ng tr\u00ean GPU Mali/Adreno, h\u00e3y th\u1eed b\u1eadt 'DISABLE_SUBGROUP' trong c\u00e0i \u0111\u1eb7t tr\u00ecnh k\u1ebft xu\u1ea5t.
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	B\u1eadt OpenGL NoError trong c\u00e0i \u0111\u1eb7t MobileGlues \u0111\u1ec3 t\u0103ng FPS khi ch\u01a1i.
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	D\u00f9ng n\u00fat HIDE GUI \u0111\u1ec3 \u1ea9n c\u00e1c n\u00fat \u1ea3o tr\u00ean m\u00e0n h\u00ecnh khi ch\u01a1i b\u1eb1ng b\u00e0n ph\u00edm v\u00e0 chu\u1ed9t th\u1eadt.
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	H\u00e3y \u0111\u1eb7t RAM ph\u00f9 h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i: 2GB\u20133GB l\u00e0 qu\u00e1 \u0111\u1ee7 cho Minecraft 1.20+ khi kh\u00f4ng d\u00f9ng modpack n\u1eb7ng.
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Thay \u0111\u1ed5i \u0111\u1ed9 nh\u1ea1y con tr\u1ecf trong c\u00e0i \u0111\u1eb7t \u0110i\u1ec1u khi\u1ec3n \u0111\u1ec3 ng\u1eafm v\u00e0 nh\u00ecn xung quanh ch\u00ednh x\u00e1c h\u01a1n.
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	H\u00e3y ch\u1ecdn driver Vulkan Turnip tr\u00ean thi\u1ebft b\u1ecb Snapdragon \u0111\u1ec3 c\u00f3 hi\u1ec7u n\u0103ng \u0111\u1ed3 h\u1ecda v\u00e0 \u0111\u1ed9 \u1ed5n \u0111\u1ecbnh t\u1ed1t nh\u1ea5t.
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	B\u1ea1n c\u00f3 th\u1ec3 t\u00f9y ch\u1ec9nh v\u1ecb tr\u00ed v\u00e0 k\u00edch th\u01b0\u1edbc c\u00e1c n\u00fat \u0111i\u1ec1u khi\u1ec3n theo \u00fd mu\u1ed1n trong menu T\u00f9y ch\u1ec9nh n\u00fat.
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	D\u00f9ng t\u00ednh n\u0103ng Import Addon \u0111\u1ec3 c\u00e0i modpack (.mrpack), mod (.jar) v\u00e0 resource pack ngay l\u1eadp t\u1ee9c!
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	Nh\u1ea5n n\u00fat ESC tr\u00ean m\u00e0n h\u00ecnh \u0111\u1ec3 m\u1edf menu t\u1ea1m d\u1eebng ho\u1eb7c quay l\u1ea1i menu tr\u01b0\u1edbc.
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Nh\u1ea5n n\u00fat F3 \u0111\u1ec3 xem t\u1ecda \u0111\u1ed9, biome v\u00e0 bi\u1ec3u \u0111\u1ed3 hi\u1ec7u n\u0103ng FPS trong game.
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	B\u1eadt ch\u1ebf \u0111\u1ed9 To\u00e0n m\u00e0n h\u00ecnh trong C\u00e0i \u0111\u1eb7t \u0111\u1ec3 b\u1ecf qua tai th\u1ecf/camera tr\u01b0\u1edbc v\u00e0 m\u1edf r\u1ed9ng t\u1ea7m nh\u00ecn.
+Memuat Minecraft {0}	\u0110ang t\u1ea3i Minecraft {0}
+Tutup loading	\u0110\u00f3ng m\u00e0n h\u00ecnh t\u1ea3i
+Menyiapkan mesin Java dan grafis...	\u0110ang chu\u1ea9n b\u1ecb Java v\u00e0 c\u00f4ng c\u1ee5 \u0111\u1ed3 h\u1ecda...
+Izin penyimpanan	Quy\u1ec1n truy c\u1eadp b\u1ed9 nh\u1edb
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher l\u01b0u th\u1ebf gi\u1edbi, mod v\u00e0 c\u00e0i \u0111\u1eb7t trong th\u01b0 m\u1ee5c nuxlauncher tr\u00ean b\u1ed9 nh\u1edb \u0111i\u1ec7n tho\u1ea1i \u0111\u1ec3 d\u1ec5 sao l\u01b0u v\u00e0 di chuy\u1ec3n.
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android s\u1ebd m\u1edf trang c\u00e0i \u0111\u1eb7t. H\u00e3y b\u1eadt quy\u1ec1n truy c\u1eadp t\u1ea5t c\u1ea3 t\u1ec7p cho AmberLauncher, r\u1ed3i quay l\u1ea1i \u0111\u00e2y.
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	N\u1ebfu ch\u1ecdn \u0110\u1ec3 sau, game v\u1eabn d\u00f9ng \u0111\u01b0\u1ee3c. D\u1eef li\u1ec7u s\u1ebd \u0111\u01b0\u1ee3c l\u01b0u trong th\u01b0 m\u1ee5c ri\u00eang c\u1ee7a \u1ee9ng d\u1ee5ng, kh\u00f3 m\u1edf b\u1eb1ng tr\u00ecnh qu\u1ea3n l\u00fd t\u1ec7p.
+Hapus instance?	X\u00f3a instance?
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	T\u1ea5t c\u1ea3 th\u1ebf gi\u1edbi, mod, b\u1ea3n l\u01b0u v\u00e0 c\u1ea5u h\u00ecnh trong instance n\u00e0y s\u1ebd b\u1ecb x\u00f3a v\u0129nh vi\u1ec5n v\u00e0 kh\u00f4ng th\u1ec3 kh\u00f4i ph\u1ee5c.
+Perender tidak cocok	Tr\u00ecnh k\u1ebft xu\u1ea5t kh\u00f4ng t\u01b0\u01a1ng th\u00edch
+Tetap jalankan	V\u1eabn ch\u1ea1y
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Tr\u00ecnh k\u1ebft xu\u1ea5t n\u00e0y kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 ch\u00ednh th\u1ee9c cho Minecraft {0}. \u00c9p d\u00f9ng c\u00f3 th\u1ec3 g\u00e2y l\u1ed7i h\u00ecnh \u1ea3nh, \u0111\u00f3ng b\u0103ng m\u00e0n h\u00ecnh ho\u1eb7c game b\u1ecb crash. Ti\u1ebfp t\u1ee5c?
+Dukungan resmi: {0}	H\u1ed7 tr\u1ee3 ch\u00ednh th\u1ee9c: {0}
+Mengunduh game	\u0110ang t\u1ea3i game
+Menyiapkan file game...	\u0110ang chu\u1ea9n b\u1ecb t\u1ec7p game...

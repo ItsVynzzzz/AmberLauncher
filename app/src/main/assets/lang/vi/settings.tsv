@@ -1,0 +1,78 @@
+# Pengaturan dan profil perangkat
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} nh\u00e2n CPU
+Memori	B\u1ed9 nh\u1edb
+Grafis	\u0110\u1ed3 h\u1ecda
+Kontrol	\u0110i\u1ec1u khi\u1ec3n
+Tampilan	Giao di\u1ec7n
+Memori game (RAM)	B\u1ed9 nh\u1edb game (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Qu\u00e1 l\u1edbn so v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y, game v\u00e0 m\u00e1y c\u00f3 th\u1ec3 b\u1ecb ch\u1eadm.
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Gi\u1edbi h\u1ea1n b\u1ed9 nh\u1edb Java (-Xmx). L\u1edbn h\u01a1n kh\u00f4ng ph\u1ea3i l\u00fac n\u00e0o c\u0169ng nhanh h\u01a1n.
+1,5 GB	1,5 GB
+Argumen JVM tambahan	Tham s\u1ed1 JVM b\u1ed5 sung
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	T\u00f9y ch\u1ecdn, d\u00e0nh cho ng\u01b0\u1eddi d\u00f9ng n\u00e2ng cao. Nh\u1eadp sai c\u00f3 th\u1ec3 khi\u1ebfn game kh\u00f4ng ch\u1ea1y \u0111\u01b0\u1ee3c.
+Contoh: -XX:+UseG1GC	V\u00ed d\u1ee5: -XX:+UseG1GC
+Konfigurasi renderer	C\u1ea5u h\u00ecnh tr\u00ecnh k\u1ebft xu\u1ea5t
+Optimasi otomatis options.txt	T\u1ef1 \u0111\u1ed9ng t\u1ed1i \u01b0u options.txt
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	T\u1ef1 \u0111\u1ed9ng t\u1eaft m\u00e2y v\u00e0 b\u00f3ng \u0111\u1ed5 \u0111\u1ec3 FPS cao h\u01a1n.
+Skala resolusi layar	T\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i m\u00e0n h\u00ecnh
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Nh\u1ecf h\u01a1n = FPS cao h\u01a1n, h\u00ecnh \u1ea3nh m\u1edd h\u01a1n.
+Driver Vulkan	Driver Vulkan
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	Ch\u1ecdn b\u1ea3n driver Vulkan m\u00e0 h\u1ec7 th\u1ed1ng/game s\u1eed d\u1ee5ng.
+API grafis	API \u0111\u1ed3 h\u1ecda
+Atur API grafis yang dipakai Minecraft modern 26.2+.	Ch\u1ecdn API \u0111\u1ed3 h\u1ecda m\u00e0 Minecraft \u0111\u1eddi m\u1edbi 26.2+ s\u1eed d\u1ee5ng.
+Gunakan driver Vulkan sistem	D\u00f9ng driver Vulkan c\u1ee7a h\u1ec7 th\u1ed1ng
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	Bu\u1ed9c d\u00f9ng driver Vulkan c\u00f3 s\u1eb5n tr\u00ean \u0111i\u1ec7n tho\u1ea1i (kh\u00f4ng ph\u1ea3i Turnip). \u1ea2nh h\u01b0\u1edfng \u0111\u1ebfn tr\u00ecnh k\u1ebft xu\u1ea5t Zink.
+V-Sync Zink	V-Sync Zink
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	\u0110\u1ed3ng b\u1ed9 d\u1ecdc cho tr\u00ecnh k\u1ebft xu\u1ea5t Kopper Zink th\u00f4ng qua giao di\u1ec7n h\u1ec7 th\u1ed1ng.
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Ng\u00f4n ng\u1eef c\u1ee7a ch\u1eef trong launcher. "Theo h\u1ec7 th\u1ed1ng" d\u00f9ng ng\u00f4n ng\u1eef c\u1ee7a \u0111i\u1ec7n tho\u1ea1i.
+Latar Beranda	H\u00ecnh n\u1ec1n Trang ch\u1ee7
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	\u1ea2nh nh\u1eb9 nh\u1ea5t, GIF chuy\u1ec3n \u0111\u1ed9ng v\u1edbi t\u1ea3i nh\u1eb9, video m\u01b0\u1ee3t nh\u1ea5t (HD, t\u1ed1i \u0111a 60 fps) nh\u01b0ng t\u1ed1n pin h\u01a1n.
+Ganti latar	\u0110\u1ed5i h\u00ecnh n\u1ec1n
+Gerakkan GIF dan video	Ph\u00e1t chuy\u1ec3n \u0111\u1ed9ng GIF v\u00e0 video
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	T\u1eaft \u0111\u1ec3 ch\u1ec9 hi\u1ec3n th\u1ecb \u1ea3nh t\u0129nh. Ti\u1ebft ki\u1ec7m pin v\u00e0 RAM nh\u1ea5t.
+Jeda saat Hemat Baterai	T\u1ea1m d\u1eebng khi Ti\u1ebft ki\u1ec7m pin
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIF v\u00e0 video t\u1ef1 \u0111\u1ed9ng d\u1eebng khi ch\u1ebf \u0111\u1ed9 Ti\u1ebft ki\u1ec7m pin c\u1ee7a \u0111i\u1ec7n tho\u1ea1i \u0111ang b\u1eadt.
+Suara video	\u00c2m thanh video
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	M\u1eb7c \u0111\u1ecbnh t\u1eaft. T\u1ef1 \u0111\u1ed9ng t\u1eaft ti\u1ebfng khi \u1ee9ng d\u1ee5ng kh\u00e1c \u0111ang ph\u00e1t nh\u1ea1c.
+Volume video	\u00c2m l\u01b0\u1ee3ng video
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	\u00c1nh s\u00e1ng d\u1ecbu \u1edf thanh b\u00ean v\u00e0 vi\u1ec1n c\u00e1c th\u1ebb Trang ch\u1ee7. M\u00e0u s\u1eafc theo n\u1ed9i dung GIF ho\u1eb7c video. Kh\u00f4ng \u00e1p d\u1ee5ng cho \u1ea3nh.
+Kekuatan ambient	C\u01b0\u1eddng \u0111\u1ed9 \u00e1nh s\u00e1ng m\u00f4i tr\u01b0\u1eddng
+Kustomisasi kontrol virtual	T\u00f9y ch\u1ec9nh \u0111i\u1ec1u khi\u1ec3n \u1ea3o
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Thay \u0111\u1ed5i b\u1ed1 c\u1ee5c n\u00fat, k\u00edch th\u01b0\u1edbc, \u0111\u1ed9 trong su\u1ed1t, cu\u1ed9n thanh c\u00f4ng c\u1ee5 nhanh (hotbar) v\u00e0 \u00e1nh x\u1ea1 ph\u00edm Minecraft.
+Buka editor	M\u1edf tr\u00ecnh ch\u1ec9nh s\u1eeda
+Mode mouse di menu	Ch\u1ebf \u0111\u1ed9 chu\u1ed9t trong menu
+Sentuh tombol atau slot menu langsung di mana jari menekan.	Ch\u1ea1m tr\u1ef1c ti\u1ebfp v\u00e0o n\u00fat ho\u1eb7c \u00f4 menu \u1edf v\u1ecb tr\u00ed ng\u00f3n tay nh\u1ea5n.
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Tr\u01b0\u1ee3t ng\u00f3n tay \u0111\u1ec3 di chuy\u1ec3n con tr\u1ecf \u1ea3o, ch\u1ea1m v\u00e0o m\u00e0n h\u00ecnh \u0111\u1ec3 nh\u1ea5p.
+Click (langsung)	Click (tr\u1ef1c ti\u1ebfp)
+Pukul lewat layar	\u0110\u00e1nh b\u1eb1ng c\u00e1ch ch\u1ea1m m\u00e0n h\u00ecnh
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Ch\u1ea1m ho\u1eb7c gi\u1eef v\u00e0o v\u00f9ng tr\u1ed1ng tr\u00ean m\u00e0n h\u00ecnh \u0111\u1ec3 \u0111\u00e1nh. H\u00e3y t\u1eaft \u0111\u1ec3 vi\u1ec7c k\u00e9o xoay camera kh\u00f4ng v\u00f4 t\u00ecnh \u0111\u00e1nh; h\u00e3y d\u00f9ng n\u00fat \u0111\u00e1nh.
+Sensitivitas kamera	\u0110\u1ed9 nh\u1ea1y camera
+Kecepatan memutar pandangan di dalam game.	T\u1ed1c \u0111\u1ed9 xoay g\u00f3c nh\u00ecn trong game.
+Sensitivitas kursor virtual	\u0110\u1ed9 nh\u1ea1y con tr\u1ecf \u1ea3o
+Kecepatan kursor saat berada di menu Minecraft.	T\u1ed1c \u0111\u1ed9 con tr\u1ecf khi \u1edf trong menu Minecraft.
+Ukuran kursor virtual	K\u00edch th\u01b0\u1edbc con tr\u1ecf \u1ea3o
+Mode mouse fisik (auto-hide)	Ch\u1ebf \u0111\u1ed9 chu\u1ed9t th\u1eadt (t\u1ef1 \u1ea9n)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	T\u1ef1 \u0111\u1ed9ng \u1ea9n con tr\u1ecf \u1ea3o khi c\u00f3 chu\u1ed9t ngo\u00e0i k\u1ebft n\u1ed1i.
+Perubahan tersimpan otomatis	Thay \u0111\u1ed5i \u0111\u01b0\u1ee3c l\u01b0u t\u1ef1 \u0111\u1ed9ng
+Pengaturan di-reset ke default!	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i c\u00e0i \u0111\u1eb7t v\u1ec1 m\u1eb7c \u0111\u1ecbnh!
+Reset default	\u0110\u1eb7t l\u1ea1i m\u1eb7c \u0111\u1ecbnh
+PILIH RENDERER GRAFIK	CH\u1eccN TR\u00ccNH K\u1ebeT XU\u1ea4T \u0110\u1ed2 H\u1eccA
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Ch\u1ecdn backend \u0111\u1ed3 h\u1ecda ph\u00f9 h\u1ee3p v\u1edbi Minecraft v\u00e0 GPU c\u1ee7a thi\u1ebft b\u1ecb
+Renderer diubah ke: {0}	\u0110\u00e3 \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t sang: {0}
+Konfigurasi {0}	C\u1ea5u h\u00ecnh {0}
+Kesesuaian: {0}	\u0110\u1ed9 t\u01b0\u01a1ng th\u00edch: {0}
+PERINGATAN DRIVER ADRENO	C\u1ea2NH B\u00c1O DRIVER ADRENO
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	Launcher ph\u00e1t hi\u1ec7n thi\u1ebft b\u1ecb c\u1ee7a b\u1ea1n d\u00f9ng GPU Adreno. B\u1eadt t\u00f9y ch\u1ecdn n\u00e0y c\u00f3 th\u1ec3 khi\u1ebfn tr\u00ecnh k\u1ebft xu\u1ea5t Zink kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c b\u1ecb crash. B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n b\u1eadt kh\u00f4ng?
+AKTIFKAN	B\u1eacT
+Profil perangkat	H\u1ed3 s\u01a1 thi\u1ebft b\u1ecb
+Profil performa HP ini	H\u1ed3 s\u01a1 hi\u1ec7u n\u0103ng c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y
+Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Gi\u1edbi h\u1ea1n heap, tinh ch\u1ec9nh GC v\u00e0 kh\u00f3a m\u00e0n h\u00ecnh \u1edf 60 Hz. T\u1eaft \u0111\u1ec3 so s\u00e1nh FPS.
+Mode GC (pembersih memori Java)	Ch\u1ebf \u0111\u1ed9 GC (b\u1ed9 d\u1ecdn d\u1eb9p b\u1ed9 nh\u1edb Java)
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: nh\u1eb9 nh\u1ea5t cho b\u1ed9 x\u1eed l\u00fd, th\u1eddi gian d\u1eebng GC d\u00e0i h\u01a1n m\u1ed9t ch\u00fat.
+Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	M\u1eb7c \u0111\u1ecbnh: kh\u00f4ng th\u00eam c\u1edd GC t\u1eeb h\u1ed3 s\u01a1 (ch\u1ec9 gi\u1edbi h\u1ea1n heap v\u00e0 m\u00e0n h\u00ecnh).
+Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	C\u00e2n b\u1eb1ng: G1 v\u1edbi th\u1eddi gian d\u1eebng ng\u1eafn v\u00e0 b\u1ed9 nh\u1edb gi\u1edbi h\u1ea1n. H\u00e3y th\u1eed m\u1ee5c n\u00e0y tr\u01b0\u1edbc.
+Kunci layar {0} Hz	Kh\u00f3a m\u00e0n h\u00ecnh \u1edf {0} Hz
+Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t \u0111\u1ec1u h\u01a1n. HUD FPS hi\u1ec3n th\u1ecb s\u1ed1 Hz \u0111ang d\u00f9ng.
+Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap game: b\u1ea1n ch\u1ecdn {0} MB, \u0111ang d\u00f9ng {1} MB. \u0110i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 {2} MB RAM; heap l\u1edbn h\u01a1n khi\u1ebfn m\u00e1y ph\u1ea3i ho\u00e1n \u0111\u1ed5i b\u1ed9 nh\u1edb v\u00e0 l\u00e0m FPS gi\u1ea3m.
+Heap game {0} MB (batas profil {1} MB).	Heap game {0} MB (gi\u1edbi h\u1ea1n c\u1ee7a h\u1ed3 s\u01a1 {1} MB).
+Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. Hi\u1ec7u qu\u1ea3 hi\u1ec3n th\u1ecb tr\u00ean HUD FPS (RAM c\u00f2n \u00b7 N\u00d3NG \u00b7 Hz).

@@ -452,7 +452,8 @@ fun SettingsScreen(
                                 Tr.SYSTEM to "Ikuti sistem",
                                 Tr.ID to "Bahasa Indonesia",
                                 Tr.EN to "English",
-                                Tr.ES to "Espa\u00f1ol"
+                                Tr.ES to "Espa\u00f1ol",
+                                Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
                             ),
                             selected = appLanguage,
                             onSelect = {

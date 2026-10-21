@@ -9,18 +9,19 @@ import java.util.Locale
  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
  *
- * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], [EN], atau [ES]. Pada pilihan [SYSTEM], HP
- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol memakai Spanyol, dan bahasa lain
- * jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
+ * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
+ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol atau Vietnam memakai bahasa itu, dan bahasa
+ * lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
  */
 object Tr {
     const val SYSTEM = "system"
     const val ID = "id"
     const val EN = "en"
     const val ES = "es"
+    const val VI = "vi"
 
     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
-    private val DICTIONARY_LANGS = setOf(EN, ES)
+    private val DICTIONARY_LANGS = setOf(EN, ES, VI)
 
     private const val PREFS_NAME = "amber_launcher_prefs"
     private const val KEY_LANGUAGE = "language"
@@ -29,12 +30,12 @@ object Tr {
     @Volatile
     private var translator: Translator? = null
 
-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], atau [ES]. */
+    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], atau [VI]. */
     @Volatile
     var choice: String = SYSTEM
         private set
 
-    /** Bahasa yang benar-benar dipakai: [ID], [EN], atau [ES]. */
+    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], atau [VI]. */
     @Volatile
     var effective: String = ID
         private set

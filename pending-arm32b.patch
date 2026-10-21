@@ -1,0 +1,84 @@
+diff --git a/scripts/build-arm32.sh b/scripts/build-arm32.sh
+index ec83de3..e8e2ec7 100755
+--- a/scripts/build-arm32.sh
++++ b/scripts/build-arm32.sh
+@@ -27,6 +27,11 @@ MOBILEGLUES_COMMIT="50e49fae5e08216dc28134c1d45fb4793d6970db"
+ RUNTIME_COMMIT="aac1cbd480550abeef3938c63e187aec2cebf990^"
+ NDK_VERSION="25.2.9519653"
+ 
++# Bila skrip berhenti di tengah, tahap terakhir yang dijalankan muncul sebagai peringatan di halaman
++# ringkasan run (langkah ini continue-on-error, jadi tanpa ini kegagalannya mudah tidak terlihat).
++STAGE="persiapan"
++trap 'rc=$?; if [ "$rc" -ne 0 ]; then echo "::warning title=APK 32-bit gagal::Berhenti di tahap: ${STAGE} (kode ${rc}). APK 64-bit tidak terpengaruh. Rincian ada di log langkah Bangun APK 32-bit."; fi' EXIT
++
+ ROOT="$(git rev-parse --show-toplevel)"
+ cd "$ROOT"
+ : "${VERSION_NAME:?VERSION_NAME belum diatur}"
+@@ -36,13 +41,18 @@ UP="$TMP/zalith-upstream"
+ OUT="$ROOT/dist"
+ APK_NAME="AmberLauncher-${VERSION_NAME}-32bit.apk"
+ 
++STAGE="1/6 pasang NDK"
+ echo "== 1/6 Pasang NDK $NDK_VERSION =="
+ SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+ if [ ! -d "$SDK_ROOT/ndk/$NDK_VERSION" ]; then
+-  yes | "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK_VERSION" > /dev/null
++  # "yes" selalu berakhir dengan kode 141 (SIGPIPE) begitu sdkmanager selesai, dan pipefail akan
++  # menghentikan skrip. Hasil sebenarnya dicek lewat "test -d" di bawah.
++  yes | "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK_VERSION" > /dev/null || true
+ fi
+ test -d "$SDK_ROOT/ndk/$NDK_VERSION"
++echo "NDK terpasang: $(ls "$SDK_ROOT/ndk" | tr '\n' ' ')"
+ 
++STAGE="2/6 ambil kode hulu"
+ echo "== 2/6 Ambil kode dan pustaka 32-bit dari proyek hulu ($UPSTREAM_SHA) =="
+ rm -rf "$UP"
+ git init -q "$UP"
+@@ -51,6 +61,7 @@ git -C "$UP" checkout -q FETCH_HEAD
+ test "$(git -C "$UP" rev-parse HEAD)" = "$UPSTREAM_SHA"
+ UPMAIN="$UP/ZalithLauncher/src/main"
+ 
++STAGE="3/6 salin repo"
+ echo "== 3/6 Siapkan salinan kerja =="
+ rm -rf "$WORK"
+ mkdir -p "$WORK"
+@@ -72,6 +83,7 @@ for lib in libEGL_angle libGLESv2_angle libOSMesa_8 libgl4es_114 libjnidispatch
+   cp "$UPMAIN/jniLibs/armeabi-v7a/$lib.so" "$APP/jniLibs/armeabi-v7a/$lib.so"
+ done
+ 
++STAGE="4/6 ambil MobileGlues, runtime Java, LWJGL"
+ echo "== 4/6 Ambil MobileGlues dan runtime Java 32-bit dari riwayat repo =="
+ for lib in libmobileglues libmobileglues_info_getter; do
+   git -C "$ROOT" show "$MOBILEGLUES_COMMIT:app/src/main/jniLibs/armeabi-v7a/$lib.so" > "$APP/jniLibs/armeabi-v7a/$lib.so"
+@@ -89,6 +101,7 @@ for aar in "$WORK"/app/libs/lwjgl-*-natives-release.aar; do
+   echo "LWJGL $v: $(ls "$dest" | wc -l) pustaka 32-bit"
+ done
+ 
++STAGE="5/6 Gradle + NDK (cari baris diawali 'e:' atau 'ndk-build' di log)"
+ echo "== 5/6 Bangun APK (Gradle + NDK) =="
+ chmod +x gradlew
+ export AMBER_VERSION_NAME="$VERSION_NAME"
+@@ -97,14 +110,17 @@ AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
+ APK="$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)"
+ test -n "$APK"
+ 
++STAGE="6/6 periksa isi APK"
+ echo "== 6/6 Periksa isi APK =="
+-unzip -l "$APK" | grep -E 'lib/[^/]+/lib[^/]+\.so$' | awk '{print $4, $1}' | sed -E 's#^lib/##' | sort
+-if unzip -l "$APK" | grep -qE 'lib/(arm64-v8a|x86|x86_64)/'; then
++# Daftar isi disimpan dulu: "unzip | grep -q" di bawah pipefail bisa salah dianggap gagal (SIGPIPE).
++APK_LIST="$(unzip -l "$APK")"
++printf '%s\n' "$APK_LIST" | grep -E 'lib/[^/]+/lib[^/]+\.so$' | awk '{print $4, $1}' | sed -E 's#^lib/##' | sort || true
++if grep -qE 'lib/(arm64-v8a|x86|x86_64)/' <<< "$APK_LIST"; then
+   echo "::error::APK 32-bit berisi pustaka arsitektur lain."
+   exit 1
+ fi
+ for lib in libpojavexec libexithook liblinkerhook libdriver_helper libjnidispatch libunpack200 libmobileglues libbytehook; do
+-  if ! unzip -l "$APK" | grep -q "lib/armeabi-v7a/$lib.so"; then
++  if ! grep -q "lib/armeabi-v7a/$lib.so" <<< "$APK_LIST"; then
+     echo "::error::$lib.so (armeabi-v7a) tidak ada di APK 32-bit."
+     exit 1
+   fi
+
+
+# FIN part=1/1 files=1

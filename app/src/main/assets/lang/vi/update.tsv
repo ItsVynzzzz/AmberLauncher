@@ -4,3 +4,81 @@ Versi {0} sudah tersedia. Kamu memakai versi {1}.	\u0110\u00e3 c\u00f3 phi\u00ea
 Yang baru	C\u00f3 g\u00ec m\u1edbi
 Lewati	B\u1ecf qua
 Unduh	T\u1ea3i xu\u1ed1ng
+# Pengecekan, unduhan, dan pemasangan pembaruan
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	T\u1ea3i xu\u1ed1ng b\u1ecb gi\u00e1n \u0111o\u1ea1n. Ch\u1ea1m Th\u1eed l\u1ea1i; s\u1ebd ti\u1ebfp t\u1ee5c t\u1eeb ph\u1ea7n \u0111\u00e3 t\u1ea3i.
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	Kh\u00f4ng \u0111\u1ee7 dung l\u01b0\u1ee3ng. H\u00e3y gi\u1ea3i ph\u00f3ng kho\u1ea3ng {0} MB r\u1ed3i th\u1eed l\u1ea1i.
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	T\u1ec7p \u0111\u00e3 t\u1ea3i b\u1ecb h\u1ecfng (kh\u00f4ng kh\u1edbp v\u1edbi t\u1ec7p tr\u00ean GitHub). Ch\u1ea1m Th\u1eed l\u1ea1i \u0111\u1ec3 t\u1ea3i l\u1ea1i.
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	Kh\u00f4ng t\u00ecm th\u1ea5y t\u1ec7p APK tr\u00ean GitHub (m\u00e3 404). C\u00f3 th\u1ec3 b\u1ea3n ph\u00e1t h\u00e0nh \u0111\u00e3 b\u1ecb x\u00f3a.
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub t\u1eeb ch\u1ed1i t\u1ea3i xu\u1ed1ng (m\u00e3 403). H\u00e3y th\u1eed l\u1ea1i sau.
+GitHub membalas kode {0} saat mengunduh.	GitHub tr\u1ea3 v\u1ec1 m\u00e3 {0} khi t\u1ea3i xu\u1ed1ng.
+Balasan GitHub kosong.	Ph\u1ea3n h\u1ed3i t\u1eeb GitHub tr\u1ed1ng.
+Balasan GitHub terlalu besar.	Ph\u1ea3n h\u1ed3i t\u1eeb GitHub qu\u00e1 l\u1edbn.
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub \u0111ang g\u1eb7p s\u1ef1 c\u1ed1 (m\u00e3 {0}). H\u00e3y th\u1eed l\u1ea1i sau.
+GitHub membalas kode {0}.	GitHub tr\u1ea3 v\u1ec1 m\u00e3 {0}.
+Tidak ada koneksi internet.	Kh\u00f4ng c\u00f3 k\u1ebft n\u1ed1i internet.
+Koneksi terlalu lambat. Coba lagi.	K\u1ebft n\u1ed1i qu\u00e1 ch\u1eadm. H\u00e3y th\u1eed l\u1ea1i.
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	K\u1ebft n\u1ed1i an to\u00e0n t\u1edbi GitHub th\u1ea5t b\u1ea1i. H\u00e3y ki\u1ec3m tra ng\u00e0y v\u00e0 gi\u1edd c\u1ee7a \u0111i\u1ec7n tho\u1ea1i.
+Koneksi internet terputus. Coba lagi.	M\u1ea5t k\u1ebft n\u1ed1i internet. H\u00e3y th\u1eed l\u1ea1i.
+Terjadi kesalahan yang tidak terduga.	\u0110\u00e3 x\u1ea3y ra l\u1ed7i kh\u00f4ng mong mu\u1ed1n.
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	\u0110\u00e3 \u0111\u1ea1t gi\u1edbi h\u1ea1n y\u00eau c\u1ea7u c\u1ee7a GitHub (th\u01b0\u1eddng do nhi\u1ec1u ng\u01b0\u1eddi d\u00f9ng chung m\u1ed9t m\u1ea1ng). H\u00e3y th\u1eed l\u1ea1i v\u00e0o kho\u1ea3ng {0}.
+Unduhan gagal: {0}	T\u1ea3i xu\u1ed1ng th\u1ea5t b\u1ea1i: {0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	Kh\u00f4ng t\u00ecm th\u1ea5y t\u1ec7p c\u1eadp nh\u1eadt. Ch\u1ea1m Th\u1eed l\u1ea1i \u0111\u1ec3 t\u1ea3i l\u1ea1i.
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	Tr\u00f2 ch\u01a1i v\u1eabn \u0111ang ch\u1ea1y. H\u00e3y \u0111\u00f3ng tr\u00f2 ch\u01a1i tr\u01b0\u1edbc \u0111\u1ec3 kh\u00f4ng m\u1ea5t d\u1eef li\u1ec7u, r\u1ed3i th\u1eed l\u1ea1i.
+Pemasangan gagal: {0}	C\u00e0i \u0111\u1eb7t th\u1ea5t b\u1ea1i: {0}
+Pemasangan dibatalkan.	\u0110\u00e3 h\u1ee7y c\u00e0i \u0111\u1eb7t.
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c t\u1ec7p c\u1eadp nh\u1eadt d\u01b0\u1edbi d\u1ea1ng APK. Ch\u1ea1m Th\u1eed l\u1ea1i \u0111\u1ec3 t\u1ea3i l\u1ea1i.
+Berkas ini bukan APK AmberLauncher.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i APK c\u1ee7a AmberLauncher.
+APK ini tidak lebih baru dari versi yang terpasang.	APK n\u00e0y kh\u00f4ng m\u1edbi h\u01a1n phi\u00ean b\u1ea3n \u0111ang c\u00e0i.
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	Ch\u1eef k\u00fd APK kh\u00e1c v\u1edbi \u1ee9ng d\u1ee5ng \u0111\u00e3 c\u00e0i, n\u00ean Android s\u1ebd t\u1eeb ch\u1ed1i b\u1ea3n c\u1eadp nh\u1eadt n\u00e0y.
+Pemasangan diblokir oleh sistem atau Play Protect.	H\u1ec7 th\u1ed1ng ho\u1eb7c Play Protect \u0111\u00e3 ch\u1eb7n vi\u1ec7c c\u00e0i \u0111\u1eb7t.
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	H\u1ec7 th\u1ed1ng ho\u1eb7c Play Protect \u0111\u00e3 ch\u1eb7n vi\u1ec7c c\u00e0i \u0111\u1eb7t.{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android \u0111\u00e3 t\u1eeb ch\u1ed1i b\u1ea3n c\u1eadp nh\u1eadt n\u00e0y: ch\u1eef k\u00fd ho\u1eb7c phi\u00ean b\u1ea3n kh\u00f4ng kh\u1edbp v\u1edbi \u1ee9ng d\u1ee5ng \u0111\u00e3 c\u00e0i.
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android \u0111\u00e3 t\u1eeb ch\u1ed1i b\u1ea3n c\u1eadp nh\u1eadt n\u00e0y: ch\u1eef k\u00fd ho\u1eb7c phi\u00ean b\u1ea3n kh\u00f4ng kh\u1edbp v\u1edbi \u1ee9ng d\u1ee5ng \u0111\u00e3 c\u00e0i.{0}
+APK ini tidak cocok dengan HP kamu.	APK n\u00e0y kh\u00f4ng t\u01b0\u01a1ng th\u00edch v\u1edbi \u0111i\u1ec7n tho\u1ea1i c\u1ee7a b\u1ea1n.
+APK ini tidak cocok dengan HP kamu.{0}	APK n\u00e0y kh\u00f4ng t\u01b0\u01a1ng th\u00edch v\u1edbi \u0111i\u1ec7n tho\u1ea1i c\u1ee7a b\u1ea1n.{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	APK b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng h\u1ee3p l\u1ec7. Ch\u1ea1m Th\u1eed l\u1ea1i \u0111\u1ec3 t\u1ea3i l\u1ea1i.
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	APK b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng h\u1ee3p l\u1ec7. Ch\u1ea1m Th\u1eed l\u1ea1i \u0111\u1ec3 t\u1ea3i l\u1ea1i.{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	Kh\u00f4ng \u0111\u1ee7 dung l\u01b0\u1ee3ng \u0111\u1ec3 c\u00e0i b\u1ea3n c\u1eadp nh\u1eadt.
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	Kh\u00f4ng \u0111\u1ee7 dung l\u01b0\u1ee3ng \u0111\u1ec3 c\u00e0i b\u1ea3n c\u1eadp nh\u1eadt.{0}
+Pemasangan gagal.	C\u00e0i \u0111\u1eb7t th\u1ea5t b\u1ea1i.
+Pemasangan gagal.{0}	C\u00e0i \u0111\u1eb7t th\u1ea5t b\u1ea1i.{0}
+Balasan GitHub tidak bisa dibaca.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c ph\u1ea3n h\u1ed3i t\u1eeb GitHub.
+Daftar rilis tersimpan tidak bisa dibaca.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh s\u00e1ch b\u1ea3n ph\u00e1t h\u00e0nh \u0111\u00e3 l\u01b0u.
+Pembaruan	C\u1eadp nh\u1eadt
+Versi terpasang	Phi\u00ean b\u1ea3n \u0111\u00e3 c\u00e0i
+Memeriksa...	\u0110ang ki\u1ec3m tra...
+Lihat pembaruan	Xem b\u1ea3n c\u1eadp nh\u1eadt
+Buka	M\u1edf
+Periksa pembaruan	Ki\u1ec3m tra c\u1eadp nh\u1eadt
+Periksa otomatis	T\u1ef1 \u0111\u1ed9ng ki\u1ec3m tra
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	Ki\u1ec3m tra phi\u00ean b\u1ea3n m\u1edbi tr\u00ean GitHub m\u1ed7i khi m\u1edf launcher (ch\u1ec9 v\u00e0i KB). N\u1ebfu c\u00f3, m\u1ed9t c\u1eeda s\u1ed5 s\u1ebd hi\u1ec7n ra \u0111\u1ec3 t\u1ea3i v\u00e0 c\u00e0i \u0111\u1eb7t.
+Semua rilis	T\u1ea5t c\u1ea3 b\u1ea3n ph\u00e1t h\u00e0nh
+Daftar versi dan catatan perubahannya di GitHub.	Danh s\u00e1ch phi\u00ean b\u1ea3n v\u00e0 ghi ch\u00fa thay \u0111\u1ed5i tr\u00ean GitHub.
+Buka GitHub	M\u1edf GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	B\u1ea3n c\u1eadp nh\u1eadt \u0111\u01b0\u1ee3c t\u1ea3i v\u00e0 c\u00e0i \u0111\u1eb7t ngay trong launcher. Android v\u1eabn y\u00eau c\u1ea7u x\u00e1c nh\u1eadn c\u00e0i \u0111\u1eb7t m\u1ed9t l\u1ea7n v\u00e0 ph\u1ea3i \u0111\u00f3ng tr\u00f2 ch\u01a1i tr\u01b0\u1edbc.
+Belum diperiksa. Ketuk Periksa pembaruan.	Ch\u01b0a ki\u1ec3m tra. Ch\u1ea1m Ki\u1ec3m tra c\u1eadp nh\u1eadt.
+Memeriksa pembaruan...	\u0110ang ki\u1ec3m tra c\u1eadp nh\u1eadt...
+Sudah versi terbaru. Diperiksa pukul {0}.	\u0110\u00e3 l\u00e0 phi\u00ean b\u1ea3n m\u1edbi nh\u1ea5t. Ki\u1ec3m tra l\u00fac {0}.
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	Phi\u00ean b\u1ea3n {0} \u0111\u00e3 ph\u00e1t h\u00e0nh, nh\u01b0ng APK cho \u0111i\u1ec7n tho\u1ea1i n\u00e0y ({1}) ch\u01b0a c\u00f3. H\u00e3y th\u1eed l\u1ea1i sau.
+Versi {0} tersedia.	Phi\u00ean b\u1ea3n {0} \u0111\u00e3 c\u00f3.
+Mengunduh versi {0}... {1}%	\u0110ang t\u1ea3i phi\u00ean b\u1ea3n {0}... {1}%
+Versi {0} siap dipasang.	Phi\u00ean b\u1ea3n {0} \u0111\u00e3 s\u1eb5n s\u00e0ng \u0111\u1ec3 c\u00e0i \u0111\u1eb7t.
+Butuh izin memasang aplikasi dari Android.	C\u1ea7n c\u1ea5p quy\u1ec1n c\u00e0i \u0111\u1eb7t \u1ee9ng d\u1ee5ng c\u1ee7a Android.
+Menunggu konfirmasi pemasangan dari Android...	\u0110ang ch\u1edd Android x\u00e1c nh\u1eadn c\u00e0i \u0111\u1eb7t...
+Ukuran unduhan: {0} MB	Dung l\u01b0\u1ee3ng t\u1ea3i: {0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	B\u1ea1n \u0111ang d\u00f9ng d\u1eef li\u1ec7u di \u0111\u1ed9ng, b\u1ea3n t\u1ea3i n\u00e0y s\u1ebd t\u1ed1n dung l\u01b0\u1ee3ng g\u00f3i c\u01b0\u1edbc.
+Mengunduh pembaruan	\u0110ang t\u1ea3i b\u1ea3n c\u1eadp nh\u1eadt
+Sembunyikan	\u1ea8n
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	Qu\u00e1 tr\u00ecnh t\u1ea3i ch\u1ea1y khi launcher \u0111ang m\u1edf. N\u1ebfu b\u1ecb gi\u00e1n \u0111o\u1ea1n, ch\u1ea1m T\u1ea3i xu\u1ed1ng l\u1ea7n n\u1eefa; s\u1ebd ti\u1ebfp t\u1ee5c t\u1eeb ph\u1ea7n \u0111\u00e3 t\u1ea3i.
+Siap dipasang	S\u1eb5n s\u00e0ng c\u00e0i \u0111\u1eb7t
+Versi {0} sudah diunduh dan diperiksa.	Phi\u00ean b\u1ea3n {0} \u0111\u00e3 \u0111\u01b0\u1ee3c t\u1ea3i v\u00e0 ki\u1ec3m tra.
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android s\u1ebd y\u00eau c\u1ea7u x\u00e1c nh\u1eadn c\u00e0i \u0111\u1eb7t. Launcher s\u1ebd \u0111\u00f3ng trong khi c\u00e0i; h\u00e3y m\u1edf l\u1ea1i sau khi xong.
+Izin pemasangan diperlukan	C\u1ea7n quy\u1ec1n c\u00e0i \u0111\u1eb7t
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android c\u1ea7n \u0111\u01b0\u1ee3c c\u1ea5p quy\u1ec1n \u0111\u1ec3 AmberLauncher t\u1ef1 c\u00e0i b\u1ea3n c\u1eadp nh\u1eadt c\u1ee7a m\u00ecnh.
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	B\u1eadt "Cho ph\u00e9p t\u1eeb ngu\u1ed3n n\u00e0y", r\u1ed3i quay l\u1ea1i \u0111\u00e2y. Vi\u1ec7c c\u00e0i \u0111\u1eb7t s\u1ebd ti\u1ebfp t\u1ee5c t\u1ef1 \u0111\u1ed9ng.
+Memasang pembaruan	\u0110ang c\u00e0i b\u1ea3n c\u1eadp nh\u1eadt
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	H\u00e3y l\u00e0m theo x\u00e1c nh\u1eadn c\u1ee7a Android. Launcher s\u1ebd t\u1ef1 \u0111\u00f3ng khi c\u00e0i \u0111\u1eb7t xong.
+Pembaruan gagal	C\u1eadp nh\u1eadt th\u1ea5t b\u1ea1i
+Coba lagi	Th\u1eed l\u1ea1i
+Pemasangan gagal. ({~0})	C\u00e0i \u0111\u1eb7t th\u1ea5t b\u1ea1i. ({0})
+layar konfirmasi tidak bisa dibuka	kh\u00f4ng th\u1ec3 m\u1edf m\u00e0n h\u00ecnh x\u00e1c nh\u1eadn

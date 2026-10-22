@@ -56,3 +56,38 @@ Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa
 Dukungan resmi: {0}	Official support: {0}
 Mengunduh game	Downloading game
 Menyiapkan file game...	Preparing game files...
+# Rekam layar bawaan
+Rekam layar	Record screen
+Merekam	Recording
+Dijeda	Paused
+Ketuk untuk mulai	Tap to start
+Merekam layar	Recording screen
+Ketuk Berhenti untuk menyimpan rekaman.	Tap Stop to save the recording.
+Berhenti	Stop
+Merekam {0}x{1} \u00b7 {2} fps	Recording {0}x{1} \u00b7 {2} fps
+Izin merekam layar tidak diberikan	Screen recording permission was not granted
+Izin mikrofon ditolak, merekam tanpa suara	Microphone permission denied, recording without sound
+Perekam layar tidak tersedia di HP ini	Screen recorder is not available on this phone
+Perekam layar tidak tersedia di HP ini.	Screen recorder is not available on this phone.
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	This phone has no hardware video encoder. Recording was cancelled so the game does not lag.
+Ruang penyimpanan kurang untuk merekam.	Not enough storage space to record.
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	Storage is full. The recording was saved and stopped.
+Perekam mengalami kesalahan. Rekaman dihentikan.	The recorder hit an error. Recording stopped.
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	Screen capture was stopped by the system. The recording was saved.
+Rekaman terlalu singkat, tidak disimpan.	Recording was too short and was not saved.
+Rekaman disimpan di Movies/AmberLauncher	Recording saved to Movies/AmberLauncher
+Rekaman disimpan: {0}	Recording saved: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	The phone is too hot. The recording was saved and stopped to keep the game smooth.
+Gagal memulai rekaman: {~0}	Failed to start recording: {0}
+Gagal menyiapkan rekaman: {0}	Failed to prepare recording: {0}
+# Pembaruan otomatis dan rekam layar (tambahan)
+REKAM	RECORD
+Berhenti merekam	Stop recording
+Game saja	Game only
+Dengan tombol	With buttons
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	Recording pauses while the menu is open and resumes automatically when it closes.
+Tombol layar ikut terekam di video.	On-screen buttons are included in the video.
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	On-screen buttons are hidden from the video (they still work).
+izin tangkap layar tidak valid	the screen capture permission is not valid
+tidak bisa membuat berkas di Movies	could not create a file in Movies
+tidak bisa membuka berkas rekaman	could not open the recording file

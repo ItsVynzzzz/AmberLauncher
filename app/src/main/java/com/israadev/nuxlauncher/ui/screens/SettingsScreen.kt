@@ -94,6 +94,11 @@ fun SettingsScreen(
     var graphicsApi by remember(currentSettings.graphicsApi) { mutableStateOf(currentSettings.graphicsApi) }
     var zinkPreferSystemDriver by remember(currentSettings.zinkPreferSystemDriver) { mutableStateOf(currentSettings.zinkPreferSystemDriver) }
     var vsyncInZink by remember(currentSettings.vsyncInZink) { mutableStateOf(currentSettings.vsyncInZink) }
+    var recordQuality by remember(currentSettings.recordQuality) { mutableStateOf(currentSettings.recordQuality) }
+    var recordFps by remember(currentSettings.recordFps) { mutableIntStateOf(currentSettings.recordFps) }
+    var recordMic by remember(currentSettings.recordMic) { mutableStateOf(currentSettings.recordMic) }
+    var recordWithControls by remember(currentSettings.recordWithControls) { mutableStateOf(currentSettings.recordWithControls) }
+    var recordThermalGuard by remember(currentSettings.recordThermalGuard) { mutableStateOf(currentSettings.recordThermalGuard) }
     var showRendererDialog by remember { mutableStateOf(false) }
     var rendererListTick by remember { mutableIntStateOf(0) }
     var showRendererConfigDialog by remember { mutableStateOf(false) }
@@ -132,6 +137,11 @@ fun SettingsScreen(
             graphicsApi = graphicsApi,
             zinkPreferSystemDriver = zinkPreferSystemDriver,
             vsyncInZink = vsyncInZink,
+            recordQuality = recordQuality,
+            recordFps = recordFps,
+            recordMic = recordMic,
+            recordWithControls = recordWithControls,
+            recordThermalGuard = recordThermalGuard,
             homeBgAnimate = bgAnimate,
             homeBgPauseOnPowerSave = bgPauseOnPowerSave,
             homeBgSound = bgSound,
@@ -142,7 +152,7 @@ fun SettingsScreen(
         SettingsManager.updateSettings(context, updated)
     }
 
-    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol, 3 = Tampilan). Isi tiap tab digulir sendiri-sendiri.
+    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol, 3 = Tampilan, 4 = Pembaruan). Isi tiap tab digulir sendiri-sendiri.
     var section by remember { mutableIntStateOf(0) }
     val contentScroll = rememberScrollState()
     LaunchedEffect(section) { contentScroll.scrollTo(0) }
@@ -199,15 +209,18 @@ fun SettingsScreen(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            // Tab samping
+            // Tab samping (bisa digulir bila layar pendek)
             Column(
-                modifier = Modifier.width(128.dp),
+                modifier = Modifier
+                    .width(128.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 SettingTab(icon = Icons.Outlined.Memory, label = "Memori", selected = section == 0) { section = 0 }
                 SettingTab(icon = Icons.Outlined.Speed, label = "Grafis", selected = section == 1) { section = 1 }
                 SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
                 SettingTab(icon = Icons.Outlined.Palette, label = "Tampilan", selected = section == 3) { section = 3 }
+                SettingTab(icon = Icons.Outlined.SystemUpdate, label = "Pembaruan", selected = section == 4) { section = 4 }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -441,6 +454,60 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        SettingDivider()
+                        // Rekam layar bawaan (tombol Rekam ada di menu dalam game). Bawaannya sengaja hemat.
+                        SettingChoiceRow(
+                            title = "Kualitas rekaman layar",
+                            desc = "Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.",
+                            options = listOf("eco" to "Hemat", "light" to "Ringan", "high" to "Tajam"),
+                            selected = recordQuality,
+                            onSelect = {
+                                recordQuality = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "FPS rekaman",
+                            desc = "30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.",
+                            options = listOf(30 to "30 fps", 60 to "60 fps"),
+                            selected = recordFps,
+                            onSelect = {
+                                recordFps = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Isi rekaman",
+                            desc = "Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.",
+                            options = listOf(false to "Game saja", true to "Dengan tombol"),
+                            selected = recordWithControls,
+                            onSelect = {
+                                recordWithControls = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Rekam suara mikrofon",
+                            desc = "Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.",
+                            checked = recordMic,
+                            onCheckedChange = {
+                                recordMic = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Hentikan rekaman saat HP terlalu panas",
+                            desc = "Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.",
+                            checked = recordThermalGuard,
+                            onCheckedChange = {
+                                recordThermalGuard = it
+                                commitSettings()
+                            }
+                        )
                     }
 
                     3 -> {
@@ -562,6 +629,11 @@ fun SettingsScreen(
                                 }
                             )
                         }
+                    }
+
+                    4 -> {
+                        // Versi terpasang, tombol Periksa pembaruan, dan sakelar pengecekan otomatis
+                        UpdateSettingsSection()
                     }
 
                     else -> {
@@ -708,6 +780,11 @@ fun SettingsScreen(
                     resolutionRatio = reset.resolutionRatio
                     autoOptimizeMC = reset.autoOptimizeMinecraft
                     sustainedPerf = reset.sustainedPerformanceMode
+                    recordQuality = reset.recordQuality
+                    recordFps = reset.recordFps
+                    recordMic = reset.recordMic
+                    recordWithControls = reset.recordWithControls
+                    recordThermalGuard = reset.recordThermalGuard
                     bgAnimate = reset.homeBgAnimate
                     bgPauseOnPowerSave = reset.homeBgPauseOnPowerSave
                     bgSound = reset.homeBgSound

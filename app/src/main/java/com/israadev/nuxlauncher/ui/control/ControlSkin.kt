@@ -187,7 +187,7 @@ private fun DrawScope.drawControlLabel(
 /**
  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
  * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, coffee, external,
- * trash, warning, download, chev_up, chev_down, chev_right.
+ * trash, warning, download, record, stop, chev_up, chev_down, chev_right.
  */
 fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
     val x0 = cx - s / 2f
@@ -327,6 +327,12 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
             poly(false, floatArrayOf(0.32f, 0.44f, 0.50f, 0.62f, 0.68f, 0.44f))
             poly(false, floatArrayOf(0.24f, 0.72f, 0.24f, 0.82f, 0.76f, 0.82f, 0.76f, 0.72f))
         }
+        "record" -> {
+            // Cincin dengan titik penuh di tengah.
+            drawCircle(color, 0.32f * s, p(0.5f, 0.5f), style = stroke)
+            drawCircle(color, 0.15f * s, p(0.5f, 0.5f))
+        }
+        "stop" -> drawRoundRect(color, p(0.28f, 0.28f), Size(0.44f * s, 0.44f * s), CornerRadius(0.07f * s))
         "chev_right" -> poly(false, floatArrayOf(0.38f, 0.22f, 0.66f, 0.50f, 0.38f, 0.78f))
         "chev_up" -> poly(false, floatArrayOf(0.22f, 0.62f, 0.5f, 0.34f, 0.78f, 0.62f))
         "chev_down" -> poly(false, floatArrayOf(0.22f, 0.38f, 0.5f, 0.66f, 0.78f, 0.38f))

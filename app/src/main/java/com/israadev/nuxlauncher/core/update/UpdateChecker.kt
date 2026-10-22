@@ -1,48 +1,37 @@
 package com.israadev.nuxlauncher.core.update
 
 import android.content.Context
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import androidx.core.content.pm.PackageInfoCompat
 import com.israadev.nuxlauncher.AppLinks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.util.concurrent.TimeUnit
-
-/** Satu rilis baru di GitHub yang bisa ditawarkan ke pengguna. */
-data class AppUpdate(
-    /** Tag rilis, mis. "v0.1.0-beta.7". */
-    val tag: String,
-    /** Tag tanpa awalan "v", mis. "0.1.0-beta.7". */
-    val versionName: String,
-    /** Isi catatan rilis (teks mentah dari GitHub). */
-    val notes: String,
-    /** Halaman rilis di GitHub. */
-    val pageUrl: String,
-    /** Alamat langsung berkas APK, bila rilis memilikinya. */
-    val downloadUrl: String?
-)
 
 /**
  * Mengecek rilis terbaru di GitHub Releases ([AppLinks.GITHUB_REPO]) dan membandingkannya dengan
- * versi yang terpasang. Tanpa login: batas GitHub 60 permintaan per jam per jaringan, jadi
- * pengecekan otomatis dibatasi sekali per 6 jam. Kegagalan jaringan diam-diam diabaikan.
- *
- * Daftar rilis dibaca lewat /releases (bukan /releases/latest) karena /latest tidak menyertakan
- * pra-rilis, sedangkan versi beta ditandai pra-rilis oleh workflow.
+ * versi yang terpasang. Pengecekan memakai ETag (lihat [ReleaseFetcher]) sehingga murah dan boleh
+ * dilakukan setiap aplikasi dibuka; daftar rilis terakhir disimpan, jadi pop-up tetap bisa muncul
+ * dari salinan itu walau sedang offline. Kebijakan kapan mengecek ada di [UpdateManager].
  */
 object UpdateChecker {
-    private const val PREFS_NAME = "amber_launcher_prefs"
-    private const val KEY_LAST_CHECK = "update_last_check"
-    private const val KEY_SKIPPED_TAG = "update_skipped_tag"
-    private const val CHECK_INTERVAL_MS = 6L * 60 * 60 * 1000
-    private const val MAX_NOTES_CHARS = 1200
+    sealed interface Result {
+        data class Found(val update: AppUpdate) : Result
+        data object UpToDate : Result
+        data class NoApk(val tag: String, val pageUrl: String) : Result
+        data class Failed(val failure: UpdateFailure) : Result
+    }
+
+    private const val PER_PAGE = 10
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
+        .callTimeout(30, TimeUnit.SECONDS)
         .build()
+
+    /** APK 32-bit dipilih bila proses aplikasi ini 32-bit (juga di HP 64-bit yang memasang APK 32-bit). */
+    fun wants32BitApk(): Boolean = !android.os.Process.is64Bit()
 
     fun currentVersionName(context: Context): String = try {
         context.packageManager.getPackageInfo(context.packageName, 0).versionName.orEmpty()
@@ -50,116 +39,83 @@ object UpdateChecker {
         ""
     }
 
+    fun currentVersionCode(context: Context): Long = try {
+        PackageInfoCompat.getLongVersionCode(context.packageManager.getPackageInfo(context.packageName, 0))
+    } catch (_: Exception) {
+        0L
+    }
+
     /**
-     * Mengecek GitHub bila sudah lewat 6 jam dari pengecekan terakhir. Mengembalikan rilis yang lebih
-     * baru daripada versi terpasang dan belum dilewati pengguna, atau null (tidak ada, belum
-     * waktunya, atau jaringan gagal; kalau gagal, pengecekan diulang saat aplikasi dibuka lagi).
+     * Nomor versi terpasang. Nama yang bukan semver (build sangat lama, mis. "1.0") dianggap 0.0.0,
+     * jadi rilis apa pun dianggap lebih baru.
      */
-    suspend fun checkIfDue(context: Context): AppUpdate? = withContext(Dispatchers.IO) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val now = System.currentTimeMillis()
-        if (now - prefs.getLong(KEY_LAST_CHECK, 0L) < CHECK_INTERVAL_MS) return@withContext null
+    private fun currentVersion(name: String): AppVersion =
+        AppVersion.parse(name) ?: AppVersion.parse("0.0.0")!!
 
-        val currentName = currentVersionName(context)
-        val current = AppVersion.parse(currentName) ?: return@withContext null
-
-        val result = fetchLatest(currentName)
-        if (result.isFailure) return@withContext null
-        prefs.edit().putLong(KEY_LAST_CHECK, now).apply()
-
-        val latest = result.getOrNull() ?: return@withContext null
-        val latestVersion = AppVersion.parse(latest.tag) ?: return@withContext null
-        if (latestVersion <= current) return@withContext null
-        if (prefs.getString(KEY_SKIPPED_TAG, null) == latest.tag) return@withContext null
-        latest
-    }
-
-    /** Pengguna memilih "Lewati": versi ini tidak ditawarkan lagi, versi yang lebih baru tetap. */
-    fun skip(context: Context, tag: String) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putString(KEY_SKIPPED_TAG, tag).apply()
-    }
-
-    /** Catatan rilis dirapikan untuk pop-up: tanpa judul/tautan Markdown, butir "- " jadi "• ". */
-    fun readableNotes(raw: String): String =
-        raw.lineSequence()
-            .map { it.trimEnd() }
-            .filterNot { it.startsWith("#") || it.contains("https://") }
-            .map { line ->
-                val plain = line.replace("**", "")
-                if (plain.startsWith("- ")) "• " + plain.drop(2) else plain
-            }
-            .joinToString("\n")
-            .replace(Regex("\n{3,}"), "\n\n")
-            .trim()
-            .take(MAX_NOTES_CHARS)
-
-    /** Rilis dengan nomor versi tertinggi (pra-rilis ikut dihitung). Result gagal = jaringan/respon bermasalah. */
-    private fun fetchLatest(userAgentVersion: String): Result<AppUpdate?> = runCatching {
-        val request = Request.Builder()
-            .url("https://api.github.com/repos/${AppLinks.GITHUB_REPO}/releases?per_page=20")
-            .header("Accept", "application/vnd.github+json")
-            .header("X-GitHub-Api-Version", "2022-11-28")
-            .header("User-Agent", "AmberLauncher/$userAgentVersion")
-            .build()
-
-        client.newCall(request).execute().use { resp ->
-            if (!resp.isSuccessful) error("GitHub membalas ${resp.code}")
-            val body = resp.body?.string().orEmpty()
-
-            var best: Pair<AppVersion, AppUpdate>? = null
-            for (element in JsonParser.parseString(body).asJsonArray) {
-                if (!element.isJsonObject) continue
-                val release = element.asJsonObject
-                if (release.bool("draft")) continue
-
-                val tag = release.str("tag_name") ?: continue
-                val version = AppVersion.parse(tag) ?: continue // tag lama "build-12" dilewati
-                val pageUrl = release.str("html_url")?.takeIf { isOfficialUrl(it) } ?: continue
-
-                var downloadUrl: String? = null
-                val assets = release.get("assets")
-                if (assets != null && assets.isJsonArray) {
-                    for (asset in assets.asJsonArray) {
-                        if (!asset.isJsonObject) continue
-                        val name = asset.asJsonObject.str("name") ?: continue
-                        val url = asset.asJsonObject.str("browser_download_url") ?: continue
-                        // Rilis membawa dua APK: "...-32bit.apk" untuk HP 32-bit dan satunya (tanpa
-                        // "32bit") untuk 64-bit. Ambil yang cocok dengan proses aplikasi ini.
-                        val isArm32Apk = name.contains("32bit", ignoreCase = true)
-                        val wantsArm32 = !android.os.Process.is64Bit()
-                        if (name.endsWith(".apk", ignoreCase = true) && isOfficialUrl(url) && isArm32Apk == wantsArm32) {
-                            downloadUrl = url
-                            break
-                        }
-                    }
-                }
-
-                val update = AppUpdate(
-                    tag = tag,
-                    versionName = tag.removePrefix("v"),
-                    notes = release.str("body").orEmpty(),
-                    pageUrl = pageUrl,
-                    downloadUrl = downloadUrl
-                )
-                val currentBest = best
-                if (currentBest == null || version > currentBest.first) best = version to update
-            }
-            best?.second
+    /** Menjawab dari daftar rilis tersimpan tanpa internet. Null bila belum pernah ada daftar. Jalankan di thread latar. */
+    fun evaluateCached(context: Context): Result? {
+        val cache = UpdateStore.readCache(context) ?: return null
+        val current = currentVersion(currentVersionName(context))
+        return try {
+            toResult(ReleaseParser.evaluateJson(cache.body, current, wants32BitApk()))
+        } catch (_: Exception) {
+            null
         }
     }
 
-    // Hanya tautan ke repo resmi yang dibuka, apa pun isi balasan server.
-    private fun isOfficialUrl(url: String): Boolean =
-        url.startsWith("https://github.com/${AppLinks.GITHUB_REPO}/", ignoreCase = true)
+    /** Bertanya ke GitHub (dengan ETag) lalu menjawab. Aman dipanggil dari thread mana pun. */
+    suspend fun check(context: Context): Result = withContext(Dispatchers.IO) {
+        val app = context.applicationContext
+        val name = currentVersionName(app)
+        val current = currentVersion(name)
+        // ETag hanya dipakai bila daftar tersimpannya masih terbaca. Kalau tidak, GitHub akan terus
+        // menjawab 304 ("tidak berubah") untuk daftar yang sebenarnya tidak bisa dipakai.
+        val cache = UpdateStore.readCache(app)?.takeIf { isReadable(it.body) }
+        val url = "https://api.github.com/repos/${AppLinks.GITHUB_REPO}/releases?per_page=$PER_PAGE"
 
-    private fun JsonObject.str(name: String): String? {
-        val value = get(name) ?: return null
-        return if (value.isJsonPrimitive) value.asString else null
+        when (val fetched = ReleaseFetcher.fetch(client, url, "AmberLauncher/$name", cache?.etag)) {
+            is ReleaseFetcher.Result.Fresh -> {
+                val evaluation = try {
+                    ReleaseParser.evaluateJson(fetched.body, current, wants32BitApk())
+                } catch (_: Exception) {
+                    return@withContext Result.Failed(
+                        UpdateFailure(FailureKind.BAD_RESPONSE, "Balasan GitHub tidak bisa dibaca.")
+                    )
+                }
+                // Disimpan hanya bila isinya benar-benar daftar rilis, supaya balasan rusak tidak meracuni cache.
+                UpdateStore.writeCache(app, fetched.etag, fetched.body)
+                UpdateStore.setBlockedUntil(app, 0L)
+                toResult(evaluation)
+            }
+            ReleaseFetcher.Result.NotModified -> {
+                UpdateStore.setBlockedUntil(app, 0L)
+                evaluateCached(app)
+                    ?: Result.Failed(UpdateFailure(FailureKind.BAD_RESPONSE, "Daftar rilis tersimpan tidak bisa dibaca."))
+            }
+            is ReleaseFetcher.Result.Failure -> {
+                if (fetched.failure.kind == FailureKind.RATE_LIMITED) {
+                    UpdateStore.setBlockedUntil(app, fetched.failure.retryAtMillis)
+                }
+                Result.Failed(fetched.failure)
+            }
+        }
     }
 
-    private fun JsonObject.bool(name: String): Boolean {
-        val value = get(name) ?: return false
-        return value.isJsonPrimitive && value.asBoolean
+    private fun isReadable(body: String): Boolean = try {
+        ReleaseParser.parse(body)
+        true
+    } catch (_: Exception) {
+        false
+    }
+
+    /** Pengguna memilih "Lewati": versi ini tidak ditawarkan otomatis lagi, versi yang lebih baru tetap. */
+    fun skip(context: Context, tag: String) = UpdateStore.setSkippedTag(context, tag)
+
+    fun isSkipped(context: Context, tag: String): Boolean = UpdateStore.skippedTag(context) == tag
+
+    private fun toResult(e: Evaluation): Result = when (e) {
+        is Evaluation.Newer -> Result.Found(e.update)
+        Evaluation.UpToDate -> Result.UpToDate
+        is Evaluation.NoApkForDevice -> Result.NoApk(e.tag, e.pageUrl)
     }
 }

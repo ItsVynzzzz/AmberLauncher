@@ -141,3 +141,107 @@ Pustaka grafis MobileGL (Vulkan & GLES backend)	MobileGL graphics library (Vulka
 Renderer eksternal dari APK: {0} ({1})	External renderer from APK: {0} ({1})
 Plugin Eksternal	External Plugin
 Renderer APK: {0} ({1})	APK Renderer: {0} ({1})
+PENGATURAN TOMBOL	CONTROL SETTINGS
+Posisi: {0}% x {1}%	Position: {0}% x {1}%
+Label Teks Tombol:	Button Label:
+🔒 Tetap	🔒 Locked
+Label tombol...	Button label...
+Tipe Kontrol:	Control Type:
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	Smooth 8-way analog movement replaces the W, A, S, and D keys.
+Ukuran Joystick (Diameter):	Joystick Size (Diameter):
+Transparansi (Opacity):	Opacity:
+Tombol / Aksi Input:	Key / Input Action:
+Indikator FPS In-Game	In-game FPS indicator
+Toggle Keyboard Layar	Toggle On-Screen Keyboard
+Sembunyikan/Tampilkan GUI	Hide/Show GUI
+Buka Menu (pengaturan dan keluar)	Open Menu (settings and exit)
+Aksi Sistem Launcher	Launcher System Action
+Mouse Kiri (Attack)	Left Mouse (Attack)
+Mouse Kanan (Use)	Right Mouse (Use)
+Mouse Tengah (Pick)	Middle Mouse (Pick)
+Mouse Btn {0}	Mouse Button {0}
+Key Code {0}	Key Code {0}
+Ubah >	Edit >
+Lebar (Width):	Width:
+Tinggi (Height):	Height:
+Kebulatan Sudut:	Corner Radius:
+Mode Toggle:	Toggle Mode:
+Sekali tap untuk kunci	Tap once to toggle
+⚡ FITUR MAKRO	⚡ MACRO
+AKTIF	ACTIVE
+Jadikan tombol ini sebagai makro otomatis	Turn this button into an automatic macro
+Pilih Mode Makro:	Choose Macro Mode:
+⌨ Chat/Perintah	⌨ Chat/Command
+🔗 Kombinasi	🔗 Combo
+Ketik otomatis	Type automatically
+Teks / Perintah yang diketik otomatis:	Text / command to type automatically:
+Misal: /gamemode creative atau /home	Example: /gamemode creative or /home
+Template Cepat:	Quick Templates:
+Urutan Key Kombinasi:	Combo Key Sequence:
+Hapus Semua	Clear All
+Belum ada key kombinasi. Tambahkan key di bawah.	No combo keys yet. Add a key below.
+Tambah Key ke Kombinasi	Add Key to Combo
+Tambah Cepat:	Quick Add:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Keys execute from top (#1) to bottom when pressed.
+Interval Auto-Click:	Auto-Click Interval:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	Automatically presses and releases the key rapidly while held.
+HAPUS TOMBOL	DELETE BUTTON
+Tombol sistem tidak dapat dihapus	System buttons cannot be deleted
+MODE IN-GAME · Geser tombol sesuai HUD game lalu klik SELESAI	IN-GAME MODE · Position buttons to match the game HUD, then tap DONE
+Reset Layout GUI?	Reset control layout?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	All button positions and customizations will be restored to the default AmberLauncher layout.
+Layout tombol in-game disimpan!	In-game control layout saved!
+Tombol baru ditambahkan di tengah layar!	New button added to the center of the screen!
+Joystick WASD ditambahkan!	WASD joystick added!
+Layout GUI berhasil disimpan!	Control layout saved!
+Tombol dihapus	Button deleted
+Layout direset ke standar	Layout reset to default
+Gagal memuat jubah: {0}	Failed to load cape: {0}
+Memvalidasi skin...	Validating skin...
+Skin dimuat di preview ({0}) — Klik Simpan untuk menerapkan	Skin loaded in preview ({0}) — Tap Save to apply
+Model Klasik dipilih (Preview) — Klik Simpan	Classic model selected (preview) — Tap Save
+Model Slim dipilih (Preview) — Klik Simpan	Slim model selected (preview) — Tap Save
+Skin direset ke default Steve (Preview) — Klik Simpan	Skin reset to the default Steve (preview) — Tap Save
+Gagal: {0}	Failed: {0}
+File tidak valid	Invalid file
+Memvalidasi cape...	Validating cape...
+Cape kustom dimuat di preview — Klik Simpan untuk menerapkan	Custom cape loaded in preview — Tap Save to apply
+File cape tidak valid	Invalid cape file
+WARDROBE & CUSTOM SKIN	WARDROBE & CUSTOM SKIN
+Kustomisasi tampilan skin dan jubah pemain Minecraft	Customize your Minecraft player's skin and cape
+Putar Otomatis	Auto-rotate
+Reset Kamera	Reset Camera
+KUSTOM SKIN	CUSTOM SKIN
+JUBAH / CAPE	CAPE
+Sistem Skin & Jubah Ely.by	Ely.by Skin & Cape System
+Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	Ely.by accounts use a centralized skin system. To change your skin or arm model, upload it directly to the official ely.by website to sync it in-game.
+KUNJUNGI ACCOUNT.ELY.BY	VISIT ACCOUNT.ELY.BY
+PILIH FILE SKIN (.PNG)	CHOOSE SKIN FILE (.PNG)
+TIPE MODEL LENGAN:	ARM MODEL:
+Klasik	Classic
+Lengan tebal (4px)	Wide arms (4px)
+Lengan ramping (3px)	Slim arms (3px)
+↺ Reset ke Skin Default (Klasik)	↺ Reset to Default Skin (Classic)
+JUBAH RESMI MINECRAFT.NET:	OFFICIAL MINECRAFT.NET CAPES:
+Memuat jubah dari Minecraft.net...	Loading capes from Minecraft.net...
+Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	Your Microsoft account has no official capes on Minecraft.net.
+Tanpa Jubah (Lepas Cape)	No Cape (Remove Cape)
+DIPILIH	SELECTED
+Jubah dilepas (Preview) — Klik Simpan	Cape removed (preview) — Tap Save
+Jubah {0} dipilih (Preview) — Klik Simpan	{0} cape selected (preview) — Tap Save
+AKTIF DI MOJANG	ACTIVE ON MOJANG
+Sistem Skin & Cape Ely.by	Ely.by Skin & Cape System
+Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	Ely.by accounts use the official skin system. All skins and capes are managed on the ely.by website and appear in-game automatically.
+BUKA WEBSITE ELY.BY	OPEN ELY.BY WEBSITE
+PILIH FILE CAPE KUSTOM (.PNG)	CHOOSE CUSTOM CAPE FILE (.PNG)
+ATAU PILIH PRESET JUBAH:	OR CHOOSE A CAPE PRESET:
+Cape dilepas (Preview) — Klik Simpan	Cape removed (preview) — Tap Save
+Jubah {0} dipilih (Preview) — Klik Simpan	{0} cape selected (preview) — Tap Save
+BATAL	CANCEL
+MENGERTI	GOT IT
+Menyinkronkan ke Minecraft.net...	Syncing with Minecraft.net...
+Gagal memperbarui Minecraft.net: {0}	Failed to update Minecraft.net: {0}
+Perubahan berhasil diterapkan ke Minecraft.net!	Changes applied to Minecraft.net!
+Skin & Cape berhasil disimpan!	Skin & cape saved!
+SIMPAN KE MOJANG	SAVE TO MOJANG
+SIMPAN PERUBAHAN	SAVE CHANGES

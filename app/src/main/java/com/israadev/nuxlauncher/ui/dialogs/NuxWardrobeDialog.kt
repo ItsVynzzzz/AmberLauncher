@@ -1,7 +1,6 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -19,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +37,9 @@ import com.israadev.nuxlauncher.core.skin.SkinUtils
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.PlayerSkin
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Toast
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.launch
@@ -241,7 +242,7 @@ fun NuxWardrobeDialog(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Close,
-                        contentDescription = "Tutup",
+                        contentDescription = Tr.t("Tutup"),
                         tint = NuxColors.GrayNeutral,
                         modifier = Modifier.size(13.dp)
                     )
@@ -323,7 +324,7 @@ fun NuxWardrobeDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.RotateRight,
-                                    contentDescription = "Putar Otomatis",
+                                    contentDescription = Tr.t("Putar Otomatis"),
                                     tint = if (isAutoRotating) NuxColors.Ink else NuxColors.DarkGray,
                                     modifier = Modifier.size(14.dp)
                                 )
@@ -341,7 +342,7 @@ fun NuxWardrobeDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.CenterFocusStrong,
-                                    contentDescription = "Reset Kamera",
+                                    contentDescription = Tr.t("Reset Kamera"),
                                     tint = NuxColors.DarkGray,
                                     modifier = Modifier.size(13.dp)
                                 )

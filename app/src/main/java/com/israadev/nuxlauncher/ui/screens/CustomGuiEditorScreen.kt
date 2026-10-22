@@ -1,6 +1,6 @@
 package com.israadev.nuxlauncher.ui.screens
 
-import android.widget.Toast
+import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,6 +49,8 @@ import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
 import com.israadev.nuxlauncher.ui.components.NuxTextField
 import com.israadev.nuxlauncher.ui.dialogs.NuxKeyPickerDialog
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
@@ -211,7 +213,7 @@ fun CustomGuiEditorScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = if (isIngame) Icons.Outlined.Check else Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = if (isIngame) "Selesai" else "Kembali",
+                        contentDescription = Tr.t(if (isIngame) "Selesai" else "Kembali"),
                     tint = if (isIngame) Color(0xFF111111) else Color.White,
                     modifier = Modifier.size(13.dp)
                 )

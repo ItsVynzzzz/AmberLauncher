@@ -1,0 +1,143 @@
+# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	The launcher hit an internal error in a UI component or a system background process.
+STATUS PELUNCUR	LAUNCHER STATUS
+INFORMASI SESI GAME	GAME SESSION INFO
+{0} Mod	{0} Mods
+DIAGNOSA KELUAR SISTEM	SYSTEM EXIT DIAGNOSIS
+SOLUSI & SARAN PEMULIHAN	SOLUTIONS & RECOVERY TIPS
+Log berhasil diunggah & tautan disalin!	Log uploaded & link copied!
+Gagal mengunggah: {~0}	Upload failed: {0}
+MENGUNGGAH LOG...	UPLOADING LOG...
+BUKA TAUTAN MCLO.GS	OPEN MCLO.GS LINK
+UNGGAH TAUTAN LOG (MCLO.GS)	UPLOAD LOG LINK (MCLO.GS)
+BAGIKAN	SHARE
+Log disalin ke clipboard!	Log copied to clipboard!
+SALIN	COPY
+LOG CRASH	CRASH LOG
+Disalin ke papan klip!	Copied to clipboard!
+Gagal membaca file log: {0}	Failed to read the log file: {0}
+Tidak ada rincian log yang tersedia.	No log details are available.
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	The launcher hit an internal error in a UI component or a background process. Please report this stack trace log to the AmberLauncher developer.
+Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	The launcher hit an unexpected error (Uncaught Exception).
+JVM dihentikan karena sinyal fatal {0} ({1}).	The JVM was stopped by fatal signal {0} ({1}).
+JVM keluar dengan kode {0} ({1}).	The JVM exited with code {0} ({1}).
+PELUNCUR MENGALAMI KESALAHAN	THE LAUNCHER ENCOUNTERED AN ERROR
+GAME MENGALAMI CRASH	THE GAME CRASHED
+Rotasi Layar	Screen Rotation
+Tautan berhasil diunggah & disalin!	Link uploaded & copied!
+Log berhasil disalin ke clipboard!	Log copied to the clipboard!
+Aplikasi AmberLauncher	AmberLauncher app
+Lokasi Log: {0}	Log location: {0}
+STATUS PENGHENTIAN PROSES	PROCESS TERMINATION STATUS
+CATATAN ANALISIS LOG	LOG ANALYSIS NOTES
+MENGUNGGAH LOG KE MCLO.GS...	UPLOADING LOG TO MCLO.GS...
+UNGGAH TAUTAN (MCLO.GS)	UPLOAD LINK (MCLO.GS)
+BAGIKAN LOG	SHARE LOG
+SALIN TEKS	COPY TEXT
+MULAI ULANG	RESTART
+MINECRAFT MENGALAMI CRASH	MINECRAFT CRASHED
+JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	The JVM exited with code {0} (Signal: {1}).\nCheck the log file for more details.
+Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	The game process stopped suddenly (possibly killed by the system for running out of RAM, or a native driver crash).
+SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (Unsupported CPU Instruction)
+SIGBUS (Kesalahan Bus Memori)	SIGBUS (Memory Bus Error)
+SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (Floating-Point Calculation Error)
+SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (Killed by the OS / Out of RAM)
+SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (Illegal Memory Access / Segfault)
+SIGTERM (Permintaan Terminasi)	SIGTERM (Termination Request)
+Selesai Normal (0)	Finished Normally (0)
+Kesalahan Inisialisasi Mod / Java Exception (1)	Mod Initialization Error / Java Exception (1)
+Dihentikan Pengguna (SIGINT 130)	Stopped by User (SIGINT 130)
+Kehabisan Memori RAM / OOM (SIGKILL 137)	Out of RAM / OOM (SIGKILL 137)
+Crash Driver Grafis / Segfault (SIGSEGV 139)	Graphics Driver Crash / Segfault (SIGSEGV 139)
+Kegagalan Bootstrap Mesin Virtual (-1)	Virtual Machine Bootstrap Failure (-1)
+Kode Keluar {0}	Exit Code {0}
+Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	For details on the cause, please check the log file. If you cannot solve the problem yourself, send the log file to someone or a team who can analyze it. Do not just take a screenshot of the current screen, because a screenshot cannot give enough technical information to solve the problem.
+JVM digugurkan karena sinyal fatal {0} ({1}).	The JVM was aborted by fatal signal {0} ({1}).
+File log tidak ditemukan.	Log file not found.
+Log Crash AmberLauncher - {0}	AmberLauncher Crash Log - {0}
+Bagikan Log Crash: {0}	Share Crash Log: {0}
+Tidak ada aplikasi untuk membagikan file ini.	There is no app to share this file.
+Gagal membagikan file: {0}	Failed to share the file: {0}
+Konten log kosong.	The log content is empty.
+Gagal mengunggah log (HTTP {0}): {1}	Failed to upload the log (HTTP {0}): {1}
+Server mclo.gs tidak mengembalikan URL.	The mclo.gs server did not return a URL.
+File log tidak ditemukan: {0}	Log file not found: {0}
+Tombol kedua	Second key
+Pilih tombol	Choose key
+Ditekan bersamaan dengan tombol utama	Pressed together with the main key
+Ketuk kategori, lalu ketuk tombolnya	Tap a category, then tap the key
+Cari tombol	Search key
+Ketik nama tombol, misalnya Shift atau F3	Type a key name, for example Shift or F3
+Tidak ada yang cocok	No matches
+Cari tombol (W, Shift, F3, Tab...)	Search key (W, Shift, F3, Tab...)
+Gerakan	Movement
+Aksi	Actions
+Angka & Hotbar	Numbers & Hotbar
+Fungsi (F1-F12)	Function (F1-F12)
+Modifier & Kontrol	Modifier & Control
+Navigasi	Navigation
+Alfabet (A - Z)	Alphabet (A - Z)
+Simbol	Symbols
+Umum	General
+Alfabet	Alphabet
+Angka	Numbers
+Mouse Kiri (Attack/Break)	Left Mouse (Attack/Break)
+Mouse Kanan (Use/Place)	Right Mouse (Use/Place)
+Mouse Tengah (Pick Block)	Middle Mouse (Pick Block)
+Mouse Tombol 4	Mouse Button 4
+Mouse Tombol 5	Mouse Button 5
+Scroll Wheel (Slide Naik/Turun)	Scroll Wheel (Slide Up/Down)
+W (Maju)	W (Forward)
+A (Kiri)	A (Left)
+S (Mundur)	S (Back)
+D (Kanan)	D (Right)
+SPACE (Lompat)	SPACE (Jump)
+LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (Sneak)
+LEFT CTRL (Sprint/Lari)	LEFT CTRL (Sprint)
+T (Buka Chat)	T (Open Chat)
+/ (Buka Command)	/ (Open Command)
+ENTER (Kirim/Pilih)	ENTER (Send/Select)
+TAB (Daftar Player)	TAB (Player List)
+BACKSPACE (Hapus)	BACKSPACE (Delete)
+F1 (Sembunyikan HUD)	F1 (Hide HUD)
+F3 (Debug Layar)	F3 (Debug Screen)
+F5 (Ubah Perspektif)	F5 (Change Perspective)
+Panah Atas (UP)	Up Arrow (UP)
+Panah Bawah (DOWN)	Down Arrow (DOWN)
+Panah Kiri (LEFT)	Left Arrow (LEFT)
+Panah Kanan (RIGHT)	Right Arrow (RIGHT)
+KURUNG BUKA ( [ { )	OPEN BRACKET ( [ { )
+KURUNG TUTUP ( ] } )	CLOSE BRACKET ( ] } )
+Numpad . (Titik)	Numpad . (Dot)
+Numpad / (Bagi)	Numpad / (Divide)
+Numpad * (Kali)	Numpad * (Multiply)
+Numpad - (Kurang)	Numpad - (Subtract)
+Numpad + (Tambah)	Numpad + (Add)
+Numpad = (Sama Dengan)	Numpad = (Equals)
+KONFIGURASI RENDERER	RENDERER CONFIGURATION
+Tidak dapat membuka panel aplikasi	Could not open the app panel
+Buka Panel Aplikasi {0}	Open {0} App Panel
+Akses pengaturan driver native, benchmark, dan preferensi aplikasi	Access native driver settings, benchmarks, and app preferences
+Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	There are no environment variables that can be configured for this renderer.
+PENGATURAN ENVIRONMENT VARIABLES	ENVIRONMENT VARIABLES SETTINGS
+Pengaturan direset ke default	Settings reset to default
+RESET DEFAULT	RESET TO DEFAULT
+SIMPAN & TUTUP	SAVE & CLOSE
+Nilai aktif: 	Active value: 
+Masukkan nilai (opsional)	Enter a value (optional)
+Auto (Rekomendasi)	Auto (Recommended)
+Otomatis Cerdas	Smart Auto
+Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	Automatically picks the most optimal and stable renderer for the Minecraft version being run.
+Semua Versi Minecraft	All Minecraft Versions
+Rekomendasi Utama (Mali & Adreno)	Top Pick (Mali & Adreno)
+Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Modern OpenGL ES 3.x wrapper running directly on the system's official driver. Most stable with maximum FPS for Mali & Adreno GPUs on modern MC (1.17 \u2013 26.3).
+Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	MobileGlues OpenGL 4.0 graphics library for Minecraft 1.17 \u2013 1.21.1. High compatibility with many mobile GPUs, including Mali.
+Paling Stabil untuk MC Lama	Most Stable for Old MC
+Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Classic OpenGL ES 2.0 wrapper. Compatible with Minecraft 1.7.10 \u2013 1.16.5 and low-spec devices.
+Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	Translates desktop OpenGL 4.6 to Vulkan. Supports modern shader mods (Iris/Oculus) & advanced mods.
+Khusus GPU Adreno	Adreno GPUs only
+Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	Open-source Mesa Gallium Freedreno driver optimized specifically for Snapdragon chipsets / Adreno GPUs.
+Pustaka grafis MobileGL (Vulkan & GLES backend)	MobileGL graphics library (Vulkan & GLES backend)
+Renderer eksternal dari APK: {0} ({1})	External renderer from APK: {0} ({1})
+Plugin Eksternal	External Plugin
+Renderer APK: {0} ({1})	APK Renderer: {0} ({1})

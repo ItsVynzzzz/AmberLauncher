@@ -28,7 +28,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material3.Text
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -128,9 +129,10 @@ fun NuxKeyPickerDialog(
         if (searching && query.isNotBlank()) {
             val q = query.trim().lowercase()
             keys.filter {
-                it.displayName.lowercase().contains(q) ||
-                    it.category.lowercase().contains(q) ||
-                    shortCategory(it.category).lowercase().contains(q)
+                Tr.t(it.displayName).lowercase().contains(q) ||
+                    it.displayName.lowercase().contains(q) ||
+                    Tr.t(it.category).lowercase().contains(q) ||
+                    Tr.t(shortCategory(it.category)).lowercase().contains(q)
             }
         } else {
             keys.filter { it.category == selected }
@@ -293,7 +295,8 @@ private fun KeyTile(
     onClick: () -> Unit
 ) {
     val shape = RoundedCornerShape(12.dp)
-    val (rawMain, rawSub) = splitLabel(option.displayName)
+    // Diterjemahkan dulu baru dipecah, karena teks hanya diterjemahkan secara utuh.
+    val (rawMain, rawSub) = splitLabel(Tr.t(option.displayName))
     // Simbol: tampilkan lambangnya besar-besar, nama katanya kecil di bawah.
     val symbolFirst = option.category == "Simbol" && rawSub.isNotEmpty()
     val main = if (symbolFirst) rawSub else rawMain

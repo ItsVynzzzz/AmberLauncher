@@ -3,7 +3,7 @@ package com.israadev.nuxlauncher.core.crash
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
+import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.core.content.FileProvider
 import java.io.File
 

@@ -1,0 +1,129 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	mod
+modpacks	modpack
+shaderpacks	shaderpack
+resourcepacks	resource pack
+datapacks	datapack
+format yang didukung	\u0111\u1ecbnh d\u1ea1ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	\u0110\u00e3 b\u1ecf qua t\u1ec7p "{0}"! \u0110\u1ecbnh d\u1ea1ng duy nh\u1ea5t \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 cho {1} l\u00e0 {2}
+{0} file diabaikan karena format tidak didukung ({~1})!	\u0110\u00e3 b\u1ecf qua {0} t\u1ec7p v\u00ec \u0111\u1ecbnh d\u1ea1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 ({1})!
+Membaca arsip modpack...	\u0110ang \u0111\u1ecdc t\u1ec7p n\u00e9n modpack...
+Berhasil mengimpor dan memasang {0} modpack!	\u0110\u00e3 nh\u1eadp v\u00e0 c\u00e0i {0} modpack!
+Gagal mengimpor modpack: {~0}	Kh\u00f4ng th\u1ec3 nh\u1eadp modpack: {0}
+Berhasil mengimpor {0} file {~1}!	\u0110\u00e3 nh\u1eadp {0} t\u1ec7p ({1})!
+Gagal mengimpor file: {~0}	Kh\u00f4ng th\u1ec3 nh\u1eadp t\u1ec7p: {0}
+Mencari versi...	\u0110ang t\u00ecm phi\u00ean b\u1ea3n...
+Tidak ada versi cocok untuk {0}!	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n t\u01b0\u01a1ng th\u00edch v\u1edbi {0}!
+Mengunduh...	\u0110ang t\u1ea3i xu\u1ed1ng...
+Modpack {0} berhasil dipasang!	\u0110\u00e3 c\u00e0i modpack {0}!
+Berhasil memasang {0} beserta {1} dependensi!	\u0110\u00e3 c\u00e0i {0} c\u00f9ng {1} ph\u1ea7n ph\u1ee5 thu\u1ed9c!
+Berhasil memasang {0}!	\u0110\u00e3 c\u00e0i {0}!
+Memulai pengunduhan...	\u0110ang b\u1eaft \u0111\u1ea7u t\u1ea3i xu\u1ed1ng...
+Gagal terhubung ke Modrinth	Kh\u00f4ng th\u1ec3 k\u1ebft n\u1ed1i t\u1edbi Modrinth
+Pilih atau buat instance di Home untuk mulai memasang mod.	H\u00e3y ch\u1ecdn ho\u1eb7c t\u1ea1o instance \u1edf Trang ch\u1ee7 \u0111\u1ec3 b\u1eaft \u0111\u1ea7u c\u00e0i mod.
+Kembali ke Home	Quay l\u1ea1i Trang ch\u1ee7
+Terpasang ({0})	\u0110\u00e3 c\u00e0i ({0})
+Jelajah	Kh\u00e1m ph\u00e1
+Resource	T\u00e0i nguy\u00ean
+Cari di Modrinth...	T\u00ecm tr\u00ean Modrinth...
+Cari di {0} item...	T\u00ecm trong {0} m\u1ee5c...
+World: {0}	Th\u1ebf gi\u1edbi: {0}
+Tidak ada world	Kh\u00f4ng c\u00f3 th\u1ebf gi\u1edbi
+Semua versi	T\u1ea5t c\u1ea3 phi\u00ean b\u1ea3n
+Pilih instance terlebih dahulu!	H\u00e3y ch\u1ecdn instance tr\u01b0\u1edbc!
+Impor	Nh\u1eadp
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	Instance n\u00e0y ch\u01b0a c\u00f3 th\u1ebf gi\u1edbi n\u00e0o. H\u00e3y m\u1edf game \u0111\u1ec3 t\u1ea1o m\u1ed9t th\u1ebf gi\u1edbi tr\u01b0\u1edbc.
+Belum ada {~0} terpasang di instance ini	Instance n\u00e0y ch\u01b0a c\u00e0i {0} n\u00e0o
+Tidak ada item yang cocok	Kh\u00f4ng c\u00f3 m\u1ee5c n\u00e0o ph\u00f9 h\u1ee3p
+Jelajahi Modrinth	Kh\u00e1m ph\u00e1 Modrinth
+Memuat data dari Modrinth...	\u0110ang t\u1ea3i d\u1eef li\u1ec7u t\u1eeb Modrinth...
+Gagal memuat dari Modrinth	Kh\u00f4ng th\u1ec3 t\u1ea3i t\u1eeb Modrinth
+Terjadi kesalahan jaringan	\u0110\u00e3 x\u1ea3y ra l\u1ed7i m\u1ea1ng
+Coba lagi	Th\u1eed l\u1ea1i
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	Kh\u00f4ng c\u00f3 k\u1ebft qu\u1ea3 ph\u00f9 h\u1ee3p v\u1edbi Minecraft {0} ({1})
+Tidak ada hasil ditemukan untuk kata kunci ini	Kh\u00f4ng t\u00ecm th\u1ea5y k\u1ebft qu\u1ea3 cho t\u1eeb kh\u00f3a n\u00e0y
+Coba ubah kata kunci atau nonaktifkan filter versi	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a ho\u1eb7c t\u1eaft b\u1ed9 l\u1ecdc phi\u00ean b\u1ea3n
+Cari di semua versi Minecraft	T\u00ecm trong t\u1ea5t c\u1ea3 phi\u00ean b\u1ea3n Minecraft
+Sebelumnya	Tr\u01b0\u1edbc
+Selanjutnya	Sau
+Pilih instance	Ch\u1ecdn instance
+Pilih world	Ch\u1ecdn th\u1ebf gi\u1edbi
+Hapus modpack?	X\u00f3a modpack?
+Hapus {~0}?	X\u00f3a {0}?
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a modpack "{0}"? T\u1ea5t c\u1ea3 mod \u0111\u00e3 c\u00e0i t\u1eeb modpack n\u00e0y c\u0169ng s\u1ebd b\u1ecb x\u00f3a kh\u1ecfi instance.
+Yakin ingin menghapus "{0}" dari instance ini?	B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a "{0}" kh\u1ecfi instance n\u00e0y?
+Modpack dan semua mod berhasil dihapus!	\u0110\u00e3 x\u00f3a modpack v\u00e0 t\u1ea5t c\u1ea3 mod c\u1ee7a n\u00f3!
+{0} berhasil dihapus!	\u0110\u00e3 x\u00f3a {0}!
+Mengimpor & memasang modpack	\u0110ang nh\u1eadp & c\u00e0i modpack
+Membaca daftar mod dan mengunduh file...	\u0110ang \u0111\u1ecdc danh s\u00e1ch mod v\u00e0 t\u1ea3i t\u1ec7p...
+{0} / {1} file mod	{0} / {1} t\u1ec7p mod
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	Launcher \u0111ang \u0111\u1ecdc danh s\u00e1ch mod v\u00e0 t\u1ea3i modpack. Vui l\u00f2ng \u0111\u1ee3i.
+Tangkapan layar	\u1ea2nh ch\u1ee5p m\u00e0n h\u00ecnh
+Pratinjau gambar	Xem tr\u01b0\u1edbc h\u00ecnh \u1ea3nh
+NONAKTIF	\u0110\u00c3 T\u1eaeT
+Tidak ada deskripsi	Kh\u00f4ng c\u00f3 m\u00f4 t\u1ea3
+oleh {0}	b\u1edfi {0}
+Unduh...	T\u1ea3i xu\u1ed1ng...
+Terpasang	\u0110\u00e3 c\u00e0i
+Pasang pack	C\u00e0i g\u00f3i
+Pasang	C\u00e0i
+Versi dipilih	Phi\u00ean b\u1ea3n \u0111\u00e3 ch\u1ecdn
+Sedang mengunduh dan memasang...	\u0110ang t\u1ea3i v\u00e0 c\u00e0i \u0111\u1eb7t...
+Sudah terpasang	\u0110\u00e3 \u0111\u01b0\u1ee3c c\u00e0i
+Pasang modpack	C\u00e0i modpack
+Pasang ke instance	C\u00e0i v\u00e0o instance
+Versi ({0})	Phi\u00ean b\u1ea3n ({0})
+Screenshot	\u1ea2nh ch\u1ee5p m\u00e0n h\u00ecnh
+Deskripsi	M\u00f4 t\u1ea3
+Tidak ada ringkasan deskripsi.	Kh\u00f4ng c\u00f3 m\u00f4 t\u1ea3 t\u00f3m t\u1eaft.
+Tidak ada versi yang didukung	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	D\u1ef1 \u00e1n n\u00e0y kh\u00f4ng c\u00f3 b\u1ea3n ph\u00e1t h\u00e0nh t\u01b0\u01a1ng th\u00edch v\u1edbi Minecraft {0} ({1}).
+Versi {0} \u00b7 MC {1}	Phi\u00ean b\u1ea3n {0} \u00b7 MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	Modpack \u0111\u01b0\u1ee3c gi\u1ea3i n\u00e9n tr\u1ef1c ti\u1ebfp v\u00e0o instance (overrides, c\u1ea5u h\u00ecnh v\u00e0 manifest).
+Dependensi wajib ikut terpasang otomatis.	C\u00e1c ph\u1ea7n ph\u1ee5 thu\u1ed9c b\u1eaft bu\u1ed9c s\u1ebd \u0111\u01b0\u1ee3c c\u00e0i t\u1ef1 \u0111\u1ed9ng.
+Mod terpasang	Mod \u0111\u00e3 c\u00e0i
+Belum ada resource pack	Ch\u01b0a c\u00f3 resource pack n\u00e0o
+Belum ada shader	Ch\u01b0a c\u00f3 shader n\u00e0o
+Belum ada mod terpasang	Ch\u01b0a c\u00e0i mod n\u00e0o
+Pasang lewat menu Mod di sidebar.	H\u00e3y c\u00e0i qua menu Mod \u1edf thanh b\u00ean.
+Nonaktif \u00b7 {0}	\u0110\u00e3 t\u1eaft \u00b7 {0}
+PASANG ADDON EKSTERNAL	C\u00c0I ADDON NGO\u00c0I
+Pemasang Addon	Tr\u00ecnh c\u00e0i Addon
+Tipe file: {0} \u00b7 Siap dipasang	Lo\u1ea1i t\u1ec7p: {0} \u00b7 S\u1eb5n s\u00e0ng c\u00e0i \u0111\u1eb7t
+KATEGORI ADDON	LO\u1ea0I ADDON
+TARGET INSTANCE MINECRAFT	INSTANCE MINECRAFT \u0110\u00cdCH
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f Ch\u01b0a c\u00f3 instance Minecraft n\u00e0o \u0111\u01b0\u1ee3c t\u1ea1o! H\u00e3y t\u1ea1o instance \u1edf Trang ch\u1ee7 tr\u01b0\u1edbc.
+Memasang addon...	\u0110ang c\u00e0i addon...
+Gagal: {~0}	Th\u1ea5t b\u1ea1i: {0}
+Mempersiapkan pemasangan...	\u0110ang chu\u1ea9n b\u1ecb c\u00e0i \u0111\u1eb7t...
+\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 \u0110\u00e3 c\u00e0i "{0}" v\u00e0o {1}!
+Terjadi kesalahan yang tidak diketahui	\u0110\u00e3 x\u1ea3y ra l\u1ed7i kh\u00f4ng x\u00e1c \u0111\u1ecbnh
+Gagal memasang: {~0}	Kh\u00f4ng th\u1ec3 c\u00e0i \u0111\u1eb7t: {0}
+MEMASANG...	\u0110ANG C\u00c0I...
+PASANG SEKARANG	C\u00c0I NGAY
+{0} mod terpasang	\u0110\u00e3 c\u00e0i {0} mod
+Menyalin file {0}...	\u0110ang sao ch\u00e9p t\u1ec7p {0}...
+Gagal membaca file sumber	Kh\u00f4ng th\u1ec3 \u0111\u1ecdc t\u1ec7p ngu\u1ed3n
+Membaca daftar modpack...	\u0110ang \u0111\u1ecdc danh s\u00e1ch modpack...
+Modrinth API error code: {0}	M\u00e3 l\u1ed7i API Modrinth: {0}
+Empty response	Ph\u1ea3n h\u1ed3i tr\u1ed1ng
+Gagal mengambil detail project: {~0}	Kh\u00f4ng th\u1ec3 l\u1ea5y chi ti\u1ebft d\u1ef1 \u00e1n: {0}
+Gagal mengambil versi project: {~0}	Kh\u00f4ng th\u1ec3 l\u1ea5y c\u00e1c phi\u00ean b\u1ea3n c\u1ee7a d\u1ef1 \u00e1n: {0}
+Mengekstrak dan menyiapkan modpack...	\u0110ang gi\u1ea3i n\u00e9n v\u00e0 chu\u1ea9n b\u1ecb modpack...
+Menyelesaikan dependensi: {0}...	\u0110ang x\u1eed l\u00fd ph\u1ea7n ph\u1ee5 thu\u1ed9c: {0}...
+Membaca daftar modpack ({0} mod ditemukan)...	\u0110ang \u0111\u1ecdc danh s\u00e1ch modpack (t\u00ecm th\u1ea5y {0} mod)...
+Mengunduh mod ({0}/{1}): {2}...	\u0110ang t\u1ea3i mod ({0}/{1}): {2}...
+Mod sudah ada ({0}/{1}): {2}	Mod \u0111\u00e3 c\u00f3 s\u1eb5n ({0}/{1}): {2}
+Mengekstrak konfigurasi modpack...	\u0110ang gi\u1ea3i n\u00e9n c\u1ea5u h\u00ecnh modpack...
+Mengekstrak file arsip modpack...	\u0110ang gi\u1ea3i n\u00e9n c\u00e1c t\u1ec7p c\u1ee7a modpack...
+Selesai! {0} mod berhasil dipasang.	Xong! \u0110\u00e3 c\u00e0i {0} mod.
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	Ho\u00e0n t\u1ea5t k\u00e8m l\u01b0u \u00fd: \u0111\u00e3 c\u00e0i {0} mod, {1} t\u1ec7p th\u1ea5t b\u1ea1i ho\u1eb7c b\u1ecb b\u1ecf qua. H\u00e3y th\u1eed c\u00e0i l\u1ea1i n\u1ebfu thi\u1ebfu mod n\u00e0o.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	Modpack n\u00e0y c\u1ea7n {0}, trong khi AmberLauncher hi\u1ec7n ch\u1ec9 h\u1ed7 tr\u1ee3 Fabric.
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n Fabric. H\u00e3y t\u1ea1o instance Fabric tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	Modpack n\u00e0y d\u00e0nh cho Minecraft {0}, trong khi instance n\u00e0y d\u00f9ng {1}. H\u00e3y ch\u1ecdn ho\u1eb7c t\u1ea1o instance c\u00f3 c\u00f9ng phi\u00ean b\u1ea3n.
+Alamat unduhan ditolak karena tidak memakai HTTPS	\u0110\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng b\u1ecb t\u1eeb ch\u1ed1i v\u00ec kh\u00f4ng d\u00f9ng HTTPS
+Gagal mengunduh file: HTTP {0}	Kh\u00f4ng th\u1ec3 t\u1ea3i t\u1ec7p: HTTP {0}
+Body stream kosong	Lu\u1ed3ng d\u1eef li\u1ec7u tr\u1ed1ng
+Gagal menyimpan file unduhan	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p \u0111\u00e3 t\u1ea3i
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	T\u1ec7p {0} b\u1ecb h\u1ecfng ho\u1eb7c b\u1ecb thay \u0111\u1ed5i khi t\u1ea3i (m\u00e3 b\u0103m kh\u00f4ng kh\u1edbp) n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+Isi modpack terlalu besar, pemasangan dibatalkan.	N\u1ed9i dung modpack qu\u00e1 l\u1edbn, \u0111\u00e3 h\u1ee7y vi\u1ec7c c\u00e0i \u0111\u1eb7t.

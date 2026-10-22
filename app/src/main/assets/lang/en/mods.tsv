@@ -1,0 +1,124 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	mods
+modpacks	modpacks
+shaderpacks	shader packs
+resourcepacks	resource packs
+datapacks	data packs
+format yang didukung	supported format
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	File "{0}" was ignored! The only supported format for {1} is {2}
+{0} file diabaikan karena format tidak didukung ({~1})!	{0} file(s) ignored because the format is not supported ({1})!
+Membaca arsip modpack...	Reading modpack archive...
+Berhasil mengimpor dan memasang {0} modpack!	Imported and installed {0} modpack(s)!
+Gagal mengimpor modpack: {~0}	Failed to import modpack: {0}
+Berhasil mengimpor {0} file {~1}!	Imported {0} file(s) ({1})!
+Gagal mengimpor file: {~0}	Failed to import file: {0}
+Mencari versi...	Searching for versions...
+Tidak ada versi cocok untuk {0}!	No compatible version for {0}!
+Mengunduh...	Downloading...
+Modpack {0} berhasil dipasang!	Modpack {0} installed!
+Berhasil memasang {0} beserta {1} dependensi!	Installed {0} along with {1} dependencies!
+Berhasil memasang {0}!	Installed {0}!
+Memulai pengunduhan...	Starting download...
+Gagal terhubung ke Modrinth	Could not connect to Modrinth
+Pilih atau buat instance di Home untuk mulai memasang mod.	Choose or create an instance on Home to start installing mods.
+Kembali ke Home	Back to Home
+Terpasang ({0})	Installed ({0})
+Jelajah	Browse
+Cari di Modrinth...	Search Modrinth...
+Cari di {0} item...	Search {0} items...
+Tidak ada world	No worlds
+Semua versi	All versions
+Pilih instance terlebih dahulu!	Choose an instance first!
+Impor	Import
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	There are no worlds in this instance yet. Open the game to create one first.
+Belum ada {~0} terpasang di instance ini	No {0} installed in this instance yet
+Tidak ada item yang cocok	No matching items
+Jelajahi Modrinth	Browse Modrinth
+Memuat data dari Modrinth...	Loading data from Modrinth...
+Gagal memuat dari Modrinth	Failed to load from Modrinth
+Terjadi kesalahan jaringan	A network error occurred
+Coba lagi	Try again
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	No results match Minecraft {0} ({1})
+Tidak ada hasil ditemukan untuk kata kunci ini	No results found for this keyword
+Coba ubah kata kunci atau nonaktifkan filter versi	Try changing the keyword or turning off the version filter
+Cari di semua versi Minecraft	Search all Minecraft versions
+Sebelumnya	Previous
+Selanjutnya	Next
+Pilih instance	Choose instance
+Pilih world	Choose world
+Hapus modpack?	Delete modpack?
+Hapus {~0}?	Delete {0}?
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	Are you sure you want to delete the modpack "{0}"? All mods installed from this modpack will also be removed from the instance.
+Yakin ingin menghapus "{0}" dari instance ini?	Are you sure you want to delete "{0}" from this instance?
+Modpack dan semua mod berhasil dihapus!	Modpack and all its mods deleted!
+{0} berhasil dihapus!	{0} deleted!
+Mengimpor & memasang modpack	Importing & installing modpack
+Membaca daftar mod dan mengunduh file...	Reading the mod list and downloading files...
+{0} / {1} file mod	{0} / {1} mod files
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	The launcher is reading the mod list and downloading the modpack. Please wait.
+Tangkapan layar	Screenshot
+Pratinjau gambar	Image preview
+NONAKTIF	DISABLED
+Tidak ada deskripsi	No description
+oleh {0}	by {0}
+Unduh...	Download...
+Terpasang	Installed
+Pasang pack	Install pack
+Pasang	Install
+Versi dipilih	Selected version
+Sedang mengunduh dan memasang...	Downloading and installing...
+Sudah terpasang	Already installed
+Pasang modpack	Install modpack
+Pasang ke instance	Install to instance
+Versi ({0})	Versions ({0})
+Deskripsi	Description
+Tidak ada ringkasan deskripsi.	No summary description.
+Tidak ada versi yang didukung	No supported versions
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	This project has no release compatible with Minecraft {0} ({1}).
+Versi {0} \u00b7 MC {1}	Version {0} \u00b7 MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	The modpack is extracted straight into the instance (overrides, configuration, and manifest).
+Dependensi wajib ikut terpasang otomatis.	Required dependencies are installed automatically.
+Mod terpasang	Installed mods
+Belum ada resource pack	No resource packs yet
+Belum ada shader	No shaders yet
+Belum ada mod terpasang	No mods installed yet
+Pasang lewat menu Mod di sidebar.	Install them from the Mods menu in the sidebar.
+Nonaktif \u00b7 {0}	Disabled \u00b7 {0}
+PASANG ADDON EKSTERNAL	INSTALL EXTERNAL ADDON
+Pemasang Addon	Addon Installer
+Tipe file: {0} \u00b7 Siap dipasang	File type: {0} \u00b7 Ready to install
+KATEGORI ADDON	ADDON CATEGORY
+TARGET INSTANCE MINECRAFT	TARGET MINECRAFT INSTANCE
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f No Minecraft instance has been created yet! Create an instance on Home first.
+Memasang addon...	Installing addon...
+Gagal: {~0}	Failed: {0}
+Mempersiapkan pemasangan...	Preparing installation...
+\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 Installed "{0}" to {1}!
+Terjadi kesalahan yang tidak diketahui	An unknown error occurred
+Gagal memasang: {~0}	Failed to install: {0}
+MEMASANG...	INSTALLING...
+PASANG SEKARANG	INSTALL NOW
+{0} mod terpasang	{0} mods installed
+Menyalin file {0}...	Copying file {0}...
+Gagal membaca file sumber	Could not read the source file
+Membaca daftar modpack...	Reading the modpack list...
+Gagal mengambil detail project: {~0}	Failed to fetch project details: {0}
+Gagal mengambil versi project: {~0}	Failed to fetch project versions: {0}
+Mengekstrak dan menyiapkan modpack...	Extracting and preparing the modpack...
+Menyelesaikan dependensi: {0}...	Resolving dependencies: {0}...
+Membaca daftar modpack ({0} mod ditemukan)...	Reading the modpack list ({0} mods found)...
+Mengunduh mod ({0}/{1}): {2}...	Downloading mod ({0}/{1}): {2}...
+Mod sudah ada ({0}/{1}): {2}	Mod already present ({0}/{1}): {2}
+Mengekstrak konfigurasi modpack...	Extracting modpack configuration...
+Mengekstrak file arsip modpack...	Extracting modpack archive files...
+Selesai! {0} mod berhasil dipasang.	Done! {0} mods installed.
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	Finished with notes: {0} mods installed, {1} files failed or were skipped. Try installing again if any mods are missing.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	This modpack requires {0}, but AmberLauncher currently only supports Fabric.
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	This modpack requires Fabric. Create a Fabric instance first, then install the modpack in it.
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	This modpack is for Minecraft {0}, but this instance uses {1}. Choose or create an instance with the same version.
+Alamat unduhan ditolak karena tidak memakai HTTPS	Download address rejected because it does not use HTTPS
+Gagal mengunduh file: HTTP {0}	Failed to download file: HTTP {0}
+Body stream kosong	Empty body stream
+Gagal menyimpan file unduhan	Failed to save the downloaded file
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	File {0} is corrupted or was altered in transit (fingerprint mismatch), so it was not installed.
+Isi modpack terlalu besar, pemasangan dibatalkan.	The modpack contents are too large, installation was canceled.

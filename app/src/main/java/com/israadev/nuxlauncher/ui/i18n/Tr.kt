@@ -9,7 +9,8 @@ import java.util.Locale
  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
  *
- * Pilihan pengguna: [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
+ * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
+ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
  * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol atau Vietnam memakai bahasa itu, dan bahasa
  * lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
  */
@@ -19,6 +20,9 @@ object Tr {
     const val EN = "en"
     const val ES = "es"
     const val VI = "vi"
+
+    /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
+    const val DEFAULT_CHOICE = EN
 
     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
     private val DICTIONARY_LANGS = setOf(EN, ES, VI)
@@ -32,7 +36,7 @@ object Tr {
 
     /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], atau [VI]. */
     @Volatile
-    var choice: String = SYSTEM
+    var choice: String = DEFAULT_CHOICE
         private set
 
     /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], atau [VI]. */
@@ -48,9 +52,9 @@ object Tr {
         val saved = try {
             context.applicationContext
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_LANGUAGE, SYSTEM)
+                .getString(KEY_LANGUAGE, DEFAULT_CHOICE)
         } catch (_: Throwable) {
-            SYSTEM
+            DEFAULT_CHOICE
         }
         choice = normalize(saved)
         apply(context)
@@ -80,9 +84,9 @@ object Tr {
     }
 
     private fun normalize(value: String?): String = when {
-        value == null -> SYSTEM
-        value == ID || value in DICTIONARY_LANGS -> value
-        else -> SYSTEM
+        value == null -> DEFAULT_CHOICE
+        value == SYSTEM || value == ID || value in DICTIONARY_LANGS -> value
+        else -> DEFAULT_CHOICE
     }
 
     private fun resolve(c: String): String {

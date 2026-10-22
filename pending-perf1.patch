@@ -1,0 +1,392 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 07327fa7ebf918c57ad389380c26cc437d859931..632e84383320b5135ff8cf14f48fc26bba217540 100644
+GIT binary patch
+delta 938
+zcmY+D&ubGw6vrw3fgozrHbF}*4_jdaX`0}rO$nlwrWS)~5fM+m>`pf0&i-I$r?yC?
+z2M^w~3@Bbiig@s3$zR~vgNNR{NQ(!d9-<ddMc;1HVlTV1GyA^peLwHb@7Mji@A^L$
+zQ@TCaKOC^Ik*}c3YP6{O9*_Lixzv+g{r1_I{_77^BlH4<AoLqtfYVe`$r3af27r%H
+zfW;-c=%5D{^K5!0N3<ikt6VTDHz48`IzWkp(pwYh+VnKI%&jwtVH}qPNM><|M<n8M
+z=ze6uLN7-dV6g@(*Q($!lZzbK%wr)+4z98gD#ci|OrjRAV-)X872rB1A)VYwI?r~{
+z$-@$^BFuD)vbd^aGaoDH7kg(W=h-SZSuHWkWWJM0+$1U-#Uh!m)(xH78y|{`uHss?
+zo&zpp$r)Xg8QtC+&vt{BR^0`Gwlu6n^Nt^(SV8yyh>QCLz4<27+WzkM-X#OKd>e?D
+z@*)-Ua?y)Wfy2q}Lj)tKe3mFcY;*3U6PM^Sj~X&{Pxy8=57!ydmAdeCq$sFEM5l>?
+zl3*#JjtG&ffM_Qu1#;pYa`1eiiwBtn+oXCHxL_rSpI4y_ya7hnZWcTx1TZ04a%`Ar
+zHrYH6b8rc%x#5&;=BX0h^L|)Ai24RPa{AY|iC$Xj&HLx|=l1AqTy4oVOEg`qJo)%I
+zX&&p+7b;>kjG7xI6-3-+$zP^VfXW5E{4=dLcLw!?wGqwt)2-5vx%A5mJ$;Ku;F{>s
+z6c8AbcttTc%0-PQ&sPdGX%Tnkx^ocIizfjvo^|CxfEMc9!Pw>FTM?4~llLSvj;htE
+z55q(8P3l~rFfStvBSSC0%INjO(|UVnR6ji|pW1*1rydFY$sN({nZDG?7(X!d)}KlJ
+MymGen<#6KmKYDvwB>(^b
+
+delta 69
+zcmV-L0J{Ivqy_Ss1+Xy@lMoOEvv3ht)05zx6|)BCZv&HnofMON-y5@T>@^jWP?`mo
+bYytramyiMhJ(KWm6qj8A0SUK10|69I=1CdK
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt b/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
+index beba7b9..f7e116b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
+@@ -40,6 +40,15 @@ object DeviceProfiles {
+     /** Heap awal minimum untuk mode Serial: Serial hanya membesarkan heap lewat Full GC yang mahal. */
+     private const val SERIAL_MIN_INITIAL_MB = 768
+ 
++    /** Heap awal lama (MB) yang tersimpan di settings.json; nilai sekecil ini dianggap "otomatis". */
++    private const val LEGACY_INITIAL_HEAP_MB = 256
++
++    /** Batas generasi muda G1 (persen heap): GC lebih jarang tanpa RAM yang membengkak. */
++    private const val G1_MAX_YOUNG_PERCENT = 30
++
++    /** HP dengan RAM total di bawah ini (MB) memakai batas generasi muda G1 walau tanpa profil. */
++    private const val GENERAL_YOUNG_CAP_RAM_MB = 6000
++
+     private val OPPO_A3X_4G = DeviceProfile(
+         id = "oppo-a3x-4g",
+         displayName = "Oppo A3x 4G",
+@@ -108,11 +117,46 @@ object DeviceProfiles {
+         var initMb = requestedInitMb
+         if (gcMode == GC_SERIAL) {
+             initMb = maxOf(initMb, minOf(SERIAL_MIN_INITIAL_MB, maxMb))
++        } else if (gcMode == GC_BALANCED) {
++            initMb = autoInitialHeapMb(initMb, maxMb)
+         }
+         initMb = minOf(initMb, maxMb)
+         return Pair(initMb, maxMb)
+     }
+ 
++    /**
++     * Heap awal otomatis. Heap awal kecil membuat G1 memulai dengan generasi muda mungil dan
++     * mengumpulkan sampah berkali-kali sampai heap membesar pelan-pelan. Bila nilai tersimpan
++     * masih bawaan lama (256 MB), heap awal disamakan dengan heap maksimum.
++     */
++    fun autoInitialHeapMb(requestedInitMb: Int, maxMb: Int): Int {
++        return if (requestedInitMb <= LEGACY_INITIAL_HEAP_MB) maxMb else minOf(requestedInitMb, maxMb)
++    }
++
++    /**
++     * Heap awal untuk HP tanpa profil. Java 8 memakai GC Parallel secara bawaan dan tidak
++     * dibatasi generasi mudanya di sini, jadi nilainya dibiarkan seperti pengaturan.
++     */
++    fun generalInitialHeapMb(requestedInitMb: Int, maxMb: Int, isJava8: Boolean): Int {
++        if (isJava8) return minOf(requestedInitMb, maxMb)
++        return autoInitialHeapMb(requestedInitMb, maxMb)
++    }
++
++    /**
++     * Flag JVM untuk HP tanpa profil: batas generasi muda G1 di HP RAM kecil. Kosong di Java 8,
++     * di HP RAM besar, atau bila pengguna sudah memilih GC sendiri lewat argumen JVM kustom.
++     */
++    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String): List<String> {
++        if (isJava8) return emptyList()
++        if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
++        if (userSelectsCollector(userArgs)) return emptyList()
++        return listOf(
++            "-XX:+IgnoreUnrecognizedVMOptions",
++            "-XX:+UnlockExperimentalVMOptions",
++            "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
++        )
++    }
++
+     /**
+      * Flag JVM tambahan sesuai mode GC. Kosong bila mode Bawaan, atau bila pengguna sudah memilih
+      * GC sendiri lewat argumen JVM kustom (dua GC sekaligus membuat JVM gagal start).
+@@ -135,13 +179,11 @@ object DeviceProfiles {
+             listOf(
+                 "-XX:+IgnoreUnrecognizedVMOptions",
+                 "-XX:+UseG1GC",
+-                // Target jeda lebih pendek dari bawaan (200 ms): G1 menjaga generasi muda tetap kecil.
+-                "-XX:MaxGCPauseMillis=100",
+                 "-XX:+UnlockExperimentalVMOptions",
+-                // Batas generasi muda 20%..35% heap supaya pemakaian RAM tidak membengkak.
+-                "-XX:G1NewSizePercent=20",
+-                "-XX:G1MaxNewSizePercent=35",
+-                "-XX:+ParallelRefProcEnabled"
++                // Hanya batas atas generasi muda supaya RAM tidak membengkak. Flag target jeda dan
++                // ukuran minimum generasi muda dari versi lama dilepas: di uji beban mirip game
++                // keduanya membuat GC lebih sering tanpa jeda yang lebih pendek.
++                "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
+             )
+         }
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/perf/GamePerfMonitor.kt b/app/src/main/java/com/israadev/nuxlauncher/core/perf/GamePerfMonitor.kt
+new file mode 100644
+index 0000000..46b599d
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/perf/GamePerfMonitor.kt
+@@ -0,0 +1,275 @@
++package com.israadev.nuxlauncher.core.perf
++
++import android.os.SystemClock
++import android.system.Os
++import android.system.OsConstants
++import com.movtery.zalithlauncher.bridge.LoggerBridge
++import java.io.File
++import java.io.RandomAccessFile
++
++/** Selang antar laporan kinerja di log (milidetik). */
++private const val REPORT_INTERVAL_MS = 30_000L
++
++/** Selang mencari thread render saat game masih memuat (milidetik). */
++private const val FIND_INTERVAL_MS = 1_000L
++
++/** Batas waktu menunggu thread render muncul (milidetik); lewat dari ini pemantau berhenti. */
++private const val FIND_TIMEOUT_MS = 300_000L
++
++/** Maksimal byte log GC yang dibaca sekali jalan. */
++private const val MAX_GC_READ_BYTES = 256 * 1024
++
++/** Tanda awal baris log, sama dengan baris "[JVM]" dan "[Profil]" milik launcher. */
++private const val LOG_PREFIX = "\u25B7 [Kinerja] "
++
++/**
++ * Pemantau kinerja game yang hanya MENCATAT ke log. Pemantau tidak mengubah prioritas, heap,
++ * atau apa pun pada game, jadi tidak bisa menurunkan FPS selain beberapa pembacaan berkas kecil
++ * di /proc tiap 30 detik, dari thread sendiri yang berprioritas rendah.
++ *
++ * Satu baris laporan berisi: pemakaian CPU thread render, berapa lama thread itu menunggu giliran
++ * CPU (tanda CPU berebut dengan thread lain), pemakaian CPU seluruh proses, ringkasan jeda GC dari
++ * log GC JVM, dan RAM proses. Dengan angka ini penyebab FPS tidak stabil bisa dibaca dari log
++ * hasil uji di HP, bukan ditebak.
++ *
++ * @param gcLogFile berkas log GC yang ditulis JVM lewat -Xlog:gc, atau null bila tidak dipakai
++ *   (Java 8 tidak mendukung -Xlog).
++ */
++class GamePerfMonitor(private val gcLogFile: File?) {
++
++    @Volatile
++    private var running = false
++    private var worker: Thread? = null
++    private var gcOffset = 0L
++    private val ticksPerSecond: Long = readTicksPerSecond()
++
++    /** Mulai memantau di thread latar. Aman dipanggil berulang. */
++    fun start() {
++        if (running) return
++        running = true
++        val t = Thread(Runnable { monitorLoop() }, "Amber-PerfMonitor")
++        t.isDaemon = true
++        worker = t
++        t.start()
++    }
++
++    /** Hentikan pemantauan. */
++    fun stop() {
++        running = false
++        worker?.interrupt()
++        worker = null
++    }
++
++    private class Sample(
++        val timeMs: Long,
++        /** Waktu CPU thread render (utime + stime) dalam tick. -1 bila thread sudah tidak ada. */
++        val renderTicks: Long,
++        /** Total nanodetik thread render siap jalan tetapi menunggu CPU. -1 bila kernel tidak menyediakan. */
++        val renderWaitNs: Long,
++        /** Waktu CPU seluruh proses dalam tick. */
++        val processTicks: Long
++    )
++
++    private class GcSummary {
++        var count = 0
++        var full = 0
++        var maxTenthsMs = 0L
++        var totalTenthsMs = 0L
++    }
++
++    private fun monitorLoop() {
++        try {
++            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
++        } catch (_: Throwable) {
++        }
++        try {
++            val tid = waitForRenderThread()
++            if (tid < 0) return
++            LoggerBridge.append("$LOG_PREFIX pemantau aktif (thread render $tid), laporan tiap ${REPORT_INTERVAL_MS / 1000L} dtk")
++            var prev = takeSample(tid)
++            while (running) {
++                Thread.sleep(REPORT_INTERVAL_MS)
++                if (!running) break
++                val now = takeSample(tid)
++                if (now.renderTicks < 0L) break
++                report(prev, now)
++                prev = now
++            }
++        } catch (_: InterruptedException) {
++        } catch (_: Throwable) {
++        }
++    }
++
++    private fun waitForRenderThread(): Int {
++        val deadline = SystemClock.elapsedRealtime() + FIND_TIMEOUT_MS
++        while (running && SystemClock.elapsedRealtime() < deadline) {
++            val tid = findRenderThread()
++            if (tid > 0) return tid
++            Thread.sleep(FIND_INTERVAL_MS)
++        }
++        return -1
++    }
++
++    /**
++     * Cari thread render lewat namanya di /proc. Minecraft memberi nama "Render thread" (1.14 ke
++     * atas) atau "Client thread" (versi lama) pada thread utamanya, dan Java meneruskan nama itu
++     * ke thread aslinya di Linux.
++     */
++    private fun findRenderThread(): Int {
++        val dirs = File("/proc/self/task").listFiles() ?: return -1
++        for (dir in dirs) {
++            val tid = dir.name.toIntOrNull() ?: continue
++            val name = firstLine(File(dir, "comm")) ?: continue
++            if (name == "Render thread" || name == "Client thread") return tid
++        }
++        return -1
++    }
++
++    private fun takeSample(tid: Int): Sample {
++        val sched = readSchedStat(tid)
++        return Sample(
++            timeMs = SystemClock.elapsedRealtime(),
++            renderTicks = readCpuTicks(File("/proc/self/task/$tid/stat")),
++            renderWaitNs = if (sched != null) sched[1] else -1L,
++            processTicks = readCpuTicks(File("/proc/self/stat"))
++        )
++    }
++
++    private fun report(prev: Sample, now: Sample) {
++        try {
++            val wallMs = now.timeMs - prev.timeMs
++            if (wallMs <= 0L) return
++            val tps = ticksPerSecond
++            val renderPct = (now.renderTicks - prev.renderTicks) * 100_000L / (tps * wallMs)
++            val coresTenths = (now.processTicks - prev.processTicks) * 10_000L / (tps * wallMs)
++
++            val sb = StringBuilder(LOG_PREFIX)
++            sb.append(wallMs / 1000L).append(" dtk | thread render: CPU ").append(renderPct).append('%')
++            if (prev.renderWaitNs >= 0L && now.renderWaitNs >= 0L) {
++                val waitPct = (now.renderWaitNs - prev.renderWaitNs) * 100L / (wallMs * 1_000_000L)
++                sb.append(", menunggu giliran CPU ").append(waitPct).append('%')
++            }
++            sb.append(" | proses: ").append(tenths(coresTenths)).append(" inti")
++
++            val gc = drainGcLog()
++            if (gc != null) {
++                sb.append(" | GC: ").append(gc.count).append("x")
++                if (gc.count > 0) {
++                    sb.append(", terlama ").append(tenths(gc.maxTenthsMs)).append(" ms")
++                    sb.append(", total ").append(tenths(gc.totalTenthsMs)).append(" ms")
++                    if (gc.full > 0) sb.append(", penuh ").append(gc.full).append("x")
++                }
++            }
++
++            val rssKb = readKb("/proc/self/status", "VmRSS:")
++            val availKb = readKb("/proc/meminfo", "MemAvailable:")
++            if (rssKb >= 0L) {
++                sb.append(" | RAM proses ").append(rssKb / 1024L).append(" MB")
++                if (availKb >= 0L) sb.append(", tersedia ").append(availKb / 1024L).append(" MB")
++            }
++            LoggerBridge.append(sb.toString())
++        } catch (_: Throwable) {
++        }
++    }
++
++    /** Baca baris baru di log GC sejak laporan terakhir dan ringkas jeda GC-nya; null bila tidak ada log. */
++    private fun drainGcLog(): GcSummary? {
++        val file = gcLogFile ?: return null
++        if (!file.exists()) return null
++        val summary = GcSummary()
++        try {
++            RandomAccessFile(file, "r").use { raf ->
++                val length = raf.length()
++                if (length < gcOffset) gcOffset = 0L
++                val toRead = minOf(length - gcOffset, MAX_GC_READ_BYTES.toLong()).toInt()
++                if (toRead <= 0) return summary
++                raf.seek(gcOffset)
++                val buf = ByteArray(toRead)
++                raf.readFully(buf)
++                // Hanya baris utuh; sisa baris yang belum selesai dibaca pada laporan berikutnya.
++                var end = toRead
++                while (end > 0 && buf[end - 1] != '\n'.code.toByte()) end--
++                if (end == 0) return summary
++                gcOffset += end.toLong()
++                val text = String(buf, 0, end, Charsets.ISO_8859_1)
++                for (line in text.split('\n')) {
++                    if (!line.contains("Pause ") || !line.endsWith("ms")) continue
++                    val ms = line.substringBeforeLast("ms").substringAfterLast(' ').toDoubleOrNull() ?: continue
++                    val tenths = (ms * 10.0).toLong()
++                    summary.count++
++                    summary.totalTenthsMs += tenths
++                    if (tenths > summary.maxTenthsMs) summary.maxTenthsMs = tenths
++                    if (line.contains("Pause Full")) summary.full++
++                }
++            }
++        } catch (_: Throwable) {
++        }
++        return summary
++    }
++
++    private fun tenths(value: Long): String = "${value / 10L}.${value % 10L}"
++}
++
++/** Jumlah tick CPU per detik (hampir selalu 100). */
++private fun readTicksPerSecond(): Long {
++    return try {
++        val v = Os.sysconf(OsConstants._SC_CLK_TCK)
++        if (v > 0L) v else 100L
++    } catch (_: Throwable) {
++        100L
++    }
++}
++
++private fun firstLine(file: File): String? {
++    return try {
++        file.bufferedReader().use { it.readLine() }
++    } catch (_: Throwable) {
++        null
++    }
++}
++
++/**
++ * utime + stime (tick) dari satu berkas stat di /proc, atau -1 bila gagal dibaca. Nama proses di
++ * baris itu boleh berisi spasi dan kurung, jadi pembacaan dimulai setelah tanda ")" terakhir.
++ */
++private fun readCpuTicks(statFile: File): Long {
++    return try {
++        val line = firstLine(statFile) ?: return -1L
++        val close = line.lastIndexOf(')')
++        if (close < 0) return -1L
++        val fields = line.substring(close + 2).split(' ')
++        // fields[0] = status (kolom 3); utime = kolom 14, stime = kolom 15.
++        if (fields.size < 13) return -1L
++        fields[11].toLong() + fields[12].toLong()
++    } catch (_: Throwable) {
++        -1L
++    }
++}
++
++/** (waktu jalan ns, waktu menunggu CPU ns) dari schedstat satu thread, atau null bila kernel tidak menyediakan. */
++private fun readSchedStat(tid: Int): LongArray? {
++    return try {
++        val line = firstLine(File("/proc/self/task/$tid/schedstat")) ?: return null
++        val parts = line.trim().split(' ')
++        if (parts.size < 2) null else longArrayOf(parts[0].toLong(), parts[1].toLong())
++    } catch (_: Throwable) {
++        null
++    }
++}
++
++/** Nilai (kB) dari satu baris "Kunci:   123 kB" di berkas /proc, atau -1 bila tidak ada. */
++private fun readKb(path: String, key: String): Long {
++    try {
++        File(path).bufferedReader().use { reader ->
++            while (true) {
++                val line = reader.readLine() ?: break
++                if (line.startsWith(key)) {
++                    val digits = line.filter { it.isDigit() }
++                    return if (digits.isEmpty()) -1L else digits.toLong()
++                }
++            }
++        }
++    } catch (_: Throwable) {
++    }
++    return -1L
++}
+
+
+# FIN part=1/1 files=3

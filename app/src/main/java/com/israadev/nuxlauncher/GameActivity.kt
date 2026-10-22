@@ -93,6 +93,7 @@ import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
+import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
@@ -1129,6 +1130,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     } else {
                         LoggerBridge.append("▷ [Profil] ${deviceProfile.displayName} dikenali, profil DIMATIKAN di Pengaturan")
                     }
+                } else {
+                    // HP tanpa profil khusus: heap awal disamakan dengan heap maksimum (GC tidak perlu
+                    // membesarkan heap sedikit demi sedikit) dan, di HP RAM kecil, generasi muda G1
+                    // dibatasi supaya RAM tidak membengkak. Java 8 tidak diubah.
+                    heapInitMb = DeviceProfiles.generalInitialHeapMb(activeSettings.initialHeapMb, heapMaxMb, isJava8)
+                    profileFlags = DeviceProfiles.generalJvmFlags(deviceTotalRamMb, isJava8, activeSettings.customJvmArgs)
                 }
                 if (!android.os.Process.is64Bit()) {
                     // Proses 32-bit hanya punya ruang alamat 3-4 GB, dan sebagian sudah terpakai
@@ -1144,6 +1151,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add("-Xms${heapInitMb}M")
                 jvmArgs.add("-Xmx${heapMaxMb}M")
                 profileFlags.forEach { jvmArgs.add(it) }
+                // Log GC untuk pemantau kinerja (Java 9 ke atas; Java 8 tidak mengenal -Xlog). Berkas
+                // lama dihapus dulu supaya tiap sesi mulai dari nol.
+                val gcLogFile: File? = if (isJava8) null else File(cacheDir, "amber-gc.log")
+                if (gcLogFile != null) {
+                    gcLogFile.delete()
+                    jvmArgs.add("-Xlog:gc:file=${gcLogFile.absolutePath}:uptime:filecount=0")
+                }
                 LoggerBridge.append(
                     "▷ [JVM] Heap awal $heapInitMb MB, maksimum $heapMaxMb MB | " +
                         "RAM HP total $deviceTotalRamMb MB, " +
@@ -1246,7 +1260,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     installedMods = installedMods
                 )
                 liveLogs.add("[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...")
-                val exitCode = VMLauncher.launchJVM(jvmArgs.toTypedArray())
+                // Pemantau hanya mencatat ke log tiap 30 detik; tidak mengubah apa pun pada game.
+                val perfMonitor = GamePerfMonitor(gcLogFile)
+                perfMonitor.start()
+                val exitCode = try {
+                    VMLauncher.launchJVM(jvmArgs.toTypedArray())
+                } finally {
+                    perfMonitor.stop()
+                }
                 liveLogs.add("[Amber Engine] JVM selesai dengan kode keluar: $exitCode")
                 runOnUiThread {
                     handleGameExit(exitCode, false)

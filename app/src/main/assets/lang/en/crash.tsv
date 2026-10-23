@@ -1,0 +1,45 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	AmberLauncher stopped
+Minecraft berhenti mendadak	Minecraft stopped suddenly
+Aplikasi tertutup karena kesalahan tak terduga	The app closed because of an unexpected error
+Kembali ke launcher	Back to launcher
+Penjelasan	Explanation
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	A crash does not always mean the launcher is broken. Mods, the phone's RAM, and the graphics driver are far more often the cause, so find out first before reporting to the developer.
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	The launcher stopped suddenly because of an unexpected error. Send the log to the developer so it can be fixed.
+Dugaan penyebab	Likely cause
+Kesalahan di dalam AmberLauncher	An error inside AmberLauncher
+Memori (RAM) HP habis	Phone memory (RAM) ran out
+Renderer atau driver grafis	Renderer or graphics driver
+Mod, versi Java, atau file game	A mod, Java version, or game file
+Belum bisa dipastikan	Cannot be determined yet
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	This time the launcher itself stopped, not the game or a mod. A report to the developer helps get it fixed.
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	The system stopped the game because the phone does not have enough RAM for the game, mods, or graphics settings in use. This is usually not a launcher fault. Try lowering the game's RAM allocation (no more than half of the phone's RAM), removing some mods, and closing other apps.
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	The game stopped in the graphics part or in a library built into the phone. A common cause is a renderer that does not suit this phone. Try changing the renderer in the instance settings. Only if every renderer fails might the problem be in the launcher.
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	The game hit an error while running. Most often it is a mod that does not match the game version or loader, a mod missing its dependencies, or the wrong Java version. This is usually not a launcher fault.
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	The cause only shows in the log contents. An AI can help read it for you.
+Detail teknis	Technical details
+Kesalahan tak terduga di dalam aplikasi	An unexpected error inside the app
+Status keluar: {~0}	Exit status: {0}
+Cari solusi dengan AI	Find a fix with AI
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Copy the log along with a ready-made question, then paste it into an AI chat. An AI can usually point out the cause and how to fix it. Send the log text, not a screenshot.
+Salin log untuk AI	Copy log for AI
+Atau buka langsung (log otomatis disalin)	Or open directly (log is copied automatically)
+Lapor ke pengembang	Report to the developer
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	If the AI concludes the problem is in the launcher, report it on GitHub. The log is copied automatically, just paste it into the report.
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	Report it on GitHub so it can be fixed. The log is copied automatically, just paste it into the report.
+Lapor di GitHub	Report on GitHub
+Cara lain membagikan log	Other ways to share the log
+Bagikan file	Share file
+Tautan mclo.gs	mclo.gs link
+Mengunggah...	Uploading...
+Buka tautan	Open link
+Log untuk AI disalin. Tempel di kolom chat AI.	Log copied for AI. Paste it into the AI chat box.
+Log disalin. Tempel di laporan.	Log copied. Paste it into the report.
+Tidak bisa membuka tautan.	Could not open the link.
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Hi, my Minecraft Java Edition crashes on my Android phone when launched through AmberLauncher. Please explain the cause in simple language (I am a beginner), then give fixes one step at a time. If a mod is the cause, tell me which mod to remove or replace.
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Hi, the AmberLauncher app (a Minecraft Java Edition launcher for Android) stopped on its own. Please explain the cause in simple language (I am a beginner) and suggest what I can try. If you think this is a bug in the launcher, please say so.
+Perangkat: {0}	Device: {0}
+Versi Minecraft: {0}	Minecraft version: {0}
+Jumlah mod: {0}	Number of mods: {0}
+Daftar mod: {0}	Mod list: {0}
+Isi log crash:	Crash log contents:

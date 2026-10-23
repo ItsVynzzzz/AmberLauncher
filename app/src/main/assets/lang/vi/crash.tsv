@@ -1,0 +1,45 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	AmberLauncher \u0111\u00e3 d\u1eebng
+Minecraft berhenti mendadak	Minecraft d\u1eebng \u0111\u1ed9t ng\u1ed9t
+Aplikasi tertutup karena kesalahan tak terduga	\u1ee8ng d\u1ee5ng \u0111\u00e3 \u0111\u00f3ng do l\u1ed7i b\u1ea5t ng\u1edd
+Kembali ke launcher	Quay l\u1ea1i launcher
+Penjelasan	Gi\u1ea3i th\u00edch
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	Crash kh\u00f4ng ph\u1ea3i l\u00fac n\u00e0o c\u0169ng c\u00f3 ngh\u0129a l\u00e0 launcher b\u1ecb h\u1ecfng. Mod, RAM c\u1ee7a \u0111i\u1ec7n tho\u1ea1i v\u00e0 tr\u00ecnh \u0111i\u1ec1u khi\u1ec3n \u0111\u1ed3 h\u1ecda th\u01b0\u1eddng l\u00e0 nguy\u00ean nh\u00e2n h\u01a1n nhi\u1ec1u, n\u00ean h\u00e3y t\u00ecm hi\u1ec3u tr\u01b0\u1edbc khi b\u00e1o cho nh\u00e0 ph\u00e1t tri\u1ec3n.
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	Launcher d\u1eebng \u0111\u1ed9t ng\u1ed9t do l\u1ed7i b\u1ea5t ng\u1edd. H\u00e3y g\u1eedi nh\u1eadt k\u00fd cho nh\u00e0 ph\u00e1t tri\u1ec3n \u0111\u1ec3 h\u1ecd s\u1eeda l\u1ed7i.
+Dugaan penyebab	Nguy\u00ean nh\u00e2n c\u00f3 th\u1ec3
+Kesalahan di dalam AmberLauncher	L\u1ed7i b\u00ean trong AmberLauncher
+Memori (RAM) HP habis	\u0110i\u1ec7n tho\u1ea1i h\u1ebft b\u1ed9 nh\u1edb (RAM)
+Renderer atau driver grafis	Tr\u00ecnh k\u1ebft xu\u1ea5t ho\u1eb7c tr\u00ecnh \u0111i\u1ec1u khi\u1ec3n \u0111\u1ed3 h\u1ecda
+Mod, versi Java, atau file game	M\u1ed9t mod, phi\u00ean b\u1ea3n Java ho\u1eb7c t\u1ec7p game
+Belum bisa dipastikan	Ch\u01b0a th\u1ec3 x\u00e1c \u0111\u1ecbnh
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	L\u1ea7n n\u00e0y ch\u00ednh launcher \u0111\u00e3 d\u1eebng, kh\u00f4ng ph\u1ea3i game hay mod. B\u00e1o cho nh\u00e0 ph\u00e1t tri\u1ec3n s\u1ebd gi\u00fap s\u1eeda l\u1ed7i.
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	H\u1ec7 th\u1ed1ng \u0111\u00e3 d\u1eebng game v\u00ec \u0111i\u1ec7n tho\u1ea1i kh\u00f4ng \u0111\u1ee7 RAM cho game, mod ho\u1eb7c c\u00e0i \u0111\u1eb7t \u0111\u1ed3 h\u1ecda \u0111ang d\u00f9ng. Th\u01b0\u1eddng \u0111\u00e2y kh\u00f4ng ph\u1ea3i l\u1ed7i c\u1ee7a launcher. H\u00e3y th\u1eed gi\u1ea3m RAM c\u1ea5p cho game (kh\u00f4ng qu\u00e1 m\u1ed9t n\u1eeda RAM \u0111i\u1ec7n tho\u1ea1i), b\u1edbt mod v\u00e0 \u0111\u00f3ng c\u00e1c \u1ee9ng d\u1ee5ng kh\u00e1c.
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	Game d\u1eebng \u1edf ph\u1ea7n \u0111\u1ed3 h\u1ecda ho\u1eb7c th\u01b0 vi\u1ec7n c\u00f3 s\u1eb5n c\u1ee7a \u0111i\u1ec7n tho\u1ea1i. Nguy\u00ean nh\u00e2n th\u01b0\u1eddng g\u1eb7p l\u00e0 tr\u00ecnh k\u1ebft xu\u1ea5t kh\u00f4ng h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y. H\u00e3y th\u1eed \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t trong c\u00e0i \u0111\u1eb7t instance. Ch\u1ec9 khi m\u1ecdi tr\u00ecnh k\u1ebft xu\u1ea5t \u0111\u1ec1u l\u1ed7i th\u00ec v\u1ea5n \u0111\u1ec1 m\u1edbi c\u00f3 th\u1ec3 n\u1eb1m \u1edf launcher.
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	Game g\u1eb7p l\u1ed7i khi \u0111ang ch\u1ea1y. Th\u01b0\u1eddng l\u00e0 do mod kh\u00f4ng kh\u1edbp v\u1edbi phi\u00ean b\u1ea3n game ho\u1eb7c loader, mod thi\u1ebfu th\u01b0 vi\u1ec7n ph\u1ee5 thu\u1ed9c, ho\u1eb7c phi\u00ean b\u1ea3n Java kh\u00f4ng ph\u00f9 h\u1ee3p. Th\u01b0\u1eddng \u0111\u00e2y kh\u00f4ng ph\u1ea3i l\u1ed7i c\u1ee7a launcher.
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	Nguy\u00ean nh\u00e2n ch\u1ec9 l\u1ed9 ra trong n\u1ed9i dung nh\u1eadt k\u00fd. AI c\u00f3 th\u1ec3 gi\u00fap b\u1ea1n \u0111\u1ecdc n\u00f3.
+Detail teknis	Chi ti\u1ebft k\u1ef9 thu\u1eadt
+Kesalahan tak terduga di dalam aplikasi	L\u1ed7i b\u1ea5t ng\u1edd b\u00ean trong \u1ee9ng d\u1ee5ng
+Status keluar: {~0}	Tr\u1ea1ng th\u00e1i tho\u00e1t: {0}
+Cari solusi dengan AI	T\u00ecm c\u00e1ch s\u1eeda b\u1eb1ng AI
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Sao ch\u00e9p nh\u1eadt k\u00fd k\u00e8m c\u00e2u h\u1ecfi so\u1ea1n s\u1eb5n r\u1ed3i d\u00e1n v\u00e0o khung chat c\u1ee7a AI. AI th\u01b0\u1eddng ch\u1ec9 ra \u0111\u01b0\u1ee3c nguy\u00ean nh\u00e2n v\u00e0 c\u00e1ch s\u1eeda. H\u00e3y g\u1eedi v\u0103n b\u1ea3n nh\u1eadt k\u00fd, \u0111\u1eebng g\u1eedi \u1ea3nh ch\u1ee5p m\u00e0n h\u00ecnh.
+Salin log untuk AI	Sao ch\u00e9p nh\u1eadt k\u00fd cho AI
+Atau buka langsung (log otomatis disalin)	Ho\u1eb7c m\u1edf tr\u1ef1c ti\u1ebfp (nh\u1eadt k\u00fd t\u1ef1 \u0111\u1ed9ng \u0111\u01b0\u1ee3c sao ch\u00e9p)
+Lapor ke pengembang	B\u00e1o cho nh\u00e0 ph\u00e1t tri\u1ec3n
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	N\u1ebfu AI k\u1ebft lu\u1eadn v\u1ea5n \u0111\u1ec1 n\u1eb1m \u1edf launcher, h\u00e3y b\u00e1o tr\u00ean GitHub. Nh\u1eadt k\u00fd \u0111\u01b0\u1ee3c sao ch\u00e9p t\u1ef1 \u0111\u1ed9ng, ch\u1ec9 c\u1ea7n d\u00e1n v\u00e0o b\u00e1o c\u00e1o.
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	H\u00e3y b\u00e1o tr\u00ean GitHub \u0111\u1ec3 l\u1ed7i \u0111\u01b0\u1ee3c s\u1eeda. Nh\u1eadt k\u00fd \u0111\u01b0\u1ee3c sao ch\u00e9p t\u1ef1 \u0111\u1ed9ng, ch\u1ec9 c\u1ea7n d\u00e1n v\u00e0o b\u00e1o c\u00e1o.
+Lapor di GitHub	B\u00e1o l\u1ed7i tr\u00ean GitHub
+Cara lain membagikan log	C\u00e1ch kh\u00e1c \u0111\u1ec3 chia s\u1ebb nh\u1eadt k\u00fd
+Bagikan file	Chia s\u1ebb t\u1ec7p
+Tautan mclo.gs	Li\u00ean k\u1ebft mclo.gs
+Mengunggah...	\u0110ang t\u1ea3i l\u00ean...
+Buka tautan	M\u1edf li\u00ean k\u1ebft
+Log untuk AI disalin. Tempel di kolom chat AI.	\u0110\u00e3 sao ch\u00e9p nh\u1eadt k\u00fd cho AI. H\u00e3y d\u00e1n v\u00e0o khung chat c\u1ee7a AI.
+Log disalin. Tempel di laporan.	\u0110\u00e3 sao ch\u00e9p nh\u1eadt k\u00fd. H\u00e3y d\u00e1n v\u00e0o b\u00e1o c\u00e1o.
+Tidak bisa membuka tautan.	Kh\u00f4ng th\u1ec3 m\u1edf li\u00ean k\u1ebft.
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Xin ch\u00e0o, Minecraft Java Edition c\u1ee7a t\u00f4i b\u1ecb crash tr\u00ean \u0111i\u1ec7n tho\u1ea1i Android khi ch\u1ea1y b\u1eb1ng AmberLauncher. H\u00e3y gi\u1ea3i th\u00edch nguy\u00ean nh\u00e2n b\u1eb1ng ng\u00f4n ng\u1eef \u0111\u01a1n gi\u1ea3n (t\u00f4i l\u00e0 ng\u01b0\u1eddi m\u1edbi) r\u1ed3i h\u01b0\u1edbng d\u1eabn c\u00e1ch s\u1eeda t\u1eebng b\u01b0\u1edbc. N\u1ebfu nguy\u00ean nh\u00e2n l\u00e0 mod, h\u00e3y cho t\u00f4i bi\u1ebft n\u00ean x\u00f3a ho\u1eb7c thay mod n\u00e0o.
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Xin ch\u00e0o, \u1ee9ng d\u1ee5ng AmberLauncher (launcher Minecraft Java Edition cho Android) t\u1ef1 d\u1eebng. H\u00e3y gi\u1ea3i th\u00edch nguy\u00ean nh\u00e2n b\u1eb1ng ng\u00f4n ng\u1eef \u0111\u01a1n gi\u1ea3n (t\u00f4i l\u00e0 ng\u01b0\u1eddi m\u1edbi) v\u00e0 g\u1ee3i \u00fd nh\u1eefng g\u00ec t\u00f4i c\u00f3 th\u1ec3 th\u1eed. N\u1ebfu b\u1ea1n cho r\u1eb1ng \u0111\u00e2y l\u00e0 l\u1ed7i c\u1ee7a launcher, h\u00e3y n\u00f3i r\u00f5.
+Perangkat: {0}	Thi\u1ebft b\u1ecb: {0}
+Versi Minecraft: {0}	Phi\u00ean b\u1ea3n Minecraft: {0}
+Jumlah mod: {0}	S\u1ed1 l\u01b0\u1ee3ng mod: {0}
+Daftar mod: {0}	Danh s\u00e1ch mod: {0}
+Isi log crash:	N\u1ed9i dung nh\u1eadt k\u00fd crash:

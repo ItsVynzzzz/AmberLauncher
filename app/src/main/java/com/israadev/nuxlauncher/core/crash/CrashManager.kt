@@ -386,6 +386,23 @@ object CrashManager {
     }
 
     /**
+     * Membaca catatan crash terakhir dari berkas tanpa mengubah status apa pun. Dipakai halaman Error
+     * mandiri: game berjalan di proses lain, jadi catatannya hanya bisa diambil dari berkas.
+     */
+    fun readSavedCrash(context: Context): GameCrashInfo? {
+        return try {
+            val crashFile = File(context.filesDir, CRASH_FILE_NAME)
+            if (crashFile.exists() && crashFile.length() > 0) {
+                gson.fromJson(crashFile.readText(), GameCrashInfo::class.java)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
      * Menghapus status crash setelah ditutup oleh user
      */
     fun dismissCrash(context: Context) {

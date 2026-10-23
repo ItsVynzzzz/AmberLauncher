@@ -1,0 +1,45 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	AmberLauncher se detuvo
+Minecraft berhenti mendadak	Minecraft se detuvo de repente
+Aplikasi tertutup karena kesalahan tak terduga	La aplicaci\u00f3n se cerr\u00f3 por un error inesperado
+Kembali ke launcher	Volver al launcher
+Penjelasan	Explicaci\u00f3n
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	Un crash no siempre significa que el launcher est\u00e9 roto. Los mods, la RAM del tel\u00e9fono y el controlador gr\u00e1fico son la causa con mucha m\u00e1s frecuencia, as\u00ed que averigua primero antes de avisar al desarrollador.
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	El launcher se detuvo de repente por un error inesperado. Env\u00eda el registro al desarrollador para que pueda corregirlo.
+Dugaan penyebab	Causa probable
+Kesalahan di dalam AmberLauncher	Un error dentro de AmberLauncher
+Memori (RAM) HP habis	Se agot\u00f3 la memoria (RAM) del tel\u00e9fono
+Renderer atau driver grafis	Renderizador o controlador gr\u00e1fico
+Mod, versi Java, atau file game	Un mod, la versi\u00f3n de Java o un archivo del juego
+Belum bisa dipastikan	A\u00fan no se puede determinar
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	Esta vez se detuvo el propio launcher, no el juego ni un mod. Un reporte al desarrollador ayuda a corregirlo.
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	El sistema detuvo el juego porque el tel\u00e9fono no tiene RAM suficiente para el juego, los mods o los ajustes gr\u00e1ficos que usas. Normalmente no es un fallo del launcher. Prueba a reducir la RAM asignada al juego (no m\u00e1s de la mitad de la RAM del tel\u00e9fono), quitar mods y cerrar otras aplicaciones.
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	El juego se detuvo en la parte gr\u00e1fica o en una biblioteca integrada del tel\u00e9fono. Una causa com\u00fan es un renderizador poco compatible con este tel\u00e9fono. Prueba a cambiar el renderizador en los ajustes de la instancia. Solo si todos fallan, el problema podr\u00eda estar en el launcher.
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	El juego tuvo un error mientras se ejecutaba. Lo m\u00e1s habitual es un mod que no coincide con la versi\u00f3n del juego o del loader, un mod al que le faltan dependencias o una versi\u00f3n de Java incorrecta. Normalmente no es un fallo del launcher.
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	La causa solo se ve en el contenido del registro. Una IA puede ayudarte a leerlo.
+Detail teknis	Detalles t\u00e9cnicos
+Kesalahan tak terduga di dalam aplikasi	Un error inesperado dentro de la aplicaci\u00f3n
+Status keluar: {~0}	Estado de salida: {0}
+Cari solusi dengan AI	Encuentra la soluci\u00f3n con una IA
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Copia el registro junto con una pregunta ya preparada y p\u00e9galo en el chat de una IA. Normalmente puede se\u00f1alar la causa y c\u00f3mo arreglarla. Env\u00eda el texto del registro, no una captura de pantalla.
+Salin log untuk AI	Copiar registro para la IA
+Atau buka langsung (log otomatis disalin)	O abre directamente (el registro se copia solo)
+Lapor ke pengembang	Avisar al desarrollador
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	Si la IA concluye que el problema est\u00e1 en el launcher, rep\u00f3rtalo en GitHub. El registro se copia solo; solo p\u00e9galo en el reporte.
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	Rep\u00f3rtalo en GitHub para que se pueda corregir. El registro se copia solo; solo p\u00e9galo en el reporte.
+Lapor di GitHub	Reportar en GitHub
+Cara lain membagikan log	Otras formas de compartir el registro
+Bagikan file	Compartir archivo
+Tautan mclo.gs	Enlace de mclo.gs
+Mengunggah...	Subiendo...
+Buka tautan	Abrir enlace
+Log untuk AI disalin. Tempel di kolom chat AI.	Registro copiado para la IA. P\u00e9galo en el chat de la IA.
+Log disalin. Tempel di laporan.	Registro copiado. P\u00e9galo en el reporte.
+Tidak bisa membuka tautan.	No se pudo abrir el enlace.
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Hola, mi Minecraft Java Edition se cierra con un crash en mi tel\u00e9fono Android al ejecutarlo con AmberLauncher. Expl\u00edcame la causa con palabras sencillas (soy principiante) y dame las soluciones paso a paso. Si la causa es un mod, dime cu\u00e1l debo quitar o reemplazar.
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Hola, la aplicaci\u00f3n AmberLauncher (un launcher de Minecraft Java Edition para Android) se detuvo sola. Expl\u00edcame la causa con palabras sencillas (soy principiante) y sugiere qu\u00e9 puedo probar. Si crees que es un error del launcher, d\u00edmelo.
+Perangkat: {0}	Dispositivo: {0}
+Versi Minecraft: {0}	Versi\u00f3n de Minecraft: {0}
+Jumlah mod: {0}	Cantidad de mods: {0}
+Daftar mod: {0}	Lista de mods: {0}
+Isi log crash:	Contenido del registro del crash:

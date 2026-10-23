@@ -187,7 +187,7 @@ private fun DrawScope.drawControlLabel(
 /**
  * Ikon garis sederhana dalam kotak [s] berpusat di ([cx], [cy]). Nama: jump, sneak, attack, use,
  * inventory, chat, pause, keyboard, eye, close, gear, sliders, terminal, power, coffee, external,
- * trash, warning, download, record, stop, chev_up, chev_down, chev_right.
+ * trash, warning, download, copy, share, record, stop, chev_up, chev_down, chev_right.
  */
 fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, color: Color, slash: Boolean = false) {
     val x0 = cx - s / 2f
@@ -326,6 +326,19 @@ fun DrawScope.drawControlIcon(name: String, cx: Float, cy: Float, s: Float, colo
             line(p(0.50f, 0.20f), p(0.50f, 0.60f))
             poly(false, floatArrayOf(0.32f, 0.44f, 0.50f, 0.62f, 0.68f, 0.44f))
             poly(false, floatArrayOf(0.24f, 0.72f, 0.24f, 0.82f, 0.76f, 0.82f, 0.76f, 0.72f))
+        }
+        "copy" -> {
+            // Dua lembar bertumpuk: lembar depan utuh, lembar belakang hanya sisi yang tidak tertutup.
+            drawRoundRect(color, p(0.38f, 0.34f), Size(0.42f * s, 0.46f * s), CornerRadius(0.06f * s), stroke)
+            poly(false, floatArrayOf(0.38f, 0.66f, 0.20f, 0.66f, 0.20f, 0.20f, 0.62f, 0.20f, 0.62f, 0.34f))
+        }
+        "share" -> {
+            // Tiga titik terhubung: satu di kiri, dua di kanan.
+            line(p(0.28f, 0.50f), p(0.70f, 0.26f))
+            line(p(0.28f, 0.50f), p(0.70f, 0.74f))
+            drawCircle(color, 0.09f * s, p(0.28f, 0.50f))
+            drawCircle(color, 0.09f * s, p(0.70f, 0.26f))
+            drawCircle(color, 0.09f * s, p(0.70f, 0.74f))
         }
         "record" -> {
             // Cincin dengan titik penuh di tengah.

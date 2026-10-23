@@ -76,3 +76,18 @@ Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan
 Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap del juego: elegiste {0} MB y se usan {1} MB. Este tel\u00e9fono tiene {2} MB de RAM; un heap mayor hace que el tel\u00e9fono use memoria de intercambio y bajan los FPS.
 Heap game {0} MB (batas profil {1} MB).	Heap del juego {0} MB (l\u00edmite del perfil {1} MB).
 Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Se aplica la pr\u00f3xima vez que inicies el juego. El efecto se ve en el HUD de FPS (RAM libre \u00b7 CALOR \u00b7 Hz).
+# Rekam layar bawaan
+Kualitas rekaman layar	Calidad de la grabaci\u00f3n de pantalla
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	M\u00e1s peque\u00f1o es m\u00e1s ligero para el tel\u00e9fono. Ahorro 540p, Ligero 720p, N\u00edtido 1080p.
+Hemat	Ahorro
+Ringan	Ligero
+Tajam	N\u00edtido
+FPS rekaman	FPS de grabaci\u00f3n
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps es mucho m\u00e1s ligero. 60 fps solo para tel\u00e9fonos potentes.
+Rekam suara mikrofon	Grabar audio del micr\u00f3fono
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	A\u00f1ade el audio del micr\u00f3fono a la grabaci\u00f3n. El sonido del juego a\u00fan no se graba.
+Hentikan rekaman saat HP terlalu panas	Detener la grabaci\u00f3n si el tel\u00e9fono se sobrecalienta
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	Guarda la grabaci\u00f3n y se detiene sola para que el juego no se ralentice por el calor.
+# Pembaruan otomatis dan rekam layar (tambahan)
+Isi rekaman	Contenido de la grabaci\u00f3n
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Solo el juego: los botones en pantalla se ocultan del video (siguen funcionando). Con botones: los botones en pantalla tambi\u00e9n se graban. Tambi\u00e9n puedes cambiarlo desde el men\u00fa del juego.

@@ -76,3 +76,18 @@ Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan
 Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Game heap: you chose {0} MB, using {1} MB. This phone has {2} MB of RAM; a larger heap makes the phone swap memory and lowers FPS.
 Heap game {0} MB (batas profil {1} MB).	Game heap {0} MB (profile limit {1} MB).
 Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (RAM left \u00b7 HOT \u00b7 Hz).
+# Rekam layar bawaan
+Kualitas rekaman layar	Screen recording quality
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	Smaller is lighter on the phone. Eco 540p, Light 720p, Sharp 1080p.
+Hemat	Eco
+Ringan	Light
+Tajam	Sharp
+FPS rekaman	Recording FPS
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps is much lighter. 60 fps only for powerful phones.
+Rekam suara mikrofon	Record microphone audio
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	Adds microphone audio to the recording. Game sound is not recorded yet.
+Hentikan rekaman saat HP terlalu panas	Stop recording when the phone overheats
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	Saves the recording and stops automatically so the game does not slow down from heat.
+# Pembaruan otomatis dan rekam layar (tambahan)
+Isi rekaman	Recording content
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Game only: on-screen buttons are hidden from the video (they still work). With buttons: on-screen buttons are recorded too. You can also change this from the in-game menu.

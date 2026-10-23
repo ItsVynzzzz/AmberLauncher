@@ -4,3 +4,82 @@ Versi {0} sudah tersedia. Kamu memakai versi {1}.	Version {0} is available. You 
 Yang baru	What's new
 Lewati	Skip
 Unduh	Download
+# Pengecekan, unduhan, dan pemasangan pembaruan
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	Download interrupted. Tap Try again; it continues from where it stopped.
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	Not enough storage space. Free up about {0} MB and try again.
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	The downloaded file is corrupted (it does not match the one on GitHub). Tap Try again to download it again.
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	The APK file was not found on GitHub (code 404). The release may have been deleted.
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub refused the download (code 403). Try again later.
+GitHub membalas kode {0} saat mengunduh.	GitHub replied with code {0} while downloading.
+Balasan GitHub kosong.	The GitHub response was empty.
+Balasan GitHub terlalu besar.	The GitHub response is too large.
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub is having problems (code {0}). Try again later.
+GitHub membalas kode {0}.	GitHub replied with code {0}.
+Tidak ada koneksi internet.	No internet connection.
+Koneksi terlalu lambat. Coba lagi.	The connection is too slow. Try again.
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	The secure connection to GitHub failed. Check the phone's date and time.
+Koneksi internet terputus. Coba lagi.	The internet connection was lost. Try again.
+Terjadi kesalahan yang tidak terduga.	An unexpected error occurred.
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	The GitHub request limit was reached (usually because many people share the same network). Try again around {0}.
+Unduhan gagal: {0}	Download failed: {0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	The update file is missing. Tap Try again to download it again.
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	The game is still running. Close it first so no data is lost, then try again.
+Pemasangan gagal: {0}	Installation failed: {0}
+Pemasangan dibatalkan.	Installation was cancelled.
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	The update file cannot be read as an APK. Tap Try again to download it again.
+Berkas ini bukan APK AmberLauncher.	This file is not an AmberLauncher APK.
+APK ini tidak lebih baru dari versi yang terpasang.	This APK is not newer than the installed version.
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	The APK signature differs from the installed app, so Android will reject this update.
+Pemasangan diblokir oleh sistem atau Play Protect.	Installation was blocked by the system or Play Protect.
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	Installation was blocked by the system or Play Protect.{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android rejected this update: its signature or version does not match the installed app.
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android rejected this update: its signature or version does not match the installed app.{0}
+APK ini tidak cocok dengan HP kamu.	This APK is not compatible with your phone.
+APK ini tidak cocok dengan HP kamu.{0}	This APK is not compatible with your phone.{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	The APK is corrupted or invalid. Tap Try again to download it again.
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	The APK is corrupted or invalid. Tap Try again to download it again.{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	Not enough storage space to install the update.
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	Not enough storage space to install the update.{0}
+Pemasangan gagal.	Installation failed.
+Pemasangan gagal.{0}	Installation failed.{0}
+Balasan GitHub tidak bisa dibaca.	The GitHub response could not be read.
+Daftar rilis tersimpan tidak bisa dibaca.	The saved release list could not be read.
+Pembaruan	Updates
+Versi terpasang	Installed version
+Memeriksa...	Checking...
+Lihat pembaruan	View update
+Buka	Open
+Periksa pembaruan	Check for updates
+Periksa otomatis	Check automatically
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	Looks for a new version on GitHub every time the launcher opens (only a few KB). If there is one, a pop-up offers to download and install it.
+Semua rilis	All releases
+Daftar versi dan catatan perubahannya di GitHub.	The list of versions and their changelogs on GitHub.
+Buka GitHub	Open GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	Updates are downloaded and installed from inside the launcher. Android still asks for one install confirmation, and the game must be closed first.
+Belum diperiksa. Ketuk Periksa pembaruan.	Not checked yet. Tap Check for updates.
+Memeriksa pembaruan...	Checking for updates...
+Sudah versi terbaru. Diperiksa pukul {0}.	You're up to date. Checked at {0}.
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	Version {0} is out, but the APK for this phone ({1}) is not available yet. Try again later.
+Versi {0} tersedia.	Version {0} is available.
+Mengunduh versi {0}... {1}%	Downloading version {0}... {1}%
+Versi {0} siap dipasang.	Version {0} is ready to install.
+Butuh izin memasang aplikasi dari Android.	Android needs your permission to install apps.
+Menunggu konfirmasi pemasangan dari Android...	Waiting for Android's install confirmation...
+Ukuran unduhan: {0} MB	Download size: {0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	You are on mobile data; this download uses your data allowance.
+Mengunduh pembaruan	Downloading update
+Sembunyikan	Hide
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	The download runs while the launcher is open. If it gets interrupted, tap Download again; it continues from where it stopped.
+Siap dipasang	Ready to install
+Pasang	Install
+Versi {0} sudah diunduh dan diperiksa.	Version {0} has been downloaded and checked.
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android will ask you to confirm the installation. The launcher closes during installation; reopen it when it finishes.
+Izin pemasangan diperlukan	Install permission required
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android needs your permission so AmberLauncher can install its own updates.
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	Turn on "Allow from this source", then come back here. Installation continues automatically.
+Memasang pembaruan	Installing update
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	Follow Android's confirmation prompt. The launcher closes automatically when installation finishes.
+Pembaruan gagal	Update failed
+Coba lagi	Try again
+Pemasangan gagal. ({~0})	Installation failed. ({0})
+layar konfirmasi tidak bisa dibuka	the confirmation screen could not be opened

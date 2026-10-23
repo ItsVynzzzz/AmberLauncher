@@ -56,3 +56,37 @@ Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa
 Dukungan resmi: {0}	H\u1ed7 tr\u1ee3 ch\u00ednh th\u1ee9c: {0}
 Mengunduh game	\u0110ang t\u1ea3i game
 Menyiapkan file game...	\u0110ang chu\u1ea9n b\u1ecb t\u1ec7p game...
+# Pembaruan otomatis dan rekam layar (tambahan)
+Rekam layar	Quay m\u00e0n h\u00ecnh
+Merekam	\u0110ang quay
+Dijeda	T\u1ea1m d\u1eebng
+Ketuk untuk mulai	Ch\u1ea1m \u0111\u1ec3 b\u1eaft \u0111\u1ea7u
+Merekam layar	\u0110ang quay m\u00e0n h\u00ecnh
+Ketuk Berhenti untuk menyimpan rekaman.	Ch\u1ea1m D\u1eebng \u0111\u1ec3 l\u01b0u b\u1ea3n quay.
+Berhenti	D\u1eebng
+Merekam {0}x{1} \u00b7 {2} fps	\u0110ang quay {0}x{1} \u00b7 {2} fps
+Izin merekam layar tidak diberikan	Ch\u01b0a \u0111\u01b0\u1ee3c c\u1ea5p quy\u1ec1n quay m\u00e0n h\u00ecnh
+Izin mikrofon ditolak, merekam tanpa suara	Quy\u1ec1n micro b\u1ecb t\u1eeb ch\u1ed1i, quay kh\u00f4ng c\u00f3 \u00e2m thanh
+Perekam layar tidak tersedia di HP ini	\u0110i\u1ec7n tho\u1ea1i n\u00e0y kh\u00f4ng h\u1ed7 tr\u1ee3 quay m\u00e0n h\u00ecnh
+Perekam layar tidak tersedia di HP ini.	\u0110i\u1ec7n tho\u1ea1i n\u00e0y kh\u00f4ng h\u1ed7 tr\u1ee3 quay m\u00e0n h\u00ecnh.
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	\u0110i\u1ec7n tho\u1ea1i n\u00e0y kh\u00f4ng c\u00f3 b\u1ed9 m\u00e3 h\u00f3a video ph\u1ea7n c\u1ee9ng. \u0110\u00e3 h\u1ee7y quay \u0111\u1ec3 tr\u00f2 ch\u01a1i kh\u00f4ng b\u1ecb gi\u1eadt.
+Ruang penyimpanan kurang untuk merekam.	Kh\u00f4ng \u0111\u1ee7 dung l\u01b0\u1ee3ng \u0111\u1ec3 quay.
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	B\u1ed9 nh\u1edb \u0111\u00e3 \u0111\u1ea7y. B\u1ea3n quay \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u v\u00e0 d\u1eebng l\u1ea1i.
+Perekam mengalami kesalahan. Rekaman dihentikan.	Tr\u00ecnh quay g\u1eb7p l\u1ed7i. \u0110\u00e3 d\u1eebng quay.
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	H\u1ec7 th\u1ed1ng \u0111\u00e3 d\u1eebng vi\u1ec7c ghi m\u00e0n h\u00ecnh. B\u1ea3n quay \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u.
+Rekaman terlalu singkat, tidak disimpan.	B\u1ea3n quay qu\u00e1 ng\u1eafn n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c l\u01b0u.
+Rekaman disimpan di Movies/AmberLauncher	\u0110\u00e3 l\u01b0u b\u1ea3n quay v\u00e0o Movies/AmberLauncher
+Rekaman disimpan: {0}	\u0110\u00e3 l\u01b0u b\u1ea3n quay: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	\u0110i\u1ec7n tho\u1ea1i qu\u00e1 n\u00f3ng. B\u1ea3n quay \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u v\u00e0 d\u1eebng l\u1ea1i \u0111\u1ec3 tr\u00f2 ch\u01a1i v\u1eabn m\u01b0\u1ee3t.
+Gagal memulai rekaman: {~0}	Kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u quay: {0}
+Gagal menyiapkan rekaman: {0}	Kh\u00f4ng th\u1ec3 chu\u1ea9n b\u1ecb quay: {0}
+REKAM	QUAY
+Berhenti merekam	D\u1eebng quay
+Game saja	Ch\u1ec9 tr\u00f2 ch\u01a1i
+Dengan tombol	K\u00e8m n\u00fat
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	B\u1ea3n quay t\u1ea1m d\u1eebng khi menu m\u1edf v\u00e0 t\u1ef1 ti\u1ebfp t\u1ee5c khi menu \u0111\u00f3ng.
+Tombol layar ikut terekam di video.	C\u00e1c n\u00fat tr\u00ean m\u00e0n h\u00ecnh s\u1ebd xu\u1ea5t hi\u1ec7n trong video.
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	C\u00e1c n\u00fat tr\u00ean m\u00e0n h\u00ecnh \u0111\u01b0\u1ee3c \u1ea9n kh\u1ecfi video (v\u1eabn b\u1ea5m \u0111\u01b0\u1ee3c).
+izin tangkap layar tidak valid	quy\u1ec1n ghi m\u00e0n h\u00ecnh kh\u00f4ng h\u1ee3p l\u1ec7
+tidak bisa membuat berkas di Movies	kh\u00f4ng th\u1ec3 t\u1ea1o t\u1ec7p trong Movies
+tidak bisa membuka berkas rekaman	kh\u00f4ng th\u1ec3 m\u1edf t\u1ec7p b\u1ea3n quay

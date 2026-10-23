@@ -31,6 +31,13 @@ data class LauncherSettings(
     val zinkPreferSystemDriver: Boolean = false,
     val vsyncInZink: Boolean = false,
 
+    // Rekam layar bawaan (encoder perangkat keras). Bawaan sengaja hemat: 720p, 30 fps, tanpa mikrofon.
+    val recordQuality: String = "light", // "eco" (540p), "light" (720p), "high" (1080p)
+    val recordFps: Int = 30, // 30 atau 60
+    val recordMic: Boolean = false, // rekam suara mikrofon (butuh izin)
+    val recordThermalGuard: Boolean = true, // hentikan rekaman otomatis bila HP sangat panas
+    val recordWithControls: Boolean = false, // false = layar game saja (tombol disembunyikan saat merekam), true = ikut merekam tombol kontrol
+
     // Profil khusus perangkat: hanya berpengaruh di HP yang terdaftar (mis. Oppo A3x 4G);
     // di HP lain nilai-nilai ini diabaikan sepenuhnya.
     val deviceProfileEnabled: Boolean = true,
@@ -43,5 +50,8 @@ data class LauncherSettings(
     val homeBgSound: Boolean = false, // suara video, bawaan mati
     val homeBgVolume: Int = 50, // 0 - 100
     val homeAmbientEnabled: Boolean = true, // cahaya di sekitar kartu Beranda (hanya GIF/video)
-    val homeAmbientIntensity: Int = 60 // 20 - 100
+    val homeAmbientIntensity: Int = 60, // 20 - 100
+
+    // Pembaruan aplikasi
+    val autoCheckUpdates: Boolean = true // cek rilis baru di GitHub setiap launcher dibuka
 )

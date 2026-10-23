@@ -15,6 +15,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -26,6 +30,7 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.core.update.UpdateManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
 import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
 import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
@@ -92,17 +97,22 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             color = NuxColors.Background
                         ) {
+                            // Pop-up pembaruan menunggu sampai dialog izin penyimpanan selesai (pembukaan pertama)
+                            var introDone by remember { mutableStateOf(!showStorageIntro) }
                             DashboardScreen()
                             AmberStorageIntro(
                                 initiallyVisible = showStorageIntro,
                                 onOpenSettings = {
+                                    introDone = true
                                     markStorageIntroDone()
                                     openAllFilesAccessSettings()
                                 },
-                                onFinished = { markStorageIntroDone() }
+                                onFinished = {
+                                    introDone = true
+                                    markStorageIntroDone()
+                                }
                             )
-                            // Jangan menumpuk dengan dialog izin penyimpanan di pembukaan pertama
-                            AmberUpdatePrompt(enabled = !showStorageIntro)
+                            AmberUpdatePrompt(enabled = introDone)
                         }
                     }
                 }
@@ -131,6 +141,13 @@ class MainActivity : ComponentActivity() {
                 com.israadev.nuxlauncher.core.crash.CrashManager.checkAndNotify(appCtx)
             } catch (_: Throwable) {}
         }
+        // Auto-update: tiap aplikasi tampil di depan, cek versi baru (murah: ETag + daftar tersimpan)
+        UpdateManager.onForeground(appCtx)
+    }
+
+    override fun onStop() {
+        UpdateManager.onBackground()
+        super.onStop()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

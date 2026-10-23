@@ -1,6 +1,7 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
 import android.os.Build
+import android.os.SystemClock
 import android.view.WindowManager
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -31,10 +32,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
@@ -53,6 +57,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.israadev.nuxlauncher.FpsMode
+import com.israadev.nuxlauncher.core.record.ScreenRecorder
 import com.israadev.nuxlauncher.ui.components.AmberIcon
 import com.israadev.nuxlauncher.ui.components.AmberSegmented
 import com.israadev.nuxlauncher.ui.components.AmberSlider
@@ -62,6 +67,7 @@ import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.theme.Amber
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 /**
@@ -93,8 +99,19 @@ fun GameMenuSheet(
     onRequestKeyboard: () -> Unit,
     onSendKeycode: (Int) -> Unit,
     onExitRequest: () -> Unit,
-    onOpenCustomGui: () -> Unit
+    onOpenCustomGui: () -> Unit,
+    onToggleRecord: () -> Unit = {},
+    recordWithControls: Boolean = false,
+    onRecordWithControlsChange: (Boolean) -> Unit = {}
 ) {
+    // Selama menu terbuka rekaman dijeda: menunya (dan geseran masuk/keluarnya) tidak perlu ikut
+    // terekam. Dilepas sedikit terlambat supaya animasi menutup tidak masuk video.
+    DisposableEffect(visible) {
+        if (visible) ScreenRecorder.hold(ScreenRecorder.Hold.MENU)
+        onDispose {
+            if (visible) ScreenRecorder.release(ScreenRecorder.Hold.MENU, delayMs = 350L)
+        }
+    }
     if (!visible) return
 
     Dialog(
@@ -231,6 +248,12 @@ fun GameMenuSheet(
                     )
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+                RecordBar(onClick = {
+                    onDismissRequest()
+                    onToggleRecord()
+                })
+
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Column(
@@ -239,6 +262,11 @@ fun GameMenuSheet(
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState())
                 ) {
+                    SectionTitle("REKAM")
+                    RecordModeRow(
+                        withControls = recordWithControls,
+                        onWithControlsChange = onRecordWithControlsChange
+                    )
                     SectionTitle("TAMPILAN")
                     SliderRow(
                         label = "Resolusi render",
@@ -462,6 +490,78 @@ private fun QuickTile(
             maxLines = 1
         )
     }
+}
+
+/**
+ * Tombol rekam layar. Waktu berjalan dihitung hanya selama menu terbuka dan tidak menghitung
+ * waktu jeda; saat menu tertutup tidak ada pekerjaan UI sama sekali dari fitur rekam.
+ */
+@Composable
+private fun RecordBar(onClick: () -> Unit) {
+    val st by ScreenRecorder.state.collectAsState()
+    var seconds by remember { mutableLongStateOf(0L) }
+    LaunchedEffect(st) {
+        val s = st
+        while (s.recording) {
+            seconds = s.elapsedMs(SystemClock.elapsedRealtime()) / 1000L
+            if (s.paused) break // waktu berhenti selama dijeda; tidak perlu dihitung ulang
+            delay(1000L)
+        }
+    }
+    val rec = st.recording
+    val shape = RoundedCornerShape(14.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(46.dp)
+            .clip(shape)
+            .background(if (rec) Amber.DangerTint else Amber.Fill)
+            .border(1.dp, if (rec) Amber.Danger else Amber.Line, shape)
+            .amberTap(onClick)
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AmberIcon(if (rec) "stop" else "record", 20.dp, if (rec) Amber.Danger else Amber.Text)
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(
+            text = if (rec) "Berhenti merekam" else "Rekam layar",
+            color = if (rec) Amber.DangerSoft else Amber.Text,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = if (rec) "%02d:%02d".format(seconds / 60L, seconds % 60L) else "Ketuk untuk mulai",
+            color = if (rec) Amber.DangerSoft else Amber.TextDim,
+            fontSize = 11.5.sp,
+            maxLines = 1
+        )
+    }
+}
+
+/** Pilihan isi rekaman: game saja, atau game beserta tombol layarnya. Berlaku juga saat sedang merekam. */
+@Composable
+private fun RecordModeRow(
+    withControls: Boolean,
+    onWithControlsChange: (Boolean) -> Unit
+) {
+    val st by ScreenRecorder.state.collectAsState()
+    AmberSegmented(
+        options = listOf("Game saja", "Dengan tombol"),
+        selected = if (withControls) 1 else 0,
+        onSelect = { onWithControlsChange(it == 1) }
+    )
+    Text(
+        text = when {
+            st.recording -> "Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup."
+            withControls -> "Tombol layar ikut terekam di video."
+            else -> "Tombol layar disembunyikan dari video (tetap bisa disentuh)."
+        },
+        color = Amber.TextDim,
+        fontSize = 10.5.sp,
+        lineHeight = 14.sp,
+        modifier = Modifier.padding(top = 4.dp, start = 2.dp, end = 2.dp)
+    )
 }
 
 @Composable

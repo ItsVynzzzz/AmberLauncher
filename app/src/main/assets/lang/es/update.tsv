@@ -4,3 +4,82 @@ Versi {0} sudah tersedia. Kamu memakai versi {1}.	La versi\u00f3n {0} ya est\u00
 Yang baru	Novedades
 Lewati	Omitir
 Unduh	Descargar
+# Pengecekan, unduhan, dan pemasangan pembaruan
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	Descarga interrumpida. Toca Reintentar; contin\u00faa desde donde se qued\u00f3.
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	No hay espacio suficiente. Libera unos {0} MB e int\u00e9ntalo de nuevo.
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	El archivo descargado est\u00e1 da\u00f1ado (no coincide con el de GitHub). Toca Reintentar para descargarlo de nuevo.
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	No se encontr\u00f3 el APK en GitHub (c\u00f3digo 404). Puede que se haya eliminado la versi\u00f3n.
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub rechaz\u00f3 la descarga (c\u00f3digo 403). Int\u00e9ntalo m\u00e1s tarde.
+GitHub membalas kode {0} saat mengunduh.	GitHub respondi\u00f3 con el c\u00f3digo {0} al descargar.
+Balasan GitHub kosong.	La respuesta de GitHub estaba vac\u00eda.
+Balasan GitHub terlalu besar.	La respuesta de GitHub es demasiado grande.
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub tiene problemas (c\u00f3digo {0}). Int\u00e9ntalo m\u00e1s tarde.
+GitHub membalas kode {0}.	GitHub respondi\u00f3 con el c\u00f3digo {0}.
+Tidak ada koneksi internet.	Sin conexi\u00f3n a internet.
+Koneksi terlalu lambat. Coba lagi.	La conexi\u00f3n es demasiado lenta. Int\u00e9ntalo de nuevo.
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	Fall\u00f3 la conexi\u00f3n segura con GitHub. Revisa la fecha y la hora del tel\u00e9fono.
+Koneksi internet terputus. Coba lagi.	Se perdi\u00f3 la conexi\u00f3n a internet. Int\u00e9ntalo de nuevo.
+Terjadi kesalahan yang tidak terduga.	Ocurri\u00f3 un error inesperado.
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	Se alcanz\u00f3 el l\u00edmite de solicitudes de GitHub (normalmente porque mucha gente comparte la misma red). Int\u00e9ntalo de nuevo hacia las {0}.
+Unduhan gagal: {0}	Fall\u00f3 la descarga: {0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	Falta el archivo de actualizaci\u00f3n. Toca Reintentar para descargarlo de nuevo.
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	El juego sigue en ejecuci\u00f3n. Ci\u00e9rralo primero para no perder datos y vuelve a intentarlo.
+Pemasangan gagal: {0}	Fall\u00f3 la instalaci\u00f3n: {0}
+Pemasangan dibatalkan.	Se cancel\u00f3 la instalaci\u00f3n.
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	El archivo de actualizaci\u00f3n no se puede leer como APK. Toca Reintentar para descargarlo de nuevo.
+Berkas ini bukan APK AmberLauncher.	Este archivo no es un APK de AmberLauncher.
+APK ini tidak lebih baru dari versi yang terpasang.	Este APK no es m\u00e1s reciente que la versi\u00f3n instalada.
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	La firma del APK es distinta de la de la app instalada, as\u00ed que Android rechazar\u00e1 esta actualizaci\u00f3n.
+Pemasangan diblokir oleh sistem atau Play Protect.	El sistema o Play Protect bloque\u00f3 la instalaci\u00f3n.
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	El sistema o Play Protect bloque\u00f3 la instalaci\u00f3n.{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android rechaz\u00f3 esta actualizaci\u00f3n: la firma o la versi\u00f3n no coincide con la app instalada.
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android rechaz\u00f3 esta actualizaci\u00f3n: la firma o la versi\u00f3n no coincide con la app instalada.{0}
+APK ini tidak cocok dengan HP kamu.	Este APK no es compatible con tu tel\u00e9fono.
+APK ini tidak cocok dengan HP kamu.{0}	Este APK no es compatible con tu tel\u00e9fono.{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	El APK est\u00e1 da\u00f1ado o no es v\u00e1lido. Toca Reintentar para descargarlo de nuevo.
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	El APK est\u00e1 da\u00f1ado o no es v\u00e1lido. Toca Reintentar para descargarlo de nuevo.{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	No hay espacio suficiente para instalar la actualizaci\u00f3n.
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	No hay espacio suficiente para instalar la actualizaci\u00f3n.{0}
+Pemasangan gagal.	Fall\u00f3 la instalaci\u00f3n.
+Pemasangan gagal.{0}	Fall\u00f3 la instalaci\u00f3n.{0}
+Balasan GitHub tidak bisa dibaca.	No se pudo leer la respuesta de GitHub.
+Daftar rilis tersimpan tidak bisa dibaca.	No se pudo leer la lista de versiones guardada.
+Pembaruan	Actualizaciones
+Versi terpasang	Versi\u00f3n instalada
+Memeriksa...	Comprobando...
+Lihat pembaruan	Ver actualizaci\u00f3n
+Buka	Abrir
+Periksa pembaruan	Buscar actualizaciones
+Periksa otomatis	Comprobar autom\u00e1ticamente
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	Busca una versi\u00f3n nueva en GitHub cada vez que se abre el launcher (solo unos KB). Si hay una, aparece una ventana para descargarla e instalarla.
+Semua rilis	Todas las versiones
+Daftar versi dan catatan perubahannya di GitHub.	La lista de versiones y sus notas de cambios en GitHub.
+Buka GitHub	Abrir GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	Las actualizaciones se descargan e instalan desde el propio launcher. Android sigue pidiendo una confirmaci\u00f3n de instalaci\u00f3n y el juego debe estar cerrado.
+Belum diperiksa. Ketuk Periksa pembaruan.	A\u00fan no se ha comprobado. Toca Buscar actualizaciones.
+Memeriksa pembaruan...	Buscando actualizaciones...
+Sudah versi terbaru. Diperiksa pukul {0}.	Ya tienes la \u00faltima versi\u00f3n. Comprobado a las {0}.
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	La versi\u00f3n {0} ya sali\u00f3, pero el APK para este tel\u00e9fono ({1}) a\u00fan no est\u00e1 disponible. Int\u00e9ntalo m\u00e1s tarde.
+Versi {0} tersedia.	La versi\u00f3n {0} est\u00e1 disponible.
+Mengunduh versi {0}... {1}%	Descargando la versi\u00f3n {0}... {1}%
+Versi {0} siap dipasang.	La versi\u00f3n {0} est\u00e1 lista para instalar.
+Butuh izin memasang aplikasi dari Android.	Android necesita permiso para instalar aplicaciones.
+Menunggu konfirmasi pemasangan dari Android...	Esperando la confirmaci\u00f3n de instalaci\u00f3n de Android...
+Ukuran unduhan: {0} MB	Tama\u00f1o de la descarga: {0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	Est\u00e1s usando datos m\u00f3viles; esta descarga consume tus datos.
+Mengunduh pembaruan	Descargando actualizaci\u00f3n
+Sembunyikan	Ocultar
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	La descarga contin\u00faa mientras el launcher est\u00e9 abierto. Si se interrumpe, toca Descargar otra vez; contin\u00faa desde donde se qued\u00f3.
+Siap dipasang	Listo para instalar
+Pasang	Instalar
+Versi {0} sudah diunduh dan diperiksa.	La versi\u00f3n {0} se descarg\u00f3 y se comprob\u00f3.
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android pedir\u00e1 confirmar la instalaci\u00f3n. El launcher se cierra durante la instalaci\u00f3n; \u00e1brelo de nuevo al terminar.
+Izin pemasangan diperlukan	Se necesita permiso de instalaci\u00f3n
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android necesita permiso para que AmberLauncher pueda instalar sus propias actualizaciones.
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	Activa "Permitir desde esta fuente" y vuelve aqu\u00ed. La instalaci\u00f3n contin\u00faa autom\u00e1ticamente.
+Memasang pembaruan	Instalando actualizaci\u00f3n
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	Sigue la confirmaci\u00f3n de Android. El launcher se cierra autom\u00e1ticamente al terminar la instalaci\u00f3n.
+Pembaruan gagal	Fall\u00f3 la actualizaci\u00f3n
+Coba lagi	Reintentar
+Pemasangan gagal. ({~0})	Fall\u00f3 la instalaci\u00f3n. ({0})
+layar konfirmasi tidak bisa dibuka	no se pudo abrir la pantalla de confirmaci\u00f3n

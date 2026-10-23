@@ -76,3 +76,17 @@ Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan
 Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap game: b\u1ea1n ch\u1ecdn {0} MB, \u0111ang d\u00f9ng {1} MB. \u0110i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 {2} MB RAM; heap l\u1edbn h\u01a1n khi\u1ebfn m\u00e1y ph\u1ea3i ho\u00e1n \u0111\u1ed5i b\u1ed9 nh\u1edb v\u00e0 l\u00e0m FPS gi\u1ea3m.
 Heap game {0} MB (batas profil {1} MB).	Heap game {0} MB (gi\u1edbi h\u1ea1n c\u1ee7a h\u1ed3 s\u01a1 {1} MB).
 Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. Hi\u1ec7u qu\u1ea3 hi\u1ec3n th\u1ecb tr\u00ean HUD FPS (RAM c\u00f2n \u00b7 N\u00d3NG \u00b7 Hz).
+# Pembaruan otomatis dan rekam layar (tambahan)
+Kualitas rekaman layar	Ch\u1ea5t l\u01b0\u1ee3ng quay m\u00e0n h\u00ecnh
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	C\u00e0ng nh\u1ecf c\u00e0ng nh\u1eb9 cho \u0111i\u1ec7n tho\u1ea1i. Ti\u1ebft ki\u1ec7m 540p, Nh\u1eb9 720p, N\u00e9t 1080p.
+Hemat	Ti\u1ebft ki\u1ec7m
+Ringan	Nh\u1eb9
+Tajam	N\u00e9t
+FPS rekaman	FPS khi quay
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps nh\u1eb9 h\u01a1n nhi\u1ec1u. 60 fps ch\u1ec9 d\u00e0nh cho \u0111i\u1ec7n tho\u1ea1i m\u1ea1nh.
+Isi rekaman	N\u1ed9i dung b\u1ea3n quay
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Ch\u1ec9 tr\u00f2 ch\u01a1i: c\u00e1c n\u00fat tr\u00ean m\u00e0n h\u00ecnh \u0111\u01b0\u1ee3c \u1ea9n kh\u1ecfi video (v\u1eabn b\u1ea5m \u0111\u01b0\u1ee3c). K\u00e8m n\u00fat: c\u00e1c n\u00fat tr\u00ean m\u00e0n h\u00ecnh c\u0169ng \u0111\u01b0\u1ee3c quay. B\u1ea1n c\u0169ng c\u00f3 th\u1ec3 \u0111\u1ed5i trong menu khi ch\u01a1i.
+Rekam suara mikrofon	Quay \u00e2m thanh micro
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	Th\u00eam \u00e2m thanh t\u1eeb micro v\u00e0o b\u1ea3n quay. \u00c2m thanh tr\u00f2 ch\u01a1i ch\u01b0a \u0111\u01b0\u1ee3c quay.
+Hentikan rekaman saat HP terlalu panas	D\u1eebng quay khi \u0111i\u1ec7n tho\u1ea1i qu\u00e1 n\u00f3ng
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	T\u1ef1 \u0111\u1ed9ng l\u01b0u b\u1ea3n quay v\u00e0 d\u1eebng \u0111\u1ec3 tr\u00f2 ch\u01a1i kh\u00f4ng b\u1ecb ch\u1eadm v\u00ec n\u00f3ng.

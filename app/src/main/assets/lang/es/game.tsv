@@ -56,3 +56,38 @@ Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa
 Dukungan resmi: {0}	Soporte oficial: {0}
 Mengunduh game	Descargando el juego
 Menyiapkan file game...	Preparando los archivos del juego...
+# Rekam layar bawaan
+Rekam layar	Grabar pantalla
+Merekam	Grabando
+Dijeda	En pausa
+Ketuk untuk mulai	Toca para empezar
+Merekam layar	Grabando la pantalla
+Ketuk Berhenti untuk menyimpan rekaman.	Toca Detener para guardar la grabaci\u00f3n.
+Berhenti	Detener
+Merekam {0}x{1} \u00b7 {2} fps	Grabando {0}x{1} \u00b7 {2} fps
+Izin merekam layar tidak diberikan	No se concedi\u00f3 el permiso para grabar la pantalla
+Izin mikrofon ditolak, merekam tanpa suara	Permiso de micr\u00f3fono denegado, grabando sin sonido
+Perekam layar tidak tersedia di HP ini	La grabadora de pantalla no est\u00e1 disponible en este tel\u00e9fono
+Perekam layar tidak tersedia di HP ini.	La grabadora de pantalla no est\u00e1 disponible en este tel\u00e9fono.
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	Este tel\u00e9fono no tiene codificador de video por hardware. Se cancel\u00f3 la grabaci\u00f3n para que el juego no se ralentice.
+Ruang penyimpanan kurang untuk merekam.	No hay suficiente espacio de almacenamiento para grabar.
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	El almacenamiento est\u00e1 lleno. La grabaci\u00f3n se guard\u00f3 y se detuvo.
+Perekam mengalami kesalahan. Rekaman dihentikan.	La grabadora tuvo un error. Se detuvo la grabaci\u00f3n.
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	El sistema detuvo la captura de pantalla. La grabaci\u00f3n se guard\u00f3.
+Rekaman terlalu singkat, tidak disimpan.	La grabaci\u00f3n fue demasiado corta y no se guard\u00f3.
+Rekaman disimpan di Movies/AmberLauncher	Grabaci\u00f3n guardada en Movies/AmberLauncher
+Rekaman disimpan: {0}	Grabaci\u00f3n guardada: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	El tel\u00e9fono est\u00e1 demasiado caliente. La grabaci\u00f3n se guard\u00f3 y se detuvo para que el juego siga fluido.
+Gagal memulai rekaman: {~0}	No se pudo iniciar la grabaci\u00f3n: {0}
+Gagal menyiapkan rekaman: {0}	No se pudo preparar la grabaci\u00f3n: {0}
+# Pembaruan otomatis dan rekam layar (tambahan)
+REKAM	GRABAR
+Berhenti merekam	Detener grabaci\u00f3n
+Game saja	Solo el juego
+Dengan tombol	Con botones
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	La grabaci\u00f3n se pausa mientras el men\u00fa est\u00e1 abierto y se reanuda sola al cerrarlo.
+Tombol layar ikut terekam di video.	Los botones en pantalla se incluyen en el video.
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	Los botones en pantalla se ocultan del video (siguen funcionando).
+izin tangkap layar tidak valid	el permiso de captura de pantalla no es v\u00e1lido
+tidak bisa membuat berkas di Movies	no se pudo crear un archivo en Movies
+tidak bisa membuka berkas rekaman	no se pudo abrir el archivo de la grabaci\u00f3n

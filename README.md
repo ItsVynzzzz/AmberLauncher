@@ -31,6 +31,8 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
 - **Akun**: Microsoft, Ely.by, dan offline.
 - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
+- **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).
+- **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
 
 Belum ada: Forge, NeoForge, dan Quilt (untuk sekarang fokusnya Fabric, ke depannya bisa berubah), serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
 
@@ -46,6 +48,8 @@ APK hasil build ada di halaman **Releases** repo ini (tiap build lolos membuat r
 
 - `AmberLauncher-<versi>.apk` untuk CPU 64-bit (arm64-v8a). Hampir semua HP keluaran beberapa tahun terakhir memakai ini, jadi pilih yang ini bila ragu.
 - `AmberLauncher-<versi>-32bit.apk` hanya untuk HP lama yang CPU-nya 32-bit (armeabi-v7a). Versi ini lebih terbatas: RAM untuk game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia, jadi FPS bisa lebih rendah daripada versi 64-bit.
+
+Setelah terpasang, pembaruan berikutnya bisa langsung dari dalam launcher (Pengaturan > Pembaruan). Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.
 
 ### Cara mulai
 

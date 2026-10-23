@@ -40,6 +40,15 @@ object DeviceProfiles {
     /** Heap awal minimum untuk mode Serial: Serial hanya membesarkan heap lewat Full GC yang mahal. */
     private const val SERIAL_MIN_INITIAL_MB = 768
 
+    /** Heap awal lama (MB) yang tersimpan di settings.json; nilai sekecil ini dianggap "otomatis". */
+    private const val LEGACY_INITIAL_HEAP_MB = 256
+
+    /** Batas generasi muda G1 (persen heap): GC lebih jarang tanpa RAM yang membengkak. */
+    private const val G1_MAX_YOUNG_PERCENT = 30
+
+    /** HP dengan RAM total di bawah ini (MB) memakai batas generasi muda G1 walau tanpa profil. */
+    private const val GENERAL_YOUNG_CAP_RAM_MB = 6000
+
     private val OPPO_A3X_4G = DeviceProfile(
         id = "oppo-a3x-4g",
         displayName = "Oppo A3x 4G",
@@ -108,9 +117,44 @@ object DeviceProfiles {
         var initMb = requestedInitMb
         if (gcMode == GC_SERIAL) {
             initMb = maxOf(initMb, minOf(SERIAL_MIN_INITIAL_MB, maxMb))
+        } else if (gcMode == GC_BALANCED) {
+            initMb = autoInitialHeapMb(initMb, maxMb)
         }
         initMb = minOf(initMb, maxMb)
         return Pair(initMb, maxMb)
+    }
+
+    /**
+     * Heap awal otomatis. Heap awal kecil membuat G1 memulai dengan generasi muda mungil dan
+     * mengumpulkan sampah berkali-kali sampai heap membesar pelan-pelan. Bila nilai tersimpan
+     * masih bawaan lama (256 MB), heap awal disamakan dengan heap maksimum.
+     */
+    fun autoInitialHeapMb(requestedInitMb: Int, maxMb: Int): Int {
+        return if (requestedInitMb <= LEGACY_INITIAL_HEAP_MB) maxMb else minOf(requestedInitMb, maxMb)
+    }
+
+    /**
+     * Heap awal untuk HP tanpa profil. Java 8 memakai GC Parallel secara bawaan dan tidak
+     * dibatasi generasi mudanya di sini, jadi nilainya dibiarkan seperti pengaturan.
+     */
+    fun generalInitialHeapMb(requestedInitMb: Int, maxMb: Int, isJava8: Boolean): Int {
+        if (isJava8) return minOf(requestedInitMb, maxMb)
+        return autoInitialHeapMb(requestedInitMb, maxMb)
+    }
+
+    /**
+     * Flag JVM untuk HP tanpa profil: batas generasi muda G1 di HP RAM kecil. Kosong di Java 8,
+     * di HP RAM besar, atau bila pengguna sudah memilih GC sendiri lewat argumen JVM kustom.
+     */
+    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String): List<String> {
+        if (isJava8) return emptyList()
+        if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
+        if (userSelectsCollector(userArgs)) return emptyList()
+        return listOf(
+            "-XX:+IgnoreUnrecognizedVMOptions",
+            "-XX:+UnlockExperimentalVMOptions",
+            "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
+        )
     }
 
     /**
@@ -135,13 +179,11 @@ object DeviceProfiles {
             listOf(
                 "-XX:+IgnoreUnrecognizedVMOptions",
                 "-XX:+UseG1GC",
-                // Target jeda lebih pendek dari bawaan (200 ms): G1 menjaga generasi muda tetap kecil.
-                "-XX:MaxGCPauseMillis=100",
                 "-XX:+UnlockExperimentalVMOptions",
-                // Batas generasi muda 20%..35% heap supaya pemakaian RAM tidak membengkak.
-                "-XX:G1NewSizePercent=20",
-                "-XX:G1MaxNewSizePercent=35",
-                "-XX:+ParallelRefProcEnabled"
+                // Hanya batas atas generasi muda supaya RAM tidak membengkak. Flag target jeda dan
+                // ukuran minimum generasi muda dari versi lama dilepas: di uji beban mirip game
+                // keduanya membuat GC lebih sering tanpa jeda yang lebih pendek.
+                "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
             )
         }
     }

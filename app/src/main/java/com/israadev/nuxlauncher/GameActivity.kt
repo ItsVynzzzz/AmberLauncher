@@ -15,7 +15,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import android.content.Intent
 import android.os.Build
+import android.Manifest
+import android.content.pm.PackageManager
+import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import com.israadev.nuxlauncher.core.record.RecordService
+import com.israadev.nuxlauncher.core.record.ScreenRecorder
 import android.system.Os
 import android.view.InputDevice
 import android.view.KeyEvent
@@ -93,6 +100,7 @@ import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxCard
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
+import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
@@ -147,6 +155,100 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private var isManualExit = false
     private var sessionStartTime = System.currentTimeMillis()
+
+    // ---- Rekam layar bawaan -------------------------------------------------------------
+    // Alurnya: (izin mikrofon/notifikasi bila perlu) -> dialog izin tangkap layar sistem ->
+    // RecordService (foreground) -> ScreenRecorder (encoder perangkat keras). Peluncur hasil
+    // harus didaftarkan sebelum Activity mulai, jadi dibuat sebagai properti.
+    private var askedRecordPermissions = false
+
+    private val projectionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data
+        if (result.resultCode == android.app.Activity.RESULT_OK && data != null) {
+            val (w, h, dpi) = screenForRecording()
+            RecordService.start(this, result.resultCode, data, w, h, dpi)
+        } else {
+            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                this, "Izin merekam layar tidak diberikan", com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private val recordPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { grants ->
+        if (grants[Manifest.permission.RECORD_AUDIO] == false) {
+            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                this, "Izin mikrofon ditolak, merekam tanpa suara", com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_SHORT
+            ).show()
+        }
+        launchProjectionPrompt()
+    }
+
+    /** Ketuk tombol Rekam di menu: berhenti bila sedang merekam, selain itu mulai alur izin. */
+    private fun toggleRecording() {
+        if (ScreenRecorder.isRecording) {
+            ScreenRecorder.stop()
+            return
+        }
+        val needed = ArrayList<String>()
+        if (SettingsManager.settings.value.recordMic &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
+        ) {
+            needed.add(Manifest.permission.RECORD_AUDIO)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            needed.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        // Minta izin tambahan paling banyak sekali per sesi game supaya tidak mengganggu.
+        if (needed.isNotEmpty() && !askedRecordPermissions) {
+            askedRecordPermissions = true
+            recordPermissionLauncher.launch(needed.toTypedArray())
+        } else {
+            launchProjectionPrompt()
+        }
+    }
+
+    private fun launchProjectionPrompt() {
+        try {
+            val mpm = getSystemService(android.content.Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+            projectionLauncher.launch(mpm.createScreenCaptureIntent())
+        } catch (e: Throwable) {
+            com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                this, "Perekam layar tidak tersedia di HP ini", com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    /** Lebar, tinggi (landscape), dan densitas layar asli untuk menentukan ukuran rekaman. */
+    private fun screenForRecording(): Triple<Int, Int, Int> {
+        val (rawW, rawH) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val bounds = windowManager.currentWindowMetrics.bounds
+            Pair(bounds.width(), bounds.height())
+        } else {
+            val dm = android.util.DisplayMetrics()
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getRealMetrics(dm)
+            Pair(dm.widthPixels, dm.heightPixels)
+        }
+        return Triple(maxOf(rawW, rawH), minOf(rawW, rawH), resources.displayMetrics.densityDpi)
+    }
+
+    // Keluar dari layar game (Home, aplikasi lain): jeda rekaman supaya layar lain tidak ikut
+    // terekam dan encoder tidak bekerja sia-sia. Kembali ke game: lanjut.
+    override fun onStart() {
+        super.onStart()
+        ScreenRecorder.release(ScreenRecorder.Hold.SCREEN)
+    }
+
+    override fun onStop() {
+        ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
+        super.onStop()
+    }
 
     private fun handleGameExit(exitCode: Int, isSignal: Boolean, errorDetail: String? = null) {
         // Pindahkan baris log yang masih mengantre supaya laporan crash memuat baris terakhirnya
@@ -217,6 +319,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     private fun terminateGameProcess() {
+        // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
+        try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
             isManualExit = true
             CrashManager.onGameSessionEnded(this)
@@ -230,6 +334,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
+        try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
             isManualExit = true
             CrashManager.onGameSessionEnded(this)
@@ -415,6 +521,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     onResolutionChange = { newRatio ->
                         applyDynamicResolution(newRatio)
                     },
+                    onToggleRecord = { toggleRecording() },
                     onExit = {
                         isManualExit = true
                         terminateGameProcess()
@@ -1129,6 +1236,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     } else {
                         LoggerBridge.append("▷ [Profil] ${deviceProfile.displayName} dikenali, profil DIMATIKAN di Pengaturan")
                     }
+                } else {
+                    // HP tanpa profil khusus: heap awal disamakan dengan heap maksimum (GC tidak perlu
+                    // membesarkan heap sedikit demi sedikit) dan, di HP RAM kecil, generasi muda G1
+                    // dibatasi supaya RAM tidak membengkak. Java 8 tidak diubah.
+                    heapInitMb = DeviceProfiles.generalInitialHeapMb(activeSettings.initialHeapMb, heapMaxMb, isJava8)
+                    profileFlags = DeviceProfiles.generalJvmFlags(deviceTotalRamMb, isJava8, activeSettings.customJvmArgs)
                 }
                 if (!android.os.Process.is64Bit()) {
                     // Proses 32-bit hanya punya ruang alamat 3-4 GB, dan sebagian sudah terpakai
@@ -1144,6 +1257,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add("-Xms${heapInitMb}M")
                 jvmArgs.add("-Xmx${heapMaxMb}M")
                 profileFlags.forEach { jvmArgs.add(it) }
+                // Log GC untuk pemantau kinerja (Java 9 ke atas; Java 8 tidak mengenal -Xlog). Berkas
+                // lama dihapus dulu supaya tiap sesi mulai dari nol.
+                val gcLogFile: File? = if (isJava8) null else File(cacheDir, "amber-gc.log")
+                if (gcLogFile != null) {
+                    gcLogFile.delete()
+                    jvmArgs.add("-Xlog:gc:file=${gcLogFile.absolutePath}:uptime:filecount=0")
+                }
                 LoggerBridge.append(
                     "▷ [JVM] Heap awal $heapInitMb MB, maksimum $heapMaxMb MB | " +
                         "RAM HP total $deviceTotalRamMb MB, " +
@@ -1246,7 +1366,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     installedMods = installedMods
                 )
                 liveLogs.add("[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...")
-                val exitCode = VMLauncher.launchJVM(jvmArgs.toTypedArray())
+                // Pemantau hanya mencatat ke log tiap 30 detik; tidak mengubah apa pun pada game.
+                val perfMonitor = GamePerfMonitor(gcLogFile)
+                perfMonitor.start()
+                val exitCode = try {
+                    VMLauncher.launchJVM(jvmArgs.toTypedArray())
+                } finally {
+                    perfMonitor.stop()
+                }
                 liveLogs.add("[Amber Engine] JVM selesai dengan kode keluar: $exitCode")
                 runOnUiThread {
                     handleGameExit(exitCode, false)
@@ -1332,6 +1459,7 @@ fun GameScreen(
     isGameRenderingState: MutableState<Boolean>,
     onSurfaceReady: (SurfaceHolder) -> Unit,
     onResolutionChange: (Int) -> Unit = {},
+    onToggleRecord: () -> Unit = {},
     onExit: () -> Unit
 ) {
     var isControlVisible by isControlVisibleState
@@ -1424,6 +1552,20 @@ fun GameScreen(
     val launcherSettings by SettingsManager.settings.collectAsState()
     val customButtons by ControlLayoutManager.buttons.collectAsState()
     val mouseControlMode = if (launcherSettings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
+
+    // Rekam mode "Game saja": perekam menangkap seluruh layar, jadi tombol layar dibuat transparan
+    // selama merekam (tetap bisa disentuh, hanya tidak tergambar) supaya tidak ikut terekam.
+    val recState by ScreenRecorder.state.collectAsState()
+    val ghostControls = recState.recording && !launcherSettings.recordWithControls
+    // Tanda mulai/berhenti merekam berupa getar singkat (toast akan ikut terekam).
+    val hostView = LocalView.current
+    var wasRecording by remember { mutableStateOf(false) }
+    LaunchedEffect(recState.recording) {
+        if (recState.recording != wasRecording) {
+            wasRecording = recState.recording
+            hostView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        }
+    }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -1593,29 +1735,37 @@ fun GameScreen(
             )
         }
 
-        // 4. Tombol layar (gaya dan logikanya ada di ui/control/ControlOverlay.kt)
-        GameControlsLayer(
-            buttons = customButtons,
-            screenWidth = screenWidth,
-            screenHeight = screenHeight,
-            controlsVisible = isControlVisible,
-            fpsMode = fpsMode,
-            consoleVisible = isConsoleVisible,
-            keyboardActive = isKeyboardRequested,
-            fps = { currentFps },
-            perfText = {
-                if (uiBusy > 0) {
-                    if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
-                } else {
-                    perfText
-                }
-            },
-            perfWarn = { perfWarn || uiBusy > 0 },
-            onFpsClick = { showInGameSettingsDialog = true },
-            onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
-            onToggleControls = { isControlVisible = !isControlVisible },
-            onOpenMenu = { showInGameSettingsDialog = true }
-        )
+        // 4. Tombol layar (gaya dan logikanya ada di ui/control/ControlOverlay.kt). Dibungkus Box
+        // penuh layar agar bisa dibuat transparan (alpha 0, tetap menerima sentuhan) saat merekam
+        // "Game saja". Box tanpa penangan sentuhan tidak menghalangi sentuhan ke lapisan di bawahnya.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(if (ghostControls) Modifier.graphicsLayer { alpha = 0f } else Modifier)
+        ) {
+            GameControlsLayer(
+                buttons = customButtons,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
+                controlsVisible = isControlVisible,
+                fpsMode = fpsMode,
+                consoleVisible = isConsoleVisible,
+                keyboardActive = isKeyboardRequested,
+                fps = { currentFps },
+                perfText = {
+                    if (uiBusy > 0) {
+                        if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
+                    } else {
+                        perfText
+                    }
+                },
+                perfWarn = { perfWarn || uiBusy > 0 },
+                onFpsClick = { showInGameSettingsDialog = true },
+                onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+                onToggleControls = { isControlVisible = !isControlVisible },
+                onOpenMenu = { showInGameSettingsDialog = true }
+            )
+        }
 
         // Konfirmasi keluar
         if (showExitConfirmDialog) {
@@ -1685,6 +1835,14 @@ fun GameScreen(
             onOpenCustomGui = {
                 showInGameSettingsDialog = false
                 isCustomGuiEditorActive = true
+            },
+            onToggleRecord = onToggleRecord,
+            recordWithControls = launcherSettings.recordWithControls,
+            onRecordWithControlsChange = { withControls ->
+                SettingsManager.updateSettings(
+                    context,
+                    launcherSettings.copy(recordWithControls = withControls)
+                )
             }
         )
         }

@@ -1,0 +1,354 @@
+diff --git a/app/src/main/assets/lang/en/instances.tsv b/app/src/main/assets/lang/en/instances.tsv
+index c2a883e..e6c2b0e 100644
+--- a/app/src/main/assets/lang/en/instances.tsv
++++ b/app/src/main/assets/lang/en/instances.tsv
+@@ -82,3 +82,4 @@ Pemasangan Forge	Forge installation
+ Memasang Forge	Installing Forge
+ Proses ini hanya berjalan sekali per versi Forge.	This runs only once per Forge version.
+ Forge dipasang sekali saat instance diunduh pertama kali.	Forge is installed once, when the instance is first downloaded.
++Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Not enough storage to install Forge ({0} MB left, at least {1} MB needed)
+diff --git a/app/src/main/assets/lang/es/instances.tsv b/app/src/main/assets/lang/es/instances.tsv
+index d1dd4c0..7896342 100644
+--- a/app/src/main/assets/lang/es/instances.tsv
++++ b/app/src/main/assets/lang/es/instances.tsv
+@@ -94,3 +94,4 @@ Pemasangan Forge	Instalaci\u00f3n de Forge
+ Memasang Forge	Instalando Forge
+ Proses ini hanya berjalan sekali per versi Forge.	Esto solo se ejecuta una vez por versi\u00f3n de Forge.
+ Forge dipasang sekali saat instance diunduh pertama kali.	Forge se instala una sola vez, cuando la instancia se descarga por primera vez.
++Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	No hay suficiente almacenamiento para instalar Forge (quedan {0} MB, se necesitan al menos {1} MB)
+diff --git a/app/src/main/assets/lang/vi/instances.tsv b/app/src/main/assets/lang/vi/instances.tsv
+index 4f49d33..0e6c989 100644
+--- a/app/src/main/assets/lang/vi/instances.tsv
++++ b/app/src/main/assets/lang/vi/instances.tsv
+@@ -94,3 +94,4 @@ Pemasangan Forge	C\u00e0i \u0111\u1eb7t Forge
+ Memasang Forge	\u0110ang c\u00e0i \u0111\u1eb7t Forge
+ Proses ini hanya berjalan sekali per versi Forge.	Qu\u00e1 tr\u00ecnh n\u00e0y ch\u1ec9 ch\u1ea1y m\u1ed9t l\u1ea7n cho m\u1ed7i phi\u00ean b\u1ea3n Forge.
+ Forge dipasang sekali saat instance diunduh pertama kali.	Forge ch\u1ec9 \u0111\u01b0\u1ee3c c\u00e0i m\u1ed9t l\u1ea7n, khi instance \u0111\u01b0\u1ee3c t\u1ea3i xu\u1ed1ng l\u1ea7n \u0111\u1ea7u.
++Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Kh\u00f4ng \u0111\u1ee7 dung l\u01b0\u1ee3ng \u0111\u1ec3 c\u00e0i Forge (c\u00f2n {0} MB, c\u1ea7n \u00edt nh\u1ea5t {1} MB)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt
+index 900071e..7275acb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt
+@@ -95,12 +95,17 @@ internal object ForgeInstallRunner {
+ 
+         var bound = false
+         try {
++            // Foreground service membuat pemasangan tahan dihentikan sistem. Android 12+ menolaknya bila
++            // aplikasi sedang di latar belakang; itu tidak fatal karena bindService di bawah tetap
++            // membuat service dan memulai installer.
+             try {
+                 ContextCompat.startForegroundService(app, intent)
+             } catch (_: Exception) {
+-                app.startService(intent)
+             }
+             bound = app.bindService(intent, connection, Context.BIND_AUTO_CREATE)
++            if (!bound) {
++                return@withContext ForgeRunResult(-1, "[Forge] Proses pemasangan tidak bisa dimulai")
++            }
+ 
+             val startedAt = SystemClock.elapsedRealtime()
+             var exitCode = -1
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+index e926f68..ca95179 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+@@ -59,23 +59,34 @@ class ForgeInstallService : Service() {
+     @Volatile
+     private var logWriter: Writer? = null
+ 
+-    override fun onBind(intent: Intent?): IBinder = Binder()
++    /**
++     * Terikat dari proses utama. Ikatan inilah yang menjamin installer jalan walau startForegroundService
++     * ditolak (Android 12+ melarang memulainya saat aplikasi di latar belakang, misalnya pengguna
++     * berpindah aplikasi selagi game diunduh), karena bindService tidak dibatasi seperti itu.
++     */
++    override fun onBind(intent: Intent?): IBinder {
++        begin(intent)
++        return Binder()
++    }
+ 
+     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+         startAsForeground()
++        if (!begin(intent)) stopSelf()
++        return START_NOT_STICKY
++    }
++
++    /** Memulai thread installer sekali saja. False bila [intent] tidak membawa parameter yang lengkap. */
++    private fun begin(intent: Intent?): Boolean {
+         val installer = intent?.getStringExtra(EXTRA_INSTALLER)
+         val target = intent?.getStringExtra(EXTRA_TARGET)
+         val runtimeHome = intent?.getStringExtra(EXTRA_RUNTIME_HOME)
+-        if (installer == null || target == null || runtimeHome == null) {
+-            stopSelf()
+-            return START_NOT_STICKY
+-        }
++        if (installer == null || target == null || runtimeHome == null) return false
+         if (started.compareAndSet(false, true)) {
+             thread(name = "Amber-Forge-Installer") {
+                 runInstaller(File(installer), File(target), File(runtimeHome))
+             }
+         }
+-        return START_NOT_STICKY
++        return true
+     }
+ 
+     private fun startAsForeground() {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+index c15f97b..de9cd12 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+@@ -46,6 +46,9 @@ object ForgeInstaller {
+ 
+     private const val LIB_THREADS = 16
+ 
++    /** Ruang kosong minimum (MB): library, jar hasil tambalan, dan berkas sementara processor. */
++    private const val MIN_FREE_MB = 400L
++
+     private val gson = Gson()
+ 
+     /** Satu pemasangan pada satu waktu: folder kerja dan proses :forge hanya ada satu. */
+@@ -119,6 +122,12 @@ object ForgeInstaller {
+         val libDir = InstanceManager.getLibrariesDir(context)
+         val nuxDir = InstanceManager.getNuxDir(context)
+ 
++        // Lebih baik berhenti di awal dengan pesan jelas daripada gagal di tengah processor karena penuh
++        val freeMb = libDir.apply { mkdirs() }.usableSpace / (1024L * 1024L)
++        if (freeMb < MIN_FREE_MB) {
++            throw IOException("Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa $freeMb MB, butuh minimal $MIN_FREE_MB MB)")
++        }
++
+         // 1. Installer resmi
+         onProgress(progress(0f), "Mengunduh installer Forge $forgeVersion...")
+         val installerJar = File(context.cacheDir, "forge/forge-$mcVersion-$forgeVersion-installer.jar")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+index 379a06f..17dd919 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+@@ -108,7 +108,7 @@ data class Instance(
+     val id: String,
+     val name: String,
+     val mcVersion: String,
+-    val loader: String = "vanilla", // "vanilla" or "fabric"
++    val loader: String = "vanilla", // "vanilla", "fabric", or "forge"
+     var loaderVersion: String = "",
+     val icon: String = "crafting_table",
+     val javaRuntime: String = "auto", // "auto", "jre-8", "jre-17", "jre-21", "jre-25"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt
+new file mode 100644
+index 0000000..d4319e5
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt
+@@ -0,0 +1,163 @@
++package com.israadev.nuxlauncher.core.mods
++
++import com.google.gson.JsonElement
++import com.google.gson.JsonParser
++import java.util.zip.ZipFile
++
++/** Info singkat sebuah mod yang dibaca dari jar-nya. Setiap bagian boleh kosong. */
++internal class ModJarInfo(val name: String?, val version: String?, val description: String?)
++
++/**
++ * Membaca nama, versi, dan deskripsi mod dari jar-nya untuk daftar "Mod terpasang".
++ * Mendukung Fabric (`fabric.mod.json`), Forge (`META-INF/mods.toml`), dan NeoForge
++ * (`META-INF/neoforge.mods.toml`, formatnya sama dengan mods.toml Forge).
++ */
++internal object ModMetadata {
++
++    private const val JAR_VERSION_PLACEHOLDER = "\${file.jarVersion}"
++
++    /** Info mod dari [zip], atau null bila jar tidak memuat berkas deskripsi yang dikenal. */
++    fun read(zip: ZipFile): ModJarInfo? {
++        zip.getEntry("fabric.mod.json")?.let { entry ->
++            return zip.getInputStream(entry).bufferedReader().use { reader ->
++                val json = JsonParser.parseReader(reader).asJsonObject
++                ModJarInfo(
++                    name = text(json.get("name")),
++                    version = text(json.get("version")),
++                    description = text(json.get("description"))
++                )
++            }
++        }
++        // NeoForge lebih dulu: jar yang dibuat untuk keduanya memuat dua berkas toml
++        for (path in listOf("META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
++            val entry = zip.getEntry(path) ?: continue
++            val toml = zip.getInputStream(entry).bufferedReader().use { it.readText() }
++            return parseModsToml(toml) { readManifestVersion(zip) }
++        }
++        return null
++    }
++
++    private fun text(element: JsonElement?): String? =
++        element?.takeIf { it.isJsonPrimitive }?.asString
++
++    /** `Implementation-Version` dari MANIFEST.MF; dipakai bila mods.toml menulis `${file.jarVersion}`. */
++    private fun readManifestVersion(zip: ZipFile): String? {
++        val entry = zip.getEntry("META-INF/MANIFEST.MF") ?: return null
++        return zip.getInputStream(entry).bufferedReader().use { reader ->
++            reader.readLines()
++                .firstOrNull { it.startsWith("Implementation-Version:", ignoreCase = true) }
++                ?.substringAfter(':')
++                ?.trim()
++                ?.takeIf { it.isNotEmpty() }
++        }
++    }
++
++    /**
++     * Membaca blok `[[mods]]` pertama dari mods.toml. Nilai yang didukung: teks "..." atau '...' satu
++     * baris, dan teks banyak baris """...""" atau '''...'''. Versi `${file.jarVersion}` diganti hasil
++     * [jarVersion]; placeholder lain yang tak terselesaikan dibuang (null) supaya tidak tampil mentah.
++     */
++    fun parseModsToml(text: String, jarVersion: () -> String?): ModJarInfo? {
++        val lines = text.lines()
++        var i = 0
++        while (i < lines.size && !lines[i].trim().startsWith("[[mods]]")) i++
++        if (i >= lines.size) return null
++        i++
++
++        var modId: String? = null
++        var displayName: String? = null
++        var version: String? = null
++        var description: String? = null
++
++        while (i < lines.size) {
++            val line = lines[i].trim()
++            i++
++            if (line.isEmpty() || line.startsWith("#")) continue
++            if (line.startsWith("[")) break // tabel berikutnya ([[dependencies.x]] dan sebagainya)
++
++            val eq = line.indexOf('=')
++            if (eq <= 0) continue
++            val key = line.substring(0, eq).trim()
++            var rest = line.substring(eq + 1).trim()
++
++            val value: String?
++            val delimiter = when {
++                rest.startsWith("\"\"\"") -> "\"\"\""
++                rest.startsWith("'''") -> "'''"
++                else -> null
++            }
++            if (delimiter != null) {
++                rest = rest.substring(3)
++                val sb = StringBuilder()
++                var closed = rest.indexOf(delimiter)
++                if (closed >= 0) {
++                    sb.append(rest, 0, closed)
++                } else {
++                    sb.append(rest)
++                    while (i < lines.size) {
++                        val next = lines[i]
++                        i++
++                        closed = next.indexOf(delimiter)
++                        if (closed >= 0) {
++                            sb.append('\n').append(next, 0, closed)
++                            break
++                        }
++                        sb.append('\n').append(next)
++                    }
++                }
++                value = sb.toString().trim().replace(Regex("\\s*\\n\\s*"), " ")
++            } else {
++                value = singleLineString(rest)
++            }
++
++            when (key) {
++                "modId" -> modId = value
++                "displayName" -> displayName = value
++                "version" -> version = value
++                "description" -> description = value
++            }
++        }
++
++        val rawVersion = version
++        val resolvedVersion = when {
++            rawVersion == null -> null
++            rawVersion.contains(JAR_VERSION_PLACEHOLDER) -> jarVersion()
++            rawVersion.contains("\${") -> null
++            else -> rawVersion
++        }
++        val name = displayName?.takeIf { it.isNotBlank() } ?: modId
++        if (name == null && resolvedVersion == null && description == null) return null
++        return ModJarInfo(name, resolvedVersion, description)
++    }
++
++    /** Nilai TOML satu baris: "teks" (dengan \" dan \\), 'teks', atau tanpa tanda kutip; komentar `#` dibuang. */
++    private fun singleLineString(raw: String): String? {
++        if (raw.isEmpty()) return null
++        val quote = raw[0]
++        if (quote == '"') {
++            val sb = StringBuilder()
++            var i = 1
++            while (i < raw.length) {
++                val c = raw[i]
++                if (c == '\\' && i + 1 < raw.length) {
++                    when (val n = raw[i + 1]) {
++                        'n' -> sb.append(' ')
++                        't' -> sb.append(' ')
++                        else -> sb.append(n)
++                    }
++                    i += 2
++                    continue
++                }
++                if (c == '"') return sb.toString()
++                sb.append(c)
++                i++
++            }
++            return sb.toString()
++        }
++        if (quote == '\'') {
++            val end = raw.indexOf('\'', 1)
++            return if (end > 0) raw.substring(1, end) else raw.substring(1)
++        }
++        return raw.substringBefore('#').trim().takeIf { it.isNotEmpty() }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index ff54493..c1082b3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -144,39 +144,11 @@ object NuxModManager {
+             if (itemType == "mods" && cleanFilename.endsWith(".jar", ignoreCase = true) && file.isFile) {
+                 try {
+                     ZipFile(file).use { zip ->
+-                        // 1. Fabric mod
+-                        val fabricEntry = zip.getEntry("fabric.mod.json")
+-                        if (fabricEntry != null) {
+-                            zip.getInputStream(fabricEntry).bufferedReader().use { reader ->
+-                                val json = JsonParser.parseReader(reader).asJsonObject
+-                                if (json.has("name")) title = json.get("name").asString
+-                                if (json.has("version")) version = json.get("version").asString
+-                                if (json.has("description")) description = json.get("description").asString
+-                            }
+-                        } else {
+-                            // 2. Forge mods.toml
+-                            val tomlEntry = zip.getEntry("META-INF/mods.toml")
+-                            if (tomlEntry != null) {
+-                                zip.getInputStream(tomlEntry).bufferedReader().use { reader ->
+-                                    val lines = reader.readLines()
+-                                    var inModBlock = false
+-                                    for (line in lines) {
+-                                        val trimmed = line.trim()
+-                                        if (trimmed.startsWith("[[mods]]")) {
+-                                            inModBlock = true
+-                                        } else if (inModBlock) {
+-                                            if (trimmed.startsWith("displayName")) {
+-                                                title = trimmed.substringAfter("=").trim().trim('"', '\'')
+-                                            } else if (trimmed.startsWith("version")) {
+-                                                version = trimmed.substringAfter("=").trim().trim('"', '\'')
+-                                            } else if (trimmed.startsWith("description")) {
+-                                                description = trimmed.substringAfter("=").trim().trim('"', '\'')
+-                                                break
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                            }
++                        // Fabric (fabric.mod.json), Forge (mods.toml), dan NeoForge (neoforge.mods.toml)
++                        ModMetadata.read(zip)?.let { info ->
++                            info.name?.takeIf { it.isNotBlank() }?.let { title = it }
++                            info.version?.takeIf { it.isNotBlank() }?.let { version = it }
++                            info.description?.takeIf { it.isNotBlank() }?.let { description = it }
+                         }
+                     }
+                 } catch (_: Exception) {
+# FIN part=1/1 files=9

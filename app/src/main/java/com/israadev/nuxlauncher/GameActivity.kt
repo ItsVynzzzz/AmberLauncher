@@ -90,6 +90,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+import com.israadev.nuxlauncher.core.renderer.GlErrorPolicy
+import com.israadev.nuxlauncher.core.renderer.ElfDeps
 import com.israadev.nuxlauncher.core.controls.GuiScaleReader
 import com.israadev.nuxlauncher.core.controls.HotbarGeometry
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
@@ -937,6 +939,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     LoggerBridge.append("▷ [Renderer V2 Env Warning] Gagal menginjeksi V2 env: ${e.message}")
                 }
 
+                // Minecraft 26.x memeriksa glGetError saat membuat backend OpenGL. "LIBGL_NOERROR=1"
+                // (bawaan Krypton/GL4ES demi kecepatan) membuatnya selalu menjawab "tanpa galat" dan
+                // game berhenti dengan "glGetError mismatch". Matikan hanya untuk versi itu.
+                if (GlErrorPolicy.needsRealGlError(mcVersion)) {
+                    Os.setenv("LIBGL_NOERROR", "0", true)
+                    LoggerBridge.append("▷ [Renderer] Minecraft $mcVersion memeriksa glGetError: LIBGL_NOERROR dimatikan")
+                }
+
                 // Pastikan flag GLSL & Extension compatibility selalu aktif untuk non-GL4ES renderers
                 // (Standar kompatibilitas Zalith Launcher 2 untuk MobileGL, Zink, Mesa, dan Custom Renderer)
                 val isPureLegacyGl4es = targetRenderer.id == "gl4es" || targetRenderer.rendererId == "opengles2"
@@ -981,9 +991,35 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 // Pre-dlopen plugin libraries from the plugin's own directory ONLY
                 if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
                     val pluginDir = File(targetRenderer.pluginNativePath)
+
+                    // Muat dulu dependensi pustaka plugin (mis. libSDL3.so). Pustaka di folder aplikasi
+                    // plugin tidak bisa menemukannya sendiri, dan game berhenti dengan
+                    // "dlopen failed: library libSDL3.so not found". Setelah dimuat lewat path lengkap,
+                    // Android mengenalinya berdasarkan nama. Folder launcher dicari lebih dulu supaya
+                    // SDL3 yang dipakai plugin sama dengan yang dipakai integrasi SDL launcher.
+                    var preloadedDeps: Set<String> = emptySet()
+                    try {
+                        val depDirs = listOf(File(nativeLibDir), pluginDir)
+                        val depRoots = listOfNotNull(File(glLibPath), eglPath?.let { File(it) })
+                            .filter { it.isFile }
+                        val deps = depRoots.flatMap { ElfDeps.loadOrder(it, depDirs) }.distinct()
+                        preloadedDeps = deps.map { it.name }.toSet()
+                        deps.forEach { dep ->
+                            val ok = try { ZLBridge.dlopen(dep.absolutePath) } catch (e: Throwable) { false }
+                            LoggerBridge.append(
+                                if (ok) "▷ [Plugin Dependency] ${dep.name} dimuat dari ${dep.parent}"
+                                else "▷ [Plugin Dependency Warning] ${dep.name} gagal dimuat"
+                            )
+                        }
+                    } catch (e: Throwable) {
+                        LoggerBridge.append("▷ [Plugin Dependency Warning] ${e.message}")
+                    }
+
                     targetRenderer.dlopenLibs.forEach { dlName ->
                         val dlFile = File(pluginDir, dlName)
-                        if (dlFile.exists()) {
+                        // Yang sudah dimuat sebagai dependensi tidak dimuat lagi dari folder plugin
+                        // (salinan kedua dengan nama sama akan menjadi pustaka terpisah).
+                        if (dlName !in preloadedDeps && dlFile.exists()) {
                             try {
                                 ZLBridge.dlopen(dlFile.absolutePath)
                                 LoggerBridge.append("▷ [Plugin DLOPEN] $dlName")
@@ -995,8 +1031,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     val targetSo = File(glLibPath)
                     if (targetSo.exists()) {
                         try {
-                            ZLBridge.dlopen(targetSo.absolutePath)
-                            LoggerBridge.append("▷ [Plugin GL Loaded] ${targetSo.absolutePath}")
+                            if (ZLBridge.dlopen(targetSo.absolutePath)) {
+                                LoggerBridge.append("▷ [Plugin GL Loaded] ${targetSo.absolutePath}")
+                            } else {
+                                LoggerBridge.append("▷ [Plugin GL Warning] ${targetRenderer.libraryName}: dlopen gagal (dependensi tidak ditemukan?)")
+                            }
                         } catch (e: Throwable) {
                             LoggerBridge.append("▷ [Plugin GL Warning] ${targetRenderer.libraryName}: ${e.message}")
                         }

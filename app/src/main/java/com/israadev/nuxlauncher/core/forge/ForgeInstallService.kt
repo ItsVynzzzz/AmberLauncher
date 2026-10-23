@@ -1,0 +1,317 @@
+package com.israadev.nuxlauncher.core.forge
+
+import android.app.ActivityManager
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import android.system.Os
+import androidx.core.app.NotificationCompat
+import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
+import com.israadev.nuxlauncher.ui.i18n.Tr
+import com.movtery.zalithlauncher.bridge.LoggerBridge
+import com.movtery.zalithlauncher.bridge.ZLBridge
+import com.movtery.zalithlauncher.bridge.ZLNativeInvoker
+import com.oracle.dalvik.VMLauncher
+import java.io.File
+import java.io.Writer
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.thread
+
+/**
+ * Menjalankan installer resmi Forge (`SimpleInstaller --installClient --offline`) di JVM bawaan Amber.
+ *
+ * Berjalan di proses `:forge` yang terpisah dari launcher dan dari game, karena sebuah proses hanya
+ * bisa membuat satu JVM dan JVM yang selesai mematikan prosesnya. Proses ini hidup hanya selama
+ * pemasangan: setelah selesai (atau dibatalkan) service berhenti dan prosesnya dimatikan, sehingga
+ * tidak ada RAM maupun CPU yang tersisa. Service foreground supaya pemasangan tidak dihentikan
+ * sistem bila pengguna berpindah aplikasi.
+ *
+ * Hubungan dengan proses utama lewat berkas di [workDir]: [LOG_NAME] (log installer) dan
+ * [RESULT_NAME] (kode keluar, ditulis paling akhir).
+ */
+class ForgeInstallService : Service() {
+
+    companion object {
+        const val EXTRA_INSTALLER = "forge_installer"
+        const val EXTRA_TARGET = "forge_target"
+        const val EXTRA_RUNTIME_HOME = "forge_runtime_home"
+
+        const val LOG_NAME = "installer.log"
+        const val RESULT_NAME = "result.txt"
+
+        private const val CHANNEL_ID = "amber_forge_install"
+        private const val NOTIFICATION_ID = 4108
+
+        fun workDir(context: Context): File = File(context.filesDir, "forge-install")
+    }
+
+    private val started = AtomicBoolean(false)
+    private val resultWritten = AtomicBoolean(false)
+    private val logLock = Any()
+
+    @Volatile
+    private var logWriter: Writer? = null
+
+    override fun onBind(intent: Intent?): IBinder = Binder()
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startAsForeground()
+        val installer = intent?.getStringExtra(EXTRA_INSTALLER)
+        val target = intent?.getStringExtra(EXTRA_TARGET)
+        val runtimeHome = intent?.getStringExtra(EXTRA_RUNTIME_HOME)
+        if (installer == null || target == null || runtimeHome == null) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
+        if (started.compareAndSet(false, true)) {
+            thread(name = "Amber-Forge-Installer") {
+                runInstaller(File(installer), File(target), File(runtimeHome))
+            }
+        }
+        return START_NOT_STICKY
+    }
+
+    private fun startAsForeground() {
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (nm.getNotificationChannel(CHANNEL_ID) == null) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    Tr.t("Pemasangan Forge"),
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    setShowBadge(false)
+                    setSound(null, null)
+                    enableVibration(false)
+                }
+                nm.createNotificationChannel(channel)
+            }
+            val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(android.R.drawable.stat_sys_download)
+                .setContentTitle(Tr.t("Memasang Forge"))
+                .setContentText(Tr.t("Proses ini hanya berjalan sekali per versi Forge."))
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .build()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (_: Throwable) {
+            // Tetap lanjut sebagai service biasa; pemasangan hanya lebih rentan dihentikan sistem
+        }
+    }
+
+    // ---------------------------------------------------------------- JVM
+
+    private fun runInstaller(installer: File, target: File, runtimeHome: File) {
+        val work = workDir(this)
+        work.mkdirs()
+        try {
+            logWriter = File(work, LOG_NAME).bufferedWriter()
+        } catch (_: Throwable) {
+        }
+        try {
+            ZLNativeInvoker.onExitCallback = { exitCode, _ ->
+                log("[Forge] JVM keluar dengan kode $exitCode")
+                finish(exitCode)
+            }
+            LoggerBridge.setListener { text -> if (text != null) log(text) }
+            LoggerBridge.start(File(work, "native.out").absolutePath)
+
+            val args = prepareJvm(installer, target, runtimeHome, work)
+            log("[Forge] Menjalankan installer: ${args.joinToString(" ")}")
+            val code = VMLauncher.launchJVM(args.toTypedArray())
+            finish(code)
+        } catch (t: Throwable) {
+            log("[Forge] ERROR: ${t.message ?: t.javaClass.simpleName}")
+            finish(-1)
+        } finally {
+            stopSelf()
+        }
+    }
+
+    /** Menyiapkan lingkungan JVM (jalur pustaka, pre-dlopen runtime) dan mengembalikan argumen peluncuran. */
+    private fun prepareJvm(installer: File, target: File, runtimeHome: File, work: File): List<String> {
+        val nativeLibDir = applicationInfo.nativeLibraryDir
+        val rh = runtimeHome.absolutePath
+        val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
+
+        // Jalur linker untuk memuat pustaka JRE (sama dengan jalur proses game, tanpa renderer/LWJGL)
+        val archSubDir = listOf("aarch64", "aarch32", "arm", "i386", "amd64", "x86_64")
+            .map { File("$rh/lib", it) }
+            .firstOrNull { it.isDirectory }
+        val runtimeLd = mutableListOf<String>()
+        if (archSubDir != null) {
+            runtimeLd.add("${archSubDir.absolutePath}/jli")
+            runtimeLd.add("${archSubDir.absolutePath}/server")
+            runtimeLd.add("${archSubDir.absolutePath}/client")
+            runtimeLd.add(archSubDir.absolutePath)
+        }
+        runtimeLd.add("$rh/lib/jli")
+        if (File("$rh/jre").exists()) {
+            runtimeLd.add("$rh/jre/lib/server")
+            runtimeLd.add("$rh/jre/lib")
+        } else {
+            runtimeLd.add("$rh/lib/server")
+            runtimeLd.add("$rh/lib")
+        }
+        runtimeLd.add(nativeLibDir)
+        runtimeLd.add("/system/$libDirName")
+        runtimeLd.add("/vendor/$libDirName")
+        runtimeLd.add("/vendor/$libDirName/hw")
+        runtimeLd.add("/system_ext/$libDirName")
+        ZLBridge.setLdLibraryPath(runtimeLd.distinct().joinToString(":"))
+
+        // LD_LIBRARY_PATH proses tidak boleh memuat folder JRE lib/server atau lib/jli
+        // (libjli akan mengira perlu menjalankan ulang bin/java, yang ditolak Android)
+        val processLd = listOf(
+            "/system/$libDirName", "/vendor/$libDirName", "/vendor/$libDirName/hw",
+            "/system_ext/$libDirName", nativeLibDir
+        ).joinToString(":")
+
+        Os.setenv("POJAV_NATIVEDIR", nativeLibDir, true)
+        Os.setenv("POJAV_RENDERER", "opengles3", true)
+        Os.setenv("JAVA_HOME", rh, true)
+        Os.setenv("HOME", work.absolutePath, true)
+        Os.setenv("TMPDIR", cacheDir.absolutePath, true)
+        Os.setenv("PATH", "$rh/bin:" + (Os.getenv("PATH") ?: "/system/bin"), true)
+        Os.setenv("LD_LIBRARY_PATH", processLd, true)
+
+        preDlopenRuntime(runtimeHome)
+
+        ZLBridge.setupExitMethod(this)
+        ZLBridge.initializeGameExitHook()
+        ZLBridge.chdir(work.absolutePath)
+
+        JavaRuntimeManager.ensureExecutablePermissionsOnce(runtimeHome)
+
+        val totalMb = try {
+            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val info = ActivityManager.MemoryInfo()
+            am.getMemoryInfo(info)
+            (info.totalMem / (1024 * 1024)).toInt()
+        } catch (_: Throwable) {
+            4096
+        }
+        // Cukup untuk processor Forge, tetapi tidak merebut RAM HP kecil
+        var heapMb = (totalMb / 4).coerceIn(384, 768)
+        if (!android.os.Process.is64Bit()) heapMb = minOf(heapMb, 640)
+
+        return listOf(
+            "$rh/bin/java",
+            "-Djava.home=$rh",
+            "-Djava.io.tmpdir=${cacheDir.absolutePath}",
+            "-Djava.library.path=$processLd",
+            "-Djava.awt.headless=true",
+            "-Dos.name=Linux",
+            "-Dos.version=Android-${Build.VERSION.RELEASE}",
+            "-Duser.home=${work.absolutePath}",
+            "-Dfile.encoding=UTF-8",
+            "-Dsun.stdout.encoding=UTF-8",
+            "-Dsun.stderr.encoding=UTF-8",
+            "-Djava.net.preferIPv4Stack=true",
+            "-XX:+IgnoreUnrecognizedVMOptions",
+            "-XX:+UseSerialGC",
+            "-Xms64M",
+            "-Xmx${heapMb}M",
+            "-cp", installer.absolutePath,
+            "net.minecraftforge.installer.SimpleInstaller",
+            "--installClient", target.absolutePath,
+            "--offline"
+        )
+    }
+
+    /** Memuat pustaka inti JRE lebih dulu dengan path absolut, sama seperti proses game. */
+    private fun preDlopenRuntime(runtimeHome: File) {
+        val rtLibDir = if (File(runtimeHome, "jre/lib").exists()) File(runtimeHome, "jre/lib") else File(runtimeHome, "lib")
+        val archLibDir = listOf("aarch64", "aarch32", "arm", "i386", "amd64", "x86_64")
+            .map { File(rtLibDir, it) }
+            .firstOrNull { it.isDirectory } ?: rtLibDir
+        val jliDir = when {
+            File(rtLibDir, "jli/libjli.so").exists() -> File(rtLibDir, "jli")
+            File(archLibDir, "jli/libjli.so").exists() -> File(archLibDir, "jli")
+            else -> rtLibDir
+        }
+        val jvmDir = when {
+            File(rtLibDir, "server/libjvm.so").exists() -> File(rtLibDir, "server")
+            File(rtLibDir, "client/libjvm.so").exists() -> File(rtLibDir, "client")
+            File(archLibDir, "server/libjvm.so").exists() -> File(archLibDir, "server")
+            File(archLibDir, "client/libjvm.so").exists() -> File(archLibDir, "client")
+            else -> rtLibDir
+        }
+        val essential = listOf(
+            File(jliDir, "libjli.so"),
+            File(jvmDir, "libjvm.so"),
+            File(rtLibDir, "libverify.so"), File(archLibDir, "libverify.so"),
+            File(rtLibDir, "libjava.so"), File(archLibDir, "libjava.so"),
+            File(rtLibDir, "libnet.so"), File(archLibDir, "libnet.so"),
+            File(rtLibDir, "libnio.so"), File(archLibDir, "libnio.so")
+        )
+        essential.forEach { so ->
+            if (so.exists()) {
+                try {
+                    ZLBridge.dlopen(so.absolutePath)
+                } catch (_: Throwable) {
+                }
+            }
+        }
+        // Sisa pustaka runtime (zip, management, dll.) dimuat juga, persis seperti proses game
+        runtimeHome.walkTopDown().filter { it.isFile && it.name.endsWith(".so") }.forEach { so ->
+            try {
+                ZLBridge.dlopen(so.absolutePath)
+            } catch (_: Throwable) {
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------- berkas komunikasi
+
+    private fun log(text: String) {
+        synchronized(logLock) {
+            try {
+                val w = logWriter ?: return
+                w.write(text.trimEnd('\n', '\r'))
+                w.write("\n")
+                w.flush()
+            } catch (_: Throwable) {
+            }
+        }
+    }
+
+    /** Menulis kode keluar sekali saja; berkas ini yang ditunggu proses utama. */
+    private fun finish(exitCode: Int) {
+        if (!resultWritten.compareAndSet(false, true)) return
+        try {
+            val work = workDir(this)
+            val tmp = File(work, "$RESULT_NAME.tmp")
+            tmp.writeText(exitCode.toString())
+            tmp.renameTo(File(work, RESULT_NAME))
+        } catch (_: Throwable) {
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        synchronized(logLock) {
+            try {
+                logWriter?.close()
+            } catch (_: Throwable) {
+            }
+            logWriter = null
+        }
+        // JVM tidak bisa dibuat ulang di proses yang sama dan tidak bisa dihentikan dari luar:
+        // mematikan proses :forge adalah satu-satunya cara bersih (juga saat pemasangan dibatalkan).
+        android.os.Process.killProcess(android.os.Process.myPid())
+    }
+}

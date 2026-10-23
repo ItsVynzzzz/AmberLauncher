@@ -1,12 +1,23 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -14,48 +25,64 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import com.israadev.nuxlauncher.ui.i18n.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.fabric.FabricService
+import com.israadev.nuxlauncher.core.forge.ForgeBuild
+import com.israadev.nuxlauncher.core.forge.ForgeService
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.VersionItem
-import com.israadev.nuxlauncher.ui.components.*
-import com.israadev.nuxlauncher.ui.theme.NuxColors
-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+import com.israadev.nuxlauncher.ui.components.AmberButton
+import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
+import com.israadev.nuxlauncher.ui.components.AmberIcon
+import com.israadev.nuxlauncher.ui.components.AmberSegmented
+import com.israadev.nuxlauncher.ui.components.NuxDialog
+import com.israadev.nuxlauncher.ui.components.amberTap
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.theme.Amber
 import java.util.UUID
 
-/**
- * Filter kategori versi Minecraft (seperti Zalith Launcher)
- */
-enum class VersionCategory(
-    val label: String,
-    val badgeBg: Color,
-    val badgeText: Color
-) {
-    RELEASE("Release", NuxColors.YellowPale, NuxColors.ForestGreen),
-    SNAPSHOT("Snapshot / Beta", Color(0xFF8B5CF6).copy(alpha = 0.15f), Color(0xFFA78BFA)),
-    OLD_BETA("Old Beta", NuxColors.Amber.copy(alpha = 0.15f), NuxColors.Amber),
-    OLD_ALPHA("Old Alpha", Color(0xFFEC4899).copy(alpha = 0.15f), Color(0xFFF472B6)),
-    ALL("Semua", Color(0xFF3B82F6).copy(alpha = 0.15f), Color(0xFF60A5FA))
+/** Filter kategori versi Minecraft (seperti Zalith Launcher). */
+enum class VersionCategory(val label: String) {
+    RELEASE("Release"),
+    SNAPSHOT("Snapshot / Beta"),
+    OLD_BETA("Old Beta"),
+    OLD_ALPHA("Old Alpha"),
+    ALL("Semua")
 }
 
+/** Satu baris pilihan versi loader (Fabric/Forge): [tag] kosong bila tidak ada keterangan. */
+private class LoaderChoice(val id: String, val tag: String)
+
+private val LOADERS = listOf("vanilla" to "Vanilla", "fabric" to "Fabric", "forge" to "Forge")
+private val LOADER_LABELS = LOADERS.map { it.second }
+
+/**
+ * Dialog "Buat Instance Baru" bergaya Amber: dua panel datar (kiri: nama, loader, ringkasan, tombol
+ * buat; kanan: filter, cari, daftar versi). Semua digambar dengan komponen Amber tanpa ripple,
+ * tanpa animasi warna, dan tanpa indikator berputar atau popup, jadi menyentuh dialog ini tidak
+ * menyusun ulang layar di belakangnya.
+ */
 @Composable
 fun NuxAddInstanceDialog(
     onDismiss: () -> Unit,
@@ -63,16 +90,22 @@ fun NuxAddInstanceDialog(
 ) {
     var instanceName by remember { mutableStateOf("") }
     var selectedVersion by remember { mutableStateOf("1.21.1") }
-    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla" or "fabric"
+    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla", "fabric", atau "forge"
     var selectedFabricVersion by remember { mutableStateOf("") }
+    var selectedForgeVersion by remember { mutableStateOf("") }
 
     var versionsList by remember { mutableStateOf<List<VersionItem>>(emptyList()) }
     var fabricVersionsList by remember { mutableStateOf<List<String>>(emptyList()) }
+    var forgeBuildsList by remember { mutableStateOf<List<ForgeBuild>>(emptyList()) }
     var isLoadingVersions by remember { mutableStateOf(true) }
     var isLoadingFabric by remember { mutableStateOf(false) }
+    var isLoadingForge by remember { mutableStateOf(false) }
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(VersionCategory.RELEASE) }
+
+    // Daftar versi loader terbuka di tempat (bukan popup); menutup sendiri saat loader/versi berganti
+    var pickerOpen by remember(selectedLoader, selectedVersion) { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val result = MojangManifestService.getVersionManifest()
@@ -104,6 +137,19 @@ fun NuxAddInstanceDialog(
         }
     }
 
+    // Forge hanya dimuat saat dipilih (tidak ada permintaan jaringan sebelumnya)
+    LaunchedEffect(selectedVersion, selectedLoader) {
+        if (selectedLoader == "forge") {
+            isLoadingForge = true
+            forgeBuildsList = emptyList()
+            selectedForgeVersion = ""
+            val builds = ForgeService.getBuilds(selectedVersion).getOrNull() ?: emptyList()
+            forgeBuildsList = builds
+            selectedForgeVersion = ForgeService.pickDefault(builds)?.version ?: ""
+            isLoadingForge = false
+        }
+    }
+
     val filteredVersions = remember(versionsList, searchQuery, selectedCategory) {
         versionsList.filter { item ->
             val matchesCategory = when (selectedCategory) {
@@ -118,698 +164,681 @@ fun NuxAddInstanceDialog(
         }
     }
 
+    val forgeChoices = remember(forgeBuildsList) {
+        forgeBuildsList.take(40).map { build ->
+            LoaderChoice(
+                id = build.version,
+                tag = when {
+                    build.recommended -> "Disarankan"
+                    build.latest -> "Terbaru"
+                    else -> ""
+                }
+            )
+        }
+    }
+    val fabricChoices = remember(fabricVersionsList) {
+        fabricVersionsList.take(30).map { LoaderChoice(it, "") }
+    }
+
+    val canCreate = !(selectedLoader == "fabric" && (isLoadingFabric || selectedFabricVersion.isBlank())) &&
+        !(selectedLoader == "forge" && (isLoadingForge || selectedForgeVersion.isBlank()))
+
+    val loaderLabel = LOADERS.firstOrNull { it.first == selectedLoader }?.second ?: "Vanilla"
+    val loaderVersionNow = when (selectedLoader) {
+        "fabric" -> selectedFabricVersion
+        "forge" -> selectedForgeVersion
+        else -> ""
+    }
+
     NuxDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.fillMaxWidth(0.92f),
-        fillMaxHeight = true
+        modifier = Modifier.widthIn(max = 820.dp),
+        fillMaxHeight = true,
+        compact = true
     ) {
-        // Outer Shell Container (Compact & space-efficient)
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            NuxColors.SurfaceWhite,
-                            NuxColors.SurfaceInput
-                        )
-                    )
-                )
-                .padding(10.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                // Top Header Bar
-                Row(
+            // ---------------------------------------------------------------- judul
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Buat Instance Baru",
+                    color = Amber.Text,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(Amber.Fill)
+                        .border(1.dp, Amber.Line, CircleShape)
+                        .amberTap(onDismiss),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column {
-                        Text(
-                            text = "INSTANCE ARCHITECT",
-                            color = NuxColors.GrayNeutral,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 8.sp,
-                            letterSpacing = 1.sp
-                        )
-                        Text(
-                            text = "Buat Instance Baru",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Black,
-                            fontSize = 14.sp,
-                            letterSpacing = (-0.3).sp
-                        )
-                    }
-
-                    // Close Button
-                    Box(
-                        modifier = Modifier
-                            .size(26.dp)
-                            .clip(CircleShape)
-                            .background(NuxColors.SurfaceElevated)
-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), CircleShape)
-                            .clickable { onDismiss() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(13.dp)
-                        )
-                    }
+                    AmberIcon("close", 18.dp, Amber.TextDim)
                 }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
 
-                // Two-Column Landscape Architecture
-                Row(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                // ============================================================ kiri: konfigurasi
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .weight(1f)
+                        .fillMaxHeight()
                 ) {
-                    // ==========================================
-                    // LEFT COLUMN: Instance Configurations
-                    // ==========================================
-                    val leftBezelShape = RoundedCornerShape(12.dp)
-                    val innerBezelShape = RoundedCornerShape(9.dp)
-
-                    Box(
+                    Column(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight()
-                            .clip(leftBezelShape)
-                            .background(NuxColors.SurfaceWhite)
-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.24f), leftBezelShape)
-                            .padding(6.dp)
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxWidth()
-                                    .verticalScroll(rememberScrollState()),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                // 1. Nama Instance Box
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(innerBezelShape)
-                                        .background(NuxColors.SurfaceElevated)
-                                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
-                                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                                ) {
-                                    Text(
-                                        text = "NAMA INSTANCE",
-                                        color = NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 8.5.sp,
-                                        letterSpacing = 0.8.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(30.dp)
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(NuxColors.SurfaceInput)
-                                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.36f), RoundedCornerShape(6.dp))
-                                            .padding(horizontal = 8.dp),
-                                        contentAlignment = Alignment.CenterStart
-                                    ) {
-                                        if (instanceName.isEmpty()) {
-                                            Text(
-                                                text = "Default: $selectedVersion ${selectedLoader.replaceFirstChar { it.uppercase() }}",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 11.sp,
-                                                fontWeight = FontWeight.Normal
-                                            )
-                                        }
-                                        BasicTextField(
-                                            value = instanceName,
-                                            onValueChange = { instanceName = it },
-                                            singleLine = true,
-                                            textStyle = TextStyle(
-                                                color = NuxColors.DarkGray,
-                                                fontSize = 11.5.sp,
-                                                fontWeight = FontWeight.SemiBold
-                                            ),
-                                            cursorBrush = SolidColor(NuxColors.Yellow),
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
+                        // 1. Nama
+                        Column {
+                            AiLabel("NAMA INSTANCE")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            AiField(
+                                value = instanceName,
+                                onChange = { instanceName = it },
+                                placeholder = "Default: $selectedVersion $loaderLabel"
+                            )
+                        }
+
+                        // 2. Mod loader
+                        Column {
+                            AiLabel("MOD LOADER")
+                            Spacer(modifier = Modifier.height(6.dp))
+                            AmberSegmented(
+                                options = LOADER_LABELS,
+                                selected = LOADERS.indexOfFirst { it.first == selectedLoader }.coerceAtLeast(0),
+                                onSelect = { selectedLoader = LOADERS[it].first }
+                            )
+
+                            if (selectedLoader == "fabric") {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                AiLoaderPicker(
+                                    prefix = "Fabric",
+                                    loading = isLoadingFabric,
+                                    loadingText = "Memuat loader Fabric...",
+                                    emptyText = "⚠️ Fabric belum tersedia untuk $selectedVersion",
+                                    choices = fabricChoices,
+                                    selectedId = selectedFabricVersion,
+                                    open = pickerOpen,
+                                    onToggle = { pickerOpen = !pickerOpen },
+                                    onPick = {
+                                        selectedFabricVersion = it
+                                        pickerOpen = false
                                     }
-                                }
-
-                                // 2. Mod Loader Selection
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(innerBezelShape)
-                                        .background(NuxColors.SurfaceElevated)
-                                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
-                                        .padding(horizontal = 8.dp, vertical = 6.dp)
-                                ) {
-                                    Text(
-                                        text = "MOD LOADER ENGINE",
-                                        color = NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 8.5.sp,
-                                        letterSpacing = 0.8.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                    ) {
-                                        listOf("vanilla" to "Vanilla", "fabric" to "Fabric").forEach { (type, label) ->
-                                            val isSelected = selectedLoader == type
-                                            val btnBg by animateColorAsState(
-                                                targetValue = if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceInput,
-                                                animationSpec = tween(200)
-                                            )
-                                            val btnBorder by animateColorAsState(
-                                                targetValue = if (isSelected) NuxColors.ForestGreen else NuxColors.DarkGray.copy(alpha = 0.13f),
-                                                animationSpec = tween(200)
-                                            )
-
-                                            Box(
-                                                modifier = Modifier
-                                                    .weight(1f)
-                                                    .height(30.dp)
-                                                    .clip(RoundedCornerShape(6.dp))
-                                                    .background(btnBg, RoundedCornerShape(6.dp))
-                                                    .border(1.dp, btnBorder, RoundedCornerShape(6.dp))
-                                                    .clickable { selectedLoader = type },
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                                    if (isSelected) {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .size(5.dp)
-                                                                .background(NuxColors.MintGreen, CircleShape)
-                                                        )
-                                                        Spacer(modifier = Modifier.width(5.dp))
-                                                    }
-                                                    Text(
-                                                        text = label,
-                                                        color = if (isSelected) NuxColors.SageGreen else NuxColors.GrayNeutral,
-                                                        fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
-                                                        fontSize = 10.5.sp
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    // Fabric Loader Version Picker
-                                    if (selectedLoader == "fabric") {
-                                        Spacer(modifier = Modifier.height(6.dp))
-                                        var showFabricMenu by remember { mutableStateOf(false) }
-
-                                        Box(modifier = Modifier.fillMaxWidth()) {
-                                            Row(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(30.dp)
-                                                    .clip(RoundedCornerShape(6.dp))
-                                                    .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.36f), RoundedCornerShape(6.dp))
-                                                    .clickable {
-                                                        if (!isLoadingFabric && fabricVersionsList.isNotEmpty()) {
-                                                            showFabricMenu = true
-                                                        }
-                                                    }
-                                                    .padding(horizontal = 8.dp),
-                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                if (isLoadingFabric) {
-                                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                                        CircularProgressIndicator(
-                                                            modifier = Modifier.size(11.dp),
-                                                            strokeWidth = 1.5.dp,
-                                                            color = NuxColors.SageGreen
-                                                        )
-                                                        Spacer(modifier = Modifier.width(5.dp))
-                                                        Text(
-                                                            text = "Memuat loader Fabric...",
-                                                            color = NuxColors.GrayNeutral,
-                                                            fontSize = 10.sp
-                                                        )
-                                                    }
-                                                } else if (fabricVersionsList.isEmpty()) {
-                                                    Text(
-                                                        text = "⚠️ Fabric belum tersedia untuk $selectedVersion",
-                                                        color = NuxColors.ErrorRed,
-                                                        fontSize = 9.5.sp,
-                                                        fontWeight = FontWeight.Medium
-                                                    )
-                                                } else {
-                                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                                        Text(
-                                                            text = "Fabric $selectedFabricVersion",
-                                                            color = NuxColors.DarkGray,
-                                                            fontWeight = FontWeight.Bold,
-                                                            fontSize = 10.5.sp
-                                                        )
-                                                    }
-                                                    Text(
-                                                        text = "▼",
-                                                        color = NuxColors.GrayNeutral,
-                                                        fontSize = 8.sp
-                                                    )
-                                                }
-                                            }
-
-                                            DropdownMenu(
-                                                expanded = showFabricMenu,
-                                                onDismissRequest = { showFabricMenu = false },
-                                                modifier = Modifier
-                                                    .background(NuxColors.SurfaceElevated)
-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), RoundedCornerShape(8.dp))
-                                                    .heightIn(max = 200.dp)
-                                            ) {
-                                                fabricVersionsList.take(30).forEach { ver ->
-                                                    val isPicked = ver == selectedFabricVersion
-                                                    DropdownMenuItem(
-                                                        text = {
-                                                            Row(
-                                                                modifier = Modifier.fillMaxWidth(),
-                                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                                verticalAlignment = Alignment.CenterVertically
-                                                            ) {
-                                                                Text(
-                                                                    text = ver,
-                                                                    fontWeight = if (isPicked) FontWeight.Black else FontWeight.Normal,
-                                                                    fontSize = 11.sp,
-                                                                    color = if (isPicked) NuxColors.SageGreen else NuxColors.DarkGray
-                                                                )
-                                                                if (isPicked) {
-                                                                    Icon(
-                                                                        imageVector = Icons.Default.Check,
-                                                                        contentDescription = null,
-                                                                        tint = NuxColors.SageGreen,
-                                                                        modifier = Modifier.size(13.dp)
-                                                                    )
-                                                                }
-                                                            }
-                                                        },
-                                                        onClick = {
-                                                            selectedFabricVersion = ver
-                                                            showFabricMenu = false
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // 3. Summary Card with Subtle Ambient Glow
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(innerBezelShape)
-                                        .background(NuxColors.SoftLime)
-                                        .border(1.dp, NuxColors.CardBorder, innerBezelShape)
-                                        .padding(horizontal = 8.dp, vertical = 5.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = "SPESIFIKASI TARGET",
-                                            color = NuxColors.SageGreen,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 7.5.sp,
-                                            letterSpacing = 0.8.sp
-                                        )
-                                        Spacer(modifier = Modifier.height(1.dp))
-                                        Text(
-                                            text = "Minecraft $selectedVersion",
-                                            color = NuxColors.DarkGray,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 11.sp
-                                        )
-                                    }
-
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(5.dp))
-                                            .background(
-                                                if (selectedLoader == "fabric") Color(0xFF8B5CF6).copy(alpha = 0.2f)
-                                                else NuxColors.YellowPale
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (selectedLoader == "fabric") Color(0xFF8B5CF6).copy(alpha = 0.5f)
-                                                else NuxColors.Yellow,
-                                                RoundedCornerShape(5.dp)
-                                            )
-                                            .padding(horizontal = 7.dp, vertical = 3.dp)
-                                    ) {
-                                        Text(
-                                            text = if (selectedLoader == "fabric") "FABRIC" else "VANILLA",
-                                            color = if (selectedLoader == "fabric") NuxColors.PurpleDark else NuxColors.SageGreen,
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 8.5.sp
-                                        )
-                                    }
-                                }
+                                )
                             }
 
-                            // 4. Island CTA Button (Bottom Anchored)
-                            val canCreate = !(selectedLoader == "fabric" && (isLoadingFabric || selectedFabricVersion.isBlank()))
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(34.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        if (canCreate) Brush.horizontalGradient(
-                                            listOf(NuxColors.ForestGreen, NuxColors.ForestGreen)
-                                        ) else Brush.horizontalGradient(
-                                            listOf(NuxColors.SurfaceElevated, NuxColors.SurfaceWhite)
-                                        )
-                                    )
-                                    .border(
-                                        1.dp,
-                                        if (canCreate) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.20f),
-                                        RoundedCornerShape(10.dp)
-                                    )
-                                    .clickable(enabled = canCreate) {
-                                        val defaultName = "$selectedVersion ${selectedLoader.replaceFirstChar { it.uppercase() }}"
-                                        val finalName = if (instanceName.isNotBlank()) instanceName else defaultName
-                                        val newInstance = Instance(
-                                            id = "inst_${UUID.randomUUID()}",
-                                            name = finalName,
-                                            mcVersion = selectedVersion,
-                                            loader = selectedLoader,
-                                            loaderVersion = if (selectedLoader == "fabric") selectedFabricVersion else "",
-                                            icon = if (selectedLoader == "fabric") "fabric" else "crafting_table"
-                                        )
-                                        onInstanceCreated(newInstance)
+                            if (selectedLoader == "forge") {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                AiLoaderPicker(
+                                    prefix = "Forge",
+                                    loading = isLoadingForge,
+                                    loadingText = "Memuat versi Forge...",
+                                    emptyText = if (ForgeService.isMcSupported(selectedVersion)) {
+                                        "⚠️ Forge belum tersedia untuk $selectedVersion"
+                                    } else {
+                                        "⚠️ Forge hanya untuk Minecraft 1.13 ke atas"
+                                    },
+                                    choices = forgeChoices,
+                                    selectedId = selectedForgeVersion,
+                                    open = pickerOpen,
+                                    onToggle = { pickerOpen = !pickerOpen },
+                                    onPick = {
+                                        selectedForgeVersion = it
+                                        pickerOpen = false
                                     }
-                                    .padding(horizontal = 10.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = when {
-                                            isLoadingFabric && selectedLoader == "fabric" -> "Memuat Fabric..."
-                                            selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
-                                            else -> "Buat Instance Sekarang"
-                                        },
-                                        color = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
-                                        fontWeight = FontWeight.Black,
-                                        fontSize = 11.sp,
-                                        letterSpacing = 0.2.sp
-                                    )
-
-                                    // Nested Icon Pill
-                                    Box(
-                                        modifier = Modifier
-                                            .size(20.dp)
-                                            .clip(CircleShape)
-                                            .background(if (canCreate) NuxColors.SurfaceWhite.copy(alpha = 0.2f) else Color.Transparent),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.ArrowForward,
-                                            contentDescription = null,
-                                            tint = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
-                                            modifier = Modifier.size(11.dp)
-                                        )
-                                    }
-                                }
+                                )
+                                Text(
+                                    text = "Forge dipasang sekali saat instance diunduh pertama kali.",
+                                    color = Amber.TextDim,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                             }
+                        }
+
+                        // 3. Ringkasan
+                        AiSummary(
+                            mcVersion = selectedVersion,
+                            loaderLabel = loaderLabel,
+                            loaderVersion = loaderVersionNow
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    AmberButton(
+                        text = when {
+                            isLoadingFabric && selectedLoader == "fabric" -> "Memuat Fabric..."
+                            selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
+                            isLoadingForge && selectedLoader == "forge" -> "Memuat Forge..."
+                            selectedLoader == "forge" && selectedForgeVersion.isBlank() -> "Forge Tidak Tersedia"
+                            else -> "Buat Instance Sekarang"
+                        },
+                        onClick = {
+                            val defaultName = "$selectedVersion $loaderLabel"
+                            val finalName = if (instanceName.isNotBlank()) instanceName else defaultName
+                            onInstanceCreated(
+                                Instance(
+                                    id = "inst_${UUID.randomUUID()}",
+                                    name = finalName,
+                                    mcVersion = selectedVersion,
+                                    loader = selectedLoader,
+                                    loaderVersion = loaderVersionNow,
+                                    icon = if (selectedLoader == "fabric") "fabric" else "crafting_table"
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        style = AmberButtonStyle.Primary,
+                        enabled = canCreate,
+                        height = 46.dp
+                    )
+                }
+
+                // Garis pemisah tipis antar panel
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .fillMaxHeight()
+                        .background(Amber.Line)
+                )
+
+                // ============================================================ kanan: daftar versi
+                Column(
+                    modifier = Modifier
+                        .weight(1.15f)
+                        .fillMaxHeight()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        VersionCategory.values().forEach { category ->
+                            AiChip(
+                                label = category.label,
+                                selected = selectedCategory == category,
+                                onClick = { selectedCategory = category }
+                            )
                         }
                     }
 
-                    // ==========================================
-                    // RIGHT COLUMN: Version Picker with Beta Options
-                    // ==========================================
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AiField(
+                        value = searchQuery,
+                        onChange = { searchQuery = it },
+                        placeholder = "Cari versi (${selectedCategory.label})...",
+                        searchIcon = true,
+                        onClear = { searchQuery = "" }
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 2.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        AiLabel("DAFTAR VERSI")
+                        Text(
+                            text = "${filteredVersions.size} versi ditemukan",
+                            color = Amber.TextDim,
+                            fontSize = 11.sp,
+                            maxLines = 1
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    val listShape = RoundedCornerShape(12.dp)
                     Box(
                         modifier = Modifier
-                            .weight(1.15f)
-                            .fillMaxHeight()
-                            .clip(leftBezelShape)
-                            .background(NuxColors.SurfaceWhite)
-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.24f), leftBezelShape)
-                            .padding(6.dp)
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .clip(listShape)
+                            .background(Amber.Fill)
+                            .border(1.dp, Amber.Line, listShape)
                     ) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            // Category Filter Bar (Pill Tabs like Zalith)
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                        if (isLoadingVersions) {
+                            AiCenterNote("Memuat manifest Mojang...")
+                        } else if (filteredVersions.isEmpty()) {
+                            AiCenterNote("Tidak ada versi yang cocok")
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
                             ) {
-                                VersionCategory.values().forEach { category ->
-                                    val isCatSelected = selectedCategory == category
-                                    val pillBg by animateColorAsState(
-                                        targetValue = if (isCatSelected) category.badgeBg else NuxColors.SurfaceElevated,
-                                        animationSpec = tween(150)
+                                items(filteredVersions, key = { it.id }) { item ->
+                                    AiVersionRow(
+                                        item = item,
+                                        selected = item.id == selectedVersion,
+                                        onClick = { selectedVersion = item.id }
                                     )
-                                    val pillBorder by animateColorAsState(
-                                        targetValue = if (isCatSelected) category.badgeText.copy(alpha = 0.7f) else NuxColors.DarkGray.copy(alpha = 0.10f),
-                                        animationSpec = tween(150)
-                                    )
-
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(6.dp))
-                                            .background(pillBg)
-                                            .border(1.dp, pillBorder, RoundedCornerShape(6.dp))
-                                            .clickable { selectedCategory = category }
-                                            .padding(horizontal = 7.dp, vertical = 3.5.dp)
-                                    ) {
-                                        Text(
-                                            text = category.label,
-                                            color = if (isCatSelected) category.badgeText else NuxColors.GrayNeutral,
-                                            fontWeight = if (isCatSelected) FontWeight.Black else FontWeight.SemiBold,
-                                            fontSize = 9.sp
-                                        )
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            // Search Field
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(28.dp)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(NuxColors.SurfaceInput)
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.30f), RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 7.dp),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        contentDescription = "Search",
-                                        tint = NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(12.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(5.dp))
-                                    BasicTextField(
-                                        value = searchQuery,
-                                        onValueChange = { searchQuery = it },
-                                        singleLine = true,
-                                        textStyle = TextStyle(
-                                            color = NuxColors.DarkGray,
-                                            fontSize = 10.5.sp,
-                                            fontWeight = FontWeight.Medium
-                                        ),
-                                        cursorBrush = SolidColor(NuxColors.Yellow),
-                                        modifier = Modifier.weight(1f),
-                                        decorationBox = { innerTextField ->
-                                            if (searchQuery.isEmpty()) {
-                                                Text(
-                                                    text = "Cari versi (${selectedCategory.label})...",
-                                                    color = NuxColors.GrayNeutral,
-                                                    fontSize = 10.sp
-                                                )
-                                            }
-                                            innerTextField()
-                                        }
-                                    )
-                                    if (searchQuery.isNotEmpty()) {
-                                        Icon(
-                                            imageVector = Icons.Default.Close,
-                                            contentDescription = "Clear",
-                                            tint = NuxColors.GrayNeutral,
-                                            modifier = Modifier
-                                                .size(13.dp)
-                                                .clickable { searchQuery = "" }
-                                        )
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(3.dp))
-
-                            // Version Count Header
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 2.dp, vertical = 1.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = "DAFTAR VERSI",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 8.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.8.sp
-                                )
-                                Text(
-                                    text = "${filteredVersions.size} versi ditemukan",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 8.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-
-                            // Version List Inner Core
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f)
-                                    .clip(innerBezelShape)
-                                    .background(NuxColors.SurfaceInput)
-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
-                                    .padding(3.dp)
-                            ) {
-                                if (isLoadingVersions) {
-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                            CircularProgressIndicator(
-                                                color = NuxColors.SageGreen,
-                                                modifier = Modifier.size(20.dp),
-                                                strokeWidth = 2.dp
-                                            )
-                                            Spacer(modifier = Modifier.height(6.dp))
-                                            Text(
-                                                text = "Memuat manifest Mojang...",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 10.sp
-                                            )
-                                        }
-                                    }
-                                } else if (filteredVersions.isEmpty()) {
-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = "Tidak ada versi yang cocok",
-                                            color = NuxColors.GrayNeutral,
-                                            fontSize = 10.5.sp,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    }
-                                } else {
-                                    LazyColumn(
-                                        modifier = Modifier.fillMaxSize(),
-                                        verticalArrangement = Arrangement.spacedBy(3.dp)
-                                    ) {
-                                        items(filteredVersions, key = { it.id }) { item ->
-                                            val isSelected = item.id == selectedVersion
-                                            val itemShape = RoundedCornerShape(6.dp)
-
-                                            // Determine Badge Color & Label based on item type
-                                            val (badgeText, badgeBg, badgeTextColor) = when {
-                                                item.type == "release" -> Triple("RELEASE", NuxColors.YellowPale, NuxColors.ForestGreen)
-                                                item.type == "snapshot" -> Triple("SNAPSHOT", Color(0xFF8B5CF6).copy(alpha = 0.15f), Color(0xFFA78BFA))
-                                                item.type == "old_beta" || item.id.startsWith("b") -> Triple("BETA", NuxColors.Amber.copy(alpha = 0.15f), NuxColors.Amber)
-                                                item.type == "old_alpha" || item.id.startsWith("a") -> Triple("ALPHA", Color(0xFFEC4899).copy(alpha = 0.15f), Color(0xFFF472B6))
-                                                else -> Triple(item.type.uppercase(), Color(0xFF3B82F6).copy(alpha = 0.15f), Color(0xFF60A5FA))
-                                            }
-
-                                            Row(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(itemShape)
-                                                    .background(
-                                                        if (isSelected) NuxColors.YellowPale
-                                                        else NuxColors.SurfaceWhite,
-                                                        itemShape
-                                                    )
-                                                    .border(
-                                                        width = 1.dp,
-                                                        color = if (isSelected) NuxColors.ForestGreen else NuxColors.DarkGray.copy(alpha = 0.16f),
-                                                        shape = itemShape
-                                                    )
-                                                    .clickable { selectedVersion = item.id }
-                                                    .padding(horizontal = 8.dp, vertical = 4.5.dp),
-                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                                    Text(
-                                                        text = item.id,
-                                                        color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral,
-                                                        fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
-                                                        fontSize = 11.sp
-                                                    )
-                                                    Spacer(modifier = Modifier.width(5.dp))
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .clip(RoundedCornerShape(3.dp))
-                                                            .background(badgeBg)
-                                                            .padding(horizontal = 4.dp, vertical = 1.5.dp)
-                                                    ) {
-                                                        Text(
-                                                            text = badgeText,
-                                                            color = badgeTextColor,
-                                                            fontWeight = FontWeight.Bold,
-                                                            fontSize = 7.5.sp
-                                                        )
-                                                    }
-                                                }
-
-                                                if (isSelected) {
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(16.dp)
-                                                            .background(NuxColors.ForestGreen, CircleShape),
-                                                        contentAlignment = Alignment.Center
-                                                    ) {
-                                                        Icon(
-                                                            imageVector = Icons.Default.Check,
-                                                            contentDescription = "Selected",
-                                                            tint = NuxColors.Ink,
-                                                            modifier = Modifier.size(11.dp)
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+// -------------------------------------------------------------------- bagian kecil
+
+/** Label bagian: huruf kapital kecil, redup. */
+@Composable
+private fun AiLabel(text: String) {
+    Text(
+        text = text,
+        color = Amber.TextDim,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 0.6.sp,
+        maxLines = 1
+    )
+}
+
+/** Pil filter: terpilih kuning berteks tinta, selain itu kaca bertepi tipis. */
+@Composable
+private fun AiChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(10.dp)
+    Box(
+        modifier = Modifier
+            .height(32.dp)
+            .clip(shape)
+            .background(if (selected) Amber.Yellow else Amber.Fill)
+            .border(1.dp, if (selected) Amber.Yellow else Amber.Line, shape)
+            .amberTap(onClick)
+            .padding(horizontal = 12.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = label,
+            color = if (selected) Amber.Ink else Amber.TextDim,
+            fontSize = 12.5.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            maxLines = 1
+        )
+    }
+}
+
+/**
+ * Kolom isian satu baris. [searchIcon] menambah kaca pembesar di kiri; [onClear] menampilkan tombol
+ * hapus saat ada isi.
+ */
+@Composable
+private fun AiField(
+    value: String,
+    onChange: (String) -> Unit,
+    placeholder: String,
+    searchIcon: Boolean = false,
+    onClear: (() -> Unit)? = null
+) {
+    val shape = RoundedCornerShape(12.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(42.dp)
+            .clip(shape)
+            .background(Amber.Fill)
+            .border(1.dp, Amber.LineStrong, shape)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (searchIcon) {
+            Box(
+                modifier = Modifier
+                    .size(16.dp)
+                    .drawBehind {
+                        val s = size.minDimension
+                        val sw = s * 0.12f
+                        drawCircle(
+                            color = Amber.TextDim,
+                            radius = s * 0.30f,
+                            center = Offset(s * 0.42f, s * 0.42f),
+                            style = Stroke(width = sw)
+                        )
+                        drawLine(
+                            color = Amber.TextDim,
+                            start = Offset(s * 0.64f, s * 0.64f),
+                            end = Offset(s * 0.90f, s * 0.90f),
+                            strokeWidth = sw,
+                            cap = StrokeCap.Round
+                        )
+                    }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+        BasicTextField(
+            value = value,
+            onValueChange = onChange,
+            singleLine = true,
+            textStyle = TextStyle(
+                color = Amber.Text,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium
+            ),
+            cursorBrush = SolidColor(Amber.Yellow),
+            modifier = Modifier.weight(1f),
+            decorationBox = { inner ->
+                Box(contentAlignment = Alignment.CenterStart) {
+                    if (value.isEmpty()) {
+                        Text(
+                            text = placeholder,
+                            color = Amber.TextFaint,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    inner()
+                }
+            }
+        )
+        if (onClear != null && value.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .amberTap(onClear),
+                contentAlignment = Alignment.Center
+            ) {
+                AmberIcon("close", 16.dp, Amber.TextDim)
+            }
+        }
+    }
+}
+
+/** Tanda centang kecil yang digambar langsung. */
+@Composable
+private fun AiCheck(color: Color, boxSize: Dp = 16.dp) {
+    Box(
+        modifier = Modifier
+            .size(boxSize)
+            .drawBehind {
+                val s = size.minDimension
+                val sw = s * 0.14f
+                drawLine(color, Offset(s * 0.20f, s * 0.54f), Offset(s * 0.42f, s * 0.76f), sw, StrokeCap.Round)
+                drawLine(color, Offset(s * 0.42f, s * 0.76f), Offset(s * 0.82f, s * 0.28f), sw, StrokeCap.Round)
+            }
+    )
+}
+
+/** Teks tengah untuk keadaan memuat atau kosong (tanpa indikator berputar). */
+@Composable
+private fun AiCenterNote(text: String) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = text,
+            color = Amber.TextDim,
+            fontSize = 13.sp,
+            maxLines = 2,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+    }
+}
+
+/** Warna dan teks lencana jenis versi (kode hijau/kuning hanya untuk rilis dan snapshot). */
+private fun typeBadge(item: VersionItem): Pair<String, Color> = when {
+    item.type == "release" -> "RELEASE" to Amber.Good
+    item.type == "snapshot" -> "SNAPSHOT" to Amber.Yellow
+    item.type == "old_beta" || item.id.startsWith("b") -> "BETA" to Amber.TextDim
+    item.type == "old_alpha" || item.id.startsWith("a") -> "ALPHA" to Amber.TextDim
+    else -> item.type.uppercase() to Amber.TextDim
+}
+
+/** Satu baris versi Minecraft di daftar kanan. */
+@Composable
+private fun AiVersionRow(item: VersionItem, selected: Boolean, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(10.dp)
+    val (badgeText, badgeColor) = typeBadge(item)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(44.dp)
+            .clip(shape)
+            .background(if (selected) Amber.YellowTint else Color.Transparent)
+            .amberTap(onClick)
+            .padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = item.id,
+            color = if (selected) Amber.Yellow else Amber.Text,
+            fontSize = 15.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+            maxLines = 1
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .background(badgeColor.copy(alpha = 0.16f))
+                .padding(horizontal = 6.dp, vertical = 2.dp)
+        ) {
+            Text(
+                text = badgeText,
+                color = badgeColor,
+                fontSize = 10.5.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        if (selected) AiCheck(Amber.Yellow, 18.dp)
+    }
+}
+
+/**
+ * Pemilih versi loader (Fabric/Forge): baris ringkas yang membuka daftar di tempat. Saat memuat atau
+ * kosong barisnya hanya menampilkan keterangan dan tidak bisa dibuka.
+ */
+@Composable
+private fun AiLoaderPicker(
+    prefix: String,
+    loading: Boolean,
+    loadingText: String,
+    emptyText: String,
+    choices: List<LoaderChoice>,
+    selectedId: String,
+    open: Boolean,
+    onToggle: () -> Unit,
+    onPick: (String) -> Unit
+) {
+    val shape = RoundedCornerShape(12.dp)
+    val interactive = !loading && choices.isNotEmpty()
+    val current = choices.firstOrNull { it.id == selectedId }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        val frame = Modifier
+            .fillMaxWidth()
+            .height(42.dp)
+            .clip(shape)
+            .background(Amber.Fill)
+            .border(1.dp, Amber.LineStrong, shape)
+        val head = if (interactive) frame.amberTap(onToggle) else frame
+        Row(
+            modifier = head.padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            when {
+                loading -> Text(
+                    text = loadingText,
+                    color = Amber.TextDim,
+                    fontSize = 13.sp,
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f)
+                )
+                choices.isEmpty() -> Text(
+                    text = emptyText,
+                    color = Amber.DangerSoft,
+                    fontSize = 12.5.sp,
+                    maxLines = 2,
+                    modifier = Modifier.weight(1f)
+                )
+                else -> {
+                    Text(
+                        text = "$prefix $selectedId",
+                        color = Amber.Text,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    if (current != null && current.tag.isNotEmpty()) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        AiTag(current.tag)
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    AmberIcon(if (open) "chev_up" else "chev_down", 18.dp, Amber.TextDim)
+                }
+            }
+        }
+
+        if (open && interactive) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .fillMaxWidth()
+                    .heightIn(max = 164.dp)
+                    .clip(shape)
+                    .background(Amber.Fill)
+                    .border(1.dp, Amber.Line, shape)
+                    .verticalScroll(rememberScrollState())
+                    .padding(4.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                choices.forEach { choice ->
+                    val picked = choice.id == selectedId
+                    val rowShape = RoundedCornerShape(8.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(38.dp)
+                            .clip(rowShape)
+                            .background(if (picked) Amber.YellowTint else Color.Transparent)
+                            .amberTap { onPick(choice.id) }
+                            .padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = choice.id,
+                            color = if (picked) Amber.Yellow else Amber.Text,
+                            fontSize = 13.5.sp,
+                            fontWeight = if (picked) FontWeight.Bold else FontWeight.Medium,
+                            maxLines = 1
+                        )
+                        if (choice.tag.isNotEmpty()) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            AiTag(choice.tag)
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (picked) AiCheck(Amber.Yellow, 16.dp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/** Lencana kecil (Disarankan / Terbaru). */
+@Composable
+private fun AiTag(text: String) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(Amber.YellowTint)
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+    ) {
+        Text(
+            text = text,
+            color = Amber.Yellow,
+            fontSize = 10.5.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1
+        )
+    }
+}
+
+/** Ringkasan pilihan: versi Minecraft, loader dan versinya. */
+@Composable
+private fun AiSummary(mcVersion: String, loaderLabel: String, loaderVersion: String) {
+    val shape = RoundedCornerShape(12.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(Amber.YellowTint)
+            .border(1.dp, Amber.Line, shape)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "SPESIFIKASI TARGET",
+                color = Amber.Yellow,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.6.sp,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            Text(
+                text = "Minecraft $mcVersion",
+                color = Amber.Text,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (loaderVersion.isNotBlank()) {
+                Text(
+                    text = "$loaderLabel $loaderVersion",
+                    color = Amber.TextDim,
+                    fontSize = 12.5.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(Amber.Yellow)
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+        ) {
+            Text(
+                text = loaderLabel.uppercase(),
+                color = Amber.Ink,
+                fontSize = 11.5.sp,
+                fontWeight = FontWeight.Black,
+                maxLines = 1
+            )
         }
     }
 }

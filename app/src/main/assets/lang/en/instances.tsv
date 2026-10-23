@@ -51,3 +51,34 @@ Membongkar bytecode Java 8: {0} ({1}/{2})...	Unpacking Java 8 bytecode: {0} ({1}
 Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	The Fabric profile ({0}) is not installed yet. Please tap the DOWNLOAD button on the instance!
 Lokasi folder disalin ke clipboard:\n{0}	Folder location copied to the clipboard:\n{0}
 Buka Folder	Open Folder
+Memuat versi Forge...	Loading Forge versions...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge is not available yet for {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge is only for Minecraft 1.13 and newer
+Disarankan	Recommended
+Terbaru	Latest
+Memuat Forge...	Loading Forge...
+Forge Tidak Tersedia	Forge Unavailable
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	The Forge profile ({0}) is not installed yet. Please tap the DOWNLOAD button on the instance!
+Mengunduh installer Forge {0}...	Downloading Forge installer {0}...
+Mengunduh library Forge ({0}/{1})...	Downloading Forge libraries ({0}/{1})...
+Menyiapkan Java ({0})...	Preparing Java ({0})...
+Memasang Forge {0}...	Installing Forge {0}...
+Memasang Forge {0} ({1}/{2})...	Installing Forge {0} ({1}/{2})...
+Forge {0} terpasang	Forge {0} installed
+Tidak dapat menemukan Forge untuk versi {0}	Could not find Forge for version {0}
+Tidak ada versi Forge untuk {0}	No Forge versions for {0}
+Versi Forge belum dipilih	No Forge version selected
+Forge hanya mendukung Minecraft 1.13 ke atas	Forge is only supported for Minecraft 1.13 and newer
+Installer Forge {0} rusak atau tidak lengkap	The Forge installer {0} is corrupted or incomplete
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	This Forge installer format is not recognized (Amber needs Forge 1.13 or newer)
+Installer Forge untuk Minecraft {0}, bukan {1}	This Forge installer is for Minecraft {0}, not {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Failed to download Forge libraries: {0}. Check your connection and try again.
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	The Forge installer finished but the patched Minecraft jar was not found ({0})
+Gagal menyiapkan Java {0}: {1}	Failed to prepare Java {0}: {1}
+Installer Forge gagal (kode {0}): {1}	Forge installer failed (code {0}): {1}
+Installer Forge gagal (kode {0})	Forge installer failed (code {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang does not provide mappings for Minecraft {0}
+Pemasangan Forge	Forge installation
+Memasang Forge	Installing Forge
+Proses ini hanya berjalan sekali per versi Forge.	This runs only once per Forge version.
+Forge dipasang sekali saat instance diunduh pertama kali.	Forge is installed once, when the instance is first downloaded.

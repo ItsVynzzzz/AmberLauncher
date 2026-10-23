@@ -956,13 +956,19 @@ object NuxModManager {
     private fun checkModpackCompatibility(indexJson: com.google.gson.JsonObject, instance: Instance) {
         val deps = indexJson.getAsJsonObject("dependencies") ?: return
 
-        val otherLoader = listOf("forge" to "Forge", "neoforge" to "NeoForge", "quilt-loader" to "Quilt")
+        val otherLoader = listOf("neoforge" to "NeoForge", "quilt-loader" to "Quilt")
             .firstOrNull { deps.has(it.first) }
         val needsFabric = deps.has("fabric-loader")
+        val needsForge = deps.has("forge")
 
-        if (!needsFabric && otherLoader != null) {
+        if (!needsFabric && !needsForge && otherLoader != null) {
             throw ModpackIncompatibleException(
-                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric."
+                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge."
+            )
+        }
+        if (needsForge && !needsFabric && !instance.loader.equals("forge", ignoreCase = true)) {
+            throw ModpackIncompatibleException(
+                "Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu."
             )
         }
         if (needsFabric && !instance.loader.equals("fabric", ignoreCase = true)) {

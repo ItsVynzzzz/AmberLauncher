@@ -63,3 +63,34 @@ HTTP Error {0}	L\u1ed7i HTTP {0}
 Empty response body	Ph\u1ea3n h\u1ed3i tr\u1ed1ng
 Folder: {0}	Th\u01b0 m\u1ee5c: {0}
 Unable to resolve host "{0}": System DNS and Fallback DoH failed	Kh\u00f4ng th\u1ec3 ph\u00e2n gi\u1ea3i m\u00e1y ch\u1ee7 "{0}": DNS h\u1ec7 th\u1ed1ng v\u00e0 DoH d\u1ef1 ph\u00f2ng \u0111\u1ec1u th\u1ea5t b\u1ea1i
+Memuat versi Forge...	\u0110ang t\u1ea3i c\u00e1c phi\u00ean b\u1ea3n Forge...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge ch\u01b0a kh\u1ea3 d\u1ee5ng cho {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge ch\u1ec9 d\u00e0nh cho Minecraft 1.13 tr\u1edf l\u00ean
+Disarankan	Khuy\u00ean d\u00f9ng
+Terbaru	M\u1edbi nh\u1ea5t
+Memuat Forge...	\u0110ang t\u1ea3i Forge...
+Forge Tidak Tersedia	Forge kh\u00f4ng kh\u1ea3 d\u1ee5ng
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	H\u1ed3 s\u01a1 Forge ({0}) ch\u01b0a \u0111\u01b0\u1ee3c c\u00e0i. H\u00e3y nh\u1ea5n n\u00fat T\u1ea2I XU\u1ed0NG tr\u00ean instance!
+Mengunduh installer Forge {0}...	\u0110ang t\u1ea3i tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0}...
+Mengunduh library Forge ({0}/{1})...	\u0110ang t\u1ea3i th\u01b0 vi\u1ec7n Forge ({0}/{1})...
+Menyiapkan Java ({0})...	\u0110ang chu\u1ea9n b\u1ecb Java ({0})...
+Memasang Forge {0}...	\u0110ang c\u00e0i \u0111\u1eb7t Forge {0}...
+Memasang Forge {0} ({1}/{2})...	\u0110ang c\u00e0i \u0111\u1eb7t Forge {0} ({1}/{2})...
+Forge {0} terpasang	\u0110\u00e3 c\u00e0i \u0111\u1eb7t Forge {0}
+Tidak dapat menemukan Forge untuk versi {0}	Kh\u00f4ng t\u00ecm th\u1ea5y Forge cho phi\u00ean b\u1ea3n {0}
+Tidak ada versi Forge untuk {0}	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge cho {0}
+Versi Forge belum dipilih	Ch\u01b0a ch\u1ecdn phi\u00ean b\u1ea3n Forge
+Forge hanya mendukung Minecraft 1.13 ke atas	Forge ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft 1.13 tr\u1edf l\u00ean
+Installer Forge {0} rusak atau tidak lengkap	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0} b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng \u0111\u1ea7y \u0111\u1ee7
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.13 tr\u1edf l\u00ean)
+Installer Forge untuk Minecraft {0}, bukan {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y d\u00e0nh cho Minecraft {0}, kh\u00f4ng ph\u1ea3i {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c th\u01b0 vi\u1ec7n Forge: {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i th\u1eed l\u1ea1i.
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge \u0111\u00e3 ch\u1ea1y xong nh\u01b0ng kh\u00f4ng t\u00ecm th\u1ea5y jar Minecraft \u0111\u00e3 v\u00e1 ({0})
+Gagal menyiapkan Java {0}: {1}	Kh\u00f4ng chu\u1ea9n b\u1ecb \u0111\u01b0\u1ee3c Java {0}: {1}
+Installer Forge gagal (kode {0}): {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge th\u1ea5t b\u1ea1i (m\u00e3 {0}): {1}
+Installer Forge gagal (kode {0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge th\u1ea5t b\u1ea1i (m\u00e3 {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang kh\u00f4ng cung c\u1ea5p mappings cho Minecraft {0}
+Pemasangan Forge	C\u00e0i \u0111\u1eb7t Forge
+Memasang Forge	\u0110ang c\u00e0i \u0111\u1eb7t Forge
+Proses ini hanya berjalan sekali per versi Forge.	Qu\u00e1 tr\u00ecnh n\u00e0y ch\u1ec9 ch\u1ea1y m\u1ed9t l\u1ea7n cho m\u1ed7i phi\u00ean b\u1ea3n Forge.
+Forge dipasang sekali saat instance diunduh pertama kali.	Forge ch\u1ec9 \u0111\u01b0\u1ee3c c\u00e0i m\u1ed9t l\u1ea7n, khi instance \u0111\u01b0\u1ee3c t\u1ea3i xu\u1ed1ng l\u1ea7n \u0111\u1ea7u.

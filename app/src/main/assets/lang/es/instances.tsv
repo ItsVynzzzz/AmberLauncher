@@ -63,3 +63,34 @@ Lokasi folder disalin ke clipboard:\n{0}	Ubicaci\u00f3n de la carpeta copiada al
 Folder: {0}	Carpeta: {0}
 Buka Folder	Abrir carpeta
 Unable to resolve host "{0}": System DNS and Fallback DoH failed	No se pudo resolver el host "{0}": fallaron el DNS del sistema y el DoH de respaldo
+Memuat versi Forge...	Cargando versiones de Forge...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge a\u00fan no est\u00e1 disponible para {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge solo es para Minecraft 1.13 o superior
+Disarankan	Recomendada
+Terbaru	\u00daltima
+Memuat Forge...	Cargando Forge...
+Forge Tidak Tersedia	Forge no disponible
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	El perfil de Forge ({0}) a\u00fan no est\u00e1 instalado. \u00a1Toca el bot\u00f3n DESCARGAR en la instancia!
+Mengunduh installer Forge {0}...	Descargando el instalador de Forge {0}...
+Mengunduh library Forge ({0}/{1})...	Descargando bibliotecas de Forge ({0}/{1})...
+Menyiapkan Java ({0})...	Preparando Java ({0})...
+Memasang Forge {0}...	Instalando Forge {0}...
+Memasang Forge {0} ({1}/{2})...	Instalando Forge {0} ({1}/{2})...
+Forge {0} terpasang	Forge {0} instalado
+Tidak dapat menemukan Forge untuk versi {0}	No se encontr\u00f3 Forge para la versi\u00f3n {0}
+Tidak ada versi Forge untuk {0}	No hay versiones de Forge para {0}
+Versi Forge belum dipilih	No se ha elegido una versi\u00f3n de Forge
+Forge hanya mendukung Minecraft 1.13 ke atas	Forge solo es compatible con Minecraft 1.13 o superior
+Installer Forge {0} rusak atau tidak lengkap	El instalador de Forge {0} est\u00e1 da\u00f1ado o incompleto
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.13 o superior)
+Installer Forge untuk Minecraft {0}, bukan {1}	Este instalador de Forge es para Minecraft {0}, no {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de Forge: {0}. Revisa tu conexi\u00f3n e int\u00e9ntalo de nuevo.
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	El instalador de Forge termin\u00f3 pero no se encontr\u00f3 el jar de Minecraft parcheado ({0})
+Gagal menyiapkan Java {0}: {1}	No se pudo preparar Java {0}: {1}
+Installer Forge gagal (kode {0}): {1}	El instalador de Forge fall\u00f3 (c\u00f3digo {0}): {1}
+Installer Forge gagal (kode {0})	El instalador de Forge fall\u00f3 (c\u00f3digo {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang no proporciona mappings para Minecraft {0}
+Pemasangan Forge	Instalaci\u00f3n de Forge
+Memasang Forge	Instalando Forge
+Proses ini hanya berjalan sekali per versi Forge.	Esto solo se ejecuta una vez por versi\u00f3n de Forge.
+Forge dipasang sekali saat instance diunduh pertama kali.	Forge se instala una sola vez, cuando la instancia se descarga por primera vez.

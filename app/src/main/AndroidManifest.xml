@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <!-- Pemasangan Forge: installer resmi berjalan di service foreground bertipe dataSync -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Auto-update: memasang APK pembaruan lewat PackageInstaller. Pembaruan berikutnya bisa tanpa konfirmasi di Android 12+ -->
@@ -184,6 +186,13 @@
             android:exported="false"
             android:process=":game"
             android:foregroundServiceType="mediaProjection|microphone" />
+
+        <!-- Proses :forge sendiri: hidup hanya selama installer Forge berjalan, lalu dimatikan (tanpa RAM tersisa) -->
+        <service
+            android:name=".core.forge.ForgeInstallService"
+            android:exported="false"
+            android:process=":forge"
+            android:foregroundServiceType="dataSync" />
 
         <activity
             android:name=".ui.activities.ErrorActivity"

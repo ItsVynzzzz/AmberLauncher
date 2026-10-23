@@ -16,7 +16,7 @@
 
 ## Tentang
 
-AmberLauncher dibuat supaya tetap lancar di HP Android kelas menengah ke bawah, dan tentu juga jalan di HP yang lebih kuat: tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya (RAM game dan jarak pandang) disesuaikan dengan RAM perangkat. Tema visualnya gelap transparan dengan aksen kuning amber. Untuk saat ini launcher ini berfokus pada **Fabric**.
+AmberLauncher dibuat supaya tetap lancar di HP Android kelas menengah ke bawah, dan tentu juga jalan di HP yang lebih kuat: tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya (RAM game dan jarak pandang) disesuaikan dengan RAM perangkat. Tema visualnya gelap transparan dengan aksen kuning amber. Untuk saat ini launcher ini mendukung **Fabric** dan **Forge** (Minecraft 1.13 ke atas).
 
 Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **Zalith Launcher 2** dan **PojavLauncher**. Lihat bagian [Lisensi dan Kredit](#lisensi-dan-kredit).
 
@@ -25,7 +25,8 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Beranda kaca gelap** yang minimalis, dengan latar yang bisa diganti.
 - **Banyak instance terpisah**: tiap profil punya versi, mod, dan pengaturan sendiri.
 - **Mod, resource pack, shader, dan datapack dari Modrinth**: cari dan pasang langsung dari dalam aplikasi, plus pemasangan file manual.
-- **Fokus Fabric**: pilih Vanilla atau Fabric saat membuat instance. Pencarian mod dan modpack otomatis disaring untuk Fabric, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
+- **Fabric dan Forge**: pilih Vanilla, Fabric, atau Forge saat membuat instance. Pencarian mod dan modpack otomatis disaring sesuai loader instance, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
+- **Forge hemat**: Forge dipasang sekali per versi lewat installer resmi di proses terpisah yang langsung dimatikan setelah selesai. Saat bermain, Forge hanya menambah beban dari Forge itu sendiri (kelas, mod, dan waktu muat); launcher tidak menjalankan layanan latar apa pun untuk Forge.
 - **Setelan awal sesuai HP**: RAM game dan jarak pandang awal menyesuaikan RAM perangkat. Model yang sudah diuji (saat ini Oppo A3x 4G) mendapat profil performa khusus; di HP lain launcher berjalan dengan setelan biasa.
 - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
@@ -35,7 +36,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).
 - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
 
-Belum ada: Forge, NeoForge, dan Quilt (untuk sekarang fokusnya Fabric, ke depannya bisa berubah), serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
+Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge, dan Quilt, serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
 
 > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
 
@@ -56,7 +57,7 @@ Setelah terpasang, pembaruan berikutnya bisa langsung dari dalam launcher (Penga
 
 1. Buka AmberLauncher. Di Android 11 ke atas akan muncul penjelasan izin penyimpanan; izinkan agar data tersimpan di folder `nuxlauncher` (boleh dilewati, datanya lalu disimpan di folder privat aplikasi).
 2. Buka **Akun** dan tambahkan akun: Microsoft untuk bermain online, atau offline untuk bermain sendiri.
-3. Buat **instance** baru: pilih versi Minecraft, lalu Vanilla atau Fabric (pilih Fabric bila ingin memakai mod).
+3. Buat **instance** baru: pilih versi Minecraft, lalu Vanilla, Fabric, atau Forge (pilih Fabric atau Forge bila ingin memakai mod).
 4. Di **Home**, tekan **UNDUH** dan tunggu sampai selesai (butuh internet; pertama kali bisa beberapa ratus MB), lalu tekan **PLAY**.
 5. Mod, resource pack, dan shader dipasang lewat menu **Mod**.
 
@@ -68,7 +69,7 @@ ID aplikasi diganti menjadi `com.itsvynzzzz.amberlauncher`, jadi versi ini terpa
 
 - **Game tertutup sendiri atau crash**: jangan beri RAM game lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di **Pengaturan**. Laporan crash bisa dilihat dari dalam aplikasi.
 - **FPS rendah**: kecilkan jarak pandang di dalam game, turunkan rasio resolusi, atau coba renderer lain di **Pengaturan**.
-- **Mod tidak jalan**: pastikan instance memakai Fabric dan versi Minecraft-nya sama dengan versi mod.
+- **Mod tidak jalan**: pastikan loader instance (Fabric atau Forge) dan versi Minecraft-nya sama dengan mod.
 
 ### Lokasi data
 

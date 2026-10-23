@@ -255,6 +255,26 @@ class MinecraftDownloader(
                 }
             }
 
+            // 6. Pasang Forge (Minecraft 1.13+). Installer resmi dijalankan sekali di proses terpisah;
+            // sesudahnya tidak ada biaya apa pun saat launcher berjalan.
+            if (instance.loader.equals("forge", ignoreCase = true)) {
+                var forgeVer = instance.loaderVersion
+                if (forgeVer.isBlank()) {
+                    val builds = com.israadev.nuxlauncher.core.forge.ForgeService.getBuilds(instance.mcVersion).getOrNull()
+                    val pick = builds?.let { com.israadev.nuxlauncher.core.forge.ForgeService.pickDefault(it) }
+                        ?: throw IllegalStateException("Tidak dapat menemukan Forge untuk versi ${instance.mcVersion}")
+                    forgeVer = pick.version
+                    instance.loaderVersion = forgeVer
+                }
+                com.israadev.nuxlauncher.core.forge.ForgeInstaller.ensureInstalled(
+                    context = context,
+                    downloader = this@MinecraftDownloader,
+                    mcVersion = instance.mcVersion,
+                    forgeVersion = forgeVer,
+                    onProgress = onProgress
+                ).getOrThrow()
+            }
+
             onProgress(1.0f, "Instalasi selesai!")
             instance.isDownloaded = true
             InstanceManager.updateInstance(context, instance)
@@ -299,6 +319,10 @@ class MinecraftDownloader(
             urls.add(url.replace("https://meta.fabricmc.net", "https://bmclapi2.bangbang93.com/fabric-meta"))
         } else if (url.startsWith("https://maven.fabricmc.net")) {
             urls.add(url.replace("https://maven.fabricmc.net", "https://bmclapi2.bangbang93.com/maven"))
+        } else if (url.startsWith("https://maven.minecraftforge.net")) {
+            urls.add(url.replace("https://maven.minecraftforge.net", "https://bmclapi2.bangbang93.com/maven"))
+        } else if (url.startsWith("https://files.minecraftforge.net/maven")) {
+            urls.add(url.replace("https://files.minecraftforge.net/maven", "https://bmclapi2.bangbang93.com/maven"))
         }
         return urls
     }
@@ -312,7 +336,7 @@ class MinecraftDownloader(
      * diberikan, isi unduhan dicocokkan dengan sidik jari resmi (mirror yang isinya berbeda ditolak,
      * lalu dicoba alamat berikutnya).
      */
-    private fun downloadFile(
+    internal fun downloadFile(
         url: String,
         targetFile: File,
         expectedSize: Long = 0L,

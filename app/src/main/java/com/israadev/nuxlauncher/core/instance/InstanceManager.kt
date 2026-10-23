@@ -384,6 +384,12 @@ object InstanceManager {
                 return false
             }
         }
+        if (inst.loader.equals("forge", ignoreCase = true)) {
+            // Hanya cek keberadaan berkas (fungsi ini dipanggil dari komposisi UI)
+            if (!com.israadev.nuxlauncher.core.forge.ForgeInstaller.isInstalled(context, inst.mcVersion, inst.loaderVersion)) {
+                return false
+            }
+        }
         return true
     }
 

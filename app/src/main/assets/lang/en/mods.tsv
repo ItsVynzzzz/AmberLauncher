@@ -122,3 +122,5 @@ Body stream kosong	Empty body stream
 Gagal menyimpan file unduhan	Failed to save the downloaded file
 Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	File {0} is corrupted or was altered in transit (fingerprint mismatch), so it was not installed.
 Isi modpack terlalu besar, pemasangan dibatalkan.	The modpack contents are too large, installation was canceled.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	This modpack requires {0}, but AmberLauncher currently only supports Fabric and Forge.
+Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	This modpack requires Forge. Create a Forge instance first, then install the modpack in it.

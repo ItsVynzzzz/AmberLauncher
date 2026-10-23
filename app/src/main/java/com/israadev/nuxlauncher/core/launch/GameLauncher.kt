@@ -68,6 +68,29 @@ object GameLauncher {
             }
         }
 
+        // Forge: profil dibuat saat instance diunduh; peluncuran hanya membaca berkas kecil itu
+        val isForge = instance.loader.equals("forge", ignoreCase = true)
+        var forgeLaunch: com.israadev.nuxlauncher.core.forge.ForgeLaunchInfo? = null
+        if (isForge) {
+            val forgeProfileFile = com.israadev.nuxlauncher.core.forge.ForgeInstaller.findProfileFile(
+                context, instance.mcVersion, instance.loaderVersion
+            )
+            forgeLaunch = forgeProfileFile?.let {
+                com.israadev.nuxlauncher.core.forge.ForgeLaunch.resolve(
+                    it, InstanceManager.getLibrariesDir(context), instance.mcVersion
+                )
+            }
+            if (forgeLaunch == null) {
+                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+                    context,
+                    "Profil Forge (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
+                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
+                ).show()
+                return
+            }
+            mainClass = forgeLaunch.mainClass
+        }
+
         val runtimeName = if (instance.javaRuntime != "auto") instance.javaRuntime else {
             com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion, mojangJavaMajor)
         }
@@ -113,6 +136,12 @@ object GameLauncher {
                     }
                 }
             }
+        }
+
+        // 2b. Forge libraries (library Mojang dengan group:artifact yang sama dilewati: versi Forge menang)
+        if (forgeLaunch != null) {
+            forgeLaunch.libraryFiles.forEach { classpathEntries.add(it.absolutePath) }
+            loaderArtifactKeys.addAll(forgeLaunch.libraryKeys)
         }
 
         // 3. Mojang libraries (excluding desktop org.lwjgl and libraries already provided/overridden by mod loader)
@@ -223,6 +252,10 @@ object GameLauncher {
             putExtra(GameActivity.EXTRA_RUNTIME_HOME, runtimeHome.absolutePath)
             putExtra(GameActivity.EXTRA_LWJGL_NATIVES_DIR, lwjglNativesDir.absolutePath)
             putExtra(GameActivity.EXTRA_USE_WRAPPER, useWrapper)
+            if (forgeLaunch != null) {
+                putStringArrayListExtra(GameActivity.EXTRA_EXTRA_JVM_ARGS, ArrayList(forgeLaunch.jvmArgs))
+                putStringArrayListExtra(GameActivity.EXTRA_EXTRA_GAME_ARGS, ArrayList(forgeLaunch.gameArgs))
+            }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 

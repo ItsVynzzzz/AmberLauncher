@@ -148,6 +148,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         const val EXTRA_LOADER = "extra_loader"
         const val EXTRA_LOADER_VERSION = "extra_loader_version"
         const val EXTRA_INSTALLED_MODS = "extra_installed_mods"
+        const val EXTRA_EXTRA_JVM_ARGS = "extra_extra_jvm_args"
+        const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
     }
 
     private val liveLogs = mutableStateListOf<String>()
@@ -396,6 +398,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private var loaderVersion: String? = null
     private var installedMods: List<String> = emptyList()
 
+    // Argumen tambahan dari mod loader (Forge): sebelum -cp dan sesudah argumen game biasa
+    private var extraJvmArgs: List<String> = emptyList()
+    private var extraGameArgs: List<String> = emptyList()
+
     private fun getScaledDisplayDimensions(): Pair<Int, Int> {
         val settings = SettingsManager.settings.value
         val ratio = (settings.resolutionRatio / 100f).coerceIn(0.35f, 1.5f)
@@ -507,6 +513,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         loader = intent.getStringExtra(EXTRA_LOADER) ?: "vanilla"
         loaderVersion = intent.getStringExtra(EXTRA_LOADER_VERSION)
         installedMods = intent.getStringArrayListExtra(EXTRA_INSTALLED_MODS) ?: CrashManager.getInstalledMods(gameDirPath)
+        extraJvmArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_JVM_ARGS) ?: emptyList()
+        extraGameArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_GAME_ARGS) ?: emptyList()
 
         // Setup real-time native LoggerBridge
         setupLogger()
@@ -1357,6 +1365,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     classpath.split(File.pathSeparator).filter { it.isNotBlank() }.distinct().joinToString(File.pathSeparator)
                 }
 
+                // Argumen JVM mod loader (Forge 1.17+: module path, --add-opens, -DignoreList, dst.)
+                extraJvmArgs.forEach { jvmArgs.add(it) }
+
                 jvmArgs.add("-cp")
                 jvmArgs.add(effectiveClasspath)
                 if (useWrapper) {
@@ -1381,6 +1392,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add(userType)
                 jvmArgs.add("--versionType")
                 jvmArgs.add("release")
+                // Argumen game mod loader (Forge: --launchTarget, --fml.*)
+                extraGameArgs.forEach { jvmArgs.add(it) }
 
                 LoggerBridge.appendTitle("JVM Launch Command")
                 jvmArgs.forEach { LoggerBridge.append("▷ $it") }

@@ -346,6 +346,19 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 
+    /**
+     * Android memberi tahu bila RAM HP hampir habis (tingkat 10 = rendah, 15 = kritis). Hanya dicatat
+     * di log: kalau proses game lalu ditutup sistem, penyebabnya terbaca dari log, bukan ditebak.
+     */
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level >= 10 && level < 20) {
+            try {
+                LoggerBridge.append("▷ [Kinerja] RAM HP hampir habis (tingkat $level dari 15): Android meminta aplikasi melepas memori")
+            } catch (_: Throwable) {}
+        }
+    }
+
     private var instanceName = "Minecraft"
     private var mcVersion = "Unknown"
     private var username = "Player"
@@ -1367,7 +1380,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 )
                 liveLogs.add("[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...")
                 // Pemantau hanya mencatat ke log tiap 30 detik; tidak mengubah apa pun pada game.
-                val perfMonitor = GamePerfMonitor(gcLogFile)
+                val perfMonitor = GamePerfMonitor(this, gcLogFile)
                 perfMonitor.start()
                 val exitCode = try {
                     VMLauncher.launchJVM(jvmArgs.toTypedArray())

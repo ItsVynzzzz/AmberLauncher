@@ -33,8 +33,7 @@ object SettingsManager {
             }
         }
 
-        val initialSettings = LauncherSettings(ramMb = recommendedRamMb(getTotalDeviceMemoryMb(context)))
-        _settings.value = initialSettings
+        _settings.value = defaultSettingsFor(context)
         save(context)
     }
 
@@ -44,9 +43,45 @@ object SettingsManager {
     }
 
     fun resetToDefaults(context: Context) {
-        val defaultSettings = LauncherSettings(ramMb = recommendedRamMb(getTotalDeviceMemoryMb(context)))
-        _settings.value = defaultSettings
+        _settings.value = defaultSettingsFor(context)
         save(context)
+    }
+
+    /**
+     * Pengaturan awal untuk HP ini: RAM game dan skala resolusi menyesuaikan spek HP. Hanya dipakai
+     * saat pertama kali dibuka dan saat reset; pengaturan yang sudah tersimpan tidak pernah diubah.
+     */
+    private fun defaultSettingsFor(context: Context): LauncherSettings {
+        val totalRamMb = getTotalDeviceMemoryMb(context)
+        val minSidePx = try {
+            val metrics = context.resources.displayMetrics
+            minOf(metrics.widthPixels, metrics.heightPixels)
+        } catch (_: Throwable) {
+            0
+        }
+        return LauncherSettings(
+            ramMb = recommendedRamMb(totalRamMb),
+            resolutionRatio = recommendedResolutionRatio(totalRamMb, minSidePx)
+        )
+    }
+
+    /**
+     * Skala resolusi game (persen) yang disarankan. Layar HP sekarang jauh lebih rapat daripada yang
+     * sanggup digambar GPU kelas bawah dengan lancar, jadi sisi terpendek layar diturunkan ke sasaran
+     * menurut RAM HP: di bawah 4 GB = 540 piksel, di bawah 6 GB = 720 piksel, selebihnya 1080 piksel.
+     * Layar yang sudah sekecil itu tetap 100%. Hasilnya kelipatan 5 supaya cocok dengan slider.
+     */
+    fun recommendedResolutionRatio(totalRamMb: Int, minSidePx: Int): Int {
+        if (minSidePx <= 0) return 100
+        val targetSide = when {
+            totalRamMb < 4096 -> 540
+            totalRamMb < 6144 -> 720
+            else -> 1080
+        }
+        if (minSidePx <= targetSide) return 100
+        val ratio = 100.0 * targetSide / minSidePx
+        val stepped = (Math.ceil(ratio / 5.0) * 5.0).toInt()
+        return stepped.coerceIn(40, 100)
     }
 
     /**

@@ -1,5 +1,8 @@
 package com.israadev.nuxlauncher.core.perf
 
+import android.content.Context
+import android.os.Build
+import android.os.PowerManager
 import android.os.SystemClock
 import android.system.Os
 import android.system.OsConstants
@@ -29,13 +32,17 @@ private const val LOG_PREFIX = "\u25B7 [Kinerja] "
  *
  * Satu baris laporan berisi: pemakaian CPU thread render, berapa lama thread itu menunggu giliran
  * CPU (tanda CPU berebut dengan thread lain), pemakaian CPU seluruh proses, ringkasan jeda GC dari
- * log GC JVM, dan RAM proses. Dengan angka ini penyebab FPS tidak stabil bisa dibaca dari log
+ * log GC JVM, RAM proses, dan suhu HP (Android 10 ke atas; HP yang terlalu panas menurunkan
+ * kecepatan prosesornya sendiri). Dengan angka ini penyebab FPS tidak stabil bisa dibaca dari log
  * hasil uji di HP, bukan ditebak.
  *
+ * @param context dipakai untuk membaca status suhu HP.
  * @param gcLogFile berkas log GC yang ditulis JVM lewat -Xlog:gc, atau null bila tidak dipakai
  *   (Java 8 tidak mendukung -Xlog).
  */
-class GamePerfMonitor(private val gcLogFile: File?) {
+class GamePerfMonitor(context: Context, private val gcLogFile: File?) {
+
+    private val appContext: Context = context.applicationContext
 
     @Volatile
     private var running = false
@@ -85,7 +92,10 @@ class GamePerfMonitor(private val gcLogFile: File?) {
         try {
             val tid = waitForRenderThread()
             if (tid < 0) return
-            LoggerBridge.append("$LOG_PREFIX pemantau aktif (thread render $tid), laporan tiap ${REPORT_INTERVAL_MS / 1000L} dtk")
+            LoggerBridge.append(
+                LOG_PREFIX + "pemantau aktif (thread render $tid), laporan tiap ${REPORT_INTERVAL_MS / 1000L} dtk | " +
+                    "mode kinerja stabil Android: ${sustainedSupportLabel()}"
+            )
             var prev = takeSample(tid)
             while (running) {
                 Thread.sleep(REPORT_INTERVAL_MS)
@@ -167,6 +177,8 @@ class GamePerfMonitor(private val gcLogFile: File?) {
                 sb.append(" | RAM proses ").append(rssKb / 1024L).append(" MB")
                 if (availKb >= 0L) sb.append(", tersedia ").append(availKb / 1024L).append(" MB")
             }
+            val thermal = thermalLabel()
+            if (thermal != null) sb.append(" | suhu HP: ").append(thermal)
             LoggerBridge.append(sb.toString())
         } catch (_: Throwable) {
         }
@@ -208,6 +220,40 @@ class GamePerfMonitor(private val gcLogFile: File?) {
     }
 
     private fun tenths(value: Long): String = "${value / 10L}.${value % 10L}"
+
+    /**
+     * Status suhu HP menurut Android (Android 10 ke atas), atau null bila tidak tersedia. Mulai dari
+     * "hangat" Android sudah bisa menurunkan kecepatan prosesor; "panas berat" ke atas pasti terasa.
+     */
+    private fun thermalLabel(): String? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
+        return try {
+            val power = appContext.getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return null
+            // 0 = normal, 1 = ringan, 2 = sedang, 3 = berat, 4 = kritis, 5 = darurat, 6 = mati
+            when (power.getCurrentThermalStatus()) {
+                0 -> "normal"
+                1 -> "hangat"
+                2 -> "panas sedang"
+                3 -> "panas berat"
+                4 -> "panas kritis"
+                5 -> "darurat"
+                6 -> "hampir mati"
+                else -> null
+            }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    /** Apakah HP ini mendukung mode kinerja stabil Android (tidak berarti sedang aktif). */
+    private fun sustainedSupportLabel(): String {
+        return try {
+            val power = appContext.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            if (power != null && power.isSustainedPerformanceModeSupported()) "didukung" else "tidak didukung"
+        } catch (_: Throwable) {
+            "tidak diketahui"
+        }
+    }
 }
 
 /** Jumlah tick CPU per detik (hampir selalu 100). */

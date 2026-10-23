@@ -127,14 +127,24 @@ class ForgeInstallService : Service() {
                 finish(exitCode)
             }
             LoggerBridge.setListener { text -> if (text != null) log(text) }
-            LoggerBridge.start(File(work, "native.out").absolutePath)
+
+            // Logger native membuka berkasnya tanpa O_CREAT (sama seperti GameActivity.setupLogger),
+            // jadi berkasnya harus sudah ada; kalau tidak, start() gagal dengan
+            // "No such file or directory" dan stdout/stderr sudah telanjur dialihkan ke pipa tanpa pembaca.
+            val nativeOut = File(work, "native.out")
+            nativeOut.delete()
+            nativeOut.createNewFile()
+            if (!nativeOut.exists()) throw java.io.IOException("Tidak bisa membuat ${nativeOut.absolutePath}")
+            LoggerBridge.start(nativeOut.absolutePath)
 
             val args = prepareJvm(installer, target, runtimeHome, work)
             log("[Forge] Menjalankan installer: ${args.joinToString(" ")}")
             val code = VMLauncher.launchJVM(args.toTypedArray())
             finish(code)
         } catch (t: Throwable) {
-            log("[Forge] ERROR: ${t.message ?: t.javaClass.simpleName}")
+            // Nama kelas ikut ditulis supaya penyebabnya terbaca dari pesan galat di layar
+            log("[Forge] ERROR: ${t.javaClass.simpleName}: ${t.message ?: ""}".trimEnd(' ', ':'))
+            t.stackTrace.take(8).forEach { log("    at $it") }
             finish(-1)
         } finally {
             stopSelf()
@@ -221,6 +231,7 @@ class ForgeInstallService : Service() {
             "-Dsun.stdout.encoding=UTF-8",
             "-Dsun.stderr.encoding=UTF-8",
             "-Djava.net.preferIPv4Stack=true",
+            "-Djdk.lang.Process.launchMechanism=FORK",
             "-XX:+IgnoreUnrecognizedVMOptions",
             "-XX:+UseSerialGC",
             "-Xms64M",

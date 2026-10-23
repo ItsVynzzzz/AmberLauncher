@@ -1,0 +1,3276 @@
+diff --git a/README.md b/README.md
+index d0c71cf..5961a2a 100644
+--- a/README.md
++++ b/README.md
+@@ -16,7 +16,7 @@
+ 
+ ## Tentang
+ 
+-AmberLauncher dibuat supaya tetap lancar di HP Android kelas menengah ke bawah, dan tentu juga jalan di HP yang lebih kuat: tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya (RAM game dan jarak pandang) disesuaikan dengan RAM perangkat. Tema visualnya gelap transparan dengan aksen kuning amber. Untuk saat ini launcher ini berfokus pada **Fabric**.
++AmberLauncher dibuat supaya tetap lancar di HP Android kelas menengah ke bawah, dan tentu juga jalan di HP yang lebih kuat: tampilannya ringan, pengaturannya sedikit tapi jelas, dan setelan awalnya (RAM game dan jarak pandang) disesuaikan dengan RAM perangkat. Tema visualnya gelap transparan dengan aksen kuning amber. Untuk saat ini launcher ini mendukung **Fabric** dan **Forge** (Minecraft 1.13 ke atas).
+ 
+ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **Zalith Launcher 2** dan **PojavLauncher**. Lihat bagian [Lisensi dan Kredit](#lisensi-dan-kredit).
+ 
+@@ -25,7 +25,8 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Beranda kaca gelap** yang minimalis, dengan latar yang bisa diganti.
+ - **Banyak instance terpisah**: tiap profil punya versi, mod, dan pengaturan sendiri.
+ - **Mod, resource pack, shader, dan datapack dari Modrinth**: cari dan pasang langsung dari dalam aplikasi, plus pemasangan file manual.
+-- **Fokus Fabric**: pilih Vanilla atau Fabric saat membuat instance. Pencarian mod dan modpack otomatis disaring untuk Fabric, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
++- **Fabric dan Forge**: pilih Vanilla, Fabric, atau Forge saat membuat instance. Pencarian mod dan modpack otomatis disaring sesuai loader instance, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
++- **Forge hemat**: Forge dipasang sekali per versi lewat installer resmi di proses terpisah yang langsung dimatikan setelah selesai. Saat bermain, Forge hanya menambah beban dari Forge itu sendiri (kelas, mod, dan waktu muat); launcher tidak menjalankan layanan latar apa pun untuk Forge.
+ - **Setelan awal sesuai HP**: RAM game dan jarak pandang awal menyesuaikan RAM perangkat. Model yang sudah diuji (saat ini Oppo A3x 4G) mendapat profil performa khusus; di HP lain launcher berjalan dengan setelan biasa.
+ - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
+ - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
+@@ -35,7 +36,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).
+ - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
+ 
+-Belum ada: Forge, NeoForge, dan Quilt (untuk sekarang fokusnya Fabric, ke depannya bisa berubah), serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
++Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge, dan Quilt, serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
+ 
+ > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
+ 
+@@ -56,7 +57,7 @@ Setelah terpasang, pembaruan berikutnya bisa langsung dari dalam launcher (Penga
+ 
+ 1. Buka AmberLauncher. Di Android 11 ke atas akan muncul penjelasan izin penyimpanan; izinkan agar data tersimpan di folder `nuxlauncher` (boleh dilewati, datanya lalu disimpan di folder privat aplikasi).
+ 2. Buka **Akun** dan tambahkan akun: Microsoft untuk bermain online, atau offline untuk bermain sendiri.
+-3. Buat **instance** baru: pilih versi Minecraft, lalu Vanilla atau Fabric (pilih Fabric bila ingin memakai mod).
++3. Buat **instance** baru: pilih versi Minecraft, lalu Vanilla, Fabric, atau Forge (pilih Fabric atau Forge bila ingin memakai mod).
+ 4. Di **Home**, tekan **UNDUH** dan tunggu sampai selesai (butuh internet; pertama kali bisa beberapa ratus MB), lalu tekan **PLAY**.
+ 5. Mod, resource pack, dan shader dipasang lewat menu **Mod**.
+ 
+@@ -68,7 +69,7 @@ ID aplikasi diganti menjadi `com.itsvynzzzz.amberlauncher`, jadi versi ini terpa
+ 
+ - **Game tertutup sendiri atau crash**: jangan beri RAM game lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di **Pengaturan**. Laporan crash bisa dilihat dari dalam aplikasi.
+ - **FPS rendah**: kecilkan jarak pandang di dalam game, turunkan rasio resolusi, atau coba renderer lain di **Pengaturan**.
+-- **Mod tidak jalan**: pastikan instance memakai Fabric dan versi Minecraft-nya sama dengan versi mod.
++- **Mod tidak jalan**: pastikan loader instance (Fabric atau Forge) dan versi Minecraft-nya sama dengan mod.
+ 
+ ### Lokasi data
+ 
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 578a47b..3549f99 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -18,6 +18,8 @@
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
++    <!-- Pemasangan Forge: installer resmi berjalan di service foreground bertipe dataSync -->
++    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+ 
+     <!-- Auto-update: memasang APK pembaruan lewat PackageInstaller. Pembaruan berikutnya bisa tanpa konfirmasi di Android 12+ -->
+@@ -185,6 +187,13 @@
+             android:process=":game"
+             android:foregroundServiceType="mediaProjection|microphone" />
+ 
++        <!-- Proses :forge sendiri: hidup hanya selama installer Forge berjalan, lalu dimatikan (tanpa RAM tersisa) -->
++        <service
++            android:name=".core.forge.ForgeInstallService"
++            android:exported="false"
++            android:process=":forge"
++            android:foregroundServiceType="dataSync" />
++
+         <activity
+             android:name=".ui.activities.ErrorActivity"
+             android:exported="false"
+diff --git a/app/src/main/assets/lang/en/instances.tsv b/app/src/main/assets/lang/en/instances.tsv
+index a3ff11c..c2a883e 100644
+--- a/app/src/main/assets/lang/en/instances.tsv
++++ b/app/src/main/assets/lang/en/instances.tsv
+@@ -51,3 +51,34 @@ Membongkar bytecode Java 8: {0} ({1}/{2})...	Unpacking Java 8 bytecode: {0} ({1}
+ Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	The Fabric profile ({0}) is not installed yet. Please tap the DOWNLOAD button on the instance!
+ Lokasi folder disalin ke clipboard:\n{0}	Folder location copied to the clipboard:\n{0}
+ Buka Folder	Open Folder
++Memuat versi Forge...	Loading Forge versions...
++\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge is not available yet for {0}
++\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge is only for Minecraft 1.13 and newer
++Disarankan	Recommended
++Terbaru	Latest
++Memuat Forge...	Loading Forge...
++Forge Tidak Tersedia	Forge Unavailable
++Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	The Forge profile ({0}) is not installed yet. Please tap the DOWNLOAD button on the instance!
++Mengunduh installer Forge {0}...	Downloading Forge installer {0}...
++Mengunduh library Forge ({0}/{1})...	Downloading Forge libraries ({0}/{1})...
++Menyiapkan Java ({0})...	Preparing Java ({0})...
++Memasang Forge {0}...	Installing Forge {0}...
++Memasang Forge {0} ({1}/{2})...	Installing Forge {0} ({1}/{2})...
++Forge {0} terpasang	Forge {0} installed
++Tidak dapat menemukan Forge untuk versi {0}	Could not find Forge for version {0}
++Tidak ada versi Forge untuk {0}	No Forge versions for {0}
++Versi Forge belum dipilih	No Forge version selected
++Forge hanya mendukung Minecraft 1.13 ke atas	Forge is only supported for Minecraft 1.13 and newer
++Installer Forge {0} rusak atau tidak lengkap	The Forge installer {0} is corrupted or incomplete
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	This Forge installer format is not recognized (Amber needs Forge 1.13 or newer)
++Installer Forge untuk Minecraft {0}, bukan {1}	This Forge installer is for Minecraft {0}, not {1}
++Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Failed to download Forge libraries: {0}. Check your connection and try again.
++Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	The Forge installer finished but the patched Minecraft jar was not found ({0})
++Gagal menyiapkan Java {0}: {1}	Failed to prepare Java {0}: {1}
++Installer Forge gagal (kode {0}): {1}	Forge installer failed (code {0}): {1}
++Installer Forge gagal (kode {0})	Forge installer failed (code {0})
++Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang does not provide mappings for Minecraft {0}
++Pemasangan Forge	Forge installation
++Memasang Forge	Installing Forge
++Proses ini hanya berjalan sekali per versi Forge.	This runs only once per Forge version.
++Forge dipasang sekali saat instance diunduh pertama kali.	Forge is installed once, when the instance is first downloaded.
+diff --git a/app/src/main/assets/lang/en/mods.tsv b/app/src/main/assets/lang/en/mods.tsv
+index 50320e4..f3000b2 100644
+--- a/app/src/main/assets/lang/en/mods.tsv
++++ b/app/src/main/assets/lang/en/mods.tsv
+@@ -122,3 +122,5 @@ Body stream kosong	Empty body stream
+ Gagal menyimpan file unduhan	Failed to save the downloaded file
+ Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	File {0} is corrupted or was altered in transit (fingerprint mismatch), so it was not installed.
+ Isi modpack terlalu besar, pemasangan dibatalkan.	The modpack contents are too large, installation was canceled.
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	This modpack requires {0}, but AmberLauncher currently only supports Fabric and Forge.
++Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	This modpack requires Forge. Create a Forge instance first, then install the modpack in it.
+diff --git a/app/src/main/assets/lang/es/instances.tsv b/app/src/main/assets/lang/es/instances.tsv
+index 74905c7..d1dd4c0 100644
+--- a/app/src/main/assets/lang/es/instances.tsv
++++ b/app/src/main/assets/lang/es/instances.tsv
+@@ -63,3 +63,34 @@ Lokasi folder disalin ke clipboard:\n{0}	Ubicaci\u00f3n de la carpeta copiada al
+ Folder: {0}	Carpeta: {0}
+ Buka Folder	Abrir carpeta
+ Unable to resolve host "{0}": System DNS and Fallback DoH failed	No se pudo resolver el host "{0}": fallaron el DNS del sistema y el DoH de respaldo
++Memuat versi Forge...	Cargando versiones de Forge...
++\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge a\u00fan no est\u00e1 disponible para {0}
++\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge solo es para Minecraft 1.13 o superior
++Disarankan	Recomendada
++Terbaru	\u00daltima
++Memuat Forge...	Cargando Forge...
++Forge Tidak Tersedia	Forge no disponible
++Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	El perfil de Forge ({0}) a\u00fan no est\u00e1 instalado. \u00a1Toca el bot\u00f3n DESCARGAR en la instancia!
++Mengunduh installer Forge {0}...	Descargando el instalador de Forge {0}...
++Mengunduh library Forge ({0}/{1})...	Descargando bibliotecas de Forge ({0}/{1})...
++Menyiapkan Java ({0})...	Preparando Java ({0})...
++Memasang Forge {0}...	Instalando Forge {0}...
++Memasang Forge {0} ({1}/{2})...	Instalando Forge {0} ({1}/{2})...
++Forge {0} terpasang	Forge {0} instalado
++Tidak dapat menemukan Forge untuk versi {0}	No se encontr\u00f3 Forge para la versi\u00f3n {0}
++Tidak ada versi Forge untuk {0}	No hay versiones de Forge para {0}
++Versi Forge belum dipilih	No se ha elegido una versi\u00f3n de Forge
++Forge hanya mendukung Minecraft 1.13 ke atas	Forge solo es compatible con Minecraft 1.13 o superior
++Installer Forge {0} rusak atau tidak lengkap	El instalador de Forge {0} est\u00e1 da\u00f1ado o incompleto
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.13 o superior)
++Installer Forge untuk Minecraft {0}, bukan {1}	Este instalador de Forge es para Minecraft {0}, no {1}
++Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de Forge: {0}. Revisa tu conexi\u00f3n e int\u00e9ntalo de nuevo.
++Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	El instalador de Forge termin\u00f3 pero no se encontr\u00f3 el jar de Minecraft parcheado ({0})
++Gagal menyiapkan Java {0}: {1}	No se pudo preparar Java {0}: {1}
++Installer Forge gagal (kode {0}): {1}	El instalador de Forge fall\u00f3 (c\u00f3digo {0}): {1}
++Installer Forge gagal (kode {0})	El instalador de Forge fall\u00f3 (c\u00f3digo {0})
++Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang no proporciona mappings para Minecraft {0}
++Pemasangan Forge	Instalaci\u00f3n de Forge
++Memasang Forge	Instalando Forge
++Proses ini hanya berjalan sekali per versi Forge.	Esto solo se ejecuta una vez por versi\u00f3n de Forge.
++Forge dipasang sekali saat instance diunduh pertama kali.	Forge se instala una sola vez, cuando la instancia se descarga por primera vez.
+diff --git a/app/src/main/assets/lang/es/mods.tsv b/app/src/main/assets/lang/es/mods.tsv
+index fee2092..8ac6a2f 100644
+--- a/app/src/main/assets/lang/es/mods.tsv
++++ b/app/src/main/assets/lang/es/mods.tsv
+@@ -129,3 +129,5 @@ Body stream kosong	Flujo de datos vac\u00edo
+ Gagal menyimpan file unduhan	No se pudo guardar el archivo descargado
+ Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	El archivo {0} est\u00e1 da\u00f1ado o se alter\u00f3 durante la descarga (la huella no coincide), as\u00ed que no se instal\u00f3.
+ Isi modpack terlalu besar, pemasangan dibatalkan.	El contenido del modpack es demasiado grande, se cancel\u00f3 la instalaci\u00f3n.
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	Este modpack requiere {0}, pero AmberLauncher por ahora solo es compatible con Fabric y Forge.
++Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Este modpack requiere Forge. Crea primero una instancia de Forge y luego instala el modpack en ella.
+diff --git a/app/src/main/assets/lang/vi/instances.tsv b/app/src/main/assets/lang/vi/instances.tsv
+index a2f0a29..4f49d33 100644
+--- a/app/src/main/assets/lang/vi/instances.tsv
++++ b/app/src/main/assets/lang/vi/instances.tsv
+@@ -63,3 +63,34 @@ HTTP Error {0}	L\u1ed7i HTTP {0}
+ Empty response body	Ph\u1ea3n h\u1ed3i tr\u1ed1ng
+ Folder: {0}	Th\u01b0 m\u1ee5c: {0}
+ Unable to resolve host "{0}": System DNS and Fallback DoH failed	Kh\u00f4ng th\u1ec3 ph\u00e2n gi\u1ea3i m\u00e1y ch\u1ee7 "{0}": DNS h\u1ec7 th\u1ed1ng v\u00e0 DoH d\u1ef1 ph\u00f2ng \u0111\u1ec1u th\u1ea5t b\u1ea1i
++Memuat versi Forge...	\u0110ang t\u1ea3i c\u00e1c phi\u00ean b\u1ea3n Forge...
++\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f Forge ch\u01b0a kh\u1ea3 d\u1ee5ng cho {0}
++\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge ch\u1ec9 d\u00e0nh cho Minecraft 1.13 tr\u1edf l\u00ean
++Disarankan	Khuy\u00ean d\u00f9ng
++Terbaru	M\u1edbi nh\u1ea5t
++Memuat Forge...	\u0110ang t\u1ea3i Forge...
++Forge Tidak Tersedia	Forge kh\u00f4ng kh\u1ea3 d\u1ee5ng
++Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	H\u1ed3 s\u01a1 Forge ({0}) ch\u01b0a \u0111\u01b0\u1ee3c c\u00e0i. H\u00e3y nh\u1ea5n n\u00fat T\u1ea2I XU\u1ed0NG tr\u00ean instance!
++Mengunduh installer Forge {0}...	\u0110ang t\u1ea3i tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0}...
++Mengunduh library Forge ({0}/{1})...	\u0110ang t\u1ea3i th\u01b0 vi\u1ec7n Forge ({0}/{1})...
++Menyiapkan Java ({0})...	\u0110ang chu\u1ea9n b\u1ecb Java ({0})...
++Memasang Forge {0}...	\u0110ang c\u00e0i \u0111\u1eb7t Forge {0}...
++Memasang Forge {0} ({1}/{2})...	\u0110ang c\u00e0i \u0111\u1eb7t Forge {0} ({1}/{2})...
++Forge {0} terpasang	\u0110\u00e3 c\u00e0i \u0111\u1eb7t Forge {0}
++Tidak dapat menemukan Forge untuk versi {0}	Kh\u00f4ng t\u00ecm th\u1ea5y Forge cho phi\u00ean b\u1ea3n {0}
++Tidak ada versi Forge untuk {0}	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge cho {0}
++Versi Forge belum dipilih	Ch\u01b0a ch\u1ecdn phi\u00ean b\u1ea3n Forge
++Forge hanya mendukung Minecraft 1.13 ke atas	Forge ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft 1.13 tr\u1edf l\u00ean
++Installer Forge {0} rusak atau tidak lengkap	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0} b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng \u0111\u1ea7y \u0111\u1ee7
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.13 tr\u1edf l\u00ean)
++Installer Forge untuk Minecraft {0}, bukan {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y d\u00e0nh cho Minecraft {0}, kh\u00f4ng ph\u1ea3i {1}
++Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c th\u01b0 vi\u1ec7n Forge: {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i th\u1eed l\u1ea1i.
++Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge \u0111\u00e3 ch\u1ea1y xong nh\u01b0ng kh\u00f4ng t\u00ecm th\u1ea5y jar Minecraft \u0111\u00e3 v\u00e1 ({0})
++Gagal menyiapkan Java {0}: {1}	Kh\u00f4ng chu\u1ea9n b\u1ecb \u0111\u01b0\u1ee3c Java {0}: {1}
++Installer Forge gagal (kode {0}): {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge th\u1ea5t b\u1ea1i (m\u00e3 {0}): {1}
++Installer Forge gagal (kode {0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge th\u1ea5t b\u1ea1i (m\u00e3 {0})
++Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang kh\u00f4ng cung c\u1ea5p mappings cho Minecraft {0}
++Pemasangan Forge	C\u00e0i \u0111\u1eb7t Forge
++Memasang Forge	\u0110ang c\u00e0i \u0111\u1eb7t Forge
++Proses ini hanya berjalan sekali per versi Forge.	Qu\u00e1 tr\u00ecnh n\u00e0y ch\u1ec9 ch\u1ea1y m\u1ed9t l\u1ea7n cho m\u1ed7i phi\u00ean b\u1ea3n Forge.
++Forge dipasang sekali saat instance diunduh pertama kali.	Forge ch\u1ec9 \u0111\u01b0\u1ee3c c\u00e0i m\u1ed9t l\u1ea7n, khi instance \u0111\u01b0\u1ee3c t\u1ea3i xu\u1ed1ng l\u1ea7n \u0111\u1ea7u.
+diff --git a/app/src/main/assets/lang/vi/mods.tsv b/app/src/main/assets/lang/vi/mods.tsv
+index bad5d4d..93a33b5 100644
+--- a/app/src/main/assets/lang/vi/mods.tsv
++++ b/app/src/main/assets/lang/vi/mods.tsv
+@@ -127,3 +127,5 @@ Body stream kosong	Lu\u1ed3ng d\u1eef li\u1ec7u tr\u1ed1ng
+ Gagal menyimpan file unduhan	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p \u0111\u00e3 t\u1ea3i
+ Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	T\u1ec7p {0} b\u1ecb h\u1ecfng ho\u1eb7c b\u1ecb thay \u0111\u1ed5i khi t\u1ea3i (m\u00e3 b\u0103m kh\u00f4ng kh\u1edbp) n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+ Isi modpack terlalu besar, pemasangan dibatalkan.	N\u1ed9i dung modpack qu\u00e1 l\u1edbn, \u0111\u00e3 h\u1ee7y vi\u1ec7c c\u00e0i \u0111\u1eb7t.
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	Modpack n\u00e0y c\u1ea7n {0}, trong khi AmberLauncher hi\u1ec7n ch\u1ec9 h\u1ed7 tr\u1ee3 Fabric v\u00e0 Forge.
++Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n Forge. H\u00e3y t\u1ea1o instance Forge tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 94aa19a..2e08849 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -148,6 +148,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         const val EXTRA_LOADER = "extra_loader"
+         const val EXTRA_LOADER_VERSION = "extra_loader_version"
+         const val EXTRA_INSTALLED_MODS = "extra_installed_mods"
++        const val EXTRA_EXTRA_JVM_ARGS = "extra_extra_jvm_args"
++        const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
+     }
+ 
+     private val liveLogs = mutableStateListOf<String>()
+@@ -396,6 +398,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+     private var loaderVersion: String? = null
+     private var installedMods: List<String> = emptyList()
+ 
++    // Argumen tambahan dari mod loader (Forge): sebelum -cp dan sesudah argumen game biasa
++    private var extraJvmArgs: List<String> = emptyList()
++    private var extraGameArgs: List<String> = emptyList()
++
+     private fun getScaledDisplayDimensions(): Pair<Int, Int> {
+         val settings = SettingsManager.settings.value
+         val ratio = (settings.resolutionRatio / 100f).coerceIn(0.35f, 1.5f)
+@@ -507,6 +513,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         loader = intent.getStringExtra(EXTRA_LOADER) ?: "vanilla"
+         loaderVersion = intent.getStringExtra(EXTRA_LOADER_VERSION)
+         installedMods = intent.getStringArrayListExtra(EXTRA_INSTALLED_MODS) ?: CrashManager.getInstalledMods(gameDirPath)
++        extraJvmArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_JVM_ARGS) ?: emptyList()
++        extraGameArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_GAME_ARGS) ?: emptyList()
+ 
+         // Setup real-time native LoggerBridge
+         setupLogger()
+@@ -1357,6 +1365,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                     classpath.split(File.pathSeparator).filter { it.isNotBlank() }.distinct().joinToString(File.pathSeparator)
+                 }
+ 
++                // Argumen JVM mod loader (Forge 1.17+: module path, --add-opens, -DignoreList, dst.)
++                extraJvmArgs.forEach { jvmArgs.add(it) }
++
+                 jvmArgs.add("-cp")
+                 jvmArgs.add(effectiveClasspath)
+                 if (useWrapper) {
+@@ -1381,6 +1392,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 jvmArgs.add(userType)
+                 jvmArgs.add("--versionType")
+                 jvmArgs.add("release")
++                // Argumen game mod loader (Forge: --launchTarget, --fml.*)
++                extraGameArgs.forEach { jvmArgs.add(it) }
+ 
+                 LoggerBridge.appendTitle("JVM Launch Command")
+                 jvmArgs.forEach { LoggerBridge.append("▷ $it") }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+index 6c6bc12..38429cb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+@@ -255,6 +255,26 @@ class MinecraftDownloader(
+                 }
+             }
+ 
++            // 6. Pasang Forge (Minecraft 1.13+). Installer resmi dijalankan sekali di proses terpisah;
++            // sesudahnya tidak ada biaya apa pun saat launcher berjalan.
++            if (instance.loader.equals("forge", ignoreCase = true)) {
++                var forgeVer = instance.loaderVersion
++                if (forgeVer.isBlank()) {
++                    val builds = com.israadev.nuxlauncher.core.forge.ForgeService.getBuilds(instance.mcVersion).getOrNull()
++                    val pick = builds?.let { com.israadev.nuxlauncher.core.forge.ForgeService.pickDefault(it) }
++                        ?: throw IllegalStateException("Tidak dapat menemukan Forge untuk versi ${instance.mcVersion}")
++                    forgeVer = pick.version
++                    instance.loaderVersion = forgeVer
++                }
++                com.israadev.nuxlauncher.core.forge.ForgeInstaller.ensureInstalled(
++                    context = context,
++                    downloader = this@MinecraftDownloader,
++                    mcVersion = instance.mcVersion,
++                    forgeVersion = forgeVer,
++                    onProgress = onProgress
++                ).getOrThrow()
++            }
++
+             onProgress(1.0f, "Instalasi selesai!")
+             instance.isDownloaded = true
+             InstanceManager.updateInstance(context, instance)
+@@ -299,6 +319,10 @@ class MinecraftDownloader(
+             urls.add(url.replace("https://meta.fabricmc.net", "https://bmclapi2.bangbang93.com/fabric-meta"))
+         } else if (url.startsWith("https://maven.fabricmc.net")) {
+             urls.add(url.replace("https://maven.fabricmc.net", "https://bmclapi2.bangbang93.com/maven"))
++        } else if (url.startsWith("https://maven.minecraftforge.net")) {
++            urls.add(url.replace("https://maven.minecraftforge.net", "https://bmclapi2.bangbang93.com/maven"))
++        } else if (url.startsWith("https://files.minecraftforge.net/maven")) {
++            urls.add(url.replace("https://files.minecraftforge.net/maven", "https://bmclapi2.bangbang93.com/maven"))
+         }
+         return urls
+     }
+@@ -312,7 +336,7 @@ class MinecraftDownloader(
+      * diberikan, isi unduhan dicocokkan dengan sidik jari resmi (mirror yang isinya berbeda ditolak,
+      * lalu dicoba alamat berikutnya).
+      */
+-    private fun downloadFile(
++    internal fun downloadFile(
+         url: String,
+         targetFile: File,
+         expectedSize: Long = 0L,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt
+new file mode 100644
+index 0000000..900071e
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallRunner.kt
+@@ -0,0 +1,172 @@
++package com.israadev.nuxlauncher.core.forge
++
++import android.content.ComponentName
++import android.content.Context
++import android.content.Intent
++import android.content.ServiceConnection
++import android.os.IBinder
++import android.os.RemoteException
++import android.os.SystemClock
++import androidx.core.content.ContextCompat
++import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
++import kotlinx.coroutines.CompletableDeferred
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.currentCoroutineContext
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.ensureActive
++import kotlinx.coroutines.withContext
++import java.io.File
++import java.io.RandomAccessFile
++
++/** Hasil satu kali menjalankan installer Forge. [exitCode] 0 = berhasil. */
++internal class ForgeRunResult(val exitCode: Int, val log: String) {
++
++    /** Ringkasan alasan gagal untuk ditampilkan ke pengguna: baris galat terakhir dari log. */
++    fun describeFailure(): String {
++        val lines = log.lines().map { it.trim() }.filter { it.isNotEmpty() }
++        val interesting = lines.filter {
++            it.contains("error", ignoreCase = true) || it.contains("exception", ignoreCase = true) ||
++                it.contains("failed", ignoreCase = true) || it.contains("missing", ignoreCase = true) ||
++                it.contains("checksum", ignoreCase = true) || it.contains("invalid", ignoreCase = true) ||
++                it.startsWith("[Forge]")
++        }
++        val reason = (interesting.ifEmpty { lines }).takeLast(3).joinToString(" | ").take(400)
++        return "Installer Forge gagal (kode $exitCode)" + if (reason.isNotEmpty()) ": $reason" else ""
++    }
++}
++
++/**
++ * Sisi proses utama dari [ForgeInstallService]: memulai service `:forge`, mengikuti log-nya untuk
++ * progress, lalu menunggu kode keluar. Proses `:forge` selalu dimatikan di akhir (juga saat dibatalkan).
++ */
++internal object ForgeInstallRunner {
++
++    /** Batas waktu satu kali pemasangan; lebih lama dari ini dianggap macet. */
++    private const val TIMEOUT_MS = 25 * 60 * 1000L
++    private const val POLL_MS = 300L
++
++    suspend fun run(
++        context: Context,
++        installerJar: File,
++        targetDir: File,
++        runtimeName: String,
++        onLine: (String) -> Unit
++    ): ForgeRunResult = withContext(Dispatchers.IO) {
++        val app = context.applicationContext
++        val work = ForgeInstallService.workDir(app)
++        work.deleteRecursively()
++        work.mkdirs()
++        val logFile = File(work, ForgeInstallService.LOG_NAME)
++        val resultFile = File(work, ForgeInstallService.RESULT_NAME)
++
++        val intent = Intent(app, ForgeInstallService::class.java)
++            .putExtra(ForgeInstallService.EXTRA_INSTALLER, installerJar.absolutePath)
++            .putExtra(ForgeInstallService.EXTRA_TARGET, targetDir.absolutePath)
++            .putExtra(
++                ForgeInstallService.EXTRA_RUNTIME_HOME,
++                JavaRuntimeManager.getRuntimeHome(app, runtimeName).absolutePath
++            )
++
++        // Terikat hanya untuk mendeteksi proses :forge mati mendadak (misalnya dimatikan karena RAM habis)
++        val died = CompletableDeferred<Unit>()
++        val connection = object : ServiceConnection {
++            override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
++                try {
++                    binder?.linkToDeath({ died.complete(Unit) }, 0)
++                } catch (_: RemoteException) {
++                    died.complete(Unit)
++                }
++            }
++
++            override fun onServiceDisconnected(name: ComponentName?) {
++                died.complete(Unit)
++            }
++        }
++
++        val tail = ArrayDeque<String>()
++        var offset = 0L
++        fun drain() {
++            offset = readNewLines(logFile, offset) { line ->
++                tail.addLast(line)
++                if (tail.size > 300) tail.removeFirst()
++                onLine(line)
++            }
++        }
++
++        var bound = false
++        try {
++            try {
++                ContextCompat.startForegroundService(app, intent)
++            } catch (_: Exception) {
++                app.startService(intent)
++            }
++            bound = app.bindService(intent, connection, Context.BIND_AUTO_CREATE)
++
++            val startedAt = SystemClock.elapsedRealtime()
++            var exitCode = -1
++            while (true) {
++                currentCoroutineContext().ensureActive()
++                drain()
++                if (resultFile.exists()) {
++                    delay(150) // beri waktu baris log terakhir tertulis
++                    drain()
++                    exitCode = resultFile.readText().trim().toIntOrNull() ?: -1
++                    break
++                }
++                if (died.isCompleted) {
++                    delay(500)
++                    drain()
++                    exitCode = resultFile.takeIf { it.exists() }?.readText()?.trim()?.toIntOrNull() ?: -1
++                    if (exitCode != 0 && !resultFile.exists()) {
++                        tail.addLast("[Forge] Proses installer berhenti mendadak (kemungkinan RAM HP habis)")
++                    }
++                    break
++                }
++                if (SystemClock.elapsedRealtime() - startedAt > TIMEOUT_MS) {
++                    exitCode = -2
++                    tail.addLast("[Forge] Waktu pemasangan habis")
++                    break
++                }
++                delay(POLL_MS)
++            }
++            ForgeRunResult(exitCode, tail.joinToString("\n"))
++        } finally {
++            if (bound) {
++                try {
++                    app.unbindService(connection)
++                } catch (_: Exception) {
++                }
++            }
++            // onDestroy service mematikan proses :forge
++            try {
++                app.stopService(intent)
++            } catch (_: Exception) {
++            }
++        }
++    }
++
++    /** Membaca baris baru dari [file] mulai [offset]; mengembalikan offset baru (hanya baris lengkap). */
++    private fun readNewLines(file: File, offset: Long, onLine: (String) -> Unit): Long {
++        if (!file.exists()) return offset
++        return try {
++            RandomAccessFile(file, "r").use { raf ->
++                val available = raf.length() - offset
++                if (available <= 0L) return@use offset
++                val bytes = ByteArray(available.coerceAtMost(1L shl 20).toInt())
++                raf.seek(offset)
++                raf.readFully(bytes)
++                val lastNewline = bytes.lastIndexOf('\n'.code.toByte())
++                if (lastNewline < 0) return@use offset // baris belum lengkap
++                String(bytes, 0, lastNewline + 1, Charsets.UTF_8)
++                    .split('\n')
++                    .forEach { line ->
++                        val l = line.trimEnd('\r')
++                        if (l.isNotEmpty()) onLine(l)
++                    }
++                offset + lastNewline + 1
++            }
++        } catch (_: Exception) {
++            offset
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+new file mode 100644
+index 0000000..0a5394e
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+@@ -0,0 +1,317 @@
++package com.israadev.nuxlauncher.core.forge
++
++import android.app.ActivityManager
++import android.app.Notification
++import android.app.NotificationChannel
++import android.app.NotificationManager
++import android.app.Service
++import android.content.Context
++import android.content.Intent
++import android.content.pm.ServiceInfo
++import android.os.Binder
++import android.os.Build
++import android.os.IBinder
++import android.system.Os
++import androidx.core.app.NotificationCompat
++import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
++import com.israadev.nuxlauncher.ui.i18n.Tr
++import com.movtery.zalithlauncher.bridge.LoggerBridge
++import com.movtery.zalithlauncher.bridge.ZLBridge
++import com.movtery.zalithlauncher.bridge.ZLNativeInvoker
++import com.oracle.dalvik.VMLauncher
++import java.io.File
++import java.io.Writer
++import java.util.concurrent.atomic.AtomicBoolean
++import kotlin.concurrent.thread
++
++/**
++ * Menjalankan installer resmi Forge (`SimpleInstaller --installClient --offline`) di JVM bawaan Amber.
++ *
++ * Berjalan di proses `:forge` yang terpisah dari launcher dan dari game, karena sebuah proses hanya
++ * bisa membuat satu JVM dan JVM yang selesai mematikan prosesnya. Proses ini hidup hanya selama
++ * pemasangan: setelah selesai (atau dibatalkan) service berhenti dan prosesnya dimatikan, sehingga
++ * tidak ada RAM maupun CPU yang tersisa. Service foreground supaya pemasangan tidak dihentikan
++ * sistem bila pengguna berpindah aplikasi.
++ *
++ * Hubungan dengan proses utama lewat berkas di [workDir]: [LOG_NAME] (log installer) dan
++ * [RESULT_NAME] (kode keluar, ditulis paling akhir).
++ */
++class ForgeInstallService : Service() {
++
++    companion object {
++        const val EXTRA_INSTALLER = "forge_installer"
++        const val EXTRA_TARGET = "forge_target"
++        const val EXTRA_RUNTIME_HOME = "forge_runtime_home"
++
++        const val LOG_NAME = "installer.log"
++        const val RESULT_NAME = "result.txt"
++
++        private const val CHANNEL_ID = "amber_forge_install"
++        private const val NOTIFICATION_ID = 4108
++
++        fun workDir(context: Context): File = File(context.filesDir, "forge-install")
++    }
++
++    private val started = AtomicBoolean(false)
++    private val resultWritten = AtomicBoolean(false)
++    private val logLock = Any()
++
++    @Volatile
++    private var logWriter: Writer? = null
++
++    override fun onBind(intent: Intent?): IBinder = Binder()
++
++    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
++        startAsForeground()
++        val installer = intent?.getStringExtra(EXTRA_INSTALLER)
++        val target = intent?.getStringExtra(EXTRA_TARGET)
++        val runtimeHome = intent?.getStringExtra(EXTRA_RUNTIME_HOME)
++        if (installer == null || target == null || runtimeHome == null) {
++            stopSelf()
++            return START_NOT_STICKY
++        }
++        if (started.compareAndSet(false, true)) {
++            thread(name = "Amber-Forge-Installer") {
++                runInstaller(File(installer), File(target), File(runtimeHome))
++            }
++        }
++        return START_NOT_STICKY
++    }
++
++    private fun startAsForeground() {
++        try {
++            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
++            if (nm.getNotificationChannel(CHANNEL_ID) == null) {
++                val channel = NotificationChannel(
++                    CHANNEL_ID,
++                    Tr.t("Pemasangan Forge"),
++                    NotificationManager.IMPORTANCE_LOW
++                ).apply {
++                    setShowBadge(false)
++                    setSound(null, null)
++                    enableVibration(false)
++                }
++                nm.createNotificationChannel(channel)
++            }
++            val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
++                .setSmallIcon(android.R.drawable.stat_sys_download)
++                .setContentTitle(Tr.t("Memasang Forge"))
++                .setContentText(Tr.t("Proses ini hanya berjalan sekali per versi Forge."))
++                .setCategory(NotificationCompat.CATEGORY_SERVICE)
++                .setPriority(NotificationCompat.PRIORITY_LOW)
++                .setOngoing(true)
++                .setOnlyAlertOnce(true)
++                .build()
++            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
++                startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
++            } else {
++                startForeground(NOTIFICATION_ID, notification)
++            }
++        } catch (_: Throwable) {
++            // Tetap lanjut sebagai service biasa; pemasangan hanya lebih rentan dihentikan sistem
++        }
++    }
++
++    // ---------------------------------------------------------------- JVM
++
++    private fun runInstaller(installer: File, target: File, runtimeHome: File) {
++        val work = workDir(this)
++        work.mkdirs()
++        try {
++            logWriter = File(work, LOG_NAME).bufferedWriter()
++        } catch (_: Throwable) {
++        }
++        try {
++            ZLNativeInvoker.onExitCallback = { exitCode, _ ->
++                log("[Forge] JVM keluar dengan kode $exitCode")
++                finish(exitCode)
++            }
++            LoggerBridge.setListener { text -> if (text != null) log(text) }
++            LoggerBridge.start(File(work, "native.out").absolutePath)
++
++            val args = prepareJvm(installer, target, runtimeHome, work)
++            log("[Forge] Menjalankan installer: ${args.joinToString(" ")}")
++            val code = VMLauncher.launchJVM(args.toTypedArray())
++            finish(code)
++        } catch (t: Throwable) {
++            log("[Forge] ERROR: ${t.message ?: t.javaClass.simpleName}")
++            finish(-1)
++        } finally {
++            stopSelf()
++        }
++    }
++
++    /** Menyiapkan lingkungan JVM (jalur pustaka, pre-dlopen runtime) dan mengembalikan argumen peluncuran. */
++    private fun prepareJvm(installer: File, target: File, runtimeHome: File, work: File): List<String> {
++        val nativeLibDir = applicationInfo.nativeLibraryDir
++        val rh = runtimeHome.absolutePath
++        val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
++
++        // Jalur linker untuk memuat pustaka JRE (sama dengan jalur proses game, tanpa renderer/LWJGL)
++        val archSubDir = listOf("aarch64", "aarch32", "arm", "i386", "amd64", "x86_64")
++            .map { File("$rh/lib", it) }
++            .firstOrNull { it.isDirectory }
++        val runtimeLd = mutableListOf<String>()
++        if (archSubDir != null) {
++            runtimeLd.add("${archSubDir.absolutePath}/jli")
++            runtimeLd.add("${archSubDir.absolutePath}/server")
++            runtimeLd.add("${archSubDir.absolutePath}/client")
++            runtimeLd.add(archSubDir.absolutePath)
++        }
++        runtimeLd.add("$rh/lib/jli")
++        if (File("$rh/jre").exists()) {
++            runtimeLd.add("$rh/jre/lib/server")
++            runtimeLd.add("$rh/jre/lib")
++        } else {
++            runtimeLd.add("$rh/lib/server")
++            runtimeLd.add("$rh/lib")
++        }
++        runtimeLd.add(nativeLibDir)
++        runtimeLd.add("/system/$libDirName")
++        runtimeLd.add("/vendor/$libDirName")
++        runtimeLd.add("/vendor/$libDirName/hw")
++        runtimeLd.add("/system_ext/$libDirName")
++        ZLBridge.setLdLibraryPath(runtimeLd.distinct().joinToString(":"))
++
++        // LD_LIBRARY_PATH proses tidak boleh memuat folder JRE lib/server atau lib/jli
++        // (libjli akan mengira perlu menjalankan ulang bin/java, yang ditolak Android)
++        val processLd = listOf(
++            "/system/$libDirName", "/vendor/$libDirName", "/vendor/$libDirName/hw",
++            "/system_ext/$libDirName", nativeLibDir
++        ).joinToString(":")
++
++        Os.setenv("POJAV_NATIVEDIR", nativeLibDir, true)
++        Os.setenv("POJAV_RENDERER", "opengles3", true)
++        Os.setenv("JAVA_HOME", rh, true)
++        Os.setenv("HOME", work.absolutePath, true)
++        Os.setenv("TMPDIR", cacheDir.absolutePath, true)
++        Os.setenv("PATH", "$rh/bin:" + (Os.getenv("PATH") ?: "/system/bin"), true)
++        Os.setenv("LD_LIBRARY_PATH", processLd, true)
++
++        preDlopenRuntime(runtimeHome)
++
++        ZLBridge.setupExitMethod(this)
++        ZLBridge.initializeGameExitHook()
++        ZLBridge.chdir(work.absolutePath)
++
++        JavaRuntimeManager.ensureExecutablePermissionsOnce(runtimeHome)
++
++        val totalMb = try {
++            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
++            val info = ActivityManager.MemoryInfo()
++            am.getMemoryInfo(info)
++            (info.totalMem / (1024 * 1024)).toInt()
++        } catch (_: Throwable) {
++            4096
++        }
++        // Cukup untuk processor Forge, tetapi tidak merebut RAM HP kecil
++        var heapMb = (totalMb / 4).coerceIn(384, 768)
++        if (!android.os.Process.is64Bit()) heapMb = minOf(heapMb, 640)
++
++        return listOf(
++            "$rh/bin/java",
++            "-Djava.home=$rh",
++            "-Djava.io.tmpdir=${cacheDir.absolutePath}",
++            "-Djava.library.path=$processLd",
++            "-Djava.awt.headless=true",
++            "-Dos.name=Linux",
++            "-Dos.version=Android-${Build.VERSION.RELEASE}",
++            "-Duser.home=${work.absolutePath}",
++            "-Dfile.encoding=UTF-8",
++            "-Dsun.stdout.encoding=UTF-8",
++            "-Dsun.stderr.encoding=UTF-8",
++            "-Djava.net.preferIPv4Stack=true",
++            "-XX:+IgnoreUnrecognizedVMOptions",
++            "-XX:+UseSerialGC",
++            "-Xms64M",
++            "-Xmx${heapMb}M",
++            "-cp", installer.absolutePath,
++            "net.minecraftforge.installer.SimpleInstaller",
++            "--installClient", target.absolutePath,
++            "--offline"
++        )
++    }
++
++    /** Memuat pustaka inti JRE lebih dulu dengan path absolut, sama seperti proses game. */
++    private fun preDlopenRuntime(runtimeHome: File) {
++        val rtLibDir = if (File(runtimeHome, "jre/lib").exists()) File(runtimeHome, "jre/lib") else File(runtimeHome, "lib")
++        val archLibDir = listOf("aarch64", "aarch32", "arm", "i386", "amd64", "x86_64")
++            .map { File(rtLibDir, it) }
++            .firstOrNull { it.isDirectory } ?: rtLibDir
++        val jliDir = when {
++            File(rtLibDir, "jli/libjli.so").exists() -> File(rtLibDir, "jli")
++            File(archLibDir, "jli/libjli.so").exists() -> File(archLibDir, "jli")
++            else -> rtLibDir
++        }
++        val jvmDir = when {
++            File(rtLibDir, "server/libjvm.so").exists() -> File(rtLibDir, "server")
++            File(rtLibDir, "client/libjvm.so").exists() -> File(rtLibDir, "client")
++            File(archLibDir, "server/libjvm.so").exists() -> File(archLibDir, "server")
++            File(archLibDir, "client/libjvm.so").exists() -> File(archLibDir, "client")
++            else -> rtLibDir
++        }
++        val essential = listOf(
++            File(jliDir, "libjli.so"),
++            File(jvmDir, "libjvm.so"),
++            File(rtLibDir, "libverify.so"), File(archLibDir, "libverify.so"),
++            File(rtLibDir, "libjava.so"), File(archLibDir, "libjava.so"),
++            File(rtLibDir, "libnet.so"), File(archLibDir, "libnet.so"),
++            File(rtLibDir, "libnio.so"), File(archLibDir, "libnio.so")
++        )
++        essential.forEach { so ->
++            if (so.exists()) {
++                try {
++                    ZLBridge.dlopen(so.absolutePath)
++                } catch (_: Throwable) {
++                }
++            }
++        }
++        // Sisa pustaka runtime (zip, management, dll.) dimuat juga, persis seperti proses game
++        runtimeHome.walkTopDown().filter { it.isFile && it.name.endsWith(".so") }.forEach { so ->
++            try {
++                ZLBridge.dlopen(so.absolutePath)
++            } catch (_: Throwable) {
++            }
++        }
++    }
++
++    // ---------------------------------------------------------------- berkas komunikasi
++
++    private fun log(text: String) {
++        synchronized(logLock) {
++            try {
++                val w = logWriter ?: return
++                w.write(text.trimEnd('\n', '\r'))
++                w.write("\n")
++                w.flush()
++            } catch (_: Throwable) {
++            }
++        }
++    }
++
++    /** Menulis kode keluar sekali saja; berkas ini yang ditunggu proses utama. */
++    private fun finish(exitCode: Int) {
++        if (!resultWritten.compareAndSet(false, true)) return
++        try {
++            val work = workDir(this)
++            val tmp = File(work, "$RESULT_NAME.tmp")
++            tmp.writeText(exitCode.toString())
++            tmp.renameTo(File(work, RESULT_NAME))
++        } catch (_: Throwable) {
++        }
++    }
++
++    override fun onDestroy() {
++        super.onDestroy()
++        synchronized(logLock) {
++            try {
++                logWriter?.close()
++            } catch (_: Throwable) {
++            }
++            logWriter = null
++        }
++        // JVM tidak bisa dibuat ulang di proses yang sama dan tidak bisa dihentikan dari luar:
++        // mematikan proses :forge adalah satu-satunya cara bersih (juga saat pemasangan dibatalkan).
++        android.os.Process.killProcess(android.os.Process.myPid())
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+new file mode 100644
+index 0000000..c15f97b
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+@@ -0,0 +1,383 @@
++package com.israadev.nuxlauncher.core.forge
++
++import android.content.Context
++import com.google.gson.Gson
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.download.MinecraftDownloader
++import com.israadev.nuxlauncher.core.fabric.FabricService
++import com.israadev.nuxlauncher.core.instance.InstanceManager
++import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.async
++import kotlinx.coroutines.awaitAll
++import kotlinx.coroutines.coroutineScope
++import kotlinx.coroutines.sync.Mutex
++import kotlinx.coroutines.sync.Semaphore
++import kotlinx.coroutines.sync.withLock
++import kotlinx.coroutines.sync.withPermit
++import kotlinx.coroutines.withContext
++import okhttp3.Request
++import java.io.File
++import java.io.IOException
++import java.security.MessageDigest
++import java.util.concurrent.CopyOnWriteArrayList
++import java.util.zip.ZipFile
++
++/**
++ * Memasang Forge ke folder versions/libraries milik Amber.
++ *
++ * Alurnya sengaja dibuat hemat: semua unduhan (installer, library, mappings Mojang) dikerjakan di
++ * sini, paralel dan dengan cek sidik jari, lalu installer resmi Forge dijalankan `--offline` di
++ * proses terpisah (:forge) hanya untuk memverifikasi dan membuat jar Minecraft yang ditambal.
++ * Pemasangan hanya terjadi sekali per versi Forge; sesudahnya tidak ada biaya apa pun saat
++ * launcher berjalan, dan proses :forge sudah mati.
++ *
++ * Penanda "terpasang" adalah berkas versions/<mc>/forge-<versi>.json, ditulis paling akhir.
++ */
++object ForgeInstaller {
++
++    private const val TAG = "ForgeInstaller"
++
++    /** Rentang progress yang dipakai pemasangan Forge di dalam proses unduh instance. */
++    private const val P_START = 0.92f
++    private const val P_END = 0.995f
++
++    private const val LIB_THREADS = 16
++
++    private val gson = Gson()
++
++    /** Satu pemasangan pada satu waktu: folder kerja dan proses :forge hanya ada satu. */
++    private val installLock = Mutex()
++
++    /** Berkas profil Forge yang dipasang untuk [forgeVersion], atau (bila kosong) yang pertama ditemukan. */
++    fun findProfileFile(context: Context, mcVersion: String, forgeVersion: String): File? {
++        val vDir = File(InstanceManager.getVersionsDir(context), mcVersion)
++        val exact = if (forgeVersion.isNotBlank()) File(vDir, SafePaths.fileName("forge-$forgeVersion.json")) else null
++        if (exact != null && exact.exists() && exact.length() > 0L) return exact
++        if (forgeVersion.isNotBlank()) return null
++        return vDir.listFiles { f -> f.name.startsWith("forge-") && f.name.endsWith(".json") && f.length() > 0L }
++            ?.minByOrNull { it.name }
++    }
++
++    /**
++     * Murah dan aman dipanggil dari komposisi UI: hanya mengecek keberadaan berkas, tanpa membaca
++     * isinya. Penanda profil ditulis paling akhir, jadi keberadaannya berarti pemasangan selesai.
++     */
++    fun isInstalled(context: Context, mcVersion: String, forgeVersion: String): Boolean {
++        val profile = findProfileFile(context, mcVersion, forgeVersion) ?: return false
++        val version = if (forgeVersion.isNotBlank()) forgeVersion
++        else profile.name.removePrefix("forge-").removeSuffix(".json")
++        val forgeDir = File(InstanceManager.getLibrariesDir(context), "net/minecraftforge/forge/$mcVersion-$version")
++        return forgeDir.isDirectory && !forgeDir.list().isNullOrEmpty()
++    }
++
++    /**
++     * Memastikan Forge [forgeVersion] untuk [mcVersion] terpasang. Versi Minecraft (client jar,
++     * library, aset) harus sudah diunduh lebih dulu. Aman dipanggil ulang: bila sudah terpasang,
++     * langsung selesai.
++     */
++    suspend fun ensureInstalled(
++        context: Context,
++        downloader: MinecraftDownloader,
++        mcVersion: String,
++        forgeVersion: String,
++        onProgress: (Float, String) -> Unit
++    ): Result<Unit> = withContext(Dispatchers.IO) {
++        try {
++            if (forgeVersion.isBlank()) throw IllegalStateException("Versi Forge belum dipilih")
++            if (isInstalled(context, mcVersion, forgeVersion)) return@withContext Result.success(Unit)
++            if (!ForgeService.isMcSupported(mcVersion)) {
++                throw IllegalStateException("Forge hanya mendukung Minecraft ${ForgeService.MIN_MC_VERSION} ke atas")
++            }
++            installLock.withLock {
++                // Pemasangan lain mungkin baru selesai selagi menunggu giliran
++                if (!isInstalled(context, mcVersion, forgeVersion)) {
++                    install(context, downloader, mcVersion, forgeVersion, onProgress)
++                }
++            }
++            Result.success(Unit)
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            android.util.Log.w(TAG, "Pemasangan Forge gagal", e)
++            Result.failure(e)
++        }
++    }
++
++    private fun progress(fraction: Float): Float = P_START + fraction.coerceIn(0f, 1f) * (P_END - P_START)
++
++    private suspend fun install(
++        context: Context,
++        downloader: MinecraftDownloader,
++        mcVersion: String,
++        forgeVersion: String,
++        onProgress: (Float, String) -> Unit
++    ) {
++        val versionsDir = InstanceManager.getVersionsDir(context)
++        val libDir = InstanceManager.getLibrariesDir(context)
++        val nuxDir = InstanceManager.getNuxDir(context)
++
++        // 1. Installer resmi
++        onProgress(progress(0f), "Mengunduh installer Forge $forgeVersion...")
++        val installerJar = File(context.cacheDir, "forge/forge-$mcVersion-$forgeVersion-installer.jar")
++        installerJar.parentFile?.mkdirs()
++        if (!isUsableInstaller(installerJar)) {
++            val url = ForgeService.installerUrl(mcVersion, forgeVersion)
++            installerJar.delete()
++            downloader.downloadFile(
++                url = url,
++                targetFile = installerJar,
++                expectedSha1 = fetchSha1(url),
++                onProgress = { read, total ->
++                    val frac = if (total > 0) (read.toFloat() / total).coerceIn(0f, 1f) else 0f
++                    onProgress(progress(frac * 0.08f), "Mengunduh installer Forge $forgeVersion...")
++                }
++            )
++            if (!isUsableInstaller(installerJar)) {
++                installerJar.delete()
++                throw IOException("Installer Forge $forgeVersion rusak atau tidak lengkap")
++            }
++        }
++
++        val (profile, versionJsonText) = readInstallerMeta(installerJar)
++        if (profile.processors == null || profile.json == null && versionJsonText.isBlank()) {
++            throw IllegalStateException("Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)")
++        }
++        if (!profile.minecraft.isNullOrBlank() && profile.minecraft != mcVersion) {
++            throw IllegalStateException("Installer Forge untuk Minecraft ${profile.minecraft}, bukan $mcVersion")
++        }
++        val forgeVersionJson = gson.fromJson(versionJsonText, ForgeVersionJson::class.java)
++            ?: throw IllegalStateException("version.json di installer Forge tidak terbaca")
++        val clientProcessorCount = (profile.processors ?: emptyList())
++            .count { it.sides.isNullOrEmpty() || it.sides.any { s -> s.equals("client", ignoreCase = true) } }
++
++        // 2. Library (installer berjalan offline, jadi semuanya harus sudah ada dan cocok sidik jarinya)
++        prefetchLibraries(downloader, libDir, forgeVersionJson, profile, onProgress)
++
++        // 3. Mappings Mojang (Forge 1.17+): diunduh di sini agar installer tidak butuh jaringan
++        prefetchMojangMappings(downloader, libDir, versionsDir, mcVersion, profile)
++
++        // 4. Installer resmi mensyaratkan launcher_profiles.json di folder tujuan
++        ensureLauncherProfiles(nuxDir)
++
++        // 5. Jalankan installer (--offline) di proses :forge
++        val mojangJson = File(File(versionsDir, mcVersion), "$mcVersion.json")
++        val runtimes = linkedSetOf("jre-8")
++        runtimes.add(JavaRuntimeManager.getRecommendedRuntime(mcVersion, readJavaMajor(mojangJson)))
++
++        var lastFailure = "Installer Forge gagal"
++        var success = false
++        for (runtime in runtimes) {
++            if (!JavaRuntimeManager.isRuntimeInstalled(context, runtime)) {
++                onProgress(progress(0.45f), "Menyiapkan Java ($runtime)...")
++                val ext = JavaRuntimeManager.extractRuntime(context, runtime) { f, msg ->
++                    onProgress(progress(0.45f + f.coerceIn(0f, 1f) * 0.05f), msg)
++                }
++                if (ext.isFailure) {
++                    lastFailure = "Gagal menyiapkan Java $runtime: ${ext.exceptionOrNull()?.message}"
++                    continue
++                }
++            }
++            onProgress(progress(0.50f), "Memasang Forge $forgeVersion...")
++            var processorsDone = 0
++            val result = ForgeInstallRunner.run(context, installerJar, nuxDir, runtime) { line ->
++                if (line.startsWith("=====")) processorsDone++
++                val frac = if (clientProcessorCount > 0) (processorsDone.toFloat() / clientProcessorCount).coerceIn(0f, 1f) else 0f
++                onProgress(progress(0.50f + frac * 0.48f), "Memasang Forge $forgeVersion ($processorsDone/$clientProcessorCount)...")
++            }
++            if (result.exitCode == 0) {
++                success = true
++                break
++            }
++            lastFailure = result.describeFailure()
++            // Hanya Java yang terlalu tua untuk processor yang layak dicoba ulang dengan Java lain
++            val retry = result.log.contains("UnsupportedClassVersionError") || result.log.contains("class file version")
++            if (!retry) break
++        }
++        if (!success) throw IOException(lastFailure)
++
++        // 6. Pastikan hasil utamanya benar-benar ada sebelum menandai selesai
++        val patchedPath = ForgeMaven.pathOfDataEntry(profile.data?.get("PATCHED")?.client)
++        if (patchedPath != null) {
++            val patched = SafePaths.resolveInside(libDir, patchedPath)
++            if (patched == null || !patched.exists() || patched.length() == 0L) {
++                throw IOException("Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ($patchedPath)")
++            }
++        }
++
++        // 7. Tandai selesai: salin profil Forge ke versions/<mc>/forge-<versi>.json (ditulis paling akhir)
++        val marker = File(File(versionsDir, mcVersion), SafePaths.fileName("forge-$forgeVersion.json"))
++        val tmp = File(marker.parentFile, marker.name + ".tmp")
++        tmp.writeText(versionJsonText)
++        if (marker.exists()) marker.delete()
++        if (!tmp.renameTo(marker)) {
++            tmp.copyTo(marker, overwrite = true)
++            tmp.delete()
++        }
++
++        // 8. Rapikan: folder versi buatan installer dan installer itu sendiri tidak dipakai lagi
++        val installedId = profile.version?.takeIf { it.isNotBlank() }
++        if (installedId != null && installedId != mcVersion) {
++            val extraDir = SafePaths.resolveInside(versionsDir, SafePaths.fileName(installedId))
++            if (extraDir != null && extraDir.isDirectory) extraDir.deleteRecursively()
++        }
++        installerJar.delete()
++        onProgress(P_END, "Forge $forgeVersion terpasang")
++    }
++
++    // ---------------------------------------------------------------- unduhan
++
++    private class LibJob(val name: String, val url: String, val target: File, val sha1: String?, val size: Long)
++
++    private suspend fun prefetchLibraries(
++        downloader: MinecraftDownloader,
++        libDir: File,
++        versionJson: ForgeVersionJson,
++        profile: ForgeInstallProfile,
++        onProgress: (Float, String) -> Unit
++    ) {
++        val jobs = ((versionJson.libraries ?: emptyList()) + (profile.libraries ?: emptyList()))
++            .mapNotNull { lib ->
++                // Tanpa alamat berarti library itu dibawa di dalam installer dan diekstrak oleh installer
++                val url = ForgeMaven.libraryUrl(lib)?.replaceFirst("http://", "https://") ?: return@mapNotNull null
++                val path = ForgeMaven.libraryPath(lib) ?: return@mapNotNull null
++                val target = SafePaths.resolveInside(libDir, path)
++                    ?: throw IOException("Path library Forge tidak aman: $path")
++                LibJob(lib.name ?: path, url, target, lib.downloads?.artifact?.sha1, lib.downloads?.artifact?.size ?: 0L)
++            }
++            .distinctBy { it.target.path }
++
++        if (jobs.isEmpty()) return
++        val failed = CopyOnWriteArrayList<String>()
++        val done = java.util.concurrent.atomic.AtomicInteger(0)
++        val gate = Semaphore(LIB_THREADS)
++        coroutineScope {
++            jobs.map { job ->
++                async(Dispatchers.IO) {
++                    gate.withPermit {
++                        if (!isUpToDate(job.target, job.sha1, job.size)) {
++                            job.target.parentFile?.mkdirs()
++                            try {
++                                downloader.downloadFile(job.url, job.target, job.size, expectedSha1 = job.sha1)
++                            } catch (e: Exception) {
++                                failed.add(job.name)
++                            }
++                        }
++                        val n = done.incrementAndGet()
++                        onProgress(progress(0.08f + (n.toFloat() / jobs.size) * 0.32f), "Mengunduh library Forge ($n/${jobs.size})...")
++                    }
++                }
++            }.awaitAll()
++        }
++        if (failed.isNotEmpty()) {
++            val shown = failed.take(3).joinToString(", ")
++            val more = if (failed.size > 3) " dan ${failed.size - 3} lainnya" else ""
++            throw IOException("Gagal mengunduh library Forge: $shown$more. Periksa koneksi lalu coba lagi.")
++        }
++    }
++
++    private fun prefetchMojangMappings(
++        downloader: MinecraftDownloader,
++        libDir: File,
++        versionsDir: File,
++        mcVersion: String,
++        profile: ForgeInstallProfile
++    ) {
++        val path = ForgeMaven.pathOfDataEntry(profile.data?.get("MOJMAPS")?.client) ?: return
++        val target = SafePaths.resolveInside(libDir, path) ?: throw IOException("Path mappings tidak aman: $path")
++        if (target.exists() && target.length() > 0L) return
++
++        val mojangJson = File(File(versionsDir, mcVersion), "$mcVersion.json")
++        val mappings = JsonParser.parseString(mojangJson.readText()).asJsonObject
++            .getAsJsonObject("downloads")?.getAsJsonObject("client_mappings")
++            ?: throw IllegalStateException("Mojang tidak menyediakan mappings untuk Minecraft $mcVersion")
++        val url = mappings.get("url")?.asString ?: throw IllegalStateException("Alamat mappings Mojang kosong")
++        target.parentFile?.mkdirs()
++        downloader.downloadFile(
++            url = url,
++            targetFile = target,
++            expectedSize = mappings.get("size")?.asLong ?: 0L,
++            expectedSha1 = mappings.get("sha1")?.asString
++        )
++    }
++
++    private fun ensureLauncherProfiles(nuxDir: File) {
++        val f = File(nuxDir, "launcher_profiles.json")
++        if (f.exists() && f.length() > 0L) return
++        f.writeText("{\"profiles\":{},\"version\":3}")
++    }
++
++    // ---------------------------------------------------------------- bantuan
++
++    private fun isUpToDate(file: File, sha1: String?, size: Long): Boolean {
++        if (!file.exists() || file.length() == 0L) return false
++        if (sha1.isNullOrBlank()) return size <= 0L || file.length() == size
++        return sha1Of(file).equals(sha1.trim(), ignoreCase = true)
++    }
++
++    private fun sha1Of(file: File): String {
++        val digest = MessageDigest.getInstance("SHA-1")
++        file.inputStream().use { input ->
++            val buffer = ByteArray(64 * 1024)
++            var read: Int
++            while (input.read(buffer).also { read = it } != -1) digest.update(buffer, 0, read)
++        }
++        return digest.digest().joinToString("") { "%02x".format(it) }
++    }
++
++    /** Berkas `.sha1` di samping installer (server resmi lalu mirror); null bila tidak bisa diambil. */
++    private fun fetchSha1(installerUrl: String): String? {
++        val candidates = listOf(
++            "$installerUrl.sha1",
++            "$installerUrl.sha1".replace(
++                "https://maven.minecraftforge.net",
++                "https://bmclapi2.bangbang93.com/maven"
++            )
++        ).distinct()
++        for (url in candidates) {
++            try {
++                val request = Request.Builder().url(url).header("User-Agent", "AmberLauncher/1.0 (Android)").build()
++                FabricService.client.newCall(request).execute().use { response ->
++                    if (!response.isSuccessful) return@use
++                    val text = response.body?.string()?.trim()?.take(40)?.lowercase() ?: return@use
++                    if (text.length == 40 && text.all { it in '0'..'9' || it in 'a'..'f' }) return text
++                }
++            } catch (_: Exception) {
++            }
++        }
++        return null
++    }
++
++    private fun isUsableInstaller(file: File): Boolean {
++        if (!file.exists() || file.length() == 0L) return false
++        return try {
++            ZipFile(file).use { it.getEntry("install_profile.json") != null }
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    private fun readInstallerMeta(installerJar: File): Pair<ForgeInstallProfile, String> {
++        ZipFile(installerJar).use { zip ->
++            val profileEntry = zip.getEntry("install_profile.json")
++                ?: throw IllegalStateException("install_profile.json tidak ada di installer Forge")
++            val profileText = zip.getInputStream(profileEntry).bufferedReader().use { it.readText() }
++            val profile = gson.fromJson(profileText, ForgeInstallProfile::class.java)
++                ?: throw IllegalStateException("install_profile.json tidak terbaca")
++            val jsonName = (profile.json ?: "/version.json").trimStart('/')
++            val jsonEntry = zip.getEntry(jsonName)
++                ?: throw IllegalStateException("$jsonName tidak ada di installer Forge")
++            val versionText = zip.getInputStream(jsonEntry).bufferedReader().use { it.readText() }
++            return Pair(profile, versionText)
++        }
++    }
++
++    private fun readJavaMajor(mojangJson: File): Int? = try {
++        JsonParser.parseString(mojangJson.readText()).asJsonObject
++            .getAsJsonObject("javaVersion")?.get("majorVersion")?.asInt
++    } catch (_: Exception) {
++        null
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt
+new file mode 100644
+index 0000000..8e40698
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt
+@@ -0,0 +1,174 @@
++package com.israadev.nuxlauncher.core.forge
++
++import com.google.gson.Gson
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import java.io.File
++
++/**
++ * Bahan peluncuran Forge yang dihitung dari profil Forge yang terpasang.
++ *
++ * - [mainClass]: kelas utama Forge (ModLauncher untuk 1.13-1.16, BootstrapLauncher untuk 1.17+).
++ * - [libraryFiles]: library Forge yang ada di disk, untuk ditaruh di classpath.
++ * - [libraryKeys]: "group:artifact" milik Forge; library Mojang dengan kunci sama dilewati (versi Forge menang).
++ * - [jvmArgs]: argumen JVM tambahan Forge (module path, --add-opens, -DignoreList, dst.), sebelum `-cp`.
++ * - [gameArgs]: argumen game tambahan Forge (--launchTarget, --fml.*), sesudah argumen game biasa.
++ */
++class ForgeLaunchInfo(
++    val mainClass: String,
++    val libraryFiles: List<File>,
++    val libraryKeys: Set<String>,
++    val jvmArgs: List<String>,
++    val gameArgs: List<String>
++)
++
++object ForgeLaunch {
++
++    /** Argumen JVM yang sudah diatur Amber sendiri; versi dari profil Forge dibuang agar tidak menimpa. */
++    private val AMBER_MANAGED_JVM_PREFIXES = listOf(
++        "-Djava.net.preferIPv6Addresses",
++        "-Djava.library.path",
++        "-Xmx",
++        "-Xms",
++        "-XstartOnFirstThread"
++    )
++
++    private val gson = Gson()
++
++    /**
++     * Membaca [profileFile] (versions/<mc>/forge-<versi>.json). Mengembalikan null bila berkas tidak
++     * terbaca atau tidak punya mainClass.
++     */
++    fun resolve(profileFile: File, libDir: File, mcVersion: String): ForgeLaunchInfo? {
++        val parsed: ForgeVersionJson? = try {
++            gson.fromJson(profileFile.readText(), ForgeVersionJson::class.java)
++        } catch (_: Exception) {
++            null
++        }
++        val version = parsed ?: return null
++        val mainClass = version.mainClass?.takeIf { it.isNotBlank() } ?: return null
++
++        val files = LinkedHashSet<File>()
++        val keys = LinkedHashSet<String>()
++        for (lib in version.libraries ?: emptyList()) {
++            val name = lib.name ?: continue
++            // LWJGL milik Amber (versi Android) dipakai; yang di profil Forge tidak boleh ikut
++            if (name.contains("org.lwjgl")) continue
++            ForgeMaven.keyOf(name)?.let { keys.add(it) }
++            val path = ForgeMaven.libraryPath(lib) ?: continue
++            val file = SafePaths.resolveInside(libDir, path) ?: continue
++            if (file.exists() && file.length() > 0L) files.add(file)
++        }
++
++        val vars = mapOf(
++            "library_directory" to libDir.absolutePath,
++            "classpath_separator" to File.pathSeparator,
++            "version_name" to (version.id ?: mcVersion),
++            "primary_jar_name" to "$mcVersion.jar"
++        )
++
++        val rawJvm = version.arguments?.jvm
++        val rawGame = version.arguments?.game
++
++        val jvmArgs = resolveArguments(rawJvm, vars, dropClasspath = true)
++            .filterNot { arg -> AMBER_MANAGED_JVM_PREFIXES.any { arg.startsWith(it) } }
++            .map { arg ->
++                // bootstraplauncher 0.1.17+ hanya menerapkan ignoreList pada nama berkas di classpath, jadi
++                // jar utama Minecraft (<mc>.jar) harus ikut dicantumkan agar tidak jadi modul ganda
++                if (arg.startsWith("-DignoreList=") && !arg.split(',').contains("$mcVersion.jar")) "$arg,$mcVersion.jar" else arg
++            }
++
++        val gameArgs = if (rawGame != null) {
++            resolveArguments(rawGame, vars)
++        } else {
++            legacyGameArguments(version.minecraftArguments)
++        }
++
++        return ForgeLaunchInfo(mainClass, files.toList(), keys, jvmArgs, gameArgs)
++    }
++
++    // ---------------------------------------------------------------- argumen
++
++    /**
++     * Mengurai daftar argumen gaya Mojang: teks biasa, atau objek `{rules, value}`.
++     * Bila [dropClasspath], "-cp <nilai>" dibuang (Amber menyusun `-cp` sendiri). Nilai yang gugur karena
++     * berisi isian tak dikenal ikut membuang flag di depannya, agar tidak ada flag yatim yang menelan
++     * argumen berikutnya.
++     */
++    private fun resolveArguments(raw: List<Any>?, vars: Map<String, String>, dropClasspath: Boolean = false): List<String> {
++        if (raw == null) return emptyList()
++        val out = ArrayList<String>()
++
++        fun add(text: String) {
++            val value = substitute(text, vars)
++            if (value != null) {
++                out.add(value)
++            } else if (!text.startsWith("-") && out.isNotEmpty()) {
++                val last = out.last()
++                if (last.startsWith("-") && !last.contains("=")) out.removeAt(out.size - 1)
++            }
++        }
++
++        var i = 0
++        while (i < raw.size) {
++            val item = raw[i]
++            i++
++            when (item) {
++                is String -> {
++                    if (dropClasspath && (item == "-cp" || item == "-classpath")) {
++                        i++ // lewati nilainya juga
++                        continue
++                    }
++                    add(item)
++                }
++                is Map<*, *> -> {
++                    if (!rulesAllow(item["rules"] as? List<*>)) continue
++                    when (val value = item["value"]) {
++                        is String -> add(value)
++                        is List<*> -> value.forEach { v -> (v as? String)?.let { add(it) } }
++                    }
++                }
++            }
++        }
++        return out
++    }
++
++    /** Mengganti ${nama}; null (argumen dibuang) bila ada isian yang tidak dikenal. */
++    private fun substitute(arg: String, vars: Map<String, String>): String? {
++        if (!arg.contains("\${")) return arg
++        var result = arg
++        for ((k, v) in vars) result = result.replace("\${$k}", v)
++        return if (result.contains("\${")) null else result
++    }
++
++    /** Aturan Mojang: tanpa `rules` selalu berlaku; aturan dengan `features` tidak pernah berlaku di Amber. */
++    private fun rulesAllow(rules: List<*>?): Boolean {
++        if (rules == null) return true
++        var allowed = false
++        for (r in rules) {
++            val rule = r as? Map<*, *> ?: continue
++            if (rule["features"] != null) continue
++            val os = rule["os"] as? Map<*, *>
++            val matches = os == null || (os["name"] == "linux" && os["arch"] == null)
++            if (matches) allowed = rule["action"] == "allow"
++        }
++        return allowed
++    }
++
++    /** Profil bergaya lama (`minecraftArguments` berupa satu teks); pasangan berisian ${...} dibuang. */
++    private fun legacyGameArguments(text: String?): List<String> {
++        if (text.isNullOrBlank()) return emptyList()
++        val tokens = text.trim().split(Regex("\\s+"))
++        val out = ArrayList<String>()
++        var i = 0
++        while (i < tokens.size) {
++            val t = tokens[i]
++            if (t.startsWith("--") && i + 1 < tokens.size && tokens[i + 1].contains("\${")) {
++                i += 2
++                continue
++            }
++            if (!t.contains("\${")) out.add(t)
++            i++
++        }
++        return out
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt
+new file mode 100644
+index 0000000..525969a
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt
+@@ -0,0 +1,133 @@
++package com.israadev.nuxlauncher.core.forge
++
++/**
++ * Model data Forge (hanya Forge modern, Minecraft 1.13 ke atas).
++ *
++ * Semua field dibuat nullable dengan nilai bawaan karena diisi Gson dari JSON milik installer Forge
++ * (Gson tidak memanggil konstruktor, jadi field yang tidak ada di JSON bernilai null).
++ */
++
++/** Satu build Forge untuk satu versi Minecraft. [version] contoh "47.2.0". */
++data class ForgeBuild(
++    val mcVersion: String,
++    val version: String,
++    val recommended: Boolean = false,
++    val latest: Boolean = false
++) {
++    /** Versi artefak Maven: "<mc>-<forge>", contoh "1.20.1-47.2.0". */
++    val mavenVersion: String get() = "$mcVersion-$version"
++}
++
++/** Isi `install_profile.json` di dalam forge-installer.jar. */
++data class ForgeInstallProfile(
++    val spec: Int? = null,
++    /** Id versi hasil pemasangan, contoh "1.20.1-forge-47.2.0". */
++    val version: String? = null,
++    val minecraft: String? = null,
++    /** Lokasi version.json di dalam installer, contoh "/version.json". */
++    val json: String? = null,
++    val data: Map<String, ForgeDataEntry>? = null,
++    val processors: List<ForgeProcessor>? = null,
++    val libraries: List<ForgeLibrary>? = null
++)
++
++data class ForgeDataEntry(
++    val client: String? = null,
++    val server: String? = null
++)
++
++data class ForgeProcessor(
++    val sides: List<String>? = null,
++    val jar: String? = null,
++    val classpath: List<String>? = null,
++    val args: List<String>? = null,
++    val outputs: Map<String, String>? = null
++)
++
++data class ForgeLibrary(
++    val name: String? = null,
++    val downloads: ForgeLibDownloads? = null,
++    /** Alamat dasar Maven untuk library bergaya lama yang tidak punya `downloads`. */
++    val url: String? = null
++)
++
++data class ForgeLibDownloads(
++    val artifact: ForgeArtifact? = null
++)
++
++data class ForgeArtifact(
++    val path: String? = null,
++    val url: String? = null,
++    val sha1: String? = null,
++    val size: Long? = null
++)
++
++/** Isi `version.json` Forge (mewarisi versi Minecraft lewat [inheritsFrom]). */
++data class ForgeVersionJson(
++    val id: String? = null,
++    val inheritsFrom: String? = null,
++    val mainClass: String? = null,
++    val minecraftArguments: String? = null,
++    val arguments: ForgeArguments? = null,
++    val libraries: List<ForgeLibrary>? = null
++)
++
++/** Elemen berupa String, atau objek berisi `rules` dan `value` (diurai Gson sebagai Map). */
++data class ForgeArguments(
++    val game: List<Any>? = null,
++    val jvm: List<Any>? = null
++)
++
++/** Cara menghitung path dan alamat library dari koordinat Maven. */
++object ForgeMaven {
++
++    /**
++     * "group:artifact:version[:classifier][@ext]" menjadi
++     * "group/artifact/version/artifact-version[-classifier].ext". Null bila koordinat tidak valid.
++     */
++    fun pathOf(coordinate: String?): String? {
++        var c = coordinate?.trim() ?: return null
++        var ext = "jar"
++        val at = c.indexOf('@')
++        if (at >= 0) {
++            ext = c.substring(at + 1)
++            c = c.substring(0, at)
++        }
++        val p = c.split(':')
++        if (p.size < 3 || p[0].isBlank() || p[1].isBlank() || p[2].isBlank()) return null
++        val group = p[0].replace('.', '/')
++        val artifact = p[1]
++        val version = p[2]
++        val classifier = if (p.size > 3 && p[3].isNotEmpty()) "-${p[3]}" else ""
++        return "$group/$artifact/$version/$artifact-$version$classifier.$ext"
++    }
++
++    /** "group:artifact" (tanpa versi dan classifier), dipakai untuk mendeteksi library yang ditimpa. */
++    fun keyOf(coordinate: String?): String? {
++        val p = coordinate?.substringBefore('@')?.split(':') ?: return null
++        return if (p.size >= 2) "${p[0]}:${p[1]}" else null
++    }
++
++    /** Isi `data` install_profile bertanda kurung siku "[koordinat]" menjadi path relatif. */
++    fun pathOfDataEntry(value: String?): String? {
++        val v = value?.trim() ?: return null
++        if (!v.startsWith("[") || !v.endsWith("]")) return null
++        return pathOf(v.substring(1, v.length - 1))
++    }
++
++    /** Path relatif library di folder libraries (dari `downloads.artifact.path`, atau dari namanya). */
++    fun libraryPath(lib: ForgeLibrary): String? {
++        return lib.downloads?.artifact?.path?.takeIf { it.isNotBlank() } ?: pathOf(lib.name)
++    }
++
++    /** Alamat unduhan library; kosong bila library itu dibawa di dalam installer. */
++    fun libraryUrl(lib: ForgeLibrary): String? {
++        lib.downloads?.artifact?.let { artifact ->
++            return artifact.url?.takeIf { it.isNotBlank() }
++        }
++        // Library gaya lama: hanya nama (+ alamat dasar Maven bila ada)
++        val path = pathOf(lib.name) ?: return null
++        val base = lib.url?.takeIf { it.isNotBlank() } ?: "https://libraries.minecraft.net/"
++        return base.trimEnd('/') + "/" + path
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt
+new file mode 100644
+index 0000000..05fd2f7
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt
+@@ -0,0 +1,131 @@
++package com.israadev.nuxlauncher.core.forge
++
++import com.google.gson.Gson
++import com.google.gson.JsonParser
++import com.google.gson.reflect.TypeToken
++import com.israadev.nuxlauncher.core.fabric.FabricService
++import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.async
++import kotlinx.coroutines.coroutineScope
++import kotlinx.coroutines.withContext
++import okhttp3.Request
++import java.io.IOException
++import java.util.concurrent.ConcurrentHashMap
++
++/**
++ * Daftar versi Forge dan alamat installer-nya.
++ *
++ * Hanya Forge modern (Minecraft 1.13 ke atas) yang didukung: Amber memakai LWJGL 3, sedangkan
++ * Forge untuk 1.12.2 ke bawah butuh LWJGL 2. Layanan ini tidak berjalan sendiri: tidak ada
++ * permintaan jaringan sampai pengguna memilih Forge di dialog buat instance.
++ */
++object ForgeService {
++
++    /** Versi Minecraft terendah yang didukung. */
++    const val MIN_MC_VERSION = "1.13"
++
++    private const val PROMOS_URL = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
++    private const val BMCL_LIST_URL = "https://bmclapi2.bangbang93.com/forge/minecraft"
++    private const val MAVEN_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge"
++
++    private val gson = Gson()
++    private val releaseRegex = Regex("""^\d+\.\d+(\.\d+)?$""")
++
++    /** Hasil daftar per versi Minecraft; dialog buat instance sering memuat ulang daftar yang sama. */
++    private val cache = ConcurrentHashMap<String, List<ForgeBuild>>()
++
++    private data class BmclForge(
++        val version: String? = null,
++        val mcversion: String? = null,
++        val branch: String? = null
++    )
++
++    /** True bila [mcVersion] adalah rilis resmi 1.13 ke atas (snapshot tidak didukung Forge). */
++    fun isMcSupported(mcVersion: String): Boolean {
++        val v = mcVersion.trim()
++        if (!releaseRegex.matches(v)) return false
++        return !NuxVersionUtils.isLowerVer(v, MIN_MC_VERSION)
++    }
++
++    /** Alamat installer resmi; mirror BMCLAPI ditambahkan otomatis oleh pengunduh. */
++    fun installerUrl(mcVersion: String, forgeVersion: String): String {
++        val v = "$mcVersion-$forgeVersion"
++        return "$MAVEN_URL/$v/forge-$v-installer.jar"
++    }
++
++    /** Pilihan bawaan: build "recommended" bila ada, kalau tidak yang terbaru. */
++    fun pickDefault(builds: List<ForgeBuild>): ForgeBuild? =
++        builds.firstOrNull { it.recommended } ?: builds.firstOrNull { it.latest } ?: builds.firstOrNull()
++
++    /**
++     * Daftar build Forge untuk [mcVersion], terbaru lebih dulu. Daftar penuh dari BMCLAPI; bila
++     * mirror itu gagal, dipakai build "recommended"/"latest" dari server resmi Forge.
++     */
++    suspend fun getBuilds(mcVersion: String): Result<List<ForgeBuild>> = withContext(Dispatchers.IO) {
++        if (!isMcSupported(mcVersion)) {
++            return@withContext Result.failure(
++                IllegalArgumentException("Forge hanya mendukung Minecraft $MIN_MC_VERSION ke atas")
++            )
++        }
++        cache[mcVersion]?.let { return@withContext Result.success(it) }
++
++        val (promos, all) = coroutineScope {
++            val p = async { runCatching { fetchPromos() }.getOrNull() }
++            val l = async { runCatching { fetchBmclList(mcVersion) } }
++            Pair(p.await(), l.await())
++        }
++
++        val recommended = promos?.get("$mcVersion-recommended")
++        val latest = promos?.get("$mcVersion-latest")
++
++        val versions = LinkedHashSet<String>()
++        all.getOrNull()?.let { versions.addAll(it) }
++        // Promosi resmi selalu dimasukkan: dipakai penuh bila mirror gagal
++        recommended?.let { versions.add(it) }
++        latest?.let { versions.add(it) }
++
++        if (versions.isEmpty()) {
++            val cause = all.exceptionOrNull() ?: IOException("Tidak ada versi Forge untuk $mcVersion")
++            return@withContext Result.failure(cause)
++        }
++
++        val builds = versions
++            .sortedWith(Comparator { a, b -> NuxVersionUtils.compare(b, a) })
++            .map { ForgeBuild(mcVersion, it, recommended = it == recommended, latest = it == latest) }
++        cache[mcVersion] = builds
++        Result.success(builds)
++    }
++
++    /** Peta "<mc>-recommended" / "<mc>-latest" -> versi Forge, dari server resmi. */
++    private fun fetchPromos(): Map<String, String> {
++        val body = httpGet(PROMOS_URL)
++        val promos = JsonParser.parseString(body).asJsonObject.getAsJsonObject("promos")
++            ?: return emptyMap()
++        return promos.entrySet().mapNotNull { (k, v) ->
++            if (v.isJsonPrimitive) k to v.asString else null
++        }.toMap()
++    }
++
++    private fun fetchBmclList(mcVersion: String): List<String> {
++        val body = httpGet("$BMCL_LIST_URL/$mcVersion")
++        val type = object : TypeToken<List<BmclForge>>() {}.type
++        val items: List<BmclForge> = gson.fromJson(body, type) ?: emptyList()
++        return items
++            .filter { it.branch.isNullOrBlank() } // build bercabang (gaya lama) punya nama artefak berbeda
++            .filter { it.mcversion == null || it.mcversion == mcVersion }
++            .mapNotNull { it.version?.trim()?.takeIf { v -> v.isNotEmpty() } }
++            .distinct()
++    }
++
++    private fun httpGet(url: String): String {
++        val request = Request.Builder()
++            .url(url)
++            .header("User-Agent", "AmberLauncher/1.0 (Android)")
++            .build()
++        FabricService.client.newCall(request).execute().use { response ->
++            if (!response.isSuccessful) throw IOException("HTTP ${response.code} dari $url")
++            return response.body?.string() ?: throw IOException("Respons kosong dari $url")
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index 966de96..2aa5805 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -384,6 +384,12 @@ object InstanceManager {
+                 return false
+             }
+         }
++        if (inst.loader.equals("forge", ignoreCase = true)) {
++            // Hanya cek keberadaan berkas (fungsi ini dipanggil dari komposisi UI)
++            if (!com.israadev.nuxlauncher.core.forge.ForgeInstaller.isInstalled(context, inst.mcVersion, inst.loaderVersion)) {
++                return false
++            }
++        }
+         return true
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+index 2ad1eda..799558e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+@@ -68,6 +68,29 @@ object GameLauncher {
+             }
+         }
+ 
++        // Forge: profil dibuat saat instance diunduh; peluncuran hanya membaca berkas kecil itu
++        val isForge = instance.loader.equals("forge", ignoreCase = true)
++        var forgeLaunch: com.israadev.nuxlauncher.core.forge.ForgeLaunchInfo? = null
++        if (isForge) {
++            val forgeProfileFile = com.israadev.nuxlauncher.core.forge.ForgeInstaller.findProfileFile(
++                context, instance.mcVersion, instance.loaderVersion
++            )
++            forgeLaunch = forgeProfileFile?.let {
++                com.israadev.nuxlauncher.core.forge.ForgeLaunch.resolve(
++                    it, InstanceManager.getLibrariesDir(context), instance.mcVersion
++                )
++            }
++            if (forgeLaunch == null) {
++                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
++                    context,
++                    "Profil Forge (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
++                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
++                ).show()
++                return
++            }
++            mainClass = forgeLaunch.mainClass
++        }
++
+         val runtimeName = if (instance.javaRuntime != "auto") instance.javaRuntime else {
+             com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion, mojangJavaMajor)
+         }
+@@ -115,6 +138,12 @@ object GameLauncher {
+             }
+         }
+ 
++        // 2b. Forge libraries (library Mojang dengan group:artifact yang sama dilewati: versi Forge menang)
++        if (forgeLaunch != null) {
++            forgeLaunch.libraryFiles.forEach { classpathEntries.add(it.absolutePath) }
++            loaderArtifactKeys.addAll(forgeLaunch.libraryKeys)
++        }
++
+         // 3. Mojang libraries (excluding desktop org.lwjgl and libraries already provided/overridden by mod loader)
+         versionDetail?.libraries?.forEach { lib ->
+             val name = lib.name ?: ""
+@@ -223,6 +252,10 @@ object GameLauncher {
+             putExtra(GameActivity.EXTRA_RUNTIME_HOME, runtimeHome.absolutePath)
+             putExtra(GameActivity.EXTRA_LWJGL_NATIVES_DIR, lwjglNativesDir.absolutePath)
+             putExtra(GameActivity.EXTRA_USE_WRAPPER, useWrapper)
++            if (forgeLaunch != null) {
++                putStringArrayListExtra(GameActivity.EXTRA_EXTRA_JVM_ARGS, ArrayList(forgeLaunch.jvmArgs))
++                putStringArrayListExtra(GameActivity.EXTRA_EXTRA_GAME_ARGS, ArrayList(forgeLaunch.gameArgs))
++            }
+             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+         }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index 6e2bafa..ff54493 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -956,13 +956,19 @@ object NuxModManager {
+     private fun checkModpackCompatibility(indexJson: com.google.gson.JsonObject, instance: Instance) {
+         val deps = indexJson.getAsJsonObject("dependencies") ?: return
+ 
+-        val otherLoader = listOf("forge" to "Forge", "neoforge" to "NeoForge", "quilt-loader" to "Quilt")
++        val otherLoader = listOf("neoforge" to "NeoForge", "quilt-loader" to "Quilt")
+             .firstOrNull { deps.has(it.first) }
+         val needsFabric = deps.has("fabric-loader")
++        val needsForge = deps.has("forge")
+ 
+-        if (!needsFabric && otherLoader != null) {
++        if (!needsFabric && !needsForge && otherLoader != null) {
+             throw ModpackIncompatibleException(
+-                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric."
++                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge."
++            )
++        }
++        if (needsForge && !needsFabric && !instance.loader.equals("forge", ignoreCase = true)) {
++            throw ModpackIncompatibleException(
++                "Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu."
+             )
+         }
+         if (needsFabric && !instance.loader.equals("fabric", ignoreCase = true)) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
+index 63176b0..683c67a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddInstanceDialog.kt
+@@ -1,12 +1,23 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+-import androidx.compose.animation.animateColorAsState
+-import androidx.compose.animation.core.tween
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+-import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.horizontalScroll
+-import androidx.compose.foundation.layout.*
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.PaddingValues
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.heightIn
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
+ import androidx.compose.foundation.lazy.LazyColumn
+ import androidx.compose.foundation.lazy.items
+ import androidx.compose.foundation.rememberScrollState
+@@ -14,48 +25,64 @@ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.text.BasicTextField
+ import androidx.compose.foundation.verticalScroll
+-import androidx.compose.material.icons.Icons
+-import androidx.compose.material.icons.filled.ArrowForward
+-import androidx.compose.material.icons.filled.Check
+-import androidx.compose.material.icons.filled.Close
+-import androidx.compose.material.icons.filled.Search
+-import androidx.compose.material3.*
+-import com.israadev.nuxlauncher.ui.i18n.Text
+-import androidx.compose.runtime.*
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.graphics.Brush
++import androidx.compose.ui.draw.drawBehind
++import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.SolidColor
++import androidx.compose.ui.graphics.StrokeCap
++import androidx.compose.ui.graphics.drawscope.Stroke
+ import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.fabric.FabricService
++import com.israadev.nuxlauncher.core.forge.ForgeBuild
++import com.israadev.nuxlauncher.core.forge.ForgeService
+ import com.israadev.nuxlauncher.core.manifest.MojangManifestService
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.VersionItem
+-import com.israadev.nuxlauncher.ui.components.*
+-import com.israadev.nuxlauncher.ui.theme.NuxColors
+-import com.israadev.nuxlauncher.ui.theme.NuxSizes
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.AmberIcon
++import com.israadev.nuxlauncher.ui.components.AmberSegmented
++import com.israadev.nuxlauncher.ui.components.NuxDialog
++import com.israadev.nuxlauncher.ui.components.amberTap
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.Amber
+ import java.util.UUID
+ 
+-/**
+- * Filter kategori versi Minecraft (seperti Zalith Launcher)
+- */
+-enum class VersionCategory(
+-    val label: String,
+-    val badgeBg: Color,
+-    val badgeText: Color
+-) {
+-    RELEASE("Release", NuxColors.YellowPale, NuxColors.ForestGreen),
+-    SNAPSHOT("Snapshot / Beta", Color(0xFF8B5CF6).copy(alpha = 0.15f), Color(0xFFA78BFA)),
+-    OLD_BETA("Old Beta", NuxColors.Amber.copy(alpha = 0.15f), NuxColors.Amber),
+-    OLD_ALPHA("Old Alpha", Color(0xFFEC4899).copy(alpha = 0.15f), Color(0xFFF472B6)),
+-    ALL("Semua", Color(0xFF3B82F6).copy(alpha = 0.15f), Color(0xFF60A5FA))
++/** Filter kategori versi Minecraft (seperti Zalith Launcher). */
++enum class VersionCategory(val label: String) {
++    RELEASE("Release"),
++    SNAPSHOT("Snapshot / Beta"),
++    OLD_BETA("Old Beta"),
++    OLD_ALPHA("Old Alpha"),
++    ALL("Semua")
+ }
+ 
++/** Satu baris pilihan versi loader (Fabric/Forge): [tag] kosong bila tidak ada keterangan. */
++private class LoaderChoice(val id: String, val tag: String)
++
++private val LOADERS = listOf("vanilla" to "Vanilla", "fabric" to "Fabric", "forge" to "Forge")
++private val LOADER_LABELS = LOADERS.map { it.second }
++
++/**
++ * Dialog "Buat Instance Baru" bergaya Amber: dua panel datar (kiri: nama, loader, ringkasan, tombol
++ * buat; kanan: filter, cari, daftar versi). Semua digambar dengan komponen Amber tanpa ripple,
++ * tanpa animasi warna, dan tanpa indikator berputar atau popup, jadi menyentuh dialog ini tidak
++ * menyusun ulang layar di belakangnya.
++ */
+ @Composable
+ fun NuxAddInstanceDialog(
+     onDismiss: () -> Unit,
+@@ -63,17 +90,23 @@ fun NuxAddInstanceDialog(
+ ) {
+     var instanceName by remember { mutableStateOf("") }
+     var selectedVersion by remember { mutableStateOf("1.21.1") }
+-    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla" or "fabric"
++    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla", "fabric", atau "forge"
+     var selectedFabricVersion by remember { mutableStateOf("") }
++    var selectedForgeVersion by remember { mutableStateOf("") }
+ 
+     var versionsList by remember { mutableStateOf<List<VersionItem>>(emptyList()) }
+     var fabricVersionsList by remember { mutableStateOf<List<String>>(emptyList()) }
++    var forgeBuildsList by remember { mutableStateOf<List<ForgeBuild>>(emptyList()) }
+     var isLoadingVersions by remember { mutableStateOf(true) }
+     var isLoadingFabric by remember { mutableStateOf(false) }
++    var isLoadingForge by remember { mutableStateOf(false) }
+ 
+     var searchQuery by remember { mutableStateOf("") }
+     var selectedCategory by remember { mutableStateOf(VersionCategory.RELEASE) }
+ 
++    // Daftar versi loader terbuka di tempat (bukan popup); menutup sendiri saat loader/versi berganti
++    var pickerOpen by remember(selectedLoader, selectedVersion) { mutableStateOf(false) }
++
+     LaunchedEffect(Unit) {
+         val result = MojangManifestService.getVersionManifest()
+         val manifest = result.getOrNull()
+@@ -104,6 +137,19 @@ fun NuxAddInstanceDialog(
+         }
+     }
+ 
++    // Forge hanya dimuat saat dipilih (tidak ada permintaan jaringan sebelumnya)
++    LaunchedEffect(selectedVersion, selectedLoader) {
++        if (selectedLoader == "forge") {
++            isLoadingForge = true
++            forgeBuildsList = emptyList()
++            selectedForgeVersion = ""
++            val builds = ForgeService.getBuilds(selectedVersion).getOrNull() ?: emptyList()
++            forgeBuildsList = builds
++            selectedForgeVersion = ForgeService.pickDefault(builds)?.version ?: ""
++            isLoadingForge = false
++        }
++    }
++
+     val filteredVersions = remember(versionsList, searchQuery, selectedCategory) {
+         versionsList.filter { item ->
+             val matchesCategory = when (selectedCategory) {
+@@ -118,698 +164,681 @@ fun NuxAddInstanceDialog(
+         }
+     }
+ 
++    val forgeChoices = remember(forgeBuildsList) {
++        forgeBuildsList.take(40).map { build ->
++            LoaderChoice(
++                id = build.version,
++                tag = when {
++                    build.recommended -> "Disarankan"
++                    build.latest -> "Terbaru"
++                    else -> ""
++                }
++            )
++        }
++    }
++    val fabricChoices = remember(fabricVersionsList) {
++        fabricVersionsList.take(30).map { LoaderChoice(it, "") }
++    }
++
++    val canCreate = !(selectedLoader == "fabric" && (isLoadingFabric || selectedFabricVersion.isBlank())) &&
++        !(selectedLoader == "forge" && (isLoadingForge || selectedForgeVersion.isBlank()))
++
++    val loaderLabel = LOADERS.firstOrNull { it.first == selectedLoader }?.second ?: "Vanilla"
++    val loaderVersionNow = when (selectedLoader) {
++        "fabric" -> selectedFabricVersion
++        "forge" -> selectedForgeVersion
++        else -> ""
++    }
++
+     NuxDialog(
+         onDismissRequest = onDismiss,
+-        modifier = Modifier.fillMaxWidth(0.92f),
+-        fillMaxHeight = true
++        modifier = Modifier.widthIn(max = 820.dp),
++        fillMaxHeight = true,
++        compact = true
+     ) {
+-        // Outer Shell Container (Compact & space-efficient)
+-        Box(
++        Column(
+             modifier = Modifier
+                 .fillMaxSize()
+-                .background(
+-                    Brush.verticalGradient(
+-                        colors = listOf(
+-                            NuxColors.SurfaceWhite,
+-                            NuxColors.SurfaceInput
+-                        )
+-                    )
+-                )
+-                .padding(10.dp)
++                .padding(horizontal = 16.dp, vertical = 14.dp)
+         ) {
+-            Column(modifier = Modifier.fillMaxSize()) {
+-                // Top Header Bar
+-                Row(
++            // ---------------------------------------------------------------- judul
++            Row(
++                modifier = Modifier.fillMaxWidth(),
++                verticalAlignment = Alignment.CenterVertically
++            ) {
++                Text(
++                    text = "Buat Instance Baru",
++                    color = Amber.Text,
++                    fontSize = 19.sp,
++                    fontWeight = FontWeight.Bold,
++                    maxLines = 1,
++                    modifier = Modifier.weight(1f)
++                )
++                Box(
+                     modifier = Modifier
+-                        .fillMaxWidth()
+-                        .padding(bottom = 6.dp),
+-                    horizontalArrangement = Arrangement.SpaceBetween,
+-                    verticalAlignment = Alignment.CenterVertically
++                        .size(36.dp)
++                        .clip(CircleShape)
++                        .background(Amber.Fill)
++                        .border(1.dp, Amber.Line, CircleShape)
++                        .amberTap(onDismiss),
++                    contentAlignment = Alignment.Center
+                 ) {
+-                    Column {
+-                        Text(
+-                            text = "INSTANCE ARCHITECT",
+-                            color = NuxColors.GrayNeutral,
+-                            fontWeight = FontWeight.Bold,
+-                            fontSize = 8.sp,
+-                            letterSpacing = 1.sp
+-                        )
+-                        Text(
+-                            text = "Buat Instance Baru",
+-                            color = NuxColors.DarkGray,
+-                            fontWeight = FontWeight.Black,
+-                            fontSize = 14.sp,
+-                            letterSpacing = (-0.3).sp
+-                        )
+-                    }
+-
+-                    // Close Button
+-                    Box(
+-                        modifier = Modifier
+-                            .size(26.dp)
+-                            .clip(CircleShape)
+-                            .background(NuxColors.SurfaceElevated)
+-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), CircleShape)
+-                            .clickable { onDismiss() },
+-                        contentAlignment = Alignment.Center
+-                    ) {
+-                        Icon(
+-                            imageVector = Icons.Default.Close,
+-                            contentDescription = "Close",
+-                            tint = NuxColors.GrayNeutral,
+-                            modifier = Modifier.size(13.dp)
+-                        )
+-                    }
++                    AmberIcon("close", 18.dp, Amber.TextDim)
+                 }
++            }
++            Spacer(modifier = Modifier.height(12.dp))
+ 
+-                // Two-Column Landscape Architecture
+-                Row(
++            Row(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .weight(1f),
++                horizontalArrangement = Arrangement.spacedBy(14.dp)
++            ) {
++                // ============================================================ kiri: konfigurasi
++                Column(
+                     modifier = Modifier
+-                        .fillMaxWidth()
+-                        .weight(1f),
+-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                        .weight(1f)
++                        .fillMaxHeight()
+                 ) {
+-                    // ==========================================
+-                    // LEFT COLUMN: Instance Configurations
+-                    // ==========================================
+-                    val leftBezelShape = RoundedCornerShape(12.dp)
+-                    val innerBezelShape = RoundedCornerShape(9.dp)
+-
+-                    Box(
++                    Column(
+                         modifier = Modifier
+                             .weight(1f)
+-                            .fillMaxHeight()
+-                            .clip(leftBezelShape)
+-                            .background(NuxColors.SurfaceWhite)
+-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.24f), leftBezelShape)
+-                            .padding(6.dp)
++                            .fillMaxWidth()
++                            .verticalScroll(rememberScrollState()),
++                        verticalArrangement = Arrangement.spacedBy(14.dp)
+                     ) {
+-                        Column(
+-                            modifier = Modifier.fillMaxSize(),
+-                            verticalArrangement = Arrangement.SpaceBetween
+-                        ) {
+-                            Column(
+-                                modifier = Modifier
+-                                    .weight(1f)
+-                                    .fillMaxWidth()
+-                                    .verticalScroll(rememberScrollState()),
+-                                verticalArrangement = Arrangement.spacedBy(6.dp)
+-                            ) {
+-                                // 1. Nama Instance Box
+-                                Column(
+-                                    modifier = Modifier
+-                                        .fillMaxWidth()
+-                                        .clip(innerBezelShape)
+-                                        .background(NuxColors.SurfaceElevated)
+-                                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
+-                                        .padding(horizontal = 8.dp, vertical = 6.dp)
+-                                ) {
+-                                    Text(
+-                                        text = "NAMA INSTANCE",
+-                                        color = NuxColors.GrayNeutral,
+-                                        fontWeight = FontWeight.Bold,
+-                                        fontSize = 8.5.sp,
+-                                        letterSpacing = 0.8.sp
+-                                    )
+-                                    Spacer(modifier = Modifier.height(4.dp))
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .height(30.dp)
+-                                            .clip(RoundedCornerShape(6.dp))
+-                                            .background(NuxColors.SurfaceInput)
+-                                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.36f), RoundedCornerShape(6.dp))
+-                                            .padding(horizontal = 8.dp),
+-                                        contentAlignment = Alignment.CenterStart
+-                                    ) {
+-                                        if (instanceName.isEmpty()) {
+-                                            Text(
+-                                                text = "Default: $selectedVersion ${selectedLoader.replaceFirstChar { it.uppercase() }}",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 11.sp,
+-                                                fontWeight = FontWeight.Normal
+-                                            )
+-                                        }
+-                                        BasicTextField(
+-                                            value = instanceName,
+-                                            onValueChange = { instanceName = it },
+-                                            singleLine = true,
+-                                            textStyle = TextStyle(
+-                                                color = NuxColors.DarkGray,
+-                                                fontSize = 11.5.sp,
+-                                                fontWeight = FontWeight.SemiBold
+-                                            ),
+-                                            cursorBrush = SolidColor(NuxColors.Yellow),
+-                                            modifier = Modifier.fillMaxWidth()
+-                                        )
+-                                    }
+-                                }
++                        // 1. Nama
++                        Column {
++                            AiLabel("NAMA INSTANCE")
++                            Spacer(modifier = Modifier.height(6.dp))
++                            AiField(
++                                value = instanceName,
++                                onChange = { instanceName = it },
++                                placeholder = "Default: $selectedVersion $loaderLabel"
++                            )
++                        }
+ 
+-                                // 2. Mod Loader Selection
+-                                Column(
+-                                    modifier = Modifier
+-                                        .fillMaxWidth()
+-                                        .clip(innerBezelShape)
+-                                        .background(NuxColors.SurfaceElevated)
+-                                        .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
+-                                        .padding(horizontal = 8.dp, vertical = 6.dp)
+-                                ) {
+-                                    Text(
+-                                        text = "MOD LOADER ENGINE",
+-                                        color = NuxColors.GrayNeutral,
+-                                        fontWeight = FontWeight.Bold,
+-                                        fontSize = 8.5.sp,
+-                                        letterSpacing = 0.8.sp
+-                                    )
+-                                    Spacer(modifier = Modifier.height(4.dp))
+-                                    Row(
+-                                        modifier = Modifier.fillMaxWidth(),
+-                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                                    ) {
+-                                        listOf("vanilla" to "Vanilla", "fabric" to "Fabric").forEach { (type, label) ->
+-                                            val isSelected = selectedLoader == type
+-                                            val btnBg by animateColorAsState(
+-                                                targetValue = if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceInput,
+-                                                animationSpec = tween(200)
+-                                            )
+-                                            val btnBorder by animateColorAsState(
+-                                                targetValue = if (isSelected) NuxColors.ForestGreen else NuxColors.DarkGray.copy(alpha = 0.13f),
+-                                                animationSpec = tween(200)
+-                                            )
+-
+-                                            Box(
+-                                                modifier = Modifier
+-                                                    .weight(1f)
+-                                                    .height(30.dp)
+-                                                    .clip(RoundedCornerShape(6.dp))
+-                                                    .background(btnBg, RoundedCornerShape(6.dp))
+-                                                    .border(1.dp, btnBorder, RoundedCornerShape(6.dp))
+-                                                    .clickable { selectedLoader = type },
+-                                                contentAlignment = Alignment.Center
+-                                            ) {
+-                                                Row(verticalAlignment = Alignment.CenterVertically) {
+-                                                    if (isSelected) {
+-                                                        Box(
+-                                                            modifier = Modifier
+-                                                                .size(5.dp)
+-                                                                .background(NuxColors.MintGreen, CircleShape)
+-                                                        )
+-                                                        Spacer(modifier = Modifier.width(5.dp))
+-                                                    }
+-                                                    Text(
+-                                                        text = label,
+-                                                        color = if (isSelected) NuxColors.SageGreen else NuxColors.GrayNeutral,
+-                                                        fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
+-                                                        fontSize = 10.5.sp
+-                                                    )
+-                                                }
+-                                            }
+-                                        }
+-                                    }
++                        // 2. Mod loader
++                        Column {
++                            AiLabel("MOD LOADER")
++                            Spacer(modifier = Modifier.height(6.dp))
++                            AmberSegmented(
++                                options = LOADER_LABELS,
++                                selected = LOADERS.indexOfFirst { it.first == selectedLoader }.coerceAtLeast(0),
++                                onSelect = { selectedLoader = LOADERS[it].first }
++                            )
+ 
+-                                    // Fabric Loader Version Picker
+-                                    if (selectedLoader == "fabric") {
+-                                        Spacer(modifier = Modifier.height(6.dp))
+-                                        var showFabricMenu by remember { mutableStateOf(false) }
+-
+-                                        Box(modifier = Modifier.fillMaxWidth()) {
+-                                            Row(
+-                                                modifier = Modifier
+-                                                    .fillMaxWidth()
+-                                                    .height(30.dp)
+-                                                    .clip(RoundedCornerShape(6.dp))
+-                                                    .background(NuxColors.SurfaceInput, RoundedCornerShape(6.dp))
+-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.36f), RoundedCornerShape(6.dp))
+-                                                    .clickable {
+-                                                        if (!isLoadingFabric && fabricVersionsList.isNotEmpty()) {
+-                                                            showFabricMenu = true
+-                                                        }
+-                                                    }
+-                                                    .padding(horizontal = 8.dp),
+-                                                horizontalArrangement = Arrangement.SpaceBetween,
+-                                                verticalAlignment = Alignment.CenterVertically
+-                                            ) {
+-                                                if (isLoadingFabric) {
+-                                                    Row(verticalAlignment = Alignment.CenterVertically) {
+-                                                        CircularProgressIndicator(
+-                                                            modifier = Modifier.size(11.dp),
+-                                                            strokeWidth = 1.5.dp,
+-                                                            color = NuxColors.SageGreen
+-                                                        )
+-                                                        Spacer(modifier = Modifier.width(5.dp))
+-                                                        Text(
+-                                                            text = "Memuat loader Fabric...",
+-                                                            color = NuxColors.GrayNeutral,
+-                                                            fontSize = 10.sp
+-                                                        )
+-                                                    }
+-                                                } else if (fabricVersionsList.isEmpty()) {
+-                                                    Text(
+-                                                        text = "⚠️ Fabric belum tersedia untuk $selectedVersion",
+-                                                        color = NuxColors.ErrorRed,
+-                                                        fontSize = 9.5.sp,
+-                                                        fontWeight = FontWeight.Medium
+-                                                    )
+-                                                } else {
+-                                                    Row(verticalAlignment = Alignment.CenterVertically) {
+-                                                        Text(
+-                                                            text = "Fabric $selectedFabricVersion",
+-                                                            color = NuxColors.DarkGray,
+-                                                            fontWeight = FontWeight.Bold,
+-                                                            fontSize = 10.5.sp
+-                                                        )
+-                                                    }
+-                                                    Text(
+-                                                        text = "▼",
+-                                                        color = NuxColors.GrayNeutral,
+-                                                        fontSize = 8.sp
+-                                                    )
+-                                                }
+-                                            }
+-
+-                                            DropdownMenu(
+-                                                expanded = showFabricMenu,
+-                                                onDismissRequest = { showFabricMenu = false },
+-                                                modifier = Modifier
+-                                                    .background(NuxColors.SurfaceElevated)
+-                                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.40f), RoundedCornerShape(8.dp))
+-                                                    .heightIn(max = 200.dp)
+-                                            ) {
+-                                                fabricVersionsList.take(30).forEach { ver ->
+-                                                    val isPicked = ver == selectedFabricVersion
+-                                                    DropdownMenuItem(
+-                                                        text = {
+-                                                            Row(
+-                                                                modifier = Modifier.fillMaxWidth(),
+-                                                                horizontalArrangement = Arrangement.SpaceBetween,
+-                                                                verticalAlignment = Alignment.CenterVertically
+-                                                            ) {
+-                                                                Text(
+-                                                                    text = ver,
+-                                                                    fontWeight = if (isPicked) FontWeight.Black else FontWeight.Normal,
+-                                                                    fontSize = 11.sp,
+-                                                                    color = if (isPicked) NuxColors.SageGreen else NuxColors.DarkGray
+-                                                                )
+-                                                                if (isPicked) {
+-                                                                    Icon(
+-                                                                        imageVector = Icons.Default.Check,
+-                                                                        contentDescription = null,
+-                                                                        tint = NuxColors.SageGreen,
+-                                                                        modifier = Modifier.size(13.dp)
+-                                                                    )
+-                                                                }
+-                                                            }
+-                                                        },
+-                                                        onClick = {
+-                                                            selectedFabricVersion = ver
+-                                                            showFabricMenu = false
+-                                                        }
+-                                                    )
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-
+-                                // 3. Summary Card with Subtle Ambient Glow
+-                                Row(
+-                                    modifier = Modifier
+-                                        .fillMaxWidth()
+-                                        .clip(innerBezelShape)
+-                                        .background(NuxColors.SoftLime)
+-                                        .border(1.dp, NuxColors.CardBorder, innerBezelShape)
+-                                        .padding(horizontal = 8.dp, vertical = 5.dp),
+-                                    horizontalArrangement = Arrangement.SpaceBetween,
+-                                    verticalAlignment = Alignment.CenterVertically
+-                                ) {
+-                                    Column {
+-                                        Text(
+-                                            text = "SPESIFIKASI TARGET",
+-                                            color = NuxColors.SageGreen,
+-                                            fontWeight = FontWeight.Bold,
+-                                            fontSize = 7.5.sp,
+-                                            letterSpacing = 0.8.sp
+-                                        )
+-                                        Spacer(modifier = Modifier.height(1.dp))
+-                                        Text(
+-                                            text = "Minecraft $selectedVersion",
+-                                            color = NuxColors.DarkGray,
+-                                            fontWeight = FontWeight.Black,
+-                                            fontSize = 11.sp
+-                                        )
++                            if (selectedLoader == "fabric") {
++                                Spacer(modifier = Modifier.height(8.dp))
++                                AiLoaderPicker(
++                                    prefix = "Fabric",
++                                    loading = isLoadingFabric,
++                                    loadingText = "Memuat loader Fabric...",
++                                    emptyText = "⚠️ Fabric belum tersedia untuk $selectedVersion",
++                                    choices = fabricChoices,
++                                    selectedId = selectedFabricVersion,
++                                    open = pickerOpen,
++                                    onToggle = { pickerOpen = !pickerOpen },
++                                    onPick = {
++                                        selectedFabricVersion = it
++                                        pickerOpen = false
+                                     }
++                                )
++                            }
+ 
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .clip(RoundedCornerShape(5.dp))
+-                                            .background(
+-                                                if (selectedLoader == "fabric") Color(0xFF8B5CF6).copy(alpha = 0.2f)
+-                                                else NuxColors.YellowPale
+-                                            )
+-                                            .border(
+-                                                1.dp,
+-                                                if (selectedLoader == "fabric") Color(0xFF8B5CF6).copy(alpha = 0.5f)
+-                                                else NuxColors.Yellow,
+-                                                RoundedCornerShape(5.dp)
+-                                            )
+-                                            .padding(horizontal = 7.dp, vertical = 3.dp)
+-                                    ) {
+-                                        Text(
+-                                            text = if (selectedLoader == "fabric") "FABRIC" else "VANILLA",
+-                                            color = if (selectedLoader == "fabric") NuxColors.PurpleDark else NuxColors.SageGreen,
+-                                            fontWeight = FontWeight.Black,
+-                                            fontSize = 8.5.sp
+-                                        )
++                            if (selectedLoader == "forge") {
++                                Spacer(modifier = Modifier.height(8.dp))
++                                AiLoaderPicker(
++                                    prefix = "Forge",
++                                    loading = isLoadingForge,
++                                    loadingText = "Memuat versi Forge...",
++                                    emptyText = if (ForgeService.isMcSupported(selectedVersion)) {
++                                        "⚠️ Forge belum tersedia untuk $selectedVersion"
++                                    } else {
++                                        "⚠️ Forge hanya untuk Minecraft 1.13 ke atas"
++                                    },
++                                    choices = forgeChoices,
++                                    selectedId = selectedForgeVersion,
++                                    open = pickerOpen,
++                                    onToggle = { pickerOpen = !pickerOpen },
++                                    onPick = {
++                                        selectedForgeVersion = it
++                                        pickerOpen = false
+                                     }
+-                                }
++                                )
++                                Text(
++                                    text = "Forge dipasang sekali saat instance diunduh pertama kali.",
++                                    color = Amber.TextDim,
++                                    fontSize = 12.sp,
++                                    lineHeight = 17.sp,
++                                    modifier = Modifier.padding(top = 8.dp)
++                                )
+                             }
++                        }
+ 
+-                            // 4. Island CTA Button (Bottom Anchored)
+-                            val canCreate = !(selectedLoader == "fabric" && (isLoadingFabric || selectedFabricVersion.isBlank()))
+-                            Spacer(modifier = Modifier.height(4.dp))
+-                            Box(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .height(34.dp)
+-                                    .clip(RoundedCornerShape(10.dp))
+-                                    .background(
+-                                        if (canCreate) Brush.horizontalGradient(
+-                                            listOf(NuxColors.ForestGreen, NuxColors.ForestGreen)
+-                                        ) else Brush.horizontalGradient(
+-                                            listOf(NuxColors.SurfaceElevated, NuxColors.SurfaceWhite)
+-                                        )
+-                                    )
+-                                    .border(
+-                                        1.dp,
+-                                        if (canCreate) NuxColors.Yellow else NuxColors.DarkGray.copy(alpha = 0.20f),
+-                                        RoundedCornerShape(10.dp)
+-                                    )
+-                                    .clickable(enabled = canCreate) {
+-                                        val defaultName = "$selectedVersion ${selectedLoader.replaceFirstChar { it.uppercase() }}"
+-                                        val finalName = if (instanceName.isNotBlank()) instanceName else defaultName
+-                                        val newInstance = Instance(
+-                                            id = "inst_${UUID.randomUUID()}",
+-                                            name = finalName,
+-                                            mcVersion = selectedVersion,
+-                                            loader = selectedLoader,
+-                                            loaderVersion = if (selectedLoader == "fabric") selectedFabricVersion else "",
+-                                            icon = if (selectedLoader == "fabric") "fabric" else "crafting_table"
+-                                        )
+-                                        onInstanceCreated(newInstance)
+-                                    }
+-                                    .padding(horizontal = 10.dp),
+-                                contentAlignment = Alignment.Center
+-                            ) {
+-                                Row(
+-                                    modifier = Modifier.fillMaxWidth(),
+-                                    horizontalArrangement = Arrangement.SpaceBetween,
+-                                    verticalAlignment = Alignment.CenterVertically
+-                                ) {
+-                                    Text(
+-                                        text = when {
+-                                            isLoadingFabric && selectedLoader == "fabric" -> "Memuat Fabric..."
+-                                            selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
+-                                            else -> "Buat Instance Sekarang"
+-                                        },
+-                                        color = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
+-                                        fontWeight = FontWeight.Black,
+-                                        fontSize = 11.sp,
+-                                        letterSpacing = 0.2.sp
+-                                    )
++                        // 3. Ringkasan
++                        AiSummary(
++                            mcVersion = selectedVersion,
++                            loaderLabel = loaderLabel,
++                            loaderVersion = loaderVersionNow
++                        )
++                    }
+ 
+-                                    // Nested Icon Pill
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .size(20.dp)
+-                                            .clip(CircleShape)
+-                                            .background(if (canCreate) NuxColors.SurfaceWhite.copy(alpha = 0.2f) else Color.Transparent),
+-                                        contentAlignment = Alignment.Center
+-                                    ) {
+-                                        Icon(
+-                                            imageVector = Icons.Default.ArrowForward,
+-                                            contentDescription = null,
+-                                            tint = if (canCreate) NuxColors.Ink else NuxColors.GrayNeutral,
+-                                            modifier = Modifier.size(11.dp)
+-                                        )
+-                                    }
+-                                }
+-                            }
++                    Spacer(modifier = Modifier.height(10.dp))
++                    AmberButton(
++                        text = when {
++                            isLoadingFabric && selectedLoader == "fabric" -> "Memuat Fabric..."
++                            selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
++                            isLoadingForge && selectedLoader == "forge" -> "Memuat Forge..."
++                            selectedLoader == "forge" && selectedForgeVersion.isBlank() -> "Forge Tidak Tersedia"
++                            else -> "Buat Instance Sekarang"
++                        },
++                        onClick = {
++                            val defaultName = "$selectedVersion $loaderLabel"
++                            val finalName = if (instanceName.isNotBlank()) instanceName else defaultName
++                            onInstanceCreated(
++                                Instance(
++                                    id = "inst_${UUID.randomUUID()}",
++                                    name = finalName,
++                                    mcVersion = selectedVersion,
++                                    loader = selectedLoader,
++                                    loaderVersion = loaderVersionNow,
++                                    icon = if (selectedLoader == "fabric") "fabric" else "crafting_table"
++                                )
++                            )
++                        },
++                        modifier = Modifier.fillMaxWidth(),
++                        style = AmberButtonStyle.Primary,
++                        enabled = canCreate,
++                        height = 46.dp
++                    )
++                }
++
++                // Garis pemisah tipis antar panel
++                Box(
++                    modifier = Modifier
++                        .width(1.dp)
++                        .fillMaxHeight()
++                        .background(Amber.Line)
++                )
++
++                // ============================================================ kanan: daftar versi
++                Column(
++                    modifier = Modifier
++                        .weight(1.15f)
++                        .fillMaxHeight()
++                ) {
++                    Row(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .horizontalScroll(rememberScrollState()),
++                        horizontalArrangement = Arrangement.spacedBy(6.dp),
++                        verticalAlignment = Alignment.CenterVertically
++                    ) {
++                        VersionCategory.values().forEach { category ->
++                            AiChip(
++                                label = category.label,
++                                selected = selectedCategory == category,
++                                onClick = { selectedCategory = category }
++                            )
+                         }
+                     }
+ 
+-                    // ==========================================
+-                    // RIGHT COLUMN: Version Picker with Beta Options
+-                    // ==========================================
++                    Spacer(modifier = Modifier.height(8.dp))
++                    AiField(
++                        value = searchQuery,
++                        onChange = { searchQuery = it },
++                        placeholder = "Cari versi (${selectedCategory.label})...",
++                        searchIcon = true,
++                        onClear = { searchQuery = "" }
++                    )
++
++                    Spacer(modifier = Modifier.height(10.dp))
++                    Row(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .padding(horizontal = 2.dp),
++                        horizontalArrangement = Arrangement.SpaceBetween,
++                        verticalAlignment = Alignment.CenterVertically
++                    ) {
++                        AiLabel("DAFTAR VERSI")
++                        Text(
++                            text = "${filteredVersions.size} versi ditemukan",
++                            color = Amber.TextDim,
++                            fontSize = 11.sp,
++                            maxLines = 1
++                        )
++                    }
++                    Spacer(modifier = Modifier.height(6.dp))
++
++                    val listShape = RoundedCornerShape(12.dp)
+                     Box(
+                         modifier = Modifier
+-                            .weight(1.15f)
+-                            .fillMaxHeight()
+-                            .clip(leftBezelShape)
+-                            .background(NuxColors.SurfaceWhite)
+-                            .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.24f), leftBezelShape)
+-                            .padding(6.dp)
++                            .fillMaxWidth()
++                            .weight(1f)
++                            .clip(listShape)
++                            .background(Amber.Fill)
++                            .border(1.dp, Amber.Line, listShape)
+                     ) {
+-                        Column(modifier = Modifier.fillMaxSize()) {
+-                            // Category Filter Bar (Pill Tabs like Zalith)
+-                            Row(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .horizontalScroll(rememberScrollState()),
+-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+-                                verticalAlignment = Alignment.CenterVertically
++                        if (isLoadingVersions) {
++                            AiCenterNote("Memuat manifest Mojang...")
++                        } else if (filteredVersions.isEmpty()) {
++                            AiCenterNote("Tidak ada versi yang cocok")
++                        } else {
++                            LazyColumn(
++                                modifier = Modifier.fillMaxSize(),
++                                contentPadding = PaddingValues(4.dp),
++                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                             ) {
+-                                VersionCategory.values().forEach { category ->
+-                                    val isCatSelected = selectedCategory == category
+-                                    val pillBg by animateColorAsState(
+-                                        targetValue = if (isCatSelected) category.badgeBg else NuxColors.SurfaceElevated,
+-                                        animationSpec = tween(150)
+-                                    )
+-                                    val pillBorder by animateColorAsState(
+-                                        targetValue = if (isCatSelected) category.badgeText.copy(alpha = 0.7f) else NuxColors.DarkGray.copy(alpha = 0.10f),
+-                                        animationSpec = tween(150)
++                                items(filteredVersions, key = { it.id }) { item ->
++                                    AiVersionRow(
++                                        item = item,
++                                        selected = item.id == selectedVersion,
++                                        onClick = { selectedVersion = item.id }
+                                     )
+-
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .clip(RoundedCornerShape(6.dp))
+-                                            .background(pillBg)
+-                                            .border(1.dp, pillBorder, RoundedCornerShape(6.dp))
+-                                            .clickable { selectedCategory = category }
+-                                            .padding(horizontal = 7.dp, vertical = 3.5.dp)
+-                                    ) {
+-                                        Text(
+-                                            text = category.label,
+-                                            color = if (isCatSelected) category.badgeText else NuxColors.GrayNeutral,
+-                                            fontWeight = if (isCatSelected) FontWeight.Black else FontWeight.SemiBold,
+-                                            fontSize = 9.sp
+-                                        )
+-                                    }
+                                 }
+                             }
++                        }
++                    }
++                }
++            }
++        }
++    }
++}
+ 
+-                            Spacer(modifier = Modifier.height(4.dp))
+-
+-                            // Search Field
+-                            Box(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .height(28.dp)
+-                                    .clip(RoundedCornerShape(6.dp))
+-                                    .background(NuxColors.SurfaceInput)
+-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.30f), RoundedCornerShape(6.dp))
+-                                    .padding(horizontal = 7.dp),
+-                                contentAlignment = Alignment.CenterStart
+-                            ) {
+-                                Row(
+-                                    modifier = Modifier.fillMaxWidth(),
+-                                    verticalAlignment = Alignment.CenterVertically
+-                                ) {
+-                                    Icon(
+-                                        imageVector = Icons.Default.Search,
+-                                        contentDescription = "Search",
+-                                        tint = NuxColors.GrayNeutral,
+-                                        modifier = Modifier.size(12.dp)
+-                                    )
+-                                    Spacer(modifier = Modifier.width(5.dp))
+-                                    BasicTextField(
+-                                        value = searchQuery,
+-                                        onValueChange = { searchQuery = it },
+-                                        singleLine = true,
+-                                        textStyle = TextStyle(
+-                                            color = NuxColors.DarkGray,
+-                                            fontSize = 10.5.sp,
+-                                            fontWeight = FontWeight.Medium
+-                                        ),
+-                                        cursorBrush = SolidColor(NuxColors.Yellow),
+-                                        modifier = Modifier.weight(1f),
+-                                        decorationBox = { innerTextField ->
+-                                            if (searchQuery.isEmpty()) {
+-                                                Text(
+-                                                    text = "Cari versi (${selectedCategory.label})...",
+-                                                    color = NuxColors.GrayNeutral,
+-                                                    fontSize = 10.sp
+-                                                )
+-                                            }
+-                                            innerTextField()
+-                                        }
+-                                    )
+-                                    if (searchQuery.isNotEmpty()) {
+-                                        Icon(
+-                                            imageVector = Icons.Default.Close,
+-                                            contentDescription = "Clear",
+-                                            tint = NuxColors.GrayNeutral,
+-                                            modifier = Modifier
+-                                                .size(13.dp)
+-                                                .clickable { searchQuery = "" }
+-                                        )
+-                                    }
+-                                }
+-                            }
++// -------------------------------------------------------------------- bagian kecil
+ 
+-                            Spacer(modifier = Modifier.height(3.dp))
++/** Label bagian: huruf kapital kecil, redup. */
++@Composable
++private fun AiLabel(text: String) {
++    Text(
++        text = text,
++        color = Amber.TextDim,
++        fontSize = 11.sp,
++        fontWeight = FontWeight.Bold,
++        letterSpacing = 0.6.sp,
++        maxLines = 1
++    )
++}
+ 
+-                            // Version Count Header
+-                            Row(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .padding(horizontal = 2.dp, vertical = 1.dp),
+-                                horizontalArrangement = Arrangement.SpaceBetween,
+-                                verticalAlignment = Alignment.CenterVertically
+-                            ) {
+-                                Text(
+-                                    text = "DAFTAR VERSI",
+-                                    color = NuxColors.GrayNeutral,
+-                                    fontSize = 8.sp,
+-                                    fontWeight = FontWeight.Bold,
+-                                    letterSpacing = 0.8.sp
+-                                )
+-                                Text(
+-                                    text = "${filteredVersions.size} versi ditemukan",
+-                                    color = NuxColors.GrayNeutral,
+-                                    fontSize = 8.sp,
+-                                    fontWeight = FontWeight.Medium
+-                                )
+-                            }
++/** Pil filter: terpilih kuning berteks tinta, selain itu kaca bertepi tipis. */
++@Composable
++private fun AiChip(label: String, selected: Boolean, onClick: () -> Unit) {
++    val shape = RoundedCornerShape(10.dp)
++    Box(
++        modifier = Modifier
++            .height(32.dp)
++            .clip(shape)
++            .background(if (selected) Amber.Yellow else Amber.Fill)
++            .border(1.dp, if (selected) Amber.Yellow else Amber.Line, shape)
++            .amberTap(onClick)
++            .padding(horizontal = 12.dp),
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = label,
++            color = if (selected) Amber.Ink else Amber.TextDim,
++            fontSize = 12.5.sp,
++            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
++            maxLines = 1
++        )
++    }
++}
+ 
+-                            // Version List Inner Core
+-                            Box(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .weight(1f)
+-                                    .clip(innerBezelShape)
+-                                    .background(NuxColors.SurfaceInput)
+-                                    .border(1.dp, NuxColors.DarkGray.copy(alpha = 0.20f), innerBezelShape)
+-                                    .padding(3.dp)
+-                            ) {
+-                                if (isLoadingVersions) {
+-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+-                                            CircularProgressIndicator(
+-                                                color = NuxColors.SageGreen,
+-                                                modifier = Modifier.size(20.dp),
+-                                                strokeWidth = 2.dp
+-                                            )
+-                                            Spacer(modifier = Modifier.height(6.dp))
+-                                            Text(
+-                                                text = "Memuat manifest Mojang...",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 10.sp
+-                                            )
+-                                        }
+-                                    }
+-                                } else if (filteredVersions.isEmpty()) {
+-                                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+-                                        Text(
+-                                            text = "Tidak ada versi yang cocok",
+-                                            color = NuxColors.GrayNeutral,
+-                                            fontSize = 10.5.sp,
+-                                            fontWeight = FontWeight.Medium
+-                                        )
+-                                    }
+-                                } else {
+-                                    LazyColumn(
+-                                        modifier = Modifier.fillMaxSize(),
+-                                        verticalArrangement = Arrangement.spacedBy(3.dp)
+-                                    ) {
+-                                        items(filteredVersions, key = { it.id }) { item ->
+-                                            val isSelected = item.id == selectedVersion
+-                                            val itemShape = RoundedCornerShape(6.dp)
+-
+-                                            // Determine Badge Color & Label based on item type
+-                                            val (badgeText, badgeBg, badgeTextColor) = when {
+-                                                item.type == "release" -> Triple("RELEASE", NuxColors.YellowPale, NuxColors.ForestGreen)
+-                                                item.type == "snapshot" -> Triple("SNAPSHOT", Color(0xFF8B5CF6).copy(alpha = 0.15f), Color(0xFFA78BFA))
+-                                                item.type == "old_beta" || item.id.startsWith("b") -> Triple("BETA", NuxColors.Amber.copy(alpha = 0.15f), NuxColors.Amber)
+-                                                item.type == "old_alpha" || item.id.startsWith("a") -> Triple("ALPHA", Color(0xFFEC4899).copy(alpha = 0.15f), Color(0xFFF472B6))
+-                                                else -> Triple(item.type.uppercase(), Color(0xFF3B82F6).copy(alpha = 0.15f), Color(0xFF60A5FA))
+-                                            }
+-
+-                                            Row(
+-                                                modifier = Modifier
+-                                                    .fillMaxWidth()
+-                                                    .clip(itemShape)
+-                                                    .background(
+-                                                        if (isSelected) NuxColors.YellowPale
+-                                                        else NuxColors.SurfaceWhite,
+-                                                        itemShape
+-                                                    )
+-                                                    .border(
+-                                                        width = 1.dp,
+-                                                        color = if (isSelected) NuxColors.ForestGreen else NuxColors.DarkGray.copy(alpha = 0.16f),
+-                                                        shape = itemShape
+-                                                    )
+-                                                    .clickable { selectedVersion = item.id }
+-                                                    .padding(horizontal = 8.dp, vertical = 4.5.dp),
+-                                                horizontalArrangement = Arrangement.SpaceBetween,
+-                                                verticalAlignment = Alignment.CenterVertically
+-                                            ) {
+-                                                Row(verticalAlignment = Alignment.CenterVertically) {
+-                                                    Text(
+-                                                        text = item.id,
+-                                                        color = if (isSelected) NuxColors.DarkGray else NuxColors.GrayNeutral,
+-                                                        fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
+-                                                        fontSize = 11.sp
+-                                                    )
+-                                                    Spacer(modifier = Modifier.width(5.dp))
+-                                                    Box(
+-                                                        modifier = Modifier
+-                                                            .clip(RoundedCornerShape(3.dp))
+-                                                            .background(badgeBg)
+-                                                            .padding(horizontal = 4.dp, vertical = 1.5.dp)
+-                                                    ) {
+-                                                        Text(
+-                                                            text = badgeText,
+-                                                            color = badgeTextColor,
+-                                                            fontWeight = FontWeight.Bold,
+-                                                            fontSize = 7.5.sp
+-                                                        )
+-                                                    }
+-                                                }
+-
+-                                                if (isSelected) {
+-                                                    Box(
+-                                                        modifier = Modifier
+-                                                            .size(16.dp)
+-                                                            .background(NuxColors.ForestGreen, CircleShape),
+-                                                        contentAlignment = Alignment.Center
+-                                                    ) {
+-                                                        Icon(
+-                                                            imageVector = Icons.Default.Check,
+-                                                            contentDescription = "Selected",
+-                                                            tint = NuxColors.Ink,
+-                                                            modifier = Modifier.size(11.dp)
+-                                                        )
+-                                                    }
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                }
+-                            }
++/**
++ * Kolom isian satu baris. [searchIcon] menambah kaca pembesar di kiri; [onClear] menampilkan tombol
++ * hapus saat ada isi.
++ */
++@Composable
++private fun AiField(
++    value: String,
++    onChange: (String) -> Unit,
++    placeholder: String,
++    searchIcon: Boolean = false,
++    onClear: (() -> Unit)? = null
++) {
++    val shape = RoundedCornerShape(12.dp)
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .height(42.dp)
++            .clip(shape)
++            .background(Amber.Fill)
++            .border(1.dp, Amber.LineStrong, shape)
++            .padding(horizontal = 12.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        if (searchIcon) {
++            Box(
++                modifier = Modifier
++                    .size(16.dp)
++                    .drawBehind {
++                        val s = size.minDimension
++                        val sw = s * 0.12f
++                        drawCircle(
++                            color = Amber.TextDim,
++                            radius = s * 0.30f,
++                            center = Offset(s * 0.42f, s * 0.42f),
++                            style = Stroke(width = sw)
++                        )
++                        drawLine(
++                            color = Amber.TextDim,
++                            start = Offset(s * 0.64f, s * 0.64f),
++                            end = Offset(s * 0.90f, s * 0.90f),
++                            strokeWidth = sw,
++                            cap = StrokeCap.Round
++                        )
++                    }
++            )
++            Spacer(modifier = Modifier.width(8.dp))
++        }
++        BasicTextField(
++            value = value,
++            onValueChange = onChange,
++            singleLine = true,
++            textStyle = TextStyle(
++                color = Amber.Text,
++                fontSize = 14.sp,
++                fontWeight = FontWeight.Medium
++            ),
++            cursorBrush = SolidColor(Amber.Yellow),
++            modifier = Modifier.weight(1f),
++            decorationBox = { inner ->
++                Box(contentAlignment = Alignment.CenterStart) {
++                    if (value.isEmpty()) {
++                        Text(
++                            text = placeholder,
++                            color = Amber.TextFaint,
++                            fontSize = 14.sp,
++                            maxLines = 1,
++                            overflow = TextOverflow.Ellipsis
++                        )
++                    }
++                    inner()
++                }
++            }
++        )
++        if (onClear != null && value.isNotEmpty()) {
++            Box(
++                modifier = Modifier
++                    .size(28.dp)
++                    .clip(CircleShape)
++                    .amberTap(onClear),
++                contentAlignment = Alignment.Center
++            ) {
++                AmberIcon("close", 16.dp, Amber.TextDim)
++            }
++        }
++    }
++}
++
++/** Tanda centang kecil yang digambar langsung. */
++@Composable
++private fun AiCheck(color: Color, boxSize: Dp = 16.dp) {
++    Box(
++        modifier = Modifier
++            .size(boxSize)
++            .drawBehind {
++                val s = size.minDimension
++                val sw = s * 0.14f
++                drawLine(color, Offset(s * 0.20f, s * 0.54f), Offset(s * 0.42f, s * 0.76f), sw, StrokeCap.Round)
++                drawLine(color, Offset(s * 0.42f, s * 0.76f), Offset(s * 0.82f, s * 0.28f), sw, StrokeCap.Round)
++            }
++    )
++}
++
++/** Teks tengah untuk keadaan memuat atau kosong (tanpa indikator berputar). */
++@Composable
++private fun AiCenterNote(text: String) {
++    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
++        Text(
++            text = text,
++            color = Amber.TextDim,
++            fontSize = 13.sp,
++            maxLines = 2,
++            modifier = Modifier.padding(horizontal = 16.dp)
++        )
++    }
++}
++
++/** Warna dan teks lencana jenis versi (kode hijau/kuning hanya untuk rilis dan snapshot). */
++private fun typeBadge(item: VersionItem): Pair<String, Color> = when {
++    item.type == "release" -> "RELEASE" to Amber.Good
++    item.type == "snapshot" -> "SNAPSHOT" to Amber.Yellow
++    item.type == "old_beta" || item.id.startsWith("b") -> "BETA" to Amber.TextDim
++    item.type == "old_alpha" || item.id.startsWith("a") -> "ALPHA" to Amber.TextDim
++    else -> item.type.uppercase() to Amber.TextDim
++}
++
++/** Satu baris versi Minecraft di daftar kanan. */
++@Composable
++private fun AiVersionRow(item: VersionItem, selected: Boolean, onClick: () -> Unit) {
++    val shape = RoundedCornerShape(10.dp)
++    val (badgeText, badgeColor) = typeBadge(item)
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .height(44.dp)
++            .clip(shape)
++            .background(if (selected) Amber.YellowTint else Color.Transparent)
++            .amberTap(onClick)
++            .padding(horizontal = 12.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Text(
++            text = item.id,
++            color = if (selected) Amber.Yellow else Amber.Text,
++            fontSize = 15.sp,
++            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
++            maxLines = 1
++        )
++        Spacer(modifier = Modifier.width(8.dp))
++        Box(
++            modifier = Modifier
++                .clip(RoundedCornerShape(6.dp))
++                .background(badgeColor.copy(alpha = 0.16f))
++                .padding(horizontal = 6.dp, vertical = 2.dp)
++        ) {
++            Text(
++                text = badgeText,
++                color = badgeColor,
++                fontSize = 10.5.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 1
++            )
++        }
++        Spacer(modifier = Modifier.weight(1f))
++        if (selected) AiCheck(Amber.Yellow, 18.dp)
++    }
++}
++
++/**
++ * Pemilih versi loader (Fabric/Forge): baris ringkas yang membuka daftar di tempat. Saat memuat atau
++ * kosong barisnya hanya menampilkan keterangan dan tidak bisa dibuka.
++ */
++@Composable
++private fun AiLoaderPicker(
++    prefix: String,
++    loading: Boolean,
++    loadingText: String,
++    emptyText: String,
++    choices: List<LoaderChoice>,
++    selectedId: String,
++    open: Boolean,
++    onToggle: () -> Unit,
++    onPick: (String) -> Unit
++) {
++    val shape = RoundedCornerShape(12.dp)
++    val interactive = !loading && choices.isNotEmpty()
++    val current = choices.firstOrNull { it.id == selectedId }
++
++    Column(modifier = Modifier.fillMaxWidth()) {
++        val frame = Modifier
++            .fillMaxWidth()
++            .height(42.dp)
++            .clip(shape)
++            .background(Amber.Fill)
++            .border(1.dp, Amber.LineStrong, shape)
++        val head = if (interactive) frame.amberTap(onToggle) else frame
++        Row(
++            modifier = head.padding(horizontal = 12.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            when {
++                loading -> Text(
++                    text = loadingText,
++                    color = Amber.TextDim,
++                    fontSize = 13.sp,
++                    maxLines = 1,
++                    modifier = Modifier.weight(1f)
++                )
++                choices.isEmpty() -> Text(
++                    text = emptyText,
++                    color = Amber.DangerSoft,
++                    fontSize = 12.5.sp,
++                    maxLines = 2,
++                    modifier = Modifier.weight(1f)
++                )
++                else -> {
++                    Text(
++                        text = "$prefix $selectedId",
++                        color = Amber.Text,
++                        fontSize = 14.sp,
++                        fontWeight = FontWeight.Bold,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis,
++                        modifier = Modifier.weight(1f, fill = false)
++                    )
++                    if (current != null && current.tag.isNotEmpty()) {
++                        Spacer(modifier = Modifier.width(8.dp))
++                        AiTag(current.tag)
++                    }
++                    Spacer(modifier = Modifier.weight(1f))
++                    AmberIcon(if (open) "chev_up" else "chev_down", 18.dp, Amber.TextDim)
++                }
++            }
++        }
++
++        if (open && interactive) {
++            Column(
++                modifier = Modifier
++                    .padding(top = 6.dp)
++                    .fillMaxWidth()
++                    .heightIn(max = 164.dp)
++                    .clip(shape)
++                    .background(Amber.Fill)
++                    .border(1.dp, Amber.Line, shape)
++                    .verticalScroll(rememberScrollState())
++                    .padding(4.dp),
++                verticalArrangement = Arrangement.spacedBy(2.dp)
++            ) {
++                choices.forEach { choice ->
++                    val picked = choice.id == selectedId
++                    val rowShape = RoundedCornerShape(8.dp)
++                    Row(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .height(38.dp)
++                            .clip(rowShape)
++                            .background(if (picked) Amber.YellowTint else Color.Transparent)
++                            .amberTap { onPick(choice.id) }
++                            .padding(horizontal = 10.dp),
++                        verticalAlignment = Alignment.CenterVertically
++                    ) {
++                        Text(
++                            text = choice.id,
++                            color = if (picked) Amber.Yellow else Amber.Text,
++                            fontSize = 13.5.sp,
++                            fontWeight = if (picked) FontWeight.Bold else FontWeight.Medium,
++                            maxLines = 1
++                        )
++                        if (choice.tag.isNotEmpty()) {
++                            Spacer(modifier = Modifier.width(8.dp))
++                            AiTag(choice.tag)
+                         }
++                        Spacer(modifier = Modifier.weight(1f))
++                        if (picked) AiCheck(Amber.Yellow, 16.dp)
+                     }
+                 }
+             }
+         }
+     }
+ }
++
++/** Lencana kecil (Disarankan / Terbaru). */
++@Composable
++private fun AiTag(text: String) {
++    Box(
++        modifier = Modifier
++            .clip(RoundedCornerShape(6.dp))
++            .background(Amber.YellowTint)
++            .padding(horizontal = 6.dp, vertical = 2.dp)
++    ) {
++        Text(
++            text = text,
++            color = Amber.Yellow,
++            fontSize = 10.5.sp,
++            fontWeight = FontWeight.Bold,
++            maxLines = 1
++        )
++    }
++}
++
++/** Ringkasan pilihan: versi Minecraft, loader dan versinya. */
++@Composable
++private fun AiSummary(mcVersion: String, loaderLabel: String, loaderVersion: String) {
++    val shape = RoundedCornerShape(12.dp)
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .background(Amber.YellowTint)
++            .border(1.dp, Amber.Line, shape)
++            .padding(horizontal = 12.dp, vertical = 10.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = "SPESIFIKASI TARGET",
++                color = Amber.Yellow,
++                fontSize = 11.sp,
++                fontWeight = FontWeight.Bold,
++                letterSpacing = 0.6.sp,
++                maxLines = 1
++            )
++            Spacer(modifier = Modifier.height(3.dp))
++            Text(
++                text = "Minecraft $mcVersion",
++                color = Amber.Text,
++                fontSize = 16.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++            if (loaderVersion.isNotBlank()) {
++                Text(
++                    text = "$loaderLabel $loaderVersion",
++                    color = Amber.TextDim,
++                    fontSize = 12.5.sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++            }
++        }
++        Spacer(modifier = Modifier.width(10.dp))
++        Box(
++            modifier = Modifier
++                .clip(RoundedCornerShape(8.dp))
++                .background(Amber.Yellow)
++                .padding(horizontal = 10.dp, vertical = 5.dp)
++        ) {
++            Text(
++                text = loaderLabel.uppercase(),
++                color = Amber.Ink,
++                fontSize = 11.5.sp,
++                fontWeight = FontWeight.Black,
++                maxLines = 1
++            )
++        }
++    }
++}
+# FIN part=1/1 files=20

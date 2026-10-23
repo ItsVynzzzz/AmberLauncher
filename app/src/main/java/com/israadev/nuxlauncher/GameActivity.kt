@@ -14,6 +14,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Build
 import android.Manifest
 import android.content.pm.PackageManager
@@ -155,6 +159,73 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private var isManualExit = false
     private var sessionStartTime = System.currentTimeMillis()
+    private var gyroSensorManager: SensorManager? = null
+    private var gyroSensorListener: SensorEventListener? = null
+    private var lastGyroTimestamp = 0L
+
+    private fun startGyroscope() {
+        if (!SettingsManager.settings.value.gyroscopeEnabled || gyroSensorListener != null) return
+        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager ?: return
+        val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) ?: return
+        val listener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                if (ZLBridgeStates.cursorMode.value != CURSOR_DISABLED) {
+                    lastGyroTimestamp = 0L
+                    return
+                }
+                val previousTimestamp = lastGyroTimestamp
+                lastGyroTimestamp = event.timestamp
+                if (previousTimestamp == 0L) return
+
+                val elapsedSeconds = (event.timestamp - previousTimestamp) / 1_000_000_000f
+                if (elapsedSeconds <= 0f || elapsedSeconds > 0.1f) return
+
+                val xRate = event.values[0]
+                val yRate = event.values[1]
+                @Suppress("DEPRECATION")
+                val rotation = windowManager.defaultDisplay.rotation
+                val (screenXRate, screenYRate) = when (rotation) {
+                    android.view.Surface.ROTATION_0 -> xRate to yRate
+                    android.view.Surface.ROTATION_90 -> yRate to -xRate
+                    android.view.Surface.ROTATION_180 -> -xRate to -yRate
+                    android.view.Surface.ROTATION_270 -> -yRate to xRate
+                    else -> xRate to yRate
+                }
+                val sensitivity = SettingsManager.settings.value.captureSensitivity / 100f
+                val pixelsPerRadian = 400f * sensitivity
+                val deltaX = -screenYRate * elapsedSeconds * pixelsPerRadian
+                val deltaY = screenXRate * elapsedSeconds * pixelsPerRadian
+                if (kotlin.math.abs(deltaX) >= 0.01f || kotlin.math.abs(deltaY) >= 0.01f) {
+                    CallbackBridge.sendCursorDelta(deltaX, deltaY)
+                }
+            }
+
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+        }
+        if (sensorManager.registerListener(listener, gyroscope, SensorManager.SENSOR_DELAY_GAME)) {
+            gyroSensorManager = sensorManager
+            gyroSensorListener = listener
+        }
+    }
+
+    private fun stopGyroscope() {
+        gyroSensorListener?.let { listener ->
+            gyroSensorManager?.unregisterListener(listener)
+        }
+        gyroSensorListener = null
+        gyroSensorManager = null
+        lastGyroTimestamp = 0L
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startGyroscope()
+    }
+
+    override fun onPause() {
+        stopGyroscope()
+        super.onPause()
+    }
 
     // ---- Rekam layar bawaan -------------------------------------------------------------
     // Alurnya: (izin mikrofon/notifikasi bila perlu) -> dialog izin tangkap layar sistem ->
@@ -333,6 +404,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     override fun onDestroy() {
+        stopGyroscope()
         super.onDestroy()
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
@@ -1751,6 +1823,7 @@ fun GameScreen(
                 fpsMode = fpsMode,
                 consoleVisible = isConsoleVisible,
                 keyboardActive = isKeyboardRequested,
+                mouseButtonCameraLook = launcherSettings.mouseButtonCameraLook,
                 fps = { currentFps },
                 perfText = {
                     if (uiBusy > 0) {

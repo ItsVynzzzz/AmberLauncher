@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.settings
 import android.app.ActivityManager
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import com.israadev.nuxlauncher.core.models.LauncherSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,9 +24,16 @@ object SettingsManager {
         if (file.exists()) {
             try {
                 val json = file.readText()
-                val loaded = gson.fromJson(json, LauncherSettings::class.java)
+                val parsed = JsonParser.parseString(json)
+                val loaded = gson.fromJson(parsed, LauncherSettings::class.java)
                 if (loaded != null) {
-                    _settings.value = loaded
+                    val hasMouseButtonCameraLook = parsed.isJsonObject &&
+                        parsed.asJsonObject.has("mouseButtonCameraLook")
+                    _settings.value = if (hasMouseButtonCameraLook) {
+                        loaded
+                    } else {
+                        loaded.copy(mouseButtonCameraLook = true)
+                    }
                     return
                 }
             } catch (e: Exception) {

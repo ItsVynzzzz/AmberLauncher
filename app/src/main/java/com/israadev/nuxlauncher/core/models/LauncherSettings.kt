@@ -12,6 +12,8 @@ data class LauncherSettings(
 
     // In-game Mouse & Touch Controls (Moved from in-game HUD to Settings)
     val mouseControlMode: String = "SLIDE", // "SLIDE" (Trackpad) or "CLICK" (Direct Touch)
+    val mouseButtonCameraLook: Boolean = true,
+    val gyroscopeEnabled: Boolean = false,
     val cursorSensitivity: Int = 100, // 50% - 300%
     val captureSensitivity: Int = 125, // 50% - 300% (Camera look speed)
     // Pukul/hancurkan lewat ketukan atau tahan di layar kosong saat bermain. Bawaan mati supaya

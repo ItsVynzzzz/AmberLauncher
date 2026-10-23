@@ -80,6 +80,8 @@ fun SettingsScreen(
     var defaultRuntime by remember(currentSettings.defaultJavaRuntime) { mutableStateOf(currentSettings.defaultJavaRuntime) }
 
     var mouseMode by remember(currentSettings.mouseControlMode) { mutableStateOf(currentSettings.mouseControlMode) }
+    var mouseButtonCameraLook by remember(currentSettings.mouseButtonCameraLook) { mutableStateOf(currentSettings.mouseButtonCameraLook) }
+    var gyroscopeEnabled by remember(currentSettings.gyroscopeEnabled) { mutableStateOf(currentSettings.gyroscopeEnabled) }
     var cursorSensitivity by remember(currentSettings.cursorSensitivity) { mutableIntStateOf(currentSettings.cursorSensitivity) }
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
@@ -124,6 +126,8 @@ fun SettingsScreen(
             customJvmArgs = customJvmArgs,
             defaultJavaRuntime = defaultRuntime,
             mouseControlMode = mouseMode,
+            mouseButtonCameraLook = mouseButtonCameraLook,
+            gyroscopeEnabled = gyroscopeEnabled,
             cursorSensitivity = cursorSensitivity,
             captureSensitivity = captureSensitivity,
             touchAttackEnabled = touchAttack,
@@ -696,6 +700,26 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSwitchRow(
+                            title = "Gerakkan kamera dengan tombol mouse",
+                            desc = "Seret tombol kiri atau kanan sambil menahannya untuk menggerakkan kamera.",
+                            checked = mouseButtonCameraLook,
+                            onCheckedChange = {
+                                mouseButtonCameraLook = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Bidik dengan giroskop",
+                            desc = "Gunakan gerakan HP untuk menggerakkan kamera saat kursor game terkunci.",
+                            checked = gyroscopeEnabled,
+                            onCheckedChange = {
+                                gyroscopeEnabled = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -772,6 +796,8 @@ fun SettingsScreen(
                     customJvmArgs = reset.customJvmArgs
                     defaultRuntime = reset.defaultJavaRuntime
                     mouseMode = reset.mouseControlMode
+                    mouseButtonCameraLook = reset.mouseButtonCameraLook
+                    gyroscopeEnabled = reset.gyroscopeEnabled
                     cursorSensitivity = reset.cursorSensitivity
                     captureSensitivity = reset.captureSensitivity
                     touchAttack = reset.touchAttackEnabled

@@ -63,6 +63,7 @@ fun GameControlsLayer(
     fpsMode: FpsMode,
     consoleVisible: Boolean,
     keyboardActive: Boolean,
+    mouseButtonCameraLook: Boolean,
     fps: () -> Int,
     perfText: () -> String,
     perfWarn: () -> Boolean,
@@ -108,7 +109,11 @@ fun GameControlsLayer(
                 if (btn.isJoystick) {
                     CustomVirtualJoystick(button = btn, modifier = place)
                 } else {
-                    CustomVirtualButton(button = btn, modifier = place)
+                    CustomVirtualButton(
+                        button = btn,
+                        modifier = place,
+                        mouseButtonCameraLook = mouseButtonCameraLook
+                    )
                 }
             }
             Unit
@@ -232,7 +237,8 @@ private fun SystemIconButton(
 @Composable
 fun CustomVirtualButton(
     button: CustomControlButton,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mouseButtonCameraLook: Boolean = true
 ) {
     var isPressed by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -313,7 +319,10 @@ fun CustomVirtualButton(
 
     // Tombol biasa (bukan toggle, bukan makro): tahan = aktif; serang/pakai/lompat boleh sambil membidik.
     val simple = !button.isMacro && !button.isToggle
-    val lookDrag = button.isMouseButton || button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
+    val isPrimaryMouseButton = button.mouseButton == LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT ||
+        button.mouseButton == LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT
+    val lookDrag = (button.isMouseButton && (!isPrimaryMouseButton || mouseButtonCameraLook)) ||
+        button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
 
     val base = modifier
         .size(width = button.widthDp.dp, height = button.heightDp.dp)
@@ -321,7 +330,7 @@ fun CustomVirtualButton(
 
     Box(
         modifier = if (simple) {
-            base.pointerInput(button.id, button.isMouseButton, button.mouseButton, button.keyCode) {
+            base.pointerInput(button.id, button.isMouseButton, button.mouseButton, button.keyCode, mouseButtonCameraLook) {
                 val slop = 6.dp.toPx()
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)

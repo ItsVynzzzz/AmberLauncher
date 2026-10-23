@@ -17,6 +17,8 @@ data class LauncherSettings(
     // Pukul/hancurkan lewat ketukan atau tahan di layar kosong saat bermain. Bawaan mati supaya
     // menggeser kamera tidak ikut memukul; pukul lewat tombol kontrol tetap bekerja.
     val touchAttackEnabled: Boolean = false,
+    // Hotbar sentuh gaya Bedrock: ketuk hotbar game untuk memilih slot saat bermain.
+    val hotbarTouchEnabled: Boolean = true,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used

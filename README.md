@@ -29,6 +29,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Setelan awal sesuai HP**: RAM game dan jarak pandang awal menyesuaikan RAM perangkat. Model yang sudah diuji (saat ini Oppo A3x 4G) mendapat profil performa khusus; di HP lain launcher berjalan dengan setelan biasa.
 - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
+- **Hotbar sentuh (gaya Bedrock)**: ketuk hotbar game di bagian bawah layar untuk memilih slot. Posisi slot dihitung dari ukuran jendela dan GUI scale Minecraft (tanpa menggambar apa pun, tanpa beban saat bermain), getar singkat saat memilih, dan bisa dimatikan di Pengaturan > Kontrol.
 - **Akun**: Microsoft, Ely.by, dan offline.
 - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
 - **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).

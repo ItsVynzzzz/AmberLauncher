@@ -19,6 +19,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.os.SystemClock
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.israadev.nuxlauncher.core.record.RecordService
@@ -89,6 +90,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+import com.israadev.nuxlauncher.core.controls.GuiScaleReader
+import com.israadev.nuxlauncher.core.controls.HotbarGeometry
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.game.MCOptions
 import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -364,6 +367,19 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private var username = "Player"
     private var uuid = "00000000-0000-0000-0000-000000000000"
     private var gameDirPath = ""
+
+    // Hotbar sentuh: GUI scale Minecraft dibaca dari options.txt, hanya saat jari menyentuh hotbar.
+    private var guiScaleReader: GuiScaleReader? = null
+
+    private fun currentGuiScale(): Int {
+        var reader = guiScaleReader
+        if (reader == null) {
+            if (gameDirPath.isEmpty()) return 0
+            reader = GuiScaleReader(File(gameDirPath, "options.txt"))
+            guiScaleReader = reader
+        }
+        return reader.get(SystemClock.uptimeMillis())
+    }
     private var assetsDirPath = ""
     private var assetIndexId = ""
     private var mainClass = "net.minecraft.client.main.Main"
@@ -535,6 +551,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         applyDynamicResolution(newRatio)
                     },
                     onToggleRecord = { toggleRecording() },
+                    guiScaleProvider = { currentGuiScale() },
                     onExit = {
                         isManualExit = true
                         terminateGameProcess()
@@ -1473,6 +1490,7 @@ fun GameScreen(
     onSurfaceReady: (SurfaceHolder) -> Unit,
     onResolutionChange: (Int) -> Unit = {},
     onToggleRecord: () -> Unit = {},
+    guiScaleProvider: () -> Int = { 0 },
     onExit: () -> Unit
 ) {
     var isControlVisible by isControlVisibleState
@@ -1588,6 +1606,21 @@ fun GameScreen(
         val screenWidth = constraints.maxWidth.toFloat()
         val screenHeight = constraints.maxHeight.toFloat()
 
+        // Hotbar sentuh gaya Bedrock (bila dinyalakan): titik sentuh -> slot 0..8 atau -1.
+        val hotbarLookup: ((Offset) -> Int)? = if (launcherSettings.hotbarTouchEnabled) {
+            val lookup: (Offset) -> Int = { pos ->
+                HotbarGeometry.slotAt(
+                    pos.x, pos.y,
+                    screenWidth, screenHeight,
+                    CallbackBridge.windowWidth, CallbackBridge.windowHeight,
+                    guiScaleProvider()
+                )
+            }
+            lookup
+        } else {
+            null
+        }
+
         var cursorX by remember { mutableFloatStateOf(0f) }
         var cursorY by remember { mutableFloatStateOf(0f) }
         var isMousePressed by remember { mutableStateOf(false) }
@@ -1644,6 +1677,13 @@ fun GameScreen(
             cursorPosition = { Offset(cursorX, cursorY) },
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
+            hotbarSlotAt = hotbarLookup,
+            onHotbarSelect = { slot ->
+                val key = LwjglGlfwKeycode.GLFW_KEY_1 + slot
+                CallbackBridge.sendKeyPress(key, true)
+                CallbackBridge.sendKeyPress(key, false)
+                hostView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+            },
             requestPointerCapture = !launcherSettings.physicalMouseMode,
             onCursorPositionChange = { newPos ->
                 cursorX = newPos.x

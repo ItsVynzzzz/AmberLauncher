@@ -91,3 +91,5 @@ Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena p
 # Pembaruan otomatis dan rekam layar (tambahan)
 Isi rekaman	Recording content
 Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Game only: on-screen buttons are hidden from the video (they still work). With buttons: on-screen buttons are recorded too. You can also change this from the in-game menu.
+Hotbar sentuh	Touch hotbar
+Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.

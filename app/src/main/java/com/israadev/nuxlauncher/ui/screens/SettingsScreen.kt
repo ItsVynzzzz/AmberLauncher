@@ -83,6 +83,7 @@ fun SettingsScreen(
     var cursorSensitivity by remember(currentSettings.cursorSensitivity) { mutableIntStateOf(currentSettings.cursorSensitivity) }
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
+    var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -127,6 +128,7 @@ fun SettingsScreen(
             cursorSensitivity = cursorSensitivity,
             captureSensitivity = captureSensitivity,
             touchAttackEnabled = touchAttack,
+            hotbarTouchEnabled = hotbarTouch,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -696,6 +698,16 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSwitchRow(
+                            title = "Hotbar sentuh",
+                            desc = "Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.",
+                            checked = hotbarTouch,
+                            onCheckedChange = {
+                                hotbarTouch = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -775,6 +787,7 @@ fun SettingsScreen(
                     cursorSensitivity = reset.cursorSensitivity
                     captureSensitivity = reset.captureSensitivity
                     touchAttack = reset.touchAttackEnabled
+                    hotbarTouch = reset.hotbarTouchEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio

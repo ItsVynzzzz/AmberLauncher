@@ -45,6 +45,9 @@ fun SwitchableMouseLayout(
     cursorPosition: () -> Offset,
     cursorSensitivity: Float = 1.0f,
     touchAttackEnabled: Boolean = true,
+    // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
+    hotbarSlotAt: ((Offset) -> Int)? = null,
+    onHotbarSelect: (Int) -> Unit = {},
     requestPointerCapture: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
@@ -78,6 +81,8 @@ fun SwitchableMouseLayout(
     val currentCursorPos by rememberUpdatedState(cursorPosition)
     val currentSensitivity by rememberUpdatedState(cursorSensitivity)
     val currentTouchAttack by rememberUpdatedState(touchAttackEnabled)
+    val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
+    val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
@@ -131,6 +136,8 @@ fun SwitchableMouseLayout(
                     var isDragging = false
                     var longPressTriggered = false
                     var longPressJob: Job? = null
+                    // Slot hotbar yang disentuh jari ini (-1 = bukan hotbar). Hanya saat bermain.
+                    var hotbarSlot = -1
 
                     awaitPointerEventScope {
                         while (true) {
@@ -154,6 +161,11 @@ fun SwitchableMouseLayout(
                                     longPressTriggered = false
 
                                     val capturedNow = currentCursorMode == CURSOR_DISABLED
+                                    hotbarSlot = if (capturedNow) {
+                                        currentHotbarSlotAt?.invoke(downEvent.position) ?: -1
+                                    } else {
+                                        -1
+                                    }
 
                                     if (!capturedNow && currentControlMode == MouseControlMode.CLICK) {
                                         currentOnCursorPositionChange(downEvent.position)
@@ -164,7 +176,9 @@ fun SwitchableMouseLayout(
                                     longPressJob = launch {
                                         delay(viewConfiguration.longPressTimeoutMillis)
                                         // Saat bermain (kursor terkunci), tahan di layar hanya memukul bila diizinkan
-                                        if (!isDragging && activePointerId == downEvent.id && (!capturedNow || currentTouchAttack)) {
+                                        if (!isDragging && activePointerId == downEvent.id && hotbarSlot < 0 &&
+                                            (!capturedNow || currentTouchAttack)
+                                        ) {
                                             longPressTriggered = true
                                             val targetPos = if (capturedNow) {
                                                 Offset.Zero
@@ -189,9 +203,12 @@ fun SwitchableMouseLayout(
                                     }
 
                                     if (currentCursorMode == CURSOR_DISABLED) {
-                                        // In gameplay: touch drag rotates the camera
-                                        val delta = moveChange.positionChange()
-                                        currentOnCapturedMove(delta)
+                                        // In gameplay: touch drag rotates the camera. Ketukan di hotbar tidak
+                                        // menggoyang kamera selama jari belum benar-benar menggeser.
+                                        if (hotbarSlot < 0 || isDragging) {
+                                            val delta = moveChange.positionChange()
+                                            currentOnCapturedMove(delta)
+                                        }
                                     } else {
                                         // In menu: move cursor
                                         if (currentControlMode == MouseControlMode.SLIDE) {
@@ -220,7 +237,10 @@ fun SwitchableMouseLayout(
                                     if (longPressTriggered) {
                                         currentOnLongPressEnd()
                                     } else if (!isDragging) {
-                                        if (currentCursorMode == CURSOR_DISABLED) {
+                                        if (hotbarSlot >= 0 && currentCursorMode == CURSOR_DISABLED) {
+                                            // Ketuk hotbar = pilih slot (gaya Bedrock)
+                                            currentOnHotbarSelect(hotbarSlot)
+                                        } else if (currentCursorMode == CURSOR_DISABLED) {
                                             // Ketuk layar saat bermain = pukul; hanya bila diizinkan di Pengaturan
                                             if (currentTouchAttack) {
                                                 CallbackBridge.putMouseEvent(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
@@ -236,11 +256,13 @@ fun SwitchableMouseLayout(
                                     }
                                     upChange.consume()
                                     activePointerId = null
+                                    hotbarSlot = -1
                                 }
                             }
 
                             if (!event.changes.anyPressed()) {
                                 activePointerId = null
+                                hotbarSlot = -1
                                 isDragging = false
                                 longPressJob?.cancel()
                             }

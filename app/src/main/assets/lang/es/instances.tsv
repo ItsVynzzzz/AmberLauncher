@@ -94,3 +94,4 @@ Pemasangan Forge	Instalaci\u00f3n de Forge
 Memasang Forge	Instalando Forge
 Proses ini hanya berjalan sekali per versi Forge.	Esto solo se ejecuta una vez por versi\u00f3n de Forge.
 Forge dipasang sekali saat instance diunduh pertama kali.	Forge se instala una sola vez, cuando la instancia se descarga por primera vez.
+Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	No hay suficiente almacenamiento para instalar Forge (quedan {0} MB, se necesitan al menos {1} MB)

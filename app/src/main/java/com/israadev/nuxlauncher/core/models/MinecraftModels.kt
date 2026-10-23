@@ -108,7 +108,7 @@ data class Instance(
     val id: String,
     val name: String,
     val mcVersion: String,
-    val loader: String = "vanilla", // "vanilla" or "fabric"
+    val loader: String = "vanilla", // "vanilla", "fabric", or "forge"
     var loaderVersion: String = "",
     val icon: String = "crafting_table",
     val javaRuntime: String = "auto", // "auto", "jre-8", "jre-17", "jre-21", "jre-25"

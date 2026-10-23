@@ -95,12 +95,17 @@ internal object ForgeInstallRunner {
 
         var bound = false
         try {
+            // Foreground service membuat pemasangan tahan dihentikan sistem. Android 12+ menolaknya bila
+            // aplikasi sedang di latar belakang; itu tidak fatal karena bindService di bawah tetap
+            // membuat service dan memulai installer.
             try {
                 ContextCompat.startForegroundService(app, intent)
             } catch (_: Exception) {
-                app.startService(intent)
             }
             bound = app.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            if (!bound) {
+                return@withContext ForgeRunResult(-1, "[Forge] Proses pemasangan tidak bisa dimulai")
+            }
 
             val startedAt = SystemClock.elapsedRealtime()
             var exitCode = -1

@@ -59,23 +59,34 @@ class ForgeInstallService : Service() {
     @Volatile
     private var logWriter: Writer? = null
 
-    override fun onBind(intent: Intent?): IBinder = Binder()
+    /**
+     * Terikat dari proses utama. Ikatan inilah yang menjamin installer jalan walau startForegroundService
+     * ditolak (Android 12+ melarang memulainya saat aplikasi di latar belakang, misalnya pengguna
+     * berpindah aplikasi selagi game diunduh), karena bindService tidak dibatasi seperti itu.
+     */
+    override fun onBind(intent: Intent?): IBinder {
+        begin(intent)
+        return Binder()
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startAsForeground()
+        if (!begin(intent)) stopSelf()
+        return START_NOT_STICKY
+    }
+
+    /** Memulai thread installer sekali saja. False bila [intent] tidak membawa parameter yang lengkap. */
+    private fun begin(intent: Intent?): Boolean {
         val installer = intent?.getStringExtra(EXTRA_INSTALLER)
         val target = intent?.getStringExtra(EXTRA_TARGET)
         val runtimeHome = intent?.getStringExtra(EXTRA_RUNTIME_HOME)
-        if (installer == null || target == null || runtimeHome == null) {
-            stopSelf()
-            return START_NOT_STICKY
-        }
+        if (installer == null || target == null || runtimeHome == null) return false
         if (started.compareAndSet(false, true)) {
             thread(name = "Amber-Forge-Installer") {
                 runInstaller(File(installer), File(target), File(runtimeHome))
             }
         }
-        return START_NOT_STICKY
+        return true
     }
 
     private fun startAsForeground() {

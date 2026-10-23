@@ -144,39 +144,11 @@ object NuxModManager {
             if (itemType == "mods" && cleanFilename.endsWith(".jar", ignoreCase = true) && file.isFile) {
                 try {
                     ZipFile(file).use { zip ->
-                        // 1. Fabric mod
-                        val fabricEntry = zip.getEntry("fabric.mod.json")
-                        if (fabricEntry != null) {
-                            zip.getInputStream(fabricEntry).bufferedReader().use { reader ->
-                                val json = JsonParser.parseReader(reader).asJsonObject
-                                if (json.has("name")) title = json.get("name").asString
-                                if (json.has("version")) version = json.get("version").asString
-                                if (json.has("description")) description = json.get("description").asString
-                            }
-                        } else {
-                            // 2. Forge mods.toml
-                            val tomlEntry = zip.getEntry("META-INF/mods.toml")
-                            if (tomlEntry != null) {
-                                zip.getInputStream(tomlEntry).bufferedReader().use { reader ->
-                                    val lines = reader.readLines()
-                                    var inModBlock = false
-                                    for (line in lines) {
-                                        val trimmed = line.trim()
-                                        if (trimmed.startsWith("[[mods]]")) {
-                                            inModBlock = true
-                                        } else if (inModBlock) {
-                                            if (trimmed.startsWith("displayName")) {
-                                                title = trimmed.substringAfter("=").trim().trim('"', '\'')
-                                            } else if (trimmed.startsWith("version")) {
-                                                version = trimmed.substringAfter("=").trim().trim('"', '\'')
-                                            } else if (trimmed.startsWith("description")) {
-                                                description = trimmed.substringAfter("=").trim().trim('"', '\'')
-                                                break
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        // Fabric (fabric.mod.json), Forge (mods.toml), dan NeoForge (neoforge.mods.toml)
+                        ModMetadata.read(zip)?.let { info ->
+                            info.name?.takeIf { it.isNotBlank() }?.let { title = it }
+                            info.version?.takeIf { it.isNotBlank() }?.let { version = it }
+                            info.description?.takeIf { it.isNotBlank() }?.let { description = it }
                         }
                     }
                 } catch (_: Exception) {

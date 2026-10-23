@@ -46,6 +46,9 @@ object ForgeInstaller {
 
     private const val LIB_THREADS = 16
 
+    /** Ruang kosong minimum (MB): library, jar hasil tambalan, dan berkas sementara processor. */
+    private const val MIN_FREE_MB = 400L
+
     private val gson = Gson()
 
     /** Satu pemasangan pada satu waktu: folder kerja dan proses :forge hanya ada satu. */
@@ -118,6 +121,12 @@ object ForgeInstaller {
         val versionsDir = InstanceManager.getVersionsDir(context)
         val libDir = InstanceManager.getLibrariesDir(context)
         val nuxDir = InstanceManager.getNuxDir(context)
+
+        // Lebih baik berhenti di awal dengan pesan jelas daripada gagal di tengah processor karena penuh
+        val freeMb = libDir.apply { mkdirs() }.usableSpace / (1024L * 1024L)
+        if (freeMb < MIN_FREE_MB) {
+            throw IOException("Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa $freeMb MB, butuh minimal $MIN_FREE_MB MB)")
+        }
 
         // 1. Installer resmi
         onProgress(progress(0f), "Mengunduh installer Forge $forgeVersion...")

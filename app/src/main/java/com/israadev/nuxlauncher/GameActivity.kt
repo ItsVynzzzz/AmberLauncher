@@ -1080,7 +1080,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
                 // Mod TouchController: socket harus sudah dikenal lewat env sebelum JVM berjalan.
                 // Tanpa modnya, tidak ada yang dibuat sama sekali (tanpa thread, socket, atau penelusuran).
-                if (activeSettings.touchControllerSupport && TouchControllerSupport.isModInstalled(installedMods)) {
+                if (activeSettings.touchControllerEnabled && TouchControllerSupport.isModInstalled(installedMods)) {
                     val socketName = TouchControllerSupport.newSocketName()
                     val bridge = TouchControllerBridge.start(
                         socketName = socketName,

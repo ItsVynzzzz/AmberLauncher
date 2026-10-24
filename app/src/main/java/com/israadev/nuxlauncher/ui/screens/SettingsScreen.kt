@@ -84,7 +84,7 @@ fun SettingsScreen(
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
-    var touchControllerSupport by remember(currentSettings.touchControllerSupport) { mutableStateOf(currentSettings.touchControllerSupport) }
+    var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -130,7 +130,7 @@ fun SettingsScreen(
             captureSensitivity = captureSensitivity,
             touchAttackEnabled = touchAttack,
             hotbarTouchEnabled = hotbarTouch,
-            touchControllerSupport = touchControllerSupport,
+            touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -712,10 +712,10 @@ fun SettingsScreen(
                         SettingDivider()
                         SettingSwitchRow(
                             title = "Dukungan TouchController",
-                            desc = "Bila mod TouchController terpasang, tombol bawaan launcher disembunyikan (hanya gerigi menu yang tersisa) dan sentuhan layar diteruskan ke mod. Matikan untuk tetap memakai tombol bawaan.",
-                            checked = touchControllerSupport,
+                            desc = "Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.",
+                            checked = touchControllerEnabled,
                             onCheckedChange = {
-                                touchControllerSupport = it
+                                touchControllerEnabled = it
                                 commitSettings()
                             }
                         )
@@ -800,7 +800,7 @@ fun SettingsScreen(
                     captureSensitivity = reset.captureSensitivity
                     touchAttack = reset.touchAttackEnabled
                     hotbarTouch = reset.hotbarTouchEnabled
-                    touchControllerSupport = reset.touchControllerSupport
+                    touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio

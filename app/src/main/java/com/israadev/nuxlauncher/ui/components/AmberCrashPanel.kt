@@ -338,7 +338,7 @@ private fun CrashExplainContent(info: GameCrashInfo, source: CrashSource, modifi
                     Spacer(modifier = Modifier.height(2.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (hasLoader) {
-                            val loaderName = info.loader.replaceFirstChar { it.uppercase() }
+                            val loaderName = com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(info.loader)
                             Text(
                                 text = "$loaderName ${info.loaderVersion ?: ""}".trim(),
                                 color = Amber.TextDim,

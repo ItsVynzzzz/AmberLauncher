@@ -31,3 +31,9 @@ Balasan kosong	Empty response
 Unduhan belum lengkap ({0} dari {1} byte)	Download incomplete ({0} of {1} bytes)
 Berkas kosong	The file is empty
 balasan bukan daftar rilis	the response is not a release list
+NeoForge hanya mendukung Minecraft {0} ke atas	NeoForge only supports Minecraft {0} and above
+Installer NeoForge gagal	The NeoForge installer failed
+version.json di installer NeoForge tidak terbaca	version.json in the NeoForge installer could not be read
+Path library NeoForge tidak aman: {0}	Unsafe NeoForge library path: {0}
+install_profile.json tidak ada di installer NeoForge	install_profile.json is missing from the NeoForge installer
+{0} tidak ada di installer NeoForge	{0} is missing from the NeoForge installer

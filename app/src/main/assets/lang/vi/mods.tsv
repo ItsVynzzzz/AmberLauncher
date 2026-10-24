@@ -126,5 +126,6 @@ Body stream kosong	Lu\u1ed3ng d\u1eef li\u1ec7u tr\u1ed1ng
 Gagal menyimpan file unduhan	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p \u0111\u00e3 t\u1ea3i
 Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	T\u1ec7p {0} b\u1ecb h\u1ecfng ho\u1eb7c b\u1ecb thay \u0111\u1ed5i khi t\u1ea3i (m\u00e3 b\u0103m kh\u00f4ng kh\u1edbp) n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
 Isi modpack terlalu besar, pemasangan dibatalkan.	N\u1ed9i dung modpack qu\u00e1 l\u1edbn, \u0111\u00e3 h\u1ee7y vi\u1ec7c c\u00e0i \u0111\u1eb7t.
-Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	Modpack n\u00e0y c\u1ea7n {0}, trong khi AmberLauncher hi\u1ec7n ch\u1ec9 h\u1ed7 tr\u1ee3 Fabric v\u00e0 Forge.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Modpack n\u00e0y c\u1ea7n {0}, trong khi AmberLauncher hi\u1ec7n ch\u1ec9 h\u1ed7 tr\u1ee3 Fabric, Forge v\u00e0 NeoForge.
 Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n Forge. H\u00e3y t\u1ea1o instance Forge tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n NeoForge. H\u00e3y t\u1ea1o instance NeoForge tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.

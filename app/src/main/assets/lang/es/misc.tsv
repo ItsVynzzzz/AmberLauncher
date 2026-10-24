@@ -44,3 +44,9 @@ Balasan kosong	Respuesta vac\u00eda
 Unduhan belum lengkap ({0} dari {1} byte)	Descarga incompleta ({0} de {1} bytes)
 Berkas kosong	El archivo est\u00e1 vac\u00edo
 balasan bukan daftar rilis	la respuesta no es una lista de versiones
+NeoForge hanya mendukung Minecraft {0} ke atas	NeoForge solo es compatible con Minecraft {0} o superior
+Installer NeoForge gagal	El instalador de NeoForge fall\u00f3
+version.json di installer NeoForge tidak terbaca	No se pudo leer version.json del instalador de NeoForge
+Path library NeoForge tidak aman: {0}	Ruta de biblioteca de NeoForge no segura: {0}
+install_profile.json tidak ada di installer NeoForge	install_profile.json no est\u00e1 en el instalador de NeoForge
+{0} tidak ada di installer NeoForge	{0} no est\u00e1 en el instalador de NeoForge

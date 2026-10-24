@@ -83,3 +83,29 @@ Memasang Forge	Installing Forge
 Proses ini hanya berjalan sekali per versi Forge.	This runs only once per Forge version.
 Forge dipasang sekali saat instance diunduh pertama kali.	Forge is installed once, when the instance is first downloaded.
 Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Not enough storage to install Forge ({0} MB left, at least {1} MB needed)
+Memuat versi NeoForge...	Loading NeoForge versions...
+\u26a0\ufe0f NeoForge belum tersedia untuk {0}	\u26a0\ufe0f NeoForge is not available yet for {0}
+\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	\u26a0\ufe0f NeoForge is only for Minecraft 1.20.2 and newer
+Memuat NeoForge...	Loading NeoForge...
+NeoForge Tidak Tersedia	NeoForge Unavailable
+Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	The NeoForge profile ({0}) is not installed yet. Please tap the DOWNLOAD button on the instance!
+Mengunduh installer NeoForge {0}...	Downloading NeoForge installer {0}...
+Mengunduh library NeoForge ({0}/{1})...	Downloading NeoForge libraries ({0}/{1})...
+Memasang NeoForge {0}...	Installing NeoForge {0}...
+Memasang NeoForge {0} ({1}/{2})...	Installing NeoForge {0} ({1}/{2})...
+NeoForge {0} terpasang	NeoForge {0} installed
+Tidak dapat menemukan NeoForge untuk versi {0}	Could not find NeoForge for version {0}
+Tidak ada versi NeoForge untuk {0}	No NeoForge versions for {0}
+Versi NeoForge belum dipilih	No NeoForge version selected
+NeoForge hanya mendukung Minecraft 1.20.2 ke atas	NeoForge is only supported for Minecraft 1.20.2 and newer
+Installer NeoForge {0} rusak atau tidak lengkap	The NeoForge installer {0} is corrupted or incomplete
+Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	This NeoForge installer format is not recognized (Amber needs NeoForge 1.20.2 or newer)
+Installer NeoForge untuk Minecraft {0}, bukan {1}	This NeoForge installer is for Minecraft {0}, not {1}
+Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	Failed to download NeoForge libraries: {0}. Check your connection and try again.
+Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	The NeoForge installer finished but the patched Minecraft jar was not found ({0})
+Installer NeoForge gagal (kode {0}): {1}	NeoForge installer failed (code {0}): {1}
+Installer NeoForge gagal (kode {0})	NeoForge installer failed (code {0})
+Memasang NeoForge	Installing NeoForge
+Proses ini hanya berjalan sekali per versi NeoForge.	This runs only once per NeoForge version.
+NeoForge dipasang sekali saat instance diunduh pertama kali.	NeoForge is installed once, when the instance is first downloaded.
+Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	Not enough storage to install NeoForge ({0} MB left, at least {1} MB needed)

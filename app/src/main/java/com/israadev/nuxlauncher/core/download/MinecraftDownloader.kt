@@ -255,14 +255,15 @@ class MinecraftDownloader(
                 }
             }
 
-            // 6. Pasang Forge (Minecraft 1.13+). Installer resmi dijalankan sekali di proses terpisah;
-            // sesudahnya tidak ada biaya apa pun saat launcher berjalan.
-            if (instance.loader.equals("forge", ignoreCase = true)) {
+            // 6. Pasang Forge (Minecraft 1.13+) atau NeoForge (1.20.2+). Installer resmi dijalankan sekali
+            // di proses terpisah; sesudahnya tidak ada biaya apa pun saat launcher berjalan.
+            val forgeFlavor = com.israadev.nuxlauncher.core.forge.ForgeFlavor.of(instance.loader)
+            if (forgeFlavor != null) {
                 var forgeVer = instance.loaderVersion
                 if (forgeVer.isBlank()) {
-                    val builds = com.israadev.nuxlauncher.core.forge.ForgeService.getBuilds(instance.mcVersion).getOrNull()
+                    val builds = com.israadev.nuxlauncher.core.forge.ForgeService.getBuilds(instance.mcVersion, forgeFlavor).getOrNull()
                     val pick = builds?.let { com.israadev.nuxlauncher.core.forge.ForgeService.pickDefault(it) }
-                        ?: throw IllegalStateException("Tidak dapat menemukan Forge untuk versi ${instance.mcVersion}")
+                        ?: throw IllegalStateException("Tidak dapat menemukan ${forgeFlavor.displayName} untuk versi ${instance.mcVersion}")
                     forgeVer = pick.version
                     instance.loaderVersion = forgeVer
                 }
@@ -271,7 +272,8 @@ class MinecraftDownloader(
                     downloader = this@MinecraftDownloader,
                     mcVersion = instance.mcVersion,
                     forgeVersion = forgeVer,
-                    onProgress = onProgress
+                    onProgress = onProgress,
+                    flavor = forgeFlavor
                 ).getOrThrow()
             }
 
@@ -321,6 +323,8 @@ class MinecraftDownloader(
             urls.add(url.replace("https://maven.fabricmc.net", "https://bmclapi2.bangbang93.com/maven"))
         } else if (url.startsWith("https://maven.minecraftforge.net")) {
             urls.add(url.replace("https://maven.minecraftforge.net", "https://bmclapi2.bangbang93.com/maven"))
+        } else if (url.startsWith("https://maven.neoforged.net/releases")) {
+            urls.add(url.replace("https://maven.neoforged.net/releases", "https://bmclapi2.bangbang93.com/maven"))
         } else if (url.startsWith("https://files.minecraftforge.net/maven")) {
             urls.add(url.replace("https://files.minecraftforge.net/maven", "https://bmclapi2.bangbang93.com/maven"))
         }

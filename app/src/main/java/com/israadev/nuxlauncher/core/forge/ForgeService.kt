@@ -14,26 +14,35 @@ import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Daftar versi Forge dan alamat installer-nya.
+ * Daftar versi Forge/NeoForge dan alamat installer-nya.
  *
- * Hanya Forge modern (Minecraft 1.13 ke atas) yang didukung: Amber memakai LWJGL 3, sedangkan
- * Forge untuk 1.12.2 ke bawah butuh LWJGL 2. Layanan ini tidak berjalan sendiri: tidak ada
- * permintaan jaringan sampai pengguna memilih Forge di dialog buat instance.
+ * Hanya yang modern yang didukung: Forge untuk Minecraft 1.13 ke atas dan NeoForge untuk 1.20.2 ke
+ * atas. Amber memakai LWJGL 3, sedangkan Forge untuk 1.12.2 ke bawah butuh LWJGL 2. Layanan ini
+ * tidak berjalan sendiri: tidak ada permintaan jaringan sampai pengguna memilih Forge/NeoForge di
+ * dialog buat instance.
  */
 object ForgeService {
 
-    /** Versi Minecraft terendah yang didukung. */
+    /** Versi Minecraft terendah yang didukung Forge. */
     const val MIN_MC_VERSION = "1.13"
 
     private const val PROMOS_URL = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
     private const val BMCL_LIST_URL = "https://bmclapi2.bangbang93.com/forge/minecraft"
     private const val MAVEN_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge"
 
+    private const val NEO_METADATA_URL = "https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml"
+    private const val NEO_BMCL_LIST_URL = "https://bmclapi2.bangbang93.com/neoforge/list"
+    private const val NEO_MAVEN_URL = "https://maven.neoforged.net/releases/net/neoforged/neoforge"
+
     private val gson = Gson()
     private val releaseRegex = Regex("""^\d+\.\d+(\.\d+)?$""")
 
-    /** Hasil daftar per versi Minecraft; dialog buat instance sering memuat ulang daftar yang sama. */
+    /** Hasil daftar per jenis dan versi Minecraft; dialog buat instance sering memuat ulang daftar yang sama. */
     private val cache = ConcurrentHashMap<String, List<ForgeBuild>>()
+
+    /** Seluruh versi NeoForge per versi Minecraft; satu berkas metadata melayani semua versi Minecraft. */
+    @Volatile
+    private var neoForgeByMc: Map<String, List<String>>? = null
 
     private data class BmclForge(
         val version: String? = null,
@@ -41,35 +50,53 @@ object ForgeService {
         val branch: String? = null
     )
 
-    /** True bila [mcVersion] adalah rilis resmi 1.13 ke atas (snapshot tidak didukung Forge). */
-    fun isMcSupported(mcVersion: String): Boolean {
+    /** True bila [mcVersion] adalah rilis resmi yang didukung [flavor] (snapshot tidak didukung). */
+    fun isMcSupported(mcVersion: String, flavor: ForgeFlavor = ForgeFlavor.FORGE): Boolean {
         val v = mcVersion.trim()
         if (!releaseRegex.matches(v)) return false
-        return !NuxVersionUtils.isLowerVer(v, MIN_MC_VERSION)
+        return !NuxVersionUtils.isLowerVer(v, flavor.minMcVersion)
     }
 
     /** Alamat installer resmi; mirror BMCLAPI ditambahkan otomatis oleh pengunduh. */
-    fun installerUrl(mcVersion: String, forgeVersion: String): String {
-        val v = "$mcVersion-$forgeVersion"
-        return "$MAVEN_URL/$v/forge-$v-installer.jar"
-    }
+    fun installerUrl(mcVersion: String, version: String, flavor: ForgeFlavor = ForgeFlavor.FORGE): String =
+        when (flavor) {
+            ForgeFlavor.FORGE -> {
+                val v = "$mcVersion-$version"
+                "$MAVEN_URL/$v/forge-$v-installer.jar"
+            }
+            ForgeFlavor.NEOFORGE -> "$NEO_MAVEN_URL/$version/neoforge-$version-installer.jar"
+        }
 
     /** Pilihan bawaan: build "recommended" bila ada, kalau tidak yang terbaru. */
     fun pickDefault(builds: List<ForgeBuild>): ForgeBuild? =
         builds.firstOrNull { it.recommended } ?: builds.firstOrNull { it.latest } ?: builds.firstOrNull()
 
     /**
-     * Daftar build Forge untuk [mcVersion], terbaru lebih dulu. Daftar penuh dari BMCLAPI; bila
-     * mirror itu gagal, dipakai build "recommended"/"latest" dari server resmi Forge.
+     * Daftar build untuk [mcVersion], terbaru lebih dulu. Forge: daftar penuh dari BMCLAPI; bila
+     * mirror itu gagal, dipakai build "recommended"/"latest" dari server resmi. NeoForge: dari
+     * berkas metadata Maven resmi; bila gagal, dari BMCLAPI.
      */
-    suspend fun getBuilds(mcVersion: String): Result<List<ForgeBuild>> = withContext(Dispatchers.IO) {
-        if (!isMcSupported(mcVersion)) {
+    suspend fun getBuilds(
+        mcVersion: String,
+        flavor: ForgeFlavor = ForgeFlavor.FORGE
+    ): Result<List<ForgeBuild>> = withContext(Dispatchers.IO) {
+        if (!isMcSupported(mcVersion, flavor)) {
             return@withContext Result.failure(
-                IllegalArgumentException("Forge hanya mendukung Minecraft $MIN_MC_VERSION ke atas")
+                IllegalArgumentException("${flavor.displayName} hanya mendukung Minecraft ${flavor.minMcVersion} ke atas")
             )
         }
-        cache[mcVersion]?.let { return@withContext Result.success(it) }
+        val key = "${flavor.loaderId}:$mcVersion"
+        cache[key]?.let { return@withContext Result.success(it) }
 
+        val result = when (flavor) {
+            ForgeFlavor.FORGE -> loadForgeBuilds(mcVersion)
+            ForgeFlavor.NEOFORGE -> loadNeoForgeBuilds(mcVersion)
+        }
+        result.getOrNull()?.let { cache[key] = it }
+        result
+    }
+
+    private suspend fun loadForgeBuilds(mcVersion: String): Result<List<ForgeBuild>> {
         val (promos, all) = coroutineScope {
             val p = async { runCatching { fetchPromos() }.getOrNull() }
             val l = async { runCatching { fetchBmclList(mcVersion) } }
@@ -87,14 +114,43 @@ object ForgeService {
 
         if (versions.isEmpty()) {
             val cause = all.exceptionOrNull() ?: IOException("Tidak ada versi Forge untuk $mcVersion")
-            return@withContext Result.failure(cause)
+            return Result.failure(cause)
         }
 
         val builds = versions
             .sortedWith(Comparator { a, b -> NuxVersionUtils.compare(b, a) })
             .map { ForgeBuild(mcVersion, it, recommended = it == recommended, latest = it == latest) }
-        cache[mcVersion] = builds
-        Result.success(builds)
+        return Result.success(builds)
+    }
+
+    private fun loadNeoForgeBuilds(mcVersion: String): Result<List<ForgeBuild>> {
+        var failure: Throwable? = null
+
+        // Metadata resmi memuat semua versi sekaligus, jadi cukup diambil sekali per sesi
+        val official = neoForgeByMc ?: try {
+            NeoForgeVersions.groupByMc(NeoForgeVersions.parseMetadataVersions(httpGet(NEO_METADATA_URL)))
+                .takeIf { it.isNotEmpty() }
+                ?.also { neoForgeByMc = it }
+        } catch (e: Exception) {
+            failure = e
+            null
+        }
+        official?.get(mcVersion)?.let { versions ->
+            val builds = NeoForgeVersions.toBuilds(mcVersion, versions)
+            if (builds.isNotEmpty()) return Result.success(builds)
+        }
+
+        // Cadangan: mirror BMCLAPI, dipakai bila server resmi tak terjangkau
+        try {
+            val builds = NeoForgeVersions.toBuilds(
+                mcVersion,
+                NeoForgeVersions.parseBmclList(httpGet("$NEO_BMCL_LIST_URL/$mcVersion"))
+            )
+            if (builds.isNotEmpty()) return Result.success(builds)
+        } catch (e: Exception) {
+            if (failure == null) failure = e
+        }
+        return Result.failure(failure ?: IOException("Tidak ada versi NeoForge untuk $mcVersion"))
     }
 
     /** Peta "<mc>-recommended" / "<mc>-latest" -> versi Forge, dari server resmi. */

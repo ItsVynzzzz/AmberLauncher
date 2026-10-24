@@ -127,5 +127,6 @@ Body stream kosong	Flujo de datos vac\u00edo
 Gagal menyimpan file unduhan	No se pudo guardar el archivo descargado
 Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	El archivo {0} est\u00e1 da\u00f1ado o se alter\u00f3 durante la descarga (la huella no coincide), as\u00ed que no se instal\u00f3.
 Isi modpack terlalu besar, pemasangan dibatalkan.	El contenido del modpack es demasiado grande, se cancel\u00f3 la instalaci\u00f3n.
-Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge.	Este modpack requiere {0}, pero AmberLauncher por ahora solo es compatible con Fabric y Forge.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack requiere {0}, pero AmberLauncher por ahora solo es compatible con Fabric, Forge y NeoForge.
 Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Este modpack requiere Forge. Crea primero una instancia de Forge y luego instala el modpack en ella.
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Este modpack requiere NeoForge. Crea primero una instancia de NeoForge y luego instala el modpack en ella.

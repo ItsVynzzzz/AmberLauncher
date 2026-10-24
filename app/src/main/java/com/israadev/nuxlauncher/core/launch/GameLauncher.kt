@@ -68,12 +68,12 @@ object GameLauncher {
             }
         }
 
-        // Forge: profil dibuat saat instance diunduh; peluncuran hanya membaca berkas kecil itu
-        val isForge = instance.loader.equals("forge", ignoreCase = true)
+        // Forge/NeoForge: profil dibuat saat instance diunduh; peluncuran hanya membaca berkas kecil itu
+        val forgeFlavor = com.israadev.nuxlauncher.core.forge.ForgeFlavor.of(instance.loader)
         var forgeLaunch: com.israadev.nuxlauncher.core.forge.ForgeLaunchInfo? = null
-        if (isForge) {
+        if (forgeFlavor != null) {
             val forgeProfileFile = com.israadev.nuxlauncher.core.forge.ForgeInstaller.findProfileFile(
-                context, instance.mcVersion, instance.loaderVersion
+                context, instance.mcVersion, instance.loaderVersion, forgeFlavor
             )
             forgeLaunch = forgeProfileFile?.let {
                 com.israadev.nuxlauncher.core.forge.ForgeLaunch.resolve(
@@ -83,7 +83,7 @@ object GameLauncher {
             if (forgeLaunch == null) {
                 com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
                     context,
-                    "Profil Forge (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
+                    "Profil ${forgeFlavor.displayName} (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
                     com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
                 ).show()
                 return

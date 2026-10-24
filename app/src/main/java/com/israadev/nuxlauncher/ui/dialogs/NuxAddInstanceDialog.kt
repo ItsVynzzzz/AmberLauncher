@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.fabric.FabricService
 import com.israadev.nuxlauncher.core.forge.ForgeBuild
+import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.forge.ForgeService
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.Instance
@@ -71,10 +72,15 @@ enum class VersionCategory(val label: String) {
     ALL("Semua")
 }
 
-/** Satu baris pilihan versi loader (Fabric/Forge): [tag] kosong bila tidak ada keterangan. */
+/** Satu baris pilihan versi loader (Fabric/Forge/NeoForge): [tag] kosong bila tidak ada keterangan. */
 private class LoaderChoice(val id: String, val tag: String)
 
-private val LOADERS = listOf("vanilla" to "Vanilla", "fabric" to "Fabric", "forge" to "Forge")
+private val LOADERS = listOf(
+    "vanilla" to "Vanilla",
+    "fabric" to "Fabric",
+    "forge" to "Forge",
+    "neoforge" to "NeoForge"
+)
 private val LOADER_LABELS = LOADERS.map { it.second }
 
 /**
@@ -90,8 +96,9 @@ fun NuxAddInstanceDialog(
 ) {
     var instanceName by remember { mutableStateOf("") }
     var selectedVersion by remember { mutableStateOf("1.21.1") }
-    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla", "fabric", atau "forge"
+    var selectedLoader by remember { mutableStateOf("vanilla") } // "vanilla", "fabric", "forge", atau "neoforge"
     var selectedFabricVersion by remember { mutableStateOf("") }
+    // Forge dan NeoForge memakai satu set state: daftar dimuat ulang tiap loader/versi Minecraft berganti
     var selectedForgeVersion by remember { mutableStateOf("") }
 
     var versionsList by remember { mutableStateOf<List<VersionItem>>(emptyList()) }
@@ -137,13 +144,14 @@ fun NuxAddInstanceDialog(
         }
     }
 
-    // Forge hanya dimuat saat dipilih (tidak ada permintaan jaringan sebelumnya)
+    // Forge/NeoForge hanya dimuat saat dipilih (tidak ada permintaan jaringan sebelumnya)
     LaunchedEffect(selectedVersion, selectedLoader) {
-        if (selectedLoader == "forge") {
+        val flavor = ForgeFlavor.of(selectedLoader)
+        if (flavor != null) {
             isLoadingForge = true
             forgeBuildsList = emptyList()
             selectedForgeVersion = ""
-            val builds = ForgeService.getBuilds(selectedVersion).getOrNull() ?: emptyList()
+            val builds = ForgeService.getBuilds(selectedVersion, flavor).getOrNull() ?: emptyList()
             forgeBuildsList = builds
             selectedForgeVersion = ForgeService.pickDefault(builds)?.version ?: ""
             isLoadingForge = false
@@ -180,13 +188,16 @@ fun NuxAddInstanceDialog(
         fabricVersionsList.take(30).map { LoaderChoice(it, "") }
     }
 
+    val forgeFlavor = ForgeFlavor.of(selectedLoader)
+    val forgeName = forgeFlavor?.displayName ?: "Forge"
+
     val canCreate = !(selectedLoader == "fabric" && (isLoadingFabric || selectedFabricVersion.isBlank())) &&
-        !(selectedLoader == "forge" && (isLoadingForge || selectedForgeVersion.isBlank()))
+        !(forgeFlavor != null && (isLoadingForge || selectedForgeVersion.isBlank()))
 
     val loaderLabel = LOADERS.firstOrNull { it.first == selectedLoader }?.second ?: "Vanilla"
-    val loaderVersionNow = when (selectedLoader) {
-        "fabric" -> selectedFabricVersion
-        "forge" -> selectedForgeVersion
+    val loaderVersionNow = when {
+        selectedLoader == "fabric" -> selectedFabricVersion
+        forgeFlavor != null -> selectedForgeVersion
         else -> ""
     }
 
@@ -286,16 +297,16 @@ fun NuxAddInstanceDialog(
                                 )
                             }
 
-                            if (selectedLoader == "forge") {
+                            if (forgeFlavor != null) {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 AiLoaderPicker(
-                                    prefix = "Forge",
+                                    prefix = forgeName,
                                     loading = isLoadingForge,
-                                    loadingText = "Memuat versi Forge...",
-                                    emptyText = if (ForgeService.isMcSupported(selectedVersion)) {
-                                        "⚠️ Forge belum tersedia untuk $selectedVersion"
+                                    loadingText = "Memuat versi $forgeName...",
+                                    emptyText = if (ForgeService.isMcSupported(selectedVersion, forgeFlavor)) {
+                                        "⚠️ $forgeName belum tersedia untuk $selectedVersion"
                                     } else {
-                                        "⚠️ Forge hanya untuk Minecraft 1.13 ke atas"
+                                        "⚠️ $forgeName hanya untuk Minecraft ${forgeFlavor.minMcVersion} ke atas"
                                     },
                                     choices = forgeChoices,
                                     selectedId = selectedForgeVersion,
@@ -307,7 +318,7 @@ fun NuxAddInstanceDialog(
                                     }
                                 )
                                 Text(
-                                    text = "Forge dipasang sekali saat instance diunduh pertama kali.",
+                                    text = "$forgeName dipasang sekali saat instance diunduh pertama kali.",
                                     color = Amber.TextDim,
                                     fontSize = 12.sp,
                                     lineHeight = 17.sp,
@@ -329,8 +340,8 @@ fun NuxAddInstanceDialog(
                         text = when {
                             isLoadingFabric && selectedLoader == "fabric" -> "Memuat Fabric..."
                             selectedLoader == "fabric" && selectedFabricVersion.isBlank() -> "Fabric Tidak Tersedia"
-                            isLoadingForge && selectedLoader == "forge" -> "Memuat Forge..."
-                            selectedLoader == "forge" && selectedForgeVersion.isBlank() -> "Forge Tidak Tersedia"
+                            isLoadingForge && forgeFlavor != null -> "Memuat $forgeName..."
+                            forgeFlavor != null && selectedForgeVersion.isBlank() -> "$forgeName Tidak Tersedia"
                             else -> "Buat Instance Sekarang"
                         },
                         onClick = {
@@ -653,7 +664,7 @@ private fun AiVersionRow(item: VersionItem, selected: Boolean, onClick: () -> Un
 }
 
 /**
- * Pemilih versi loader (Fabric/Forge): baris ringkas yang membuka daftar di tempat. Saat memuat atau
+ * Pemilih versi loader (Fabric/Forge/NeoForge): baris ringkas yang membuka daftar di tempat. Saat memuat atau
  * kosong barisnya hanya menampilkan keterangan dan tidak bisa dibuka.
  */
 @Composable

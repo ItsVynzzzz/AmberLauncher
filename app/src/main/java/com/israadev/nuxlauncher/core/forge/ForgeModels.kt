@@ -1,11 +1,46 @@
 package com.israadev.nuxlauncher.core.forge
 
 /**
- * Model data Forge (hanya Forge modern, Minecraft 1.13 ke atas).
+ * Model data Forge dan NeoForge (hanya yang modern: Forge 1.13 ke atas, NeoForge 1.20.2 ke atas).
  *
  * Semua field dibuat nullable dengan nilai bawaan karena diisi Gson dari JSON milik installer Forge
  * (Gson tidak memanggil konstruktor, jadi field yang tidak ada di JSON bernilai null).
  */
+
+/**
+ * Jenis loader bergaya Forge modern. Forge dan NeoForge memakai format installer yang sama
+ * (`install_profile.json` + `version.json` + processors), jadi satu mesin pemasangan melayani keduanya.
+ */
+enum class ForgeFlavor(
+    /** Nilai `Instance.loader`; sama dengan id loader di Modrinth. */
+    val loaderId: String,
+    val displayName: String,
+    /** Versi Minecraft terendah yang didukung. */
+    val minMcVersion: String
+) {
+    FORGE("forge", "Forge", "1.13"),
+    NEOFORGE("neoforge", "NeoForge", "1.20.2");
+
+    /** Nama berkas penanda "terpasang" di versions/<mc>/. */
+    fun markerName(version: String): String = "$loaderId-$version.json"
+
+    /** Folder library hasil pemasangan, relatif terhadap folder libraries. */
+    fun libraryDir(mcVersion: String, version: String): String = when (this) {
+        FORGE -> "net/minecraftforge/forge/$mcVersion-$version"
+        NEOFORGE -> "net/neoforged/neoforge/$version"
+    }
+
+    companion object {
+        /** Jenis untuk nilai `Instance.loader`, atau null bila bukan loader bergaya Forge. */
+        fun of(loader: String?): ForgeFlavor? {
+            val id = loader?.trim() ?: return null
+            return values().firstOrNull { it.loaderId.equals(id, ignoreCase = true) }
+        }
+
+        /** Nama tampilan loader: "NeoForge" untuk neoforge, selain itu huruf pertama dibesarkan ("Fabric", "Vanilla"). */
+        fun label(loader: String): String = of(loader)?.displayName ?: loader.replaceFirstChar { it.uppercase() }
+    }
+}
 
 /** Satu build Forge untuk satu versi Minecraft. [version] contoh "47.2.0". */
 data class ForgeBuild(

@@ -18,8 +18,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.RandomAccessFile
 
-/** Hasil satu kali menjalankan installer Forge. [exitCode] 0 = berhasil. */
-internal class ForgeRunResult(val exitCode: Int, val log: String) {
+/** Hasil satu kali menjalankan installer Forge/NeoForge. [exitCode] 0 = berhasil; [label] = nama loadernya. */
+internal class ForgeRunResult(val exitCode: Int, val log: String, val label: String = "Forge") {
 
     /** Ringkasan alasan gagal untuk ditampilkan ke pengguna: baris galat terakhir dari log. */
     fun describeFailure(): String {
@@ -28,10 +28,10 @@ internal class ForgeRunResult(val exitCode: Int, val log: String) {
             it.contains("error", ignoreCase = true) || it.contains("exception", ignoreCase = true) ||
                 it.contains("failed", ignoreCase = true) || it.contains("missing", ignoreCase = true) ||
                 it.contains("checksum", ignoreCase = true) || it.contains("invalid", ignoreCase = true) ||
-                it.startsWith("[Forge]")
+                it.startsWith("[$label]")
         }
         val reason = (interesting.ifEmpty { lines }).takeLast(3).joinToString(" | ").take(400)
-        return "Installer Forge gagal (kode $exitCode)" + if (reason.isNotEmpty()) ": $reason" else ""
+        return "Installer $label gagal (kode $exitCode)" + if (reason.isNotEmpty()) ": $reason" else ""
     }
 }
 
@@ -45,11 +45,13 @@ internal object ForgeInstallRunner {
     private const val TIMEOUT_MS = 25 * 60 * 1000L
     private const val POLL_MS = 300L
 
+    /** Menjalankan [command] dari [installerJar] dengan runtime Java [runtimeName]; [label] = nama loader untuk log dan notifikasi. */
     suspend fun run(
         context: Context,
         installerJar: File,
-        targetDir: File,
+        command: InstallerCommand,
         runtimeName: String,
+        label: String,
         onLine: (String) -> Unit
     ): ForgeRunResult = withContext(Dispatchers.IO) {
         val app = context.applicationContext
@@ -61,7 +63,9 @@ internal object ForgeInstallRunner {
 
         val intent = Intent(app, ForgeInstallService::class.java)
             .putExtra(ForgeInstallService.EXTRA_INSTALLER, installerJar.absolutePath)
-            .putExtra(ForgeInstallService.EXTRA_TARGET, targetDir.absolutePath)
+            .putExtra(ForgeInstallService.EXTRA_MAIN_CLASS, command.mainClass)
+            .putExtra(ForgeInstallService.EXTRA_ARGS, command.args.toTypedArray())
+            .putExtra(ForgeInstallService.EXTRA_LABEL, label)
             .putExtra(
                 ForgeInstallService.EXTRA_RUNTIME_HOME,
                 JavaRuntimeManager.getRuntimeHome(app, runtimeName).absolutePath
@@ -104,7 +108,7 @@ internal object ForgeInstallRunner {
             }
             bound = app.bindService(intent, connection, Context.BIND_AUTO_CREATE)
             if (!bound) {
-                return@withContext ForgeRunResult(-1, "[Forge] Proses pemasangan tidak bisa dimulai")
+                return@withContext ForgeRunResult(-1, "[$label] Proses pemasangan tidak bisa dimulai", label)
             }
 
             val startedAt = SystemClock.elapsedRealtime()
@@ -123,18 +127,18 @@ internal object ForgeInstallRunner {
                     drain()
                     exitCode = resultFile.takeIf { it.exists() }?.readText()?.trim()?.toIntOrNull() ?: -1
                     if (exitCode != 0 && !resultFile.exists()) {
-                        tail.addLast("[Forge] Proses installer berhenti mendadak (kemungkinan RAM HP habis)")
+                        tail.addLast("[$label] Proses installer berhenti mendadak (kemungkinan RAM HP habis)")
                     }
                     break
                 }
                 if (SystemClock.elapsedRealtime() - startedAt > TIMEOUT_MS) {
                     exitCode = -2
-                    tail.addLast("[Forge] Waktu pemasangan habis")
+                    tail.addLast("[$label] Waktu pemasangan habis")
                     break
                 }
                 delay(POLL_MS)
             }
-            ForgeRunResult(exitCode, tail.joinToString("\n"))
+            ForgeRunResult(exitCode, tail.joinToString("\n"), label)
         } finally {
             if (bound) {
                 try {

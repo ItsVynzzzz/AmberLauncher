@@ -25,7 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 /**
- * Menjalankan installer resmi Forge (`SimpleInstaller --installClient --offline`) di JVM bawaan Amber.
+ * Menjalankan installer resmi Forge/NeoForge (misalnya `SimpleInstaller --installClient <folder> --offline`)
+ * di JVM bawaan Amber.
  *
  * Berjalan di proses `:forge` yang terpisah dari launcher dan dari game, karena sebuah proses hanya
  * bisa membuat satu JVM dan JVM yang selesai mematikan prosesnya. Proses ini hidup hanya selama
@@ -40,7 +41,9 @@ class ForgeInstallService : Service() {
 
     companion object {
         const val EXTRA_INSTALLER = "forge_installer"
-        const val EXTRA_TARGET = "forge_target"
+        const val EXTRA_MAIN_CLASS = "forge_main_class"
+        const val EXTRA_ARGS = "forge_args"
+        const val EXTRA_LABEL = "forge_label"
         const val EXTRA_RUNTIME_HOME = "forge_runtime_home"
 
         const val LOG_NAME = "installer.log"
@@ -59,6 +62,10 @@ class ForgeInstallService : Service() {
     @Volatile
     private var logWriter: Writer? = null
 
+    /** Nama loader ("Forge"/"NeoForge") untuk notifikasi dan awalan baris log. */
+    @Volatile
+    private var label = "Forge"
+
     /**
      * Terikat dari proses utama. Ikatan inilah yang menjamin installer jalan walau startForegroundService
      * ditolak (Android 12+ melarang memulainya saat aplikasi di latar belakang, misalnya pengguna
@@ -70,6 +77,7 @@ class ForgeInstallService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.getStringExtra(EXTRA_LABEL)?.takeIf { it.isNotBlank() }?.let { label = it }
         startAsForeground()
         if (!begin(intent)) stopSelf()
         return START_NOT_STICKY
@@ -78,12 +86,14 @@ class ForgeInstallService : Service() {
     /** Memulai thread installer sekali saja. False bila [intent] tidak membawa parameter yang lengkap. */
     private fun begin(intent: Intent?): Boolean {
         val installer = intent?.getStringExtra(EXTRA_INSTALLER)
-        val target = intent?.getStringExtra(EXTRA_TARGET)
+        val mainClass = intent?.getStringExtra(EXTRA_MAIN_CLASS)
+        val installerArgs = intent?.getStringArrayExtra(EXTRA_ARGS)
         val runtimeHome = intent?.getStringExtra(EXTRA_RUNTIME_HOME)
-        if (installer == null || target == null || runtimeHome == null) return false
+        if (installer == null || mainClass == null || installerArgs == null || runtimeHome == null) return false
+        intent?.getStringExtra(EXTRA_LABEL)?.takeIf { it.isNotBlank() }?.let { label = it }
         if (started.compareAndSet(false, true)) {
             thread(name = "Amber-Forge-Installer") {
-                runInstaller(File(installer), File(target), File(runtimeHome))
+                runInstaller(File(installer), mainClass, installerArgs.toList(), File(runtimeHome))
             }
         }
         return true
@@ -106,8 +116,8 @@ class ForgeInstallService : Service() {
             }
             val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
-                .setContentTitle(Tr.t("Memasang Forge"))
-                .setContentText(Tr.t("Proses ini hanya berjalan sekali per versi Forge."))
+                .setContentTitle(Tr.t("Memasang $label"))
+                .setContentText(Tr.t("Proses ini hanya berjalan sekali per versi $label."))
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
@@ -125,7 +135,7 @@ class ForgeInstallService : Service() {
 
     // ---------------------------------------------------------------- JVM
 
-    private fun runInstaller(installer: File, target: File, runtimeHome: File) {
+    private fun runInstaller(installer: File, mainClass: String, installerArgs: List<String>, runtimeHome: File) {
         val work = workDir(this)
         work.mkdirs()
         try {
@@ -134,7 +144,7 @@ class ForgeInstallService : Service() {
         }
         try {
             ZLNativeInvoker.onExitCallback = { exitCode, _ ->
-                log("[Forge] JVM keluar dengan kode $exitCode")
+                log("[$label] JVM keluar dengan kode $exitCode")
                 finish(exitCode)
             }
             LoggerBridge.setListener { text -> if (text != null) log(text) }
@@ -148,13 +158,13 @@ class ForgeInstallService : Service() {
             if (!nativeOut.exists()) throw java.io.IOException("Tidak bisa membuat ${nativeOut.absolutePath}")
             LoggerBridge.start(nativeOut.absolutePath)
 
-            val args = prepareJvm(installer, target, runtimeHome, work)
-            log("[Forge] Menjalankan installer: ${args.joinToString(" ")}")
+            val args = prepareJvm(installer, mainClass, installerArgs, runtimeHome, work)
+            log("[$label] Menjalankan installer: ${args.joinToString(" ")}")
             val code = VMLauncher.launchJVM(args.toTypedArray())
             finish(code)
         } catch (t: Throwable) {
             // Nama kelas ikut ditulis supaya penyebabnya terbaca dari pesan galat di layar
-            log("[Forge] ERROR: ${t.javaClass.simpleName}: ${t.message ?: ""}".trimEnd(' ', ':'))
+            log("[$label] ERROR: ${t.javaClass.simpleName}: ${t.message ?: ""}".trimEnd(' ', ':'))
             t.stackTrace.take(8).forEach { log("    at $it") }
             finish(-1)
         } finally {
@@ -163,7 +173,13 @@ class ForgeInstallService : Service() {
     }
 
     /** Menyiapkan lingkungan JVM (jalur pustaka, pre-dlopen runtime) dan mengembalikan argumen peluncuran. */
-    private fun prepareJvm(installer: File, target: File, runtimeHome: File, work: File): List<String> {
+    private fun prepareJvm(
+        installer: File,
+        mainClass: String,
+        installerArgs: List<String>,
+        runtimeHome: File,
+        work: File
+    ): List<String> {
         val nativeLibDir = applicationInfo.nativeLibraryDir
         val rh = runtimeHome.absolutePath
         val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
@@ -225,11 +241,11 @@ class ForgeInstallService : Service() {
         } catch (_: Throwable) {
             4096
         }
-        // Cukup untuk processor Forge, tetapi tidak merebut RAM HP kecil
+        // Cukup untuk processor Forge/NeoForge, tetapi tidak merebut RAM HP kecil
         var heapMb = (totalMb / 4).coerceIn(384, 768)
         if (!android.os.Process.is64Bit()) heapMb = minOf(heapMb, 640)
 
-        return listOf(
+        val jvmArgs = listOf(
             "$rh/bin/java",
             "-Djava.home=$rh",
             "-Djava.io.tmpdir=${cacheDir.absolutePath}",
@@ -248,10 +264,9 @@ class ForgeInstallService : Service() {
             "-Xms64M",
             "-Xmx${heapMb}M",
             "-cp", installer.absolutePath,
-            "net.minecraftforge.installer.SimpleInstaller",
-            "--installClient", target.absolutePath,
-            "--offline"
+            mainClass
         )
+        return jvmArgs + installerArgs
     }
 
     /** Memuat pustaka inti JRE lebih dulu dengan path absolut, sama seperti proses game. */

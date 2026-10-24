@@ -928,24 +928,25 @@ object NuxModManager {
     private fun checkModpackCompatibility(indexJson: com.google.gson.JsonObject, instance: Instance) {
         val deps = indexJson.getAsJsonObject("dependencies") ?: return
 
-        val otherLoader = listOf("neoforge" to "NeoForge", "quilt-loader" to "Quilt")
+        val otherLoader = listOf("quilt-loader" to "Quilt")
             .firstOrNull { deps.has(it.first) }
-        val needsFabric = deps.has("fabric-loader")
-        val needsForge = deps.has("forge")
+        // Satu modpack hanya punya satu loader; bila ada beberapa, Fabric diutamakan
+        val requiredLoader = when {
+            deps.has("fabric-loader") -> "fabric" to "Fabric"
+            deps.has("neoforge") -> "neoforge" to "NeoForge"
+            deps.has("forge") -> "forge" to "Forge"
+            else -> null
+        }
 
-        if (!needsFabric && !needsForge && otherLoader != null) {
+        if (requiredLoader == null && otherLoader != null) {
             throw ModpackIncompatibleException(
-                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric dan Forge."
+                "Modpack ini membutuhkan ${otherLoader.second}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge."
             )
         }
-        if (needsForge && !needsFabric && !instance.loader.equals("forge", ignoreCase = true)) {
+        if (requiredLoader != null && !instance.loader.equals(requiredLoader.first, ignoreCase = true)) {
             throw ModpackIncompatibleException(
-                "Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu."
-            )
-        }
-        if (needsFabric && !instance.loader.equals("fabric", ignoreCase = true)) {
-            throw ModpackIncompatibleException(
-                "Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu."
+                "Modpack ini membutuhkan ${requiredLoader.second}. " +
+                    "Buat instance ${requiredLoader.second} dulu, lalu pasang modpack di instance itu."
             )
         }
 

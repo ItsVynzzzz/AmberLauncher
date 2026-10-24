@@ -848,7 +848,7 @@ private fun HomeScene(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = instance.loader.replaceFirstChar { it.uppercase() },
+                        text = com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(instance.loader),
                         color = NuxColors.Yellow,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 13.sp,
@@ -1507,7 +1507,7 @@ private fun InstancePickerDialog(
                                     overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
-                                    text = "${inst.mcVersion} · ${inst.loader.replaceFirstChar { it.uppercase() }}",
+                                    text = "${inst.mcVersion} · ${com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(inst.loader)}",
                                     color = NuxColors.GrayNeutral,
                                     fontSize = 12.sp,
                                     maxLines = 1

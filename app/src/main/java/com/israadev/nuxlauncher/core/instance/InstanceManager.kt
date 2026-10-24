@@ -384,9 +384,10 @@ object InstanceManager {
                 return false
             }
         }
-        if (inst.loader.equals("forge", ignoreCase = true)) {
+        val forgeFlavor = com.israadev.nuxlauncher.core.forge.ForgeFlavor.of(inst.loader)
+        if (forgeFlavor != null) {
             // Hanya cek keberadaan berkas (fungsi ini dipanggil dari komposisi UI)
-            if (!com.israadev.nuxlauncher.core.forge.ForgeInstaller.isInstalled(context, inst.mcVersion, inst.loaderVersion)) {
+            if (!com.israadev.nuxlauncher.core.forge.ForgeInstaller.isInstalled(context, inst.mcVersion, inst.loaderVersion, forgeFlavor)) {
                 return false
             }
         }

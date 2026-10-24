@@ -494,6 +494,30 @@ fun CustomGuiEditorScreen(
                                     inactiveTrackColor = Color(0xFF2E2E2E)
                                 )
                             )
+
+                            // Lari otomatis (khusus joystick)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Lari otomatis:", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                    Text("Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
+                                }
+                                Switch(
+                                    checked = selectedButton.autoSprint,
+                                    onCheckedChange = { on ->
+                                        buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(autoSprint = on) else it }
+                                    },
+                                    colors = SwitchDefaults.colors(
+                                        checkedThumbColor = Color(0xFF111111),
+                                        checkedTrackColor = Color(0xFFFFD60A),
+                                        uncheckedThumbColor = Color(0xFF757575),
+                                        uncheckedTrackColor = Color(0xFF2E2E2E)
+                                    )
+                                )
+                            }
                         } else {
                             // 2. Mapped Keycode / Input
                             Text("Tombol / Aksi Input:", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))

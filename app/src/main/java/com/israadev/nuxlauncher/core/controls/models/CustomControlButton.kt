@@ -23,6 +23,9 @@ data class CustomControlButton(
     val isSystem: Boolean = false,
     val systemAction: String = "", // "FPS", "KEYBOARD", "HIDE_GUI", "MENU" ("CLOSE" = nama lama MENU)
     val isJoystick: Boolean = false, // Virtual analog WASD joystick
+    // Khusus joystick: dorong sampai tepi lingkaran = lari otomatis (Ctrl). Mati = tidak pernah lari
+    // lewat joystick. Layout lama tanpa kolom ini tetap lari otomatis (nilai bawaan).
+    val autoSprint: Boolean = true,
     // Macro Settings
     val isMacro: Boolean = false,
     val macroType: String = "COMMAND", // "COMMAND", "COMBO", "TURBO"

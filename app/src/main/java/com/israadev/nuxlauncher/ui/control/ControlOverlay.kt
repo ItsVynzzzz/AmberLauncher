@@ -239,9 +239,30 @@ fun CustomVirtualButton(
     var turboJob by remember { mutableStateOf<Job?>(null) }
     val spec = remember(button) { skinSpecFor(button) }
 
+    // Nilai terbaru tombol dibaca saat dilepas dari layar, bukan salinan saat pertama disusun.
+    val currentButton by rememberUpdatedState(button)
+
     DisposableEffect(button.id) {
         onDispose {
             turboJob?.cancel()
+            // Tombol kunci (toggle) yang sedang aktif dilepas saat tombolnya hilang dari layar
+            // (mis. kontrol disembunyikan). Tanpa ini tombol (Shift/Ctrl, dll.) tetap tertahan di
+            // game padahal tombol di layar sudah terlihat mati, dan butuh dua ketukan untuk memperbaikinya.
+            val b = currentButton
+            val plainToggle = b.isToggle && !b.isScroll && !(b.isMacro && b.macroType == "COMMAND")
+            if (plainToggle && isPressed) {
+                if (b.isMacro && b.macroType == "COMBO") {
+                    val keys = if (b.macroComboKeys.isNotEmpty()) b.macroComboKeys
+                    else if (b.macroComboKey != 0) listOf(b.macroComboKey) else emptyList()
+                    if (b.isMouseButton) CallbackBridge.putMouseEvent(b.mouseButton, false)
+                    else CallbackBridge.sendKeyPress(b.keyCode, false)
+                    for (k in keys.asReversed()) CallbackBridge.sendKeyPress(k, false)
+                } else if (b.isMouseButton) {
+                    CallbackBridge.putMouseEvent(b.mouseButton, false)
+                } else {
+                    CallbackBridge.sendKeyPress(b.keyCode, false)
+                }
+            }
         }
     }
 
@@ -510,7 +531,8 @@ fun CustomVirtualButton(
 
 /**
  * Joystick WASD dengan kunci lari: dorong sampai tepi lingkaran supaya lari otomatis (Ctrl
- * ditahan) selama maju masih ditahan. Dilepas = berhenti.
+ * ditahan) selama maju masih ditahan. Dilepas = berhenti. Lari otomatis bisa dimatikan per joystick
+ * di editor tombol ([CustomControlButton.autoSprint]).
  */
 @Composable
 fun CustomVirtualJoystick(
@@ -526,6 +548,8 @@ fun CustomVirtualJoystick(
     var knobOffset by remember { mutableStateOf(Offset.Zero) }
     var isTouching by remember { mutableStateOf(false) }
     var sprint by remember { mutableStateOf(false) }
+    // Dibaca saat jari bergerak, jadi perubahan dari editor langsung dipakai tanpa menyusun ulang.
+    val autoSprint by rememberUpdatedState(button.autoSprint)
 
     // Posisi kenop yang terakhir digambar. Kenop hanya digambar ulang bila bergeser cukup jauh:
     // jari yang ditahan hampir selalu bergetar 1-2 piksel, dan tiap penggambaran ulang berarti
@@ -619,7 +643,8 @@ fun CustomVirtualJoystick(
 
                                 updateKeys(w, a, s, d)
                                 // Kunci lari: sampai tepi lingkaran sambil maju; berhenti saat tidak maju lagi.
-                                if (!w) {
+                                // Bila lari otomatis dimatikan di editor, joystick tidak pernah menahan Ctrl.
+                                if (!w || !autoSprint) {
                                     setSprint(false)
                                 } else if (dist >= radiusPx * 0.98f) {
                                     setSprint(true)

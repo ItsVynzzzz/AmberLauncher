@@ -22,6 +22,7 @@ import com.movtery.zalithlauncher.bridge.ZLBridgeStates;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import com.israadev.nuxlauncher.core.game.input.EfficientAndroidLWJGLKeycode;
+import com.israadev.nuxlauncher.core.game.input.ModifierKeys;
 import com.movtery.zalithlauncher.game.sdl.SdlBridge;
 import org.libsdl.app.SDLActivity;
 import org.libsdl.app.SDLSurface;
@@ -261,8 +262,11 @@ public class CallbackBridge {
     public static volatile boolean holdingNumlock = false;
     public static volatile boolean holdingShift = false;
 
+    /** Shift/Ctrl/Alt yang ditahan lewat sendKeycode (keyboard fisik dan tombol layar virtual). */
+    private static final ModifierKeys sHeldModifiers = new ModifierKeys();
+
     public static int getCurrentMods() {
-        int v = 0;
+        int v = sHeldModifiers.heldMods();
         if (holdingAlt) v |= LwjglGlfwKeycode.GLFW_MOD_ALT;
         if (holdingCapslock) v |= LwjglGlfwKeycode.GLFW_MOD_CAPS_LOCK;
         if (holdingCtrl) v |= LwjglGlfwKeycode.GLFW_MOD_CONTROL;
@@ -328,6 +332,9 @@ public class CallbackBridge {
     }
 
     public static void sendKeycode(int keycode, char keychar, int scancode, int modifiers, boolean isDown) {
+        // Catat Shift/Ctrl/Alt supaya klik mouse dan tombol berikutnya membawa "mods" yang benar
+        // (Minecraft baru membaca Shift + klik di inventory dari sini).
+        modifiers = sHeldModifiers.onKey(keycode, isDown, modifiers);
         if (keycode > LwjglGlfwKeycode.GLFW_KEY_UNKNOWN && keycode <= LwjglGlfwKeycode.GLFW_KEY_LAST) {
             nativeSendKey(keycode, scancode, isDown ? 1 : 0, modifiers);
         }
@@ -410,6 +417,7 @@ public class CallbackBridge {
         holdingCtrl = false;
         holdingNumlock = false;
         holdingShift = false;
+        sHeldModifiers.clear();
     }
 
     // Native functions registered by libpojavexec.so

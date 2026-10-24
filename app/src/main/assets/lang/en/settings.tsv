@@ -95,3 +95,16 @@ Hotbar sentuh	Touch hotbar
 Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.
 Dukungan TouchController	TouchController support
 Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Turn on only if you use the TouchController mod: the built-in controls are hidden (only the menu gear stays) and all screen touches are passed to the mod. If the screen stops responding, turn it off.
+# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+Optimasi HP RAM kecil	Low-RAM phone tuning
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	This phone has {0} MB of RAM, so how Java's memory cleaner works can be tuned.
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: lightest on the processor, with slightly longer GC pauses. Try it if the game often stutters.
+Bawaan: tanpa flag GC tambahan dari launcher.	Default: no extra GC flags from the launcher.
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Auto: G1 with limited memory, good for most phones. Try this first.
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Applies the next time the game starts. To compare, look at the [Kinerja] lines in the game log.
+Mode Hemat	Power Saver Mode
+Untuk HP yang cepat panas atau baterainya cepat habis.	For phones that get hot quickly or drain the battery fast.
+Nyalakan Mode Hemat	Turn on Power Saver Mode
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Turns on the system's sustained performance mode and Zink V-Sync, and caps the resolution scale at 80%.
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Applies the next time the game starts. Turning it off restores your previous settings.
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.

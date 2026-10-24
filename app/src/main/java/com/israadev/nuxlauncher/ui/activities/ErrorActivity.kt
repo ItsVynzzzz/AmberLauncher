@@ -117,7 +117,8 @@ class ErrorActivity : ComponentActivity() {
             crashType = crashType,
             loader = saved?.loader ?: "vanilla",
             loaderVersion = saved?.loaderVersion,
-            installedMods = saved?.installedMods.orEmpty()
+            installedMods = saved?.installedMods.orEmpty(),
+            gameDirPath = saved?.gameDirPath
         )
 
         setContent {

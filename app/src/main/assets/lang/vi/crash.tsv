@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Phi\u00ean b\u1ea3n Minecraft: {0}
 Jumlah mod: {0}	S\u1ed1 l\u01b0\u1ee3ng mod: {0}
 Daftar mod: {0}	Danh s\u00e1ch mod: {0}
 Isi log crash:	N\u1ed9i dung nh\u1eadt k\u00fd crash:
+# Pemulihan crash sekali ketuk
+Turunkan RAM ke {0} MB	H\u1ea1 RAM xu\u1ed1ng {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Gi\u00fap \u0111i\u1ec7n tho\u1ea1i c\u00f3 th\u00eam ch\u1ed7 tr\u1ed1ng. B\u1ea1n c\u00f3 th\u1ec3 t\u0103ng l\u1ea1i trong C\u00e0i \u0111\u1eb7t > B\u1ed9 nh\u1edb.
+Pakai renderer Otomatis	D\u00f9ng tr\u00ecnh k\u1ebft xu\u1ea5t T\u1ef1 \u0111\u1ed9ng
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	Tr\u00ecnh k\u1ebft xu\u1ea5t b\u1ea1n ch\u1ecdn c\u00f3 th\u1ec3 kh\u00f4ng h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y. T\u1ef1 \u0111\u1ed9ng s\u1ebd ch\u1ecdn lo\u1ea1i ph\u00f9 h\u1ee3p nh\u1ea5t.
+Coba renderer {0}	Th\u1eed tr\u00ecnh k\u1ebft xu\u1ea5t {0}
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	Tr\u00ecnh k\u1ebft xu\u1ea5t hi\u1ec7n t\u1ea1i c\u00f3 v\u1ebb g\u1eb7p v\u1ea5n \u0111\u1ec1 tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y. B\u1ea1n c\u00f3 th\u1ec3 \u0111\u1ed5i l\u1ea1i trong C\u00e0i \u0111\u1eb7t > \u0110\u1ed3 h\u1ecda.
+Matikan shader	T\u1eaft shader
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shader l\u00e0m GPU v\u00e0 b\u1ed9 nh\u1edb ch\u1ecbu t\u1ea3i n\u1eb7ng. B\u1ea1n c\u00f3 th\u1ec3 b\u1eadt l\u1ea1i t\u1eeb menu video c\u1ee7a game.
+Nonaktifkan mod tersangka	V\u00f4 hi\u1ec7u h\u00f3a mod nghi v\u1ea5n
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	C\u00e1c mod \u0111\u01b0\u1ee3c nh\u1eafc trong nh\u1eadt k\u00fd: {0}. B\u1ea1n c\u00f3 th\u1ec3 b\u1eadt l\u1ea1i trong menu Mod.
+Reset Java ke Otomatis	\u0110\u1eb7t l\u1ea1i Java v\u1ec1 T\u1ef1 \u0111\u1ed9ng
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	Phi\u00ean b\u1ea3n Java b\u1ea1n ch\u1ecdn c\u00f3 th\u1ec3 kh\u00f4ng kh\u1edbp v\u1edbi game n\u00e0y. T\u1ef1 \u0111\u1ed9ng s\u1ebd ch\u1ecdn phi\u00ean b\u1ea3n ph\u00f9 h\u1ee3p.
+RAM game diturunkan ke {0} MB.	\u0110\u00e3 h\u1ea1 RAM game xu\u1ed1ng {0} MB.
+Renderer dikembalikan ke Otomatis.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i tr\u00ecnh k\u1ebft xu\u1ea5t v\u1ec1 T\u1ef1 \u0111\u1ed9ng.
+Renderer diganti ke {0}.	\u0110\u00e3 \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t sang {0}.
+Shader dimatikan.	\u0110\u00e3 t\u1eaft shader.
+Mod dinonaktifkan: {0}.	\u0110\u00e3 v\u00f4 hi\u1ec7u h\u00f3a mod: {0}.
+Java dikembalikan ke Otomatis.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i Java v\u1ec1 T\u1ef1 \u0111\u1ed9ng.
+Gagal menerapkan. Coba lewat Pengaturan.	Kh\u00f4ng \u00e1p d\u1ee5ng \u0111\u01b0\u1ee3c. H\u00e3y th\u1eed trong C\u00e0i \u0111\u1eb7t.
+Pemulihan cepat	Kh\u1eafc ph\u1ee5c nhanh
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Ch\u1ea1m \u0111\u1ec3 th\u1eed c\u00e1c c\u00e1ch s\u1eeda c\u00f3 kh\u1ea3 n\u0103ng gi\u00fap nh\u1ea5t. M\u1ecdi thay \u0111\u1ed5i \u0111\u1ec1u c\u00f3 th\u1ec3 ho\u00e0n t\u00e1c.
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	\u0110\u00e3 l\u01b0u thay \u0111\u1ed5i. Quay l\u1ea1i launcher r\u1ed3i ch\u1ea1y game l\u1ea1i.
+Sudah diterapkan	\u0110\u00e3 \u00e1p d\u1ee5ng
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	Game d\u1eebng \u1edf ph\u1ea7n \u0111\u1ed3 h\u1ecda ho\u1eb7c th\u01b0 vi\u1ec7n c\u00f3 s\u1eb5n c\u1ee7a \u0111i\u1ec7n tho\u1ea1i. Nguy\u00ean nh\u00e2n th\u01b0\u1eddng g\u1eb7p l\u00e0 tr\u00ecnh k\u1ebft xu\u1ea5t kh\u00f4ng h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y. H\u00e3y th\u1eed \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t trong C\u00e0i \u0111\u1eb7t > \u0110\u1ed3 h\u1ecda. Ch\u1ec9 khi m\u1ecdi tr\u00ecnh k\u1ebft xu\u1ea5t \u0111\u1ec1u l\u1ed7i th\u00ec v\u1ea5n \u0111\u1ec1 m\u1edbi c\u00f3 th\u1ec3 n\u1eb1m \u1edf launcher.

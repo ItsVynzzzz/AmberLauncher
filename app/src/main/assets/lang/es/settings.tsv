@@ -95,3 +95,16 @@ Hotbar sentuh	Barra r\u00e1pida t\u00e1ctil
 Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toca la barra r\u00e1pida en la parte inferior de la pantalla para elegir una ranura, como en Minecraft Bedrock. Las posiciones siguen la escala de GUI del juego.
 Dukungan TouchController	Compatibilidad con TouchController
 Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Act\u00edvalo solo si usas el mod TouchController: los controles integrados se ocultan (solo queda el engranaje del men\u00fa) y todos los toques se env\u00edan al mod. Si la pantalla no responde, desact\u00edvalo.
+# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+Optimasi HP RAM kecil	Optimizaci\u00f3n para tel\u00e9fonos con poca RAM
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	Este tel\u00e9fono tiene {0} MB de RAM, as\u00ed que se puede ajustar c\u00f3mo trabaja el limpiador de memoria de Java.
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: el m\u00e1s ligero para el procesador, con pausas de GC algo m\u00e1s largas. Pru\u00e9balo si el juego se entrecorta a menudo.
+Bawaan: tanpa flag GC tambahan dari launcher.	Predeterminado: sin flags de GC adicionales del launcher.
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Auto: G1 con memoria limitada, adecuado para la mayor\u00eda de tel\u00e9fonos. Prueba este primero.
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Se aplica la pr\u00f3xima vez que inicies el juego. Para comparar, mira las l\u00edneas [Kinerja] del registro del juego.
+Mode Hemat	Modo Ahorro
+Untuk HP yang cepat panas atau baterainya cepat habis.	Para tel\u00e9fonos que se calientan r\u00e1pido o gastan mucha bater\u00eda.
+Nyalakan Mode Hemat	Activar Modo Ahorro
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Activa el modo de rendimiento sostenido del sistema y la V-Sync de Zink, y limita la escala de resoluci\u00f3n al 80 % como m\u00e1ximo.
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Se aplica la pr\u00f3xima vez que inicies el juego. Al desactivarlo se restauran tus ajustes anteriores.
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90/120 Hz se fija a 60 Hz mientras juegas para un movimiento m\u00e1s uniforme y algo menos de calor. Va bien si el juego rara vez llega a 90 FPS. El HUD de FPS muestra los Hz activos.

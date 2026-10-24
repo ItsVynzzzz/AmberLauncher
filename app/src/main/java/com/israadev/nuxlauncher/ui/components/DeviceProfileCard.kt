@@ -37,6 +37,85 @@ fun DeviceProfileCard() {
     val profile = DeviceProfiles.detect()
     if (profile != null) {
         DeviceProfileCardContent(profile)
+    } else {
+        GeneralGcCard()
+    }
+}
+
+/**
+ * HP tanpa profil khusus tetap boleh memilih mode GC bila RAM-nya kecil. Di HP RAM besar kartu
+ * ini tidak menggambar apa pun, jadi Pengaturan tampil seperti biasa.
+ */
+@Composable
+private fun GeneralGcCard() {
+    val context = LocalContext.current
+    val settings by SettingsManager.settings.collectAsState()
+    val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
+    if (!DeviceProfiles.isSmallRamPhone(totalRamMb)) return
+    val gcMode = DeviceProfiles.normalizeGeneralGcMode(settings.generalGcMode)
+
+    NuxCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        cornerRadius = 20.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 8.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.Memory,
+                    contentDescription = null,
+                    tint = NuxColors.Yellow,
+                    modifier = Modifier.size(22.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Column {
+                    Text(
+                        text = "Optimasi HP RAM kecil",
+                        fontWeight = FontWeight.Black,
+                        fontSize = 14.sp,
+                        color = NuxColors.DarkGray
+                    )
+                    Text(
+                        text = "RAM HP ini ${totalRamMb} MB, jadi cara kerja pembersih memori Java bisa disetel.",
+                        fontSize = 11.sp,
+                        color = NuxColors.GrayNeutral,
+                        lineHeight = 15.sp
+                    )
+                }
+            }
+            SettingChoiceRow(
+                title = "Mode GC (pembersih memori Java)",
+                desc = when (gcMode) {
+                    DeviceProfiles.GC_SERIAL ->
+                        "Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat."
+                    DeviceProfiles.GC_DEFAULT ->
+                        "Bawaan: tanpa flag GC tambahan dari launcher."
+                    else ->
+                        "Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu."
+                },
+                options = listOf(
+                    DeviceProfiles.GC_AUTO to "Otomatis",
+                    DeviceProfiles.GC_SERIAL to "Serial",
+                    DeviceProfiles.GC_DEFAULT to "Bawaan"
+                ),
+                selected = gcMode,
+                onSelect = { modeId ->
+                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(generalGcMode = modeId))
+                }
+            )
+            Text(
+                text = "Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.",
+                fontSize = 11.sp,
+                color = NuxColors.GrayNeutral,
+                lineHeight = 15.sp,
+                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
+            )
+        }
     }
 }
 

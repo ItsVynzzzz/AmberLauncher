@@ -44,6 +44,7 @@ import com.israadev.nuxlauncher.GameActivity
 import java.io.File
 import java.io.FileOutputStream
 import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.models.LauncherSettings
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
@@ -118,6 +119,7 @@ fun SettingsScreen(
     val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
     val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.85f).toInt().coerceAtLeast(1024) }
     val cpuCores = remember { SettingsManager.getCpuCoreCount() }
+    val showRefreshLock = remember { DeviceProfiles.detect() == null && DeviceProfiles.supportsHighRefresh(context) }
 
     fun commitSettings() {
         val updated = currentSettings.copy(
@@ -316,6 +318,9 @@ fun SettingsScreen(
                             NuxRendererRegistry.findRendererById(selectedRenderer)
                         }
 
+                        // Preset sekali ketuk untuk HP yang cepat panas atau baterainya boros.
+                        PowerSaverCard()
+
                         // Renderer aktif + tombol ganti / konfigurasi
                         Row(
                             modifier = Modifier
@@ -412,6 +417,18 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        // Kunci 60 Hz untuk layar 90/120 Hz. HP berprofil khusus mengaturnya di kartu profil (tab Memori).
+                        if (showRefreshLock) {
+                            SettingDivider()
+                            SettingSwitchRow(
+                                title = "Kunci layar 60 Hz",
+                                desc = "Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.",
+                                checked = currentSettings.lockRefresh60,
+                                onCheckedChange = { on ->
+                                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(lockRefresh60 = on))
+                                }
+                            )
+                        }
                         SettingDivider()
                         SettingChoiceRow(
                             title = "Driver Vulkan",

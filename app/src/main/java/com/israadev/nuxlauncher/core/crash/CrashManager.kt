@@ -23,7 +23,9 @@ data class GameCrashInfo(
     val crashType: String = CRASH_TYPE_GAME,
     val loader: String = "vanilla",
     val loaderVersion: String? = null,
-    val installedMods: List<String> = emptyList()
+    val installedMods: List<String> = emptyList(),
+    /** Folder game (minecraft) instance yang crash; dipakai tombol pemulihan. Kosong di catatan lama. */
+    val gameDirPath: String? = null
 ) {
     companion object {
         const val CRASH_TYPE_GAME = "GAME_CRASH"
@@ -196,7 +198,8 @@ object CrashManager {
                 crashType = crashType,
                 loader = loader,
                 loaderVersion = loaderVersion,
-                installedMods = resolvedMods
+                installedMods = resolvedMods,
+                gameDirPath = gameDirPath.takeIf { it.isNotBlank() }
             )
 
             val crashFile = File(filesDir, CRASH_FILE_NAME)
@@ -333,7 +336,8 @@ object CrashManager {
                         crashType = GameCrashInfo.CRASH_TYPE_GAME,
                         loader = session?.loader ?: "vanilla",
                         loaderVersion = session?.loaderVersion,
-                        installedMods = resolvedSessionMods
+                        installedMods = resolvedSessionMods,
+                        gameDirPath = session?.gameDirPath
                     )
 
                     val cf = File(context.filesDir, CRASH_FILE_NAME)
@@ -373,7 +377,8 @@ object CrashManager {
                                 crashType = GameCrashInfo.CRASH_TYPE_GAME,
                                 loader = inst.loader,
                                 loaderVersion = inst.loaderVersion,
-                                installedMods = fallbackMods
+                                installedMods = fallbackMods,
+                                gameDirPath = instGameDir.absolutePath
                             )
                             _activeCrash.value = info
                         }

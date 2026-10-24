@@ -1,0 +1,17 @@
+HSPLcom/israadev/nuxlauncher/NuxApplication;->onCreate()V
+HSPLcom/israadev/nuxlauncher/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/israadev/nuxlauncher/ui/screens/DashboardScreenKt;->DashboardScreen(Landroidx/compose/runtime/Composer;I)V
+HSPLcom/israadev/nuxlauncher/ui/i18n/Tr;->t(Ljava/lang/String;)Ljava/lang/String;
+HSPLcom/israadev/nuxlauncher/ui/i18n/Translator;->translate(Ljava/lang/String;)Ljava/lang/String;
+Lcom/israadev/nuxlauncher/NuxApplication;
+Lcom/israadev/nuxlauncher/MainActivity;
+Lcom/israadev/nuxlauncher/ui/screens/DashboardScreenKt;
+Lcom/israadev/nuxlauncher/ui/screens/SettingsScreenKt;
+Lcom/israadev/nuxlauncher/ui/components/NuxComponentsKt;
+Lcom/israadev/nuxlauncher/ui/components/NuxSettingPartsKt;
+Lcom/israadev/nuxlauncher/ui/components/AmberPartsKt;
+Lcom/israadev/nuxlauncher/ui/i18n/Tr;
+Lcom/israadev/nuxlauncher/ui/i18n/Translator;
+Lcom/israadev/nuxlauncher/ui/i18n/AmberTextKt;
+Lcom/israadev/nuxlauncher/core/settings/SettingsManager;
+Lcom/israadev/nuxlauncher/core/instance/InstanceManager;

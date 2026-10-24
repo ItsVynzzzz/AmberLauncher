@@ -49,6 +49,20 @@ data class LauncherSettings(
     val deviceProfileGcMode: String = "balanced", // "balanced", "serial", "default"
     val deviceProfileLockRefresh: Boolean = true,
 
+    // HP tanpa profil khusus: kunci layar 90/120 Hz ke 60 Hz selama game berjalan (bawaan mati;
+    // HP berprofil memakai deviceProfileLockRefresh di atas).
+    val lockRefresh60: Boolean = false,
+    // HP tanpa profil khusus dan RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
+    // (tanpa flag GC tambahan dari launcher).
+    val generalGcMode: String = "auto",
+
+    // Mode Hemat: preset sekali ketuk (mode performa stabil sistem, V-Sync Zink, resolusi maks 80%).
+    // Nilai sebelum dinyalakan disimpan supaya bisa dikembalikan saat dimatikan.
+    val powerSaverMode: Boolean = false,
+    val powerSaverPrevResolution: Int = 100,
+    val powerSaverPrevSustained: Boolean = false,
+    val powerSaverPrevVsync: Boolean = false,
+
     // Latar Beranda (foto / GIF / video)
     val homeBgAnimate: Boolean = true, // false = GIF dan video tampil diam (paling hemat)
     val homeBgPauseOnPowerSave: Boolean = true, // jeda GIF/video saat mode Hemat Baterai HP menyala

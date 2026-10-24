@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.view.Display
 import android.view.WindowManager
+import com.israadev.nuxlauncher.core.models.LauncherSettings
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -36,6 +37,19 @@ object DeviceProfiles {
     const val GC_BALANCED = "balanced"
     const val GC_SERIAL = "serial"
     const val GC_DEFAULT = "default"
+
+    /** Mode GC HP tanpa profil: "auto" = bawaan launcher (G1 dengan generasi muda dibatasi di RAM kecil). */
+    const val GC_AUTO = "auto"
+
+    /** Layar 90/120 Hz dikunci ke frekuensi ini di HP tanpa profil bila pengguna menyalakannya. */
+    const val GENERAL_LOCK_HZ = 60f
+
+    /** Layar dianggap "tinggi" (layak punya saklar kunci 60 Hz) bila mendukung frekuensi sebesar ini. */
+    private const val HIGH_REFRESH_MIN_HZ = 85f
+
+    /** Dengan Serial dan heap sekecil ini (MB) atau kurang, code cache JIT dikecilkan (cara Battly). */
+    private const val SERIAL_CODE_CACHE_HEAP_LIMIT_MB = 1280
+    private const val SERIAL_CODE_CACHE_FLAG = "-XX:ReservedCodeCacheSize=48M"
 
     /** Heap awal minimum untuk mode Serial: Serial hanya membesarkan heap lewat Full GC yang mahal. */
     private const val SERIAL_MIN_INITIAL_MB = 768
@@ -94,6 +108,17 @@ object DeviceProfiles {
         }
     }
 
+    /** True bila HP ini termasuk RAM kecil (di bawah sekitar 6 GB): pilihan mode GC umum ditawarkan. */
+    fun isSmallRamPhone(totalRamMb: Int): Boolean = totalRamMb < GENERAL_YOUNG_CAP_RAM_MB
+
+    fun normalizeGeneralGcMode(mode: String?): String {
+        return when (mode) {
+            GC_SERIAL -> GC_SERIAL
+            GC_DEFAULT -> GC_DEFAULT
+            else -> GC_AUTO
+        }
+    }
+
     /** True bila batas heap profil berlaku di HP ini (RAM kecil). */
     fun heapCapApplies(profile: DeviceProfile, totalRamMb: Int): Boolean {
         return profile.smallRamHeapCapMb > 0 && totalRamMb < profile.smallRamThresholdMb
@@ -143,19 +168,53 @@ object DeviceProfiles {
     }
 
     /**
-     * Flag JVM untuk HP tanpa profil: batas generasi muda G1 di HP RAM kecil. Kosong di Java 8,
-     * di HP RAM besar, atau bila pengguna sudah memilih GC sendiri lewat argumen JVM kustom.
+     * Flag JVM untuk HP tanpa profil. Mode "auto": batas generasi muda G1 di HP RAM kecil (kosong di
+     * Java 8 dan di HP RAM besar). Mode "serial": GC Serial, hanya bila HP berRAM kecil, dan boleh
+     * juga di Java 8. Mode "default": tanpa flag GC dari launcher. Selalu kosong bila pengguna sudah
+     * memilih GC sendiri lewat argumen JVM kustom (dua GC sekaligus membuat JVM gagal start).
      */
-    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String): List<String> {
-        if (isJava8) return emptyList()
-        if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
+    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String, gcMode: String = GC_AUTO): List<String> {
         if (userSelectsCollector(userArgs)) return emptyList()
-        return listOf(
-            "-XX:+IgnoreUnrecognizedVMOptions",
-            "-XX:+UnlockExperimentalVMOptions",
-            "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
-        )
+        return when (normalizeGeneralGcMode(gcMode)) {
+            GC_DEFAULT -> emptyList()
+            GC_SERIAL -> {
+                if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) emptyList() else serialFlags()
+            }
+            else -> {
+                if (isJava8) return emptyList()
+                if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
+                listOf(
+                    "-XX:+IgnoreUnrecognizedVMOptions",
+                    "-XX:+UnlockExperimentalVMOptions",
+                    "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
+                )
+            }
+        }
     }
+
+    private fun serialFlags(): List<String> = listOf(
+        // Jaring pengaman: flag yang tidak dikenal runtime Java ini diabaikan, tidak membuat game gagal start.
+        "-XX:+IgnoreUnrecognizedVMOptions",
+        // Tanpa thread GC latar dan tanpa barrier G1: paling hemat CPU di prosesor lemah.
+        "-XX:+UseSerialGC",
+        // Generasi muda 25% dari heap: jeda GC pendek dan memori terbatas.
+        "-XX:NewRatio=3"
+    )
+
+    /**
+     * Code cache JIT 48 MB untuk mode Serial dengan heap kecil (cara Battly): memori yang dicadangkan
+     * lebih sedikit. Tidak dipasang bila heap lebih besar (mod banyak butuh code cache lebih luas) atau
+     * bila pengguna sudah mengatur code cache sendiri.
+     */
+    fun serialCodeCacheFlags(serialActive: Boolean, heapMaxMb: Int, userArgs: String): List<String> {
+        if (!serialActive) return emptyList()
+        if (heapMaxMb > SERIAL_CODE_CACHE_HEAP_LIMIT_MB) return emptyList()
+        if (userArgs.contains("ReservedCodeCacheSize")) return emptyList()
+        return listOf(SERIAL_CODE_CACHE_FLAG)
+    }
+
+    /** True bila flag GC yang akan dipasang memilih Serial (dipakai untuk memutuskan code cache). */
+    fun flagsSelectSerial(flags: List<String>): Boolean = flags.contains("-XX:+UseSerialGC")
 
     /**
      * Flag JVM tambahan sesuai mode GC. Kosong bila mode Bawaan, atau bila pengguna sudah memilih
@@ -167,14 +226,7 @@ object DeviceProfiles {
         if (mode == GC_DEFAULT) return emptyList()
         if (userSelectsCollector(userArgs)) return emptyList()
         return if (mode == GC_SERIAL) {
-            listOf(
-                // Jaring pengaman: flag yang tidak dikenal runtime Java ini diabaikan, tidak membuat game gagal start.
-                "-XX:+IgnoreUnrecognizedVMOptions",
-                // Tanpa thread GC latar dan tanpa barrier G1: paling hemat CPU di prosesor lemah.
-                "-XX:+UseSerialGC",
-                // Generasi muda 25% dari heap: jeda GC pendek dan memori terbatas.
-                "-XX:NewRatio=3"
-            )
+            serialFlags()
         } else {
             listOf(
                 "-XX:+IgnoreUnrecognizedVMOptions",
@@ -233,9 +285,31 @@ object DeviceProfiles {
         }
     }
 
-    /** Frekuensi layar yang sedang aktif, mis. "60Hz"; kosong di HP tanpa profil. */
-    fun refreshRateLabel(context: Context): String {
-        if (detect() == null) return ""
+    /** True bila layar HP ini mendukung 85 Hz ke atas (90/120 Hz), jadi kunci 60 Hz ada gunanya. */
+    fun supportsHighRefresh(context: Context): Boolean {
+        val display = displayOf(context) ?: return false
+        return try {
+            display.supportedModes.any { it.refreshRate >= HIGH_REFRESH_MIN_HZ }
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    /**
+     * Frekuensi layar yang diminta selama game, atau 0 bila layar tidak dikunci. HP berprofil
+     * mengikuti setelan profilnya; HP lain mengikuti saklar [LauncherSettings.lockRefresh60].
+     */
+    fun refreshLockTarget(settings: LauncherSettings): Float {
+        val profile = detect()
+        if (profile != null) {
+            return if (settings.deviceProfileEnabled && settings.deviceProfileLockRefresh) profile.refreshRateHz else 0f
+        }
+        return if (settings.lockRefresh60) GENERAL_LOCK_HZ else 0f
+    }
+
+    /** Frekuensi layar yang sedang aktif, mis. "60Hz"; kosong bila layar tidak dikunci launcher. */
+    fun refreshRateLabel(context: Context, generalLock: Boolean = false): String {
+        if (detect() == null && !generalLock) return ""
         val display = displayOf(context) ?: return ""
         return try {
             "${display.refreshRate.roundToInt()}Hz"

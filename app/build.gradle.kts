@@ -165,6 +165,9 @@ dependencies {
     // Klien proxy resmi mod TouchController (LGPL-3.0). Dipanggil lewat refleksi, lihat TouchControllerBridge.
     implementation(libs.proxy.client.android)
     implementation("androidx.webkit:webkit:1.12.1")
+    // Memasang profil dasar (baseline profile) milik aplikasi dan pustaka AndroidX saat pertama dibuka,
+    // termasuk APK yang dipasang di luar Play Store, supaya launcher lebih cepat terbuka di HP lemah.
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
 
     debugImplementation(libs.androidx.ui.tooling)
 }

@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Minecraft version: {0}
 Jumlah mod: {0}	Number of mods: {0}
 Daftar mod: {0}	Mod list: {0}
 Isi log crash:	Crash log contents:
+# Pemulihan crash sekali ketuk
+Turunkan RAM ke {0} MB	Lower RAM to {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Gives the phone more room. You can raise it again in Settings > Memory.
+Pakai renderer Otomatis	Use the Auto renderer
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	The renderer you chose may not suit this phone. Auto picks the best fit.
+Coba renderer {0}	Try the {0} renderer
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	The current renderer seems to have problems on this phone. You can change it again in Settings > Graphics.
+Matikan shader	Turn off shaders
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shaders put a heavy load on the GPU and memory. You can turn them back on from the game's video menu.
+Nonaktifkan mod tersangka	Disable suspect mods
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mods named in the log: {0}. You can enable them again in the Mods menu.
+Reset Java ke Otomatis	Reset Java to Auto
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	The Java version you picked may not match this game. Auto picks a suitable version.
+RAM game diturunkan ke {0} MB.	Game RAM lowered to {0} MB.
+Renderer dikembalikan ke Otomatis.	Renderer set back to Auto.
+Renderer diganti ke {0}.	Renderer changed to {0}.
+Shader dimatikan.	Shaders turned off.
+Mod dinonaktifkan: {0}.	Mods disabled: {0}.
+Java dikembalikan ke Otomatis.	Java set back to Auto.
+Gagal menerapkan. Coba lewat Pengaturan.	Could not apply this. Try it from Settings.
+Pemulihan cepat	Quick recovery
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Tap to try the fixes most likely to help. Everything can be undone.
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	Changes are saved. Go back to the launcher and start the game again.
+Sudah diterapkan	Already applied
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	The game stopped in the graphics part or in a library built into the phone. A common cause is a renderer that does not suit this phone. Try changing the renderer in Settings > Graphics. Only if every renderer fails might the problem be in the launcher.

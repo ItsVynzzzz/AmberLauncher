@@ -24,6 +24,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,15 +40,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.crash.CrashAdvisor
+import com.israadev.nuxlauncher.core.crash.CrashRecovery
 import com.israadev.nuxlauncher.core.crash.CrashSource
 import com.israadev.nuxlauncher.core.crash.CrashUtils
 import com.israadev.nuxlauncher.core.crash.GameCrashInfo
 import com.israadev.nuxlauncher.core.crash.MCLogsUploader
+import com.israadev.nuxlauncher.core.crash.RecoveryAction
+import com.israadev.nuxlauncher.core.crash.RecoveryOption
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.Amber
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 private const val INTRO_GAME =
@@ -67,6 +73,12 @@ private const val REPORT_BODY_GAME =
 
 private const val REPORT_BODY_LAUNCHER =
     "Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan."
+
+private const val RECOVERY_BODY =
+    "Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan."
+
+private const val RECOVERY_DONE =
+    "Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi."
 
 private const val MAX_SHOWN_LOG_CHARS = 40_000
 
@@ -95,6 +107,25 @@ fun AmberCrashPanel(
     }
     var uploading by remember { mutableStateOf(false) }
     var uploadUrl by remember { mutableStateOf<String?>(null) }
+
+    // Tawaran pemulihan sekali ketuk. Dihitung di thread latar karena membaca berkas (shader, mod, instance).
+    var recovery by remember(info) { mutableStateOf<List<RecoveryOption>>(emptyList()) }
+    var recovered by remember(info) { mutableStateOf<Set<RecoveryAction>>(emptySet()) }
+    LaunchedEffect(info, log) {
+        recovery = withContext(Dispatchers.IO) { CrashRecovery.suggest(context, info, log) }
+    }
+    val inFlight = remember(info) { HashSet<RecoveryAction>() }
+    val applyRecovery: (RecoveryOption) -> Unit = { option ->
+        // Ketukan ganda tidak menerapkan perbaikan yang sama dua kali.
+        if (option.action !in recovered && inFlight.add(option.action)) {
+            scope.launch {
+                val result = withContext(Dispatchers.IO) { CrashRecovery.apply(context, info, option) }
+                if (result.ok) recovered = recovered + option.action
+                inFlight.remove(option.action)
+                Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     val copyForAi: () -> Unit = {
         copyToClipboard(context, "Crash Log", CrashAdvisor.buildAiPrompt(context, info, log))
@@ -177,6 +208,9 @@ fun AmberCrashPanel(
             )
             CrashHelpPane(
                 launcherCrash = launcherCrash,
+                recovery = recovery,
+                recovered = recovered,
+                onRecover = applyRecovery,
                 uploading = uploading,
                 uploaded = uploadUrl != null,
                 onCopyForAi = copyForAi,
@@ -415,6 +449,9 @@ private fun CrashLogContent(logText: String, logFile: File, modifier: Modifier) 
 @Composable
 private fun CrashHelpPane(
     launcherCrash: Boolean,
+    recovery: List<RecoveryOption>,
+    recovered: Set<RecoveryAction>,
+    onRecover: (RecoveryOption) -> Unit,
     uploading: Boolean,
     uploaded: Boolean,
     onCopyForAi: () -> Unit,
@@ -430,12 +467,16 @@ private fun CrashHelpPane(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (!launcherCrash && recovery.isNotEmpty()) {
+            RecoverySection(recovery = recovery, recovered = recovered, onRecover = onRecover)
+            CrashRule()
+        }
         if (launcherCrash) {
             ReportSection(primary = true, launcherCrash = true, onReport = onReport)
             CrashRule()
             AiSection(primary = false, onCopy = onCopyForAi, onOpenAi = onOpenAi)
         } else {
-            AiSection(primary = true, onCopy = onCopyForAi, onOpenAi = onOpenAi)
+            AiSection(primary = recovery.isEmpty(), onCopy = onCopyForAi, onOpenAi = onOpenAi)
             CrashRule()
             ReportSection(primary = false, launcherCrash = false, onReport = onReport)
         }
@@ -462,6 +503,34 @@ private fun CrashHelpPane(
                 enabled = !uploading,
                 height = 40.dp
             )
+        }
+    }
+}
+
+/** Perbaikan sekali ketuk. Tombol pertama dibuat menonjol; yang sudah diterapkan dikunci. */
+@Composable
+private fun RecoverySection(
+    recovery: List<RecoveryOption>,
+    recovered: Set<RecoveryAction>,
+    onRecover: (RecoveryOption) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        CrashSectionTitle("Pemulihan cepat")
+        Text(text = RECOVERY_BODY, color = Amber.TextDim, fontSize = 13.sp, lineHeight = 19.sp)
+        recovery.forEachIndexed { index, option ->
+            val done = option.action in recovered
+            Text(text = option.detail, color = Amber.TextDim, fontSize = 12.sp, lineHeight = 17.sp)
+            AmberButton(
+                text = if (done) "Sudah diterapkan" else option.label,
+                onClick = { onRecover(option) },
+                modifier = Modifier.fillMaxWidth(),
+                style = if (index == 0 && !done) AmberButtonStyle.Primary else AmberButtonStyle.Ghost,
+                enabled = !done,
+                height = 42.dp
+            )
+        }
+        if (recovered.isNotEmpty()) {
+            Text(text = RECOVERY_DONE, color = Amber.Yellow, fontSize = 12.sp, lineHeight = 17.sp)
         }
     }
 }
@@ -563,7 +632,7 @@ private fun sourceDetail(source: CrashSource): String = when (source) {
             "setengah RAM HP), kurangi mod, dan tutup aplikasi lain."
     CrashSource.GRAPHICS ->
         "Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang " +
-            "cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, " +
+            "cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, " +
             "barulah mungkin masalahnya ada di launcher."
     CrashSource.GAME_OR_MODS ->
         "Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game " +

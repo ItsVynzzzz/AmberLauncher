@@ -588,25 +588,25 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     /**
-     * Profil perangkat (hanya HP yang terdaftar): kunci layar ke 60 Hz selama game berjalan.
+     * Kunci frekuensi layar selama game berjalan. HP berprofil khusus (Oppo A3x 4G) mengikuti profilnya;
+     * HP lain mengikuti saklar "Kunci layar 60 Hz" di Pengaturan > Grafis (bawaan mati).
      * Layar Oppo A3x 90 Hz sedangkan game di HP ini jarang mencapai 90 FPS; pada 20/30/45 FPS
      * ritme tampil di 90 Hz tidak rata (frame bergantian tampil 1 dan 2 kali) dan terasa
      * patah-patah. 60 Hz kelipatan 20/30 sehingga ritmenya rata, dan sedikit lebih hemat
-     * panas. Bisa dimatikan di Pengaturan > Profil perangkat untuk dibandingkan.
+     * panas. Bisa dimatikan di Pengaturan untuk dibandingkan.
      */
     private fun applyDeviceDisplayProfile() {
-        val profile = DeviceProfiles.detect() ?: return
-        val st = SettingsManager.settings.value
-        if (!st.deviceProfileEnabled || !st.deviceProfileLockRefresh) return
+        val targetHz = DeviceProfiles.refreshLockTarget(SettingsManager.settings.value)
+        if (targetHz <= 0f) return
         try {
             val params = window.attributes
-            params.preferredRefreshRate = profile.refreshRateHz
-            val modeId = DeviceProfiles.findDisplayModeId(this, profile.refreshRateHz)
+            params.preferredRefreshRate = targetHz
+            val modeId = DeviceProfiles.findDisplayModeId(this, targetHz)
             if (modeId != 0) {
                 params.preferredDisplayModeId = modeId
             }
             window.attributes = params
-            LoggerBridge.append("▷ [Layar] Meminta ${profile.refreshRateHz.toInt()} Hz (modeId=$modeId)")
+            LoggerBridge.append("▷ [Layar] Meminta ${targetHz.toInt()} Hz (modeId=$modeId)")
         } catch (e: Throwable) {
             try {
                 LoggerBridge.append("▷ [Layar] Gagal mengunci refresh rate: ${e.message}")
@@ -677,15 +677,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         val (targetWidth, targetHeight) = getScaledDisplayDimensions()
         holder.setFixedSize(targetWidth, targetHeight)
         val surface = holder.surface
-        // Profil perangkat: beri tahu sistem bahwa surface game cukup 60 Hz (Android 11+)
-        val displayProfile = DeviceProfiles.detect()
-        if (displayProfile != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val st = SettingsManager.settings.value
-            if (st.deviceProfileEnabled && st.deviceProfileLockRefresh) {
-                try {
-                    surface.setFrameRate(displayProfile.refreshRateHz, android.view.Surface.FRAME_RATE_COMPATIBILITY_DEFAULT)
-                } catch (_: Throwable) {
-                }
+        // Kunci layar (profil perangkat atau saklar umum): beri tahu sistem bahwa surface game cukup 60 Hz (Android 11+)
+        val lockHz = DeviceProfiles.refreshLockTarget(SettingsManager.settings.value)
+        if (lockHz > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                surface.setFrameRate(lockHz, android.view.Surface.FRAME_RATE_COMPATIBILITY_DEFAULT)
+            } catch (_: Throwable) {
             }
         }
         val rootLayout = window.decorView as? ViewGroup
@@ -1347,7 +1344,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     // membesarkan heap sedikit demi sedikit) dan, di HP RAM kecil, generasi muda G1
                     // dibatasi supaya RAM tidak membengkak. Java 8 tidak diubah.
                     heapInitMb = DeviceProfiles.generalInitialHeapMb(activeSettings.initialHeapMb, heapMaxMb, isJava8)
-                    profileFlags = DeviceProfiles.generalJvmFlags(deviceTotalRamMb, isJava8, activeSettings.customJvmArgs)
+                    profileFlags = DeviceProfiles.generalJvmFlags(
+                        deviceTotalRamMb, isJava8, activeSettings.customJvmArgs, activeSettings.generalGcMode
+                    )
                 }
                 if (!android.os.Process.is64Bit()) {
                     // Proses 32-bit hanya punya ruang alamat 3-4 GB, dan sebagian sudah terpakai
@@ -1360,6 +1359,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     }
                     if (heapInitMb > heapMaxMb) heapInitMb = heapMaxMb
                 }
+                // Mode Serial dengan heap kecil: code cache JIT dikecilkan (cara Battly). Heap sudah final di sini.
+                profileFlags = profileFlags + DeviceProfiles.serialCodeCacheFlags(
+                    DeviceProfiles.flagsSelectSerial(profileFlags), heapMaxMb, activeSettings.customJvmArgs
+                )
+                LoggerBridge.append(
+                    "▷ [JVM] Flag GC: ${if (profileFlags.isEmpty()) "(bawaan JVM)" else profileFlags.joinToString(" ")}"
+                )
                 jvmArgs.add("-Xms${heapInitMb}M")
                 jvmArgs.add("-Xmx${heapMaxMb}M")
                 profileFlags.forEach { jvmArgs.add(it) }
@@ -1540,10 +1546,10 @@ private fun buildPerfHint(context: Context): Pair<String, Boolean> {
         } catch (_: Throwable) {
         }
     }
-    // Hz layar yang benar-benar aktif: hanya di HP yang punya profil khusus (HP lain tidak berubah).
-    // Dipakai untuk memastikan kunci 60 Hz berlaku; kalau tertulis 90Hz berarti sistem menolaknya.
+    // Hz layar yang benar-benar aktif: hanya di HP berprofil khusus atau yang menyalakan "Kunci layar 60 Hz"
+    // (HP lain tidak berubah). Dipakai untuk memastikan kunci berlaku; kalau tertulis 90Hz berarti sistem menolaknya.
     try {
-        val hz = DeviceProfiles.refreshRateLabel(context)
+        val hz = DeviceProfiles.refreshRateLabel(context, SettingsManager.settings.value.lockRefresh60)
         if (hz.isNotEmpty()) {
             text = if (text.isEmpty()) hz else "$text · $hz"
         }

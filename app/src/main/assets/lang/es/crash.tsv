@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Versi\u00f3n de Minecraft: {0}
 Jumlah mod: {0}	Cantidad de mods: {0}
 Daftar mod: {0}	Lista de mods: {0}
 Isi log crash:	Contenido del registro del crash:
+# Pemulihan crash sekali ketuk
+Turunkan RAM ke {0} MB	Reducir la RAM a {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Da m\u00e1s margen al tel\u00e9fono. Puedes volver a subirla en Ajustes > Memoria.
+Pakai renderer Otomatis	Usar el renderizador Auto
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	Es posible que el renderizador elegido no sea adecuado para este tel\u00e9fono. Auto elige el que mejor encaje.
+Coba renderer {0}	Probar el renderizador {0}
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	El renderizador actual parece tener problemas en este tel\u00e9fono. Puedes cambiarlo de nuevo en Ajustes > Gr\u00e1ficos.
+Matikan shader	Desactivar shaders
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Los shaders cargan mucho la GPU y la memoria. Puedes volver a activarlos desde el men\u00fa de v\u00eddeo del juego.
+Nonaktifkan mod tersangka	Desactivar mods sospechosos
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mods mencionados en el registro: {0}. Puedes volver a activarlos en el men\u00fa Mods.
+Reset Java ke Otomatis	Restablecer Java a Auto
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	Es posible que la versi\u00f3n de Java elegida no coincida con este juego. Auto elige una versi\u00f3n adecuada.
+RAM game diturunkan ke {0} MB.	RAM del juego reducida a {0} MB.
+Renderer dikembalikan ke Otomatis.	Renderizador restablecido a Auto.
+Renderer diganti ke {0}.	Renderizador cambiado a {0}.
+Shader dimatikan.	Shaders desactivados.
+Mod dinonaktifkan: {0}.	Mods desactivados: {0}.
+Java dikembalikan ke Otomatis.	Java restablecido a Auto.
+Gagal menerapkan. Coba lewat Pengaturan.	No se pudo aplicar. Int\u00e9ntalo desde Ajustes.
+Pemulihan cepat	Recuperaci\u00f3n r\u00e1pida
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Toca para probar las soluciones con m\u00e1s probabilidades de ayudar. Todo se puede deshacer.
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	Los cambios se han guardado. Vuelve al launcher y inicia el juego de nuevo.
+Sudah diterapkan	Ya aplicado
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	El juego se detuvo en la parte gr\u00e1fica o en una biblioteca integrada del tel\u00e9fono. Una causa com\u00fan es un renderizador poco compatible con este tel\u00e9fono. Prueba a cambiar el renderizador en Ajustes > Gr\u00e1ficos. Solo si todos fallan, el problema podr\u00eda estar en el launcher.

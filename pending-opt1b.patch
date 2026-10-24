@@ -1,0 +1,616 @@
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index cd87c16..b969225 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -165,6 +165,9 @@ dependencies {
+     // Klien proxy resmi mod TouchController (LGPL-3.0). Dipanggil lewat refleksi, lihat TouchControllerBridge.
+     implementation(libs.proxy.client.android)
+     implementation("androidx.webkit:webkit:1.12.1")
++    // Memasang profil dasar (baseline profile) milik aplikasi dan pustaka AndroidX saat pertama dibuka,
++    // termasuk APK yang dipasang di luar Play Store, supaya launcher lebih cepat terbuka di HP lemah.
++    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+ 
+     debugImplementation(libs.androidx.ui.tooling)
+ }
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index 95419de..f6ae03e 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -95,3 +95,16 @@ Hotbar sentuh	Touch hotbar
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.
+ Dukungan TouchController	TouchController support
+ Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Turn on only if you use the TouchController mod: the built-in controls are hidden (only the menu gear stays) and all screen touches are passed to the mod. If the screen stops responding, turn it off.
++# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
++Optimasi HP RAM kecil	Low-RAM phone tuning
++RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	This phone has {0} MB of RAM, so how Java's memory cleaner works can be tuned.
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: lightest on the processor, with slightly longer GC pauses. Try it if the game often stutters.
++Bawaan: tanpa flag GC tambahan dari launcher.	Default: no extra GC flags from the launcher.
++Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Auto: G1 with limited memory, good for most phones. Try this first.
++Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Applies the next time the game starts. To compare, look at the [Kinerja] lines in the game log.
++Mode Hemat	Power Saver Mode
++Untuk HP yang cepat panas atau baterainya cepat habis.	For phones that get hot quickly or drain the battery fast.
++Nyalakan Mode Hemat	Turn on Power Saver Mode
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Turns on the system's sustained performance mode and Zink V-Sync, and caps the resolution scale at 80%.
++Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Applies the next time the game starts. Turning it off restores your previous settings.
++Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index d4ededd..8e22058 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -95,3 +95,16 @@ Hotbar sentuh	Barra r\u00e1pida t\u00e1ctil
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toca la barra r\u00e1pida en la parte inferior de la pantalla para elegir una ranura, como en Minecraft Bedrock. Las posiciones siguen la escala de GUI del juego.
+ Dukungan TouchController	Compatibilidad con TouchController
+ Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Act\u00edvalo solo si usas el mod TouchController: los controles integrados se ocultan (solo queda el engranaje del men\u00fa) y todos los toques se env\u00edan al mod. Si la pantalla no responde, desact\u00edvalo.
++# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
++Optimasi HP RAM kecil	Optimizaci\u00f3n para tel\u00e9fonos con poca RAM
++RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	Este tel\u00e9fono tiene {0} MB de RAM, as\u00ed que se puede ajustar c\u00f3mo trabaja el limpiador de memoria de Java.
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: el m\u00e1s ligero para el procesador, con pausas de GC algo m\u00e1s largas. Pru\u00e9balo si el juego se entrecorta a menudo.
++Bawaan: tanpa flag GC tambahan dari launcher.	Predeterminado: sin flags de GC adicionales del launcher.
++Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Auto: G1 con memoria limitada, adecuado para la mayor\u00eda de tel\u00e9fonos. Prueba este primero.
++Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Se aplica la pr\u00f3xima vez que inicies el juego. Para comparar, mira las l\u00edneas [Kinerja] del registro del juego.
++Mode Hemat	Modo Ahorro
++Untuk HP yang cepat panas atau baterainya cepat habis.	Para tel\u00e9fonos que se calientan r\u00e1pido o gastan mucha bater\u00eda.
++Nyalakan Mode Hemat	Activar Modo Ahorro
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Activa el modo de rendimiento sostenido del sistema y la V-Sync de Zink, y limita la escala de resoluci\u00f3n al 80 % como m\u00e1ximo.
++Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Se aplica la pr\u00f3xima vez que inicies el juego. Al desactivarlo se restauran tus ajustes anteriores.
++Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90/120 Hz se fija a 60 Hz mientras juegas para un movimiento m\u00e1s uniforme y algo menos de calor. Va bien si el juego rara vez llega a 90 FPS. El HUD de FPS muestra los Hz activos.
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index 39c97cc..1a1c91d 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -94,3 +94,16 @@ Hotbar sentuh	Thanh nhanh c\u1ea3m \u1ee9ng
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Ch\u1ea1m v\u00e0o thanh nhanh \u1edf cu\u1ed1i m\u00e0n h\u00ecnh \u0111\u1ec3 ch\u1ecdn \u00f4, gi\u1ed1ng Minecraft Bedrock. V\u1ecb tr\u00ed c\u00e1c \u00f4 theo t\u1ef7 l\u1ec7 GUI c\u1ee7a tr\u00f2 ch\u01a1i.
+ Dukungan TouchController	H\u1ed7 tr\u1ee3 TouchController
+ Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Th\u1eed nghi\u1ec7m. Ch\u1ec9 b\u1eadt khi d\u00f9ng mod TouchController: c\u00e1c n\u00fat c\u00f3 s\u1eb5n b\u1ecb \u1ea9n (ch\u1ec9 c\u00f2n b\u00e1nh r\u0103ng menu) v\u00e0 m\u1ecdi thao t\u00e1c ch\u1ea1m \u0111\u01b0\u1ee3c chuy\u1ec3n cho mod. N\u1ebfu m\u00e0n h\u00ecnh kh\u00f4ng ph\u1ea3n h\u1ed3i, h\u00e3y t\u1eaft.
++# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
++Optimasi HP RAM kecil	T\u1ed1i \u01b0u cho \u0111i\u1ec7n tho\u1ea1i RAM th\u1ea5p
++RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	\u0110i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 {0} MB RAM, n\u00ean c\u00f3 th\u1ec3 tinh ch\u1ec9nh c\u00e1ch b\u1ed9 d\u1ecdn d\u1eb9p b\u1ed9 nh\u1edb Java ho\u1ea1t \u0111\u1ed9ng.
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: nh\u1eb9 nh\u1ea5t cho b\u1ed9 x\u1eed l\u00fd, th\u1eddi gian d\u1eebng GC d\u00e0i h\u01a1n m\u1ed9t ch\u00fat. H\u00e3y th\u1eed n\u1ebfu game th\u01b0\u1eddng b\u1ecb gi\u1eadt.
++Bawaan: tanpa flag GC tambahan dari launcher.	M\u1eb7c \u0111\u1ecbnh: kh\u00f4ng th\u00eam c\u1edd GC n\u00e0o t\u1eeb launcher.
++Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	T\u1ef1 \u0111\u1ed9ng: G1 v\u1edbi b\u1ed9 nh\u1edb gi\u1edbi h\u1ea1n, ph\u00f9 h\u1ee3p v\u1edbi \u0111a s\u1ed1 \u0111i\u1ec7n tho\u1ea1i. H\u00e3y th\u1eed c\u00e1ch n\u00e0y tr\u01b0\u1edbc.
++Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. \u0110\u1ec3 so s\u00e1nh, xem c\u00e1c d\u00f2ng [Kinerja] trong nh\u1eadt k\u00fd game.
++Mode Hemat	Ch\u1ebf \u0111\u1ed9 Ti\u1ebft ki\u1ec7m
++Untuk HP yang cepat panas atau baterainya cepat habis.	D\u00e0nh cho \u0111i\u1ec7n tho\u1ea1i nhanh n\u00f3ng ho\u1eb7c hao pin.
++Nyalakan Mode Hemat	B\u1eadt Ch\u1ebf \u0111\u1ed9 Ti\u1ebft ki\u1ec7m
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	B\u1eadt ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh c\u1ee7a h\u1ec7 th\u1ed1ng v\u00e0 V-Sync c\u1ee7a Zink, \u0111\u1ed3ng th\u1eddi gi\u1edbi h\u1ea1n t\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i t\u1ed1i \u0111a 80%.
++Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. T\u1eaft \u0111i s\u1ebd kh\u00f4i ph\u1ee5c c\u00e0i \u0111\u1eb7t tr\u01b0\u1edbc \u0111\u00f3.
++Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90/120 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t h\u01a1n v\u00e0 \u0111\u1ee1 n\u00f3ng h\u01a1n m\u1ed9t ch\u00fat. Ph\u00f9 h\u1ee3p n\u1ebfu game hi\u1ebfm khi \u0111\u1ea1t 90 FPS. HUD FPS hi\u1ec3n th\u1ecb Hz \u0111ang ho\u1ea1t \u0111\u1ed9ng.
+diff --git a/app/src/main/baseline-prof.txt b/app/src/main/baseline-prof.txt
+new file mode 100644
+index 0000000..4eee11d
+--- /dev/null
++++ b/app/src/main/baseline-prof.txt
+@@ -0,0 +1,17 @@
++HSPLcom/israadev/nuxlauncher/NuxApplication;->onCreate()V
++HSPLcom/israadev/nuxlauncher/MainActivity;->onCreate(Landroid/os/Bundle;)V
++HSPLcom/israadev/nuxlauncher/ui/screens/DashboardScreenKt;->DashboardScreen(Landroidx/compose/runtime/Composer;I)V
++HSPLcom/israadev/nuxlauncher/ui/i18n/Tr;->t(Ljava/lang/String;)Ljava/lang/String;
++HSPLcom/israadev/nuxlauncher/ui/i18n/Translator;->translate(Ljava/lang/String;)Ljava/lang/String;
++Lcom/israadev/nuxlauncher/NuxApplication;
++Lcom/israadev/nuxlauncher/MainActivity;
++Lcom/israadev/nuxlauncher/ui/screens/DashboardScreenKt;
++Lcom/israadev/nuxlauncher/ui/screens/SettingsScreenKt;
++Lcom/israadev/nuxlauncher/ui/components/NuxComponentsKt;
++Lcom/israadev/nuxlauncher/ui/components/NuxSettingPartsKt;
++Lcom/israadev/nuxlauncher/ui/components/AmberPartsKt;
++Lcom/israadev/nuxlauncher/ui/i18n/Tr;
++Lcom/israadev/nuxlauncher/ui/i18n/Translator;
++Lcom/israadev/nuxlauncher/ui/i18n/AmberTextKt;
++Lcom/israadev/nuxlauncher/core/settings/SettingsManager;
++Lcom/israadev/nuxlauncher/core/instance/InstanceManager;
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 2ec2c059ec9320b17368bd0564f4e4d0f88a3a01..39beedd66f686f8ad715bf97728f66eede3b00af 100644
+GIT binary patch
+delta 896
+zcmZvbQA-q26vw&YuBfQF;i6J{Fp%9`b{7<@O~tfyD<#Vag0Rlc-rc>--I;0Tj=76g
+z555}I4M$2Mh~5JOdkK2#HK>=K`UXLLf#}Z63Rce3<;?$_^E>za@5}AztDWfEpL+Kd
+z*U%W0Y^uA|a2Rl`p)IpK{t)tuP@uMDn<d6UuegruK;o)pnQ(q&6-MWhP^Cth>8@Z9
+zs*D<*YX$#1<!5tb#sQ6kI!7A@!<IoK7|TMwJ_tnyi>ek1*G2;-Va~>`5>xF8cpp`y
+zih?C~FY+lOx2rds1=?jQ@?Jeh`r77AO}`NY5|V88A5Vq^3WAj&(U8_*d;+p1`Pksm
+zFeKZ}nf;??erg<d$F28mnS+Fh#syeZp_O$MfC61;4C7YaYEm|>%}2PxIGm{WZ=yh0
+zS3@eC7i-h9{d-)RtXV!<?`RJHrR2RxxBR%Ckw11?ywCGwNaluGcPAe_f94f7NVlBI
+zHF@7+<aA#OP!nv0E>R(vQFhX0YA8-Vr)@1ablIaMwlzRv@~({RojFFn9Ff1jMwclp
+zQJW!$qJQrOR47`YQ;qQ)Xl9XuhFXQf<x4lza)P+7R0$1jglQCl*OF<-`$>*l#0r#{
+z;TL1zFoUJN+i`MY1ST53ptBsy4h+Kuy23QN7+8urX(vFKQSD~@Zc63d*&sb<|B;pa
+z>?O*nCPL`OPQtRuQ~<w#s|yA1SB&(_*H5}Ue{9d{A){p0`_M`BFpzB_oqN4;^6uoV
+z|EwLXwWfCLTegNA{ecfLYhbTT1`_)Y7p#c7|5V%pR+4Eik|W>^=SZETo^B3wr2VB{
+Rr|OA0m9gyJn;fZK`vbSEFG2tS
+
+delta 683
+zcmZ{i&ubGw6vvs;rliFnThmYr<rN_$YPWjPwyCM&4+0jA1rZNoU$V2!x|7*;cDIn4
+zg8l<up0Xk$dh(zLAxQKe@ZzaAJ+)qY@+>0mCV`f;&hh)^z4?CLeBZoEynd1R_{+Xs
+zR*q>2aJfRcW}^?e8p;MjsSJ%s0iP=aO&?W$0qj6lEfCm11vZCsXP~qJ9v4_gSi?Gp
+z3Re$MplrPt7nxRs{^7J+zr)<{N0Pw=EG>ZIexT$C^v*g8@O--Tbd2ub%v`Zd$W42`
+zZt!)h%Dc1pRf!eB4QMvuKyBHn+AG{t+^gk#v*~AXlFIrZZQs@DkIam@9bT@h?!6WC
+zIZZg157jHq*TeLd?tUIUdVnq6Tpl(o&yDsIeowNKQ?dV^&@&Iy7eEF=KsF2E+j%xa
+zUuMz+d&tFj5pmo9sH49A(mrT<;vA!U-;R@G4WH6I?q5^Uuf&LbKK9d>Hcr#Sp)_6J
+zoDH|nvILcP$HSc)><GE$Agz8#(bD256|%`zYxCu^(A3!Za5BZTsHBBEQ!LT`t+B0v
+z=Z{&cy_I2~PRw<3;|6hxy4wc37I=XNxhPZuEeXD5pdF_rs9-IxcLFdQJzroj)JawN
+Nx4<5?-z~Dnt$&hQ^??8Y
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt b/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
+index f7e116b..9ceb9d3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/device/DeviceProfile.kt
+@@ -4,6 +4,7 @@ import android.content.Context
+ import android.os.Build
+ import android.view.Display
+ import android.view.WindowManager
++import com.israadev.nuxlauncher.core.models.LauncherSettings
+ import kotlin.math.abs
+ import kotlin.math.roundToInt
+ 
+@@ -37,6 +38,19 @@ object DeviceProfiles {
+     const val GC_SERIAL = "serial"
+     const val GC_DEFAULT = "default"
+ 
++    /** Mode GC HP tanpa profil: "auto" = bawaan launcher (G1 dengan generasi muda dibatasi di RAM kecil). */
++    const val GC_AUTO = "auto"
++
++    /** Layar 90/120 Hz dikunci ke frekuensi ini di HP tanpa profil bila pengguna menyalakannya. */
++    const val GENERAL_LOCK_HZ = 60f
++
++    /** Layar dianggap "tinggi" (layak punya saklar kunci 60 Hz) bila mendukung frekuensi sebesar ini. */
++    private const val HIGH_REFRESH_MIN_HZ = 85f
++
++    /** Dengan Serial dan heap sekecil ini (MB) atau kurang, code cache JIT dikecilkan (cara Battly). */
++    private const val SERIAL_CODE_CACHE_HEAP_LIMIT_MB = 1280
++    private const val SERIAL_CODE_CACHE_FLAG = "-XX:ReservedCodeCacheSize=48M"
++
+     /** Heap awal minimum untuk mode Serial: Serial hanya membesarkan heap lewat Full GC yang mahal. */
+     private const val SERIAL_MIN_INITIAL_MB = 768
+ 
+@@ -94,6 +108,17 @@ object DeviceProfiles {
+         }
+     }
+ 
++    /** True bila HP ini termasuk RAM kecil (di bawah sekitar 6 GB): pilihan mode GC umum ditawarkan. */
++    fun isSmallRamPhone(totalRamMb: Int): Boolean = totalRamMb < GENERAL_YOUNG_CAP_RAM_MB
++
++    fun normalizeGeneralGcMode(mode: String?): String {
++        return when (mode) {
++            GC_SERIAL -> GC_SERIAL
++            GC_DEFAULT -> GC_DEFAULT
++            else -> GC_AUTO
++        }
++    }
++
+     /** True bila batas heap profil berlaku di HP ini (RAM kecil). */
+     fun heapCapApplies(profile: DeviceProfile, totalRamMb: Int): Boolean {
+         return profile.smallRamHeapCapMb > 0 && totalRamMb < profile.smallRamThresholdMb
+@@ -143,20 +168,54 @@ object DeviceProfiles {
+     }
+ 
+     /**
+-     * Flag JVM untuk HP tanpa profil: batas generasi muda G1 di HP RAM kecil. Kosong di Java 8,
+-     * di HP RAM besar, atau bila pengguna sudah memilih GC sendiri lewat argumen JVM kustom.
++     * Flag JVM untuk HP tanpa profil. Mode "auto": batas generasi muda G1 di HP RAM kecil (kosong di
++     * Java 8 dan di HP RAM besar). Mode "serial": GC Serial, hanya bila HP berRAM kecil, dan boleh
++     * juga di Java 8. Mode "default": tanpa flag GC dari launcher. Selalu kosong bila pengguna sudah
++     * memilih GC sendiri lewat argumen JVM kustom (dua GC sekaligus membuat JVM gagal start).
+      */
+-    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String): List<String> {
+-        if (isJava8) return emptyList()
+-        if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
++    fun generalJvmFlags(totalRamMb: Int, isJava8: Boolean, userArgs: String, gcMode: String = GC_AUTO): List<String> {
+         if (userSelectsCollector(userArgs)) return emptyList()
+-        return listOf(
+-            "-XX:+IgnoreUnrecognizedVMOptions",
+-            "-XX:+UnlockExperimentalVMOptions",
+-            "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
+-        )
++        return when (normalizeGeneralGcMode(gcMode)) {
++            GC_DEFAULT -> emptyList()
++            GC_SERIAL -> {
++                if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) emptyList() else serialFlags()
++            }
++            else -> {
++                if (isJava8) return emptyList()
++                if (totalRamMb >= GENERAL_YOUNG_CAP_RAM_MB) return emptyList()
++                listOf(
++                    "-XX:+IgnoreUnrecognizedVMOptions",
++                    "-XX:+UnlockExperimentalVMOptions",
++                    "-XX:G1MaxNewSizePercent=$G1_MAX_YOUNG_PERCENT"
++                )
++            }
++        }
++    }
++
++    private fun serialFlags(): List<String> = listOf(
++        // Jaring pengaman: flag yang tidak dikenal runtime Java ini diabaikan, tidak membuat game gagal start.
++        "-XX:+IgnoreUnrecognizedVMOptions",
++        // Tanpa thread GC latar dan tanpa barrier G1: paling hemat CPU di prosesor lemah.
++        "-XX:+UseSerialGC",
++        // Generasi muda 25% dari heap: jeda GC pendek dan memori terbatas.
++        "-XX:NewRatio=3"
++    )
++
++    /**
++     * Code cache JIT 48 MB untuk mode Serial dengan heap kecil (cara Battly): memori yang dicadangkan
++     * lebih sedikit. Tidak dipasang bila heap lebih besar (mod banyak butuh code cache lebih luas) atau
++     * bila pengguna sudah mengatur code cache sendiri.
++     */
++    fun serialCodeCacheFlags(serialActive: Boolean, heapMaxMb: Int, userArgs: String): List<String> {
++        if (!serialActive) return emptyList()
++        if (heapMaxMb > SERIAL_CODE_CACHE_HEAP_LIMIT_MB) return emptyList()
++        if (userArgs.contains("ReservedCodeCacheSize")) return emptyList()
++        return listOf(SERIAL_CODE_CACHE_FLAG)
+     }
+ 
++    /** True bila flag GC yang akan dipasang memilih Serial (dipakai untuk memutuskan code cache). */
++    fun flagsSelectSerial(flags: List<String>): Boolean = flags.contains("-XX:+UseSerialGC")
++
+     /**
+      * Flag JVM tambahan sesuai mode GC. Kosong bila mode Bawaan, atau bila pengguna sudah memilih
+      * GC sendiri lewat argumen JVM kustom (dua GC sekaligus membuat JVM gagal start).
+@@ -167,14 +226,7 @@ object DeviceProfiles {
+         if (mode == GC_DEFAULT) return emptyList()
+         if (userSelectsCollector(userArgs)) return emptyList()
+         return if (mode == GC_SERIAL) {
+-            listOf(
+-                // Jaring pengaman: flag yang tidak dikenal runtime Java ini diabaikan, tidak membuat game gagal start.
+-                "-XX:+IgnoreUnrecognizedVMOptions",
+-                // Tanpa thread GC latar dan tanpa barrier G1: paling hemat CPU di prosesor lemah.
+-                "-XX:+UseSerialGC",
+-                // Generasi muda 25% dari heap: jeda GC pendek dan memori terbatas.
+-                "-XX:NewRatio=3"
+-            )
++            serialFlags()
+         } else {
+             listOf(
+                 "-XX:+IgnoreUnrecognizedVMOptions",
+@@ -233,9 +285,31 @@ object DeviceProfiles {
+         }
+     }
+ 
+-    /** Frekuensi layar yang sedang aktif, mis. "60Hz"; kosong di HP tanpa profil. */
+-    fun refreshRateLabel(context: Context): String {
+-        if (detect() == null) return ""
++    /** True bila layar HP ini mendukung 85 Hz ke atas (90/120 Hz), jadi kunci 60 Hz ada gunanya. */
++    fun supportsHighRefresh(context: Context): Boolean {
++        val display = displayOf(context) ?: return false
++        return try {
++            display.supportedModes.any { it.refreshRate >= HIGH_REFRESH_MIN_HZ }
++        } catch (_: Throwable) {
++            false
++        }
++    }
++
++    /**
++     * Frekuensi layar yang diminta selama game, atau 0 bila layar tidak dikunci. HP berprofil
++     * mengikuti setelan profilnya; HP lain mengikuti saklar [LauncherSettings.lockRefresh60].
++     */
++    fun refreshLockTarget(settings: LauncherSettings): Float {
++        val profile = detect()
++        if (profile != null) {
++            return if (settings.deviceProfileEnabled && settings.deviceProfileLockRefresh) profile.refreshRateHz else 0f
++        }
++        return if (settings.lockRefresh60) GENERAL_LOCK_HZ else 0f
++    }
++
++    /** Frekuensi layar yang sedang aktif, mis. "60Hz"; kosong bila layar tidak dikunci launcher. */
++    fun refreshRateLabel(context: Context, generalLock: Boolean = false): String {
++        if (detect() == null && !generalLock) return ""
+         val display = displayOf(context) ?: return ""
+         return try {
+             "${display.refreshRate.roundToInt()}Hz"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index b841242..a06e224 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -49,6 +49,20 @@ data class LauncherSettings(
+     val deviceProfileGcMode: String = "balanced", // "balanced", "serial", "default"
+     val deviceProfileLockRefresh: Boolean = true,
+ 
++    // HP tanpa profil khusus: kunci layar 90/120 Hz ke 60 Hz selama game berjalan (bawaan mati;
++    // HP berprofil memakai deviceProfileLockRefresh di atas).
++    val lockRefresh60: Boolean = false,
++    // HP tanpa profil khusus dan RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
++    // (tanpa flag GC tambahan dari launcher).
++    val generalGcMode: String = "auto",
++
++    // Mode Hemat: preset sekali ketuk (mode performa stabil sistem, V-Sync Zink, resolusi maks 80%).
++    // Nilai sebelum dinyalakan disimpan supaya bisa dikembalikan saat dimatikan.
++    val powerSaverMode: Boolean = false,
++    val powerSaverPrevResolution: Int = 100,
++    val powerSaverPrevSustained: Boolean = false,
++    val powerSaverPrevVsync: Boolean = false,
++
+     // Latar Beranda (foto / GIF / video)
+     val homeBgAnimate: Boolean = true, // false = GIF dan video tampil diam (paling hemat)
+     val homeBgPauseOnPowerSave: Boolean = true, // jeda GIF/video saat mode Hemat Baterai HP menyala
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/settings/PowerSaver.kt b/app/src/main/java/com/israadev/nuxlauncher/core/settings/PowerSaver.kt
+new file mode 100644
+index 0000000..eed5587
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/settings/PowerSaver.kt
+@@ -0,0 +1,53 @@
++package com.israadev.nuxlauncher.core.settings
++
++import com.israadev.nuxlauncher.core.models.LauncherSettings
++
++/**
++ * Mode Hemat: preset sekali ketuk untuk HP yang cepat panas atau baterainya boros.
++ *
++ * Yang diubah hanya tiga setelan yang sudah ada, jadi game tidak butuh kode baru untuk
++ * menjalankannya:
++ *  - mode performa stabil sistem (sustained performance) dinyalakan,
++ *  - V-Sync Zink dinyalakan (berlaku bila renderer Zink yang dipakai),
++ *  - skala resolusi dibatasi paling besar [MAX_RESOLUTION] persen.
++ *
++ * Nilai sebelumnya disimpan di settings.json supaya mematikan Mode Hemat mengembalikan keadaan
++ * semula, bukan angka bawaan.
++ */
++object PowerSaver {
++    const val MAX_RESOLUTION = 80
++    private const val MIN_RESOLUTION = 40
++    private const val MAX_STORED_RESOLUTION = 125
++
++    /** Skala resolusi yang dipakai selama Mode Hemat menyala. */
++    fun cappedResolution(current: Int): Int {
++        return minOf(current, MAX_RESOLUTION).coerceAtLeast(MIN_RESOLUTION)
++    }
++
++    fun enable(s: LauncherSettings): LauncherSettings {
++        if (s.powerSaverMode) return s
++        return s.copy(
++            powerSaverMode = true,
++            powerSaverPrevResolution = s.resolutionRatio.coerceIn(MIN_RESOLUTION, MAX_STORED_RESOLUTION),
++            powerSaverPrevSustained = s.sustainedPerformanceMode,
++            powerSaverPrevVsync = s.vsyncInZink,
++            sustainedPerformanceMode = true,
++            vsyncInZink = true,
++            resolutionRatio = cappedResolution(s.resolutionRatio)
++        )
++    }
++
++    fun disable(s: LauncherSettings): LauncherSettings {
++        if (!s.powerSaverMode) return s
++        // Resolusi dikembalikan hanya bila pengguna tidak mengubahnya sendiri selama Mode Hemat menyala.
++        val untouched = s.resolutionRatio == cappedResolution(s.powerSaverPrevResolution)
++        return s.copy(
++            powerSaverMode = false,
++            sustainedPerformanceMode = s.powerSaverPrevSustained,
++            vsyncInZink = s.powerSaverPrevVsync,
++            resolutionRatio = if (untouched) s.powerSaverPrevResolution else s.resolutionRatio
++        )
++    }
++
++    fun set(s: LauncherSettings, on: Boolean): LauncherSettings = if (on) enable(s) else disable(s)
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
+index 940eb24..9660b32 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/DeviceProfileCard.kt
+@@ -37,6 +37,85 @@ fun DeviceProfileCard() {
+     val profile = DeviceProfiles.detect()
+     if (profile != null) {
+         DeviceProfileCardContent(profile)
++    } else {
++        GeneralGcCard()
++    }
++}
++
++/**
++ * HP tanpa profil khusus tetap boleh memilih mode GC bila RAM-nya kecil. Di HP RAM besar kartu
++ * ini tidak menggambar apa pun, jadi Pengaturan tampil seperti biasa.
++ */
++@Composable
++private fun GeneralGcCard() {
++    val context = LocalContext.current
++    val settings by SettingsManager.settings.collectAsState()
++    val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
++    if (!DeviceProfiles.isSmallRamPhone(totalRamMb)) return
++    val gcMode = DeviceProfiles.normalizeGeneralGcMode(settings.generalGcMode)
++
++    NuxCard(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(bottom = 8.dp),
++        cornerRadius = 20.dp
++    ) {
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(horizontal = 14.dp, vertical = 8.dp)
++        ) {
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Icon(
++                    imageVector = Icons.Outlined.Memory,
++                    contentDescription = null,
++                    tint = NuxColors.Yellow,
++                    modifier = Modifier.size(22.dp)
++                )
++                Spacer(modifier = Modifier.width(10.dp))
++                Column {
++                    Text(
++                        text = "Optimasi HP RAM kecil",
++                        fontWeight = FontWeight.Black,
++                        fontSize = 14.sp,
++                        color = NuxColors.DarkGray
++                    )
++                    Text(
++                        text = "RAM HP ini ${totalRamMb} MB, jadi cara kerja pembersih memori Java bisa disetel.",
++                        fontSize = 11.sp,
++                        color = NuxColors.GrayNeutral,
++                        lineHeight = 15.sp
++                    )
++                }
++            }
++            SettingChoiceRow(
++                title = "Mode GC (pembersih memori Java)",
++                desc = when (gcMode) {
++                    DeviceProfiles.GC_SERIAL ->
++                        "Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat."
++                    DeviceProfiles.GC_DEFAULT ->
++                        "Bawaan: tanpa flag GC tambahan dari launcher."
++                    else ->
++                        "Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu."
++                },
++                options = listOf(
++                    DeviceProfiles.GC_AUTO to "Otomatis",
++                    DeviceProfiles.GC_SERIAL to "Serial",
++                    DeviceProfiles.GC_DEFAULT to "Bawaan"
++                ),
++                selected = gcMode,
++                onSelect = { modeId ->
++                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(generalGcMode = modeId))
++                }
++            )
++            Text(
++                text = "Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.",
++                fontSize = 11.sp,
++                color = NuxColors.GrayNeutral,
++                lineHeight = 15.sp,
++                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
++            )
++        }
+     }
+ }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PowerSaverCard.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PowerSaverCard.kt
+new file mode 100644
+index 0000000..258c7a7
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PowerSaverCard.kt
+@@ -0,0 +1,88 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Tune
++import androidx.compose.material3.Icon
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.collectAsState
++import androidx.compose.runtime.getValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.settings.PowerSaver
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.NuxColors
++
++/**
++ * Kartu "Mode Hemat" di Pengaturan > Grafis: satu saklar untuk HP yang cepat panas atau baterainya
++ * boros. Saklar ini hanya mengubah tiga setelan yang sudah ada (lihat [PowerSaver]), jadi game
++ * tidak menjalankan kode tambahan.
++ */
++@Composable
++fun PowerSaverCard() {
++    val context = LocalContext.current
++    val settings by SettingsManager.settings.collectAsState()
++
++    NuxCard(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(bottom = 8.dp),
++        cornerRadius = 20.dp
++    ) {
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(horizontal = 14.dp, vertical = 8.dp)
++        ) {
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Icon(
++                    imageVector = Icons.Outlined.Tune,
++                    contentDescription = null,
++                    tint = NuxColors.Yellow,
++                    modifier = Modifier.size(22.dp)
++                )
++                Spacer(modifier = Modifier.width(10.dp))
++                Column {
++                    Text(
++                        text = "Mode Hemat",
++                        fontWeight = FontWeight.Black,
++                        fontSize = 14.sp,
++                        color = NuxColors.DarkGray
++                    )
++                    Text(
++                        text = "Untuk HP yang cepat panas atau baterainya cepat habis.",
++                        fontSize = 11.sp,
++                        color = NuxColors.GrayNeutral,
++                        lineHeight = 15.sp
++                    )
++                }
++            }
++            SettingSwitchRow(
++                title = "Nyalakan Mode Hemat",
++                desc = "Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal ${PowerSaver.MAX_RESOLUTION}%.",
++                checked = settings.powerSaverMode,
++                onCheckedChange = { on ->
++                    SettingsManager.updateSettings(context, PowerSaver.set(SettingsManager.settings.value, on))
++                }
++            )
++            Text(
++                text = "Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.",
++                fontSize = 11.sp,
++                color = NuxColors.GrayNeutral,
++                lineHeight = 15.sp,
++                modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 76bc798..98165b5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -44,6 +44,7 @@ import com.israadev.nuxlauncher.GameActivity
+ import java.io.File
+ import java.io.FileOutputStream
+ import com.israadev.nuxlauncher.core.account.AccountManager
++import com.israadev.nuxlauncher.core.device.DeviceProfiles
+ import com.israadev.nuxlauncher.core.models.LauncherSettings
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
+@@ -118,6 +119,7 @@ fun SettingsScreen(
+     val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
+     val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.85f).toInt().coerceAtLeast(1024) }
+     val cpuCores = remember { SettingsManager.getCpuCoreCount() }
++    val showRefreshLock = remember { DeviceProfiles.detect() == null && DeviceProfiles.supportsHighRefresh(context) }
+ 
+     fun commitSettings() {
+         val updated = currentSettings.copy(
+@@ -316,6 +318,9 @@ fun SettingsScreen(
+                             NuxRendererRegistry.findRendererById(selectedRenderer)
+                         }
+ 
++                        // Preset sekali ketuk untuk HP yang cepat panas atau baterainya boros.
++                        PowerSaverCard()
++
+                         // Renderer aktif + tombol ganti / konfigurasi
+                         Row(
+                             modifier = Modifier
+@@ -412,6 +417,18 @@ fun SettingsScreen(
+                                 commitSettings()
+                             }
+                         )
++                        // Kunci 60 Hz untuk layar 90/120 Hz. HP berprofil khusus mengaturnya di kartu profil (tab Memori).
++                        if (showRefreshLock) {
++                            SettingDivider()
++                            SettingSwitchRow(
++                                title = "Kunci layar 60 Hz",
++                                desc = "Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.",
++                                checked = currentSettings.lockRefresh60,
++                                onCheckedChange = { on ->
++                                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(lockRefresh60 = on))
++                                }
++                            )
++                        }
+                         SettingDivider()
+                         SettingChoiceRow(
+                             title = "Driver Vulkan",
+
+
+# FIN part=2/2 files=12

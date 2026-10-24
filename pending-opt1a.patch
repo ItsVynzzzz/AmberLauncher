@@ -1,0 +1,763 @@
+diff --git a/app/src/main/assets/lang/en/crash.tsv b/app/src/main/assets/lang/en/crash.tsv
+index 94e5b5d..2bb51ed 100644
+--- a/app/src/main/assets/lang/en/crash.tsv
++++ b/app/src/main/assets/lang/en/crash.tsv
+@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Minecraft version: {0}
+ Jumlah mod: {0}	Number of mods: {0}
+ Daftar mod: {0}	Mod list: {0}
+ Isi log crash:	Crash log contents:
++# Pemulihan crash sekali ketuk
++Turunkan RAM ke {0} MB	Lower RAM to {0} MB
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Gives the phone more room. You can raise it again in Settings > Memory.
++Pakai renderer Otomatis	Use the Auto renderer
++Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	The renderer you chose may not suit this phone. Auto picks the best fit.
++Coba renderer {0}	Try the {0} renderer
++Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	The current renderer seems to have problems on this phone. You can change it again in Settings > Graphics.
++Matikan shader	Turn off shaders
++Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shaders put a heavy load on the GPU and memory. You can turn them back on from the game's video menu.
++Nonaktifkan mod tersangka	Disable suspect mods
++Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mods named in the log: {0}. You can enable them again in the Mods menu.
++Reset Java ke Otomatis	Reset Java to Auto
++Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	The Java version you picked may not match this game. Auto picks a suitable version.
++RAM game diturunkan ke {0} MB.	Game RAM lowered to {0} MB.
++Renderer dikembalikan ke Otomatis.	Renderer set back to Auto.
++Renderer diganti ke {0}.	Renderer changed to {0}.
++Shader dimatikan.	Shaders turned off.
++Mod dinonaktifkan: {0}.	Mods disabled: {0}.
++Java dikembalikan ke Otomatis.	Java set back to Auto.
++Gagal menerapkan. Coba lewat Pengaturan.	Could not apply this. Try it from Settings.
++Pemulihan cepat	Quick recovery
++Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Tap to try the fixes most likely to help. Everything can be undone.
++Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	Changes are saved. Go back to the launcher and start the game again.
++Sudah diterapkan	Already applied
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	The game stopped in the graphics part or in a library built into the phone. A common cause is a renderer that does not suit this phone. Try changing the renderer in Settings > Graphics. Only if every renderer fails might the problem be in the launcher.
+diff --git a/app/src/main/assets/lang/es/crash.tsv b/app/src/main/assets/lang/es/crash.tsv
+index 25787cf..ad990b8 100644
+--- a/app/src/main/assets/lang/es/crash.tsv
++++ b/app/src/main/assets/lang/es/crash.tsv
+@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Versi\u00f3n de Minecraft: {0}
+ Jumlah mod: {0}	Cantidad de mods: {0}
+ Daftar mod: {0}	Lista de mods: {0}
+ Isi log crash:	Contenido del registro del crash:
++# Pemulihan crash sekali ketuk
++Turunkan RAM ke {0} MB	Reducir la RAM a {0} MB
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Da m\u00e1s margen al tel\u00e9fono. Puedes volver a subirla en Ajustes > Memoria.
++Pakai renderer Otomatis	Usar el renderizador Auto
++Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	Es posible que el renderizador elegido no sea adecuado para este tel\u00e9fono. Auto elige el que mejor encaje.
++Coba renderer {0}	Probar el renderizador {0}
++Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	El renderizador actual parece tener problemas en este tel\u00e9fono. Puedes cambiarlo de nuevo en Ajustes > Gr\u00e1ficos.
++Matikan shader	Desactivar shaders
++Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Los shaders cargan mucho la GPU y la memoria. Puedes volver a activarlos desde el men\u00fa de v\u00eddeo del juego.
++Nonaktifkan mod tersangka	Desactivar mods sospechosos
++Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mods mencionados en el registro: {0}. Puedes volver a activarlos en el men\u00fa Mods.
++Reset Java ke Otomatis	Restablecer Java a Auto
++Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	Es posible que la versi\u00f3n de Java elegida no coincida con este juego. Auto elige una versi\u00f3n adecuada.
++RAM game diturunkan ke {0} MB.	RAM del juego reducida a {0} MB.
++Renderer dikembalikan ke Otomatis.	Renderizador restablecido a Auto.
++Renderer diganti ke {0}.	Renderizador cambiado a {0}.
++Shader dimatikan.	Shaders desactivados.
++Mod dinonaktifkan: {0}.	Mods desactivados: {0}.
++Java dikembalikan ke Otomatis.	Java restablecido a Auto.
++Gagal menerapkan. Coba lewat Pengaturan.	No se pudo aplicar. Int\u00e9ntalo desde Ajustes.
++Pemulihan cepat	Recuperaci\u00f3n r\u00e1pida
++Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Toca para probar las soluciones con m\u00e1s probabilidades de ayudar. Todo se puede deshacer.
++Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	Los cambios se han guardado. Vuelve al launcher y inicia el juego de nuevo.
++Sudah diterapkan	Ya aplicado
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	El juego se detuvo en la parte gr\u00e1fica o en una biblioteca integrada del tel\u00e9fono. Una causa com\u00fan es un renderizador poco compatible con este tel\u00e9fono. Prueba a cambiar el renderizador en Ajustes > Gr\u00e1ficos. Solo si todos fallan, el problema podr\u00eda estar en el launcher.
+diff --git a/app/src/main/assets/lang/vi/crash.tsv b/app/src/main/assets/lang/vi/crash.tsv
+index a98f3f2..8d2fb87 100644
+--- a/app/src/main/assets/lang/vi/crash.tsv
++++ b/app/src/main/assets/lang/vi/crash.tsv
+@@ -43,3 +43,28 @@ Versi Minecraft: {0}	Phi\u00ean b\u1ea3n Minecraft: {0}
+ Jumlah mod: {0}	S\u1ed1 l\u01b0\u1ee3ng mod: {0}
+ Daftar mod: {0}	Danh s\u00e1ch mod: {0}
+ Isi log crash:	N\u1ed9i dung nh\u1eadt k\u00fd crash:
++# Pemulihan crash sekali ketuk
++Turunkan RAM ke {0} MB	H\u1ea1 RAM xu\u1ed1ng {0} MB
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Gi\u00fap \u0111i\u1ec7n tho\u1ea1i c\u00f3 th\u00eam ch\u1ed7 tr\u1ed1ng. B\u1ea1n c\u00f3 th\u1ec3 t\u0103ng l\u1ea1i trong C\u00e0i \u0111\u1eb7t > B\u1ed9 nh\u1edb.
++Pakai renderer Otomatis	D\u00f9ng tr\u00ecnh k\u1ebft xu\u1ea5t T\u1ef1 \u0111\u1ed9ng
++Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	Tr\u00ecnh k\u1ebft xu\u1ea5t b\u1ea1n ch\u1ecdn c\u00f3 th\u1ec3 kh\u00f4ng h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y. T\u1ef1 \u0111\u1ed9ng s\u1ebd ch\u1ecdn lo\u1ea1i ph\u00f9 h\u1ee3p nh\u1ea5t.
++Coba renderer {0}	Th\u1eed tr\u00ecnh k\u1ebft xu\u1ea5t {0}
++Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	Tr\u00ecnh k\u1ebft xu\u1ea5t hi\u1ec7n t\u1ea1i c\u00f3 v\u1ebb g\u1eb7p v\u1ea5n \u0111\u1ec1 tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y. B\u1ea1n c\u00f3 th\u1ec3 \u0111\u1ed5i l\u1ea1i trong C\u00e0i \u0111\u1eb7t > \u0110\u1ed3 h\u1ecda.
++Matikan shader	T\u1eaft shader
++Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shader l\u00e0m GPU v\u00e0 b\u1ed9 nh\u1edb ch\u1ecbu t\u1ea3i n\u1eb7ng. B\u1ea1n c\u00f3 th\u1ec3 b\u1eadt l\u1ea1i t\u1eeb menu video c\u1ee7a game.
++Nonaktifkan mod tersangka	V\u00f4 hi\u1ec7u h\u00f3a mod nghi v\u1ea5n
++Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	C\u00e1c mod \u0111\u01b0\u1ee3c nh\u1eafc trong nh\u1eadt k\u00fd: {0}. B\u1ea1n c\u00f3 th\u1ec3 b\u1eadt l\u1ea1i trong menu Mod.
++Reset Java ke Otomatis	\u0110\u1eb7t l\u1ea1i Java v\u1ec1 T\u1ef1 \u0111\u1ed9ng
++Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	Phi\u00ean b\u1ea3n Java b\u1ea1n ch\u1ecdn c\u00f3 th\u1ec3 kh\u00f4ng kh\u1edbp v\u1edbi game n\u00e0y. T\u1ef1 \u0111\u1ed9ng s\u1ebd ch\u1ecdn phi\u00ean b\u1ea3n ph\u00f9 h\u1ee3p.
++RAM game diturunkan ke {0} MB.	\u0110\u00e3 h\u1ea1 RAM game xu\u1ed1ng {0} MB.
++Renderer dikembalikan ke Otomatis.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i tr\u00ecnh k\u1ebft xu\u1ea5t v\u1ec1 T\u1ef1 \u0111\u1ed9ng.
++Renderer diganti ke {0}.	\u0110\u00e3 \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t sang {0}.
++Shader dimatikan.	\u0110\u00e3 t\u1eaft shader.
++Mod dinonaktifkan: {0}.	\u0110\u00e3 v\u00f4 hi\u1ec7u h\u00f3a mod: {0}.
++Java dikembalikan ke Otomatis.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i Java v\u1ec1 T\u1ef1 \u0111\u1ed9ng.
++Gagal menerapkan. Coba lewat Pengaturan.	Kh\u00f4ng \u00e1p d\u1ee5ng \u0111\u01b0\u1ee3c. H\u00e3y th\u1eed trong C\u00e0i \u0111\u1eb7t.
++Pemulihan cepat	Kh\u1eafc ph\u1ee5c nhanh
++Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Ch\u1ea1m \u0111\u1ec3 th\u1eed c\u00e1c c\u00e1ch s\u1eeda c\u00f3 kh\u1ea3 n\u0103ng gi\u00fap nh\u1ea5t. M\u1ecdi thay \u0111\u1ed5i \u0111\u1ec1u c\u00f3 th\u1ec3 ho\u00e0n t\u00e1c.
++Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	\u0110\u00e3 l\u01b0u thay \u0111\u1ed5i. Quay l\u1ea1i launcher r\u1ed3i ch\u1ea1y game l\u1ea1i.
++Sudah diterapkan	\u0110\u00e3 \u00e1p d\u1ee5ng
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	Game d\u1eebng \u1edf ph\u1ea7n \u0111\u1ed3 h\u1ecda ho\u1eb7c th\u01b0 vi\u1ec7n c\u00f3 s\u1eb5n c\u1ee7a \u0111i\u1ec7n tho\u1ea1i. Nguy\u00ean nh\u00e2n th\u01b0\u1eddng g\u1eb7p l\u00e0 tr\u00ecnh k\u1ebft xu\u1ea5t kh\u00f4ng h\u1ee3p v\u1edbi \u0111i\u1ec7n tho\u1ea1i n\u00e0y. H\u00e3y th\u1eed \u0111\u1ed5i tr\u00ecnh k\u1ebft xu\u1ea5t trong C\u00e0i \u0111\u1eb7t > \u0110\u1ed3 h\u1ecda. Ch\u1ec9 khi m\u1ecdi tr\u00ecnh k\u1ebft xu\u1ea5t \u0111\u1ec1u l\u1ed7i th\u00ec v\u1ea5n \u0111\u1ec1 m\u1edbi c\u00f3 th\u1ec3 n\u1eb1m \u1edf launcher.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
+index 910463d..86f3a63 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
+@@ -23,7 +23,9 @@ data class GameCrashInfo(
+     val crashType: String = CRASH_TYPE_GAME,
+     val loader: String = "vanilla",
+     val loaderVersion: String? = null,
+-    val installedMods: List<String> = emptyList()
++    val installedMods: List<String> = emptyList(),
++    /** Folder game (minecraft) instance yang crash; dipakai tombol pemulihan. Kosong di catatan lama. */
++    val gameDirPath: String? = null
+ ) {
+     companion object {
+         const val CRASH_TYPE_GAME = "GAME_CRASH"
+@@ -196,7 +198,8 @@ object CrashManager {
+                 crashType = crashType,
+                 loader = loader,
+                 loaderVersion = loaderVersion,
+-                installedMods = resolvedMods
++                installedMods = resolvedMods,
++                gameDirPath = gameDirPath.takeIf { it.isNotBlank() }
+             )
+ 
+             val crashFile = File(filesDir, CRASH_FILE_NAME)
+@@ -333,7 +336,8 @@ object CrashManager {
+                         crashType = GameCrashInfo.CRASH_TYPE_GAME,
+                         loader = session?.loader ?: "vanilla",
+                         loaderVersion = session?.loaderVersion,
+-                        installedMods = resolvedSessionMods
++                        installedMods = resolvedSessionMods,
++                        gameDirPath = session?.gameDirPath
+                     )
+ 
+                     val cf = File(context.filesDir, CRASH_FILE_NAME)
+@@ -373,7 +377,8 @@ object CrashManager {
+                                 crashType = GameCrashInfo.CRASH_TYPE_GAME,
+                                 loader = inst.loader,
+                                 loaderVersion = inst.loaderVersion,
+-                                installedMods = fallbackMods
++                                installedMods = fallbackMods,
++                                gameDirPath = instGameDir.absolutePath
+                             )
+                             _activeCrash.value = info
+                         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt
+new file mode 100644
+index 0000000..b48ec70
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt
+@@ -0,0 +1,442 @@
++package com.israadev.nuxlauncher.core.crash
++
++import android.content.Context
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.device.DeviceProfiles
++import com.israadev.nuxlauncher.core.instance.InstanceManager
++import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
++import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
++import java.io.File
++
++/** Perbaikan sekali ketuk yang ditawarkan setelah game crash. */
++enum class RecoveryAction { LOWER_RAM, RESET_RENDERER, DISABLE_SHADERS, DISABLE_MODS, RESET_JAVA }
++
++/**
++ * Satu tawaran perbaikan. [label] dan [detail] ditulis dalam bahasa Indonesia dan diterjemahkan
++ * lewat kamus saat ditampilkan. [arg] membawa nilai yang akan diterapkan: RAM baru (MB), id
++ * renderer, atau daftar nama berkas mod dipisah tanda "|".
++ */
++data class RecoveryOption(
++    val action: RecoveryAction,
++    val label: String,
++    val detail: String,
++    val arg: String = ""
++)
++
++data class RecoveryResult(val ok: Boolean, val message: String)
++
++/**
++ * Pemulihan sekali ketuk setelah crash. Hanya menawarkan perbaikan yang masuk akal untuk dugaan
++ * penyebab crash ([CrashAdvisor.sourceOf]), dan semuanya bisa dibatalkan pengguna: RAM dan renderer
++ * tinggal diubah lagi di Pengaturan, mod hanya diberi akhiran ".disabled" (diaktifkan lagi di menu
++ * Mod), dan shader tinggal dinyalakan lagi dari menu video game.
++ *
++ * Fungsi [suggest] dan [apply] membaca atau menulis berkas, jadi panggil dari thread latar.
++ */
++object CrashRecovery {
++
++    private const val RAM_STEP_MB = 256
++    private const val RAM_ROUND_MB = 128
++    private const val RAM_MIN_MB = 512
++    private const val MAX_SUSPECT_MODS = 3
++
++    private val BUILTIN_RENDERER_IDS = setOf("auto", "krypton", "mobileglues", "gl4es", "zink", "freedreno")
++
++    /** Berkas pengaturan shader (relatif terhadap folder game) yang memakai kunci enableShaders. */
++    private val SHADER_PROPERTY_FILES = listOf("config/iris.properties", "config/oculus.properties")
++    private const val OPTIFINE_SHADER_FILE = "optionsshaders.txt"
++
++    /** Id mod yang tidak pernah dianggap tersangka (pustaka inti: mematikannya membuat game makin rusak). */
++    private val PROTECTED_MOD_IDS = setOf(
++        "minecraft", "java", "fabricloader", "fabric", "fabric-api", "forge", "neoforge", "quilt_loader", "mixinextras"
++    )
++
++    private val MOD_ID_PATTERNS = listOf(
++        Regex("""Mod ID: '([A-Za-z0-9_.\-]+)'"""),
++        Regex("""Mixin apply for mod ([A-Za-z0-9_.\-]+) failed"""),
++        Regex("""Mod '[^']*' \(([A-Za-z0-9_.\-]+)\)""")
++    )
++
++    // ---------------------------------------------------------------- logika murni (mudah diuji)
++
++    /** True bila heap Java kehabisan ruang (bukan RAM HP): menurunkan RAM justru memperburuk. */
++    fun isJavaHeapOutOfMemory(log: String): Boolean {
++        return log.contains("OutOfMemoryError: Java heap space") ||
++            log.contains("GC overhead limit exceeded")
++    }
++
++    /**
++     * RAM game baru (MB) bila diturunkan 256 MB dari heap yang benar-benar dipakai
++     * ([effectiveMb], sudah memperhitungkan batas profil), atau null bila tidak ada ruang untuk turun.
++     */
++    fun loweredRamMb(requestedMb: Int, effectiveMb: Int): Int? {
++        val target = ((effectiveMb - RAM_STEP_MB) / RAM_ROUND_MB * RAM_ROUND_MB).coerceAtLeast(RAM_MIN_MB)
++        return if (target < requestedMb) target else null
++    }
++
++    /** True bila log menyinggung shader sehingga mematikannya masuk akal. */
++    fun mentionsShaders(log: String): Boolean {
++        return log.contains("shader", ignoreCase = true) ||
++            log.contains("iris", ignoreCase = true) ||
++            log.contains("oculus", ignoreCase = true) ||
++            log.contains("optifine", ignoreCase = true)
++    }
++
++    /** True bila log menunjukkan versi Java tidak cocok dengan game atau mod. */
++    fun mentionsJavaMismatch(log: String): Boolean {
++        return log.contains("UnsupportedClassVersionError") ||
++            log.contains("Unsupported class file major version") ||
++            log.contains("Unsupported major.minor version") ||
++            log.contains("compiled by a more recent version of the Java Runtime")
++    }
++
++    /** Teks iris.properties/oculus.properties dengan shader dimatikan, atau null bila tidak perlu diubah. */
++    fun disableShaderProperty(text: String): String? {
++        val lines = text.split("\n")
++        var changed = false
++        val out = lines.map { line ->
++            val trimmed = line.trim()
++            if (trimmed.startsWith("enableShaders") && trimmed.substringAfter("=", "").trim().equals("true", ignoreCase = true)) {
++                changed = true
++                "enableShaders=false"
++            } else {
++                line
++            }
++        }
++        return if (changed) out.joinToString("\n") else null
++    }
++
++    /** Teks optionsshaders.txt (OptiFine) dengan shader dimatikan, atau null bila tidak perlu diubah. */
++    fun disableOptifineShader(text: String): String? {
++        val lines = text.split("\n")
++        var changed = false
++        val out = lines.map { line ->
++            val trimmed = line.trim()
++            if (trimmed.startsWith("shaderPack=")) {
++                val value = trimmed.substringAfter("=").trim()
++                if (value.isNotEmpty() && !value.equals("OFF", ignoreCase = true)) {
++                    changed = true
++                    "shaderPack=OFF"
++                } else {
++                    line
++                }
++            } else {
++                line
++            }
++        }
++        return if (changed) out.joinToString("\n") else null
++    }
++
++    /** Nama dasar berkas mod tanpa versi, mis. "sodium-fabric-0.5.8+mc1.20.1.jar" -> "sodium-fabric". */
++    fun modBaseName(fileName: String): String {
++        var base = fileName.lowercase().removeSuffix(".disabled").removeSuffix(".jar")
++        val cut = Regex("""[-_+ ]v?\d""").find(base)
++        if (cut != null && cut.range.first > 0) base = base.substring(0, cut.range.first)
++        return base
++    }
++
++    /**
++     * Mod aktif yang disebut di [log]: nama berkasnya muncul utuh, atau id mod yang disebut crash
++     * report cocok dengan nama berkasnya. Paling banyak [MAX_SUSPECT_MODS]; lebih dari itu dianggap
++     * terlalu tidak pasti, hasilnya kosong. Pustaka inti (mis. Fabric API) tidak pernah dipilih.
++     */
++    fun findSuspectMods(log: String, installedMods: List<String>): List<String> {
++        val enabled = installedMods.filter { it.endsWith(".jar", ignoreCase = true) }
++        if (enabled.isEmpty() || log.isBlank()) return emptyList()
++
++        val ids = HashSet<String>()
++        for (pattern in MOD_ID_PATTERNS) {
++            for (m in pattern.findAll(log)) {
++                val id = m.groupValues[1].lowercase()
++                if (id.length >= 3 && id !in PROTECTED_MOD_IDS) ids.add(id)
++            }
++        }
++
++        val found = LinkedHashSet<String>()
++        for (name in enabled) {
++            val base = modBaseName(name)
++            if (isProtectedJar(base)) continue
++            if (log.contains(name)) {
++                found.add(name)
++                continue
++            }
++            val squashed = base.replace(Regex("""[^a-z0-9]"""), "")
++            for (id in ids) {
++                val idSquashed = id.replace(Regex("""[^a-z0-9]"""), "")
++                if (base == id || base.startsWith("$id-") || base.startsWith("${id}_") || (idSquashed.length >= 4 && squashed == idSquashed)) {
++                    found.add(name)
++                    break
++                }
++            }
++        }
++        return if (found.size in 1..MAX_SUSPECT_MODS) found.toList() else emptyList()
++    }
++
++    private fun isProtectedJar(base: String): Boolean {
++        return base.startsWith("fabric-api") || base == "fabricapi" || base.startsWith("forgified-fabric-api") ||
++            base.startsWith("quilted-fabric-api") || base == "fabric-language-kotlin"
++    }
++
++    /**
++     * Renderer lain yang layak dicoba setelah [currentId] crash: urutan Krypton, MobileGlues, GL4ES,
++     * hanya yang pustakanya ada di HP ini dan mendukung versi Minecraft-nya. Null bila tidak ada pilihan lain.
++     */
++    fun alternativeRenderer(currentId: String, chain: List<NuxRendererInfo>): NuxRendererInfo? {
++        if (chain.size < 2) return null
++        val idx = chain.indexOfFirst { it.id == currentId }
++        return if (idx < 0) chain.first() else chain[(idx + 1) % chain.size]
++    }
++
++    // ---------------------------------------------------------------- tawaran dan penerapan
++
++    /** Perbaikan yang layak ditawarkan untuk crash ini. Kosong untuk crash launcher. */
++    fun suggest(context: Context, info: GameCrashInfo, logText: String): List<RecoveryOption> {
++        if (info.isLauncherCrash) return emptyList()
++        val options = ArrayList<RecoveryOption>()
++        try {
++            // Halaman Error bisa berjalan di proses yang baru dibuka: muat setelan dari berkas dulu.
++            SettingsManager.init(context)
++            val log = if (logText.isNotBlank()) logText else info.logSnippet
++            val source = CrashAdvisor.sourceOf(info)
++            val settings = SettingsManager.settings.value
++            val gameDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it) }?.takeIf { it.isDirectory }
++
++            // 1. RAM: hanya bila HP kehabisan RAM (bukan heap Java yang sempit)
++            if (source == CrashSource.MEMORY && !isJavaHeapOutOfMemory(log)) {
++                val target = loweredRamMb(settings.ramMb, effectiveHeapMb(context, settings.ramMb, settings.deviceProfileEnabled))
++                if (target != null) {
++                    options.add(
++                        RecoveryOption(
++                            RecoveryAction.LOWER_RAM,
++                            "Turunkan RAM ke $target MB",
++                            "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.",
++                            target.toString()
++                        )
++                    )
++                }
++            }
++
++            // 2. Renderer: hanya untuk crash grafis
++            if (source == CrashSource.GRAPHICS) {
++                rendererOption(context, info, settings.selectedRenderer)?.let { options.add(it) }
++            }
++
++            // 3. Shader: bila masih menyala dan crash berkaitan dengan grafis, memori, atau log menyebut shader
++            if (gameDir != null && shadersEnabled(gameDir) &&
++                (source == CrashSource.GRAPHICS || source == CrashSource.MEMORY || mentionsShaders(log))
++            ) {
++                options.add(
++                    RecoveryOption(
++                        RecoveryAction.DISABLE_SHADERS,
++                        "Matikan shader",
++                        "Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game."
++                    )
++                )
++            }
++
++            // 4. Mod yang disebut di log
++            if (gameDir != null) {
++                val suspects = findSuspectMods(log, info.installedMods).filter { File(File(gameDir, "mods"), it).isFile }
++                if (suspects.isNotEmpty()) {
++                    options.add(
++                        RecoveryOption(
++                            RecoveryAction.DISABLE_MODS,
++                            "Nonaktifkan mod tersangka",
++                            "Mod yang disebut di log: ${suspects.joinToString(", ")}. Bisa diaktifkan lagi di menu Mod.",
++                            suspects.joinToString("|")
++                        )
++                    )
++                }
++            }
++
++            // 5. Java: bila versi dipilih manual dan log menunjukkan ketidakcocokan
++            if ((mentionsJavaMismatch(log) || source == CrashSource.GAME_OR_MODS) && javaIsManual(info)) {
++                options.add(
++                    RecoveryOption(
++                        RecoveryAction.RESET_JAVA,
++                        "Reset Java ke Otomatis",
++                        "Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai."
++                    )
++                )
++            }
++        } catch (_: Throwable) {
++            // Tawaran pemulihan hanya bonus: kegagalan di sini tidak boleh mengganggu panel crash.
++        }
++        return options
++    }
++
++    fun apply(context: Context, info: GameCrashInfo, option: RecoveryOption): RecoveryResult {
++        return try {
++            when (option.action) {
++                RecoveryAction.LOWER_RAM -> {
++                    val mb = option.arg.toIntOrNull() ?: return RecoveryResult(false, FAIL_MESSAGE)
++                    SettingsManager.init(context)
++                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(ramMb = mb))
++                    RecoveryResult(true, "RAM game diturunkan ke $mb MB.")
++                }
++                RecoveryAction.RESET_RENDERER -> {
++                    val id = option.arg.ifBlank { "auto" }
++                    SettingsManager.init(context)
++                    SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(selectedRenderer = id))
++                    if (id == "auto") {
++                        RecoveryResult(true, "Renderer dikembalikan ke Otomatis.")
++                    } else {
++                        RecoveryResult(true, "Renderer diganti ke ${NuxRendererRegistry.findRendererById(id).displayName}.")
++                    }
++                }
++                RecoveryAction.DISABLE_SHADERS -> {
++                    val gameDir = info.gameDirPath?.let { File(it) } ?: return RecoveryResult(false, FAIL_MESSAGE)
++                    if (disableShaders(gameDir) > 0) RecoveryResult(true, "Shader dimatikan.") else RecoveryResult(false, FAIL_MESSAGE)
++                }
++                RecoveryAction.DISABLE_MODS -> {
++                    val gameDir = info.gameDirPath?.let { File(it) } ?: return RecoveryResult(false, FAIL_MESSAGE)
++                    val done = disableMods(gameDir, option.arg.split("|").filter { it.isNotBlank() })
++                    if (done.isNotEmpty()) {
++                        RecoveryResult(true, "Mod dinonaktifkan: ${done.joinToString(", ")}.")
++                    } else {
++                        RecoveryResult(false, FAIL_MESSAGE)
++                    }
++                }
++                RecoveryAction.RESET_JAVA -> {
++                    resetJava(context, info)
++                    RecoveryResult(true, "Java dikembalikan ke Otomatis.")
++                }
++            }
++        } catch (_: Throwable) {
++            RecoveryResult(false, FAIL_MESSAGE)
++        }
++    }
++
++    private const val FAIL_MESSAGE = "Gagal menerapkan. Coba lewat Pengaturan."
++
++    // ---------------------------------------------------------------- bagian yang menyentuh berkas
++
++    private fun effectiveHeapMb(context: Context, requestedMb: Int, profileEnabled: Boolean): Int {
++        val profile = DeviceProfiles.detect() ?: return requestedMb
++        if (!profileEnabled) return requestedMb
++        val totalMb = SettingsManager.getTotalDeviceMemoryMb(context)
++        return if (DeviceProfiles.heapCapApplies(profile, totalMb)) minOf(requestedMb, profile.smallRamHeapCapMb) else requestedMb
++    }
++
++    private fun rendererOption(context: Context, info: GameCrashInfo, selectedId: String): RecoveryOption? {
++        val nativeDir = File(context.applicationInfo.nativeLibraryDir)
++        val selected = selectedId.trim().ifEmpty { "auto" }.lowercase()
++
++        // Renderer tambahan (plugin) atau pilihan manual yang tidak dikenal: kembali ke Otomatis.
++        if (selected !in BUILTIN_RENDERER_IDS) {
++            return resetToAuto("Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.")
++        }
++
++        val current = NuxRendererRegistry.resolveRenderer(selected, info.mcVersion, nativeDir, null)
++        // Pilihan manual yang berbeda dari pilihan Otomatis: kembali ke Otomatis dulu.
++        if (selected != "auto") {
++            val auto = NuxRendererRegistry.resolveRenderer("auto", info.mcVersion, nativeDir, null)
++            if (auto.id != current.id) {
++                return resetToAuto("Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.")
++            }
++        }
++
++        val chain = listOf(
++            NuxRendererRegistry.RENDERER_KRYPTON,
++            NuxRendererRegistry.RENDERER_MOBILEGLUES,
++            NuxRendererRegistry.RENDERER_GL4ES
++        ).filter { File(nativeDir, it.libraryName).exists() && NuxVersionUtils.isRendererSupported(it, info.mcVersion) }
++        val alt = alternativeRenderer(current.id, chain) ?: return null
++        val name = alt.displayName.substringBefore(" (")
++        return RecoveryOption(
++            RecoveryAction.RESET_RENDERER,
++            "Coba renderer $name",
++            "Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.",
++            alt.id
++        )
++    }
++
++    private fun resetToAuto(detail: String) = RecoveryOption(
++        RecoveryAction.RESET_RENDERER,
++        "Pakai renderer Otomatis",
++        detail,
++        "auto"
++    )
++
++    private fun shadersEnabled(gameDir: File): Boolean {
++        for (rel in SHADER_PROPERTY_FILES) {
++            val f = File(gameDir, rel)
++            if (f.isFile && f.length() < 65_536 && disableShaderProperty(f.readText()) != null) return true
++        }
++        val of = File(gameDir, OPTIFINE_SHADER_FILE)
++        return of.isFile && of.length() < 65_536 && disableOptifineShader(of.readText()) != null
++    }
++
++    /** Mematikan shader di semua berkas pengaturan yang dikenal. Mengembalikan jumlah berkas yang diubah. */
++    fun disableShaders(gameDir: File): Int {
++        var changed = 0
++        for (rel in SHADER_PROPERTY_FILES) {
++            val f = File(gameDir, rel)
++            if (!f.isFile || f.length() >= 65_536) continue
++            val updated = disableShaderProperty(f.readText()) ?: continue
++            f.writeText(updated)
++            changed++
++        }
++        val of = File(gameDir, OPTIFINE_SHADER_FILE)
++        if (of.isFile && of.length() < 65_536) {
++            val updated = disableOptifineShader(of.readText())
++            if (updated != null) {
++                of.writeText(updated)
++                changed++
++            }
++        }
++        return changed
++    }
++
++    /** Memberi akhiran ".disabled" pada mod yang disebut. Mengembalikan nama berkas yang berhasil. */
++    fun disableMods(gameDir: File, names: List<String>): List<String> {
++        val modsDir = File(gameDir, "mods")
++        val done = ArrayList<String>()
++        for (raw in names) {
++            // Hanya nama berkas biasa di folder mods, tidak boleh berisi jalur.
++            val name = File(raw).name
++            if (name != raw || !name.endsWith(".jar", ignoreCase = true)) continue
++            val src = File(modsDir, name)
++            val dst = File(modsDir, "$name.disabled")
++            if (src.isFile && !dst.exists() && src.renameTo(dst)) done.add(name)
++        }
++        return done
++    }
++
++    private fun resolveInstanceId(info: GameCrashInfo): String? {
++        val dir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it) }
++        return dir?.parentFile?.name?.takeIf { it.isNotBlank() }
++    }
++
++    private fun instanceJavaRuntime(info: GameCrashInfo): String? {
++        val instDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it).parentFile } ?: return null
++        val f = File(instDir, "instance.json")
++        if (!f.isFile || f.length() > 65_536) return null
++        return try {
++            JsonParser.parseString(f.readText()).asJsonObject.get("javaRuntime")?.asString
++        } catch (_: Throwable) {
++            null
++        }
++    }
++
++    private fun javaIsManual(info: GameCrashInfo): Boolean {
++        if (!SettingsManager.settings.value.defaultJavaRuntime.equals("auto", ignoreCase = true)) return true
++        val runtime = instanceJavaRuntime(info) ?: return false
++        return !runtime.equals("auto", ignoreCase = true)
++    }
++
++    private fun resetJava(context: Context, info: GameCrashInfo) {
++        SettingsManager.init(context)
++        SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(defaultJavaRuntime = "auto"))
++        // Daftar instance dimuat dulu supaya menyimpan satu instance tidak menimpa daftar dengan isi kosong.
++        InstanceManager.init(context)
++        if (InstanceManager.instances.value.isEmpty()) return
++        val id = resolveInstanceId(info)
++        val inst = InstanceManager.instances.value.firstOrNull { (id != null && it.id == id) || it.name == info.instanceName }
++        if (inst != null && !inst.javaRuntime.equals("auto", ignoreCase = true)) {
++            InstanceManager.updateInstance(context, inst.copy(javaRuntime = "auto"))
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
+index 030311c..ef5ecd3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
+@@ -117,7 +117,8 @@ class ErrorActivity : ComponentActivity() {
+             crashType = crashType,
+             loader = saved?.loader ?: "vanilla",
+             loaderVersion = saved?.loaderVersion,
+-            installedMods = saved?.installedMods.orEmpty()
++            installedMods = saved?.installedMods.orEmpty(),
++            gameDirPath = saved?.gameDirPath
+         )
+ 
+         setContent {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberCrashPanel.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberCrashPanel.kt
+index ef57fec..b62b541 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberCrashPanel.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberCrashPanel.kt
+@@ -24,6 +24,7 @@ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.verticalScroll
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+@@ -39,15 +40,20 @@ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.crash.CrashAdvisor
++import com.israadev.nuxlauncher.core.crash.CrashRecovery
+ import com.israadev.nuxlauncher.core.crash.CrashSource
+ import com.israadev.nuxlauncher.core.crash.CrashUtils
+ import com.israadev.nuxlauncher.core.crash.GameCrashInfo
+ import com.israadev.nuxlauncher.core.crash.MCLogsUploader
++import com.israadev.nuxlauncher.core.crash.RecoveryAction
++import com.israadev.nuxlauncher.core.crash.RecoveryOption
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.i18n.Toast
+ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import com.israadev.nuxlauncher.ui.theme.Amber
++import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ import java.io.File
+ 
+ private const val INTRO_GAME =
+@@ -68,6 +74,12 @@ private const val REPORT_BODY_GAME =
+ private const val REPORT_BODY_LAUNCHER =
+     "Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan."
+ 
++private const val RECOVERY_BODY =
++    "Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan."
++
++private const val RECOVERY_DONE =
++    "Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi."
++
+ private const val MAX_SHOWN_LOG_CHARS = 40_000
+ 
+ /**
+@@ -96,6 +108,25 @@ fun AmberCrashPanel(
+     var uploading by remember { mutableStateOf(false) }
+     var uploadUrl by remember { mutableStateOf<String?>(null) }
+ 
++    // Tawaran pemulihan sekali ketuk. Dihitung di thread latar karena membaca berkas (shader, mod, instance).
++    var recovery by remember(info) { mutableStateOf<List<RecoveryOption>>(emptyList()) }
++    var recovered by remember(info) { mutableStateOf<Set<RecoveryAction>>(emptySet()) }
++    LaunchedEffect(info, log) {
++        recovery = withContext(Dispatchers.IO) { CrashRecovery.suggest(context, info, log) }
++    }
++    val inFlight = remember(info) { HashSet<RecoveryAction>() }
++    val applyRecovery: (RecoveryOption) -> Unit = { option ->
++        // Ketukan ganda tidak menerapkan perbaikan yang sama dua kali.
++        if (option.action !in recovered && inFlight.add(option.action)) {
++            scope.launch {
++                val result = withContext(Dispatchers.IO) { CrashRecovery.apply(context, info, option) }
++                if (result.ok) recovered = recovered + option.action
++                inFlight.remove(option.action)
++                Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
++            }
++        }
++    }
++
+     val copyForAi: () -> Unit = {
+         copyToClipboard(context, "Crash Log", CrashAdvisor.buildAiPrompt(context, info, log))
+         Toast.makeText(context, "Log untuk AI disalin. Tempel di kolom chat AI.", Toast.LENGTH_LONG).show()
+@@ -177,6 +208,9 @@ fun AmberCrashPanel(
+             )
+             CrashHelpPane(
+                 launcherCrash = launcherCrash,
++                recovery = recovery,
++                recovered = recovered,
++                onRecover = applyRecovery,
+                 uploading = uploading,
+                 uploaded = uploadUrl != null,
+                 onCopyForAi = copyForAi,
+@@ -415,6 +449,9 @@ private fun CrashLogContent(logText: String, logFile: File, modifier: Modifier)
+ @Composable
+ private fun CrashHelpPane(
+     launcherCrash: Boolean,
++    recovery: List<RecoveryOption>,
++    recovered: Set<RecoveryAction>,
++    onRecover: (RecoveryOption) -> Unit,
+     uploading: Boolean,
+     uploaded: Boolean,
+     onCopyForAi: () -> Unit,
+@@ -430,12 +467,16 @@ private fun CrashHelpPane(
+             .verticalScroll(rememberScrollState()),
+         verticalArrangement = Arrangement.spacedBy(12.dp)
+     ) {
++        if (!launcherCrash && recovery.isNotEmpty()) {
++            RecoverySection(recovery = recovery, recovered = recovered, onRecover = onRecover)
++            CrashRule()
++        }
+         if (launcherCrash) {
+             ReportSection(primary = true, launcherCrash = true, onReport = onReport)
+             CrashRule()
+             AiSection(primary = false, onCopy = onCopyForAi, onOpenAi = onOpenAi)
+         } else {
+-            AiSection(primary = true, onCopy = onCopyForAi, onOpenAi = onOpenAi)
++            AiSection(primary = recovery.isEmpty(), onCopy = onCopyForAi, onOpenAi = onOpenAi)
+             CrashRule()
+             ReportSection(primary = false, launcherCrash = false, onReport = onReport)
+         }
+@@ -466,6 +507,34 @@ private fun CrashHelpPane(
+     }
+ }
+ 
++/** Perbaikan sekali ketuk. Tombol pertama dibuat menonjol; yang sudah diterapkan dikunci. */
++@Composable
++private fun RecoverySection(
++    recovery: List<RecoveryOption>,
++    recovered: Set<RecoveryAction>,
++    onRecover: (RecoveryOption) -> Unit
++) {
++    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++        CrashSectionTitle("Pemulihan cepat")
++        Text(text = RECOVERY_BODY, color = Amber.TextDim, fontSize = 13.sp, lineHeight = 19.sp)
++        recovery.forEachIndexed { index, option ->
++            val done = option.action in recovered
++            Text(text = option.detail, color = Amber.TextDim, fontSize = 12.sp, lineHeight = 17.sp)
++            AmberButton(
++                text = if (done) "Sudah diterapkan" else option.label,
++                onClick = { onRecover(option) },
++                modifier = Modifier.fillMaxWidth(),
++                style = if (index == 0 && !done) AmberButtonStyle.Primary else AmberButtonStyle.Ghost,
++                enabled = !done,
++                height = 42.dp
++            )
++        }
++        if (recovered.isNotEmpty()) {
++            Text(text = RECOVERY_DONE, color = Amber.Yellow, fontSize = 12.sp, lineHeight = 17.sp)
++        }
++    }
++}
++
+ @Composable
+ private fun AiSection(primary: Boolean, onCopy: () -> Unit, onOpenAi: (String) -> Unit) {
+     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+@@ -563,7 +632,7 @@ private fun sourceDetail(source: CrashSource): String = when (source) {
+             "setengah RAM HP), kurangi mod, dan tutup aplikasi lain."
+     CrashSource.GRAPHICS ->
+         "Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang " +
+-            "cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, " +
++            "cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, " +
+             "barulah mungkin masalahnya ada di launcher."
+     CrashSource.GAME_OR_MODS ->
+         "Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game " +
+
+
+# FIN part=1/2 files=7

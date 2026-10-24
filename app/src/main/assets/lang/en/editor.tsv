@@ -1,0 +1,58 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	\u2713 In-game button layout saved!
+Selesai	Done
+Kembali	Back
+Tombol baru ditambahkan di tengah layar!	New button added at the center of the screen!
++ TOMBOL	+ BUTTON
+Joystick WASD ditambahkan!	WASD joystick added!
+\u2713 Layout GUI berhasil disimpan!	\u2713 GUI layout saved!
+PENGATURAN TOMBOL	BUTTON SETTINGS
+Posisi: {0}% x {1}%	Position: {0}% x {1}%
+Label Teks Tombol:	Button Text Label:
+\ud83d\udd12 Tetap	\ud83d\udd12 Fixed
+Label tombol...	Button label...
+Tipe Kontrol:	Control Type:
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	A smooth 8-direction analog stick that moves the character in place of the W, A, S, D keys.
+Ukuran Joystick (Diameter):	Joystick Size (Diameter):
+Transparansi (Opacity):	Transparency (Opacity):
+Lari otomatis:	Auto sprint:
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	Push to the edge of the circle to sprint. Turn this off if you want to sprint with your own CTRL button.
+Tombol / Aksi Input:	Button / Input Action:
+Indikator FPS In-Game	In-Game FPS Indicator
+Toggle Keyboard Layar	Toggle On-Screen Keyboard
+Sembunyikan/Tampilkan GUI	Hide/Show GUI
+Buka Menu (pengaturan dan keluar)	Open Menu (settings and exit)
+Aksi Sistem Launcher	Launcher System Action
+Mouse Kiri (Attack)	Left Mouse (Attack)
+Mouse Kanan (Use)	Right Mouse (Use)
+Mouse Tengah (Pick)	Middle Mouse (Pick)
+Ubah >	Change >
+Lebar (Width):	Width:
+Tinggi (Height):	Height:
+Kebulatan Sudut:	Corner Roundness:
+Mode Toggle:	Toggle Mode:
+Sekali tap untuk kunci	Tap once to lock
+\u26a1 FITUR MAKRO	\u26a1 MACRO FEATURE
+Jadikan tombol ini sebagai makro otomatis	Make this button an automatic macro
+Pilih Mode Makro:	Choose Macro Mode:
+\u2328 Chat/Perintah	\u2328 Chat/Command
+Ketik otomatis	Auto-type
+\ud83d\udd17 Kombinasi	\ud83d\udd17 Combo
+Teks / Perintah yang diketik otomatis:	Text / command typed automatically:
+Misal: /gamemode creative atau /home	Example: /gamemode creative or /home
+Template Cepat:	Quick Templates:
+Urutan Key Kombinasi:	Key Combo Sequence:
+Hapus Semua	Clear All
+Belum ada key kombinasi. Tambahkan key di bawah.	No combo keys yet. Add keys below.
+Tambah Key ke Kombinasi	Add Key to Combo
+Tambah Cepat:	Quick Add:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Executed in order from top (#1) to bottom when pressed.
+Interval Auto-Click:	Auto-Click Interval:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	The button automatically presses and releases repeatedly, very quickly, while it is held.
+Tombol dihapus	Button deleted
+HAPUS TOMBOL	DELETE BUTTON
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 System buttons cannot be deleted
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	IN-GAME MODE \u00b7 Drag the buttons to match the game HUD, then tap DONE
+Reset Layout GUI?	Reset GUI Layout?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	All button positions and customizations will be restored to the standard AmberLauncher default layout.
+Layout direset ke standar	Layout reset to default

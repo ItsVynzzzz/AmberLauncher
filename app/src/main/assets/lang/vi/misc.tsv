@@ -1,0 +1,50 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	RAM tr\u1ed1ng {0} GB
+Otomatis	T\u1ef1 \u0111\u1ed9ng
+\u26a1 Optimization	\u26a1 T\u1ed1i \u01b0u h\u00f3a
+\u2699\ufe0f Technology	\u2699\ufe0f C\u00f4ng ngh\u1ec7
+\ud83e\ude84 Magic	\ud83e\ude84 Ph\u00e9p thu\u1eadt
+\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f Phi\u00eau l\u01b0u
+\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f Ti\u1ec7n \u00edch
+\ud83c\udfa8 Decoration	\ud83c\udfa8 Trang tr\u00ed
+\ud83d\udcdc Quests	\ud83d\udcdc Nhi\u1ec7m v\u1ee5
+\u2728 Simplistic	\u2728 \u0110\u01a1n gi\u1ea3n
+\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f Truy\u1ec1n th\u1ed1ng
+\ud83c\udff0 Medieval	\ud83c\udff0 Trung c\u1ed5
+\ud83c\udf05 Realistic	\ud83c\udf05 Ch\u00e2n th\u1ef1c
+\ud83c\udfa8 Stylized	\ud83c\udfa8 C\u00e1ch \u0111i\u1ec7u
+\ud83d\udd2e Fantasy	\ud83d\udd2e Huy\u1ec1n \u1ea3o
+\ud83c\udf0d Worldgen	\ud83c\udf0d T\u1ea1o th\u1ebf gi\u1edbi
+Resource Pack (.zip)	G\u00f3i t\u00e0i nguy\u00ean (.zip)
+MOD LOADER	TR\u00ccNH N\u1ea0P MOD
+Lokal	C\u1ee5c b\u1ed9
+Buy me a coffee	M\u1eddi t\u00f4i m\u1ed9t ly c\u00e0 ph\u00ea
+Mengunduh {0}...	\u0110ang t\u1ea3i {0}...
+Mengekstrak	\u0110ang gi\u1ea3i n\u00e9n
+{~0}: {1} ({2} file)	{0}: {1} ({2} t\u1ec7p)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, m\u00e0n h\u00ecnh 90 Hz
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc FPS \u0111\u01b0\u1ee3c ghim (v\u1eabn hi\u1ec7n khi \u1ea9n GUI)
+\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc \u0110ang hi\u1ec7n nh\u1eadt k\u00fd tr\u1ef1c ti\u1ebfp c\u1ee7a Minecraft
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS ch\u1ebf \u0111\u1ed9 th\u01b0\u1eddng (theo vi\u1ec7c hi\u1ec7n/\u1ea9n GUI)
+Gagal menyiapkan OpenJDK ({0}): {~1}	Kh\u00f4ng th\u1ec3 chu\u1ea9n b\u1ecb OpenJDK ({0}): {1}
+LAUNCHER EXCEPTION	NGO\u1ea0I L\u1ec6 C\u1ee6A LAUNCHER
+Forge hanya mendukung Minecraft {0} ke atas	Forge ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft {0} tr\u1edf l\u00ean
+Installer Forge gagal	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge th\u1ea5t b\u1ea1i
+version.json di installer Forge tidak terbaca	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c version.json trong tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge
+Path library Forge tidak aman: {0}	\u0110\u01b0\u1eddng d\u1eabn th\u01b0 vi\u1ec7n Forge kh\u00f4ng an to\u00e0n: {0}
+dan {0} lainnya	v\u00e0 {0} m\u1ee5c kh\u00e1c
+Path mappings tidak aman: {0}	\u0110\u01b0\u1eddng d\u1eabn mappings kh\u00f4ng an to\u00e0n: {0}
+Alamat mappings Mojang kosong	\u0110\u1ecba ch\u1ec9 mappings c\u1ee7a Mojang tr\u1ed1ng
+install_profile.json tidak ada di installer Forge	Kh\u00f4ng c\u00f3 install_profile.json trong tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge
+install_profile.json tidak terbaca	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c install_profile.json
+{0} tidak ada di installer Forge	Kh\u00f4ng c\u00f3 {0} trong tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge
+Tidak bisa membuat {0}	Kh\u00f4ng th\u1ec3 t\u1ea1o {0}
+HTTP {0} dari {1}	HTTP {0} t\u1eeb {1}
+Respons kosong dari {0}	Ph\u1ea3n h\u1ed3i tr\u1ed1ng t\u1eeb {0}
+Unduhan dibatalkan	\u0110\u00e3 h\u1ee7y t\u1ea3i xu\u1ed1ng
+Content-Range tidak cocok	Content-Range kh\u00f4ng kh\u1edbp
+Range ditolak	Range b\u1ecb t\u1eeb ch\u1ed1i
+Balasan kosong	Ph\u1ea3n h\u1ed3i tr\u1ed1ng
+Unduhan belum lengkap ({0} dari {1} byte)	T\u1ea3i xu\u1ed1ng ch\u01b0a \u0111\u1ee7 ({0}/{1} byte)
+Berkas kosong	T\u1ec7p tr\u1ed1ng
+balasan bukan daftar rilis	ph\u1ea3n h\u1ed3i kh\u00f4ng ph\u1ea3i danh s\u00e1ch b\u1ea3n ph\u00e1t h\u00e0nh

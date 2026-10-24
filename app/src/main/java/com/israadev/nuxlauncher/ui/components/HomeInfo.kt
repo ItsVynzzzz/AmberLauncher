@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.components
 
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import java.util.Locale
 
 /**
@@ -20,10 +21,12 @@ object HomeInfo {
         else -> 0
     }
 
-    /** Contoh: "RAM bebas 1,4 GB" (koma desimal, 1 GB = 1024 MB). */
+    /** Contoh: "RAM bebas 1,4 GB" (koma desimal; Inggris memakai titik; 1 GB = 1024 MB). */
     fun ramText(freeMb: Int): String {
         val gb = freeMb.coerceAtLeast(0) / 1024f
-        return "RAM bebas " + String.format(Locale.forLanguageTag("id-ID"), "%.1f", gb) + " GB"
+        val locale = if (Tr.effective == Tr.EN) Locale.US else Locale.forLanguageTag("id-ID")
+        val value = String.format(locale, "%.1f", gb)
+        return "RAM bebas $value GB"
     }
 
     /** Nama renderer singkat untuk Home: "Otomatis" untuk Auto, selain itu kata pertama nama tampilnya. */

@@ -1,0 +1,33 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	{0} GB RAM available
+Renderer {~0}	Renderer {0}
+Otomatis	Auto
+Lokal	Local
+Mengunduh {0}...	Downloading {0}...
+Mengekstrak	Extracting
+{~0}: {1} ({2} file)	{0}: {1} ({2} files)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, 4 GB RAM, 90 Hz display
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc FPS pinned (stays visible when the GUI is hidden)
+\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc Showing the Minecraft Live Log
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS normal mode (follows GUI visibility)
+Gagal menyiapkan OpenJDK ({0}): {~1}	Failed to prepare OpenJDK ({0}): {1}
+Forge hanya mendukung Minecraft {0} ke atas	Forge only supports Minecraft {0} and above
+Installer Forge gagal	The Forge installer failed
+version.json di installer Forge tidak terbaca	version.json in the Forge installer could not be read
+Path library Forge tidak aman: {0}	Unsafe Forge library path: {0}
+dan {0} lainnya	and {0} more
+Path mappings tidak aman: {0}	Unsafe mappings path: {0}
+Alamat mappings Mojang kosong	The Mojang mappings address is empty
+install_profile.json tidak ada di installer Forge	install_profile.json is missing from the Forge installer
+install_profile.json tidak terbaca	install_profile.json could not be read
+{0} tidak ada di installer Forge	{0} is missing from the Forge installer
+Tidak bisa membuat {0}	Cannot create {0}
+HTTP {0} dari {1}	HTTP {0} from {1}
+Respons kosong dari {0}	Empty response from {0}
+Unduhan dibatalkan	Download canceled
+Content-Range tidak cocok	Content-Range does not match
+Range ditolak	Range was rejected
+Balasan kosong	Empty response
+Unduhan belum lengkap ({0} dari {1} byte)	Download incomplete ({0} of {1} bytes)
+Berkas kosong	The file is empty
+balasan bukan daftar rilis	the response is not a release list

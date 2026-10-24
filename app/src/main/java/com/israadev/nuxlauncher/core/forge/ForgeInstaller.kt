@@ -8,6 +8,7 @@ import com.israadev.nuxlauncher.core.fabric.FabricService
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
 import com.israadev.nuxlauncher.core.utils.SafePaths
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -282,8 +283,9 @@ object ForgeInstaller {
         }
         if (failed.isNotEmpty()) {
             val shown = failed.take(3).joinToString(", ")
-            val more = if (failed.size > 3) " dan ${failed.size - 3} lainnya" else ""
-            throw IOException("Gagal mengunduh library Forge: $shown$more. Periksa koneksi lalu coba lagi.")
+            val more = if (failed.size > 3) " " + Tr.t("dan ${failed.size - 3} lainnya") else ""
+            val list = shown + more
+            throw IOException("Gagal mengunduh library Forge: $list. Periksa koneksi lalu coba lagi.")
         }
     }
 

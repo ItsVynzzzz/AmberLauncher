@@ -1,0 +1,66 @@
+# Wardrobe: skin dan jubah
+Gagal memuat jubah: {0}	Failed to load cape: {0}
+Memvalidasi skin...	Validating skin...
+Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	Skin loaded in preview ({0}) \u2014 Click Save to apply
+File tidak valid	Invalid file
+Memvalidasi cape...	Validating cape...
+Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	Custom cape loaded in preview \u2014 Click Save to apply
+File cape tidak valid	Invalid cape file
+Kustomisasi tampilan skin dan jubah pemain Minecraft	Customize the skin and cape of your Minecraft player
+3D (DRAG / PUTAR)	3D (DRAG / ROTATE)
+Putar Otomatis	Auto Rotate
+Reset Kamera	Reset Camera
+Jalan	Walk
+Diam	Idle
+Lari	Run
+Sapa	Wave
+KUSTOM SKIN	CUSTOM SKIN
+JUBAH / CAPE	CAPE
+Sistem Skin & Jubah Ely.by	Ely.by Skin & Cape System
+Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	Ely.by accounts use a centralized skinsystem server. To change your skin or arm model type, upload it directly on the official ely.by website so it syncs in-game.
+KUNJUNGI ACCOUNT.ELY.BY	VISIT ACCOUNT.ELY.BY
+PILIH FILE SKIN (.PNG)	CHOOSE SKIN FILE (.PNG)
+TIPE MODEL LENGAN:	ARM MODEL TYPE:
+Model Klasik dipilih (Preview) \u2014 Klik Simpan	Classic model selected (Preview) \u2014 Click Save
+Klasik	Classic
+Lengan tebal (4px)	Thick arms (4px)
+Model Slim dipilih (Preview) \u2014 Klik Simpan	Slim model selected (Preview) \u2014 Click Save
+Lengan ramping (3px)	Slim arms (3px)
+Skin direset ke default Steve (Preview) \u2014 Klik Simpan	Skin reset to the default Steve (Preview) \u2014 Click Save
+\u21ba Reset ke Skin Default (Klasik)	\u21ba Reset to Default Skin (Classic)
+JUBAH RESMI MINECRAFT.NET:	OFFICIAL MINECRAFT.NET CAPES:
+Memuat jubah dari Minecraft.net...	Loading capes from Minecraft.net...
+Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	Your Microsoft account does not have any official capes on Minecraft.net yet.
+Jubah dilepas (Preview) \u2014 Klik Simpan	Cape removed (Preview) \u2014 Click Save
+Tanpa Jubah (Lepas Cape)	No Cape (Remove Cape)
+Jubah {0} dipilih (Preview) \u2014 Klik Simpan	{0} cape selected (Preview) \u2014 Click Save
+AKTIF DI MOJANG	ACTIVE ON MOJANG
+Sistem Skin & Cape Ely.by	Ely.by Skin & Cape System
+Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	Ely.by accounts use the official skinsystem server. All skins and capes are managed directly on the ely.by website and will appear in-game automatically.
+BUKA WEBSITE ELY.BY	OPEN ELY.BY WEBSITE
+PILIH FILE CAPE KUSTOM (.PNG)	CHOOSE CUSTOM CAPE FILE (.PNG)
+ATAU PILIH PRESET JUBAH:	OR CHOOSE A CAPE PRESET:
+Cape dilepas (Preview) \u2014 Klik Simpan	Cape removed (Preview) \u2014 Click Save
+Menyinkronkan ke Minecraft.net...	Syncing to Minecraft.net...
+Gagal memperbarui Minecraft.net: {~0}	Failed to update Minecraft.net: {0}
+Perubahan berhasil diterapkan ke Minecraft.net!	Changes applied to Minecraft.net!
+Skin & Cape berhasil disimpan!	Skin & Cape saved!
+SIMPAN KE MOJANG	SAVE TO MOJANG
+SIMPAN PERUBAHAN	SAVE CHANGES
+Jubah Resmi Minecraft	Official Minecraft Cape
+Jubah Aktif Minecraft	Active Minecraft Cape
+Gagal memuat jubah Minecraft.	Failed to load Minecraft capes.
+Respon profil kosong	Empty profile response
+Gagal mengubah jubah.	Failed to change the cape.
+Gagal mengunggah skin.	Failed to upload the skin.
+Gagal membaca file dari penyimpanan.	Failed to read the file from storage.
+Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	Invalid skin format. The size must be 64x64 or 64x32 pixels.
+Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	Invalid cape format. The size must be 64x32 or 128x64 pixels.
+Tanpa Cape	No Cape
+Reset / Lepas cape	Reset / Remove cape
+Klasik merah resmi Mojang	Classic official Mojang red
+Creeper emas peringatan 15 tahun	Golden Creeper for the 15th anniversary
+Jubah biru kehormatan migrasi	Blue cape of honor for migrating
+Motif sakura edisi 1.20	Cherry blossom pattern, 1.20 edition
+Edisi emas pencipta	Golden creator's edition
+Edisi Java & Bedrock bundle	Java & Bedrock bundle edition

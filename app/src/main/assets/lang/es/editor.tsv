@@ -1,0 +1,64 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	\u2713 \u00a1Dise\u00f1o de botones del juego guardado!
+Selesai	Listo
+Kembali	Atr\u00e1s
+Tombol baru ditambahkan di tengah layar!	\u00a1Nuevo bot\u00f3n a\u00f1adido en el centro de la pantalla!
++ TOMBOL	+ BOT\u00d3N
+Joystick WASD ditambahkan!	\u00a1Joystick WASD a\u00f1adido!
+\u2713 Layout GUI berhasil disimpan!	\u2713 \u00a1Dise\u00f1o de la interfaz guardado!
+PENGATURAN TOMBOL	AJUSTES DEL BOT\u00d3N
+Posisi: {0}% x {1}%	Posici\u00f3n: {0}% x {1}%
+Label Teks Tombol:	Texto del bot\u00f3n:
+\ud83d\udd12 Tetap	\ud83d\udd12 Fijo
+Label tombol...	Etiqueta del bot\u00f3n...
+Tipe Kontrol:	Tipo de control:
+\ud83d\udd79 Virtual Analog Joystick (WASD)	\ud83d\udd79 Joystick anal\u00f3gico virtual (WASD)
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	Un stick anal\u00f3gico suave de 8 direcciones que mueve al personaje en lugar de las teclas W, A, S, D.
+Ukuran Joystick (Diameter):	Tama\u00f1o del joystick (di\u00e1metro):
+Transparansi (Opacity):	Transparencia (opacidad):
+Lari otomatis:	Correr autom\u00e1ticamente:
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	Empuja hasta el borde del c\u00edrculo para correr. Desact\u00edvalo si prefieres correr con tu propio bot\u00f3n CTRL.
+Tombol / Aksi Input:	Bot\u00f3n / acci\u00f3n de entrada:
+Indikator FPS In-Game	Indicador de FPS en el juego
+Toggle Keyboard Layar	Mostrar/ocultar teclado en pantalla
+Sembunyikan/Tampilkan GUI	Ocultar/mostrar GUI
+Buka Menu (pengaturan dan keluar)	Abrir men\u00fa (ajustes y salir)
+Aksi Sistem Launcher	Acci\u00f3n del sistema del launcher
+Mouse Kiri (Attack)	Rat\u00f3n izquierdo (atacar)
+Mouse Kanan (Use)	Rat\u00f3n derecho (usar)
+Mouse Tengah (Pick)	Rat\u00f3n central (elegir)
+Mouse Btn {0}	Bot\u00f3n {0} del rat\u00f3n
+Key Code {0}	C\u00f3digo de tecla {0}
+Ubah >	Cambiar >
+Lebar (Width):	Ancho:
+Tinggi (Height):	Alto:
+Kebulatan Sudut:	Redondez de las esquinas:
+Mode Toggle:	Modo interruptor:
+Sekali tap untuk kunci	Toca una vez para bloquear
+\u26a1 FITUR MAKRO	\u26a1 FUNCI\u00d3N DE MACRO
+Jadikan tombol ini sebagai makro otomatis	Convertir este bot\u00f3n en una macro autom\u00e1tica
+Pilih Mode Makro:	Elige el modo de macro:
+\u2328 Chat/Perintah	\u2328 Chat/comando
+Ketik otomatis	Escritura autom\u00e1tica
+\ud83d\udd17 Kombinasi	\ud83d\udd17 Combinaci\u00f3n
+Multi-Key	Multitecla
+\u26a1 Turbo Click	\u26a1 Clic turbo
+Auto-clicker	Autoclicker
+Teks / Perintah yang diketik otomatis:	Texto / comando que se escribe autom\u00e1ticamente:
+Misal: /gamemode creative atau /home	Ejemplo: /gamemode creative o /home
+Template Cepat:	Plantillas r\u00e1pidas:
+Urutan Key Kombinasi:	Secuencia de teclas de la combinaci\u00f3n:
+Hapus Semua	Borrar todo
+Belum ada key kombinasi. Tambahkan key di bawah.	A\u00fan no hay teclas en la combinaci\u00f3n. A\u00f1ade teclas abajo.
+Tambah Key ke Kombinasi	A\u00f1adir tecla a la combinaci\u00f3n
+Tambah Cepat:	A\u00f1adir r\u00e1pido:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Se ejecutan en orden, de arriba (#1) hacia abajo, al pulsar.
+Interval Auto-Click:	Intervalo de autoclic:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	El bot\u00f3n pulsar\u00e1 y soltar\u00e1 repetidamente y muy r\u00e1pido, de forma autom\u00e1tica, mientras lo mantengas pulsado.
+Tombol dihapus	Bot\u00f3n eliminado
+HAPUS TOMBOL	ELIMINAR BOT\u00d3N
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 Los botones del sistema no se pueden eliminar
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	MODO EN EL JUEGO \u00b7 Arrastra los botones seg\u00fan el HUD del juego y toca LISTO
+Reset Layout GUI?	\u00bfRestablecer el dise\u00f1o de la interfaz?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Todas las posiciones de los botones y personalizaciones volver\u00e1n al dise\u00f1o est\u00e1ndar inicial de AmberLauncher.
+Layout direset ke standar	Dise\u00f1o restablecido al est\u00e1ndar

@@ -1,0 +1,46 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	{0} GB de RAM libre
+Otomatis	Auto
+\u26a1 Optimization	\u26a1 Optimizaci\u00f3n
+\u2699\ufe0f Technology	\u2699\ufe0f Tecnolog\u00eda
+\ud83e\ude84 Magic	\ud83e\ude84 Magia
+\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f Aventura
+\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f Utilidad
+\ud83c\udfa8 Decoration	\ud83c\udfa8 Decoraci\u00f3n
+\ud83d\udcdc Quests	\ud83d\udcdc Misiones
+\u2728 Simplistic	\u2728 Simplista
+\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f Tradicional
+\ud83c\udf05 Realistic	\ud83c\udf05 Realista
+\ud83c\udfa8 Stylized	\ud83c\udfa8 Estilizado
+\ud83d\udd2e Fantasy	\ud83d\udd2e Fantas\u00eda
+\ud83c\udf0d Worldgen	\ud83c\udf0d Generaci\u00f3n del mundo
+Buy me a coffee	Inv\u00edtame a un caf\u00e9
+Mengunduh {0}...	Descargando {0}...
+Mengekstrak	Extrayendo
+{~0}: {1} ({2} file)	{0}: {1} ({2} archivos)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, 4 GB de RAM, pantalla de 90 Hz
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc FPS fijado (sigue visible al ocultar la GUI)
+\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc Mostrando el registro en vivo de Minecraft
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS en modo normal (sigue la visibilidad de la GUI)
+Gagal menyiapkan OpenJDK ({0}): {~1}	No se pudo preparar OpenJDK ({0}): {1}
+LAUNCHER EXCEPTION	EXCEPCI\u00d3N DEL LAUNCHER
+Forge hanya mendukung Minecraft {0} ke atas	Forge solo es compatible con Minecraft {0} o superior
+Installer Forge gagal	El instalador de Forge fall\u00f3
+version.json di installer Forge tidak terbaca	No se pudo leer version.json del instalador de Forge
+Path library Forge tidak aman: {0}	Ruta de biblioteca de Forge no segura: {0}
+dan {0} lainnya	y {0} m\u00e1s
+Path mappings tidak aman: {0}	Ruta de mappings no segura: {0}
+Alamat mappings Mojang kosong	La direcci\u00f3n de los mappings de Mojang est\u00e1 vac\u00eda
+install_profile.json tidak ada di installer Forge	install_profile.json no est\u00e1 en el instalador de Forge
+install_profile.json tidak terbaca	No se pudo leer install_profile.json
+{0} tidak ada di installer Forge	{0} no est\u00e1 en el instalador de Forge
+Tidak bisa membuat {0}	No se puede crear {0}
+HTTP {0} dari {1}	HTTP {0} desde {1}
+Respons kosong dari {0}	Respuesta vac\u00eda de {0}
+Unduhan dibatalkan	Descarga cancelada
+Content-Range tidak cocok	Content-Range no coincide
+Range ditolak	Se rechaz\u00f3 el Range
+Balasan kosong	Respuesta vac\u00eda
+Unduhan belum lengkap ({0} dari {1} byte)	Descarga incompleta ({0} de {1} bytes)
+Berkas kosong	El archivo est\u00e1 vac\u00edo
+balasan bukan daftar rilis	la respuesta no es una lista de versiones

@@ -37,7 +37,6 @@ Jelajahi Modrinth	Browse Modrinth
 Memuat data dari Modrinth...	Loading data from Modrinth...
 Gagal memuat dari Modrinth	Failed to load from Modrinth
 Terjadi kesalahan jaringan	A network error occurred
-Coba lagi	Try again
 Tidak ada hasil cocok untuk Minecraft {0} ({1})	No results match Minecraft {0} ({1})
 Tidak ada hasil ditemukan untuk kata kunci ini	No results found for this keyword
 Coba ubah kata kunci atau nonaktifkan filter versi	Try changing the keyword or turning off the version filter
@@ -64,7 +63,6 @@ oleh {0}	by {0}
 Unduh...	Download...
 Terpasang	Installed
 Pasang pack	Install pack
-Pasang	Install
 Versi dipilih	Selected version
 Sedang mengunduh dan memasang...	Downloading and installing...
 Sudah terpasang	Already installed

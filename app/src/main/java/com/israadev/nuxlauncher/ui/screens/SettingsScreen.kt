@@ -84,6 +84,7 @@ fun SettingsScreen(
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+    var touchControllerSupport by remember(currentSettings.touchControllerSupport) { mutableStateOf(currentSettings.touchControllerSupport) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -129,6 +130,7 @@ fun SettingsScreen(
             captureSensitivity = captureSensitivity,
             touchAttackEnabled = touchAttack,
             hotbarTouchEnabled = hotbarTouch,
+            touchControllerSupport = touchControllerSupport,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -708,6 +710,16 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSwitchRow(
+                            title = "Dukungan TouchController",
+                            desc = "Bila mod TouchController terpasang, tombol bawaan launcher disembunyikan (hanya gerigi menu yang tersisa) dan sentuhan layar diteruskan ke mod. Matikan untuk tetap memakai tombol bawaan.",
+                            checked = touchControllerSupport,
+                            onCheckedChange = {
+                                touchControllerSupport = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -788,6 +800,7 @@ fun SettingsScreen(
                     captureSensitivity = reset.captureSensitivity
                     touchAttack = reset.touchAttackEnabled
                     hotbarTouch = reset.hotbarTouchEnabled
+                    touchControllerSupport = reset.touchControllerSupport
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio

@@ -22,6 +22,9 @@
 -keep class com.bytedance.** { *; }
 -keep class androidx.graphics.path.** { *; }
 
+# Klien proxy TouchController hanya dipanggil lewat refleksi; tanpa ini R8 membuangnya.
+-keep class top.fifthlight.touchcontroller.** { *; }
+
 # Semua metode native tidak boleh dihapus atau diganti namanya.
 -keepclasseswithmembernames,includedescriptorclasses class * {
     native <methods>;

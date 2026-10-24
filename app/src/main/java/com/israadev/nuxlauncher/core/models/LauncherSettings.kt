@@ -19,6 +19,8 @@ data class LauncherSettings(
     val touchAttackEnabled: Boolean = false,
     // Hotbar sentuh gaya Bedrock: ketuk hotbar game untuk memilih slot saat bermain.
     val hotbarTouchEnabled: Boolean = true,
+    // Mod TouchController terpasang: kontrol bawaan disembunyikan dan sentuhan diteruskan ke mod.
+    val touchControllerSupport: Boolean = true,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used

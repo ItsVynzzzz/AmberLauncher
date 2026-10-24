@@ -92,7 +92,11 @@ import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.renderer.GlErrorPolicy
 import com.israadev.nuxlauncher.core.renderer.ElfDeps
+import com.israadev.nuxlauncher.core.controls.DexClassScanner
 import com.israadev.nuxlauncher.core.controls.GuiScaleReader
+import com.israadev.nuxlauncher.core.controls.TouchControllerBridge
+import com.israadev.nuxlauncher.core.controls.TouchControllerSupport
+import com.israadev.nuxlauncher.core.controls.TouchSink
 import com.israadev.nuxlauncher.core.controls.HotbarGeometry
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.game.MCOptions
@@ -159,6 +163,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private var surfaceHolderRef: SurfaceHolder? = null
     private val isControlVisibleState = mutableStateOf(true)
     private val isGameRenderingState = mutableStateOf(false)
+
+    // Mod TouchController: terisi hanya bila modnya terpasang, pengaturannya aktif, dan klien proxy
+    // berhasil jalan. Selama null, kontrol bawaan launcher dipakai seperti biasa.
+    private val touchSinkState = mutableStateOf<TouchSink?>(null)
+    @Volatile private var touchBridge: TouchControllerBridge? = null
 
     private var isManualExit = false
     private var sessionStartTime = System.currentTimeMillis()
@@ -254,6 +263,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun onStop() {
         ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
+        // Jari yang masih tercatat di mod tidak akan pernah menerima "angkat" bila aplikasi keluar layar.
+        touchBridge?.onCancelAll()
         super.onStop()
     }
 
@@ -551,6 +562,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     liveLogs = liveLogs,
                     isControlVisibleState = isControlVisibleState,
                     isGameRenderingState = isGameRenderingState,
+                    touchSinkState = touchSinkState,
                     onSurfaceReady = { surfaceHolder ->
                         surfaceHolderRef = surfaceHolder
                         val (targetWidth, targetHeight) = getScaledDisplayDimensions()
@@ -1066,6 +1078,23 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 Os.setenv("AWTSTUB_HEIGHT", "$targetHeight", true)
                 Os.setenv("ALSOFT_DRIVERS", "opensl", true)
 
+                // Mod TouchController: socket harus sudah dikenal lewat env sebelum JVM berjalan.
+                // Tanpa modnya, tidak ada yang dibuat sama sekali (tanpa thread, socket, atau penelusuran).
+                if (activeSettings.touchControllerSupport && TouchControllerSupport.isModInstalled(installedMods)) {
+                    val socketName = TouchControllerSupport.newSocketName()
+                    val bridge = TouchControllerBridge.start(
+                        socketName = socketName,
+                        scanner = TouchControllerBridge.ClassScanner { DexClassScanner.find(this@GameActivity, it) },
+                        log = { LoggerBridge.append("▷ $it") }
+                    )
+                    if (bridge != null) {
+                        Os.setenv(TouchControllerSupport.ENV_SOCKET, socketName, true)
+                        touchBridge = bridge
+                        touchSinkState.value = bridge
+                        LoggerBridge.append("▷ [TouchController] Mod terdeteksi: kontrol bawaan disembunyikan")
+                    }
+                }
+
                 // Android DNS Resolver Setup (Direct match with Zalith Launcher 2 & Pojav)
                 val resolvConf = File(gameDir, "resolv.conf")
                 val dnsServers = buildSet {
@@ -1539,6 +1568,7 @@ fun GameScreen(
     liveLogs: List<String>,
     isControlVisibleState: MutableState<Boolean>,
     isGameRenderingState: MutableState<Boolean>,
+    touchSinkState: State<TouchSink?>,
     onSurfaceReady: (SurfaceHolder) -> Unit,
     onResolutionChange: (Int) -> Unit = {},
     onToggleRecord: () -> Unit = {},
@@ -1552,6 +1582,12 @@ fun GameScreen(
 
     var showInGameSettingsDialog by remember { mutableStateOf(false) }
     var isCustomGuiEditorActive by remember { mutableStateOf(false) }
+    // Non-null = mod TouchController yang memegang kontrol sentuh (kontrol bawaan disembunyikan).
+    val touchSink = touchSinkState.value
+    // Lapisan sentuh tertutup menu/editor: jari yang masih tercatat di mod dilepas supaya tidak menggantung.
+    LaunchedEffect(touchSink, showInGameSettingsDialog, isCustomGuiEditorActive) {
+        if (touchSink != null && (showInGameSettingsDialog || isCustomGuiEditorActive)) touchSink.onCancelAll()
+    }
     var isKeyboardRequested by remember { mutableStateOf(false) }
     var isConsoleVisible by remember { mutableStateOf(false) }
     var isConsoleExpanded by remember { mutableStateOf(false) }
@@ -1730,6 +1766,7 @@ fun GameScreen(
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
             hotbarSlotAt = hotbarLookup,
+            touchSink = touchSink,
             onHotbarSelect = { slot ->
                 val key = LwjglGlfwKeycode.GLFW_KEY_1 + slot
                 CallbackBridge.sendKeyPress(key, true)
@@ -1868,7 +1905,8 @@ fun GameScreen(
                 onFpsClick = { showInGameSettingsDialog = true },
                 onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
                 onToggleControls = { isControlVisible = !isControlVisible },
-                onOpenMenu = { showInGameSettingsDialog = true }
+                onOpenMenu = { showInGameSettingsDialog = true },
+                touchControllerMode = touchSink != null
             )
         }
 

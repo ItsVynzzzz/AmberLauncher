@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.israadev.nuxlauncher.core.controls.TouchSink
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.ui.components.FocusableBox
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
@@ -48,6 +49,9 @@ fun SwitchableMouseLayout(
     // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
     hotbarSlotAt: ((Offset) -> Int)? = null,
     onHotbarSelect: (Int) -> Unit = {},
+    // Mod TouchController aktif: semua sentuhan jari diteruskan mentah ke penerima ini (koordinat
+    // 0..1) dan lapisan ini tidak menggerakkan kamera atau kursor sendiri. Mouse fisik tetap jalan.
+    touchSink: TouchSink? = null,
     requestPointerCapture: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
@@ -83,6 +87,7 @@ fun SwitchableMouseLayout(
     val currentTouchAttack by rememberUpdatedState(touchAttackEnabled)
     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
+    val currentTouchSink by rememberUpdatedState(touchSink)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
@@ -142,6 +147,37 @@ fun SwitchableMouseLayout(
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
+
+                            // Mod TouchController: teruskan jari apa adanya, lewati logika kamera/kursor.
+                            val sink = currentTouchSink
+                            if (sink != null) {
+                                if (activePointerId != null) {
+                                    longPressJob?.cancel()
+                                    activePointerId = null
+                                    hotbarSlot = -1
+                                    isDragging = false
+                                }
+                                val sinkChanges = event.changes
+                                val invW = if (screenWidth > 0f) 1f / screenWidth else 0f
+                                val invH = if (screenHeight > 0f) 1f / screenHeight else 0f
+                                for (ci in sinkChanges.indices) {
+                                    val c = sinkChanges[ci]
+                                    if (c.type != PointerType.Touch) continue
+                                    if (c.changedToDown()) {
+                                        checkPhysicalMouseMode(false)
+                                        currentOnTouch()
+                                        sink.onDown(c.id.value, c.position.x * invW, c.position.y * invH)
+                                        c.consume()
+                                    } else if (c.changedToUpIgnoreConsumed()) {
+                                        sink.onUp(c.id.value)
+                                        c.consume()
+                                    } else if (c.pressed && c.positionChanged()) {
+                                        sink.onMove(c.id.value, c.position.x * invW, c.position.y * invH)
+                                        c.consume()
+                                    }
+                                }
+                                continue
+                            }
 
                             // Touch Down (perulangan biasa: tanpa membuat daftar baru di tiap kejadian sentuh)
                             val changes = event.changes

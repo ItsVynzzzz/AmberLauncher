@@ -69,9 +69,13 @@ fun GameControlsLayer(
     onFpsClick: () -> Unit,
     onToggleKeyboard: () -> Unit,
     onToggleControls: () -> Unit,
-    onOpenMenu: () -> Unit
+    onOpenMenu: () -> Unit,
+    // Mod TouchController dipakai: kontrol bawaan disembunyikan, hanya gerigi menu (dan FPS bila
+    // disematkan) yang tersisa. Tombol yang tidak tampil tidak ikut disusun sama sekali.
+    touchControllerMode: Boolean = false
 ) {
     val density = LocalDensity.current
+    val tc = touchControllerMode
     buttons.forEach { btn ->
         key(btn.id) {
             val widthPx = with(density) { btn.widthDp.dp.toPx() }
@@ -86,7 +90,7 @@ fun GameControlsLayer(
                 when (btn.systemAction) {
                     "FPS" -> {
                         val show = when (fpsMode) {
-                            FpsMode.NORMAL -> controlsVisible && !consoleVisible
+                            FpsMode.NORMAL -> controlsVisible && !consoleVisible && !tc
                             FpsMode.PINNED -> !consoleVisible
                             FpsMode.SHOW_LOG -> false
                         }
@@ -94,17 +98,19 @@ fun GameControlsLayer(
                             FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
                         }
                     }
-                    "KEYBOARD" -> if (controlsVisible) {
+                    "KEYBOARD" -> if (controlsVisible && !tc) {
                         SystemIconButton(btn, place, active = keyboardActive, onTap = onToggleKeyboard)
                     }
                     // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
-                    "HIDE_GUI" -> SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+                    "HIDE_GUI" -> if (!tc) {
+                        SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+                    }
                     // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
-                    "MENU", "CLOSE" -> if (controlsVisible) {
+                    "MENU", "CLOSE" -> if (controlsVisible || tc) {
                         SystemIconButton(btn, place, onTap = onOpenMenu)
                     }
                 }
-            } else if (controlsVisible) {
+            } else if (controlsVisible && !tc) {
                 if (btn.isJoystick) {
                     CustomVirtualJoystick(button = btn, modifier = place)
                 } else {

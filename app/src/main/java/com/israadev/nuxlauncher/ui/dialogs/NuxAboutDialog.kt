@@ -138,6 +138,13 @@ private val LIBRARIES = listOf(
         url = "https://github.com/bytedance/bhook"
     ),
     OpenSourceLibrary(
+        name = "TouchController (proxy client)",
+        copyright = "$COPY fifth_light",
+        license = "LGPL-3.0",
+        role = "Klien proxy untuk mod kontrol sentuh TouchController",
+        url = "https://github.com/TouchController/TouchController"
+    ),
+    OpenSourceLibrary(
         name = "Jetpack Compose & Material 3",
         copyright = "$COPY The Android Open Source Project",
         license = "Apache 2.0",

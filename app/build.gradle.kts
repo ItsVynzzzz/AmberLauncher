@@ -162,6 +162,8 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.xz)
     implementation(libs.bytehook)
+    // Klien proxy resmi mod TouchController (LGPL-3.0). Dipanggil lewat refleksi, lihat TouchControllerBridge.
+    implementation(libs.proxy.client.android)
     implementation("androidx.webkit:webkit:1.12.1")
 
     debugImplementation(libs.androidx.ui.tooling)

@@ -1,0 +1,173 @@
+diff --git a/README.md b/README.md
+index 5ec9d07..97f3f77 100644
+--- a/README.md
++++ b/README.md
+@@ -31,7 +31,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
+ - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
+ - **Hotbar sentuh (gaya Bedrock)**: ketuk hotbar game di bagian bawah layar untuk memilih slot. Posisi slot dihitung dari ukuran jendela dan GUI scale Minecraft (tanpa menggambar apa pun, tanpa beban saat bermain), getar singkat saat memilih, dan bisa dimatikan di Pengaturan > Kontrol.
+-- **Mod TouchController**: bila modnya ada di folder mods, launcher meneruskan sentuhan layar ke mod itu dan menyembunyikan tombol bawaan (hanya gerigi menu yang tersisa). Tanpa modnya tidak ada tambahan beban sama sekali. Eksperimental dan bawaannya mati: nyalakan di Pengaturan > Kontrol bila memakai mod ini. Belum diuji di perangkat; bila klien proxy gagal dimulai, tombol bawaan dipakai dan alasannya tertulis di log dengan awalan `[TouchController]`.
++- **Mod TouchController**: bila modnya ada di folder mods, launcher meneruskan sentuhan layar ke mod itu dan menyembunyikan tombol bawaan (hanya gerigi menu yang tersisa). Tanpa modnya tidak ada tambahan beban sama sekali. Tombol bawaan baru disembunyikan setelah modnya benar-benar tersambung; selama belum (atau bila tidak pernah), tombol bawaan tetap bisa dipakai. Eksperimental dan bawaannya mati: nyalakan di Pengaturan > Kontrol bila memakai mod ini. Belum diuji di perangkat; bila klien proxy gagal dimulai, tombol bawaan dipakai dan alasannya tertulis di log dengan awalan `[TouchController]`.
+ - **Lari otomatis joystick bisa dimatikan**: di Atur tombol, pilih joystick lalu matikan "Lari otomatis" bila lebih suka lari lewat tombol CTRL sendiri. Shift/Ctrl/Alt dari tombol layar kini ikut dikirim sebagai modifier ke Minecraft (dipakai untuk Shift + klik di inventory).
+ - **Akun**: Microsoft, Ely.by, dan offline.
+ - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 39beedd..ada912d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -545,6 +545,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+             runOnUiThread {
+                 isGameRenderingState.value = true
+                 liveLogs.add("🎨 [Render Engine] First graphical frame rendered on Surface!")
++                val tc = touchBridge
++                if (tc != null && !tc.isConnected) {
++                    LoggerBridge.append("▷ [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai")
++                }
+                 val midX = (CallbackBridge.windowWidth.takeIf { it > 0 } ?: 1280) / 2f
+                 val midY = (CallbackBridge.windowHeight.takeIf { it > 0 } ?: 720) / 2f
+                 CallbackBridge.sendCursorPos(midX, midY)
+@@ -1079,16 +1083,22 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 // Tanpa modnya, tidak ada yang dibuat sama sekali (tanpa thread, socket, atau penelusuran).
+                 if (activeSettings.touchControllerEnabled && TouchControllerSupport.isModInstalled(installedMods)) {
+                     val socketName = TouchControllerSupport.newSocketName()
++                    val waitStart = System.currentTimeMillis()
+                     val bridge = TouchControllerBridge.start(
+                         socketName = socketName,
+                         scanner = TouchControllerBridge.ClassScanner { DexClassScanner.find(this@GameActivity, it) },
+-                        log = { LoggerBridge.append("▷ $it") }
++                        log = { LoggerBridge.append("▷ $it") },
++                        // Kontrol bawaan baru disembunyikan setelah modnya benar-benar tersambung;
++                        // sebelum itu (dan bila tidak pernah) layar tetap bisa dipakai seperti biasa.
++                        onConnected = { connected ->
++                            val sec = (System.currentTimeMillis() - waitStart) / 1000
++                            LoggerBridge.append("▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): kontrol bawaan disembunyikan")
++                            touchSinkState.value = connected
++                        }
+                     )
+                     if (bridge != null) {
+                         Os.setenv(TouchControllerSupport.ENV_SOCKET, socketName, true)
+                         touchBridge = bridge
+-                        touchSinkState.value = bridge
+-                        LoggerBridge.append("▷ [TouchController] Mod terdeteksi: kontrol bawaan disembunyikan")
+                     }
+                 }
+ 
+@@ -1845,7 +1855,10 @@ fun GameScreen(
+         }
+ 
+         // 3. Visible Desktop Virtual Cursor Pointer (Zalith Style - automatically visible ONLY in menus, hidden when external mouse is active)
+-        val shouldShowPointer = if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
++        val shouldShowPointer = if (touchSink != null) {
++            // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
++            false
++        } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
+             false
+         } else if (PhysicalMouseChecker.physicalMouseConnected && isPhysicalMouseMode && launcherSettings.physicalMouseMode) {
+             // Sembunyikan mouse virtual jika mouse fisik eksternal terhubung & sedang digunakan
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
+index ad75ea7..edcf530 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
+@@ -1,8 +1,12 @@
+ package com.israadev.nuxlauncher.core.controls
+ 
++import java.lang.reflect.InvocationTargetException
+ import java.lang.reflect.Method
+ import java.lang.reflect.Modifier
++import java.lang.reflect.Proxy
+ import java.util.UUID
++import java.util.concurrent.atomic.AtomicBoolean
++import java.util.concurrent.atomic.AtomicReference
+ 
+ /**
+  * Penerima sentuhan mentah dari layar game. Koordinat sudah dinormalkan 0..1 terhadap area game
+@@ -58,6 +62,10 @@ object TouchControllerSupport {
+  *
+  * Nomor jari ("index") yang dikirim ke mod harus selalu naik, tidak seperti id jari Android yang
+  * dipakai ulang, jadi setiap sentuhan baru diberi nomor berikutnya.
++ *
++ * Socketnya milik launcher dan modnya yang menyambung saat game berjalan. Jalur data dibungkus
++ * sehingga launcher tahu kapan mod benar-benar mengirim sesuatu ([isConnected]); selama itu belum
++ * terjadi, pemanggil tidak boleh mengambil alih sentuhan dari kontrol bawaan.
+  */
+ class TouchControllerBridge private constructor(
+     private val client: Any,
+@@ -67,6 +75,11 @@ class TouchControllerBridge private constructor(
+     private val log: (String) -> Unit
+ ) : TouchSink {
+ 
++    /** True setelah mod mengirim pesan pertamanya (artinya modnya hidup dan terhubung). */
++    @Volatile
++    var isConnected = false
++        internal set
++
+     private val ids = LongArray(MAX_POINTERS)
+     private val indexes = IntArray(MAX_POINTERS)
+     private var count = 0
+@@ -176,7 +189,8 @@ class TouchControllerBridge private constructor(
+             socketName: String,
+             loader: ClassLoader? = TouchControllerBridge::class.java.classLoader,
+             scanner: ClassScanner? = null,
+-            log: (String) -> Unit
++            log: (String) -> Unit,
++            onConnected: (TouchControllerBridge) -> Unit = {}
+         ): TouchControllerBridge? {
+             try {
+                 val clientClass = load(loader, CLIENT_CANDIDATES)
+@@ -196,11 +210,37 @@ class TouchControllerBridge private constructor(
+                     log("[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan")
+                     return null
+                 }
+-                val transport = factory.invoke(null, socketName)
++                val realTransport = factory.invoke(null, socketName)
+                     ?: run {
+                         log("[TouchController] transport kosong; memakai kontrol bawaan")
+                         return null
+                     }
++                val transportType = factory.returnType
++                if (!transportType.isInterface) {
++                    log("[TouchController] jenis transport tidak dikenal (${transportType.name}); memakai kontrol bawaan")
++                    return null
++                }
++
++                // Pesan pertama dari mod = mod sudah tersambung. Dihitung sekali saja.
++                val self = AtomicReference<TouchControllerBridge?>()
++                val fired = AtomicBoolean(false)
++                val transport = Proxy.newProxyInstance(
++                    transportType.classLoader ?: TouchControllerBridge::class.java.classLoader,
++                    arrayOf(transportType)
++                ) { _, m, args ->
++                    try {
++                        val result = if (args == null) m.invoke(realTransport) else m.invoke(realTransport, *args)
++                        if (result == true && m.name == "receive" && fired.compareAndSet(false, true)) {
++                            self.get()?.let {
++                                it.isConnected = true
++                                try { onConnected(it) } catch (_: Throwable) {}
++                            }
++                        }
++                        result
++                    } catch (e: InvocationTargetException) {
++                        throw e.targetException ?: e
++                    }
++                }
+ 
+                 val ctor = clientClass.constructors.firstOrNull {
+                     it.parameterCount == 1 && it.parameterTypes[0].isInstance(transport)
+@@ -232,6 +272,7 @@ class TouchControllerBridge private constructor(
+                 }
+ 
+                 val bridge = TouchControllerBridge(client, add, remove, clear, log)
++                self.set(bridge)
+                 // run() bisa berupa perulangan yang tidak kembali: jalankan di thread sendiri.
+                 Thread({
+                     try {
+@@ -240,7 +281,7 @@ class TouchControllerBridge private constructor(
+                         log("[TouchController] klien berhenti: ${t.cause?.message ?: t.message}")
+                     }
+                 }, "TouchController-Proxy").apply { isDaemon = true }.start()
+-                log("[TouchController] klien proxy aktif (socket $socketName)")
++                log("[TouchController] klien proxy menunggu mod (socket $socketName)")
+                 return bridge
+             } catch (t: Throwable) {
+                 log("[TouchController] gagal memulai: ${t.cause?.message ?: t.message}; memakai kontrol bawaan")
+# FIN part=1/1 files=3

@@ -1,23 +1,11 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
-import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
-import android.net.http.SslError
-import android.webkit.CookieManager
-import android.webkit.SslErrorHandler
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import com.israadev.nuxlauncher.ui.i18n.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,7 +19,6 @@ import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,26 +27,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftDeviceCode
 import com.israadev.nuxlauncher.core.models.UserAccount
+import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
+import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+
+private const val CHROME_PACKAGE = "com.android.chrome"
 
 /**
- * In-App Dialog WebView untuk Login Microsoft / Xbox Live.
- * Mengikuti sistem arsitektur Zalith Launcher: User tidak perlu beralih ke browser eksternal,
- * sehingga koneksi polling tetap stabil di foreground tanpa risiko process suspension oleh OS Android.
+ * Dialog login Microsoft / Xbox Live lewat browser HP.
+ *
+ * Halaman masuk Microsoft di WebView sering berhenti di layar kosong, jadi login dikerjakan di
+ * browser sungguhan (Chrome bila ada): browser dibuka otomatis dengan kode perangkat sudah terisi,
+ * sedangkan launcher hanya menunggu hasilnya. Dialog ini sendiri hanya menampilkan status dan
+ * tombol "Buka di browser" untuk pengguna yang kembali ke launcher tanpa sengaja.
  */
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun NuxMicrosoftAuthDialog(
     deviceCode: MicrosoftDeviceCode,
@@ -71,30 +63,31 @@ fun NuxMicrosoftAuthDialog(
     val scope = rememberCoroutineScope()
 
     var isCancelled by remember { mutableStateOf(false) }
-    var statusText by remember { mutableStateOf("Menunggu otorisasi akun di halaman web Microsoft...") }
-    var isWebLoading by remember { mutableStateOf(true) }
-    // Alamat tetap halaman kode perangkat. Dipakai untuk membuka browser: alamat yang sedang tampil di
-    // WebView (halaman masuk di tengah proses) tidak berguna di browser lain karena sesinya tidak ikut.
+    var statusText by remember { mutableStateOf("Menunggu login di browser...") }
+
     val linkUrl = remember(deviceCode.userCode) { "https://microsoft.com/link?otc=${deviceCode.userCode}" }
-    var webError by remember { mutableStateOf<String?>(null) }
 
-    val webViewHolder = remember { mutableStateOf<WebView?>(null) }
-
+    // Chrome lebih dulu (login Microsoft paling lancar di sana); kalau tidak ada, browser bawaan HP.
     val openInBrowser: () -> Unit = {
-        try {
+        fun tryStart(pkg: String?): Boolean = try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl))
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (pkg != null) intent.setPackage(pkg)
             context.startActivity(intent)
+            true
         } catch (_: Throwable) {
+            false
+        }
+        if (!tryStart(CHROME_PACKAGE) && !tryStart(null)) {
             Toast.makeText(context, "Tidak ada browser yang bisa dibuka", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // Salin kode otomatis saat dialog pertama kali muncul
+    // Salin kode lalu buka browser otomatis, sekali saat dialog pertama kali muncul
     LaunchedEffect(deviceCode.userCode) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         clipboard?.setPrimaryClip(ClipData.newPlainText("Microsoft User Code", deviceCode.userCode))
-        Toast.makeText(context, "Kode '${deviceCode.userCode}' telah disalin!", Toast.LENGTH_SHORT).show()
+        openInBrowser()
     }
 
     // Polling Coroutine yang aktif selama dialog terbuka
@@ -145,18 +138,10 @@ fun NuxMicrosoftAuthDialog(
         }
     }
 
-    // Bersihkan resource saat dialog ditutup
+    // Hentikan polling saat dialog ditutup
     DisposableEffect(Unit) {
         onDispose {
             isCancelled = true
-            webViewHolder.value?.apply {
-                stopLoading()
-                loadUrl("about:blank")
-                clearHistory()
-                removeAllViews()
-                destroy()
-            }
-            webViewHolder.value = null
         }
     }
 
@@ -165,21 +150,17 @@ fun NuxMicrosoftAuthDialog(
             isCancelled = true
             onDismiss()
         },
-        modifier = Modifier
-            .fillMaxWidth(0.92f)
-            .fillMaxHeight(0.94f),
-        fillMaxHeight = true
+        modifier = Modifier.fillMaxWidth(0.9f)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 14.dp, vertical = 10.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // TOP HEADER BAR
+            // Judul + tombol tutup
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -201,7 +182,6 @@ fun NuxMicrosoftAuthDialog(
                             modifier = Modifier.size(18.dp)
                         )
                     }
-
                     Column {
                         Text(
                             text = "LOGIN AKUN MICROSOFT",
@@ -211,248 +191,120 @@ fun NuxMicrosoftAuthDialog(
                             letterSpacing = 0.5.sp
                         )
                         Text(
-                            text = "Masuk dan konfirmasi langsung di jendela aman ini",
+                            text = "Selesaikan login di browser, lalu kembali ke sini",
                             color = NuxColors.GrayNeutral,
                             fontSize = 9.sp
                         )
                     }
                 }
 
-                // Interactive Code Badge & Action Buttons
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .background(NuxColors.SurfaceInput, CircleShape)
+                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, CircleShape)
+                        .clickable {
+                            isCancelled = true
+                            onDismiss()
+                        },
+                    contentAlignment = Alignment.Center
                 ) {
-                    // Badge Kode User
-                    Row(
-                        modifier = Modifier
-                            .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                            .border(1.dp, Color(0xFF0078D4).copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                            .clickable {
-                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-                                clipboard?.setPrimaryClip(ClipData.newPlainText("Microsoft User Code", deviceCode.userCode))
-                                Toast.makeText(context, "Kode '${deviceCode.userCode}' disalin!", Toast.LENGTH_SHORT).show()
-                            }
-                            .padding(horizontal = 10.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(
-                            text = "KODE:",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = deviceCode.userCode,
-                            color = Color(0xFF0078D4),
-                            fontSize = 12.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Black
-                        )
-                        Icon(
-                            imageVector = Icons.Outlined.ContentCopy,
-                            contentDescription = "Salin Kode",
-                            tint = Color(0xFF0078D4),
-                            modifier = Modifier.size(13.dp)
-                        )
-                    }
-
-                    // Tombol Buka di Browser Eksternal (Cadangan jika user butuh)
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(8.dp))
-                            .clickable { openInBrowser() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.OpenInNew,
-                            contentDescription = "Buka di Browser Eksternal",
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(15.dp)
-                        )
-                    }
-
-                    // Tombol Tutup
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .background(NuxColors.SurfaceInput, CircleShape)
-                            .border(NuxSizes.BorderWidth, NuxColors.CardBorder, CircleShape)
-                            .clickable {
-                                isCancelled = true
-                                onDismiss()
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Close,
-                            contentDescription = "Tutup",
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(15.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = "Tutup",
+                        tint = NuxColors.GrayNeutral,
+                        modifier = Modifier.size(15.dp)
+                    )
                 }
             }
 
-            // Web Loading Progress Bar
-            AnimatedVisibility(visible = isWebLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.dp),
-                    color = Color(0xFF0078D4),
-                    trackColor = NuxColors.SurfaceInput
-                )
-            }
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // WEBVIEW CONTAINER
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(NuxColors.SurfaceElevated, RoundedCornerShape(10.dp))
-                    .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(10.dp))
-            ) {
-                AndroidView(
-                    modifier = Modifier.fillMaxSize(),
-                    factory = { ctx ->
-                        WebView(ctx).apply {
-                            settings.apply {
-                                javaScriptEnabled = true
-                                domStorageEnabled = true
-                                databaseEnabled = true
-                                // Halaman login Microsoft tidak butuh akses ke berkas atau konten di HP
-                                allowFileAccess = false
-                                allowContentAccess = false
-                                cacheMode = WebSettings.LOAD_NO_CACHE
-                                useWideViewPort = true
-                                loadWithOverviewMode = true
-                                // Pakai versi mesin WebView yang sebenarnya (tanpa penanda "wv"). Versi Chrome palsu
-                                // yang sudah lama bisa ditolak atau membuat halaman masuk Microsoft kosong.
-                                userAgentString = try {
-                                    WebSettings.getDefaultUserAgent(ctx)
-                                        .replace("; wv)", ")")
-                                        .replace(" Version/4.0", "")
-                                } catch (_: Throwable) {
-                                    "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
-                                }
-                            }
-
-                            // Halaman masuk Microsoft memuat bagian dari domain lain (login.live.com, dll.);
-                            // tanpa cookie pihak ketiga langkah-langkahnya bisa berhenti di halaman kosong.
-                            try {
-                                val cookies = CookieManager.getInstance()
-                                cookies.setAcceptCookie(true)
-                                cookies.setAcceptThirdPartyCookies(this, true)
-                            } catch (_: Throwable) {
-                            }
-
-                            webViewClient = object : WebViewClient() {
-                                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                                    super.onPageStarted(view, url, favicon)
-                                    isWebLoading = true
-                                    webError = null
-                                }
-
-                                override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                                    super.onReceivedError(view, request, error)
-                                    if (request?.isForMainFrame == true) {
-                                        isWebLoading = false
-                                        webError = "Halaman gagal dimuat (${error?.description ?: "tidak diketahui"})."
-                                    }
-                                }
-
-                                override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-                                    super.onReceivedHttpError(view, request, errorResponse)
-                                    val code = errorResponse?.statusCode ?: 0
-                                    if (request?.isForMainFrame == true && code >= 400) {
-                                        webError = "Halaman Microsoft membalas HTTP $code."
-                                    }
-                                }
-
-                                override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                                    handler?.cancel()
-                                    isWebLoading = false
-                                    webError = "Sambungan aman ke Microsoft ditolak. Periksa tanggal dan jam HP."
-                                }
-
-                                override fun onPageFinished(view: WebView?, url: String?) {
-                                    super.onPageFinished(view, url)
-                                    isWebLoading = false
-                                }
-                            }
-
-                            loadUrl(linkUrl)
-                            webViewHolder.value = this
-                        }
-                    }
-                )
-            }
-
-            // BOTTOM STATUS FOOTER
-            Spacer(modifier = Modifier.height(8.dp))
+            // Status / loading
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 12.dp, vertical = 7.dp),
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(13.dp),
+                    modifier = Modifier.size(16.dp),
                     color = Color(0xFF0078D4),
-                    strokeWidth = 1.8.dp
+                    strokeWidth = 2.dp
                 )
-
                 Text(
                     text = statusText,
                     color = NuxColors.DarkGray,
-                    fontSize = 10.5.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.weight(1f)
                 )
+            }
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Kode perangkat (ketuk untuk menyalin)
+            Row(
+                modifier = Modifier
+                    .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
+                    .border(1.dp, Color(0xFF0078D4).copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                    .clickable {
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                        clipboard?.setPrimaryClip(ClipData.newPlainText("Microsoft User Code", deviceCode.userCode))
+                        Toast.makeText(context, "Kode '${deviceCode.userCode}' disalin!", Toast.LENGTH_SHORT).show()
+                    }
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
-                    text = "Klik 'Lanjutkan' di halaman atas setelah memasukkan kode",
+                    text = "KODE:",
                     color = NuxColors.GrayNeutral,
-                    fontSize = 9.sp
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = deviceCode.userCode,
+                    color = Color(0xFF0078D4),
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Black
+                )
+                Icon(
+                    imageVector = Icons.Outlined.ContentCopy,
+                    contentDescription = "Salin Kode",
+                    tint = Color(0xFF0078D4),
+                    modifier = Modifier.size(15.dp)
                 )
             }
 
-            // Jalur cadangan: login lewat browser HP. Kodenya sudah disalin dan terisi otomatis di alamatnya,
-            // sedangkan launcher tetap menunggu hasilnya di sini.
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                    .border(
-                        1.dp,
-                        if (webError != null) NuxColors.ErrorRed.copy(alpha = 0.6f) else Color(0xFF0078D4).copy(alpha = 0.35f),
-                        RoundedCornerShape(8.dp)
-                    )
-                    .clickable { openInBrowser() }
-                    .padding(horizontal = 12.dp, vertical = 7.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.",
+                color = NuxColors.GrayNeutral,
+                fontSize = 10.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            // Untuk yang tidak sengaja kembali ke launcher sebelum selesai login
+            NuxButton(
+                onClick = openInBrowser,
+                backgroundColor = NuxColors.Yellow,
+                cornerRadius = 20.dp,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
                     imageVector = Icons.Outlined.OpenInNew,
                     contentDescription = null,
-                    tint = if (webError != null) NuxColors.ErrorRed else Color(0xFF0078D4),
-                    modifier = Modifier.size(14.dp)
+                    modifier = Modifier.size(16.dp)
                 )
-                Text(
-                    text = (webError?.let { "$it " } ?: "Halaman kosong, macet, atau tidak bisa masuk? ") +
-                        "Ketuk di sini untuk masuk lewat browser HP (kode sudah disalin).",
-                    color = if (webError != null) NuxColors.ErrorRed else NuxColors.DarkGray,
-                    fontSize = 10.sp,
-                    modifier = Modifier.weight(1f)
-                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Buka di browser", fontWeight = FontWeight.Black, fontSize = 13.sp)
             }
         }
     }

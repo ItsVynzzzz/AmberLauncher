@@ -148,8 +148,12 @@ object MicrosoftAuthService {
                                 pollIntervalMs += 2000L
                                 onStatusUpdate("Memperlambat frekuensi polling...")
                             }
-                            "code_expired" -> {
+                            // Microsoft v2.0 memakai "expired_token"; "code_expired" nama lama dari v1.
+                            "code_expired", "expired_token" -> {
                                 return@withContext Result.failure(Exception("Kode login kedaluwarsa. Silakan mulai ulang."))
+                            }
+                            "authorization_declined" -> {
+                                return@withContext Result.failure(Exception("Login ditolak di halaman Microsoft. Silakan mulai ulang."))
                             }
                             "invalid_grant" -> {
                                 if (desc.contains("AADSTS70000") || desc.contains("already been used")) {
@@ -317,6 +321,12 @@ object MicrosoftAuthService {
             httpClient.newCall(mojangReq).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
+                    // Mojang hanya menerima aplikasi (Client ID) yang sudah terdaftar dan disetujui.
+                    if (response.code == 403 && bodyStr.contains("Invalid app registration", ignoreCase = true)) {
+                        return@withContext Result.failure(
+                            Exception("Mojang menolak aplikasi launcher ini (Invalid app registration, HTTP 403). Client ID login belum disetujui; hubungi pengembang launcher. Rincian: $bodyStr")
+                        )
+                    }
                     return@withContext Result.failure(Exception("Gagal login ke layanan Minecraft (${response.code}): $bodyStr"))
                 }
                 val json = JsonParser.parseString(bodyStr).asJsonObject

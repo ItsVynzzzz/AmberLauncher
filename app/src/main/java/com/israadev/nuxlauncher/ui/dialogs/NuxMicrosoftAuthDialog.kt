@@ -7,7 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.net.http.SslError
 import android.webkit.CookieManager
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -68,9 +73,22 @@ fun NuxMicrosoftAuthDialog(
     var isCancelled by remember { mutableStateOf(false) }
     var statusText by remember { mutableStateOf("Menunggu otorisasi akun di halaman web Microsoft...") }
     var isWebLoading by remember { mutableStateOf(true) }
-    var currentWebUrl by remember { mutableStateOf("https://microsoft.com/link?otc=${deviceCode.userCode}") }
+    // Alamat tetap halaman kode perangkat. Dipakai untuk membuka browser: alamat yang sedang tampil di
+    // WebView (halaman masuk di tengah proses) tidak berguna di browser lain karena sesinya tidak ikut.
+    val linkUrl = remember(deviceCode.userCode) { "https://microsoft.com/link?otc=${deviceCode.userCode}" }
+    var webError by remember { mutableStateOf<String?>(null) }
 
     val webViewHolder = remember { mutableStateOf<WebView?>(null) }
+
+    val openInBrowser: () -> Unit = {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(linkUrl))
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        } catch (_: Throwable) {
+            Toast.makeText(context, "Tidak ada browser yang bisa dibuka", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     // Salin kode otomatis saat dialog pertama kali muncul
     LaunchedEffect(deviceCode.userCode) {
@@ -246,13 +264,7 @@ fun NuxMicrosoftAuthDialog(
                             .size(30.dp)
                             .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
                             .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(8.dp))
-                            .clickable {
-                                runCatching {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentWebUrl))
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    context.startActivity(intent)
-                                }
-                            },
+                            .clickable { openInBrowser() },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -318,24 +330,62 @@ fun NuxMicrosoftAuthDialog(
                                 cacheMode = WebSettings.LOAD_NO_CACHE
                                 useWideViewPort = true
                                 loadWithOverviewMode = true
-                                userAgentString = "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+                                // Pakai versi mesin WebView yang sebenarnya (tanpa penanda "wv"). Versi Chrome palsu
+                                // yang sudah lama bisa ditolak atau membuat halaman masuk Microsoft kosong.
+                                userAgentString = try {
+                                    WebSettings.getDefaultUserAgent(ctx)
+                                        .replace("; wv)", ")")
+                                        .replace(" Version/4.0", "")
+                                } catch (_: Throwable) {
+                                    "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+                                }
+                            }
+
+                            // Halaman masuk Microsoft memuat bagian dari domain lain (login.live.com, dll.);
+                            // tanpa cookie pihak ketiga langkah-langkahnya bisa berhenti di halaman kosong.
+                            try {
+                                val cookies = CookieManager.getInstance()
+                                cookies.setAcceptCookie(true)
+                                cookies.setAcceptThirdPartyCookies(this, true)
+                            } catch (_: Throwable) {
                             }
 
                             webViewClient = object : WebViewClient() {
                                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                                     super.onPageStarted(view, url, favicon)
                                     isWebLoading = true
-                                    url?.let { currentWebUrl = it }
+                                    webError = null
+                                }
+
+                                override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                                    super.onReceivedError(view, request, error)
+                                    if (request?.isForMainFrame == true) {
+                                        isWebLoading = false
+                                        webError = "Halaman gagal dimuat (${error?.description ?: "tidak diketahui"})."
+                                    }
+                                }
+
+                                override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+                                    super.onReceivedHttpError(view, request, errorResponse)
+                                    val code = errorResponse?.statusCode ?: 0
+                                    if (request?.isForMainFrame == true && code >= 400) {
+                                        webError = "Halaman Microsoft membalas HTTP $code."
+                                    }
+                                }
+
+                                override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                                    handler?.cancel()
+                                    isWebLoading = false
+                                    webError = "Sambungan aman ke Microsoft ditolak. Periksa tanggal dan jam HP."
                                 }
 
                                 override fun onPageFinished(view: WebView?, url: String?) {
                                     super.onPageFinished(view, url)
                                     isWebLoading = false
-                                    url?.let { currentWebUrl = it }
                                 }
                             }
 
-                            loadUrl("https://microsoft.com/link?otc=${deviceCode.userCode}")
+                            loadUrl(linkUrl)
                             webViewHolder.value = this
                         }
                     }
@@ -370,6 +420,38 @@ fun NuxMicrosoftAuthDialog(
                     text = "Klik 'Lanjutkan' di halaman atas setelah memasukkan kode",
                     color = NuxColors.GrayNeutral,
                     fontSize = 9.sp
+                )
+            }
+
+            // Jalur cadangan: login lewat browser HP. Kodenya sudah disalin dan terisi otomatis di alamatnya,
+            // sedangkan launcher tetap menunggu hasilnya di sini.
+            Spacer(modifier = Modifier.height(6.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
+                    .border(
+                        1.dp,
+                        if (webError != null) NuxColors.ErrorRed.copy(alpha = 0.6f) else Color(0xFF0078D4).copy(alpha = 0.35f),
+                        RoundedCornerShape(8.dp)
+                    )
+                    .clickable { openInBrowser() }
+                    .padding(horizontal = 12.dp, vertical = 7.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.OpenInNew,
+                    contentDescription = null,
+                    tint = if (webError != null) NuxColors.ErrorRed else Color(0xFF0078D4),
+                    modifier = Modifier.size(14.dp)
+                )
+                Text(
+                    text = (webError?.let { "$it " } ?: "Halaman kosong, macet, atau tidak bisa masuk? ") +
+                        "Ketuk di sini untuk masuk lewat browser HP (kode sudah disalin).",
+                    color = if (webError != null) NuxColors.ErrorRed else NuxColors.DarkGray,
+                    fontSize = 10.sp,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }

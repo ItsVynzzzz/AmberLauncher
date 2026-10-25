@@ -1,0 +1,318 @@
+diff --git a/README.md b/README.md
+index 97f3f77..e35ea96 100644
+--- a/README.md
++++ b/README.md
+@@ -31,7 +31,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
+ - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
+ - **Hotbar sentuh (gaya Bedrock)**: ketuk hotbar game di bagian bawah layar untuk memilih slot. Posisi slot dihitung dari ukuran jendela dan GUI scale Minecraft (tanpa menggambar apa pun, tanpa beban saat bermain), getar singkat saat memilih, dan bisa dimatikan di Pengaturan > Kontrol.
+-- **Mod TouchController**: bila modnya ada di folder mods, launcher meneruskan sentuhan layar ke mod itu dan menyembunyikan tombol bawaan (hanya gerigi menu yang tersisa). Tanpa modnya tidak ada tambahan beban sama sekali. Tombol bawaan baru disembunyikan setelah modnya benar-benar tersambung; selama belum (atau bila tidak pernah), tombol bawaan tetap bisa dipakai. Eksperimental dan bawaannya mati: nyalakan di Pengaturan > Kontrol bila memakai mod ini. Belum diuji di perangkat; bila klien proxy gagal dimulai, tombol bawaan dipakai dan alasannya tertulis di log dengan awalan `[TouchController]`.
++- **Mod TouchController**: bila modnya ada di folder mods dan opsinya dinyalakan di Pengaturan > Kontrol, sentuhan saat bermain juga diteruskan ke mod setelah modnya tersambung, sedangkan tombol dan mouse virtual launcher tetap aktif (bisa dipakai bersamaan). Opsi "TouchController saja" menyembunyikan kontrol launcher bila keduanya bentrok. Tanpa modnya tidak ada tambahan beban sama sekali. Eksperimental, bawaannya mati, dan belum diuji di perangkat; alasan bila gagal tersambung tertulis di log dengan awalan `[TouchController]`.
+ - **Lari otomatis joystick bisa dimatikan**: di Atur tombol, pilih joystick lalu matikan "Lari otomatis" bila lebih suka lari lewat tombol CTRL sendiri. Shift/Ctrl/Alt dari tombol layar kini ikut dikirim sebagai modifier ke Minecraft (dipakai untuk Shift + klik di inventory).
+ - **Akun**: Microsoft, Ely.by, dan offline.
+ - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index f6ae03e..bb43cda 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -94,7 +94,7 @@ Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan t
+ Hotbar sentuh	Touch hotbar
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.
+ Dukungan TouchController	TouchController support
+-Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Turn on only if you use the TouchController mod: the built-in controls are hidden (only the menu gear stays) and all screen touches are passed to the mod. If the screen stops responding, turn it off.
++Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. If the TouchController mod is installed and connected, touches while playing are also passed to the mod. The launcher's buttons and virtual mouse stay active, so both can be used at the same time.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+ Optimasi HP RAM kecil	Low-RAM phone tuning
+ RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	This phone has {0} MB of RAM, so how Java's memory cleaner works can be tuned.
+@@ -108,3 +108,5 @@ Nyalakan Mode Hemat	Turn on Power Saver Mode
+ Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Turns on the system's sustained performance mode and Zink V-Sync, and caps the resolution scale at 80%.
+ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Applies the next time the game starts. Turning it off restores your previous settings.
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
++TouchController saja	TouchController only
++Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Hide the launcher's buttons and virtual mouse (only the menu gear stays) while the mod is connected. Use it if the two controls clash, for example the camera turning twice.
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index 8e22058..899b1b3 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -94,7 +94,7 @@ Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan t
+ Hotbar sentuh	Barra r\u00e1pida t\u00e1ctil
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toca la barra r\u00e1pida en la parte inferior de la pantalla para elegir una ranura, como en Minecraft Bedrock. Las posiciones siguen la escala de GUI del juego.
+ Dukungan TouchController	Compatibilidad con TouchController
+-Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Act\u00edvalo solo si usas el mod TouchController: los controles integrados se ocultan (solo queda el engranaje del men\u00fa) y todos los toques se env\u00edan al mod. Si la pantalla no responde, desact\u00edvalo.
++Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. Si el mod TouchController est\u00e1 instalado y conectado, los toques al jugar tambi\u00e9n se env\u00edan al mod. Los botones y el rat\u00f3n virtual del launcher siguen activos, as\u00ed que ambos se pueden usar a la vez.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+ Optimasi HP RAM kecil	Optimizaci\u00f3n para tel\u00e9fonos con poca RAM
+ RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	Este tel\u00e9fono tiene {0} MB de RAM, as\u00ed que se puede ajustar c\u00f3mo trabaja el limpiador de memoria de Java.
+@@ -108,3 +108,5 @@ Nyalakan Mode Hemat	Activar Modo Ahorro
+ Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Activa el modo de rendimiento sostenido del sistema y la V-Sync de Zink, y limita la escala de resoluci\u00f3n al 80 % como m\u00e1ximo.
+ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Se aplica la pr\u00f3xima vez que inicies el juego. Al desactivarlo se restauran tus ajustes anteriores.
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90/120 Hz se fija a 60 Hz mientras juegas para un movimiento m\u00e1s uniforme y algo menos de calor. Va bien si el juego rara vez llega a 90 FPS. El HUD de FPS muestra los Hz activos.
++TouchController saja	Solo TouchController
++Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Oculta los botones y el rat\u00f3n virtual del launcher (solo queda el engranaje del men\u00fa) mientras el mod est\u00e9 conectado. \u00dasalo si ambos controles chocan, por ejemplo si la c\u00e1mara gira dos veces.
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index 1a1c91d..f207e3f 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -93,7 +93,7 @@ Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena p
+ Hotbar sentuh	Thanh nhanh c\u1ea3m \u1ee9ng
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Ch\u1ea1m v\u00e0o thanh nhanh \u1edf cu\u1ed1i m\u00e0n h\u00ecnh \u0111\u1ec3 ch\u1ecdn \u00f4, gi\u1ed1ng Minecraft Bedrock. V\u1ecb tr\u00ed c\u00e1c \u00f4 theo t\u1ef7 l\u1ec7 GUI c\u1ee7a tr\u00f2 ch\u01a1i.
+ Dukungan TouchController	H\u1ed7 tr\u1ee3 TouchController
+-Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Th\u1eed nghi\u1ec7m. Ch\u1ec9 b\u1eadt khi d\u00f9ng mod TouchController: c\u00e1c n\u00fat c\u00f3 s\u1eb5n b\u1ecb \u1ea9n (ch\u1ec9 c\u00f2n b\u00e1nh r\u0103ng menu) v\u00e0 m\u1ecdi thao t\u00e1c ch\u1ea1m \u0111\u01b0\u1ee3c chuy\u1ec3n cho mod. N\u1ebfu m\u00e0n h\u00ecnh kh\u00f4ng ph\u1ea3n h\u1ed3i, h\u00e3y t\u1eaft.
++Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Th\u1eed nghi\u1ec7m. N\u1ebfu mod TouchController \u0111\u00e3 c\u00e0i v\u00e0 k\u1ebft n\u1ed1i, thao t\u00e1c ch\u1ea1m khi ch\u01a1i c\u0169ng \u0111\u01b0\u1ee3c chuy\u1ec3n cho mod. N\u00fat v\u00e0 chu\u1ed9t \u1ea3o c\u1ee7a launcher v\u1eabn ho\u1ea1t \u0111\u1ed9ng, n\u00ean c\u00f3 th\u1ec3 d\u00f9ng c\u1ea3 hai c\u00f9ng l\u00fac.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+ Optimasi HP RAM kecil	T\u1ed1i \u01b0u cho \u0111i\u1ec7n tho\u1ea1i RAM th\u1ea5p
+ RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	\u0110i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 {0} MB RAM, n\u00ean c\u00f3 th\u1ec3 tinh ch\u1ec9nh c\u00e1ch b\u1ed9 d\u1ecdn d\u1eb9p b\u1ed9 nh\u1edb Java ho\u1ea1t \u0111\u1ed9ng.
+@@ -107,3 +107,5 @@ Nyalakan Mode Hemat	B\u1eadt Ch\u1ebf \u0111\u1ed9 Ti\u1ebft ki\u1ec7m
+ Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	B\u1eadt ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh c\u1ee7a h\u1ec7 th\u1ed1ng v\u00e0 V-Sync c\u1ee7a Zink, \u0111\u1ed3ng th\u1eddi gi\u1edbi h\u1ea1n t\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i t\u1ed1i \u0111a 80%.
+ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. T\u1eaft \u0111i s\u1ebd kh\u00f4i ph\u1ee5c c\u00e0i \u0111\u1eb7t tr\u01b0\u1edbc \u0111\u00f3.
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90/120 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t h\u01a1n v\u00e0 \u0111\u1ee1 n\u00f3ng h\u01a1n m\u1ed9t ch\u00fat. Ph\u00f9 h\u1ee3p n\u1ebfu game hi\u1ebfm khi \u0111\u1ea1t 90 FPS. HUD FPS hi\u1ec3n th\u1ecb Hz \u0111ang ho\u1ea1t \u0111\u1ed9ng.
++TouchController saja	Ch\u1ec9 TouchController
++Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	\u1ea8n n\u00fat v\u00e0 chu\u1ed9t \u1ea3o c\u1ee7a launcher (ch\u1ec9 c\u00f2n b\u00e1nh r\u0103ng menu) khi mod \u0111\u00e3 k\u1ebft n\u1ed1i. D\u00f9ng khi hai ki\u1ec3u \u0111i\u1ec1u khi\u1ec3n xung \u0111\u1ed9t, v\u00ed d\u1ee5 camera xoay hai l\u1ea7n.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index ada912d..1d5465c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -1092,7 +1092,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                         // sebelum itu (dan bila tidak pernah) layar tetap bisa dipakai seperti biasa.
+                         onConnected = { connected ->
+                             val sec = (System.currentTimeMillis() - waitStart) / 1000
+-                            LoggerBridge.append("▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): kontrol bawaan disembunyikan")
++                            LoggerBridge.append(
++                                "▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): " +
++                                    if (activeSettings.touchControllerExclusive) "kontrol bawaan disembunyikan"
++                                    else "sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif"
++                            )
+                             touchSinkState.value = connected
+                         }
+                     )
+@@ -1685,6 +1689,8 @@ fun GameScreen(
+ 
+     val gameCursorMode by ZLBridgeStates.cursorMode.collectAsState()
+     val launcherSettings by SettingsManager.settings.collectAsState()
++    // TouchController saja: tombol dan mouse virtual launcher dimatikan (hanya bila modnya sudah tersambung).
++    val tcExclusive = touchSink != null && launcherSettings.touchControllerExclusive
+     val customButtons by ControlLayoutManager.buttons.collectAsState()
+     val mouseControlMode = if (launcherSettings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
+ 
+@@ -1783,6 +1789,7 @@ fun GameScreen(
+             touchAttackEnabled = launcherSettings.touchAttackEnabled,
+             hotbarSlotAt = hotbarLookup,
+             touchSink = touchSink,
++            touchExclusive = tcExclusive,
+             onHotbarSelect = { slot ->
+                 val key = LwjglGlfwKeycode.GLFW_KEY_1 + slot
+                 CallbackBridge.sendKeyPress(key, true)
+@@ -1855,7 +1862,7 @@ fun GameScreen(
+         }
+ 
+         // 3. Visible Desktop Virtual Cursor Pointer (Zalith Style - automatically visible ONLY in menus, hidden when external mouse is active)
+-        val shouldShowPointer = if (touchSink != null) {
++        val shouldShowPointer = if (tcExclusive) {
+             // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
+             false
+         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
+@@ -1925,7 +1932,7 @@ fun GameScreen(
+                 onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+                 onToggleControls = { isControlVisible = !isControlVisible },
+                 onOpenMenu = { showInGameSettingsDialog = true },
+-                touchControllerMode = touchSink != null
++                touchControllerMode = tcExclusive
+             )
+         }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
+index edcf530..8e82615 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/TouchControllerBridge.kt
+@@ -21,6 +21,51 @@ interface TouchSink {
+     fun onCancelAll()
+ }
+ 
++/**
++ * Mencatat jari mana saja yang sudah dikirim ke mod pada mode berdampingan, supaya gerak dan angkat
++ * hanya dikirim untuk jari yang tadinya dikirim (jari yang dipakai tombol launcher atau yang mulai
++ * saat di menu tidak pernah sampai ke mod). Tanpa alokasi per kejadian; maksimum [capacity] jari.
++ */
++class TouchForwarder(capacity: Int = 10) {
++    private val ids = LongArray(capacity)
++    private var count = 0
++
++    private fun find(id: Long): Int {
++        for (i in 0 until count) if (ids[i] == id) return i
++        return -1
++    }
++
++    /**
++     * Mengirim jari baru ke [sink]. Mengembalikan true bila benar-benar dikirim. Id yang ternyata
++     * masih tercatat (angkatnya tidak pernah terlihat, mis. menu menutup layar saat jari turun)
++     * dianggap sentuhan baru, bukan dibuang.
++     */
++    fun down(sink: TouchSink, id: Long, x: Float, y: Float): Boolean {
++        if (find(id) < 0) {
++            if (count >= ids.size) return false
++            ids[count++] = id
++        }
++        sink.onDown(id, x, y)
++        return true
++    }
++
++    fun move(sink: TouchSink, id: Long, x: Float, y: Float) {
++        if (find(id) >= 0) sink.onMove(id, x, y)
++    }
++
++    fun up(sink: TouchSink, id: Long) {
++        val at = find(id)
++        if (at < 0) return
++        ids[at] = ids[--count]
++        sink.onUp(id)
++    }
++
++    /** Lupakan semua jari tercatat (setelah [TouchSink.onCancelAll]). */
++    fun clear() {
++        count = 0
++    }
++}
++
+ /**
+  * Dukungan mod TouchController (https://github.com/TouchController/TouchController).
+  *
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index a06e224..cd19ea0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -22,6 +22,9 @@ data class LauncherSettings(
+     // Eksperimental, bawaan mati. Bila modnya terpasang: kontrol bawaan disembunyikan dan semua
+     // sentuhan diteruskan ke mod. Namanya sengaja baru supaya nilai "aktif" dari versi sebelumnya tidak terbawa.
+     val touchControllerEnabled: Boolean = false,
++    // Hanya berlaku bila touchControllerEnabled nyala: sembunyikan tombol dan mouse virtual launcher,
++    // semua sentuhan hanya untuk mod. Bawaan mati = launcher dan mod aktif berdampingan.
++    val touchControllerExclusive: Boolean = false,
+     val mouseSizeDp: Int = 24, // 16 - 48 dp
+     val hideMouseInClickMode: Boolean = true,
+     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index ead28b2..83def69 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.*
+ import androidx.compose.ui.platform.LocalView
+ import androidx.compose.ui.platform.LocalViewConfiguration
+ import androidx.lifecycle.compose.collectAsStateWithLifecycle
++import com.israadev.nuxlauncher.core.controls.TouchForwarder
+ import com.israadev.nuxlauncher.core.controls.TouchSink
+ import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
+ import com.israadev.nuxlauncher.ui.components.FocusableBox
+@@ -52,6 +53,9 @@ fun SwitchableMouseLayout(
+     // Mod TouchController aktif: semua sentuhan jari diteruskan mentah ke penerima ini (koordinat
+     // 0..1) dan lapisan ini tidak menggerakkan kamera atau kursor sendiri. Mouse fisik tetap jalan.
+     touchSink: TouchSink? = null,
++    // true = hanya mod yang memegang sentuhan (kamera/kursor launcher dimatikan). false = launcher
++    // bekerja seperti biasa dan jari yang menyentuh area game saat bermain juga dikirim ke mod.
++    touchExclusive: Boolean = false,
+     requestPointerCapture: Boolean = false,
+     onCursorPositionChange: (Offset) -> Unit,
+     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
+@@ -88,6 +92,7 @@ fun SwitchableMouseLayout(
+     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
+     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
+     val currentTouchSink by rememberUpdatedState(touchSink)
++    val currentTouchExclusive by rememberUpdatedState(touchExclusive)
+     val currentOnTap by rememberUpdatedState(onTap)
+     val currentOnLongPress by rememberUpdatedState(onLongPress)
+     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
+@@ -143,14 +148,38 @@ fun SwitchableMouseLayout(
+                     var longPressJob: Job? = null
+                     // Slot hotbar yang disentuh jari ini (-1 = bukan hotbar). Hanya saat bermain.
+                     var hotbarSlot = -1
++                    // Jari yang sedang diteruskan ke mod pada mode berdampingan.
++                    val forwarder = TouchForwarder()
+ 
+                     awaitPointerEventScope {
+                         while (true) {
+                             val event = awaitPointerEvent()
+ 
+-                            // Mod TouchController: teruskan jari apa adanya, lewati logika kamera/kursor.
++                            // Mod TouchController (lihat touchSink/touchExclusive di atas).
+                             val sink = currentTouchSink
+-                            if (sink != null) {
++                            if (sink != null && !currentTouchExclusive) {
++                                // Berdampingan: sentuhan tetap diproses launcher di bawah (tidak dikonsumsi),
++                                // dan salinannya dikirim ke mod hanya saat bermain (kursor terkunci). Di menu
++                                // game launcher yang bekerja sendiri, kalau tidak klik akan terhitung dua kali.
++                                val invW = if (screenWidth > 0f) 1f / screenWidth else 0f
++                                val invH = if (screenHeight > 0f) 1f / screenHeight else 0f
++                                val fChanges = event.changes
++                                for (ci in fChanges.indices) {
++                                    val c = fChanges[ci]
++                                    if (c.type != PointerType.Touch) continue
++                                    val key = c.id.value
++                                    if (c.changedToDown()) {
++                                        // Jari yang sudah dipakai tombol launcher (sudah dikonsumsi) tidak ikut dikirim.
++                                        if (!c.isConsumed && currentCursorMode == CURSOR_DISABLED) {
++                                            forwarder.down(sink, key, c.position.x * invW, c.position.y * invH)
++                                        }
++                                    } else if (c.changedToUpIgnoreConsumed()) {
++                                        forwarder.up(sink, key)
++                                    } else if (c.pressed && c.positionChanged()) {
++                                        forwarder.move(sink, key, c.position.x * invW, c.position.y * invH)
++                                    }
++                                }
++                            } else if (sink != null) {
+                                 if (activePointerId != null) {
+                                     longPressJob?.cancel()
+                                     activePointerId = null
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 98165b5..9e6d40d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -86,6 +86,7 @@ fun SettingsScreen(
+     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
++    var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
+ 
+@@ -133,6 +134,7 @@ fun SettingsScreen(
+             touchAttackEnabled = touchAttack,
+             hotbarTouchEnabled = hotbarTouch,
+             touchControllerEnabled = touchControllerEnabled,
++            touchControllerExclusive = touchControllerExclusive,
+             mouseSizeDp = mouseSizeDp,
+             physicalMouseMode = physicalMouseMode,
+             resolutionRatio = resolutionRatio,
+@@ -729,7 +731,7 @@ fun SettingsScreen(
+                         SettingDivider()
+                         SettingSwitchRow(
+                             title = "Dukungan TouchController",
+-                            desc = "Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.",
++                            desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
+                             checked = touchControllerEnabled,
+                             onCheckedChange = {
+                                 touchControllerEnabled = it
+@@ -737,6 +739,16 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
++                        SettingSwitchRow(
++                            title = "TouchController saja",
++                            desc = "Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.",
++                            checked = touchControllerExclusive,
++                            onCheckedChange = {
++                                touchControllerExclusive = it
++                                commitSettings()
++                            }
++                        )
++                        SettingDivider()
+                         SettingSliderRow(
+                             title = "Sensitivitas kamera",
+                             desc = "Kecepatan memutar pandangan di dalam game.",
+@@ -818,6 +830,7 @@ fun SettingsScreen(
+                     touchAttack = reset.touchAttackEnabled
+                     hotbarTouch = reset.hotbarTouchEnabled
+                     touchControllerEnabled = reset.touchControllerEnabled
++                    touchControllerExclusive = reset.touchControllerExclusive
+                     mouseSizeDp = reset.mouseSizeDp
+                     physicalMouseMode = reset.physicalMouseMode
+                     resolutionRatio = reset.resolutionRatio
+# FIN part=1/1 files=9

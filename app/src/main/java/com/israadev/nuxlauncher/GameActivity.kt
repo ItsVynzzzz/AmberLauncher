@@ -545,6 +545,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             runOnUiThread {
                 isGameRenderingState.value = true
                 liveLogs.add("🎨 [Render Engine] First graphical frame rendered on Surface!")
+                val tc = touchBridge
+                if (tc != null && !tc.isConnected) {
+                    LoggerBridge.append("▷ [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai")
+                }
                 val midX = (CallbackBridge.windowWidth.takeIf { it > 0 } ?: 1280) / 2f
                 val midY = (CallbackBridge.windowHeight.takeIf { it > 0 } ?: 720) / 2f
                 CallbackBridge.sendCursorPos(midX, midY)
@@ -1079,16 +1083,22 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 // Tanpa modnya, tidak ada yang dibuat sama sekali (tanpa thread, socket, atau penelusuran).
                 if (activeSettings.touchControllerEnabled && TouchControllerSupport.isModInstalled(installedMods)) {
                     val socketName = TouchControllerSupport.newSocketName()
+                    val waitStart = System.currentTimeMillis()
                     val bridge = TouchControllerBridge.start(
                         socketName = socketName,
                         scanner = TouchControllerBridge.ClassScanner { DexClassScanner.find(this@GameActivity, it) },
-                        log = { LoggerBridge.append("▷ $it") }
+                        log = { LoggerBridge.append("▷ $it") },
+                        // Kontrol bawaan baru disembunyikan setelah modnya benar-benar tersambung;
+                        // sebelum itu (dan bila tidak pernah) layar tetap bisa dipakai seperti biasa.
+                        onConnected = { connected ->
+                            val sec = (System.currentTimeMillis() - waitStart) / 1000
+                            LoggerBridge.append("▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): kontrol bawaan disembunyikan")
+                            touchSinkState.value = connected
+                        }
                     )
                     if (bridge != null) {
                         Os.setenv(TouchControllerSupport.ENV_SOCKET, socketName, true)
                         touchBridge = bridge
-                        touchSinkState.value = bridge
-                        LoggerBridge.append("▷ [TouchController] Mod terdeteksi: kontrol bawaan disembunyikan")
                     }
                 }
 
@@ -1845,7 +1855,10 @@ fun GameScreen(
         }
 
         // 3. Visible Desktop Virtual Cursor Pointer (Zalith Style - automatically visible ONLY in menus, hidden when external mouse is active)
-        val shouldShowPointer = if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
+        val shouldShowPointer = if (touchSink != null) {
+            // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
+            false
+        } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
             false
         } else if (PhysicalMouseChecker.physicalMouseConnected && isPhysicalMouseMode && launcherSettings.physicalMouseMode) {
             // Sembunyikan mouse virtual jika mouse fisik eksternal terhubung & sedang digunakan

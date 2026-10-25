@@ -1,8 +1,12 @@
 package com.israadev.nuxlauncher.core.controls
 
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import java.lang.reflect.Proxy
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Penerima sentuhan mentah dari layar game. Koordinat sudah dinormalkan 0..1 terhadap area game
@@ -58,6 +62,10 @@ object TouchControllerSupport {
  *
  * Nomor jari ("index") yang dikirim ke mod harus selalu naik, tidak seperti id jari Android yang
  * dipakai ulang, jadi setiap sentuhan baru diberi nomor berikutnya.
+ *
+ * Socketnya milik launcher dan modnya yang menyambung saat game berjalan. Jalur data dibungkus
+ * sehingga launcher tahu kapan mod benar-benar mengirim sesuatu ([isConnected]); selama itu belum
+ * terjadi, pemanggil tidak boleh mengambil alih sentuhan dari kontrol bawaan.
  */
 class TouchControllerBridge private constructor(
     private val client: Any,
@@ -66,6 +74,11 @@ class TouchControllerBridge private constructor(
     private val clearPointer: Method,
     private val log: (String) -> Unit
 ) : TouchSink {
+
+    /** True setelah mod mengirim pesan pertamanya (artinya modnya hidup dan terhubung). */
+    @Volatile
+    var isConnected = false
+        internal set
 
     private val ids = LongArray(MAX_POINTERS)
     private val indexes = IntArray(MAX_POINTERS)
@@ -176,7 +189,8 @@ class TouchControllerBridge private constructor(
             socketName: String,
             loader: ClassLoader? = TouchControllerBridge::class.java.classLoader,
             scanner: ClassScanner? = null,
-            log: (String) -> Unit
+            log: (String) -> Unit,
+            onConnected: (TouchControllerBridge) -> Unit = {}
         ): TouchControllerBridge? {
             try {
                 val clientClass = load(loader, CLIENT_CANDIDATES)
@@ -196,11 +210,37 @@ class TouchControllerBridge private constructor(
                     log("[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan")
                     return null
                 }
-                val transport = factory.invoke(null, socketName)
+                val realTransport = factory.invoke(null, socketName)
                     ?: run {
                         log("[TouchController] transport kosong; memakai kontrol bawaan")
                         return null
                     }
+                val transportType = factory.returnType
+                if (!transportType.isInterface) {
+                    log("[TouchController] jenis transport tidak dikenal (${transportType.name}); memakai kontrol bawaan")
+                    return null
+                }
+
+                // Pesan pertama dari mod = mod sudah tersambung. Dihitung sekali saja.
+                val self = AtomicReference<TouchControllerBridge?>()
+                val fired = AtomicBoolean(false)
+                val transport = Proxy.newProxyInstance(
+                    transportType.classLoader ?: TouchControllerBridge::class.java.classLoader,
+                    arrayOf(transportType)
+                ) { _, m, args ->
+                    try {
+                        val result = if (args == null) m.invoke(realTransport) else m.invoke(realTransport, *args)
+                        if (result == true && m.name == "receive" && fired.compareAndSet(false, true)) {
+                            self.get()?.let {
+                                it.isConnected = true
+                                try { onConnected(it) } catch (_: Throwable) {}
+                            }
+                        }
+                        result
+                    } catch (e: InvocationTargetException) {
+                        throw e.targetException ?: e
+                    }
+                }
 
                 val ctor = clientClass.constructors.firstOrNull {
                     it.parameterCount == 1 && it.parameterTypes[0].isInstance(transport)
@@ -232,6 +272,7 @@ class TouchControllerBridge private constructor(
                 }
 
                 val bridge = TouchControllerBridge(client, add, remove, clear, log)
+                self.set(bridge)
                 // run() bisa berupa perulangan yang tidak kembali: jalankan di thread sendiri.
                 Thread({
                     try {
@@ -240,7 +281,7 @@ class TouchControllerBridge private constructor(
                         log("[TouchController] klien berhenti: ${t.cause?.message ?: t.message}")
                     }
                 }, "TouchController-Proxy").apply { isDaemon = true }.start()
-                log("[TouchController] klien proxy aktif (socket $socketName)")
+                log("[TouchController] klien proxy menunggu mod (socket $socketName)")
                 return bridge
             } catch (t: Throwable) {
                 log("[TouchController] gagal memulai: ${t.cause?.message ?: t.message}; memakai kontrol bawaan")

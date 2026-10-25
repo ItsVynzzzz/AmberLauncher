@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+import com.israadev.nuxlauncher.core.controls.ControlLimits
 import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.ui.components.NuxBadge
@@ -55,6 +56,13 @@ import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import java.util.UUID
 import kotlin.math.roundToInt
+
+/**
+ * Seperti coerceIn, tapi tidak melempar galat bila rentangnya terbalik (tombol lebih besar dari
+ * layar, mungkin sejak batas ukuran dinaikkan): pusatnya dipasang di tengah rentang.
+ */
+private fun Float.clampCenter(lo: Float, hi: Float): Float =
+    if (lo > hi) (lo + hi) / 2f else coerceIn(lo, hi)
 
 @Composable
 fun CustomGuiEditorScreen(
@@ -177,8 +185,13 @@ fun CustomGuiEditorScreen(
                                 val curCenterX = screenWidthPx * (currentBtn.xPercent / 100f)
                                 val curCenterY = screenHeightPx * (currentBtn.yPercent / 100f)
 
-                                val newCenterX = (curCenterX + dragAmount.x).coerceIn(btnWidthPx / 2f, screenWidthPx - btnWidthPx / 2f)
-                                val newCenterY = (curCenterY + dragAmount.y).coerceIn(btnHeightPx / 2f, screenHeightPx - btnHeightPx / 2f)
+                                // Ukuran dibaca dari tombol saat ini (bukan yang ditangkap saat composition),
+                                // supaya batas geser ikut berubah setelah slider ukuran digeser. Tombol yang
+                                // lebih besar dari layar dipusatkan dan tidak membuat galat.
+                                val halfW = with(density) { currentBtn.widthDp.dp.toPx() } / 2f
+                                val halfH = with(density) { currentBtn.heightDp.dp.toPx() } / 2f
+                                val newCenterX = (curCenterX + dragAmount.x).clampCenter(halfW, screenWidthPx - halfW)
+                                val newCenterY = (curCenterY + dragAmount.y).clampCenter(halfH, screenHeightPx - halfH)
 
                                 val newXPercent = (newCenterX / screenWidthPx) * 100f
                                 val newYPercent = (newCenterY / screenHeightPx) * 100f
@@ -470,7 +483,7 @@ fun CustomGuiEditorScreen(
                                         if (it.id == selectedButton.id) it.copy(widthDp = d, heightDp = d, cornerRadiusDp = d / 2) else it
                                     }
                                 },
-                                valueRange = 80f..220f,
+                                valueRange = ControlLimits.MIN_JOYSTICK_DP.toFloat()..ControlLimits.MAX_JOYSTICK_DP.toFloat(),
                                 colors = SliderDefaults.colors(
                                     thumbColor = Color(0xFFFFD60A),
                                     activeTrackColor = Color(0xFFFFD60A),
@@ -589,7 +602,7 @@ fun CustomGuiEditorScreen(
                                 onValueChange = { newW ->
                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
                                 },
-                                valueRange = 24f..160f,
+                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
                                 colors = SliderDefaults.colors(
                                     thumbColor = Color(0xFFFFD60A),
                                     activeTrackColor = Color(0xFFFFD60A),
@@ -607,7 +620,7 @@ fun CustomGuiEditorScreen(
                                 onValueChange = { newH ->
                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(heightDp = newH.roundToInt()) else it }
                                 },
-                                valueRange = 24f..160f,
+                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_HEIGHT_DP.toFloat(),
                                 colors = SliderDefaults.colors(
                                     thumbColor = Color(0xFFFFD60A),
                                     activeTrackColor = Color(0xFFFFD60A),
@@ -643,7 +656,7 @@ fun CustomGuiEditorScreen(
                                 onValueChange = { newR ->
                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(cornerRadiusDp = newR.roundToInt()) else it }
                                 },
-                                valueRange = 0f..28f,
+                                valueRange = 0f..ControlLimits.MAX_CORNER_DP.toFloat(),
                                 colors = SliderDefaults.colors(
                                     thumbColor = Color(0xFFFFD60A),
                                     activeTrackColor = Color(0xFFFFD60A),

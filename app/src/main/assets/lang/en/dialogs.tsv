@@ -141,3 +141,10 @@ Pustaka grafis MobileGL (Vulkan & GLES backend)	MobileGL graphics library (Vulka
 Renderer eksternal dari APK: {0} ({1})	External renderer from APK: {0} ({1})
 Plugin Eksternal	External Plugin
 Renderer APK: {0} ({1})	APK Renderer: {0} ({1})
+Impor layout kontrol?	Import control layout?
+Ganti layout	Replace layout
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	Your current button layout will be replaced with the {0} buttons from this file.
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	This file contains {0} macro buttons that type chat messages or commands automatically. Check them before using on a server.
+Utama	Main
+Navigasi & Numpad	Navigation & Numpad
+Ketuk tombol yang diinginkan	Tap the key you want

@@ -157,8 +157,18 @@ object KeycodeCatalog {
         KeyOption("Numpad = (Sama Dengan)", LwjglGlfwKeycode.GLFW_KEY_KP_EQUAL, category = "Numpad")
     )
 
+    /** Nama tombol keyboard per kode (entri pertama yang cocok), dibuat sekali saat pertama dipakai. */
+    private val keyboardNames: Map<Int, String> by lazy {
+        val map = HashMap<Int, String>(ALL_KEYS.size * 2)
+        for (k in ALL_KEYS) {
+            if (k.isMouseButton || k.isScroll) continue
+            if (!map.containsKey(k.keyCode)) map[k.keyCode] = k.displayName
+        }
+        map
+    }
+
     fun getKeyName(keyCode: Int): String {
-        return ALL_KEYS.firstOrNull { !it.isMouseButton && !it.isScroll && it.keyCode == keyCode }?.displayName
+        return keyboardNames[keyCode]
             ?: when (keyCode) {
                 0 -> "None"
                 else -> "Key $keyCode"

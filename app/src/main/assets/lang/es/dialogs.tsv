@@ -173,3 +173,10 @@ Crash Log	Registro de fallo
 LAUNCHER ERROR	ERROR DEL LAUNCHER
 EXIT CODE {0}	C\u00d3DIGO DE SALIDA {0}
 TERMINAL LOG / STACK TRACE	REGISTRO DE TERMINAL / STACK TRACE
+Impor layout kontrol?	\u00bfImportar dise\u00f1o de controles?
+Ganti layout	Reemplazar dise\u00f1o
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	La disposici\u00f3n actual de botones se reemplazar\u00e1 por los {0} botones de este archivo.
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Este archivo contiene {0} botones de macro que escriben mensajes o comandos autom\u00e1ticamente. Rev\u00edsalos antes de usarlos en un servidor.
+Utama	Principal
+Navigasi & Numpad	Navegaci\u00f3n y Numpad
+Ketuk tombol yang diinginkan	Toca la tecla que quieras

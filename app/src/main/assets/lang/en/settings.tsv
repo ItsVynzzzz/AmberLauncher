@@ -110,3 +110,12 @@ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya d
 Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
 TouchController saja	TouchController only
 Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Hide the launcher's buttons and virtual mouse (only the menu gear stays) while the mod is connected. Use it if the two controls clash, for example the camera turning twice.
+Cadangan & bagikan layout	Back up & share layout
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Save the button layout to a .json file to back it up or share it, or load one from someone else's file.
+Ekspor	Export
+Layout kontrol disimpan ke berkas	Control layout saved to file
+Gagal menyimpan berkas	Failed to save the file
+Berkas terlalu besar untuk layout kontrol	File is too large for a control layout
+Berkas tidak berisi tombol	The file contains no buttons
+Berkas ini bukan layout kontrol yang valid	This file is not a valid control layout
+Layout kontrol diimpor ({0} tombol)	Control layout imported ({0} buttons)

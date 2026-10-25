@@ -174,3 +174,10 @@ LAUNCHER ERROR	L\u1ed6I LAUNCHER
 EXIT CODE {0}	M\u00c3 THO\u00c1T {0}
 TERMINAL LOG / STACK TRACE	NH\u1eacT K\u00dd TERMINAL / STACK TRACE
 Error: {0}	L\u1ed7i: {0}
+Impor layout kontrol?	Nh\u1eadp b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n?
+Ganti layout	Thay b\u1ed1 c\u1ee5c
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	B\u1ed1 c\u1ee5c n\u00fat hi\u1ec7n t\u1ea1i s\u1ebd \u0111\u01b0\u1ee3c thay b\u1eb1ng {0} n\u00fat t\u1eeb t\u1ec7p n\u00e0y.
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	T\u1ec7p n\u00e0y c\u00f3 {0} n\u00fat macro t\u1ef1 \u0111\u1ed9ng g\u00f5 chat ho\u1eb7c l\u1ec7nh. H\u00e3y ki\u1ec3m tra tr\u01b0\u1edbc khi d\u00f9ng tr\u00ean m\u00e1y ch\u1ee7.
+Utama	Ch\u00ednh
+Navigasi & Numpad	\u0110i\u1ec1u h\u01b0\u1edbng & Numpad
+Ketuk tombol yang diinginkan	Ch\u1ea1m v\u00e0o ph\u00edm b\u1ea1n mu\u1ed1n

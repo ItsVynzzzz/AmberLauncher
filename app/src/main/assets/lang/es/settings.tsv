@@ -110,3 +110,12 @@ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya d
 Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90/120 Hz se fija a 60 Hz mientras juegas para un movimiento m\u00e1s uniforme y algo menos de calor. Va bien si el juego rara vez llega a 90 FPS. El HUD de FPS muestra los Hz activos.
 TouchController saja	Solo TouchController
 Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Oculta los botones y el rat\u00f3n virtual del launcher (solo queda el engranaje del men\u00fa) mientras el mod est\u00e9 conectado. \u00dasalo si ambos controles chocan, por ejemplo si la c\u00e1mara gira dos veces.
+Cadangan & bagikan layout	Copia de seguridad y compartir dise\u00f1o
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Guarda la disposici\u00f3n de los botones en un archivo .json para respaldarla o compartirla, o carga la de otra persona.
+Ekspor	Exportar
+Layout kontrol disimpan ke berkas	Dise\u00f1o de controles guardado en el archivo
+Gagal menyimpan berkas	No se pudo guardar el archivo
+Berkas terlalu besar untuk layout kontrol	El archivo es demasiado grande para un dise\u00f1o de controles
+Berkas tidak berisi tombol	El archivo no contiene botones
+Berkas ini bukan layout kontrol yang valid	Este archivo no es un dise\u00f1o de controles v\u00e1lido
+Layout kontrol diimpor ({0} tombol)	Dise\u00f1o de controles importado ({0} botones)

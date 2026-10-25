@@ -44,6 +44,8 @@ import com.israadev.nuxlauncher.GameActivity
 import java.io.File
 import java.io.FileOutputStream
 import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
+import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.models.LauncherSettings
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
@@ -54,6 +56,7 @@ import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
 import com.israadev.nuxlauncher.ui.components.*
 import com.israadev.nuxlauncher.ui.dialogs.NuxRendererV2ConfigDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +76,43 @@ fun SettingsScreen(
     val currentSettings by SettingsManager.settings.collectAsState()
 
     var showAboutDialog by remember { mutableStateOf(false) }
+
+    // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
+    // dikerjakan di thread IO; layar hanya menyimpan hasil pemeriksaan sampai pengguna menyetujui.
+    var pendingImport by remember { mutableStateOf<ControlLayoutIO.ImportResult.Ok?>(null) }
+    val exportLayoutLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri: Uri? ->
+        if (uri != null) {
+            scope.launch {
+                val ok = withContext(Dispatchers.IO) { ControlLayoutManager.exportTo(context, uri) }
+                Toast.makeText(
+                    context,
+                    if (ok) "Layout kontrol disimpan ke berkas" else "Gagal menyimpan berkas",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    val importLayoutLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            scope.launch {
+                val r = withContext(Dispatchers.IO) { ControlLayoutManager.readImport(context, uri) }
+                if (r is ControlLayoutIO.ImportResult.Ok) {
+                    pendingImport = r
+                } else if (r is ControlLayoutIO.ImportResult.Failed) {
+                    val message = when (r.reason) {
+                        ControlLayoutIO.Reason.TOO_LARGE -> "Berkas terlalu besar untuk layout kontrol"
+                        ControlLayoutIO.Reason.NO_BUTTONS -> "Berkas tidak berisi tombol"
+                        ControlLayoutIO.Reason.NOT_LAYOUT -> "Berkas ini bukan layout kontrol yang valid"
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     // Local mutable state for instant responsive UI before saving
     var ramMb by remember(currentSettings.ramMb) { mutableIntStateOf(currentSettings.ramMb) }
@@ -694,6 +734,63 @@ fun SettingsScreen(
                         }
 
                         SettingDivider()
+                        // Cadangkan atau bagikan tata letak tombol sebagai berkas .json
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 9.dp)
+                        ) {
+                            SettingRowText(
+                                title = "Cadangan & bagikan layout",
+                                desc = "Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.",
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                NuxButton(
+                                    onClick = {
+                                        val stamp = java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.US)
+                                            .format(java.util.Date())
+                                        exportLayoutLauncher.launch("amber-controls-$stamp.json")
+                                    },
+                                    backgroundColor = Color.Transparent,
+                                    cornerRadius = 20.dp,
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.FileUpload,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Ekspor",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                }
+                                NuxButton(
+                                    onClick = { importLayoutLauncher.launch(arrayOf("*/*")) },
+                                    backgroundColor = Color.Transparent,
+                                    cornerRadius = 20.dp,
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.FileDownload,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Impor",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                }
+                            }
+                        }
+
+                        SettingDivider()
                         SettingChoiceRow(
                             title = "Mode mouse di menu",
                             desc = if (mouseMode == "CLICK") {
@@ -1169,6 +1266,23 @@ fun SettingsScreen(
     }
 
     // Dialog Tentang & Lisensi Open Source (GPL-3.0 & Zalith Compliance)
+    pendingImport?.let { pending ->
+        NuxImportLayoutDialog(
+            buttonCount = pending.buttons.size,
+            macroCommands = pending.macroCommands,
+            onConfirm = {
+                pendingImport = null
+                scope.launch {
+                    val count = withContext(Dispatchers.IO) {
+                        ControlLayoutManager.importLayout(context, pending.buttons).size
+                    }
+                    Toast.makeText(context, "Layout kontrol diimpor ($count tombol)", Toast.LENGTH_SHORT).show()
+                }
+            },
+            onDismiss = { pendingImport = null }
+        )
+    }
+
     if (showAboutDialog) {
         NuxAboutDialog(
             onDismissRequest = { showAboutDialog = false }

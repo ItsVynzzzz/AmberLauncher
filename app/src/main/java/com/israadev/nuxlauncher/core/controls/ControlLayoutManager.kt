@@ -1,6 +1,7 @@
 package com.israadev.nuxlauncher.core.controls
 
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -493,6 +494,74 @@ object ControlLayoutManager {
     fun saveButtons(context: Context, newButtons: List<CustomControlButton>) {
         _buttons.value = newButtons
         save(context, newButtons)
+    }
+
+    /**
+     * Layout tersimpan sekarang dalam bentuk berkas ekspor (JSON). Dimuat dari penyimpanan dulu
+     * bila belum pernah dimuat di proses ini. Panggil dari thread latar.
+     */
+    fun exportJson(context: Context): String {
+        if (_buttons.value.isEmpty()) init(context)
+        return ControlLayoutIO.toJson(_buttons.value)
+    }
+
+    /** Menulis layout tersimpan ke berkas pilihan pengguna (lewat pemilih berkas sistem). Panggil dari thread latar. */
+    fun exportTo(context: Context, uri: Uri): Boolean {
+        return try {
+            val bytes = exportJson(context).toByteArray(Charsets.UTF_8)
+            val stream = context.contentResolver.openOutputStream(uri, "wt") ?: return false
+            stream.use { it.write(bytes) }
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Membaca dan memeriksa berkas layout pilihan pengguna tanpa mengubah apa pun. Pembacaan dibatasi
+     * [ControlLayoutIO.MAX_FILE_BYTES] supaya berkas raksasa tidak memenuhi memori. Panggil dari thread latar.
+     */
+    fun readImport(context: Context, uri: Uri): ControlLayoutIO.ImportResult {
+        return try {
+            val input = context.contentResolver.openInputStream(uri)
+                ?: return ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.NOT_LAYOUT)
+            val out = java.io.ByteArrayOutputStream()
+            input.use {
+                val buf = ByteArray(8 * 1024)
+                while (out.size() <= ControlLayoutIO.MAX_FILE_BYTES) {
+                    val n = it.read(buf)
+                    if (n < 0) break
+                    out.write(buf, 0, n)
+                }
+            }
+            if (out.size() > ControlLayoutIO.MAX_FILE_BYTES) {
+                return ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.TOO_LARGE)
+            }
+            ControlLayoutIO.parse(String(out.toByteArray(), Charsets.UTF_8).removePrefix("﻿"))
+        } catch (_: Exception) {
+            ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.NOT_LAYOUT)
+        }
+    }
+
+    /**
+     * Mengganti seluruh layout dengan hasil impor lalu menyimpannya. Tombol sistem (FPS, keyboard,
+     * sembunyikan GUI, menu) yang tidak ada di berkas ditambahkan lagi dari bawaan, supaya layout
+     * milik orang lain tidak bisa membuat menu game tidak terjangkau. Panggil dari thread latar.
+     */
+    fun importLayout(context: Context, imported: List<CustomControlButton>): List<CustomControlButton> {
+        fun actionOf(b: CustomControlButton) = if (b.systemAction == "CLOSE") "MENU" else b.systemAction
+
+        val result = ArrayList<CustomControlButton>(imported)
+        val present = result.filter { it.isSystem }.map { actionOf(it) }.toSet()
+        for (d in getDefaultButtons()) {
+            if (!d.isSystem || actionOf(d) in present) continue
+            var id = d.id
+            var n = 2
+            while (result.any { it.id == id }) id = d.id + "_" + n++
+            result.add(if (id == d.id) d else d.copy(id = id))
+        }
+        saveButtons(context, result)
+        return result
     }
 
     fun addButton(context: Context, button: CustomControlButton) {

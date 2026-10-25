@@ -1,0 +1,41 @@
+diff --git a/scripts/build-arm32.sh b/scripts/build-arm32.sh
+index e8e2ec7..c200cd5 100755
+--- a/scripts/build-arm32.sh
++++ b/scripts/build-arm32.sh
+@@ -14,7 +14,8 @@
+ #   - pojavexec, exithook, linkerhook,
+ #     driver_helper, vulkan_check, awt  : dibangun dari kode C hulu dengan NDK (Android.mk).
+ #   - SDL, OpenAL, kopper-zink, NG-GL4ES,
+-#     spirv-cross, LWJGL natives        : sudah ada di AAR app/libs (armeabi-v7a).
++#     spirv-cross, LWJGL natives        : diekstrak dari AAR app/libs (armeabi-v7a). Gradle tidak
++#                                         memasukkan isi AAR lokal ke APK, jadi harus disalin sendiri.
+ # Yang TIDAK ada untuk 32-bit (hulu pun tidak menyediakan): Turnip (libvulkan_freedreno).
+ set -euo pipefail
+ 
+@@ -88,6 +89,16 @@ echo "== 4/6 Ambil MobileGlues dan runtime Java 32-bit dari riwayat repo =="
+ for lib in libmobileglues libmobileglues_info_getter; do
+   git -C "$ROOT" show "$MOBILEGLUES_COMMIT:app/src/main/jniLibs/armeabi-v7a/$lib.so" > "$APP/jniLibs/armeabi-v7a/$lib.so"
+ done
++# SDL (libSDL3/libSDL2), OpenAL (suara), NG-GL4ES, kopper-zink, spirv-cross. Di APK 64-bit pustaka ini
++# berada di jniLibs/arm64-v8a; AAR di app/libs hanya penyimpanan, tidak ikut dikemas Gradle. Tanpa langkah
++# ini APK 32-bit tidak punya libopenal.so (game tanpa suara) dan libSDL3.so ("library libSDL3.so not found").
++# "-n": jangan menimpa pustaka hulu yang sudah disalin di atas. unzip berhenti dengan kode error bila
++# tidak ada pustaka armeabi-v7a di AAR-nya, jadi AAR yang kosong tidak lolos diam-diam.
++for aar in SDL-release openal-soft-release NG-GL4ES-release kopper-zink-release spirv-cross-natives; do
++  test -f "$WORK/app/libs/$aar.aar"
++  unzip -n -j -q "$WORK/app/libs/$aar.aar" 'jni/armeabi-v7a/*.so' -d "$APP/jniLibs/armeabi-v7a"
++done
++echo "Pustaka 32-bit dari AAR: $(ls "$APP/jniLibs/armeabi-v7a" | grep -cE '^lib(SDL2|SDL3|openal|ng_gl4es|spirv-cross-c-shared|EGL_mesa|cutils|glapi|glxshim|zink_dri)\.so$') berkas"
+ for v in 8 17 21 25; do
+   git -C "$ROOT" show "$RUNTIME_COMMIT:app/src/main/assets/runtimes/jre-$v/bin-arm.tar.xz" > "$APP/assets/runtimes/jre-$v/bin-arm.tar.xz"
+ done
+@@ -119,7 +130,7 @@ if grep -qE 'lib/(arm64-v8a|x86|x86_64)/' <<< "$APK_LIST"; then
+   echo "::error::APK 32-bit berisi pustaka arsitektur lain."
+   exit 1
+ fi
+-for lib in libpojavexec libexithook liblinkerhook libdriver_helper libjnidispatch libunpack200 libmobileglues libbytehook; do
++for lib in libpojavexec libexithook liblinkerhook libdriver_helper libjnidispatch libunpack200 libmobileglues libbytehook libSDL3 libSDL2 libopenal libng_gl4es libzink_dri libspirv-cross-c-shared; do
+   if ! grep -q "lib/armeabi-v7a/$lib.so" <<< "$APK_LIST"; then
+     echo "::error::$lib.so (armeabi-v7a) tidak ada di APK 32-bit."
+     exit 1
+# FIN part=1/1 files=1

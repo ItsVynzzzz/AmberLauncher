@@ -1092,7 +1092,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         // sebelum itu (dan bila tidak pernah) layar tetap bisa dipakai seperti biasa.
                         onConnected = { connected ->
                             val sec = (System.currentTimeMillis() - waitStart) / 1000
-                            LoggerBridge.append("▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): kontrol bawaan disembunyikan")
+                            LoggerBridge.append(
+                                "▷ [TouchController] Mod tersambung (${sec}s setelah dimulai): " +
+                                    if (activeSettings.touchControllerExclusive) "kontrol bawaan disembunyikan"
+                                    else "sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif"
+                            )
                             touchSinkState.value = connected
                         }
                     )
@@ -1685,6 +1689,8 @@ fun GameScreen(
 
     val gameCursorMode by ZLBridgeStates.cursorMode.collectAsState()
     val launcherSettings by SettingsManager.settings.collectAsState()
+    // TouchController saja: tombol dan mouse virtual launcher dimatikan (hanya bila modnya sudah tersambung).
+    val tcExclusive = touchSink != null && launcherSettings.touchControllerExclusive
     val customButtons by ControlLayoutManager.buttons.collectAsState()
     val mouseControlMode = if (launcherSettings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
 
@@ -1783,6 +1789,7 @@ fun GameScreen(
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
             hotbarSlotAt = hotbarLookup,
             touchSink = touchSink,
+            touchExclusive = tcExclusive,
             onHotbarSelect = { slot ->
                 val key = LwjglGlfwKeycode.GLFW_KEY_1 + slot
                 CallbackBridge.sendKeyPress(key, true)
@@ -1855,7 +1862,7 @@ fun GameScreen(
         }
 
         // 3. Visible Desktop Virtual Cursor Pointer (Zalith Style - automatically visible ONLY in menus, hidden when external mouse is active)
-        val shouldShowPointer = if (touchSink != null) {
+        val shouldShowPointer = if (tcExclusive) {
             // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
             false
         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
@@ -1925,7 +1932,7 @@ fun GameScreen(
                 onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
                 onToggleControls = { isControlVisible = !isControlVisible },
                 onOpenMenu = { showInGameSettingsDialog = true },
-                touchControllerMode = touchSink != null
+                touchControllerMode = tcExclusive
             )
         }
 

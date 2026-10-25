@@ -16,6 +16,7 @@ import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.israadev.nuxlauncher.core.controls.TouchForwarder
 import com.israadev.nuxlauncher.core.controls.TouchSink
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.ui.components.FocusableBox
@@ -52,6 +53,9 @@ fun SwitchableMouseLayout(
     // Mod TouchController aktif: semua sentuhan jari diteruskan mentah ke penerima ini (koordinat
     // 0..1) dan lapisan ini tidak menggerakkan kamera atau kursor sendiri. Mouse fisik tetap jalan.
     touchSink: TouchSink? = null,
+    // true = hanya mod yang memegang sentuhan (kamera/kursor launcher dimatikan). false = launcher
+    // bekerja seperti biasa dan jari yang menyentuh area game saat bermain juga dikirim ke mod.
+    touchExclusive: Boolean = false,
     requestPointerCapture: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
@@ -88,6 +92,7 @@ fun SwitchableMouseLayout(
     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
     val currentTouchSink by rememberUpdatedState(touchSink)
+    val currentTouchExclusive by rememberUpdatedState(touchExclusive)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
@@ -143,14 +148,38 @@ fun SwitchableMouseLayout(
                     var longPressJob: Job? = null
                     // Slot hotbar yang disentuh jari ini (-1 = bukan hotbar). Hanya saat bermain.
                     var hotbarSlot = -1
+                    // Jari yang sedang diteruskan ke mod pada mode berdampingan.
+                    val forwarder = TouchForwarder()
 
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
 
-                            // Mod TouchController: teruskan jari apa adanya, lewati logika kamera/kursor.
+                            // Mod TouchController (lihat touchSink/touchExclusive di atas).
                             val sink = currentTouchSink
-                            if (sink != null) {
+                            if (sink != null && !currentTouchExclusive) {
+                                // Berdampingan: sentuhan tetap diproses launcher di bawah (tidak dikonsumsi),
+                                // dan salinannya dikirim ke mod hanya saat bermain (kursor terkunci). Di menu
+                                // game launcher yang bekerja sendiri, kalau tidak klik akan terhitung dua kali.
+                                val invW = if (screenWidth > 0f) 1f / screenWidth else 0f
+                                val invH = if (screenHeight > 0f) 1f / screenHeight else 0f
+                                val fChanges = event.changes
+                                for (ci in fChanges.indices) {
+                                    val c = fChanges[ci]
+                                    if (c.type != PointerType.Touch) continue
+                                    val key = c.id.value
+                                    if (c.changedToDown()) {
+                                        // Jari yang sudah dipakai tombol launcher (sudah dikonsumsi) tidak ikut dikirim.
+                                        if (!c.isConsumed && currentCursorMode == CURSOR_DISABLED) {
+                                            forwarder.down(sink, key, c.position.x * invW, c.position.y * invH)
+                                        }
+                                    } else if (c.changedToUpIgnoreConsumed()) {
+                                        forwarder.up(sink, key)
+                                    } else if (c.pressed && c.positionChanged()) {
+                                        forwarder.move(sink, key, c.position.x * invW, c.position.y * invH)
+                                    }
+                                }
+                            } else if (sink != null) {
                                 if (activePointerId != null) {
                                     longPressJob?.cancel()
                                     activePointerId = null

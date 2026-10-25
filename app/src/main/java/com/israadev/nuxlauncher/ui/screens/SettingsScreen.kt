@@ -86,6 +86,7 @@ fun SettingsScreen(
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+    var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -133,6 +134,7 @@ fun SettingsScreen(
             touchAttackEnabled = touchAttack,
             hotbarTouchEnabled = hotbarTouch,
             touchControllerEnabled = touchControllerEnabled,
+            touchControllerExclusive = touchControllerExclusive,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -729,10 +731,20 @@ fun SettingsScreen(
                         SettingDivider()
                         SettingSwitchRow(
                             title = "Dukungan TouchController",
-                            desc = "Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.",
+                            desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
                             checked = touchControllerEnabled,
                             onCheckedChange = {
                                 touchControllerEnabled = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "TouchController saja",
+                            desc = "Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.",
+                            checked = touchControllerExclusive,
+                            onCheckedChange = {
+                                touchControllerExclusive = it
                                 commitSettings()
                             }
                         )
@@ -818,6 +830,7 @@ fun SettingsScreen(
                     touchAttack = reset.touchAttackEnabled
                     hotbarTouch = reset.hotbarTouchEnabled
                     touchControllerEnabled = reset.touchControllerEnabled
+                    touchControllerExclusive = reset.touchControllerExclusive
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio

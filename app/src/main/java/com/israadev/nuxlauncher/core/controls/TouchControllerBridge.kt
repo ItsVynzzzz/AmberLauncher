@@ -22,6 +22,51 @@ interface TouchSink {
 }
 
 /**
+ * Mencatat jari mana saja yang sudah dikirim ke mod pada mode berdampingan, supaya gerak dan angkat
+ * hanya dikirim untuk jari yang tadinya dikirim (jari yang dipakai tombol launcher atau yang mulai
+ * saat di menu tidak pernah sampai ke mod). Tanpa alokasi per kejadian; maksimum [capacity] jari.
+ */
+class TouchForwarder(capacity: Int = 10) {
+    private val ids = LongArray(capacity)
+    private var count = 0
+
+    private fun find(id: Long): Int {
+        for (i in 0 until count) if (ids[i] == id) return i
+        return -1
+    }
+
+    /**
+     * Mengirim jari baru ke [sink]. Mengembalikan true bila benar-benar dikirim. Id yang ternyata
+     * masih tercatat (angkatnya tidak pernah terlihat, mis. menu menutup layar saat jari turun)
+     * dianggap sentuhan baru, bukan dibuang.
+     */
+    fun down(sink: TouchSink, id: Long, x: Float, y: Float): Boolean {
+        if (find(id) < 0) {
+            if (count >= ids.size) return false
+            ids[count++] = id
+        }
+        sink.onDown(id, x, y)
+        return true
+    }
+
+    fun move(sink: TouchSink, id: Long, x: Float, y: Float) {
+        if (find(id) >= 0) sink.onMove(id, x, y)
+    }
+
+    fun up(sink: TouchSink, id: Long) {
+        val at = find(id)
+        if (at < 0) return
+        ids[at] = ids[--count]
+        sink.onUp(id)
+    }
+
+    /** Lupakan semua jari tercatat (setelah [TouchSink.onCancelAll]). */
+    fun clear() {
+        count = 0
+    }
+}
+
+/**
  * Dukungan mod TouchController (https://github.com/TouchController/TouchController).
  *
  * Mod itu menggambar dan menjalankan kontrol sentuhnya sendiri di dalam game; launcher hanya perlu

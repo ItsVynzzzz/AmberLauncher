@@ -94,7 +94,7 @@ Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan t
 Hotbar sentuh	Touch hotbar
 Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.
 Dukungan TouchController	TouchController support
-Eksperimental. Nyalakan hanya bila memakai mod TouchController: tombol bawaan disembunyikan (hanya gerigi menu yang tersisa) dan semua sentuhan layar diteruskan ke mod. Bila layar tidak merespons, matikan.	Experimental. Turn on only if you use the TouchController mod: the built-in controls are hidden (only the menu gear stays) and all screen touches are passed to the mod. If the screen stops responding, turn it off.
+Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. If the TouchController mod is installed and connected, touches while playing are also passed to the mod. The launcher's buttons and virtual mouse stay active, so both can be used at the same time.
 # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
 Optimasi HP RAM kecil	Low-RAM phone tuning
 RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	This phone has {0} MB of RAM, so how Java's memory cleaner works can be tuned.
@@ -108,3 +108,5 @@ Nyalakan Mode Hemat	Turn on Power Saver Mode
 Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Turns on the system's sustained performance mode and Zink V-Sync, and caps the resolution scale at 80%.
 Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Applies the next time the game starts. Turning it off restores your previous settings.
 Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
+TouchController saja	TouchController only
+Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Hide the launcher's buttons and virtual mouse (only the menu gear stays) while the mod is connected. Use it if the two controls clash, for example the camera turning twice.

@@ -1,0 +1,1508 @@
+diff --git a/app/src/main/assets/lang/en/dialogs.tsv b/app/src/main/assets/lang/en/dialogs.tsv
+index a1d3fa4..3306fa7 100644
+--- a/app/src/main/assets/lang/en/dialogs.tsv
++++ b/app/src/main/assets/lang/en/dialogs.tsv
+@@ -141,3 +141,10 @@ Pustaka grafis MobileGL (Vulkan & GLES backend)	MobileGL graphics library (Vulka
+ Renderer eksternal dari APK: {0} ({1})	External renderer from APK: {0} ({1})
+ Plugin Eksternal	External Plugin
+ Renderer APK: {0} ({1})	APK Renderer: {0} ({1})
++Impor layout kontrol?	Import control layout?
++Ganti layout	Replace layout
++Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	Your current button layout will be replaced with the {0} buttons from this file.
++Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	This file contains {0} macro buttons that type chat messages or commands automatically. Check them before using on a server.
++Utama	Main
++Navigasi & Numpad	Navigation & Numpad
++Ketuk tombol yang diinginkan	Tap the key you want
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index bb43cda..e91afe7 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -110,3 +110,12 @@ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya d
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
+ TouchController saja	TouchController only
+ Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Hide the launcher's buttons and virtual mouse (only the menu gear stays) while the mod is connected. Use it if the two controls clash, for example the camera turning twice.
++Cadangan & bagikan layout	Back up & share layout
++Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Save the button layout to a .json file to back it up or share it, or load one from someone else's file.
++Ekspor	Export
++Layout kontrol disimpan ke berkas	Control layout saved to file
++Gagal menyimpan berkas	Failed to save the file
++Berkas terlalu besar untuk layout kontrol	File is too large for a control layout
++Berkas tidak berisi tombol	The file contains no buttons
++Berkas ini bukan layout kontrol yang valid	This file is not a valid control layout
++Layout kontrol diimpor ({0} tombol)	Control layout imported ({0} buttons)
+diff --git a/app/src/main/assets/lang/es/dialogs.tsv b/app/src/main/assets/lang/es/dialogs.tsv
+index 834edc3..84db9dc 100644
+--- a/app/src/main/assets/lang/es/dialogs.tsv
++++ b/app/src/main/assets/lang/es/dialogs.tsv
+@@ -173,3 +173,10 @@ Crash Log	Registro de fallo
+ LAUNCHER ERROR	ERROR DEL LAUNCHER
+ EXIT CODE {0}	C\u00d3DIGO DE SALIDA {0}
+ TERMINAL LOG / STACK TRACE	REGISTRO DE TERMINAL / STACK TRACE
++Impor layout kontrol?	\u00bfImportar dise\u00f1o de controles?
++Ganti layout	Reemplazar dise\u00f1o
++Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	La disposici\u00f3n actual de botones se reemplazar\u00e1 por los {0} botones de este archivo.
++Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Este archivo contiene {0} botones de macro que escriben mensajes o comandos autom\u00e1ticamente. Rev\u00edsalos antes de usarlos en un servidor.
++Utama	Principal
++Navigasi & Numpad	Navegaci\u00f3n y Numpad
++Ketuk tombol yang diinginkan	Toca la tecla que quieras
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index 899b1b3..ea493b1 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -110,3 +110,12 @@ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya d
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90/120 Hz se fija a 60 Hz mientras juegas para un movimiento m\u00e1s uniforme y algo menos de calor. Va bien si el juego rara vez llega a 90 FPS. El HUD de FPS muestra los Hz activos.
+ TouchController saja	Solo TouchController
+ Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Oculta los botones y el rat\u00f3n virtual del launcher (solo queda el engranaje del men\u00fa) mientras el mod est\u00e9 conectado. \u00dasalo si ambos controles chocan, por ejemplo si la c\u00e1mara gira dos veces.
++Cadangan & bagikan layout	Copia de seguridad y compartir dise\u00f1o
++Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Guarda la disposici\u00f3n de los botones en un archivo .json para respaldarla o compartirla, o carga la de otra persona.
++Ekspor	Exportar
++Layout kontrol disimpan ke berkas	Dise\u00f1o de controles guardado en el archivo
++Gagal menyimpan berkas	No se pudo guardar el archivo
++Berkas terlalu besar untuk layout kontrol	El archivo es demasiado grande para un dise\u00f1o de controles
++Berkas tidak berisi tombol	El archivo no contiene botones
++Berkas ini bukan layout kontrol yang valid	Este archivo no es un dise\u00f1o de controles v\u00e1lido
++Layout kontrol diimpor ({0} tombol)	Dise\u00f1o de controles importado ({0} botones)
+diff --git a/app/src/main/assets/lang/vi/dialogs.tsv b/app/src/main/assets/lang/vi/dialogs.tsv
+index 93e5f13..764417b 100644
+--- a/app/src/main/assets/lang/vi/dialogs.tsv
++++ b/app/src/main/assets/lang/vi/dialogs.tsv
+@@ -174,3 +174,10 @@ LAUNCHER ERROR	L\u1ed6I LAUNCHER
+ EXIT CODE {0}	M\u00c3 THO\u00c1T {0}
+ TERMINAL LOG / STACK TRACE	NH\u1eacT K\u00dd TERMINAL / STACK TRACE
+ Error: {0}	L\u1ed7i: {0}
++Impor layout kontrol?	Nh\u1eadp b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n?
++Ganti layout	Thay b\u1ed1 c\u1ee5c
++Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	B\u1ed1 c\u1ee5c n\u00fat hi\u1ec7n t\u1ea1i s\u1ebd \u0111\u01b0\u1ee3c thay b\u1eb1ng {0} n\u00fat t\u1eeb t\u1ec7p n\u00e0y.
++Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	T\u1ec7p n\u00e0y c\u00f3 {0} n\u00fat macro t\u1ef1 \u0111\u1ed9ng g\u00f5 chat ho\u1eb7c l\u1ec7nh. H\u00e3y ki\u1ec3m tra tr\u01b0\u1edbc khi d\u00f9ng tr\u00ean m\u00e1y ch\u1ee7.
++Utama	Ch\u00ednh
++Navigasi & Numpad	\u0110i\u1ec1u h\u01b0\u1edbng & Numpad
++Ketuk tombol yang diinginkan	Ch\u1ea1m v\u00e0o ph\u00edm b\u1ea1n mu\u1ed1n
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index f207e3f..a77431e 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -109,3 +109,12 @@ Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya d
+ Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90/120 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t h\u01a1n v\u00e0 \u0111\u1ee1 n\u00f3ng h\u01a1n m\u1ed9t ch\u00fat. Ph\u00f9 h\u1ee3p n\u1ebfu game hi\u1ebfm khi \u0111\u1ea1t 90 FPS. HUD FPS hi\u1ec3n th\u1ecb Hz \u0111ang ho\u1ea1t \u0111\u1ed9ng.
+ TouchController saja	Ch\u1ec9 TouchController
+ Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	\u1ea8n n\u00fat v\u00e0 chu\u1ed9t \u1ea3o c\u1ee7a launcher (ch\u1ec9 c\u00f2n b\u00e1nh r\u0103ng menu) khi mod \u0111\u00e3 k\u1ebft n\u1ed1i. D\u00f9ng khi hai ki\u1ec3u \u0111i\u1ec1u khi\u1ec3n xung \u0111\u1ed9t, v\u00ed d\u1ee5 camera xoay hai l\u1ea7n.
++Cadangan & bagikan layout	Sao l\u01b0u & chia s\u1ebb b\u1ed1 c\u1ee5c
++Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	L\u01b0u b\u1ed1 c\u1ee5c n\u00fat v\u00e0o t\u1ec7p .json \u0111\u1ec3 sao l\u01b0u ho\u1eb7c chia s\u1ebb, ho\u1eb7c t\u1ea3i t\u1eeb t\u1ec7p c\u1ee7a ng\u01b0\u1eddi kh\u00e1c.
++Ekspor	Xu\u1ea5t
++Layout kontrol disimpan ke berkas	\u0110\u00e3 l\u01b0u b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n v\u00e0o t\u1ec7p
++Gagal menyimpan berkas	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p
++Berkas terlalu besar untuk layout kontrol	T\u1ec7p qu\u00e1 l\u1edbn \u0111\u1ec3 l\u00e0m b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n
++Berkas tidak berisi tombol	T\u1ec7p kh\u00f4ng ch\u1ee9a n\u00fat n\u00e0o
++Berkas ini bukan layout kontrol yang valid	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n h\u1ee3p l\u1ec7
++Layout kontrol diimpor ({0} tombol)	\u0110\u00e3 nh\u1eadp b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n ({0} n\u00fat)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt
+new file mode 100644
+index 0000000..442929a
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt
+@@ -0,0 +1,250 @@
++package com.israadev.nuxlauncher.core.controls
++
++import com.google.gson.GsonBuilder
++import com.google.gson.JsonArray
++import com.google.gson.JsonObject
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import java.util.UUID
++import kotlin.math.roundToInt
++
++/**
++ * Ekspor dan impor tata letak tombol kontrol sebagai berkas JSON yang bisa dibagikan.
++ *
++ * Penulisan dan pembacaan memakai nama kolom yang tertulis di sini (bukan refleksi pada kelas
++ * model), jadi berkas tetap terbaca walau nama kelas berubah atau kode diperkecil (R8). Berkas dari
++ * orang lain tidak dipercaya: setiap kolom dicek tipenya, dibatasi rentangnya, dan kolom yang
++ * hilang diisi nilai bawaan model. Tidak ada refleksi, tidak ada kelas yang dimuat dari berkas.
++ *
++ * Murni logika (tanpa Android) supaya mudah diuji.
++ */
++object ControlLayoutIO {
++    const val FORMAT = "amber-controls"
++    const val VERSION = 1
++
++    /** Batas ukuran berkas yang dibaca. Layout normal hanya beberapa KB. */
++    const val MAX_FILE_BYTES = 512 * 1024
++    const val MAX_BUTTONS = 200
++
++    private const val MAX_ID = 64
++    private const val MAX_NAME = 32
++    private const val MAX_ICON = 24
++    private const val MAX_COMMAND = 256
++    private const val MAX_COMBO_KEYS = 32
++    private const val MIN_KEYCODE = -1
++    private const val MAX_KEYCODE = 1024
++    private const val MIN_TURBO_MS = 40L
++    private const val MAX_TURBO_MS = 1000L
++
++    private val MACRO_TYPES = setOf("COMMAND", "COMBO", "TURBO")
++    private val SYSTEM_ACTIONS = setOf("FPS", "KEYBOARD", "HIDE_GUI", "MENU", "CLOSE")
++
++    enum class Reason { TOO_LARGE, NOT_LAYOUT, NO_BUTTONS }
++
++    sealed class ImportResult {
++        /**
++         * @param skipped jumlah entri yang dilewati (bukan objek, atau melebihi [MAX_BUTTONS]).
++         * @param macroCommands jumlah tombol makro pengetik chat/perintah, ditampilkan sebagai peringatan.
++         */
++        class Ok(
++            val buttons: List<CustomControlButton>,
++            val skipped: Int,
++            val macroCommands: Int
++        ) : ImportResult()
++
++        class Failed(val reason: Reason) : ImportResult()
++    }
++
++    // Tanpa escape HTML supaya perintah makro seperti "a=b" tetap terbaca di berkas.
++    private val pretty = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
++
++    // ---- Ekspor ---------------------------------------------------------------------------
++
++    fun toJson(buttons: List<CustomControlButton>): String {
++        val root = JsonObject()
++        root.addProperty("format", FORMAT)
++        root.addProperty("version", VERSION)
++        val arr = JsonArray()
++        for (b in buttons) arr.add(buttonToJson(b))
++        root.add("buttons", arr)
++        return pretty.toJson(root)
++    }
++
++    private fun buttonToJson(b: CustomControlButton): JsonObject {
++        val o = JsonObject()
++        o.addProperty("id", b.id)
++        o.addProperty("name", b.name)
++        o.addProperty("keyCode", b.keyCode)
++        o.addProperty("isMouseButton", b.isMouseButton)
++        o.addProperty("mouseButton", b.mouseButton)
++        o.addProperty("xPercent", b.xPercent)
++        o.addProperty("yPercent", b.yPercent)
++        o.addProperty("widthDp", b.widthDp)
++        o.addProperty("heightDp", b.heightDp)
++        o.addProperty("opacity", b.opacity)
++        o.addProperty("cornerRadiusDp", b.cornerRadiusDp)
++        o.addProperty("isToggle", b.isToggle)
++        o.addProperty("isScroll", b.isScroll)
++        o.addProperty("isSystem", b.isSystem)
++        o.addProperty("systemAction", b.systemAction)
++        o.addProperty("isJoystick", b.isJoystick)
++        o.addProperty("autoSprint", b.autoSprint)
++        o.addProperty("isMacro", b.isMacro)
++        o.addProperty("macroType", b.macroType)
++        o.addProperty("macroCommand", b.macroCommand)
++        o.addProperty("macroComboKey", b.macroComboKey)
++        val combo = JsonArray()
++        for (k in b.macroComboKeys) combo.add(k)
++        o.add("macroComboKeys", combo)
++        o.addProperty("macroTurboIntervalMs", b.macroTurboIntervalMs)
++        o.addProperty("icon", b.icon)
++        return o
++    }
++
++    // ---- Impor ----------------------------------------------------------------------------
++
++    /**
++     * Membaca isi berkas. Menerima dua bentuk: berkas ekspor (objek dengan "format") dan larik
++     * telanjang seperti berkas cadangan otomatis (controls_layout.json).
++     */
++    fun parse(json: String): ImportResult {
++        if (json.length > MAX_FILE_BYTES) return ImportResult.Failed(Reason.TOO_LARGE)
++
++        val root = try {
++            JsonParser.parseString(json)
++        } catch (_: Exception) {
++            return ImportResult.Failed(Reason.NOT_LAYOUT)
++        }
++
++        val arr: JsonArray = if (root.isJsonArray) {
++            root.asJsonArray
++        } else if (root.isJsonObject) {
++            val o = root.asJsonObject
++            if (o.str("format", "", 32) != FORMAT) return ImportResult.Failed(Reason.NOT_LAYOUT)
++            val b = o.get("buttons")
++            if (b == null || !b.isJsonArray) return ImportResult.Failed(Reason.NOT_LAYOUT)
++            b.asJsonArray
++        } else {
++            return ImportResult.Failed(Reason.NOT_LAYOUT)
++        }
++
++        val usedIds = HashSet<String>()
++        val out = ArrayList<CustomControlButton>()
++        var skipped = 0
++        var macros = 0
++        for (el in arr) {
++            if (out.size >= MAX_BUTTONS || !el.isJsonObject) {
++                skipped++
++                continue
++            }
++            val b = parseButton(el.asJsonObject, usedIds)
++            if (b.isMacro && b.macroType == "COMMAND" && b.macroCommand.isNotBlank()) macros++
++            out.add(b)
++        }
++        if (out.isEmpty()) return ImportResult.Failed(Reason.NO_BUTTONS)
++        return ImportResult.Ok(out, skipped, macros)
++    }
++
++    private fun parseButton(o: JsonObject, usedIds: MutableSet<String>): CustomControlButton {
++        val d = CustomControlButton()
++
++        var id = o.str("id", "", MAX_ID).trim()
++        if (id.isEmpty() || !usedIds.add(id)) {
++            id = "btn_" + UUID.randomUUID().toString().take(8)
++            usedIds.add(id)
++        }
++
++        val isJoystick = o.bool("isJoystick", d.isJoystick)
++        val maxW = if (isJoystick) ControlLimits.MAX_JOYSTICK_DP else ControlLimits.MAX_WIDTH_DP
++        val maxH = if (isJoystick) ControlLimits.MAX_JOYSTICK_DP else ControlLimits.MAX_HEIGHT_DP
++
++        val isSystem = o.bool("isSystem", d.isSystem)
++        var systemAction = o.str("systemAction", d.systemAction, 16)
++        if (!isSystem || systemAction !in SYSTEM_ACTIONS) systemAction = ""
++
++        var macroType = o.str("macroType", d.macroType, 16)
++        if (macroType !in MACRO_TYPES) macroType = d.macroType
++
++        return CustomControlButton(
++            id = id,
++            name = o.str("name", d.name, MAX_NAME),
++            keyCode = o.int("keyCode", d.keyCode, MIN_KEYCODE, MAX_KEYCODE),
++            isMouseButton = o.bool("isMouseButton", d.isMouseButton),
++            mouseButton = o.int("mouseButton", d.mouseButton, 0, 7),
++            xPercent = o.float("xPercent", d.xPercent, 0f, 100f),
++            yPercent = o.float("yPercent", d.yPercent, 0f, 100f),
++            widthDp = o.int("widthDp", d.widthDp, ControlLimits.MIN_SIZE_DP, maxW),
++            heightDp = o.int("heightDp", d.heightDp, ControlLimits.MIN_SIZE_DP, maxH),
++            opacity = o.float("opacity", d.opacity, ControlLimits.MIN_OPACITY, 1f),
++            cornerRadiusDp = o.int("cornerRadiusDp", d.cornerRadiusDp, 0, ControlLimits.MAX_JOYSTICK_DP / 2),
++            isToggle = o.bool("isToggle", d.isToggle),
++            isScroll = o.bool("isScroll", d.isScroll),
++            isSystem = isSystem,
++            systemAction = systemAction,
++            isJoystick = isJoystick,
++            autoSprint = o.bool("autoSprint", d.autoSprint),
++            isMacro = o.bool("isMacro", d.isMacro),
++            macroType = macroType,
++            macroCommand = o.str("macroCommand", d.macroCommand, MAX_COMMAND),
++            macroComboKey = o.int("macroComboKey", d.macroComboKey, 0, MAX_KEYCODE),
++            macroComboKeys = o.intList("macroComboKeys", MAX_COMBO_KEYS),
++            macroTurboIntervalMs = o.long("macroTurboIntervalMs", d.macroTurboIntervalMs, MIN_TURBO_MS, MAX_TURBO_MS),
++            icon = o.str("icon", d.icon, MAX_ICON)
++        )
++    }
++
++    // ---- Pembaca kolom yang toleran ---------------------------------------------------------
++
++    private fun JsonObject.str(key: String, def: String, max: Int): String {
++        val e = get(key)
++        if (e == null || !e.isJsonPrimitive) return def
++        return e.asString.take(max)
++    }
++
++    private fun JsonObject.bool(key: String, def: Boolean): Boolean {
++        val e = get(key)
++        if (e == null || !e.isJsonPrimitive) return def
++        val p = e.asJsonPrimitive
++        return if (p.isBoolean) p.asBoolean else def
++    }
++
++    private fun JsonObject.num(key: String): Double? {
++        val e = get(key)
++        if (e == null || !e.isJsonPrimitive) return null
++        val p = e.asJsonPrimitive
++        if (!p.isNumber) return null
++        val v = p.asDouble
++        return if (v.isNaN() || v.isInfinite()) null else v
++    }
++
++    private fun JsonObject.int(key: String, def: Int, min: Int, max: Int): Int {
++        val v = num(key) ?: return def
++        return v.roundToInt().coerceIn(min, max)
++    }
++
++    private fun JsonObject.long(key: String, def: Long, min: Long, max: Long): Long {
++        val v = num(key) ?: return def
++        return v.toLong().coerceIn(min, max)
++    }
++
++    private fun JsonObject.float(key: String, def: Float, min: Float, max: Float): Float {
++        val v = num(key) ?: return def
++        return v.toFloat().coerceIn(min, max)
++    }
++
++    private fun JsonObject.intList(key: String, maxItems: Int): List<Int> {
++        val e = get(key)
++        if (e == null || !e.isJsonArray) return emptyList()
++        val out = ArrayList<Int>()
++        for (item in e.asJsonArray) {
++            if (out.size >= maxItems) break
++            if (!item.isJsonPrimitive) continue
++            val p = item.asJsonPrimitive
++            if (!p.isNumber) continue
++            val v = p.asDouble
++            if (v.isNaN() || v.isInfinite()) continue
++            out.add(v.roundToInt().coerceIn(0, MAX_KEYCODE))
++        }
++        return out
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+index cd9bb22..10c69f8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+@@ -1,6 +1,7 @@
+ package com.israadev.nuxlauncher.core.controls
+ 
+ import android.content.Context
++import android.net.Uri
+ import android.os.Environment
+ import com.google.gson.Gson
+ import com.google.gson.reflect.TypeToken
+@@ -495,6 +496,74 @@ object ControlLayoutManager {
+         save(context, newButtons)
+     }
+ 
++    /**
++     * Layout tersimpan sekarang dalam bentuk berkas ekspor (JSON). Dimuat dari penyimpanan dulu
++     * bila belum pernah dimuat di proses ini. Panggil dari thread latar.
++     */
++    fun exportJson(context: Context): String {
++        if (_buttons.value.isEmpty()) init(context)
++        return ControlLayoutIO.toJson(_buttons.value)
++    }
++
++    /** Menulis layout tersimpan ke berkas pilihan pengguna (lewat pemilih berkas sistem). Panggil dari thread latar. */
++    fun exportTo(context: Context, uri: Uri): Boolean {
++        return try {
++            val bytes = exportJson(context).toByteArray(Charsets.UTF_8)
++            val stream = context.contentResolver.openOutputStream(uri, "wt") ?: return false
++            stream.use { it.write(bytes) }
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    /**
++     * Membaca dan memeriksa berkas layout pilihan pengguna tanpa mengubah apa pun. Pembacaan dibatasi
++     * [ControlLayoutIO.MAX_FILE_BYTES] supaya berkas raksasa tidak memenuhi memori. Panggil dari thread latar.
++     */
++    fun readImport(context: Context, uri: Uri): ControlLayoutIO.ImportResult {
++        return try {
++            val input = context.contentResolver.openInputStream(uri)
++                ?: return ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.NOT_LAYOUT)
++            val out = java.io.ByteArrayOutputStream()
++            input.use {
++                val buf = ByteArray(8 * 1024)
++                while (out.size() <= ControlLayoutIO.MAX_FILE_BYTES) {
++                    val n = it.read(buf)
++                    if (n < 0) break
++                    out.write(buf, 0, n)
++                }
++            }
++            if (out.size() > ControlLayoutIO.MAX_FILE_BYTES) {
++                return ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.TOO_LARGE)
++            }
++            ControlLayoutIO.parse(String(out.toByteArray(), Charsets.UTF_8).removePrefix("﻿"))
++        } catch (_: Exception) {
++            ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.NOT_LAYOUT)
++        }
++    }
++
++    /**
++     * Mengganti seluruh layout dengan hasil impor lalu menyimpannya. Tombol sistem (FPS, keyboard,
++     * sembunyikan GUI, menu) yang tidak ada di berkas ditambahkan lagi dari bawaan, supaya layout
++     * milik orang lain tidak bisa membuat menu game tidak terjangkau. Panggil dari thread latar.
++     */
++    fun importLayout(context: Context, imported: List<CustomControlButton>): List<CustomControlButton> {
++        fun actionOf(b: CustomControlButton) = if (b.systemAction == "CLOSE") "MENU" else b.systemAction
++
++        val result = ArrayList<CustomControlButton>(imported)
++        val present = result.filter { it.isSystem }.map { actionOf(it) }.toSet()
++        for (d in getDefaultButtons()) {
++            if (!d.isSystem || actionOf(d) in present) continue
++            var id = d.id
++            var n = 2
++            while (result.any { it.id == id }) id = d.id + "_" + n++
++            result.add(if (id == d.id) d else d.copy(id = id))
++        }
++        saveButtons(context, result)
++        return result
++    }
++
+     fun addButton(context: Context, button: CustomControlButton) {
+         val current = _buttons.value.toMutableList()
+         current.add(button)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLimits.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLimits.kt
+new file mode 100644
+index 0000000..6cc5073
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLimits.kt
+@@ -0,0 +1,28 @@
++package com.israadev.nuxlauncher.core.controls
++
++/**
++ * Batas ukuran tombol kontrol virtual (dp). Dipakai bersama oleh editor (slider) dan impor layout
++ * supaya angkanya selalu sama.
++ *
++ * Yang naik hanya BATAS MAKSIMUM. Ukuran bawaan dan ukuran yang sudah tersimpan tidak disentuh,
++ * jadi kontrol pengguna lama tidak tiba-tiba membesar setelah pembaruan.
++ */
++object ControlLimits {
++    const val MIN_SIZE_DP = 24
++
++    /** Lebar maksimum tombol biasa (dulu 160). */
++    const val MAX_WIDTH_DP = 600
++
++    /** Tinggi maksimum tombol biasa (dulu 160). */
++    const val MAX_HEIGHT_DP = 400
++
++    const val MIN_JOYSTICK_DP = 80
++
++    /** Diameter maksimum joystick (dulu 220). */
++    const val MAX_JOYSTICK_DP = 400
++
++    /** Kebulatan sudut maksimum di slider editor. Joystick memakai diameter / 2 sendiri. */
++    const val MAX_CORNER_DP = 28
++
++    const val MIN_OPACITY = 0.1f
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeyboardLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeyboardLayout.kt
+new file mode 100644
+index 0000000..fe42766
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeyboardLayout.kt
+@@ -0,0 +1,114 @@
++package com.israadev.nuxlauncher.core.controls
++
++import com.movtery.inputmap.keycodes.LwjglGlfwKeycode as K
++
++/**
++ * Satu kotak di papan ketik pemilih tombol.
++ *
++ * @param label tulisan di kotak (nama tombol seperti di keyboard asli, tidak diterjemahkan).
++ * @param code kode tombol GLFW; null = ruang kosong selebar [w].
++ * @param w lebar relatif, 1f = satu tombol huruf. Baris keyboard utama berjumlah 15f supaya kolomnya sejajar.
++ * @param name nama pendek yang dipakai sebagai label tombol baru di layar (huruf besar, muat di tombol kecil).
++ */
++class KeyCap(
++    val label: String,
++    val code: Int?,
++    val w: Float = 1f,
++    name: String = label.uppercase()
++) {
++    /** Pilihan yang dikirim ke editor saat kotak diketuk. Dibuat sekali; null untuk ruang kosong. */
++    val option: KeyOption? = if (code == null) null else KeyOption(name, code)
++}
++
++/**
++ * Susunan keyboard untuk pemilih tombol (dua halaman, seperti keyboard asli):
++ * [MAIN] = huruf, angka, F1-F12, dan modifier; [NAV] = navigasi, panah, dan numpad.
++ * Data statis yang dibuat sekali, tidak ada pekerjaan saat dialog dibuka.
++ */
++object KeyboardLayout {
++    private fun k(label: String, code: Int, w: Float = 1f, name: String = label.uppercase()) =
++        KeyCap(label, code, w, name)
++
++    private fun gap(w: Float) = KeyCap("", null, w)
++
++    val MAIN: List<List<KeyCap>> = listOf(
++        listOf(
++            k("Esc", K.GLFW_KEY_ESCAPE), gap(1f),
++            k("F1", K.GLFW_KEY_F1), k("F2", K.GLFW_KEY_F2), k("F3", K.GLFW_KEY_F3), k("F4", K.GLFW_KEY_F4), gap(0.5f),
++            k("F5", K.GLFW_KEY_F5), k("F6", K.GLFW_KEY_F6), k("F7", K.GLFW_KEY_F7), k("F8", K.GLFW_KEY_F8), gap(0.5f),
++            k("F9", K.GLFW_KEY_F9), k("F10", K.GLFW_KEY_F10), k("F11", K.GLFW_KEY_F11), k("F12", K.GLFW_KEY_F12)
++        ),
++        listOf(
++            k("`", K.GLFW_KEY_GRAVE_ACCENT),
++            k("1", K.GLFW_KEY_1), k("2", K.GLFW_KEY_2), k("3", K.GLFW_KEY_3), k("4", K.GLFW_KEY_4), k("5", K.GLFW_KEY_5),
++            k("6", K.GLFW_KEY_6), k("7", K.GLFW_KEY_7), k("8", K.GLFW_KEY_8), k("9", K.GLFW_KEY_9), k("0", K.GLFW_KEY_0),
++            k("-", K.GLFW_KEY_MINUS), k("=", K.GLFW_KEY_EQUAL),
++            k("Backspace", K.GLFW_KEY_BACKSPACE, 2f, "BKSP")
++        ),
++        listOf(
++            k("Tab", K.GLFW_KEY_TAB, 1.5f),
++            k("Q", K.GLFW_KEY_Q), k("W", K.GLFW_KEY_W), k("E", K.GLFW_KEY_E), k("R", K.GLFW_KEY_R), k("T", K.GLFW_KEY_T),
++            k("Y", K.GLFW_KEY_Y), k("U", K.GLFW_KEY_U), k("I", K.GLFW_KEY_I), k("O", K.GLFW_KEY_O), k("P", K.GLFW_KEY_P),
++            k("[", K.GLFW_KEY_LEFT_BRACKET), k("]", K.GLFW_KEY_RIGHT_BRACKET),
++            k("\\", K.GLFW_KEY_BACKSLASH, 1.5f)
++        ),
++        listOf(
++            k("Capslock", K.GLFW_KEY_CAPS_LOCK, 1.75f, "CAPS"),
++            k("A", K.GLFW_KEY_A), k("S", K.GLFW_KEY_S), k("D", K.GLFW_KEY_D), k("F", K.GLFW_KEY_F), k("G", K.GLFW_KEY_G),
++            k("H", K.GLFW_KEY_H), k("J", K.GLFW_KEY_J), k("K", K.GLFW_KEY_K), k("L", K.GLFW_KEY_L),
++            k(";", K.GLFW_KEY_SEMICOLON), k("'", K.GLFW_KEY_APOSTROPHE),
++            k("Enter", K.GLFW_KEY_ENTER, 2.25f)
++        ),
++        listOf(
++            k("Shift", K.GLFW_KEY_LEFT_SHIFT, 2.25f),
++            k("Z", K.GLFW_KEY_Z), k("X", K.GLFW_KEY_X), k("C", K.GLFW_KEY_C), k("V", K.GLFW_KEY_V),
++            k("B", K.GLFW_KEY_B), k("N", K.GLFW_KEY_N), k("M", K.GLFW_KEY_M),
++            k(",", K.GLFW_KEY_COMMA), k(".", K.GLFW_KEY_PERIOD), k("/", K.GLFW_KEY_SLASH),
++            k("Shift", K.GLFW_KEY_RIGHT_SHIFT, 2.75f)
++        ),
++        listOf(
++            k("Ctrl", K.GLFW_KEY_LEFT_CONTROL, 1.25f), k("Win", K.GLFW_KEY_LEFT_SUPER, 1.25f),
++            k("Alt", K.GLFW_KEY_LEFT_ALT, 1.25f),
++            k("Space", K.GLFW_KEY_SPACE, 6.25f),
++            k("Alt", K.GLFW_KEY_RIGHT_ALT, 1.25f), k("Win", K.GLFW_KEY_RIGHT_SUPER, 1.25f),
++            k("Menu", K.GLFW_KEY_MENU, 1.25f), k("Ctrl", K.GLFW_KEY_RIGHT_CONTROL, 1.25f)
++        )
++    )
++
++    // Kiri: 3 kolom (sistem, navigasi, panah). Tengah: jarak 8f. Kanan: numpad 4 kolom. Total tiap baris 15f.
++    val NAV: List<List<KeyCap>> = listOf(
++        listOf(
++            k("PrtSc", K.GLFW_KEY_PRINT_SCREEN), k("ScrLk", K.GLFW_KEY_SCROLL_LOCK), k("Pause", K.GLFW_KEY_PAUSE),
++            gap(12f)
++        ),
++        listOf(
++            k("Insert", K.GLFW_KEY_INSERT), k("Home", K.GLFW_KEY_HOME), k("PgUp", K.GLFW_KEY_PAGE_UP),
++            gap(8f),
++            k("NumLk", K.GLFW_KEY_NUM_LOCK), k("/", K.GLFW_KEY_KP_DIVIDE, name = "NP/"),
++            k("*", K.GLFW_KEY_KP_MULTIPLY, name = "NP*"), k("-", K.GLFW_KEY_KP_SUBTRACT, name = "NP-")
++        ),
++        listOf(
++            k("Delete", K.GLFW_KEY_DELETE, name = "DEL"), k("End", K.GLFW_KEY_END), k("PgDn", K.GLFW_KEY_PAGE_DOWN),
++            gap(8f),
++            k("7", K.GLFW_KEY_KP_7, name = "NP7"), k("8", K.GLFW_KEY_KP_8, name = "NP8"),
++            k("9", K.GLFW_KEY_KP_9, name = "NP9"), k("+", K.GLFW_KEY_KP_ADD, name = "NP+")
++        ),
++        listOf(
++            gap(11f),
++            k("4", K.GLFW_KEY_KP_4, name = "NP4"), k("5", K.GLFW_KEY_KP_5, name = "NP5"),
++            k("6", K.GLFW_KEY_KP_6, name = "NP6"), k("=", K.GLFW_KEY_KP_EQUAL, name = "NP=")
++        ),
++        listOf(
++            gap(1f), k("↑", K.GLFW_KEY_UP), gap(1f),
++            gap(8f),
++            k("1", K.GLFW_KEY_KP_1, name = "NP1"), k("2", K.GLFW_KEY_KP_2, name = "NP2"),
++            k("3", K.GLFW_KEY_KP_3, name = "NP3"), k("Enter", K.GLFW_KEY_KP_ENTER, name = "NP↵")
++        ),
++        listOf(
++            k("←", K.GLFW_KEY_LEFT), k("↓", K.GLFW_KEY_DOWN), k("→", K.GLFW_KEY_RIGHT),
++            gap(9f),
++            k("0", K.GLFW_KEY_KP_0, name = "NP0"), k(".", K.GLFW_KEY_KP_DECIMAL, name = "NP."),
++            gap(1f)
++        )
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeycodeCatalog.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeycodeCatalog.kt
+index 33fc050..c307821 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeycodeCatalog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/KeycodeCatalog.kt
+@@ -157,8 +157,18 @@ object KeycodeCatalog {
+         KeyOption("Numpad = (Sama Dengan)", LwjglGlfwKeycode.GLFW_KEY_KP_EQUAL, category = "Numpad")
+     )
+ 
++    /** Nama tombol keyboard per kode (entri pertama yang cocok), dibuat sekali saat pertama dipakai. */
++    private val keyboardNames: Map<Int, String> by lazy {
++        val map = HashMap<Int, String>(ALL_KEYS.size * 2)
++        for (k in ALL_KEYS) {
++            if (k.isMouseButton || k.isScroll) continue
++            if (!map.containsKey(k.keyCode)) map[k.keyCode] = k.displayName
++        }
++        map
++    }
++
+     fun getKeyName(keyCode: Int): String {
+-        return ALL_KEYS.firstOrNull { !it.isMouseButton && !it.isScroll && it.keyCode == keyCode }?.displayName
++        return keyboardNames[keyCode]
+             ?: when (keyCode) {
+                 0 -> "None"
+                 else -> "Key $keyCode"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxImportLayoutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxImportLayoutDialog.kt
+new file mode 100644
+index 0000000..d8bea39
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxImportLayoutDialog.kt
+@@ -0,0 +1,63 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import androidx.compose.foundation.layout.padding
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.ui.components.AmberAlert
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.Amber
++
++/**
++ * Konfirmasi impor layout kontrol. Mengganti layout yang sekarang, jadi perlu persetujuan dulu.
++ * Bila berkas berisi makro pengetik chat/perintah, ditampilkan peringatan karena berkas dari orang
++ * lain bisa membuat tombol yang mengirim perintah ke server saat diketuk.
++ */
++@Composable
++fun NuxImportLayoutDialog(
++    buttonCount: Int,
++    macroCommands: Int,
++    onConfirm: () -> Unit,
++    onDismiss: () -> Unit
++) {
++    AmberAlert(
++        onDismissRequest = onDismiss,
++        title = "Impor layout kontrol?",
++        icon = "warning",
++        accent = Amber.Yellow,
++        actions = {
++            AmberButton(
++                text = "Batal",
++                onClick = onDismiss,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Ghost
++            )
++            AmberButton(
++                text = "Ganti layout",
++                onClick = onConfirm,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary,
++                icon = "download"
++            )
++        }
++    ) {
++        Text(
++            text = "Layout tombol saat ini akan diganti dengan $buttonCount tombol dari berkas ini.",
++            color = Amber.TextDim,
++            fontSize = 14.sp,
++            lineHeight = 21.sp
++        )
++        if (macroCommands > 0) {
++            Text(
++                text = "Berkas ini berisi $macroCommands tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.",
++                color = Amber.TextDim,
++                fontSize = 14.sp,
++                lineHeight = 21.sp,
++                modifier = Modifier.padding(top = 10.dp)
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxKeyPickerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxKeyPickerDialog.kt
+index c678a5c..4428b9c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxKeyPickerDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxKeyPickerDialog.kt
+@@ -1,86 +1,48 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+ import androidx.compose.foundation.background
+-import androidx.compose.foundation.border
+ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.Column
+-import androidx.compose.foundation.layout.ExperimentalLayoutApi
+-import androidx.compose.foundation.layout.FlowRow
+-import androidx.compose.foundation.layout.PaddingValues
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.layout.widthIn
+-import androidx.compose.foundation.lazy.grid.GridCells
+-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+-import androidx.compose.foundation.lazy.grid.items
+-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+-import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.foundation.text.BasicTextField
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.outlined.Close
+-import androidx.compose.material.icons.outlined.Search
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import androidx.compose.runtime.Composable
+-import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.mutableIntStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.focus.FocusRequester
+-import androidx.compose.ui.focus.focusRequester
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.SolidColor
+-import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.controls.KeyCap
+ import com.israadev.nuxlauncher.core.controls.KeyOption
++import com.israadev.nuxlauncher.core.controls.KeyboardLayout
+ import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
+ import com.israadev.nuxlauncher.ui.components.NuxDialog
+ import com.israadev.nuxlauncher.ui.components.NuxIconButton
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ 
+-/** Urutan kategori di pemilih: yang paling sering dipakai di depan, yang jarang di belakang. */
+-private val CATEGORY_ORDER = listOf(
+-    "Mouse",
+-    "Gerakan",
+-    "Aksi",
+-    "Angka & Hotbar",
+-    "Fungsi (F1-F12)",
+-    "Modifier & Kontrol",
+-    "Navigasi",
+-    "Alfabet (A - Z)",
+-    "Simbol",
+-    "Numpad"
+-)
+-
+-private fun shortCategory(category: String): String = when (category) {
+-    "Angka & Hotbar" -> "Hotbar"
+-    "Fungsi (F1-F12)" -> "F1–F12"
+-    "Modifier & Kontrol" -> "Modifier"
+-    "Alfabet (A - Z)" -> "A–Z"
+-    else -> category
+-}
+-
+-/** Kategori yang isinya cuma satu huruf/angka dibuat kotak kecil supaya muat tanpa gulir. */
+-private fun isSmallCategory(category: String): Boolean =
+-    category.startsWith("Alfabet") || category.startsWith("Angka")
++private val KEY_SHAPE = RoundedCornerShape(10.dp)
++private val TAB_NUMBERS = arrayOf("①", "②", "③")
+ 
+ /** "W (Maju)" -> ("W", "Maju"); tanpa kurung -> (nama, ""). */
+ private fun splitLabel(name: String): Pair<String, String> {
+@@ -91,15 +53,21 @@ private fun splitLabel(name: String): Pair<String, String> {
+     return main to sub
+ }
+ 
++private fun List<List<KeyCap>>.hasCurrent(isCurrent: (KeyOption) -> Boolean): Boolean =
++    any { row -> row.any { cap -> cap.option?.let(isCurrent) == true } }
++
+ /**
+- * Pemilih tombol keyboard / mouse untuk editor kontrol. Pilih kategori dulu (Mouse, Gerakan, Aksi,
+- * Hotbar, F1-F12, ...), lalu ketuk kotak tombolnya. Tiap kategori muat di satu layar jadi tidak perlu
+- * menggulir daftar panjang. Pencarian tetap ada (ikon kaca pembesar) tapi tidak wajib.
++ * Pemilih tombol berbentuk keyboard. Halaman 1 = keyboard utama (Esc, F1-F12, angka, huruf,
++ * modifier, Space); halaman 2 = navigasi, panah, dan numpad; halaman 3 = mouse dan scroll (tidak ada
++ * di mode kombinasi). Tinggi tiap baris dan lebar tiap tombol ikut ukuran dialog, jadi muat di layar
++ * pendek tanpa menggulir.
++ *
++ * Susunan tombol berupa data statis ([KeyboardLayout]) dan digambar dengan Row/Column biasa tanpa
++ * daftar lazy atau state per tombol, jadi membuka dialog ringan dan tidak ada yang berubah saat idle.
+  *
+  * @param comboMode true = memilih tombol kedua untuk kombinasi (tanpa mouse/scroll).
+- * @param isCurrent menandai pilihan yang sedang dipakai tombol; kategorinya dibuka lebih dulu.
++ * @param isCurrent menandai pilihan yang sedang dipakai tombol; halamannya dibuka lebih dulu.
+  */
+-@OptIn(ExperimentalLayoutApi::class)
+ @Composable
+ fun NuxKeyPickerDialog(
+     comboMode: Boolean,
+@@ -107,54 +75,33 @@ fun NuxKeyPickerDialog(
+     onDismiss: () -> Unit,
+     isCurrent: (KeyOption) -> Boolean = { false }
+ ) {
+-    val keys = remember(comboMode) {
+-        if (comboMode) {
+-            KeycodeCatalog.ALL_KEYS.filter { !it.isScroll && !it.isMouseButton }
+-        } else {
+-            KeycodeCatalog.ALL_KEYS
+-        }
+-    }
+-    val categories = remember(keys) {
+-        val present = keys.map { it.category }.distinct()
+-        CATEGORY_ORDER.filter { it in present } + present.filter { it !in CATEGORY_ORDER }
++    val mouseKeys = remember(comboMode) {
++        if (comboMode) emptyList() else KeycodeCatalog.ALL_KEYS.filter { it.isMouseButton || it.isScroll }
+     }
+-    var selected by remember(categories) {
+-        val currentCategory = keys.firstOrNull { isCurrent(it) }?.category
+-        mutableStateOf(currentCategory ?: categories.firstOrNull() ?: "")
++    val tabTitles = remember(comboMode) {
++        if (comboMode) listOf("Utama", "Navigasi & Numpad") else listOf("Utama", "Navigasi & Numpad", "Mouse")
+     }
+-    var searching by remember { mutableStateOf(false) }
+-    var query by remember { mutableStateOf("") }
+-
+-    val shown = remember(keys, selected, searching, query) {
+-        if (searching && query.isNotBlank()) {
+-            val q = query.trim().lowercase()
+-            keys.filter {
+-                Tr.t(it.displayName).lowercase().contains(q) ||
+-                    it.displayName.lowercase().contains(q) ||
+-                    Tr.t(it.category).lowercase().contains(q) ||
+-                    Tr.t(shortCategory(it.category)).lowercase().contains(q)
++    var tab by remember {
++        mutableIntStateOf(
++            when {
++                mouseKeys.any(isCurrent) -> 2
++                KeyboardLayout.NAV.hasCurrent(isCurrent) -> 1
++                else -> 0
+             }
+-        } else {
+-            keys.filter { it.category == selected }
+-        }
++        )
+     }
+-    val small = !(searching && query.isNotBlank()) && isSmallCategory(selected)
+-
+-    val gridState = rememberLazyGridState()
+-    LaunchedEffect(selected, query, searching) { gridState.scrollToItem(0) }
+ 
+     NuxDialog(
+         onDismissRequest = onDismiss,
+-        modifier = Modifier.widthIn(max = 680.dp),
++        modifier = Modifier.widthIn(max = 820.dp),
+         fillMaxHeight = true,
+         compact = true
+     ) {
+         Column(
+             modifier = Modifier
+                 .fillMaxSize()
+-                .padding(horizontal = 18.dp, vertical = 14.dp)
++                .padding(horizontal = 14.dp, vertical = 10.dp)
+         ) {
+-            // Judul + cari + tutup
+             Row(
+                 modifier = Modifier.fillMaxWidth(),
+                 verticalAlignment = Alignment.CenterVertically
+@@ -164,31 +111,17 @@ fun NuxKeyPickerDialog(
+                         text = if (comboMode) "Tombol kedua" else "Pilih tombol",
+                         color = NuxColors.DarkGray,
+                         fontWeight = FontWeight.Black,
+-                        fontSize = 17.sp,
++                        fontSize = 16.sp,
+                         letterSpacing = (-0.2).sp
+                     )
+                     Text(
+-                        text = if (comboMode) {
+-                            "Ditekan bersamaan dengan tombol utama"
+-                        } else {
+-                            "Ketuk kategori, lalu ketuk tombolnya"
+-                        },
++                        text = if (comboMode) "Ditekan bersamaan dengan tombol utama" else "Ketuk tombol yang diinginkan",
+                         color = NuxColors.GrayNeutral,
+                         fontSize = 11.sp,
+                         maxLines = 1,
+                         overflow = TextOverflow.Ellipsis
+                     )
+                 }
+-                NuxIconButton(
+-                    icon = Icons.Outlined.Search,
+-                    description = "Cari tombol",
+-                    onClick = {
+-                        searching = !searching
+-                        if (!searching) query = ""
+-                    },
+-                    tint = if (searching) NuxColors.Yellow else NuxColors.GrayNeutral
+-                )
+-                Spacer(modifier = Modifier.width(6.dp))
+                 NuxIconButton(
+                     icon = Icons.Outlined.Close,
+                     description = "Tutup",
+@@ -196,64 +129,36 @@ fun NuxKeyPickerDialog(
+                 )
+             }
+ 
+-            Spacer(modifier = Modifier.height(10.dp))
++            Spacer(modifier = Modifier.height(6.dp))
+ 
+-            if (searching) {
+-                SearchField(
+-                    value = query,
+-                    onValueChange = { query = it },
+-                    modifier = Modifier.fillMaxWidth()
+-                )
+-            } else {
+-                FlowRow(
+-                    modifier = Modifier.fillMaxWidth(),
+-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+-                ) {
+-                    categories.forEach { category ->
+-                        CategoryChip(
+-                            text = shortCategory(category),
+-                            selected = category == selected,
+-                            onClick = { selected = category }
+-                        )
+-                    }
++            Row(modifier = Modifier.fillMaxWidth()) {
++                tabTitles.forEachIndexed { index, title ->
++                    PickerTab(
++                        number = TAB_NUMBERS[index],
++                        title = title,
++                        selected = tab == index,
++                        onClick = { tab = index },
++                        modifier = Modifier.weight(1f)
++                    )
+                 }
+             }
+-
+-            Spacer(modifier = Modifier.height(10.dp))
++            Box(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .height(1.dp)
++                    .background(NuxColors.CardBorder)
++            )
+ 
+             Box(
+                 modifier = Modifier
+                     .weight(1f)
+                     .fillMaxWidth()
++                    .padding(top = 6.dp)
+             ) {
+-                if (shown.isEmpty()) {
+-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+-                        Text(
+-                            text = if (query.isBlank()) "Ketik nama tombol, misalnya Shift atau F3" else "Tidak ada yang cocok",
+-                            color = NuxColors.GrayNeutral,
+-                            fontSize = 12.sp,
+-                            textAlign = TextAlign.Center
+-                        )
+-                    }
+-                } else {
+-                    LazyVerticalGrid(
+-                        columns = GridCells.Adaptive(minSize = if (small) 60.dp else 120.dp),
+-                        state = gridState,
+-                        modifier = Modifier.fillMaxSize(),
+-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+-                        verticalArrangement = Arrangement.spacedBy(6.dp),
+-                        contentPadding = PaddingValues(bottom = 6.dp)
+-                    ) {
+-                        items(shown) { option ->
+-                            KeyTile(
+-                                option = option,
+-                                current = isCurrent(option),
+-                                small = small,
+-                                onClick = { onPick(option) }
+-                            )
+-                        }
+-                    }
++                when (tab) {
++                    0 -> KeyboardPage(KeyboardLayout.MAIN, isCurrent, onPick)
++                    1 -> KeyboardPage(KeyboardLayout.NAV, isCurrent, onPick)
++                    else -> MousePage(mouseKeys, isCurrent, onPick)
+                 }
+             }
+         }
+@@ -261,59 +166,164 @@ fun NuxKeyPickerDialog(
+ }
+ 
+ @Composable
+-private fun CategoryChip(text: String, selected: Boolean, onClick: () -> Unit) {
+-    val shape = RoundedCornerShape(16.dp)
++private fun PickerTab(
++    number: String,
++    title: String,
++    selected: Boolean,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier
++) {
++    val ink = if (selected) NuxColors.Yellow else NuxColors.GrayNeutral
+     Box(
+-        modifier = Modifier
+-            .height(32.dp)
+-            .clip(shape)
+-            .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
+-            .border(
+-                NuxSizes.GlassBorder,
+-                if (selected) NuxColors.Yellow else NuxColors.CardBorder,
+-                shape
+-            )
+-            .clickable { onClick() }
+-            .padding(horizontal = 12.dp),
++        modifier = modifier
++            .height(38.dp)
++            .clickable(onClick = onClick),
+         contentAlignment = Alignment.Center
+     ) {
+-        Text(
+-            text = text,
+-            color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
+-            fontSize = 12.sp,
+-            fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+-            maxLines = 1
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            androidx.compose.material3.Text(text = number, color = ink, fontSize = 15.sp)
++            Spacer(modifier = Modifier.width(6.dp))
++            Text(
++                text = title,
++                color = ink,
++                fontSize = 12.sp,
++                fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
++                maxLines = 1
++            )
++        }
++        Box(
++            modifier = Modifier
++                .align(Alignment.BottomCenter)
++                .fillMaxWidth()
++                .height(2.dp)
++                .background(if (selected) NuxColors.Yellow else Color.Transparent)
+         )
+     }
+ }
+ 
++/**
++ * Satu halaman keyboard. Tiap baris memakai bobot yang sama untuk tinggi, tiap tombol memakai
++ * bobot lebarnya ([KeyCap.w]), sehingga kolom antar baris selalu sejajar di ukuran layar apa pun.
++ */
+ @Composable
+-private fun KeyTile(
++private fun KeyboardPage(
++    rows: List<List<KeyCap>>,
++    isCurrent: (KeyOption) -> Boolean,
++    onPick: (KeyOption) -> Unit
++) {
++    Column(modifier = Modifier.fillMaxSize()) {
++        for (row in rows) {
++            Row(
++                modifier = Modifier
++                    .weight(1f)
++                    .fillMaxWidth()
++            ) {
++                for (cap in row) {
++                    val option = cap.option
++                    if (option == null) {
++                        Spacer(
++                            modifier = Modifier
++                                .weight(cap.w)
++                                .fillMaxHeight()
++                        )
++                    } else {
++                        KeyCapTile(
++                            label = cap.label,
++                            current = isCurrent(option),
++                            onClick = { onPick(option) },
++                            modifier = Modifier
++                                .weight(cap.w)
++                                .fillMaxHeight()
++                        )
++                    }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun KeyCapTile(
++    label: String,
++    current: Boolean,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier
++) {
++    // Jarak antar tombol dibuat dari padding di dalam bobot, bukan spacedBy, supaya lebar kolom
++    // antar baris tetap persis sejajar.
++    Box(modifier = modifier.padding(2.dp)) {
++        Box(
++            modifier = Modifier
++                .fillMaxSize()
++                .clip(KEY_SHAPE)
++                .background(if (current) NuxColors.Yellow else NuxColors.SurfaceElevated)
++                .clickable(onClick = onClick),
++            contentAlignment = Alignment.Center
++        ) {
++            // Nama tombol fisik (Esc, Enter, Shift, ...) sengaja tidak diterjemahkan.
++            androidx.compose.material3.Text(
++                text = label,
++                color = if (current) NuxColors.Ink else NuxColors.DarkGray,
++                fontSize = if (label.length > 3) 11.sp else 14.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 1,
++                softWrap = false,
++                textAlign = TextAlign.Center
++            )
++        }
++    }
++}
++
++/** Mouse kiri/kanan/tengah, tombol 4-5, dan scroll: tiga kolom, nama di atas dan fungsinya di bawah. */
++@Composable
++private fun MousePage(
++    keys: List<KeyOption>,
++    isCurrent: (KeyOption) -> Boolean,
++    onPick: (KeyOption) -> Unit
++) {
++    Column(
++        modifier = Modifier.fillMaxSize(),
++        verticalArrangement = Arrangement.spacedBy(6.dp)
++    ) {
++        for (row in keys.chunked(3)) {
++            Row(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .height(64.dp),
++                horizontalArrangement = Arrangement.spacedBy(6.dp)
++            ) {
++                for (option in row) {
++                    MouseTile(
++                        option = option,
++                        current = isCurrent(option),
++                        onClick = { onPick(option) },
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxHeight()
++                    )
++                }
++                repeat(3 - row.size) {
++                    Spacer(modifier = Modifier.weight(1f))
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun MouseTile(
+     option: KeyOption,
+     current: Boolean,
+-    small: Boolean,
+-    onClick: () -> Unit
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier
+ ) {
+-    val shape = RoundedCornerShape(12.dp)
+     // Diterjemahkan dulu baru dipecah, karena teks hanya diterjemahkan secara utuh.
+-    val (rawMain, rawSub) = splitLabel(Tr.t(option.displayName))
+-    // Simbol: tampilkan lambangnya besar-besar, nama katanya kecil di bawah.
+-    val symbolFirst = option.category == "Simbol" && rawSub.isNotEmpty()
+-    val main = if (symbolFirst) rawSub else rawMain
+-    val sub = if (small) "" else if (symbolFirst) rawMain else rawSub
+-
++    val (main, sub) = remember(option) { splitLabel(Tr.t(option.displayName)) }
+     Column(
+-        modifier = Modifier
+-            .fillMaxWidth()
+-            .height(if (small) 46.dp else 54.dp)
+-            .clip(shape)
+-            .background(if (current) NuxColors.Yellow else NuxColors.SurfaceWhite, shape)
+-            .border(
+-                NuxSizes.GlassBorder,
+-                if (current) NuxColors.Yellow else NuxColors.CardBorder,
+-                shape
+-            )
+-            .clickable { onClick() }
++        modifier = modifier
++            .clip(KEY_SHAPE)
++            .background(if (current) NuxColors.Yellow else NuxColors.SurfaceElevated)
++            .clickable(onClick = onClick)
+             .padding(horizontal = 8.dp),
+         horizontalAlignment = Alignment.CenterHorizontally,
+         verticalArrangement = Arrangement.Center
+@@ -321,7 +331,7 @@ private fun KeyTile(
+         Text(
+             text = main,
+             color = if (current) NuxColors.Ink else NuxColors.DarkGray,
+-            fontSize = if (small) 15.sp else 13.sp,
++            fontSize = 13.sp,
+             fontWeight = FontWeight.Bold,
+             maxLines = 1,
+             overflow = TextOverflow.Ellipsis,
+@@ -339,64 +349,3 @@ private fun KeyTile(
+         }
+     }
+ }
+-
+-@Composable
+-private fun SearchField(
+-    value: String,
+-    onValueChange: (String) -> Unit,
+-    modifier: Modifier = Modifier
+-) {
+-    val focus = remember { FocusRequester() }
+-    LaunchedEffect(Unit) {
+-        try {
+-            focus.requestFocus()
+-        } catch (_: Exception) {
+-        }
+-    }
+-    val shape = RoundedCornerShape(12.dp)
+-    Row(
+-        modifier = modifier
+-            .height(40.dp)
+-            .background(NuxColors.SurfaceInput, shape)
+-            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
+-            .padding(horizontal = 12.dp),
+-        verticalAlignment = Alignment.CenterVertically
+-    ) {
+-        Box(modifier = Modifier.weight(1f)) {
+-            if (value.isEmpty()) {
+-                Text(
+-                    text = "Cari tombol (W, Shift, F3, Tab...)",
+-                    color = NuxColors.GrayNeutral.copy(alpha = 0.7f),
+-                    fontSize = 13.sp,
+-                    maxLines = 1
+-                )
+-            }
+-            BasicTextField(
+-                value = value,
+-                onValueChange = onValueChange,
+-                singleLine = true,
+-                textStyle = TextStyle(
+-                    color = NuxColors.DarkGray,
+-                    fontSize = 13.sp,
+-                    fontWeight = FontWeight.SemiBold
+-                ),
+-                cursorBrush = SolidColor(NuxColors.Yellow),
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .focusRequester(focus)
+-            )
+-        }
+-        if (value.isNotEmpty()) {
+-            Box(
+-                modifier = Modifier
+-                    .size(22.dp)
+-                    .clip(CircleShape)
+-                    .background(NuxColors.SurfaceElevated, CircleShape)
+-                    .clickable { onValueChange("") },
+-                contentAlignment = Alignment.Center
+-            ) {
+-                Text("✕", fontSize = 10.sp, color = NuxColors.DarkGray, fontWeight = FontWeight.Bold)
+-            }
+-        }
+-    }
+-}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index 5db2968..a3149e2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import androidx.compose.ui.window.Dialog
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
++import com.israadev.nuxlauncher.core.controls.ControlLimits
+ import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.ui.components.NuxBadge
+@@ -56,6 +57,13 @@ import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+ import java.util.UUID
+ import kotlin.math.roundToInt
+ 
++/**
++ * Seperti coerceIn, tapi tidak melempar galat bila rentangnya terbalik (tombol lebih besar dari
++ * layar, mungkin sejak batas ukuran dinaikkan): pusatnya dipasang di tengah rentang.
++ */
++private fun Float.clampCenter(lo: Float, hi: Float): Float =
++    if (lo > hi) (lo + hi) / 2f else coerceIn(lo, hi)
++
+ @Composable
+ fun CustomGuiEditorScreen(
+     onNavigateBack: () -> Unit,
+@@ -177,8 +185,13 @@ fun CustomGuiEditorScreen(
+                                 val curCenterX = screenWidthPx * (currentBtn.xPercent / 100f)
+                                 val curCenterY = screenHeightPx * (currentBtn.yPercent / 100f)
+ 
+-                                val newCenterX = (curCenterX + dragAmount.x).coerceIn(btnWidthPx / 2f, screenWidthPx - btnWidthPx / 2f)
+-                                val newCenterY = (curCenterY + dragAmount.y).coerceIn(btnHeightPx / 2f, screenHeightPx - btnHeightPx / 2f)
++                                // Ukuran dibaca dari tombol saat ini (bukan yang ditangkap saat composition),
++                                // supaya batas geser ikut berubah setelah slider ukuran digeser. Tombol yang
++                                // lebih besar dari layar dipusatkan dan tidak membuat galat.
++                                val halfW = with(density) { currentBtn.widthDp.dp.toPx() } / 2f
++                                val halfH = with(density) { currentBtn.heightDp.dp.toPx() } / 2f
++                                val newCenterX = (curCenterX + dragAmount.x).clampCenter(halfW, screenWidthPx - halfW)
++                                val newCenterY = (curCenterY + dragAmount.y).clampCenter(halfH, screenHeightPx - halfH)
+ 
+                                 val newXPercent = (newCenterX / screenWidthPx) * 100f
+                                 val newYPercent = (newCenterY / screenHeightPx) * 100f
+@@ -470,7 +483,7 @@ fun CustomGuiEditorScreen(
+                                         if (it.id == selectedButton.id) it.copy(widthDp = d, heightDp = d, cornerRadiusDp = d / 2) else it
+                                     }
+                                 },
+-                                valueRange = 80f..220f,
++                                valueRange = ControlLimits.MIN_JOYSTICK_DP.toFloat()..ControlLimits.MAX_JOYSTICK_DP.toFloat(),
+                                 colors = SliderDefaults.colors(
+                                     thumbColor = Color(0xFFFFD60A),
+                                     activeTrackColor = Color(0xFFFFD60A),
+@@ -589,7 +602,7 @@ fun CustomGuiEditorScreen(
+                                 onValueChange = { newW ->
+                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
+                                 },
+-                                valueRange = 24f..160f,
++                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
+                                 colors = SliderDefaults.colors(
+                                     thumbColor = Color(0xFFFFD60A),
+                                     activeTrackColor = Color(0xFFFFD60A),
+@@ -607,7 +620,7 @@ fun CustomGuiEditorScreen(
+                                 onValueChange = { newH ->
+                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(heightDp = newH.roundToInt()) else it }
+                                 },
+-                                valueRange = 24f..160f,
++                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_HEIGHT_DP.toFloat(),
+                                 colors = SliderDefaults.colors(
+                                     thumbColor = Color(0xFFFFD60A),
+                                     activeTrackColor = Color(0xFFFFD60A),
+@@ -643,7 +656,7 @@ fun CustomGuiEditorScreen(
+                                 onValueChange = { newR ->
+                                     buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(cornerRadiusDp = newR.roundToInt()) else it }
+                                 },
+-                                valueRange = 0f..28f,
++                                valueRange = 0f..ControlLimits.MAX_CORNER_DP.toFloat(),
+                                 colors = SliderDefaults.colors(
+                                     thumbColor = Color(0xFFFFD60A),
+                                     activeTrackColor = Color(0xFFFFD60A),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 9e6d40d..4b8ba28 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -44,6 +44,8 @@ import com.israadev.nuxlauncher.GameActivity
+ import java.io.File
+ import java.io.FileOutputStream
+ import com.israadev.nuxlauncher.core.account.AccountManager
++import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
++import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+ import com.israadev.nuxlauncher.core.device.DeviceProfiles
+ import com.israadev.nuxlauncher.core.models.LauncherSettings
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+@@ -54,6 +56,7 @@ import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
+ import com.israadev.nuxlauncher.ui.components.*
+ import com.israadev.nuxlauncher.ui.dialogs.NuxRendererV2ConfigDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
++import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+ import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ import kotlinx.coroutines.Dispatchers
+@@ -74,6 +77,43 @@ fun SettingsScreen(
+ 
+     var showAboutDialog by remember { mutableStateOf(false) }
+ 
++    // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
++    // dikerjakan di thread IO; layar hanya menyimpan hasil pemeriksaan sampai pengguna menyetujui.
++    var pendingImport by remember { mutableStateOf<ControlLayoutIO.ImportResult.Ok?>(null) }
++    val exportLayoutLauncher = rememberLauncherForActivityResult(
++        ActivityResultContracts.CreateDocument("application/json")
++    ) { uri: Uri? ->
++        if (uri != null) {
++            scope.launch {
++                val ok = withContext(Dispatchers.IO) { ControlLayoutManager.exportTo(context, uri) }
++                Toast.makeText(
++                    context,
++                    if (ok) "Layout kontrol disimpan ke berkas" else "Gagal menyimpan berkas",
++                    Toast.LENGTH_SHORT
++                ).show()
++            }
++        }
++    }
++    val importLayoutLauncher = rememberLauncherForActivityResult(
++        ActivityResultContracts.OpenDocument()
++    ) { uri: Uri? ->
++        if (uri != null) {
++            scope.launch {
++                val r = withContext(Dispatchers.IO) { ControlLayoutManager.readImport(context, uri) }
++                if (r is ControlLayoutIO.ImportResult.Ok) {
++                    pendingImport = r
++                } else if (r is ControlLayoutIO.ImportResult.Failed) {
++                    val message = when (r.reason) {
++                        ControlLayoutIO.Reason.TOO_LARGE -> "Berkas terlalu besar untuk layout kontrol"
++                        ControlLayoutIO.Reason.NO_BUTTONS -> "Berkas tidak berisi tombol"
++                        ControlLayoutIO.Reason.NOT_LAYOUT -> "Berkas ini bukan layout kontrol yang valid"
++                    }
++                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
++                }
++            }
++        }
++    }
++
+     // Local mutable state for instant responsive UI before saving
+     var ramMb by remember(currentSettings.ramMb) { mutableIntStateOf(currentSettings.ramMb) }
+     var initialHeapMb by remember(currentSettings.initialHeapMb) { mutableIntStateOf(currentSettings.initialHeapMb) }
+@@ -693,6 +733,63 @@ fun SettingsScreen(
+                             }
+                         }
+ 
++                        SettingDivider()
++                        // Cadangkan atau bagikan tata letak tombol sebagai berkas .json
++                        Column(
++                            modifier = Modifier
++                                .fillMaxWidth()
++                                .padding(vertical = 9.dp)
++                        ) {
++                            SettingRowText(
++                                title = "Cadangan & bagikan layout",
++                                desc = "Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.",
++                                modifier = Modifier.fillMaxWidth()
++                            )
++                            Spacer(modifier = Modifier.height(8.dp))
++                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                                NuxButton(
++                                    onClick = {
++                                        val stamp = java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.US)
++                                            .format(java.util.Date())
++                                        exportLayoutLauncher.launch("amber-controls-$stamp.json")
++                                    },
++                                    backgroundColor = Color.Transparent,
++                                    cornerRadius = 20.dp,
++                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
++                                ) {
++                                    Icon(
++                                        imageVector = Icons.Outlined.FileUpload,
++                                        contentDescription = null,
++                                        modifier = Modifier.size(18.dp)
++                                    )
++                                    Spacer(modifier = Modifier.width(8.dp))
++                                    Text(
++                                        text = "Ekspor",
++                                        fontSize = 12.sp,
++                                        fontWeight = FontWeight.Black
++                                    )
++                                }
++                                NuxButton(
++                                    onClick = { importLayoutLauncher.launch(arrayOf("*/*")) },
++                                    backgroundColor = Color.Transparent,
++                                    cornerRadius = 20.dp,
++                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
++                                ) {
++                                    Icon(
++                                        imageVector = Icons.Outlined.FileDownload,
++                                        contentDescription = null,
++                                        modifier = Modifier.size(18.dp)
++                                    )
++                                    Spacer(modifier = Modifier.width(8.dp))
++                                    Text(
++                                        text = "Impor",
++                                        fontSize = 12.sp,
++                                        fontWeight = FontWeight.Black
++                                    )
++                                }
++                            }
++                        }
++
+                         SettingDivider()
+                         SettingChoiceRow(
+                             title = "Mode mouse di menu",
+@@ -1169,6 +1266,23 @@ fun SettingsScreen(
+     }
+ 
+     // Dialog Tentang & Lisensi Open Source (GPL-3.0 & Zalith Compliance)
++    pendingImport?.let { pending ->
++        NuxImportLayoutDialog(
++            buttonCount = pending.buttons.size,
++            macroCommands = pending.macroCommands,
++            onConfirm = {
++                pendingImport = null
++                scope.launch {
++                    val count = withContext(Dispatchers.IO) {
++                        ControlLayoutManager.importLayout(context, pending.buttons).size
++                    }
++                    Toast.makeText(context, "Layout kontrol diimpor ($count tombol)", Toast.LENGTH_SHORT).show()
++                }
++            },
++            onDismiss = { pendingImport = null }
++        )
++    }
++
+     if (showAboutDialog) {
+         NuxAboutDialog(
+             onDismissRequest = { showAboutDialog = false }

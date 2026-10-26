@@ -1246,6 +1246,7 @@ fun CustomGuiEditorScreen(
     // Reset Confirmation Dialog
     if (showResetConfirmDialog) {
         Dialog(onDismissRequest = { showResetConfirmDialog = false }) {
+            com.israadev.nuxlauncher.ui.components.GamepadWindowHook()
             NuxCard(
                 modifier = Modifier.width(320.dp),
                 backgroundColor = Color(0xFF171717),

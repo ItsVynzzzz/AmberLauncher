@@ -2,6 +2,11 @@ package com.israadev.nuxlauncher.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -35,6 +40,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -50,26 +60,22 @@ import kotlin.math.roundToInt
  * menyentuh sesuatu di menu tidak menyusun ulang layar sementara game masih berjalan.
  */
 
-/** Ketuk dengan umpan balik tekan (lapisan putih tipis). Pasang setelah clip bentuknya. */
+/**
+ * Ketuk dengan umpan balik tekan (lapisan putih tipis) dan sorotan fokus untuk controller/D-pad.
+ * Pasang setelah clip bentuknya. Status tekan dan fokus hanya dibaca saat menggambar.
+ */
 @Composable
 fun Modifier.amberTap(onClick: () -> Unit): Modifier {
-    val callback by rememberUpdatedState(onClick)
-    var pressed by remember { mutableStateOf(false) }
+    val interaction = remember { MutableInteractionSource() }
+    val pressed = interaction.collectIsPressedAsState()
+    val focused = interaction.collectIsFocusedAsState()
     return this
         .drawWithContent {
             drawContent()
-            if (pressed) drawRect(Amber.Press)
+            if (pressed.value) drawRect(Amber.Press)
+            if (focused.value) drawGamepadFocusRing()
         }
-        .pointerInput(Unit) {
-            detectTapGestures(
-                onPress = {
-                    pressed = true
-                    tryAwaitRelease()
-                    pressed = false
-                },
-                onTap = { callback() }
-            )
-        }
+        .clickable(interactionSource = interaction, indication = null, onClick = onClick)
 }
 
 /** Ikon garis buatan sendiri (lihat drawControlIcon di ControlSkin). */
@@ -122,6 +128,8 @@ fun FpsReadout(fps: () -> Int) {
 @Composable
 fun AmberToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
     val callback by rememberUpdatedState(onChange)
+    val interaction = remember { MutableInteractionSource() }
+    val focused = interaction.collectIsFocusedAsState()
     Box(
         modifier = Modifier
             .size(width = 40.dp, height = 24.dp)
@@ -146,8 +154,9 @@ fun AmberToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
                     radius = r - 5.dp.toPx(),
                     center = Offset(cx, r)
                 )
+                if (focused.value) drawGamepadFocusRing()
             }
-            .pointerInput(checked) { detectTapGestures { callback(!checked) } }
+            .clickable(interactionSource = interaction, indication = null) { callback(!checked) }
     )
 }
 
@@ -167,10 +176,31 @@ fun AmberSlider(
     val change by rememberUpdatedState(onChange)
     val finish by rememberUpdatedState(onFinished)
     val read by rememberUpdatedState(value)
+    val interaction = remember { MutableInteractionSource() }
+    val focused = interaction.collectIsFocusedAsState()
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(30.dp)
+            // D-pad kiri/kanan menggeser satu langkah saat penggeser disorot.
+            .onKeyEvent { event ->
+                val dir = when (event.key) {
+                    Key.DirectionLeft -> -1f
+                    Key.DirectionRight -> 1f
+                    else -> 0f
+                }
+                if (dir == 0f) {
+                    false
+                } else {
+                    if (event.type == KeyEventType.KeyDown) {
+                        val unit = if (step > 0f) step else (range.endInclusive - range.start) / 20f
+                        change((read() + dir * unit).coerceIn(range.start, range.endInclusive))
+                        finish()
+                    }
+                    true
+                }
+            }
+            .focusable(interactionSource = interaction)
             .drawBehind {
                 val pad = 10.dp.toPx()
                 val y = size.height / 2f
@@ -184,6 +214,7 @@ fun AmberSlider(
                 val c = Offset(pad + span * frac, y)
                 drawCircle(Amber.YellowTint, 10.dp.toPx(), c)
                 drawCircle(Amber.Yellow, 6.5.dp.toPx(), c)
+                if (focused.value) drawGamepadFocusRing()
             }
             .pointerInput(range, step) {
                 val pad = 10.dp.toPx()

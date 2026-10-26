@@ -63,6 +63,7 @@ import com.israadev.nuxlauncher.ui.components.AmberSegmented
 import com.israadev.nuxlauncher.ui.components.AmberSlider
 import com.israadev.nuxlauncher.ui.components.AmberToggle
 import com.israadev.nuxlauncher.ui.components.FpsReadout
+import com.israadev.nuxlauncher.ui.components.GamepadWindowHook
 import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.theme.Amber
@@ -121,6 +122,7 @@ fun GameMenuSheet(
             decorFitsSystemWindows = false
         )
     ) {
+        GamepadWindowHook()
         val dialogView = LocalView.current
         SideEffect {
             val win = (dialogView.parent as? DialogWindowProvider)?.window

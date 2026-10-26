@@ -75,6 +75,15 @@ public class SDLControllerManager
         }
     }
 
+    /**
+     * True bila SDL (dipakai mod seperti Controlify) sudah memindai dan mengenali perangkat ini.
+     * Launcher memakainya untuk tahu kapan controller dipegang mod, jadi tidak diterjemahkan dua kali.
+     */
+    static public boolean isKnownToSdl(int deviceId) {
+        SDLJoystickHandler handler = mJoystickHandler;
+        return handler != null && handler.hasJoystick(deviceId);
+    }
+
     // Joystick glue code, just a series of stubs that redirect to the SDLJoystickHandler instance
     static public boolean handleJoystickMotionEvent(MotionEvent event) {
         return mJoystickHandler.handleMotionEvent(event);
@@ -230,6 +239,10 @@ class SDLJoystickHandler {
     SDLJoystickHandler() {
 
         mJoysticks = new ArrayList<SDLJoystick>();
+    }
+
+    synchronized boolean hasJoystick(int device_id) {
+        return getJoystick(device_id) != null;
     }
 
     /**

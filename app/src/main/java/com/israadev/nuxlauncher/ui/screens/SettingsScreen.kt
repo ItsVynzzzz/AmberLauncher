@@ -127,6 +127,7 @@ fun SettingsScreen(
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
+    var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
@@ -175,6 +176,7 @@ fun SettingsScreen(
             hotbarTouchEnabled = hotbarTouch,
             touchControllerEnabled = touchControllerEnabled,
             touchControllerExclusive = touchControllerExclusive,
+            gamepadEmulation = gamepadEmulation,
             mouseSizeDp = mouseSizeDp,
             physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
@@ -852,6 +854,16 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSwitchRow(
+                            title = "Dukungan controller",
+                            desc = "Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.",
+                            checked = gamepadEmulation,
+                            onCheckedChange = {
+                                gamepadEmulation = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -934,6 +946,7 @@ fun SettingsScreen(
                     hotbarTouch = reset.hotbarTouchEnabled
                     touchControllerEnabled = reset.touchControllerEnabled
                     touchControllerExclusive = reset.touchControllerExclusive
+                    gamepadEmulation = reset.gamepadEmulation
                     mouseSizeDp = reset.mouseSizeDp
                     physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio
@@ -1178,6 +1191,7 @@ fun SettingsScreen(
     // Adreno GPU Warning Dialog (Persis seperti Zalith)
     if (showAdrenoWarningDialog) {
         androidx.compose.ui.window.Dialog(onDismissRequest = { showAdrenoWarningDialog = false }) {
+            GamepadWindowHook()
             Box(
                 modifier = Modifier
                     .fillMaxSize()

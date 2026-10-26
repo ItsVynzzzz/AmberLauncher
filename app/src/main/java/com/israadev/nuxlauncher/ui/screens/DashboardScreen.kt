@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.ui.components.HomeInfo
 import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
+import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
 import com.israadev.nuxlauncher.ui.components.NuxSidebar
 import com.israadev.nuxlauncher.ui.components.rememberIsResumed
 import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
@@ -142,6 +143,21 @@ fun DashboardScreen() {
     val scope = rememberCoroutineScope()
 
     var currentTab by remember { mutableStateOf("home") }
+
+    // Controller: LB/RB berpindah antar tab (Home, Akun, Mod, Pengaturan).
+    DisposableEffect(Unit) {
+        val ids = NUX_NAV_ITEMS.map { it.id }
+        val listener: (Int) -> Unit = { step ->
+            val index = ids.indexOf(currentTab)
+            if (index >= 0) currentTab = ids[(index + step + ids.size) % ids.size]
+        }
+        com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener = listener
+        onDispose {
+            if (com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener === listener) {
+                com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener = null
+            }
+        }
+    }
 
     val activeCrash by CrashManager.activeCrash.collectAsState()
 

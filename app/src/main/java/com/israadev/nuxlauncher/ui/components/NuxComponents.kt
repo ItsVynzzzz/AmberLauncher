@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -96,6 +97,7 @@ fun NuxButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressedState = interactionSource.collectIsPressedAsState()
+    val focusedState = interactionSource.collectIsFocusedAsState()
 
     val filled = backgroundColor.alpha >= 0.9f && backgroundColor.luminance() > 0.45f
     val edgeColor = when {
@@ -123,6 +125,7 @@ fun NuxButton(
             .drawWithContent {
                 drawContent()
                 if (enabled && pressedState.value) drawRect(pressTint)
+                if (enabled && focusedState.value) drawGamepadFocusRing()
             }
             .clickable(
                 enabled = enabled,
@@ -245,6 +248,7 @@ fun NuxWindowDialog(
     content: @Composable () -> Unit
 ) {
     Dialog(onDismissRequest = onDismissRequest, properties = properties) {
+        GamepadWindowHook()
         NuxReadable(scale = 1f, boost = 1.18f) {
             content()
         }
@@ -284,6 +288,7 @@ fun NuxDialog(
             decorFitsSystemWindows = false
         )
     ) {
+        GamepadWindowHook()
         NuxReadable(
             scale = if (compact && !inScaledScreen) 0.9f else 1f,
             boost = if (compact) 1f else 1.18f

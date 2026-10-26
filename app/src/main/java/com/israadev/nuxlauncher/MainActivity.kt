@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private val bgExecutor: java.util.concurrent.ExecutorService =
         java.util.concurrent.Executors.newSingleThreadExecutor()
     private var storageWasGranted = false
+    private var navUninstall: (() -> Unit)? = null
 
     private companion object {
         const val PREFS_NAME = "amber_launcher_prefs"
@@ -63,6 +64,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         hideSystemBars()
+        // Controller: A pilih, B kembali, stick/D-pad pindah sorotan, LB/RB ganti tab.
+        navUninstall = com.israadev.nuxlauncher.core.controls.GamepadNav.install(window, allowBumper = true)
         checkAndRequestStoragePermissions()
         storageWasGranted = storageAccessGranted()
 
@@ -93,6 +96,7 @@ class MainActivity : ComponentActivity() {
             AmberLanguageHost {
                 NuxResponsiveTheme {
                     MaterialTheme {
+                        com.israadev.nuxlauncher.ui.components.GamepadFocusProvider {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
                             color = NuxColors.Background
@@ -113,6 +117,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                             AmberUpdatePrompt(enabled = introDone)
+                        }
                         }
                     }
                 }
@@ -158,6 +163,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
+        navUninstall?.invoke()
+        navUninstall = null
         super.onDestroy()
         bgExecutor.shutdown()
         com.israadev.nuxlauncher.core.skin.OfflineSkinServerManager.stopServer()

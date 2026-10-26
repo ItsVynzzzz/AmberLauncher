@@ -25,6 +25,9 @@ data class LauncherSettings(
     // Hanya berlaku bila touchControllerEnabled nyala: sembunyikan tombol dan mouse virtual launcher,
     // semua sentuhan hanya untuk mod. Bawaan mati = launcher dan mod aktif berdampingan.
     val touchControllerExclusive: Boolean = false,
+    // Controller (gamepad) langsung bisa dipakai: tanpa mod, stick/tombol diterjemahkan jadi keyboard+mouse.
+    // Bila mod controller terdeteksi (Controlify, dsb.), controller diteruskan ke mod dan emulasi ini diam.
+    val gamepadEmulation: Boolean = true,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used

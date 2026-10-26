@@ -230,6 +230,8 @@ public class CallbackBridge {
     @Keep
     public static void onDirectInputEnable() {
         Log.i("AMBER_INPUT", "Direct input enabled");
+        // Mod controller yang membaca GLFW langsung sudah aktif: controller diteruskan apa adanya.
+        sGamepadDirectInput = true;
     }
 
     public static void sendCursorPos(float x, float y) {

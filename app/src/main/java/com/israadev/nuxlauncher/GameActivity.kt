@@ -103,7 +103,9 @@ import com.israadev.nuxlauncher.core.controls.TouchSink
 import com.israadev.nuxlauncher.core.controls.HotbarGeometry
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.game.MCOptions
+import com.israadev.nuxlauncher.core.controls.GamepadRouter
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.ui.components.GamepadFocusProvider
 import com.israadev.nuxlauncher.core.game.input.EfficientAndroidLWJGLKeycode
 import com.israadev.nuxlauncher.core.game.input.HidableInputLayout
 import com.israadev.nuxlauncher.core.game.input.TouchCharInput
@@ -274,6 +276,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
         // Jari yang masih tercatat di mod tidak akan pernah menerima "angkat" bila aplikasi keluar layar.
         touchBridge?.onCancelAll()
+        GamepadRouter.reset()
         super.onStop()
     }
 
@@ -504,6 +507,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             applyImmersiveFullscreen()
+        } else {
+            GamepadRouter.reset()
         }
     }
 
@@ -580,6 +585,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
         val composeView = ComposeView(this).apply {
             setContent {
+              GamepadFocusProvider {
                 GameScreen(
                     instanceName = instanceName,
                     mcVersion = mcVersion,
@@ -611,6 +617,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         terminateGameProcess()
                     }
                 )
+              }
             }
         }
 
@@ -829,6 +836,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             return super.dispatchKeyEvent(event)
         }
 
+        // Controller: diteruskan ke mod (SDL/GLFW) atau diterjemahkan menjadi keyboard+mouse
+        if (GamepadRouter.isPadKey(event)) {
+            if (event.action == KeyEvent.ACTION_DOWN) isControlVisibleState.value = false
+            if (GamepadRouter.onKey(event)) return true
+        }
+
         // Intercept right click from mouse being treated as KEYCODE_BACK
         val source = event.source
         if (source and InputDevice.SOURCE_MOUSE == InputDevice.SOURCE_MOUSE ||
@@ -855,6 +868,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
+        if (GamepadRouter.isPadMotion(event) && GamepadRouter.onMotion(event)) return true
         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
             // Physical mouse action detected -> hide touch controls
             isControlVisibleState.value = false
@@ -1854,6 +1868,7 @@ fun GameScreen(
         var cursorX by remember { mutableFloatStateOf(0f) }
         var cursorY by remember { mutableFloatStateOf(0f) }
         var isMousePressed by remember { mutableStateOf(false) }
+        var padCursorShown by remember { mutableStateOf(false) }
 
         LaunchedEffect(screenWidth, screenHeight) {
             if (cursorX == 0f && screenWidth > 0f) {
@@ -1865,6 +1880,26 @@ fun GameScreen(
                 val targetY = if (screenHeight > 0 && winH > 0) cursorY * (winH.toFloat() / screenHeight) else cursorY
                 CallbackBridge.sendCursorPos(targetX, targetY)
             }
+        }
+
+        // Controller menggeser kursor menu: posisi tampilan dan posisi di game ikut diperbarui.
+        DisposableEffect(screenWidth, screenHeight) {
+            GamepadRouter.cursorMover = { dx, dy ->
+                if (screenWidth > 0f && screenHeight > 0f) {
+                    val nx = (cursorX + dx).coerceIn(0f, screenWidth)
+                    val ny = (cursorY + dy).coerceIn(0f, screenHeight)
+                    cursorX = nx
+                    cursorY = ny
+                    padCursorShown = true
+                    val winW = CallbackBridge.windowWidth
+                    val winH = CallbackBridge.windowHeight
+                    CallbackBridge.sendCursorPos(
+                        if (winW > 0) nx * (winW.toFloat() / screenWidth) else nx,
+                        if (winH > 0) ny * (winH.toFloat() / screenHeight) else ny
+                    )
+                }
+            }
+            onDispose { GamepadRouter.cursorMover = null }
         }
 
         // 1. OpenGL/Vulkan Surface View (Pure rendering surface)
@@ -1937,6 +1972,7 @@ fun GameScreen(
             },
             onTouch = {
                 isPhysicalMouseMode = false
+                padCursorShown = false
             },
             onTap = { pos ->
                 val winW = CallbackBridge.windowWidth
@@ -1990,6 +2026,9 @@ fun GameScreen(
         val shouldShowPointer = if (tcExclusive) {
             // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
             false
+        } else if (padCursorShown) {
+            // Kursor digerakkan controller: panah harus terlihat walau mode ketuk menyembunyikannya.
+            gameCursorMode == CURSOR_ENABLED
         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
             false
         } else if (PhysicalMouseChecker.physicalMouseConnected && isPhysicalMouseMode && launcherSettings.physicalMouseMode) {

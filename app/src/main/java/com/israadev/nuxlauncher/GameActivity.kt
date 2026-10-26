@@ -26,12 +26,14 @@ import androidx.core.content.ContextCompat
 import com.israadev.nuxlauncher.core.record.RecordService
 import com.israadev.nuxlauncher.core.record.ScreenRecorder
 import android.system.Os
+import android.graphics.SurfaceTexture
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.HapticFeedbackConstants
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -162,6 +164,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private val liveLogs = mutableStateListOf<String>()
     private var isGameStarted = false
     private var surfaceHolderRef: SurfaceHolder? = null
+
+    // Minecraft 26.x: permukaan game berupa TextureView (lihat shouldUseTextureView)
+    private var useTextureView = false
+    private var gameTextureView: TextureView? = null
+    private var gameTextureSurface: android.view.Surface? = null
     private val isControlVisibleState = mutableStateOf(true)
     private val isGameRenderingState = mutableStateOf(false)
 
@@ -303,7 +310,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 exceptionDetail = errorDetail,
                 loader = loader,
                 loaderVersion = loaderVersion,
-                installedMods = installedMods
+                installedMods = installedMods,
+                graphicsInfo = graphicsSummary
             )
 
             // 2. Langsung luncurkan ErrorActivity mandiri (persis seperti Zalith Launcher)
@@ -420,6 +428,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private var useWrapper = false
     private var loader = "vanilla"
     private var loaderVersion: String? = null
+    /** Ringkasan renderer + backend grafis sesi ini; ikut ke laporan crash supaya penyebab "layar miring/hitam" mudah dilacak. */
+    private var graphicsSummary: String? = null
     private var installedMods: List<String> = emptyList()
 
     // Argumen tambahan dari mod loader (Forge): sebelum -cp dan sesudah argumen game biasa
@@ -453,6 +463,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
         val (targetW, targetH) = getScaledDisplayDimensions()
         surfaceHolderRef?.setFixedSize(targetW, targetH)
+        gameTextureView?.surfaceTexture?.setDefaultBufferSize(targetW, targetH)
         CallbackBridge.sendUpdateWindowSize(targetW, targetH)
         LoggerBridge.append("▷ [In-Game Resolution] Dinamis diperbarui ke $newRatio% (${targetW}x${targetH})")
     }
@@ -539,6 +550,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         installedMods = intent.getStringArrayListExtra(EXTRA_INSTALLED_MODS) ?: CrashManager.getInstalledMods(gameDirPath)
         extraJvmArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_JVM_ARGS) ?: emptyList()
         extraGameArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_GAME_ARGS) ?: emptyList()
+        useTextureView = shouldUseTextureView()
 
         // Setup real-time native LoggerBridge
         setupLogger()
@@ -583,6 +595,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         val (targetWidth, targetHeight) = getScaledDisplayDimensions()
                         surfaceHolder.setFixedSize(targetWidth, targetHeight)
                         surfaceHolder.addCallback(this@GameActivity)
+                    },
+                    useTextureView = useTextureView,
+                    onTextureViewReady = { textureView ->
+                        gameTextureView = textureView
+                        textureView.surfaceTextureListener = textureListener
                     },
                     onResolutionChange = { newRatio ->
                         applyDynamicResolution(newRatio)
@@ -694,10 +711,71 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * Minecraft 26.x punya backend Vulkan sendiri (dan bisa jatuh ke Vulkan bila OpenGL gagal). Swapchain
+     * Vulkan di Android membaca "transform hint" permukaannya. Pada SurfaceView di HP berlayar-alami-portrait,
+     * hint itu 90/270 derajat, dan backend Vulkan Mojang memakainya sebagai preTransform tanpa memutar isi
+     * gambar (pre-rotation), sehingga buffer landscape diputar 90 derajat lalu diregangkan: seluruh tampilan game
+     * terlihat portrait/miring padahal launcher landscape. Permukaan TextureView seharusnya tidak punya hint itu (0),
+     * sehingga swapchain memakai orientasi normal dan gambarnya tegak. (Belum diuji di perangkat: bila
+     * layar masih miring, cek baris log "[Graphics]" untuk tahu permukaan dan backend yang dipakai.)
+     *
+     * TextureView sedikit lebih berat dari SurfaceView, jadi hanya dipakai untuk 26.x, dan tidak dipakai bila
+     * pemain sudah memilih "Prefer OpenGL" di options.txt (preferredGraphicsBackend:"opengl").
+     */
+    private fun shouldUseTextureView(): Boolean {
+        if (!GlErrorPolicy.hasBackendChoice(mcVersion)) return false
+        val backend = runCatching {
+            File(gameDirPath, "options.txt").useLines { lines ->
+                lines.map { it.trim() }
+                    .firstOrNull { it.startsWith("preferredGraphicsBackend:") }
+                    ?.substringAfter(':')
+                    ?.trim()
+            }
+        }.getOrNull()
+        return backend != "\"opengl\""
+    }
+
+    private val textureListener = object : TextureView.SurfaceTextureListener {
+        override fun onSurfaceTextureAvailable(st: SurfaceTexture, width: Int, height: Int) {
+            val (targetWidth, targetHeight) = getScaledDisplayDimensions()
+            st.setDefaultBufferSize(targetWidth, targetHeight)
+            val surface = android.view.Surface(st)
+            gameTextureSurface = surface
+            onGameSurfaceCreated(surface, this, targetWidth, targetHeight, "TextureView")
+            CallbackBridge.sendUpdateWindowSize(targetWidth, targetHeight)
+            LoggerBridge.append("▷ [SurfaceChanged] Native TextureView buffer: ${targetWidth}x${targetHeight} (Scale: ${SettingsManager.settings.value.resolutionRatio}%)")
+        }
+
+        // Ukuran buffer ditentukan setDefaultBufferSize (bukan ukuran View), jadi tidak ada yang diubah di sini
+        override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, width: Int, height: Int) {}
+
+        override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
+            onGameSurfaceDestroyed(this)
+            try {
+                gameTextureSurface?.release()
+            } catch (_: Throwable) {
+            }
+            gameTextureSurface = null
+            return true
+        }
+
+        override fun onSurfaceTextureUpdated(st: SurfaceTexture) {}
+    }
+
     override fun surfaceCreated(holder: SurfaceHolder) {
         val (targetWidth, targetHeight) = getScaledDisplayDimensions()
         holder.setFixedSize(targetWidth, targetHeight)
-        val surface = holder.surface
+        onGameSurfaceCreated(holder.surface, holder, targetWidth, targetHeight, "SurfaceView")
+    }
+
+    private fun onGameSurfaceCreated(
+        surface: android.view.Surface,
+        source: Any,
+        targetWidth: Int,
+        targetHeight: Int,
+        kind: String
+    ) {
         // Kunci layar (profil perangkat atau saklar umum): beri tahu sistem bahwa surface game cukup 60 Hz (Android 11+)
         val lockHz = DeviceProfiles.refreshLockTarget(SettingsManager.settings.value)
         if (lockHz > 0f && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -707,10 +785,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             }
         }
         val rootLayout = window.decorView as? ViewGroup
-        SdlBridge.prepareSurface(this, surface, rootLayout, holder)
+        SdlBridge.prepareSurface(this, surface, rootLayout, source)
         try {
             ZLBridge.setupBridgeWindow(surface)
-            liveLogs.add("[Render Bridge] Native window bound to SurfaceView (${targetWidth}x${targetHeight}).")
+            liveLogs.add("[Render Bridge] Native window bound to $kind (${targetWidth}x${targetHeight}).")
         } catch (e: Throwable) {
             liveLogs.add("[Render Bridge Error] ${e.message}")
         }
@@ -729,9 +807,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
+        onGameSurfaceDestroyed(holder)
+    }
+
+    private fun onGameSurfaceDestroyed(source: Any) {
         try {
             val nativeSurface = SDLSurface.getNativeSurface()
-            if (SdlBridge.beginSurfaceDestroy(holder, nativeSurface)) {
+            if (SdlBridge.beginSurfaceDestroy(source, nativeSurface)) {
                 if (SdlBridge.sdlEnabled) {
                     SDLActivity.getSDLSurface()?.surfaceDestroyed()
                 }
@@ -831,6 +913,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     set("overrideHeight", "$targetHeight")
                     save()
                 }
+                if (GlErrorPolicy.hasBackendChoice(mcVersion)) {
+                    LoggerBridge.append("▷ [Graphics] preferredGraphicsBackend=${MCOptions.get("preferredGraphicsBackend") ?: "(belum ada)"}, permukaan game=${if (useTextureView) "TextureView" else "SurfaceView"}")
+                }
                 LoggerBridge.append("▷ [MCOptions] Minecraft options verified (res=${targetWidth}x${targetHeight}, autoOptimize=${activeSettings.autoOptimizeMinecraft})")
 
                 // Verify & Ensure OpenJDK Runtime is fully installed
@@ -879,6 +964,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
                 LoggerBridge.append("▷ [Renderer] Active Backend: ${targetRenderer.displayName} ($rendererId)")
                 LoggerBridge.append("▷ [Renderer] Library: $rendererSoName, Selection: ${activeSettings.selectedRenderer}, IsPlugin: ${targetRenderer.isPlugin}")
+                graphicsSummary = "${targetRenderer.displayName} ($rendererId, $rendererSoName), " +
+                    "backend=${MCOptions.get("preferredGraphicsBackend") ?: "-"}, " +
+                    "surface=${if (useTextureView) "TextureView" else "SurfaceView"}"
 
                 val runtimeHomeStr = runtimeHome.absolutePath
                 // Ditentukan dari bitness proses ini (bukan daftar ABI HP): APK 32-bit di HP 64-bit
@@ -1514,7 +1602,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     gameDirPath = gameDir.absolutePath,
                     loader = loader,
                     loaderVersion = loaderVersion,
-                    installedMods = installedMods
+                    installedMods = installedMods,
+                    graphicsInfo = graphicsSummary
                 )
                 liveLogs.add("[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...")
                 // Pemantau hanya mencatat ke log tiap 30 detik; tidak mengubah apa pun pada game.
@@ -1610,6 +1699,8 @@ fun GameScreen(
     isGameRenderingState: MutableState<Boolean>,
     touchSinkState: State<TouchSink?>,
     onSurfaceReady: (SurfaceHolder) -> Unit,
+    useTextureView: Boolean = false,
+    onTextureViewReady: (TextureView) -> Unit = {},
     onResolutionChange: (Int) -> Unit = {},
     onToggleRecord: () -> Unit = {},
     guiScaleProvider: () -> Int = { 0 },
@@ -1779,8 +1870,15 @@ fun GameScreen(
         // 1. OpenGL/Vulkan Surface View (Pure rendering surface)
         AndroidView(
             factory = { ctx ->
-                SurfaceView(ctx).apply {
-                    onSurfaceReady(holder)
+                if (useTextureView) {
+                    TextureView(ctx).apply {
+                        isOpaque = true
+                        onTextureViewReady(this)
+                    }
+                } else {
+                    SurfaceView(ctx).apply {
+                        onSurfaceReady(holder)
+                    }
                 }
             },
             modifier = Modifier.fillMaxSize()

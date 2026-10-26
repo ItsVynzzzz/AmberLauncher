@@ -388,6 +388,15 @@ private fun CrashExplainContent(info: GameCrashInfo, source: CrashSource, modifi
                         }
                     }
                 }
+                if (!info.graphicsInfo.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Grafis: ${info.graphicsInfo}",
+                        color = Amber.TextDim,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                }
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = "Status keluar: ${CrashAdvisor.describeExit(info)}",

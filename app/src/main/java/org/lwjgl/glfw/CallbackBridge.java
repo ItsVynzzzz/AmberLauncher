@@ -111,6 +111,8 @@ public class CallbackBridge {
                         SdlBridge.setupJNI();
                         LoggerBridge.append("AmberLauncher: binding SDL surface");
                         SdlBridge.setSdlEnabled(true);
+                        // SDL harus tahu orientasi bawaan layar + rotasi saat ini sebelum jendela dibuat
+                        SDLActivity.sendInitialOrientation();
                         SDLSurface surface = SDLActivity.getSDLSurface();
                         if (surface != null) {
                             surface.surfaceChanged();
@@ -249,11 +251,27 @@ public class CallbackBridge {
     }
 
     public static void sendUpdateWindowSize(int w, int h) {
+        final boolean sizeChanged = (w != windowWidth || h != windowHeight);
         windowWidth = w;
         windowHeight = h;
         try {
             nativeSendScreenSize(w, h);
         } catch (Throwable ignored) {}
+
+        // Minecraft 26.x (SDL3) mengambil ukuran jendela dari SDL, bukan dari nativeSendScreenSize.
+        // Tanpa ini, mengganti resolusi di dalam game (atau surface berubah ukuran) hanya mengubah
+        // buffer SurfaceView, sedangkan jendela SDL tetap berukuran lama sehingga gambar dan
+        // posisi sentuhan tidak lagi cocok. Hanya dikirim bila ukuran benar-benar berubah.
+        if (sizeChanged && w > 0 && h > 0 && SdlBridge.getSdlEnabled()) {
+            SDLSurface surface = SDLActivity.getSDLSurface();
+            if (surface != null) {
+                try {
+                    surface.nativeResize(w, h);
+                } catch (Throwable t) {
+                    LoggerBridge.append("AmberLauncher: gagal meneruskan ukuran jendela ke SDL: " + t);
+                }
+            }
+        }
     }
 
     public static volatile boolean holdingAlt = false;

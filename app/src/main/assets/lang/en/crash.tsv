@@ -40,6 +40,7 @@ Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat Ambe
 Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Hi, the AmberLauncher app (a Minecraft Java Edition launcher for Android) stopped on its own. Please explain the cause in simple language (I am a beginner) and suggest what I can try. If you think this is a bug in the launcher, please say so.
 Perangkat: {0}	Device: {0}
 Versi Minecraft: {0}	Minecraft version: {0}
+Grafis: {0}	Graphics: {0}
 Jumlah mod: {0}	Number of mods: {0}
 Daftar mod: {0}	Mod list: {0}
 Isi log crash:	Crash log contents:

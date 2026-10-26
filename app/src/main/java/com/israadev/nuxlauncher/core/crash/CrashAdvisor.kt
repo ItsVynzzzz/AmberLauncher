@@ -82,6 +82,9 @@ object CrashAdvisor {
                 "${info.loader} ${info.loaderVersion ?: ""}".trim()
             }
             sb.append("Loader: ").append(loader).append('\n')
+            if (!info.graphicsInfo.isNullOrBlank()) {
+                sb.append(Tr.t("Grafis: ${info.graphicsInfo}")).append('\n')
+            }
             if (info.installedMods.isNotEmpty()) {
                 sb.append(Tr.t("Jumlah mod: ${info.installedMods.size}")).append('\n')
                 sb.append(Tr.t("Daftar mod: ${modList(info.installedMods)}")).append('\n')

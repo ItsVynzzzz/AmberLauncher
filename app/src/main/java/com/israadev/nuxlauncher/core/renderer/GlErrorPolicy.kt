@@ -14,4 +14,10 @@ object GlErrorPolicy {
         val major = Regex("""^\s*(\d+)""").find(mcVersion)?.groupValues?.get(1)?.toIntOrNull() ?: return false
         return major >= 26
     }
+
+    /**
+     * Minecraft 26.x punya pilihan backend OpenGL/Vulkan sendiri ("preferredGraphicsBackend" di options.txt)
+     * dan bisa jatuh ke Vulkan bila OpenGL gagal dibuat.
+     */
+    fun hasBackendChoice(mcVersion: String): Boolean = needsRealGlError(mcVersion)
 }

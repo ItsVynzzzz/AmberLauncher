@@ -1180,74 +1180,48 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     }
 
     /**
-     * This can be overridden
+     * AmberLauncher: GameActivity dikunci sensorLandscape di manifest dan seluruh UI-nya (kontrol,
+     * menu, perekam layar) dirancang landscape. SDL3 di Minecraft 26.x memanggil ini setiap kali
+     * jendela dibuat; versi bawaan SDL lalu menimpa orientasi Activity sesuai ukuran jendela atau
+     * hint (SENSOR_PORTRAIT bila lebar <= tinggi, USER_LANDSCAPE yang ikut kunci rotasi pengguna,
+     * dsb), sehingga layar bisa berpindah orientasi di tengah permainan. Di sini permintaan game
+     * diabaikan dan orientasi dipastikan tetap sensorLandscape seperti manifest.
      */
     public static void setOrientationBis(int w, int h, boolean resizable, String hint)
     {
-        int orientation_landscape = -1;
-        int orientation_portrait = -1;
-
         if (w <= 1 || h <= 1) {
             // Invalid width/height, ignore this request
             return;
         }
 
-        /* If set, hint "explicitly controls which UI orientations are allowed". */
-        if (hint.contains("LandscapeRight") && hint.contains("LandscapeLeft")) {
-            orientation_landscape = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
-        } else if (hint.contains("LandscapeLeft")) {
-            orientation_landscape = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        } else if (hint.contains("LandscapeRight")) {
-            orientation_landscape = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+        final Activity activity = mSingleton;
+        if (activity == null) {
+            return;
         }
 
-        /* exact match to 'Portrait' to distinguish with PortraitUpsideDown */
-        boolean contains_Portrait = hint.contains("Portrait ") || hint.endsWith("Portrait");
-
-        if (contains_Portrait && hint.contains("PortraitUpsideDown")) {
-            orientation_portrait = ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
-        } else if (contains_Portrait) {
-            orientation_portrait = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } else if (hint.contains("PortraitUpsideDown")) {
-            orientation_portrait = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
-        }
-
-        boolean is_landscape_allowed = (orientation_landscape != -1);
-        boolean is_portrait_allowed = (orientation_portrait != -1);
-        int req; /* Requested orientation */
-
-        /* No valid hint, nothing is explicitly allowed */
-        if (!is_portrait_allowed && !is_landscape_allowed) {
-            if (resizable) {
-                /* All orientations are allowed, respecting user orientation lock setting */
-                req = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
-            } else {
-                /* Fixed window and nothing specified. Get orientation from w/h of created window */
-                req = (w > h ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        final int req = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+        Log.v(TAG, "setOrientation() diabaikan, tetap sensorLandscape. width=" + w + " height=" + h + " resizable=" + resizable + " hint=" + hint);
+        activity.runOnUiThread(() -> {
+            if (activity.getRequestedOrientation() != req) {
+                activity.setRequestedOrientation(req);
             }
-        } else {
-            /* At least one orientation is allowed */
-            if (resizable) {
-                if (is_portrait_allowed && is_landscape_allowed) {
-                    /* hint allows both landscape and portrait, prefer landscape*/
-                    req = ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE;
-                } else {
-                    /* Use the only one allowed "orientation" */
-                    req = (is_landscape_allowed ? orientation_landscape : orientation_portrait);
-                }
-            } else {
-                /* Fixed window and both orientations are allowed. Choose one. */
-                if (is_portrait_allowed && is_landscape_allowed) {
-                    req = (w > h ? orientation_landscape : orientation_portrait);
-                } else {
-                    /* Use the only one allowed "orientation" */
-                    req = (is_landscape_allowed ? orientation_landscape : orientation_portrait);
-                }
-            }
-        }
+        });
+    }
 
-        Log.v(TAG, "setOrientation() requestedOrientation=" + req + " width=" + w +" height="+ h +" resizable=" + resizable + " hint=" + hint);
-        mSingleton.setRequestedOrientation(req);
+    /**
+     * AmberLauncher: onCreate() SDLActivity asli mengirim orientasi bawaan layar dan rotasi saat
+     * ini ke SDL, tetapi launcher tidak memakai onCreate itu sehingga SDL3 tidak pernah tahu
+     * (orientasi bawaan UNKNOWN; di tablet/HP layar-landscape-alami orientasinya terbaca terbalik).
+     * Dipanggil sekali begitu JNI SDL siap.
+     */
+    public static void sendInitialOrientation() {
+        try {
+            SDLActivity.nativeSetNaturalOrientation(SDLActivity.getNaturalOrientation());
+            mCurrentRotation = SDLActivity.getCurrentRotation();
+            SDLActivity.onNativeRotationChanged(mCurrentRotation);
+        } catch (Throwable t) {
+            Log.w(TAG, "sendInitialOrientation() gagal: " + t);
+        }
     }
 
     /**

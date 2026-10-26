@@ -25,7 +25,9 @@ data class GameCrashInfo(
     val loaderVersion: String? = null,
     val installedMods: List<String> = emptyList(),
     /** Folder game (minecraft) instance yang crash; dipakai tombol pemulihan. Kosong di catatan lama. */
-    val gameDirPath: String? = null
+    val gameDirPath: String? = null,
+    /** Ringkasan grafis saat crash: renderer, library, backend Minecraft 26.x, jenis permukaan. Kosong di catatan lama. */
+    val graphicsInfo: String? = null
 ) {
     companion object {
         const val CRASH_TYPE_GAME = "GAME_CRASH"
@@ -73,7 +75,8 @@ object CrashManager {
         val gameDirPath: String? = null,
         val loader: String? = null,
         val loaderVersion: String? = null,
-        val installedMods: List<String> = emptyList()
+        val installedMods: List<String> = emptyList(),
+        val graphicsInfo: String? = null
     )
 
     fun getInstalledMods(gameDirPath: String?): List<String> {
@@ -97,7 +100,8 @@ object CrashManager {
         gameDirPath: String? = null,
         loader: String? = null,
         loaderVersion: String? = null,
-        installedMods: List<String> = emptyList()
+        installedMods: List<String> = emptyList(),
+        graphicsInfo: String? = null
     ) {
         try {
             val resolvedMods = if (installedMods.isNotEmpty()) installedMods else getInstalledMods(gameDirPath)
@@ -109,7 +113,8 @@ object CrashManager {
                 gameDirPath = gameDirPath,
                 loader = loader,
                 loaderVersion = loaderVersion,
-                installedMods = resolvedMods
+                installedMods = resolvedMods,
+                graphicsInfo = graphicsInfo
             )
             val file = File(context.filesDir, SESSION_FILE_NAME)
             file.writeText(gson.toJson(session))
@@ -143,7 +148,8 @@ object CrashManager {
         crashType: String = GameCrashInfo.CRASH_TYPE_GAME,
         loader: String = "vanilla",
         loaderVersion: String? = null,
-        installedMods: List<String> = emptyList()
+        installedMods: List<String> = emptyList(),
+        graphicsInfo: String? = null
     ) {
         try {
             val filesDir = context.filesDir
@@ -199,7 +205,8 @@ object CrashManager {
                 loader = loader,
                 loaderVersion = loaderVersion,
                 installedMods = resolvedMods,
-                gameDirPath = gameDirPath.takeIf { it.isNotBlank() }
+                gameDirPath = gameDirPath.takeIf { it.isNotBlank() },
+                graphicsInfo = graphicsInfo
             )
 
             val crashFile = File(filesDir, CRASH_FILE_NAME)
@@ -337,7 +344,8 @@ object CrashManager {
                         loader = session?.loader ?: "vanilla",
                         loaderVersion = session?.loaderVersion,
                         installedMods = resolvedSessionMods,
-                        gameDirPath = session?.gameDirPath
+                        gameDirPath = session?.gameDirPath,
+                        graphicsInfo = session?.graphicsInfo
                     )
 
                     val cf = File(context.filesDir, CRASH_FILE_NAME)

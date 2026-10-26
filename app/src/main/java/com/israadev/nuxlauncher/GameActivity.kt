@@ -2,6 +2,7 @@ package com.israadev.nuxlauncher
 
 import android.content.Context
 import com.israadev.nuxlauncher.core.crash.CrashManager
+import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.ui.activities.ErrorActivity
 import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
@@ -171,6 +172,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private var isManualExit = false
     private var sessionStartTime = System.currentTimeMillis()
+    private var gameLogArchived = false
 
     // ---- Rekam layar bawaan -------------------------------------------------------------
     // Alurnya: (izin mikrofon/notifikasi bila perlu) -> dialog izin tangkap layar sistem ->
@@ -336,7 +338,15 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         terminateGameProcess()
     }
 
+    /** Menyimpan log sesi ini ke folder logs (sekali saja per sesi); dipanggil sebelum proses game dimatikan. */
+    private fun archiveGameLogOnce() {
+        if (gameLogArchived) return
+        gameLogArchived = true
+        try { GameLogArchive.archiveSession(this) } catch (_: Throwable) {}
+    }
+
     private fun terminateGameProcess() {
+        archiveGameLogOnce()
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
@@ -352,6 +362,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun onDestroy() {
         super.onDestroy()
+        archiveGameLogOnce()
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
@@ -656,8 +667,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private fun setupLogger() {
         val logFile = File(filesDir, "latestlog.txt")
+        // Sesi sebelumnya yang belum sempat tersimpan (mis. proses game dimatikan Android) disimpan dulu,
+        // sebelum berkas log-nya ditimpa oleh sesi ini.
+        try { GameLogArchive.archiveIfNeeded(this) } catch (_: Throwable) {}
         if (logFile.exists()) logFile.delete()
         logFile.createNewFile()
+        try {
+            GameLogArchive.beginSession(this, sessionStartTime, instanceName, mcVersion, loader, loaderVersion, gameDirPath)
+        } catch (_: Throwable) {}
 
         LoggerBridge.setListener { text ->
             if (text != null) {
@@ -951,6 +968,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 } catch (e: Exception) {
                     LoggerBridge.append("▷ [Renderer V2 Env Warning] Gagal menginjeksi V2 env: ${e.message}")
                 }
+                try {
+                    Os.getenv("MG_DIR_PATH")?.takeIf { it.isNotBlank() }?.let { GameLogArchive.noteMgDir(this@GameActivity, it) }
+                } catch (_: Throwable) {}
 
                 // Minecraft 26.x memeriksa glGetError saat membuat backend OpenGL. "LIBGL_NOERROR=1"
                 // (bawaan Krypton/GL4ES demi kecepatan) membuatnya selalu menjawab "tanpa galat" dan
@@ -1597,8 +1617,17 @@ fun GameScreen(
 ) {
     var isControlVisible by isControlVisibleState
     var isGameRendering by isGameRenderingState
-    var isManualLoadingDismissed by remember { mutableStateOf(false) }
-    val showLoadingOverlay = !isGameRendering && !isManualLoadingDismissed
+    val showLoadingOverlay = !isGameRendering
+    // Tombol layar baru muncul setelah logo Mojang tampil, supaya layar loading bersih. Bila loading
+    // sangat lama (game macet), tombol dimunculkan juga agar pemain bisa membuka menu: lihat log atau keluar.
+    var loadingTooLong by remember { mutableStateOf(false) }
+    LaunchedEffect(isGameRendering) {
+        if (!isGameRendering) {
+            delay(60_000L)
+            loadingTooLong = true
+        }
+    }
+    val controlsAllowed = isGameRendering || loadingTooLong
 
     var showInGameSettingsDialog by remember { mutableStateOf(false) }
     var isCustomGuiEditorActive by remember { mutableStateOf(false) }
@@ -1840,15 +1869,9 @@ fun GameScreen(
         GameLoadingOverlay(
             visible = showLoadingOverlay,
             instanceName = instanceName,
-            mcVersion = mcVersion,
             // Daftar log hanya dibaca saat layar loading tampil; selebihnya layar tidak ikut
             // digambar ulang setiap ada log baru.
             latestLog = if (showLoadingOverlay) (liveLogs.lastOrNull() ?: "") else "",
-            onClose = { isManualLoadingDismissed = true },
-            onViewLog = {
-                fpsMode = FpsMode.SHOW_LOG
-                isConsoleVisible = true
-            },
             modifier = Modifier.fillMaxSize()
         )
 
@@ -1906,34 +1929,36 @@ fun GameScreen(
         // 4. Tombol layar (gaya dan logikanya ada di ui/control/ControlOverlay.kt). Dibungkus Box
         // penuh layar agar bisa dibuat transparan (alpha 0, tetap menerima sentuhan) saat merekam
         // "Game saja". Box tanpa penangan sentuhan tidak menghalangi sentuhan ke lapisan di bawahnya.
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(if (ghostControls) Modifier.graphicsLayer { alpha = 0f } else Modifier)
-        ) {
-            GameControlsLayer(
-                buttons = customButtons,
-                screenWidth = screenWidth,
-                screenHeight = screenHeight,
-                controlsVisible = isControlVisible,
-                fpsMode = fpsMode,
-                consoleVisible = isConsoleVisible,
-                keyboardActive = isKeyboardRequested,
-                fps = { currentFps },
-                perfText = {
-                    if (uiBusy > 0) {
-                        if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
-                    } else {
-                        perfText
-                    }
-                },
-                perfWarn = { perfWarn || uiBusy > 0 },
-                onFpsClick = { showInGameSettingsDialog = true },
-                onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
-                onToggleControls = { isControlVisible = !isControlVisible },
-                onOpenMenu = { showInGameSettingsDialog = true },
-                touchControllerMode = tcExclusive
-            )
+        if (controlsAllowed) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (ghostControls) Modifier.graphicsLayer { alpha = 0f } else Modifier)
+            ) {
+                GameControlsLayer(
+                    buttons = customButtons,
+                    screenWidth = screenWidth,
+                    screenHeight = screenHeight,
+                    controlsVisible = isControlVisible,
+                    fpsMode = fpsMode,
+                    consoleVisible = isConsoleVisible,
+                    keyboardActive = isKeyboardRequested,
+                    fps = { currentFps },
+                    perfText = {
+                        if (uiBusy > 0) {
+                            if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
+                        } else {
+                            perfText
+                        }
+                    },
+                    perfWarn = { perfWarn || uiBusy > 0 },
+                    onFpsClick = { showInGameSettingsDialog = true },
+                    onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+                    onToggleControls = { isControlVisible = !isControlVisible },
+                    onOpenMenu = { showInGameSettingsDialog = true },
+                    touchControllerMode = tcExclusive
+                )
+            }
         }
 
         // Konfirmasi keluar

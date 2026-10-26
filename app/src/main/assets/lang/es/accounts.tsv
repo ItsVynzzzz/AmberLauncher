@@ -94,3 +94,24 @@ Gagal mengambil profil Minecraft ({0}): {1}	No se pudo obtener el perfil de Mine
 Tidak ada refresh token tersimpan.	No hay ning\u00fan token de actualizaci\u00f3n guardado.
 Gagal memperbarui token Microsoft ({0}): {1}	No se pudo actualizar el token de Microsoft ({0}): {1}
 Token pembaruan kosong.	El token de actualizaci\u00f3n est\u00e1 vac\u00edo.
+# Login Microsoft: sesi diperbarui otomatis dan pesan galat lebih jelas
+Memperbarui sesi Microsoft...	Actualizando la sesi\u00f3n de Microsoft...
+Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	No se pudo actualizar la sesi\u00f3n de Microsoft. El juego se iniciar\u00e1 igualmente, pero las funciones en l\u00ednea pueden requerir iniciar sesi\u00f3n de nuevo.
+Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	No se pudo conectar con el servidor de Microsoft. Comprueba tu conexi\u00f3n a internet e int\u00e9ntalo de nuevo.
+Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	No se pudo iniciar el inicio de sesi\u00f3n de Microsoft (c\u00f3digo {0}). Int\u00e9ntalo de nuevo m\u00e1s tarde.
+Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	Demasiados intentos de inicio de sesi\u00f3n. Espera unos minutos e int\u00e9ntalo de nuevo.
+Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	Error de autenticaci\u00f3n de Xbox Live (c\u00f3digo {0}). Int\u00e9ntalo de nuevo m\u00e1s tarde.
+Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	Error de autorizaci\u00f3n XSTS (c\u00f3digo {0}). Int\u00e9ntalo de nuevo m\u00e1s tarde.
+Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	El servidor de Minecraft tiene problemas (c\u00f3digo {0}). Int\u00e9ntalo de nuevo en unos minutos.
+Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	El servicio de Minecraft rechaz\u00f3 el inicio de sesi\u00f3n (c\u00f3digo {0}). Int\u00e9ntalo m\u00e1s tarde. Si se repite, informa al desarrollador del launcher.
+Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	Esta cuenta a\u00fan no tiene un perfil de Minecraft Java. Aseg\u00farate de tener Minecraft: Java Edition (o Game Pass para PC) y crea un nombre de jugador en minecraft.net/profile.
+Gagal mengambil profil Minecraft (kode {0}).	No se pudo cargar el perfil de Minecraft (c\u00f3digo {0}).
+Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	No se pudo actualizar la sesi\u00f3n de Microsoft (c\u00f3digo {0}). Inicia sesi\u00f3n de nuevo.
+Kode login tidak dikenali. Silakan mulai ulang.	No se reconoce el c\u00f3digo de inicio de sesi\u00f3n. Vuelve a empezar.
+Login ditolak di halaman Microsoft. Silakan mulai ulang.	El inicio de sesi\u00f3n fue rechazado en la p\u00e1gina de Microsoft. Vuelve a empezar.
+Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	Mojang rechaz\u00f3 esta aplicaci\u00f3n de launcher (Invalid app registration, c\u00f3digo 403). El Client ID de inicio de sesi\u00f3n no est\u00e1 aprobado; contacta con el desarrollador del launcher.
+Menunggu login di browser...	Esperando el inicio de sesi\u00f3n en el navegador...
+Selesaikan login di browser, lalu kembali ke sini	Termina de iniciar sesi\u00f3n en el navegador y vuelve aqu\u00ed
+Tidak ada browser yang bisa dibuka	No hay ning\u00fan navegador disponible
+Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	El c\u00f3digo ya est\u00e1 copiado. Si el campo del c\u00f3digo en el navegador sigue vac\u00edo, p\u00e9galo y elige Continuar.
+Buka di browser	Abrir en el navegador

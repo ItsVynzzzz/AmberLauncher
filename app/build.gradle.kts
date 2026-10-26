@@ -1,6 +1,9 @@
 import java.util.Properties
 import java.io.File
 import java.io.FileInputStream
+import java.io.RandomAccessFile
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 plugins {
     alias(libs.plugins.android.application)
@@ -142,6 +145,102 @@ android {
         jniLibs {
             useLegacyPackaging = true
             if (buildArm32) pickFirsts += listOf("**/libbytehook.so")
+        }
+    }
+}
+
+// ---- Pemangkasan simbol pustaka native (jaring pengaman ukuran) ----
+// Beberapa pustaka bawaan repo (libspirv-cross-c-shared, libshaderconv, libc++_shared) masih membawa
+// tabel simbol dan info debug: sekitar 47 MB bila terpasang di HP. AGP membuangnya di langkah
+// stripReleaseDebugSymbols, tetapi hanya bila NDK ditemukan; tanpa NDK ia diam-diam mengemas apa adanya.
+// Setelah langkah itu, pustaka yang masih berisi .symtab dipangkas dengan llvm-strip (cara yang sama
+// seperti AGP). Pustaka yang sudah bersih tidak disentuh. Langkah ini tidak pernah menggagalkan build.
+fun findLlvmStrip(): File? {
+    val exe = if (System.getProperty("os.name").lowercase().contains("win")) "llvm-strip.exe" else "llvm-strip"
+    val roots = mutableListOf<File>()
+    for (key in listOf("ANDROID_NDK_HOME", "ANDROID_NDK_ROOT", "ANDROID_NDK_LATEST_HOME")) {
+        System.getenv(key)?.takeIf { it.isNotBlank() }?.let { roots.add(File(it)) }
+    }
+    for (key in listOf("ANDROID_HOME", "ANDROID_SDK_ROOT")) {
+        System.getenv(key)?.takeIf { it.isNotBlank() }?.let { sdk ->
+            File(sdk, "ndk").listFiles()?.sortedByDescending { it.name }?.let { roots.addAll(it) }
+        }
+    }
+    for (root in roots) {
+        val hosts = File(root, "toolchains/llvm/prebuilt").listFiles() ?: continue
+        for (host in hosts) {
+            val tool = File(host, "bin/$exe")
+            if (tool.isFile) return tool
+        }
+    }
+    for (dir in (System.getenv("PATH") ?: "").split(File.pathSeparator)) {
+        if (dir.isBlank()) continue
+        val tool = File(dir, exe)
+        if (tool.isFile && tool.canExecute()) return tool
+    }
+    return null
+}
+
+// True bila berkas ELF 64-bit little-endian punya bagian tabel simbol (.symtab, tipe SHT_SYMTAB = 2).
+fun elfHasSymbols(file: File): Boolean {
+    try {
+        RandomAccessFile(file, "r").use { raf ->
+            if (raf.length() < 64) return false
+            val header = ByteArray(64)
+            raf.readFully(header)
+            val isElf = header[0].toInt() == 0x7F && header[1].toInt() == 'E'.code &&
+                header[2].toInt() == 'L'.code && header[3].toInt() == 'F'.code
+            if (!isElf || header[4].toInt() != 2 || header[5].toInt() != 1) return false
+            val head = ByteBuffer.wrap(header).order(ByteOrder.LITTLE_ENDIAN)
+            val shoff = head.getLong(0x28)
+            val shentsize = head.getShort(0x3A).toInt() and 0xFFFF
+            val shnum = head.getShort(0x3C).toInt() and 0xFFFF
+            if (shoff <= 0L || shentsize < 64 || shnum == 0) return false
+            if (shoff + shentsize.toLong() * shnum > raf.length()) return false
+            val entry = ByteArray(8)
+            for (i in 0 until shnum) {
+                raf.seek(shoff + i.toLong() * shentsize)
+                raf.readFully(entry)
+                // Bidang sh_name (4 byte) lalu sh_type (4 byte)
+                if (ByteBuffer.wrap(entry).order(ByteOrder.LITTLE_ENDIAN).getInt(4) == 2) return true
+            }
+        }
+    } catch (_: Throwable) {
+    }
+    return false
+}
+
+tasks.configureEach {
+    if (name == "stripReleaseDebugSymbols") {
+        doLast {
+            try {
+                val unstripped = outputs.files.files
+                    .flatMap { root -> if (root.isDirectory) root.walkTopDown().toList() else listOf(root) }
+                    .filter { it.isFile && it.name.endsWith(".so") && elfHasSymbols(it) }
+                if (unstripped.isNotEmpty()) {
+                    val tool = findLlvmStrip()
+                    if (tool == null) {
+                        logger.warn("[Amber] ${unstripped.size} pustaka native masih berisi simbol, tetapi llvm-strip tidak ditemukan (NDK belum terpasang).")
+                    } else {
+                        var saved = 0L
+                        var done = 0
+                        for (lib in unstripped) {
+                            val before = lib.length()
+                            val proc = ProcessBuilder(tool.absolutePath, "--strip-unneeded", lib.absolutePath)
+                                .redirectErrorStream(true)
+                                .start()
+                            proc.inputStream.readBytes()
+                            if (proc.waitFor() == 0) {
+                                saved += before - lib.length()
+                                done++
+                            }
+                        }
+                        logger.lifecycle("[Amber] Simbol dipangkas dari $done dari ${unstripped.size} pustaka native, hemat ${saved / 1024 / 1024} MB.")
+                    }
+                }
+            } catch (e: Throwable) {
+                logger.warn("[Amber] Pemangkasan simbol dilewati: ${e.message}")
+            }
         }
     }
 }

@@ -118,3 +118,15 @@ Berkas terlalu besar untuk layout kontrol	T\u1ec7p qu\u00e1 l\u1edbn \u0111\u1ec
 Berkas tidak berisi tombol	T\u1ec7p kh\u00f4ng ch\u1ee9a n\u00fat n\u00e0o
 Berkas ini bukan layout kontrol yang valid	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n h\u1ee3p l\u1ec7
 Layout kontrol diimpor ({0} tombol)	\u0110\u00e3 nh\u1eadp b\u1ed1 c\u1ee5c \u0111i\u1ec1u khi\u1ec3n ({0} n\u00fat)
+# Log game: simpan otomatis dan bagikan
+Log game	Nh\u1eadt k\u00fd game
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	M\u1ed7i l\u1ea7n tho\u00e1t Minecraft, nh\u1eadt k\u00fd c\u1ee7a phi\u00ean \u0111\u00f3 \u0111\u01b0\u1ee3c t\u1ef1 \u0111\u1ed9ng l\u01b0u (10 b\u1ea3n g\u1ea7n nh\u1ea5t), kh\u00f4ng ch\u1ee9a token t\u00e0i kho\u1ea3n. N\u1ebfu c\u00f3 s\u1ef1 c\u1ed1, v\u00ed d\u1ee5 shader kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c, h\u00e3y chia s\u1ebb nh\u1eadt k\u00fd m\u1edbi nh\u1ea5t cho nh\u00e0 ph\u00e1t tri\u1ec3n.
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	Ch\u01b0a c\u00f3 nh\u1eadt k\u00fd. H\u00e3y ch\u01a1i game m\u1ed9t l\u1ea7n r\u1ed3i tho\u00e1t; nh\u1eadt k\u00fd s\u1ebd t\u1ef1 \u0111\u1ed9ng \u0111\u01b0\u1ee3c l\u01b0u.
+Log terbaru	Nh\u1eadt k\u00fd m\u1edbi nh\u1ea5t
+Log sebelumnya	Nh\u1eadt k\u00fd tr\u01b0\u1edbc
+Bagikan	Chia s\u1ebb
+Hapus semua log	X\u00f3a t\u1ea5t c\u1ea3 nh\u1eadt k\u00fd
+Ketuk lagi untuk menghapus	Ch\u1ea1m l\u1ea1i \u0111\u1ec3 x\u00f3a
+Log dihapus.	\u0110\u00e3 x\u00f3a nh\u1eadt k\u00fd.
+Lokasi: {0}	V\u1ecb tr\u00ed: {0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	G\u1eedi qua WhatsApp, Telegram ho\u1eb7c Google Drive b\u1eb1ng n\u00fat Chia s\u1ebb, ho\u1eb7c l\u1ea5y tr\u1ef1c ti\u1ebfp t\u1eeb th\u01b0 m\u1ee5c \u0111\u00f3 b\u1eb1ng tr\u00ecnh qu\u1ea3n l\u00fd t\u1ec7p.

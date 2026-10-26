@@ -7,6 +7,11 @@ import java.io.InputStream
 
 object LwjglManager {
 
+    // libshaderc.so identik (byte demi byte) di semua versi LWJGL, jadi APK hanya membawa satu salinan
+    // (di folder 3.3.3) dan disalin ke folder natives versi lain saat diekstrak. Hemat sekitar 3 MB APK.
+    private const val SHARED_NATIVE_NAME = "libshaderc.so"
+    private const val SHARED_NATIVE_ASSET = "app_runtime/lwjgl/3.3.3/natives/libshaderc.so"
+
     fun getLwjglVersion(mcVersion: String, versionJsonFile: File? = null): String {
         if (versionJsonFile != null && versionJsonFile.exists()) {
             try {
@@ -83,6 +88,7 @@ object LwjglManager {
 
         val marker = File(targetDir, ".extracted")
         if (marker.exists()) {
+            ensureSharedNatives(context, nativesDir)
             ensureSpirvCross(context, nativesDir)
             return nativesDir
         }
@@ -94,6 +100,7 @@ object LwjglManager {
         val assetBasePath = "app_runtime/lwjgl/$lwjglVersion"
         copyAssetFolder(context, assetBasePath, targetDir)
 
+        ensureSharedNatives(context, nativesDir)
         ensureSpirvCross(context, nativesDir)
 
         marker.createNewFile()
@@ -125,9 +132,27 @@ object LwjglManager {
         if (!dir.exists() || dir.listFiles()?.isEmpty() == true) {
             prepareLwjgl(context, lwjglVersion)
         } else {
+            ensureSharedNatives(context, dir)
             ensureSpirvCross(context, dir)
         }
         return dir
+    }
+
+    /** Menyalin pustaka native yang dipakai bersama bila belum ada di folder natives versi ini. */
+    private fun ensureSharedNatives(context: Context, nativesDir: File) {
+        val dest = File(nativesDir, SHARED_NATIVE_NAME)
+        if (dest.exists() && dest.length() > 0L) return
+        try {
+            nativesDir.mkdirs()
+            context.assets.open(SHARED_NATIVE_ASSET).use { input ->
+                FileOutputStream(dest).use { output ->
+                    input.copyTo(output)
+                }
+            }
+        } catch (_: Throwable) {
+            // Jangan tinggalkan berkas setengah jadi; percobaan berikutnya mengulang dari awal.
+            try { dest.delete() } catch (_: Throwable) {}
+        }
     }
 
     fun ensureSpirvCross(context: Context, nativesDir: File) {

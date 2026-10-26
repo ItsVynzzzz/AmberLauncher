@@ -119,3 +119,15 @@ Berkas terlalu besar untuk layout kontrol	El archivo es demasiado grande para un
 Berkas tidak berisi tombol	El archivo no contiene botones
 Berkas ini bukan layout kontrol yang valid	Este archivo no es un dise\u00f1o de controles v\u00e1lido
 Layout kontrol diimpor ({0} tombol)	Dise\u00f1o de controles importado ({0} botones)
+# Log game: simpan otomatis dan bagikan
+Log game	Registros del juego
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	Cada vez que sales de Minecraft, el registro de esa sesi\u00f3n se guarda autom\u00e1ticamente (los 10 \u00faltimos), sin tokens de cuenta. Si algo falla, por ejemplo si los shaders no cargan, comparte el registro m\u00e1s reciente con el desarrollador.
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	A\u00fan no hay registros. Juega una vez y sal; se guardan autom\u00e1ticamente.
+Log terbaru	Registro m\u00e1s reciente
+Log sebelumnya	Registro anterior
+Bagikan	Compartir
+Hapus semua log	Eliminar todos los registros
+Ketuk lagi untuk menghapus	Toca de nuevo para eliminar
+Log dihapus.	Registros eliminados.
+Lokasi: {0}	Ubicaci\u00f3n: {0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Env\u00edalo por WhatsApp, Telegram o Google Drive con el bot\u00f3n Compartir, o c\u00f3gelo directamente de esa carpeta con un administrador de archivos.

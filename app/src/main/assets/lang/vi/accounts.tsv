@@ -94,3 +94,24 @@ Gagal memperbarui token Microsoft ({0}): {1}	Kh\u00f4ng th\u1ec3 l\u00e0m m\u1ed
 Token pembaruan kosong.	Refresh token tr\u1ed1ng.
 Ely.by OAuth Error: {0}	L\u1ed7i OAuth Ely.by: {0}
 Microsoft OAuth Error: {0}	L\u1ed7i OAuth Microsoft: {0}
+# Login Microsoft: sesi diperbarui otomatis dan pesan galat lebih jelas
+Memperbarui sesi Microsoft...	\u0110ang l\u00e0m m\u1edbi phi\u00ean Microsoft...
+Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	Ch\u01b0a l\u00e0m m\u1edbi \u0111\u01b0\u1ee3c phi\u00ean Microsoft. Game v\u1eabn s\u1ebd ch\u1ea1y, nh\u01b0ng t\u00ednh n\u0103ng tr\u1ef1c tuy\u1ebfn c\u00f3 th\u1ec3 c\u1ea7n \u0111\u0103ng nh\u1eadp l\u1ea1i.
+Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	Kh\u00f4ng th\u1ec3 k\u1ebft n\u1ed1i t\u1edbi m\u00e1y ch\u1ee7 Microsoft. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i internet r\u1ed3i th\u1eed l\u1ea1i.
+Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	Kh\u00f4ng th\u1ec3 b\u1eaft \u0111\u1ea7u \u0111\u0103ng nh\u1eadp Microsoft (m\u00e3 {0}). Vui l\u00f2ng th\u1eed l\u1ea1i sau.
+Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	Qu\u00e1 nhi\u1ec1u l\u1ea7n th\u1eed \u0111\u0103ng nh\u1eadp. H\u00e3y ch\u1edd v\u00e0i ph\u00fat r\u1ed3i th\u1eed l\u1ea1i.
+Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	X\u00e1c th\u1ef1c Xbox Live th\u1ea5t b\u1ea1i (m\u00e3 {0}). Vui l\u00f2ng th\u1eed l\u1ea1i sau.
+Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	\u1ee6y quy\u1ec1n XSTS th\u1ea5t b\u1ea1i (m\u00e3 {0}). Vui l\u00f2ng th\u1eed l\u1ea1i sau.
+Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	M\u00e1y ch\u1ee7 Minecraft \u0111ang g\u1eb7p s\u1ef1 c\u1ed1 (m\u00e3 {0}). H\u00e3y th\u1eed l\u1ea1i sau v\u00e0i ph\u00fat.
+Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	D\u1ecbch v\u1ee5 Minecraft \u0111\u00e3 t\u1eeb ch\u1ed1i \u0111\u0103ng nh\u1eadp (m\u00e3 {0}). H\u00e3y th\u1eed l\u1ea1i sau. N\u1ebfu l\u1ed7i l\u1eb7p l\u1ea1i, h\u00e3y b\u00e1o cho nh\u00e0 ph\u00e1t tri\u1ec3n launcher.
+Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	T\u00e0i kho\u1ea3n n\u00e0y ch\u01b0a c\u00f3 h\u1ed3 s\u01a1 Minecraft Java. H\u00e3y \u0111\u1ea3m b\u1ea3o b\u1ea1n s\u1edf h\u1eefu Minecraft: Java Edition (ho\u1eb7c Game Pass cho PC), r\u1ed3i t\u1ea1o t\u00ean ng\u01b0\u1eddi ch\u01a1i t\u1ea1i minecraft.net/profile.
+Gagal mengambil profil Minecraft (kode {0}).	Kh\u00f4ng th\u1ec3 t\u1ea3i h\u1ed3 s\u01a1 Minecraft (m\u00e3 {0}).
+Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	Kh\u00f4ng th\u1ec3 l\u00e0m m\u1edbi phi\u00ean Microsoft (m\u00e3 {0}). Vui l\u00f2ng \u0111\u0103ng nh\u1eadp l\u1ea1i.
+Kode login tidak dikenali. Silakan mulai ulang.	M\u00e3 \u0111\u0103ng nh\u1eadp kh\u00f4ng h\u1ee3p l\u1ec7. Vui l\u00f2ng b\u1eaft \u0111\u1ea7u l\u1ea1i.
+Login ditolak di halaman Microsoft. Silakan mulai ulang.	\u0110\u0103ng nh\u1eadp b\u1ecb t\u1eeb ch\u1ed1i tr\u00ean trang Microsoft. Vui l\u00f2ng b\u1eaft \u0111\u1ea7u l\u1ea1i.
+Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	Mojang \u0111\u00e3 t\u1eeb ch\u1ed1i \u1ee9ng d\u1ee5ng launcher n\u00e0y (Invalid app registration, m\u00e3 403). Client ID \u0111\u0103ng nh\u1eadp ch\u01b0a \u0111\u01b0\u1ee3c duy\u1ec7t; h\u00e3y li\u00ean h\u1ec7 nh\u00e0 ph\u00e1t tri\u1ec3n launcher.
+Menunggu login di browser...	\u0110ang ch\u1edd \u0111\u0103ng nh\u1eadp tr\u00ean tr\u00ecnh duy\u1ec7t...
+Selesaikan login di browser, lalu kembali ke sini	H\u00e3y ho\u00e0n t\u1ea5t \u0111\u0103ng nh\u1eadp tr\u00ean tr\u00ecnh duy\u1ec7t r\u1ed3i quay l\u1ea1i \u0111\u00e2y
+Tidak ada browser yang bisa dibuka	Kh\u00f4ng c\u00f3 tr\u00ecnh duy\u1ec7t n\u00e0o \u0111\u1ec3 m\u1edf
+Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	M\u00e3 \u0111\u00e3 \u0111\u01b0\u1ee3c sao ch\u00e9p. N\u1ebfu \u00f4 m\u00e3 tr\u00ean tr\u00ecnh duy\u1ec7t v\u1eabn tr\u1ed1ng, h\u00e3y d\u00e1n r\u1ed3i ch\u1ecdn Ti\u1ebfp t\u1ee5c.
+Buka di browser	M\u1edf trong tr\u00ecnh duy\u1ec7t

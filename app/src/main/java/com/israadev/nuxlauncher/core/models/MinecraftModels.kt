@@ -137,7 +137,10 @@ data class UserAccount(
     val skinUrl: String? = null,
     val skinModel: String? = "classic", // "classic" (steve) or "slim" (alex)
     val customSkinPath: String? = null,
-    val customCapePath: String? = null
+    val customCapePath: String? = null,
+    // Kapan token Minecraft terakhir diperoleh (ms sejak epoch). Token Minecraft hanya berlaku sekitar
+    // 24 jam; kosong pada akun lama, yang diperbarui sekali saat game berikutnya dijalankan.
+    val tokenIssuedAt: Long? = null
 ) {
     val safeAccountType: String
         get() = (accountType ?: if (isOffline) "offline" else "offline").lowercase()

@@ -269,6 +269,7 @@ fun SettingsScreen(
                 SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
                 SettingTab(icon = Icons.Outlined.Palette, label = "Tampilan", selected = section == 3) { section = 3 }
                 SettingTab(icon = Icons.Outlined.SystemUpdate, label = "Pembaruan", selected = section == 4) { section = 4 }
+                SettingTab(icon = Icons.Outlined.Description, label = "Log game", selected = section == 5) { section = 5 }
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -697,6 +698,11 @@ fun SettingsScreen(
                     4 -> {
                         // Versi terpasang, tombol Periksa pembaruan, dan sakelar pengecekan otomatis
                         UpdateSettingsSection()
+                    }
+
+                    5 -> {
+                        // Log sesi game yang tersimpan otomatis, siap dibagikan ke pengembang
+                        GameLogSettingsSection()
                     }
 
                     else -> {

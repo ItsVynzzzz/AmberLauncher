@@ -45,7 +45,12 @@ object CrashUtils {
         }
     }
 
-    fun shareLogFile(context: Context, file: File) {
+    fun shareLogFile(
+        context: Context,
+        file: File,
+        subjectPrefix: String = "Log Crash AmberLauncher",
+        chooserTitle: String = "Bagikan Log Crash"
+    ) {
         try {
             if (!file.exists()) {
                 Toast.makeText(context, "File log tidak ditemukan.", Toast.LENGTH_SHORT).show()
@@ -68,12 +73,12 @@ object CrashUtils {
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_STREAM, uri)
-                putExtra(Intent.EXTRA_SUBJECT, "Log Crash AmberLauncher - ${file.name}")
+                putExtra(Intent.EXTRA_SUBJECT, "$subjectPrefix - ${file.name}")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
 
-            val chooser = Intent.createChooser(shareIntent, "Bagikan Log Crash: ${file.name}").apply {
+            val chooser = Intent.createChooser(shareIntent, "$chooserTitle: ${file.name}").apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(chooser)

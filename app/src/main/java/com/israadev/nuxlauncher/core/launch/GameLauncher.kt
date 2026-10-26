@@ -4,16 +4,76 @@ import android.content.Context
 import android.content.Intent
 import com.google.gson.Gson
 import com.israadev.nuxlauncher.GameActivity
+import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
 import com.israadev.nuxlauncher.core.models.VersionDetail
+import com.israadev.nuxlauncher.ui.i18n.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
+import java.util.concurrent.atomic.AtomicBoolean
 
 object GameLauncher {
     private val gson = Gson()
 
+    // Batas menunggu pembaruan sesi Microsoft sebelum game tetap dijalankan.
+    private const val SESSION_REFRESH_TIMEOUT_MS = 12_000L
+    private val refreshScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val refreshing = AtomicBoolean(false)
+
+    /**
+     * Menjalankan game. Untuk akun Microsoft yang token Minecraft-nya sudah lama, sesi diperbarui
+     * dulu (token hanya berlaku sekitar 24 jam); tanpa ini server online menolak dengan "Invalid session".
+     * Bila pembaruan gagal atau terlalu lama, game tetap dijalankan dengan token yang ada.
+     */
     fun launch(context: Context, instance: Instance, account: UserAccount) {
+        if (!MicrosoftAuthService.needsRefresh(account)) {
+            launchNow(context, instance, account)
+            return
+        }
+        // Ketukan ganda pada tombol main tidak boleh memulai dua pembaruan sekaligus.
+        if (!refreshing.compareAndSet(false, true)) return
+
+        val appContext = context.applicationContext
+        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
+        refreshScope.launch {
+            var launchAccount = account
+            try {
+                // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
+                val job = async(Dispatchers.IO) {
+                    MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
+                        result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
+                    }
+                }
+                val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
+                val fresh = result?.getOrNull()
+                if (fresh != null) {
+                    launchAccount = fresh
+                } else {
+                    android.util.Log.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}")
+                    Toast.makeText(
+                        appContext,
+                        "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
+            } finally {
+                refreshing.set(false)
+            }
+            launchNow(appContext, instance, launchAccount)
+        }
+    }
+
+    private fun launchNow(context: Context, instance: Instance, account: UserAccount) {
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
         val versionDir = File(InstanceManager.getVersionsDir(context), instance.mcVersion)
         val versionJson = File(versionDir, "${instance.mcVersion}.json")

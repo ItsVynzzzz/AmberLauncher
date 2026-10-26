@@ -12,6 +12,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -40,6 +41,23 @@ object MicrosoftAuthService {
     // Mencegah multiple concurrent polling sessions
     private val isCurrentlyPolling = AtomicBoolean(false)
 
+    // Token Minecraft berlaku sekitar 24 jam. Diperbarui bila sudah lebih tua dari ini supaya
+    // masih berlaku sepanjang sesi bermain (mis. untuk masuk ke server).
+    private const val SESSION_MAX_AGE_MS = 8L * 60L * 60L * 1000L
+
+    /** True bila akun Microsoft ini punya refresh token dan token Minecraft-nya sudah (hampir) kedaluwarsa. */
+    fun needsRefresh(account: UserAccount): Boolean {
+        if (account.safeAccountType != "microsoft") return false
+        if (account.safeRefreshToken.isBlank() || account.safeRefreshToken == "0") return false
+        val issued = account.tokenIssuedAt ?: return true
+        val age = System.currentTimeMillis() - issued
+        return age < 0L || age > SESSION_MAX_AGE_MS
+    }
+
+    /** Galat jaringan diganti pesan yang bisa dipahami; galat lain dibiarkan apa adanya. */
+    private fun friendly(e: Exception): Exception =
+        if (e is IOException) Exception("Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.") else e
+
     /**
      * Memulai alur Microsoft Device Code Authorization
      */
@@ -58,7 +76,8 @@ object MicrosoftAuthService {
             httpClient.newCall(request).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
-                    return@withContext Result.failure(Exception("Gagal memulai login Microsoft (HTTP ${response.code}): $bodyStr"))
+                    android.util.Log.w("MicrosoftAuth", "devicecode HTTP ${response.code}: $bodyStr")
+                    return@withContext Result.failure(Exception("Gagal memulai login Microsoft (kode ${response.code}). Coba lagi nanti."))
                 }
 
                 val json = JsonParser.parseString(bodyStr).asJsonObject
@@ -79,7 +98,7 @@ object MicrosoftAuthService {
                 )
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(friendly(e))
         }
     }
 
@@ -151,6 +170,9 @@ object MicrosoftAuthService {
                             // Microsoft v2.0 memakai "expired_token"; "code_expired" nama lama dari v1.
                             "code_expired", "expired_token" -> {
                                 return@withContext Result.failure(Exception("Kode login kedaluwarsa. Silakan mulai ulang."))
+                            }
+                            "bad_verification_code" -> {
+                                return@withContext Result.failure(Exception("Kode login tidak dikenali. Silakan mulai ulang."))
                             }
                             "authorization_declined" -> {
                                 return@withContext Result.failure(Exception("Login ditolak di halaman Microsoft. Silakan mulai ulang."))
@@ -233,7 +255,11 @@ object MicrosoftAuthService {
             }
 
             if (xblCode !in 200..299) {
-                return@withContext Result.failure(Exception("Gagal autentikasi Xbox Live (HTTP $xblCode): $xblBody"))
+                android.util.Log.w("MicrosoftAuth", "XBL HTTP $xblCode: $xblBody")
+                if (xblCode == 429) {
+                    return@withContext Result.failure(Exception("Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi."))
+                }
+                return@withContext Result.failure(Exception("Gagal autentikasi Xbox Live (kode $xblCode). Coba lagi nanti."))
             }
 
             val xblJson = JsonParser.parseString(xblBody).asJsonObject
@@ -287,8 +313,11 @@ object MicrosoftAuthService {
                         "2148916237" -> return@withContext Result.failure(Exception("Batas waktu bermain harian Xbox Live telah tercapai."))
                         "2148916238" -> return@withContext Result.failure(Exception("Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua."))
                         else -> {
-                            val msg = xErrJson?.get("Message")?.asString ?: bodyStr
-                            return@withContext Result.failure(Exception("Otorisasi XSTS gagal (HTTP ${response.code}): $msg"))
+                            android.util.Log.w("MicrosoftAuth", "XSTS HTTP ${response.code} XErr=$xErr: $bodyStr")
+                            if (response.code == 429) {
+                                return@withContext Result.failure(Exception("Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi."))
+                            }
+                            return@withContext Result.failure(Exception("Otorisasi XSTS gagal (kode ${xErr.ifBlank { response.code.toString() }}). Coba lagi nanti."))
                         }
                     }
                 }
@@ -321,13 +350,22 @@ object MicrosoftAuthService {
             httpClient.newCall(mojangReq).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
+                    android.util.Log.w("MicrosoftAuth", "login_with_xbox HTTP ${response.code}: $bodyStr")
                     // Mojang hanya menerima aplikasi (Client ID) yang sudah terdaftar dan disetujui.
                     if (response.code == 403 && bodyStr.contains("Invalid app registration", ignoreCase = true)) {
                         return@withContext Result.failure(
-                            Exception("Mojang menolak aplikasi launcher ini (Invalid app registration, HTTP 403). Client ID login belum disetujui; hubungi pengembang launcher. Rincian: $bodyStr")
+                            Exception("Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.")
                         )
                     }
-                    return@withContext Result.failure(Exception("Gagal login ke layanan Minecraft (${response.code}): $bodyStr"))
+                    return@withContext Result.failure(
+                        Exception(
+                            when {
+                                response.code == 429 -> "Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi."
+                                response.code >= 500 -> "Server Minecraft sedang bermasalah (kode ${response.code}). Coba lagi beberapa menit lagi."
+                                else -> "Layanan Minecraft menolak login (kode ${response.code}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher."
+                            }
+                        )
+                    )
                 }
                 val json = JsonParser.parseString(bodyStr).asJsonObject
                 mcAccessToken = json.get("access_token")?.asString ?: ""
@@ -350,10 +388,13 @@ object MicrosoftAuthService {
             httpClient.newCall(profileReq).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (response.code == 404) {
-                    return@withContext Result.failure(Exception("Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition."))
+                    return@withContext Result.failure(
+                        Exception("Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.")
+                    )
                 }
                 if (!response.isSuccessful) {
-                    return@withContext Result.failure(Exception("Gagal mengambil profil Minecraft (${response.code}): $bodyStr"))
+                    android.util.Log.w("MicrosoftAuth", "profile HTTP ${response.code}: $bodyStr")
+                    return@withContext Result.failure(Exception("Gagal mengambil profil Minecraft (kode ${response.code})."))
                 }
 
                 val json = JsonParser.parseString(bodyStr).asJsonObject
@@ -378,13 +419,14 @@ object MicrosoftAuthService {
                     isOffline = false,
                     accountType = "microsoft",
                     xuid = userHash,
-                    skinUrl = skinUrl
+                    skinUrl = skinUrl,
+                    tokenIssuedAt = System.currentTimeMillis()
                 )
 
                 Result.success(account)
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(friendly(e))
         }
     }
 
@@ -416,7 +458,8 @@ object MicrosoftAuthService {
             httpClient.newCall(request).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
-                    return@withContext Result.failure(Exception("Gagal memperbarui token Microsoft (${response.code}): $bodyStr"))
+                    android.util.Log.w("MicrosoftAuth", "refresh HTTP ${response.code}: $bodyStr")
+                    return@withContext Result.failure(Exception("Gagal memperbarui sesi Microsoft (kode ${response.code}). Silakan login ulang."))
                 }
                 val json = JsonParser.parseString(bodyStr).asJsonObject
                 newAccessToken = json.get("access_token")?.asString ?: ""
@@ -428,9 +471,21 @@ object MicrosoftAuthService {
                 return@withContext Result.failure(Exception("Token pembaruan kosong."))
             }
 
-            completeMinecraftAuth(newAccessToken, newRefreshToken) { _ -> }
+            // Data lokal (skin kustom, jubah, model skin, id) dipertahankan; hanya token dan profil yang baru.
+            completeMinecraftAuth(newAccessToken, newRefreshToken) { _ -> }.map { fresh ->
+                fresh.copy(
+                    id = account.id.ifBlank { fresh.id },
+                    email = account.email,
+                    isActivated = account.isActivated,
+                    tier = account.tier,
+                    photoUrl = account.photoUrl,
+                    skinModel = account.skinModel,
+                    customSkinPath = account.customSkinPath,
+                    customCapePath = account.customCapePath
+                )
+            }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(friendly(e))
         }
     }
 }

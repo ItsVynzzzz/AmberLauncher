@@ -1,0 +1,1434 @@
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index 8a53d81..c66aa16 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -131,3 +131,5 @@ Ketuk lagi untuk menghapus	Tap again to delete
+ Log dihapus.	Logs deleted.
+ Lokasi: {0}	Location: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Send it through WhatsApp, Telegram or Google Drive with the Share button, or take it straight from that folder with a file manager.
++Dukungan controller	Controller support
++Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Plug in a controller and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the sticks move the cursor. If a controller mod (e.g. Controlify) is detected, the controller is handed over to the mod.
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index dfe88f2..f1eb11a 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -131,3 +131,5 @@ Ketuk lagi untuk menghapus	Toca de nuevo para eliminar
+ Log dihapus.	Registros eliminados.
+ Lokasi: {0}	Ubicaci\u00f3n: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Env\u00edalo por WhatsApp, Telegram o Google Drive con el bot\u00f3n Compartir, o c\u00f3gelo directamente de esa carpeta con un administrador de archivos.
++Dukungan controller	Compatibilidad con mando
++Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Conecta un mando y juega: stick izquierdo camina, derecho mira, A salta, RT ataca, LT coloca/usa, Y abre el inventario, Start = Esc. En los men\u00fas los sticks mueven el cursor. Si se detecta un mod de mando (p. ej. Controlify), el mando se entrega al mod.
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index 8d3d7d8..73d5450 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -130,3 +130,5 @@ Ketuk lagi untuk menghapus	Ch\u1ea1m l\u1ea1i \u0111\u1ec3 x\u00f3a
+ Log dihapus.	\u0110\u00e3 x\u00f3a nh\u1eadt k\u00fd.
+ Lokasi: {0}	V\u1ecb tr\u00ed: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	G\u1eedi qua WhatsApp, Telegram ho\u1eb7c Google Drive b\u1eb1ng n\u00fat Chia s\u1ebb, ho\u1eb7c l\u1ea5y tr\u1ef1c ti\u1ebfp t\u1eeb th\u01b0 m\u1ee5c \u0111\u00f3 b\u1eb1ng tr\u00ecnh qu\u1ea3n l\u00fd t\u1ec7p.
++Dukungan controller	H\u1ed7 tr\u1ee3 tay c\u1ea7m
++Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	C\u1eafm tay c\u1ea7m v\u00e0 ch\u01a1i: c\u1ea7n tr\u00e1i \u0111i, c\u1ea7n ph\u1ea3i xoay camera, A nh\u1ea3y, RT \u0111\u00e1nh, LT \u0111\u1eb7t/d\u00f9ng, Y m\u1edf t\u00fai \u0111\u1ed3, Start = Esc. Trong menu c\u1ea7n g\u1ea1t di chuy\u1ec3n con tr\u1ecf. N\u1ebfu ph\u00e1t hi\u1ec7n mod tay c\u1ea7m (v\u00ed d\u1ee5 Controlify), tay c\u1ea7m s\u1ebd giao cho mod.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 9f2aa4c..fabaca0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -103,7 +103,9 @@ import com.israadev.nuxlauncher.core.controls.TouchSink
+ import com.israadev.nuxlauncher.core.controls.HotbarGeometry
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.core.game.MCOptions
++import com.israadev.nuxlauncher.core.controls.GamepadRouter
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.ui.components.GamepadFocusProvider
+ import com.israadev.nuxlauncher.core.game.input.EfficientAndroidLWJGLKeycode
+ import com.israadev.nuxlauncher.core.game.input.HidableInputLayout
+ import com.israadev.nuxlauncher.core.game.input.TouchCharInput
+@@ -274,6 +276,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
+         // Jari yang masih tercatat di mod tidak akan pernah menerima "angkat" bila aplikasi keluar layar.
+         touchBridge?.onCancelAll()
++        GamepadRouter.reset()
+         super.onStop()
+     }
+ 
+@@ -504,6 +507,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         super.onWindowFocusChanged(hasFocus)
+         if (hasFocus) {
+             applyImmersiveFullscreen()
++        } else {
++            GamepadRouter.reset()
+         }
+     }
+ 
+@@ -580,6 +585,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+ 
+         val composeView = ComposeView(this).apply {
+             setContent {
++              GamepadFocusProvider {
+                 GameScreen(
+                     instanceName = instanceName,
+                     mcVersion = mcVersion,
+@@ -611,6 +617,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                         terminateGameProcess()
+                     }
+                 )
++              }
+             }
+         }
+ 
+@@ -829,6 +836,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+             return super.dispatchKeyEvent(event)
+         }
+ 
++        // Controller: diteruskan ke mod (SDL/GLFW) atau diterjemahkan menjadi keyboard+mouse
++        if (GamepadRouter.isPadKey(event)) {
++            if (event.action == KeyEvent.ACTION_DOWN) isControlVisibleState.value = false
++            if (GamepadRouter.onKey(event)) return true
++        }
++
+         // Intercept right click from mouse being treated as KEYCODE_BACK
+         val source = event.source
+         if (source and InputDevice.SOURCE_MOUSE == InputDevice.SOURCE_MOUSE ||
+@@ -855,6 +868,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+     }
+ 
+     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
++        if (GamepadRouter.isPadMotion(event) && GamepadRouter.onMotion(event)) return true
+         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
+             // Physical mouse action detected -> hide touch controls
+             isControlVisibleState.value = false
+@@ -1854,6 +1868,7 @@ fun GameScreen(
+         var cursorX by remember { mutableFloatStateOf(0f) }
+         var cursorY by remember { mutableFloatStateOf(0f) }
+         var isMousePressed by remember { mutableStateOf(false) }
++        var padCursorShown by remember { mutableStateOf(false) }
+ 
+         LaunchedEffect(screenWidth, screenHeight) {
+             if (cursorX == 0f && screenWidth > 0f) {
+@@ -1867,6 +1882,26 @@ fun GameScreen(
+             }
+         }
+ 
++        // Controller menggeser kursor menu: posisi tampilan dan posisi di game ikut diperbarui.
++        DisposableEffect(screenWidth, screenHeight) {
++            GamepadRouter.cursorMover = { dx, dy ->
++                if (screenWidth > 0f && screenHeight > 0f) {
++                    val nx = (cursorX + dx).coerceIn(0f, screenWidth)
++                    val ny = (cursorY + dy).coerceIn(0f, screenHeight)
++                    cursorX = nx
++                    cursorY = ny
++                    padCursorShown = true
++                    val winW = CallbackBridge.windowWidth
++                    val winH = CallbackBridge.windowHeight
++                    CallbackBridge.sendCursorPos(
++                        if (winW > 0) nx * (winW.toFloat() / screenWidth) else nx,
++                        if (winH > 0) ny * (winH.toFloat() / screenHeight) else ny
++                    )
++                }
++            }
++            onDispose { GamepadRouter.cursorMover = null }
++        }
++
+         // 1. OpenGL/Vulkan Surface View (Pure rendering surface)
+         AndroidView(
+             factory = { ctx ->
+@@ -1937,6 +1972,7 @@ fun GameScreen(
+             },
+             onTouch = {
+                 isPhysicalMouseMode = false
++                padCursorShown = false
+             },
+             onTap = { pos ->
+                 val winW = CallbackBridge.windowWidth
+@@ -1990,6 +2026,9 @@ fun GameScreen(
+         val shouldShowPointer = if (tcExclusive) {
+             // TouchController memegang sentuhan: kursor milik mod, bukan panah launcher.
+             false
++        } else if (padCursorShown) {
++            // Kursor digerakkan controller: panah harus terlihat walau mode ketuk menyembunyikannya.
++            gameCursorMode == CURSOR_ENABLED
+         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
+             false
+         } else if (PhysicalMouseChecker.physicalMouseConnected && isPhysicalMouseMode && launcherSettings.physicalMouseMode) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 200411e..7e78978 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
+     private val bgExecutor: java.util.concurrent.ExecutorService =
+         java.util.concurrent.Executors.newSingleThreadExecutor()
+     private var storageWasGranted = false
++    private var navUninstall: (() -> Unit)? = null
+ 
+     private companion object {
+         const val PREFS_NAME = "amber_launcher_prefs"
+@@ -63,6 +64,8 @@ class MainActivity : ComponentActivity() {
+         super.onCreate(savedInstanceState)
+ 
+         hideSystemBars()
++        // Controller: A pilih, B kembali, stick/D-pad pindah sorotan, LB/RB ganti tab.
++        navUninstall = com.israadev.nuxlauncher.core.controls.GamepadNav.install(window, allowBumper = true)
+         checkAndRequestStoragePermissions()
+         storageWasGranted = storageAccessGranted()
+ 
+@@ -93,6 +96,7 @@ class MainActivity : ComponentActivity() {
+             AmberLanguageHost {
+                 NuxResponsiveTheme {
+                     MaterialTheme {
++                        com.israadev.nuxlauncher.ui.components.GamepadFocusProvider {
+                         Surface(
+                             modifier = Modifier.fillMaxSize(),
+                             color = NuxColors.Background
+@@ -114,6 +118,7 @@ class MainActivity : ComponentActivity() {
+                             )
+                             AmberUpdatePrompt(enabled = introDone)
+                         }
++                        }
+                     }
+                 }
+             }
+@@ -158,6 +163,8 @@ class MainActivity : ComponentActivity() {
+     }
+ 
+     override fun onDestroy() {
++        navUninstall?.invoke()
++        navUninstall = null
+         super.onDestroy()
+         bgExecutor.shutdown()
+         com.israadev.nuxlauncher.core.skin.OfflineSkinServerManager.stopServer()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadEmulator.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadEmulator.kt
+new file mode 100644
+index 0000000..7423e5b
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadEmulator.kt
+@@ -0,0 +1,351 @@
++package com.israadev.nuxlauncher.core.controls
++
++import android.view.KeyEvent
++import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
++import kotlin.math.abs
++import kotlin.math.hypot
++
++/** Tombol logis controller, lepas dari kode Android supaya pemetaannya mudah diuji. */
++object Pad {
++    const val A = 0
++    const val B = 1
++    const val X = 2
++    const val Y = 3
++    const val L1 = 4
++    const val R1 = 5
++    const val L2 = 6
++    const val R2 = 7
++    const val L3 = 8
++    const val R3 = 9
++    const val START = 10
++    const val SELECT = 11
++    const val UP = 12
++    const val DOWN = 13
++    const val LEFT = 14
++    const val RIGHT = 15
++    const val COUNT = 16
++
++    /** Kode tombol Android -> tombol logis, atau -1 bila bukan tombol yang dipetakan. */
++    fun fromKeyCode(code: Int): Int = when (code) {
++        KeyEvent.KEYCODE_BUTTON_A -> A
++        KeyEvent.KEYCODE_BUTTON_B -> B
++        KeyEvent.KEYCODE_BUTTON_X -> X
++        KeyEvent.KEYCODE_BUTTON_Y -> Y
++        KeyEvent.KEYCODE_BUTTON_L1 -> L1
++        KeyEvent.KEYCODE_BUTTON_R1 -> R1
++        KeyEvent.KEYCODE_BUTTON_L2 -> L2
++        KeyEvent.KEYCODE_BUTTON_R2 -> R2
++        KeyEvent.KEYCODE_BUTTON_THUMBL -> L3
++        KeyEvent.KEYCODE_BUTTON_THUMBR -> R3
++        KeyEvent.KEYCODE_BUTTON_START -> START
++        KeyEvent.KEYCODE_BUTTON_SELECT -> SELECT
++        KeyEvent.KEYCODE_DPAD_UP -> UP
++        KeyEvent.KEYCODE_DPAD_DOWN -> DOWN
++        KeyEvent.KEYCODE_DPAD_LEFT -> LEFT
++        KeyEvent.KEYCODE_DPAD_RIGHT -> RIGHT
++        else -> -1
++    }
++}
++
++/** Tempat hasil emulasi dikirim (CallbackBridge di game, objek palsu di uji). */
++interface GamepadOutput {
++    fun key(glfwKey: Int, down: Boolean)
++    fun mouse(button: Int, down: Boolean)
++    fun scroll(amount: Double)
++
++    /** Putar kamera (kursor game terkunci), dalam piksel. */
++    fun look(dx: Float, dy: Float)
++
++    /** Geser kursor menu, dalam piksel layar. */
++    fun cursor(dx: Float, dy: Float)
++}
++
++/**
++ * Menerjemahkan controller menjadi keyboard + mouse supaya Minecraft biasa (tanpa mod controller)
++ * langsung bisa dimainkan. Dua mode, dipilih dari keadaan kursor game:
++ * - bermain (kursor terkunci): stick kiri = WASD, stick kanan = kamera, A lompat, B jongkok,
++ *   RT pukul, LT pasang/pakai, LB/RB ganti slot, Y inventaris, X tukar tangan, Start = Esc.
++ * - menu (kursor bebas): stick menggeser kursor, A/RT klik kiri, X/LT klik kanan,
++ *   Y Shift+klik (pindah tumpukan), B/Start = Esc, D-pad = tombol panah.
++ *
++ * Kelas ini tidak menyentuh Android selain konstanta tombol, jadi seluruhnya berjalan di JVM biasa.
++ * Tidak ada apa pun yang berjalan saat controller diam: [tick] hanya dipanggil selama stick digerakkan.
++ */
++class GamepadEmulator(private val out: GamepadOutput) {
++
++    /** Pengali kecepatan kamera dan kursor (1 = 100%). */
++    var lookScale = 1.25f
++    var cursorScale = 1f
++
++    var grabbed = true
++        private set
++
++    private val keyDown = BooleanArray(Pad.COUNT)
++    private val axisDown = BooleanArray(Pad.COUNT)
++    private val active = BooleanArray(Pad.COUNT)
++    private val issued = IntArray(Pad.COUNT)
++
++    private var lx = 0f
++    private var ly = 0f
++    private var rx = 0f
++    private var ry = 0f
++
++    private var moveUp = false
++    private var moveDown = false
++    private var moveLeft = false
++    private var moveRight = false
++
++    /** Ganti mode (bermain/menu). Semua tombol yang sedang ditahan dilepas supaya tidak ada yang macet. */
++    fun setGrabbed(value: Boolean) {
++        if (value == grabbed) return
++        releaseAll()
++        grabbed = value
++        updateMove()
++    }
++
++    /** Tombol fisik ditekan/dilepas (dari KeyEvent). */
++    fun button(pad: Int, down: Boolean) {
++        if (pad < 0 || pad >= Pad.COUNT) return
++        keyDown[pad] = down
++        refresh(pad)
++    }
++
++    /** Nilai sumbu terbaru. Dipanggil tiap MotionEvent joystick. */
++    fun axes(lx: Float, ly: Float, rx: Float, ry: Float, lt: Float, rt: Float, hatX: Float, hatY: Float) {
++        this.lx = lx
++        this.ly = ly
++        this.rx = rx
++        this.ry = ry
++
++        axisDown[Pad.L2] = hysteresis(axisDown[Pad.L2], lt, TRIGGER_ON, TRIGGER_OFF)
++        axisDown[Pad.R2] = hysteresis(axisDown[Pad.R2], rt, TRIGGER_ON, TRIGGER_OFF)
++        axisDown[Pad.LEFT] = hatX < -0.5f
++        axisDown[Pad.RIGHT] = hatX > 0.5f
++        axisDown[Pad.UP] = hatY < -0.5f
++        axisDown[Pad.DOWN] = hatY > 0.5f
++        refresh(Pad.L2)
++        refresh(Pad.R2)
++        refresh(Pad.LEFT)
++        refresh(Pad.RIGHT)
++        refresh(Pad.UP)
++        refresh(Pad.DOWN)
++
++        updateMove()
++    }
++
++    /** True selama stick digerakkan (butuh [tick] tiap frame). */
++    fun needsTick(): Boolean {
++        val right = hypot(rx, ry)
++        if (grabbed) return right > DEAD_ZONE
++        return right > DEAD_ZONE || hypot(lx, ly) > DEAD_ZONE
++    }
++
++    /**
++     * Gerakkan kamera/kursor selama [dtSec] detik. Mengembalikan true bila masih perlu dipanggil
++     * lagi di frame berikutnya.
++     */
++    fun tick(dtSec: Float): Boolean {
++        var sx = rx
++        var sy = ry
++        if (!grabbed && hypot(lx, ly) > hypot(rx, ry)) {
++            sx = lx
++            sy = ly
++        }
++        val mag = hypot(sx, sy)
++        if (mag <= DEAD_ZONE) return false
++
++        val m = ((mag - DEAD_ZONE) / (1f - DEAD_ZONE)).coerceIn(0f, 1f)
++        val curve = m * (0.4f + 0.6f * m)
++        val dt = dtSec.coerceIn(0f, 0.05f)
++        val scale = if (grabbed) LOOK_SPEED * lookScale else CURSOR_SPEED * cursorScale
++        val step = curve * scale * dt
++        val dx = sx / mag * step
++        val dy = sy / mag * step
++        if (grabbed) out.look(dx, dy) else out.cursor(dx, dy)
++        return true
++    }
++
++    /** Lepas semua yang sedang ditahan emulator (tombol fisik tetap dicatat). */
++    fun releaseAll() {
++        for (b in 0 until Pad.COUNT) {
++            val a = issued[b]
++            if (a != 0) {
++                issued[b] = 0
++                perform(a, false)
++            }
++        }
++        setMove(up = false, down = false, left = false, right = false)
++    }
++
++    /** Lupakan semuanya (aplikasi dijeda, controller dicabut, atau mod mengambil alih). */
++    fun reset() {
++        releaseAll()
++        keyDown.fill(false)
++        axisDown.fill(false)
++        active.fill(false)
++        lx = 0f
++        ly = 0f
++        rx = 0f
++        ry = 0f
++    }
++
++    private fun refresh(pad: Int) {
++        val now = keyDown[pad] || axisDown[pad]
++        if (now == active[pad]) return
++        active[pad] = now
++        if (now) {
++            val a = if (grabbed) gameAction(pad) else menuAction(pad)
++            issued[pad] = a
++            if (a != 0) perform(a, true)
++        } else {
++            val a = issued[pad]
++            issued[pad] = 0
++            if (a != 0) perform(a, false)
++        }
++    }
++
++    private fun updateMove() {
++        if (!grabbed) {
++            setMove(up = false, down = false, left = false, right = false)
++            return
++        }
++        setMove(
++            up = hysteresis(moveUp, -ly, MOVE_ON, MOVE_OFF),
++            down = hysteresis(moveDown, ly, MOVE_ON, MOVE_OFF),
++            left = hysteresis(moveLeft, -lx, MOVE_ON, MOVE_OFF),
++            right = hysteresis(moveRight, lx, MOVE_ON, MOVE_OFF)
++        )
++    }
++
++    private fun setMove(up: Boolean, down: Boolean, left: Boolean, right: Boolean) {
++        if (up != moveUp) { moveUp = up; out.key(LwjglGlfwKeycode.GLFW_KEY_W, up) }
++        if (down != moveDown) { moveDown = down; out.key(LwjglGlfwKeycode.GLFW_KEY_S, down) }
++        if (left != moveLeft) { moveLeft = left; out.key(LwjglGlfwKeycode.GLFW_KEY_A, left) }
++        if (right != moveRight) { moveRight = right; out.key(LwjglGlfwKeycode.GLFW_KEY_D, right) }
++    }
++
++    private fun perform(action: Int, down: Boolean) {
++        val arg = action and 0xFFFF
++        when (action ushr 16) {
++            KIND_KEY -> out.key(arg, down)
++            KIND_MOUSE -> out.mouse(arg, down)
++            KIND_SHIFT_CLICK -> if (down) {
++                out.key(LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, true)
++                out.mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT, true)
++            } else {
++                out.mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT, false)
++                out.key(LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, false)
++            }
++            KIND_SCROLL -> if (down) out.scroll(if (arg == SCROLL_PREV) 1.0 else -1.0)
++        }
++    }
++
++    private fun gameAction(pad: Int): Int = when (pad) {
++        Pad.A -> key(LwjglGlfwKeycode.GLFW_KEY_SPACE)
++        Pad.B -> key(LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT)
++        Pad.X -> key(LwjglGlfwKeycode.GLFW_KEY_F)
++        Pad.Y -> key(LwjglGlfwKeycode.GLFW_KEY_E)
++        Pad.L1, Pad.LEFT -> scroll(SCROLL_PREV)
++        Pad.R1, Pad.RIGHT -> scroll(SCROLL_NEXT)
++        Pad.L2 -> mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT)
++        Pad.R2 -> mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
++        Pad.L3 -> key(LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL)
++        Pad.R3 -> mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE)
++        Pad.START -> key(LwjglGlfwKeycode.GLFW_KEY_ESCAPE)
++        Pad.SELECT -> key(LwjglGlfwKeycode.GLFW_KEY_TAB)
++        Pad.UP -> key(LwjglGlfwKeycode.GLFW_KEY_F5)
++        Pad.DOWN -> key(LwjglGlfwKeycode.GLFW_KEY_Q)
++        else -> 0
++    }
++
++    private fun menuAction(pad: Int): Int = when (pad) {
++        Pad.A, Pad.R2 -> mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
++        Pad.X, Pad.L2 -> mouse(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT)
++        Pad.Y -> (KIND_SHIFT_CLICK shl 16)
++        Pad.B, Pad.START -> key(LwjglGlfwKeycode.GLFW_KEY_ESCAPE)
++        Pad.L1 -> scroll(SCROLL_PREV)
++        Pad.R1 -> scroll(SCROLL_NEXT)
++        Pad.UP -> key(LwjglGlfwKeycode.GLFW_KEY_UP)
++        Pad.DOWN -> key(LwjglGlfwKeycode.GLFW_KEY_DOWN)
++        Pad.LEFT -> key(LwjglGlfwKeycode.GLFW_KEY_LEFT)
++        Pad.RIGHT -> key(LwjglGlfwKeycode.GLFW_KEY_RIGHT)
++        else -> 0
++    }
++
++    private fun key(code: Int) = (KIND_KEY shl 16) or code
++    private fun mouse(button: Int) = (KIND_MOUSE shl 16) or button
++    private fun scroll(direction: Int) = (KIND_SCROLL shl 16) or direction
++
++    private fun hysteresis(wasOn: Boolean, value: Float, on: Float, off: Float): Boolean =
++        if (wasOn) value > off else value > on
++
++    companion object {
++        private const val KIND_KEY = 1
++        private const val KIND_MOUSE = 2
++        private const val KIND_SHIFT_CLICK = 3
++        private const val KIND_SCROLL = 4
++        private const val SCROLL_PREV = 1
++        private const val SCROLL_NEXT = 2
++
++        const val DEAD_ZONE = 0.18f
++        private const val MOVE_ON = 0.45f
++        private const val MOVE_OFF = 0.30f
++        private const val TRIGGER_ON = 0.55f
++        private const val TRIGGER_OFF = 0.35f
++
++        /** Piksel per detik pada defleksi penuh (100%). */
++        private const val LOOK_SPEED = 1100f
++        private const val CURSOR_SPEED = 1000f
++    }
++}
++
++/**
++ * Pengulang arah untuk navigasi menu launcher: satu tekanan langsung, lalu menahan stick
++ * mengulang pelan-pelan seperti tombol panah keyboard.
++ */
++class DirectionRepeater(
++    private val firstDelayMs: Long = 380L,
++    private val repeatMs: Long = 110L
++) {
++    /** Arah aktif: kode tombol panah Android, atau 0 bila stick di tengah. */
++    var dir = 0
++        private set
++    private var nextAt = 0L
++
++    /** Arah baru. True bila harus langsung menekan satu kali. */
++    fun set(newDir: Int, now: Long): Boolean {
++        if (newDir == dir) return false
++        dir = newDir
++        if (newDir == 0) return false
++        nextAt = now + firstDelayMs
++        return true
++    }
++
++    /** True bila sudah waktunya mengulang. */
++    fun due(now: Long): Boolean {
++        if (dir == 0 || now < nextAt) return false
++        nextAt = now + repeatMs
++        return true
++    }
++
++    /** Jeda (ms) sampai pengulangan berikutnya. */
++    fun delayUntilNext(now: Long): Long = if (dir == 0) 0L else (nextAt - now).coerceAtLeast(1L)
++
++    companion object {
++        private const val ON = 0.6f
++        private const val OFF = 0.35f
++
++        /** Stick/hat -> kode tombol panah Android (19 atas, 20 bawah, 21 kiri, 22 kanan) atau 0. */
++        fun directionOf(x: Float, y: Float, current: Int): Int {
++            val ax = abs(x)
++            val ay = abs(y)
++            val limit = if (current != 0) OFF else ON
++            if (maxOf(ax, ay) < limit) return 0
++            return if (ax > ay) {
++                if (x > 0f) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
++            } else {
++                if (y > 0f) KeyEvent.KEYCODE_DPAD_DOWN else KeyEvent.KEYCODE_DPAD_UP
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadNav.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadNav.kt
+new file mode 100644
+index 0000000..72105e9
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadNav.kt
+@@ -0,0 +1,137 @@
++package com.israadev.nuxlauncher.core.controls
++
++import android.os.Handler
++import android.os.Looper
++import android.os.SystemClock
++import android.view.InputDevice
++import android.view.KeyEvent
++import android.view.MotionEvent
++import android.view.Window
++import kotlin.math.abs
++
++/**
++ * Navigasi menu launcher dengan controller, tanpa mengubah satu pun layar:
++ * pencegat tipis di Window.Callback (Activity maupun dialog) yang menerjemahkan
++ * - A -> tombol tengah D-pad (memilih yang sedang disorot),
++ * - B -> Kembali,
++ * - stick kiri / hat -> tombol panah (menahan = mengulang),
++ * - LB / RB -> pindah tab (hanya di layar utama).
++ * Selebihnya (D-pad asli, keyboard, sentuhan) lewat seperti biasa, jadi pengguna tanpa controller
++ * tidak merasakan perubahan apa pun.
++ */
++object GamepadNav {
++
++    /** LB/RB di layar utama: -1 = tab sebelumnya, +1 = berikutnya. */
++    @Volatile
++    var bumperListener: ((Int) -> Unit)? = null
++
++    /** Pasang pada [window]. Mengembalikan fungsi pelepas. Aman dipanggil dua kali pada jendela yang sama. */
++    fun install(window: Window, allowBumper: Boolean): () -> Unit {
++        val base = window.callback ?: return {}
++        if (base is NavCallback) return {}
++        val callback = NavCallback(base, window, allowBumper)
++        window.callback = callback
++        return {
++            callback.stop()
++            if (window.callback === callback) window.callback = base
++        }
++    }
++
++    internal fun isPad(event: KeyEvent): Boolean {
++        val s = event.source
++        if ((s and InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD ||
++            (s and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
++        ) return true
++        return KeyEvent.isGamepadButton(event.keyCode)
++    }
++
++    private class NavCallback(
++        private val base: Window.Callback,
++        private val window: Window,
++        private val allowBumper: Boolean
++    ) : Window.Callback by base {
++
++        private val handler = Handler(Looper.getMainLooper())
++        private val repeater = DirectionRepeater()
++        private var dpadKeyAt = 0L
++
++        private val repeatTick = object : Runnable {
++            override fun run() {
++                val now = SystemClock.uptimeMillis()
++                if (repeater.dir == 0) return
++                if (!window.decorView.hasWindowFocus()) {
++                    repeater.set(0, now)
++                    return
++                }
++                if (repeater.due(now)) press(repeater.dir)
++                handler.postDelayed(this, repeater.delayUntilNext(now).coerceAtLeast(16L))
++            }
++        }
++
++        fun stop() {
++            handler.removeCallbacks(repeatTick)
++            repeater.set(0, SystemClock.uptimeMillis())
++        }
++
++        override fun dispatchKeyEvent(event: KeyEvent): Boolean {
++            if (GamepadNav.isPad(event)) {
++                when (event.keyCode) {
++                    KeyEvent.KEYCODE_BUTTON_A ->
++                        return base.dispatchKeyEvent(remap(event, KeyEvent.KEYCODE_DPAD_CENTER))
++                    KeyEvent.KEYCODE_BUTTON_B ->
++                        return base.dispatchKeyEvent(remap(event, KeyEvent.KEYCODE_BACK))
++                    KeyEvent.KEYCODE_BUTTON_L1, KeyEvent.KEYCODE_BUTTON_R1 -> {
++                        if (allowBumper && event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
++                            GamepadNav.bumperListener?.invoke(if (event.keyCode == KeyEvent.KEYCODE_BUTTON_L1) -1 else 1)
++                        }
++                        return true
++                    }
++                    KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
++                    KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT -> dpadKeyAt = SystemClock.uptimeMillis()
++                }
++            }
++            return base.dispatchKeyEvent(event)
++        }
++
++        override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
++            if ((event.source and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK &&
++                event.actionMasked == MotionEvent.ACTION_MOVE
++            ) {
++                onStick(event)
++                return true
++            }
++            return base.dispatchGenericMotionEvent(event)
++        }
++
++        private fun onStick(event: MotionEvent) {
++            val now = SystemClock.uptimeMillis()
++            var x = event.getAxisValue(MotionEvent.AXIS_X)
++            var y = event.getAxisValue(MotionEvent.AXIS_Y)
++            // D-pad berupa hat: dipakai hanya bila controller ini tidak sekaligus mengirim tombol panah.
++            if (now - dpadKeyAt > 300L) {
++                val hx = event.getAxisValue(MotionEvent.AXIS_HAT_X)
++                val hy = event.getAxisValue(MotionEvent.AXIS_HAT_Y)
++                if (abs(hx) > 0.5f) x = hx
++                if (abs(hy) > 0.5f) y = hy
++            }
++            val dir = DirectionRepeater.directionOf(x, y, repeater.dir)
++            if (dir == repeater.dir) return
++            handler.removeCallbacks(repeatTick)
++            if (repeater.set(dir, now)) {
++                press(dir)
++                handler.postDelayed(repeatTick, repeater.delayUntilNext(now).coerceAtLeast(16L))
++            }
++        }
++
++        private fun press(keyCode: Int) {
++            val t = SystemClock.uptimeMillis()
++            base.dispatchKeyEvent(KeyEvent(t, t, KeyEvent.ACTION_DOWN, keyCode, 0))
++            base.dispatchKeyEvent(KeyEvent(t, t, KeyEvent.ACTION_UP, keyCode, 0))
++        }
++
++        private fun remap(e: KeyEvent, code: Int): KeyEvent = KeyEvent(
++            e.downTime, e.eventTime, e.action, code, e.repeatCount, e.metaState,
++            e.deviceId, e.scanCode, e.flags, InputDevice.SOURCE_KEYBOARD
++        )
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadRouter.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadRouter.kt
+new file mode 100644
+index 0000000..88ec631
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GamepadRouter.kt
+@@ -0,0 +1,231 @@
++package com.israadev.nuxlauncher.core.controls
++
++import android.view.Choreographer
++import android.view.InputDevice
++import android.view.KeyEvent
++import android.view.MotionEvent
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
++import com.movtery.zalithlauncher.bridge.LoggerBridge
++import com.movtery.zalithlauncher.bridge.ZLBridgeStates
++import com.movtery.zalithlauncher.game.sdl.SdlBridge
++import com.movtery.zalithlauncher.game.sdl.handleGamepadKeyEvent
++import com.movtery.zalithlauncher.game.sdl.handleGamepadMotionEvent
++import org.libsdl.app.SDLControllerManager
++import org.lwjgl.glfw.CallbackBridge
++
++/**
++ * Jalur controller di dalam game. Dipanggil dari GameActivity di thread utama.
++ *
++ * Satu controller hanya punya satu pemilik, dipilih otomatis:
++ * 1. Mod yang membaca controller lewat SDL (Controlify) atau GLFW langsung: tombol dan stick
++ *    diteruskan apa adanya, launcher tidak ikut menerjemahkan (supaya tidak dobel).
++ * 2. Tanpa mod: controller diterjemahkan menjadi keyboard + mouse oleh [GamepadEmulator].
++ *
++ * Tidak ada pekerjaan saat controller diam: pencacah frame hanya berjalan selama stick digerakkan.
++ */
++object GamepadRouter {
++
++    /** Diisi layar game: menggeser kursor menu (dalam piksel layar). */
++    @Volatile
++    var cursorMover: ((Float, Float) -> Unit)? = null
++
++    private val emulator = GamepadEmulator(object : GamepadOutput {
++        override fun key(glfwKey: Int, down: Boolean) = CallbackBridge.sendKeyPress(glfwKey, down)
++        override fun mouse(button: Int, down: Boolean) = CallbackBridge.sendMouseButton(button, down)
++        override fun scroll(amount: Double) = CallbackBridge.sendScroll(0.0, amount)
++        override fun look(dx: Float, dy: Float) = CallbackBridge.sendCursorDelta(dx, dy)
++        override fun cursor(dx: Float, dy: Float) {
++            cursorMover?.invoke(dx, dy)
++        }
++    })
++
++    private var emulating = false
++    private var lastOwner = ""
++    private var ticking = false
++    private var lastFrameNanos = 0L
++
++    // Sumbu stick kanan dan trigger berbeda-beda antar merek: dicari sekali per perangkat.
++    private var axisDevice = Int.MIN_VALUE
++    private var rightX = MotionEvent.AXIS_Z
++    private var rightY = MotionEvent.AXIS_RZ
++    private var leftTrigger = -1
++    private var rightTrigger = -1
++
++    private val frame = object : Choreographer.FrameCallback {
++        override fun doFrame(frameTimeNanos: Long) {
++            val dt = if (lastFrameNanos == 0L) 0.016f else (frameTimeNanos - lastFrameNanos) / 1_000_000_000f
++            lastFrameNanos = frameTimeNanos
++            applySettings()
++            syncMode()
++            if (emulator.tick(dt)) {
++                Choreographer.getInstance().postFrameCallback(this)
++            } else {
++                ticking = false
++                lastFrameNanos = 0L
++            }
++        }
++    }
++
++    /** Kejadian tombol ini berasal dari controller? */
++    fun isPadKey(event: KeyEvent): Boolean {
++        val s = event.source
++        if ((s and InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD ||
++            (s and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK
++        ) return true
++        return KeyEvent.isGamepadButton(event.keyCode)
++    }
++
++    /** Gerakan stick/trigger/hat dari controller? */
++    fun isPadMotion(event: MotionEvent): Boolean =
++        (event.source and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK &&
++            event.actionMasked == MotionEvent.ACTION_MOVE
++
++    /** True bila kejadian sudah ditangani dan tidak perlu diteruskan ke jalur lain. */
++    fun onKey(event: KeyEvent): Boolean {
++        val code = event.keyCode
++        val pad = Pad.fromKeyCode(code)
++        if (pad < 0 && !KeyEvent.isGamepadButton(code)) return false
++
++        val action = event.action
++        if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP) return true
++        if (action == KeyEvent.ACTION_DOWN && event.repeatCount > 0) return true
++
++        if (modOwns(event.deviceId)) {
++            stopEmulating()
++            forwardKey(event)
++            return true
++        }
++        if (pad >= 0 && SettingsManager.settings.value.gamepadEmulation) {
++            note("emulasi keyboard+mouse")
++            applySettings()
++            syncMode()
++            emulating = true
++            emulator.button(pad, action == KeyEvent.ACTION_DOWN)
++            ensureTicking()
++        }
++        return true
++    }
++
++    /** True bila gerakan sudah ditangani. */
++    fun onMotion(event: MotionEvent): Boolean {
++        if (modOwns(event.deviceId)) {
++            stopEmulating()
++            if (CallbackBridge.sGamepadDirectInput) handleGamepadMotionEvent(event)
++            if (SdlBridge.sdlEnabled) {
++                try {
++                    SDLControllerManager.handleJoystickMotionEvent(event)
++                } catch (_: Throwable) {
++                }
++            }
++            return true
++        }
++        if (!SettingsManager.settings.value.gamepadEmulation) return false
++
++        findAxes(event)
++        applySettings()
++        syncMode()
++        emulating = true
++        emulator.axes(
++            lx = event.getAxisValue(MotionEvent.AXIS_X),
++            ly = event.getAxisValue(MotionEvent.AXIS_Y),
++            rx = event.getAxisValue(rightX),
++            ry = event.getAxisValue(rightY),
++            lt = if (leftTrigger >= 0) event.getAxisValue(leftTrigger) else 0f,
++            rt = if (rightTrigger >= 0) event.getAxisValue(rightTrigger) else 0f,
++            hatX = event.getAxisValue(MotionEvent.AXIS_HAT_X),
++            hatY = event.getAxisValue(MotionEvent.AXIS_HAT_Y)
++        )
++        ensureTicking()
++        return true
++    }
++
++    /** Layar dijeda, controller dicabut, atau game ditutup: lepaskan semua tombol yang tertahan. */
++    fun reset() {
++        stopEmulating()
++    }
++
++    private fun modOwns(deviceId: Int): Boolean {
++        // Mod membaca lewat GLFW langsung: LWJGL yang sudah ditambal memberi tahu lewat onDirectInputEnable.
++        if (CallbackBridge.sGamepadDirectInput) {
++            note("diteruskan ke mod (GLFW)")
++            return true
++        }
++        // Mod membaca lewat SDL (Controlify): SDL sudah mengenali controller ini.
++        if (!SdlBridge.sdlEnabled) return false
++        val known = try {
++            SDLControllerManager.isKnownToSdl(deviceId)
++        } catch (_: Throwable) {
++            false
++        }
++        if (known) note("diteruskan ke mod (SDL)")
++        return known
++    }
++
++    /** Catat ke log game saat pemilik controller berganti, untuk memudahkan pelacakan laporan. */
++    private fun note(owner: String) {
++        if (owner == lastOwner) return
++        lastOwner = owner
++        try {
++            LoggerBridge.append("▷ [Controller] $owner")
++        } catch (_: Throwable) {
++        }
++    }
++
++    private fun forwardKey(event: KeyEvent) {
++        if (CallbackBridge.sGamepadDirectInput) handleGamepadKeyEvent(event)
++        if (SdlBridge.sdlEnabled) {
++            try {
++                if (event.action == KeyEvent.ACTION_DOWN) {
++                    SDLControllerManager.onNativePadDown(event.deviceId, event.keyCode, event.scanCode)
++                } else {
++                    SDLControllerManager.onNativePadUp(event.deviceId, event.keyCode, event.scanCode)
++                }
++            } catch (_: Throwable) {
++            }
++        }
++    }
++
++    private fun stopEmulating() {
++        if (!emulating) return
++        emulating = false
++        emulator.reset()
++    }
++
++    private fun syncMode() {
++        emulator.setGrabbed(ZLBridgeStates.cursorMode.value == CURSOR_DISABLED)
++    }
++
++    private fun applySettings() {
++        val s = SettingsManager.settings.value
++        emulator.lookScale = s.captureSensitivity / 100f
++        emulator.cursorScale = s.cursorSensitivity / 100f
++    }
++
++    private fun ensureTicking() {
++        if (ticking || !emulator.needsTick()) return
++        ticking = true
++        lastFrameNanos = 0L
++        Choreographer.getInstance().postFrameCallback(frame)
++    }
++
++    private fun findAxes(event: MotionEvent) {
++        val id = event.deviceId
++        if (id == axisDevice) return
++        axisDevice = id
++        val dev = event.device
++        fun has(axis: Int) = dev?.getMotionRange(axis) != null
++        rightX = if (has(MotionEvent.AXIS_RX)) MotionEvent.AXIS_RX else MotionEvent.AXIS_Z
++        rightY = if (has(MotionEvent.AXIS_RY)) MotionEvent.AXIS_RY else MotionEvent.AXIS_RZ
++        leftTrigger = when {
++            has(MotionEvent.AXIS_LTRIGGER) -> MotionEvent.AXIS_LTRIGGER
++            has(MotionEvent.AXIS_BRAKE) -> MotionEvent.AXIS_BRAKE
++            else -> -1
++        }
++        rightTrigger = when {
++            has(MotionEvent.AXIS_RTRIGGER) -> MotionEvent.AXIS_RTRIGGER
++            has(MotionEvent.AXIS_GAS) -> MotionEvent.AXIS_GAS
++            else -> -1
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index cd19ea0..d954f72 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -25,6 +25,9 @@ data class LauncherSettings(
+     // Hanya berlaku bila touchControllerEnabled nyala: sembunyikan tombol dan mouse virtual launcher,
+     // semua sentuhan hanya untuk mod. Bawaan mati = launcher dan mod aktif berdampingan.
+     val touchControllerExclusive: Boolean = false,
++    // Controller (gamepad) langsung bisa dipakai: tanpa mod, stick/tombol diterjemahkan jadi keyboard+mouse.
++    // Bila mod controller terdeteksi (Controlify, dsb.), controller diteruskan ke mod dan emulasi ini diam.
++    val gamepadEmulation: Boolean = true,
+     val mouseSizeDp: Int = 24, // 16 - 48 dp
+     val hideMouseInClickMode: Boolean = true,
+     val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
+index d00e567..cf31b97 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberParts.kt
+@@ -2,6 +2,11 @@ package com.israadev.nuxlauncher.ui.components
+ 
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.focusable
++import androidx.compose.foundation.interaction.MutableInteractionSource
++import androidx.compose.foundation.interaction.collectIsFocusedAsState
++import androidx.compose.foundation.interaction.collectIsPressedAsState
+ import androidx.compose.foundation.gestures.awaitEachGesture
+ import androidx.compose.foundation.gestures.awaitFirstDown
+ import androidx.compose.foundation.gestures.detectTapGestures
+@@ -35,6 +40,11 @@ import androidx.compose.ui.geometry.Size
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.StrokeCap
+ import androidx.compose.ui.graphics.drawscope.Stroke
++import androidx.compose.ui.input.key.Key
++import androidx.compose.ui.input.key.KeyEventType
++import androidx.compose.ui.input.key.key
++import androidx.compose.ui.input.key.onKeyEvent
++import androidx.compose.ui.input.key.type
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.Dp
+@@ -50,26 +60,22 @@ import kotlin.math.roundToInt
+  * menyentuh sesuatu di menu tidak menyusun ulang layar sementara game masih berjalan.
+  */
+ 
+-/** Ketuk dengan umpan balik tekan (lapisan putih tipis). Pasang setelah clip bentuknya. */
++/**
++ * Ketuk dengan umpan balik tekan (lapisan putih tipis) dan sorotan fokus untuk controller/D-pad.
++ * Pasang setelah clip bentuknya. Status tekan dan fokus hanya dibaca saat menggambar.
++ */
+ @Composable
+ fun Modifier.amberTap(onClick: () -> Unit): Modifier {
+-    val callback by rememberUpdatedState(onClick)
+-    var pressed by remember { mutableStateOf(false) }
++    val interaction = remember { MutableInteractionSource() }
++    val pressed = interaction.collectIsPressedAsState()
++    val focused = interaction.collectIsFocusedAsState()
+     return this
+         .drawWithContent {
+             drawContent()
+-            if (pressed) drawRect(Amber.Press)
+-        }
+-        .pointerInput(Unit) {
+-            detectTapGestures(
+-                onPress = {
+-                    pressed = true
+-                    tryAwaitRelease()
+-                    pressed = false
+-                },
+-                onTap = { callback() }
+-            )
++            if (pressed.value) drawRect(Amber.Press)
++            if (focused.value) drawGamepadFocusRing()
+         }
++        .clickable(interactionSource = interaction, indication = null, onClick = onClick)
+ }
+ 
+ /** Ikon garis buatan sendiri (lihat drawControlIcon di ControlSkin). */
+@@ -122,6 +128,8 @@ fun FpsReadout(fps: () -> Int) {
+ @Composable
+ fun AmberToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
+     val callback by rememberUpdatedState(onChange)
++    val interaction = remember { MutableInteractionSource() }
++    val focused = interaction.collectIsFocusedAsState()
+     Box(
+         modifier = Modifier
+             .size(width = 40.dp, height = 24.dp)
+@@ -146,8 +154,9 @@ fun AmberToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
+                     radius = r - 5.dp.toPx(),
+                     center = Offset(cx, r)
+                 )
++                if (focused.value) drawGamepadFocusRing()
+             }
+-            .pointerInput(checked) { detectTapGestures { callback(!checked) } }
++            .clickable(interactionSource = interaction, indication = null) { callback(!checked) }
+     )
+ }
+ 
+@@ -167,10 +176,31 @@ fun AmberSlider(
+     val change by rememberUpdatedState(onChange)
+     val finish by rememberUpdatedState(onFinished)
+     val read by rememberUpdatedState(value)
++    val interaction = remember { MutableInteractionSource() }
++    val focused = interaction.collectIsFocusedAsState()
+     Box(
+         modifier = modifier
+             .fillMaxWidth()
+             .height(30.dp)
++            // D-pad kiri/kanan menggeser satu langkah saat penggeser disorot.
++            .onKeyEvent { event ->
++                val dir = when (event.key) {
++                    Key.DirectionLeft -> -1f
++                    Key.DirectionRight -> 1f
++                    else -> 0f
++                }
++                if (dir == 0f) {
++                    false
++                } else {
++                    if (event.type == KeyEventType.KeyDown) {
++                        val unit = if (step > 0f) step else (range.endInclusive - range.start) / 20f
++                        change((read() + dir * unit).coerceIn(range.start, range.endInclusive))
++                        finish()
++                    }
++                    true
++                }
++            }
++            .focusable(interactionSource = interaction)
+             .drawBehind {
+                 val pad = 10.dp.toPx()
+                 val y = size.height / 2f
+@@ -184,6 +214,7 @@ fun AmberSlider(
+                 val c = Offset(pad + span * frac, y)
+                 drawCircle(Amber.YellowTint, 10.dp.toPx(), c)
+                 drawCircle(Amber.Yellow, 6.5.dp.toPx(), c)
++                if (focused.value) drawGamepadFocusRing()
+             }
+             .pointerInput(range, step) {
+                 val pad = 10.dp.toPx()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt
+new file mode 100644
+index 0000000..2c78a84
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt
+@@ -0,0 +1,106 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.IndicationNodeFactory
++import androidx.compose.foundation.LocalIndication
++import androidx.compose.foundation.interaction.FocusInteraction
++import androidx.compose.foundation.interaction.InteractionSource
++import androidx.compose.foundation.interaction.PressInteraction
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.CompositionLocalProvider
++import androidx.compose.runtime.DisposableEffect
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.geometry.CornerRadius
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.geometry.Size
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.drawscope.ContentDrawScope
++import androidx.compose.ui.graphics.drawscope.DrawScope
++import androidx.compose.ui.graphics.drawscope.Stroke
++import androidx.compose.ui.node.DelegatableNode
++import androidx.compose.ui.node.DrawModifierNode
++import androidx.compose.ui.node.invalidateDraw
++import androidx.compose.ui.platform.LocalView
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.window.DialogWindowProvider
++import com.israadev.nuxlauncher.core.controls.GamepadNav
++import kotlinx.coroutines.launch
++
++private val RingColor = Color(0xFFFFD23F)
++private val FocusTint = Color.White.copy(alpha = 0.07f)
++private val PressTint = Color.White.copy(alpha = 0.12f)
++
++/** Bingkai kuning tipis di sekeliling yang sedang disorot (untuk navigasi controller/D-pad/keyboard). */
++fun DrawScope.drawGamepadFocusRing() {
++    val stroke = 2.dp.toPx()
++    drawRect(FocusTint)
++    drawRoundRect(
++        color = RingColor,
++        topLeft = Offset(stroke / 2f, stroke / 2f),
++        size = Size(size.width - stroke, size.height - stroke),
++        cornerRadius = CornerRadius(10.dp.toPx()),
++        style = Stroke(width = stroke)
++    )
++}
++
++/**
++ * Pengganti umpan balik klik bawaan: tint tipis saat ditekan dan bingkai saat disorot lewat
++ * D-pad/controller. Semuanya digambar di fase gambar, tanpa menyusun ulang layar.
++ */
++object FocusRingIndication : IndicationNodeFactory {
++    override fun create(interactionSource: InteractionSource): DelegatableNode =
++        FocusRingNode(interactionSource)
++
++    override fun hashCode(): Int = -1
++
++    override fun equals(other: Any?): Boolean = other === this
++}
++
++private class FocusRingNode(
++    private val interactionSource: InteractionSource
++) : Modifier.Node(), DrawModifierNode {
++    private var pressed = false
++    private var focused = false
++
++    override fun onAttach() {
++        coroutineScope.launch {
++            interactionSource.interactions.collect { interaction ->
++                when (interaction) {
++                    is PressInteraction.Press -> pressed = true
++                    is PressInteraction.Release -> pressed = false
++                    is PressInteraction.Cancel -> pressed = false
++                    is FocusInteraction.Focus -> focused = true
++                    is FocusInteraction.Unfocus -> focused = false
++                }
++                invalidateDraw()
++            }
++        }
++    }
++
++    override fun ContentDrawScope.draw() {
++        drawContent()
++        if (pressed) drawRect(PressTint)
++        if (focused) drawGamepadFocusRing()
++    }
++}
++
++/** Pasang di akar layar: semua `clickable` di bawahnya otomatis punya sorotan fokus. */
++@Composable
++fun GamepadFocusProvider(content: @Composable () -> Unit) {
++    CompositionLocalProvider(LocalIndication provides FocusRingIndication) {
++        content()
++    }
++}
++
++/**
++ * Letakkan di dalam isi sebuah Dialog: jendela dialog ikut bisa dinavigasi dengan controller
++ * (A pilih, B tutup, stick pindah sorotan).
++ */
++@Composable
++fun GamepadWindowHook() {
++    val view = LocalView.current
++    DisposableEffect(view) {
++        val window = (view.parent as? DialogWindowProvider)?.window
++        val undo = if (window != null) GamepadNav.install(window, allowBumper = false) else null
++        onDispose { undo?.invoke() }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+index 432ca86..14cb247 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxComponents.kt
+@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.interaction.MutableInteractionSource
++import androidx.compose.foundation.interaction.collectIsFocusedAsState
+ import androidx.compose.foundation.interaction.collectIsPressedAsState
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -96,6 +97,7 @@ fun NuxButton(
+ ) {
+     val interactionSource = remember { MutableInteractionSource() }
+     val pressedState = interactionSource.collectIsPressedAsState()
++    val focusedState = interactionSource.collectIsFocusedAsState()
+ 
+     val filled = backgroundColor.alpha >= 0.9f && backgroundColor.luminance() > 0.45f
+     val edgeColor = when {
+@@ -123,6 +125,7 @@ fun NuxButton(
+             .drawWithContent {
+                 drawContent()
+                 if (enabled && pressedState.value) drawRect(pressTint)
++                if (enabled && focusedState.value) drawGamepadFocusRing()
+             }
+             .clickable(
+                 enabled = enabled,
+@@ -245,6 +248,7 @@ fun NuxWindowDialog(
+     content: @Composable () -> Unit
+ ) {
+     Dialog(onDismissRequest = onDismissRequest, properties = properties) {
++        GamepadWindowHook()
+         NuxReadable(scale = 1f, boost = 1.18f) {
+             content()
+         }
+@@ -284,6 +288,7 @@ fun NuxDialog(
+             decorFitsSystemWindows = false
+         )
+     ) {
++        GamepadWindowHook()
+         NuxReadable(
+             scale = if (compact && !inScaledScreen) 0.9f else 1f,
+             boost = if (compact) 1f else 1.18f
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+index e966b32..1c5ccc7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+@@ -25,6 +25,7 @@ import androidx.compose.material3.Slider
+ import androidx.compose.material3.SliderDefaults
+ import androidx.compose.material3.Switch
+ import androidx.compose.material3.SwitchDefaults
++import androidx.compose.ui.focus.focusProperties
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+@@ -134,6 +135,8 @@ fun SettingSwitchRow(
+         Switch(
+             checked = checked,
+             onCheckedChange = onCheckedChange,
++            // Barisnya sudah bisa disorot dan dipilih; saklar tidak perlu jadi perhentian fokus kedua.
++            modifier = Modifier.focusProperties { canFocus = false },
+             colors = SwitchDefaults.colors(
+                 checkedThumbColor = NuxColors.Ink,
+                 checkedTrackColor = NuxColors.Yellow,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
+index b496187..8b39054 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameDialogs.kt
+@@ -34,6 +34,7 @@ import androidx.compose.ui.window.Dialog
+ import androidx.compose.ui.window.DialogProperties
+ import com.israadev.nuxlauncher.ui.components.AmberIcon
+ import com.israadev.nuxlauncher.ui.components.FpsReadout
++import com.israadev.nuxlauncher.ui.components.GamepadWindowHook
+ import com.israadev.nuxlauncher.ui.components.amberTap
+ import com.israadev.nuxlauncher.ui.theme.Amber
+ 
+@@ -47,6 +48,7 @@ fun ExitConfirmDialog(
+         onDismissRequest = onCancel,
+         properties = DialogProperties(usePlatformDefaultWidth = false)
+     ) {
++        GamepadWindowHook()
+         val shape = RoundedCornerShape(22.dp)
+         Box(
+             modifier = Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index 0d3d47e..b781ac5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -63,6 +63,7 @@ import com.israadev.nuxlauncher.ui.components.AmberSegmented
+ import com.israadev.nuxlauncher.ui.components.AmberSlider
+ import com.israadev.nuxlauncher.ui.components.AmberToggle
+ import com.israadev.nuxlauncher.ui.components.FpsReadout
++import com.israadev.nuxlauncher.ui.components.GamepadWindowHook
+ import com.israadev.nuxlauncher.ui.components.amberTap
+ import com.israadev.nuxlauncher.ui.control.MouseControlMode
+ import com.israadev.nuxlauncher.ui.theme.Amber
+@@ -121,6 +122,7 @@ fun GameMenuSheet(
+             decorFitsSystemWindows = false
+         )
+     ) {
++        GamepadWindowHook()
+         val dialogView = LocalView.current
+         SideEffect {
+             val win = (dialogView.parent as? DialogWindowProvider)?.window
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index a3149e2..8acb396 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -1143,6 +1143,7 @@ fun CustomGuiEditorScreen(
+     // Reset Confirmation Dialog
+     if (showResetConfirmDialog) {
+         Dialog(onDismissRequest = { showResetConfirmDialog = false }) {
++            com.israadev.nuxlauncher.ui.components.GamepadWindowHook()
+             NuxCard(
+                 modifier = Modifier.width(320.dp),
+                 backgroundColor = Color(0xFF171717),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 5446e0c..900bb30 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.ui.components.HomeInfo
+ import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
+ import com.israadev.nuxlauncher.ui.components.NuxButton
+ import com.israadev.nuxlauncher.ui.components.NuxDialog
++import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
+ import com.israadev.nuxlauncher.ui.components.NuxSidebar
+ import com.israadev.nuxlauncher.ui.components.rememberIsResumed
+ import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
+@@ -143,6 +144,21 @@ fun DashboardScreen() {
+ 
+     var currentTab by remember { mutableStateOf("home") }
+ 
++    // Controller: LB/RB berpindah antar tab (Home, Akun, Mod, Pengaturan).
++    DisposableEffect(Unit) {
++        val ids = NUX_NAV_ITEMS.map { it.id }
++        val listener: (Int) -> Unit = { step ->
++            val index = ids.indexOf(currentTab)
++            if (index >= 0) currentTab = ids[(index + step + ids.size) % ids.size]
++        }
++        com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener = listener
++        onDispose {
++            if (com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener === listener) {
++                com.israadev.nuxlauncher.core.controls.GamepadNav.bumperListener = null
++            }
++        }
++    }
++
+     val activeCrash by CrashManager.activeCrash.collectAsState()
+ 
+     val instances by InstanceManager.instances.collectAsState()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index f62d6e5..0247ff9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -127,6 +127,7 @@ fun SettingsScreen(
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
++    var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+     var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
+ 
+@@ -175,6 +176,7 @@ fun SettingsScreen(
+             hotbarTouchEnabled = hotbarTouch,
+             touchControllerEnabled = touchControllerEnabled,
+             touchControllerExclusive = touchControllerExclusive,
++            gamepadEmulation = gamepadEmulation,
+             mouseSizeDp = mouseSizeDp,
+             physicalMouseMode = physicalMouseMode,
+             resolutionRatio = resolutionRatio,
+@@ -852,6 +854,16 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
++                        SettingSwitchRow(
++                            title = "Dukungan controller",
++                            desc = "Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.",
++                            checked = gamepadEmulation,
++                            onCheckedChange = {
++                                gamepadEmulation = it
++                                commitSettings()
++                            }
++                        )
++                        SettingDivider()
+                         SettingSliderRow(
+                             title = "Sensitivitas kamera",
+                             desc = "Kecepatan memutar pandangan di dalam game.",
+@@ -934,6 +946,7 @@ fun SettingsScreen(
+                     hotbarTouch = reset.hotbarTouchEnabled
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     touchControllerExclusive = reset.touchControllerExclusive
++                    gamepadEmulation = reset.gamepadEmulation
+                     mouseSizeDp = reset.mouseSizeDp
+                     physicalMouseMode = reset.physicalMouseMode
+                     resolutionRatio = reset.resolutionRatio
+@@ -1178,6 +1191,7 @@ fun SettingsScreen(
+     // Adreno GPU Warning Dialog (Persis seperti Zalith)
+     if (showAdrenoWarningDialog) {
+         androidx.compose.ui.window.Dialog(onDismissRequest = { showAdrenoWarningDialog = false }) {
++            GamepadWindowHook()
+             Box(
+                 modifier = Modifier
+                     .fillMaxSize()
+diff --git a/app/src/main/java/org/libsdl/app/SDLControllerManager.java b/app/src/main/java/org/libsdl/app/SDLControllerManager.java
+index 4555994..f1d0bc1 100644
+--- a/app/src/main/java/org/libsdl/app/SDLControllerManager.java
++++ b/app/src/main/java/org/libsdl/app/SDLControllerManager.java
+@@ -75,6 +75,15 @@ public class SDLControllerManager
+         }
+     }
+ 
++    /**
++     * True bila SDL (dipakai mod seperti Controlify) sudah memindai dan mengenali perangkat ini.
++     * Launcher memakainya untuk tahu kapan controller dipegang mod, jadi tidak diterjemahkan dua kali.
++     */
++    static public boolean isKnownToSdl(int deviceId) {
++        SDLJoystickHandler handler = mJoystickHandler;
++        return handler != null && handler.hasJoystick(deviceId);
++    }
++
+     // Joystick glue code, just a series of stubs that redirect to the SDLJoystickHandler instance
+     static public boolean handleJoystickMotionEvent(MotionEvent event) {
+         return mJoystickHandler.handleMotionEvent(event);
+@@ -232,6 +241,10 @@ class SDLJoystickHandler {
+         mJoysticks = new ArrayList<SDLJoystick>();
+     }
+ 
++    synchronized boolean hasJoystick(int device_id) {
++        return getJoystick(device_id) != null;
++    }
++
+     /**
+      * Handles adding and removing of input devices.
+      */
+diff --git a/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java b/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
+index 6abd55b..d4afa92 100644
+--- a/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
++++ b/app/src/main/java/org/lwjgl/glfw/CallbackBridge.java
+@@ -230,6 +230,8 @@ public class CallbackBridge {
+     @Keep
+     public static void onDirectInputEnable() {
+         Log.i("AMBER_INPUT", "Direct input enabled");
++        // Mod controller yang membaca GLFW langsung sudah aktif: controller diteruskan apa adanya.
++        sGamepadDirectInput = true;
+     }
+ 
+     public static void sendCursorPos(float x, float y) {
+# FIN part=1/1 files=20

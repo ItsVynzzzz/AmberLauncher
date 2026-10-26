@@ -1,0 +1,526 @@
+diff --git a/app/src/main/assets/lang/en/editor.tsv b/app/src/main/assets/lang/en/editor.tsv
+index 2dbffd5..c729683 100644
+--- a/app/src/main/assets/lang/en/editor.tsv
++++ b/app/src/main/assets/lang/en/editor.tsv
+@@ -56,3 +56,9 @@ MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	IN-GAME MODE
+ Reset Layout GUI?	Reset GUI Layout?
+ Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	All button positions and customizations will be restored to the standard AmberLauncher default layout.
+ Layout direset ke standar	Layout reset to default
++Tampil saat:	Show when:
++Selalu	Always
++Saat main	In game
++Saat menu	In menus
++Menu = inventori, chat, dan layar lain di dalam game.	Menus = inventory, chat, and other screens inside the game.
++Semua tombol	All buttons
+diff --git a/app/src/main/assets/lang/es/editor.tsv b/app/src/main/assets/lang/es/editor.tsv
+index a61621a..4c8284a 100644
+--- a/app/src/main/assets/lang/es/editor.tsv
++++ b/app/src/main/assets/lang/es/editor.tsv
+@@ -62,3 +62,9 @@ MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	MODO EN EL JU
+ Reset Layout GUI?	\u00bfRestablecer el dise\u00f1o de la interfaz?
+ Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Todas las posiciones de los botones y personalizaciones volver\u00e1n al dise\u00f1o est\u00e1ndar inicial de AmberLauncher.
+ Layout direset ke standar	Dise\u00f1o restablecido al est\u00e1ndar
++Tampil saat:	Mostrar cuando:
++Selalu	Siempre
++Saat main	En juego
++Saat menu	En men\u00fas
++Menu = inventori, chat, dan layar lain di dalam game.	Men\u00fas = inventario, chat y otras pantallas dentro del juego.
++Semua tombol	Todos los botones
+diff --git a/app/src/main/assets/lang/vi/editor.tsv b/app/src/main/assets/lang/vi/editor.tsv
+index ea8ceee..3fbb504 100644
+--- a/app/src/main/assets/lang/vi/editor.tsv
++++ b/app/src/main/assets/lang/vi/editor.tsv
+@@ -62,3 +62,9 @@ MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	CH\u1ebe \u01
+ Reset Layout GUI?	\u0110\u1eb7t l\u1ea1i b\u1ed1 c\u1ee5c GUI?
+ Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	M\u1ecdi v\u1ecb tr\u00ed n\u00fat v\u00e0 t\u00f9y ch\u1ec9nh s\u1ebd \u0111\u01b0\u1ee3c kh\u00f4i ph\u1ee5c v\u1ec1 b\u1ed1 c\u1ee5c m\u1eb7c \u0111\u1ecbnh chu\u1ea9n c\u1ee7a AmberLauncher.
+ Layout direset ke standar	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i b\u1ed1 c\u1ee5c v\u1ec1 m\u1eb7c \u0111\u1ecbnh
++Tampil saat:	Hi\u1ec3n th\u1ecb khi:
++Selalu	Lu\u00f4n lu\u00f4n
++Saat main	Khi ch\u01a1i
++Saat menu	Trong menu
++Menu = inventori, chat, dan layar lain di dalam game.	Menu = t\u00fai \u0111\u1ed3, chat v\u00e0 c\u00e1c m\u00e0n h\u00ecnh kh\u00e1c trong game.
++Semua tombol	T\u1ea5t c\u1ea3 n\u00fat
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 9f2aa4c..8f9d19a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -2058,7 +2058,8 @@ fun GameScreen(
+                     onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
+                     onToggleControls = { isControlVisible = !isControlVisible },
+                     onOpenMenu = { showInGameSettingsDialog = true },
+-                    touchControllerMode = tcExclusive
++                    touchControllerMode = tcExclusive,
++                    inMenu = gameCursorMode != CURSOR_DISABLED
+                 )
+             }
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt
+index 442929a..f24d2eb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutIO.kt
+@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
+ import com.google.gson.JsonArray
+ import com.google.gson.JsonObject
+ import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import java.util.UUID
+ import kotlin.math.roundToInt
+@@ -98,6 +99,7 @@ object ControlLayoutIO {
+         o.add("macroComboKeys", combo)
+         o.addProperty("macroTurboIntervalMs", b.macroTurboIntervalMs)
+         o.addProperty("icon", b.icon)
++        o.addProperty("showMode", b.showMode)
+         return o
+     }
+ 
+@@ -165,6 +167,11 @@ object ControlLayoutIO {
+         var macroType = o.str("macroType", d.macroType, 16)
+         if (macroType !in MACRO_TYPES) macroType = d.macroType
+ 
++        // Mode tampil hanya berlaku untuk tombol biasa. Tombol sistem (menu, FPS, dll.) selalu tampil
++        // supaya layout orang lain tidak bisa membuat menu game tidak terjangkau.
++        var showMode = o.str("showMode", d.showMode, 8)
++        if (isSystem || !ControlShowMode.isValid(showMode)) showMode = ControlShowMode.ALWAYS
++
+         return CustomControlButton(
+             id = id,
+             name = o.str("name", d.name, MAX_NAME),
+@@ -189,7 +196,8 @@ object ControlLayoutIO {
+             macroComboKey = o.int("macroComboKey", d.macroComboKey, 0, MAX_KEYCODE),
+             macroComboKeys = o.intList("macroComboKeys", MAX_COMBO_KEYS),
+             macroTurboIntervalMs = o.long("macroTurboIntervalMs", d.macroTurboIntervalMs, MIN_TURBO_MS, MAX_TURBO_MS),
+-            icon = o.str("icon", d.icon, MAX_ICON)
++            icon = o.str("icon", d.icon, MAX_ICON),
++            showMode = showMode
+         )
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+index 10c69f8..86e1347 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlLayoutManager.kt
+@@ -5,6 +5,7 @@ import android.net.Uri
+ import android.os.Environment
+ import com.google.gson.Gson
+ import com.google.gson.reflect.TypeToken
++import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+ import kotlinx.coroutines.flow.MutableStateFlow
+@@ -33,7 +34,7 @@ object ControlLayoutManager {
+                 if (!loaded.isNullOrEmpty()) {
+                     // Layout bawaan versi lama yang belum pernah diubah: ganti ke layout baru.
+                     // Layout yang sudah diatur pengguna tidak disentuh.
+-                    if (loaded == legacyDefaultButtons()) {
++                    if (isUntouchedDefault(loaded)) {
+                         val fresh = getDefaultButtons()
+                         _buttons.value = fresh
+                         save(context, fresh)
+@@ -50,7 +51,7 @@ object ControlLayoutManager {
+         // Data internal tidak ada (mis. aplikasi baru dipasang ulang): coba pulihkan dari cadangan.
+         val restored = readBackup()
+         if (restored != null) {
+-            if (restored == legacyDefaultButtons()) {
++            if (isUntouchedDefault(restored)) {
+                 val fresh = getDefaultButtons()
+                 _buttons.value = fresh
+                 save(context, fresh)
+@@ -129,6 +130,8 @@ object ControlLayoutManager {
+      * Tata letak bawaan: sedikit tombol, besar, mudah dijangkau jempol.
+      * Kiri: joystick + jongkok. Kanan: serang, pakai, lompat, gulir hotbar.
+      * Atas: lencana FPS, ESC/chat/inventori/F5 di tengah, tombol sistem kecil di kanan.
++     * Dua mode: tombol gerak dan aksi hanya tampil saat main; saat menu (inventori, chat, jeda)
++     * tersisa ESC, inventori, dan tombol Shift untuk memindah barang cepat.
+      */
+     fun getDefaultButtons(): List<CustomControlButton> {
+         return listOf(
+@@ -150,7 +153,8 @@ object ControlLayoutManager {
+                 id = "key_t", name = "CHAT", icon = "chat",
+                 keyCode = LwjglGlfwKeycode.GLFW_KEY_T,
+                 xPercent = 47f, yPercent = 9f, widthDp = 38, heightDp = 34,
+-                opacity = 0.9f, cornerRadiusDp = 12
++                opacity = 0.9f, cornerRadiusDp = 12,
++                showMode = ControlShowMode.GAME
+             ),
+             CustomControlButton(
+                 id = "key_inv", name = "INV", icon = "inventory",
+@@ -162,7 +166,8 @@ object ControlLayoutManager {
+                 id = "key_f5", name = "F5",
+                 keyCode = LwjglGlfwKeycode.GLFW_KEY_F5,
+                 xPercent = 59f, yPercent = 9f, widthDp = 38, heightDp = 34,
+-                opacity = 0.9f, cornerRadiusDp = 12
++                opacity = 0.9f, cornerRadiusDp = 12,
++                showMode = ControlShowMode.GAME
+             ),
+ 
+             // Tombol sistem kecil di kanan atas
+@@ -189,13 +194,24 @@ object ControlLayoutManager {
+             CustomControlButton(
+                 id = "joy_move", name = "JOYSTICK", isJoystick = true,
+                 xPercent = 15f, yPercent = 70f, widthDp = 120, heightDp = 120,
+-                opacity = 0.9f, cornerRadiusDp = 60
++                opacity = 0.9f, cornerRadiusDp = 60,
++                showMode = ControlShowMode.GAME
+             ),
+             CustomControlButton(
+                 id = "key_sneak", name = "SNEAK", icon = "sneak",
+                 keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, isToggle = true,
+                 xPercent = 29.5f, yPercent = 82f, widthDp = 52, heightDp = 52,
+-                opacity = 0.9f, cornerRadiusDp = 26
++                opacity = 0.9f, cornerRadiusDp = 26,
++                showMode = ControlShowMode.GAME
++            ),
++
++            // Saat menu terbuka (inventori, peti): tahan Shift lalu ketuk barang = pindah cepat.
++            CustomControlButton(
++                id = "key_shift_menu", name = "SHIFT",
++                keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, isToggle = true,
++                xPercent = 12f, yPercent = 80f, widthDp = 56, heightDp = 44,
++                opacity = 0.9f, cornerRadiusDp = 14,
++                showMode = ControlShowMode.MENU
+             ),
+ 
+             // Kanan: aksi utama di sekitar jempol
+@@ -203,28 +219,45 @@ object ControlLayoutManager {
+                 id = "mouse_attack", name = "SERANG", icon = "attack",
+                 isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT,
+                 xPercent = 84f, yPercent = 62f, widthDp = 72, heightDp = 72,
+-                opacity = 0.9f, cornerRadiusDp = 36
++                opacity = 0.9f, cornerRadiusDp = 36,
++                showMode = ControlShowMode.GAME
+             ),
+             CustomControlButton(
+                 id = "mouse_use", name = "PAKAI", icon = "use",
+                 isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT,
+                 xPercent = 75.5f, yPercent = 84f, widthDp = 60, heightDp = 60,
+-                opacity = 0.9f, cornerRadiusDp = 30
++                opacity = 0.9f, cornerRadiusDp = 30,
++                showMode = ControlShowMode.GAME
+             ),
+             CustomControlButton(
+                 id = "key_jump", name = "JUMP", icon = "jump",
+                 keyCode = LwjglGlfwKeycode.GLFW_KEY_SPACE,
+                 xPercent = 92f, yPercent = 80f, widthDp = 70, heightDp = 70,
+-                opacity = 0.9f, cornerRadiusDp = 35
++                opacity = 0.9f, cornerRadiusDp = 35,
++                showMode = ControlShowMode.GAME
+             ),
+             CustomControlButton(
+                 id = "widget_scroll", name = "HOTBAR", isScroll = true,
+                 xPercent = 96.5f, yPercent = 36f, widthDp = 40, heightDp = 92,
+-                opacity = 0.9f, cornerRadiusDp = 14
++                opacity = 0.9f, cornerRadiusDp = 14,
++                showMode = ControlShowMode.GAME
+             )
+         )
+     }
+ 
++    /** Layout yang tersimpan masih persis salah satu bawaan versi lama (belum pernah diubah pengguna). */
++    private fun isUntouchedDefault(list: List<CustomControlButton>): Boolean =
++        list == legacyDefaultButtons() || list == previousDefaultButtons()
++
++    /**
++     * Bawaan sebelum ada mode tampil (semua tombol selalu tampil, tanpa tombol Shift menu). Pemakai yang
++     * tata letaknya masih ini dipindah ke bawaan dua mode; yang sudah mengubahnya tidak disentuh.
++     */
++    private fun previousDefaultButtons(): List<CustomControlButton> =
++        getDefaultButtons()
++            .filter { it.id != "key_shift_menu" }
++            .map { it.copy(showMode = ControlShowMode.ALWAYS) }
++
+     /** Tata letak bawaan versi lama; dipakai hanya untuk mengenali layout yang belum pernah diubah pengguna. */
+     private fun legacyDefaultButtons(): List<CustomControlButton> {
+         return listOf(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
+index 50785f6..3292a92 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/models/CustomControlButton.kt
+@@ -34,5 +34,24 @@ data class CustomControlButton(
+     val macroComboKeys: List<Int> = emptyList(), // Multi-key sequence executed from top to bottom
+     val macroTurboIntervalMs: Long = 100L, // Auto-click speed interval in ms
+     // Nama ikon gambar (jump, sneak, attack, use, inventory, chat, pause, ...); kosong = tampilkan nama sebagai teks
+-    val icon: String = ""
++    val icon: String = "",
++    // Kapan tombol tampil: ALWAYS = selalu, GAME = hanya saat main (kursor dikunci game),
++    // MENU = hanya saat ada menu/GUI game (inventori, chat, jeda). Layout lama tanpa kolom ini = ALWAYS.
++    val showMode: String = ControlShowMode.ALWAYS
+ )
++
++/** Nilai [CustomControlButton.showMode] dan aturan tampilnya. Nilai tak dikenal diperlakukan sebagai ALWAYS. */
++object ControlShowMode {
++    const val ALWAYS = "ALWAYS"
++    const val GAME = "GAME"
++    const val MENU = "MENU"
++
++    /** [inMenu] = game sedang menampilkan kursor (menu, inventori, chat, layar judul). */
++    fun visible(mode: String?, inMenu: Boolean): Boolean = when (mode) {
++        GAME -> !inMenu
++        MENU -> inMenu
++        else -> true
++    }
++
++    fun isValid(mode: String): Boolean = mode == ALWAYS || mode == GAME || mode == MENU
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index 6e1a2bc..bdee221 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -30,12 +30,16 @@ import androidx.compose.ui.platform.LocalDensity
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.dp
+ import com.israadev.nuxlauncher.FpsMode
++import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+ import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
+ import com.movtery.zalithlauncher.bridge.ZLBridgeStates
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.Job
++import kotlinx.coroutines.SupervisorJob
+ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.isActive
+ import kotlinx.coroutines.launch
+@@ -53,6 +57,10 @@ import kotlin.math.sin
+  * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
+  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
+  * merah di dalam menu.
++ *
++ * Dua mode tampil: tiap tombol biasa punya [CustomControlButton.showMode] (selalu / hanya saat main /
++ * hanya saat menu). [inMenu] true bila game sedang menampilkan kursor (inventori, chat, jeda). Tombol
++ * yang tidak cocok dengan mode saat ini tidak disusun sama sekali, jadi tidak membebani layar.
+  */
+ @Composable
+ fun GameControlsLayer(
+@@ -72,7 +80,9 @@ fun GameControlsLayer(
+     onOpenMenu: () -> Unit,
+     // Mod TouchController dipakai: kontrol bawaan disembunyikan, hanya gerigi menu (dan FPS bila
+     // disematkan) yang tersisa. Tombol yang tidak tampil tidak ikut disusun sama sekali.
+-    touchControllerMode: Boolean = false
++    touchControllerMode: Boolean = false,
++    // Game sedang menampilkan kursor (menu/GUI). Dibaca dari status kursor game, bukan dari layar.
++    inMenu: Boolean = false
+ ) {
+     val density = LocalDensity.current
+     val tc = touchControllerMode
+@@ -110,7 +120,7 @@ fun GameControlsLayer(
+                         SystemIconButton(btn, place, onTap = onOpenMenu)
+                     }
+                 }
+-            } else if (controlsVisible && !tc) {
++            } else if (controlsVisible && !tc && ControlShowMode.visible(btn.showMode, inMenu)) {
+                 if (btn.isJoystick) {
+                     CustomVirtualJoystick(button = btn, modifier = place)
+                 } else {
+@@ -122,6 +132,13 @@ fun GameControlsLayer(
+     }
+ }
+ 
++/**
++ * Wadah makro "ketik perintah". Mengetik / atau T membuka chat, yang mengganti mode ke menu dan
++ * bisa membuat tombolnya hilang di tengah jalan; kalau pengetikan ikut terhenti bersama tombolnya,
++ * perintahnya setengah terkirim. Karena itu pengetikan jalan di wadah sendiri, bukan di komposisi tombol.
++ */
++private val macroTypingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
++
+ private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+     typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+     fontFeatureSettings = "tnum"
+@@ -254,8 +271,13 @@ fun CustomVirtualButton(
+             // Tombol kunci (toggle) yang sedang aktif dilepas saat tombolnya hilang dari layar
+             // (mis. kontrol disembunyikan). Tanpa ini tombol (Shift/Ctrl, dll.) tetap tertahan di
+             // game padahal tombol di layar sudah terlihat mati, dan butuh dua ketukan untuk memperbaikinya.
++            // Kombinasi tombol yang sedang ditahan juga dilepas (mis. tombol hilang karena mode
++            // berganti ke menu saat jari masih di atasnya), kalau tidak tombolnya tetap tertahan.
+             val b = currentButton
+-            val plainToggle = b.isToggle && !b.isScroll && !(b.isMacro && b.macroType == "COMMAND")
++            val plainToggle = !b.isScroll && (
++                (b.isToggle && !(b.isMacro && b.macroType == "COMMAND")) ||
++                    (b.isMacro && b.macroType == "COMBO")
++                )
+             if (plainToggle && isPressed) {
+                 if (b.isMacro && b.macroType == "COMBO") {
+                     val keys = if (b.macroComboKeys.isNotEmpty()) b.macroComboKeys
+@@ -394,7 +416,7 @@ fun CustomVirtualButton(
+                                     val cmd = button.macroCommand.trim()
+                                     if (cmd.isNotEmpty()) {
+                                         isPressed = true
+-                                        coroutineScope.launch {
++                                        macroTypingScope.launch {
+                                             try {
+                                                 if (cmd.startsWith("/")) {
+                                                     CallbackBridge.sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_SLASH, true)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index a3149e2..6b3a34a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -45,6 +45,7 @@ import androidx.compose.ui.window.Dialog
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+ import com.israadev.nuxlauncher.core.controls.ControlLimits
+ import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
++import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.ui.components.NuxBadge
+ import com.israadev.nuxlauncher.ui.components.NuxButton
+@@ -64,6 +65,13 @@ import kotlin.math.roundToInt
+ private fun Float.clampCenter(lo: Float, hi: Float): Float =
+     if (lo > hi) (lo + hi) / 2f else coerceIn(lo, hi)
+ 
++/** Pilihan "lihat" di editor: semua tombol, atau hanya yang tampil saat main / saat menu. */
++private const val VIEW_ALL = "ALL"
++
++/** Tombol sistem selalu terlihat di semua tampilan; tombol biasa mengikuti mode tampilnya. */
++private fun editorShows(b: CustomControlButton, view: String): Boolean =
++    view == VIEW_ALL || b.isSystem || ControlShowMode.visible(b.showMode, view == ControlShowMode.MENU)
++
+ @Composable
+ fun CustomGuiEditorScreen(
+     onNavigateBack: () -> Unit,
+@@ -80,6 +88,8 @@ fun CustomGuiEditorScreen(
+     var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN" or "COMBO"
+     var showResetConfirmDialog by remember { mutableStateOf(false) }
+     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
++    // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
++    var viewMode by remember { mutableStateOf(VIEW_ALL) }
+ 
+     LaunchedEffect(Unit) {
+         ControlLayoutManager.init(context)
+@@ -138,7 +148,7 @@ fun CustomGuiEditorScreen(
+         }
+ 
+         // 2. Interactive Draggable Buttons on Screen
+-        buttonsList.forEach { btn ->
++        buttonsList.filter { editorShows(it, viewMode) }.forEach { btn ->
+             val isSelected = btn.id == selectedButtonId
+             val btnWidthPx = with(density) { btn.widthDp.dp.toPx() }
+             val btnHeightPx = with(density) { btn.heightDp.dp.toPx() }
+@@ -262,7 +272,8 @@ fun CustomGuiEditorScreen(
+                             xPercent = 50f,
+                             yPercent = 50f,
+                             widthDp = 52,
+-                            heightDp = 48
++                            heightDp = 48,
++                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
+                         )
+                         buttonsList = buttonsList + newBtn
+                         selectedButtonId = newBtn.id
+@@ -293,7 +304,8 @@ fun CustomGuiEditorScreen(
+                             widthDp = 130,
+                             heightDp = 130,
+                             cornerRadiusDp = 65,
+-                            opacity = 0.85f
++                            opacity = 0.85f,
++                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
+                         )
+                         buttonsList = buttonsList + newJoy
+                         selectedButtonId = newJoy.id
+@@ -332,6 +344,46 @@ fun CustomGuiEditorScreen(
+             }
+         }
+ 
++        // 3b. Pilih tampilan: semua tombol, hanya yang tampil saat main, atau hanya saat menu (inventori, chat, jeda).
++        Row(
++            modifier = Modifier
++                .align(Alignment.BottomCenter)
++                .padding(bottom = 6.dp)
++                .background(Color(0xFF171717), RoundedCornerShape(10.dp))
++                .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
++                .padding(horizontal = 6.dp, vertical = 4.dp),
++            horizontalArrangement = Arrangement.spacedBy(4.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            listOf(
++                VIEW_ALL to "Semua tombol",
++                ControlShowMode.GAME to "Saat main",
++                ControlShowMode.MENU to "Saat menu"
++            ).forEach { (viewKey, viewLabel) ->
++                val chosen = viewMode == viewKey
++                Box(
++                    modifier = Modifier
++                        .background(if (chosen) Color(0xFFFFD60A) else Color(0xFF262626), RoundedCornerShape(6.dp))
++                        .clickable {
++                            viewMode = viewKey
++                            // Tombol terpilih yang tidak ikut tampil di tampilan baru dilepas dari pilihan.
++                            val sel = buttonsList.firstOrNull { it.id == selectedButtonId }
++                            if (sel != null && !editorShows(sel, viewKey)) selectedButtonId = null
++                        }
++                        .padding(horizontal = 10.dp, vertical = 5.dp),
++                    contentAlignment = Alignment.Center
++                ) {
++                    Text(
++                        viewLabel,
++                        fontWeight = FontWeight.Black,
++                        fontSize = 10.sp,
++                        color = if (chosen) Color(0xFF111111) else Color.White,
++                        maxLines = 1
++                    )
++                }
++            }
++        }
++
+         // 4. SMART AUTO-DOCKING INSPECTOR PANEL (NEVER COVERS THE SELECTED BUTTON!)
+         if (selectedButton != null) {
+             // If the selected button is on the right half, auto-dock panel on the LEFT side.
+@@ -665,6 +717,57 @@ fun CustomGuiEditorScreen(
+                             )
+                         }
+ 
++                        // 6b. Kapan tombol tampil: selalu / saat main / saat menu (tombol sistem selalu tampil).
++                        if (!selectedButton.isSystem) {
++                            val currentShow = if (ControlShowMode.isValid(selectedButton.showMode)) selectedButton.showMode else ControlShowMode.ALWAYS
++                            Text("Tampil saat:", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
++                            Row(
++                                modifier = Modifier.fillMaxWidth(),
++                                horizontalArrangement = Arrangement.spacedBy(4.dp)
++                            ) {
++                                listOf(
++                                    ControlShowMode.ALWAYS to "Selalu",
++                                    ControlShowMode.GAME to "Saat main",
++                                    ControlShowMode.MENU to "Saat menu"
++                                ).forEach { (modeKey, modeLabel) ->
++                                    val isChosen = currentShow == modeKey
++                                    Box(
++                                        modifier = Modifier
++                                            .weight(1f)
++                                            .background(
++                                                if (isChosen) Color(0xFFFFD60A) else Color(0xFF202020),
++                                                RoundedCornerShape(6.dp)
++                                            )
++                                            .border(
++                                                1.dp,
++                                                if (isChosen) Color(0xFFFFE566) else Color(0xFF313131),
++                                                RoundedCornerShape(6.dp)
++                                            )
++                                            .clickable {
++                                                buttonsList = buttonsList.map {
++                                                    if (it.id == selectedButton.id) it.copy(showMode = modeKey) else it
++                                                }
++                                                // Ikuti tombolnya: kalau tidak lagi tampil di tampilan ini, pindah ke tampilan barunya.
++                                                if (viewMode != VIEW_ALL && !ControlShowMode.visible(modeKey, viewMode == ControlShowMode.MENU)) {
++                                                    viewMode = modeKey
++                                                }
++                                            }
++                                            .padding(vertical = 6.dp),
++                                        contentAlignment = Alignment.Center
++                                    ) {
++                                        Text(
++                                            text = modeLabel,
++                                            fontSize = 9.sp,
++                                            fontWeight = if (isChosen) FontWeight.Black else FontWeight.Bold,
++                                            color = if (isChosen) Color(0xFF111111) else Color.White,
++                                            maxLines = 1
++                                        )
++                                    }
++                                }
++                            }
++                            Text("Menu = inventori, chat, dan layar lain di dalam game.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
++                        }
++
+                         // 7. Toggle Mode Switch (Only for normal key buttons)
+                         if (!selectedButton.isSystem && !selectedButton.isJoystick) {
+                             Row(
+
+
+# FIN part=1/1 files=9

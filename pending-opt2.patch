@@ -1,8 +1,18 @@
 diff --git a/app/build.gradle.kts b/app/build.gradle.kts
-index b969225..1aaa5ec 100644
+index b969225..56d35ec 100644
 --- a/app/build.gradle.kts
 +++ b/app/build.gradle.kts
-@@ -146,6 +146,102 @@ android {
+@@ -1,6 +1,9 @@
+ import java.util.Properties
+ import java.io.File
+ import java.io.FileInputStream
++import java.io.RandomAccessFile
++import java.nio.ByteBuffer
++import java.nio.ByteOrder
+ 
+ plugins {
+     alias(libs.plugins.android.application)
+@@ -146,6 +149,102 @@ android {
      }
  }
  
@@ -41,14 +51,14 @@ index b969225..1aaa5ec 100644
 +// True bila berkas ELF 64-bit little-endian punya bagian tabel simbol (.symtab, tipe SHT_SYMTAB = 2).
 +fun elfHasSymbols(file: File): Boolean {
 +    try {
-+        java.io.RandomAccessFile(file, "r").use { raf ->
++        RandomAccessFile(file, "r").use { raf ->
 +            if (raf.length() < 64) return false
 +            val header = ByteArray(64)
 +            raf.readFully(header)
 +            val isElf = header[0].toInt() == 0x7F && header[1].toInt() == 'E'.code &&
 +                header[2].toInt() == 'L'.code && header[3].toInt() == 'F'.code
 +            if (!isElf || header[4].toInt() != 2 || header[5].toInt() != 1) return false
-+            val head = java.nio.ByteBuffer.wrap(header).order(java.nio.ByteOrder.LITTLE_ENDIAN)
++            val head = ByteBuffer.wrap(header).order(ByteOrder.LITTLE_ENDIAN)
 +            val shoff = head.getLong(0x28)
 +            val shentsize = head.getShort(0x3A).toInt() and 0xFFFF
 +            val shnum = head.getShort(0x3C).toInt() and 0xFFFF
@@ -59,7 +69,7 @@ index b969225..1aaa5ec 100644
 +                raf.seek(shoff + i.toLong() * shentsize)
 +                raf.readFully(entry)
 +                // Bidang sh_name (4 byte) lalu sh_type (4 byte)
-+                if (java.nio.ByteBuffer.wrap(entry).order(java.nio.ByteOrder.LITTLE_ENDIAN).getInt(4) == 2) return true
++                if (ByteBuffer.wrap(entry).order(ByteOrder.LITTLE_ENDIAN).getInt(4) == 2) return true
 +            }
 +        }
 +    } catch (_: Throwable) {
@@ -200,110 +210,40 @@ index 205c8f6..6891d0c 100644
 +Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	M\u00e3 \u0111\u00e3 \u0111\u01b0\u1ee3c sao ch\u00e9p. N\u1ebfu \u00f4 m\u00e3 tr\u00ean tr\u00ecnh duy\u1ec7t v\u1eabn tr\u1ed1ng, h\u00e3y d\u00e1n r\u1ed3i ch\u1ecdn Ti\u1ebfp t\u1ee5c.
 +Buka di browser	M\u1edf trong tr\u00ecnh duy\u1ec7t
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
-index 1d5465c..830682b 100644
---- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
-+++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
-@@ -1597,8 +1597,17 @@ fun GameScreen(
- ) {
-     var isControlVisible by isControlVisibleState
-     var isGameRendering by isGameRenderingState
--    var isManualLoadingDismissed by remember { mutableStateOf(false) }
--    val showLoadingOverlay = !isGameRendering && !isManualLoadingDismissed
-+    val showLoadingOverlay = !isGameRendering
-+    // Tombol layar baru muncul setelah logo Mojang tampil, supaya layar loading bersih. Bila loading
-+    // sangat lama (game macet), tombol dimunculkan juga agar pemain bisa membuka menu: lihat log atau keluar.
-+    var loadingTooLong by remember { mutableStateOf(false) }
-+    LaunchedEffect(isGameRendering) {
-+        if (!isGameRendering) {
-+            delay(60_000L)
-+            loadingTooLong = true
-+        }
-+    }
-+    val controlsAllowed = isGameRendering || loadingTooLong
- 
-     var showInGameSettingsDialog by remember { mutableStateOf(false) }
-     var isCustomGuiEditorActive by remember { mutableStateOf(false) }
-@@ -1840,15 +1849,9 @@ fun GameScreen(
-         GameLoadingOverlay(
-             visible = showLoadingOverlay,
-             instanceName = instanceName,
--            mcVersion = mcVersion,
-             // Daftar log hanya dibaca saat layar loading tampil; selebihnya layar tidak ikut
-             // digambar ulang setiap ada log baru.
-             latestLog = if (showLoadingOverlay) (liveLogs.lastOrNull() ?: "") else "",
--            onClose = { isManualLoadingDismissed = true },
--            onViewLog = {
--                fpsMode = FpsMode.SHOW_LOG
--                isConsoleVisible = true
--            },
-             modifier = Modifier.fillMaxSize()
-         )
- 
-@@ -1906,34 +1909,36 @@ fun GameScreen(
-         // 4. Tombol layar (gaya dan logikanya ada di ui/control/ControlOverlay.kt). Dibungkus Box
-         // penuh layar agar bisa dibuat transparan (alpha 0, tetap menerima sentuhan) saat merekam
-         // "Game saja". Box tanpa penangan sentuhan tidak menghalangi sentuhan ke lapisan di bawahnya.
--        Box(
--            modifier = Modifier
--                .fillMaxSize()
--                .then(if (ghostControls) Modifier.graphicsLayer { alpha = 0f } else Modifier)
--        ) {
--            GameControlsLayer(
--                buttons = customButtons,
--                screenWidth = screenWidth,
--                screenHeight = screenHeight,
--                controlsVisible = isControlVisible,
--                fpsMode = fpsMode,
--                consoleVisible = isConsoleVisible,
--                keyboardActive = isKeyboardRequested,
--                fps = { currentFps },
--                perfText = {
--                    if (uiBusy > 0) {
--                        if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
--                    } else {
--                        perfText
--                    }
--                },
--                perfWarn = { perfWarn || uiBusy > 0 },
--                onFpsClick = { showInGameSettingsDialog = true },
--                onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
--                onToggleControls = { isControlVisible = !isControlVisible },
--                onOpenMenu = { showInGameSettingsDialog = true },
--                touchControllerMode = tcExclusive
--            )
-+        if (controlsAllowed) {
-+            Box(
-+                modifier = Modifier
-+                    .fillMaxSize()
-+                    .then(if (ghostControls) Modifier.graphicsLayer { alpha = 0f } else Modifier)
-+            ) {
-+                GameControlsLayer(
-+                    buttons = customButtons,
-+                    screenWidth = screenWidth,
-+                    screenHeight = screenHeight,
-+                    controlsVisible = isControlVisible,
-+                    fpsMode = fpsMode,
-+                    consoleVisible = isConsoleVisible,
-+                    keyboardActive = isKeyboardRequested,
-+                    fps = { currentFps },
-+                    perfText = {
-+                        if (uiBusy > 0) {
-+                            if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
-+                        } else {
-+                            perfText
-+                        }
-+                    },
-+                    perfWarn = { perfWarn || uiBusy > 0 },
-+                    onFpsClick = { showInGameSettingsDialog = true },
-+                    onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
-+                    onToggleControls = { isControlVisible = !isControlVisible },
-+                    onOpenMenu = { showInGameSettingsDialog = true },
-+                    touchControllerMode = tcExclusive
-+                )
-+            }
-         }
- 
-         // Konfirmasi keluar
+index 1d5465c58d02439962a2734819baf43cdb9b7b87..161df3afc87acd4f0b0fb9370dad275497e2d9a0 100644
+GIT binary patch
+delta 1602
+zcmaJ>U1(fI6lO}2ZlY*4X-gN<PEs3p!)CKpno2{O9~#qOHd&fApon31@9e#koqK1!
+zGdFd~ZZ=jyAA}S}oQGnu2tGGNh~R^LQ~F?h^+6>S#0ODdd=M0zx%*??mfnYZ&zzt6
+z&iT$c_s37W?(TG5zuA}f5qFYv$i)lHp7!$&S;z8hM{MWgzfZ|SFZT8Rr?%h(EFjA9
+z?hW{UzcV^K4Aa;v6SsssNSO^e<^&Rtz#@hPMlI|cHHR^di-;1)(Hep!tu>DEacB`8
+zY1@QqMGn)zg(aV98?<#g+Ug=fib#GrbgYKznKklU^71$qhZ{Yx@sI+HnV|cUjYA)c
+z!1r1{ZFXIZ@B`d33%?9EU<05*M6v<9{5a;EFfS$?!sGJn)G4{Ya#;S_ACaRM&piEL
+za=YJ8J$6WDr#^VN?e!OGqoZ)y(AB8iD<fFeWWYKP9BWbq6xio=dSfo($%oS8!D-L(
+z8L{G;v4*!5&>+#OOhYyK&0)WYxbDi5Jz^j&BFz1eQS5|WG3`sXA|J)cd|?q|3tKHt
+zPRsPzN%=}SF7I88vNj@f*e0GXxW!_^z?svsK)%Ql7bi3}7f82uQFk%{-TaCvpLq$L
+zFVe%*{I=AlqnC)ELBf$wz4OfOwQ^=$9w{7=xBrM{mw3{~0(<MR!SvkfrTHtXnd$81
+z!T4lSpdy|x=w=g<Bz%#H8H&83o~P<$l49}T6nISFw5^fkz=wVE;HP8q&hJtA)j{9x
+z&z~J^t0!i`v$c>j&2*NzIYuExW#q#g@&o7wUOq4*E-*!o*$4*HY|S)VAh$%QrXnb5
+z|3;80mV}d_t9O!chEQ#)E1M`>N9*~Z$VK(Rr_e=tEaC|$>IvxW32}>hH`f9iL1gQM
+zO4vojgE_(xbg`QYistJD7a%2$xlnI05-89cOatWCCt+O&Ht@5IEig~Lbr~dT3rGVv
+z*qSXAa9+d+H!Z({J>4mte*1O~Ji>04*wW;bV`Hh+R4TO)Z%v>v{SVu2?yWjE0iINw
+z+n{?Q&phEX%BLx1SF!m`wSmD(rR|oU5W!TYGIQX>UN8%;4XbDg{G#>|IJfuP8vu0=
+zncqs=<@eWRlAB>~s=uy+arO19AS(AikEl;Jz>4~F1N6zQk2+L$1)P>s7dlj;0^*^t
+zRRLXU8-oEkS&S%s8VS|cp939grvg&p>4$mHqi((pj>>PHi0Y_<=R@`RDi{j|w+e<r
+zVRaKk)Qu`Qp>9_}(!3(-UKPBiwtB&trboXyb;>*69F?i!adm4GoR_7SJJolaU^*1M
+p8aS*5Yv85kX(1H8sA+rVZm0UE21eA$_du^)diVI=%ogbH{TFR<DB%DA
+
+delta 420
+zcmZ{ePbh<N9L9Ur3`=8XCH1y<sWpEi`4dUKR)ifSauB91z5eX2y@oJt@4Fo&k)QfX
+zu}PdLdJjuU4s%h;)yV}(4sOapUQRBa)ARIsdU|foOb<t<jXf4k6`j4kI<zl-m1D;X
+zc`VcBJkSIKGYDInCiFG2kHrp{nRVB$A=2DJDZr{(&L7uHLcAz@eZjDAsz>tq#o)L{
+zl&3{m4*1D2f(m-?L>b4sT)gwYUiz~Ohvn>bzm$?;ym+Kw`;;UH_*Q=L-)$Yvgu($n
+zQfcP@ND2;!fw>-OoP6uBQ*s5vbiV{!dS@1DZk8a;yUldFgc^!O;h<C$18mz}K$aLv
+zsXm4>8jI<l2PbvMDafYl7-~uCg_&|!VBc&pl2bt)4Jv4$O$9ExP~c>v86!RE>DSm)
+z4AE#YICd%;e|Qe1RQ*h}3O2e^QAp1!8p*y44_(D!A}Nk;x{Sk1`3VTrpFlOOO`te^
+Ik^pD>1_B<KX8-^I
+
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
 index 4b61237..ca53ef2 100644
 --- a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
@@ -648,26 +588,36 @@ index 17dd919..8112614 100644
      val safeAccountType: String
          get() = (accountType ?: if (isOffline) "offline" else "offline").lowercase()
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GameLoadingOverlay.kt
-index ff1764718c5a2dff239744db562afc983995b95d..b6ec72453eed1dc4167f3bbf0b292fc41bfc28e1 100644
+index ff1764718c5a2dff239744db562afc983995b95d..982caadd58ae7eff3caade3a305b5f1992e25a0f 100644
 GIT binary patch
-delta 1315
-zcmZ`&&2Jk;6j#$Ec1)o$Ar46ay`%_i$60JQMQue7aiW&+kyfMuf%tm1C%e;K&n~kw
-zX;KN&Q%``3-USH>A?1wdfdlFV^)EpE3&@>+fJ>#mS+}N9!mf6AcILg`@BQA#cc1?K
-z%AHSs_;!ze8GeT3F^_H?&pqFYw?C35SdLX{G)iSsx_^A0J|1e&A47l9Jzj4OSLxzN
-zp7us&>0Yi#`=fa(jGm^k+)es5_XeHF@6rB9p;<_@+(IK@3nO^%%F@c}+T|}=OUv(G
-z{@}{S+6r8R<v5CUxxRhrQlsT=`uF7gt_N3nJB2PPehlgh5V;TdBEqBw3VR5W!$Z{(
-z&=x5lbtQySOK9T_3~B|a@=D7TqSyx`G=_oHyhzYE)67ckU@hbDGs{r)@VaHn-NYIh
-zKq?}^7)-s>$4@Yl%J2Jnj^P@r1i{3;b{t)Ro=}$IBJ6>WJppAI#)?DM(w7ycHkd$L
-zrpWwl8}f%)fn{-w8G}?3tTHyNFjOQ1G>*f?&qfwP5n0q8tfR3DDZe;;x;tKKIe9h(
-zbkqS;JJnCL^z|9p#n2fzz(gpYy*1px&{*b{iuT8w4cG{+X7z#9cJsfqI2Tst%aD@-
-zh7;h+e!x^LeonWGQ}m$t8m&(39o0DBOn&yl;ks7}^yl=8yRIqHjut|_Eu<e9ZigOj
-z_tzdDT2X+fE@y6}iNw0RDcH7rz_$u@uhH17c%4}2j#yRY=9`-}INRi{G&uysY2E!_
-zocf~k8UQuUFi^98G!S>lAo{}*)z2&*K&mrR;~Z~wlfueV+Oh!=UH@oZ^|J>+oUZ0$
-z5IR4#c8dGbSLG%5=29826&r5Kb)FbQ#n}?woy^nsQ=^o=T55U;cDr1~GEa|oDR-<j
-z5UM*^w=?(0zg(;OJP^#xP-~__zr8*|w`WT9<wBF6VfuL?H#R5=-RF~Ar#I-~OXHcx
-z&fJ}$^PBY5^wbmM94Fr8{eWo|=AO&MyCN>K*a}^Pxz+wial={QN#{vRgicu>raW8`
-zTGa^z&ve$@1_R3z+vZ7U!|P}Rc<00SxpR9K4gCl|jSULLDLF+at0T1k@(I$@rGcj3
-XXDi3f(X*4Y^v^<p-kQh{eO-72v7fKg
+literal 4017
+zcmcgvTW{Mo6n^)wAo?T+9%CnM(FG{5Bwf0;xfFBTJPyYeEitAjfus_9L;w4}Bgu|j
+z%bxo(1xaY}JNK&#n$9UvVwz`Cdq)(jM`_E2q0&xM<z%TP?uy(h8+@;)adbhDja{ze
+zMSbU$B&#zDI=Aw?I;r@Z_Ijd?4$A|GrnyrxJSk-l0MDT0heLsPW!TAbmX|iJwVuEa
+ziQ~_QpbahaGRTX3aj!#qnOh$mX?D;q|FlFk#Fx1#v)xu~6O0R*D)$o-X4;q=T8#DI
+z>gTEMbsW;4AWM}_(t}*x*k4c_YnvP*!lzUyd8yshs4<^+5+Mhb(_~KNwYG}fXO|~V
+zdH=!2dP*VR?LJr9pfgC}WcM^NyM>@6&W%oNhLYH+2|zb_tY>;p$bg9*J;|xj#Xd%f
+zqaxK)59Q1r6TmL0MUb=H26=@)_xoeA!uzl^N`3+9-J^0dlRxcKrnEZ9c(1+{#IGUy
+zdW#;tv6bjvuW<Si;S-N!#P!|zyAQYT|GGH8{Ph0MyRWzJ#9L8W9}O2*SECF5>Gyia
+zM@KzzB(7;mPMDlHql8xzh1$aBBo{aN1KC81&v2a=F<JZua%aNuKanUy#XwlfNNAKX
+z*{Ko}<#82jG1pFu2|ZCdU@;SN+A~{$ETeg<9S#KrhE^!Mq(LPksgQG((L)K5MHzGo
+zy^I12NM>z8Q;=bOD^ke<zK|_Qggl$%=B)YOz#~1+E!1^7(F1Yyc{~t!5nOKiVC7Xd
+zDeY3vA?!V6YCLu5r7V#Rs|9MSSw^6&(5BK7%9J8Qqc07h0pPUlG+Y_d;GR$h=s>_@
+z<r?^UC}I`#T%gI507Qul4JuTIj471Ac>IA!Ff1?|ycSCY0={(*WS}NoSb9M*KBORL
+z&#wGc`!ML3<_r*pvI%%O@kH}b!W?a@c=)n_D@6@NH6{rpB&GQH?WPvy6#||JTrD9+
+zim&t1L3CQWa@L9ylj=EQ1Xf_6YlpER$GzWL4PjQ+-o369jjIK&jd}vlBab_y&csEY
+z8%3-jo>fZS!aZkV931%9H%LF_!*!l)zRsGSafZaLy9W|~b?o)UKNZ{U8CxsSQUqj;
+zO0_(`LcdZD7xe&*s(Blo4u}1I3$xInfnantm{*&am6E`%j+I&~^;p*SY<yOc?^lH2
+zu{Mw2w;$P>U{Svkv2p!8w4?2Y@r-Y)#q``@d{rQSR1K2NphbO_xGdF%D24|eFnTaZ
+zfsHn3kHk=pMzcOPA?2pnOQMt4vw?VZf>&sPZGD*$n#WEy!<S67<}*44pOaxXAJpSo
+z`E7-Ur!O}+4Z&&j2CvY!f7D3DSpT}L8ot`#!B(9#JT{ori_B(pS;!#~W}HM9Ol-6s
+zsaUH5THqM%IXnlEk*jBw7uAl^kr<4V&3+M~r(<D#E7;BfN+4dJCzYJ$<EEq^Q-(S6
+zfZVo{Z+Pm0O}p5i3yJ}&XUg*%$ZC?w`&0+j4dfACPj8@~M>$+$;@uQYX04O88;M-!
+z<;a8cs2h<tYXA`Ktw8>6u&8+LH^R@hZ90$N{I|1aB3k!AeD%1^!v)5|JnHw+ew*GX
+zl<`WuxIzEcRPb=il-E{#q(`dzx1*W%Qpy+ImUK8A1y(F0GDS+TZzzAAwYndxzIr$Y
+zjYpfR?UwPs__JRAqmG)A_2wN_b<Ex9CF*uNAjij84BA8XjK^YG%}Z=OSUU>kJSGIe
+z<A_ZC^{<(&fl?m)nB4^61C?ntV>6YN)KQ~5cJJ=u=`d+4zg8hRr0^NL^2xeOZu?`+
+wl9%tO_1$7eHgsfCcRJvk;B;OUIMS<C=s)Hi_v0-?H{X0;-`A(_z3;t$0c;4|UjP6A
 
 literal 11789
 zcmcIq>u%h*75?w1V2!pbXT8eUPJ(QJ6!kq$?8L}84vL~!a7LUNW+YM&C0}+CpzqK(
@@ -740,4 +690,4 @@ i3W{QF=j`f96Avmod!3?Nrfnx$eNumOci%U@Z~PCg^&+MK
 
 
 
-# FIN part=1/1 files=11
+# FIN part=1/2 files=11

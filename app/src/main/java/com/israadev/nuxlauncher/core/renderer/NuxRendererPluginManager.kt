@@ -9,6 +9,18 @@ import java.io.File
 
 object NuxRendererPluginManager {
     private const val TAG = "NuxRendererPlugin"
+
+    /**
+     * Plugin renderer yang dikenal. Hanya paket dengan nama persis ini yang boleh dikenali tanpa string
+     * renderer lama di AndroidManifest (mis. MobileGL yang memakai fclPlugin_V2).
+     */
+    private val KNOWN_PLUGIN_PACKAGES = setOf(
+        "top.mobilegl.plugin",
+        "com.fcl.plugin.mobileglues",
+        "com.bzlzhh.plugin.ngg",
+        "com.bzlzhh.plugin.ngg.angleless"
+    )
+
     private val pluginRenderers = mutableListOf<NuxRendererInfo>()
 
     fun getPluginRenderers(): List<NuxRendererInfo> = synchronized(pluginRenderers) {
@@ -45,27 +57,24 @@ object NuxRendererPluginManager {
                 val metaData = info.metaData
                 val nativeLibDir = info.nativeLibraryDir
 
-                // Aplikasi sistem tanpa penanda plugin tidak mungkin renderer: lewati
-                // supaya folder native dan label-nya tidak dibuka sia-sia.
-                val isSystemApp = (info.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                val hasPluginMeta = metaData != null && (
+                // Sama seperti Zalith: plugin renderer adalah APK yang dipasang pengguna, dan harus
+                // menandai dirinya lewat metadata. Nama paket atau isi folder native TIDAK dipakai
+                // menebak, supaya launcher lain (Pojav, Zalith, dll) dan aplikasi biasa tidak ikut terdaftar.
+                if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) return
+
+                val hasLegacyPlugin = metaData != null && (
                     metaData.getBoolean("fclPlugin", false) ||
-                    metaData.getBoolean("zalithRendererPlugin", false) ||
-                    metaData.containsKey("renderer")
-                )
-                if (!hasPluginMeta && isSystemApp) return
+                    metaData.getBoolean("zalithRendererPlugin", false)
+                ) && !metaData.getString("renderer").isNullOrBlank()
+                if (!hasLegacyPlugin && pkg !in KNOWN_PLUGIN_PACKAGES) return
 
                 // Label (butuh membuka resource aplikasi, mahal) hanya dimuat bila benar-benar dipakai.
                 val appLabel by lazy(LazyThreadSafetyMode.NONE) {
                     runCatching { info.loadLabel(pm).toString() }.getOrDefault(pkg)
                 }
 
-                // 1. Check FCL / Zalith Plugin metadata
-                if (metaData != null && (
-                    metaData.getBoolean("fclPlugin", false) ||
-                    metaData.getBoolean("zalithRendererPlugin", false) ||
-                    metaData.containsKey("renderer")
-                )) {
+                // 1. Metadata plugin FCL / Zalith (penanda fclPlugin atau zalithRendererPlugin + string renderer)
+                if (metaData != null && hasLegacyPlugin) {
                     val rendererString = metaData.getString("renderer") ?: ""
                     val des = metaData.getString("des") ?: appLabel
                     val pojavEnvString = metaData.getString("pojavEnv") ?: ""
@@ -137,21 +146,13 @@ object NuxRendererPluginManager {
                     return
                 }
 
-                // 2. Heuristic detection: check for native libraries in package dir (MobileGL, MobileGlues, LTW, Holy GL4ES, etc.)
+                // 2. Paket plugin yang dikenal tetapi tanpa string renderer lama (mis. MobileGL V2):
+                // ambil pustaka grafis dari folder native-nya. Folder harus berisi pustaka (.so).
                 val nativeDirFile = File(nativeLibDir)
                 if (nativeDirFile.exists() && nativeDirFile.isDirectory) {
                     val soFiles = nativeDirFile.listFiles { f -> f.extension == "so" } ?: emptyArray()
-                    val hasMobileGL = soFiles.any { it.name.contains("mobilegl", ignoreCase = true) }
-                    val hasMobileGlues = soFiles.any { it.name.contains("mobileglue", ignoreCase = true) }
-                    val hasGl4es = soFiles.any { it.name.contains("gl4es", ignoreCase = true) }
-                    val hasLtw = soFiles.any { it.name.contains("ltw", ignoreCase = true) || it.name.contains("turnip", ignoreCase = true) }
-                    val isKnownPkg = pkg.contains("mobilegl", ignoreCase = true) ||
-                            pkg.contains("gl4es", ignoreCase = true) ||
-                            pkg.contains("renderer", ignoreCase = true) ||
-                            pkg.contains("ltw", ignoreCase = true) ||
-                            pkg.contains("ngg", ignoreCase = true)
 
-                    if (hasMobileGL || hasMobileGlues || hasGl4es || hasLtw || isKnownPkg) {
+                    if (soFiles.isNotEmpty()) {
                         val glName = soFiles.firstOrNull { it.name.startsWith("libmobilegl", ignoreCase = true) || it.name.startsWith("libgl") }?.name ?: "libgl4es.so"
                         val eglName = soFiles.firstOrNull { it.name.contains("egl", ignoreCase = true) }?.name
                         val dlopenList = soFiles.map { it.name }

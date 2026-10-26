@@ -62,6 +62,8 @@ object NuxRendererV2Manager {
         for (info in installedApps) {
             val pkg = info.packageName
             if (pkg == context.packageName) continue
+            // Plugin renderer = APK yang dipasang pengguna (sama seperti Zalith); aplikasi sistem dilewati.
+            if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
 
             val metaData = info.metaData ?: continue
             val nativeLibDir = info.nativeLibraryDir
@@ -95,8 +97,8 @@ object NuxRendererV2Manager {
             }
 
             // 2. Fallback khusus untuk MobileGL (top.mobilegl.plugin) jika manifest resource gagal diurai
-            val isMobileGLPkg = pkg == "top.mobilegl.plugin" || 
-                    (pkg.contains("mobilegl", ignoreCase = true) && !pkg.contains("mobileglue", ignoreCase = true))
+            // Nama paket harus persis; tebakan "mengandung kata mobilegl" membuat aplikasi lain ikut terdaftar.
+            val isMobileGLPkg = pkg == "top.mobilegl.plugin"
 
             if (isMobileGLPkg) {
                 val mgConfig = createDefaultMobileGLV2Config(nativeLibDir)

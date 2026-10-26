@@ -1872,7 +1872,11 @@ fun GameScreen(
             // Daftar log hanya dibaca saat layar loading tampil; selebihnya layar tidak ikut
             // digambar ulang setiap ada log baru.
             latestLog = if (showLoadingOverlay) (liveLogs.lastOrNull() ?: "") else "",
-            modifier = Modifier.fillMaxSize()
+            // X: batal dan keluar (jalur yang sama dengan "Keluar dari game"), tanpa konfirmasi karena
+            // belum ada dunia yang terbuka. Disembunyikan begitu tombol layar muncul (setelah 60 detik).
+            onClose = onExit,
+            modifier = Modifier.fillMaxSize(),
+            showClose = !controlsAllowed
         )
 
         // Hidden IME soft keyboard layer

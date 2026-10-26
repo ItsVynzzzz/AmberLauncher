@@ -34,5 +34,24 @@ data class CustomControlButton(
     val macroComboKeys: List<Int> = emptyList(), // Multi-key sequence executed from top to bottom
     val macroTurboIntervalMs: Long = 100L, // Auto-click speed interval in ms
     // Nama ikon gambar (jump, sneak, attack, use, inventory, chat, pause, ...); kosong = tampilkan nama sebagai teks
-    val icon: String = ""
+    val icon: String = "",
+    // Kapan tombol tampil: ALWAYS = selalu, GAME = hanya saat main (kursor dikunci game),
+    // MENU = hanya saat ada menu/GUI game (inventori, chat, jeda). Layout lama tanpa kolom ini = ALWAYS.
+    val showMode: String = ControlShowMode.ALWAYS
 )
+
+/** Nilai [CustomControlButton.showMode] dan aturan tampilnya. Nilai tak dikenal diperlakukan sebagai ALWAYS. */
+object ControlShowMode {
+    const val ALWAYS = "ALWAYS"
+    const val GAME = "GAME"
+    const val MENU = "MENU"
+
+    /** [inMenu] = game sedang menampilkan kursor (menu, inventori, chat, layar judul). */
+    fun visible(mode: String?, inMenu: Boolean): Boolean = when (mode) {
+        GAME -> !inMenu
+        MENU -> inMenu
+        else -> true
+    }
+
+    fun isValid(mode: String): Boolean = mode == ALWAYS || mode == GAME || mode == MENU
+}

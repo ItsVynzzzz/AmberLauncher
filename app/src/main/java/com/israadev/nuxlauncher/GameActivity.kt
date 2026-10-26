@@ -2058,7 +2058,8 @@ fun GameScreen(
                     onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
                     onToggleControls = { isControlVisible = !isControlVisible },
                     onOpenMenu = { showInGameSettingsDialog = true },
-                    touchControllerMode = tcExclusive
+                    touchControllerMode = tcExclusive,
+                    inMenu = gameCursorMode != CURSOR_DISABLED
                 )
             }
         }

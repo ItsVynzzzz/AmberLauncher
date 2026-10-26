@@ -62,3 +62,9 @@ MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	MODO EN EL JU
 Reset Layout GUI?	\u00bfRestablecer el dise\u00f1o de la interfaz?
 Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Todas las posiciones de los botones y personalizaciones volver\u00e1n al dise\u00f1o est\u00e1ndar inicial de AmberLauncher.
 Layout direset ke standar	Dise\u00f1o restablecido al est\u00e1ndar
+Tampil saat:	Mostrar cuando:
+Selalu	Siempre
+Saat main	En juego
+Saat menu	En men\u00fas
+Menu = inventori, chat, dan layar lain di dalam game.	Men\u00fas = inventario, chat y otras pantallas dentro del juego.
+Semua tombol	Todos los botones

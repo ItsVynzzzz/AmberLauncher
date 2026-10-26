@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import java.util.UUID
 import kotlin.math.roundToInt
@@ -98,6 +99,7 @@ object ControlLayoutIO {
         o.add("macroComboKeys", combo)
         o.addProperty("macroTurboIntervalMs", b.macroTurboIntervalMs)
         o.addProperty("icon", b.icon)
+        o.addProperty("showMode", b.showMode)
         return o
     }
 
@@ -165,6 +167,11 @@ object ControlLayoutIO {
         var macroType = o.str("macroType", d.macroType, 16)
         if (macroType !in MACRO_TYPES) macroType = d.macroType
 
+        // Mode tampil hanya berlaku untuk tombol biasa. Tombol sistem (menu, FPS, dll.) selalu tampil
+        // supaya layout orang lain tidak bisa membuat menu game tidak terjangkau.
+        var showMode = o.str("showMode", d.showMode, 8)
+        if (isSystem || !ControlShowMode.isValid(showMode)) showMode = ControlShowMode.ALWAYS
+
         return CustomControlButton(
             id = id,
             name = o.str("name", d.name, MAX_NAME),
@@ -189,7 +196,8 @@ object ControlLayoutIO {
             macroComboKey = o.int("macroComboKey", d.macroComboKey, 0, MAX_KEYCODE),
             macroComboKeys = o.intList("macroComboKeys", MAX_COMBO_KEYS),
             macroTurboIntervalMs = o.long("macroTurboIntervalMs", d.macroTurboIntervalMs, MIN_TURBO_MS, MAX_TURBO_MS),
-            icon = o.str("icon", d.icon, MAX_ICON)
+            icon = o.str("icon", d.icon, MAX_ICON),
+            showMode = showMode
         )
     }
 

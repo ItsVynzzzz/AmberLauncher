@@ -30,12 +30,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.israadev.nuxlauncher.FpsMode
+import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
 import com.movtery.zalithlauncher.bridge.ZLBridgeStates
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -53,6 +57,10 @@ import kotlin.math.sin
  * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
  * merah di dalam menu.
+ *
+ * Dua mode tampil: tiap tombol biasa punya [CustomControlButton.showMode] (selalu / hanya saat main /
+ * hanya saat menu). [inMenu] true bila game sedang menampilkan kursor (inventori, chat, jeda). Tombol
+ * yang tidak cocok dengan mode saat ini tidak disusun sama sekali, jadi tidak membebani layar.
  */
 @Composable
 fun GameControlsLayer(
@@ -72,7 +80,9 @@ fun GameControlsLayer(
     onOpenMenu: () -> Unit,
     // Mod TouchController dipakai: kontrol bawaan disembunyikan, hanya gerigi menu (dan FPS bila
     // disematkan) yang tersisa. Tombol yang tidak tampil tidak ikut disusun sama sekali.
-    touchControllerMode: Boolean = false
+    touchControllerMode: Boolean = false,
+    // Game sedang menampilkan kursor (menu/GUI). Dibaca dari status kursor game, bukan dari layar.
+    inMenu: Boolean = false
 ) {
     val density = LocalDensity.current
     val tc = touchControllerMode
@@ -110,7 +120,7 @@ fun GameControlsLayer(
                         SystemIconButton(btn, place, onTap = onOpenMenu)
                     }
                 }
-            } else if (controlsVisible && !tc) {
+            } else if (controlsVisible && !tc && ControlShowMode.visible(btn.showMode, inMenu)) {
                 if (btn.isJoystick) {
                     CustomVirtualJoystick(button = btn, modifier = place)
                 } else {
@@ -121,6 +131,13 @@ fun GameControlsLayer(
         }
     }
 }
+
+/**
+ * Wadah makro "ketik perintah". Mengetik / atau T membuka chat, yang mengganti mode ke menu dan
+ * bisa membuat tombolnya hilang di tengah jalan; kalau pengetikan ikut terhenti bersama tombolnya,
+ * perintahnya setengah terkirim. Karena itu pengetikan jalan di wadah sendiri, bukan di komposisi tombol.
+ */
+private val macroTypingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
 private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
@@ -254,8 +271,13 @@ fun CustomVirtualButton(
             // Tombol kunci (toggle) yang sedang aktif dilepas saat tombolnya hilang dari layar
             // (mis. kontrol disembunyikan). Tanpa ini tombol (Shift/Ctrl, dll.) tetap tertahan di
             // game padahal tombol di layar sudah terlihat mati, dan butuh dua ketukan untuk memperbaikinya.
+            // Kombinasi tombol yang sedang ditahan juga dilepas (mis. tombol hilang karena mode
+            // berganti ke menu saat jari masih di atasnya), kalau tidak tombolnya tetap tertahan.
             val b = currentButton
-            val plainToggle = b.isToggle && !b.isScroll && !(b.isMacro && b.macroType == "COMMAND")
+            val plainToggle = !b.isScroll && (
+                (b.isToggle && !(b.isMacro && b.macroType == "COMMAND")) ||
+                    (b.isMacro && b.macroType == "COMBO")
+                )
             if (plainToggle && isPressed) {
                 if (b.isMacro && b.macroType == "COMBO") {
                     val keys = if (b.macroComboKeys.isNotEmpty()) b.macroComboKeys
@@ -394,7 +416,7 @@ fun CustomVirtualButton(
                                     val cmd = button.macroCommand.trim()
                                     if (cmd.isNotEmpty()) {
                                         isPressed = true
-                                        coroutineScope.launch {
+                                        macroTypingScope.launch {
                                             try {
                                                 if (cmd.startsWith("/")) {
                                                     CallbackBridge.sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_SLASH, true)

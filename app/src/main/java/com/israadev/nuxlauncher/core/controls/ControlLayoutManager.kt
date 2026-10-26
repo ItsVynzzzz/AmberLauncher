@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Environment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +34,7 @@ object ControlLayoutManager {
                 if (!loaded.isNullOrEmpty()) {
                     // Layout bawaan versi lama yang belum pernah diubah: ganti ke layout baru.
                     // Layout yang sudah diatur pengguna tidak disentuh.
-                    if (loaded == legacyDefaultButtons()) {
+                    if (isUntouchedDefault(loaded)) {
                         val fresh = getDefaultButtons()
                         _buttons.value = fresh
                         save(context, fresh)
@@ -50,7 +51,7 @@ object ControlLayoutManager {
         // Data internal tidak ada (mis. aplikasi baru dipasang ulang): coba pulihkan dari cadangan.
         val restored = readBackup()
         if (restored != null) {
-            if (restored == legacyDefaultButtons()) {
+            if (isUntouchedDefault(restored)) {
                 val fresh = getDefaultButtons()
                 _buttons.value = fresh
                 save(context, fresh)
@@ -129,6 +130,8 @@ object ControlLayoutManager {
      * Tata letak bawaan: sedikit tombol, besar, mudah dijangkau jempol.
      * Kiri: joystick + jongkok. Kanan: serang, pakai, lompat, gulir hotbar.
      * Atas: lencana FPS, ESC/chat/inventori/F5 di tengah, tombol sistem kecil di kanan.
+     * Dua mode: tombol gerak dan aksi hanya tampil saat main; saat menu (inventori, chat, jeda)
+     * tersisa ESC, inventori, dan tombol Shift untuk memindah barang cepat.
      */
     fun getDefaultButtons(): List<CustomControlButton> {
         return listOf(
@@ -150,7 +153,8 @@ object ControlLayoutManager {
                 id = "key_t", name = "CHAT", icon = "chat",
                 keyCode = LwjglGlfwKeycode.GLFW_KEY_T,
                 xPercent = 47f, yPercent = 9f, widthDp = 38, heightDp = 34,
-                opacity = 0.9f, cornerRadiusDp = 12
+                opacity = 0.9f, cornerRadiusDp = 12,
+                showMode = ControlShowMode.GAME
             ),
             CustomControlButton(
                 id = "key_inv", name = "INV", icon = "inventory",
@@ -162,7 +166,8 @@ object ControlLayoutManager {
                 id = "key_f5", name = "F5",
                 keyCode = LwjglGlfwKeycode.GLFW_KEY_F5,
                 xPercent = 59f, yPercent = 9f, widthDp = 38, heightDp = 34,
-                opacity = 0.9f, cornerRadiusDp = 12
+                opacity = 0.9f, cornerRadiusDp = 12,
+                showMode = ControlShowMode.GAME
             ),
 
             // Tombol sistem kecil di kanan atas
@@ -189,13 +194,24 @@ object ControlLayoutManager {
             CustomControlButton(
                 id = "joy_move", name = "JOYSTICK", isJoystick = true,
                 xPercent = 15f, yPercent = 70f, widthDp = 120, heightDp = 120,
-                opacity = 0.9f, cornerRadiusDp = 60
+                opacity = 0.9f, cornerRadiusDp = 60,
+                showMode = ControlShowMode.GAME
             ),
             CustomControlButton(
                 id = "key_sneak", name = "SNEAK", icon = "sneak",
                 keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, isToggle = true,
                 xPercent = 29.5f, yPercent = 82f, widthDp = 52, heightDp = 52,
-                opacity = 0.9f, cornerRadiusDp = 26
+                opacity = 0.9f, cornerRadiusDp = 26,
+                showMode = ControlShowMode.GAME
+            ),
+
+            // Saat menu terbuka (inventori, peti): tahan Shift lalu ketuk barang = pindah cepat.
+            CustomControlButton(
+                id = "key_shift_menu", name = "SHIFT",
+                keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_SHIFT, isToggle = true,
+                xPercent = 12f, yPercent = 80f, widthDp = 56, heightDp = 44,
+                opacity = 0.9f, cornerRadiusDp = 14,
+                showMode = ControlShowMode.MENU
             ),
 
             // Kanan: aksi utama di sekitar jempol
@@ -203,27 +219,44 @@ object ControlLayoutManager {
                 id = "mouse_attack", name = "SERANG", icon = "attack",
                 isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT,
                 xPercent = 84f, yPercent = 62f, widthDp = 72, heightDp = 72,
-                opacity = 0.9f, cornerRadiusDp = 36
+                opacity = 0.9f, cornerRadiusDp = 36,
+                showMode = ControlShowMode.GAME
             ),
             CustomControlButton(
                 id = "mouse_use", name = "PAKAI", icon = "use",
                 isMouseButton = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT,
                 xPercent = 75.5f, yPercent = 84f, widthDp = 60, heightDp = 60,
-                opacity = 0.9f, cornerRadiusDp = 30
+                opacity = 0.9f, cornerRadiusDp = 30,
+                showMode = ControlShowMode.GAME
             ),
             CustomControlButton(
                 id = "key_jump", name = "JUMP", icon = "jump",
                 keyCode = LwjglGlfwKeycode.GLFW_KEY_SPACE,
                 xPercent = 92f, yPercent = 80f, widthDp = 70, heightDp = 70,
-                opacity = 0.9f, cornerRadiusDp = 35
+                opacity = 0.9f, cornerRadiusDp = 35,
+                showMode = ControlShowMode.GAME
             ),
             CustomControlButton(
                 id = "widget_scroll", name = "HOTBAR", isScroll = true,
                 xPercent = 96.5f, yPercent = 36f, widthDp = 40, heightDp = 92,
-                opacity = 0.9f, cornerRadiusDp = 14
+                opacity = 0.9f, cornerRadiusDp = 14,
+                showMode = ControlShowMode.GAME
             )
         )
     }
+
+    /** Layout yang tersimpan masih persis salah satu bawaan versi lama (belum pernah diubah pengguna). */
+    private fun isUntouchedDefault(list: List<CustomControlButton>): Boolean =
+        list == legacyDefaultButtons() || list == previousDefaultButtons()
+
+    /**
+     * Bawaan sebelum ada mode tampil (semua tombol selalu tampil, tanpa tombol Shift menu). Pemakai yang
+     * tata letaknya masih ini dipindah ke bawaan dua mode; yang sudah mengubahnya tidak disentuh.
+     */
+    private fun previousDefaultButtons(): List<CustomControlButton> =
+        getDefaultButtons()
+            .filter { it.id != "key_shift_menu" }
+            .map { it.copy(showMode = ControlShowMode.ALWAYS) }
 
     /** Tata letak bawaan versi lama; dipakai hanya untuk mengenali layout yang belum pernah diubah pengguna. */
     private fun legacyDefaultButtons(): List<CustomControlButton> {

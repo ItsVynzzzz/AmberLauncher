@@ -45,6 +45,7 @@ import androidx.compose.ui.window.Dialog
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.controls.ControlLimits
 import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
+import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.ui.components.NuxBadge
 import com.israadev.nuxlauncher.ui.components.NuxButton
@@ -64,6 +65,13 @@ import kotlin.math.roundToInt
 private fun Float.clampCenter(lo: Float, hi: Float): Float =
     if (lo > hi) (lo + hi) / 2f else coerceIn(lo, hi)
 
+/** Pilihan "lihat" di editor: semua tombol, atau hanya yang tampil saat main / saat menu. */
+private const val VIEW_ALL = "ALL"
+
+/** Tombol sistem selalu terlihat di semua tampilan; tombol biasa mengikuti mode tampilnya. */
+private fun editorShows(b: CustomControlButton, view: String): Boolean =
+    view == VIEW_ALL || b.isSystem || ControlShowMode.visible(b.showMode, view == ControlShowMode.MENU)
+
 @Composable
 fun CustomGuiEditorScreen(
     onNavigateBack: () -> Unit,
@@ -80,6 +88,8 @@ fun CustomGuiEditorScreen(
     var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN" or "COMBO"
     var showResetConfirmDialog by remember { mutableStateOf(false) }
     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
+    // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
+    var viewMode by remember { mutableStateOf(VIEW_ALL) }
 
     LaunchedEffect(Unit) {
         ControlLayoutManager.init(context)
@@ -138,7 +148,7 @@ fun CustomGuiEditorScreen(
         }
 
         // 2. Interactive Draggable Buttons on Screen
-        buttonsList.forEach { btn ->
+        buttonsList.filter { editorShows(it, viewMode) }.forEach { btn ->
             val isSelected = btn.id == selectedButtonId
             val btnWidthPx = with(density) { btn.widthDp.dp.toPx() }
             val btnHeightPx = with(density) { btn.heightDp.dp.toPx() }
@@ -262,7 +272,8 @@ fun CustomGuiEditorScreen(
                             xPercent = 50f,
                             yPercent = 50f,
                             widthDp = 52,
-                            heightDp = 48
+                            heightDp = 48,
+                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
                         )
                         buttonsList = buttonsList + newBtn
                         selectedButtonId = newBtn.id
@@ -293,7 +304,8 @@ fun CustomGuiEditorScreen(
                             widthDp = 130,
                             heightDp = 130,
                             cornerRadiusDp = 65,
-                            opacity = 0.85f
+                            opacity = 0.85f,
+                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
                         )
                         buttonsList = buttonsList + newJoy
                         selectedButtonId = newJoy.id
@@ -329,6 +341,46 @@ fun CustomGuiEditorScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text("SIMPAN", color = Color(0xFF111111), fontWeight = FontWeight.Black, fontSize = 11.sp)
+            }
+        }
+
+        // 3b. Pilih tampilan: semua tombol, hanya yang tampil saat main, atau hanya saat menu (inventori, chat, jeda).
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 6.dp)
+                .background(Color(0xFF171717), RoundedCornerShape(10.dp))
+                .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
+                .padding(horizontal = 6.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            listOf(
+                VIEW_ALL to "Semua tombol",
+                ControlShowMode.GAME to "Saat main",
+                ControlShowMode.MENU to "Saat menu"
+            ).forEach { (viewKey, viewLabel) ->
+                val chosen = viewMode == viewKey
+                Box(
+                    modifier = Modifier
+                        .background(if (chosen) Color(0xFFFFD60A) else Color(0xFF262626), RoundedCornerShape(6.dp))
+                        .clickable {
+                            viewMode = viewKey
+                            // Tombol terpilih yang tidak ikut tampil di tampilan baru dilepas dari pilihan.
+                            val sel = buttonsList.firstOrNull { it.id == selectedButtonId }
+                            if (sel != null && !editorShows(sel, viewKey)) selectedButtonId = null
+                        }
+                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        viewLabel,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 10.sp,
+                        color = if (chosen) Color(0xFF111111) else Color.White,
+                        maxLines = 1
+                    )
+                }
             }
         }
 
@@ -663,6 +715,57 @@ fun CustomGuiEditorScreen(
                                     inactiveTrackColor = Color(0xFF2E2E2E)
                                 )
                             )
+                        }
+
+                        // 6b. Kapan tombol tampil: selalu / saat main / saat menu (tombol sistem selalu tampil).
+                        if (!selectedButton.isSystem) {
+                            val currentShow = if (ControlShowMode.isValid(selectedButton.showMode)) selectedButton.showMode else ControlShowMode.ALWAYS
+                            Text("Tampil saat:", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                listOf(
+                                    ControlShowMode.ALWAYS to "Selalu",
+                                    ControlShowMode.GAME to "Saat main",
+                                    ControlShowMode.MENU to "Saat menu"
+                                ).forEach { (modeKey, modeLabel) ->
+                                    val isChosen = currentShow == modeKey
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .background(
+                                                if (isChosen) Color(0xFFFFD60A) else Color(0xFF202020),
+                                                RoundedCornerShape(6.dp)
+                                            )
+                                            .border(
+                                                1.dp,
+                                                if (isChosen) Color(0xFFFFE566) else Color(0xFF313131),
+                                                RoundedCornerShape(6.dp)
+                                            )
+                                            .clickable {
+                                                buttonsList = buttonsList.map {
+                                                    if (it.id == selectedButton.id) it.copy(showMode = modeKey) else it
+                                                }
+                                                // Ikuti tombolnya: kalau tidak lagi tampil di tampilan ini, pindah ke tampilan barunya.
+                                                if (viewMode != VIEW_ALL && !ControlShowMode.visible(modeKey, viewMode == ControlShowMode.MENU)) {
+                                                    viewMode = modeKey
+                                                }
+                                            }
+                                            .padding(vertical = 6.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = modeLabel,
+                                            fontSize = 9.sp,
+                                            fontWeight = if (isChosen) FontWeight.Black else FontWeight.Bold,
+                                            color = if (isChosen) Color(0xFF111111) else Color.White,
+                                            maxLines = 1
+                                        )
+                                    }
+                                }
+                            }
+                            Text("Menu = inventori, chat, dan layar lain di dalam game.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
                         }
 
                         // 7. Toggle Mode Switch (Only for normal key buttons)

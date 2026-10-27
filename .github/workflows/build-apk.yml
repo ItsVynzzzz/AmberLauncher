@@ -15,7 +15,216 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Tahap 1 (sekitar 15 detik): memeriksa patch dan menentukan perlu build atau tidak, SEBELUM
+  # menghabiskan menit runner untuk Gradle. Kesalahan patch berhenti di sini dengan penjelasan
+  # yang bisa dibaca di halaman ringkasan run (cocok dibuka dari HP).
+  periksa:
+    name: Periksa patch dan perubahan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      build: ${{ steps.cek.outputs.build }}
+      patches: ${{ steps.cek.outputs.patches }}
+
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v5
+        with:
+          # Riwayat dan tag lengkap dibutuhkan untuk membandingkan dengan rilis terakhir dan untuk 3-way merge
+          fetch-depth: 0
+
+      - name: Periksa patch dan perubahan
+        id: cek
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -u
+          shopt -s nullglob
+          SUM="$GITHUB_STEP_SUMMARY"
+          ERR="$RUNNER_TEMP/apply-err.txt"
+
+          # Berhenti dengan satu baris anotasi (tampil di daftar run) dan penjelasan lengkap di ringkasan.
+          fail() {
+            echo "::error title=Build dihentikan::$1"
+            { echo "### Build dihentikan: $1"; echo; printf '%s\n' "$2"; } >> "$SUM"
+            exit 1
+          }
+
+          # File di patch yang isinya sudah berubah di repo sejak patch dibuat. Dibandingkan lewat
+          # hash "index <lama>..<baru>" pada kepala tiap file di patch.
+          stale_files() {
+            local path old cur
+            while read -r path old; do
+              if [ -z "$path" ] || [[ $old =~ ^0+$ ]]; then continue; fi
+              cur=$(git rev-parse -q --verify "HEAD:$path" 2>/dev/null || true)
+              if [ -z "$cur" ]; then
+                echo "- \`$path\` tidak ada lagi di repo"
+              elif [[ $cur != "$old"* ]]; then
+                echo "- \`$path\` sudah berubah di repo sejak patch dibuat"
+              fi
+            done < <(awk '/^diff --git /{p=$3; sub(/^a\//,"",p)} /^index /{split($2,h,"[.][.]"); print p, h[1]}' "$1")
+          }
+
+          # Semua *.patch di akar repo dianggap patch, bukan hanya yang bernama pending-*.patch.
+          # Syaratnya satu: punya penanda akhir "# FIN part=N/M files=X" (bukti file tidak terpotong).
+          FILES=(*.patch)
+          NAMES=()
+          TOTAL=0
+          NOTES=""
+          FIN_RE='^# FIN part=([0-9]+)/([0-9]+) files=([0-9]+)$'
+
+          for f in "${FILES[@]}"; do
+            if [[ ! $f =~ ^[A-Za-z0-9._-]+$ ]]; then
+              fail "nama file patch tidak aman ($f)" "Pakai huruf, angka, titik, minus, atau garis bawah saja, tanpa spasi. Contoh: \`pending-perbaikan-mouse.patch\`."
+            fi
+
+            ACTUAL=$(grep -c '^diff --git ' "$f" || true)
+            LAST=$(awk 'NF { l = $0 } END { print l }' "$f")
+            LAST=${LAST%$'\r'}
+
+            if [[ ! $LAST =~ $FIN_RE ]]; then
+              BODY="File \`$f\` tidak punya penanda akhir \`# FIN ...\`. Penanda itu bukti file tidak terpotong saat diupload (mis. dari HP), jadi tanpa penanda patch tidak diterapkan.
+
+          Cara memperbaiki, pilih yang sesuai:
+
+          - Terpotong saat upload: upload ulang file aslinya.
+          - Patch dibuat tanpa penanda: tambahkan satu baris di paling akhir file, persis seperti ini (angka 1/1 untuk patch tunggal; kalau patch dibagi N bagian, pakai nomor bagian dan N):
+
+              # FIN part=1/1 files=$ACTUAL
+
+          - File ini bukan untuk diterapkan (sisa lama): hapus dari repo."
+              if [[ $f != pending-* ]]; then
+                BODY="$BODY
+
+          Nama file sebaiknya juga diawali \`pending-\`, mis. \`pending-$f\`."
+              fi
+              fail "$f tidak punya penanda akhir" "$BODY"
+            fi
+            PART_TOTAL=${BASH_REMATCH[2]}
+            EXPECT=${BASH_REMATCH[3]}
+
+            if [ "$EXPECT" != "$ACTUAL" ]; then
+              fail "$f terpotong saat diupload" "Penanda akhir menyebut $EXPECT file, tetapi hanya ditemukan $ACTUAL file di dalam patch. Upload ulang file aslinya sampai utuh."
+            fi
+
+            if [ "$PART_TOTAL" != "${#FILES[@]}" ]; then
+              # shellcheck disable=SC2016
+              LIST=$(printf '%s\n' "${FILES[@]}" | sed 's/^/- `/; s/$/`/')
+              fail "jumlah file patch tidak cocok" "Ada ${#FILES[@]} file patch di repo, tetapi penanda akhir menyebut total $PART_TOTAL bagian:
+
+          $LIST
+
+          - Salah satunya sisa patch lama yang gagal? Hapus file lamanya, atau upload perbaikan dengan nama yang sama supaya menimpa.
+          - Patch yang dibagi beberapa bagian? Upload semua bagian sekaligus."
+            fi
+
+            if grep -q '^diff --git a/\.github/workflows/' "$f"; then
+              fail "$f mengubah file workflow" "GitHub tidak mengizinkan workflow mengubah file di \`.github/workflows/\` dengan token bawaannya, jadi walau build lolos perubahan itu tidak bisa disimpan ke repo. Ubah file workflow langsung lewat GitHub (Edit file, atau Add file > Upload files), lalu keluarkan dari patch."
+            fi
+
+            if [[ $f != pending-* ]]; then
+              echo "::warning title=Nama patch::$f tidak diawali pending-, tetap diterapkan karena penanda akhirnya valid."
+              NOTES="$NOTES
+          - \`$f\`: nama sebaiknya diawali \`pending-\`, tetap diterapkan karena penanda akhirnya valid."
+            fi
+
+            NAMES+=("$f")
+            TOTAL=$((TOTAL + ACTUAL))
+          done
+
+          # Coba terapkan sungguhan (checkout ini dibuang setelah job selesai). Gagal ketat -> coba 3-way
+          # merge, karena repo sering berubah sejak patch dibuat.
+          for f in "${NAMES[@]}"; do
+            if git apply --index --whitespace=nowarn "$f" 2> "$ERR"; then
+              continue
+            fi
+            STRICT=$(head -n 12 "$ERR")
+            if git apply --index --3way --whitespace=nowarn "$f" > /dev/null 2>&1; then
+              echo "::warning title=Patch digabung 3-way::$f tidak cocok persis dengan repo sekarang, digabung dengan 3-way merge."
+              NOTES="$NOTES
+          - \`$f\` tidak cocok persis dengan repo sekarang, jadi digabung dengan 3-way merge. Hasilnya tetap diuji oleh build."
+              continue
+            fi
+            STALE=$(stale_files "$f")
+            BODY="Isi patch tidak cocok dengan kode di repo sekarang (commit $(git rev-parse --short HEAD)), dan penggabungan 3-way juga gagal."
+            if [ -n "$STALE" ]; then
+              BODY="$BODY
+
+          File yang sudah berubah di repo sejak patch dibuat:
+
+          $STALE"
+            fi
+            BODY="$BODY
+
+          Buat ulang patch dari versi repo terbaru lalu upload lagi. Pesan dari git:
+
+          \`\`\`
+          $STRICT
+          \`\`\`"
+            fail "gagal menerapkan $f" "$BODY"
+          done
+
+          if [ "${#NAMES[@]}" -gt 0 ]; then
+            CHANGED=$(git diff --cached --name-only | wc -l)
+            if [ "$CHANGED" != "$TOTAL" ]; then
+              fail "jumlah file berubah tidak sama dengan isi patch" "Patch menyebut $TOTAL file, tetapi setelah diterapkan yang berubah $CHANGED file. Periksa isi patch, lalu upload ulang."
+            fi
+          fi
+
+          # Perlu build? Tanpa patch dan tanpa perubahan kode sejak rilis terakhir (hanya dokumen, file
+          # patch, atau workflow berubah) build dilewati supaya tidak membuat rilis kembar.
+          PREV=""
+          if [ "${#NAMES[@]}" -gt 0 ]; then
+            BUILD=true
+            REASON="ada ${#NAMES[@]} patch yang akan diterapkan"
+          elif [ "$EVENT" = "workflow_dispatch" ]; then
+            BUILD=true
+            REASON="dijalankan manual"
+          else
+            PREV=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
+            if [ -z "$PREV" ]; then
+              BUILD=true
+              REASON="belum ada rilis sebelumnya"
+            else
+              CHG=$(git diff --name-only "$PREV" HEAD -- . ':(exclude)*.md' ':(exclude)*.patch' ':(exclude).github' ':(exclude)LICENSE' | head -n 5 || true)
+              if [ -n "$CHG" ]; then
+                BUILD=true
+                REASON="kode berubah sejak $PREV"
+              else
+                BUILD=false
+                REASON="tidak ada perubahan kode sejak $PREV (hanya dokumen, file patch, atau workflow)"
+              fi
+            fi
+          fi
+
+          {
+            echo "### Hasil pemeriksaan"
+            echo
+            if [ "${#NAMES[@]}" -gt 0 ]; then
+              echo "Patch yang akan diterapkan:"
+              echo
+              for f in "${NAMES[@]}"; do echo "- \`$f\`"; done
+              if [ -n "$NOTES" ]; then echo; printf '%s\n' "$NOTES"; fi
+              echo
+            fi
+            if [ "$BUILD" = true ]; then
+              echo "Build: **jalan** ($REASON)."
+            else
+              echo "Build: **dilewati** ($REASON). Untuk tetap membangun APK, jalankan workflow ini manual (Run workflow)."
+            fi
+          } >> "$SUM"
+          echo "$REASON"
+
+          {
+            echo "build=$BUILD"
+            echo "patches=${NAMES[*]:-}"
+          } >> "$GITHUB_OUTPUT"
+
+  # Tahap 2: build dan rilis. Hanya jalan bila tahap 1 lolos dan memang ada yang perlu dibangun.
   build:
+    name: Build APK
+    needs: periksa
+    if: needs.periksa.outputs.build == 'true'
     runs-on: ubuntu-24.04
     # APK 32-bit dibangun setelah APK 64-bit (Gradle kedua + NDK), jadi batas waktunya dilonggarkan
     timeout-minutes: 80
@@ -26,6 +235,31 @@ jobs:
         with:
           # Riwayat dan tag lengkap dibutuhkan untuk menentukan nomor versi dan catatan perubahan
           fetch-depth: 0
+
+      # Daftar patch sudah diperiksa di tahap 1, jadi di sini cukup diterapkan. Dijalankan paling awal
+      # supaya berkas VERSION dan Gradle wrapper dari patch ikut terbaca dan diperiksa.
+      - name: Terapkan patch
+        id: patch
+        env:
+          PATCHES: ${{ needs.periksa.outputs.patches }}
+        run: |
+          if [ -z "$PATCHES" ]; then
+            echo "Tidak ada patch, build seperti biasa."
+            exit 0
+          fi
+          for f in $PATCHES; do
+            echo "Menerapkan $f ..."
+            if git apply --index --whitespace=nowarn "$f"; then
+              continue
+            fi
+            if git apply --index --3way --whitespace=nowarn "$f"; then
+              echo "::warning::$f digabung dengan 3-way merge."
+              continue
+            fi
+            echo "::error::Gagal menerapkan $f padahal pemeriksaan awal lolos. Coba jalankan ulang workflow."
+            exit 1
+          done
+          echo "applied=true" >> "$GITHUB_OUTPUT"
 
       - name: Periksa keaslian Gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
@@ -69,46 +303,6 @@ jobs:
             exit 1
           fi
 
-      - name: Terapkan patch pending-*.patch (jika ada)
-        id: patch
-        run: |
-          shopt -s nullglob
-          PATCHES=(pending-*.patch)
-          if [ ${#PATCHES[@]} -eq 0 ]; then
-            echo "Tidak ada patch, build seperti biasa."
-            exit 0
-          fi
-          TOTAL=0
-          for f in "${PATCHES[@]}"; do
-            LAST=$(tail -n 1 "$f")
-            PARTS=$(echo "$LAST" | sed -n 's/^# FIN part=[0-9]*\/\([0-9][0-9]*\) files=[0-9][0-9]*$/\1/p')
-            EXPECT=$(echo "$LAST" | sed -n 's/^# FIN part=[0-9]*\/[0-9]* files=\([0-9][0-9]*\)$/\1/p')
-            ACTUAL=$(grep -c '^diff --git ' "$f" || true)
-            echo "Memeriksa $f ($(wc -c < "$f") byte, $ACTUAL file)"
-            if [ -z "$EXPECT" ] || [ "$EXPECT" != "$ACTUAL" ]; then
-              echo "::error::$f terpotong atau rusak saat diupload (penanda akhir tidak ditemukan). Upload ulang file aslinya."
-              exit 1
-            fi
-            if [ "$PARTS" != "${#PATCHES[@]}" ]; then
-              echo "::error::Ada ${#PATCHES[@]} file pending-*.patch di repo, seharusnya $PARTS. Upload semua bagian sekaligus."
-              exit 1
-            fi
-            TOTAL=$((TOTAL + ACTUAL))
-          done
-          for f in "${PATCHES[@]}"; do
-            echo "Menerapkan $f ..."
-            if ! git apply --index --whitespace=nowarn "$f"; then
-              echo "::error::Gagal menerapkan $f."
-              exit 1
-            fi
-          done
-          CHANGED=$(git diff --cached --name-only | wc -l)
-          if [ "$CHANGED" != "$TOTAL" ]; then
-            echo "::error::Jumlah file berubah ($CHANGED) tidak sama dengan isi patch ($TOTAL)."
-            exit 1
-          fi
-          echo "applied=true" >> "$GITHUB_OUTPUT"
-
       # Dijalankan setelah patch diterapkan, supaya berkas VERSION dari patch ikut terbaca.
       # Nomor build = nomor terakhir pada tag v<VERSION>.<n> ditambah 1 (mulai dari 1). Run yang
       # dibatalkan atau gagal tidak memakai nomor karena tag baru dibuat di langkah Release.
@@ -135,13 +329,15 @@ jobs:
       - name: Pasang Gradle dan cache
         uses: gradle/actions/setup-gradle@v4
 
+      # Keluaran Gradle disimpan ke berkas supaya kesalahan kompilasi bisa dirangkum bila build gagal.
       - name: Build APK release
         env:
           AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
           AMBER_VERSION_NAME: ${{ env.VERSION_NAME }}
         run: |
+          set -o pipefail
           chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
+          ./gradlew assembleRelease --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
 
       - name: Siapkan file APK
         run: |
@@ -173,6 +369,35 @@ jobs:
           name: AmberLauncher-${{ env.VERSION_NAME }}
           path: dist/*.apk
           retention-days: 14
+
+      # Patch disimpan ke repo SEBELUM rilis dibuat, supaya tag rilis menunjuk ke commit yang isinya
+      # sama dengan APK (sebelumnya tag menunjuk ke commit tanpa patch). Bila main berubah selama
+      # build, perubahan terbaru diambil dulu (rebase) lalu push diulang.
+      - name: Simpan perubahan patch ke repo (hanya jika build lolos)
+        id: simpan
+        if: steps.patch.outputs.applied == 'true'
+        env:
+          PATCHES: ${{ needs.periksa.outputs.patches }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Nama patch sudah divalidasi di tahap 1 (tanpa spasi), jadi pemisahan kata di sini aman.
+          # shellcheck disable=SC2086
+          git rm -q -f $PATCHES
+          git commit -m "Terapkan patch (build lolos)"
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push ditolak (main berubah selama build). Mengambil perubahan terbaru lalu mencoba lagi ($i/3) ..."
+            if ! git pull --rebase; then
+              git rebase --abort || true
+              echo "::error::Perubahan terbaru di main tidak bisa digabung otomatis dengan penghapusan patch ini."
+              exit 1
+            fi
+          done
+          echo "::error::Push gagal setelah 3 percobaan."
+          exit 1
 
       # Catatan perubahan diambil dari judul commit sejak rilis sebelumnya, jadi tulis judul commit
       # yang jelas. Judul bawaan GitHub (mis. "Add files via upload") dan commit bot disaring.
@@ -209,16 +434,57 @@ jobs:
           # Versi dengan tanda "-" (mis. 0.1.0-beta.3) ditandai pra-rilis
           PRE=""
           case "$VERSION_NAME" in *-*) PRE="--prerelease" ;; esac
-          if ! gh release create "$RELEASE_TAG" dist/*.apk --target "$GITHUB_SHA" --title "AmberLauncher ${VERSION_NAME}" --notes-file "$NOTES" $PRE; then
+          if ! gh release create "$RELEASE_TAG" dist/*.apk --target "$(git rev-parse HEAD)" --title "AmberLauncher ${VERSION_NAME}" --notes-file "$NOTES" $PRE; then
             # Bila dijalankan ulang dan rilisnya sudah ada, cukup timpa berkas APK-nya
             gh release upload "$RELEASE_TAG" dist/*.apk --clobber
           fi
 
-      - name: Simpan perubahan patch ke repo (hanya jika build lolos)
-        if: steps.patch.outputs.applied == 'true'
+      - name: Ringkasan hasil
+        if: success()
+        env:
+          PATCHES: ${{ needs.periksa.outputs.patches }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git ls-files 'pending*.patch' | xargs -r git rm -q -f
-          git commit -m "Terapkan patch (build lolos)"
-          git push
+          {
+            echo "### Selesai: ${VERSION_NAME}"
+            echo
+            echo "APK sudah dirilis: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}"
+            if [ -n "$PATCHES" ]; then
+              echo
+              echo "Patch yang diterapkan dan disimpan ke repo: $PATCHES"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Bila gagal: rangkum penyebabnya di halaman ringkasan supaya tidak perlu menggulir log panjang.
+      - name: Ringkasan kegagalan
+        if: failure()
+        env:
+          PATCHES: ${{ needs.periksa.outputs.patches }}
+          SIMPAN: ${{ steps.simpan.outcome }}
+        run: |
+          {
+            echo "### Build gagal"
+            echo
+            if [ -n "$PATCHES" ]; then
+              if [ "$SIMPAN" = "success" ]; then
+                echo "Patch ($PATCHES) sudah tersimpan ke repo. Yang gagal adalah langkah sesudahnya (rilis); jalankan ulang workflow ini (Run workflow) untuk mencoba lagi."
+              else
+                echo "Patch ($PATCHES) TIDAK disimpan ke repo dan filenya tetap ada. Perbaiki lalu upload ulang patch dengan nama yang sama (menimpa file lama)."
+              fi
+              echo
+            fi
+            LOG="$RUNNER_TEMP/gradle.log"
+            if [ -f "$LOG" ]; then
+              ERRS="$(grep -E '^e: |: error: |^\* What went wrong:' -A2 "$LOG" | sed -E 's#file://##; s#/home/runner/work/[^/]+/[^/]+/##' | head -n 40 || true)"
+              if [ -n "$ERRS" ]; then
+                echo "Kesalahan yang ditemukan di keluaran Gradle:"
+                echo
+                echo '```'
+                printf '%s\n' "$ERRS"
+                echo '```'
+              else
+                echo "Tidak ada baris kesalahan kompilasi di keluaran Gradle. Lihat log langkah yang berwarna merah."
+              fi
+            else
+              echo "Gagal sebelum Gradle berjalan. Lihat log langkah yang berwarna merah."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

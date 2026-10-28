@@ -1,0 +1,329 @@
+diff --git a/app/src/main/assets/lang/en/game.tsv b/app/src/main/assets/lang/en/game.tsv
+index c4062a9..98afb5d 100644
+--- a/app/src/main/assets/lang/en/game.tsv
++++ b/app/src/main/assets/lang/en/game.tsv
+@@ -15,6 +15,7 @@ Mode sentuh	Touch mode
+ Geser	Slide
+ Ketuk	Tap
+ Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Slide: the screen acts as a trackpad. Tap: your finger becomes the cursor directly.
++Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Hold the attack or jump button and slide your finger to turn the camera. Turn off for PvP.
+ PINTAS	SHORTCUTS
+ Kamera	Camera
+ Jeda	Pause
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index c66aa16..7839123 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -93,6 +93,8 @@ Isi rekaman	Recording content
+ Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Game only: on-screen buttons are hidden from the video (they still work). With buttons: on-screen buttons are recorded too. You can also change this from the in-game menu.
+ Hotbar sentuh	Touch hotbar
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Tap the hotbar at the bottom of the screen to select a slot, like in Minecraft Bedrock. Slot positions follow the game's GUI scale.
++Geser kamera dari tombol	Look by dragging buttons
++Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Holding the attack, use, or jump button and sliding your finger also turns the camera. Turn off so your view doesn't drift during fights (PvP).
+ Dukungan TouchController	TouchController support
+ Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. If the TouchController mod is installed and connected, touches while playing are also passed to the mod. The launcher's buttons and virtual mouse stay active, so both can be used at the same time.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+diff --git a/app/src/main/assets/lang/es/game.tsv b/app/src/main/assets/lang/es/game.tsv
+index 3d27200..dea5fb1 100644
+--- a/app/src/main/assets/lang/es/game.tsv
++++ b/app/src/main/assets/lang/es/game.tsv
+@@ -15,6 +15,7 @@ Mode sentuh	Modo t\u00e1ctil
+ Geser	Deslizar
+ Ketuk	Tocar
+ Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Deslizar: la pantalla act\u00faa como trackpad. Tocar: tu dedo se convierte directamente en el cursor.
++Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Mant\u00e9n pulsado el bot\u00f3n de atacar o saltar y desliza el dedo para girar la c\u00e1mara. Desact\u00edvalo para PvP.
+ PINTAS	ATAJOS
+ Kamera	C\u00e1mara
+ Jeda	Pausa
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index f1eb11a..b785c74 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -93,6 +93,8 @@ Isi rekaman	Contenido de la grabaci\u00f3n
+ Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Solo el juego: los botones en pantalla se ocultan del video (siguen funcionando). Con botones: los botones en pantalla tambi\u00e9n se graban. Tambi\u00e9n puedes cambiarlo desde el men\u00fa del juego.
+ Hotbar sentuh	Barra r\u00e1pida t\u00e1ctil
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toca la barra r\u00e1pida en la parte inferior de la pantalla para elegir una ranura, como en Minecraft Bedrock. Las posiciones siguen la escala de GUI del juego.
++Geser kamera dari tombol	Mirar arrastrando los botones
++Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Al mantener pulsado el bot\u00f3n de atacar, usar o saltar y deslizar el dedo, la c\u00e1mara tambi\u00e9n gira. Desact\u00edvalo para que la vista no se mueva durante los combates (PvP).
+ Dukungan TouchController	Compatibilidad con TouchController
+ Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. Si el mod TouchController est\u00e1 instalado y conectado, los toques al jugar tambi\u00e9n se env\u00edan al mod. Los botones y el rat\u00f3n virtual del launcher siguen activos, as\u00ed que ambos se pueden usar a la vez.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+diff --git a/app/src/main/assets/lang/vi/game.tsv b/app/src/main/assets/lang/vi/game.tsv
+index 1ad0049..4968f01 100644
+--- a/app/src/main/assets/lang/vi/game.tsv
++++ b/app/src/main/assets/lang/vi/game.tsv
+@@ -15,6 +15,7 @@ Mode sentuh	Ch\u1ebf \u0111\u1ed9 c\u1ea3m \u1ee9ng
+ Geser	Tr\u01b0\u1ee3t
+ Ketuk	Ch\u1ea1m
+ Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Tr\u01b0\u1ee3t: m\u00e0n h\u00ecnh ho\u1ea1t \u0111\u1ed9ng nh\u01b0 trackpad. Ch\u1ea1m: ng\u00f3n tay tr\u1edf th\u00e0nh con tr\u1ecf tr\u1ef1c ti\u1ebfp.
++Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Gi\u1eef n\u00fat \u0111\u00e1nh ho\u1eb7c nh\u1ea3y r\u1ed3i tr\u01b0\u1ee3t ng\u00f3n tay \u0111\u1ec3 xoay camera. T\u1eaft khi ch\u01a1i PvP.
+ PINTAS	PH\u00cdM T\u1eaeT
+ Kamera	Camera
+ Jeda	T\u1ea1m d\u1eebng
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index 73d5450..59d39ad 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -92,6 +92,8 @@ Hentikan rekaman saat HP terlalu panas	D\u1eebng quay khi \u0111i\u1ec7n tho\u1e
+ Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	T\u1ef1 \u0111\u1ed9ng l\u01b0u b\u1ea3n quay v\u00e0 d\u1eebng \u0111\u1ec3 tr\u00f2 ch\u01a1i kh\u00f4ng b\u1ecb ch\u1eadm v\u00ec n\u00f3ng.
+ Hotbar sentuh	Thanh nhanh c\u1ea3m \u1ee9ng
+ Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Ch\u1ea1m v\u00e0o thanh nhanh \u1edf cu\u1ed1i m\u00e0n h\u00ecnh \u0111\u1ec3 ch\u1ecdn \u00f4, gi\u1ed1ng Minecraft Bedrock. V\u1ecb tr\u00ed c\u00e1c \u00f4 theo t\u1ef7 l\u1ec7 GUI c\u1ee7a tr\u00f2 ch\u01a1i.
++Geser kamera dari tombol	Xoay camera khi k\u00e9o n\u00fat
++Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Gi\u1eef n\u00fat \u0111\u00e1nh, d\u00f9ng ho\u1eb7c nh\u1ea3y r\u1ed3i tr\u01b0\u1ee3t ng\u00f3n tay s\u1ebd xoay camera. T\u1eaft \u0111\u1ec3 g\u00f3c nh\u00ecn kh\u00f4ng b\u1ecb l\u1ec7ch khi chi\u1ebfn \u0111\u1ea5u (PvP).
+ Dukungan TouchController	H\u1ed7 tr\u1ee3 TouchController
+ Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Th\u1eed nghi\u1ec7m. N\u1ebfu mod TouchController \u0111\u00e3 c\u00e0i v\u00e0 k\u1ebft n\u1ed1i, thao t\u00e1c ch\u1ea1m khi ch\u01a1i c\u0169ng \u0111\u01b0\u1ee3c chuy\u1ec3n cho mod. N\u00fat v\u00e0 chu\u1ed9t \u1ea3o c\u1ee7a launcher v\u1eabn ho\u1ea1t \u0111\u1ed9ng, n\u00ean c\u00f3 th\u1ec3 d\u00f9ng c\u1ea3 hai c\u00f9ng l\u00fac.
+ # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 1a15bef..8060007 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -2196,6 +2196,13 @@ fun GameScreen(
+                     launcherSettings.copy(mouseControlMode = if (newMode == MouseControlMode.CLICK) "CLICK" else "SLIDE")
+                 )
+             },
++            buttonLookDrag = launcherSettings.buttonLookDrag,
++            onButtonLookDragChange = { on ->
++                SettingsManager.updateSettings(
++                    context,
++                    launcherSettings.copy(buttonLookDrag = on)
++                )
++            },
+             isControlVisible = isControlVisible,
+             onToggleControlVisibility = {
+                 isControlVisible = !isControlVisible
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index d954f72..d6d8da2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -19,6 +19,9 @@ data class LauncherSettings(
+     val touchAttackEnabled: Boolean = false,
+     // Hotbar sentuh gaya Bedrock: ketuk hotbar game untuk memilih slot saat bermain.
+     val hotbarTouchEnabled: Boolean = true,
++    // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
++    // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
++    val buttonLookDrag: Boolean = false,
+     // Eksperimental, bawaan mati. Bila modnya terpasang: kontrol bawaan disembunyikan dan semua
+     // sentuhan diteruskan ke mod. Namanya sengaja baru supaya nilai "aktif" dari versi sebelumnya tidak terbawa.
+     val touchControllerEnabled: Boolean = false,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index bdee221..4f1cc7e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.drawscope.DrawScope
+ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
++import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.graphics.nativeCanvas
+ import androidx.compose.ui.graphics.toArgb
+ import androidx.compose.ui.input.pointer.pointerInput
+@@ -58,6 +59,11 @@ import kotlin.math.sin
+  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
+  * merah di dalam menu.
+  *
++ * Tiap tombol punya lapisan gambar (RenderNode) sendiri. Tanpa itu, satu tombol yang berubah
++ * (ditekan, angka FPS baru, kenop joystick bergeser) membuat thread utama merekam ulang gambar
++ * SEMUA tombol, jadi makin banyak tombol makin berat tiap sentuhan. Dengan lapisan sendiri hanya
++ * tombol yang berubah yang direkam ulang; tombol lain cukup memakai daftar gambar yang sudah ada.
++ *
+  * Dua mode tampil: tiap tombol biasa punya [CustomControlButton.showMode] (selalu / hanya saat main /
+  * hanya saat menu). [inMenu] true bila game sedang menampilkan kursor (inventori, chat, jeda). Tombol
+  * yang tidak cocok dengan mode saat ini tidak disusun sama sekali, jadi tidak membebani layar.
+@@ -94,7 +100,10 @@ fun GameControlsLayer(
+                 .coerceIn(0f, (screenWidth - widthPx).coerceAtLeast(0f))
+             val top = (screenHeight * (btn.yPercent / 100f) - heightPx / 2f)
+                 .coerceIn(0f, (screenHeight - heightPx).coerceAtLeast(0f))
+-            val place = Modifier.offset { IntOffset(left.roundToInt(), top.roundToInt()) }
++            // graphicsLayer harus sebelum size/drawBehind milik tombol, supaya gambarnya masuk ke lapisan ini.
++            val place = Modifier
++                .offset { IntOffset(left.roundToInt(), top.roundToInt()) }
++                .graphicsLayer { }
+ 
+             if (btn.isSystem) {
+                 when (btn.systemAction) {
+@@ -248,9 +257,11 @@ private fun SystemIconButton(
+ }
+ 
+ /**
+- * Tombol virtual biasa, widget gulir hotbar, dan tombol makro. Tombol serang/pakai/lompat juga
+- * bisa digeser sambil ditahan untuk memutar kamera, jadi satu jempol cukup untuk menggali atau
+- * menyerang sambil membidik.
++ * Tombol virtual biasa, widget gulir hotbar, dan tombol makro. Tombol serang/pakai/lompat bisa
++ * digeser sambil ditahan untuk memutar kamera (satu jempol untuk menggali sambil membidik), tetapi
++ * hanya bila "Geser kamera dari tombol" dinyalakan di Pengaturan. Bawaannya mati: jari yang sedikit
++ * bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan. Memutar kamera dengan jari
++ * lain di area kosong layar tetap bekerja seperti biasa.
+  */
+ @Composable
+ fun CustomVirtualButton(
+@@ -360,8 +371,9 @@ fun CustomVirtualButton(
+         }
+     }
+ 
+-    // Tombol biasa (bukan toggle, bukan makro): tahan = aktif; serang/pakai/lompat boleh sambil membidik.
++    // Tombol biasa (bukan toggle, bukan makro): tahan = aktif.
+     val simple = !button.isMacro && !button.isToggle
++    // Tombol yang boleh memutar kamera bila digeser (hanya bila dinyalakan di Pengaturan, lihat di bawah).
+     val lookDrag = button.isMouseButton || button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
+ 
+     val base = modifier
+@@ -377,6 +389,8 @@ fun CustomVirtualButton(
+                     down.consume()
+                     isPressed = true
+                     sendPress(true)
++                    // Dibaca tiap jari menyentuh tombol, jadi mengubah pengaturan langsung berlaku.
++                    val canLook = lookDrag && SettingsManager.settings.value.buttonLookDrag
+                     var last = down.position
+                     var looking = false
+                     try {
+@@ -389,7 +403,7 @@ fun CustomVirtualButton(
+                             }
+                             val delta = change.position - last
+                             last = change.position
+-                            if (lookDrag) {
++                            if (canLook) {
+                                 if (!looking && (change.position - down.position).getDistance() > slop) {
+                                     looking = true
+                                 }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index b781ac5..5a1e53f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -3,8 +3,6 @@ package com.israadev.nuxlauncher.ui.dialogs
+ import android.os.Build
+ import android.os.SystemClock
+ import android.view.WindowManager
+-import androidx.compose.animation.core.Animatable
+-import androidx.compose.animation.core.tween
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+ import androidx.compose.foundation.gestures.detectTapGestures
+@@ -45,8 +43,6 @@ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.platform.LocalView
+ import androidx.compose.ui.text.font.FontWeight
+@@ -72,10 +68,12 @@ import kotlinx.coroutines.delay
+ import kotlin.math.roundToInt
+ 
+ /**
+- * Menu dalam game: panel yang meluncur dari kanan dan membiarkan game tetap terlihat di kiri.
++ * Menu dalam game: panel di sisi kanan yang membiarkan game tetap terlihat di kiri.
+  * Aksi yang paling sering dipakai ada di baris ikon paling atas, sisanya satu daftar bergulir
+- * tanpa tab. Tanpa blur latar (blur memberatkan GPU saat game masih berjalan di belakangnya) dan
+- * angka FPS hanya dibaca oleh lencana kecil di kepala panel.
++ * tanpa tab. Sengaja polos supaya ringan selagi game berjalan di belakangnya: tanpa blur, tanpa
++ * peredup layar penuh (satu isian hitam transparan seluas layar yang digambar ulang tiap kali
++ * menu berubah), tanpa animasi masuk, dan angka FPS hanya dibaca oleh lencana kecil di kepala
++ * panel. Mengetuk area game di luar panel menutup menu.
+  */
+ @Composable
+ fun GameMenuSheet(
+@@ -95,6 +93,8 @@ fun GameMenuSheet(
+     onCaptureSensitivityChange: (Int) -> Unit,
+     mouseControlMode: MouseControlMode,
+     onMouseControlModeChange: (MouseControlMode) -> Unit,
++    buttonLookDrag: Boolean = false,
++    onButtonLookDragChange: (Boolean) -> Unit = {},
+     isControlVisible: Boolean,
+     onToggleControlVisibility: () -> Unit,
+     onRequestKeyboard: () -> Unit,
+@@ -127,7 +127,8 @@ fun GameMenuSheet(
+         SideEffect {
+             val win = (dialogView.parent as? DialogWindowProvider)?.window
+             if (win != null) {
+-                // Peredupan kita atur sendiri di bawah; tidak memakai blur latar.
++                // Tanpa peredup dan tanpa blur latar: game tetap terlihat jelas dan menu tidak perlu
++                // menggambar satu isian gelap seluas layar tiap kali berubah.
+                 win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                     win.attributes = win.attributes.apply {
+@@ -138,15 +139,13 @@ fun GameMenuSheet(
+             }
+         }
+ 
+-        val slide = remember { Animatable(1f) }
+-        LaunchedEffect(Unit) { slide.animateTo(0f, tween(durationMillis = 170)) }
+         val dismiss by rememberUpdatedState(onDismissRequest)
+         val panelShape = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp)
+ 
++        // Wadah penuh layar hanya menangkap ketukan di luar panel (menutup menu); tidak menggambar apa pun.
+         Box(
+             modifier = Modifier
+                 .fillMaxSize()
+-                .background(Color.Black.copy(alpha = 0.40f))
+                 .pointerInput(Unit) { detectTapGestures { dismiss() } },
+             contentAlignment = Alignment.CenterEnd
+         ) {
+@@ -155,7 +154,6 @@ fun GameMenuSheet(
+                     .fillMaxHeight()
+                     .widthIn(max = 360.dp)
+                     .fillMaxWidth()
+-                    .graphicsLayer { translationX = slide.value * size.width }
+                     .clip(panelShape)
+                     .background(Amber.Panel)
+                     .border(1.dp, Amber.Line, panelShape)
+@@ -337,6 +335,13 @@ fun GameMenuSheet(
+                         fontSize = 11.sp,
+                         lineHeight = 15.sp
+                     )
++                    Spacer(modifier = Modifier.height(12.dp))
++                    ToggleRow(
++                        title = "Geser kamera dari tombol",
++                        subtitle = "Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.",
++                        checked = buttonLookDrag,
++                        onChange = onButtonLookDragChange
++                    )
+ 
+                     SectionTitle("PINTAS")
+                     val keys = listOf(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 0247ff9..2b2ee8a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -125,6 +125,7 @@ fun SettingsScreen(
+     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
+     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
++    var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
+     var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
+@@ -174,6 +175,7 @@ fun SettingsScreen(
+             captureSensitivity = captureSensitivity,
+             touchAttackEnabled = touchAttack,
+             hotbarTouchEnabled = hotbarTouch,
++            buttonLookDrag = buttonLookDrag,
+             touchControllerEnabled = touchControllerEnabled,
+             touchControllerExclusive = touchControllerExclusive,
+             gamepadEmulation = gamepadEmulation,
+@@ -834,6 +836,16 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
++                        SettingSwitchRow(
++                            title = "Geser kamera dari tombol",
++                            desc = "Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).",
++                            checked = buttonLookDrag,
++                            onCheckedChange = {
++                                buttonLookDrag = it
++                                commitSettings()
++                            }
++                        )
++                        SettingDivider()
+                         SettingSwitchRow(
+                             title = "Dukungan TouchController",
+                             desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
+@@ -944,6 +956,7 @@ fun SettingsScreen(
+                     captureSensitivity = reset.captureSensitivity
+                     touchAttack = reset.touchAttackEnabled
+                     hotbarTouch = reset.hotbarTouchEnabled
++                    buttonLookDrag = reset.buttonLookDrag
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     touchControllerExclusive = reset.touchControllerExclusive
+                     gamepadEmulation = reset.gamepadEmulation
+# FIN part=1/1 files=11

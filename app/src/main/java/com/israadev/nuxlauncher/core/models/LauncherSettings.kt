@@ -19,6 +19,9 @@ data class LauncherSettings(
     val touchAttackEnabled: Boolean = false,
     // Hotbar sentuh gaya Bedrock: ketuk hotbar game untuk memilih slot saat bermain.
     val hotbarTouchEnabled: Boolean = true,
+    // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
+    // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
+    val buttonLookDrag: Boolean = false,
     // Eksperimental, bawaan mati. Bila modnya terpasang: kontrol bawaan disembunyikan dan semua
     // sentuhan diteruskan ke mod. Namanya sengaja baru supaya nilai "aktif" dari versi sebelumnya tidak terbawa.
     val touchControllerEnabled: Boolean = false,

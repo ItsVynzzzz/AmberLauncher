@@ -3,8 +3,6 @@ package com.israadev.nuxlauncher.ui.dialogs
 import android.os.Build
 import android.os.SystemClock
 import android.view.WindowManager
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -45,8 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
@@ -72,10 +68,12 @@ import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 /**
- * Menu dalam game: panel yang meluncur dari kanan dan membiarkan game tetap terlihat di kiri.
+ * Menu dalam game: panel di sisi kanan yang membiarkan game tetap terlihat di kiri.
  * Aksi yang paling sering dipakai ada di baris ikon paling atas, sisanya satu daftar bergulir
- * tanpa tab. Tanpa blur latar (blur memberatkan GPU saat game masih berjalan di belakangnya) dan
- * angka FPS hanya dibaca oleh lencana kecil di kepala panel.
+ * tanpa tab. Sengaja polos supaya ringan selagi game berjalan di belakangnya: tanpa blur, tanpa
+ * peredup layar penuh (satu isian hitam transparan seluas layar yang digambar ulang tiap kali
+ * menu berubah), tanpa animasi masuk, dan angka FPS hanya dibaca oleh lencana kecil di kepala
+ * panel. Mengetuk area game di luar panel menutup menu.
  */
 @Composable
 fun GameMenuSheet(
@@ -95,6 +93,8 @@ fun GameMenuSheet(
     onCaptureSensitivityChange: (Int) -> Unit,
     mouseControlMode: MouseControlMode,
     onMouseControlModeChange: (MouseControlMode) -> Unit,
+    buttonLookDrag: Boolean = false,
+    onButtonLookDragChange: (Boolean) -> Unit = {},
     isControlVisible: Boolean,
     onToggleControlVisibility: () -> Unit,
     onRequestKeyboard: () -> Unit,
@@ -127,7 +127,8 @@ fun GameMenuSheet(
         SideEffect {
             val win = (dialogView.parent as? DialogWindowProvider)?.window
             if (win != null) {
-                // Peredupan kita atur sendiri di bawah; tidak memakai blur latar.
+                // Tanpa peredup dan tanpa blur latar: game tetap terlihat jelas dan menu tidak perlu
+                // menggambar satu isian gelap seluas layar tiap kali berubah.
                 win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     win.attributes = win.attributes.apply {
@@ -138,15 +139,13 @@ fun GameMenuSheet(
             }
         }
 
-        val slide = remember { Animatable(1f) }
-        LaunchedEffect(Unit) { slide.animateTo(0f, tween(durationMillis = 170)) }
         val dismiss by rememberUpdatedState(onDismissRequest)
         val panelShape = RoundedCornerShape(topStart = 24.dp, bottomStart = 24.dp)
 
+        // Wadah penuh layar hanya menangkap ketukan di luar panel (menutup menu); tidak menggambar apa pun.
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.40f))
                 .pointerInput(Unit) { detectTapGestures { dismiss() } },
             contentAlignment = Alignment.CenterEnd
         ) {
@@ -155,7 +154,6 @@ fun GameMenuSheet(
                     .fillMaxHeight()
                     .widthIn(max = 360.dp)
                     .fillMaxWidth()
-                    .graphicsLayer { translationX = slide.value * size.width }
                     .clip(panelShape)
                     .background(Amber.Panel)
                     .border(1.dp, Amber.Line, panelShape)
@@ -336,6 +334,13 @@ fun GameMenuSheet(
                         color = Amber.TextFaint,
                         fontSize = 11.sp,
                         lineHeight = 15.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    ToggleRow(
+                        title = "Geser kamera dari tombol",
+                        subtitle = "Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.",
+                        checked = buttonLookDrag,
+                        onChange = onButtonLookDragChange
                     )
 
                     SectionTitle("PINTAS")

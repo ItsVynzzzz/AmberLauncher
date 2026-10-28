@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
@@ -57,6 +58,11 @@ import kotlin.math.sin
  * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
  * merah di dalam menu.
+ *
+ * Tiap tombol punya lapisan gambar (RenderNode) sendiri. Tanpa itu, satu tombol yang berubah
+ * (ditekan, angka FPS baru, kenop joystick bergeser) membuat thread utama merekam ulang gambar
+ * SEMUA tombol, jadi makin banyak tombol makin berat tiap sentuhan. Dengan lapisan sendiri hanya
+ * tombol yang berubah yang direkam ulang; tombol lain cukup memakai daftar gambar yang sudah ada.
  *
  * Dua mode tampil: tiap tombol biasa punya [CustomControlButton.showMode] (selalu / hanya saat main /
  * hanya saat menu). [inMenu] true bila game sedang menampilkan kursor (inventori, chat, jeda). Tombol
@@ -94,7 +100,10 @@ fun GameControlsLayer(
                 .coerceIn(0f, (screenWidth - widthPx).coerceAtLeast(0f))
             val top = (screenHeight * (btn.yPercent / 100f) - heightPx / 2f)
                 .coerceIn(0f, (screenHeight - heightPx).coerceAtLeast(0f))
-            val place = Modifier.offset { IntOffset(left.roundToInt(), top.roundToInt()) }
+            // graphicsLayer harus sebelum size/drawBehind milik tombol, supaya gambarnya masuk ke lapisan ini.
+            val place = Modifier
+                .offset { IntOffset(left.roundToInt(), top.roundToInt()) }
+                .graphicsLayer { }
 
             if (btn.isSystem) {
                 when (btn.systemAction) {
@@ -248,9 +257,11 @@ private fun SystemIconButton(
 }
 
 /**
- * Tombol virtual biasa, widget gulir hotbar, dan tombol makro. Tombol serang/pakai/lompat juga
- * bisa digeser sambil ditahan untuk memutar kamera, jadi satu jempol cukup untuk menggali atau
- * menyerang sambil membidik.
+ * Tombol virtual biasa, widget gulir hotbar, dan tombol makro. Tombol serang/pakai/lompat bisa
+ * digeser sambil ditahan untuk memutar kamera (satu jempol untuk menggali sambil membidik), tetapi
+ * hanya bila "Geser kamera dari tombol" dinyalakan di Pengaturan. Bawaannya mati: jari yang sedikit
+ * bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan. Memutar kamera dengan jari
+ * lain di area kosong layar tetap bekerja seperti biasa.
  */
 @Composable
 fun CustomVirtualButton(
@@ -360,8 +371,9 @@ fun CustomVirtualButton(
         }
     }
 
-    // Tombol biasa (bukan toggle, bukan makro): tahan = aktif; serang/pakai/lompat boleh sambil membidik.
+    // Tombol biasa (bukan toggle, bukan makro): tahan = aktif.
     val simple = !button.isMacro && !button.isToggle
+    // Tombol yang boleh memutar kamera bila digeser (hanya bila dinyalakan di Pengaturan, lihat di bawah).
     val lookDrag = button.isMouseButton || button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
 
     val base = modifier
@@ -377,6 +389,8 @@ fun CustomVirtualButton(
                     down.consume()
                     isPressed = true
                     sendPress(true)
+                    // Dibaca tiap jari menyentuh tombol, jadi mengubah pengaturan langsung berlaku.
+                    val canLook = lookDrag && SettingsManager.settings.value.buttonLookDrag
                     var last = down.position
                     var looking = false
                     try {
@@ -389,7 +403,7 @@ fun CustomVirtualButton(
                             }
                             val delta = change.position - last
                             last = change.position
-                            if (lookDrag) {
+                            if (canLook) {
                                 if (!looking && (change.position - down.position).getDistance() > slop) {
                                     looking = true
                                 }

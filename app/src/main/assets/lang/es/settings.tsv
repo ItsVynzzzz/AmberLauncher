@@ -93,6 +93,8 @@ Isi rekaman	Contenido de la grabaci\u00f3n
 Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Solo el juego: los botones en pantalla se ocultan del video (siguen funcionando). Con botones: los botones en pantalla tambi\u00e9n se graban. Tambi\u00e9n puedes cambiarlo desde el men\u00fa del juego.
 Hotbar sentuh	Barra r\u00e1pida t\u00e1ctil
 Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toca la barra r\u00e1pida en la parte inferior de la pantalla para elegir una ranura, como en Minecraft Bedrock. Las posiciones siguen la escala de GUI del juego.
+Geser kamera dari tombol	Mirar arrastrando los botones
+Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Al mantener pulsado el bot\u00f3n de atacar, usar o saltar y deslizar el dedo, la c\u00e1mara tambi\u00e9n gira. Desact\u00edvalo para que la vista no se mueva durante los combates (PvP).
 Dukungan TouchController	Compatibilidad con TouchController
 Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. Si el mod TouchController est\u00e1 instalado y conectado, los toques al jugar tambi\u00e9n se env\u00edan al mod. Los botones y el rat\u00f3n virtual del launcher siguen activos, as\u00ed que ambos se pueden usar a la vez.
 # Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil

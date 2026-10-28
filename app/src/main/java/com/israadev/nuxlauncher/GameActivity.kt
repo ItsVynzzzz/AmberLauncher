@@ -2196,6 +2196,13 @@ fun GameScreen(
                     launcherSettings.copy(mouseControlMode = if (newMode == MouseControlMode.CLICK) "CLICK" else "SLIDE")
                 )
             },
+            buttonLookDrag = launcherSettings.buttonLookDrag,
+            onButtonLookDragChange = { on ->
+                SettingsManager.updateSettings(
+                    context,
+                    launcherSettings.copy(buttonLookDrag = on)
+                )
+            },
             isControlVisible = isControlVisible,
             onToggleControlVisibility = {
                 isControlVisible = !isControlVisible

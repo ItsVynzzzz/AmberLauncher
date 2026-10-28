@@ -125,6 +125,7 @@ fun SettingsScreen(
     var captureSensitivity by remember(currentSettings.captureSensitivity) { mutableIntStateOf(currentSettings.captureSensitivity) }
     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+    var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
     var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
@@ -174,6 +175,7 @@ fun SettingsScreen(
             captureSensitivity = captureSensitivity,
             touchAttackEnabled = touchAttack,
             hotbarTouchEnabled = hotbarTouch,
+            buttonLookDrag = buttonLookDrag,
             touchControllerEnabled = touchControllerEnabled,
             touchControllerExclusive = touchControllerExclusive,
             gamepadEmulation = gamepadEmulation,
@@ -835,6 +837,16 @@ fun SettingsScreen(
                         )
                         SettingDivider()
                         SettingSwitchRow(
+                            title = "Geser kamera dari tombol",
+                            desc = "Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).",
+                            checked = buttonLookDrag,
+                            onCheckedChange = {
+                                buttonLookDrag = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
                             title = "Dukungan TouchController",
                             desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
                             checked = touchControllerEnabled,
@@ -944,6 +956,7 @@ fun SettingsScreen(
                     captureSensitivity = reset.captureSensitivity
                     touchAttack = reset.touchAttackEnabled
                     hotbarTouch = reset.hotbarTouchEnabled
+                    buttonLookDrag = reset.buttonLookDrag
                     touchControllerEnabled = reset.touchControllerEnabled
                     touchControllerExclusive = reset.touchControllerExclusive
                     gamepadEmulation = reset.gamepadEmulation

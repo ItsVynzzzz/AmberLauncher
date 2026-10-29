@@ -27,7 +27,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Mod, resource pack, shader, dan datapack dari Modrinth**: cari dan pasang langsung dari dalam aplikasi, plus pemasangan file manual.
 - **Fabric, Forge, dan NeoForge**: pilih Vanilla, Fabric, Forge, atau NeoForge saat membuat instance. Pencarian mod dan modpack otomatis disaring sesuai loader instance, dan modpack untuk loader lain ditolak dengan pesan yang jelas.
 - **Forge dan NeoForge hemat**: keduanya dipasang sekali per versi lewat installer resmi di proses terpisah yang langsung dimatikan setelah selesai. Saat bermain, mereka hanya menambah beban dari Forge/NeoForge itu sendiri (kelas, mod, dan waktu muat); launcher tidak menjalankan layanan latar apa pun untuknya.
-- **Setelan awal sesuai HP**: RAM game dan jarak pandang awal menyesuaikan RAM perangkat. Model yang sudah diuji (saat ini Oppo A3x 4G) mendapat profil performa khusus; di HP lain launcher berjalan dengan setelan biasa.
+- **Setelan awal sesuai HP**: RAM game, skala resolusi, dan jarak pandang awal menyesuaikan RAM perangkat. Semua HP memakai jalur yang sama; tidak ada profil khusus per model HP.
 - **Pilihan renderer dan runtime Java** yang sudah dibawa aplikasi (Java 8, 17, 21, dan 25).
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar; pemilih tombol berdasarkan kategori; sakelar serang-sentuh.
 - **Hotbar sentuh (gaya Bedrock)**: ketuk hotbar game di bagian bawah layar untuk memilih slot. Posisi slot dihitung dari ukuran jendela dan GUI scale Minecraft (tanpa menggambar apa pun, tanpa beban saat bermain), getar singkat saat memilih, dan bisa dimatikan di Pengaturan > Kontrol.

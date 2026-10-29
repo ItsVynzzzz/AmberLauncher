@@ -1,4 +1,4 @@
-# Pengaturan dan profil perangkat
+# Pengaturan
 {0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} nh\u00e2n CPU
 Memori	B\u1ed9 nh\u1edb
 Grafis	\u0110\u1ed3 h\u1ecda
@@ -64,18 +64,8 @@ Kesesuaian: {0}	\u0110\u1ed9 t\u01b0\u01a1ng th\u00edch: {0}
 PERINGATAN DRIVER ADRENO	C\u1ea2NH B\u00c1O DRIVER ADRENO
 Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	Launcher ph\u00e1t hi\u1ec7n thi\u1ebft b\u1ecb c\u1ee7a b\u1ea1n d\u00f9ng GPU Adreno. B\u1eadt t\u00f9y ch\u1ecdn n\u00e0y c\u00f3 th\u1ec3 khi\u1ebfn tr\u00ecnh k\u1ebft xu\u1ea5t Zink kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c b\u1ecb crash. B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n b\u1eadt kh\u00f4ng?
 AKTIFKAN	B\u1eacT
-Profil perangkat	H\u1ed3 s\u01a1 thi\u1ebft b\u1ecb
-Profil performa HP ini	H\u1ed3 s\u01a1 hi\u1ec7u n\u0103ng c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y
-Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Gi\u1edbi h\u1ea1n heap, tinh ch\u1ec9nh GC v\u00e0 kh\u00f3a m\u00e0n h\u00ecnh \u1edf 60 Hz. T\u1eaft \u0111\u1ec3 so s\u00e1nh FPS.
 Mode GC (pembersih memori Java)	Ch\u1ebf \u0111\u1ed9 GC (b\u1ed9 d\u1ecdn d\u1eb9p b\u1ed9 nh\u1edb Java)
-Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: nh\u1eb9 nh\u1ea5t cho b\u1ed9 x\u1eed l\u00fd, th\u1eddi gian d\u1eebng GC d\u00e0i h\u01a1n m\u1ed9t ch\u00fat.
-Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	M\u1eb7c \u0111\u1ecbnh: kh\u00f4ng th\u00eam c\u1edd GC t\u1eeb h\u1ed3 s\u01a1 (ch\u1ec9 gi\u1edbi h\u1ea1n heap v\u00e0 m\u00e0n h\u00ecnh).
-Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	C\u00e2n b\u1eb1ng: G1 v\u1edbi th\u1eddi gian d\u1eebng ng\u1eafn v\u00e0 b\u1ed9 nh\u1edb gi\u1edbi h\u1ea1n. H\u00e3y th\u1eed m\u1ee5c n\u00e0y tr\u01b0\u1edbc.
-Kunci layar {0} Hz	Kh\u00f3a m\u00e0n h\u00ecnh \u1edf {0} Hz
-Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t \u0111\u1ec1u h\u01a1n. HUD FPS hi\u1ec3n th\u1ecb s\u1ed1 Hz \u0111ang d\u00f9ng.
-Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap game: b\u1ea1n ch\u1ecdn {0} MB, \u0111ang d\u00f9ng {1} MB. \u0110i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 {2} MB RAM; heap l\u1edbn h\u01a1n khi\u1ebfn m\u00e1y ph\u1ea3i ho\u00e1n \u0111\u1ed5i b\u1ed9 nh\u1edb v\u00e0 l\u00e0m FPS gi\u1ea3m.
-Heap game {0} MB (batas profil {1} MB).	Heap game {0} MB (gi\u1edbi h\u1ea1n c\u1ee7a h\u1ed3 s\u01a1 {1} MB).
-Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. Hi\u1ec7u qu\u1ea3 hi\u1ec3n th\u1ecb tr\u00ean HUD FPS (RAM c\u00f2n \u00b7 N\u00d3NG \u00b7 Hz).
+Kunci layar 60 Hz	Kh\u00f3a m\u00e0n h\u00ecnh \u1edf 60 Hz
 # Pembaruan otomatis dan rekam layar (tambahan)
 Kualitas rekaman layar	Ch\u1ea5t l\u01b0\u1ee3ng quay m\u00e0n h\u00ecnh
 Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	C\u00e0ng nh\u1ecf c\u00e0ng nh\u1eb9 cho \u0111i\u1ec7n tho\u1ea1i. Ti\u1ebft ki\u1ec7m 540p, Nh\u1eb9 720p, N\u00e9t 1080p.

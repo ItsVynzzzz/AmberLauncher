@@ -26,13 +26,28 @@ class Translator private constructor(
 
     /** Satu pola berisian: [anchor] = potongan teks tetap terpanjang, untuk menyaring cepat. */
     private class Template(
-        val regex: Regex,
+        private val pattern: String,
         val anchor: String,
         val parts: List<Any>,
         val nested: Set<Int>,
         /** Jumlah huruf tetap di kunci. Pola yang lebih spesifik (lebih besar) dicoba lebih dulu. */
         val weight: Int
-    )
+    ) {
+        /**
+         * Regex baru dikompilasi saat pertama kali dibutuhkan, yaitu ketika sebuah teks lolos saringan
+         * [anchor]. Kamus punya ratusan pola dan hampir semuanya tidak pernah cocok dalam satu sesi, jadi
+         * mengompilasi semuanya saat aplikasi dibuka (di tiap proses, termasuk proses game) hanya membuang
+         * waktu dan memori. Hanya dibaca dari translateByTemplate yang sudah @Synchronized.
+         * null = pola tidak valid, dilewati.
+         */
+        val regex: Regex? by lazy(LazyThreadSafetyMode.NONE) {
+            try {
+                Regex(pattern, RegexOption.DOT_MATCHES_ALL)
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
 
     private fun render(t: Template, match: MatchResult, depth: Int): String {
         val sb = StringBuilder()
@@ -72,7 +87,7 @@ class Translator private constructor(
         var result = text
         for (t in templates) {
             if (t.anchor.isNotEmpty() && !text.contains(t.anchor)) continue
-            val m = t.regex.matchEntire(text) ?: continue
+            val m = t.regex?.matchEntire(text) ?: continue
             result = render(t, m, depth)
             break
         }
@@ -142,12 +157,8 @@ class Translator private constructor(
             }
             if (pos < value.length) parts.add(value.substring(pos))
 
-            val regex = try {
-                Regex(pattern.toString(), RegexOption.DOT_MATCHES_ALL)
-            } catch (_: Exception) {
-                return null
-            }
-            return Template(regex, anchor, parts, nested, weight)
+            // Regex-nya sengaja belum dikompilasi di sini (lihat Template.regex).
+            return Template(pattern.toString(), anchor, parts, nested, weight)
         }
 
         /** Mengubah \n, \t, \\ dan \uXXXX di dalam satu bidang kamus menjadi karakter aslinya. */

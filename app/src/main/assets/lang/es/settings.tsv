@@ -1,4 +1,4 @@
-# Pengaturan dan profil perangkat
+# Pengaturan
 {0} GB RAM \u00b7 {1} inti CPU	{0} GB de RAM \u00b7 {1} n\u00facleos de CPU
 Memori	Memoria
 Grafis	Gr\u00e1ficos
@@ -64,18 +64,8 @@ Kesesuaian: {0}	Compatibilidad: {0}
 PERINGATAN DRIVER ADRENO	ADVERTENCIA SOBRE EL CONTROLADOR ADRENO
 Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	El launcher detect\u00f3 que tu dispositivo usa una GPU Adreno. Activar esta opci\u00f3n puede hacer que el renderizador Zink deje de funcionar o se cierre. \u00bfSeguro que quieres activarla?
 AKTIFKAN	ACTIVAR
-Profil perangkat	Perfil del dispositivo
-Profil performa HP ini	Perfil de rendimiento de este tel\u00e9fono
-Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Limita el heap, ajusta el GC y fija la pantalla a 60 Hz. Desact\u00edvalo para comparar los FPS.
 Mode GC (pembersih memori Java)	Modo de GC (limpiador de memoria de Java)
-Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: el m\u00e1s ligero para el procesador, con pausas de GC algo m\u00e1s largas.
-Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	Predeterminado: sin opciones de GC adicionales del perfil (solo el l\u00edmite de heap y la pantalla).
-Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	Equilibrado: G1 con pausas cortas y memoria limitada. Prueba este primero.
-Kunci layar {0} Hz	Fijar pantalla a {0} Hz
-Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	Una pantalla de 90 Hz se fija a 60 Hz mientras juegas para que el movimiento sea m\u00e1s uniforme. El HUD de FPS muestra los Hz activos.
-Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Heap del juego: elegiste {0} MB y se usan {1} MB. Este tel\u00e9fono tiene {2} MB de RAM; un heap mayor hace que el tel\u00e9fono use memoria de intercambio y bajan los FPS.
-Heap game {0} MB (batas profil {1} MB).	Heap del juego {0} MB (l\u00edmite del perfil {1} MB).
-Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Se aplica la pr\u00f3xima vez que inicies el juego. El efecto se ve en el HUD de FPS (RAM libre \u00b7 CALOR \u00b7 Hz).
+Kunci layar 60 Hz	Fijar pantalla a 60 Hz
 # Rekam layar bawaan
 Kualitas rekaman layar	Calidad de la grabaci\u00f3n de pantalla
 Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	M\u00e1s peque\u00f1o es m\u00e1s ligero para el tel\u00e9fono. Ahorro 540p, Ligero 720p, N\u00edtido 1080p.

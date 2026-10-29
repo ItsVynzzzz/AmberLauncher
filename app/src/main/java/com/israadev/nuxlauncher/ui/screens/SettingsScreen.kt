@@ -162,7 +162,7 @@ fun SettingsScreen(
     val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
     val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.85f).toInt().coerceAtLeast(1024) }
     val cpuCores = remember { SettingsManager.getCpuCoreCount() }
-    val showRefreshLock = remember { DeviceProfiles.detect() == null && DeviceProfiles.supportsHighRefresh(context) }
+    val showRefreshLock = remember { DeviceProfiles.supportsHighRefresh(context) }
 
     fun commitSettings() {
         val updated = currentSettings.copy(
@@ -287,8 +287,7 @@ fun SettingsScreen(
             ) {
                 when (section) {
                     0 -> {
-                        // Profil khusus perangkat: hanya muncul di HP yang terdaftar (Oppo A3x 4G),
-                        // di HP lain tidak menggambar apa pun.
+                        // Pilihan mode GC untuk HP RAM kecil (di HP RAM besar tidak menggambar apa pun).
                         DeviceProfileCard()
 
                         val ramTooBig = ramMb > (totalRamMb * 0.75f)
@@ -464,7 +463,7 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
-                        // Kunci 60 Hz untuk layar 90/120 Hz. HP berprofil khusus mengaturnya di kartu profil (tab Memori).
+                        // Kunci 60 Hz untuk layar 90/120 Hz.
                         if (showRefreshLock) {
                             SettingDivider()
                             SettingSwitchRow(

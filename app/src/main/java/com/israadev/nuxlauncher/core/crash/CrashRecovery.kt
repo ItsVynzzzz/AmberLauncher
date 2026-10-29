@@ -2,7 +2,6 @@ package com.israadev.nuxlauncher.core.crash
 
 import android.content.Context
 import com.google.gson.JsonParser
-import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
@@ -68,11 +67,11 @@ object CrashRecovery {
     }
 
     /**
-     * RAM game baru (MB) bila diturunkan 256 MB dari heap yang benar-benar dipakai
-     * ([effectiveMb], sudah memperhitungkan batas profil), atau null bila tidak ada ruang untuk turun.
+     * RAM game baru (MB) bila diturunkan 256 MB dari heap yang dipilih ([requestedMb]),
+     * atau null bila tidak ada ruang untuk turun.
      */
-    fun loweredRamMb(requestedMb: Int, effectiveMb: Int): Int? {
-        val target = ((effectiveMb - RAM_STEP_MB) / RAM_ROUND_MB * RAM_ROUND_MB).coerceAtLeast(RAM_MIN_MB)
+    fun loweredRamMb(requestedMb: Int): Int? {
+        val target = ((requestedMb - RAM_STEP_MB) / RAM_ROUND_MB * RAM_ROUND_MB).coerceAtLeast(RAM_MIN_MB)
         return if (target < requestedMb) target else null
     }
 
@@ -205,7 +204,7 @@ object CrashRecovery {
 
             // 1. RAM: hanya bila HP kehabisan RAM (bukan heap Java yang sempit)
             if (source == CrashSource.MEMORY && !isJavaHeapOutOfMemory(log)) {
-                val target = loweredRamMb(settings.ramMb, effectiveHeapMb(context, settings.ramMb, settings.deviceProfileEnabled))
+                val target = loweredRamMb(settings.ramMb)
                 if (target != null) {
                     options.add(
                         RecoveryOption(
@@ -312,13 +311,6 @@ object CrashRecovery {
     private const val FAIL_MESSAGE = "Gagal menerapkan. Coba lewat Pengaturan."
 
     // ---------------------------------------------------------------- bagian yang menyentuh berkas
-
-    private fun effectiveHeapMb(context: Context, requestedMb: Int, profileEnabled: Boolean): Int {
-        val profile = DeviceProfiles.detect() ?: return requestedMb
-        if (!profileEnabled) return requestedMb
-        val totalMb = SettingsManager.getTotalDeviceMemoryMb(context)
-        return if (DeviceProfiles.heapCapApplies(profile, totalMb)) minOf(requestedMb, profile.smallRamHeapCapMb) else requestedMb
-    }
 
     private fun rendererOption(context: Context, info: GameCrashInfo, selectedId: String): RecoveryOption? {
         val nativeDir = File(context.applicationInfo.nativeLibraryDir)

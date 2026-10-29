@@ -1,4 +1,4 @@
-# Pengaturan dan profil perangkat
+# Pengaturan
 {0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} CPU cores
 Memori	Memory
 Grafis	Graphics
@@ -64,18 +64,8 @@ Kesesuaian: {0}	Compatibility: {0}
 PERINGATAN DRIVER ADRENO	ADRENO DRIVER WARNING
 Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	The launcher detected that your device uses an Adreno GPU. Enabling this option can make the Zink renderer stop working or crash. Are you sure you want to enable it?
 AKTIFKAN	ENABLE
-Profil perangkat	Device profile
-Profil performa HP ini	Performance profile for this phone
-Batasi heap, atur GC, kunci layar 60 Hz. Matikan untuk membandingkan FPS.	Limits the heap, tunes GC, and locks the screen to 60 Hz. Turn off to compare FPS.
 Mode GC (pembersih memori Java)	GC mode (Java memory cleaner)
-Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang.	Serial: lightest on the processor, slightly longer GC pauses.
-Bawaan: tanpa flag GC tambahan dari profil (hanya batas heap dan layar).	Default: no extra GC flags from the profile (heap limit and screen only).
-Seimbang: G1 dengan jeda pendek dan memori terbatas. Coba ini dulu.	Balanced: G1 with short pauses and limited memory. Try this first.
-Kunci layar {0} Hz	Lock screen to {0} Hz
-Layar 90 Hz dikunci 60 Hz saat main supaya gerak lebih rata. HUD FPS menampilkan Hz yang aktif.	A 90 Hz screen is locked to 60 Hz while playing for smoother motion. The FPS HUD shows the active Hz.
-Heap game: pilihanmu {0} MB, dipakai {1} MB. RAM HP ini {2} MB; heap lebih besar membuat HP menukar memori dan FPS turun.	Game heap: you chose {0} MB, using {1} MB. This phone has {2} MB of RAM; a larger heap makes the phone swap memory and lowers FPS.
-Heap game {0} MB (batas profil {1} MB).	Game heap {0} MB (profile limit {1} MB).
-Berlaku saat game dijalankan berikutnya. Dampaknya terlihat di HUD FPS (sisa RAM \u00b7 PANAS \u00b7 Hz).	Applies the next time the game starts. The effect shows in the FPS HUD (RAM left \u00b7 HOT \u00b7 Hz).
+Kunci layar 60 Hz	Lock screen to 60 Hz
 # Rekam layar bawaan
 Kualitas rekaman layar	Screen recording quality
 Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	Smaller is lighter on the phone. Eco 540p, Light 720p, Sharp 1080p.

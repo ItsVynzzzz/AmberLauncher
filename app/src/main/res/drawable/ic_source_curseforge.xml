@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ikon NETRAL sementara untuk sumber CurseForge (kubus).
+  Logo resmi CurseForge adalah merek dagang pemiliknya (Overwolf). Ketentuan API mereka tidak
+  memberi lisensi logo, jadi pakai logo resminya hanya setelah mendapat izin atau memastikan
+  pedoman mereknya mengizinkan. Kalau sudah aman, cukup timpa isi berkas ini dengan logonya.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M12,3.5 L19.5,7.75 L19.5,16.25 L12,20.5 L4.5,16.25 L4.5,7.75 Z M12,12 L12,20.5 M12,12 L19.5,7.75 M12,12 L4.5,7.75"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

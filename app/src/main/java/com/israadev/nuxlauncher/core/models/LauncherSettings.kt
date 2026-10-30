@@ -77,6 +77,12 @@ data class LauncherSettings(
     // Pembaruan aplikasi
     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
 
+    // Tampilan: warna aksen ("navy", "green", "purple", "teal"), gaya ("default" atau "liquid"),
+    // dan seberapa gelap latar di layar selain Home (0 - 100)
+    val accentColor: String = "navy",
+    val uiStyle: String = "default",
+    val bgDim: Int = 50,
+
     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
     val perfRev: Int = 0

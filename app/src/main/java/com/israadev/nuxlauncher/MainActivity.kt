@@ -80,6 +80,12 @@ class MainActivity : ComponentActivity() {
         AccountManager.init(this)
         InstanceManager.init(this)
         SettingsManager.init(this)
+        // Terapkan warna aksen dan gaya tampilan tersimpan sebelum layar pertama digambar
+        SettingsManager.settings.value.let {
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
+        }
         com.israadev.nuxlauncher.core.device.PhysicalMouseChecker.initChecker(this)
         com.israadev.nuxlauncher.core.controls.ControlLayoutManager.init(this)
         val appCtx = applicationContext

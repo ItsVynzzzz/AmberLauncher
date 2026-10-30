@@ -56,6 +56,7 @@ object NuxModManager {
 
     /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
     private const val SUPPORTED_LOADER = "fabric"
+    private val SEARCH_SORT_INDEXES = setOf("relevance", "downloads", "follows", "newest", "updated")
 
     /**
      * Loader yang dipakai untuk menyaring mod dan modpack. Instance Vanilla (atau tanpa instance)
@@ -419,7 +420,9 @@ object NuxModManager {
         category: String? = null,
         filterByGameVersion: Boolean = true,
         page: Int = 1,
-        limit: Int = 18
+        limit: Int = 18,
+        sortIndex: String = "relevance",
+        filterByLoader: Boolean = true
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
         try {
             val facets = mutableListOf<List<String>>()
@@ -445,17 +448,21 @@ object NuxModManager {
             }
 
             // 4. Loader filter (loader instance; Vanilla atau tanpa instance memakai loader yang didukung)
-            if (itemType == "mods" || itemType == "modpacks") {
+            if (filterByLoader && (itemType == "mods" || itemType == "modpacks")) {
                 facets.add(listOf("categories:${effectiveLoader(instance)}"))
             }
 
             val facetsJson = gson.toJson(facets)
             val offset = (page - 1) * limit
 
+            // Urutan hasil: hanya nilai yang dikenal Modrinth, selain itu kembali ke relevansi
+            val index = if (sortIndex in SEARCH_SORT_INDEXES) sortIndex else "relevance"
+
             val url = StringBuilder("$MODRINTH_API_BASE/search?")
                 .append("query=").append(URLEncoder.encode(query, "UTF-8"))
                 .append("&limit=").append(limit)
                 .append("&offset=").append(offset)
+                .append("&index=").append(index)
                 .append("&facets=").append(URLEncoder.encode(facetsJson, "UTF-8"))
                 .toString()
 

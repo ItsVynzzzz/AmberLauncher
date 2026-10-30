@@ -60,21 +60,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Dialog "Ubah instance" (tombol slider di Home): nama, versi Java, lalu tiga baris aksi
- * (Lihat mod, Buka folder, Hapus). Tampilan dibuat lega dan sedikit isi supaya tidak padat.
+ * Dialog "Ubah instance" (tombol pensil di Home): nama, versi Java, lalu tiga baris aksi
+ * (Mod & konten, Buka folder, Hapus). "Mod & konten" membuka layar kelola mod, shader,
+ * resource pack, dan datapack milik instance ini. Tampilan dibuat lega dan sedikit isi.
  */
 @Composable
 fun NuxEditInstanceDialog(
     instance: Instance,
     onDismiss: () -> Unit,
     onInstanceUpdated: (Instance) -> Unit,
-    onInstanceDeleted: (Instance) -> Unit
+    onInstanceDeleted: (Instance) -> Unit,
+    onOpenContent: () -> Unit
 ) {
     val context = LocalContext.current
     var editName by remember { mutableStateOf(instance.name) }
     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
-    var showMods by remember { mutableStateOf(false) }
     var modCount by remember { mutableStateOf<Int?>(null) }
 
     val autoRecommendedRuntime = remember(instance.mcVersion) {
@@ -176,7 +177,7 @@ fun NuxEditInstanceDialog(
                     }
                 }
 
-                // Aksi: Lihat mod, Buka folder, Hapus
+                // Aksi: Mod & konten, Buka folder, Hapus
                 val groupShape = RoundedCornerShape(16.dp)
                 Column(
                     modifier = Modifier
@@ -187,10 +188,10 @@ fun NuxEditInstanceDialog(
                 ) {
                     EditActionRow(
                         icon = Icons.Outlined.Extension,
-                        label = "Lihat mod",
+                        label = "Mod & konten",
                         trailing = modCount?.let { "$it terpasang" },
                         showChevron = true,
-                        onClick = { showMods = true }
+                        onClick = onOpenContent
                     )
                     SettingDivider()
                     EditActionRow(
@@ -300,13 +301,6 @@ fun NuxEditInstanceDialog(
                 }
             }
         }
-    }
-
-    if (showMods) {
-        NuxInstalledModsDialog(
-            instance = instance,
-            onDismiss = { showMods = false }
-        )
     }
 }
 

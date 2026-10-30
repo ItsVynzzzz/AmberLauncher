@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.ui.theme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
 
 /**
@@ -14,11 +15,12 @@ import androidx.compose.ui.unit.dp
  * SurfaceWhite/SurfaceElevated/SurfaceInput = isian kaca bertingkat, YellowPale = tint kuning.
  */
 object NuxColors {
-    // Kuning (isian)
-    val Yellow = Color(0xFFFFD60A)       // Warna merek: tombol utama, pil terpilih, aksen
-    val YellowSoft = Color(0xFFFFE566)   // Kuning muda: aksen, progres
-    val YellowPale = Color(0x2EFFD60A)   // Tint kuning 18% di atas gelap: item terpilih, lencana
-    val YellowMist = Color(0x14FFD60A)   // Tint kuning 8%
+    // Aksen (nama "Yellow" dipertahankan supaya ratusan pemakaian lama tidak perlu diubah).
+    // Kini mengikuti warna aksen yang dipilih di Pengaturan > Tampilan, bukan lagi kuning.
+    val Yellow: Color get() = AmberUi.AccentSoft                          // Tombol utama, pil terpilih, aksen
+    val YellowSoft: Color get() = lerp(AmberUi.AccentSoft, Color.White, 0.35f) // Aksen lebih muda: progres
+    val YellowPale: Color get() = AmberUi.AccentSoft.copy(alpha = 0.18f)  // Tint 18% di atas gelap: item terpilih, lencana
+    val YellowMist: Color get() = AmberUi.AccentSoft.copy(alpha = 0.08f)  // Tint 8%
 
     // Hitam / kaca
     val Ink = Color(0xFF111111)          // Tinta: teks di atas kuning, bingkai luar, bayangan keras
@@ -40,13 +42,13 @@ object NuxColors {
     val SuccessGreen = Color(0xFF16A34A) // Hijau khusus status berhasil/online
 
     // Alias lama (jangan dihapus, masih dipakai di kode lain)
-    val ForestGreen = Yellow             // Dulu hijau utama, sekarang kuning merek
-    val MintGreen = YellowSoft
-    val SageGreen = Yellow               // Teks/ikon aksen di atas gelap
-    val SoftLime = YellowPale
-    val LightGreen = YellowMist
-    val Mint = YellowPale
-    val MintDark = YellowSoft
+    val ForestGreen: Color get() = Yellow             // Dulu hijau utama, sekarang kuning merek
+    val MintGreen: Color get() = YellowSoft
+    val SageGreen: Color get() = Yellow               // Teks/ikon aksen di atas gelap
+    val SoftLime: Color get() = YellowPale
+    val LightGreen: Color get() = YellowMist
+    val Mint: Color get() = YellowPale
+    val MintDark: Color get() = YellowSoft
     val ForestDark = Ink
     val ForestLight = GrayNeutral
     val ForestMuted = GrayNeutral

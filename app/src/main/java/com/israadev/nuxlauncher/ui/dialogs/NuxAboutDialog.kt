@@ -411,6 +411,15 @@ private fun Brand(version: String) {
                     maxLines = 1
                 )
             }
+            // Pemberitahuan versi modifikasi tidak resmi (dulu tampil di Home, kini cukup di sini)
+            Text(
+                text = "UNOFFICIAL MODIFIED VERSION",
+                color = Amber.TextDim,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp,
+                maxLines = 1
+            )
         }
     }
 }

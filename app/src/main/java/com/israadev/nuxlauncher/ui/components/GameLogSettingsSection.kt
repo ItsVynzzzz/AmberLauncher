@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.components
 
+import com.israadev.nuxlauncher.ui.theme.AmberUi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -90,7 +91,7 @@ fun GameLogSettingsSection() {
                 onClick = {
                     CrashUtils.shareLogFile(context, file, "Log game AmberLauncher", "Bagikan log game")
                 },
-                backgroundColor = if (index == 0) NuxColors.Yellow else Color.Transparent,
+                backgroundColor = if (index == 0) AmberUi.Accent else Color.Transparent,
                 cornerRadius = 20.dp,
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
             ) {

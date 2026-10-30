@@ -1,5 +1,7 @@
 package com.israadev.nuxlauncher.ui.screens
 
+import com.israadev.nuxlauncher.ui.theme.AmberGlassKind
+import com.israadev.nuxlauncher.ui.theme.amberGlass
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
@@ -12,7 +14,40 @@ import android.widget.ImageView
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.offset
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import com.israadev.nuxlauncher.ui.theme.rememberCameraSideInsets
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.platform.LocalDensity
+import com.israadev.nuxlauncher.ui.theme.AmberStyle
+import com.israadev.nuxlauncher.ui.theme.LocalGlassBackdrop
+import com.israadev.nuxlauncher.ui.theme.amberScrimBrush
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,10 +57,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,8 +86,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -72,17 +106,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -109,7 +145,6 @@ import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
-import com.israadev.nuxlauncher.ui.components.NuxSidebar
 import com.israadev.nuxlauncher.ui.components.rememberIsResumed
 import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
@@ -135,6 +170,10 @@ fun DashboardScreen() {
     val scope = rememberCoroutineScope()
 
     var currentTab by remember { mutableStateOf("home") }
+    // Jenis addon yang dibuka di halaman Mod dan tab tujuan tombol kembali
+    // (dari Home = Home, dari layar kelola konten = layar kelola konten).
+    var modsInitialType by remember { mutableStateOf("mods") }
+    var modsBackTab by remember { mutableStateOf("home") }
 
     // Controller: LB/RB berpindah antar tab (Home, Akun, Mod, Pengaturan).
     DisposableEffect(Unit) {
@@ -189,15 +228,12 @@ fun DashboardScreen() {
     val powerSave = rememberPowerSaveMode()
     val animateBackground = launcherSettings.homeBgAnimate &&
         !(launcherSettings.homeBgPauseOnPowerSave && powerSave)
-    val ambientActive = animateBackground && launcherSettings.homeAmbientEnabled
     val videoVolume = if (launcherSettings.homeBgSound) {
         val p = launcherSettings.homeBgVolume.coerceIn(0, 100) / 100f
         p * p
     } else {
         0f
     }
-    val ambientState = remember { AmbientState() }
-    var cardBounds by remember { mutableStateOf<Rect?>(null) }
 
     val pickBackground = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
@@ -312,138 +348,145 @@ fun DashboardScreen() {
             modifier = Modifier.fillMaxSize()
         )
     } else {
-        // Latar hitam polos memenuhi layar (area poni/kamera ikut menyatu), lalu satu kartu
-        // panel bersudut bulat dengan tepi putih tipis ala kaca. Kuning hanya dipakai sebagai aksen.
-        val cutout = WindowInsets.displayCutout.asPaddingValues()
-        val layoutDir = LocalLayoutDirection.current
-        val leftInset = cutout.calculateLeftPadding(layoutDir)
-        val rightInset = cutout.calculateRightPadding(layoutDir)
+        // Semua layar utama memakai layar penuh dengan latar pilihan pengguna di belakangnya.
+        // Jarak kiri/kanan hanya selebar kamera (plus sedikit celah); navigasi sistem tidak dihitung.
+        val (leftInset, rightInset) = rememberCameraSideInsets()
+
+        // Latar pilihan pengguna (foto/GIF/video, atau gambar bawaan) dan lapisan gelap tipisnya dipakai
+        // di semua layar. Untuk gaya Liquid Glass, latar direkam lalu diburamkan sekali di sini dan
+        // dipakai semua permukaan kaca (Android 12 ke atas; di bawah itu otomatis kembali ke Default).
+        val liquid = AmberUi.style == AmberStyle.LIQUID && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        val rawBackdrop = rememberGraphicsLayer()
+        val blurBackdrop = rememberGraphicsLayer()
+        val blurPx = with(LocalDensity.current) { 26.dp.toPx() }
+        // Redupkan latar: di Liquid Glass lapisan gelapnya dikurangi supaya wallpaper tetap terlihat.
+        val scrim = remember(launcherSettings.bgDim, liquid) {
+            amberScrimBrush(launcherSettings.bgDim / 100f * (if (liquid) 0.7f else 1f))
+        }
+        SideEffect {
+            AmberUi.applyDim(launcherSettings.bgDim / 100f)
+            if (liquid) {
+                // Latar yang diburamkan dibuat lebih hidup warnanya supaya kaca terasa menyatu dengan wallpaper.
+                blurBackdrop.renderEffect = BlurEffect(blurPx, blurPx, TileMode.Clamp)
+                blurBackdrop.colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(1.5f) })
+            }
+        }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(NuxColors.Ink)
         ) {
-            // Cahaya ambient di sekeliling kartu: hanya di Home dan hanya saat GIF/video bergerak.
-            LaunchedEffect(ambientActive, currentTab) {
-                if (!ambientActive || currentTab != "home") ambientState.colors = null
-            }
-            if (currentTab == "home" && ambientActive) {
-                AmbientGlow(
-                    state = ambientState,
-                    intensity = launcherSettings.homeAmbientIntensity,
-                    bounds = cardBounds,
-                    cornerRadius = 24.dp
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .drawWithContent {
+                        rawBackdrop.record { this@drawWithContent.drawContent() }
+                        drawLayer(rawBackdrop)
+                        // Yang direkam hanya wallpaper (tanpa lapisan gelap), jadi kaca menampilkan warna aslinya.
+                        if (liquid) blurBackdrop.record { drawLayer(rawBackdrop) }
+                    }
+            ) {
+                HomeBackground(
+                    customFile = if (hasCustomBg) bgFile else null,
+                    version = bgVersion,
+                    videoFile = if (hasVideoBg && hasCustomBg) bgVideoFile else null,
+                    animate = animateBackground,
+                    videoVolume = videoVolume,
+                    ambient = null,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
-
-            Row(modifier = Modifier.fillMaxSize()) {
-                NuxSidebar(
-                    activeTab = currentTab,
-                    onTabSelected = { tabId -> currentTab = tabId },
-                    startInset = leftInset,
-                    onOpenAbout = { showAboutDialog = true }
-                )
-
-                // Kartu panel: jarak sama di atas, kanan, dan bawah (8dp), jadi tingginya sejajar sidebar.
-                val cardShape = RoundedCornerShape(24.dp)
-                val cardEdge = remember {
-                    Brush.linearGradient(
-                        listOf(
-                            Color.White.copy(alpha = 0.42f),
-                            Color.White.copy(alpha = 0.08f),
-                            Color.White.copy(alpha = 0.22f)
-                        )
-                    )
-                }
-                // Latar layar Akun/Mod/Pengaturan: hitam hangat dengan sedikit cahaya kuning di atas.
-                val cardFill = remember {
-                    Brush.verticalGradient(
-                        listOf(Color(0xFF1A1606), NuxColors.Background, NuxColors.Background)
-                    )
-                }
+            if (currentTab != "home") {
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .padding(start = 4.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+                        .fillMaxSize()
+                        .background(scrim)
+                )
+            }
+
+            CompositionLocalProvider(LocalGlassBackdrop provides (if (liquid) blurBackdrop else null)) {
+            when (currentTab) {
+                // Home: layar penuh tanpa sidebar dan kartu; navigasinya ada di bar bawah.
+                "home" -> NuxReadable {
+                    val rendererLabel = remember(launcherSettings.selectedRenderer) {
+                        val info = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
+                        HomeInfo.rendererLabel(info.id, info.displayName)
+                    }
+                    HomeScene(
+                        instance = selectedInstance,
+                        isReady = isInstanceReady,
+                        account = currentAccount,
+                        rendererLabel = rendererLabel,
+                        onOpenAbout = { showAboutDialog = true },
+                        onPickInstance = { showInstancePicker = true },
+                        onPlay = { selectedInstance?.let { startInstance(it) } },
+                        onCreateInstance = { showAddDialog = true },
+                        onEditInstance = { showEditInstanceDialog = true },
+                        onNavigate = { tab ->
+                            if (tab == "mods") {
+                                modsInitialType = "mods"
+                                modsBackTab = "home"
+                            }
+                            currentTab = tab
+                        },
+                        startInset = leftInset,
+                        endInset = rightInset,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                // Mod, kelola konten, Akun, dan Pengaturan: layar penuh dengan pil navigasi yang sama
+                // di kiri atas (kembali, Mod, Akun, Pengaturan).
+                else -> Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = leftInset, end = rightInset)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .onGloballyPositioned {
-                                val r = it.boundsInRoot()
-                                cardBounds = r
-                                if (r.height > 0f) ambientState.aspect = r.width / r.height
-                            }
-                            .clip(cardShape)
-                            .background(cardFill, cardShape)
-                            .border(1.dp, cardEdge, cardShape)
-                    ) {
+                    NuxReadable {
+                        val openMods = {
+                            modsInitialType = "mods"
+                            modsBackTab = "home"
+                            currentTab = "mods"
+                        }
                         when (currentTab) {
-                            "accounts" -> NuxReadable {
-                                AccountsScreen(
-                                    onNavigateBack = { currentTab = "home" },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
-                            "mods" -> NuxReadable {
-                                ModsScreen(
-                                    onNavigateBack = { currentTab = "home" },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
-                            "settings" -> NuxReadable {
-                                SettingsScreen(
-                                    onNavigateBack = { currentTab = "home" },
-                                    onOpenGuiEditor = { currentTab = "gui_editor" },
-                                    onChangeBackground = {
-                                        currentTab = "home"
-                                        showBgDialog = true
-                                    },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
-                            else -> {
-                                val rendererLabel = remember(launcherSettings.selectedRenderer) {
-                                    val info = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
-                                    HomeInfo.rendererLabel(info.id, info.displayName)
-                                }
-                                HomeScene(
-                                    instance = selectedInstance,
-                                    isReady = isInstanceReady,
-                                    account = currentAccount,
-                                    rendererLabel = rendererLabel,
-                                    onOpenAccounts = { currentTab = "accounts" },
-                                    onOpenAbout = { showAboutDialog = true },
-                                    onPickInstance = { showInstancePicker = true },
-                                    onPlay = { selectedInstance?.let { startInstance(it) } },
-                                    onCreateInstance = { showAddDialog = true },
-                                    onOpenFolder = {
-                                        selectedInstance?.let { inst ->
-                                            Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
-                                            InstanceManager.openInstanceFolder(context, inst)
-                                        }
-                                    },
-                                    onEditInstance = { showEditInstanceDialog = true },
-                                    backgroundFile = if (hasCustomBg) bgFile else null,
-                                    backgroundVersion = bgVersion,
-                                    backgroundVideo = if (hasVideoBg && hasCustomBg) bgVideoFile else null,
-                                    animateBackground = animateBackground,
-                                    videoVolume = videoVolume,
-                                    ambient = if (ambientActive) ambientState else null,
-                                    onChangeBackground = { showBgDialog = true },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
+                            "mods" -> ModsScreen(
+                                onNavigateBack = { currentTab = modsBackTab },
+                                onOpenAccounts = { currentTab = "accounts" },
+                                onOpenSettings = { currentTab = "settings" },
+                                initialType = modsInitialType,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            "instance_content" -> ModsScreen(
+                                mode = ModsMode.MANAGE,
+                                onNavigateBack = { currentTab = "home" },
+                                onOpenAccounts = { currentTab = "accounts" },
+                                onOpenSettings = { currentTab = "settings" },
+                                onOpenBrowse = { type ->
+                                    modsInitialType = type
+                                    modsBackTab = "instance_content"
+                                    currentTab = "mods"
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            "accounts" -> AccountsScreen(
+                                onNavigateBack = { currentTab = "home" },
+                                onOpenMods = openMods,
+                                onOpenSettings = { currentTab = "settings" },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            else -> SettingsScreen(
+                                onNavigateBack = { currentTab = "home" },
+                                onOpenMods = openMods,
+                                onOpenAccounts = { currentTab = "accounts" },
+                                onOpenGuiEditor = { currentTab = "gui_editor" },
+                                onChangeBackground = { showBgDialog = true },
+                                modifier = Modifier.fillMaxSize()
+                            )
                         }
                     }
                 }
-
-                if (rightInset > 0.dp) {
-                    // Ruang poni/kamera di kanan (warnanya sama dengan latar hitam).
-                    Spacer(modifier = Modifier.width(rightInset).fillMaxHeight())
-                }
+            }
             }
         }
 
@@ -519,6 +562,10 @@ fun DashboardScreen() {
                     onDismiss = { showEditInstanceDialog = false },
                     onInstanceUpdated = { updated ->
                         InstanceManager.updateInstance(context, updated)
+                    },
+                    onOpenContent = {
+                        showEditInstanceDialog = false
+                        currentTab = "instance_content"
                     },
                     onInstanceDeleted = { toDelete ->
                         InstanceManager.deleteInstance(context, toDelete.id)
@@ -600,9 +647,11 @@ fun DashboardScreen() {
 }
 
 /**
- * Layar Home: gambar latar penuh, nama instance besar di kiri bawah dengan tombol PLAY kuning,
- * tombol Folder/Ubah yang halus, dan status RAM + renderer kecil di kanan bawah. Tidak ada
- * kotak atau dock; teks terbaca lewat gradien gelap di tepi.
+ * Layar Home. Latar (foto/GIF/video) digambar DashboardScreen di belakang semua layar.
+ * Kiri atas pil pemain (ketuk = menu akun cepat), kanan atas satu tombol bulat Tentang & Lisensi.
+ * Di kiri bawah nama instance aktif beserta info versi, lalu bar navigasi (Home, Mod, Akun,
+ * Pengaturan) dan tombol PLAY di kanan bawah. Semua tombol berkaca hitam tembus pandang seperti
+ * layar Pengaturan. Tanpa animasi masuk, supaya ringan di HP kelas bawah.
  */
 @Composable
 private fun HomeScene(
@@ -610,424 +659,396 @@ private fun HomeScene(
     isReady: Boolean,
     account: UserAccount?,
     rendererLabel: String,
-    onOpenAccounts: () -> Unit,
     onOpenAbout: () -> Unit,
     onPickInstance: () -> Unit,
     onPlay: () -> Unit,
     onCreateInstance: () -> Unit,
-    onOpenFolder: () -> Unit,
     onEditInstance: () -> Unit,
-    backgroundFile: File?,
-    backgroundVersion: Int,
-    backgroundVideo: File?,
-    animateBackground: Boolean,
-    videoVolume: Float,
-    ambient: AmbientState?,
-    onChangeBackground: () -> Unit,
+    onNavigate: (String) -> Unit,
+    startInset: Dp,
+    endInset: Dp,
     modifier: Modifier = Modifier
 ) {
     val freeRamMb = rememberFreeRamMb()
     val config = LocalConfiguration.current
     val compact = config.screenWidthDp < 640
-    val nameSize = if (config.screenHeightDp < 380) 36.sp else 46.sp
-    val nameShadow = remember { Shadow(NuxColors.Ink.copy(alpha = 0.45f), Offset(0f, 2f), 14f) }
+    val nameSize = if (config.screenHeightDp < 380) 40.sp else 54.sp
+    val textShadow = remember { Shadow(NuxColors.Ink.copy(alpha = 0.40f), Offset(0f, 2f), 12f) }
+
+    // Menu akun cepat di bawah pil pemain: ganti, hapus, dan tambah akun tanpa membuka tab Akun
+    val context = LocalContext.current
+    val accounts by AccountManager.accounts.collectAsState()
+    var accountMenuOpen by remember { mutableStateOf(false) }
+    var showAddAccount by remember { mutableStateOf(false) }
+    var accountToDelete by remember { mutableStateOf<UserAccount?>(null) }
 
     Box(modifier = modifier) {
-        // Latar foto/GIF/video memenuhi panel
-        HomeBackground(
-            customFile = backgroundFile,
-            version = backgroundVersion,
-            videoFile = backgroundVideo,
-            animate = animateBackground,
-            videoVolume = videoVolume,
-            ambient = ambient,
-            modifier = Modifier.fillMaxSize()
-        )
-
-        // Gradien atas + bawah, lalu gradien kiri: teks putih terbaca di latar apa pun
+        // Gradien bawah dan kiri: teks putih terbaca di latar terang
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0f to NuxColors.Ink.copy(alpha = 0.45f),
+                        0f to NuxColors.Ink.copy(alpha = 0.18f),
                         0.24f to Color.Transparent,
-                        0.34f to Color.Transparent,
-                        0.66f to NuxColors.Ink.copy(alpha = 0.50f),
-                        1f to NuxColors.Ink.copy(alpha = 0.90f)
+                        0.58f to NuxColors.Ink.copy(alpha = 0.18f),
+                        1f to NuxColors.Ink.copy(alpha = 0.78f)
                     )
                 )
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
                 .background(
                     Brush.horizontalGradient(
-                        0f to NuxColors.Ink.copy(alpha = 0.50f),
-                        0.58f to Color.Transparent
+                        0f to NuxColors.Ink.copy(alpha = 0.40f),
+                        0.55f to Color.Transparent
                     )
                 )
         )
 
-        // ---- BARIS ATAS ----
-        Row(
+        Column(
             modifier = Modifier
-                .align(Alignment.TopStart)
-                .fillMaxWidth()
-                .padding(start = 18.dp, end = 18.dp, top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(
+                    start = startInset + 16.dp,
+                    end = endInset + 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                )
         ) {
-            // Akun (ketuk = ganti / tambah akun)
-            val chipShape = RoundedCornerShape(20.dp)
+            // ---- BARIS ATAS: pil pemain di kiri, satu tombol bulat Tentang di kanan ----
             Row(
-                modifier = Modifier
-                    .clip(chipShape)
-                    .background(NuxColors.Ink.copy(alpha = 0.38f), chipShape)
-                    .border(1.dp, Color.White.copy(alpha = 0.26f), chipShape)
-                    .clickable { onOpenAccounts() }
-                    .defaultMinSize(minHeight = 40.dp)
-                    .padding(start = 5.dp, end = 10.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (account != null) {
-                    NuxAccountAvatar(
-                        account = account,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .background(NuxColors.Yellow, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            tint = NuxColors.Ink,
-                            modifier = Modifier.size(18.dp)
+                // Pil pemain (ketuk = menu akun cepat)
+                Row(
+                    modifier = Modifier
+                        .height(42.dp)
+                        .clip(CircleShape)
+                        .amberGlass(CircleShape)
+                        .clickable {
+                            // Belum ada akun: langsung buka dialog tambah akun
+                            if (accounts.isEmpty()) showAddAccount = true
+                            else accountMenuOpen = !accountMenuOpen
+                        }
+                        .padding(start = 6.dp, end = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (account != null) {
+                        NuxAccountAvatar(
+                            account = account,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
                         )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .background(AmberUi.Accent, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = AmberUi.Text,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = account?.username ?: "Tambah akun",
+                        color = AmberUi.Text,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.widthIn(max = 150.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        imageVector = if (accountMenuOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Ganti akun",
+                        tint = AmberUi.Text.copy(alpha = 0.8f),
+                        modifier = Modifier.size(18.dp)
+                    )
                 }
-                Spacer(modifier = Modifier.width(9.dp))
-                Text(
-                    text = account?.username ?: "Tambah akun",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.widthIn(max = 150.dp)
-                )
-                Spacer(modifier = Modifier.width(2.dp))
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Ganti akun",
-                    tint = Color.White.copy(alpha = 0.8f),
-                    modifier = Modifier.size(18.dp)
-                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Tentang & Lisensi (memuat pemberitahuan versi modifikasi tidak resmi dan lisensi GPL-3.0)
+                Box(
+                    modifier = Modifier
+                        .size(43.dp)
+                        .clip(CircleShape)
+                        .amberGlass(CircleShape)
+                        .clickable { onOpenAbout() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = "Tentang & Lisensi",
+                        tint = AmberUi.Text,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Label wajib GPL-3.0 (ketuk = Tentang & Lisensi)
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { onOpenAbout() }
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(6.dp)
-                        .background(NuxColors.Amber, CircleShape)
-                )
-                Spacer(modifier = Modifier.width(7.dp))
-                Text(
-                    text = "UNOFFICIAL MODIFIED VERSION",
-                    color = Color.White.copy(alpha = 0.72f),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.4.sp,
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = "Tentang & Lisensi",
-                    tint = Color.White.copy(alpha = 0.72f),
-                    modifier = Modifier.size(13.dp)
-                )
-            }
+            // ---- KIRI BAWAH: instance aktif, lalu navigasi + PLAY ----
+            Column(modifier = Modifier.fillMaxWidth()) {
+                if (instance != null) {
+                    val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime) {
+                        val rt = if (instance.javaRuntime != "auto") instance.javaRuntime
+                        else JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
+                        rt.replace("jre-", "Java ")
+                    }
+                    val textStyle = LocalTextStyle.current.copy(shadow = textShadow)
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Ganti latar belakang
-            Box(
-                modifier = Modifier
-                    .size(38.dp)
-                    .clip(CircleShape)
-                    .background(NuxColors.Ink.copy(alpha = 0.38f), CircleShape)
-                    .border(1.dp, Color.White.copy(alpha = 0.26f), CircleShape)
-                    .clickable { onChangeBackground() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Image,
-                    contentDescription = "Ganti latar belakang",
-                    tint = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
-
-        // ---- KIRI BAWAH: instance aktif + aksi ----
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .fillMaxWidth(if (compact) 1f else 0.68f)
-                .padding(start = 30.dp, end = if (compact) 30.dp else 0.dp, bottom = 28.dp)
-        ) {
-            if (instance != null) {
-                val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime) {
-                    val rt = if (instance.javaRuntime != "auto") instance.javaRuntime
-                    else JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
-                    rt.replace("jre-", "Java ")
-                }
-
-                // Nama besar (ketuk = ganti instance)
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(18.dp))
-                        .clickable { onPickInstance() },
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
                     Text(
-                        text = instance.name,
-                        color = Color.White,
-                        fontWeight = FontWeight.Black,
-                        fontSize = nameSize,
-                        lineHeight = nameSize * 1.1f,
-                        letterSpacing = (-0.5).sp,
+                        text = "INSTANCE AKTIF",
+                        color = Color.White.copy(alpha = 0.85f),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 11.sp,
+                        letterSpacing = 2.6.sp,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = LocalTextStyle.current.copy(shadow = nameShadow),
-                        modifier = Modifier.weight(1f, fill = false)
+                        style = textStyle
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Box(
+
+                    // Nama besar + dropdown (ganti instance) + pensil (ubah instance)
+                    Row(
                         modifier = Modifier
-                            .size(28.dp)
-                            .background(Color.White.copy(alpha = 0.16f), CircleShape),
-                        contentAlignment = Alignment.Center
+                            .padding(top = 4.dp)
+                            .fillMaxWidth(if (compact) 1f else 0.7f),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Ganti instance",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-
-                // Loader (kuning) | versi Minecraft | Java
-                Row(
-                    modifier = Modifier
-                        .padding(top = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(instance.loader),
-                        color = NuxColors.Yellow,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 13.sp,
-                        maxLines = 1
-                    )
-                    HomeMetaDivider()
-                    Text(
-                        text = "Minecraft ${instance.mcVersion}",
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 13.sp,
-                        maxLines = 1
-                    )
-                    HomeMetaDivider()
-                    Text(
-                        text = javaLabel,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 13.sp,
-                        maxLines = 1
-                    )
-                }
-
-                // PLAY / UNDUH + Folder + Ubah
-                Row(
-                    modifier = Modifier
-                        .padding(top = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    NuxButton(
-                        onClick = onPlay,
-                        backgroundColor = NuxColors.Yellow,
-                        contentColor = NuxColors.Ink,
-                        cornerRadius = 32.dp,
-                        shadowOffset = 4.dp,
-                        contentPadding = PaddingValues(horizontal = 26.dp, vertical = 12.dp),
-                        modifier = Modifier.padding(end = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (isReady) "PLAY" else "UNDUH",
-                            fontWeight = FontWeight.Black,
-                            fontSize = 22.sp,
-                            letterSpacing = 0.8.sp,
-                            maxLines = 1
+                            text = instance.name,
+                            color = Color.White,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = nameSize,
+                            lineHeight = nameSize * 1.1f,
+                            letterSpacing = (-1.5).sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = textStyle,
+                            modifier = Modifier.weight(1f, fill = false)
                         )
-                    }
-                    if (!compact) {
+                        Spacer(modifier = Modifier.width(14.dp))
+                        HomeInstanceButton(
+                            icon = Icons.Default.KeyboardArrowDown,
+                            description = "Ganti instance",
+                            onClick = onPickInstance
+                        )
                         Spacer(modifier = Modifier.width(10.dp))
-                        HomeRoundButton(
-                            icon = Icons.Outlined.Folder,
-                            description = "Buka folder instance",
-                            onClick = onOpenFolder
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        HomeRoundButton(
-                            icon = Icons.Outlined.Tune,
+                        HomeInstanceButton(
+                            icon = Icons.Outlined.Edit,
                             description = "Ubah instance",
                             onClick = onEditInstance
                         )
                     }
+
+                    // Versi | loader (biru muda) | Java
+                    Row(
+                        modifier = Modifier.padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = instance.mcVersion,
+                            color = Color.White.copy(alpha = 0.92f),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            style = textStyle
+                        )
+                        HomeMetaDivider()
+                        Text(
+                            text = com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(instance.loader),
+                            color = AmberUi.AccentSoft,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            maxLines = 1
+                        )
+                        HomeMetaDivider()
+                        Text(
+                            text = javaLabel,
+                            color = Color.White.copy(alpha = 0.92f),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                            maxLines = 1,
+                            style = textStyle
+                        )
+                    }
+
+                    // Status RAM dan renderer
+                    val ramColor = when (HomeInfo.ramLevel(freeRamMb)) {
+                        2 -> AmberUi.AccentSoft
+                        1 -> NuxColors.Amber
+                        else -> NuxColors.ErrorRed
+                    }
+                    Row(
+                        modifier = Modifier.padding(top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(7.dp)
+                                .background(ramColor, CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = HomeInfo.ramText(freeRamMb),
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp,
+                            maxLines = 1,
+                            style = textStyle
+                        )
+                        if (!compact) {
+                            Spacer(modifier = Modifier.width(18.dp))
+                            Text(
+                                text = "Renderer $rendererLabel",
+                                color = Color.White.copy(alpha = 0.85f),
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                                style = textStyle
+                            )
+                        }
+                    }
+                } else {
+                    // Belum ada instance
+                    val textStyle = LocalTextStyle.current.copy(shadow = textShadow)
+                    Text(
+                        text = "Belum ada instance",
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = nameSize,
+                        lineHeight = nameSize * 1.1f,
+                        letterSpacing = (-1.5).sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = textStyle
+                    )
+                    Text(
+                        text = "Buat instance Minecraft pertamamu untuk mulai bermain.",
+                        color = Color.White.copy(alpha = 0.88f),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                        maxLines = 2,
+                        style = textStyle,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
-            } else {
-                // Belum ada instance
-                Text(
-                    text = "Belum ada instance",
-                    color = Color.White,
-                    fontWeight = FontWeight.Black,
-                    fontSize = nameSize,
-                    lineHeight = nameSize * 1.1f,
-                    letterSpacing = (-0.5).sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = LocalTextStyle.current.copy(shadow = nameShadow)
-                )
-                Text(
-                    text = "Buat instance Minecraft pertamamu untuk mulai bermain.",
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 13.sp,
-                    maxLines = 2,
-                    modifier = Modifier
-                        .padding(top = 6.dp)
-                )
+
+                // Bar navigasi + tombol utama
                 Row(
                     modifier = Modifier
-                        .padding(top = 20.dp),
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    NuxButton(
-                        onClick = onCreateInstance,
-                        backgroundColor = NuxColors.Yellow,
-                        contentColor = NuxColors.Ink,
-                        cornerRadius = 32.dp,
-                        shadowOffset = 4.dp,
-                        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
-                        modifier = Modifier.padding(end = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = null,
-                            modifier = Modifier.size(26.dp)
+                    Box(modifier = Modifier.weight(1f)) {
+                        HomeNavBar(
+                            selected = "home",
+                            onSelect = onNavigate,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .widthIn(max = 430.dp)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
+                    }
+                    Spacer(modifier = Modifier.width(14.dp))
+                    if (instance != null) {
+                        HomeMainButton(
+                            text = if (isReady) "PLAY" else "UNDUH",
+                            icon = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
+                            onClick = onPlay,
+                            modifier = Modifier.width(if (compact) 160.dp else 224.dp)
+                        )
+                    } else {
+                        HomeMainButton(
                             text = "TAMBAH",
-                            fontWeight = FontWeight.Black,
-                            fontSize = 20.sp,
-                            letterSpacing = 0.5.sp,
-                            maxLines = 1
+                            icon = Icons.Default.Add,
+                            onClick = onCreateInstance,
+                            modifier = Modifier.width(if (compact) 160.dp else 224.dp)
                         )
                     }
                 }
             }
         }
 
-        // ---- KANAN BAWAH: status RAM dan renderer (teks kecil, tanpa kotak) ----
-        if (!compact) {
-            val ramColor = when (HomeInfo.ramLevel(freeRamMb)) {
-                2 -> NuxColors.SuccessGreen
-                1 -> NuxColors.Amber
-                else -> NuxColors.ErrorRed
-            }
-            Column(
+        // Ketuk di luar menu = tutup
+        if (accountMenuOpen) {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 30.dp, bottom = 32.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(7.dp)
-                            .background(ramColor, CircleShape)
-                    )
-                    Spacer(modifier = Modifier.width(7.dp))
-                    Text(
-                        text = HomeInfo.ramText(freeRamMb),
-                        color = Color.White.copy(alpha = 0.75f),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 12.sp,
-                        maxLines = 1
-                    )
-                }
-                Text(
-                    text = "Renderer $rendererLabel",
-                    color = Color.White.copy(alpha = 0.75f),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    maxLines = 1,
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
+                    .fillMaxSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { accountMenuOpen = false }
+            )
+            HomeAccountMenu(
+                accounts = accounts,
+                currentAccountId = account?.id,
+                onSelect = { picked ->
+                    AccountManager.selectAccount(picked)
+                    accountMenuOpen = false
+                },
+                onDelete = { accountToDelete = it },
+                onAdd = {
+                    accountMenuOpen = false
+                    showAddAccount = true
+                },
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = startInset + 16.dp, top = 16.dp + 42.dp + 8.dp)
+                    .width(280.dp)
+            )
         }
+    }
+
+    if (showAddAccount) {
+        AddAccountModal(
+            onDismiss = { showAddAccount = false },
+            onAccountAdded = { newAcc ->
+                AccountManager.addAccount(context, newAcc)
+                Toast.makeText(context, "Akun ${newAcc.username} berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+                showAddAccount = false
+            }
+        )
+    }
+    accountToDelete?.let { target ->
+        DeleteAccountDialog(
+            target = target,
+            onDismiss = { accountToDelete = null }
+        )
     }
 }
 
-/** Garis tegak tipis pemisah loader | versi | Java. */
+/** Garis tegak tipis pemisah versi | loader | Java. */
 @Composable
 private fun HomeMetaDivider() {
     Box(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 12.dp)
             .width(1.dp)
-            .height(12.dp)
-            .background(Color.White.copy(alpha = 0.35f))
+            .height(14.dp)
+            .background(Color.White.copy(alpha = 0.40f))
     )
 }
 
-/** Tombol bulat 52dp, latar putih transparan dan tepi tipis (aksi kedua di Home). */
+/** Tombol bulat kecil di samping nama instance (dropdown dan pensil). */
 @Composable
-private fun HomeRoundButton(
+private fun HomeInstanceButton(
     icon: ImageVector,
     description: String,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .size(52.dp)
+            .size(32.dp)
             .clip(CircleShape)
-            .background(Color.White.copy(alpha = 0.12f), CircleShape)
-            .border(1.dp, Color.White.copy(alpha = 0.26f), CircleShape)
+            .amberGlass(CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -1035,8 +1056,120 @@ private fun HomeRoundButton(
             imageVector = icon,
             contentDescription = description,
             tint = Color.White,
-            modifier = Modifier.size(22.dp)
+            modifier = Modifier.size(18.dp)
         )
+    }
+}
+
+private val HOME_NAV_ITEMS = listOf(
+    Triple("home", "Home", Icons.Outlined.Home),
+    Triple("mods", "Mod", Icons.Outlined.FileDownload),
+    Triple("accounts", "Akun", Icons.Outlined.Person),
+    Triple("settings", "Pengaturan", Icons.Outlined.Tune)
+)
+
+/** Bar navigasi berbentuk pil di kiri bawah: Home, Mod, Akun, Pengaturan (ikon di atas label). */
+@Composable
+private fun HomeNavBar(
+    selected: String,
+    onSelect: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(61.dp)
+            .clip(CircleShape)
+            .amberGlass(CircleShape)
+            .padding(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        HOME_NAV_ITEMS.forEach { (id, label, icon) ->
+            val isSelected = id == selected
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(CircleShape)
+                    .background(if (isSelected) AmberUi.SurfaceRaised else Color.Transparent, CircleShape)
+                    .border(
+                        1.dp,
+                        if (isSelected) AmberUi.BorderStrong else Color.Transparent,
+                        CircleShape
+                    )
+                    .clickable { if (!isSelected) onSelect(id) },
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = if (isSelected) Color.White else Color.White.copy(alpha = 0.78f),
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(
+                    text = label,
+                    color = if (isSelected) Color.White else Color.White.copy(alpha = 0.78f),
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+/** Tombol utama biru (PLAY / UNDUH / TAMBAH) dengan bayangan keras di bawah; menekan = turun. */
+@Composable
+private fun HomeMainButton(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val lift by animateDpAsState(if (pressed) 0.dp else 4.dp, label = "homeMainLift")
+    Box(
+        modifier = modifier
+            .height(64.dp)
+            .clickable(interactionSource = interaction, indication = null) { onClick() }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .align(Alignment.BottomCenter)
+                .background(AmberUi.AccentDeep, CircleShape)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .align(Alignment.TopCenter)
+                .offset(y = 4.dp - lift)
+                .clip(CircleShape)
+                .background(AmberUi.Accent, CircleShape)
+                .border(1.5.dp, AmberUi.AccentEdge, CircleShape),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(26.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = text,
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                letterSpacing = 3.sp,
+                maxLines = 1
+            )
+        }
     }
 }
 

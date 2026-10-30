@@ -1,5 +1,7 @@
 package com.israadev.nuxlauncher.ui.screens
 
+import androidx.compose.ui.res.painterResource
+import com.israadev.nuxlauncher.ui.theme.amberGlass
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.israadev.nuxlauncher.ui.i18n.Toast
@@ -26,8 +28,10 @@ import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +45,7 @@ import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.mods.WorldInfo
 import com.israadev.nuxlauncher.ui.components.*
+import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.Job
@@ -153,10 +158,21 @@ private val CATEGORIES_MAP = mapOf(
     )
 )
 
+/**
+ * BROWSE = jelajah dan pasang dari Modrinth (tab Mod di Home).
+ * MANAGE = kelola isi instance yang terpasang (dibuka dari Ubah instance).
+ */
+enum class ModsMode { BROWSE, MANAGE }
+
 @Composable
 fun ModsScreen(
     onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenAccounts: () -> Unit = {},
+    onOpenSettings: () -> Unit = {},
+    mode: ModsMode = ModsMode.BROWSE,
+    initialType: String = "mods",
+    onOpenBrowse: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -164,11 +180,11 @@ fun ModsScreen(
     val instances by InstanceManager.instances.collectAsState()
     val selectedInstance by InstanceManager.selectedInstance.collectAsState()
 
-    // Mode: "installed" | "browse"
-    var mainMode by remember { mutableStateOf("browse") }
+    // Mode: "installed" (kelola isi instance) | "browse" (jelajah Modrinth)
+    val mainMode = if (mode == ModsMode.MANAGE) "installed" else "browse"
 
     // Item Type: "mods" | "modpacks" | "resourcepacks" | "shaderpacks" | "datapacks"
-    var activeType by remember { mutableStateOf("mods") }
+    var activeType by remember { mutableStateOf(initialType) }
 
     // World state for Datapacks
     var worlds by remember { mutableStateOf<List<WorldInfo>>(emptyList()) }
@@ -188,6 +204,12 @@ fun ModsScreen(
     var isSearching by remember { mutableStateOf(false) }
     var searchErrorMessage by remember { mutableStateOf<String?>(null) }
     var filterByGameVersion by remember { mutableStateOf(true) }
+    var filterByLoader by remember { mutableStateOf(true) }
+    var selectedSort by remember { mutableStateOf("relevance") }
+    var showCategoryMenu by remember { mutableStateOf(false) }
+    var showVersionMenu by remember { mutableStateOf(false) }
+    var showLoaderMenu by remember { mutableStateOf(false) }
+    var showSortMenu by remember { mutableStateOf(false) }
     var currentPage by remember { mutableStateOf(1) }
     var totalHits by remember { mutableStateOf(0) }
     var downloadingProjectIds by remember { mutableStateOf<Map<String, String>>(emptyMap()) } // projectId -> status
@@ -244,7 +266,9 @@ fun ModsScreen(
                 instance = inst,
                 category = cat,
                 filterByGameVersion = filterByGameVersion,
-                page = page
+                page = page,
+                sortIndex = selectedSort,
+                filterByLoader = filterByLoader
             )
             if (res.isSuccess) {
                 val data = res.getOrNull()
@@ -262,7 +286,7 @@ fun ModsScreen(
     }
 
     // Trigger reload when tab, type, world or instance changes
-    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion) {
+    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort) {
         if (selectedInstance != null) {
             reloadWorlds()
             reloadInstalled()
@@ -531,143 +555,72 @@ fun ModsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 10.dp)
+            .padding(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 10.dp)
     ) {
-        if (selectedInstance == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    modifier = Modifier.width(300.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ExtensionOff,
-                        contentDescription = null,
-                        tint = NuxColors.GrayNeutral,
-                        modifier = Modifier.size(36.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Belum ada instance",
-                        fontWeight = FontWeight.Black,
-                        fontSize = 16.sp,
-                        color = NuxColors.DarkGray
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Pilih atau buat instance di Home untuk mulai memasang mod.",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 12.sp,
-                        lineHeight = 17.sp,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    NuxButton(
-                        onClick = { onNavigateBack() },
-                        backgroundColor = NuxColors.Yellow,
-                        cornerRadius = 20.dp,
-                        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
-                    ) {
-                        Text("Kembali ke Home", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                    }
-                }
-            }
-            return
-        }
-
-        val currentInst = selectedInstance!!
-
         // =========================================================================
-        // BARIS ATAS: judul, instance aktif, sakelar Terpasang / Jelajah
+        // BARIS ATAS: navigasi (kembali, jenis, akun, pengaturan) | sumber | pencarian
         // =========================================================================
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(bottom = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.weight(1f, fill = false),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Mod",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 20.sp,
-                    letterSpacing = (-0.3).sp
-                )
-                Spacer(modifier = Modifier.width(10.dp))
-                val instShape = RoundedCornerShape(19.dp)
-                Row(
-                    modifier = Modifier
-                        .weight(1f, fill = false)
-                        .height(38.dp)
-                        .clip(instShape)
-                        .background(NuxColors.SurfaceElevated, instShape)
-                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, instShape)
-                        .clickable { if (instances.size > 1) showInstanceMenu = true }
-                        .padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Inventory2,
-                        contentDescription = null,
-                        tint = NuxColors.Yellow,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "${currentInst.name} · ${currentInst.mcVersion} · ${currentInst.loader.uppercase()}",
-                        color = NuxColors.DarkGray,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
-                    if (instances.size > 1) {
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowDropDown,
-                            contentDescription = "Ganti instance",
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(20.dp)
-                        )
+            AmberNavPill(
+                active = "mods",
+                activeLabel = modsTypeShortLabel(activeType),
+                activeIcon = if (mainMode == "installed") Icons.Outlined.Inventory2 else Icons.Outlined.FileDownload,
+                onBack = onNavigateBack,
+                onMods = {},
+                onAccounts = onOpenAccounts,
+                onSettings = onOpenSettings
+            )
+            if (mainMode == "browse") {
+                ModsSourcePill(
+                    curseForgeLocked = CURSEFORGE_LOCKED,
+                    onCurseForgeClick = {
+                        Toast.makeText(context, "CurseForge belum tersedia di versi ini", Toast.LENGTH_SHORT).show()
                     }
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            val segShape = RoundedCornerShape(19.dp)
-            Row(
-                modifier = Modifier
-                    .clip(segShape)
-                    .background(NuxColors.SurfaceElevated, segShape)
-                    .border(NuxSizes.GlassBorder, NuxColors.CardBorder, segShape)
-                    .padding(2.dp),
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ModsModeTab(
-                    text = "Terpasang (${installedItems.size})",
-                    selected = mainMode == "installed",
-                    onClick = { mainMode = "installed" }
                 )
-                ModsModeTab(
-                    text = "Jelajah",
-                    selected = mainMode == "browse",
-                    onClick = { mainMode = "browse" }
+            } else {
+                ModsActionPill(
+                    onAdd = { onOpenBrowse(activeType) },
+                    onImport = {
+                        if (selectedInstance == null) {
+                            Toast.makeText(context, "Pilih instance terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            filePicker.launch(getMimeTypesForType(activeType))
+                        }
+                    }
                 )
             }
+            AmberSearchPill(
+                value = if (mainMode == "browse") browseQuery else installedSearch,
+                onValueChange = { if (mainMode == "browse") onQueryChanged(it) else installedSearch = it },
+                placeholder = if (mainMode == "browse") modsSearchPlaceholder(activeType) else "Cari di ${installedItems.size} item...",
+                modifier = Modifier.weight(1f)
+            )
         }
 
+        if (selectedInstance == null) {
+            ModsMessage(
+                icon = Icons.Outlined.ExtensionOff,
+                title = "Belum ada instance",
+                subtitle = "Pilih atau buat instance di Home untuk mulai memasang mod.",
+                actionLabel = "Kembali ke Home",
+                onAction = { onNavigateBack() }
+            )
+            return
+        }
+
+        val currentInst = selectedInstance!!
+        val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
+        val selectedCategoryLabel = categories.firstOrNull { it.id == selectedCategory }?.label ?: "Semua"
+        val selectedSortLabel = MODS_SORT_OPTIONS.firstOrNull { it.first == selectedSort }?.second ?: "Relevansi"
+
         // =========================================================================
-        // ISI: rel jenis addon di kiri, pencarian + daftar di kanan
+        // ISI: rel jenis addon di kiri, filter + daftar di kanan
         // =========================================================================
         Row(
             modifier = Modifier
@@ -676,17 +629,14 @@ fun ModsScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
-                modifier = Modifier.width(128.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                modifier = Modifier
+                    .width(148.dp)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                listOf(
-                    Triple("mods", "Mod", Icons.Outlined.Extension),
-                    Triple("modpacks", "Modpack", Icons.Outlined.Inventory2),
-                    Triple("resourcepacks", "Resource", Icons.Outlined.Palette),
-                    Triple("shaderpacks", "Shader", Icons.Outlined.AutoAwesome),
-                    Triple("datapacks", "Datapack", Icons.Outlined.Storage)
-                ).forEach { (typeId, typeLabel, typeIcon) ->
-                    SettingTab(
+                MODS_TYPE_ITEMS.forEach { (typeId, typeLabel, typeIcon) ->
+                    AmberSideItem(
                         icon = typeIcon,
                         label = typeLabel,
                         selected = activeType == typeId,
@@ -703,93 +653,58 @@ fun ModsScreen(
                     .weight(1f)
                     .fillMaxHeight()
             ) {
-                // Cari + filter
-                Row(
+                // Filter (bisa digeser ke samping bila layar sempit)
+                BoxWithConstraints(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(bottom = 10.dp)
                 ) {
-                    if (mainMode == "browse") {
-                        ModsSearchBar(
-                            value = browseQuery,
-                            onValueChange = { onQueryChanged(it) },
-                            placeholder = "Cari di Modrinth...",
-                            modifier = Modifier.weight(1f)
-                        )
-                    } else {
-                        ModsSearchBar(
-                            value = installedSearch,
-                            onValueChange = { installedSearch = it },
-                            placeholder = "Cari di ${installedItems.size} item...",
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-
-                    if (activeType == "datapacks") {
-                        ModsFilterChip(
-                            icon = Icons.Outlined.Public,
-                            text = if (worlds.isNotEmpty()) "World: $selectedWorld" else "Tidak ada world",
-                            selected = false,
-                            onClick = { if (worlds.isNotEmpty()) showWorldMenu = true }
-                        )
-                    }
-
-                    if (mainMode == "browse") {
-                        ModsFilterChip(
-                            icon = if (filterByGameVersion) Icons.Outlined.Check else Icons.Outlined.Close,
-                            text = if (filterByGameVersion) currentInst.mcVersion else "Semua versi",
-                            selected = filterByGameVersion,
-                            onClick = {
-                                filterByGameVersion = !filterByGameVersion
-                                currentPage = 1
-                                performSearch(1)
-                            }
-                        )
-                    } else {
-                        NuxButton(
-                            onClick = {
-                                if (selectedInstance == null) {
-                                    Toast.makeText(context, "Pilih instance terlebih dahulu!", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    filePicker.launch(getMimeTypesForType(activeType))
-                                }
-                            },
-                            backgroundColor = NuxColors.Yellow,
-                            cornerRadius = 20.dp,
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.FileUpload,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Impor", fontWeight = FontWeight.Black, fontSize = 12.sp)
-                        }
-                    }
-                }
-
-                // Kategori (hanya mode Jelajah)
-                if (mainMode == "browse") {
-                    val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
-                    LazyRow(
+                    val rowMinWidth = maxWidth
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            .horizontalScroll(rememberScrollState())
+                            .widthIn(min = rowMinWidth),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.End),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        items(categories) { cat ->
-                            SettingChip(
-                                text = cat.label,
-                                selected = selectedCategory == cat.id,
-                                onClick = {
-                                    selectedCategory = cat.id
-                                    currentPage = 1
-                                    performSearch(1)
-                                }
+                        AmberFilterPill(
+                            label = "Instance",
+                            value = currentInst.name,
+                            showChevron = mainMode == "browse" && instances.size > 1,
+                            onClick = { if (mainMode == "browse" && instances.size > 1) showInstanceMenu = true }
+                        )
+
+                        if (activeType == "datapacks") {
+                            AmberFilterPill(
+                                label = "World",
+                                value = if (worlds.isNotEmpty()) selectedWorld else "Tidak ada world",
+                                showChevron = worlds.isNotEmpty(),
+                                onClick = { if (worlds.isNotEmpty()) showWorldMenu = true }
+                            )
+                        }
+
+                        if (mainMode == "browse") {
+                            AmberFilterPill(
+                                label = "Kategori",
+                                value = modsPlainLabel(selectedCategoryLabel),
+                                onClick = { showCategoryMenu = true }
+                            )
+                            AmberFilterPill(
+                                label = "Versi",
+                                value = if (filterByGameVersion) "Auto" else "Semua",
+                                onClick = { showVersionMenu = true }
+                            )
+                            if (activeType == "mods" || activeType == "modpacks") {
+                                AmberFilterPill(
+                                    label = "Loader",
+                                    value = if (filterByLoader) "Auto" else "Semua",
+                                    onClick = { showLoaderMenu = true }
+                                )
+                            }
+                            AmberFilterPill(
+                                label = "Urutkan",
+                                value = selectedSortLabel,
+                                onClick = { showSortMenu = true }
                             )
                         }
                     }
@@ -808,48 +723,22 @@ fun ModsScreen(
                     }
 
                     if (isInstalledLoading) {
-                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
-                        }
+                        ModsLoading()
                     } else if (filteredInstalled.isEmpty()) {
-                        Box(
-                            modifier = Modifier.weight(1f).fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    imageVector = Icons.Outlined.FolderOpen,
-                                    contentDescription = null,
-                                    tint = NuxColors.GrayNeutral,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Text(
-                                    text = if (activeType == "datapacks" && worlds.isEmpty())
-                                        "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
-                                    else if (installedSearch.isBlank())
-                                        "Belum ada ${activeType} terpasang di instance ini"
-                                    else "Tidak ada item yang cocok",
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                NuxButton(
-                                    onClick = { mainMode = "browse" },
-                                    backgroundColor = NuxColors.Yellow,
-                                    cornerRadius = 20.dp,
-                                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
-                                ) {
-                                    Text("Jelajahi Modrinth", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                                }
-                            }
-                        }
+                        ModsMessage(
+                            icon = Icons.Outlined.FolderOpen,
+                            title = if (activeType == "datapacks" && worlds.isEmpty())
+                                "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
+                            else if (installedSearch.isBlank())
+                                "Belum ada ${activeType} terpasang di instance ini"
+                            else "Tidak ada item yang cocok",
+                            actionLabel = "Jelajahi Modrinth",
+                            onAction = { onOpenBrowse(activeType) }
+                        )
                     } else {
                         LazyColumn(
                             modifier = Modifier.weight(1f).fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                             contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
                             items(filteredInstalled, key = { it.id }) { item ->
@@ -872,99 +761,36 @@ fun ModsScreen(
                     // JELAJAH MODRINTH
                     // ==========================================
                     if (isSearching) {
-                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 12.sp)
-                            }
-                        }
+                        ModsLoading(text = "Memuat data dari Modrinth...")
                     } else if (searchErrorMessage != null) {
-                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(horizontal = 24.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.CloudOff,
-                                    contentDescription = null,
-                                    tint = NuxColors.ErrorRed,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Text(
-                                    text = "Gagal memuat dari Modrinth",
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = searchErrorMessage ?: "Terjadi kesalahan jaringan",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 11.sp,
-                                    lineHeight = 16.sp,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                NuxButton(
-                                    onClick = { performSearch(currentPage) },
-                                    backgroundColor = NuxColors.Yellow,
-                                    cornerRadius = 20.dp,
-                                    contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
-                                ) {
-                                    Text("Coba lagi", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                                }
-                            }
-                        }
+                        ModsMessage(
+                            icon = Icons.Outlined.CloudOff,
+                            iconTint = NuxColors.ErrorRed,
+                            title = "Gagal memuat dari Modrinth",
+                            subtitle = searchErrorMessage ?: "Terjadi kesalahan jaringan",
+                            actionLabel = "Coba lagi",
+                            onAction = { performSearch(currentPage) }
+                        )
                     } else if (searchHits.isEmpty()) {
-                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    imageVector = Icons.Outlined.SearchOff,
-                                    contentDescription = null,
-                                    tint = NuxColors.GrayNeutral,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                                Spacer(modifier = Modifier.height(6.dp))
-                                Text(
-                                    text = if (filterByGameVersion) {
-                                        "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
-                                    } else {
-                                        "Tidak ada hasil ditemukan untuk kata kunci ini"
-                                    },
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "Coba ubah kata kunci atau nonaktifkan filter versi",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 11.sp
-                                )
-                                if (filterByGameVersion) {
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    NuxButton(
-                                        onClick = {
-                                            filterByGameVersion = false
-                                            currentPage = 1
-                                            performSearch(1)
-                                        },
-                                        backgroundColor = NuxColors.Yellow,
-                                        cornerRadius = 20.dp,
-                                        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 2.dp)
-                                    ) {
-                                        Text("Cari di semua versi Minecraft", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                                    }
-                                }
+                        ModsMessage(
+                            icon = Icons.Outlined.SearchOff,
+                            title = if (filterByGameVersion) {
+                                "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
+                            } else {
+                                "Tidak ada hasil ditemukan untuk kata kunci ini"
+                            },
+                            subtitle = "Coba ubah kata kunci atau nonaktifkan filter versi",
+                            actionLabel = if (filterByGameVersion) "Cari di semua versi Minecraft" else null,
+                            onAction = {
+                                filterByGameVersion = false
+                                currentPage = 1
+                                performSearch(1)
                             }
-                        }
+                        )
                     } else {
                         LazyColumn(
                             modifier = Modifier.weight(1f).fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
                             contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
                             items(searchHits, key = { it.projectId }) { hit ->
@@ -988,32 +814,26 @@ fun ModsScreen(
                                     horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    NuxButton(
-                                        onClick = { performSearch(currentPage - 1) },
-                                        backgroundColor = Color.Transparent,
+                                    AmberPillButton(
+                                        text = "Sebelumnya",
+                                        filled = false,
                                         enabled = currentPage > 1,
-                                        cornerRadius = 20.dp,
-                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-                                    ) {
-                                        Text("Sebelumnya", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                    }
-                                    Spacer(modifier = Modifier.width(10.dp))
+                                        onClick = { performSearch(currentPage - 1) }
+                                    )
+                                    Spacer(modifier = Modifier.width(12.dp))
                                     Text(
                                         text = "$currentPage / $totalPages",
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 12.sp,
-                                        color = NuxColors.GrayNeutral
+                                        fontSize = 13.sp,
+                                        color = AmberUi.TextDim
                                     )
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    NuxButton(
-                                        onClick = { performSearch(currentPage + 1) },
-                                        backgroundColor = Color.Transparent,
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    AmberPillButton(
+                                        text = "Selanjutnya",
+                                        filled = false,
                                         enabled = currentPage < totalPages,
-                                        cornerRadius = 20.dp,
-                                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-                                    ) {
-                                        Text("Selanjutnya", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                    }
+                                        onClick = { performSearch(currentPage + 1) }
+                                    )
                                 }
                             }
                         }
@@ -1025,7 +845,7 @@ fun ModsScreen(
 
     // --- PILIH INSTANCE ---
     if (showInstanceMenu) {
-        ModsPickerDialog(
+        AmberPickerDialog(
             title = "Pilih instance",
             options = instances.map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
             selectedId = selectedInstance?.id,
@@ -1039,7 +859,7 @@ fun ModsScreen(
 
     // --- PILIH WORLD (DATAPACK) ---
     if (showWorldMenu) {
-        ModsPickerDialog(
+        AmberPickerDialog(
             title = "Pilih world",
             options = worlds.map { it.folderName to it.displayName },
             selectedId = selectedWorld,
@@ -1049,6 +869,67 @@ fun ModsScreen(
                 reloadInstalled()
             },
             onDismiss = { showWorldMenu = false }
+        )
+    }
+
+    // --- PILIH KATEGORI / VERSI / LOADER / URUTAN ---
+    if (showCategoryMenu) {
+        AmberPickerDialog(
+            title = "Pilih kategori",
+            options = (CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))).map { it.id to it.label },
+            selectedId = selectedCategory,
+            onPick = { id ->
+                selectedCategory = id
+                showCategoryMenu = false
+                currentPage = 1
+                performSearch(1)
+            },
+            onDismiss = { showCategoryMenu = false }
+        )
+    }
+    if (showVersionMenu) {
+        AmberPickerDialog(
+            title = "Pilih versi",
+            options = listOf(
+                "auto" to "Auto (${selectedInstance?.mcVersion ?: ""})",
+                "all" to "Semua versi"
+            ),
+            selectedId = if (filterByGameVersion) "auto" else "all",
+            onPick = { id ->
+                filterByGameVersion = id == "auto"
+                currentPage = 1
+                showVersionMenu = false
+            },
+            onDismiss = { showVersionMenu = false }
+        )
+    }
+    if (showLoaderMenu) {
+        AmberPickerDialog(
+            title = "Pilih loader",
+            options = listOf(
+                "auto" to "Auto (${(selectedInstance?.loader ?: "").uppercase()})",
+                "all" to "Semua loader"
+            ),
+            selectedId = if (filterByLoader) "auto" else "all",
+            onPick = { id ->
+                filterByLoader = id == "auto"
+                currentPage = 1
+                showLoaderMenu = false
+            },
+            onDismiss = { showLoaderMenu = false }
+        )
+    }
+    if (showSortMenu) {
+        AmberPickerDialog(
+            title = "Urutkan",
+            options = MODS_SORT_OPTIONS,
+            selectedId = selectedSort,
+            onPick = { id ->
+                selectedSort = id
+                currentPage = 1
+                showSortMenu = false
+            },
+            onDismiss = { showSortMenu = false }
         )
     }
     // --- DIALOG HAPUS ---
@@ -1316,74 +1197,6 @@ fun ModsScreen(
 // ============================================================================
 
 /** Tombol sakelar atas (Terpasang / Jelajah). Terpilih = isian kuning, teks Ink. */
-@Composable
-private fun ModsModeTab(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    val shape = RoundedCornerShape(17.dp)
-    Box(
-        modifier = Modifier
-            .height(34.dp)
-            .clip(shape)
-            .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
-            .clickable { onClick() }
-            .padding(horizontal = 14.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
-            fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
-            fontSize = 12.sp,
-            maxLines = 1
-        )
-    }
-}
-
-/** Chip filter setinggi 38dp di samping kolom cari (versi game, world). */
-@Composable
-private fun ModsFilterChip(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    val shape = RoundedCornerShape(19.dp)
-    Row(
-        modifier = Modifier
-            .height(38.dp)
-            .clip(shape)
-            .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceElevated, shape)
-            .border(
-                NuxSizes.GlassBorder,
-                if (selected) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
-                shape
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (selected) NuxColors.Yellow else NuxColors.GrayNeutral,
-            modifier = Modifier.size(16.dp)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = text,
-            color = if (selected) NuxColors.Yellow else NuxColors.DarkGray,
-            fontWeight = FontWeight.Bold,
-            fontSize = 12.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.widthIn(max = 130.dp)
-        )
-    }
-}
-
 /** Tombol ikon bulat 38dp. */
 @Composable
 private fun ModsIconButton(
@@ -1420,41 +1233,309 @@ private fun ModsIconButton(
     }
 }
 
-/** Baris addon yang sudah terpasang: inisial, nama, berkas, saklar aktif, tombol hapus. */
+// =============================================================================
+// TAMPILAN BARU LAYAR MOD (kaca gelap dengan aksen biru, semua bentuk pil)
+// =============================================================================
+
+/** Sumber unduhan CurseForge dikunci sampai kunci API tersedia. Ubah ke false bila sudah siap dipakai. */
+private const val CURSEFORGE_LOCKED = true
+
+private val MODS_TYPE_ITEMS = listOf(
+    Triple("modpacks", "Modpack", Icons.Outlined.Layers),
+    Triple("mods", "Mod", Icons.Outlined.ViewInAr),
+    Triple("shaderpacks", "Shader", Icons.Outlined.LightMode),
+    Triple("resourcepacks", "Resource Pack", Icons.Outlined.Image),
+    Triple("datapacks", "Datapack", Icons.Outlined.Public)
+)
+
+private val MODS_SORT_OPTIONS = listOf(
+    "relevance" to "Relevansi",
+    "downloads" to "Unduhan",
+    "follows" to "Pengikut",
+    "newest" to "Terbaru",
+    "updated" to "Diperbarui"
+)
+
+private val MODS_LOADER_IDS = setOf("fabric", "forge", "neoforge", "quilt")
+
+private fun modsTypeShortLabel(type: String): String = when (type) {
+    "modpacks" -> "Modpack"
+    "shaderpacks" -> "Shader"
+    "resourcepacks" -> "Resource"
+    "datapacks" -> "Datapack"
+    else -> "Mod"
+}
+
+private fun modsSearchPlaceholder(type: String): String = when (type) {
+    "modpacks" -> "Cari modpack..."
+    "shaderpacks" -> "Cari shader..."
+    "resourcepacks" -> "Cari resource pack..."
+    "datapacks" -> "Cari datapack..."
+    else -> "Cari mod..."
+}
+
+/** "⚡ Optimization" menjadi "Optimization" (buang emoji di depan label kategori). */
+private fun modsPlainLabel(label: String): String {
+    val firstSpace = label.indexOf(' ')
+    return if (firstSpace > 0 && !label[0].isLetterOrDigit()) label.substring(firstSpace + 1) else label
+}
+
+private fun modsCategoryTag(id: String): String = when (id) {
+    "optimization" -> "Optimasi"
+    "technology" -> "Teknologi"
+    "magic" -> "Sihir"
+    "adventure" -> "Petualangan"
+    "utility" -> "Utilitas"
+    "decoration" -> "Dekorasi"
+    "equipment" -> "Perlengkapan"
+    "food" -> "Makanan"
+    "storage" -> "Penyimpanan"
+    "library" -> "Pustaka"
+    "lightweight" -> "Ringan"
+    "realistic" -> "Realistis"
+    "fantasy" -> "Fantasi"
+    else -> id.replace('-', ' ').replaceFirstChar { it.uppercase() }
+}
+
+private fun modsLoaderTag(id: String): String = when (id) {
+    "neoforge" -> "NeoForge"
+    else -> id.replaceFirstChar { it.uppercase() }
+}
+
+/** Label kecil di kartu: maksimal 2 kategori lalu 2 loader, mis. "Optimasi", "Fabric". */
+private fun modsTagsFor(hit: ModrinthSearchHit): List<String> {
+    val all = (hit.displayCategories ?: hit.categories ?: emptyList()).map { it.lowercase() }.distinct()
+    val loaders = all.filter { it in MODS_LOADER_IDS }
+    val topics = all.filter { it !in MODS_LOADER_IDS }
+    return topics.take(2).map { modsCategoryTag(it) } + loaders.take(2).map { modsLoaderTag(it) }
+}
+
+/** Pil sumber: Modrinth (aktif) dan CurseForge (terkunci sampai ada kunci API). */
+@Composable
+private fun ModsSourcePill(
+    curseForgeLocked: Boolean,
+    onCurseForgeClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .clip(CircleShape)
+            .amberGlass(CircleShape)
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Modrinth: satu-satunya sumber yang aktif saat ini
+        Row(
+            modifier = Modifier
+                .height(40.dp)
+                .clip(CircleShape)
+                .background(AmberUi.SurfaceRaised, CircleShape)
+                .border(1.dp, AmberUi.BorderStrong, CircleShape)
+                .padding(horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth),
+                contentDescription = null,
+                tint = AmberUi.Text,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Modrinth",
+                color = AmberUi.Text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                maxLines = 1
+            )
+        }
+
+        // CurseForge: dikunci (pudar + ikon gembok), ketuk = pesan penjelasan
+        Row(
+            modifier = Modifier
+                .height(40.dp)
+                .alpha(if (curseForgeLocked) 0.5f else 1f)
+                .clip(CircleShape)
+                .clickable { onCurseForgeClick() }
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_curseforge),
+                contentDescription = null,
+                tint = AmberUi.Text,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "CurseForge",
+                color = AmberUi.Text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                maxLines = 1
+            )
+            if (curseForgeLocked) {
+                Spacer(modifier = Modifier.width(6.dp))
+                Icon(
+                    imageVector = Icons.Outlined.Lock,
+                    contentDescription = "Terkunci",
+                    tint = AmberUi.Text,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        }
+    }
+}
+
+/** Pil aksi layar kelola: Tambah (buka jelajah Modrinth) dan Impor berkas dari penyimpanan. */
+@Composable
+private fun ModsActionPill(
+    onAdd: () -> Unit,
+    onImport: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .clip(CircleShape)
+            .amberGlass(CircleShape)
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AmberPillButton(text = "Tambah", icon = Icons.Outlined.Add, onClick = onAdd)
+        AmberPillButton(text = "Impor", icon = Icons.Outlined.FileUpload, filled = false, onClick = onImport)
+    }
+}
+
+/** Label kecil berbentuk pil di bawah deskripsi kartu (kategori, loader). */
+@Composable
+private fun ModsTagChip(text: String) {
+    Box(
+        modifier = Modifier
+            .height(22.dp)
+            .border(1.dp, AmberUi.Border, CircleShape)
+            .padding(horizontal = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            maxLines = 1
+        )
+    }
+}
+
+/** Pesan di tengah daftar (kosong, galat, belum ada instance) dengan tombol aksi opsional. */
+@Composable
+private fun ColumnScope.ModsMessage(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String? = null,
+    iconTint: Color = AmberUi.TextDim,
+    actionLabel: String? = null,
+    onAction: () -> Unit = {}
+) {
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .widthIn(max = 340.dp)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconTint,
+                modifier = Modifier.size(34.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                color = AmberUi.Text,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                lineHeight = 19.sp,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            if (subtitle != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = subtitle,
+                    color = AmberUi.TextDim,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
+            if (actionLabel != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                AmberPillButton(text = actionLabel, onClick = onAction)
+            }
+        }
+    }
+}
+
+/** Indikator memuat di tengah daftar. */
+@Composable
+private fun ColumnScope.ModsLoading(text: String? = null) {
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            AmberSpinner(
+                color = AmberUi.AccentSoft,
+                modifier = Modifier.size(28.dp)
+            )
+            if (text != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text, color = AmberUi.TextDim, fontSize = 12.sp)
+            }
+        }
+    }
+}
+
+/** Baris addon yang sudah terpasang: ikon, nama, berkas, saklar aktif, tombol hapus. */
 @Composable
 private fun InstalledItemRow(
     item: InstalledModItem,
     onToggle: () -> Unit,
     onDelete: () -> Unit
 ) {
-    val shape = RoundedCornerShape(16.dp)
+    val shape = RoundedCornerShape(24.dp)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(
-                if (item.isEnabled) NuxColors.SurfaceWhite else NuxColors.SurfaceWhite.copy(alpha = 0.5f),
-                shape
-            )
-            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
-            .padding(start = 10.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+            .background(if (item.isEnabled) AmberUi.Surface else AmberUi.Surface.copy(alpha = 0.3f), shape)
+            .border(1.dp, AmberUi.Border, shape)
+            .padding(start = 12.dp, end = 8.dp, top = 10.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ModIcon(
             item = item,
-            size = 40.dp,
+            size = 48.dp,
             dimmed = !item.isEnabled
         )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(12.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = item.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = if (item.isEnabled) NuxColors.DarkGray else NuxColors.GrayNeutral,
+                    fontSize = 15.sp,
+                    color = if (item.isEnabled) AmberUi.Text else AmberUi.TextDim,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
@@ -1470,8 +1551,8 @@ private fun InstalledItemRow(
             }
             Text(
                 text = "${item.filename} · ${formatBytes(item.sizeBytes)}",
-                fontSize = 11.sp,
-                color = NuxColors.GrayNeutral,
+                fontSize = 12.sp,
+                color = AmberUi.TextDim,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -1483,9 +1564,10 @@ private fun InstalledItemRow(
             checked = item.isEnabled,
             onCheckedChange = { onToggle() },
             colors = SwitchDefaults.colors(
-                checkedThumbColor = NuxColors.Ink,
-                checkedTrackColor = NuxColors.Yellow,
-                uncheckedThumbColor = NuxColors.GrayNeutral,
+                checkedThumbColor = Color.White,
+                checkedTrackColor = AmberUi.Accent,
+                checkedBorderColor = AmberUi.AccentEdge,
+                uncheckedThumbColor = AmberUi.TextDim,
                 uncheckedTrackColor = NuxColors.SurfaceElevated
             )
         )
@@ -1500,7 +1582,7 @@ private fun InstalledItemRow(
     }
 }
 
-/** Baris hasil pencarian Modrinth: ikon, judul, deskripsi, lencana, tombol Pasang. */
+/** Kartu hasil pencarian Modrinth: ikon, judul, deskripsi, label, tombol Pasang / Terpasang. */
 @Composable
 private fun ModrinthHitRow(
     hit: ModrinthSearchHit,
@@ -1510,38 +1592,38 @@ private fun ModrinthHitRow(
     onOpen: () -> Unit,
     onInstall: () -> Unit
 ) {
-    val shape = RoundedCornerShape(16.dp)
-    val iconShape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(24.dp)
+    val iconShape = RoundedCornerShape(14.dp)
+    val tags = remember(hit.projectId, hit.displayCategories, hit.categories) { modsTagsFor(hit) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(NuxColors.SurfaceWhite, shape)
-            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
+            .amberGlass(shape)
             .clickable { onOpen() }
-            .padding(start = 10.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+            .padding(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         NuxNetworkImage(
             model = hit.iconUrl,
             contentDescription = hit.title,
             modifier = Modifier
-                .size(44.dp)
-                .border(NuxSizes.GlassBorder, NuxColors.CardBorder, iconShape),
+                .size(52.dp)
+                .border(1.dp, AmberUi.Border, iconShape),
             fallbackInitials = hit.title.take(2).uppercase(),
             shape = iconShape,
             maxSidePx = 192
         )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(14.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = hit.title,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 14.sp,
-                    color = NuxColors.DarkGray,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = AmberUi.Text,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
@@ -1550,50 +1632,37 @@ private fun ModrinthHitRow(
                     Spacer(modifier = Modifier.width(8.dp))
                     NuxBadge(
                         text = "PACK",
-                        backgroundColor = NuxColors.YellowPale,
-                        textColor = NuxColors.Yellow
+                        backgroundColor = AmberUi.Accent,
+                        textColor = AmberUi.Text
                     )
                 }
             }
 
             Text(
                 text = hit.description ?: "Tidak ada deskripsi",
-                fontSize = 11.sp,
-                color = NuxColors.GrayNeutral,
+                fontSize = 13.sp,
+                color = AmberUi.TextDim,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(3.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                NuxBadge(
-                    text = "📥 ${formatCompactNumber(hit.downloads)}",
-                    backgroundColor = NuxColors.SurfaceElevated,
-                    textColor = NuxColors.GrayNeutral
-                )
-                if (!hit.author.isNullOrBlank()) {
-                    Text(
-                        text = "oleh ${hit.author}",
-                        fontSize = 11.sp,
-                        color = NuxColors.GrayNeutral,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
+            if (tags.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    tags.forEach { tag -> ModsTagChip(tag) }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(12.dp))
 
         if (isDownloading) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 AmberSpinner(
-                    color = NuxColors.Yellow,
+                    color = AmberUi.AccentSoft,
                     modifier = Modifier.size(22.dp),
                     strokeWidth = 2.dp
                 )
@@ -1602,95 +1671,24 @@ private fun ModrinthHitRow(
                     text = downloadStatus.ifBlank { "Unduh..." },
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = NuxColors.Yellow,
+                    color = AmberUi.AccentSoft,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.widthIn(max = 96.dp)
                 )
             }
         } else if (isInstalled) {
-            val okShape = RoundedCornerShape(16.dp)
-            Row(
-                modifier = Modifier
-                    .clip(okShape)
-                    .background(NuxColors.YellowPale, okShape)
-                    .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape)
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Check,
-                    contentDescription = null,
-                    tint = NuxColors.Yellow,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Terpasang",
-                    color = NuxColors.Yellow,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
-                )
-            }
-        } else {
-            NuxButton(
-                onClick = onInstall,
-                backgroundColor = NuxColors.Yellow,
-                cornerRadius = 20.dp,
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-            ) {
-                Text(
-                    text = if (hit.projectType == "modpack") "Pasang pack" else "Pasang",
-                    fontWeight = FontWeight.Black,
-                    fontSize = 12.sp
-                )
-            }
-        }
-    }
-}
-
-/** Daftar pilihan dalam dialog kaca (pengganti menu tarik-turun): instance dan world. */
-@Composable
-private fun ModsPickerDialog(
-    title: String,
-    options: List<Pair<String, String>>,
-    selectedId: String?,
-    onPick: (String) -> Unit,
-    onDismiss: () -> Unit
-) {
-    NuxDialog(
-        onDismissRequest = onDismiss,
-        modifier = Modifier
-            .fillMaxWidth(0.55f)
-            .wrapContentHeight(),
-        compact = true
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 14.dp)
-        ) {
-            Text(
-                text = title,
-                fontWeight = FontWeight.Black,
-                fontSize = 16.sp,
-                color = NuxColors.DarkGray
+            AmberPillButton(
+                text = "Terpasang",
+                icon = Icons.Outlined.Check,
+                filled = false,
+                onClick = onOpen
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Column(
-                modifier = Modifier
-                    .heightIn(max = 220.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                options.forEach { (id, label) ->
-                    NuxPickRow(
-                        label = label,
-                        selected = id == selectedId,
-                        onClick = { onPick(id) }
-                    )
-                }
-            }
+        } else {
+            AmberPillButton(
+                text = if (hit.projectType == "modpack") "Pasang pack" else "Pasang",
+                onClick = onInstall
+            )
         }
     }
 }
@@ -2120,75 +2118,6 @@ private fun ModDetailDialog(
 }
 
 /** Kolom cari berbentuk pil 38dp dengan ikon kaca pembesar dan tombol hapus teks. */
-@Composable
-private fun ModsSearchBar(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    modifier: Modifier = Modifier
-) {
-    val shape = RoundedCornerShape(19.dp)
-    Row(
-        modifier = modifier
-            .height(38.dp)
-            .clip(shape)
-            .background(NuxColors.SurfaceInput, shape)
-            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, shape)
-            .padding(start = 12.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Search,
-            contentDescription = null,
-            tint = NuxColors.GrayNeutral,
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            if (value.isEmpty()) {
-                Text(
-                    text = placeholder,
-                    color = NuxColors.GrayNeutral.copy(alpha = 0.7f),
-                    fontSize = 13.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            BasicTextField(
-                value = value,
-                onValueChange = onValueChange,
-                textStyle = TextStyle(
-                    color = NuxColors.DarkGray,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium
-                ),
-                cursorBrush = SolidColor(NuxColors.Yellow),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        if (value.isNotEmpty()) {
-            Box(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(CircleShape)
-                    .clickable { onValueChange("") },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = "Hapus teks",
-                    tint = NuxColors.GrayNeutral,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        }
-    }
-}
-
 private fun formatBytes(bytes: Long): String {
     if (bytes <= 0) return "0 B"
     val units = arrayOf("B", "KB", "MB", "GB")

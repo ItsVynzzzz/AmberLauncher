@@ -1,5 +1,24 @@
 package com.israadev.nuxlauncher.ui.screens
 
+import kotlin.math.sin
+import kotlin.math.cos
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import kotlin.math.roundToInt
+import okhttp3.Request
+import okhttp3.OkHttpClient
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import com.israadev.nuxlauncher.ui.theme.amberGlass
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.foundation.Canvas
+import android.graphics.BitmapFactory
 import android.content.Intent
 import android.net.Uri
 import com.israadev.nuxlauncher.ui.i18n.Toast
@@ -58,15 +77,15 @@ import java.util.UUID
 import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
 /**
- * Layar Akun gaya baru (kaca gelap seperti Home).
- * - Kiri: kartu profil aktif dengan model 3D, nama besar, dan tombol skin & jubah.
- * - Kanan: daftar akun berbaris besar; ketuk baris untuk berganti, tombol "Gunakan" jelas.
- * - Tambah akun: dialog dengan 3 pilihan penyedia dan tombol utama kuning selebar dialog.
- * Semua target sentuh sekitar 40dp dan huruf terkecil 11sp supaya enak dipakai di HP.
+ * Layar Akun gaya baru: kiri daftar akun berupa kartu panjang (ketuk untuk berganti, akun aktif
+ * diberi lencana "Aktif"), kanan detail akun terpilih dengan pratinjau skin 3D yang ringan (diam, bisa diputar manual).
+ * Tombol tambah akun ada di kanan atas, navigasi di pil kiri atas yang sama dengan layar lain.
  */
 @Composable
 fun AccountsScreen(
     onNavigateBack: () -> Unit,
+    onOpenMods: () -> Unit = {},
+    onOpenSettings: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -78,24 +97,7 @@ fun AccountsScreen(
     var showAddAccountDialog by remember { mutableStateOf(false) }
     var accountToDelete by remember { mutableStateOf<UserAccount?>(null) }
     var accountForWardrobe by remember { mutableStateOf<UserAccount?>(null) }
-
-    // Pratinjau 3D pemain (viewport interaktif)
-    val leftPlayerSkin = remember { PlayerSkin(context) }
-    var leftPageFinished by remember { mutableStateOf(false) }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            leftPlayerSkin.destroy()
-        }
-    }
-
-    fun selectAccount(acc: UserAccount) {
-        AccountManager.selectAccount(acc)
-        coroutineScope.launch {
-            val updated = SkinUtils.ensureSkinAndCapeCached(context, acc)
-            leftPlayerSkin.loadAccount(updated)
-        }
-    }
+    var refreshing by remember { mutableStateOf(false) }
 
     fun openWardrobe(acc: UserAccount) {
         val allowed = acc.safeAccountType == "microsoft" || acc.safeAccountType == "offline"
@@ -113,397 +115,144 @@ fun AccountsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 10.dp)
+            .padding(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 10.dp)
     ) {
-        // Judul + tombol tambah akun
+        // Baris atas: navigasi di kiri, tambah akun di kanan
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "Akun",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 20.sp,
-                    letterSpacing = (-0.3).sp
-                )
-                Text(
-                    text = if (accounts.isEmpty()) {
-                        "Belum ada akun tersimpan"
-                    } else {
-                        "${accounts.size} akun tersimpan · ketuk untuk berganti"
-                    },
-                    color = NuxColors.GrayNeutral,
-                    fontSize = 11.sp
-                )
-            }
-            NuxButton(
-                onClick = { showAddAccountDialog = true },
-                backgroundColor = NuxColors.Yellow,
-                cornerRadius = 20.dp,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Tambah akun",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Black
-                )
-            }
+            AmberNavPill(
+                active = "accounts",
+                activeLabel = "Akun",
+                onBack = onNavigateBack,
+                onMods = onOpenMods,
+                onAccounts = {},
+                onSettings = onOpenSettings
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AmberPillButton(
+                text = "Tambah akun",
+                icon = Icons.Outlined.Add,
+                onClick = { showAddAccountDialog = true }
+            )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // -----------------------------------------------------
-            // KIRI: PROFIL AKTIF
-            // -----------------------------------------------------
-            NuxCard(
+        if (accounts.isEmpty()) {
+            Box(
                 modifier = Modifier
-                    .weight(0.85f)
-                    .fillMaxHeight(),
-                cornerRadius = 22.dp
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                val acc = currentAccount
-                if (acc != null) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(7.dp)
-                                        .background(NuxColors.Yellow, CircleShape)
-                                )
-                                Text(
-                                    text = "Profil aktif",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            AccountTypePill(acc.safeAccountType)
-                        }
-
-                        // Model 3D pemain
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(vertical = 2.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            AndroidView(
-                                modifier = Modifier.fillMaxSize(),
-                                factory = { ctx ->
-                                    leftPlayerSkin.loadWebView(ctx) {
-                                        leftPageFinished = true
-                                        leftPlayerSkin.loadAccount(acc)
-                                        leftPlayerSkin.startAnim("NewIdle", 0.7f)
-                                        leftPlayerSkin.setAutoRotate(true, 0.6f)
-                                        leftPlayerSkin.setCamera(20, 8, 44)
-                                    }
-                                },
-                                update = {
-                                    if (leftPageFinished) {
-                                        leftPlayerSkin.loadAccount(acc)
-                                    }
-                                }
-                            )
-                        }
-
-                        LaunchedEffect(acc.id, acc.customSkinPath, acc.customCapePath, acc.skinModel, leftPageFinished) {
-                            if (leftPageFinished) {
-                                val updated = SkinUtils.ensureSkinAndCapeCached(context, acc)
-                                leftPlayerSkin.loadAccount(updated)
-                            }
-                        }
-
-                        // Nama + keterangan di kiri, tombol skin & jubah di kanan
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = acc.username,
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.Black,
-                                    fontSize = 17.sp,
-                                    letterSpacing = (-0.2).sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = acctTypeDesc(acc.safeAccountType),
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 11.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            AccountIconAction(
-                                icon = Icons.Outlined.Checkroom,
-                                description = "Skin & Jubah",
-                                tint = NuxColors.Yellow,
-                                ring = true,
-                                onClick = { openWardrobe(acc) }
-                            )
-                        }
-                    }
-                } else {
-                    // Belum ada profil aktif
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Person,
-                            contentDescription = "Belum ada akun",
-                            tint = NuxColors.GrayNeutral,
-                            modifier = Modifier.size(36.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Belum ada profil aktif",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Pilih atau tambahkan akun untuk mulai bermain.",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 11.sp,
-                            lineHeight = 16.sp
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Outlined.AccountCircle,
+                        contentDescription = null,
+                        tint = AmberUi.TextDim,
+                        modifier = Modifier.size(40.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Belum ada akun",
+                        color = AmberUi.Text,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Tambahkan akun Offline, Microsoft, atau Ely.by.",
+                        color = AmberUi.TextDim,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // KIRI: daftar akun
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(bottom = 8.dp)
+                ) {
+                    items(accounts, key = { it.id }) { acc ->
+                        AccountListCard(
+                            account = acc,
+                            isCurrent = acc.id == currentAccount?.id,
+                            onClick = { AccountManager.selectAccount(acc) }
                         )
                     }
                 }
-            }
 
-            // -----------------------------------------------------
-            // KANAN: DAFTAR AKUN
-            // -----------------------------------------------------
-            Box(
-                modifier = Modifier
-                    .weight(1.3f)
-                    .fillMaxHeight()
-            ) {
-                if (accounts.isEmpty()) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Belum ada akun",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Tambahkan akun Offline, Microsoft, atau Ely.by.",
-                            color = NuxColors.GrayNeutral,
-                            fontSize = 11.sp
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        NuxButton(
-                            onClick = { showAddAccountDialog = true },
-                            backgroundColor = NuxColors.Yellow,
-                            cornerRadius = 20.dp,
-                            contentPadding = PaddingValues(horizontal = 20.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "Tambah akun",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Black
-                            )
-                        }
-                    }
+                // KANAN: detail akun terpilih
+                val acc = currentAccount
+                if (acc != null) {
+                    AccountDetailCard(
+                        account = acc,
+                        refreshing = refreshing,
+                        onEdit = { openWardrobe(acc) },
+                        onOpenSkin = { openWardrobe(acc) },
+                        onRefresh = {
+                            if (acc.safeAccountType != "microsoft") return@AccountDetailCard
+                            coroutineScope.launch {
+                                refreshing = true
+                                MicrosoftAuthService.refreshMicrosoftAccount(acc)
+                                    .onSuccess { fresh ->
+                                        AccountManager.updateAccount(context, fresh)
+                                        Toast.makeText(context, "Login berhasil disegarkan", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .onFailure { e ->
+                                        Toast.makeText(
+                                            context,
+                                            e.message ?: "Gagal menyegarkan login",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                refreshing = false
+                            }
+                        },
+                        onDelete = { accountToDelete = acc },
+                        modifier = Modifier
+                            .weight(1.7f)
+                            .fillMaxHeight()
+                    )
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        contentPadding = PaddingValues(bottom = 6.dp)
+                    Box(
+                        modifier = Modifier
+                            .weight(1.7f)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        items(accounts, key = { "${it.safeAccountType}_${it.id}_${it.username}" }) { acc ->
-                            val isCurrent = acc.id == currentAccount?.id ||
-                                (acc.username == currentAccount?.username &&
-                                    acc.safeAccountType == currentAccount?.safeAccountType)
-                            val accent = acctAccent(acc.safeAccountType)
-                            val itemShape = RoundedCornerShape(16.dp)
-                            val shortUuid = if (acc.uuid.length > 10) {
-                                "${acc.uuid.take(6)}...${acc.uuid.takeLast(4)}"
-                            } else {
-                                acc.uuid
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(itemShape)
-                                    .background(
-                                        if (isCurrent) NuxColors.YellowPale else NuxColors.SurfaceWhite,
-                                        itemShape
-                                    )
-                                    .border(
-                                        NuxSizes.GlassBorder,
-                                        if (isCurrent) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
-                                        itemShape
-                                    )
-                                    .clickable { selectAccount(acc) }
-                                    .padding(start = 10.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Avatar kepala pemain
-                                Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(RoundedCornerShape(10.dp))
-                                        .border(
-                                            NuxSizes.GlassBorder,
-                                            accent.copy(alpha = 0.55f),
-                                            RoundedCornerShape(10.dp)
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    NuxAccountAvatar(
-                                        account = acc,
-                                        modifier = Modifier
-                                            .size(36.dp)
-                                            .clip(RoundedCornerShape(8.dp)),
-                                        fallbackInitials = acc.username.take(2).uppercase()
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(10.dp))
-
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = acc.username,
-                                        color = NuxColors.DarkGray,
-                                        fontWeight = if (isCurrent) FontWeight.Black else FontWeight.Bold,
-                                        fontSize = 14.sp,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Spacer(modifier = Modifier.height(2.dp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        AccountTypePill(acc.safeAccountType)
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text(
-                                            text = shortUuid,
-                                            color = NuxColors.GrayNeutral,
-                                            fontSize = 11.sp,
-                                            fontFamily = FontFamily.Monospace,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                    }
-                                }
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                if (isCurrent) {
-                                    Row(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(16.dp))
-                                            .background(NuxColors.Yellow, RoundedCornerShape(16.dp))
-                                            .padding(horizontal = 10.dp, vertical = 5.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Check,
-                                            contentDescription = null,
-                                            tint = NuxColors.Ink,
-                                            modifier = Modifier.size(13.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(3.dp))
-                                        Text(
-                                            text = "Aktif",
-                                            color = NuxColors.Ink,
-                                            fontSize = 11.sp,
-                                            fontWeight = FontWeight.Black
-                                        )
-                                    }
-                                } else {
-                                    NuxButton(
-                                        onClick = { selectAccount(acc) },
-                                        backgroundColor = Color.Transparent,
-                                        cornerRadius = 18.dp,
-                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(
-                                            text = "Gunakan",
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-
-                                AccountIconAction(
-                                    icon = Icons.Outlined.Checkroom,
-                                    description = "Skin & Jubah",
-                                    onClick = { openWardrobe(acc) }
-                                )
-                                AccountIconAction(
-                                    icon = Icons.Outlined.DeleteOutline,
-                                    description = "Hapus",
-                                    onClick = { accountToDelete = acc }
-                                )
-                            }
-                        }
+                        Text(
+                            text = "Pilih akun untuk bermain",
+                            color = AmberUi.TextDim,
+                            fontSize = 14.sp
+                        )
                     }
                 }
             }
         }
     }
 
-    // =============================================================
     // DIALOG: SKIN & JUBAH
-    // =============================================================
     if (accountForWardrobe != null) {
         NuxWardrobeDialog(
             account = accountForWardrobe!!,
             onDismissRequest = { accountForWardrobe = null },
-            onSaved = { updated ->
-                accountForWardrobe = null
-                leftPlayerSkin.loadAccount(updated)
-            }
+            onSaved = { accountForWardrobe = null }
         )
     }
 
-    // =============================================================
     // DIALOG: TAMBAH AKUN
-    // =============================================================
     if (showAddAccountDialog) {
         AddAccountModal(
             onDismiss = { showAddAccountDialog = false },
@@ -515,80 +264,397 @@ fun AccountsScreen(
         )
     }
 
-    // =============================================================
     // DIALOG: KONFIRMASI HAPUS
-    // =============================================================
     if (accountToDelete != null) {
-        val target = accountToDelete!!
-        NuxDialog(
-            onDismissRequest = { accountToDelete = null },
+        DeleteAccountDialog(
+            target = accountToDelete!!,
+            onDismiss = { accountToDelete = null }
+        )
+    }
+}
+
+/** Kartu satu akun di daftar kiri: avatar bulat, nama, jenis akun, dan lencana "Aktif". */
+@Composable
+private fun AccountListCard(
+    account: UserAccount,
+    isCurrent: Boolean,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(26.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .then(
+                if (isCurrent) {
+                    Modifier
+                        .background(AmberUi.SurfaceRaised, shape)
+                        .border(1.5.dp, AmberUi.BorderStrong, shape)
+                } else {
+                    Modifier.amberGlass(shape)
+                }
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        NuxAccountAvatar(
+            account = account,
             modifier = Modifier
-                .fillMaxWidth(0.55f)
-                .wrapContentHeight(),
-            compact = true
-        ) {
-            Column(
+                .size(46.dp)
+                .clip(CircleShape)
+        )
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = account.username,
+                color = AmberUi.Text,
+                fontWeight = FontWeight.Bold,
+                fontSize = 17.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = acctTypeLabel(account.safeAccountType),
+                color = AmberUi.TextDim,
+                fontSize = 14.sp,
+                maxLines = 1
+            )
+        }
+        if (isCurrent) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .height(30.dp)
+                    .clip(CircleShape)
+                    .background(AmberUi.Accent, CircleShape)
+                    .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                    .padding(horizontal = 11.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(NuxColors.ErrorRed.copy(alpha = 0.18f), CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = null,
-                        tint = NuxColors.ErrorRed,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Hapus akun?",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 16.sp
+                Icon(
+                    imageVector = Icons.Outlined.Check,
+                    contentDescription = null,
+                    tint = AmberUi.Text,
+                    modifier = Modifier.size(15.dp)
                 )
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "Hapus profil '${target.username}' (${acctTypeLabel(target.safeAccountType)}) dari perangkat ini?",
-                    color = NuxColors.GrayNeutral,
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp
+                    text = "Aktif",
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 13.sp,
+                    maxLines = 1
                 )
-                Spacer(modifier = Modifier.height(14.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    NuxButton(
-                        onClick = { accountToDelete = null },
-                        backgroundColor = Color.Transparent,
-                        cornerRadius = 20.dp,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                    }
-                    NuxButton(
-                        onClick = {
-                            AccountManager.removeAccount(context, target)
-                            Toast.makeText(context, "Profil '${target.username}' dihapus", Toast.LENGTH_SHORT).show()
-                            accountToDelete = null
-                        },
-                        backgroundColor = NuxColors.ErrorRed,
-                        contentColor = NuxColors.DarkGray,
-                        cornerRadius = 20.dp,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Hapus", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                    }
-                }
             }
         }
+    }
+}
+
+/** Kartu detail akun aktif: pratinjau skin di kiri, info dan aksi di kanan. */
+@Composable
+private fun AccountDetailCard(
+    account: UserAccount,
+    refreshing: Boolean,
+    onEdit: () -> Unit,
+    onOpenSkin: () -> Unit,
+    onRefresh: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(30.dp)
+    val type = account.safeAccountType
+    val needsRefresh = type == "microsoft" && MicrosoftAuthService.needsRefresh(account)
+    val (statusText, statusColor) = when {
+        type == "offline" -> "Offline" to AmberUi.TextDim
+        needsRefresh -> "Perlu disegarkan" to NuxColors.Amber
+        else -> "Tersambung" to AmberUi.AccentSoft
+    }
+
+    Row(
+        modifier = modifier
+            .clip(shape)
+            .amberGlass(shape)
+            .padding(horizontal = 18.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Pratinjau skin: gambar diam, tanpa animasi dan tanpa WebView supaya ringan
+        Box(
+            modifier = Modifier
+                .weight(0.85f)
+                .fillMaxHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            AccountSkinPreview(
+                account = account,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1.2f)
+                .fillMaxHeight()
+        ) {
+            Row(verticalAlignment = Alignment.Top) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = account.username,
+                        color = AmberUi.Text,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp,
+                        letterSpacing = (-0.5).sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "Akun aktif untuk bermain",
+                        color = AmberUi.TextDim,
+                        fontSize = 14.sp,
+                        maxLines = 1
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                AmberRoundIcon(
+                    icon = Icons.Outlined.Edit,
+                    description = "Ubah skin & jubah",
+                    onClick = onEdit
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            AccountInfoRow(label = "Jenis akun") {
+                Text(
+                    text = acctTypeLabel(type),
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
+            }
+            AccountInfoRow(label = "Status login") {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .background(statusColor, CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = statusText,
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
+            }
+            AccountInfoRow(label = "Skin", onClick = onOpenSkin) {
+                Text(
+                    text = if (account.safeSkinModel == "slim") "Slim" else "Klasik",
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Icon(
+                    imageVector = Icons.Outlined.ChevronRight,
+                    contentDescription = null,
+                    tint = AmberUi.TextDim,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                AmberPillButton(
+                    text = if (refreshing) "Menyegarkan..." else "Segarkan login",
+                    icon = Icons.Outlined.Refresh,
+                    filled = false,
+                    enabled = type == "microsoft" && !refreshing,
+                    onClick = onRefresh
+                )
+                AmberPillButton(
+                    text = "Hapus akun",
+                    icon = Icons.Outlined.Delete,
+                    filled = false,
+                    danger = true,
+                    onClick = onDelete
+                )
+            }
+        }
+    }
+}
+
+/** Satu baris info (label redup di kiri, nilai di kanan) dengan garis pemisah di atasnya. */
+@Composable
+private fun AccountInfoRow(
+    label: String,
+    onClick: (() -> Unit)? = null,
+    value: @Composable RowScope.() -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(AmberUi.Border)
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = AmberUi.TextDim,
+            fontSize = 15.sp,
+            modifier = Modifier.weight(1f)
+        )
+        value()
+    }
+}
+
+/**
+ * Pratinjau skin 3D yang ringan: enam kotak (kepala, badan, dua tangan, dua kaki) digambar langsung
+ * dari berkas skin di Canvas, lengkap dengan lapisan luarnya. Diam saja (tanpa putar otomatis dan
+ * tanpa animasi), tetapi bisa diputar dengan menggeser ke kiri atau kanan. Tanpa WebView.
+ * Akun Microsoft yang belum punya berkas lokal mengunduh skinnya sekali dari mc-heads.net.
+ */
+@Composable
+private fun AccountSkinPreview(
+    account: UserAccount,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val skinState = produceState<ImageBitmap?>(
+        initialValue = null,
+        account.id,
+        account.customSkinPath,
+        account.skinModel,
+        account.safeAccountType
+    ) {
+        value = withContext(Dispatchers.IO) {
+            runCatching {
+                val updated = SkinUtils.ensureSkinAndCapeCached(context, account)
+                val local = SkinUtils.resolveSkinFile(context, updated)
+                val bmp = if (local != null) {
+                    BitmapFactory.decodeFile(local.absolutePath)
+                } else if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
+                    val req = Request.Builder().url("https://mc-heads.net/skin/${account.uuid}").build()
+                    OkHttpClient().newCall(req).execute().use { resp ->
+                        if (resp.isSuccessful) {
+                            resp.body?.bytes()?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
+                        } else null
+                    }
+                } else null
+                bmp?.asImageBitmap()
+            }.getOrNull()
+        }
+    }
+    val skin = skinState.value
+    val slim = account.safeSkinModel == "slim"
+
+    // Sudut putar: dibaca hanya saat menggambar, jadi menggeser tidak memicu komposisi ulang
+    var angle by remember(account.id) { mutableFloatStateOf(0.5f) }
+
+    if (skin == null) {
+        // Belum ada berkas skin: tampilkan kepala saja
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            NuxAccountAvatar(
+                account = account,
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
+        }
+    } else {
+        Canvas(
+            modifier = modifier
+                .padding(vertical = 6.dp)
+                .pointerInput(account.id) {
+                    detectHorizontalDragGestures { _, dragX -> angle += dragX * 0.012f }
+                }
+        ) {
+            drawSkin3D(skin, slim, angle)
+        }
+    }
+}
+
+/** Satu kotak bagian tubuh: posisi (pusat x, sisi atas) dan ukuran dalam piksel skin, plus asal tekstur. */
+private class SkinBox(
+    val cx: Float,
+    val top: Float,
+    val w: Int,
+    val h: Int,
+    val d: Int,
+    val u: Int,
+    val v: Int,
+    val ou: Int,
+    val ov: Int,
+    val hasOverlay: Boolean
+)
+
+/**
+ * Menggambar model skin diputar sebesar [angle] radian mengelilingi sumbu tegak. Karena hanya berputar
+ * ke samping (tanpa miring), setiap sisi tegak tampil sebagai persegi panjang yang lebarnya mengecil,
+ * jadi cukup beberapa drawImage tanpa matriks. Bagian terjauh digambar lebih dulu.
+ */
+private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float) {
+    val legacy = img.height < 64
+    val armW = if (slim) 3 else 4
+    val unit = minOf(size.width / 16f, size.height / 32.6f)
+    if (unit <= 0f) return
+    val ox = size.width / 2f
+    val oy = (size.height - 32f * unit) / 2f
+    val cosA = cos(angle)
+    val sinA = sin(angle)
+
+    // Bayangan lembut di bawah kaki
+    drawOval(
+        color = Color.Black.copy(alpha = 0.32f),
+        topLeft = Offset(ox - 6f * unit, oy + 32f * unit - unit * 0.3f),
+        size = Size(12f * unit, unit * 1.3f)
+    )
+
+    val boxes = listOf(
+        SkinBox(0f, 0f, 8, 8, 8, 0, 0, 32, 0, true),                                  // kepala + topi
+        SkinBox(0f, 8f, 8, 12, 4, 16, 16, 16, 32, !legacy),                           // badan
+        SkinBox(-(4f + armW / 2f), 8f, armW, 12, 4, 40, 16, 40, 32, !legacy),         // tangan kanan
+        SkinBox(
+            4f + armW / 2f, 8f, armW, 12, 4,
+            if (legacy) 40 else 32, if (legacy) 16 else 48, 48, 48, !legacy
+        ),                                                                            // tangan kiri
+        SkinBox(-2f, 20f, 4, 12, 4, 0, 16, 0, 32, !legacy),                           // kaki kanan
+        SkinBox(2f, 20f, 4, 12, 4, if (legacy) 0 else 16, if (legacy) 16 else 48, 0, 48, !legacy) // kaki kiri
+    )
+
+    for (b in boxes.sortedByDescending { -it.cx * sinA }) {
+        val hw = b.w / 2f
+        val hd = b.d / 2f
+
+        fun face(u0: Int, v0: Int, srcW: Int, x1: Float, z1: Float, x2: Float, z2: Float) {
+            val sx1 = (b.cx + x1) * cosA + z1 * sinA
+            val sx2 = (b.cx + x2) * cosA + z2 * sinA
+            if (sx2 - sx1 < 0.01f) return   // sisi membelakangi kamera
+            val dstW = ((sx2 - sx1) * unit).roundToInt().coerceAtLeast(1)
+            drawImage(
+                image = img,
+                srcOffset = IntOffset(u0, v0),
+                srcSize = IntSize(srcW, b.h),
+                dstOffset = IntOffset((ox + sx1 * unit).roundToInt(), (oy + b.top * unit).roundToInt()),
+                dstSize = IntSize(dstW, (b.h * unit).roundToInt()),
+                filterQuality = FilterQuality.None
+            )
+        }
+
+        fun layer(u: Int, v: Int) {
+            face(u + b.d, v + b.d, b.w, -hw, -hd, hw, -hd)             // depan
+            face(u + 2 * b.d + b.w, v + b.d, b.w, hw, hd, -hw, hd)     // belakang
+            face(u, v + b.d, b.d, -hw, hd, -hw, -hd)                   // sisi kanan tubuh
+            face(u + b.d + b.w, v + b.d, b.d, hw, -hd, hw, hd)         // sisi kiri tubuh
+        }
+
+        layer(b.u, b.v)
+        if (b.hasOverlay) layer(b.ou, b.ov)
     }
 }
 
@@ -670,8 +736,86 @@ private fun AccountIconAction(
  * Dialog tambah akun: 3 pilihan penyedia di atas, area aksi di bawah dengan tombol utama
  * kuning selebar dialog (mudah ditekan jempol). Bisa digulir bila layar pendek.
  */
+/** Dialog konfirmasi hapus akun. Dipakai di layar Akun dan di menu akun cepat Home. */
 @Composable
-private fun AddAccountModal(
+internal fun DeleteAccountDialog(
+    target: UserAccount,
+    onDismiss: () -> Unit
+) {
+    val context = LocalContext.current
+    NuxDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier
+            .fillMaxWidth(0.55f)
+            .wrapContentHeight(),
+        compact = true
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(NuxColors.ErrorRed.copy(alpha = 0.18f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = null,
+                    tint = NuxColors.ErrorRed,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Hapus akun?",
+                color = NuxColors.DarkGray,
+                fontWeight = FontWeight.Black,
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Hapus profil '${target.username}' (${acctTypeLabel(target.safeAccountType)}) dari perangkat ini?",
+                color = NuxColors.GrayNeutral,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+            Spacer(modifier = Modifier.height(14.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                NuxButton(
+                    onClick = onDismiss,
+                    backgroundColor = Color.Transparent,
+                    cornerRadius = 20.dp,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                }
+                NuxButton(
+                    onClick = {
+                        AccountManager.removeAccount(context, target)
+                        Toast.makeText(context, "Profil '${target.username}' dihapus", Toast.LENGTH_SHORT).show()
+                        onDismiss()
+                    },
+                    backgroundColor = NuxColors.ErrorRed,
+                    contentColor = NuxColors.DarkGray,
+                    cornerRadius = 20.dp,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Hapus", fontWeight = FontWeight.Black, fontSize = 13.sp)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun AddAccountModal(
     onDismiss: () -> Unit,
     onAccountAdded: (UserAccount) -> Unit
 ) {

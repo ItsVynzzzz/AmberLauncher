@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.components
 
+import com.israadev.nuxlauncher.ui.theme.AmberUi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +43,9 @@ fun DeviceProfileCard() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp),
-        cornerRadius = 20.dp
+        cornerRadius = 24.dp,
+        backgroundColor = AmberUi.Surface,
+        borderColor = AmberUi.Border
     ) {
         Column(
             modifier = Modifier
@@ -53,7 +56,7 @@ fun DeviceProfileCard() {
                 Icon(
                     imageVector = Icons.Outlined.Memory,
                     contentDescription = null,
-                    tint = NuxColors.Yellow,
+                    tint = AmberUi.AccentSoft,
                     modifier = Modifier.size(22.dp)
                 )
                 Spacer(modifier = Modifier.width(10.dp))

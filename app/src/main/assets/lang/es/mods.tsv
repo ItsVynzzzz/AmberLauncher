@@ -130,3 +130,71 @@ Isi modpack terlalu besar, pemasangan dibatalkan.	El contenido del modpack es de
 Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack requiere {0}, pero AmberLauncher por ahora solo es compatible con Fabric, Forge y NeoForge.
 Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Este modpack requiere Forge. Crea primero una instancia de Forge y luego instala el modpack en ella.
 Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Este modpack requiere NeoForge. Crea primero una instancia de NeoForge y luego instala el modpack en ella.
+# Tampilan baru layar Mod: filter, sumber, dan label kartu
+Kategori	Categoría
+Versi	Versión
+Urutkan	Ordenar por
+Relevansi	Relevancia
+Unduhan	Descargas
+Pengikut	Seguidores
+Diperbarui	Actualizados
+Semua loader	Todos los loaders
+Pilih kategori	Elegir categoría
+Pilih versi	Elegir versión
+Pilih loader	Elegir loader
+Cari mod...	Buscar mods...
+Cari modpack...	Buscar modpacks...
+Cari shader...	Buscar shaders...
+Cari resource pack...	Buscar paquetes de recursos...
+Cari datapack...	Buscar datapacks...
+CurseForge belum tersedia di versi ini	CurseForge aún no está disponible en esta versión
+Optimasi	Optimización
+Teknologi	Tecnología
+Sihir	Magia
+Petualangan	Aventura
+Utilitas	Utilidad
+Dekorasi	Decoración
+Perlengkapan	Equipamiento
+Makanan	Comida
+Penyimpanan	Almacenamiento
+Pustaka	Biblioteca
+Realistis	Realista
+Fantasi	Fantasía
+# Home baru dan layar kelola konten instance
+INSTANCE AKTIF	INSTANCIA ACTIVA
+Mod & konten	Mods y contenido
+Tambah	Añadir
+# Layar Akun dan Pengaturan baru
+Game	Juego
+Tentang	Acerca de
+Cari pengaturan...	Buscar ajustes...
+Perekaman layar	Grabación de pantalla
+Latar	Fondo
+Foto, GIF, atau video	Foto, GIF o video
+Redupkan latar	Oscurecer fondo
+Seberapa gelap latar di layar selain Home.	Qué tan oscuro es el fondo en las pantallas distintas a Inicio.
+Aksen warna	Color de acento
+Warna tombol dan penanda terpilih di seluruh launcher.	Color de botones y marcas seleccionadas en todo el launcher.
+Gaya tampilan	Estilo de visualización
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Predeterminado usa el tema propio de AmberLauncher. Liquid Glass difumina el fondo detrás de paneles y botones.
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Liquid Glass requiere Android 12 o superior. Este teléfono usa Predeterminado automáticamente.
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Idioma del texto del launcher. Se aplica al instante sin reiniciar.
+Pengaturan khusus untuk renderer yang sedang dipakai.	Ajustes específicos del renderer en uso.
+Atur	Configurar
+Tata letak kontrol	Diseño de controles
+Input dan sensitivitas	Entrada y sensibilidad
+Aplikasi	Aplicación
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	Información de la app, licencia GPL-3.0 y créditos.
+Reset ke default	Restablecer a predeterminado
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	Todos los ajustes vuelven a los valores predeterminados. Los demás cambios se guardan automáticamente.
+Belum ada akun	Aún no hay cuentas
+Pilih akun untuk bermain	Elige una cuenta para jugar
+Akun aktif untuk bermain	Cuenta activa para jugar
+Jenis akun	Tipo de cuenta
+Status login	Estado de inicio de sesión
+Tersambung	Conectado
+Perlu disegarkan	Necesita actualizarse
+Segarkan login	Actualizar inicio de sesión
+Menyegarkan...	Actualizando...
+Login berhasil disegarkan	Inicio de sesión actualizado
+Gagal menyegarkan login	No se pudo actualizar el inicio de sesión

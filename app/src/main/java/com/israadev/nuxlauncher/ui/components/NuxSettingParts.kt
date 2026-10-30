@@ -1,5 +1,11 @@
 package com.israadev.nuxlauncher.ui.components
 
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import com.israadev.nuxlauncher.ui.screens.AmberPillButton
+import com.israadev.nuxlauncher.ui.screens.AmberCard
+import com.israadev.nuxlauncher.ui.i18n.Tr
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -45,14 +51,40 @@ import com.israadev.nuxlauncher.ui.theme.NuxSizes
  * Semua target sentuh minimal 44-48dp dan huruf terkecil 12sp supaya enak dipakai di HP.
  */
 
-/** Garis pemisah tipis antar baris pengaturan. */
+/**
+ * Penyaring pencarian pengaturan. Null = tidak sedang mencari (baris tampil di dalam kartu
+ * kelompoknya). Ada = tiap baris yang cocok tampil sendiri di dalam satu kartu panjang.
+ */
+class SettingsFilter(val query: String)
+
+val LocalSettingsFilter = compositionLocalOf<SettingsFilter?> { null }
+
+private fun matchesFilter(filter: SettingsFilter, vararg texts: String?): Boolean {
+    val q = filter.query.trim()
+    if (q.isEmpty()) return false
+    return texts.any { t -> t != null && (t.contains(q, ignoreCase = true) || Tr.t(t).contains(q, ignoreCase = true)) }
+}
+
+/** Pembungkus baris: ikut penyaringan pencarian bila aktif. */
+@Composable
+fun SettingFrame(title: String, desc: String?, content: @Composable () -> Unit) {
+    val filter = LocalSettingsFilter.current
+    if (filter == null) {
+        content()
+    } else if (matchesFilter(filter, title, desc)) {
+        AmberCard { content() }
+    }
+}
+
+/** Garis pemisah tipis antar baris dalam satu kartu (tidak tampil saat mencari). */
 @Composable
 fun SettingDivider() {
+    if (LocalSettingsFilter.current != null) return
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
-            .background(NuxColors.LightGray)
+            .background(AmberUi.Border)
     )
 }
 
@@ -66,23 +98,23 @@ fun SettingRowText(
     Column(modifier = modifier) {
         Text(
             text = title,
-            color = NuxColors.DarkGray,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            color = AmberUi.Text,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold
         )
         if (!desc.isNullOrBlank()) {
             Text(
                 text = desc,
-                color = NuxColors.GrayNeutral,
-                fontSize = 11.sp,
-                lineHeight = 15.sp,
-                modifier = Modifier.padding(top = 1.dp)
+                color = AmberUi.TextDim,
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                modifier = Modifier.padding(top = 2.dp)
             )
         }
     }
 }
 
-/** Chip pilihan berbentuk pil. Terpilih = isian kuning dengan teks Ink. */
+/** Chip pilihan berbentuk pil. Terpilih = isian aksen dengan tepi terang. */
 @Composable
 fun SettingChip(
     text: String,
@@ -95,10 +127,10 @@ fun SettingChip(
         modifier = modifier
             .height(34.dp)
             .clip(shape)
-            .background(if (selected) NuxColors.Yellow else Color.Transparent, shape)
+            .background(if (selected) AmberUi.Accent else Color.Transparent, shape)
             .border(
-                NuxSizes.GlassBorder,
-                if (selected) NuxColors.Yellow else NuxColors.CardBorder,
+                1.dp,
+                if (selected) AmberUi.AccentEdge else AmberUi.BorderStrong,
                 shape
             )
             .clickable { onClick() }
@@ -107,9 +139,9 @@ fun SettingChip(
     ) {
         Text(
             text = text,
-            color = if (selected) NuxColors.Ink else NuxColors.DarkGray,
+            color = AmberUi.Text,
             fontSize = 12.sp,
-            fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
             maxLines = 1
         )
     }
@@ -123,27 +155,31 @@ fun SettingSwitchRow(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 9.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
-        Spacer(modifier = Modifier.width(16.dp))
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            // Barisnya sudah bisa disorot dan dipilih; saklar tidak perlu jadi perhentian fokus kedua.
-            modifier = Modifier.focusProperties { canFocus = false },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = NuxColors.Ink,
-                checkedTrackColor = NuxColors.Yellow,
-                uncheckedThumbColor = NuxColors.GrayNeutral,
-                uncheckedTrackColor = NuxColors.SurfaceElevated
+    SettingFrame(title, desc) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onCheckedChange(!checked) }
+                .padding(vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(16.dp))
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                // Barisnya sudah bisa disorot dan dipilih; saklar tidak perlu jadi perhentian fokus kedua.
+                modifier = Modifier.focusProperties { canFocus = false },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = AmberUi.Accent,
+                    checkedBorderColor = AmberUi.AccentEdge,
+                    uncheckedThumbColor = AmberUi.TextDim,
+                    uncheckedTrackColor = AmberUi.SurfaceRaised,
+                    uncheckedBorderColor = AmberUi.BorderStrong
+                )
             )
-        )
+        }
     }
 }
 
@@ -156,29 +192,31 @@ fun <T> SettingChoiceRow(
     selected: T,
     onSelect: (T) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 9.dp)
-    ) {
-        SettingRowText(title = title, desc = desc)
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+    SettingFrame(title, desc) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
         ) {
-            options.forEach { (value, label) ->
-                SettingChip(
-                    text = label,
-                    selected = value == selected,
-                    onClick = { onSelect(value) }
-                )
+            SettingRowText(title = title, desc = desc)
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                options.forEach { (value, label) ->
+                    SettingChip(
+                        text = label,
+                        selected = value == selected,
+                        onClick = { onSelect(value) }
+                    )
+                }
             }
         }
     }
 }
 
-/** Baris slider: judul di kiri, nilai di kanan (kuning, merah bila berlebihan), slider di bawah. */
+/** Baris slider: judul di kiri, nilai di kanan (merah bila berlebihan), slider di bawah. */
 @Composable
 fun SettingSliderRow(
     title: String,
@@ -191,36 +229,98 @@ fun SettingSliderRow(
     warn: Boolean = false,
     footer: (@Composable () -> Unit)? = null
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 9.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    SettingFrame(title, desc) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = valueText,
+                    color = if (warn) AmberUi.Danger else AmberUi.Text,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Slider(
+                value = value,
+                onValueChange = onValueChange,
+                valueRange = valueRange,
+                steps = steps,
+                colors = SliderDefaults.colors(
+                    thumbColor = Color.White,
+                    activeTrackColor = AmberUi.AccentSoft,
+                    inactiveTrackColor = AmberUi.BorderStrong,
+                    activeTickColor = Color.Transparent,
+                    inactiveTickColor = Color.Transparent
+                )
+            )
+            if (footer != null) {
+                footer()
+            }
+        }
+    }
+}
+
+/** Baris aksi: judul + keterangan di kiri, tombol pil di kanan. */
+@Composable
+fun SettingActionRow(
+    title: String,
+    desc: String?,
+    actionLabel: String,
+    onClick: () -> Unit,
+    filled: Boolean = false,
+    danger: Boolean = false
+) {
+    SettingFrame(title, desc) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(12.dp))
+            AmberPillButton(text = actionLabel, onClick = onClick, filled = filled, danger = danger)
+        }
+    }
+}
+
+/** Baris nilai: judul di kiri, nilai saat ini dan panah di kanan; ketuk untuk memilih. */
+@Composable
+fun SettingValueRow(
+    title: String,
+    desc: String?,
+    value: String,
+    onClick: () -> Unit
+) {
+    SettingFrame(title, desc) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+                .padding(vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = valueText,
-                color = if (warn) NuxColors.ErrorRed else NuxColors.Yellow,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Black
+                text = value,
+                color = AmberUi.Text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
             )
-        }
-        Slider(
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = valueRange,
-            steps = steps,
-            colors = SliderDefaults.colors(
-                thumbColor = NuxColors.Yellow,
-                activeTrackColor = NuxColors.Yellow,
-                inactiveTrackColor = NuxColors.CardBorder,
-                activeTickColor = Color.Transparent,
-                inactiveTickColor = Color.Transparent
+            Spacer(modifier = Modifier.width(6.dp))
+            Icon(
+                imageVector = Icons.Outlined.ChevronRight,
+                contentDescription = null,
+                tint = AmberUi.TextDim,
+                modifier = Modifier.size(18.dp)
             )
-        )
-        if (footer != null) {
-            footer()
         }
     }
 }

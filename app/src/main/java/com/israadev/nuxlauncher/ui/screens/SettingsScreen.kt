@@ -1,5 +1,13 @@
 package com.israadev.nuxlauncher.ui.screens
 
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import com.israadev.nuxlauncher.ui.theme.AmberStyle
+import com.israadev.nuxlauncher.ui.theme.AMBER_ACCENTS
+import com.israadev.nuxlauncher.core.background.HomeVideo
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.ImageBitmap
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -67,6 +75,8 @@ import kotlin.math.roundToInt
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
+    onOpenMods: () -> Unit = {},
+    onOpenAccounts: () -> Unit = {},
     onOpenGuiEditor: () -> Unit = {},
     onChangeBackground: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -153,6 +163,9 @@ fun SettingsScreen(
 
     var appLanguage by remember { mutableStateOf(Tr.choice) }
     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
+    var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
+    var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
+    var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
@@ -199,97 +212,117 @@ fun SettingsScreen(
             homeBgSound = bgSound,
             homeBgVolume = bgVolume,
             homeAmbientEnabled = ambientOn,
-            homeAmbientIntensity = ambientIntensity
+            homeAmbientIntensity = ambientIntensity,
+            accentColor = accentId,
+            uiStyle = uiStyleId,
+            bgDim = bgDim
         )
         SettingsManager.updateSettings(context, updated)
     }
 
-    // Tab aktif (0 = Memori, 1 = Grafis, 2 = Kontrol, 3 = Tampilan, 4 = Pembaruan). Isi tiap tab digulir sendiri-sendiri.
+    // Kategori aktif: 0 = Game, 1 = Tampilan, 2 = Kontrol, 3 = Tentang. Isinya digulir sendiri.
     var section by remember { mutableIntStateOf(0) }
+    var query by remember { mutableStateOf("") }
+    val searching = query.isNotBlank()
+    var showLanguageDialog by remember { mutableStateOf(false) }
     val contentScroll = rememberScrollState()
-    LaunchedEffect(section) { contentScroll.scrollTo(0) }
+    LaunchedEffect(section, searching) { contentScroll.scrollTo(0) }
+
+    val languageOptions = listOf(
+        Tr.SYSTEM to "Ikuti sistem",
+        Tr.ID to "Bahasa Indonesia",
+        Tr.EN to "English",
+        Tr.ES to "Espa\u00f1ol",
+        Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
+    )
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+            .padding(start = 14.dp, end = 14.dp, top = 12.dp, bottom = 10.dp)
     ) {
-        // Judul + tombol Tentang
+        // Baris atas: navigasi di kiri, kolom cari di kanan
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "Pengaturan",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 20.sp,
-                    letterSpacing = (-0.3).sp
-                )
-                Text(
-                    text = "${totalRamMb / 1024} GB RAM · $cpuCores inti CPU",
-                    color = NuxColors.GrayNeutral,
-                    fontSize = 11.sp
-                )
-            }
-            NuxButton(
-                onClick = { showAboutDialog = true },
-                backgroundColor = Color.Transparent,
-                cornerRadius = 20.dp,
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Tentang & lisensi",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            AmberNavPill(
+                active = "settings",
+                activeLabel = "Pengaturan",
+                onBack = onNavigateBack,
+                onMods = onOpenMods,
+                onAccounts = onOpenAccounts,
+                onSettings = {}
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AmberSearchPill(
+                value = query,
+                onValueChange = { query = it },
+                placeholder = "Cari pengaturan...",
+                modifier = Modifier.width(230.dp)
+            )
         }
-
-        Spacer(modifier = Modifier.height(4.dp))
 
         Row(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Tab samping (bisa digulir bila layar pendek)
+            // Kategori (sidebar)
             Column(
                 modifier = Modifier
-                    .width(128.dp)
+                    .width(148.dp)
+                    .fillMaxHeight()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                SettingTab(icon = Icons.Outlined.Memory, label = "Memori", selected = section == 0) { section = 0 }
-                SettingTab(icon = Icons.Outlined.Speed, label = "Grafis", selected = section == 1) { section = 1 }
-                SettingTab(icon = Icons.Outlined.TouchApp, label = "Kontrol", selected = section == 2) { section = 2 }
-                SettingTab(icon = Icons.Outlined.Palette, label = "Tampilan", selected = section == 3) { section = 3 }
-                SettingTab(icon = Icons.Outlined.SystemUpdate, label = "Pembaruan", selected = section == 4) { section = 4 }
-                SettingTab(icon = Icons.Outlined.Description, label = "Log game", selected = section == 5) { section = 5 }
+                listOf(
+                    Triple(0, "Game", Icons.Outlined.ViewInAr),
+                    Triple(1, "Tampilan", Icons.Outlined.Image),
+                    Triple(2, "Kontrol", Icons.Outlined.SportsEsports),
+                    Triple(3, "Tentang", Icons.Outlined.Info)
+                ).forEach { (index, label, icon) ->
+                    AmberSideItem(
+                        icon = icon,
+                        label = label,
+                        selected = !searching && section == index,
+                        onClick = {
+                            section = index
+                            query = ""
+                        }
+                    )
+                }
+                if (!searching) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${totalRamMb / 1024} GB RAM · $cpuCores inti CPU",
+                        color = AmberUi.TextDim,
+                        fontSize = 11.sp,
+                        modifier = Modifier.padding(horizontal = 6.dp)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
-
-            // Isi tab
+            // Isi kategori: tiap kelompok berupa kartu panjang. Saat mencari, semua baris yang cocok
+            // dari semua kategori tampil, masing-masing di kartunya sendiri.
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
                     .verticalScroll(contentScroll)
             ) {
-                when (section) {
-                    0 -> {
-                        // Pilihan mode GC untuk HP RAM kecil (di HP RAM besar tidak menggambar apa pun).
-                        DeviceProfileCard()
+                CompositionLocalProvider(
+                    LocalSettingsFilter provides (if (searching) SettingsFilter(query) else null)
+                ) {
+                    // ===================== GAME =====================
+                    if (searching || section == 0) {
+                        // Profil khusus perangkat: hanya muncul di HP yang terdaftar, di HP lain tidak menggambar apa pun.
+                        if (!searching) DeviceProfileCard()
 
+                        SettingsGroup("Memori") {
                         val ramTooBig = ramMb > (totalRamMb * 0.75f)
                         SettingSliderRow(
                             title = "Memori game (RAM)",
@@ -335,9 +368,8 @@ fun SettingsScreen(
                                 }
                             }
                         )
-
-                        SettingDivider()
-
+                            SettingDivider()
+                            SettingFrame("Argumen JVM tambahan", "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.") {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -357,88 +389,33 @@ fun SettingsScreen(
                                 placeholder = "Contoh: -XX:+UseG1GC"
                             )
                         }
-                    }
+                            }
+                        }
 
-                    1 -> {
+                        if (!searching) PowerSaverCard()
+
+                        SettingsGroup("Grafis") {
                         val activeRendererInfo = remember(selectedRenderer) {
                             NuxRendererRegistry.findRendererById(selectedRenderer)
                         }
-
-                        // Preset sekali ketuk untuk HP yang cepat panas atau baterainya boros.
-                        PowerSaverCard()
-
-                        // Renderer aktif + tombol ganti / konfigurasi
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 9.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Renderer",
-                                    color = NuxColors.DarkGray,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Row(
-                                    modifier = Modifier.padding(top = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    Text(
-                                        text = activeRendererInfo.displayName,
-                                        color = NuxColors.Yellow,
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Black
-                                    )
-                                    NuxBadge(
-                                        text = activeRendererInfo.badge,
-                                        textColor = NuxColors.SageGreen
-                                    )
-                                }
-                                Text(
-                                    text = activeRendererInfo.summary,
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 11.sp,
-                                    lineHeight = 15.sp,
-                                    modifier = Modifier.padding(top = 4.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
+                            SettingValueRow(
+                                title = "Renderer",
+                                desc = activeRendererInfo.summary,
+                                value = activeRendererInfo.displayName,
+                                onClick = { showRendererDialog = true }
+                            )
                             if (activeRendererInfo.isConfigurable) {
-                                NuxButton(
+                                SettingDivider()
+                                SettingActionRow(
+                                    title = "Konfigurasi renderer",
+                                    desc = "Pengaturan khusus untuk renderer yang sedang dipakai.",
+                                    actionLabel = "Atur",
                                     onClick = {
                                         selectedConfigRenderer = activeRendererInfo
                                         showRendererConfigDialog = true
-                                    },
-                                    backgroundColor = Color.Transparent,
-                                    cornerRadius = 20.dp,
-                                    contentPadding = PaddingValues(0.dp),
-                                    modifier = Modifier.size(38.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Settings,
-                                        contentDescription = "Konfigurasi renderer",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
-                            NuxButton(
-                                onClick = { showRendererDialog = true },
-                                backgroundColor = Color.Transparent,
-                                cornerRadius = 20.dp,
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = "Ganti",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
+                                    }
                                 )
                             }
-                        }
-
                         SettingDivider()
                         SettingSwitchRow(
                             title = "Optimasi otomatis options.txt",
@@ -521,7 +498,9 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
-                        SettingDivider()
+                        }
+
+                        SettingsGroup("Perekaman layar") {
                         // Rekam layar bawaan (tombol Rekam ada di menu dalam game). Bawaannya sengaja hemat.
                         SettingChoiceRow(
                             title = "Kualitas rekaman layar",
@@ -575,62 +554,27 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
                     }
 
-                    3 -> {
-                        // Bahasa tampilan. Berlaku langsung, tanpa memulai ulang aplikasi.
-                        SettingChoiceRow(
-                            title = "Bahasa",
-                            desc = "Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.",
-                            options = listOf(
-                                Tr.SYSTEM to "Ikuti sistem",
-                                Tr.ID to "Bahasa Indonesia",
-                                Tr.EN to "English",
-                                Tr.ES to "Espa\u00f1ol",
-                                Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
-                            ),
-                            selected = appLanguage,
-                            onSelect = {
-                                appLanguage = it
-                                Tr.setLanguage(context, it)
-                            }
-                        )
-                        SettingDivider()
-
-                        // Latar Beranda: foto (paling ringan), GIF, atau video; suara dan ambient
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 9.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            SettingRowText(
-                                title = "Latar Beranda",
-                                desc = "Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.",
-                                modifier = Modifier.weight(1f)
+                    // ===================== TAMPILAN =====================
+                    if (searching || section == 1) {
+                        SettingsGroup("Latar") {
+                            SettingBackgroundRow(onChange = onChangeBackground)
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Redupkan latar",
+                                desc = "Seberapa gelap latar di layar selain Home.",
+                                valueText = "$bgDim%",
+                                value = bgDim.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 19,
+                                onValueChange = {
+                                    bgDim = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
+                                    commitSettings()
+                                }
                             )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            NuxButton(
-                                onClick = onChangeBackground,
-                                backgroundColor = NuxColors.Yellow,
-                                cornerRadius = 20.dp,
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Image,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Ganti latar",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Black
-                                )
-                            }
-                        }
-
-                        SettingDivider()
+                            SettingDivider()
                         SettingSwitchRow(
                             title = "Gerakkan GIF dan video",
                             desc = "Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.",
@@ -673,43 +617,93 @@ fun SettingsScreen(
                                 }
                             )
                         }
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Ambient",
-                            desc = "Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.",
-                            checked = ambientOn,
-                            onCheckedChange = {
-                                ambientOn = it
-                                commitSettings()
+                        }
+
+                        SettingsGroup("Tema") {
+                            SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 10.dp)
+                                ) {
+                                    SettingRowText(
+                                        title = "Aksen warna",
+                                        desc = "Warna tombol dan penanda terpilih di seluruh launcher."
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        AMBER_ACCENTS.forEach { accent ->
+                                            val picked = accent.id == accentId
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(44.dp)
+                                                    .clip(CircleShape)
+                                                    .background(accent.base, CircleShape)
+                                                    .border(
+                                                        if (picked) 2.5.dp else 1.dp,
+                                                        if (picked) Color.White else AmberUi.BorderStrong,
+                                                        CircleShape
+                                                    )
+                                                    .clickable {
+                                                        accentId = accent.id
+                                                        AmberUi.setAccent(accent.id)
+                                                        commitSettings()
+                                                    },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (picked) {
+                                                    Icon(
+                                                        imageVector = Icons.Outlined.Check,
+                                                        contentDescription = accent.label,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(22.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Text(
+                                        text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
+                                        color = AmberUi.TextDim,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(top = 6.dp)
+                                    )
+                                }
                             }
-                        )
-                        if (ambientOn) {
-                            val level = listOf(30, 60, 90).minByOrNull { kotlin.math.abs(it - ambientIntensity) } ?: 60
+                            SettingDivider()
                             SettingChoiceRow(
-                                title = "Kekuatan ambient",
-                                desc = null,
-                                options = listOf(30 to "Halus", 60 to "Sedang", 90 to "Kuat"),
-                                selected = level,
+                                title = "Gaya tampilan",
+                                desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol."
+                                } else {
+                                    "Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default."
+                                },
+                                options = AmberStyle.entries.map { it.id to it.label },
+                                selected = uiStyleId,
                                 onSelect = {
-                                    ambientIntensity = it
+                                    uiStyleId = it
+                                    AmberUi.setStyle(it)
                                     commitSettings()
                                 }
                             )
                         }
+
+                        SettingsGroup("Bahasa") {
+                            SettingValueRow(
+                                title = "Bahasa",
+                                desc = "Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.",
+                                value = languageOptions.firstOrNull { it.first == appLanguage }?.second ?: "",
+                                onClick = { showLanguageDialog = true }
+                            )
+                        }
                     }
 
-                    4 -> {
-                        // Versi terpasang, tombol Periksa pembaruan, dan sakelar pengecekan otomatis
-                        UpdateSettingsSection()
-                    }
-
-                    5 -> {
-                        // Log sesi game yang tersimpan otomatis, siap dibagikan ke pengembang
-                        GameLogSettingsSection()
-                    }
-
-                    else -> {
-                        // Editor tata letak tombol kontrol virtual
+                    // ===================== KONTROL =====================
+                    if (searching || section == 2) {
+                        if (!searching) SettingsGroup("Tata letak kontrol") {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -724,7 +718,8 @@ fun SettingsScreen(
                             Spacer(modifier = Modifier.width(12.dp))
                             NuxButton(
                                 onClick = onOpenGuiEditor,
-                                backgroundColor = NuxColors.Yellow,
+                                backgroundColor = AmberUi.Accent,
+ borderColor = AmberUi.AccentEdge,
                                 cornerRadius = 20.dp,
                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
                             ) {
@@ -742,8 +737,7 @@ fun SettingsScreen(
                             }
                         }
 
-                        SettingDivider()
-                        // Cadangkan atau bagikan tata letak tombol sebagai berkas .json
+                            SettingDivider()
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -799,7 +793,8 @@ fun SettingsScreen(
                             }
                         }
 
-                        SettingDivider()
+                        }
+                        SettingsGroup("Input dan sensitivitas") {
                         SettingChoiceRow(
                             title = "Mode mouse di menu",
                             desc = if (mouseMode == "CLICK") {
@@ -922,29 +917,34 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
                     }
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-        }
 
-        // Pita bawah: semua perubahan langsung tersimpan, tombol reset ke bawaan
-        SettingDivider()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(46.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Perubahan tersimpan otomatis",
-                color = NuxColors.GrayNeutral,
-                fontSize = 11.sp,
-                modifier = Modifier.weight(1f)
-            )
-            NuxButton(
-                onClick = {
-                    SettingsManager.resetToDefaults(context)
+                    // ===================== TENTANG =====================
+                    if (searching || section == 3) {
+                        if (!searching) {
+                            SettingsGroup("Pembaruan") {
+                                UpdateSettingsSection()
+                            }
+                            SettingsGroup("Log game") {
+                                GameLogSettingsSection()
+                            }
+                        }
+                        SettingsGroup("Aplikasi") {
+                            SettingActionRow(
+                                title = "Tentang & lisensi",
+                                desc = "Informasi aplikasi, lisensi GPL-3.0, dan kredit.",
+                                actionLabel = "Buka",
+                                onClick = { showAboutDialog = true }
+                            )
+                            SettingDivider()
+                            SettingActionRow(
+                                title = "Reset ke default",
+                                desc = "Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.",
+                                actionLabel = "Reset default",
+                                danger = true,
+                                onClick = {
+                                    SettingsManager.resetToDefaults(context)
                     val reset = SettingsManager.settings.value
                     ramMb = reset.ramMb
                     initialHeapMb = reset.initialHeapMb
@@ -975,20 +975,34 @@ fun SettingsScreen(
                     bgVolume = reset.homeBgVolume
                     ambientOn = reset.homeAmbientEnabled
                     ambientIntensity = reset.homeAmbientIntensity
+                    accentId = reset.accentColor
+                    uiStyleId = reset.uiStyle
+                    bgDim = reset.bgDim
+                    AmberUi.setAccent(reset.accentColor)
+                    AmberUi.setStyle(reset.uiStyle)
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
-                },
-                backgroundColor = Color.Transparent,
-                contentColor = NuxColors.ErrorRed,
-                borderColor = NuxColors.ErrorRed.copy(alpha = 0.45f),
-                cornerRadius = 20.dp,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
-            ) {
-                Text(
-                    text = "Reset default",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                                }
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        // Pilih bahasa
+        if (showLanguageDialog) {
+            AmberPickerDialog(
+                title = "Bahasa",
+                options = languageOptions,
+                selectedId = appLanguage,
+                onPick = { picked ->
+                    appLanguage = picked
+                    Tr.setLanguage(context, picked)
+                    showLanguageDialog = false
+                },
+                onDismiss = { showLanguageDialog = false }
+            )
         }
 
 
@@ -1319,5 +1333,97 @@ fun SettingsScreen(
         NuxAboutDialog(
             onDismissRequest = { showAboutDialog = false }
         )
+    }
+}
+
+/** Satu kelompok pengaturan: judul kecil + kartu panjang. Saat mencari, baris tampil sendiri-sendiri. */
+@Composable
+private fun SettingsGroup(label: String, content: @Composable ColumnScope.() -> Unit) {
+    if (LocalSettingsFilter.current != null) {
+        Column(content = content)
+    } else {
+        AmberSectionLabel(label)
+        AmberCard(content = content)
+    }
+}
+
+/** Baris latar: pratinjau kecil latar saat ini, keterangan, dan tombol Ganti latar. */
+@Composable
+private fun SettingBackgroundRow(onChange: () -> Unit) {
+    val context = LocalContext.current
+    val thumbState = produceState<ImageBitmap?>(initialValue = null) {
+        value = withContext(Dispatchers.IO) {
+            runCatching {
+                val video = HomeVideo.file(context)
+                val still = File(context.filesDir, "home_bg")
+                val bmp: Bitmap? = if (video.exists() && video.length() > 0) {
+                    val retriever = MediaMetadataRetriever()
+                    try {
+                        retriever.setDataSource(video.absolutePath)
+                        retriever.getFrameAtTime(0)
+                    } finally {
+                        retriever.release()
+                    }
+                } else if (still.exists() && still.length() > 0) {
+                    BitmapFactory.decodeFile(still.absolutePath, BitmapFactory.Options().apply { inSampleSize = 4 })
+                } else null
+                bmp?.asImageBitmap()
+            }.getOrNull()
+        }
+    }
+    val thumb = thumbState.value
+    val shape = RoundedCornerShape(14.dp)
+    SettingFrame("Latar", "Foto, GIF, atau video") {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(132.dp)
+                    .height(80.dp)
+                    .clip(shape)
+                    .border(1.dp, AmberUi.BorderStrong, shape)
+            ) {
+                if (thumb != null) {
+                    Image(
+                        bitmap = thumb,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.mc_hero_bg),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(14.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Latar",
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "Foto, GIF, atau video",
+                    color = AmberUi.TextDim,
+                    fontSize = 13.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                AmberPillButton(
+                    text = "Ganti latar",
+                    icon = Icons.Outlined.Image,
+                    filled = false,
+                    onClick = onChange
+                )
+            }
+        }
     }
 }

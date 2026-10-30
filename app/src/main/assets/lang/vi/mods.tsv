@@ -129,3 +129,72 @@ Isi modpack terlalu besar, pemasangan dibatalkan.	N\u1ed9i dung modpack qu\u00e1
 Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Modpack n\u00e0y c\u1ea7n {0}, trong khi AmberLauncher hi\u1ec7n ch\u1ec9 h\u1ed7 tr\u1ee3 Fabric, Forge v\u00e0 NeoForge.
 Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n Forge. H\u00e3y t\u1ea1o instance Forge tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.
 Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Modpack n\u00e0y c\u1ea7n NeoForge. H\u00e3y t\u1ea1o instance NeoForge tr\u01b0\u1edbc, r\u1ed3i c\u00e0i modpack v\u00e0o instance \u0111\u00f3.
+# Tampilan baru layar Mod: filter, sumber, dan label kartu
+Kategori	Danh mục
+Versi	Phiên bản
+Urutkan	Sắp xếp
+Relevansi	Liên quan
+Unduhan	Lượt tải
+Pengikut	Người theo dõi
+Diperbarui	Mới cập nhật
+Semua loader	Tất cả loader
+Pilih kategori	Chọn danh mục
+Pilih versi	Chọn phiên bản
+Pilih loader	Chọn loader
+Cari mod...	Tìm mod...
+Cari modpack...	Tìm modpack...
+Cari shader...	Tìm shader...
+Cari resource pack...	Tìm resource pack...
+Cari datapack...	Tìm datapack...
+CurseForge belum tersedia di versi ini	CurseForge chưa khả dụng ở phiên bản này
+Optimasi	Tối ưu hóa
+Teknologi	Công nghệ
+Sihir	Phép thuật
+Petualangan	Phiêu lưu
+Utilitas	Tiện ích
+Dekorasi	Trang trí
+Perlengkapan	Trang bị
+Makanan	Thức ăn
+Penyimpanan	Lưu trữ
+Pustaka	Thư viện
+Realistis	Chân thực
+Fantasi	Giả tưởng
+# Home baru dan layar kelola konten instance
+INSTANCE AKTIF	INSTANCE ĐANG DÙNG
+Mod & konten	Mod & nội dung
+Tambah	Thêm
+# Layar Akun dan Pengaturan baru
+Tentang	Giới thiệu
+Cari pengaturan...	Tìm cài đặt...
+Perekaman layar	Quay màn hình
+Latar	Hình nền
+Foto, GIF, atau video	Ảnh, GIF hoặc video
+Redupkan latar	Làm tối hình nền
+Seberapa gelap latar di layar selain Home.	Độ tối của hình nền ở các màn hình ngoài Trang chủ.
+Tema	Chủ đề
+Aksen warna	Màu nhấn
+Warna tombol dan penanda terpilih di seluruh launcher.	Màu của nút và dấu chọn trên toàn launcher.
+Gaya tampilan	Kiểu hiển thị
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Mặc định dùng giao diện riêng của AmberLauncher. Liquid Glass làm mờ nền phía sau các bảng và nút.
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Liquid Glass cần Android 12 trở lên. Điện thoại này tự dùng Mặc định.
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Ngôn ngữ văn bản của launcher. Áp dụng ngay, không cần khởi động lại.
+Pengaturan khusus untuk renderer yang sedang dipakai.	Cài đặt riêng cho renderer đang dùng.
+Atur	Cấu hình
+Tata letak kontrol	Bố cục điều khiển
+Input dan sensitivitas	Đầu vào và độ nhạy
+Aplikasi	Ứng dụng
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	Thông tin ứng dụng, giấy phép GPL-3.0 và ghi công.
+Reset ke default	Đặt lại mặc định
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	Mọi cài đặt trở về mặc định. Các thay đổi khác được lưu tự động.
+Belum ada akun	Chưa có tài khoản
+Pilih akun untuk bermain	Chọn tài khoản để chơi
+Akun aktif untuk bermain	Tài khoản đang dùng để chơi
+Jenis akun	Loại tài khoản
+Status login	Trạng thái đăng nhập
+Klasik	Cổ điển
+Tersambung	Đã kết nối
+Perlu disegarkan	Cần làm mới
+Segarkan login	Làm mới đăng nhập
+Menyegarkan...	Đang làm mới...
+Login berhasil disegarkan	Đã làm mới đăng nhập
+Gagal menyegarkan login	Không thể làm mới đăng nhập

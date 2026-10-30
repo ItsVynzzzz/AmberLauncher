@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.components
 
+import com.israadev.nuxlauncher.ui.theme.AmberUi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -103,7 +104,8 @@ fun UpdateSettingsSection() {
                 if (showsPrompt) UpdateManager.openPrompt() else UpdateManager.checkNow(context)
             },
             enabled = !checking,
-            backgroundColor = NuxColors.Yellow,
+            backgroundColor = AmberUi.Accent,
+            borderColor = AmberUi.AccentEdge,
             cornerRadius = 20.dp,
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
         ) {
@@ -188,21 +190,21 @@ private fun statusFor(state: UpdateState, bits: String): Pair<String, Color> = w
     is UpdateState.UpToDate ->
         "Sudah versi terbaru. Diperiksa pukul ${clock(state.checkedAt)}." to NuxColors.DarkGray
     is UpdateState.NoApk ->
-        "Versi ${state.tag.removePrefix("v")} sudah terbit, tetapi APK untuk HP ini ($bits) belum tersedia. Coba lagi nanti." to NuxColors.Yellow
+        "Versi ${state.tag.removePrefix("v")} sudah terbit, tetapi APK untuk HP ini ($bits) belum tersedia. Coba lagi nanti." to AmberUi.AccentSoft
     is UpdateState.Failed ->
         state.failure.message to NuxColors.ErrorRed
     is UpdateState.Available ->
-        "Versi ${state.update.versionName} tersedia." to NuxColors.Yellow
+        "Versi ${state.update.versionName} tersedia." to AmberUi.AccentSoft
     is UpdateState.Downloading -> {
         val percent = if (state.totalBytes > 0) (state.doneBytes * 100 / state.totalBytes).toInt() else 0
-        "Mengunduh versi ${state.update.versionName}... $percent%" to NuxColors.Yellow
+        "Mengunduh versi ${state.update.versionName}... $percent%" to AmberUi.AccentSoft
     }
     is UpdateState.ReadyToInstall ->
-        "Versi ${state.update.versionName} siap dipasang." to NuxColors.Yellow
+        "Versi ${state.update.versionName} siap dipasang." to AmberUi.AccentSoft
     is UpdateState.NeedsInstallPermission ->
-        "Butuh izin memasang aplikasi dari Android." to NuxColors.Yellow
+        "Butuh izin memasang aplikasi dari Android." to AmberUi.AccentSoft
     is UpdateState.Installing ->
-        "Menunggu konfirmasi pemasangan dari Android..." to NuxColors.Yellow
+        "Menunggu konfirmasi pemasangan dari Android..." to AmberUi.AccentSoft
     is UpdateState.ActionFailed ->
         state.failure.message to NuxColors.ErrorRed
 }

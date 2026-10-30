@@ -2,11 +2,6 @@ package com.israadev.nuxlauncher.ui.dialogs
 
 import android.content.Intent
 import com.israadev.nuxlauncher.ui.i18n.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -454,11 +449,7 @@ private fun SelectableEnvItemCard(unit: EnvSettingUnit.Selectable) {
                 )
             }
 
-            AnimatedVisibility(
-                visible = expanded,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
+            if (expanded) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

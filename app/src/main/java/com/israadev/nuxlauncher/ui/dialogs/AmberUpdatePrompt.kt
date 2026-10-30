@@ -37,6 +37,7 @@ import com.israadev.nuxlauncher.ui.components.AmberInfoBox
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.Amber
 import java.util.Locale
+import com.israadev.nuxlauncher.ui.components.AmberWaitBar
 
 /**
  * Pop-up auto-update. Isinya mengikuti [UpdateManager.state]: ada versi baru, mengunduh (dengan
@@ -193,7 +194,7 @@ private fun DownloadingDialog(s: UpdateState.Downloading) {
                 modifier = Modifier.padding(top = 8.dp)
             )
         } else {
-            LinearProgressIndicator(
+            AmberWaitBar(
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .fillMaxWidth()
@@ -326,7 +327,7 @@ private fun InstallingDialog(update: AppUpdate) {
             color = Amber.Text,
             fontSize = 14.sp
         )
-        LinearProgressIndicator(
+        AmberWaitBar(
             modifier = Modifier
                 .padding(top = 12.dp)
                 .fillMaxWidth()

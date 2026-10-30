@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
 object SettingsManager {
+    /** Nomor gelombang penyederhanaan bawaan terbaru (lihat [applyPerfDefaults]). */
+    private const val PERF_REV = 1
+
     private val gson = Gson()
     private val _settings = MutableStateFlow(LauncherSettings())
     val settings: StateFlow<LauncherSettings> = _settings.asStateFlow()
@@ -25,7 +28,9 @@ object SettingsManager {
                 val json = file.readText()
                 val loaded = gson.fromJson(json, LauncherSettings::class.java)
                 if (loaded != null) {
-                    _settings.value = loaded
+                    val migrated = applyPerfDefaults(loaded)
+                    _settings.value = migrated
+                    if (migrated !== loaded) save(context)
                     return
                 }
             } catch (e: Exception) {
@@ -48,8 +53,19 @@ object SettingsManager {
     }
 
     /**
+     * Penyederhanaan bawaan demi HP kelas bawah, diterapkan sekali per berkas pengaturan: animasi
+     * latar Beranda (GIF/video) dan cahaya ambient dimatikan. Keduanya bisa dinyalakan lagi di
+     * Pengaturan > Tampilan dan tidak akan dimatikan ulang, karena [LauncherSettings.perfRev] sudah naik.
+     */
+    private fun applyPerfDefaults(s: LauncherSettings): LauncherSettings {
+        if (s.perfRev >= PERF_REV) return s
+        return s.copy(homeBgAnimate = false, homeAmbientEnabled = false, perfRev = PERF_REV)
+    }
+
+    /**
      * Pengaturan awal untuk HP ini: RAM game dan skala resolusi menyesuaikan spek HP. Hanya dipakai
-     * saat pertama kali dibuka dan saat reset; pengaturan yang sudah tersimpan tidak pernah diubah.
+     * saat pertama kali dibuka dan saat reset; pengaturan yang sudah tersimpan tidak diubah, selain
+     * penyederhanaan sekali jalan di [applyPerfDefaults].
      */
     private fun defaultSettingsFor(context: Context): LauncherSettings {
         val totalRamMb = getTotalDeviceMemoryMb(context)
@@ -61,7 +77,8 @@ object SettingsManager {
         }
         return LauncherSettings(
             ramMb = recommendedRamMb(totalRamMb),
-            resolutionRatio = recommendedResolutionRatio(totalRamMb, minSidePx)
+            resolutionRatio = recommendedResolutionRatio(totalRamMb, minSidePx),
+            perfRev = PERF_REV
         )
     }
 

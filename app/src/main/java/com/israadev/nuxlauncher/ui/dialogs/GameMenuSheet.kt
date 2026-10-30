@@ -128,14 +128,28 @@ fun GameMenuSheet(
             val win = (dialogView.parent as? DialogWindowProvider)?.window
             if (win != null) {
                 // Tanpa peredup dan tanpa blur latar: game tetap terlihat jelas dan menu tidak perlu
-                // menggambar satu isian gelap seluas layar tiap kali berubah.
-                win.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    win.attributes = win.attributes.apply {
-                        layoutInDisplayCutoutMode =
-                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                    }
+                // menggambar satu isian gelap seluas layar tiap kali berubah. Tanpa animasi jendela
+                // (memudar/membesar) saat muncul dan hilang. Perubahan jendela hanya dikirim ke sistem
+                // bila memang ada yang berbeda, jadi menyusun ulang menu tidak memicu panggilan lagi.
+                val attrs = win.attributes
+                var changed = false
+                if (attrs.flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND != 0) {
+                    attrs.flags = attrs.flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
+                    changed = true
                 }
+                if (attrs.windowAnimations != 0) {
+                    attrs.windowAnimations = 0
+                    changed = true
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                    attrs.layoutInDisplayCutoutMode !=
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                ) {
+                    attrs.layoutInDisplayCutoutMode =
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    changed = true
+                }
+                if (changed) win.attributes = attrs
             }
         }
 

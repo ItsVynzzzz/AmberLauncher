@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.OpenInNew
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
@@ -41,6 +40,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
 private const val CHROME_PACKAGE = "com.android.chrome"
 
@@ -229,7 +229,7 @@ fun NuxMicrosoftAuthDialog(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                CircularProgressIndicator(
+                AmberSpinner(
                     modifier = Modifier.size(16.dp),
                     color = Color(0xFF0078D4),
                     strokeWidth = 2.dp

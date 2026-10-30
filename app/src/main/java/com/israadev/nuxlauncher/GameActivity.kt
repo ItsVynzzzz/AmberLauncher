@@ -36,7 +36,6 @@ import android.view.SurfaceView
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.israadev.nuxlauncher.ui.i18n.Toast
@@ -955,6 +954,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                         if (!containsKey("entityShadows")) set("entityShadows", "false")
                         if (!containsKey("renderDistance")) set("renderDistance", defaultRenderDistance)
                         if (!containsKey("simulationDistance")) set("simulationDistance", "5")
+                        // Pilihan grafis paling hemat (daun tanpa transparansi, partikel minimal, tanpa
+                        // pencampuran warna bioma, entitas jauh dikurangi). Hanya diisi bila belum ada,
+                        // jadi pilihan pemain di dalam game tidak pernah ditimpa; kunci yang tidak
+                        // dikenal versi lama diabaikan Minecraft.
+                        if (!containsKey("graphicsMode")) set("graphicsMode", "0")
+                        if (!containsKey("particles")) set("particles", "2")
+                        if (!containsKey("biomeBlendRadius")) set("biomeBlendRadius", "0")
+                        if (!containsKey("entityDistanceScaling")) set("entityDistanceScaling", "0.5")
                     }
 
                     set("overrideWidth", "$targetWidth")
@@ -1660,9 +1667,6 @@ enum class FpsMode {
     SHOW_LOG   // Siklus 2: Memunculkan log in-game (isConsoleVisible = true)
 }
 
-/** Jendela UI digambar lebih dari ini per detik = dianggap sibuk dan dilaporkan di samping FPS. */
-private const val UI_BUSY_PER_SEC = 12
-
 /** Tombol panah D-pad (atas/bawah/kiri/kanan), dipakai untuk menyaring tombol panah sintetis. */
 private fun KeyEvent.isDpadArrow(): Boolean = when (keyCode) {
     KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN,
@@ -1796,36 +1800,15 @@ fun GameScreen(
     // Info RAM/panas hanya tampil di teks FPS, jadi hanya dihitung saat teks FPS terlihat.
     val wantPerfHint by rememberUpdatedState(isControlVisible || fpsMode == FpsMode.PINNED)
 
-    // Hitung berapa kali jendela UI digambar per detik. Saat bermain angkanya harus nyaris nol
-    // (hanya satu kali per detik untuk teks FPS); kalau tinggi, UI ikut berebut CPU/GPU dengan
-    // game dan angkanya muncul di samping FPS ("UI n/s"), jadi penyebab FPS turun bisa terbaca.
-    val uiDraws = remember { IntArray(1) }
-    var uiBusy by remember { mutableIntStateOf(0) }
-    val rootView = LocalView.current
-    DisposableEffect(rootView) {
-        val listener = ViewTreeObserver.OnDrawListener { uiDraws[0]++ }
-        val vto = rootView.viewTreeObserver
-        if (vto.isAlive) vto.addOnDrawListener(listener)
-        onDispose {
-            val t = rootView.viewTreeObserver
-            if (t.isAlive) t.removeOnDrawListener(listener)
-        }
-    }
-
     // Periodically update FPS counter from native engine (1x per detik: tiap angka baru = satu
     // penggambaran UI, jadi tidak perlu lebih sering dari yang bisa dibaca mata)
     LaunchedEffect(Unit) {
         var tick = 0
-        var lastDraws = uiDraws[0]
         while (isActive) {
             try {
                 currentFps = CallbackBridge.getCurrentFps()
             } catch (_: Throwable) {
             }
-            val draws = uiDraws[0]
-            val busy = if (draws - lastDraws > UI_BUSY_PER_SEC) draws - lastDraws else 0
-            lastDraws = draws
-            if (busy != uiBusy) uiBusy = busy
             if (tick % 3 == 0 && wantPerfHint) {
                 // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
                 val hint = withContext(Dispatchers.Default) {
@@ -2103,14 +2086,8 @@ fun GameScreen(
                     consoleVisible = isConsoleVisible,
                     keyboardActive = isKeyboardRequested,
                     fps = { currentFps },
-                    perfText = {
-                        if (uiBusy > 0) {
-                            if (perfText.isEmpty()) "UI $uiBusy/s" else "$perfText \u00B7 UI $uiBusy/s"
-                        } else {
-                            perfText
-                        }
-                    },
-                    perfWarn = { perfWarn || uiBusy > 0 },
+                    perfText = { perfText },
+                    perfWarn = { perfWarn },
                     onFpsClick = { showInGameSettingsDialog = true },
                     onToggleKeyboard = { isKeyboardRequested = !isKeyboardRequested },
                     onToggleControls = { isControlVisible = !isControlVisible },

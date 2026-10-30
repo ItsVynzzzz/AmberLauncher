@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Extension
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +46,7 @@ import com.israadev.nuxlauncher.ui.components.NuxIconButton
 import com.israadev.nuxlauncher.ui.components.SettingChip
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
 /**
  * "Lihat mod": tampilan bersih isi satu instance. Kotak-kotak kecil dengan gambar, nama, dan versi
@@ -138,7 +138,7 @@ fun NuxInstalledModsDialog(
             ) {
                 if (shown == null) {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(
+                        AmberSpinner(
                             color = NuxColors.Yellow,
                             modifier = Modifier.size(26.dp),
                             strokeWidth = 2.5.dp

@@ -1,7 +1,5 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,9 +24,8 @@ import com.israadev.nuxlauncher.ui.components.AmberAlert
 import com.israadev.nuxlauncher.ui.theme.Amber
 
 /**
- * Dialog proses unduh game. Batang kemajuan digambar langsung dan nilainya hanya dibaca saat
- * menggambar, jadi animasi kemajuan tidak menyusun ulang dialog; tidak ada indikator berputar
- * yang menggambar ulang terus-menerus.
+ * Dialog proses unduh game. Batang kemajuan digambar langsung tanpa animasi: lebarnya mengikuti
+ * nilai terbaru; tidak ada indikator berputar yang menggambar ulang terus-menerus.
  */
 @Composable
 fun NuxDownloadProgressDialog(
@@ -37,12 +34,8 @@ fun NuxDownloadProgressDialog(
     message: String,
     onDismissRequest: () -> Unit = {}
 ) {
-    val animated = animateFloatAsState(
-        targetValue = progress.coerceIn(0f, 1f),
-        animationSpec = tween(durationMillis = 250),
-        label = "dlProgress"
-    )
-    val percent = (progress.coerceIn(0f, 1f) * 100f).toInt()
+    val fraction = progress.coerceIn(0f, 1f)
+    val percent = (fraction * 100f).toInt()
 
     AmberAlert(
         onDismissRequest = onDismissRequest,
@@ -80,7 +73,7 @@ fun NuxDownloadProgressDialog(
                 .clip(CircleShape)
                 .drawBehind {
                     drawRect(Amber.Fill)
-                    val w = size.width * animated.value
+                    val w = size.width * fraction
                     if (w > 0f) {
                         drawRoundRect(
                             color = Amber.Yellow,

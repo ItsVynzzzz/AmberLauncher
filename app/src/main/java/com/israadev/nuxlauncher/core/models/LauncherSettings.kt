@@ -65,14 +65,19 @@ data class LauncherSettings(
     val powerSaverPrevSustained: Boolean = false,
     val powerSaverPrevVsync: Boolean = false,
 
-    // Latar Beranda (foto / GIF / video)
-    val homeBgAnimate: Boolean = true, // false = GIF dan video tampil diam (paling hemat)
+    // Latar Beranda (foto / GIF / video). Bawaan mati supaya Beranda diam dan tidak memakai CPU/GPU
+    // di HP kelas bawah; bisa dinyalakan di Pengaturan > Tampilan.
+    val homeBgAnimate: Boolean = false, // false = GIF dan video tampil diam (paling hemat)
     val homeBgPauseOnPowerSave: Boolean = true, // jeda GIF/video saat mode Hemat Baterai HP menyala
     val homeBgSound: Boolean = false, // suara video, bawaan mati
     val homeBgVolume: Int = 50, // 0 - 100
-    val homeAmbientEnabled: Boolean = true, // cahaya di sekitar kartu Beranda (hanya GIF/video)
+    val homeAmbientEnabled: Boolean = false, // cahaya di sekitar kartu Beranda (hanya GIF/video)
     val homeAmbientIntensity: Int = 60, // 20 - 100
 
     // Pembaruan aplikasi
-    val autoCheckUpdates: Boolean = true // cek rilis baru di GitHub setiap launcher dibuka
+    val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
+
+    // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
+    // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
+    val perfRev: Int = 0
 )

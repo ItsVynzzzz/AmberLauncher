@@ -8,7 +8,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -287,7 +286,7 @@ fun NuxNetworkImage(
                 contentAlignment = Alignment.Center
             ) {
                 if (showSpinner) {
-                    CircularProgressIndicator(
+                    AmberSpinner(
                         modifier = Modifier.size(18.dp),
                         color = NuxColors.SageGreen,
                         strokeWidth = 2.dp

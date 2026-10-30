@@ -12,10 +12,6 @@ import android.widget.ImageView
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -60,7 +56,6 @@ import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -77,9 +72,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInRoot
@@ -90,7 +83,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -607,9 +599,6 @@ fun DashboardScreen() {
     }
 }
 
-/** True setelah animasi masuk Home diputar sekali; kembali ke Home dari tab lain tidak mengulangnya. */
-private var homeIntroPlayed = false
-
 /**
  * Layar Home: gambar latar penuh, nama instance besar di kiri bawah dengan tombol PLAY kuning,
  * tombol Folder/Ubah yang halus, dan status RAM + renderer kecil di kanan bawah. Tidak ada
@@ -637,16 +626,6 @@ private fun HomeScene(
     onChangeBackground: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Satu animasi masuk (sekali per peluncuran aplikasi): tiap bagian muncul bertahap.
-    val enter = remember { Animatable(if (homeIntroPlayed) 1f else 0f) }
-    val enterState = enter.asState()
-    LaunchedEffect(Unit) {
-        if (enter.value < 1f) {
-            homeIntroPlayed = true
-            enter.animateTo(1f, tween(durationMillis = 700, easing = FastOutSlowInEasing))
-        }
-    }
-
     val freeRamMb = rememberFreeRamMb()
     val config = LocalConfiguration.current
     val compact = config.screenWidthDp < 640
@@ -695,8 +674,7 @@ private fun HomeScene(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .fillMaxWidth()
-                .padding(start = 18.dp, end = 18.dp, top = 16.dp)
-                .homeEnter(enterState, 0f, 0.dp),
+                .padding(start = 18.dp, end = 18.dp, top = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Akun (ketuk = ganti / tambah akun)
@@ -823,7 +801,6 @@ private fun HomeScene(
                 // Nama besar (ketuk = ganti instance)
                 Row(
                     modifier = Modifier
-                        .homeEnter(enterState, 0f, 14.dp)
                         .clip(RoundedCornerShape(18.dp))
                         .clickable { onPickInstance() },
                     verticalAlignment = Alignment.CenterVertically
@@ -859,8 +836,7 @@ private fun HomeScene(
                 // Loader (kuning) | versi Minecraft | Java
                 Row(
                     modifier = Modifier
-                        .padding(top = 6.dp)
-                        .homeEnter(enterState, 0.1f, 14.dp),
+                        .padding(top = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -891,8 +867,7 @@ private fun HomeScene(
                 // PLAY / UNDUH + Folder + Ubah
                 Row(
                     modifier = Modifier
-                        .padding(top = 20.dp)
-                        .homeEnter(enterState, 0.22f, 14.dp),
+                        .padding(top = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     NuxButton(
@@ -944,8 +919,7 @@ private fun HomeScene(
                     letterSpacing = (-0.5).sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = LocalTextStyle.current.copy(shadow = nameShadow),
-                    modifier = Modifier.homeEnter(enterState, 0f, 14.dp)
+                    style = LocalTextStyle.current.copy(shadow = nameShadow)
                 )
                 Text(
                     text = "Buat instance Minecraft pertamamu untuk mulai bermain.",
@@ -955,12 +929,10 @@ private fun HomeScene(
                     maxLines = 2,
                     modifier = Modifier
                         .padding(top = 6.dp)
-                        .homeEnter(enterState, 0.1f, 14.dp)
                 )
                 Row(
                     modifier = Modifier
-                        .padding(top = 20.dp)
-                        .homeEnter(enterState, 0.22f, 14.dp),
+                        .padding(top = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     NuxButton(
@@ -1000,8 +972,7 @@ private fun HomeScene(
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(end = 30.dp, bottom = 32.dp)
-                    .homeEnter(enterState, 0.35f, 0.dp),
+                    .padding(end = 30.dp, bottom = 32.dp),
                 horizontalAlignment = Alignment.End
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -1031,16 +1002,6 @@ private fun HomeScene(
         }
     }
 }
-
-/** Muncul bertahap: transparan dan sedikit di bawah sebelum [start], lalu naik ke tempatnya. */
-private fun Modifier.homeEnter(enter: State<Float>, start: Float, rise: Dp): Modifier =
-    graphicsLayer {
-        val t = HomeInfo.stagger(enter.value, start)
-        alpha = t
-        translationY = (1f - t) * rise.toPx()
-        // Tanpa lapisan terpisah, supaya bayangan keras tombol di luar kotaknya tidak terpotong.
-        compositingStrategy = CompositingStrategy.ModulateAlpha
-    }
 
 /** Garis tegak tipis pemisah loader | versi | Java. */
 @Composable
@@ -1233,11 +1194,6 @@ private fun HomeBackground(
     }
 
     if (videoFile != null && animate && !videoFailed) {
-        val posterAlpha by animateFloatAsState(
-            targetValue = if (videoReady) 0f else 1f,
-            animationSpec = tween(durationMillis = 450),
-            label = "homeVideoPoster"
-        )
         Box(modifier = modifier) {
             HomeVideoLayer(
                 file = videoFile,
@@ -1248,15 +1204,14 @@ private fun HomeBackground(
                 onFailed = { videoFailed = true },
                 modifier = Modifier.fillMaxSize()
             )
-            if (posterAlpha > 0.01f) {
+            // Poster diam menutupi video sampai bingkai pertama tampil, lalu hilang seketika (tanpa pudar).
+            if (!videoReady) {
                 HomeStillBackground(
                     customFile = customFile,
                     version = version,
                     animate = false,
                     ambient = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer { alpha = posterAlpha }
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -109,7 +108,7 @@ fun UpdateSettingsSection() {
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
         ) {
             if (checking) {
-                CircularProgressIndicator(
+                AmberSpinner(
                     modifier = Modifier.size(14.dp),
                     color = NuxColors.Ink,
                     strokeWidth = 2.dp

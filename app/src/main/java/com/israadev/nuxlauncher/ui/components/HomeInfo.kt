@@ -5,7 +5,7 @@ import java.util.Locale
 
 /**
  * Hitungan kecil untuk layar Home (tanpa Android/Compose): teks RAM, tingkat RAM,
- * nama renderer singkat, dan kemajuan animasi masuk bertahap.
+ * dan nama renderer singkat.
  */
 object HomeInfo {
     const val RAM_GOOD_MB = 1400
@@ -34,14 +34,5 @@ object HomeInfo {
         if (id.equals("auto", ignoreCase = true)) return "Otomatis"
         val first = displayName.trim().substringBefore(' ')
         return first.ifBlank { displayName.trim() }.ifBlank { "Otomatis" }
-    }
-
-    /**
-     * Kemajuan satu elemen dalam animasi masuk bertahap: 0 sebelum [start], naik ke 1 saat
-     * animasi induk [progress] (0..1) selesai.
-     */
-    fun stagger(progress: Float, start: Float): Float {
-        if (start >= 1f) return if (progress >= 1f) 1f else 0f
-        return ((progress - start) / (1f - start)).coerceIn(0f, 1f)
     }
 }

@@ -7,5 +7,11 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <!-- Dialog (Compose Dialog/AlertDialog ikut memakai ini) muncul dan hilang tanpa animasi jendela. -->
+        <item name="android:dialogTheme">@style/Theme.NuxLauncher.Dialog</item>
+    </style>
+
+    <style name="Theme.NuxLauncher.Dialog" parent="android:Theme.Material.Dialog">
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 </resources>

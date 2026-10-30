@@ -1,9 +1,5 @@
 package com.israadev.nuxlauncher.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,13 +31,14 @@ private val LOADING_BACKGROUND = Color(0xFF1B1B1B)
 
 /**
  * Layar loading sebelum logo Mojang. Polos dan datar: latar gelap, nama instance besar di kiri bawah,
- * baris log terakhir tepat di bawahnya, dan garis kemajuan putih selebar layar di paling bawah.
+ * baris log terakhir tepat di bawahnya, dan garis tunggu putih selebar layar di paling bawah.
  * Satu-satunya tombol adalah X kecil di kanan atas, untuk membatalkan dan keluar bila pemain tidak
  * sengaja menekan Main atau salah memilih instance. Tombol layar lain (ikon gerigi, FPS, kontrol)
  * disembunyikan GameScreen selama layar ini tampil dan baru muncul setelah logo Mojang mulai
  * digambar, atau setelah 60 detik bila game macet (saat itu X disembunyikan, keluar lewat gerigi).
- * Satu-satunya animasi yang berjalan terus adalah garis kemajuan, dan tidak ada pengatur waktu lain,
- * supaya tidak mengganggu JVM yang sedang menyala. Ukuran huruf dan garis mengikuti tinggi layar.
+ * Tanpa animasi masuk/keluar. Garis tunggu tidak bergerak halus tiap frame: segmennya hanya maju
+ * satu langkah tiap 450 ms, supaya JVM yang sedang menyala tidak berebut CPU dengan UI.
+ * Ukuran huruf dan garis mengikuti tinggi layar.
  */
 @Composable
 fun GameLoadingOverlay(
@@ -53,79 +49,73 @@ fun GameLoadingOverlay(
     modifier: Modifier = Modifier,
     showClose: Boolean = true
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(tween(300)),
-        exit = fadeOut(tween(500)),
+    if (!visible) return
+
+    BoxWithConstraints(
         modifier = modifier
+            .fillMaxSize()
+            .background(LOADING_BACKGROUND)
     ) {
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LOADING_BACKGROUND)
-        ) {
-            val screenHeight = maxHeight.value
-            val titleSize = (screenHeight * 0.11f).coerceIn(26f, 52f).sp
-            val logSize = (screenHeight * 0.042f).coerceIn(13f, 20f).sp
-            val barHeight = (screenHeight * 0.034f).coerceIn(10f, 18f).dp
-            val edge = (screenHeight * 0.05f).coerceIn(16f, 28f).dp
-            val closeSize = (screenHeight * 0.1f).coerceIn(36f, 44f).dp
+        val screenHeight = maxHeight.value
+        val titleSize = (screenHeight * 0.11f).coerceIn(26f, 52f).sp
+        val logSize = (screenHeight * 0.042f).coerceIn(13f, 20f).sp
+        val barHeight = (screenHeight * 0.034f).coerceIn(10f, 18f).dp
+        val edge = (screenHeight * 0.05f).coerceIn(16f, 28f).dp
+        val closeSize = (screenHeight * 0.1f).coerceIn(36f, 44f).dp
 
-            // Tombol X: kaca gelap berbingkai putih tipis. Dimatikan selama layar memudar keluar
-            // (visible = false) supaya ketukan di pojok ini saat game mulai tampil tidak menutup game.
-            if (showClose) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = edge, end = edge)
-                        .size(closeSize)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.10f))
-                        .border(1.dp, Color.White.copy(alpha = 0.28f), CircleShape)
-                        .clickable(enabled = visible, onClick = onClose),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "Batal dan keluar",
-                        tint = Color.White,
-                        modifier = Modifier.size(closeSize * 0.5f)
-                    )
-                }
-            }
-
-            Column(
+        // Tombol X: kaca gelap berbingkai putih tipis.
+        if (showClose) {
+            Box(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .fillMaxWidth()
-                    .padding(start = edge, end = edge, bottom = edge)
+                    .align(Alignment.TopEnd)
+                    .padding(top = edge, end = edge)
+                    .size(closeSize)
+                    .clip(CircleShape)
+                    .background(Color.White.copy(alpha = 0.10f))
+                    .border(1.dp, Color.White.copy(alpha = 0.28f), CircleShape)
+                    .clickable(onClick = onClose),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = instanceName,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = titleSize,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = if (latestLog.isNotBlank()) latestLog else "Menyiapkan mesin Java dan grafis...",
-                    color = Color.White.copy(alpha = 0.9f),
-                    fontSize = logSize,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(edge * 0.45f))
-                // Garis kemajuan: menunggu tanpa persentase (launcher tidak tahu seberapa jauh JVM memuat)
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(barHeight)
-                        .clip(CircleShape),
-                    color = Color.White,
-                    trackColor = Color.White.copy(alpha = 0.18f)
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "Batal dan keluar",
+                    tint = Color.White,
+                    modifier = Modifier.size(closeSize * 0.5f)
                 )
             }
+        }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .padding(start = edge, end = edge, bottom = edge)
+        ) {
+            Text(
+                text = instanceName,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = titleSize,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = if (latestLog.isNotBlank()) latestLog else "Menyiapkan mesin Java dan grafis...",
+                color = Color.White.copy(alpha = 0.9f),
+                fontSize = logSize,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(modifier = Modifier.height(edge * 0.45f))
+            // Garis tunggu tanpa persentase (launcher tidak tahu seberapa jauh JVM memuat)
+            AmberWaitBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(barHeight)
+                    .clip(CircleShape),
+                color = Color.White,
+                trackColor = Color.White.copy(alpha = 0.18f)
+            )
         }
     }
 }

@@ -20,7 +20,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
@@ -56,6 +55,7 @@ import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.UUID
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
 /**
  * Layar Akun gaya baru (kaca gelap seperti Home).
@@ -925,7 +925,7 @@ private fun AddAccountModal(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         if (isMsLoading) {
-                            CircularProgressIndicator(
+                            AmberSpinner(
                                 modifier = Modifier.size(16.dp),
                                 color = NuxColors.GrayNeutral,
                                 strokeWidth = 2.dp
@@ -952,7 +952,7 @@ private fun AddAccountModal(
                         is ElyByLoginState.WaitingForApproval -> {
                             val dc = state.deviceCode
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                CircularProgressIndicator(
+                                AmberSpinner(
                                     modifier = Modifier.size(16.dp),
                                     color = NuxColors.PurpleDark,
                                     strokeWidth = 2.dp
@@ -1075,7 +1075,7 @@ private fun AddAccountModal(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 if (isStarting) {
-                                    CircularProgressIndicator(
+                                    AmberSpinner(
                                         modifier = Modifier.size(16.dp),
                                         color = NuxColors.GrayNeutral,
                                         strokeWidth = 2.dp

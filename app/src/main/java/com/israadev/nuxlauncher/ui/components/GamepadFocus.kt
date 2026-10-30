@@ -104,3 +104,19 @@ fun GamepadWindowHook() {
         onDispose { undo?.invoke() }
     }
 }
+
+/**
+ * Letakkan di dalam isi sebuah Dialog: dialog muncul dan hilang langsung, tanpa animasi jendela
+ * bawaan sistem (memudar/membesar). Dipanggil sekali per dialog; tidak ada pekerjaan setelahnya.
+ */
+@Composable
+fun NoWindowAnimationHook() {
+    val view = LocalView.current
+    DisposableEffect(view) {
+        val window = (view.parent as? DialogWindowProvider)?.window
+        if (window != null && window.attributes.windowAnimations != 0) {
+            window.setWindowAnimations(0)
+        }
+        onDispose { }
+    }
+}

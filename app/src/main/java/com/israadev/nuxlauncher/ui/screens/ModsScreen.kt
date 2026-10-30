@@ -47,6 +47,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
+import com.israadev.nuxlauncher.ui.components.AmberWaitBar
 
 private fun getMimeTypesForType(type: String): Array<String> {
     return when (type) {
@@ -807,7 +809,7 @@ fun ModsScreen(
 
                     if (isInstalledLoading) {
                         Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                            AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
                         }
                     } else if (filteredInstalled.isEmpty()) {
                         Box(
@@ -872,7 +874,7 @@ fun ModsScreen(
                     if (isSearching) {
                         Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                                AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text("Memuat data dari Modrinth...", color = NuxColors.GrayNeutral, fontSize = 12.sp)
                             }
@@ -1161,7 +1163,7 @@ fun ModsScreen(
                         .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
+                    AmberSpinner(
                         modifier = Modifier.size(22.dp),
                         color = NuxColors.Yellow,
                         strokeWidth = 2.5.dp
@@ -1221,7 +1223,7 @@ fun ModsScreen(
                         color = NuxColors.GrayNeutral
                     )
                 } else {
-                    LinearProgressIndicator(
+                    AmberWaitBar(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(6.dp)
@@ -1590,7 +1592,7 @@ private fun ModrinthHitRow(
 
         if (isDownloading) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                CircularProgressIndicator(
+                AmberSpinner(
                     color = NuxColors.Yellow,
                     modifier = Modifier.size(22.dp),
                     strokeWidth = 2.dp
@@ -1814,7 +1816,7 @@ private fun ModDetailDialog(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CircularProgressIndicator(
+                        AmberSpinner(
                             color = NuxColors.Yellow,
                             modifier = Modifier.size(22.dp),
                             strokeWidth = 2.dp
@@ -1926,7 +1928,7 @@ private fun ModDetailDialog(
                                 .height(140.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+                            AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
                         }
                     } else if (tab == "overview") {
                         val galleryList = project?.gallery ?: emptyList()

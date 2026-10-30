@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
@@ -39,6 +38,8 @@ import com.israadev.nuxlauncher.ui.components.NuxWindowDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.launch
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
+import com.israadev.nuxlauncher.ui.components.AmberWaitBar
 
 private data class AddonTypeOption(val id: String, val label: String, val icon: String)
 
@@ -417,7 +418,7 @@ fun NuxAddonImportDialog(
                                             trackColor = NuxColors.SoftLime
                                         )
                                     } else {
-                                        LinearProgressIndicator(
+                                        AmberWaitBar(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .height(6.dp)
@@ -529,7 +530,7 @@ fun NuxAddonImportDialog(
                         ) {
                             if (isImporting) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    CircularProgressIndicator(
+                                    AmberSpinner(
                                         modifier = Modifier.size(16.dp),
                                         color = NuxColors.Ink,
                                         strokeWidth = 2.dp

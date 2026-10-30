@@ -35,6 +35,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.ui.components.AmberIcon
 import com.israadev.nuxlauncher.ui.components.FpsReadout
 import com.israadev.nuxlauncher.ui.components.GamepadWindowHook
+import com.israadev.nuxlauncher.ui.components.NoWindowAnimationHook
 import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.theme.Amber
 
@@ -49,6 +50,7 @@ fun ExitConfirmDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         GamepadWindowHook()
+        NoWindowAnimationHook()
         val shape = RoundedCornerShape(22.dp)
         Box(
             modifier = Modifier

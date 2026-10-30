@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.*
@@ -43,6 +42,7 @@ import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.launch
 import java.io.File
+import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
 @Composable
 fun NuxWardrobeDialog(
@@ -666,7 +666,7 @@ fun NuxWardrobeDialog(
                                             horizontalArrangement = Arrangement.Center,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            CircularProgressIndicator(
+                                            AmberSpinner(
                                                 modifier = Modifier.size(16.dp),
                                                 strokeWidth = 2.dp,
                                                 color = NuxColors.PurpleDark
@@ -1024,7 +1024,7 @@ fun NuxWardrobeDialog(
                                         .height(32.dp)
                                 ) {
                                     if (isProcessing) {
-                                        CircularProgressIndicator(modifier = Modifier.size(13.dp), color = NuxColors.Ink, strokeWidth = 2.dp)
+                                        AmberSpinner(modifier = Modifier.size(13.dp), color = NuxColors.Ink, strokeWidth = 2.dp)
                                         Spacer(modifier = Modifier.width(5.dp))
                                     } else {
                                         Icon(

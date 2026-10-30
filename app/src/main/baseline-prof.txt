@@ -15,3 +15,7 @@ Lcom/israadev/nuxlauncher/ui/i18n/Translator;
 Lcom/israadev/nuxlauncher/ui/i18n/AmberTextKt;
 Lcom/israadev/nuxlauncher/core/settings/SettingsManager;
 Lcom/israadev/nuxlauncher/core/instance/InstanceManager;
+HSPLcom/israadev/nuxlauncher/**->**(**)**
+HSPLcom/movtery/**->**(**)**
+HSPLorg/libsdl/**->**(**)**
+HSPLorg/lwjgl/**->**(**)**

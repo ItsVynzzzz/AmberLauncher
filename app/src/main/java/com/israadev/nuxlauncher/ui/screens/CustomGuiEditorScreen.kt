@@ -90,6 +90,8 @@ fun CustomGuiEditorScreen(
     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
     // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
     var viewMode by remember { mutableStateOf(VIEW_ALL) }
+    // Tombol "UI": menyembunyikan panel atas dan bawah supaya tombol kontrol mudah digeser.
+    var uiHidden by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         ControlLayoutManager.init(context)
@@ -215,171 +217,174 @@ fun CustomGuiEditorScreen(
             )
         }
 
-        // 3. TOP ACTION BAR (Clean & Un-clipped Floating Header)
-        // Top-Left: Kembali / Selesai In-Game Button
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-                .background(if (isIngame) Color(0xFFFFD60A) else Color(0xFF171717), RoundedCornerShape(8.dp))
-                .border(1.2.dp, if (isIngame) Color(0xFFE9E4CC) else Color(0xFF2E2E2E), RoundedCornerShape(8.dp))
-                .clickable {
-                    if (isIngame) {
-                        ControlLayoutManager.saveButtons(context, buttonsList)
-                        Toast.makeText(context, "✓ Layout tombol in-game disimpan!", Toast.LENGTH_SHORT).show()
+        // Panel Kembali, bar atas, dan pilihan tampilan: disembunyikan oleh tombol UI.
+        if (!uiHidden) {
+            // 3. TOP ACTION BAR (Clean & Un-clipped Floating Header)
+            // Top-Left: Kembali / Selesai In-Game Button
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+                    .background(if (isIngame) Color(0xFFFFD60A) else Color(0xFF171717), RoundedCornerShape(8.dp))
+                    .border(1.2.dp, if (isIngame) Color(0xFFE9E4CC) else Color(0xFF2E2E2E), RoundedCornerShape(8.dp))
+                    .clickable {
+                        if (isIngame) {
+                            ControlLayoutManager.saveButtons(context, buttonsList)
+                            Toast.makeText(context, "✓ Layout tombol in-game disimpan!", Toast.LENGTH_SHORT).show()
+                        }
+                        onNavigateBack()
                     }
-                    onNavigateBack()
+                    .padding(horizontal = 12.dp, vertical = 7.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = if (isIngame) Icons.Outlined.Check else Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = if (isIngame) "Selesai" else "Kembali",
+                        tint = if (isIngame) Color(0xFF111111) else Color.White,
+                        modifier = Modifier.size(13.dp)
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = if (isIngame) "SELESAI" else "KEMBALI",
+                        color = if (isIngame) Color(0xFF111111) else Color.White,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 11.sp
+                    )
                 }
-                .padding(horizontal = 12.dp, vertical = 7.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = if (isIngame) Icons.Outlined.Check else Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = if (isIngame) "Selesai" else "Kembali",
-                    tint = if (isIngame) Color(0xFF111111) else Color.White,
-                    modifier = Modifier.size(13.dp)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = if (isIngame) "SELESAI" else "KEMBALI",
-                    color = if (isIngame) Color(0xFF111111) else Color.White,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 11.sp
-                )
             }
-        }
 
-        // Top-Center: Compact Floating Action Pill (+ Tambah, Reset, Simpan)
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 16.dp)
-                .background(Color(0xFF171717), RoundedCornerShape(10.dp))
-                .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
-                .padding(horizontal = 8.dp, vertical = 5.dp),
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // + TAMBAH
-            Box(
+            // Top-Center: Compact Floating Action Pill (+ Tambah, Reset, Simpan)
+            Row(
                 modifier = Modifier
-                    .background(Color(0xFF3A3A3A), RoundedCornerShape(6.dp))
-                    .clickable {
-                        val newBtn = CustomControlButton(
-                            id = "btn_" + UUID.randomUUID().toString().take(6),
-                            name = "NEW",
-                            keyCode = LwjglGlfwKeycode.GLFW_KEY_SPACE,
-                            xPercent = 50f,
-                            yPercent = 50f,
-                            widthDp = 52,
-                            heightDp = 48,
-                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
-                        )
-                        buttonsList = buttonsList + newBtn
-                        selectedButtonId = newBtn.id
-                        manualFlipSide = null
-                        // Langsung pilih fungsinya, tidak perlu cari tombol "Ubah" dulu.
-                        keyPickerTargetMode = "MAIN"
-                        showKeyPickerForButtonId = newBtn.id
-                        Toast.makeText(context, "Tombol baru ditambahkan di tengah layar!", Toast.LENGTH_SHORT).show()
-                    }
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp)
+                    .background(Color(0xFF171717), RoundedCornerShape(10.dp))
+                    .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 8.dp, vertical = 5.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("+ TOMBOL", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color.White)
-            }
-
-            // + JOYSTICK
-            Box(
-                modifier = Modifier
-                    .background(Color(0xFF262626).copy(alpha = 0.85f), RoundedCornerShape(6.dp))
-                    .border(1.dp, Color(0xFFFFD60A), RoundedCornerShape(6.dp))
-                    .clickable {
-                        val newJoy = CustomControlButton(
-                            id = "joy_" + UUID.randomUUID().toString().take(6),
-                            name = "JOYSTICK",
-                            isJoystick = true,
-                            xPercent = 20f,
-                            yPercent = 70f,
-                            widthDp = 130,
-                            heightDp = 130,
-                            cornerRadiusDp = 65,
-                            opacity = 0.85f,
-                            showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
-                        )
-                        buttonsList = buttonsList + newJoy
-                        selectedButtonId = newJoy.id
-                        manualFlipSide = null
-                        Toast.makeText(context, "Joystick WASD ditambahkan!", Toast.LENGTH_SHORT).show()
-                    }
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("🕹 + JOYSTICK", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color(0xFFFFE566))
-            }
-
-            // RESET
-            Box(
-                modifier = Modifier
-                    .background(Color(0xFF381C1C), RoundedCornerShape(6.dp))
-                    .clickable { showResetConfirmDialog = true }
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("RESET", color = Color(0xFFFF8A80), fontWeight = FontWeight.Black, fontSize = 11.sp)
-            }
-
-            // SIMPAN
-            Box(
-                modifier = Modifier
-                    .background(Color(0xFFFFD60A), RoundedCornerShape(6.dp))
-                    .clickable {
-                        ControlLayoutManager.saveButtons(context, buttonsList)
-                        Toast.makeText(context, "✓ Layout GUI berhasil disimpan!", Toast.LENGTH_SHORT).show()
-                    }
-                    .padding(horizontal = 14.dp, vertical = 6.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("SIMPAN", color = Color(0xFF111111), fontWeight = FontWeight.Black, fontSize = 11.sp)
-            }
-        }
-
-        // 3b. Pilih tampilan: semua tombol, hanya yang tampil saat main, atau hanya saat menu (inventori, chat, jeda).
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 6.dp)
-                .background(Color(0xFF171717), RoundedCornerShape(10.dp))
-                .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
-                .padding(horizontal = 6.dp, vertical = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            listOf(
-                VIEW_ALL to "Semua tombol",
-                ControlShowMode.GAME to "Saat main",
-                ControlShowMode.MENU to "Saat menu"
-            ).forEach { (viewKey, viewLabel) ->
-                val chosen = viewMode == viewKey
+                // + TAMBAH
                 Box(
                     modifier = Modifier
-                        .background(if (chosen) Color(0xFFFFD60A) else Color(0xFF262626), RoundedCornerShape(6.dp))
+                        .background(Color(0xFF3A3A3A), RoundedCornerShape(6.dp))
                         .clickable {
-                            viewMode = viewKey
-                            // Tombol terpilih yang tidak ikut tampil di tampilan baru dilepas dari pilihan.
-                            val sel = buttonsList.firstOrNull { it.id == selectedButtonId }
-                            if (sel != null && !editorShows(sel, viewKey)) selectedButtonId = null
+                            val newBtn = CustomControlButton(
+                                id = "btn_" + UUID.randomUUID().toString().take(6),
+                                name = "NEW",
+                                keyCode = LwjglGlfwKeycode.GLFW_KEY_SPACE,
+                                xPercent = 50f,
+                                yPercent = 50f,
+                                widthDp = 52,
+                                heightDp = 48,
+                                showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
+                            )
+                            buttonsList = buttonsList + newBtn
+                            selectedButtonId = newBtn.id
+                            manualFlipSide = null
+                            // Langsung pilih fungsinya, tidak perlu cari tombol "Ubah" dulu.
+                            keyPickerTargetMode = "MAIN"
+                            showKeyPickerForButtonId = newBtn.id
+                            Toast.makeText(context, "Tombol baru ditambahkan di tengah layar!", Toast.LENGTH_SHORT).show()
                         }
-                        .padding(horizontal = 10.dp, vertical = 5.dp),
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        viewLabel,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 10.sp,
-                        color = if (chosen) Color(0xFF111111) else Color.White,
-                        maxLines = 1
-                    )
+                    Text("+ TOMBOL", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color.White)
+                }
+
+                // + JOYSTICK
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xFF262626).copy(alpha = 0.85f), RoundedCornerShape(6.dp))
+                        .border(1.dp, Color(0xFFFFD60A), RoundedCornerShape(6.dp))
+                        .clickable {
+                            val newJoy = CustomControlButton(
+                                id = "joy_" + UUID.randomUUID().toString().take(6),
+                                name = "JOYSTICK",
+                                isJoystick = true,
+                                xPercent = 20f,
+                                yPercent = 70f,
+                                widthDp = 130,
+                                heightDp = 130,
+                                cornerRadiusDp = 65,
+                                opacity = 0.85f,
+                                showMode = if (viewMode == VIEW_ALL) ControlShowMode.ALWAYS else viewMode
+                            )
+                            buttonsList = buttonsList + newJoy
+                            selectedButtonId = newJoy.id
+                            manualFlipSide = null
+                            Toast.makeText(context, "Joystick WASD ditambahkan!", Toast.LENGTH_SHORT).show()
+                        }
+                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("🕹 + JOYSTICK", fontWeight = FontWeight.Black, fontSize = 11.sp, color = Color(0xFFFFE566))
+                }
+
+                // RESET
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xFF381C1C), RoundedCornerShape(6.dp))
+                        .clickable { showResetConfirmDialog = true }
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("RESET", color = Color(0xFFFF8A80), fontWeight = FontWeight.Black, fontSize = 11.sp)
+                }
+
+                // SIMPAN
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xFFFFD60A), RoundedCornerShape(6.dp))
+                        .clickable {
+                            ControlLayoutManager.saveButtons(context, buttonsList)
+                            Toast.makeText(context, "✓ Layout GUI berhasil disimpan!", Toast.LENGTH_SHORT).show()
+                        }
+                        .padding(horizontal = 14.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("SIMPAN", color = Color(0xFF111111), fontWeight = FontWeight.Black, fontSize = 11.sp)
+                }
+            }
+
+            // 3b. Pilih tampilan: semua tombol, hanya yang tampil saat main, atau hanya saat menu (inventori, chat, jeda).
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 6.dp)
+                    .background(Color(0xFF171717), RoundedCornerShape(10.dp))
+                    .border(1.5.dp, Color(0xFF2E2E2E), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 6.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                listOf(
+                    VIEW_ALL to "Semua tombol",
+                    ControlShowMode.GAME to "Saat main",
+                    ControlShowMode.MENU to "Saat menu"
+                ).forEach { (viewKey, viewLabel) ->
+                    val chosen = viewMode == viewKey
+                    Box(
+                        modifier = Modifier
+                            .background(if (chosen) Color(0xFFFFD60A) else Color(0xFF262626), RoundedCornerShape(6.dp))
+                            .clickable {
+                                viewMode = viewKey
+                                // Tombol terpilih yang tidak ikut tampil di tampilan baru dilepas dari pilihan.
+                                val sel = buttonsList.firstOrNull { it.id == selectedButtonId }
+                                if (sel != null && !editorShows(sel, viewKey)) selectedButtonId = null
+                            }
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            viewLabel,
+                            fontWeight = FontWeight.Black,
+                            fontSize = 10.sp,
+                            color = if (chosen) Color(0xFF111111) else Color.White,
+                            maxLines = 1
+                        )
+                    }
                 }
             }
         }
@@ -1173,7 +1178,7 @@ fun CustomGuiEditorScreen(
         }
 
         // 5. In-Game Mode Floating Status Badge
-        if (isIngame) {
+        if (isIngame && !uiHidden) {
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -1197,6 +1202,26 @@ fun CustomGuiEditorScreen(
                     )
                 }
             }
+        }
+
+        // 6. Tombol "UI" (selalu terlihat): sembunyikan / tampilkan Kembali, bar atas, dan pilihan
+        //    tampilan, supaya tombol kontrol di belakangnya bisa digeser tanpa tertutup.
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 6.dp, bottom = 6.dp)
+                .size(36.dp)
+                .background(if (uiHidden) Color(0xFFFFD60A) else Color(0xE6111111), CircleShape)
+                .border(1.2.dp, Color(0xFFFFD60A), CircleShape)
+                .clickable { uiHidden = !uiHidden },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "UI",
+                color = if (uiHidden) Color(0xFF111111) else Color(0xFFFFD60A),
+                fontWeight = FontWeight.Black,
+                fontSize = 13.sp
+            )
         }
     }
 

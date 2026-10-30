@@ -101,6 +101,10 @@ fun SwitchableMouseLayout(
     val currentOnPhysicalMouseModeChange by rememberUpdatedState(onPhysicalMouseModeChange)
     val currentOnMouse by rememberUpdatedState(onMouse)
     val currentOnTouch by rememberUpdatedState(onTouch)
+    // Blok sentuh di bawah tidak pernah dimulai ulang, jadi nilai yang bisa berubah dibaca lewat State.
+    val currentScreenWidth by rememberUpdatedState(screenWidth)
+    val currentScreenHeight by rememberUpdatedState(screenHeight)
+    val currentRequestPointerCapture by rememberUpdatedState(requestPointerCapture)
 
     val isCaptured = currentCursorMode == CURSOR_DISABLED
 
@@ -115,7 +119,7 @@ fun SwitchableMouseLayout(
     }
 
     fun checkPhysicalMouseMode(using: Boolean) {
-        val newMode = !requestPointerCapture && using
+        val newMode = !currentRequestPointerCapture && using
         if (isPhysicalMouseMode != newMode) {
             isPhysicalMouseMode = newMode
             currentOnPhysicalMouseModeChange(newMode)
@@ -130,16 +134,21 @@ fun SwitchableMouseLayout(
     fun sendScaledCursor(x: Float, y: Float) {
         val winW = CallbackBridge.windowWidth
         val winH = CallbackBridge.windowHeight
-        val targetX = if (screenWidth > 0 && winW > 0) x * (winW.toFloat() / screenWidth) else x
-        val targetY = if (screenHeight > 0 && winH > 0) y * (winH.toFloat() / screenHeight) else y
+        val sw = currentScreenWidth
+        val sh = currentScreenHeight
+        val targetX = if (sw > 0 && winW > 0) x * (winW.toFloat() / sw) else x
+        val targetY = if (sh > 0 && winH > 0) y * (winH.toFloat() / sh) else y
         CallbackBridge.sendCursorPos(targetX, targetY)
     }
 
     FocusableBox(
         modifier = modifier
             .fillMaxSize()
-            // 1. Touchscreen input processing
-            .pointerInput(cursorMode, controlMode) {
+            // 1. Touchscreen input processing.
+            // Kunci Unit: blok ini TIDAK dimulai ulang saat mode kursor atau mode kontrol berganti.
+            // Dulu dimulai ulang tiap inventori dibuka/ditutup, sehingga jari yang sudah menempel
+            // dilupakan dan baru bergerak lagi setelah diangkat. Semua nilai berubah dibaca lewat State.
+            .pointerInput(Unit) {
                 coroutineScope {
                     var activePointerId: PointerId? = null
                     var startPosition = Offset.Zero
@@ -150,6 +159,8 @@ fun SwitchableMouseLayout(
                     var hotbarSlot = -1
                     // Jari yang sedang diteruskan ke mod pada mode berdampingan.
                     val forwarder = TouchForwarder()
+                    // Status kursor terkunci pada kejadian sebelumnya, untuk mendeteksi pergantian mode.
+                    var lastCaptured = currentCursorMode == CURSOR_DISABLED
 
                     awaitPointerEventScope {
                         while (true) {
@@ -161,8 +172,8 @@ fun SwitchableMouseLayout(
                                 // Berdampingan: sentuhan tetap diproses launcher di bawah (tidak dikonsumsi),
                                 // dan salinannya dikirim ke mod hanya saat bermain (kursor terkunci). Di menu
                                 // game launcher yang bekerja sendiri, kalau tidak klik akan terhitung dua kali.
-                                val invW = if (screenWidth > 0f) 1f / screenWidth else 0f
-                                val invH = if (screenHeight > 0f) 1f / screenHeight else 0f
+                                val invW = if (currentScreenWidth > 0f) 1f / currentScreenWidth else 0f
+                                val invH = if (currentScreenHeight > 0f) 1f / currentScreenHeight else 0f
                                 val fChanges = event.changes
                                 for (ci in fChanges.indices) {
                                     val c = fChanges[ci]
@@ -187,8 +198,8 @@ fun SwitchableMouseLayout(
                                     isDragging = false
                                 }
                                 val sinkChanges = event.changes
-                                val invW = if (screenWidth > 0f) 1f / screenWidth else 0f
-                                val invH = if (screenHeight > 0f) 1f / screenHeight else 0f
+                                val invW = if (currentScreenWidth > 0f) 1f / currentScreenWidth else 0f
+                                val invH = if (currentScreenHeight > 0f) 1f / currentScreenHeight else 0f
                                 for (ci in sinkChanges.indices) {
                                     val c = sinkChanges[ci]
                                     if (c.type != PointerType.Touch) continue
@@ -206,6 +217,34 @@ fun SwitchableMouseLayout(
                                     }
                                 }
                                 continue
+                            }
+
+                            // Mode kursor berganti (inventori dibuka/ditutup) saat jari sudah menempel: jari yang
+                            // sama diteruskan ke mode baru tanpa harus diangkat dulu.
+                            val capturedNow0 = currentCursorMode == CURSOR_DISABLED
+                            if (capturedNow0 != lastCaptured) {
+                                lastCaptured = capturedNow0
+                                val heldId = activePointerId
+                                if (heldId != null) {
+                                    longPressJob?.cancel()
+                                    if (longPressTriggered) {
+                                        // Tombol kiri yang sedang ditahan dilepas, supaya tidak ikut tertahan di mode baru.
+                                        longPressTriggered = false
+                                        currentOnLongPressEnd()
+                                    }
+                                    hotbarSlot = -1
+                                    // Dianggap sudah menggeser: jari langsung menggerakkan kamera/kursor, dan saat
+                                    // diangkat tidak menghasilkan ketukan (pukul/klik) yang tidak disengaja.
+                                    isDragging = true
+                                    val heldChange = event.changes.firstFast { it.id == heldId }
+                                    if (heldChange != null) {
+                                        startPosition = heldChange.position
+                                        if (!capturedNow0 && currentControlMode == MouseControlMode.CLICK) {
+                                            currentOnCursorPositionChange(heldChange.position)
+                                            sendScaledCursor(heldChange.position.x, heldChange.position.y)
+                                        }
+                                    }
+                                }
                             }
 
                             // Touch Down (perulangan biasa: tanpa membuat daftar baru di tiap kejadian sentuh)
@@ -262,8 +301,12 @@ fun SwitchableMouseLayout(
                             activePointerId?.let { pointerId ->
                                 event.changes.firstFast { it.id == pointerId && it.positionChanged() && !it.isConsumed }?.let { moveChange ->
                                     val distanceFromStart = (moveChange.position - startPosition).getDistance()
+                                    // Kejadian ini baru melewati ambang geser: gerak sebelumnya (di dalam ambang)
+                                    // belum dipakai di beberapa mode, jadi dihitung dari titik awal agar tidak hilang.
+                                    var crossedSlop = false
                                     if (!isDragging && distanceFromStart > viewConfiguration.touchSlop) {
                                         isDragging = true
+                                        crossedSlop = true
                                         longPressJob?.cancel()
                                     }
 
@@ -271,17 +314,25 @@ fun SwitchableMouseLayout(
                                         // In gameplay: touch drag rotates the camera. Ketukan di hotbar tidak
                                         // menggoyang kamera selama jari belum benar-benar menggeser.
                                         if (hotbarSlot < 0 || isDragging) {
-                                            val delta = moveChange.positionChange()
+                                            val delta = if (crossedSlop && hotbarSlot >= 0) {
+                                                moveChange.position - startPosition
+                                            } else {
+                                                moveChange.positionChange()
+                                            }
                                             currentOnCapturedMove(delta)
                                         }
                                     } else {
                                         // In menu: move cursor
                                         if (currentControlMode == MouseControlMode.SLIDE) {
                                             if (isDragging || longPressTriggered) {
-                                                val delta = moveChange.positionChange()
+                                                val delta = if (crossedSlop && !longPressTriggered) {
+                                                    moveChange.position - startPosition
+                                                } else {
+                                                    moveChange.positionChange()
+                                                }
                                                 val cur = currentCursorPos()
-                                                val newX = (cur.x + delta.x * currentSensitivity).coerceIn(0f, screenWidth)
-                                                val newY = (cur.y + delta.y * currentSensitivity).coerceIn(0f, screenHeight)
+                                                val newX = (cur.x + delta.x * currentSensitivity).coerceIn(0f, currentScreenWidth)
+                                                val newY = (cur.y + delta.y * currentSensitivity).coerceIn(0f, currentScreenHeight)
                                                 val newPos = Offset(newX, newY)
                                                 currentOnCursorPositionChange(newPos)
                                                 sendScaledCursor(newX, newY)

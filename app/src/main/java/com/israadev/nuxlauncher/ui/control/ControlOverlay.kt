@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+import com.israadev.nuxlauncher.core.controls.JoystickLogic
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
@@ -46,11 +47,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.lwjgl.glfw.CallbackBridge
 import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.hypot
 import kotlin.math.roundToInt
-import kotlin.math.sin
 
 /**
  * Lapisan semua tombol layar di atas game. Tiap tombol hanya satu simpul yang menggambar dirinya
@@ -599,6 +596,9 @@ fun CustomVirtualJoystick(
     val shown = remember { FloatArray(2) }
     val knobStepPx = with(density) { 2.5.dp.toPx() }
 
+    // Hitungan arah dan lari (zona mati, titik tumpu, histeresis) ada di JoystickLogic.
+    val logic = remember { JoystickLogic() }
+
     // Status tombol arah disimpan biasa (bukan state) supaya menggeser kenop tidak menyusun ulang.
     val keys = remember { BooleanArray(4) } // W, A, S, D
     val ctrlDown = remember { BooleanArray(1) }
@@ -631,12 +631,29 @@ fun CustomVirtualJoystick(
     }
 
     fun releaseAll() {
+        logic.release()
         updateKeys(false, false, false, false)
         setSprint(false)
         shown[0] = 0f
         shown[1] = 0f
         knobOffset = Offset.Zero
         isTouching = false
+    }
+
+    // Terapkan hasil JoystickLogic: gambar ulang kenop hanya bila bergeser cukup jauh, kirim tombol
+    // hanya bila berubah.
+    fun applyLogic() {
+        val kx = logic.knobX
+        val ky = logic.knobY
+        val ddx = kx - shown[0]
+        val ddy = ky - shown[1]
+        if (ddx * ddx + ddy * ddy >= knobStepPx * knobStepPx) {
+            shown[0] = kx
+            shown[1] = ky
+            knobOffset = Offset(kx, ky)
+        }
+        updateKeys(logic.w, logic.a, logic.s, logic.d)
+        setSprint(logic.sprint)
     }
 
     DisposableEffect(button.id) {
@@ -654,47 +671,13 @@ fun CustomVirtualJoystick(
                     while (true) {
                         val down = awaitFirstDown(requireUnconsumed = false)
                         isTouching = true
-                        val center = Offset(size.width / 2f, size.height / 2f)
-
-                        fun processPosition(pos: Offset) {
-                            val rawDelta = pos - center
-                            val dist = hypot(rawDelta.x.toDouble(), rawDelta.y.toDouble()).toFloat()
-                            val clampedDist = dist.coerceAtMost(maxDragDistance)
-                            val angleRad = atan2(rawDelta.y.toDouble(), rawDelta.x.toDouble())
-
-                            val kx = if (dist > 0f) (cos(angleRad) * clampedDist).toFloat() else 0f
-                            val ky = if (dist > 0f) (sin(angleRad) * clampedDist).toFloat() else 0f
-                            val ddx = kx - shown[0]
-                            val ddy = ky - shown[1]
-                            if (ddx * ddx + ddy * ddy >= knobStepPx * knobStepPx) {
-                                shown[0] = kx
-                                shown[1] = ky
-                                knobOffset = Offset(kx, ky)
-                            }
-
-                            val deadzone = maxDragDistance * 0.20f
-                            if (clampedDist < deadzone) {
-                                updateKeys(false, false, false, false)
-                                setSprint(false)
-                            } else {
-                                val deg = Math.toDegrees(angleRad)
-                                val w = deg in -157.5..-22.5
-                                val s = deg in 22.5..157.5
-                                val d = deg in -67.5..67.5
-                                val a = deg !in -112.5..112.5
-
-                                updateKeys(w, a, s, d)
-                                // Kunci lari: sampai tepi lingkaran sambil maju; berhenti saat tidak maju lagi.
-                                // Bila lari otomatis dimatikan di editor, joystick tidak pernah menahan Ctrl.
-                                if (!w || !autoSprint) {
-                                    setSprint(false)
-                                } else if (dist >= radiusPx * 0.98f) {
-                                    setSprint(true)
-                                }
-                            }
-                        }
-
-                        processPosition(down.position)
+                        logic.begin(
+                            down.position.x, down.position.y,
+                            size.width / 2f, size.height / 2f,
+                            radiusPx, maxDragDistance
+                        )
+                        logic.update(down.position.x, down.position.y, autoSprint)
+                        applyLogic()
 
                         while (true) {
                             val event = awaitPointerEvent()
@@ -702,7 +685,8 @@ fun CustomVirtualJoystick(
                             if (!change.pressed) {
                                 break
                             }
-                            processPosition(change.position)
+                            logic.update(change.position.x, change.position.y, autoSprint)
+                            applyLogic()
                             change.consume()
                         }
                         releaseAll()

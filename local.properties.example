@@ -1,2 +1,6 @@
 ## Lokasi Android SDK (hanya perlu bila membangun di komputer sendiri)
 sdk.dir=C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
+
+## Kunci API CurseForge (opsional, hanya untuk build di komputer sendiri). Jangan dimasukkan ke repo.
+## Di GitHub Actions, pakai Secrets bernama CURSEFORGE_API_KEY.
+#curseforge.api.key=

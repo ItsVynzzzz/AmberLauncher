@@ -39,7 +39,8 @@ private data class MrpackFileEntry(
 object NuxModManager {
 
     private val gson = Gson()
-    private val httpClient = OkHttpClient.Builder()
+    // Dipakai juga oleh CurseForgeApi (satu klien, satu kolam sambungan)
+    internal val httpClient = OkHttpClient.Builder()
         .dns(com.israadev.nuxlauncher.core.network.NuxDns)
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
@@ -48,11 +49,15 @@ object NuxModManager {
         .followSslRedirects(false)
         .build()
 
-    private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
+    internal const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
 
     /** Batas total isi yang boleh diekstrak dari satu modpack (cegah arsip "bom" yang memenuhi penyimpanan). */
     private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
+
+    /** Sumber unduhan di layar Mod. */
+    const val SOURCE_MODRINTH = "modrinth"
+    const val SOURCE_CURSEFORGE = "curseforge"
 
     /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
     private const val SUPPORTED_LOADER = "fabric"
@@ -62,7 +67,7 @@ object NuxModManager {
      * Loader yang dipakai untuk menyaring mod dan modpack. Instance Vanilla (atau tanpa instance)
      * ikut disaring ke loader yang didukung, supaya pengguna tidak memasang mod Forge yang pasti gagal.
      */
-    private fun effectiveLoader(instance: Instance?): String {
+    internal fun effectiveLoader(instance: Instance?): String {
         val loader = instance?.loader?.trim()?.lowercase().orEmpty()
         return if (loader.isEmpty() || loader == "vanilla") SUPPORTED_LOADER else loader
     }
@@ -422,8 +427,21 @@ object NuxModManager {
         page: Int = 1,
         limit: Int = 18,
         sortIndex: String = "relevance",
-        filterByLoader: Boolean = true
+        filterByLoader: Boolean = true,
+        source: String = SOURCE_MODRINTH
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
+        if (source == SOURCE_CURSEFORGE) {
+            return@withContext CurseForgeApi.search(
+                queryText = query,
+                itemType = itemType,
+                instance = instance,
+                filterByGameVersion = filterByGameVersion,
+                page = page,
+                limit = limit,
+                sortIndex = sortIndex,
+                filterByLoader = filterByLoader
+            )
+        }
         try {
             val facets = mutableListOf<List<String>>()
 
@@ -488,6 +506,9 @@ object NuxModManager {
      * Mengambil detail lengkap suatu project dari Modrinth
      */
     suspend fun getProjectDetails(projectId: String): Result<ModrinthProject> = withContext(Dispatchers.IO) {
+        if (CurseForgeMapper.isCurseForgeId(projectId)) {
+            return@withContext CurseForgeApi.projectDetails(projectId)
+        }
         try {
             val url = "$MODRINTH_API_BASE/project/$projectId"
             val request = Request.Builder()
@@ -542,6 +563,9 @@ object NuxModManager {
         itemType: String,
         filterByGameVersion: Boolean = true
     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
+        if (CurseForgeMapper.isCurseForgeId(projectId)) {
+            return@withContext CurseForgeApi.compatibleVersions(projectId, instance, itemType, filterByGameVersion)
+        }
         val allVersResult = getProjectVersions(projectId)
         if (allVersResult.isFailure) return@withContext allVersResult
 
@@ -752,11 +776,15 @@ object NuxModManager {
             var skippedFiles = 0
             var failedFiles = 0
             var extractedBytes = 0L
+            // Catatan tambahan di pesan akhir (mis. mod CurseForge yang unduhannya ditutup penulis)
+            var packNote = ""
 
             ZipFile(mrpackFile).use { zip ->
                 // 1. Cari modrinth.index.json
                 val indexEntry = zip.getEntry("modrinth.index.json")
                     ?: zip.entries().asSequence().firstOrNull { it.name.endsWith("modrinth.index.json") }
+                // Bukan mrpack: mungkin modpack CurseForge (manifest.json di akar zip)
+                val cfPack = if (indexEntry == null) readCurseForgeManifest(zip) else null
 
                 if (indexEntry != null) {
                     val prefix = if (indexEntry.name.contains("/")) indexEntry.name.substringBeforeLast("/") + "/" else ""
@@ -867,6 +895,81 @@ object NuxModManager {
                             }
                         }
                     }
+                } else if (cfPack != null) {
+                    // Modpack CurseForge: daftar mod ada di manifest.json, isi tambahan di folder overrides/
+                    checkCurseForgePackCompatibility(cfPack, instance)
+                    if (cfPack.name.isNotBlank()) packTitle = cfPack.name
+                    packVersion = cfPack.version
+
+                    onProgress("Mencari alamat unduhan mod dari CurseForge...", 0, 0)
+                    val wanted = cfPack.files
+                    val resolved = CurseForgeApi.resolveFiles(wanted.map { it.fileId })
+                    val classIds = CurseForgeApi.classIdsOf(wanted.map { it.projectId })
+
+                    val totalFiles = wanted.size
+                    var currentIdx = 0
+                    var blockedFiles = 0
+                    for (packFile in wanted) {
+                        currentIdx++
+                        val info = resolved[packFile.fileId]
+                        val dlUrl = info?.url
+                        if (info == null || dlUrl == null) {
+                            // Penulis menutup unduhan lewat API (atau file sudah dihapus): dihormati, tidak dipaksa
+                            blockedFiles++
+                            skippedFiles++
+                            continue
+                        }
+                        val folder = CurseForgeMapper.folderFor(classIds[packFile.projectId], info.fileName)
+                        val relPath = folder + "/" + SafePaths.fileName(info.fileName)
+                        val targetFile = resolveModpackFile(gameDir, relPath)
+                        if (targetFile == null || !SafePaths.isAllowedModpackDownloadUrl(dlUrl)) {
+                            skippedFiles++
+                            android.util.Log.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
+                            continue
+                        }
+                        if (!targetFile.exists()) {
+                            targetFile.parentFile?.mkdirs()
+                            onProgress("Mengunduh mod ($currentIdx/$totalFiles): ${targetFile.name}...", currentIdx, totalFiles)
+                            try {
+                                downloadFile(dlUrl, targetFile)
+                                verifyHashes(targetFile, info.sha1?.let { mapOf("sha1" to it) })
+                                installedRelativeFiles.add(relPath)
+                            } catch (e: Exception) {
+                                failedFiles++
+                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: $dlUrl", e)
+                            }
+                        } else {
+                            installedRelativeFiles.add(relPath)
+                            onProgress("Mod sudah ada ($currentIdx/$totalFiles): ${targetFile.name}", currentIdx, totalFiles)
+                        }
+                    }
+                    if (blockedFiles > 0) {
+                        packNote = " $blockedFiles mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. " +
+                            "Pasang manual dari situs CurseForge bila perlu."
+                    }
+
+                    onProgress("Mengekstrak konfigurasi modpack...", totalFiles, totalFiles)
+                    val overridesPrefix = cfPack.overrides + "/"
+                    val overrideEntries = zip.entries()
+                    while (overrideEntries.hasMoreElements()) {
+                        val entry = overrideEntries.nextElement()
+                        val name = entry.name
+                        if (!name.startsWith(overridesPrefix)) continue
+                        val rel = name.removePrefix(overridesPrefix)
+                        if (rel.isBlank() || rel.startsWith("saves/")) continue
+                        val outFile = resolveModpackFile(gameDir, rel)
+                        if (outFile == null) {
+                            skippedFiles++
+                            android.util.Log.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
+                            continue
+                        }
+                        installedRelativeFiles.add(rel)
+                        if (entry.isDirectory) {
+                            outFile.mkdirs()
+                        } else {
+                            extractedBytes = extractZipEntry(zip, entry, outFile, extractedBytes)
+                        }
+                    }
                 } else {
                     // Fallback jika file zip modpack bukan standar Modrinth mrpack
                     // (misal zip kumpulan mod yang langsung berisi folder mods/ atau file .jar)
@@ -914,17 +1017,60 @@ object NuxModManager {
             } else {
                 "Selesai dengan catatan: $installedModCount mod terpasang, $problemCount file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang."
             }
-            onProgress(doneMessage, installedRelativeFiles.size, installedRelativeFiles.size)
+            onProgress(doneMessage + packNote, installedRelativeFiles.size, installedRelativeFiles.size)
         } catch (e: Exception) {
             android.util.Log.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
-            if (e is ModpackIncompatibleException) {
-                // Modpack ditolak: buang arsipnya supaya tidak tampil sebagai modpack yang terpasang
+            if (e is ModpackIncompatibleException || e is CurseForgeApi.KeyException) {
+                // Modpack ditolak (atau kunci CurseForge bermasalah): buang arsipnya supaya tidak tampil
+                // sebagai modpack yang terpasang
                 try {
                     mrpackFile.delete()
                 } catch (_: Exception) {
                 }
             }
             throw e
+        }
+    }
+
+    /** Membaca manifest.json di akar zip; null bila bukan modpack CurseForge. */
+    private fun readCurseForgeManifest(zip: ZipFile): CurseForgeMapper.PackManifest? {
+        val entry = zip.getEntry("manifest.json") ?: return null
+        return try {
+            zip.getInputStream(entry).bufferedReader().use { reader ->
+                val root = JsonParser.parseReader(reader)
+                if (root.isJsonObject) CurseForgeMapper.parseManifest(root.asJsonObject) else null
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Seperti [checkModpackCompatibility] tetapi untuk modpack CurseForge: loader dan versi Minecraft
+     * harus cocok dengan instance sebelum ada file yang diunduh.
+     */
+    private fun checkCurseForgePackCompatibility(pack: CurseForgeMapper.PackManifest, instance: Instance) {
+        val loader = pack.loader
+        if (loader == "quilt") {
+            throw ModpackIncompatibleException(
+                "Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge."
+            )
+        }
+        if ((loader == "forge" || loader == "fabric" || loader == "neoforge") &&
+            !instance.loader.equals(loader, ignoreCase = true)
+        ) {
+            val label = if (loader == "neoforge") "NeoForge" else loader.replaceFirstChar { it.uppercase() }
+            throw ModpackIncompatibleException(
+                "Modpack ini membutuhkan $label. " +
+                    "Buat instance $label dulu, lalu pasang modpack di instance itu."
+            )
+        }
+        val packMc = pack.minecraftVersion
+        if (packMc.isNotBlank() && instance.mcVersion.isNotBlank() && packMc != instance.mcVersion) {
+            throw ModpackIncompatibleException(
+                "Modpack ini untuk Minecraft $packMc, sedangkan instance ini memakai ${instance.mcVersion}. " +
+                    "Pilih atau buat instance dengan versi yang sama."
+            )
         }
     }
 

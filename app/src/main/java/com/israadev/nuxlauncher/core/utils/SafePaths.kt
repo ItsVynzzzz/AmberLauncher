@@ -47,12 +47,15 @@ object SafePaths {
         }
     }
 
-    /** Host yang dibolehkan Modrinth sebagai sumber berkas di dalam modpack. */
+    /** Host yang dibolehkan sebagai sumber berkas di dalam modpack (Modrinth dan CDN resmi CurseForge). */
     private val MODPACK_HOSTS = setOf(
         "cdn.modrinth.com",
         "github.com",
         "raw.githubusercontent.com",
-        "gitlab.com"
+        "gitlab.com",
+        "edge.forgecdn.net",
+        "mediafilez.forgecdn.net",
+        "media.forgecdn.net"
     )
 
     /** True bila [url] memakai https dan menuju salah satu host modpack yang dibolehkan. */

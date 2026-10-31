@@ -74,6 +74,9 @@ data class LauncherSettings(
     val homeAmbientEnabled: Boolean = false, // cahaya di sekitar kartu Beranda (hanya GIF/video)
     val homeAmbientIntensity: Int = 60, // 20 - 100
 
+    // Kunci API CurseForge milik pengguna (diisi dari layar Mod). Kosong = pakai kunci bawaan build bila ada.
+    val curseForgeApiKey: String = "",
+
     // Pembaruan aplikasi
     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
 

@@ -73,6 +73,13 @@ android {
             ?: "${baseVersionName()}.dev"
 
 
+        // Kunci API CurseForge untuk unduhan di layar Mod. Tidak disimpan di repo: diambil dari variabel
+        // lingkungan CURSEFORGE_API_KEY (GitHub Actions Secrets) atau local.properties (curseforge.api.key).
+        // Kosong = CurseForge tetap aktif, tetapi pengguna mengisi kuncinya sendiri di aplikasi.
+        val curseForgeApiKey = (System.getenv("CURSEFORGE_API_KEY") ?: localProperties.getProperty("curseforge.api.key") ?: "")
+            .filter { !it.isWhitespace() && it != '"' && it != '\\' }
+        buildConfigField("String", "CURSEFORGE_API_KEY", "\"" + curseForgeApiKey + "\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

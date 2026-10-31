@@ -42,8 +42,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
+import com.israadev.nuxlauncher.core.mods.CurseForgeApi
 import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.mods.WorldInfo
+import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.components.*
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.NuxColors
@@ -206,6 +208,12 @@ fun ModsScreen(
     var filterByGameVersion by remember { mutableStateOf(true) }
     var filterByLoader by remember { mutableStateOf(true) }
     var selectedSort by remember { mutableStateOf("relevance") }
+    // Sumber unduhan: Modrinth atau CurseForge (butuh kunci API; lihat CurseForgeApi)
+    var browseSource by remember { mutableStateOf(NuxModManager.SOURCE_MODRINTH) }
+    var showKeyDialog by remember { mutableStateOf(false) }
+    var keyProblem by remember { mutableStateOf(false) }
+    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE
+    val sourceLabel = if (isCurseForge) "CurseForge" else "Modrinth"
     var showCategoryMenu by remember { mutableStateOf(false) }
     var showVersionMenu by remember { mutableStateOf(false) }
     var showLoaderMenu by remember { mutableStateOf(false) }
@@ -258,6 +266,8 @@ fun ModsScreen(
         val inst = selectedInstance ?: return
         isSearching = true
         searchErrorMessage = null
+        keyProblem = false
+        val source = browseSource
         scope.launch {
             val cat = if (selectedCategory == "Semua") null else selectedCategory
             val res = NuxModManager.searchProjects(
@@ -268,7 +278,8 @@ fun ModsScreen(
                 filterByGameVersion = filterByGameVersion,
                 page = page,
                 sortIndex = selectedSort,
-                filterByLoader = filterByLoader
+                filterByLoader = filterByLoader,
+                source = source
             )
             if (res.isSuccess) {
                 val data = res.getOrNull()
@@ -279,14 +290,17 @@ fun ModsScreen(
             } else {
                 searchHits = emptyList()
                 totalHits = 0
-                searchErrorMessage = res.exceptionOrNull()?.message ?: "Gagal terhubung ke Modrinth"
+                val failure = res.exceptionOrNull()
+                keyProblem = failure is CurseForgeApi.KeyException
+                searchErrorMessage = failure?.message
+                    ?: "Gagal terhubung ke ${if (source == NuxModManager.SOURCE_CURSEFORGE) "CurseForge" else "Modrinth"}"
             }
             isSearching = false
         }
     }
 
     // Trigger reload when tab, type, world or instance changes
-    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort) {
+    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource) {
         if (selectedInstance != null) {
             reloadWorlds()
             reloadInstalled()
@@ -471,7 +485,13 @@ fun ModsScreen(
             val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
             val compList = vRes.getOrNull()
             if (compList.isNullOrEmpty()) {
-                Toast.makeText(context, "Tidak ada versi cocok untuk ${inst.mcVersion}!", Toast.LENGTH_SHORT).show()
+                val failure = vRes.exceptionOrNull()
+                if (failure is CurseForgeApi.KeyException) showKeyDialog = true
+                Toast.makeText(
+                    context,
+                    failure?.message ?: "Tidak ada versi cocok untuk ${inst.mcVersion}!",
+                    Toast.LENGTH_LONG
+                ).show()
                 downloadingProjectIds = downloadingProjectIds - hit.projectId
                 return@launch
             }
@@ -578,9 +598,19 @@ fun ModsScreen(
             )
             if (mainMode == "browse") {
                 ModsSourcePill(
-                    curseForgeLocked = CURSEFORGE_LOCKED,
-                    onCurseForgeClick = {
-                        Toast.makeText(context, "CurseForge belum tersedia di versi ini", Toast.LENGTH_SHORT).show()
+                    selectedSource = browseSource,
+                    onSelect = { src ->
+                        if (src != browseSource) {
+                            if (src == NuxModManager.SOURCE_CURSEFORGE && !CurseForgeApi.isConfigured()) {
+                                // Belum ada kunci API: minta pengguna mengisinya dulu
+                                showKeyDialog = true
+                            } else {
+                                browseSource = src
+                                selectedCategory = "Semua"
+                                selectedSort = "relevance"
+                                currentPage = 1
+                            }
+                        }
                     }
                 )
             } else {
@@ -617,7 +647,8 @@ fun ModsScreen(
         val currentInst = selectedInstance!!
         val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
         val selectedCategoryLabel = categories.firstOrNull { it.id == selectedCategory }?.label ?: "Semua"
-        val selectedSortLabel = MODS_SORT_OPTIONS.firstOrNull { it.first == selectedSort }?.second ?: "Relevansi"
+        val sortOptions = if (isCurseForge) MODS_SORT_OPTIONS_CF else MODS_SORT_OPTIONS
+        val selectedSortLabel = sortOptions.firstOrNull { it.first == selectedSort }?.second ?: "Relevansi"
 
         // =========================================================================
         // ISI: rel jenis addon di kiri, filter + daftar di kanan
@@ -684,11 +715,14 @@ fun ModsScreen(
                         }
 
                         if (mainMode == "browse") {
-                            AmberFilterPill(
-                                label = "Kategori",
-                                value = modsPlainLabel(selectedCategoryLabel),
-                                onClick = { showCategoryMenu = true }
-                            )
+                            // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
+                            if (!isCurseForge) {
+                                AmberFilterPill(
+                                    label = "Kategori",
+                                    value = modsPlainLabel(selectedCategoryLabel),
+                                    onClick = { showCategoryMenu = true }
+                                )
+                            }
                             AmberFilterPill(
                                 label = "Versi",
                                 value = if (filterByGameVersion) "Auto" else "Semua",
@@ -761,15 +795,17 @@ fun ModsScreen(
                     // JELAJAH MODRINTH
                     // ==========================================
                     if (isSearching) {
-                        ModsLoading(text = "Memuat data dari Modrinth...")
+                        ModsLoading(text = "Memuat data dari $sourceLabel...")
                     } else if (searchErrorMessage != null) {
                         ModsMessage(
                             icon = Icons.Outlined.CloudOff,
                             iconTint = NuxColors.ErrorRed,
-                            title = "Gagal memuat dari Modrinth",
+                            title = "Gagal memuat dari $sourceLabel",
                             subtitle = searchErrorMessage ?: "Terjadi kesalahan jaringan",
-                            actionLabel = "Coba lagi",
-                            onAction = { performSearch(currentPage) }
+                            actionLabel = if (keyProblem) "Ubah kunci API" else "Coba lagi",
+                            onAction = {
+                                if (keyProblem) showKeyDialog = true else performSearch(currentPage)
+                            }
                         )
                     } else if (searchHits.isEmpty()) {
                         ModsMessage(
@@ -922,7 +958,7 @@ fun ModsScreen(
     if (showSortMenu) {
         AmberPickerDialog(
             title = "Urutkan",
-            options = MODS_SORT_OPTIONS,
+            options = if (isCurseForge) MODS_SORT_OPTIONS_CF else MODS_SORT_OPTIONS,
             selectedId = selectedSort,
             onPick = { id ->
                 selectedSort = id
@@ -930,6 +966,38 @@ fun ModsScreen(
                 showSortMenu = false
             },
             onDismiss = { showSortMenu = false }
+        )
+    }
+    // --- KUNCI API CURSEFORGE ---
+    if (showKeyDialog) {
+        CurseForgeKeyDialog(
+            hasOwnKey = SettingsManager.settings.value.curseForgeApiKey.isNotBlank(),
+            onDismiss = { showKeyDialog = false },
+            onSave = { key ->
+                val cleaned = key.trim()
+                SettingsManager.updateSettings(
+                    context,
+                    SettingsManager.settings.value.copy(curseForgeApiKey = cleaned)
+                )
+                showKeyDialog = false
+                keyProblem = false
+                if (CurseForgeApi.isConfigured()) {
+                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE) {
+                        // Berganti sumber memicu pencarian otomatis (LaunchedEffect di atas)
+                        browseSource = NuxModManager.SOURCE_CURSEFORGE
+                        selectedCategory = "Semua"
+                        selectedSort = "relevance"
+                        currentPage = 1
+                    } else {
+                        performSearch(1)
+                    }
+                } else if (browseSource == NuxModManager.SOURCE_CURSEFORGE) {
+                    // Kunci dihapus dan tidak ada kunci bawaan: kembali ke Modrinth
+                    browseSource = NuxModManager.SOURCE_MODRINTH
+                    selectedSort = "relevance"
+                    currentPage = 1
+                }
+            }
         )
     }
     // --- DIALOG HAPUS ---
@@ -1237,9 +1305,6 @@ private fun ModsIconButton(
 // TAMPILAN BARU LAYAR MOD (kaca gelap dengan aksen biru, semua bentuk pil)
 // =============================================================================
 
-/** Sumber unduhan CurseForge dikunci sampai kunci API tersedia. Ubah ke false bila sudah siap dipakai. */
-private const val CURSEFORGE_LOCKED = true
-
 private val MODS_TYPE_ITEMS = listOf(
     Triple("modpacks", "Modpack", Icons.Outlined.Layers),
     Triple("mods", "Mod", Icons.Outlined.ViewInAr),
@@ -1253,6 +1318,14 @@ private val MODS_SORT_OPTIONS = listOf(
     "downloads" to "Unduhan",
     "follows" to "Pengikut",
     "newest" to "Terbaru",
+    "updated" to "Diperbarui"
+)
+
+/** Pilihan urutan CurseForge (tidak punya "pengikut"; "Populer" memakai peringkat popularitasnya). */
+private val MODS_SORT_OPTIONS_CF = listOf(
+    "relevance" to "Relevansi",
+    "downloads" to "Unduhan",
+    "follows" to "Populer",
     "updated" to "Diperbarui"
 )
 
@@ -1310,11 +1383,11 @@ private fun modsTagsFor(hit: ModrinthSearchHit): List<String> {
     return topics.take(2).map { modsCategoryTag(it) } + loaders.take(2).map { modsLoaderTag(it) }
 }
 
-/** Pil sumber: Modrinth (aktif) dan CurseForge (terkunci sampai ada kunci API). */
+/** Pil sumber unduhan: Modrinth atau CurseForge. Yang dipilih tampil menonjol. */
 @Composable
 private fun ModsSourcePill(
-    curseForgeLocked: Boolean,
-    onCurseForgeClick: () -> Unit
+    selectedSource: String,
+    onSelect: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -1325,64 +1398,144 @@ private fun ModsSourcePill(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Modrinth: satu-satunya sumber yang aktif saat ini
-        Row(
-            modifier = Modifier
-                .height(40.dp)
-                .clip(CircleShape)
-                .background(AmberUi.SurfaceRaised, CircleShape)
-                .border(1.dp, AmberUi.BorderStrong, CircleShape)
-                .padding(horizontal = 14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth),
-                contentDescription = null,
-                tint = AmberUi.Text,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Modrinth",
-                color = AmberUi.Text,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp,
-                maxLines = 1
-            )
-        }
+        ModsSourceChip(
+            selected = selectedSource == NuxModManager.SOURCE_MODRINTH,
+            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth,
+            iconSize = 20.dp,
+            label = "Modrinth",
+            onClick = { onSelect(NuxModManager.SOURCE_MODRINTH) }
+        )
+        ModsSourceChip(
+            selected = selectedSource == NuxModManager.SOURCE_CURSEFORGE,
+            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_curseforge,
+            iconSize = 18.dp,
+            label = "CurseForge",
+            onClick = { onSelect(NuxModManager.SOURCE_CURSEFORGE) }
+        )
+    }
+}
 
-        // CurseForge: dikunci (pudar + ikon gembok), ketuk = pesan penjelasan
-        Row(
+@Composable
+private fun ModsSourceChip(
+    selected: Boolean,
+    iconRes: Int,
+    iconSize: androidx.compose.ui.unit.Dp,
+    label: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .height(40.dp)
+            .clip(CircleShape)
+            .then(
+                if (selected) {
+                    Modifier
+                        .background(AmberUi.SurfaceRaised, CircleShape)
+                        .border(1.dp, AmberUi.BorderStrong, CircleShape)
+                } else {
+                    Modifier
+                }
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            tint = AmberUi.Text,
+            modifier = Modifier.size(iconSize)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            color = if (selected) AmberUi.Text else AmberUi.TextDim,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 15.sp,
+            maxLines = 1
+        )
+    }
+}
+
+/**
+ * Isian kunci API CurseForge. Kunci disimpan hanya di HP ini (pengaturan launcher) dan hanya dikirim
+ * ke api.curseforge.com. Dipakai bila build ini tidak membawa kunci sendiri.
+ */
+@Composable
+private fun CurseForgeKeyDialog(
+    hasOwnKey: Boolean,
+    onDismiss: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var text by remember { mutableStateOf("") }
+    NuxDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier
+            .fillMaxWidth(0.7f)
+            .wrapContentHeight(),
+        compact = true
+    ) {
+        Column(
             modifier = Modifier
-                .height(40.dp)
-                .alpha(if (curseForgeLocked) 0.5f else 1f)
-                .clip(CircleShape)
-                .clickable { onCurseForgeClick() }
-                .padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            Icon(
-                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_curseforge),
-                contentDescription = null,
-                tint = AmberUi.Text,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "CurseForge",
-                color = AmberUi.Text,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp,
-                maxLines = 1
+                text = "Kunci API CurseForge",
+                fontWeight = FontWeight.Black,
+                fontSize = 16.sp,
+                color = NuxColors.DarkGray
             )
-            if (curseForgeLocked) {
-                Spacer(modifier = Modifier.width(6.dp))
-                Icon(
-                    imageVector = Icons.Outlined.Lock,
-                    contentDescription = "Terkunci",
-                    tint = AmberUi.Text,
-                    modifier = Modifier.size(14.dp)
-                )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = if (hasOwnKey) {
+                    "Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini."
+                } else {
+                    "CurseForge butuh kunci API. Tempel kunci dari email CurseForge. " +
+                        "Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge."
+                },
+                fontSize = 12.sp,
+                lineHeight = 17.sp,
+                color = NuxColors.GrayNeutral
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            NuxTextField(
+                value = text,
+                onValueChange = { text = it },
+                placeholder = "Tempel kunci di sini",
+                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+            )
+            Spacer(modifier = Modifier.height(14.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                NuxButton(
+                    onClick = onDismiss,
+                    backgroundColor = Color.Transparent,
+                    cornerRadius = 20.dp,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                }
+                if (hasOwnKey) {
+                    NuxButton(
+                        onClick = { onSave("") },
+                        backgroundColor = Color.Transparent,
+                        cornerRadius = 20.dp,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Hapus", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                }
+                NuxButton(
+                    onClick = { if (text.isNotBlank()) onSave(text) },
+                    enabled = text.isNotBlank(),
+                    cornerRadius = 20.dp,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Simpan", fontWeight = FontWeight.Black, fontSize = 13.sp)
+                }
             }
         }
     }

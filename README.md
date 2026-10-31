@@ -37,8 +37,9 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
 - **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).
 - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
+- **Unduhan CurseForge**: di layar Mod, pilih sumber **CurseForge** di samping Modrinth untuk mencari dan memasang mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensi wajib. Mod yang penulisnya melarang unduhan lewat aplikasi pihak ketiga tidak dipaksa diunduh; launcher memberi tahu supaya mod itu diunduh manual dari situs CurseForge. CurseForge butuh kunci API: bila build ini tidak membawa kunci, launcher meminta pengguna menempelkan kuncinya sendiri (disimpan hanya di HP). Cara memasang kunci di build GitHub ada di bagian *Kunci API CurseForge* di bawah.
 
-Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt, serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
+Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt.
 
 > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
 
@@ -86,6 +87,10 @@ Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder diper
 3. Ambil APK dari **Releases** atau artifact hasil build.
 
 Fork tanpa kunci tanda tangan sendiri menghasilkan APK bertanda tangan kunci debug, cukup untuk dicoba tetapi jangan dibagikan sebagai rilis. Untuk membagikannya, buat kunci pribadi lalu isi Secrets `AMBER_KEYSTORE_BASE64` (isi keystore PKCS12, alias `amber`, dalam base64) dan `AMBER_KEYSTORE_PASSWORD`. Kunci itu harus dicadangkan di tempat aman: bila hilang, pengguna tidak bisa memperbarui aplikasi dan harus memasang ulang.
+
+### Kunci API CurseForge
+
+Kunci tidak disimpan di repo. Untuk membawanya di build GitHub, buat Secret `CURSEFORGE_API_KEY` (Settings > Secrets and variables > Actions), lalu tambahkan baris `CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}` ke blok `env:` langkah build di `.github/workflows/build-apk.yml` (langkah *Build APK release* dan langkah APK 32-bit). Untuk build di komputer sendiri, isi `curseforge.api.key` di `local.properties` (lihat `local.properties.example`). Tanpa kunci di build, pengguna bisa menempelkan kunci milik mereka sendiri di layar Mod. Kunci yang ikut dibuild berada di dalam APK, jadi perlakukan sebagai kunci aplikasi (bukan rahasia mutlak) dan cabut lewat CurseForge bila disalahgunakan.
 
 ### Lewat Android Studio / Gradle
 

@@ -47,7 +47,9 @@ object UpdateInstaller {
     fun cleanup(context: Context, installed: AppVersion) {
         val dir = updatesDir(context)
         val files = dir.listFiles() ?: return
-        val pattern = Regex("""^AmberLauncher-(.+?)(?:-32bit)?\.apk(\.part)?$""")
+        // Nama lama (AmberLauncher-0.1.0-beta.7.apk, ...-32bit.apk) dan nama rilis sekarang
+        // (AmberLauncher-0.1.0-beta.7-64bit-arm64-v8a-RECOMMENDED.apk, ...-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk).
+        val pattern = Regex("""^AmberLauncher-(.+?)(?:-(?:32|64)bit[A-Za-z0-9_-]*)?\.apk(\.part)?$""")
         val now = System.currentTimeMillis()
         for (f in files) {
             if (!f.isFile) continue

@@ -2,14 +2,32 @@ package com.israadev.nuxlauncher.core.network
 
 import android.util.Log
 import com.google.gson.JsonParser
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import okhttp3.Dns
 import java.net.HttpURLConnection
 import java.net.InetAddress
 import java.net.URL
 import java.net.UnknownHostException
+import java.util.concurrent.ConcurrentHashMap
 
 object NuxDns : Dns {
     private const val TAG = "NuxDns"
+
+    // Unduhan berjalan paralel; saat jaringan putus, satu alamat yang sama gagal puluhan kali.
+    // Buku harian launcher cukup menerima satu peringatan per alamat tiap setengah menit.
+    private const val WARN_INTERVAL_MS = 30_000L
+    private val lastWarn = ConcurrentHashMap<String, Long>()
+
+    private fun warnLimited(key: String, msg: String) {
+        val now = System.currentTimeMillis()
+        val prev = lastWarn[key]
+        if (prev == null || now - prev >= WARN_INTERVAL_MS) {
+            lastWarn[key] = now
+            LauncherLog.w(TAG, msg)
+        } else {
+            Log.w(TAG, msg)
+        }
+    }
 
     // Cloudflare edge Anycast IPs for Modrinth API and CDN
     private val MODRINTH_IPS = listOf(
@@ -32,7 +50,7 @@ object NuxDns : Dns {
                 return systemAddresses
             }
         } catch (e: Exception) {
-            Log.w(TAG, "System DNS lookup failed for $hostname: ${e.message}, falling back")
+            warnLimited("sys:$hostname", "System DNS lookup failed for $hostname: ${e.message}, falling back")
         }
 
         // 2. Direct Cloudflare IP fallback for Modrinth domains
@@ -62,7 +80,7 @@ object NuxDns : Dns {
                 return dohAddresses
             }
         } catch (e: Exception) {
-            Log.w(TAG, "DoH lookup failed for $hostname: ${e.message}")
+            warnLimited("doh:$hostname", "DoH lookup failed for $hostname: ${e.message}")
         }
 
         // If all fallbacks fail, throw UnknownHostException as per OkHttp Dns contract

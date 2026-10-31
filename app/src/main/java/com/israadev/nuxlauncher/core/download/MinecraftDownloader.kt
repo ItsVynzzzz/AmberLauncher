@@ -2,6 +2,7 @@ package com.israadev.nuxlauncher.core.download
 
 import android.content.Context
 import com.google.gson.Gson
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.AssetIndexContent
@@ -32,6 +33,11 @@ class MinecraftDownloader(
     clientOverride: OkHttpClient? = null,
     private val gson: Gson = Gson()
 ) {
+    private companion object {
+        /** Batas baris galat per jenis unduhan di buku harian, supaya jaringan putus tidak membanjiri log. */
+        const val MAX_LOGGED_FAILURES = 30
+    }
+
     private val client: OkHttpClient = clientOverride ?: OkHttpClient.Builder()
         .dispatcher(okhttp3.Dispatcher().apply {
             maxRequests = 128
@@ -45,7 +51,25 @@ class MinecraftDownloader(
         .retryOnConnectionFailure(true)
         .build()
 
+    /** Mengunduh instance; awal, hasil, dan galatnya dicatat di buku harian launcher ([LauncherLog]). */
     suspend fun downloadInstance(
+        instance: Instance,
+        onProgress: (Float, String) -> Unit
+    ): Result<Unit> {
+        LauncherLog.event("Unduhan", "Mulai mengunduh ${instance.name} (Minecraft ${instance.mcVersion}, loader=${instance.loader})")
+        val result = downloadInstanceInternal(instance, onProgress)
+        val err = result.exceptionOrNull()
+        if (err == null) {
+            LauncherLog.event("Unduhan", "Unduhan ${instance.name} selesai")
+        } else if (err is java.util.concurrent.CancellationException) {
+            LauncherLog.event("Unduhan", "Unduhan ${instance.name} dibatalkan")
+        } else {
+            LauncherLog.e("Unduhan", "Unduhan ${instance.name} gagal: ${err.message}", err)
+        }
+        return result
+    }
+
+    private suspend fun downloadInstanceInternal(
         instance: Instance,
         onProgress: (Float, String) -> Unit
     ): Result<Unit> = withContext(Dispatchers.IO) {
@@ -104,6 +128,7 @@ class MinecraftDownloader(
             val totalLibs = allowedLibs.size
             if (totalLibs > 0) {
                 val downloadedLibs = AtomicInteger(0)
+                val failedLibs = AtomicInteger(0)
                 val semaphore = Semaphore(libThreads)
 
                 val libJobs = allowedLibs.map { lib ->
@@ -122,6 +147,9 @@ class MinecraftDownloader(
                                         downloadFile(artifact.url, targetFile, expectedSize, expectedSha1 = artifact.sha1)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
+                                        if (failedLibs.incrementAndGet() <= MAX_LOGGED_FAILURES) {
+                                            LauncherLog.w("Unduhan", "Library gagal: ${artifact.path}: ${e.message}")
+                                        }
                                     }
                                 }
                             }
@@ -132,6 +160,9 @@ class MinecraftDownloader(
                     }
                 }
                 libJobs.awaitAll()
+                if (failedLibs.get() > 0) {
+                    LauncherLog.w("Unduhan", "${failedLibs.get()} dari $totalLibs library gagal diunduh (game bisa gagal dimulai)")
+                }
             }
 
             // 4. Download Asset Index
@@ -155,6 +186,7 @@ class MinecraftDownloader(
                         val objectsDir = File(assetsDir, "objects")
 
                         val downloadedAssets = AtomicInteger(0)
+                        val failedAssets = AtomicInteger(0)
                         val assetThreads = 24
                         val semaphore = Semaphore(assetThreads)
 
@@ -172,7 +204,11 @@ class MinecraftDownloader(
                                             val objUrl = "https://resources.download.minecraft.net/$prefix/$hash"
                                             try {
                                                 downloadFile(objUrl, targetObj, expectedSize, expectedSha1 = hash)
-                                            } catch (_: Exception) {}
+                                            } catch (e: Exception) {
+                                                if (failedAssets.incrementAndGet() <= MAX_LOGGED_FAILURES) {
+                                                    LauncherLog.w("Unduhan", "Aset gagal: $hash: ${e.message}")
+                                                }
+                                            }
                                         }
                                     }
                                     val count = downloadedAssets.incrementAndGet()
@@ -182,8 +218,12 @@ class MinecraftDownloader(
                             }
                         }
                         assetJobs.awaitAll()
+                        if (failedAssets.get() > 0) {
+                            LauncherLog.w("Unduhan", "${failedAssets.get()} dari $totalObjects aset gagal diunduh (suara atau bahasa bisa hilang di game)")
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        LauncherLog.w("Unduhan", "Daftar aset tidak bisa diproses: ${e.message}", e)
                     }
                 }
             }
@@ -241,7 +281,7 @@ class MinecraftDownloader(
                                             } catch (_: Exception) {}
                                         }
                                         if (!success) {
-                                            android.util.Log.w("MinecraftDownloader", "Gagal mengunduh library Fabric: ${lib.name}")
+                                            LauncherLog.w("MinecraftDownloader", "Gagal mengunduh library Fabric: ${lib.name}")
                                         }
                                     }
                                 }

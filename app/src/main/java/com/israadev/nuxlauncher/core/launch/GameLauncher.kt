@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.israadev.nuxlauncher.GameActivity
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -34,12 +35,20 @@ object GameLauncher {
      * Bila pembaruan gagal atau terlalu lama, game tetap dijalankan dengan token yang ada.
      */
     fun launch(context: Context, instance: Instance, account: UserAccount) {
+        LauncherLog.event(
+            "Peluncuran",
+            "PLAY ditekan: instance=" + instance.name + ", Minecraft " + instance.mcVersion +
+                ", loader=" + instance.loader + " " + instance.loaderVersion + ", akun=" + account.safeAccountType
+        )
         if (!MicrosoftAuthService.needsRefresh(account)) {
             launchNow(context, instance, account)
             return
         }
         // Ketukan ganda pada tombol main tidak boleh memulai dua pembaruan sekaligus.
-        if (!refreshing.compareAndSet(false, true)) return
+        if (!refreshing.compareAndSet(false, true)) {
+            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: pembaruan sesi Microsoft masih berjalan")
+            return
+        }
 
         val appContext = context.applicationContext
         Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
@@ -56,8 +65,9 @@ object GameLauncher {
                 val fresh = result?.getOrNull()
                 if (fresh != null) {
                     launchAccount = fresh
+                    LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum main")
                 } else {
-                    android.util.Log.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}")
+                    LauncherLog.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
                     Toast.makeText(
                         appContext,
                         "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
@@ -65,7 +75,7 @@ object GameLauncher {
                     ).show()
                 }
             } catch (e: Exception) {
-                android.util.Log.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
+                LauncherLog.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
             } finally {
                 refreshing.set(false)
             }
@@ -74,6 +84,15 @@ object GameLauncher {
     }
 
     private fun launchNow(context: Context, instance: Instance, account: UserAccount) {
+        try {
+            launchPrepared(context, instance, account)
+        } catch (t: Throwable) {
+            LauncherLog.e("Peluncuran", "Persiapan ${instance.name} gagal sebelum game dimulai", t)
+            throw t
+        }
+    }
+
+    private fun launchPrepared(context: Context, instance: Instance, account: UserAccount) {
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
         val versionDir = File(InstanceManager.getVersionsDir(context), instance.mcVersion)
         val versionJson = File(versionDir, "${instance.mcVersion}.json")
@@ -91,8 +110,10 @@ object GameLauncher {
                 detail.assetIndex?.id?.let { assetIndexId = it }
                 mojangJavaMajor = detail.javaVersion?.majorVersion
             } catch (e: Exception) {
-                e.printStackTrace()
+                LauncherLog.w("Peluncuran", "Berkas versi ${versionJson.name} tidak terbaca: ${e.message}", e)
             }
+        } else {
+            LauncherLog.w("Peluncuran", "Berkas versi tidak ada: ${versionJson.absolutePath} (instance belum diunduh?)")
         }
 
         val isFabric = instance.loader.equals("fabric", ignoreCase = true)
@@ -181,6 +202,7 @@ object GameLauncher {
 
         // 2. Fabric Libraries
         val loaderArtifactKeys = mutableSetOf<String>()
+        val missingLibs = mutableListOf<String>()
         if (isFabric && fabricProfile != null) {
             fabricProfile.libraries.forEach { lib ->
                 if (lib.name.contains("org.lwjgl")) return@forEach
@@ -193,6 +215,8 @@ object GameLauncher {
                     val file = File(libDir, relPath)
                     if (file.exists()) {
                         classpathEntries.add(file.absolutePath)
+                    } else {
+                        missingLibs.add(relPath)
                     }
                 }
             }
@@ -225,6 +249,9 @@ object GameLauncher {
                 val file = File(libDir, path)
                 if (file.exists()) {
                     classpathEntries.add(file.absolutePath)
+                } else if (lib.rules == null) {
+                    // Library beraturan OS (mis. khusus Windows atau macOS) memang tidak diunduh di Android, jadi tidak dihitung.
+                    missingLibs.add(path)
                 }
             }
         }
@@ -233,6 +260,8 @@ object GameLauncher {
         val clientJar = File(versionDir, "${instance.mcVersion}.jar")
         if (clientJar.exists()) {
             classpathEntries.add(clientJar.absolutePath)
+        } else {
+            LauncherLog.w("Peluncuran", "Client Minecraft tidak ada: ${clientJar.absolutePath}")
         }
 
         val classpath = classpathEntries.distinct().joinToString(File.pathSeparator)
@@ -282,12 +311,26 @@ object GameLauncher {
                 if (port > 0) {
                     authlibJar = LwjglManager.prepareAuthLibInjector(context)
                     authlibUrl = "http://127.0.0.1:$port"
-                    android.util.Log.i("GameLauncher", "Mengaktifkan Offline Yggdrasil server pada port $port untuk ${account.username}")
+                    LauncherLog.i("GameLauncher", "Mengaktifkan Offline Yggdrasil server pada port $port untuk ${account.username}")
                 }
             }
         }
 
         val installedMods = com.israadev.nuxlauncher.core.crash.CrashManager.getInstalledMods(gameDir.absolutePath)
+
+        if (missingLibs.isNotEmpty()) {
+            LauncherLog.w(
+                "Peluncuran",
+                "${missingLibs.size} library wajib tidak ada di folder libraries (unduhan belum lengkap?): " +
+                    missingLibs.take(12).joinToString(", ") + (if (missingLibs.size > 12) ", ..." else "")
+            )
+        }
+        LauncherLog.event(
+            "Peluncuran",
+            "Memulai game: runtime=$runtimeName (terpasang=${com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.isRuntimeInstalled(context, runtimeName)}), " +
+                "LWJGL=$lwjglVersion, wrapper=$useWrapper, classpath=${classpathEntries.size} berkas, " +
+                "mainClass=$mainClass, mod=${installedMods.size}"
+        )
 
         val intent = Intent(context, GameActivity::class.java).apply {
             putExtra(GameActivity.EXTRA_INSTANCE_NAME, instance.name)

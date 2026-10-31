@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
 import android.os.Environment
+import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.update.UpdateChecker
@@ -22,15 +23,25 @@ import java.util.Properties
  * game dijalankan lagi (berkas log sesi berjalan selalu ditimpa) dan bisa dibagikan dengan satu ketukan
  * dari Pengaturan > Log game.
  *
- * Tiap berkas berisi ringkasan sesi (versi launcher, HP, instance, mod, shader) lalu log lengkapnya,
- * sudah tanpa token atau kata sandi. Disimpan saat game keluar; bila proses game dimatikan Android
- * sebelum sempat menyimpan, sesi itu disimpan pada peluncuran berikutnya atau saat Log game dibuka.
+ * Tiap berkas berisi ringkasan sesi (versi launcher, HP, instance, mod, shader), kejadian di dalam launcher
+ * sebelum dan selama sesi itu ([LauncherLog]), lalu log lengkapnya, sudah tanpa token atau kata sandi.
+ * Disimpan saat game keluar; bila proses game dimatikan Android sebelum sempat menyimpan, sesi itu
+ * disimpan pada peluncuran berikutnya atau saat Log game dibuka.
+ *
+ * Masalah yang terjadi di luar game (game belum sempat berjalan) tidak punya log game; untuk itu ada
+ * laporan launcher ([saveLauncherReport]) yang berisi ringkasan perangkat, kejadian launcher, dan
+ * peringatan sistem.
  *
  * Aman dipanggil dari proses game maupun proses launcher.
  */
 object GameLogArchive {
 
     private const val KEEP_COUNT = 10
+    private const val KEEP_LAUNCHER_COUNT = 3
+    private const val LAUNCHER_LOOKBACK_MS = 20L * 60L * 1000L
+    private const val MAX_LAUNCHER_BYTES = 160L * 1024L
+    private const val MAX_LAUNCHER_REPORT_BYTES = 320L * 1024L
+    private const val LOGCAT_LINES = 500
     private const val MAX_LOG_BYTES = 4L * 1024L * 1024L
     private const val HEAD_BYTES = 192L * 1024L
     private const val MAX_EXTRA_BYTES = 128L * 1024L
@@ -40,6 +51,9 @@ object GameLogArchive {
     private const val LOG_NAME = "latestlog.txt"
     private const val META_NAME = "last-session.properties"
     const val ARCHIVE_PREFIX = "amber-log_"
+
+    /** Pengganti nama instance pada nama berkas laporan launcher (tanda kurung tidak mungkin muncul dari nama instance). */
+    private const val LAUNCHER_TAG = "(launcher)"
 
     private const val KEY_START = "start"
     private const val KEY_INSTANCE = "instance"
@@ -61,6 +75,9 @@ object GameLogArchive {
             .listFiles { f -> f.isFile && f.name.startsWith(ARCHIVE_PREFIX) && f.name.endsWith(".txt") }
             ?.sortedByDescending { it.lastModified() }
             .orEmpty()
+
+    /** Apakah berkas ini laporan launcher (bukan log sesi game). */
+    fun isLauncherReport(file: File): Boolean = file.name.endsWith("_" + LAUNCHER_TAG + ".txt")
 
     /**
      * Pecah nama berkas menjadi (waktu, nama instance) untuk ditampilkan.
@@ -144,15 +161,45 @@ object GameLogArchive {
         return result
     }
 
+    /**
+     * Membuat laporan khusus launcher (tanpa game): ringkasan perangkat, instance, akun (hanya jenisnya),
+     * kejadian launcher, dan peringatan sistem. Untuk masalah yang muncul sebelum game dimulai.
+     * Jangan dipanggil dari thread utama (membaca logcat). Mengembalikan berkas laporan, atau null bila gagal.
+     */
+    fun saveLauncherReport(context: Context): File? {
+        return try {
+            val dir = logsDir(context)
+            if (!dir.exists()) dir.mkdirs()
+            val now = System.currentTimeMillis()
+            val out = File(dir, ARCHIVE_PREFIX + fileStamp(now) + "_" + LAUNCHER_TAG + ".txt")
+            val tmp = File(dir, out.name + ".tmp")
+            tmp.bufferedWriter(Charsets.UTF_8).use { w -> writeLauncherReport(context, w, now) }
+            if (out.exists()) out.delete()
+            if (tmp.renameTo(out)) {
+                prune(dir)
+                out
+            } else {
+                tmp.delete()
+                null
+            }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
     private fun prune(dir: File) {
         val all = dir.listFiles { f -> f.isFile && f.name.startsWith(ARCHIVE_PREFIX) } ?: return
-        all.sortedByDescending { it.lastModified() }.drop(KEEP_COUNT).forEach { it.delete() }
+        val sorted = all.sortedByDescending { it.lastModified() }
+        // Log game dan laporan launcher dihitung terpisah, supaya laporan launcher tidak menggeser log game.
+        sorted.filter { !isLauncherReport(it) }.drop(KEEP_COUNT).forEach { it.delete() }
+        sorted.filter { isLauncherReport(it) }.drop(KEEP_LAUNCHER_COUNT).forEach { it.delete() }
     }
 
     /** Menghapus semua log tersimpan. Mengembalikan jumlah berkas yang terhapus. */
     fun deleteAll(context: Context): Int {
         var n = 0
         list(context).forEach { if (it.delete()) n++ }
+        LauncherLog.clear(context)
         return n
     }
 
@@ -186,6 +233,11 @@ object GameLogArchive {
         } catch (_: Throwable) {
         }
 
+        // Kejadian di dalam launcher sebelum dan selama sesi ini (persiapan, unduhan, login, galat sebelum game)
+        w.section("Log launcher (sebelum dan selama sesi ini)")
+        val launcherText = LauncherLog.recentText(context, start - LAUNCHER_LOOKBACK_MS, MAX_LAUNCHER_BYTES)
+        if (launcherText.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, launcherText)
+
         if (gameDir.isNotBlank()) {
             writeModsAndShaders(w, File(gameDir))
         }
@@ -207,6 +259,77 @@ object GameLogArchive {
         w.section("Log peluncur dan game")
         writeMainLog(w, source)
         w.flush()
+    }
+
+    private fun writeLauncherReport(context: Context, w: Writer, now: Long) {
+        val clock = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+
+        w.line("===== AmberLauncher: laporan launcher =====")
+        w.line("Disimpan     : " + clock.format(Date(now)))
+        w.line("Launcher     : " + UpdateChecker.currentVersionName(context) + " (build " +
+            UpdateChecker.currentVersionCode(context) + ", " + (if (UpdateChecker.wants32BitApk()) "32-bit" else "64-bit") + ")")
+        w.line("Perangkat    : " + Build.MANUFACTURER + " " + Build.MODEL + ", Android " + Build.VERSION.RELEASE +
+            " (API " + Build.VERSION.SDK_INT + "), " + Build.SUPPORTED_ABIS.joinToString("/") + ", RAM " + totalRamMb(context) + " MB")
+        try {
+            val s = SettingsManager.settings.value
+            w.line("Pengaturan   : renderer=" + s.selectedRenderer + ", RAM game=" + s.ramMb + " MB, resolusi=" + s.resolutionRatio + "%")
+        } catch (_: Throwable) {
+        }
+        w.line("Penyimpanan  : " + storageText(context))
+
+        try {
+            val list = InstanceManager.instances.value
+            w.line("Instance     : " + list.size + " terdaftar")
+            for (inst in list.take(MAX_LISTED)) {
+                w.line("  " + inst.name + " | " + inst.mcVersion + " | " + inst.loader +
+                    (if (inst.loaderVersion.isNotBlank()) " " + inst.loaderVersion else "") +
+                    " | java=" + inst.javaRuntime + " | diunduh=" + yesNo(inst.isDownloaded))
+            }
+        } catch (_: Throwable) {
+            w.line("Instance     : (tidak tersedia)")
+        }
+        try {
+            val types = AccountManager.accounts.value.groupingBy { it.safeAccountType }.eachCount()
+            w.line("Akun         : " +
+                (if (types.isEmpty()) "belum ada" else types.entries.joinToString(", ") { it.key + " x" + it.value }))
+        } catch (_: Throwable) {
+            w.line("Akun         : (tidak tersedia)")
+        }
+
+        w.section("Kejadian di dalam launcher")
+        val events = LauncherLog.recentText(context, 0L, MAX_LAUNCHER_REPORT_BYTES)
+        if (events.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, events)
+
+        w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
+        val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
+        if (logcat.isBlank()) w.line("(tidak tersedia di HP ini atau kosong)") else writeLines(w, logcat.trimEnd('\n'))
+        w.flush()
+    }
+
+    private fun storageText(context: Context): String {
+        val allFiles = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) yesNo(Environment.isExternalStorageManager()) else "(tidak berlaku)"
+        } catch (_: Throwable) {
+            "?"
+        }
+        val nux = try {
+            InstanceManager.getNuxDir(context)
+        } catch (_: Throwable) {
+            null
+        }
+        val free = try {
+            sizeText(Environment.getExternalStorageDirectory().usableSpace)
+        } catch (_: Throwable) {
+            "?"
+        }
+        return "izin semua berkas=" + allFiles + ", folder data=" + (nux?.absolutePath ?: "?") +
+            " (ada=" + yesNo(nux?.exists()) + ", bisa ditulis=" + yesNo(nux?.canWrite()) + "), ruang kosong=" + free
+    }
+
+    private fun yesNo(value: Boolean?): String = when (value) {
+        null -> "?"
+        true -> "ya"
+        false -> "tidak"
     }
 
     private fun writeModsAndShaders(w: Writer, gameDir: File) {

@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.account.microsoft
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.UserAccount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -76,7 +77,7 @@ object MicrosoftAuthService {
             httpClient.newCall(request).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
-                    android.util.Log.w("MicrosoftAuth", "devicecode HTTP ${response.code}: $bodyStr")
+                    LauncherLog.w("MicrosoftAuth", "devicecode HTTP ${response.code}: $bodyStr")
                     return@withContext Result.failure(Exception("Gagal memulai login Microsoft (kode ${response.code}). Coba lagi nanti."))
                 }
 
@@ -255,7 +256,7 @@ object MicrosoftAuthService {
             }
 
             if (xblCode !in 200..299) {
-                android.util.Log.w("MicrosoftAuth", "XBL HTTP $xblCode: $xblBody")
+                LauncherLog.w("MicrosoftAuth", "XBL HTTP $xblCode: $xblBody")
                 if (xblCode == 429) {
                     return@withContext Result.failure(Exception("Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi."))
                 }
@@ -313,7 +314,7 @@ object MicrosoftAuthService {
                         "2148916237" -> return@withContext Result.failure(Exception("Batas waktu bermain harian Xbox Live telah tercapai."))
                         "2148916238" -> return@withContext Result.failure(Exception("Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua."))
                         else -> {
-                            android.util.Log.w("MicrosoftAuth", "XSTS HTTP ${response.code} XErr=$xErr: $bodyStr")
+                            LauncherLog.w("MicrosoftAuth", "XSTS HTTP ${response.code} XErr=$xErr: $bodyStr")
                             if (response.code == 429) {
                                 return@withContext Result.failure(Exception("Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi."))
                             }
@@ -350,7 +351,7 @@ object MicrosoftAuthService {
             httpClient.newCall(mojangReq).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
-                    android.util.Log.w("MicrosoftAuth", "login_with_xbox HTTP ${response.code}: $bodyStr")
+                    LauncherLog.w("MicrosoftAuth", "login_with_xbox HTTP ${response.code}: $bodyStr")
                     // Mojang hanya menerima aplikasi (Client ID) yang sudah terdaftar dan disetujui.
                     if (response.code == 403 && bodyStr.contains("Invalid app registration", ignoreCase = true)) {
                         return@withContext Result.failure(
@@ -393,7 +394,7 @@ object MicrosoftAuthService {
                     )
                 }
                 if (!response.isSuccessful) {
-                    android.util.Log.w("MicrosoftAuth", "profile HTTP ${response.code}: $bodyStr")
+                    LauncherLog.w("MicrosoftAuth", "profile HTTP ${response.code}: $bodyStr")
                     return@withContext Result.failure(Exception("Gagal mengambil profil Minecraft (kode ${response.code})."))
                 }
 
@@ -458,7 +459,7 @@ object MicrosoftAuthService {
             httpClient.newCall(request).execute().use { response ->
                 val bodyStr = response.body?.string() ?: ""
                 if (!response.isSuccessful) {
-                    android.util.Log.w("MicrosoftAuth", "refresh HTTP ${response.code}: $bodyStr")
+                    LauncherLog.w("MicrosoftAuth", "refresh HTTP ${response.code}: $bodyStr")
                     return@withContext Result.failure(Exception("Gagal memperbarui sesi Microsoft (kode ${response.code}). Silakan login ulang."))
                 }
                 val json = JsonParser.parseString(bodyStr).asJsonObject

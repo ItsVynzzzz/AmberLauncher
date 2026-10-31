@@ -1,7 +1,7 @@
 package com.israadev.nuxlauncher.core.game
 
 import android.content.Context
-import android.util.Log
+import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.ConcurrentHashMap

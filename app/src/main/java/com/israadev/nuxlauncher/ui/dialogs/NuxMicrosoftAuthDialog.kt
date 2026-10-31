@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -114,12 +115,14 @@ fun NuxMicrosoftAuthDialog(
 
                     mcAuthResult.fold(
                         onSuccess = { account ->
+                            LauncherLog.event("Login", "Login Microsoft berhasil")
                             withContext(Dispatchers.Main) {
                                 onSuccess(account)
                             }
                         },
                         onFailure = { err ->
                             if (err !is CancellationException && !isCancelled) {
+                                LauncherLog.w("Login", "Autentikasi Minecraft gagal: ${err.message}", err)
                                 withContext(Dispatchers.Main) {
                                     onError(err.message ?: "Gagal memproses autentikasi Minecraft.")
                                 }
@@ -129,6 +132,7 @@ fun NuxMicrosoftAuthDialog(
                 },
                 onFailure = { err ->
                     if (err !is CancellationException && !isCancelled) {
+                        LauncherLog.w("Login", "Otorisasi Microsoft gagal: ${err.message}", err)
                         withContext(Dispatchers.Main) {
                             onError(err.message ?: "Otorisasi Microsoft gagal.")
                         }

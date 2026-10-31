@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
+import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
 import org.json.JSONArray
 import org.json.JSONObject

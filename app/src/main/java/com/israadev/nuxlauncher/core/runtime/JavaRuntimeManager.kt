@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.runtime
 import android.content.Context
 import android.os.Build
 import android.system.Os
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
@@ -185,6 +186,7 @@ object JavaRuntimeManager {
             }
             destDir.mkdirs()
             val arch = getDeviceArch()
+            LauncherLog.event("Runtime", "Mengekstrak Java $runtimeName (arsitektur $arch) ke ${destDir.absolutePath}")
             val assetPath = "runtimes/$runtimeName"
 
             // 1. Unpack universal.tar.xz (libraries, modules, config) - 0% to 55%
@@ -203,7 +205,7 @@ object JavaRuntimeManager {
                     )
                 }
             } catch (e: Exception) {
-                android.util.Log.e("JavaRuntimeManager", "Gagal unpack universal.tar.xz: ${e.message}", e)
+                LauncherLog.e("JavaRuntimeManager", "Gagal unpack universal.tar.xz: ${e.message}", e)
                 throw e
             }
 
@@ -223,7 +225,7 @@ object JavaRuntimeManager {
                     )
                 }
             } catch (e: Exception) {
-                android.util.Log.e("JavaRuntimeManager", "Gagal unpack bin-$arch.tar.xz: ${e.message}", e)
+                LauncherLog.e("JavaRuntimeManager", "Gagal unpack bin-$arch.tar.xz: ${e.message}", e)
                 throw e
             }
 
@@ -247,12 +249,15 @@ object JavaRuntimeManager {
             }
 
             if (!isRuntimeInstalled(context, runtimeName)) {
+                LauncherLog.e("Runtime", "Verifikasi Java $runtimeName tidak lengkap setelah ekstraksi")
                 return@withContext Result.failure(Exception("Verifikasi OpenJDK $runtimeName tidak lengkap setelah ekstraksi."))
             }
 
             onProgress(1.0f, "Ekstraksi OpenJDK $runtimeName selesai!")
+            LauncherLog.event("Runtime", "Java $runtimeName siap dipakai")
             Result.success(destDir)
         } catch (e: Exception) {
+            LauncherLog.e("Runtime", "Ekstraksi Java $runtimeName gagal: ${e.message}", e)
             Result.failure(e)
         }
     }
@@ -300,10 +305,10 @@ object JavaRuntimeManager {
                 val process = pb.start()
                 val exitCode = process.waitFor()
                 if (exitCode != 0) {
-                    android.util.Log.w("JavaRuntimeManager", "unpack200 exit code $exitCode for ${packFile.name}")
+                    LauncherLog.w("JavaRuntimeManager", "unpack200 exit code $exitCode for ${packFile.name}")
                 }
             } catch (e: Exception) {
-                android.util.Log.e("JavaRuntimeManager", "Gagal unpack200 ${packFile.name}: ${e.message}", e)
+                LauncherLog.e("JavaRuntimeManager", "Gagal unpack200 ${packFile.name}: ${e.message}", e)
             }
         }
     }

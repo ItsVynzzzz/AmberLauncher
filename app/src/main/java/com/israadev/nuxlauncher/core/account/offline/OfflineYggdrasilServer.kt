@@ -1,6 +1,6 @@
 package com.israadev.nuxlauncher.core.account.offline
 
-import android.util.Log
+import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

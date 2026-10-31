@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.forge
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
 import com.israadev.nuxlauncher.core.fabric.FabricService
 import com.israadev.nuxlauncher.core.instance.InstanceManager
@@ -123,7 +124,7 @@ object ForgeInstaller {
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            android.util.Log.w(TAG, "Pemasangan ${flavor.displayName} gagal", e)
+            LauncherLog.w(TAG, "Pemasangan ${flavor.displayName} gagal", e)
             Result.failure(e)
         }
     }

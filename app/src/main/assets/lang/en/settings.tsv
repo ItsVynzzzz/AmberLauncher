@@ -121,6 +121,10 @@ Bagikan	Share
 Hapus semua log	Delete all logs
 Ketuk lagi untuk menghapus	Tap again to delete
 Log dihapus.	Logs deleted.
+Log launcher	Launcher log
+Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	What happens inside the launcher outside the game, such as downloads, sign-in and error messages. Share it if the problem appears before the game starts.
+Menyiapkan log...	Preparing log...
+Gagal menyiapkan log launcher.	Could not prepare the launcher log.
 Lokasi: {0}	Location: {0}
 Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Send it through WhatsApp, Telegram or Google Drive with the Share button, or take it straight from that folder with a file manager.
 Dukungan controller	Controller support

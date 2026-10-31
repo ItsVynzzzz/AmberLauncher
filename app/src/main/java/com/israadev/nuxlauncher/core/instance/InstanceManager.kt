@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.instance
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -131,7 +132,7 @@ object InstanceManager {
                     android.os.StrictMode.setVmPolicy(oldPolicy)
                 }
             } catch (e: Exception) {
-                android.util.Log.w("InstanceManager", "Failed to launch ZArchiver: ${e.message}")
+                LauncherLog.w("InstanceManager", "Failed to launch ZArchiver: ${e.message}")
             }
         }
 
@@ -148,7 +149,7 @@ object InstanceManager {
             context.startActivity(docIntent)
             return
         } catch (e: Exception) {
-            android.util.Log.w("InstanceManager", "Failed to launch DocumentsUI: ${e.message}")
+            LauncherLog.w("InstanceManager", "Failed to launch DocumentsUI: ${e.message}")
         }
 
         // 3. DocumentsUI alternate MIME
@@ -164,7 +165,7 @@ object InstanceManager {
             context.startActivity(docIntent)
             return
         } catch (e: Exception) {
-            android.util.Log.w("InstanceManager", "Failed to launch DocumentsUI vnd: ${e.message}")
+            LauncherLog.w("InstanceManager", "Failed to launch DocumentsUI vnd: ${e.message}")
         }
 
         // 4. FileProvider Chooser
@@ -184,7 +185,7 @@ object InstanceManager {
             context.startActivity(chooser)
             return
         } catch (e: Exception) {
-            android.util.Log.w("InstanceManager", "Failed to launch FileProvider: ${e.message}")
+            LauncherLog.w("InstanceManager", "Failed to launch FileProvider: ${e.message}")
         }
 
         // 5. Fallback: Copy to clipboard

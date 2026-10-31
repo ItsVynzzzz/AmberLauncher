@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
@@ -43,6 +45,8 @@ fun GameLogSettingsSection() {
     var loaded by remember { mutableStateOf(false) }
     var confirmClear by remember { mutableStateOf(false) }
     var reloadTick by remember { mutableIntStateOf(0) }
+    var preparing by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     // Sesi yang terputus (mis. game ditutup paksa oleh Android) disimpan dulu, lalu daftar dimuat.
     LaunchedEffect(reloadTick) {
@@ -63,7 +67,54 @@ fun GameLogSettingsSection() {
     )
     SettingDivider()
 
-    if (loaded && logs.isEmpty()) {
+    // Laporan khusus launcher: kejadian di luar game (unduhan, login, galat sebelum game dimulai)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 9.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        SettingRowText(
+            title = "Log launcher",
+            desc = "Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. " +
+                "Bagikan bila masalahnya muncul sebelum game dimulai.",
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        NuxButton(
+            onClick = {
+                if (!preparing) {
+                    preparing = true
+                    scope.launch {
+                        val report = withContext(Dispatchers.IO) { GameLogArchive.saveLauncherReport(context) }
+                        preparing = false
+                        if (report != null) {
+                            reloadTick += 1
+                            CrashUtils.shareLogFile(context, report, "Log launcher AmberLauncher", "Bagikan log launcher")
+                        } else {
+                            Toast.makeText(context, "Gagal menyiapkan log launcher.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            },
+            backgroundColor = Color.Transparent,
+            cornerRadius = 20.dp,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+        ) {
+            Text(
+                text = if (preparing) "Menyiapkan log..." else "Bagikan",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Black
+            )
+        }
+    }
+    SettingDivider()
+
+    val gameLogs = logs.filterNot { GameLogArchive.isLauncherReport(it) }
+    val launcherReports = logs.filter { GameLogArchive.isLauncherReport(it) }
+
+    if (loaded && gameLogs.isEmpty()) {
         Text(
             text = "Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.",
             color = NuxColors.GrayNeutral,
@@ -73,7 +124,7 @@ fun GameLogSettingsSection() {
         )
     }
 
-    logs.forEachIndexed { index, file ->
+    gameLogs.forEachIndexed { index, file ->
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,6 +143,38 @@ fun GameLogSettingsSection() {
                     CrashUtils.shareLogFile(context, file, "Log game AmberLauncher", "Bagikan log game")
                 },
                 backgroundColor = if (index == 0) AmberUi.Accent else Color.Transparent,
+                cornerRadius = 20.dp,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+            ) {
+                Text(
+                    text = "Bagikan",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Black
+                )
+            }
+        }
+        SettingDivider()
+    }
+
+    launcherReports.forEach { file ->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 9.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            SettingRowText(
+                title = "Log launcher",
+                desc = launcherSummary(file),
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            NuxButton(
+                onClick = {
+                    CrashUtils.shareLogFile(context, file, "Log launcher AmberLauncher", "Bagikan log launcher")
+                },
+                backgroundColor = Color.Transparent,
                 cornerRadius = 20.dp,
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
             ) {
@@ -163,12 +246,19 @@ fun GameLogSettingsSection() {
 /** Satu baris ringkas: waktu, nama instance, dan ukuran berkas. */
 private fun summary(file: File): String {
     val (time, name) = GameLogArchive.describe(file)
-    val bytes = file.length()
-    val size = when {
-        bytes >= 1024L * 1024L -> String.format(Locale.US, "%.1f MB", bytes / 1048576.0)
-        bytes >= 1024L -> (bytes / 1024L).toString() + " KB"
-        else -> bytes.toString() + " B"
-    }
+    val size = sizeLabel(file.length())
     val label = name.replace('_', ' ').trim()
     return if (label.isEmpty()) "$time - $size" else "$time - $label - $size"
+}
+
+/** Ringkasan laporan launcher: waktu dan ukuran berkas. */
+private fun launcherSummary(file: File): String {
+    val (time, _) = GameLogArchive.describe(file)
+    return "$time - " + sizeLabel(file.length())
+}
+
+private fun sizeLabel(bytes: Long): String = when {
+    bytes >= 1024L * 1024L -> String.format(Locale.US, "%.1f MB", bytes / 1048576.0)
+    bytes >= 1024L -> (bytes / 1024L).toString() + " KB"
+    else -> bytes.toString() + " B"
 }

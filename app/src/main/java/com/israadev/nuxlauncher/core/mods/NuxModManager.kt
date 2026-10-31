@@ -6,6 +6,7 @@ import android.provider.OpenableColumns
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.utils.SafePaths
@@ -645,7 +646,7 @@ object NuxModManager {
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("NuxModManager", "Gagal inspect ZIP: ${e.message}", e)
+            LauncherLog.e("NuxModManager", "Gagal inspect ZIP: ${e.message}", e)
             return "unknown"
         }
     }
@@ -821,7 +822,7 @@ object NuxModManager {
                                         !SafePaths.isAllowedModpackDownloadUrl(dlUrl)
                                     ) {
                                         skippedFiles++
-                                        android.util.Log.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
+                                        LauncherLog.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
                                         continue
                                     }
 
@@ -859,7 +860,7 @@ object NuxModManager {
                                 installedRelativeFiles.add(entry.relPath)
                             } catch (e: Exception) {
                                 failedFiles++
-                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: ${entry.url}", e)
+                                LauncherLog.e("NuxModManager", "Gagal unduh file modpack: ${entry.url}", e)
                             }
                         } else {
                             installedRelativeFiles.add(entry.relPath)
@@ -884,7 +885,7 @@ object NuxModManager {
                             val outFile = resolveModpackFile(gameDir, rel)
                             if (outFile == null) {
                                 skippedFiles++
-                                android.util.Log.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
+                                LauncherLog.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
                                 continue
                             }
                             installedRelativeFiles.add(rel)
@@ -924,7 +925,7 @@ object NuxModManager {
                         val targetFile = resolveModpackFile(gameDir, relPath)
                         if (targetFile == null || !SafePaths.isAllowedModpackDownloadUrl(dlUrl)) {
                             skippedFiles++
-                            android.util.Log.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
+                            LauncherLog.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
                             continue
                         }
                         if (!targetFile.exists()) {
@@ -936,7 +937,7 @@ object NuxModManager {
                                 installedRelativeFiles.add(relPath)
                             } catch (e: Exception) {
                                 failedFiles++
-                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: $dlUrl", e)
+                                LauncherLog.e("NuxModManager", "Gagal unduh file modpack: $dlUrl", e)
                             }
                         } else {
                             installedRelativeFiles.add(relPath)
@@ -960,7 +961,7 @@ object NuxModManager {
                         val outFile = resolveModpackFile(gameDir, rel)
                         if (outFile == null) {
                             skippedFiles++
-                            android.util.Log.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
+                            LauncherLog.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
                             continue
                         }
                         installedRelativeFiles.add(rel)
@@ -992,7 +993,7 @@ object NuxModManager {
                         val outFile = resolveModpackFile(gameDir, relPath)
                         if (outFile == null) {
                             skippedFiles++
-                            android.util.Log.w("NuxModManager", "Isi arsip dilewati (path tidak aman): $name")
+                            LauncherLog.w("NuxModManager", "Isi arsip dilewati (path tidak aman): $name")
                             continue
                         }
                         installedRelativeFiles.add(relPath)
@@ -1019,7 +1020,7 @@ object NuxModManager {
             }
             onProgress(doneMessage + packNote, installedRelativeFiles.size, installedRelativeFiles.size)
         } catch (e: Exception) {
-            android.util.Log.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
+            LauncherLog.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
             if (e is ModpackIncompatibleException || e is CurseForgeApi.KeyException) {
                 // Modpack ditolak (atau kunci CurseForge bermasalah): buang arsipnya supaya tidak tampil
                 // sebagai modpack yang terpasang
@@ -1226,7 +1227,7 @@ object NuxModManager {
             val metaFile = getModpackMetadataFile(gameDir, manifest.archiveFilename)
             metaFile.writeText(gson.toJson(manifest))
         } catch (e: Exception) {
-            android.util.Log.e("NuxModManager", "Gagal menyimpan metadata modpack: ${e.message}", e)
+            LauncherLog.e("NuxModManager", "Gagal menyimpan metadata modpack: ${e.message}", e)
         }
     }
 
@@ -1238,7 +1239,7 @@ object NuxModManager {
                 return gson.fromJson(json, ModpackManifest::class.java)
             }
         } catch (e: Exception) {
-            android.util.Log.e("NuxModManager", "Gagal membaca metadata modpack: ${e.message}", e)
+            LauncherLog.e("NuxModManager", "Gagal membaca metadata modpack: ${e.message}", e)
         }
         return null
     }
@@ -1297,7 +1298,7 @@ object NuxModManager {
                 }
             }
         } catch (e: Exception) {
-            android.util.Log.e("NuxModManager", "Error getModpackInstalledFilesFromArchive: ${e.message}", e)
+            LauncherLog.e("NuxModManager", "Error getModpackInstalledFilesFromArchive: ${e.message}", e)
         }
         // Path dari arsip luar tidak boleh keluar dari folder instance (mis. "../../")
         return files.distinct().filter { SafePaths.isSafeRelative(it) }

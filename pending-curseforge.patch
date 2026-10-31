@@ -1004,7 +1004,7 @@ index c30bc70..af06202 100644
  
      /** True bila [url] memakai https dan menuju salah satu host modpack yang dibolehkan. */
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
-index cda625d..a96cd77 100644
+index cda625d..3fa05f8 100644
 --- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
 +++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
 @@ -42,8 +42,10 @@ import androidx.compose.ui.unit.dp
@@ -1165,7 +1165,7 @@ index cda625d..a96cd77 100644
          AmberPickerDialog(
              title = "Urutkan",
 -            options = MODS_SORT_OPTIONS,
-+            options = sortOptions,
++            options = if (isCurseForge) MODS_SORT_OPTIONS_CF else MODS_SORT_OPTIONS,
              selectedId = selectedSort,
              onPick = { id ->
                  selectedSort = id

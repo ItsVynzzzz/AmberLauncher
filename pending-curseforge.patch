@@ -1,0 +1,1458 @@
+diff --git a/README.md b/README.md
+index 9eb303c..4609fe7 100644
+--- a/README.md
++++ b/README.md
+@@ -37,8 +37,9 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Laporan crash** dengan unggah log ke mclo.gs bila diinginkan.
+ - **Rekam layar bawaan**: tombol Rekam di menu dalam game, dengan dua mode: *Game saja* (tombol layar disembunyikan dari video, tetap bisa disentuh) atau *Dengan tombol*. Memakai encoder video perangkat keras (tanpa kerja CPU per frame), bawaannya 720p/30 fps, otomatis jeda saat menu terbuka atau saat keluar dari game, dan berhenti bila HP terlalu panas. Hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam (mikrofon opsional).
+ - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
++- **Unduhan CurseForge**: di layar Mod, pilih sumber **CurseForge** di samping Modrinth untuk mencari dan memasang mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensi wajib. Mod yang penulisnya melarang unduhan lewat aplikasi pihak ketiga tidak dipaksa diunduh; launcher memberi tahu supaya mod itu diunduh manual dari situs CurseForge. CurseForge butuh kunci API: bila build ini tidak membawa kunci, launcher meminta pengguna menempelkan kuncinya sendiri (disimpan hanya di HP). Cara memasang kunci di build GitHub ada di bagian *Kunci API CurseForge* di bawah.
+ 
+-Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt, serta unduhan dari CurseForge (membutuhkan kunci API sendiri).
++Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt.
+ 
+ > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
+ 
+@@ -87,6 +88,10 @@ Folder data aplikasi ada di `/storage/emulated/0/nuxlauncher` (nama folder diper
+ 
+ Fork tanpa kunci tanda tangan sendiri menghasilkan APK bertanda tangan kunci debug, cukup untuk dicoba tetapi jangan dibagikan sebagai rilis. Untuk membagikannya, buat kunci pribadi lalu isi Secrets `AMBER_KEYSTORE_BASE64` (isi keystore PKCS12, alias `amber`, dalam base64) dan `AMBER_KEYSTORE_PASSWORD`. Kunci itu harus dicadangkan di tempat aman: bila hilang, pengguna tidak bisa memperbarui aplikasi dan harus memasang ulang.
+ 
++### Kunci API CurseForge
++
++Kunci tidak disimpan di repo. Untuk membawanya di build GitHub, buat Secret `CURSEFORGE_API_KEY` (Settings > Secrets and variables > Actions), lalu tambahkan baris `CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}` ke blok `env:` langkah build di `.github/workflows/build-apk.yml` (langkah *Build APK release* dan langkah APK 32-bit). Untuk build di komputer sendiri, isi `curseforge.api.key` di `local.properties` (lihat `local.properties.example`). Tanpa kunci di build, pengguna bisa menempelkan kunci milik mereka sendiri di layar Mod. Kunci yang ikut dibuild berada di dalam APK, jadi perlakukan sebagai kunci aplikasi (bukan rahasia mutlak) dan cabut lewat CurseForge bila disalahgunakan.
++
+ ### Lewat Android Studio / Gradle
+ 
+ Prasyarat: JDK 17, Android SDK (compile SDK 37, min SDK 26), dan NDK bila ikut mengompilasi kode native.
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index 56d35ec..ddb9330 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -73,6 +73,13 @@ android {
+             ?: "${baseVersionName()}.dev"
+ 
+ 
++        // Kunci API CurseForge untuk unduhan di layar Mod. Tidak disimpan di repo: diambil dari variabel
++        // lingkungan CURSEFORGE_API_KEY (GitHub Actions Secrets) atau local.properties (curseforge.api.key).
++        // Kosong = CurseForge tetap aktif, tetapi pengguna mengisi kuncinya sendiri di aplikasi.
++        val curseForgeApiKey = (System.getenv("CURSEFORGE_API_KEY") ?: localProperties.getProperty("curseforge.api.key") ?: "")
++            .filter { !it.isWhitespace() && it != '"' && it != '\\' }
++        buildConfigField("String", "CURSEFORGE_API_KEY", "\"" + curseForgeApiKey + "\"")
++
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables {
+             useSupportLibrary = true
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 0e9013b..31f60b7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -74,6 +74,9 @@ data class LauncherSettings(
+     val homeAmbientEnabled: Boolean = false, // cahaya di sekitar kartu Beranda (hanya GIF/video)
+     val homeAmbientIntensity: Int = 60, // 20 - 100
+ 
++    // Kunci API CurseForge milik pengguna (diisi dari layar Mod). Kosong = pakai kunci bawaan build bila ada.
++    val curseForgeApiKey: String = "",
++
+     // Pembaruan aplikasi
+     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeApi.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeApi.kt
+new file mode 100644
+index 0000000..c6be490
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeApi.kt
+@@ -0,0 +1,244 @@
++package com.israadev.nuxlauncher.core.mods
++
++import com.google.gson.JsonArray
++import com.google.gson.JsonObject
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.BuildConfig
++import com.israadev.nuxlauncher.core.models.Instance
++import com.israadev.nuxlauncher.core.models.ModrinthProject
++import com.israadev.nuxlauncher.core.models.ModrinthSearchResponse
++import com.israadev.nuxlauncher.core.models.ModrinthVersion
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import okhttp3.MediaType.Companion.toMediaType
++import okhttp3.Request
++import okhttp3.RequestBody.Companion.toRequestBody
++import java.net.URLEncoder
++
++/**
++ * Klien CurseForge (https://api.curseforge.com/v1). Hasilnya dipetakan oleh [CurseForgeMapper] ke
++ * model yang sama dengan Modrinth.
++ *
++ * Kunci API: kunci yang diisi pengguna di aplikasi dipakai lebih dulu; bila kosong dipakai kunci yang
++ * dipasang saat build (BuildConfig.CURSEFORGE_API_KEY, dari Secrets). Kunci hanya dikirim ke
++ * api.curseforge.com lewat header x-api-key, tidak pernah ke server unduhan, dan tidak pernah dicatat
++ * atau dimasukkan ke pesan galat.
++ *
++ * Mod yang penulisnya menutup unduhan lewat API (downloadUrl kosong) sengaja tidak dipaksa diunduh:
++ * pilihan penulis dihormati dan pengguna diberi tahu.
++ */
++object CurseForgeApi {
++    private const val BASE = "https://api.curseforge.com/v1"
++
++    /** Batas CurseForge: satu halaman maksimal 50 item, dan index + pageSize tidak boleh lewat 10.000. */
++    private const val MAX_PAGE_SIZE = 50
++    private const val MAX_RESULT_WINDOW = 10_000
++
++    /** Jumlah id per permintaan massal (POST /mods/files dan /mods). */
++    private const val BULK_CHUNK = 100
++
++    /** Kunci API belum diisi atau ditolak server; layar menawarkan mengisi ulang kunci. */
++    class KeyException(message: String) : Exception(message)
++
++    /** Kunci aktif: isian pengguna, atau kunci bawaan build. Kosong = belum ada. */
++    fun apiKey(): String {
++        val own = SettingsManager.settings.value.curseForgeApiKey.trim()
++        return if (own.isNotEmpty()) own else BuildConfig.CURSEFORGE_API_KEY.trim()
++    }
++
++    fun isConfigured(): Boolean = apiKey().isNotEmpty()
++
++    // ------------------------------------------------------------------
++    // Permintaan dasar
++    // ------------------------------------------------------------------
++
++    private fun query(vararg params: Pair<String, String?>): String {
++        val sb = StringBuilder()
++        for ((name, value) in params) {
++            if (value.isNullOrEmpty()) continue
++            sb.append(if (sb.isEmpty()) '?' else '&')
++            sb.append(name).append('=').append(URLEncoder.encode(value, "UTF-8"))
++        }
++        return sb.toString()
++    }
++
++    private fun authed(url: String): Request.Builder {
++        val key = apiKey()
++        if (key.isEmpty()) throw KeyException("Kunci API CurseForge belum diisi.")
++        return Request.Builder()
++            .url(url)
++            .header("Accept", "application/json")
++            .header("x-api-key", key)
++            .header("User-Agent", NuxModManager.USER_AGENT)
++    }
++
++    private fun httpError(code: Int): Exception = when (code) {
++        401, 403 -> KeyException("Kunci API CurseForge ditolak (kode $code). Periksa kuncinya lalu isi ulang.")
++        429 -> Exception("CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.")
++        else -> Exception("CurseForge API error: kode $code")
++    }
++
++    private fun execute(request: Request): JsonObject {
++        return NuxModManager.httpClient.newCall(request).execute().use { response ->
++            if (!response.isSuccessful) throw httpError(response.code)
++            val body = response.body?.string() ?: throw Exception("Respons kosong dari CurseForge")
++            val parsed = JsonParser.parseString(body)
++            if (!parsed.isJsonObject) throw Exception("Respons CurseForge tidak dikenali")
++            parsed.asJsonObject
++        }
++    }
++
++    private fun gameVersionOf(instance: Instance?, filterByGameVersion: Boolean): String? =
++        if (filterByGameVersion && instance != null && instance.mcVersion.isNotBlank()) instance.mcVersion else null
++
++    // ------------------------------------------------------------------
++    // Cari, detail, versi
++    // ------------------------------------------------------------------
++
++    suspend fun search(
++        queryText: String,
++        itemType: String,
++        instance: Instance?,
++        filterByGameVersion: Boolean,
++        page: Int,
++        limit: Int,
++        sortIndex: String,
++        filterByLoader: Boolean
++    ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
++        try {
++            val size = limit.coerceIn(1, MAX_PAGE_SIZE)
++            val offset = (page - 1).coerceAtLeast(0) * size
++            if (offset + size > MAX_RESULT_WINDOW) {
++                return@withContext Result.failure(Exception("CurseForge hanya menampilkan $MAX_RESULT_WINDOW hasil pertama. Persempit pencarian."))
++            }
++            val gameVersion = gameVersionOf(instance, filterByGameVersion)
++            // CurseForge hanya menyaring loader bila versi Minecraft ikut dikirim
++            val loaderType = if (gameVersion != null && filterByLoader && itemType == "mods") {
++                CurseForgeMapper.loaderTypeFor(NuxModManager.effectiveLoader(instance))
++            } else {
++                0
++            }
++
++            val url = BASE + "/mods/search" + query(
++                "gameId" to CurseForgeMapper.GAME_ID.toString(),
++                "classId" to CurseForgeMapper.classIdFor(itemType).toString(),
++                "searchFilter" to queryText.trim().takeIf { it.isNotEmpty() },
++                "gameVersion" to gameVersion,
++                "modLoaderType" to loaderType.takeIf { it != 0 }?.toString(),
++                "sortField" to CurseForgeMapper.sortFieldFor(sortIndex).toString(),
++                "sortOrder" to "desc",
++                "index" to offset.toString(),
++                "pageSize" to size.toString()
++            )
++            val root = execute(authed(url).build())
++            val hits = CurseForgeMapper.dataObjects(root).mapNotNull { CurseForgeMapper.toSearchHit(it, itemType) }
++            val total = CurseForgeMapper.totalCountOf(root).coerceIn(0, MAX_RESULT_WINDOW)
++            Result.success(ModrinthSearchResponse(hits = hits, offset = offset, limit = size, totalHits = total))
++        } catch (e: Exception) {
++            Result.failure(e)
++        }
++    }
++
++    suspend fun projectDetails(prefixedId: String): Result<ModrinthProject> = withContext(Dispatchers.IO) {
++        try {
++            val id = CurseForgeMapper.modIdOf(prefixedId)
++                ?: return@withContext Result.failure(Exception("Id CurseForge tidak valid"))
++            val root = execute(authed("$BASE/mods/$id").build())
++            val mod = CurseForgeMapper.dataObject(root)
++            val project = if (mod != null) CurseForgeMapper.toProject(mod) else null
++            if (project == null) {
++                Result.failure(Exception("Detail CurseForge kosong"))
++            } else {
++                Result.success(project)
++            }
++        } catch (e: Exception) {
++            Result.failure(e)
++        }
++    }
++
++    /**
++     * File yang cocok dengan instance dan bisa diunduh lewat launcher, rilis stabil lebih dulu lalu yang
++     * terbaru. Gagal dengan pesan jelas bila semua file ditutup unduhannya oleh penulis.
++     */
++    suspend fun compatibleVersions(
++        prefixedId: String,
++        instance: Instance?,
++        itemType: String,
++        filterByGameVersion: Boolean
++    ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
++        try {
++            val id = CurseForgeMapper.modIdOf(prefixedId)
++                ?: return@withContext Result.failure(Exception("Id CurseForge tidak valid"))
++            val gameVersion = gameVersionOf(instance, filterByGameVersion)
++            val wantedLoader = if (instance != null && itemType == "mods") NuxModManager.effectiveLoader(instance) else null
++            val loaderType = if (gameVersion != null && wantedLoader != null) CurseForgeMapper.loaderTypeFor(wantedLoader) else 0
++
++            val url = "$BASE/mods/$id/files" + query(
++                "gameVersion" to gameVersion,
++                "modLoaderType" to loaderType.takeIf { it != 0 }?.toString(),
++                "index" to "0",
++                "pageSize" to MAX_PAGE_SIZE.toString()
++            )
++            val root = execute(authed(url).build())
++            val raw = CurseForgeMapper.dataObjects(root)
++            val usable = CurseForgeMapper.orderedFiles(raw)
++                .mapNotNull { CurseForgeMapper.toVersion(it) }
++                .filter { CurseForgeMapper.loaderMatches(it.loaders, wantedLoader) }
++
++            if (usable.isEmpty() && raw.isNotEmpty() && raw.all { CurseForgeMapper.downloadUrlOf(it) == null }) {
++                Result.failure(Exception(CurseForgeMapper.BLOCKED_NOTE))
++            } else {
++                Result.success(usable)
++            }
++        } catch (e: Exception) {
++            Result.failure(e)
++        }
++    }
++
++    // ------------------------------------------------------------------
++    // Modpack: cari alamat unduhan banyak file sekaligus (blocking, panggil dari thread IO)
++    // ------------------------------------------------------------------
++
++    private fun idsBody(field: String, ids: List<Long>): okhttp3.RequestBody {
++        val arr = JsonArray()
++        for (id in ids) arr.add(id)
++        val obj = JsonObject()
++        obj.add(field, arr)
++        return obj.toString().toRequestBody("application/json".toMediaType())
++    }
++
++    /** Alamat unduhan, nama, dan sidik jari tiap file (kunci = id file). File yang tidak dikenal CurseForge tidak ada di hasil. */
++    fun resolveFiles(fileIds: List<Long>): Map<Long, CurseForgeMapper.ResolvedFile> {
++        val out = HashMap<Long, CurseForgeMapper.ResolvedFile>()
++        for (chunk in fileIds.distinct().chunked(BULK_CHUNK)) {
++            val request = authed("$BASE/mods/files")
++                .post(idsBody("fileIds", chunk))
++                .build()
++            val root = execute(request)
++            for (f in CurseForgeMapper.dataObjects(root)) {
++                CurseForgeMapper.toResolvedFile(f)?.let { out[it.fileId] = it }
++            }
++        }
++        return out
++    }
++
++    /** classId tiap proyek (kunci = id proyek). Hanya pelengkap: bila gagal, hasilnya kosong. */
++    fun classIdsOf(modIds: List<Long>): Map<Long, Int> {
++        val out = HashMap<Long, Int>()
++        for (chunk in modIds.distinct().chunked(BULK_CHUNK)) {
++            try {
++                val request = authed("$BASE/mods")
++                    .post(idsBody("modIds", chunk))
++                    .build()
++                val root = execute(request)
++                for (m in CurseForgeMapper.dataObjects(root)) {
++                    CurseForgeMapper.classIdOfMod(m)?.let { out[it.first] = it.second }
++                }
++            } catch (e: Exception) {
++                if (e is KeyException) throw e
++            }
++        }
++        return out
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+new file mode 100644
+index 0000000..6f85225
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+@@ -0,0 +1,422 @@
++package com.israadev.nuxlauncher.core.mods
++
++import com.google.gson.JsonElement
++import com.google.gson.JsonObject
++import com.israadev.nuxlauncher.core.models.ModrinthDependency
++import com.israadev.nuxlauncher.core.models.ModrinthGalleryItem
++import com.israadev.nuxlauncher.core.models.ModrinthProject
++import com.israadev.nuxlauncher.core.models.ModrinthSearchHit
++import com.israadev.nuxlauncher.core.models.ModrinthVersion
++import com.israadev.nuxlauncher.core.models.ModrinthVersionFile
++
++/**
++ * Pemetaan data CurseForge ke model yang dipakai layar Mod (bentuknya model Modrinth), sehingga daftar,
++ * jendela detail, dan pengunduh tidak perlu tahu sumbernya. Murni JSON ke model, tanpa jaringan dan
++ * tanpa Android, jadi mudah diuji.
++ *
++ * Semua id proyek CurseForge diberi awalan [ID_PREFIX] ("cf:123"). Awalan itulah yang memberi tahu
++ * NuxModManager harus bertanya ke CurseForge, bukan ke Modrinth, untuk detail, versi, dan dependensi.
++ *
++ * JSON dibaca tanpa refleksi (JsonObject), jadi aman dari R8 dan tidak mengalokasi kelas tambahan.
++ */
++object CurseForgeMapper {
++    const val ID_PREFIX = "cf:"
++
++    /** Id game Minecraft di CurseForge. */
++    const val GAME_ID = 432
++
++    /** Pesan untuk mod yang penulisnya melarang unduhan lewat aplikasi pihak ketiga. */
++    const val BLOCKED_NOTE = "Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge."
++
++    fun isCurseForgeId(id: String?): Boolean = id != null && id.startsWith(ID_PREFIX)
++
++    fun prefixed(modId: Long): String = "$ID_PREFIX$modId"
++
++    /** Id numerik dari "cf:123", atau null bila bukan id CurseForge yang sah. */
++    fun modIdOf(prefixedId: String?): Long? {
++        if (prefixedId == null || !prefixedId.startsWith(ID_PREFIX)) return null
++        return prefixedId.substring(ID_PREFIX.length).toLongOrNull()
++    }
++
++    /** classId CurseForge untuk jenis item di launcher. */
++    fun classIdFor(itemType: String): Int = when (itemType) {
++        "modpacks" -> 4471
++        "resourcepacks" -> 12
++        "shaderpacks" -> 6552
++        "datapacks" -> 6945
++        else -> 6
++    }
++
++    /** Nilai project_type yang dipakai layar (sama dengan istilah Modrinth). */
++    fun projectTypeFor(itemType: String): String = when (itemType) {
++        "resourcepacks" -> "resourcepack"
++        "shaderpacks" -> "shader"
++        "datapacks" -> "datapack"
++        "modpacks" -> "modpack"
++        else -> "mod"
++    }
++
++    /** modLoaderType CurseForge untuk nama loader; 0 = tidak dikenal (tanpa penyaringan). */
++    fun loaderTypeFor(loader: String?): Int = when (loader?.trim()?.lowercase()) {
++        "forge" -> 1
++        "fabric" -> 4
++        "quilt" -> 5
++        "neoforge" -> 6
++        else -> 0
++    }
++
++    private fun loaderNameFor(type: Int): String? = when (type) {
++        1 -> "forge"
++        4 -> "fabric"
++        5 -> "quilt"
++        6 -> "neoforge"
++        else -> null
++    }
++
++    /** sortField CurseForge untuk pilihan urutan di layar. 1 = Featured, 2 = Popularity, 3 = LastUpdated, 6 = TotalDownloads. */
++    fun sortFieldFor(sortIndex: String): Int = when (sortIndex) {
++        "downloads" -> 6
++        "follows" -> 2
++        "newest", "updated" -> 3
++        else -> 1
++    }
++
++    // ------------------------------------------------------------------
++    // Pembaca JSON yang tahan JsonNull dan tipe tak terduga
++    // ------------------------------------------------------------------
++
++    private fun JsonObject.str(name: String): String? {
++        val e = get(name) ?: return null
++        return if (e.isJsonPrimitive) e.asString else null
++    }
++
++    private fun JsonObject.long(name: String): Long? {
++        val e = get(name) ?: return null
++        if (!e.isJsonPrimitive) return null
++        return try {
++            e.asLong
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    private fun JsonObject.int(name: String): Int? = long(name)?.toInt()
++
++    private fun JsonObject.obj(name: String): JsonObject? {
++        val e = get(name) ?: return null
++        return if (e.isJsonObject) e.asJsonObject else null
++    }
++
++    private fun JsonObject.objects(name: String): List<JsonObject> {
++        val e = get(name) ?: return emptyList()
++        if (!e.isJsonArray) return emptyList()
++        val out = ArrayList<JsonObject>(e.asJsonArray.size())
++        for (item in e.asJsonArray) {
++            if (item.isJsonObject) out.add(item.asJsonObject)
++        }
++        return out
++    }
++
++    /** true / false bila ada nilai boolean yang sah, null bila kosong atau JsonNull. */
++    private fun JsonObject.bool(name: String): Boolean? {
++        val e: JsonElement = get(name) ?: return null
++        if (!e.isJsonPrimitive || !e.asJsonPrimitive.isBoolean) return null
++        return e.asBoolean
++    }
++
++    /** Isi larik "data" pada respons CurseForge (hanya yang berupa objek). */
++    fun dataObjects(root: JsonObject): List<JsonObject> = root.objects("data")
++
++    /** Objek tunggal pada "data" (mis. GET /mods/{id}), atau null. */
++    fun dataObject(root: JsonObject): JsonObject? = root.obj("data")
++
++    /** Total hasil pada "pagination.totalCount", atau 0. */
++    fun totalCountOf(root: JsonObject): Int = root.obj("pagination")?.int("totalCount") ?: 0
++
++    // ------------------------------------------------------------------
++    // Mod -> hasil pencarian dan detail proyek
++    // ------------------------------------------------------------------
++
++    /** Loader yang dikenal dari latestFilesIndexes (modLoader), tanpa duplikat. */
++    private fun loadersOfMod(mod: JsonObject): List<String> {
++        val out = LinkedHashSet<String>()
++        for (idx in mod.objects("latestFilesIndexes")) {
++            val type = idx.int("modLoader") ?: continue
++            loaderNameFor(type)?.let { out.add(it) }
++        }
++        return out.toList()
++    }
++
++    private fun gameVersionsOfMod(mod: JsonObject): List<String> {
++        val out = LinkedHashSet<String>()
++        for (idx in mod.objects("latestFilesIndexes")) {
++            idx.str("gameVersion")?.let { if (it.isNotBlank()) out.add(it) }
++        }
++        return out.toList()
++    }
++
++    /** Penulis melarang unduhan pihak ketiga bila allowModDistribution bernilai false (null = tidak diketahui). */
++    fun isDistributionBlocked(mod: JsonObject): Boolean = mod.bool("allowModDistribution") == false
++
++    private fun iconOf(mod: JsonObject): String? {
++        val logo = mod.obj("logo") ?: return null
++        return (logo.str("thumbnailUrl")?.takeIf { it.isNotBlank() } ?: logo.str("url"))?.takeIf { it.isNotBlank() }
++    }
++
++    fun toSearchHit(mod: JsonObject, itemType: String): ModrinthSearchHit? {
++        val id = mod.long("id") ?: return null
++        val name = mod.str("name")?.takeIf { it.isNotBlank() } ?: return null
++        val topics = mod.objects("categories").mapNotNull { it.str("slug") }.filter { it.isNotBlank() }
++        val loaders = loadersOfMod(mod)
++        val summary = mod.str("summary").orEmpty()
++        val description = if (isDistributionBlocked(mod)) "$BLOCKED_NOTE $summary".trim() else summary
++        val tags = (topics + loaders).distinct()
++        return ModrinthSearchHit(
++            projectId = prefixed(id),
++            projectType = projectTypeFor(itemType),
++            slug = mod.str("slug"),
++            author = mod.objects("authors").firstOrNull()?.str("name"),
++            title = name,
++            description = description,
++            categories = tags,
++            displayCategories = tags,
++            versions = gameVersionsOfMod(mod),
++            downloads = mod.long("downloadCount") ?: 0L,
++            iconUrl = iconOf(mod),
++            color = null
++        )
++    }
++
++    fun toProject(mod: JsonObject): ModrinthProject? {
++        val id = mod.long("id") ?: return null
++        val summary = mod.str("summary").orEmpty()
++        val gallery = mod.objects("screenshots").mapNotNull { shot ->
++            val url = shot.str("url")?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
++            ModrinthGalleryItem(url = url, title = shot.str("title"), description = shot.str("description"))
++        }
++        return ModrinthProject(
++            id = prefixed(id),
++            slug = mod.str("slug").orEmpty(),
++            title = mod.str("name").orEmpty(),
++            description = if (isDistributionBlocked(mod)) "$BLOCKED_NOTE $summary".trim() else summary,
++            body = null,
++            categories = mod.objects("categories").mapNotNull { it.str("slug") },
++            loaders = loadersOfMod(mod),
++            gameVersions = gameVersionsOfMod(mod),
++            downloads = mod.long("downloadCount") ?: 0L,
++            iconUrl = iconOf(mod),
++            gallery = gallery
++        )
++    }
++
++    // ------------------------------------------------------------------
++    // File -> versi yang bisa diunduh
++    // ------------------------------------------------------------------
++
++    private val KNOWN_LOADER_NAMES = setOf("forge", "fabric", "quilt", "neoforge", "liteloader", "cauldron")
++
++    /** Daftar gameVersions CurseForge mencampur versi Minecraft dan nama loader; yang pertama diawali angka. */
++    private fun minecraftVersionsOf(file: JsonObject): List<String> {
++        val e = file.get("gameVersions")
++        if (e == null || !e.isJsonArray) return emptyList()
++        val out = ArrayList<String>()
++        for (item in e.asJsonArray) {
++            if (!item.isJsonPrimitive) continue
++            val v = item.asString.trim()
++            if (v.isNotEmpty() && v[0].isDigit()) out.add(v)
++        }
++        return out
++    }
++
++    private fun loaderNamesOf(file: JsonObject): List<String> {
++        val e = file.get("gameVersions")
++        if (e == null || !e.isJsonArray) return emptyList()
++        val out = ArrayList<String>()
++        for (item in e.asJsonArray) {
++            if (!item.isJsonPrimitive) continue
++            val v = item.asString.trim().lowercase()
++            if (v in KNOWN_LOADER_NAMES) out.add(v)
++        }
++        return out
++    }
++
++    /** Alamat unduhan sebuah file, atau null bila penulis menutup unduhan lewat API. */
++    fun downloadUrlOf(file: JsonObject): String? = file.str("downloadUrl")?.trim()?.takeIf { it.isNotEmpty() }
++
++    private fun sha1Of(file: JsonObject): String? {
++        for (h in file.objects("hashes")) {
++            if (h.int("algo") == 1) {
++                val v = h.str("value")?.trim()
++                if (!v.isNullOrEmpty()) return v
++            }
++        }
++        return null
++    }
++
++    private fun dependencyTypeOf(relationType: Int?): String = when (relationType) {
++        3 -> "required"
++        5 -> "incompatible"
++        1, 6 -> "embedded"
++        else -> "optional"
++    }
++
++    /** Null bila file tidak bisa diunduh lewat launcher (tanpa alamat unduhan atau tidak tersedia). */
++    fun toVersion(file: JsonObject): ModrinthVersion? {
++        val fileId = file.long("id") ?: return null
++        val url = downloadUrlOf(file) ?: return null
++        if (file.bool("isAvailable") == false) return null
++        val fileName = file.str("fileName")?.takeIf { it.isNotBlank() } ?: return null
++        val display = file.str("displayName")?.takeIf { it.isNotBlank() } ?: fileName
++
++        val hashes = HashMap<String, String>()
++        sha1Of(file)?.let { hashes["sha1"] = it }
++
++        val deps = file.objects("dependencies").mapNotNull { dep ->
++            val depMod = dep.long("modId") ?: return@mapNotNull null
++            ModrinthDependency(
++                versionId = null,
++                projectId = prefixed(depMod),
++                fileName = null,
++                dependencyType = dependencyTypeOf(dep.int("relationType"))
++            )
++        }
++
++        val releaseType = when (file.int("releaseType")) {
++            2 -> "beta"
++            3 -> "alpha"
++            else -> "release"
++        }
++
++        val modId = file.long("modId")
++        return ModrinthVersion(
++            id = fileId.toString(),
++            projectId = if (modId != null) prefixed(modId) else "",
++            name = display,
++            versionNumber = display,
++            gameVersions = minecraftVersionsOf(file),
++            loaders = loaderNamesOf(file),
++            versionType = releaseType,
++            files = listOf(
++                ModrinthVersionFile(
++                    url = url,
++                    filename = fileName,
++                    primary = true,
++                    size = file.long("fileLength") ?: 0L,
++                    hashes = if (hashes.isEmpty()) null else hashes
++                )
++            ),
++            dependencies = deps
++        )
++    }
++
++    /** Tanggal unggah (teks ISO 8601, urut sama dengan urutan waktu) untuk mengurutkan file. */
++    fun fileDateOf(file: JsonObject): String = file.str("fileDate").orEmpty()
++
++    fun releaseRankOf(file: JsonObject): Int = (file.int("releaseType") ?: 1).coerceIn(1, 3)
++
++    /**
++     * Urutan daftar versi: rilis stabil dulu, lalu beta, lalu alpha; di dalam tiap kelompok yang terbaru
++     * di depan. Versi pertama itulah yang dipasang tombol "Pasang" di daftar, jadi tidak boleh alpha
++     * selama masih ada rilis stabil.
++     */
++    fun orderedFiles(files: List<JsonObject>): List<JsonObject> =
++        files.sortedWith(
++            compareBy<JsonObject> { releaseRankOf(it) }
++                .thenByDescending { fileDateOf(it) }
++        )
++
++    /**
++     * Apakah loader file cocok dengan [wantedLoader]. File yang tidak menyebut loader apa pun (mod lama
++     * atau pack yang tidak menandai loader) dianggap cocok, supaya tidak ikut tersaring habis.
++     */
++    fun loaderMatches(versionLoaders: List<String>, wantedLoader: String?): Boolean {
++        if (wantedLoader.isNullOrBlank()) return true
++        if (versionLoaders.isEmpty()) return true
++        return versionLoaders.any { it.equals(wantedLoader, ignoreCase = true) }
++    }
++
++    // ------------------------------------------------------------------
++    // Modpack CurseForge: manifest.json di dalam zip
++    // ------------------------------------------------------------------
++
++    class PackFile(val projectId: Long, val fileId: Long, val required: Boolean)
++
++    class PackManifest(
++        val name: String,
++        val version: String,
++        val minecraftVersion: String,
++        /** Loader utama modpack ("forge", "fabric", "neoforge", "quilt"), atau null bila tidak disebut. */
++        val loader: String?,
++        /** Nama folder isi tambahan (biasanya "overrides"). */
++        val overrides: String,
++        val files: List<PackFile>
++    )
++
++    /** Null bila [root] bukan manifest modpack Minecraft dari CurseForge. */
++    fun parseManifest(root: JsonObject): PackManifest? {
++        val mc = root.obj("minecraft") ?: return null
++        val filesElement = root.get("files")
++        if (filesElement == null || !filesElement.isJsonArray) return null
++        val type = root.str("manifestType")
++        if (type != null && !type.equals("minecraftModpack", ignoreCase = true)) return null
++
++        val loaders = mc.objects("modLoaders")
++        val primary = loaders.firstOrNull { it.bool("primary") == true } ?: loaders.firstOrNull()
++        val loader = primary?.str("id")?.substringBefore('-')?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
++
++        val files = ArrayList<PackFile>()
++        for (item in filesElement.asJsonArray) {
++            if (!item.isJsonObject) continue
++            val f = item.asJsonObject
++            val pid = f.long("projectID") ?: continue
++            val fid = f.long("fileID") ?: continue
++            files.add(PackFile(pid, fid, f.bool("required") != false))
++        }
++
++        return PackManifest(
++            name = root.str("name").orEmpty(),
++            version = root.str("version").orEmpty(),
++            minecraftVersion = mc.str("version").orEmpty(),
++            loader = loader,
++            overrides = root.str("overrides")?.trim()?.trim('/')?.takeIf { it.isNotEmpty() } ?: "overrides",
++            files = files
++        )
++    }
++
++    /** Satu file modpack yang sudah dicari alamat unduhannya lewat API. */
++    class ResolvedFile(
++        val fileId: Long,
++        val modId: Long,
++        val fileName: String,
++        /** Null = penulis menutup unduhan lewat API. */
++        val url: String?,
++        val sha1: String?
++    )
++
++    fun toResolvedFile(file: JsonObject): ResolvedFile? {
++        val id = file.long("id") ?: return null
++        val name = file.str("fileName")?.takeIf { it.isNotBlank() } ?: return null
++        return ResolvedFile(
++            fileId = id,
++            modId = file.long("modId") ?: 0L,
++            fileName = name,
++            url = downloadUrlOf(file),
++            sha1 = sha1Of(file)
++        )
++    }
++
++    /** Folder tujuan (relatif ke folder game) untuk file modpack menurut classId proyeknya. */
++    fun folderFor(classId: Int?, fileName: String): String = when (classId) {
++        12 -> "resourcepacks"
++        6552 -> "shaderpacks"
++        6 -> "mods"
++        else -> if (fileName.endsWith(".jar", ignoreCase = true)) "mods" else "resourcepacks"
++    }
++
++    /** classId proyek dari objek mod hasil POST /v1/mods. */
++    fun classIdOfMod(mod: JsonObject): Pair<Long, Int>? {
++        val id = mod.long("id") ?: return null
++        val cls = mod.int("classId") ?: return null
++        return id to cls
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index aa97b40..2215955 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -39,7 +39,8 @@ private data class MrpackFileEntry(
+ object NuxModManager {
+ 
+     private val gson = Gson()
+-    private val httpClient = OkHttpClient.Builder()
++    // Dipakai juga oleh CurseForgeApi (satu klien, satu kolam sambungan)
++    internal val httpClient = OkHttpClient.Builder()
+         .dns(com.israadev.nuxlauncher.core.network.NuxDns)
+         .connectTimeout(15, TimeUnit.SECONDS)
+         .readTimeout(30, TimeUnit.SECONDS)
+@@ -48,12 +49,16 @@ object NuxModManager {
+         .followSslRedirects(false)
+         .build()
+ 
+-    private const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
++    internal const val USER_AGENT = "AmberLauncher/1.0 (+https://github.com/ItsVynzzzz/AmberLauncher)"
+ 
+     /** Batas total isi yang boleh diekstrak dari satu modpack (cegah arsip "bom" yang memenuhi penyimpanan). */
+     private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
+     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
+ 
++    /** Sumber unduhan di layar Mod. */
++    const val SOURCE_MODRINTH = "modrinth"
++    const val SOURCE_CURSEFORGE = "curseforge"
++
+     /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
+     private const val SUPPORTED_LOADER = "fabric"
+     private val SEARCH_SORT_INDEXES = setOf("relevance", "downloads", "follows", "newest", "updated")
+@@ -62,7 +67,7 @@ object NuxModManager {
+      * Loader yang dipakai untuk menyaring mod dan modpack. Instance Vanilla (atau tanpa instance)
+      * ikut disaring ke loader yang didukung, supaya pengguna tidak memasang mod Forge yang pasti gagal.
+      */
+-    private fun effectiveLoader(instance: Instance?): String {
++    internal fun effectiveLoader(instance: Instance?): String {
+         val loader = instance?.loader?.trim()?.lowercase().orEmpty()
+         return if (loader.isEmpty() || loader == "vanilla") SUPPORTED_LOADER else loader
+     }
+@@ -422,8 +427,21 @@ object NuxModManager {
+         page: Int = 1,
+         limit: Int = 18,
+         sortIndex: String = "relevance",
+-        filterByLoader: Boolean = true
++        filterByLoader: Boolean = true,
++        source: String = SOURCE_MODRINTH
+     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
++        if (source == SOURCE_CURSEFORGE) {
++            return@withContext CurseForgeApi.search(
++                queryText = query,
++                itemType = itemType,
++                instance = instance,
++                filterByGameVersion = filterByGameVersion,
++                page = page,
++                limit = limit,
++                sortIndex = sortIndex,
++                filterByLoader = filterByLoader
++            )
++        }
+         try {
+             val facets = mutableListOf<List<String>>()
+ 
+@@ -488,6 +506,9 @@ object NuxModManager {
+      * Mengambil detail lengkap suatu project dari Modrinth
+      */
+     suspend fun getProjectDetails(projectId: String): Result<ModrinthProject> = withContext(Dispatchers.IO) {
++        if (CurseForgeMapper.isCurseForgeId(projectId)) {
++            return@withContext CurseForgeApi.projectDetails(projectId)
++        }
+         try {
+             val url = "$MODRINTH_API_BASE/project/$projectId"
+             val request = Request.Builder()
+@@ -542,6 +563,9 @@ object NuxModManager {
+         itemType: String,
+         filterByGameVersion: Boolean = true
+     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
++        if (CurseForgeMapper.isCurseForgeId(projectId)) {
++            return@withContext CurseForgeApi.compatibleVersions(projectId, instance, itemType, filterByGameVersion)
++        }
+         val allVersResult = getProjectVersions(projectId)
+         if (allVersResult.isFailure) return@withContext allVersResult
+ 
+@@ -752,11 +776,15 @@ object NuxModManager {
+             var skippedFiles = 0
+             var failedFiles = 0
+             var extractedBytes = 0L
++            // Catatan tambahan di pesan akhir (mis. mod CurseForge yang unduhannya ditutup penulis)
++            var packNote = ""
+ 
+             ZipFile(mrpackFile).use { zip ->
+                 // 1. Cari modrinth.index.json
+                 val indexEntry = zip.getEntry("modrinth.index.json")
+                     ?: zip.entries().asSequence().firstOrNull { it.name.endsWith("modrinth.index.json") }
++                // Bukan mrpack: mungkin modpack CurseForge (manifest.json di akar zip)
++                val cfPack = if (indexEntry == null) readCurseForgeManifest(zip) else null
+ 
+                 if (indexEntry != null) {
+                     val prefix = if (indexEntry.name.contains("/")) indexEntry.name.substringBeforeLast("/") + "/" else ""
+@@ -867,6 +895,81 @@ object NuxModManager {
+                             }
+                         }
+                     }
++                } else if (cfPack != null) {
++                    // Modpack CurseForge: daftar mod ada di manifest.json, isi tambahan di folder overrides/
++                    checkCurseForgePackCompatibility(cfPack, instance)
++                    if (cfPack.name.isNotBlank()) packTitle = cfPack.name
++                    packVersion = cfPack.version
++
++                    onProgress("Mencari alamat unduhan mod dari CurseForge...", 0, 0)
++                    val wanted = cfPack.files
++                    val resolved = CurseForgeApi.resolveFiles(wanted.map { it.fileId })
++                    val classIds = CurseForgeApi.classIdsOf(wanted.map { it.projectId })
++
++                    val totalFiles = wanted.size
++                    var currentIdx = 0
++                    var blockedFiles = 0
++                    for (packFile in wanted) {
++                        currentIdx++
++                        val info = resolved[packFile.fileId]
++                        val dlUrl = info?.url
++                        if (info == null || dlUrl == null) {
++                            // Penulis menutup unduhan lewat API (atau file sudah dihapus): dihormati, tidak dipaksa
++                            blockedFiles++
++                            skippedFiles++
++                            continue
++                        }
++                        val folder = CurseForgeMapper.folderFor(classIds[packFile.projectId], info.fileName)
++                        val relPath = folder + "/" + SafePaths.fileName(info.fileName)
++                        val targetFile = resolveModpackFile(gameDir, relPath)
++                        if (targetFile == null || !SafePaths.isAllowedModpackDownloadUrl(dlUrl)) {
++                            skippedFiles++
++                            android.util.Log.w("NuxModManager", "File modpack dilewati (path/alamat tidak aman): $relPath")
++                            continue
++                        }
++                        if (!targetFile.exists()) {
++                            targetFile.parentFile?.mkdirs()
++                            onProgress("Mengunduh mod ($currentIdx/$totalFiles): ${targetFile.name}...", currentIdx, totalFiles)
++                            try {
++                                downloadFile(dlUrl, targetFile)
++                                verifyHashes(targetFile, info.sha1?.let { mapOf("sha1" to it) })
++                                installedRelativeFiles.add(relPath)
++                            } catch (e: Exception) {
++                                failedFiles++
++                                android.util.Log.e("NuxModManager", "Gagal unduh file modpack: $dlUrl", e)
++                            }
++                        } else {
++                            installedRelativeFiles.add(relPath)
++                            onProgress("Mod sudah ada ($currentIdx/$totalFiles): ${targetFile.name}", currentIdx, totalFiles)
++                        }
++                    }
++                    if (blockedFiles > 0) {
++                        packNote = " $blockedFiles mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. " +
++                            "Pasang manual dari situs CurseForge bila perlu."
++                    }
++
++                    onProgress("Mengekstrak konfigurasi modpack...", totalFiles, totalFiles)
++                    val overridesPrefix = cfPack.overrides + "/"
++                    val overrideEntries = zip.entries()
++                    while (overrideEntries.hasMoreElements()) {
++                        val entry = overrideEntries.nextElement()
++                        val name = entry.name
++                        if (!name.startsWith(overridesPrefix)) continue
++                        val rel = name.removePrefix(overridesPrefix)
++                        if (rel.isBlank() || rel.startsWith("saves/")) continue
++                        val outFile = resolveModpackFile(gameDir, rel)
++                        if (outFile == null) {
++                            skippedFiles++
++                            android.util.Log.w("NuxModManager", "Isi modpack dilewati (path tidak aman): $name")
++                            continue
++                        }
++                        installedRelativeFiles.add(rel)
++                        if (entry.isDirectory) {
++                            outFile.mkdirs()
++                        } else {
++                            extractedBytes = extractZipEntry(zip, entry, outFile, extractedBytes)
++                        }
++                    }
+                 } else {
+                     // Fallback jika file zip modpack bukan standar Modrinth mrpack
+                     // (misal zip kumpulan mod yang langsung berisi folder mods/ atau file .jar)
+@@ -914,11 +1017,12 @@ object NuxModManager {
+             } else {
+                 "Selesai dengan catatan: $installedModCount mod terpasang, $problemCount file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang."
+             }
+-            onProgress(doneMessage, installedRelativeFiles.size, installedRelativeFiles.size)
++            onProgress(doneMessage + packNote, installedRelativeFiles.size, installedRelativeFiles.size)
+         } catch (e: Exception) {
+             android.util.Log.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
+-            if (e is ModpackIncompatibleException) {
+-                // Modpack ditolak: buang arsipnya supaya tidak tampil sebagai modpack yang terpasang
++            if (e is ModpackIncompatibleException || e is CurseForgeApi.KeyException) {
++                // Modpack ditolak (atau kunci CurseForge bermasalah): buang arsipnya supaya tidak tampil
++                // sebagai modpack yang terpasang
+                 try {
+                     mrpackFile.delete()
+                 } catch (_: Exception) {
+@@ -928,6 +1032,48 @@ object NuxModManager {
+         }
+     }
+ 
++    /** Membaca manifest.json di akar zip; null bila bukan modpack CurseForge. */
++    private fun readCurseForgeManifest(zip: ZipFile): CurseForgeMapper.PackManifest? {
++        val entry = zip.getEntry("manifest.json") ?: return null
++        return try {
++            zip.getInputStream(entry).bufferedReader().use { reader ->
++                val root = JsonParser.parseReader(reader)
++                if (root.isJsonObject) CurseForgeMapper.parseManifest(root.asJsonObject) else null
++            }
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    /**
++     * Seperti [checkModpackCompatibility] tetapi untuk modpack CurseForge: loader dan versi Minecraft
++     * harus cocok dengan instance sebelum ada file yang diunduh.
++     */
++    private fun checkCurseForgePackCompatibility(pack: CurseForgeMapper.PackManifest, instance: Instance) {
++        val loader = pack.loader
++        if (loader == "quilt") {
++            throw ModpackIncompatibleException(
++                "Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge."
++            )
++        }
++        if ((loader == "forge" || loader == "fabric" || loader == "neoforge") &&
++            !instance.loader.equals(loader, ignoreCase = true)
++        ) {
++            val label = if (loader == "neoforge") "NeoForge" else loader.replaceFirstChar { it.uppercase() }
++            throw ModpackIncompatibleException(
++                "Modpack ini membutuhkan $label. " +
++                    "Buat instance $label dulu, lalu pasang modpack di instance itu."
++            )
++        }
++        val packMc = pack.minecraftVersion
++        if (packMc.isNotBlank() && instance.mcVersion.isNotBlank() && packMc != instance.mcVersion) {
++            throw ModpackIncompatibleException(
++                "Modpack ini untuk Minecraft $packMc, sedangkan instance ini memakai ${instance.mcVersion}. " +
++                    "Pilih atau buat instance dengan versi yang sama."
++            )
++        }
++    }
++
+     /**
+      * Memeriksa modpack Modrinth sebelum ada file yang diunduh: loader dan versi Minecraft-nya harus
+      * cocok dengan instance. Bila tidak cocok, dilempar [ModpackIncompatibleException] dengan pesan jelas.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt b/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt
+index c30bc70..af06202 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/utils/SafePaths.kt
+@@ -47,12 +47,15 @@ object SafePaths {
+         }
+     }
+ 
+-    /** Host yang dibolehkan Modrinth sebagai sumber berkas di dalam modpack. */
++    /** Host yang dibolehkan sebagai sumber berkas di dalam modpack (Modrinth dan CDN resmi CurseForge). */
+     private val MODPACK_HOSTS = setOf(
+         "cdn.modrinth.com",
+         "github.com",
+         "raw.githubusercontent.com",
+-        "gitlab.com"
++        "gitlab.com",
++        "edge.forgecdn.net",
++        "mediafilez.forgecdn.net",
++        "media.forgecdn.net"
+     )
+ 
+     /** True bila [url] memakai https dan menuju salah satu host modpack yang dibolehkan. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index cda625d..a96cd77 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -42,8 +42,10 @@ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.*
++import com.israadev.nuxlauncher.core.mods.CurseForgeApi
+ import com.israadev.nuxlauncher.core.mods.NuxModManager
+ import com.israadev.nuxlauncher.core.mods.WorldInfo
++import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.components.*
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+@@ -206,6 +208,12 @@ fun ModsScreen(
+     var filterByGameVersion by remember { mutableStateOf(true) }
+     var filterByLoader by remember { mutableStateOf(true) }
+     var selectedSort by remember { mutableStateOf("relevance") }
++    // Sumber unduhan: Modrinth atau CurseForge (butuh kunci API; lihat CurseForgeApi)
++    var browseSource by remember { mutableStateOf(NuxModManager.SOURCE_MODRINTH) }
++    var showKeyDialog by remember { mutableStateOf(false) }
++    var keyProblem by remember { mutableStateOf(false) }
++    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE
++    val sourceLabel = if (isCurseForge) "CurseForge" else "Modrinth"
+     var showCategoryMenu by remember { mutableStateOf(false) }
+     var showVersionMenu by remember { mutableStateOf(false) }
+     var showLoaderMenu by remember { mutableStateOf(false) }
+@@ -258,6 +266,8 @@ fun ModsScreen(
+         val inst = selectedInstance ?: return
+         isSearching = true
+         searchErrorMessage = null
++        keyProblem = false
++        val source = browseSource
+         scope.launch {
+             val cat = if (selectedCategory == "Semua") null else selectedCategory
+             val res = NuxModManager.searchProjects(
+@@ -268,7 +278,8 @@ fun ModsScreen(
+                 filterByGameVersion = filterByGameVersion,
+                 page = page,
+                 sortIndex = selectedSort,
+-                filterByLoader = filterByLoader
++                filterByLoader = filterByLoader,
++                source = source
+             )
+             if (res.isSuccess) {
+                 val data = res.getOrNull()
+@@ -279,14 +290,17 @@ fun ModsScreen(
+             } else {
+                 searchHits = emptyList()
+                 totalHits = 0
+-                searchErrorMessage = res.exceptionOrNull()?.message ?: "Gagal terhubung ke Modrinth"
++                val failure = res.exceptionOrNull()
++                keyProblem = failure is CurseForgeApi.KeyException
++                searchErrorMessage = failure?.message
++                    ?: "Gagal terhubung ke ${if (source == NuxModManager.SOURCE_CURSEFORGE) "CurseForge" else "Modrinth"}"
+             }
+             isSearching = false
+         }
+     }
+ 
+     // Trigger reload when tab, type, world or instance changes
+-    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort) {
++    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource) {
+         if (selectedInstance != null) {
+             reloadWorlds()
+             reloadInstalled()
+@@ -471,7 +485,13 @@ fun ModsScreen(
+             val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
+             val compList = vRes.getOrNull()
+             if (compList.isNullOrEmpty()) {
+-                Toast.makeText(context, "Tidak ada versi cocok untuk ${inst.mcVersion}!", Toast.LENGTH_SHORT).show()
++                val failure = vRes.exceptionOrNull()
++                if (failure is CurseForgeApi.KeyException) showKeyDialog = true
++                Toast.makeText(
++                    context,
++                    failure?.message ?: "Tidak ada versi cocok untuk ${inst.mcVersion}!",
++                    Toast.LENGTH_LONG
++                ).show()
+                 downloadingProjectIds = downloadingProjectIds - hit.projectId
+                 return@launch
+             }
+@@ -578,9 +598,19 @@ fun ModsScreen(
+             )
+             if (mainMode == "browse") {
+                 ModsSourcePill(
+-                    curseForgeLocked = CURSEFORGE_LOCKED,
+-                    onCurseForgeClick = {
+-                        Toast.makeText(context, "CurseForge belum tersedia di versi ini", Toast.LENGTH_SHORT).show()
++                    selectedSource = browseSource,
++                    onSelect = { src ->
++                        if (src != browseSource) {
++                            if (src == NuxModManager.SOURCE_CURSEFORGE && !CurseForgeApi.isConfigured()) {
++                                // Belum ada kunci API: minta pengguna mengisinya dulu
++                                showKeyDialog = true
++                            } else {
++                                browseSource = src
++                                selectedCategory = "Semua"
++                                selectedSort = "relevance"
++                                currentPage = 1
++                            }
++                        }
+                     }
+                 )
+             } else {
+@@ -617,7 +647,8 @@ fun ModsScreen(
+         val currentInst = selectedInstance!!
+         val categories = CATEGORIES_MAP[activeType] ?: listOf(ModCategoryItem("Semua", "Semua"))
+         val selectedCategoryLabel = categories.firstOrNull { it.id == selectedCategory }?.label ?: "Semua"
+-        val selectedSortLabel = MODS_SORT_OPTIONS.firstOrNull { it.first == selectedSort }?.second ?: "Relevansi"
++        val sortOptions = if (isCurseForge) MODS_SORT_OPTIONS_CF else MODS_SORT_OPTIONS
++        val selectedSortLabel = sortOptions.firstOrNull { it.first == selectedSort }?.second ?: "Relevansi"
+ 
+         // =========================================================================
+         // ISI: rel jenis addon di kiri, filter + daftar di kanan
+@@ -684,11 +715,14 @@ fun ModsScreen(
+                         }
+ 
+                         if (mainMode == "browse") {
+-                            AmberFilterPill(
+-                                label = "Kategori",
+-                                value = modsPlainLabel(selectedCategoryLabel),
+-                                onClick = { showCategoryMenu = true }
+-                            )
++                            // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
++                            if (!isCurseForge) {
++                                AmberFilterPill(
++                                    label = "Kategori",
++                                    value = modsPlainLabel(selectedCategoryLabel),
++                                    onClick = { showCategoryMenu = true }
++                                )
++                            }
+                             AmberFilterPill(
+                                 label = "Versi",
+                                 value = if (filterByGameVersion) "Auto" else "Semua",
+@@ -761,15 +795,17 @@ fun ModsScreen(
+                     // JELAJAH MODRINTH
+                     // ==========================================
+                     if (isSearching) {
+-                        ModsLoading(text = "Memuat data dari Modrinth...")
++                        ModsLoading(text = "Memuat data dari $sourceLabel...")
+                     } else if (searchErrorMessage != null) {
+                         ModsMessage(
+                             icon = Icons.Outlined.CloudOff,
+                             iconTint = NuxColors.ErrorRed,
+-                            title = "Gagal memuat dari Modrinth",
++                            title = "Gagal memuat dari $sourceLabel",
+                             subtitle = searchErrorMessage ?: "Terjadi kesalahan jaringan",
+-                            actionLabel = "Coba lagi",
+-                            onAction = { performSearch(currentPage) }
++                            actionLabel = if (keyProblem) "Ubah kunci API" else "Coba lagi",
++                            onAction = {
++                                if (keyProblem) showKeyDialog = true else performSearch(currentPage)
++                            }
+                         )
+                     } else if (searchHits.isEmpty()) {
+                         ModsMessage(
+@@ -922,7 +958,7 @@ fun ModsScreen(
+     if (showSortMenu) {
+         AmberPickerDialog(
+             title = "Urutkan",
+-            options = MODS_SORT_OPTIONS,
++            options = sortOptions,
+             selectedId = selectedSort,
+             onPick = { id ->
+                 selectedSort = id
+@@ -932,6 +968,38 @@ fun ModsScreen(
+             onDismiss = { showSortMenu = false }
+         )
+     }
++    // --- KUNCI API CURSEFORGE ---
++    if (showKeyDialog) {
++        CurseForgeKeyDialog(
++            hasOwnKey = SettingsManager.settings.value.curseForgeApiKey.isNotBlank(),
++            onDismiss = { showKeyDialog = false },
++            onSave = { key ->
++                val cleaned = key.trim()
++                SettingsManager.updateSettings(
++                    context,
++                    SettingsManager.settings.value.copy(curseForgeApiKey = cleaned)
++                )
++                showKeyDialog = false
++                keyProblem = false
++                if (CurseForgeApi.isConfigured()) {
++                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE) {
++                        // Berganti sumber memicu pencarian otomatis (LaunchedEffect di atas)
++                        browseSource = NuxModManager.SOURCE_CURSEFORGE
++                        selectedCategory = "Semua"
++                        selectedSort = "relevance"
++                        currentPage = 1
++                    } else {
++                        performSearch(1)
++                    }
++                } else if (browseSource == NuxModManager.SOURCE_CURSEFORGE) {
++                    // Kunci dihapus dan tidak ada kunci bawaan: kembali ke Modrinth
++                    browseSource = NuxModManager.SOURCE_MODRINTH
++                    selectedSort = "relevance"
++                    currentPage = 1
++                }
++            }
++        )
++    }
+     // --- DIALOG HAPUS ---
+     itemToDelete?.let { item ->
+         NuxDialog(
+@@ -1237,9 +1305,6 @@ private fun ModsIconButton(
+ // TAMPILAN BARU LAYAR MOD (kaca gelap dengan aksen biru, semua bentuk pil)
+ // =============================================================================
+ 
+-/** Sumber unduhan CurseForge dikunci sampai kunci API tersedia. Ubah ke false bila sudah siap dipakai. */
+-private const val CURSEFORGE_LOCKED = true
+-
+ private val MODS_TYPE_ITEMS = listOf(
+     Triple("modpacks", "Modpack", Icons.Outlined.Layers),
+     Triple("mods", "Mod", Icons.Outlined.ViewInAr),
+@@ -1256,6 +1321,14 @@ private val MODS_SORT_OPTIONS = listOf(
+     "updated" to "Diperbarui"
+ )
+ 
++/** Pilihan urutan CurseForge (tidak punya "pengikut"; "Populer" memakai peringkat popularitasnya). */
++private val MODS_SORT_OPTIONS_CF = listOf(
++    "relevance" to "Relevansi",
++    "downloads" to "Unduhan",
++    "follows" to "Populer",
++    "updated" to "Diperbarui"
++)
++
+ private val MODS_LOADER_IDS = setOf("fabric", "forge", "neoforge", "quilt")
+ 
+ private fun modsTypeShortLabel(type: String): String = when (type) {
+@@ -1310,11 +1383,11 @@ private fun modsTagsFor(hit: ModrinthSearchHit): List<String> {
+     return topics.take(2).map { modsCategoryTag(it) } + loaders.take(2).map { modsLoaderTag(it) }
+ }
+ 
+-/** Pil sumber: Modrinth (aktif) dan CurseForge (terkunci sampai ada kunci API). */
++/** Pil sumber unduhan: Modrinth atau CurseForge. Yang dipilih tampil menonjol. */
+ @Composable
+ private fun ModsSourcePill(
+-    curseForgeLocked: Boolean,
+-    onCurseForgeClick: () -> Unit
++    selectedSource: String,
++    onSelect: (String) -> Unit
+ ) {
+     Row(
+         modifier = Modifier
+@@ -1325,64 +1398,144 @@ private fun ModsSourcePill(
+         horizontalArrangement = Arrangement.spacedBy(4.dp),
+         verticalAlignment = Alignment.CenterVertically
+     ) {
+-        // Modrinth: satu-satunya sumber yang aktif saat ini
+-        Row(
+-            modifier = Modifier
+-                .height(40.dp)
+-                .clip(CircleShape)
+-                .background(AmberUi.SurfaceRaised, CircleShape)
+-                .border(1.dp, AmberUi.BorderStrong, CircleShape)
+-                .padding(horizontal = 14.dp),
+-            verticalAlignment = Alignment.CenterVertically
+-        ) {
+-            Icon(
+-                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth),
+-                contentDescription = null,
+-                tint = AmberUi.Text,
+-                modifier = Modifier.size(20.dp)
+-            )
+-            Spacer(modifier = Modifier.width(8.dp))
+-            Text(
+-                text = "Modrinth",
+-                color = AmberUi.Text,
+-                fontWeight = FontWeight.SemiBold,
+-                fontSize = 15.sp,
+-                maxLines = 1
++        ModsSourceChip(
++            selected = selectedSource == NuxModManager.SOURCE_MODRINTH,
++            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth,
++            iconSize = 20.dp,
++            label = "Modrinth",
++            onClick = { onSelect(NuxModManager.SOURCE_MODRINTH) }
++        )
++        ModsSourceChip(
++            selected = selectedSource == NuxModManager.SOURCE_CURSEFORGE,
++            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_curseforge,
++            iconSize = 18.dp,
++            label = "CurseForge",
++            onClick = { onSelect(NuxModManager.SOURCE_CURSEFORGE) }
++        )
++    }
++}
++
++@Composable
++private fun ModsSourceChip(
++    selected: Boolean,
++    iconRes: Int,
++    iconSize: androidx.compose.ui.unit.Dp,
++    label: String,
++    onClick: () -> Unit
++) {
++    Row(
++        modifier = Modifier
++            .height(40.dp)
++            .clip(CircleShape)
++            .then(
++                if (selected) {
++                    Modifier
++                        .background(AmberUi.SurfaceRaised, CircleShape)
++                        .border(1.dp, AmberUi.BorderStrong, CircleShape)
++                } else {
++                    Modifier
++                }
+             )
+-        }
++            .clickable { onClick() }
++            .padding(horizontal = 14.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Icon(
++            painter = painterResource(id = iconRes),
++            contentDescription = null,
++            tint = AmberUi.Text,
++            modifier = Modifier.size(iconSize)
++        )
++        Spacer(modifier = Modifier.width(8.dp))
++        Text(
++            text = label,
++            color = if (selected) AmberUi.Text else AmberUi.TextDim,
++            fontWeight = FontWeight.SemiBold,
++            fontSize = 15.sp,
++            maxLines = 1
++        )
++    }
++}
+ 
+-        // CurseForge: dikunci (pudar + ikon gembok), ketuk = pesan penjelasan
+-        Row(
++/**
++ * Isian kunci API CurseForge. Kunci disimpan hanya di HP ini (pengaturan launcher) dan hanya dikirim
++ * ke api.curseforge.com. Dipakai bila build ini tidak membawa kunci sendiri.
++ */
++@Composable
++private fun CurseForgeKeyDialog(
++    hasOwnKey: Boolean,
++    onDismiss: () -> Unit,
++    onSave: (String) -> Unit
++) {
++    var text by remember { mutableStateOf("") }
++    NuxDialog(
++        onDismissRequest = onDismiss,
++        modifier = Modifier
++            .fillMaxWidth(0.7f)
++            .wrapContentHeight(),
++        compact = true
++    ) {
++        Column(
+             modifier = Modifier
+-                .height(40.dp)
+-                .alpha(if (curseForgeLocked) 0.5f else 1f)
+-                .clip(CircleShape)
+-                .clickable { onCurseForgeClick() }
+-                .padding(horizontal = 12.dp),
+-            verticalAlignment = Alignment.CenterVertically
++                .fillMaxWidth()
++                .padding(horizontal = 20.dp, vertical = 16.dp)
+         ) {
+-            Icon(
+-                painter = painterResource(id = com.israadev.nuxlauncher.R.drawable.ic_source_curseforge),
+-                contentDescription = null,
+-                tint = AmberUi.Text,
+-                modifier = Modifier.size(18.dp)
++            Text(
++                text = "Kunci API CurseForge",
++                fontWeight = FontWeight.Black,
++                fontSize = 16.sp,
++                color = NuxColors.DarkGray
+             )
+-            Spacer(modifier = Modifier.width(8.dp))
++            Spacer(modifier = Modifier.height(6.dp))
+             Text(
+-                text = "CurseForge",
+-                color = AmberUi.Text,
+-                fontWeight = FontWeight.SemiBold,
+-                fontSize = 15.sp,
+-                maxLines = 1
++                text = if (hasOwnKey) {
++                    "Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini."
++                } else {
++                    "CurseForge butuh kunci API. Tempel kunci dari email CurseForge. " +
++                        "Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge."
++                },
++                fontSize = 12.sp,
++                lineHeight = 17.sp,
++                color = NuxColors.GrayNeutral
+             )
+-            if (curseForgeLocked) {
+-                Spacer(modifier = Modifier.width(6.dp))
+-                Icon(
+-                    imageVector = Icons.Outlined.Lock,
+-                    contentDescription = "Terkunci",
+-                    tint = AmberUi.Text,
+-                    modifier = Modifier.size(14.dp)
+-                )
++            Spacer(modifier = Modifier.height(12.dp))
++            NuxTextField(
++                value = text,
++                onValueChange = { text = it },
++                placeholder = "Tempel kunci di sini",
++                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
++            )
++            Spacer(modifier = Modifier.height(14.dp))
++            Row(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(10.dp)
++            ) {
++                NuxButton(
++                    onClick = onDismiss,
++                    backgroundColor = Color.Transparent,
++                    cornerRadius = 20.dp,
++                    modifier = Modifier.weight(1f)
++                ) {
++                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
++                }
++                if (hasOwnKey) {
++                    NuxButton(
++                        onClick = { onSave("") },
++                        backgroundColor = Color.Transparent,
++                        cornerRadius = 20.dp,
++                        modifier = Modifier.weight(1f)
++                    ) {
++                        Text("Hapus", fontWeight = FontWeight.Bold, fontSize = 13.sp)
++                    }
++                }
++                NuxButton(
++                    onClick = { if (text.isNotBlank()) onSave(text) },
++                    enabled = text.isNotBlank(),
++                    cornerRadius = 20.dp,
++                    modifier = Modifier.weight(1f)
++                ) {
++                    Text("Simpan", fontWeight = FontWeight.Black, fontSize = 13.sp)
++                }
+             }
+         }
+     }
+diff --git a/local.properties.example b/local.properties.example
+index 751543a..0a6b68a 100644
+--- a/local.properties.example
++++ b/local.properties.example
+@@ -1,2 +1,6 @@
+ ## Lokasi Android SDK (hanya perlu bila membangun di komputer sendiri)
+ sdk.dir=C\:\\Users\\YourUsername\\AppData\\Local\\Android\\Sdk
++
++## Kunci API CurseForge (opsional, hanya untuk build di komputer sendiri). Jangan dimasukkan ke repo.
++## Di GitHub Actions, pakai Secrets bernama CURSEFORGE_API_KEY.
++#curseforge.api.key=
+# FIN part=1/1 files=9

@@ -334,6 +334,8 @@ jobs:
         env:
           AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
           AMBER_VERSION_NAME: ${{ env.VERSION_NAME }}
+          # Kunci API CurseForge dari Secrets; ikut dibuild ke APK (kosong = pengguna mengisi sendiri di aplikasi)
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         run: |
           set -o pipefail
           chmod +x gradlew
@@ -344,12 +346,15 @@ jobs:
           APK=$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)
           test -n "$APK"
           mkdir -p dist
-          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}.apk"
+          # Nama berkas sengaja panjang dan jelas supaya pengguna tidak salah pilih 32-bit/64-bit.
+          # Aplikasi memilih APK pembaruan lewat kata "32bit" di nama (lihat ReleaseParser): APK 64-bit
+          # tidak boleh memuat "32bit", APK 32-bit wajib memuatnya.
+          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
           ls -lh dist
           APKSIGNER=$(ls -d "${ANDROID_HOME:-/usr/local/lib/android/sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1)
           if [ -n "$APKSIGNER" ]; then
             echo "Sidik jari tanda tangan APK:"
-            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}.apk" | grep -i "SHA-256" || true
+            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk" | grep -i "SHA-256" || true
           fi
 
       # APK 32-bit dibangun terpisah (scripts/build-arm32.sh, ada setelah patch 32-bit diterapkan) dan
@@ -361,7 +366,20 @@ jobs:
         continue-on-error: true
         env:
           AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
         run: bash scripts/build-arm32.sh
+
+      # Skrip 32-bit menamai hasilnya "...-32bit.apk"; di sini diganti ke nama yang jelas bagi pengguna.
+      # Tanpa APK 32-bit (langkah di atas gagal atau tidak ada) langkah ini tidak melakukan apa-apa.
+      - name: Beri nama jelas pada APK 32-bit
+        run: |
+          SRC="dist/AmberLauncher-${VERSION_NAME}-32bit.apk"
+          if [ -f "$SRC" ]; then
+            mv "$SRC" "dist/AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
+          else
+            echo "Tidak ada APK 32-bit pada build ini; rilis hanya membawa APK 64-bit."
+          fi
+          ls -lh dist
 
       - name: Simpan sebagai artifact
         uses: actions/upload-artifact@v4
@@ -412,21 +430,30 @@ jobs:
             LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
           fi
           LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \(build lolos\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
+          APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
+          APK32="AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
+          BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
+          # Catatan rilis ditulis dalam bahasa Inggris supaya mudah dipahami semua orang. Baris panduan
+          # unduhan sengaja memuat tautan "https://" atau diawali "#": aplikasi menyaring baris seperti itu
+          # saat menampilkan catatan di pop-up pembaruan, jadi panduan ini tidak ikut muncul di sana.
           {
-            echo "## Yang berubah di ${VERSION_NAME}"
+            echo "## What's new in ${VERSION_NAME}"
             echo
             if [ -n "$LOG" ]; then
               printf '%s\n' "$LOG" | sed 's/^/- /'
             else
-              echo "- Perbaikan dan peningkatan kecil."
+              echo "- Fixes and small improvements."
             fi
-            if ls dist/*-32bit.apk > /dev/null 2>&1; then
-              echo
-              echo "Pilih APK: AmberLauncher-${VERSION_NAME}.apk untuk HP 64-bit (hampir semua HP). Berkas yang berakhiran -32bit.apk hanya untuk HP lama dengan CPU 32-bit."
+            echo
+            echo "### Which file should I download?"
+            echo
+            echo "- **64-bit (arm64-v8a): pick this one if you are not sure.** [${APK64}](${BASE}/${APK64}) Works on almost every phone made in the last several years."
+            if ls dist/*-32bit-*.apk > /dev/null 2>&1; then
+              echo "- **32-bit (armeabi-v7a): old phones only.** [${APK32}](${BASE}/${APK32}) For old phones with a 32-bit CPU. It is slower, game RAM is limited to about 1.2 GB, and some renderers are missing. Only pick it if the 64-bit file will not install on your phone."
             fi
             if [ -n "$PREV_TAG" ]; then
               echo
-              echo "Perubahan lengkap: https://github.com/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${RELEASE_TAG}"
+              echo "Full changelog: https://github.com/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${RELEASE_TAG}"
             fi
           } > "$NOTES"
           cat "$NOTES"

@@ -1,0 +1,327 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
+index 2a78811..fcf3b7f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
+@@ -40,6 +40,13 @@ data class MicrosoftSkinItem(
+     val variant: String = "CLASSIC" // "CLASSIC" or "SLIM"
+ )
+ 
++/** Jawaban Session Server soal jubah: ada ([Found]), memang tidak ada ([None]), atau tidak bisa dipastikan ([Failed]). */
++sealed class SessionCape {
++    class Found(val url: String) : SessionCape()
++    object None : SessionCape()
++    object Failed : SessionCape()
++}
++
+ object MicrosoftWardrobeService {
+     private const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
+     private const val MOJANG_SESSION_URL = "https://sessionserver.mojang.com"
+@@ -80,9 +87,10 @@ object MicrosoftWardrobeService {
+     }
+ 
+     /**
+-     * Mengambil tekstur jubah aktif langsung dari Session Server resmi Mojang tanpa perlu token OAuth
++     * Mengambil tekstur jubah aktif langsung dari Session Server resmi Mojang tanpa perlu token OAuth.
++     * Sama seperti yang dibaca game saat dijalankan, jadi hasilnya adalah jubah yang akan terlihat di dalam game.
+      */
+-    suspend fun getSessionActiveCape(uuid: String): String? = withContext(Dispatchers.IO) {
++    suspend fun lookupSessionCape(uuid: String): SessionCape = withContext(Dispatchers.IO) {
+         try {
+             val cleanUuid = uuid.replace("-", "")
+             val req = Request.Builder()
+@@ -91,10 +99,12 @@ object MicrosoftWardrobeService {
+                 .build()
+ 
+             httpClient.newCall(req).execute().use { resp ->
+-                if (!resp.isSuccessful) return@withContext null
+-                val body = resp.body?.string() ?: return@withContext null
++                if (resp.code == 204 || resp.code == 404) return@withContext SessionCape.None
++                if (!resp.isSuccessful) return@withContext SessionCape.Failed
++                val body = resp.body?.string().orEmpty()
++                if (body.isBlank()) return@withContext SessionCape.Failed
+                 val json = JsonParser.parseString(body).asJsonObject
+-                val props = json.getAsJsonArray("properties") ?: return@withContext null
++                val props = json.getAsJsonArray("properties") ?: return@withContext SessionCape.None
+                 for (p in props) {
+                     val pObj = p.asJsonObject
+                     if (pObj.get("name")?.asString == "textures") {
+@@ -105,15 +115,22 @@ object MicrosoftWardrobeService {
+                         val cape = textures.getAsJsonObject("CAPE")
+                         val capeUrl = cape?.get("url")?.asString
+                         if (!capeUrl.isNullOrBlank()) {
+-                            return@withContext if (capeUrl.startsWith("http://")) capeUrl.replace("http://", "https://") else capeUrl
++                            return@withContext SessionCape.Found(
++                                if (capeUrl.startsWith("http://")) capeUrl.replace("http://", "https://") else capeUrl
++                            )
+                         }
+                     }
+                 }
++                SessionCape.None
+             }
+-        } catch (_: Exception) {}
+-        null
++        } catch (_: Exception) {
++            SessionCape.Failed
++        }
+     }
+ 
++    suspend fun getSessionActiveCape(uuid: String): String? =
++        (lookupSessionCape(uuid) as? SessionCape.Found)?.url
++
+     /**
+      * Mengambil profil lengkap pemain dari api.minecraftservices.com.
+      * Jika token kedaluwarsa (HTTP 401), secara otomatis memperbarui token via refresh_token,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+index d98b9d6..2fa2b70 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+@@ -10,6 +10,9 @@ import android.graphics.Rect
+ import android.net.Uri
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.update
+ import java.io.File
+ import java.io.FileOutputStream
+ import java.io.IOException
+@@ -19,6 +22,7 @@ import android.util.LruCache
+ import com.google.gson.JsonParser
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.models.UserAccount
++import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+ import okhttp3.OkHttpClient
+ import okhttp3.Request
+ import java.util.concurrent.TimeUnit
+@@ -410,6 +414,89 @@ object SkinUtils {
+         updatedAccount
+     }
+ 
++    // ---- Jubah akun Microsoft ----
++    // Game memuat jubah Microsoft sendiri dari server Mojang, jadi launcher hanya perlu menirunya untuk
++    // pratinjau: tanya Session Server (tanpa token) sekali tiap beberapa menit, lalu unduh PNG-nya bila berubah.
++
++    private const val MOJANG_CAPE_TTL_MS = 10L * 60 * 1000 // tanya ulang Session Server paling cepat tiap 10 menit
++    private const val MOJANG_CAPE_RETRY_MS = 60L * 1000 // bila Session Server gagal dijangkau, coba lagi semenit kemudian
++
++    private class CapeLookup(val validUntil: Long, val url: String?)
++
++    private val mojangCapes = ConcurrentHashMap<String, CapeLookup>()
++    private val capeRevisionState = MutableStateFlow(0)
++
++    /** Naik setiap jubah Microsoft diganti dari dalam aplikasi, supaya pratinjau memuat ulang. */
++    val capeRevision: StateFlow<Int> = capeRevisionState
++
++    private fun mojangCapeFile(context: Context, accountId: String) =
++        File(getCapesDir(context), "${accountId}_mojang_cape.png")
++
++    // Berisi alamat jubah yang sedang tersimpan di berkas PNG di atas.
++    private fun mojangCapeMarker(context: Context, accountId: String) =
++        File(getCapesDir(context), "${accountId}_mojang_cape.url")
++
++    private fun isMojangTextureUrl(url: String): Boolean {
++        val host = url.toHttpUrlOrNull()?.host ?: return false
++        return host == "textures.minecraft.net" || host.endsWith(".minecraft.net") || host.endsWith(".mojang.com")
++    }
++
++    /**
++     * Dipanggil setelah jubah Microsoft diganti di Minecraft.net. [url] adalah alamat jubah baru,
++     * null berarti tanpa jubah. Pratinjau langsung memakai ini tanpa menunggu Session Server.
++     */
++    fun rememberMojangCape(accountId: String, url: String?) {
++        mojangCapes[accountId] = CapeLookup(System.currentTimeMillis() + MOJANG_CAPE_TTL_MS, url)
++        capeRevisionState.update { it + 1 }
++    }
++
++    /**
++     * Berkas PNG jubah yang sedang aktif untuk akun Microsoft (sama dengan yang tampil di game), atau null
++     * bila akun tidak punya jubah atau belum bisa diunduh. Tidak ada permintaan jaringan bila hasil terakhir
++     * masih segar dan berkasnya sudah ada.
++     */
++    suspend fun ensureMojangCape(context: Context, account: UserAccount): File? = withContext(Dispatchers.IO) {
++        if (account.uuid.isBlank()) return@withContext null
++        val file = mojangCapeFile(context, account.id)
++        val marker = mojangCapeMarker(context, account.id)
++        val now = System.currentTimeMillis()
++
++        val cached = mojangCapes[account.id]
++        val known: CapeLookup = if (cached != null && now < cached.validUntil) {
++            cached
++        } else {
++            val fresh = when (val found = MicrosoftWardrobeService.lookupSessionCape(account.uuid)) {
++                is SessionCape.Found -> CapeLookup(now + MOJANG_CAPE_TTL_MS, found.url)
++                is SessionCape.None -> CapeLookup(now + MOJANG_CAPE_TTL_MS, null)
++                // Tidak bisa dipastikan (offline, dibatasi server): pakai jubah terakhir yang tersimpan
++                is SessionCape.Failed -> CapeLookup(
++                    now + MOJANG_CAPE_RETRY_MS,
++                    if (file.exists()) runCatching { marker.readText().trim() }.getOrNull()?.takeIf { it.isNotEmpty() } else null
++                )
++            }
++            mojangCapes[account.id] = fresh
++            fresh
++        }
++
++        val url = known.url
++        if (url == null) {
++            if (file.exists()) file.delete()
++            if (marker.exists()) marker.delete()
++            return@withContext null
++        }
++
++        val stored = if (file.exists() && file.length() > 0) runCatching { marker.readText().trim() }.getOrNull() else null
++        if (stored == url) return@withContext file
++        if (!isMojangTextureUrl(url)) return@withContext null
++
++        if (downloadTexture(url, file) == TextureFetch.SAVED) {
++            runCatching { marker.writeText(url) }
++            file
++        } else {
++            null
++        }
++    }
++
+     suspend fun validateSkinFile(file: File): Boolean = withContext(Dispatchers.IO) {
+         if (!file.exists() || file.length() <= 0) return@withContext false
+         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+index ea75d76..b8af90e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+@@ -997,6 +997,14 @@ fun NuxWardrobeDialog(
+                                                         errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
+                                                     } else {
+                                                         activeAccount = res.getOrThrow()
++                                                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
++                                                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
++                                                        SkinUtils.rememberMojangCape(
++                                                            activeAccount.id,
++                                                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
++                                                                ?.takeIf { it.id != "mojang_active_cape" }
++                                                                ?.url
++                                                        )
+                                                     }
+                                                 }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index ed16aa2..1fbcd08 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -518,6 +518,8 @@ private fun AccountInfoRow(
+  * dari berkas skin di Canvas, lengkap dengan lapisan luarnya. Diam saja (tanpa putar otomatis dan
+  * tanpa animasi), tetapi bisa diputar dengan menggeser ke kiri atau kanan. Tanpa WebView.
+  * Akun Microsoft yang belum punya berkas lokal mengunduh skinnya sekali dari mc-heads.net.
++ * Jubah ikut digambar di punggung (geser untuk melihatnya dari belakang). Akun Microsoft memakai jubah
++ * aktifnya di server Mojang, yaitu yang juga muncul di dalam game; akun lain memakai jubah lokalnya.
+  */
+ @Composable
+ private fun AccountSkinPreview(
+@@ -553,6 +555,30 @@ private fun AccountSkinPreview(
+     val skin = skinState.value
+     val slim = account.safeSkinModel == "slim"
+ 
++    // Jubah dimuat terpisah dari skin supaya skin tampil duluan; naik revisi = jubah diganti di wardrobe
++    val capeRevision by SkinUtils.capeRevision.collectAsState()
++    val capeState = produceState<ImageBitmap?>(
++        initialValue = null,
++        account.id,
++        account.customCapePath,
++        account.safeAccountType,
++        capeRevision
++    ) {
++        value = withContext(Dispatchers.IO) {
++            runCatching {
++                val file = if (account.safeAccountType == "microsoft") {
++                    SkinUtils.ensureMojangCape(context, account)
++                } else {
++                    SkinUtils.resolveCapeFile(context, account)
++                }
++                file?.takeIf { it.length() > 0 }
++                    ?.let { BitmapFactory.decodeFile(it.absolutePath) }
++                    ?.asImageBitmap()
++            }.getOrNull()
++        }
++    }
++    val cape = capeState.value
++
+     // Sudut putar: dibaca hanya saat menggambar, jadi menggeser tidak memicu komposisi ulang
+     var angle by remember(account.id) { mutableFloatStateOf(0.5f) }
+ 
+@@ -574,7 +600,7 @@ private fun AccountSkinPreview(
+                     detectHorizontalDragGestures { _, dragX -> angle += dragX * 0.012f }
+                 }
+         ) {
+-            drawSkin3D(skin, slim, angle)
++            drawSkin3D(skin, cape, slim, angle)
+         }
+     }
+ }
+@@ -598,7 +624,7 @@ private class SkinBox(
+  * ke samping (tanpa miring), setiap sisi tegak tampil sebagai persegi panjang yang lebarnya mengecil,
+  * jadi cukup beberapa drawImage tanpa matriks. Bagian terjauh digambar lebih dulu.
+  */
+-private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float) {
++private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float) {
+     val legacy = img.height < 64
+     val armW = if (slim) 3 else 4
+     val unit = minOf(size.width / 16f, size.height / 32.6f)
+@@ -627,6 +653,11 @@ private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float)
+         SkinBox(2f, 20f, 4, 12, 4, if (legacy) 0 else 16, if (legacy) 16 else 48, 0, 48, !legacy) // kaki kiri
+     )
+ 
++    // Jubah menggantung di belakang badan: dilihat dari depan ia terjauh (digambar dulu),
++    // dilihat dari belakang ia terdekat (digambar terakhir).
++    val capeBehind = cosA >= 0f
++    if (cape != null && capeBehind) drawCape(cape, unit, ox, oy, cosA, sinA)
++
+     for (b in boxes.sortedByDescending { -it.cx * sinA }) {
+         val hw = b.w / 2f
+         val hd = b.d / 2f
+@@ -656,6 +687,47 @@ private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float)
+         layer(b.u, b.v)
+         if (b.hasOverlay) layer(b.ou, b.ov)
+     }
++
++    if (cape != null && !capeBehind) drawCape(cape, unit, ox, oy, cosA, sinA)
++}
++
++/**
++ * Jubah: kotak 10 x 16 x 1 tepat di belakang badan (tanpa kemiringan). Sisi luar, yang terlihat dari
++ * belakang, memakai petak (1,1) pada tekstur jubah; dua sisi samping setebal 1 piksel. Tekstur HD
++ * (128x64 dan seterusnya) diskalakan lewat [s]. Sisi dalam dan atas tertutup badan, jadi tidak digambar.
++ */
++private fun DrawScope.drawCape(cape: ImageBitmap, unit: Float, ox: Float, oy: Float, cosA: Float, sinA: Float) {
++    val s = when {
++        cape.width >= 64 -> cape.width / 64
++        cape.width >= 22 -> cape.width / 22 // format lama 22x17
++        else -> 1
++    }
++    // Petak yang dibutuhkan harus ada di dalam gambar (22 x 17 satuan tekstur)
++    if (cape.width < 22 * s || cape.height < 17 * s) return
++
++    val top = 8f      // sejajar bahu
++    val hw = 5f       // lebar 10
++    val zIn = 2f      // menempel punggung (badan setebal 4, dari -2 sampai 2)
++    val zOut = 3f
++
++    fun face(u0: Int, v0: Int, srcW: Int, x1: Float, z1: Float, x2: Float, z2: Float) {
++        val sx1 = x1 * cosA + z1 * sinA
++        val sx2 = x2 * cosA + z2 * sinA
++        if (sx2 - sx1 < 0.01f) return   // sisi membelakangi kamera
++        val dstW = ((sx2 - sx1) * unit).roundToInt().coerceAtLeast(1)
++        drawImage(
++            image = cape,
++            srcOffset = IntOffset(u0 * s, v0 * s),
++            srcSize = IntSize(srcW * s, 16 * s),
++            dstOffset = IntOffset((ox + sx1 * unit).roundToInt(), (oy + top * unit).roundToInt()),
++            dstSize = IntSize(dstW, (16 * unit).roundToInt()),
++            filterQuality = FilterQuality.None
++        )
++    }
++
++    face(1, 1, 10, hw, zOut, -hw, zOut)   // luar (terlihat dari belakang)
++    face(0, 1, 1, -hw, zOut, -hw, zIn)    // sisi kanan tubuh
++    face(11, 1, 1, hw, zIn, hw, zOut)     // sisi kiri tubuh
+ }
+ 
+ private fun acctAccent(type: String): Color = when (type) {
+# FIN part=1/1 files=4

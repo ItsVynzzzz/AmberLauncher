@@ -997,6 +997,14 @@ fun NuxWardrobeDialog(
                                                         errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
                                                     } else {
                                                         activeAccount = res.getOrThrow()
+                                                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
+                                                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
+                                                        SkinUtils.rememberMojangCape(
+                                                            activeAccount.id,
+                                                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
+                                                                ?.takeIf { it.id != "mojang_active_cape" }
+                                                                ?.url
+                                                        )
                                                     }
                                                 }
 

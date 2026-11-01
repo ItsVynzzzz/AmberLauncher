@@ -40,6 +40,13 @@ data class MicrosoftSkinItem(
     val variant: String = "CLASSIC" // "CLASSIC" or "SLIM"
 )
 
+/** Jawaban Session Server soal jubah: ada ([Found]), memang tidak ada ([None]), atau tidak bisa dipastikan ([Failed]). */
+sealed class SessionCape {
+    class Found(val url: String) : SessionCape()
+    object None : SessionCape()
+    object Failed : SessionCape()
+}
+
 object MicrosoftWardrobeService {
     private const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
     private const val MOJANG_SESSION_URL = "https://sessionserver.mojang.com"
@@ -80,9 +87,10 @@ object MicrosoftWardrobeService {
     }
 
     /**
-     * Mengambil tekstur jubah aktif langsung dari Session Server resmi Mojang tanpa perlu token OAuth
+     * Mengambil tekstur jubah aktif langsung dari Session Server resmi Mojang tanpa perlu token OAuth.
+     * Sama seperti yang dibaca game saat dijalankan, jadi hasilnya adalah jubah yang akan terlihat di dalam game.
      */
-    suspend fun getSessionActiveCape(uuid: String): String? = withContext(Dispatchers.IO) {
+    suspend fun lookupSessionCape(uuid: String): SessionCape = withContext(Dispatchers.IO) {
         try {
             val cleanUuid = uuid.replace("-", "")
             val req = Request.Builder()
@@ -91,10 +99,12 @@ object MicrosoftWardrobeService {
                 .build()
 
             httpClient.newCall(req).execute().use { resp ->
-                if (!resp.isSuccessful) return@withContext null
-                val body = resp.body?.string() ?: return@withContext null
+                if (resp.code == 204 || resp.code == 404) return@withContext SessionCape.None
+                if (!resp.isSuccessful) return@withContext SessionCape.Failed
+                val body = resp.body?.string().orEmpty()
+                if (body.isBlank()) return@withContext SessionCape.Failed
                 val json = JsonParser.parseString(body).asJsonObject
-                val props = json.getAsJsonArray("properties") ?: return@withContext null
+                val props = json.getAsJsonArray("properties") ?: return@withContext SessionCape.None
                 for (p in props) {
                     val pObj = p.asJsonObject
                     if (pObj.get("name")?.asString == "textures") {
@@ -105,14 +115,21 @@ object MicrosoftWardrobeService {
                         val cape = textures.getAsJsonObject("CAPE")
                         val capeUrl = cape?.get("url")?.asString
                         if (!capeUrl.isNullOrBlank()) {
-                            return@withContext if (capeUrl.startsWith("http://")) capeUrl.replace("http://", "https://") else capeUrl
+                            return@withContext SessionCape.Found(
+                                if (capeUrl.startsWith("http://")) capeUrl.replace("http://", "https://") else capeUrl
+                            )
                         }
                     }
                 }
+                SessionCape.None
             }
-        } catch (_: Exception) {}
-        null
+        } catch (_: Exception) {
+            SessionCape.Failed
+        }
     }
+
+    suspend fun getSessionActiveCape(uuid: String): String? =
+        (lookupSessionCape(uuid) as? SessionCape.Found)?.url
 
     /**
      * Mengambil profil lengkap pemain dari api.minecraftservices.com.

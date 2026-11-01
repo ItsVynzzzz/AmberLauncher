@@ -10,6 +10,9 @@ import android.graphics.Rect
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -19,6 +22,7 @@ import android.util.LruCache
 import com.google.gson.JsonParser
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.models.UserAccount
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.concurrent.TimeUnit
@@ -408,6 +412,89 @@ object SkinUtils {
         }
 
         updatedAccount
+    }
+
+    // ---- Jubah akun Microsoft ----
+    // Game memuat jubah Microsoft sendiri dari server Mojang, jadi launcher hanya perlu menirunya untuk
+    // pratinjau: tanya Session Server (tanpa token) sekali tiap beberapa menit, lalu unduh PNG-nya bila berubah.
+
+    private const val MOJANG_CAPE_TTL_MS = 10L * 60 * 1000 // tanya ulang Session Server paling cepat tiap 10 menit
+    private const val MOJANG_CAPE_RETRY_MS = 60L * 1000 // bila Session Server gagal dijangkau, coba lagi semenit kemudian
+
+    private class CapeLookup(val validUntil: Long, val url: String?)
+
+    private val mojangCapes = ConcurrentHashMap<String, CapeLookup>()
+    private val capeRevisionState = MutableStateFlow(0)
+
+    /** Naik setiap jubah Microsoft diganti dari dalam aplikasi, supaya pratinjau memuat ulang. */
+    val capeRevision: StateFlow<Int> = capeRevisionState
+
+    private fun mojangCapeFile(context: Context, accountId: String) =
+        File(getCapesDir(context), "${accountId}_mojang_cape.png")
+
+    // Berisi alamat jubah yang sedang tersimpan di berkas PNG di atas.
+    private fun mojangCapeMarker(context: Context, accountId: String) =
+        File(getCapesDir(context), "${accountId}_mojang_cape.url")
+
+    private fun isMojangTextureUrl(url: String): Boolean {
+        val host = url.toHttpUrlOrNull()?.host ?: return false
+        return host == "textures.minecraft.net" || host.endsWith(".minecraft.net") || host.endsWith(".mojang.com")
+    }
+
+    /**
+     * Dipanggil setelah jubah Microsoft diganti di Minecraft.net. [url] adalah alamat jubah baru,
+     * null berarti tanpa jubah. Pratinjau langsung memakai ini tanpa menunggu Session Server.
+     */
+    fun rememberMojangCape(accountId: String, url: String?) {
+        mojangCapes[accountId] = CapeLookup(System.currentTimeMillis() + MOJANG_CAPE_TTL_MS, url)
+        capeRevisionState.update { it + 1 }
+    }
+
+    /**
+     * Berkas PNG jubah yang sedang aktif untuk akun Microsoft (sama dengan yang tampil di game), atau null
+     * bila akun tidak punya jubah atau belum bisa diunduh. Tidak ada permintaan jaringan bila hasil terakhir
+     * masih segar dan berkasnya sudah ada.
+     */
+    suspend fun ensureMojangCape(context: Context, account: UserAccount): File? = withContext(Dispatchers.IO) {
+        if (account.uuid.isBlank()) return@withContext null
+        val file = mojangCapeFile(context, account.id)
+        val marker = mojangCapeMarker(context, account.id)
+        val now = System.currentTimeMillis()
+
+        val cached = mojangCapes[account.id]
+        val known: CapeLookup = if (cached != null && now < cached.validUntil) {
+            cached
+        } else {
+            val fresh = when (val found = MicrosoftWardrobeService.lookupSessionCape(account.uuid)) {
+                is SessionCape.Found -> CapeLookup(now + MOJANG_CAPE_TTL_MS, found.url)
+                is SessionCape.None -> CapeLookup(now + MOJANG_CAPE_TTL_MS, null)
+                // Tidak bisa dipastikan (offline, dibatasi server): pakai jubah terakhir yang tersimpan
+                is SessionCape.Failed -> CapeLookup(
+                    now + MOJANG_CAPE_RETRY_MS,
+                    if (file.exists()) runCatching { marker.readText().trim() }.getOrNull()?.takeIf { it.isNotEmpty() } else null
+                )
+            }
+            mojangCapes[account.id] = fresh
+            fresh
+        }
+
+        val url = known.url
+        if (url == null) {
+            if (file.exists()) file.delete()
+            if (marker.exists()) marker.delete()
+            return@withContext null
+        }
+
+        val stored = if (file.exists() && file.length() > 0) runCatching { marker.readText().trim() }.getOrNull() else null
+        if (stored == url) return@withContext file
+        if (!isMojangTextureUrl(url)) return@withContext null
+
+        if (downloadTexture(url, file) == TextureFetch.SAVED) {
+            runCatching { marker.writeText(url) }
+            file
+        } else {
+            null
+        }
     }
 
     suspend fun validateSkinFile(file: File): Boolean = withContext(Dispatchers.IO) {

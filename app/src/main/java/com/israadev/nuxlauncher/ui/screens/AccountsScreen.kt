@@ -518,6 +518,8 @@ private fun AccountInfoRow(
  * dari berkas skin di Canvas, lengkap dengan lapisan luarnya. Diam saja (tanpa putar otomatis dan
  * tanpa animasi), tetapi bisa diputar dengan menggeser ke kiri atau kanan. Tanpa WebView.
  * Akun Microsoft yang belum punya berkas lokal mengunduh skinnya sekali dari mc-heads.net.
+ * Jubah ikut digambar di punggung (geser untuk melihatnya dari belakang). Akun Microsoft memakai jubah
+ * aktifnya di server Mojang, yaitu yang juga muncul di dalam game; akun lain memakai jubah lokalnya.
  */
 @Composable
 private fun AccountSkinPreview(
@@ -553,6 +555,30 @@ private fun AccountSkinPreview(
     val skin = skinState.value
     val slim = account.safeSkinModel == "slim"
 
+    // Jubah dimuat terpisah dari skin supaya skin tampil duluan; naik revisi = jubah diganti di wardrobe
+    val capeRevision by SkinUtils.capeRevision.collectAsState()
+    val capeState = produceState<ImageBitmap?>(
+        initialValue = null,
+        account.id,
+        account.customCapePath,
+        account.safeAccountType,
+        capeRevision
+    ) {
+        value = withContext(Dispatchers.IO) {
+            runCatching {
+                val file = if (account.safeAccountType == "microsoft") {
+                    SkinUtils.ensureMojangCape(context, account)
+                } else {
+                    SkinUtils.resolveCapeFile(context, account)
+                }
+                file?.takeIf { it.length() > 0 }
+                    ?.let { BitmapFactory.decodeFile(it.absolutePath) }
+                    ?.asImageBitmap()
+            }.getOrNull()
+        }
+    }
+    val cape = capeState.value
+
     // Sudut putar: dibaca hanya saat menggambar, jadi menggeser tidak memicu komposisi ulang
     var angle by remember(account.id) { mutableFloatStateOf(0.5f) }
 
@@ -574,7 +600,7 @@ private fun AccountSkinPreview(
                     detectHorizontalDragGestures { _, dragX -> angle += dragX * 0.012f }
                 }
         ) {
-            drawSkin3D(skin, slim, angle)
+            drawSkin3D(skin, cape, slim, angle)
         }
     }
 }
@@ -598,7 +624,7 @@ private class SkinBox(
  * ke samping (tanpa miring), setiap sisi tegak tampil sebagai persegi panjang yang lebarnya mengecil,
  * jadi cukup beberapa drawImage tanpa matriks. Bagian terjauh digambar lebih dulu.
  */
-private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float) {
+private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float) {
     val legacy = img.height < 64
     val armW = if (slim) 3 else 4
     val unit = minOf(size.width / 16f, size.height / 32.6f)
@@ -626,6 +652,11 @@ private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float) 
         SkinBox(-2f, 20f, 4, 12, 4, 0, 16, 0, 32, !legacy),                           // kaki kanan
         SkinBox(2f, 20f, 4, 12, 4, if (legacy) 0 else 16, if (legacy) 16 else 48, 0, 48, !legacy) // kaki kiri
     )
+
+    // Jubah menggantung di belakang badan: dilihat dari depan ia terjauh (digambar dulu),
+    // dilihat dari belakang ia terdekat (digambar terakhir).
+    val capeBehind = cosA >= 0f
+    if (cape != null && capeBehind) drawCape(cape, unit, ox, oy, cosA, sinA)
 
     for (b in boxes.sortedByDescending { -it.cx * sinA }) {
         val hw = b.w / 2f
@@ -656,6 +687,47 @@ private fun DrawScope.drawSkin3D(img: ImageBitmap, slim: Boolean, angle: Float) 
         layer(b.u, b.v)
         if (b.hasOverlay) layer(b.ou, b.ov)
     }
+
+    if (cape != null && !capeBehind) drawCape(cape, unit, ox, oy, cosA, sinA)
+}
+
+/**
+ * Jubah: kotak 10 x 16 x 1 tepat di belakang badan (tanpa kemiringan). Sisi luar, yang terlihat dari
+ * belakang, memakai petak (1,1) pada tekstur jubah; dua sisi samping setebal 1 piksel. Tekstur HD
+ * (128x64 dan seterusnya) diskalakan lewat [s]. Sisi dalam dan atas tertutup badan, jadi tidak digambar.
+ */
+private fun DrawScope.drawCape(cape: ImageBitmap, unit: Float, ox: Float, oy: Float, cosA: Float, sinA: Float) {
+    val s = when {
+        cape.width >= 64 -> cape.width / 64
+        cape.width >= 22 -> cape.width / 22 // format lama 22x17
+        else -> 1
+    }
+    // Petak yang dibutuhkan harus ada di dalam gambar (22 x 17 satuan tekstur)
+    if (cape.width < 22 * s || cape.height < 17 * s) return
+
+    val top = 8f      // sejajar bahu
+    val hw = 5f       // lebar 10
+    val zIn = 2f      // menempel punggung (badan setebal 4, dari -2 sampai 2)
+    val zOut = 3f
+
+    fun face(u0: Int, v0: Int, srcW: Int, x1: Float, z1: Float, x2: Float, z2: Float) {
+        val sx1 = x1 * cosA + z1 * sinA
+        val sx2 = x2 * cosA + z2 * sinA
+        if (sx2 - sx1 < 0.01f) return   // sisi membelakangi kamera
+        val dstW = ((sx2 - sx1) * unit).roundToInt().coerceAtLeast(1)
+        drawImage(
+            image = cape,
+            srcOffset = IntOffset(u0 * s, v0 * s),
+            srcSize = IntSize(srcW * s, 16 * s),
+            dstOffset = IntOffset((ox + sx1 * unit).roundToInt(), (oy + top * unit).roundToInt()),
+            dstSize = IntSize(dstW, (16 * unit).roundToInt()),
+            filterQuality = FilterQuality.None
+        )
+    }
+
+    face(1, 1, 10, hw, zOut, -hw, zOut)   // luar (terlihat dari belakang)
+    face(0, 1, 1, -hw, zOut, -hw, zIn)    // sisi kanan tubuh
+    face(11, 1, 1, hw, zIn, hw, zOut)     // sisi kiri tubuh
 }
 
 private fun acctAccent(type: String): Color = when (type) {

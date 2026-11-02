@@ -109,3 +109,13 @@ Memasang NeoForge	Installing NeoForge
 Proses ini hanya berjalan sekali per versi NeoForge.	This runs only once per NeoForge version.
 NeoForge dipasang sekali saat instance diunduh pertama kali.	NeoForge is installed once, when the instance is first downloaded.
 Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	Not enough storage to install NeoForge ({0} MB left, at least {1} MB needed)
+Buat Instance	Create Instance
+Cari versi...	Search versions...
+Memuat versi Minecraft...	Loading Minecraft versions...
+Memuat versi yang didukung {0}...	Loading versions supported by {0}...
+Gagal memuat daftar versi Minecraft	Failed to load the Minecraft version list
+Dirilis {0}	Released {0}
+LOADER {0}	{0} LOADER
+Memuat loader {0}...	Loading {0} loader...
+Loader {0} belum tersedia untuk Minecraft {1}	{0} loader is not available yet for Minecraft {1}
+Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	The newest version is picked automatically. Tap another one if you need an older loader.

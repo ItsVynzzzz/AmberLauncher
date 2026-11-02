@@ -96,6 +96,36 @@ object ForgeService {
         result
     }
 
+    /**
+     * Versi Minecraft yang punya build [flavor] dan didukung Amber. Satu permintaan (Forge: daftar
+     * promosi resmi; NeoForge: berkas metadata Maven yang sama dengan daftar build). Dipakai layar buat
+     * instance supaya hanya menampilkan versi yang memang punya loader itu. Gagal = layar memakai
+     * perkiraan sendiri.
+     */
+    suspend fun getSupportedMcVersions(flavor: ForgeFlavor): Result<Set<String>> = withContext(Dispatchers.IO) {
+        try {
+            val found: Set<String> = when (flavor) {
+                ForgeFlavor.FORGE -> fetchPromos().keys
+                    .map { it.substringBeforeLast('-') } // "1.20.1-latest" menjadi "1.20.1"
+                    .toSet()
+                ForgeFlavor.NEOFORGE -> {
+                    val grouped = neoForgeByMc ?: NeoForgeVersions
+                        .groupByMc(NeoForgeVersions.parseMetadataVersions(httpGet(NEO_METADATA_URL)))
+                        .also { if (it.isNotEmpty()) neoForgeByMc = it }
+                    grouped.keys
+                }
+            }
+            val supported = found.filter { isMcSupported(it, flavor) }.toSet()
+            if (supported.isEmpty()) {
+                Result.failure<Set<String>>(IOException("Tidak ada versi ${flavor.displayName} yang didukung"))
+            } else {
+                Result.success(supported)
+            }
+        } catch (e: Exception) {
+            Result.failure<Set<String>>(e)
+        }
+    }
+
     private suspend fun loadForgeBuilds(mcVersion: String): Result<List<ForgeBuild>> {
         val (promos, all) = coroutineScope {
             val p = async { runCatching { fetchPromos() }.getOrNull() }

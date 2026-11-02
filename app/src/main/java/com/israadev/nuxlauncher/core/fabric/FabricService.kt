@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit
 object FabricService {
     private const val META_URL = "https://meta.fabricmc.net/v2/versions/loader"
     private const val MIRROR_META_URL = "https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader"
+    private const val GAME_URL = "https://meta.fabricmc.net/v2/versions/game"
+    private const val MIRROR_GAME_URL = "https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/game"
 
     private val gson = Gson()
     val client = OkHttpClient.Builder()
@@ -62,6 +64,37 @@ object FabricService {
             }
         }
         Result.failure(lastException ?: IOException("Tidak dapat memuat versi Fabric untuk $gameVersion"))
+    }
+
+    /**
+     * Daftar versi game Minecraft yang didukung Fabric (rilis dan snapshot). Dipakai layar buat instance
+     * untuk hanya menampilkan versi yang memang punya Fabric. Gagal = layar memakai perkiraan sendiri.
+     */
+    suspend fun getSupportedGameVersions(): Result<Set<String>> = withContext(Dispatchers.IO) {
+        var lastException: Exception? = null
+        for (url in listOf(GAME_URL, MIRROR_GAME_URL)) {
+            try {
+                val request = Request.Builder().url(url).build()
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    lastException = IOException("HTTP Error ${response.code} from $url")
+                    continue
+                }
+
+                val json = response.body?.string() ?: continue
+                val versions = com.google.gson.JsonParser.parseString(json).asJsonArray
+                    .mapNotNull { element ->
+                        element.asJsonObject.get("version")?.asString?.trim()?.takeIf { it.isNotEmpty() }
+                    }
+                    .toSet()
+                if (versions.isNotEmpty()) {
+                    return@withContext Result.success(versions)
+                }
+            } catch (e: Exception) {
+                lastException = e
+            }
+        }
+        Result.failure<Set<String>>(lastException ?: IOException("Tidak dapat memuat daftar versi Fabric"))
     }
 
     /**

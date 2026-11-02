@@ -148,7 +148,6 @@ import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
 import com.israadev.nuxlauncher.ui.components.rememberIsResumed
 import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
-import com.israadev.nuxlauncher.ui.dialogs.NuxAddInstanceDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAddonImportDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxCrashDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxDeleteInstanceDialog
@@ -197,7 +196,6 @@ fun DashboardScreen() {
     val currentAccount by AccountManager.currentAccount.collectAsState()
     val launcherSettings by SettingsManager.settings.collectAsState()
 
-    var showAddDialog by remember { mutableStateOf(false) }
     var showEditInstanceDialog by remember { mutableStateOf(false) }
     var showInstancePicker by remember { mutableStateOf(false) }
     var instanceToDelete by remember { mutableStateOf<Instance?>(null) }
@@ -421,7 +419,7 @@ fun DashboardScreen() {
                         onOpenAbout = { showAboutDialog = true },
                         onPickInstance = { showInstancePicker = true },
                         onPlay = { selectedInstance?.let { startInstance(it) } },
-                        onCreateInstance = { showAddDialog = true },
+                        onCreateInstance = { currentTab = "create_instance" },
                         onEditInstance = { showEditInstanceDialog = true },
                         onNavigate = { tab ->
                             if (tab == "mods") {
@@ -436,7 +434,7 @@ fun DashboardScreen() {
                     )
                 }
 
-                // Mod, kelola konten, Akun, dan Pengaturan: layar penuh dengan pil navigasi yang sama
+                // Mod, kelola konten, Buat Instance, Akun, dan Pengaturan: layar penuh dengan pil navigasi yang sama
                 // di kiri atas (kembali, Mod, Akun, Pengaturan).
                 else -> Box(
                     modifier = Modifier
@@ -466,6 +464,15 @@ fun DashboardScreen() {
                                     modsInitialType = type
                                     modsBackTab = "instance_content"
                                     currentTab = "mods"
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            "create_instance" -> CreateInstanceScreen(
+                                onNavigateBack = { currentTab = "home" },
+                                onInstanceCreated = { newInst ->
+                                    InstanceManager.createInstance(context, newInst)
+                                    Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
+                                    currentTab = "home"
                                 },
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -536,21 +543,9 @@ fun DashboardScreen() {
                 },
                 onAdd = {
                     showInstancePicker = false
-                    showAddDialog = true
+                    currentTab = "create_instance"
                 },
                 onDismiss = { showInstancePicker = false }
-            )
-        }
-
-        // Add Instance Dialog
-        if (showAddDialog) {
-            NuxAddInstanceDialog(
-                onDismiss = { showAddDialog = false },
-                onInstanceCreated = { newInst ->
-                    showAddDialog = false
-                    InstanceManager.createInstance(context, newInst)
-                    Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
-                }
             )
         }
 

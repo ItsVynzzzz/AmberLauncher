@@ -1,0 +1,485 @@
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index cef3824..ec629f3 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -129,3 +129,10 @@ Lokasi: {0}	Location: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Send it through WhatsApp, Telegram or Google Drive with the Share button, or take it straight from that folder with a file manager.
+ Dukungan controller	Controller support
+ Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Plug in a controller and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the sticks move the cursor. If a controller mod (e.g. Controlify) is detected, the controller is handed over to the mod.
++Plugin native library	Native library plugins
++Belum ada plugin terpasang	No plugins installed
++Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Install the native library plugin APK (Zalith/FCL format) that a mod needs, for example Distant Horizons, then tap to scan again.
++Pindai	Scan
++Memindai...	Scanning...
++Pindai ulang plugin	Rescan plugins
++Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Use after installing or removing a plugin. Plugins are also scanned automatically every time the game starts.
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index bc4c88c..a689cb7 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -129,3 +129,10 @@ Lokasi: {0}	Ubicaci\u00f3n: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Env\u00edalo por WhatsApp, Telegram o Google Drive con el bot\u00f3n Compartir, o c\u00f3gelo directamente de esa carpeta con un administrador de archivos.
+ Dukungan controller	Compatibilidad con mando
+ Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Conecta un mando y juega: stick izquierdo camina, derecho mira, A salta, RT ataca, LT coloca/usa, Y abre el inventario, Start = Esc. En los men\u00fas los sticks mueven el cursor. Si se detecta un mod de mando (p. ej. Controlify), el mando se entrega al mod.
++Plugin native library	Plugins de bibliotecas nativas
++Belum ada plugin terpasang	No hay plugins instalados
++Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Instala el APK del plugin de biblioteca nativa (formato Zalith/FCL) que necesita un mod, por ejemplo Distant Horizons, y toca para volver a buscar.
++Pindai	Buscar
++Memindai...	Buscando...
++Pindai ulang plugin	Volver a buscar plugins
++Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Úsalo tras instalar o quitar un plugin. Los plugins también se buscan automáticamente cada vez que se inicia el juego.
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index e15b152..708387e 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -128,3 +128,10 @@ Lokasi: {0}	V\u1ecb tr\u00ed: {0}
+ Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	G\u1eedi qua WhatsApp, Telegram ho\u1eb7c Google Drive b\u1eb1ng n\u00fat Chia s\u1ebb, ho\u1eb7c l\u1ea5y tr\u1ef1c ti\u1ebfp t\u1eeb th\u01b0 m\u1ee5c \u0111\u00f3 b\u1eb1ng tr\u00ecnh qu\u1ea3n l\u00fd t\u1ec7p.
+ Dukungan controller	H\u1ed7 tr\u1ee3 tay c\u1ea7m
+ Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	C\u1eafm tay c\u1ea7m v\u00e0 ch\u01a1i: c\u1ea7n tr\u00e1i \u0111i, c\u1ea7n ph\u1ea3i xoay camera, A nh\u1ea3y, RT \u0111\u00e1nh, LT \u0111\u1eb7t/d\u00f9ng, Y m\u1edf t\u00fai \u0111\u1ed3, Start = Esc. Trong menu c\u1ea7n g\u1ea1t di chuy\u1ec3n con tr\u1ecf. N\u1ebfu ph\u00e1t hi\u1ec7n mod tay c\u1ea7m (v\u00ed d\u1ee5 Controlify), tay c\u1ea7m s\u1ebd giao cho mod.
++Plugin native library	Plugin thư viện gốc
++Belum ada plugin terpasang	Chưa cài plugin nào
++Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Cài APK plugin thư viện gốc (định dạng Zalith/FCL) mà mod cần, ví dụ Distant Horizons, rồi chạm để quét lại.
++Pindai	Quét
++Memindai...	Đang quét...
++Pindai ulang plugin	Quét lại plugin
++Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Dùng sau khi cài hoặc gỡ plugin. Plugin cũng được quét tự động mỗi lần trò chơi khởi động.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 079face..fe0ca4d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -1028,6 +1028,16 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 // tetap perlu /system/lib, bukan /system/lib64.
+                 val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
+ 
++                // Plugin native library (Distant Horizons dkk). Hasil pemindaian di atas sudah memuatnya, jadi ini
++                // hanya membaca daftar di memori. Tanpa plugin terpasang rencananya kosong dan tidak ada yang berubah.
++                val nativePlan = com.israadev.nuxlauncher.core.plugin.NativePluginManager.planFor(
++                    mcVersion, activeSettings.disabledNativePlugins
++                )
++                nativePlan.active.forEach {
++                    LoggerBridge.append("▷ [Plugin Native] ${it.displayName} (${it.packageName}): ${it.nativeLibDir}")
++                }
++                nativePlan.skipped.forEach { LoggerBridge.append("▷ [Plugin Native] dilewati - $it") }
++
+                 // 1. Runtime linker library path (Dipakai oleh ZLBridge.setLdLibraryPath untuk memperbarui Android Bionic Linker)
+                 val runtimeLdPaths = mutableListOf<String>()
+                 if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
+@@ -1055,6 +1065,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 }
+                 if (lwjglNativesDirPath.isNotBlank()) runtimeLdPaths.add(lwjglNativesDirPath)
+                 runtimeLdPaths.add(nativeLibDir)
++                // Setelah folder milik launcher: pustaka launcher (mis. libc++_shared) tidak boleh tertimpa
++                // salinan di dalam plugin, tapi pustaka unik plugin tetap ditemukan lewat linker.
++                runtimeLdPaths.addAll(nativePlan.libPaths)
+                 runtimeLdPaths.add("/system/$libDirName")
+                 runtimeLdPaths.add("/vendor/$libDirName")
+                 runtimeLdPaths.add("/vendor/$libDirName/hw")
+@@ -1076,6 +1089,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                     gameLdPaths.add(targetRenderer.pluginNativePath!!)
+                 }
+                 gameLdPaths.add(nativeLibDir)
++                // Plugin native library: dipakai System.loadLibrary mod (java.library.path) dan dlopen via nama.
++                gameLdPaths.addAll(nativePlan.libPaths)
+                 val gameLdLibraryPath = gameLdPaths.distinct().joinToString(":")
+ 
+                 val glLibPath = if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
+@@ -1487,6 +1502,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 jvmArgs.add("-Dorg.lwjgl.system.SharedLibraryExtractPath=${cacheDir.absolutePath}")
+                 jvmArgs.add("-Dio.netty.tryReflectionSetAccessible=true")
+ 
++                // Properti sistem dari plugin native library (mis. -Dorg.sqlite.lib.path=...). Sudah disaring
++                // di NativePluginManager; argumen JVM kustom pengguna di bawah tetap bisa menimpanya.
++                nativePlan.jvmArgs.forEach { jvmArgs.add(it) }
++
+                 jvmArgs.add("-XX:ActiveProcessorCount=${Runtime.getRuntime().availableProcessors()}")
+                 // Data kinerja JVM (untuk jstat/jcmd) tidak terpakai di HP: mematikannya menghapus tugas
+                 // pencuplik yang bangun 20 kali per detik di thread watcher JVM. Tidak mengubah isi game.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 31f60b7..d76c78d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -52,6 +52,11 @@ data class LauncherSettings(
+     val recordThermalGuard: Boolean = true, // hentikan rekaman otomatis bila HP sangat panas
+     val recordWithControls: Boolean = false, // false = layar game saja (tombol disembunyikan saat merekam), true = ikut merekam tombol kontrol
+ 
++    // Plugin native library (APK format Zalith/FCL, mis. untuk Distant Horizons) yang DIMATIKAN pengguna,
++    // berupa nama paket. Daftar kosong = semua plugin terpasang dipakai. Menyimpan yang dimatikan (bukan yang
++    // dinyalakan) membuat plugin baru langsung aktif tanpa langkah tambahan.
++    val disabledNativePlugins: List<String> = emptyList(),
++
+     // Kunci layar 90/120 Hz ke 60 Hz selama game berjalan (bawaan mati).
+     val lockRefresh60: Boolean = false,
+     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginArgs.kt b/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginArgs.kt
+new file mode 100644
+index 0000000..b753ca3
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginArgs.kt
+@@ -0,0 +1,58 @@
++package com.israadev.nuxlauncher.core.plugin
++
++/**
++ * Penyaring argumen JVM dari metadata `environment` plugin native library. Logika murni (tanpa Android)
++ * supaya bisa diuji langsung di JVM.
++ */
++object NativePluginArgs {
++    const val PLACEHOLDER = "{nativeLibraryDir}"
++
++    /**
++     * Kunci properti sistem yang dikelola launcher. Plugin tidak boleh menimpanya: nilai yang salah
++     * membuat JVM atau LWJGL gagal start. Properti lain (mis. `org.sqlite.*`) bebas.
++     */
++    private val PROTECTED_KEYS = setOf(
++        "java.home", "java.library.path", "java.class.path", "java.io.tmpdir",
++        "user.home", "os.name", "os.version", "jna.boot.library.path"
++    )
++
++    private val WHITESPACE = Regex("\\s+")
++
++    /**
++     * Mengubah string `environment` (dipisah spasi) menjadi argumen JVM yang aman:
++     *  - hanya properti sistem `-Dkunci` atau `-Dkunci=nilai`; argumen lain (-javaagent, -XX, --add-opens, dst.)
++     *    bisa menyuntikkan kode atau mengubah JVM dan tidak dibutuhkan untuk menunjuk pustaka;
++     *  - kunci terlindungi dan `org.lwjgl.*` dibuang;
++     *  - `{nativeLibraryDir}` diganti [libDir]; nilai dengan segmen ".." ditolak (anti keluar folder).
++     * Setiap token yang dibuang dilaporkan lewat [onReject] (alasannya untuk log).
++     */
++    fun sanitize(environment: String, libDir: String, onReject: (String) -> Unit = {}): List<String> {
++        if (environment.isBlank()) return emptyList()
++        val out = ArrayList<String>()
++        for (token in environment.trim().split(WHITESPACE)) {
++            if (token.isEmpty()) continue
++            if (!token.startsWith("-D")) {
++                onReject("hanya -D yang diizinkan: $token")
++                continue
++            }
++            val eq = token.indexOf('=')
++            val key = if (eq < 0) token.substring(2) else token.substring(2, eq)
++            if (key.isEmpty() || key in PROTECTED_KEYS || key.startsWith("org.lwjgl.")) {
++                onReject("properti dikelola launcher: $token")
++                continue
++            }
++            if (eq < 0) {
++                out.add(token)
++                continue
++            }
++            val raw = token.substring(eq + 1)
++            val value = if (raw.contains(PLACEHOLDER)) raw.replace(PLACEHOLDER, libDir) else raw
++            if (value.split('/', ',', ':').any { it == ".." }) {
++                onReject("path mengandung '..': $token")
++                continue
++            }
++            out.add("-D$key=$value")
++        }
++        return out
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginManager.kt
+new file mode 100644
+index 0000000..0e92202
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/plugin/NativePluginManager.kt
+@@ -0,0 +1,136 @@
++package com.israadev.nuxlauncher.core.plugin
++
++import android.content.pm.ApplicationInfo
++import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
++import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
++import java.io.File
++
++/**
++ * Plugin native library: APK terpisah yang hanya membawa pustaka .so (mis. sqlite/zstd versi bionic) untuk
++ * mod yang pustaka bawaannya dibangun untuk glibc dan tidak bisa dimuat di Android (Distant Horizons dkk).
++ * Formatnya sama dengan plugin native Zalith/FCL, jadi APK plugin yang sudah ada langsung dikenali.
++ *
++ * Penanda di AndroidManifest (meta-data):
++ *  - `FCLNativePlugin` = true (wajib)
++ *  - `environment`     = argumen JVM dipisah spasi, mis. `-Dorg.sqlite.lib.path={nativeLibraryDir}`
++ *  - `des`             = nama tampilan
++ *  - `minMCVer` / `maxMCVer` = rentang versi Minecraft yang didukung (opsional)
++ *
++ * Soal beban: plugin dikenali oleh [com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager] di dalam
++ * putaran pemindaian aplikasi yang SUDAH ada (satu kali ambil daftar aplikasi, tanpa panggilan IPC tambahan).
++ * Bila tidak ada plugin terpasang, [planFor] mengembalikan rencana kosong: tidak ada path, argumen, atau
++ * pemuatan pustaka yang ditambahkan, dan tidak ada layanan atau thread latar baru.
++ */
++object NativePluginManager {
++    private const val TAG = "NativePlugin"
++    private const val META_FLAG = "FCLNativePlugin"
++
++    data class NativePlugin(
++        val packageName: String,
++        val displayName: String,
++        val nativeLibDir: String,
++        val minMcVersion: String?,
++        val maxMcVersion: String?,
++        /** Argumen JVM yang sudah dibersihkan (hanya `-D`, tanpa kunci terlindungi, placeholder sudah diganti). */
++        val jvmArgs: List<String>
++    )
++
++    /** Hasil keputusan untuk satu kali peluncuran. */
++    class LaunchPlan(
++        val active: List<NativePlugin>,
++        /** Folder pustaka yang ditambahkan ke library path, tanpa duplikat. */
++        val libPaths: List<String>,
++        /** Argumen JVM tambahan, tanpa duplikat. */
++        val jvmArgs: List<String>,
++        /** Keterangan plugin yang terpasang tetapi tidak dipakai kali ini (untuk log). */
++        val skipped: List<String>
++    ) {
++        val isEmpty: Boolean get() = active.isEmpty()
++    }
++
++    @Volatile
++    private var plugins: List<NativePlugin> = emptyList()
++
++    fun getPlugins(): List<NativePlugin> = plugins
++
++    /** Dipanggil pemindai aplikasi di akhir tiap pemindaian. Mengganti seluruh daftar. */
++    fun setPlugins(list: List<NativePlugin>) {
++        plugins = list.sortedBy { it.displayName.lowercase() }
++    }
++
++    /**
++     * Mengenali plugin dari satu aplikasi. Murah: aplikasi tanpa metadata (hampir semuanya) langsung selesai.
++     * [label] hanya dipanggil bila plugin tidak punya `des`, karena membaca label membuka resource aplikasi.
++     */
++    fun parse(info: ApplicationInfo, label: () -> String): NativePlugin? {
++        // Seperti plugin renderer: hanya APK yang dipasang pengguna dan menandai dirinya lewat metadata.
++        if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) return null
++        val meta = info.metaData ?: return null
++        if (!meta.getBoolean(META_FLAG, false)) return null
++
++        val libDir = info.nativeLibraryDir?.takeIf { it.isNotBlank() } ?: return null
++        val pkg = info.packageName
++        val name = meta.getString("des")?.takeIf { it.isNotBlank() } ?: label()
++
++        @Suppress("DEPRECATION")
++        fun versionOf(key: String): String? {
++            if (!meta.containsKey(key)) return null
++            val v = when (val raw = meta.get(key)) {
++                is String -> raw
++                is Number -> raw.toString()
++                else -> null
++            }
++            return v?.trim()?.takeIf { it.isNotEmpty() }
++        }
++
++        return NativePlugin(
++            packageName = pkg,
++            displayName = name,
++            nativeLibDir = libDir,
++            minMcVersion = versionOf("minMCVer"),
++            maxMcVersion = versionOf("maxMCVer"),
++            jvmArgs = parseArgs(meta.getString("environment").orEmpty(), libDir, pkg)
++        )
++    }
++
++    /**
++     * Memutuskan plugin mana yang dipakai untuk [mcVersion]. Plugin yang dimatikan pengguna, di luar rentang
++     * versi, atau foldernya tidak ada dilewati (dicatat di [LaunchPlan.skipped]) tanpa menghentikan peluncuran.
++     */
++    fun planFor(mcVersion: String, disabled: Collection<String>): LaunchPlan {
++        val all = plugins
++        if (all.isEmpty()) return LaunchPlan(emptyList(), emptyList(), emptyList(), emptyList())
++
++        val active = ArrayList<NativePlugin>(all.size)
++        val skipped = ArrayList<String>()
++        for (p in all) {
++            when {
++                p.packageName in disabled -> skipped.add("${p.displayName}: dimatikan di Pengaturan")
++                !supports(p, mcVersion) -> skipped.add("${p.displayName}: di luar rentang versi Minecraft ($mcVersion)")
++                !File(p.nativeLibDir).isDirectory -> skipped.add("${p.displayName}: folder pustaka tidak ada")
++                else -> active.add(p)
++            }
++        }
++        return LaunchPlan(
++            active = active,
++            libPaths = active.map { it.nativeLibDir }.distinct(),
++            jvmArgs = active.flatMap { it.jvmArgs }.distinct(),
++            skipped = skipped
++        )
++    }
++
++    /** Versi Minecraft tidak dikenal (kosong atau "Unknown") dianggap didukung supaya tidak memblokir tanpa alasan. */
++    fun supports(p: NativePlugin, mcVersion: String): Boolean {
++        if (mcVersion.isBlank() || mcVersion.equals("Unknown", ignoreCase = true)) return true
++        val min = p.minMcVersion
++        if (min != null && NuxVersionUtils.isLowerVer(mcVersion, min)) return false
++        val max = p.maxMcVersion
++        if (max != null && NuxVersionUtils.isBiggerVer(mcVersion, max)) return false
++        return true
++    }
++
++    private fun parseArgs(environment: String, libDir: String, pkg: String): List<String> =
++        NativePluginArgs.sanitize(environment, libDir) { reason ->
++            Log.w(TAG, "$pkg: argumen ditolak - $reason")
++        }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/renderer/NuxRendererPluginManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/renderer/NuxRendererPluginManager.kt
+index 3cc3732..bc3c8df 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/renderer/NuxRendererPluginManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/renderer/NuxRendererPluginManager.kt
+@@ -5,6 +5,7 @@ import android.content.Intent
+ import android.content.pm.ApplicationInfo
+ import android.content.pm.PackageManager
+ import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
++import com.israadev.nuxlauncher.core.plugin.NativePluginManager
+ import java.io.File
+ 
+ object NuxRendererPluginManager {
+@@ -45,6 +46,7 @@ object NuxRendererPluginManager {
+     @Synchronized
+     fun scanPlugins(context: Context): List<NuxRendererInfo> {
+         val detected = mutableListOf<NuxRendererInfo>()
++        val detectedNative = mutableListOf<NativePluginManager.NativePlugin>()
+         val pm = context.packageManager
+         val processedPackages = mutableSetOf<String>()
+ 
+@@ -62,17 +64,25 @@ object NuxRendererPluginManager {
+                 // menebak, supaya launcher lain (Pojav, Zalith, dll) dan aplikasi biasa tidak ikut terdaftar.
+                 if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) return
+ 
++                // Label (butuh membuka resource aplikasi, mahal) hanya dimuat bila benar-benar dipakai.
++                val appLabel by lazy(LazyThreadSafetyMode.NONE) {
++                    runCatching { info.loadLabel(pm).toString() }.getOrDefault(pkg)
++                }
++
++                // Plugin native library (untuk mod seperti Distant Horizons) dikenali di putaran yang sama:
++                // tidak ada pemindaian atau panggilan IPC tambahan. Aplikasi tanpa metadata langsung lolos.
++                // Tidak langsung return: satu APK boleh sekaligus plugin renderer.
++                NativePluginManager.parse(info) { appLabel }?.let {
++                    detectedNative.add(it)
++                    Log.i(TAG, "Found native library plugin: ${it.displayName} ($pkg)")
++                }
++
+                 val hasLegacyPlugin = metaData != null && (
+                     metaData.getBoolean("fclPlugin", false) ||
+                     metaData.getBoolean("zalithRendererPlugin", false)
+                 ) && !metaData.getString("renderer").isNullOrBlank()
+                 if (!hasLegacyPlugin && pkg !in KNOWN_PLUGIN_PACKAGES) return
+ 
+-                // Label (butuh membuka resource aplikasi, mahal) hanya dimuat bila benar-benar dipakai.
+-                val appLabel by lazy(LazyThreadSafetyMode.NONE) {
+-                    runCatching { info.loadLabel(pm).toString() }.getOrDefault(pkg)
+-                }
+-
+                 // 1. Metadata plugin FCL / Zalith (penanda fclPlugin atau zalithRendererPlugin + string renderer)
+                 if (metaData != null && hasLegacyPlugin) {
+                     val rendererString = metaData.getString("renderer") ?: ""
+@@ -201,6 +211,7 @@ object NuxRendererPluginManager {
+             pluginRenderers.addAll(detected)
+         }
+         NuxRendererRegistry.setPluginRenderers(detected)
++        NativePluginManager.setPlugins(detectedNative)
+         try {
+             com.israadev.nuxlauncher.core.renderer.v2.NuxRendererV2Manager.scanV2Plugins(context, installed)
+         } catch (e: Exception) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 4369d37..8328106 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -59,6 +59,7 @@ import com.israadev.nuxlauncher.core.models.LauncherSettings
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
++import com.israadev.nuxlauncher.core.plugin.NativePluginManager
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
+ import com.israadev.nuxlauncher.ui.components.*
+@@ -161,6 +162,18 @@ fun SettingsScreen(
+     var selectedConfigRenderer by remember { mutableStateOf<NuxRendererInfo?>(null) }
+     var showAdrenoWarningDialog by remember { mutableStateOf(false) }
+ 
++    // Plugin native library: daftar dari hasil pemindaian yang sudah ada (tidak memindai sendiri saat dibuka
++    // kecuali hasilnya belum pernah ada atau sudah tua), dan plugin yang dimatikan pengguna.
++    var nativePlugins by remember { mutableStateOf(NativePluginManager.getPlugins()) }
++    var nativeScanBusy by remember { mutableStateOf(false) }
++    var disabledNativePlugins by remember(currentSettings.disabledNativePlugins) { mutableStateOf(currentSettings.disabledNativePlugins) }
++    LaunchedEffect(Unit) {
++        withContext(Dispatchers.IO) {
++            try { NuxRendererPluginManager.scanPluginsIfStale(context) } catch (_: Throwable) {}
++        }
++        nativePlugins = NativePluginManager.getPlugins()
++    }
++
+     var appLanguage by remember { mutableStateOf(Tr.choice) }
+     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
+     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
+@@ -202,6 +215,7 @@ fun SettingsScreen(
+             graphicsApi = graphicsApi,
+             zinkPreferSystemDriver = zinkPreferSystemDriver,
+             vsyncInZink = vsyncInZink,
++            disabledNativePlugins = disabledNativePlugins,
+             recordQuality = recordQuality,
+             recordFps = recordFps,
+             recordMic = recordMic,
+@@ -220,6 +234,19 @@ fun SettingsScreen(
+         SettingsManager.updateSettings(context, updated)
+     }
+ 
++    // Pindai ulang atas permintaan pengguna (setelah memasang plugin baru), di thread latar.
++    fun rescanNativePlugins() {
++        if (nativeScanBusy) return
++        nativeScanBusy = true
++        scope.launch {
++            withContext(Dispatchers.IO) {
++                try { NuxRendererPluginManager.scanPlugins(context) } catch (_: Throwable) {}
++            }
++            nativePlugins = NativePluginManager.getPlugins()
++            nativeScanBusy = false
++        }
++    }
++
+     // Kategori aktif: 0 = Game, 1 = Tampilan, 2 = Kontrol, 3 = Tentang. Isinya digulir sendiri.
+     var section by remember { mutableIntStateOf(0) }
+     var query by remember { mutableStateOf("") }
+@@ -500,6 +527,47 @@ fun SettingsScreen(
+                         )
+                         }
+ 
++                        // Plugin native library (format Zalith/FCL) untuk mod yang butuh pustaka native Android,
++                        // mis. Distant Horizons. Dipakai hanya saat game dijalankan; tanpa plugin tidak ada beban.
++                        SettingsGroup("Plugin native library") {
++                        if (nativePlugins.isEmpty()) {
++                            SettingValueRow(
++                                title = "Belum ada plugin terpasang",
++                                desc = "Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.",
++                                value = if (nativeScanBusy) "Memindai..." else "Pindai",
++                                onClick = { rescanNativePlugins() }
++                            )
++                        } else {
++                            nativePlugins.forEachIndexed { index, plugin ->
++                                if (index > 0) SettingDivider()
++                                val range = listOfNotNull(
++                                    plugin.minMcVersion?.let { ">= $it" },
++                                    plugin.maxMcVersion?.let { "<= $it" }
++                                ).joinToString(" ")
++                                SettingSwitchRow(
++                                    title = plugin.displayName,
++                                    desc = plugin.packageName + if (range.isNotEmpty()) " · Minecraft $range" else "",
++                                    checked = plugin.packageName !in disabledNativePlugins,
++                                    onCheckedChange = { on ->
++                                        disabledNativePlugins = if (on) {
++                                            disabledNativePlugins - plugin.packageName
++                                        } else {
++                                            (disabledNativePlugins + plugin.packageName).distinct()
++                                        }
++                                        commitSettings()
++                                    }
++                                )
++                            }
++                            SettingDivider()
++                            SettingValueRow(
++                                title = "Pindai ulang plugin",
++                                desc = "Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.",
++                                value = if (nativeScanBusy) "Memindai..." else "Pindai",
++                                onClick = { rescanNativePlugins() }
++                            )
++                        }
++                        }
++
+                         SettingsGroup("Perekaman layar") {
+                         // Rekam layar bawaan (tombol Rekam ada di menu dalam game). Bawaannya sengaja hemat.
+                         SettingChoiceRow(
+# FIN part=1/1 files=9

@@ -129,3 +129,10 @@ Lokasi: {0}	Ubicaci\u00f3n: {0}
 Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Env\u00edalo por WhatsApp, Telegram o Google Drive con el bot\u00f3n Compartir, o c\u00f3gelo directamente de esa carpeta con un administrador de archivos.
 Dukungan controller	Compatibilidad con mando
 Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Conecta un mando y juega: stick izquierdo camina, derecho mira, A salta, RT ataca, LT coloca/usa, Y abre el inventario, Start = Esc. En los men\u00fas los sticks mueven el cursor. Si se detecta un mod de mando (p. ej. Controlify), el mando se entrega al mod.
+Plugin native library	Plugins de bibliotecas nativas
+Belum ada plugin terpasang	No hay plugins instalados
+Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Instala el APK del plugin de biblioteca nativa (formato Zalith/FCL) que necesita un mod, por ejemplo Distant Horizons, y toca para volver a buscar.
+Pindai	Buscar
+Memindai...	Buscando...
+Pindai ulang plugin	Volver a buscar plugins
+Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Úsalo tras instalar o quitar un plugin. Los plugins también se buscan automáticamente cada vez que se inicia el juego.

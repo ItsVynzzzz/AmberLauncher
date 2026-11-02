@@ -52,6 +52,11 @@ data class LauncherSettings(
     val recordThermalGuard: Boolean = true, // hentikan rekaman otomatis bila HP sangat panas
     val recordWithControls: Boolean = false, // false = layar game saja (tombol disembunyikan saat merekam), true = ikut merekam tombol kontrol
 
+    // Plugin native library (APK format Zalith/FCL, mis. untuk Distant Horizons) yang DIMATIKAN pengguna,
+    // berupa nama paket. Daftar kosong = semua plugin terpasang dipakai. Menyimpan yang dimatikan (bukan yang
+    // dinyalakan) membuat plugin baru langsung aktif tanpa langkah tambahan.
+    val disabledNativePlugins: List<String> = emptyList(),
+
     // Kunci layar 90/120 Hz ke 60 Hz selama game berjalan (bawaan mati).
     val lockRefresh60: Boolean = false,
     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"

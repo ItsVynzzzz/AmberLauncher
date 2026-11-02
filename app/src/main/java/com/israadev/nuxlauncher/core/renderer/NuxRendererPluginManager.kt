@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.israadev.nuxlauncher.core.crash.LauncherLog as Log
+import com.israadev.nuxlauncher.core.plugin.NativePluginManager
 import java.io.File
 
 object NuxRendererPluginManager {
@@ -45,6 +46,7 @@ object NuxRendererPluginManager {
     @Synchronized
     fun scanPlugins(context: Context): List<NuxRendererInfo> {
         val detected = mutableListOf<NuxRendererInfo>()
+        val detectedNative = mutableListOf<NativePluginManager.NativePlugin>()
         val pm = context.packageManager
         val processedPackages = mutableSetOf<String>()
 
@@ -62,16 +64,24 @@ object NuxRendererPluginManager {
                 // menebak, supaya launcher lain (Pojav, Zalith, dll) dan aplikasi biasa tidak ikut terdaftar.
                 if ((info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) return
 
+                // Label (butuh membuka resource aplikasi, mahal) hanya dimuat bila benar-benar dipakai.
+                val appLabel by lazy(LazyThreadSafetyMode.NONE) {
+                    runCatching { info.loadLabel(pm).toString() }.getOrDefault(pkg)
+                }
+
+                // Plugin native library (untuk mod seperti Distant Horizons) dikenali di putaran yang sama:
+                // tidak ada pemindaian atau panggilan IPC tambahan. Aplikasi tanpa metadata langsung lolos.
+                // Tidak langsung return: satu APK boleh sekaligus plugin renderer.
+                NativePluginManager.parse(info) { appLabel }?.let {
+                    detectedNative.add(it)
+                    Log.i(TAG, "Found native library plugin: ${it.displayName} ($pkg)")
+                }
+
                 val hasLegacyPlugin = metaData != null && (
                     metaData.getBoolean("fclPlugin", false) ||
                     metaData.getBoolean("zalithRendererPlugin", false)
                 ) && !metaData.getString("renderer").isNullOrBlank()
                 if (!hasLegacyPlugin && pkg !in KNOWN_PLUGIN_PACKAGES) return
-
-                // Label (butuh membuka resource aplikasi, mahal) hanya dimuat bila benar-benar dipakai.
-                val appLabel by lazy(LazyThreadSafetyMode.NONE) {
-                    runCatching { info.loadLabel(pm).toString() }.getOrDefault(pkg)
-                }
 
                 // 1. Metadata plugin FCL / Zalith (penanda fclPlugin atau zalithRendererPlugin + string renderer)
                 if (metaData != null && hasLegacyPlugin) {
@@ -201,6 +211,7 @@ object NuxRendererPluginManager {
             pluginRenderers.addAll(detected)
         }
         NuxRendererRegistry.setPluginRenderers(detected)
+        NativePluginManager.setPlugins(detectedNative)
         try {
             com.israadev.nuxlauncher.core.renderer.v2.NuxRendererV2Manager.scanV2Plugins(context, installed)
         } catch (e: Exception) {

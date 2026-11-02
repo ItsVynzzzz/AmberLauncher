@@ -1028,6 +1028,16 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 // tetap perlu /system/lib, bukan /system/lib64.
                 val libDirName = if (android.os.Process.is64Bit()) "lib64" else "lib"
 
+                // Plugin native library (Distant Horizons dkk). Hasil pemindaian di atas sudah memuatnya, jadi ini
+                // hanya membaca daftar di memori. Tanpa plugin terpasang rencananya kosong dan tidak ada yang berubah.
+                val nativePlan = com.israadev.nuxlauncher.core.plugin.NativePluginManager.planFor(
+                    mcVersion, activeSettings.disabledNativePlugins
+                )
+                nativePlan.active.forEach {
+                    LoggerBridge.append("▷ [Plugin Native] ${it.displayName} (${it.packageName}): ${it.nativeLibDir}")
+                }
+                nativePlan.skipped.forEach { LoggerBridge.append("▷ [Plugin Native] dilewati - $it") }
+
                 // 1. Runtime linker library path (Dipakai oleh ZLBridge.setLdLibraryPath untuk memperbarui Android Bionic Linker)
                 val runtimeLdPaths = mutableListOf<String>()
                 if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
@@ -1055,6 +1065,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 }
                 if (lwjglNativesDirPath.isNotBlank()) runtimeLdPaths.add(lwjglNativesDirPath)
                 runtimeLdPaths.add(nativeLibDir)
+                // Setelah folder milik launcher: pustaka launcher (mis. libc++_shared) tidak boleh tertimpa
+                // salinan di dalam plugin, tapi pustaka unik plugin tetap ditemukan lewat linker.
+                runtimeLdPaths.addAll(nativePlan.libPaths)
                 runtimeLdPaths.add("/system/$libDirName")
                 runtimeLdPaths.add("/vendor/$libDirName")
                 runtimeLdPaths.add("/vendor/$libDirName/hw")
@@ -1076,6 +1089,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     gameLdPaths.add(targetRenderer.pluginNativePath!!)
                 }
                 gameLdPaths.add(nativeLibDir)
+                // Plugin native library: dipakai System.loadLibrary mod (java.library.path) dan dlopen via nama.
+                gameLdPaths.addAll(nativePlan.libPaths)
                 val gameLdLibraryPath = gameLdPaths.distinct().joinToString(":")
 
                 val glLibPath = if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
@@ -1486,6 +1501,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add("-Djna.tmpdir=${cacheDir.absolutePath}")
                 jvmArgs.add("-Dorg.lwjgl.system.SharedLibraryExtractPath=${cacheDir.absolutePath}")
                 jvmArgs.add("-Dio.netty.tryReflectionSetAccessible=true")
+
+                // Properti sistem dari plugin native library (mis. -Dorg.sqlite.lib.path=...). Sudah disaring
+                // di NativePluginManager; argumen JVM kustom pengguna di bawah tetap bisa menimpanya.
+                nativePlan.jvmArgs.forEach { jvmArgs.add(it) }
 
                 jvmArgs.add("-XX:ActiveProcessorCount=${Runtime.getRuntime().availableProcessors()}")
                 // Data kinerja JVM (untuk jstat/jcmd) tidak terpakai di HP: mematikannya menghapus tugas

@@ -59,6 +59,7 @@ import com.israadev.nuxlauncher.core.models.LauncherSettings
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
+import com.israadev.nuxlauncher.core.plugin.NativePluginManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
 import com.israadev.nuxlauncher.ui.components.*
@@ -161,6 +162,18 @@ fun SettingsScreen(
     var selectedConfigRenderer by remember { mutableStateOf<NuxRendererInfo?>(null) }
     var showAdrenoWarningDialog by remember { mutableStateOf(false) }
 
+    // Plugin native library: daftar dari hasil pemindaian yang sudah ada (tidak memindai sendiri saat dibuka
+    // kecuali hasilnya belum pernah ada atau sudah tua), dan plugin yang dimatikan pengguna.
+    var nativePlugins by remember { mutableStateOf(NativePluginManager.getPlugins()) }
+    var nativeScanBusy by remember { mutableStateOf(false) }
+    var disabledNativePlugins by remember(currentSettings.disabledNativePlugins) { mutableStateOf(currentSettings.disabledNativePlugins) }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            try { NuxRendererPluginManager.scanPluginsIfStale(context) } catch (_: Throwable) {}
+        }
+        nativePlugins = NativePluginManager.getPlugins()
+    }
+
     var appLanguage by remember { mutableStateOf(Tr.choice) }
     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
@@ -202,6 +215,7 @@ fun SettingsScreen(
             graphicsApi = graphicsApi,
             zinkPreferSystemDriver = zinkPreferSystemDriver,
             vsyncInZink = vsyncInZink,
+            disabledNativePlugins = disabledNativePlugins,
             recordQuality = recordQuality,
             recordFps = recordFps,
             recordMic = recordMic,
@@ -218,6 +232,19 @@ fun SettingsScreen(
             bgDim = bgDim
         )
         SettingsManager.updateSettings(context, updated)
+    }
+
+    // Pindai ulang atas permintaan pengguna (setelah memasang plugin baru), di thread latar.
+    fun rescanNativePlugins() {
+        if (nativeScanBusy) return
+        nativeScanBusy = true
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                try { NuxRendererPluginManager.scanPlugins(context) } catch (_: Throwable) {}
+            }
+            nativePlugins = NativePluginManager.getPlugins()
+            nativeScanBusy = false
+        }
     }
 
     // Kategori aktif: 0 = Game, 1 = Tampilan, 2 = Kontrol, 3 = Tentang. Isinya digulir sendiri.
@@ -498,6 +525,47 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
+
+                        // Plugin native library (format Zalith/FCL) untuk mod yang butuh pustaka native Android,
+                        // mis. Distant Horizons. Dipakai hanya saat game dijalankan; tanpa plugin tidak ada beban.
+                        SettingsGroup("Plugin native library") {
+                        if (nativePlugins.isEmpty()) {
+                            SettingValueRow(
+                                title = "Belum ada plugin terpasang",
+                                desc = "Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.",
+                                value = if (nativeScanBusy) "Memindai..." else "Pindai",
+                                onClick = { rescanNativePlugins() }
+                            )
+                        } else {
+                            nativePlugins.forEachIndexed { index, plugin ->
+                                if (index > 0) SettingDivider()
+                                val range = listOfNotNull(
+                                    plugin.minMcVersion?.let { ">= $it" },
+                                    plugin.maxMcVersion?.let { "<= $it" }
+                                ).joinToString(" ")
+                                SettingSwitchRow(
+                                    title = plugin.displayName,
+                                    desc = plugin.packageName + if (range.isNotEmpty()) " · Minecraft $range" else "",
+                                    checked = plugin.packageName !in disabledNativePlugins,
+                                    onCheckedChange = { on ->
+                                        disabledNativePlugins = if (on) {
+                                            disabledNativePlugins - plugin.packageName
+                                        } else {
+                                            (disabledNativePlugins + plugin.packageName).distinct()
+                                        }
+                                        commitSettings()
+                                    }
+                                )
+                            }
+                            SettingDivider()
+                            SettingValueRow(
+                                title = "Pindai ulang plugin",
+                                desc = "Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.",
+                                value = if (nativeScanBusy) "Memindai..." else "Pindai",
+                                onClick = { rescanNativePlugins() }
+                            )
+                        }
                         }
 
                         SettingsGroup("Perekaman layar") {

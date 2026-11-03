@@ -128,6 +128,7 @@ import com.israadev.nuxlauncher.core.background.BgImportResult
 import com.israadev.nuxlauncher.core.background.HomeVideo
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
+import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.launch.GameLauncher
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
@@ -273,6 +274,12 @@ fun DashboardScreen() {
 
     // Tombol PLAY / UNDUH: unduh dulu bila belum lengkap, siapkan Java bila belum ada, lalu luncurkan.
     fun startInstance(inst: Instance) {
+        // Mesin Rust (Horizon): tanpa JVM, tanpa unduhan lewat launcher, dan akunnya diurus layar milik mesinnya
+        if (HorizonEngine.isEngine(inst.loader)) {
+            HorizonEngine.launch(context, inst)
+            return
+        }
+
         val account = currentAccount
         if (account == null) {
             Toast.makeText(context, "Silakan buat atau pilih akun terlebih dahulu!", Toast.LENGTH_SHORT).show()
@@ -793,10 +800,14 @@ private fun HomeScene(
             // ---- KIRI BAWAH: instance aktif, lalu navigasi + PLAY ----
             Column(modifier = Modifier.fillMaxWidth()) {
                 if (instance != null) {
-                    val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime) {
-                        val rt = if (instance.javaRuntime != "auto") instance.javaRuntime
-                        else JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
-                        rt.replace("jre-", "Java ")
+                    val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime, instance.loader) {
+                        if (HorizonEngine.isEngine(instance.loader)) {
+                            "Tanpa Java"
+                        } else {
+                            val rt = if (instance.javaRuntime != "auto") instance.javaRuntime
+                            else JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
+                            rt.replace("jre-", "Java ")
+                        }
                     }
                     val textStyle = LocalTextStyle.current.copy(shadow = textShadow)
 

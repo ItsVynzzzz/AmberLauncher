@@ -37,8 +37,16 @@ enum class ForgeFlavor(
             return values().firstOrNull { it.loaderId.equals(id, ignoreCase = true) }
         }
 
-        /** Nama tampilan loader: "NeoForge" untuk neoforge, selain itu huruf pertama dibesarkan ("Fabric", "Vanilla"). */
-        fun label(loader: String): String = of(loader)?.displayName ?: loader.replaceFirstChar { it.uppercase() }
+        /**
+         * Nama tampilan loader: "NeoForge" untuk neoforge, "Rust (Horizon)" untuk mesin Rust, selain itu huruf
+         * pertama dibesarkan ("Fabric", "Vanilla").
+         */
+        fun label(loader: String): String = of(loader)?.displayName
+            ?: if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(loader)) {
+                com.israadev.nuxlauncher.core.horizon.HorizonEngine.LABEL
+            } else {
+                loader.replaceFirstChar { it.uppercase() }
+            }
     }
 }
 

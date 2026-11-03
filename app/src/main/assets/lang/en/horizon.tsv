@@ -1,0 +1,11 @@
+# Mesin Rust (Horizon)
+Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	The Rust engine is not included in this build. How to add it: docs/rust-engine.md.
+Mesin Rust butuh Android 9 (API 28) ke atas.	The Rust engine needs Android 9 (API 28) or newer.
+Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	The Rust engine is only available on 64-bit (arm64) phones.
+RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	This phone's RAM is tight for the Rust engine (4 GB or more is recommended). The game may close on its own.
+Mesin Rust gagal dibuka: {0}	Could not open the Rust engine: {0}
+MESIN RUST (HORIZON)	RUST ENGINE (HORIZON)
+Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	The Rust engine replaces the whole Java Minecraft client: no Java, and no Fabric, Forge or NeoForge mods.
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	Supports Minecraft {0} only. The engine itself downloads the game resources (about 500 MiB) the first time it opens.
+Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Experimental: needs Android 9 or newer and a 64-bit phone.
+Tanpa Java	No Java

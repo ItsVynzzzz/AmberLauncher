@@ -180,6 +180,26 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation"
             android:theme="@style/Theme.NuxLauncher" />
 
+        <!--
+            Mesin Rust (Horizon, MIT): NativeActivity yang memuat libhorizon_android.so. Pustakanya TIDAK ada di repo,
+            dipasang saat build oleh scripts/fetch-horizon-engine.sh (lihat docs/rust-engine.md); tanpanya activity ini
+            tidak pernah dibuka karena HorizonEngine.availability() menolaknya lebih dulu.
+            Proses :horizon sendiri karena mesinnya memanggil process::exit saat selesai, dan itu tidak boleh ikut
+            mematikan launcher. Nama kelas terikat pada fungsi JNI di pustaka native, jadi tidak boleh diganti.
+        -->
+        <activity
+            android:name="dev.horizon.android.HorizonActivity"
+            android:exported="false"
+            android:process=":horizon"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|density|screenLayout"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/HorizonGameTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="horizon_android" />
+        </activity>
+
         <!-- Satu proses dengan GameActivity supaya perekam berbagi status dan mati bersama game -->
         <service
             android:name=".core.record.RecordService"

@@ -363,6 +363,8 @@ object InstanceManager {
     }
 
     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
+        // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
+        if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
         val versionsDir = getVersionsDir(context)
         val vDir = File(versionsDir, inst.mcVersion)
         val jarFile = File(vDir, "${inst.mcVersion}.jar")

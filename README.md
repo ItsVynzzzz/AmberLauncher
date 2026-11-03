@@ -39,6 +39,8 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
 - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
 - **Unduhan CurseForge**: di layar Mod, pilih sumber **CurseForge** di samping Modrinth untuk mencari dan memasang mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensi wajib. Mod yang penulisnya melarang unduhan lewat aplikasi pihak ketiga tidak dipaksa diunduh; launcher memberi tahu supaya mod itu diunduh manual dari situs CurseForge. CurseForge butuh kunci API: bila build ini tidak membawa kunci, launcher meminta pengguna menempelkan kuncinya sendiri (disimpan hanya di HP). Cara memasang kunci di build GitHub ada di bagian *Kunci API CurseForge* di bawah.
 
+- **Mesin Rust (Horizon), eksperimental dan opsional**: pilihan *Rust* saat membuat instance menjalankan Minecraft 26.3 lewat [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java yang ditulis ulang dalam Rust, memakai [port Android](https://github.com/Vasysik/horizon-android) buatan Vasysik. Tanpa Java dan tanpa mod Fabric, Forge, atau NeoForge. Pustakanya tidak ada di repo; build GitHub hanya menyertakannya bila kamu mengisi `horizon-engine.properties`. Cara dan batasannya ada di [docs/rust-engine.md](docs/rust-engine.md).
+
 Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt.
 
 > Semua fitur di atas dibangun lewat GitHub Actions dan belum tentu sudah diuji di semua perangkat. Bila ada yang rusak, buka *issue* dengan menyertakan log.
@@ -131,6 +133,7 @@ Karena proyek hulunya berlisensi GPL-3.0, seluruh hasil turunannya juga harus te
 | [Fold Craft Launcher](https://github.com/FCL-Team/FoldCraftLauncher) | Tim FCL | GPL-3.0 |
 | [MobileGlues](https://github.com/MobileGlues/MobileGlues) | Tim MobileGlues | LGPL-2.1 |
 | [GL4ES](https://github.com/ptitSeb/gl4es) | ptitSeb | MIT |
+| [Horizon](https://github.com/horizon-rust/horizon) dan [port Android-nya](https://github.com/Vasysik/horizon-android) (opsional, hanya bila build menyertakannya) | Ludovic Marie, Vasysik, dan kontributor | MIT |
 
 Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan [Ely.by](https://ely.by) atas sistem skin dan autentikasinya.
 
@@ -146,3 +149,5 @@ Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan
 ## Penafian
 
 *Minecraft* adalah merek dagang Mojang AB / Microsoft Corporation. AmberLauncher tidak menyertakan atau membagikan salinan game; pemain wajib memiliki akun Minecraft Java Edition yang sah untuk bermain secara online.
+
+Mesin Rust (Horizon) yang opsional adalah karya pihak ketiga dan tidak berafiliasi dengan Mojang atau Microsoft. Pustakanya tidak disimpan di repo ini; bila sebuah build menyertakannya, pemberitahuan lisensi MIT-nya ikut dikemas. Periksa isi dan syaratnya sendiri sebelum membagikan build semacam itu (lihat [docs/rust-engine.md](docs/rust-engine.md)).

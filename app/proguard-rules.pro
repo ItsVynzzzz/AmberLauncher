@@ -25,6 +25,9 @@
 # Klien proxy TouchController hanya dipanggil lewat refleksi; tanpa ini R8 membuangnya.
 -keep class top.fifthlight.touchcontroller.** { *; }
 
+# Mesin Rust (Horizon): pustaka native memanggil dan dipanggil lewat nama kelas dan metode ini (JNI).
+-keep class dev.horizon.android.** { *; }
+
 # Semua metode native tidak boleh dihapus atau diganti namanya.
 -keepclasseswithmembernames,includedescriptorclasses class * {
     native <methods>;

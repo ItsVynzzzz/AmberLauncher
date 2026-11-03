@@ -77,6 +77,10 @@ cp -r "$UPMAIN/jni" "$APP/jni"
 # Buang bagian 64-bit dari salinan (tidak ikut APK 32-bit)
 rm -rf "$APP/jniLibs/arm64-v8a"
 rm -f "$APP"/assets/runtimes/*/bin-arm64.tar.xz
+# Mesin Rust (Horizon) hanya untuk arm64 (pustakanya ada di jniLibs/arm64-v8a, sudah dibuang di atas): data
+# tabel dan lisensinya jadi beban tak terpakai di APK 32-bit
+rm -f "$APP/assets/engine-data.zip"
+rm -rf "$APP/assets/licenses/horizon"
 
 # Pustaka grafis 32-bit dari hulu
 mkdir -p "$APP/jniLibs/armeabi-v7a"

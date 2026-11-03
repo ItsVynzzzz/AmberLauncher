@@ -7,6 +7,7 @@ import com.israadev.nuxlauncher.GameActivity
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.crash.LauncherLog
+import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -35,6 +36,11 @@ object GameLauncher {
      * Bila pembaruan gagal atau terlalu lama, game tetap dijalankan dengan token yang ada.
      */
     fun launch(context: Context, instance: Instance, account: UserAccount) {
+        // Jaring pengaman: instance mesin Rust tidak lewat JVM (tombol PLAY di Beranda sudah mencabangkannya lebih dulu)
+        if (HorizonEngine.isEngine(instance.loader)) {
+            HorizonEngine.launch(context, instance)
+            return
+        }
         LauncherLog.event(
             "Peluncuran",
             "PLAY ditekan: instance=" + instance.name + ", Minecraft " + instance.mcVersion +

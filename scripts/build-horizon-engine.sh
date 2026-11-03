@@ -240,7 +240,9 @@ RESOURCES="$SRC/.local/horizon-client/$MC_VERSION"
 if [ -f "$RESOURCES/horizon-resources.json" ] && [ -f "$RESOURCES/worldgen/blocks/structure-blocks.json" ]; then
   echo "Tabel data untuk Minecraft $MC_VERSION sudah ada, dipakai ulang."
 else
-  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off python3 tools/android_prepare.py --java-home "$JDK")
+  # Lewat scripts/prepare-horizon-data.py: memakai berkas versi Mojang yang dipatok proyek sumber, bukan yang
+  # kebetulan terbit ulang hari ini (horizon-prepare menolak yang tidak dikenalnya).
+  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off python3 "$ROOT/scripts/prepare-horizon-data.py" "$SRC" --java-home "$JDK")
 fi
 
 # ---- 4. Kompilasi ----

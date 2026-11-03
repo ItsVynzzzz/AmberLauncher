@@ -22,7 +22,7 @@ Status: **eksperimental, belum diuji di perangkat.** Peluncuran masih lewat laya
 
 Ada dua tahap yang terpisah supaya build APK tetap cepat:
 
-1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>`. Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`).
+1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>`. Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`). Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
 2. **Build APK biasa** hanya mengambil hasil itu. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh` sebelum build, mengunduh paket dari Release repo yang sedang membangun, memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Tanpa Release-nya, build jalan terus tanpa mesin dan alasannya muncul di ringkasan run.
 
 Tidak ada langkah tambahan di `build-apk.yml`, dan tidak ada URL atau SHA-256 yang perlu diisi.
@@ -87,6 +87,7 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
 | `horizon-engine.properties` | Patokan: sumber, commit, profil, NDK, repo Release |
 | `scripts/build-horizon-engine.sh` | Mengompilasi mesin dari sumber (dipakai workflow pembangun) dan menerbitkan Release |
+| `scripts/prepare-horizon-data.py` | Menyiapkan tabel data memakai berkas versi Mojang yang dipatok (pembungkus `tools/android_prepare.py` milik sumber) |
 | `scripts/package-horizon-engine.sh` | Mengemas pustaka, data, lisensi, dan manifest menjadi satu paket zip |
 | `scripts/fetch-horizon-engine.sh` | Mengambil dan memeriksa paket dari Release, lalu memasangnya untuk Gradle |
 | `app/build.gradle.kts` (`fetchHorizonEngine`) | Menjalankan skrip pengambil sebelum build; tidak pernah menggagalkan build |

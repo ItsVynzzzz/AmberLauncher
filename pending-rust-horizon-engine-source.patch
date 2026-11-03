@@ -1,0 +1,1110 @@
+diff --git a/.gitignore b/.gitignore
+index 9f4e042..7ad1b27 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -23,10 +23,11 @@ google-services.json
+ build/
+ app/build/
+ 
+-# Mesin Rust (Horizon): diambil saat build oleh scripts/fetch-horizon-engine.sh, tidak disimpan di repo
++# Mesin Rust (Horizon): dipasang saat build oleh scripts/fetch-horizon-engine.sh, tidak disimpan di repo
+ /app/src/main/jniLibs/arm64-v8a/libhorizon_android.so
+ /app/src/main/assets/engine-data.zip
+ /app/src/main/assets/licenses/horizon/
++/.horizon-engine-installed
+ 
+ # Kotlin / OS specific
+ .kotlin/
+diff --git a/README.md b/README.md
+index b607810..292fff0 100644
+--- a/README.md
++++ b/README.md
+@@ -39,7 +39,7 @@ Proyek ini adalah turunan (fork) dari **NUX Launcher**, yang sendiri berbasis **
+ - **Pembaruan dari dalam aplikasi**: tiap launcher dibuka, versi baru di GitHub Releases dicek (murah, memakai ETag) dan muncul pop-up untuk mengunduh serta memasangnya; APK 32-bit/64-bit dipilih otomatis. Ada tombol **Periksa pembaruan** di Pengaturan > Pembaruan.
+ - **Unduhan CurseForge**: di layar Mod, pilih sumber **CurseForge** di samping Modrinth untuk mencari dan memasang mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensi wajib. Mod yang penulisnya melarang unduhan lewat aplikasi pihak ketiga tidak dipaksa diunduh; launcher memberi tahu supaya mod itu diunduh manual dari situs CurseForge. CurseForge butuh kunci API: bila build ini tidak membawa kunci, launcher meminta pengguna menempelkan kuncinya sendiri (disimpan hanya di HP). Cara memasang kunci di build GitHub ada di bagian *Kunci API CurseForge* di bawah.
+ 
+-- **Mesin Rust (Horizon), eksperimental dan opsional**: pilihan *Rust* saat membuat instance menjalankan Minecraft 26.3 lewat [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java yang ditulis ulang dalam Rust, memakai [port Android](https://github.com/Vasysik/horizon-android) buatan Vasysik. Tanpa Java dan tanpa mod Fabric, Forge, atau NeoForge. Pustakanya tidak ada di repo; build GitHub hanya menyertakannya bila kamu mengisi `horizon-engine.properties`. Cara dan batasannya ada di [docs/rust-engine.md](docs/rust-engine.md).
++- **Mesin Rust (Horizon), eksperimental dan opsional**: pilihan *Rust* saat membuat instance menjalankan Minecraft 26.3 lewat [Horizon](https://github.com/horizon-rust/horizon), Minecraft Java yang ditulis ulang dalam Rust, memakai [port Android](https://github.com/Vasysik/horizon-android) buatan Vasysik. Tanpa Java dan tanpa mod Fabric, Forge, atau NeoForge. Mesinnya dikompilasi dari sumber di CI repo ini (commit dipatok di `horizon-engine.properties`), tidak disimpan di repo, dan dipasang otomatis ke build setelah workflow pembangunnya dijalankan sekali. Cara dan batasannya ada di [docs/rust-engine.md](docs/rust-engine.md).
+ 
+ Belum ada: Forge untuk Minecraft 1.12.2 ke bawah (butuh LWJGL 2), NeoForge untuk 1.20.1 ke bawah, dan Quilt.
+ 
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index ddb9330..fdb5d3b 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -252,6 +252,24 @@ tasks.configureEach {
+     }
+ }
+ 
++// ---- Mesin Rust (Horizon): dipasang otomatis sebelum build ----
++// scripts/fetch-horizon-engine.sh mengambil mesin yang sudah dikompilasi dari Release repo ini dan menaruhnya di
++// jniLibs/assets (cara kerjanya ada di docs/rust-engine.md). Tanpa konfigurasi, tanpa Release-nya, atau tanpa
++// jaringan, skrip itu hanya memberi tahu alasannya, dan build berjalan seperti biasa tanpa mesin Rust. Dilewati di
++// build 32-bit (mesin hanya untuk arm64), di Windows (butuh bash), dan bila HORIZON_ENGINE=off.
++val fetchHorizonEngine by tasks.registering(Exec::class) {
++    group = "amber"
++    description = "Memasang mesin Rust (Horizon) dari Release repo ini bila tersedia"
++    workingDir = rootDir
++    commandLine("bash", "scripts/fetch-horizon-engine.sh")
++    isIgnoreExitValue = true
++    outputs.upToDateWhen { false }
++    enabled = !buildArm32 &&
++        !System.getProperty("os.name").lowercase().contains("win") &&
++        File(rootDir, "scripts/fetch-horizon-engine.sh").isFile
++}
++tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine) }
++
+ dependencies {
+     implementation(libs.androidx.core.ktx)
+     implementation(libs.androidx.lifecycle.runtime.ktx)
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index c667878..9965c22 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -1,15 +1,15 @@
+ # Mesin Rust (Horizon) di AmberLauncher
+ 
+-Pilihan **Rust** di layar Buat Instance menjalankan Minecraft lewat **Horizon**, yaitu Minecraft Java yang ditulis ulang dalam Rust (bukan Java), memakai port Android buatan Vasysik. Cara pakainya sama seperti Fabric, Forge, atau NeoForge: buat instance, lalu tekan PLAY.
++Pilihan **Rust** di layar Buat Instance menjalankan Minecraft lewat **Horizon**, yaitu Minecraft Java yang ditulis ulang dalam Rust (bukan Java). Mesinnya dikompilasi dari sumber proyek **Horizon Android** (Vasysik, MIT) di CI repo ini sendiri, lalu ikut dikemas ke APK AmberLauncher. Tidak ada APK Horizon yang dipasang, dan pengguna cukup membuat instance lalu menekan PLAY, seperti Fabric, Forge, atau NeoForge.
+ 
+-Status: **tahap 1, eksperimental, belum diuji di perangkat.**
++Status: **eksperimental, belum diuji di perangkat.** Peluncuran masih lewat layar peluncur milik Horizon (lihat "Rencana berikutnya").
+ 
+ ## Apa ini, dan apa bukan
+ 
+ - Mesin ini **menggantikan seluruh client Java**. Tidak ada JVM, `client.jar`, atau library Java, jadi mod Fabric, Forge, NeoForge, dan mod Java apa pun **tidak bisa dipakai**. Horizon punya format mod native sendiri (`.hmod`), tidak bisa dipasang lewat layar Mod launcher.
+ - Hanya Minecraft **26.3** (versi yang dipatok proyek Horizon). Satu-satunya versi di daftar.
+ - Sumber daya game (sekitar 500 MiB) diunduh **oleh mesinnya sendiri** dari Mojang saat pertama dibuka. Launcher tidak mengunduhnya.
+-- Layar peluncur, login Microsoft (kode perangkat), dan dunia permainan diurus UI milik Horizon. **Akun launcher belum dihubungkan** (rencana tahap 2).
++- Layar peluncur, login, dan dunia permainan masih diurus UI milik Horizon. **Akun launcher belum dihubungkan** (rencana berikutnya, termasuk akun offline).
+ - Ini proyek pihak ketiga, tidak berafiliasi dengan Mojang atau Microsoft.
+ 
+ ## Syarat perangkat
+@@ -18,64 +18,64 @@ Status: **tahap 1, eksperimental, belum diuji di perangkat.**
+ - RAM disarankan 4 GB ke atas. Di bawah itu tetap boleh dicoba, dengan peringatan.
+ - Ruang kosong sekitar 500 MiB untuk sumber daya, plus koneksi internet saat pertama dibuka.
+ 
+-## Cara menyertakan mesin di build
++## Cara kerja pembangunan (tanpa mengurus URL atau hash)
+ 
+-Pustaka mesin **tidak disimpan di repo**. Skrip `scripts/fetch-horizon-engine.sh` mengambilnya saat build, dari APK Horizon Android, dan hanya bila kamu mengisi alamat dan sidik jarinya. Tanpa itu build tetap normal dan opsi Rust tampil dengan keterangan "belum disertakan".
++Ada dua tahap yang terpisah supaya build APK tetap cepat:
+ 
+-### 1. Tambah satu langkah di workflow (sekali, manual)
++1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>`. Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`).
++2. **Build APK biasa** hanya mengambil hasil itu. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh` sebelum build, mengunduh paket dari Release repo yang sedang membangun, memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Tanpa Release-nya, build jalan terus tanpa mesin dan alasannya muncul di ringkasan run.
+ 
+-Berkas di `.github/workflows/` tidak bisa diubah lewat patch, jadi tambahkan lewat editor web GitHub. Letakkan **tepat setelah** langkah `Terapkan patch` dan **sebelum** `Periksa keaslian Gradle wrapper` di `.github/workflows/build-apk.yml`:
++Tidak ada langkah tambahan di `build-apk.yml`, dan tidak ada URL atau SHA-256 yang perlu diisi.
+ 
+-```yaml
+-      # Opsional: menyertakan mesin Rust (Horizon). Tanpa url dan sha256 di horizon-engine.properties langkah ini
+-      # tidak melakukan apa-apa. continue-on-error: gagal mengambil mesin tidak boleh menggagalkan build biasa.
+-      - name: Ambil mesin Rust (Horizon, opsional)
+-        continue-on-error: true
+-        run: bash scripts/fetch-horizon-engine.sh
+-```
+-
+-Bila langkah ini gagal, alasannya muncul sebagai peringatan dan di ringkasan run, dan build jalan terus tanpa mesin.
++### Menyiapkan (sekali)
+ 
+-### 2. Isi `horizon-engine.properties`
++1. Buka `docs/workflows/build-horizon-engine.yml` di repo ini, salin isinya, lalu buat berkas baru `.github/workflows/build-horizon-engine.yml` lewat editor web GitHub (Add file > Create new file) dan tempel. Berkas di `.github/workflows/` tidak bisa dibuat lewat patch, jadi ini satu-satunya langkah manual. Semua logikanya ada di skrip yang bisa diperbarui lewat patch, jadi berkas workflow tidak perlu diubah lagi.
++2. Buka tab **Actions > Bangun mesin Rust (Horizon) > Run workflow**. Untuk percobaan pertama boleh pilih profil `fast` (tanpa LTO, lebih cepat dan hemat RAM) supaya alurnya terbukti dulu; profil `release` yang dipakai build APK secara bawaan (`profile=` di `horizon-engine.properties`).
++3. Setelah run selesai, ringkasan run mencatat ukuran, SHA-256, dan waktu tiap tahap, dan di halaman Releases muncul pra-rilis `Mesin Rust (Horizon) ...`. Jalankan build APK seperti biasa: mesin terpasang otomatis (ringkasan langkah build menulis "Mesin Rust (Horizon) ikut dibangun").
+ 
+-1. Buka halaman Releases Horizon Android (`github.com/Vasysik/horizon-android`) dan salin alamat unduhan APK **arm64** (harus `https://`). Isi `url=`.
+-2. Biarkan `sha256=` kosong, lalu jalankan build sekali. Skrip mengunduh APK dan **tidak memasang apa pun**, hanya mencetak SHA-256 hasil unduhan di ringkasan run.
+-3. Bandingkan angka itu dengan `SHA256SUMS.txt` di halaman rilis yang sama. Bila cocok dan kamu percaya berkasnya, isi `sha256=` dengan angka tersebut.
+-4. Jalankan build lagi. Kali ini mesin dipasang, dan ringkasan run mencatat ukuran dua berkasnya.
++Bila run gagal, ringkasan run memuat tahap yang gagal, baris galatnya, dan 60 baris terakhir lognya. Salin bagian itu untuk diperbaiki.
+ 
+-Bila rilisnya diganti di alamat yang sama, SHA-256 tidak lagi cocok dan mesin tidak dipasang (kode keluar 3). Itu disengaja.
++### Mengganti versi mesin
+ 
+-Skrip hanya membaca dua entri bernama pasti dari APK (`lib/arm64-v8a/libhorizon_android.so` dan `assets/engine-data.zip`), memeriksa bahwa pustakanya benar-benar ELF 64-bit arm64 dan data zip-nya utuh, lalu menaruhnya di `app/src/main/jniLibs/arm64-v8a/` dan `app/src/main/assets/`. Tidak ada isi APK yang dijalankan saat build.
++Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa), jalankan workflow pembangun sekali, lalu build APK. Bila `commit=` diganti tetapi workflow belum dijalankan, build APK tetap lolos tanpa mesin dan memberi tahu bahwa Release-nya belum ada.
+ 
+ ### Build di komputer sendiri
+ 
+ ```bash
+-HORIZON_ENGINE_SHA256=<sha256 APK> bash scripts/fetch-horizon-engine.sh --apk /jalur/horizon-android.apk
+-bash scripts/fetch-horizon-engine.sh --remove   # menghapus berkas mesin dari pohon kerja
++bash scripts/fetch-horizon-engine.sh                      # ambil dari Release (repo di release_repo=)
++bash scripts/fetch-horizon-engine.sh --bundle paket.zip   # pasang dari paket yang sudah ada
++bash scripts/fetch-horizon-engine.sh --remove             # hapus berkas mesin dari pohon kerja
+ ```
+ 
+-Variabel `HORIZON_ENGINE_URL` dan `HORIZON_ENGINE_SHA256` menang atas isi `horizon-engine.properties`.
++Gradle menjalankan skrip itu sendiri di Linux dan macOS (butuh `bash`, `curl`, `unzip`); di Windows dilewati. `HORIZON_ENGINE=off` mematikannya. Release harus bisa diunduh tanpa login, jadi repo-nya harus publik.
++
++Mengompilasi mesin sendiri (Linux x86-64, JDK 25, NDK 28.2, Rust, Python 3.11): `bash scripts/build-horizon-engine.sh --work /folder/lapang`. Butuh puluhan GB disk dan RAM besar.
+ 
+ ### APK 32-bit
+ 
+-Mesin hanya untuk arm64. `scripts/build-arm32.sh` membuang pustaka dan data mesin dari salinan kerjanya, jadi APK 32-bit tidak menjadi lebih besar.
++Mesin hanya untuk arm64. Build 32-bit melewati langkah ini dan `scripts/build-arm32.sh` membuang pustaka dan data mesin dari salinan kerjanya, jadi APK 32-bit tidak membesar.
++
++### Ukuran APK
++
++Mesin menambah ukuran APK 64-bit. Berapa persisnya baru diketahui setelah run pertama: ukuran pustaka dan datanya tercatat di ringkasan run pembangun.
+ 
+ ## Kepercayaan dan keamanan
+ 
+-Pustaka native pihak ketiga yang dikemas ke APK berjalan **dengan hak yang sama dengan launcher** (satu UID Android). Proses `:horizon` terpisah melindungi launcher dari mesin yang mati (`process::exit`), bukan dari kode jahat. Karena itu:
++Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launcher** (satu UID Android). Proses `:horizon` terpisah melindungi launcher dari mesin yang mati (`process::exit`), bukan dari kode jahat. Karena itu:
+ 
+-- Pin SHA-256 itu wajib, dan skrip menolak jalan tanpanya.
+-- Periksa sendiri sumber dan rilis yang kamu patok. Sandbox tempat patch ini disusun tidak bisa mengunduh rilis Horizon Android, jadi **pustakanya belum pernah kuperiksa atau kujalankan**.
+-- Sebelum menaruh APK berisi mesin ini di rilis publik, pertimbangkan apakah kamu mau bertanggung jawab atas kode itu bagi semua penggunamu.
++- Sumbernya dipatok pada **satu commit** (40 digit). Skrip pembangun menolak bila HEAD hasil ambil bukan commit itu, dan skrip pengambil menolak paket yang manifest-nya menyebut commit lain.
++- Yang kamu percayai adalah kode sumber di commit itu: **periksa sendiri** sebelum mengganti `commit=`. Aku belum pernah menjalankan hasil build-nya di perangkat.
++- Paket diperiksa lagi saat dipasang: SHA-256 paket harus cocok dengan berkas `.sha256` di Release yang sama (menangkap unduhan rusak, bukan Release yang diubah orang yang punya akses tulis ke repo ini), SHA-256 tiap berkas harus cocok dengan manifest di dalamnya, dan pustaka harus ELF 64-bit arm64. Tidak ada isi paket yang dijalankan saat build.
++- Release mesin ditandai pra-rilis dengan tag yang bukan nomor versi, jadi tidak dianggap pembaruan aplikasi oleh pemeriksa pembaruan dan tidak mengubah penomoran versi build.
+ 
+-## Lisensi
++## Lisensi dan data Mojang
+ 
+-- Horizon dan port Android-nya berlisensi **MIT**, Copyright (c) 2026 Ludovic Marie and the Horizon contributors. Salinan `LICENSE` dan `THIRD_PARTY_NOTICES.md` ada di `third_party/horizon/`, dan skrip ikut menaruhnya di `assets/licenses/horizon/` setiap kali mesin dikemas (MIT mensyaratkan pemberitahuannya ikut). Skrip menolak memasang mesin bila kedua berkas itu tidak ada.
++- Horizon dan port Android-nya berlisensi **MIT**, Copyright (c) 2026 Ludovic Marie and the Horizon contributors. Pemberitahuan lisensinya dikemas ke APK di `assets/licenses/horizon/` (diambil dari sumber yang dikompilasi; salinan cadangan ada di `third_party/horizon/`). Skrip menolak memasang mesin tanpa pemberitahuan itu.
+ - `app/src/main/java/dev/horizon/android/HorizonActivity.java` diadaptasi dari Horizon Android (MIT), dengan perubahan: folder data diarahkan ke subfolder `horizon`.
+ - MIT kompatibel dengan GPL-3.0 milik AmberLauncher. **Aku bukan pengacara.**
+-- Satu hal yang belum bisa kupastikan: asal isi `engine-data.zip`. README menyatakan AmberLauncher tidak menyertakan atau membagikan salinan game. Buka zip itu dan baca lisensi serta `THIRD_PARTY_NOTICES.md` Horizon sebelum membagikan build publik berisi mesin ini. Bila isinya ternyata turunan data Minecraft, pernyataan di README perlu disesuaikan, atau mesin tidak ikut di build publik.
++- Untuk menyusun tabel data mesin, workflow pembangun **mengunduh sementara berkas Mojang** (jar game dan aset) ke runner dan menjalankan eksporter proyek sumber, persis seperti jalur build publik proyek itu. Hanya berkas dalam daftar putih proyek sumber (`generated_engine_file`: tabel hasil generate, tanpa jar, aset, atau sumber Mojang) yang masuk ke paket. Berkas Mojang tidak disimpan ke repo atau Release. Meski begitu, pernyataan di README bahwa AmberLauncher tidak menyertakan salinan game perlu kamu tinjau terhadap isi `engine-data.zip`; keputusan akhirnya ada padamu.
+ 
+-## Cara kerja (tahap 1)
++## Isi di dalam kode
+ 
+ | Bagian | Peran |
+ |---|---|
+@@ -85,12 +85,17 @@ Pustaka native pihak ketiga yang dikemas ke APK berjalan **dengan hak yang sama
+ | `CreateInstanceScreen.kt` | Opsi Rust di rel loader; versi 26.3 terpilih otomatis; Install dimatikan bila mesin tidak tersedia |
+ | `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust membuka mesin, tanpa cek akun, Java, atau unduhan launcher |
+ | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
++| `horizon-engine.properties` | Patokan: sumber, commit, profil, NDK, repo Release |
++| `scripts/build-horizon-engine.sh` | Mengompilasi mesin dari sumber (dipakai workflow pembangun) dan menerbitkan Release |
++| `scripts/package-horizon-engine.sh` | Mengemas pustaka, data, lisensi, dan manifest menjadi satu paket zip |
++| `scripts/fetch-horizon-engine.sh` | Mengambil dan memeriksa paket dari Release, lalu memasangnya untuk Gradle |
++| `app/build.gradle.kts` (`fetchHorizonEngine`) | Menjalankan skrip pengambil sebelum build; tidak pernah menggagalkan build |
+ 
+ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam data aplikasi, terpisah dari data launcher. Menghapus instance Rust dari launcher **tidak** menghapus data itu karena dipakai bersama; hapus lewat Pengaturan Android > Info aplikasi > Hapus data.
+ 
+ ## Daftar uji di perangkat
+ 
+-1. Build dengan mesin terpasang (ringkasan run menulis "Mesin Rust (Horizon) ikut dibangun"), pasang APK-nya.
++1. Jalankan workflow pembangun sampai selesai, lalu build APK (ringkasan langkah build menulis "Mesin Rust (Horizon) ikut dibangun"), dan pasang APK-nya.
+ 2. Buat Instance: opsi **Rust** muncul, 26.3 sudah terpilih, tombol Install aktif tanpa peringatan merah.
+ 3. Install, lalu PLAY di Beranda: layar peluncur Horizon terbuka.
+ 4. Login dan unduh sumber daya (sekitar 500 MiB), lalu masuk ke dunia.
+@@ -100,15 +105,15 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
+ 
+ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
+ 
+-## Batasan tahap 1
++## Batasan saat ini
+ 
+ - Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
+ - Tanpa mod Java, tanpa Fabric, Forge, NeoForge, dan layar Mod launcher tidak berlaku untuk instance Rust.
+-- Akun Horizon terpisah dari akun launcher; unduhan dan UI-nya milik Horizon.
+-- Belum ada integrasi lebih jauh dengan launcher (dunia dan setelan launcher tidak dibagi).
+-- Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya) belum diuji.
++- Login dan unduhan sumber daya masih lewat UI Horizon; akun launcher belum dipakai.
++- Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
++- Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
+ 
+ ## Rencana berikutnya
+ 
+-- **Tahap 2**: patch di sisi Rust (fork Horizon Android) supaya mesin mau menerima instruksi mulai otomatis, kembali ke launcher saat keluar, dan menerima akun dari launcher lewat Intent. Butuh membangun Rust sendiri untuk Android.
+-- **Tahap 3**: otomatisasi pembaruan, yaitu workflow terjadwal yang memeriksa rilis baru Horizon Android, memverifikasi `SHA256SUMS.txt`-nya, lalu mengajukan perubahan `url=` dan `sha256=` untuk kamu setujui, supaya `horizon-engine.properties` tidak perlu diisi dan diperbarui manual.
++- **Ronde 2**: patch kecil di sisi Rust (pada salinan sumber di CI) supaya mesin mau dimulai tanpa layar peluncur Horizon, dari berkas permintaan yang ditulis AmberLauncher (versi, folder, akun, server), dengan mode siapkan sumber daya dan mode main, serta berkas kemajuan yang bisa dibaca launcher.
++- **Ronde 3**: sisi AmberLauncher: PLAY langsung masuk ke mesin dengan akun yang dipilih di launcher. **Akun offline** (hanya nama) dan akun Microsoft (sesi dari token yang sudah diperbarui launcher) sama-sama didukung, serta progres unduhan sumber daya di UI launcher sendiri.
+diff --git a/docs/workflows/build-horizon-engine.yml b/docs/workflows/build-horizon-engine.yml
+new file mode 100644
+index 0000000..564dc0d
+--- /dev/null
++++ b/docs/workflows/build-horizon-engine.yml
+@@ -0,0 +1,61 @@
++# Mesin Rust (Horizon): dikompilasi dari sumber, hasilnya diterbitkan sebagai Release di repo ini.
++#
++# Salin berkas ini ke .github/workflows/build-horizon-engine.yml (sekali, lewat editor web GitHub: Add file > Create
++# new file), lalu jalankan dari tab Actions > "Bangun mesin Rust (Horizon)" > Run workflow. Semua logikanya ada di
++# scripts/build-horizon-engine.sh (bisa diperbarui lewat patch), jadi berkas ini tidak perlu diubah lagi.
++# Jalankan ulang hanya bila commit= di horizon-engine.properties diganti. Panduan: docs/rust-engine.md
++name: Bangun mesin Rust (Horizon)
++
++on:
++  workflow_dispatch:
++    inputs:
++      profile:
++        description: "release = penuh (ThinLTO, lambat, butuh banyak RAM). fast = tanpa LTO, lebih cepat dan hemat RAM (untuk mencoba)"
++        type: choice
++        options: [release, fast]
++        default: release
++      force:
++        description: Bangun ulang walau Release untuk commit ini sudah ada
++        type: boolean
++        default: false
++
++permissions:
++  contents: write
++
++concurrency:
++  group: horizon-engine
++  cancel-in-progress: false
++
++jobs:
++  engine:
++    name: Bangun mesin Rust
++    runs-on: ubuntu-24.04
++    timeout-minutes: 330
++    env:
++      HORIZON_TELEMETRY_URL: "off"
++    steps:
++      - name: Ambil kode
++        uses: actions/checkout@v5
++
++      # Eksporter tabel data proyek sumber dikompilasi dengan JDK yang dipatok proyek itu (Java 25).
++      - name: Pasang JDK 25
++        uses: actions/setup-java@v5
++        with:
++          distribution: temurin
++          java-version: 25
++
++      # Sumber, unduhan Mojang sementara, dan target Rust makan beberapa GB: kerjakan di /mnt, bukan di disk akar.
++      - name: Siapkan ruang disk
++        run: |
++          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
++          sudo mkdir -p /mnt/horizon-engine
++          sudo chown "$USER" /mnt/horizon-engine
++          df -h / /mnt
++
++      - name: Bangun dan terbitkan mesin
++        env:
++          GH_TOKEN: ${{ github.token }}
++          HORIZON_ENGINE_PROFILE: ${{ inputs.profile }}
++          HORIZON_ENGINE_FORCE: ${{ inputs.force }}
++          HORIZON_ENGINE_WORK: /mnt/horizon-engine
++        run: bash scripts/build-horizon-engine.sh --publish
+diff --git a/horizon-engine.properties b/horizon-engine.properties
+index 70f721f..087ef1d 100644
+--- a/horizon-engine.properties
++++ b/horizon-engine.properties
+@@ -1,11 +1,19 @@
+-# Mesin Rust (Horizon), opsional. Panduan lengkap: docs/rust-engine.md
++# Mesin Rust (Horizon). Panduan lengkap: docs/rust-engine.md
+ #
+-# Isi dua baris di bawah supaya build GitHub Actions menyertakan mesin Rust. Biarkan kosong untuk build biasa.
+-#   url    = alamat unduhan APK Horizon Android untuk arm64 (salin dari halaman Releases-nya). Harus https://
+-#   sha256 = SHA-256 APK itu. Ambil dari SHA256SUMS.txt di halaman rilis yang sama dan periksa sendiri.
+-#            Tanpa sha256 mesin TIDAK dipasang: skrip hanya mencetak SHA-256 hasil unduhan.
+-#
+-# Berkas ini hanya dibaca scripts/fetch-horizon-engine.sh, yang dijalankan oleh langkah tambahan di workflow
+-# (lihat docs/rust-engine.md). Variabel lingkungan HORIZON_ENGINE_URL dan HORIZON_ENGINE_SHA256 menang atas isinya.
+-url=
+-sha256=
++# Mesin dikompilasi dari SUMBER oleh workflow "Bangun mesin Rust (Horizon)" pada commit yang dipatok di sini,
++# diterbitkan sebagai Release di repo ini, lalu dipasang otomatis ke APK oleh build (scripts/fetch-horizon-engine.sh).
++# Mengganti versi mesin = mengganti commit= lalu menjalankan workflow itu sekali.
++# Variabel lingkungan HORIZON_ENGINE_* menang atas isi berkas ini. Kosongkan commit= untuk build tanpa mesin Rust.
++
++# Sumber mesin: port Android proyek Horizon (MIT) dan commit yang diperiksa dan dipatok (40 digit).
++source_repo=https://github.com/Vasysik/horizon-android
++commit=844ef35f2b14e3fed99d5d2e05b274193fae4388
++
++# release = optimasi penuh (ThinLTO, kompilasi lambat). fast = tanpa LTO, lebih cepat dan hemat RAM (untuk mencoba).
++profile=release
++
++# Versi NDK Android yang dipakai proyek sumber.
++ndk=28.2.13676358
++
++# Repo tempat Release mesin dicari bila build berjalan di luar GitHub Actions (di Actions dipakai repo yang membangun).
++release_repo=ItsVynzzzz/AmberLauncher
+diff --git a/scripts/build-horizon-engine.sh b/scripts/build-horizon-engine.sh
+new file mode 100755
+index 0000000..756644a
+--- /dev/null
++++ b/scripts/build-horizon-engine.sh
+@@ -0,0 +1,332 @@
++#!/usr/bin/env bash
++# Mengompilasi mesin Rust (Horizon) dari SUMBER untuk Android arm64, lalu (opsional) menerbitkannya sebagai
++# Release di repo ini. Dijalankan oleh workflow "Bangun mesin Rust (Horizon)" di GitHub Actions (runner Linux
++# x86-64), sekali setiap patokan commit diganti; build APK biasa hanya mengambil hasilnya
++# (scripts/fetch-horizon-engine.sh), jadi tidak menunggu kompilasi Rust.
++#
++# Sumbernya proyek Horizon Android (MIT) pada commit yang dipatok di horizon-engine.properties. Yang dipakai
++# adalah jalur build resmi proyeknya sendiri (tools/android_prepare.py dan tools/android_build.py dengan --public),
++# berhenti sebelum Gradle: yang dibutuhkan hanya pustaka native dan tabel datanya.
++#
++# Tahap: sumber, alat, data (menyiapkan tabel data dari berkas Mojang yang diunduh sementara), kompilasi,
++# kemas, terbitkan. Ringkasan waktu dan ukuran ditulis ke ringkasan run; bila gagal, ringkasan memuat tahap
++# yang gagal dan ujung lognya supaya bisa disalin.
++#
++# Konfigurasi dari horizon-engine.properties (variabel lingkungan HORIZON_ENGINE_* menang atasnya):
++#   source_repo   alamat git sumber mesin (https://)          HORIZON_ENGINE_SOURCE_REPO
++#   commit        commit sumber yang dipatok (40 digit)         HORIZON_ENGINE_COMMIT
++#   profile       release (ThinLTO, lambat) atau fast           HORIZON_ENGINE_PROFILE
++#   ndk           versi NDK Android                             (bawaan 28.2.13676358)
++# Lainnya: HORIZON_ENGINE_WORK (folder kerja; bawaan $RUNNER_TEMP/horizon-engine), HORIZON_ENGINE_JDK (JDK 25
++# bila bukan JAVA_HOME), HORIZON_ENGINE_JOBS (batas proses paralel cargo; kecilkan bila kehabisan RAM),
++# HORIZON_ENGINE_FORCE=true (sama dengan --force).
++#
++# Pemakaian:
++#   scripts/build-horizon-engine.sh [--publish] [--force] [--src FOLDER] [--work FOLDER]
++#     --publish  terbitkan hasilnya sebagai Release (butuh gh dan GH_TOKEN dengan hak menulis konten)
++#     --force    bangun dan terbitkan ulang walau Release untuk commit ini sudah ada
++#     --src      pakai salinan sumber yang sudah ada (HEAD-nya harus tepat commit yang dipatok)
++#     --work     folder kerja (disarankan di disk yang lapang: sumber, unduhan, dan target Rust beberapa GB)
++
++set -euo pipefail
++
++ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
++CONFIG="$ROOT/horizon-engine.properties"
++BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
++
++prop() {
++  [ -f "$CONFIG" ] || return 0
++  { tr -d '\r' < "$CONFIG" | grep -E "^[[:space:]]*$1[[:space:]]*=" || true; } \
++    | tail -n 1 | sed -E 's/^[^=]*=[[:space:]]*//; s/[[:space:]]+$//'
++}
++
++PUBLISH=0
++FORCE=0
++[ "${HORIZON_ENGINE_FORCE:-}" = "true" ] && FORCE=1
++SRC_ARG=""
++WORK="${HORIZON_ENGINE_WORK:-}"
++while [ $# -gt 0 ]; do
++  case "$1" in
++    --publish) PUBLISH=1; shift ;;
++    --force) FORCE=1; shift ;;
++    --src | --work)
++      [ $# -ge 2 ] || { echo "$1 butuh nilai." >&2; exit 1; }
++      if [ "$1" = "--src" ]; then SRC_ARG="$2"; else WORK="$2"; fi
++      shift 2
++      ;;
++    -h | --help)
++      awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "$0"
++      exit 0
++      ;;
++    *) echo "Argumen tidak dikenal: $1" >&2; exit 1 ;;
++  esac
++done
++
++REPO="${HORIZON_ENGINE_SOURCE_REPO:-$(prop source_repo)}"
++COMMIT="${HORIZON_ENGINE_COMMIT:-$(prop commit)}"
++COMMIT="$(printf '%s' "$COMMIT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
++PROFILE="${HORIZON_ENGINE_PROFILE:-$(prop profile)}"
++PROFILE="${PROFILE:-release}"
++NDK_VERSION="$(prop ndk)"
++NDK_VERSION="${NDK_VERSION:-28.2.13676358}"
++[ -n "$WORK" ] || WORK="${RUNNER_TEMP:-/tmp}/horizon-engine"
++mkdir -p "$WORK"
++WORK="$(cd "$WORK" && pwd)"
++LOGDIR="$WORK/logs"
++OUT="$WORK/out"
++rm -rf "$LOGDIR" "$OUT"
++mkdir -p "$LOGDIR" "$OUT"
++
++# ---- Pencatat tahap dan ringkasan ----
++PHASE="persiapan"
++PHASE_SLUG="00-persiapan"
++PHASE_START=$SECONDS
++PHASE_LOG="$LOGDIR/$PHASE_SLUG.log"
++: > "$PHASE_LOG"
++TIMES=()
++IN_GROUP=0
++STARTED=$SECONDS
++
++# Selalu menghabiskan masukannya (tanpa GitHub Actions dibuang), supaya pipa di depannya tidak kena SIGPIPE.
++summary() { if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then cat >> "$GITHUB_STEP_SUMMARY"; else cat > /dev/null; fi; }
++
++end_phase() {
++  TIMES+=("$PHASE|$((SECONDS - PHASE_START))")
++  if [ "$IN_GROUP" = 1 ] && [ -n "${GITHUB_ACTIONS:-}" ]; then echo "::endgroup::"; fi
++  IN_GROUP=0
++}
++
++# Memulai tahap baru: $1 nomor-nama (untuk berkas log), $2 judul.
++phase() {
++  end_phase
++  PHASE_SLUG="$1"
++  PHASE="$2"
++  PHASE_START=$SECONDS
++  PHASE_LOG="$LOGDIR/$PHASE_SLUG.log"
++  : > "$PHASE_LOG"
++  [ -z "${GITHUB_ACTIONS:-}" ] || echo "::group::$PHASE"
++  IN_GROUP=1
++  echo "== $PHASE =="
++}
++
++# Menjalankan perintah dan mencatat keluarannya ke log tahap ini (juga tampil di layar).
++logged() {
++  "$@" 2>&1 | tee -a "$PHASE_LOG"
++}
++
++fmt_time() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
++
++on_exit() {
++  local rc=$?
++  [ "$rc" -ne 0 ] || return 0
++  [ "$IN_GROUP" = 1 ] && [ -n "${GITHUB_ACTIONS:-}" ] && echo "::endgroup::"
++  local tail_text errors
++  tail_text="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | tail -n 60 || true)"
++  errors="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | grep -E '^(error|Error|ERROR)|panicked|No such file|not found' | head -n 15 || true)"
++  echo "::error title=Mesin Rust (Horizon) gagal dibangun::Berhenti di tahap: $PHASE (kode $rc). Ujung lognya ada di ringkasan run."
++  {
++    echo "### Mesin Rust (Horizon) GAGAL dibangun"
++    echo
++    echo "- Tahap: **$PHASE** (kode keluar $rc), setelah $(fmt_time $((SECONDS - STARTED)))"
++    echo "- Sumber: \`${REPO:-?}\` commit \`${COMMIT:0:12}\` ($PROFILE)"
++    if [ -n "$errors" ]; then
++      echo
++      echo "Baris galat:"
++      echo
++      echo '```'
++      printf '%s\n' "$errors"
++      echo '```'
++    fi
++    echo
++    echo "Ujung log tahap ini (60 baris terakhir):"
++    echo
++    echo '```'
++    printf '%s\n' "$tail_text"
++    echo '```'
++  } | summary
++}
++trap on_exit EXIT
++
++die() { echo "build-horizon-engine: $*" >&2; exit 1; }
++
++# ---- Pemeriksaan konfigurasi ----
++[ -n "$REPO" ] || die "source_repo belum diisi di horizon-engine.properties."
++case "$REPO" in https://*) ;; *) die "source_repo harus diawali https://" ;; esac
++[[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal (isi commit= di horizon-engine.properties)."
++case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." ;; esac
++[ "$(uname -s)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ] || die "skrip ini hanya untuk Linux x86-64 (runner GitHub Actions)."
++
++TAG="horizon-engine-${COMMIT:0:12}"
++[ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
++echo "Sumber: $REPO @ $COMMIT ($PROFILE), NDK $NDK_VERSION, tag Release: $TAG"
++
++if [ "$PUBLISH" = 1 ]; then
++  command -v gh > /dev/null 2>&1 || die "--publish butuh perintah gh."
++  [ -n "${GH_TOKEN:-${GITHUB_TOKEN:-}}" ] || die "--publish butuh GH_TOKEN."
++  if gh release view "$TAG" > /dev/null 2>&1; then
++    if [ "$FORCE" = 1 ]; then
++      echo "Release $TAG sudah ada, akan diganti (--force)."
++    else
++      echo "Release $TAG sudah ada: tidak perlu membangun lagi (pakai force untuk membangun ulang)."
++      {
++        echo "### Mesin Rust (Horizon): sudah ada"
++        echo
++        echo "Release \`$TAG\` sudah berisi mesin untuk commit \`${COMMIT:0:12}\` ($PROFILE). Tidak ada yang dibangun. Pilih *force* untuk membangun ulang."
++      } | summary
++      PHASE="selesai"
++      exit 0
++    fi
++  fi
++fi
++
++# ---- 1. Sumber ----
++phase 01-sumber "1/6 Ambil sumber (commit dipatok)"
++if [ -n "$SRC_ARG" ]; then
++  SRC="$(cd "$SRC_ARG" && pwd)"
++else
++  SRC="$WORK/src"
++  rm -rf "$SRC"
++  git init -q "$SRC"
++  logged git -C "$SRC" fetch -q --depth 1 "$REPO" "$COMMIT"
++  git -C "$SRC" checkout -q --detach FETCH_HEAD
++fi
++[ "$(git -C "$SRC" rev-parse HEAD)" = "$COMMIT" ] || die "HEAD sumber bukan commit yang dipatok ($COMMIT)."
++for f in tools/android_prepare.py tools/android_build.py research-lock.json rust-toolchain.toml LICENSE THIRD_PARTY_NOTICES.md; do
++  [ -f "$SRC/$f" ] || die "sumber tidak berisi $f: bentuk repo sumber berubah, patokan perlu ditinjau."
++done
++
++# ---- 2. Alat ----
++phase 02-alat "2/6 Siapkan alat (Python, JDK, NDK, Rust)"
++python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' || die "butuh Python 3.11 atau lebih baru."
++
++JDK="${HORIZON_ENGINE_JDK:-${JAVA_HOME:-}}"
++[ -n "$JDK" ] && [ -x "$JDK/bin/javac" ] || die "JDK dengan javac tidak ditemukan (isi JAVA_HOME atau HORIZON_ENGINE_JDK ke JDK 25)."
++JAVA_NEED="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["minecraft"]["java_major"])' "$SRC/research-lock.json")"
++JAVA_HAVE="$("$JDK/bin/javac" -version 2>&1 | sed -n 's/^javac \([0-9]*\).*/\1/p' | head -n 1)"
++[ -n "$JAVA_HAVE" ] && [ "$JAVA_HAVE" -ge "$JAVA_NEED" ] || die "butuh JDK $JAVA_NEED atau lebih baru untuk eksporter tabel data; yang ada: javac ${JAVA_HAVE:-?} di $JDK."
++echo "JDK: javac $JAVA_HAVE ($JDK), dibutuhkan >= $JAVA_NEED"
++
++SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
++NDK_HOME="$SDK_ROOT/ndk/$NDK_VERSION"
++if [ ! -d "$NDK_HOME" ]; then
++  echo "Memasang NDK $NDK_VERSION ..."
++  # "yes" selalu berakhir dengan kode 141 (SIGPIPE) begitu sdkmanager selesai; hasil sebenarnya dicek di bawah.
++  yes | "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;$NDK_VERSION" > /dev/null || true
++fi
++NDK_BIN="$NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
++[ -x "$NDK_BIN/clang" ] || die "NDK $NDK_VERSION tidak ditemukan di $SDK_ROOT/ndk."
++echo "NDK: $NDK_HOME"
++
++# Alat build proyek sumber memilih NDK dan build-tools "terbaru" di folder SDK. Supaya yang dipakai pasti NDK yang
++# dipatok (bukan NDK lain di runner), diberikan SDK mini berisi tepat satu NDK. Untuk kompilasi saja folder
++# build-tools cukup ada dan tidak dipakai.
++SDK_MINI="$WORK/sdk"
++rm -rf "$SDK_MINI"
++mkdir -p "$SDK_MINI/ndk" "$SDK_MINI/build-tools/35.0.0"
++ln -s "$NDK_HOME" "$SDK_MINI/ndk/$NDK_VERSION"
++
++RUST_CHANNEL="$(sed -n 's/^channel *= *"\([^"]*\)".*/\1/p' "$SRC/rust-toolchain.toml" | head -n 1)"
++[ -n "$RUST_CHANNEL" ] || die "rust-toolchain.toml sumber tidak menyebut channel."
++command -v rustup > /dev/null 2>&1 || die "rustup tidak ditemukan."
++logged rustup toolchain install "$RUST_CHANNEL" --profile minimal --component clippy --component rustfmt --no-self-update
++logged rustup target add --toolchain "$RUST_CHANNEL" aarch64-linux-android
++export RUSTUP_TOOLCHAIN="$RUST_CHANNEL"
++echo "Rust: $(rustc --version)"
++
++# ---- 3. Data ----
++phase 03-data "3/6 Siapkan tabel data (unduh berkas Mojang sementara, jalankan eksporter)"
++MC_VERSION="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["minecraft"]["version"])' "$SRC/research-lock.json")"
++RESOURCES="$SRC/.local/horizon-client/$MC_VERSION"
++if [ -f "$RESOURCES/horizon-resources.json" ] && [ -f "$RESOURCES/worldgen/blocks/structure-blocks.json" ]; then
++  echo "Tabel data untuk Minecraft $MC_VERSION sudah ada, dipakai ulang."
++else
++  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off python3 tools/android_prepare.py --java-home "$JDK")
++fi
++
++# ---- 4. Kompilasi ----
++phase 04-kompilasi "4/6 Kompilasi mesin Rust (arm64, profil $PROFILE)"
++TARGET_DIR="$WORK/target"
++[ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
++(cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
++  --abi arm64-v8a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK")
++LIB="$TARGET_DIR/aarch64-linux-android/$PROFILE/libhorizon_android.so"
++[ -f "$LIB" ] || die "kompilasi selesai tetapi pustaka tidak ada: $LIB"
++echo "Pustaka mentah: $(wc -c < "$LIB" | tr -d ' ') byte"
++
++# ---- 5. Kemas ----
++phase 05-kemas "5/6 Strip pustaka, susun tabel data, kemas"
++STAGE="$WORK/stage"
++rm -rf "$STAGE"
++mkdir -p "$STAGE"
++cp "$LIB" "$STAGE/libhorizon_android.so"
++# Sama seperti jalur APK proyek sumber: llvm-strip --strip-unneeded.
++logged "$NDK_BIN/llvm-strip" --strip-unneeded "$STAGE/libhorizon_android.so"
++# Tabel data dibuat oleh fungsi proyek sumber sendiri; hanya berkas hasil generate yang diizinkan untuk build
++# publik (daftar putih generated_engine_file di tools/android_build.py).
++if ! DATA_ZIP="$(cd "$SRC" && python3 - "$SRC" 2> "$STAGE/python.err" <<'PY'
++import sys
++sys.path.insert(0, sys.argv[1] + '/tools')
++import android_build
++print(android_build.engine_data(True))
++PY
++)"; then
++  tee -a "$PHASE_LOG" < "$STAGE/python.err" >&2
++  die "gagal menyusun tabel data."
++fi
++DATA_ZIP="$(printf '%s\n' "$DATA_ZIP" | tail -n 1)"
++[ -f "$DATA_ZIP" ] || die "tabel data tidak terbentuk: $DATA_ZIP"
++logged bash "$ROOT/scripts/package-horizon-engine.sh" \
++  --so "$STAGE/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
++  --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
++  --readelf "$NDK_BIN/llvm-readelf"
++
++# ---- 6. Terbitkan ----
++if [ "$PUBLISH" = 1 ]; then
++  phase 06-terbit "6/6 Terbitkan Release $TAG"
++  if gh release view "$TAG" > /dev/null 2>&1; then
++    logged gh release delete "$TAG" --cleanup-tag --yes
++  fi
++  NOTES="$WORK/release-notes.md"
++  {
++    echo "Mesin Rust (Horizon) untuk Android arm64, dikompilasi dari sumber oleh workflow di repo ini."
++    echo
++    echo "- Sumber: $REPO"
++    echo "- Commit: \`$COMMIT\`"
++    echo "- Profil: $PROFILE, NDK $NDK_VERSION, $(rustc --version)"
++    echo
++    echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"
++    echo "(scripts/fetch-horizon-engine.sh); tidak perlu diunduh atau dipasang sendiri."
++  } > "$NOTES"
++  TARGET_SHA="${GITHUB_SHA:-$(git -C "$ROOT" rev-parse HEAD)}"
++  # Pra-rilis dengan tag bukan nomor versi: tidak dianggap pembaruan aplikasi dan tidak mengubah penomoran versi.
++  logged gh release create "$TAG" "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256" \
++    --prerelease --target "$TARGET_SHA" --title "Mesin Rust (Horizon) ${COMMIT:0:12} ($PROFILE)" --notes-file "$NOTES"
++else
++  echo "Tanpa --publish: paket ada di $OUT"
++fi
++end_phase
++PHASE="selesai"
++
++# ---- Ringkasan ----
++M="$(mktemp)"
++unzip -p "$OUT/$BUNDLE_NAME" engine.properties > "$M"
++val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
++{
++  echo "### Mesin Rust (Horizon) berhasil dibangun"
++  echo
++  echo "- Sumber: \`$REPO\` commit \`${COMMIT:0:12}\` ($PROFILE)"
++  echo "- Alat: $(val rust), NDK $NDK_VERSION, javac $JAVA_HAVE"
++  echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
++  echo "- \`engine-data.zip\`: $(val data_bytes) byte"
++  echo "- Paket: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
++  [ "$PUBLISH" = 1 ] && echo "- Release: \`$TAG\` (pra-rilis). Build APK berikutnya memasangnya otomatis." || true
++  echo
++  echo "| Tahap | Waktu |"
++  echo "|---|---|"
++  for t in "${TIMES[@]}"; do
++    echo "| ${t%%|*} | $(fmt_time "${t##*|}") |"
++  done
++  echo
++  echo "Total: $(fmt_time $((SECONDS - STARTED)))"
++} | tee /dev/stderr | summary
++rm -f "$M"
+diff --git a/scripts/fetch-horizon-engine.sh b/scripts/fetch-horizon-engine.sh
+index bc76629..8408c0b 100755
+--- a/scripts/fetch-horizon-engine.sh
++++ b/scripts/fetch-horizon-engine.sh
+@@ -1,28 +1,35 @@
+ #!/usr/bin/env bash
+-# Mengambil mesin Rust (Horizon) dari APK Horizon Android, lalu menaruh dua berkas yang dikemas Gradle:
++# Memasang mesin Rust (Horizon) ke pohon kerja dari Release repo ini sendiri, lalu menaruh dua berkas yang
++# dikemas Gradle:
+ #   app/src/main/jniLibs/arm64-v8a/libhorizon_android.so   mesinnya (arm64)
+ #   app/src/main/assets/engine-data.zip                     tabel data mesin
+ # beserta pemberitahuan lisensi MIT-nya di app/src/main/assets/licenses/horizon/.
+ # Semuanya ada di .gitignore dan tidak pernah disimpan ke repo.
+ #
+-# OPSIONAL: tanpa konfigurasi skrip ini keluar dengan sukses tanpa mengubah apa pun (build biasa).
++# Mesinnya dikompilasi dari sumber oleh workflow "Bangun mesin Rust (Horizon)" (scripts/build-horizon-engine.sh)
++# dan diterbitkan sebagai Release bertanda horizon-engine-<12 digit commit>. Skrip ini hanya mengambil hasilnya.
++# Dipanggil otomatis oleh Gradle sebelum build (app/build.gradle.kts, tugas fetchHorizonEngine).
+ #
+-# Konfigurasi. Variabel lingkungan menang atas berkas horizon-engine.properties di akar repo:
+-#   HORIZON_ENGINE_URL     alamat unduhan APK Horizon Android (arm64), harus https://
+-#   HORIZON_ENGINE_SHA256  SHA-256 APK itu (64 digit heksadesimal). WAJIB. Tanpa ini tidak ada yang dipasang:
+-#                          skrip hanya mencetak SHA-256 hasil unduhan supaya bisa kamu periksa dan, bila
+-#                          kamu percaya berkasnya, kamu salin ke konfigurasi.
++# OPSIONAL dan tidak pernah menggagalkan build: tanpa konfigurasi atau tanpa Release-nya, skrip memberi tahu
++# alasannya lalu keluar, dan build berjalan seperti biasa tanpa mesin Rust.
++#
++# Konfigurasi dibaca dari horizon-engine.properties di akar repo. Variabel lingkungan menang atasnya:
++#   HORIZON_ENGINE=off                  lewati sama sekali (build 32-bit, atau build tanpa jaringan)
++#   HORIZON_ENGINE_COMMIT               commit sumber mesin yang dipatok (40 digit heksadesimal)
++#   HORIZON_ENGINE_PROFILE              release (bawaan) atau fast
++#   HORIZON_ENGINE_RELEASE_REPO         pemilik/repo tempat Release mesin (bawaan: repo yang sedang membangun)
+ #
+ # Pemakaian:
+-#   scripts/fetch-horizon-engine.sh                baca konfigurasi seperti di atas
+-#   scripts/fetch-horizon-engine.sh --apk BERKAS   pakai APK yang sudah ada di komputer (SHA-256 tetap wajib)
+-#   scripts/fetch-horizon-engine.sh --remove       hapus berkas mesin yang pernah dipasang
++#   scripts/fetch-horizon-engine.sh                   ambil dari Release dan pasang
++#   scripts/fetch-horizon-engine.sh --force           pasang ulang walau sudah terpasang
++#   scripts/fetch-horizon-engine.sh --bundle BERKAS   pasang dari paket zip yang sudah ada di komputer
++#   scripts/fetch-horizon-engine.sh --remove          hapus berkas mesin yang pernah dipasang
+ #
+-# Kode keluar: 0 selesai atau tidak dikonfigurasi, 1 galat umum, 2 SHA-256 belum diisi,
+-# 3 SHA-256 tidak cocok, 4 isi APK tidak sesuai.
++# Kode keluar: 0 selesai, sudah terpasang, atau tidak dikonfigurasi; 1 galat umum; 3 SHA-256 paket tidak cocok;
++# 4 isi paket tidak sesuai; 5 Release mesin belum ada (workflow pembangunnya belum pernah dijalankan).
+ #
+-# APK yang diunduh diperlakukan sebagai data tak tepercaya: tidak ada yang dijalankan darinya, hanya dua entri
+-# bernama pasti yang dibaca, dan tanpa SHA-256 yang cocok tidak ada yang dipasang.
++# Paket yang diunduh diperlakukan sebagai data tak tepercaya: tidak ada yang dijalankan darinya, hanya entri
++# bernama pasti yang dibaca, dan tanpa SHA-256 serta commit yang cocok tidak ada yang dipasang.
+ 
+ set -euo pipefail
+ 
+@@ -31,11 +38,11 @@ MAIN="$ROOT/app/src/main"
+ SO_DEST="$MAIN/jniLibs/arm64-v8a/libhorizon_android.so"
+ DATA_DEST="$MAIN/assets/engine-data.zip"
+ LICENSE_DIR="$MAIN/assets/licenses/horizon"
+-LICENSE_SRC="$ROOT/third_party/horizon"
++LICENSE_FALLBACK="$ROOT/third_party/horizon"
++STAMP="$ROOT/.horizon-engine-installed"
+ CONFIG="$ROOT/horizon-engine.properties"
+-SO_ENTRY="lib/arm64-v8a/libhorizon_android.so"
+-DATA_ENTRY="assets/engine-data.zip"
+-MAX_APK_BYTES=$((400 * 1024 * 1024))
++BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
++MAX_BUNDLE_BYTES=$((600 * 1024 * 1024))
+ 
+ say() { echo "Mesin Rust (Horizon): $*"; }
+ 
+@@ -64,6 +71,11 @@ prop() {
+     | tail -n 1 | sed -E 's/^[^=]*=[[:space:]]*//; s/[[:space:]]+$//'
+ }
+ 
++# Nilai $1 dari engine.properties milik paket (berkas $2).
++manifest() {
++  { tr -d '\r' < "$2" | grep -E "^$1=" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'
++}
++
+ sha256_of() {
+   if command -v sha256sum > /dev/null 2>&1; then
+     sha256sum "$1" | cut -d' ' -f1
+@@ -75,14 +87,19 @@ sha256_of() {
+ size_of() { wc -c < "$1" | tr -d '[:space:]'; }
+ 
+ REMOVE=0
+-APK_LOCAL=""
++FORCE=0
++BUNDLE_LOCAL=""
+ while [ $# -gt 0 ]; do
+   case "$1" in
+-    --apk)
+-      [ $# -ge 2 ] || fail 1 "--apk butuh jalur berkas APK."
+-      APK_LOCAL="$2"
++    --bundle)
++      [ $# -ge 2 ] || fail 1 "--bundle butuh jalur berkas paket."
++      BUNDLE_LOCAL="$2"
+       shift 2
+       ;;
++    --force)
++      FORCE=1
++      shift
++      ;;
+     --remove)
+       REMOVE=1
+       shift
+@@ -96,99 +113,174 @@ while [ $# -gt 0 ]; do
+ done
+ 
+ if [ "$REMOVE" = 1 ]; then
+-  rm -f "$SO_DEST" "$DATA_DEST"
++  rm -f "$SO_DEST" "$DATA_DEST" "$STAMP"
+   rm -rf "$LICENSE_DIR"
+   say "berkas mesin dihapus dari pohon kerja."
+   exit 0
+ fi
+ 
+-URL="${HORIZON_ENGINE_URL:-}"
+-[ -n "$URL" ] || URL="$(prop url)"
+-WANT="${HORIZON_ENGINE_SHA256:-}"
+-[ -n "$WANT" ] || WANT="$(prop sha256)"
+-WANT="$(printf '%s' "$WANT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
++if [ "${HORIZON_ENGINE:-}" = "off" ]; then
++  say "dimatikan (HORIZON_ENGINE=off), dilewati."
++  exit 0
++fi
+ 
+-if [ -z "$APK_LOCAL" ] && [ -z "$URL" ]; then
+-  say "tidak dikonfigurasi, dilewati (build tanpa mesin Rust)."
++COMMIT="${HORIZON_ENGINE_COMMIT:-}"
++[ -n "$COMMIT" ] || COMMIT="$(prop commit)"
++COMMIT="$(printf '%s' "$COMMIT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
++PROFILE="${HORIZON_ENGINE_PROFILE:-}"
++[ -n "$PROFILE" ] || PROFILE="$(prop profile)"
++PROFILE="${PROFILE:-release}"
++
++if [ -z "$COMMIT" ]; then
++  say "tidak dikonfigurasi (commit= kosong di horizon-engine.properties), dilewati."
+   exit 0
+ fi
++[[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || fail 1 "commit= harus 40 digit heksadesimal."
++case "$PROFILE" in release | fast) ;; *) fail 1 "profile= harus release atau fast." ;; esac
+ 
+-if [ -n "$WANT" ] && ! [[ $WANT =~ ^[0-9a-f]{64}$ ]]; then
+-  fail 1 "SHA-256 harus 64 digit heksadesimal (0-9, a-f)."
++# Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
++WANT_STAMP="$COMMIT $PROFILE"
++if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
++  && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
++  say "sudah terpasang (commit ${COMMIT:0:12}, $PROFILE)."
++  exit 0
+ fi
+ 
+-# Pemberitahuan lisensi wajib ikut bila mesin dikemas (MIT mensyaratkannya): periksa sebelum mengunduh apa pun.
+-for f in LICENSE THIRD_PARTY_NOTICES.md; do
+-  [ -f "$LICENSE_SRC/$f" ] || fail 1 "berkas lisensi third_party/horizon/$f tidak ada, mesin tidak dipasang."
+-done
+ command -v unzip > /dev/null 2>&1 || fail 1 "perintah unzip tidak ditemukan."
++command -v curl > /dev/null 2>&1 || [ -n "$BUNDLE_LOCAL" ] || fail 1 "perintah curl tidak ditemukan."
+ 
+ TMP="$(mktemp -d)"
+ trap 'rm -rf "$TMP"' EXIT
+ 
+-if [ -n "$APK_LOCAL" ]; then
+-  [ -f "$APK_LOCAL" ] || fail 1 "berkas APK tidak ditemukan: $APK_LOCAL"
+-  APK="$APK_LOCAL"
++TAG="horizon-engine-${COMMIT:0:12}"
++[ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
++
++BUNDLE="$TMP/$BUNDLE_NAME"
++if [ -n "$BUNDLE_LOCAL" ]; then
++  [ -f "$BUNDLE_LOCAL" ] || fail 1 "paket tidak ditemukan: $BUNDLE_LOCAL"
++  cp "$BUNDLE_LOCAL" "$BUNDLE"
++  WANT_SHA=""
+ else
+-  case "$URL" in
+-    https://*) ;;
+-    *) fail 1 "alamat unduhan harus diawali https:// (HORIZON_ENGINE_URL atau url= di horizon-engine.properties)." ;;
+-  esac
+-  APK="$TMP/horizon-android.apk"
+-  say "mengunduh APK Horizon Android ..."
+-  curl --fail --silent --show-error --location --retry 3 --connect-timeout 30 --max-time 900 \
+-    --proto '=https' --proto-redir '=https' --max-filesize "$MAX_APK_BYTES" \
+-    --output "$APK" "$URL" || fail 1 "unduhan gagal. Periksa alamatnya (url=) dan coba lagi."
+-fi
++  # Tempat mencari Release, berurutan: variabel lingkungan, repo yang sedang membangun, lalu release_repo=.
++  REPOS=()
++  for r in "${HORIZON_ENGINE_RELEASE_REPO:-}" "${GITHUB_REPOSITORY:-}" "$(prop release_repo)"; do
++    r="$(printf '%s' "$r" | tr -d '[:space:]')"
++    [ -n "$r" ] || continue
++    [[ $r =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]] || fail 1 "nama repo Release tidak valid: $r"
++    dup=0
++    for seen in ${REPOS[@]+"${REPOS[@]}"}; do [ "$seen" = "$r" ] && dup=1; done
++    [ "$dup" = 1 ] || REPOS+=("$r")
++  done
++  [ "${#REPOS[@]}" -gt 0 ] || fail 1 "tidak ada repo untuk mencari Release mesin (isi release_repo= di horizon-engine.properties)."
+ 
+-[ "$(size_of "$APK")" -le "$MAX_APK_BYTES" ] || fail 1 "APK lebih besar dari $((MAX_APK_BYTES / 1024 / 1024)) MB, ditolak."
++  # HORIZON_ENGINE_BASE_URL hanya untuk pengujian dan hanya diterima untuk alamat lokal.
++  BASE_OVERRIDE="${HORIZON_ENGINE_BASE_URL:-}"
++  PROTO='=https'
++  if [ -n "$BASE_OVERRIDE" ]; then
++    case "$BASE_OVERRIDE" in
++      http://127.0.0.1:* | http://localhost:*) PROTO='=https,http' ;;
++      *) fail 1 "HORIZON_ENGINE_BASE_URL hanya boleh alamat lokal (http://127.0.0.1:PORT)." ;;
++    esac
++  fi
+ 
+-HAVE="$(sha256_of "$APK")"
+-if [ -z "$WANT" ]; then
+-  fail 2 "SHA-256 belum diisi, jadi mesin TIDAK dipasang.
++  FOUND=""
++  TRIED=""
++  for repo in "${REPOS[@]}"; do
++    if [ -n "$BASE_OVERRIDE" ]; then
++      URL_BASE="$BASE_OVERRIDE/$TAG"
++    else
++      URL_BASE="https://github.com/$repo/releases/download/$TAG"
++    fi
++    TRIED="$TRIED $repo"
++    code="$(curl --silent --show-error --location --retry 2 --connect-timeout 30 --max-time 120 \
++      --proto "$PROTO" --proto-redir "$PROTO" --output "$TMP/sha256.txt" --write-out '%{http_code}' \
++      "$URL_BASE/$BUNDLE_NAME.sha256" 2> "$TMP/curl.err" || true)"
++    case "$code" in
++      200)
++        FOUND="$URL_BASE"
++        break
++        ;;
++      404) continue ;;
++      *) fail 1 "tidak bisa membaca $URL_BASE/$BUNDLE_NAME.sha256 (HTTP $code). $(tr '\n' ' ' < "$TMP/curl.err")" ;;
++    esac
++  done
++  if [ -z "$FOUND" ]; then
++    fail 5 "Release mesin belum ada, jadi mesin TIDAK dipasang (build tetap jalan tanpa mesin Rust).
+ 
+-SHA-256 APK yang baru diunduh:
++Dicari di:$TRIED
++Tag yang dicari: $TAG
+ 
+-    $HAVE
++Jalankan sekali workflow \"Bangun mesin Rust (Horizon)\" (tab Actions > Run workflow). Hasilnya diterbitkan sebagai Release bertanda itu, dan build APK berikutnya memasangnya otomatis. Panduan: docs/rust-engine.md"
++  fi
+ 
+-Bandingkan dengan SHA256SUMS.txt di halaman rilis Horizon Android. Bila kamu percaya berkas ini, isi sha256= di horizon-engine.properties dengan nilai itu."
++  WANT_SHA="$(tr -d '\r' < "$TMP/sha256.txt" | head -n 1 | cut -d' ' -f1 | tr 'A-F' 'a-f')"
++  [[ $WANT_SHA =~ ^[0-9a-f]{64}$ ]] || fail 4 "berkas $BUNDLE_NAME.sha256 di Release tidak berisi SHA-256 yang sah."
++
++  say "mengunduh paket mesin dari $FOUND ..."
++  curl --fail --silent --show-error --location --retry 3 --connect-timeout 30 --max-time 900 \
++    --proto "$PROTO" --proto-redir "$PROTO" --max-filesize "$MAX_BUNDLE_BYTES" \
++    --output "$BUNDLE" "$FOUND/$BUNDLE_NAME" || fail 1 "unduhan paket gagal. Coba jalankan ulang."
+ fi
+-if [ "$HAVE" != "$WANT" ]; then
+-  fail 3 "SHA-256 tidak cocok, mesin TIDAK dipasang.
+ 
+-Diharapkan: $WANT
+-Didapat:    $HAVE
++[ "$(size_of "$BUNDLE")" -le "$MAX_BUNDLE_BYTES" ] || fail 4 "paket lebih besar dari $((MAX_BUNDLE_BYTES / 1024 / 1024)) MB, ditolak."
++
++HAVE="$(sha256_of "$BUNDLE")"
++if [ -n "$WANT_SHA" ] && [ "$HAVE" != "$WANT_SHA" ]; then
++  fail 3 "SHA-256 paket tidak cocok dengan yang tercatat di Release, mesin TIDAK dipasang.
+ 
+-Berkas di alamat itu berbeda dari yang kamu patok (mungkin rilis diganti)."
++Tercatat: $WANT_SHA
++Didapat:  $HAVE
++
++Unduhan mungkin rusak: coba lagi. Bila tetap begitu, jalankan ulang workflow pembangun mesin dengan force."
+ fi
+ 
+-# Hanya dua entri bernama pasti yang dibaca, ke berkas sementara.
+-extract() { unzip -p "$APK" "$1" > "$2" 2> /dev/null && [ -s "$2" ]; }
+-extract "$SO_ENTRY" "$TMP/lib.so" || fail 4 "APK tidak berisi $SO_ENTRY."
+-extract "$DATA_ENTRY" "$TMP/engine-data.zip" || fail 4 "APK tidak berisi $DATA_ENTRY."
++unzip -tq "$BUNDLE" > /dev/null 2>&1 || fail 4 "paket mesin bukan zip yang utuh."
++# Hanya entri bernama pasti yang dibaca, ke berkas sementara.
++extract() { unzip -p "$BUNDLE" "$1" > "$2" 2> /dev/null && [ -s "$2" ]; }
++extract engine.properties "$TMP/engine.properties" || fail 4 "paket tidak berisi engine.properties."
++extract libhorizon_android.so "$TMP/lib.so" || fail 4 "paket tidak berisi libhorizon_android.so."
++extract engine-data.zip "$TMP/engine-data.zip" || fail 4 "paket tidak berisi engine-data.zip."
++
++M="$TMP/engine.properties"
++[ "$(manifest schema "$M")" = "1" ] || fail 4 "format paket tidak dikenal (schema bukan 1)."
++[ "$(manifest abi "$M")" = "arm64-v8a" ] || fail 4 "paket bukan untuk arm64-v8a."
++[ "$(manifest source_commit "$M")" = "$COMMIT" ] \
++  || fail 4 "paket dibangun dari commit lain ($(manifest source_commit "$M")), bukan yang dipatok ($COMMIT)."
++[ "$(manifest so_sha256 "$M")" = "$(sha256_of "$TMP/lib.so")" ] || fail 4 "libhorizon_android.so tidak cocok dengan catatan di paket."
++[ "$(manifest data_sha256 "$M")" = "$(sha256_of "$TMP/engine-data.zip")" ] || fail 4 "engine-data.zip tidak cocok dengan catatan di paket."
+ 
+ # Pustaka harus ELF 64-bit little-endian untuk arm64: byte 0-3 = 7f 45 4c 46, byte 4 = 02, byte 5 = 01,
+ # dan e_machine (byte 18-19) = b7 00 (AArch64).
+ HEADER="$(od -An -v -tx1 -N20 "$TMP/lib.so" | tr -d ' \n')"
+ if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
+-  fail 4 "$SO_ENTRY bukan pustaka ELF 64-bit arm64 (AArch64)."
++  fail 4 "libhorizon_android.so bukan pustaka ELF 64-bit arm64 (AArch64)."
+ fi
+-unzip -tq "$TMP/engine-data.zip" > /dev/null 2>&1 || fail 4 "$DATA_ENTRY di APK rusak (bukan zip yang utuh)."
++unzip -tq "$TMP/engine-data.zip" > /dev/null 2>&1 || fail 4 "engine-data.zip di paket rusak (bukan zip yang utuh)."
++
++# Pemberitahuan lisensi MIT wajib ikut bila mesin dikemas: dari paket (sesuai sumber yang dikompilasi),
++# atau salinan di third_party/horizon bila paket tidak membawanya.
++for f in LICENSE THIRD_PARTY_NOTICES.md; do
++  if ! extract "$f" "$TMP/$f"; then
++    [ -f "$LICENSE_FALLBACK/$f" ] || fail 4 "pemberitahuan lisensi $f tidak ada di paket maupun di third_party/horizon, mesin tidak dipasang."
++    cp "$LICENSE_FALLBACK/$f" "$TMP/$f"
++  fi
++done
+ 
+ mkdir -p "$(dirname "$SO_DEST")" "$(dirname "$DATA_DEST")" "$LICENSE_DIR"
+ cp "$TMP/lib.so" "$SO_DEST"
+ cp "$TMP/engine-data.zip" "$DATA_DEST"
+-cp "$LICENSE_SRC/LICENSE" "$LICENSE_SRC/THIRD_PARTY_NOTICES.md" "$LICENSE_DIR/"
++cp "$TMP/LICENSE" "$TMP/THIRD_PARTY_NOTICES.md" "$LICENSE_DIR/"
+ chmod 644 "$SO_DEST" "$DATA_DEST"
++printf '%s\n' "$WANT_STAMP" > "$STAMP"
+ 
+-say "terpasang."
+-say "  $SO_ENTRY -> $(size_of "$SO_DEST") byte, sha256 $(sha256_of "$SO_DEST")"
+-say "  $DATA_ENTRY -> $(size_of "$DATA_DEST") byte, sha256 $(sha256_of "$DATA_DEST")"
++say "terpasang (commit ${COMMIT:0:12}, $PROFILE)."
++say "  libhorizon_android.so -> $(size_of "$SO_DEST") byte, sha256 $(sha256_of "$SO_DEST")"
++say "  engine-data.zip -> $(size_of "$DATA_DEST") byte, sha256 $(sha256_of "$DATA_DEST")"
+ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+   {
+     echo "### Mesin Rust (Horizon) ikut dibangun"
+     echo
+-    echo "- APK sumber, SHA-256: \`$HAVE\` (cocok dengan patokan)"
++    echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)"
+     echo "- \`libhorizon_android.so\`: $(size_of "$SO_DEST") byte"
+     echo "- \`engine-data.zip\`: $(size_of "$DATA_DEST") byte"
+   } >> "$GITHUB_STEP_SUMMARY"
+diff --git a/scripts/package-horizon-engine.sh b/scripts/package-horizon-engine.sh
+new file mode 100755
+index 0000000..6a5795c
+--- /dev/null
++++ b/scripts/package-horizon-engine.sh
+@@ -0,0 +1,113 @@
++#!/usr/bin/env bash
++# Mengemas mesin Rust (Horizon) yang sudah dikompilasi menjadi satu paket zip untuk Release repo ini.
++# Dipanggil oleh scripts/build-horizon-engine.sh; dipisah supaya bisa diuji tanpa mengompilasi apa pun.
++#
++# Isi paket (nama berkas tetap, dibaca scripts/fetch-horizon-engine.sh):
++#   libhorizon_android.so        mesinnya (arm64, sudah di-strip)
++#   engine-data.zip              tabel data mesin hasil generate
++#   LICENSE, THIRD_PARTY_NOTICES.md   pemberitahuan lisensi MIT dari sumber yang dikompilasi
++#   engine.properties            keterangan: sumber, commit, versi alat, ukuran dan SHA-256 tiap berkas
++#
++# Pemakaian:
++#   package-horizon-engine.sh --so BERKAS --data BERKAS --license-dir FOLDER --out FOLDER \
++#       --repo URL --commit SHA40 --profile release|fast [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
++#
++# Hasil: FOLDER/horizon-engine-arm64-v8a.zip dan FOLDER/horizon-engine-arm64-v8a.zip.sha256
++
++set -euo pipefail
++
++BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
++
++die() { echo "package-horizon-engine: $*" >&2; exit 1; }
++
++SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" RUST="" NDK="" READELF=""
++while [ $# -gt 0 ]; do
++  case "$1" in
++    --so | --data | --license-dir | --out | --repo | --commit | --profile | --rust | --ndk | --readelf)
++      [ $# -ge 2 ] || die "$1 butuh nilai."
++      case "$1" in
++        --so) SO="$2" ;;
++        --data) DATA="$2" ;;
++        --license-dir) LICENSE_DIR="$2" ;;
++        --out) OUT="$2" ;;
++        --repo) REPO="$2" ;;
++        --commit) COMMIT="$2" ;;
++        --profile) PROFILE="$2" ;;
++        --rust) RUST="$2" ;;
++        --ndk) NDK="$2" ;;
++        --readelf) READELF="$2" ;;
++      esac
++      shift 2
++      ;;
++    -h | --help)
++      awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "$0"
++      exit 0
++      ;;
++    *) die "argumen tidak dikenal: $1" ;;
++  esac
++done
++
++for v in SO DATA LICENSE_DIR OUT REPO COMMIT PROFILE; do
++  [ -n "${!v}" ] || die "argumen wajib kurang: $v"
++done
++[[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal."
++case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." ;; esac
++[ -f "$SO" ] || die "pustaka tidak ada: $SO"
++[ -f "$DATA" ] || die "data mesin tidak ada: $DATA"
++for f in LICENSE THIRD_PARTY_NOTICES.md; do
++  [ -f "$LICENSE_DIR/$f" ] || die "berkas lisensi tidak ada: $LICENSE_DIR/$f"
++done
++command -v zip > /dev/null 2>&1 || die "perintah zip tidak ditemukan."
++command -v unzip > /dev/null 2>&1 || die "perintah unzip tidak ditemukan."
++
++sha256_of() {
++  if command -v sha256sum > /dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1; else shasum -a 256 "$1" | cut -d' ' -f1; fi
++}
++size_of() { wc -c < "$1" | tr -d '[:space:]'; }
++
++# ELF 64-bit little-endian untuk arm64: 7f 45 4c 46, kelas 02, data 01, e_machine (byte 18-19) = b7 00.
++HEADER="$(od -An -v -tx1 -N20 "$SO" | tr -d ' \n')"
++if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
++  die "$SO bukan pustaka ELF 64-bit arm64 (AArch64)."
++fi
++unzip -tq "$DATA" > /dev/null 2>&1 || die "data mesin bukan zip yang utuh: $DATA"
++
++# Build ID membantu mencocokkan laporan crash dengan simbol; bila alatnya tidak ada, dikosongkan.
++BUILD_ID=""
++if [ -n "$READELF" ] && [ -x "$(command -v "$READELF" 2> /dev/null || true)" ]; then
++  BUILD_ID="$("$READELF" --notes "$SO" 2> /dev/null | sed -n 's/.*Build ID: *\([0-9a-f]*\).*/\1/p' | head -n 1 || true)"
++fi
++
++mkdir -p "$OUT"
++OUT="$(cd "$OUT" && pwd)"
++STAGE="$(mktemp -d)"
++trap 'rm -rf "$STAGE"' EXIT
++
++cp "$SO" "$STAGE/libhorizon_android.so"
++cp "$DATA" "$STAGE/engine-data.zip"
++cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
++
++{
++  echo "schema=1"
++  echo "abi=arm64-v8a"
++  echo "source_repo=$REPO"
++  echo "source_commit=$COMMIT"
++  echo "profile=$PROFILE"
++  echo "rust=$RUST"
++  echo "ndk=$NDK"
++  echo "build_id=$BUILD_ID"
++  echo "built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
++  echo "so_bytes=$(size_of "$STAGE/libhorizon_android.so")"
++  echo "so_sha256=$(sha256_of "$STAGE/libhorizon_android.so")"
++  echo "data_bytes=$(size_of "$STAGE/engine-data.zip")"
++  echo "data_sha256=$(sha256_of "$STAGE/engine-data.zip")"
++} > "$STAGE/engine.properties"
++
++rm -f "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256"
++# -X: tanpa atribut tambahan; urutan tetap supaya hasilnya mudah dibandingkan.
++(cd "$STAGE" && zip -q -X "$OUT/$BUNDLE_NAME" engine.properties libhorizon_android.so engine-data.zip LICENSE THIRD_PARTY_NOTICES.md)
++unzip -tq "$OUT/$BUNDLE_NAME" > /dev/null 2>&1 || die "paket yang baru dibuat tidak lolos pemeriksaan zip."
++echo "$(sha256_of "$OUT/$BUNDLE_NAME")  $BUNDLE_NAME" > "$OUT/$BUNDLE_NAME.sha256"
++
++echo "Paket: $OUT/$BUNDLE_NAME ($(size_of "$OUT/$BUNDLE_NAME") byte)"
++echo "SHA-256 paket: $(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")"
+# FIN part=1/1 files=9

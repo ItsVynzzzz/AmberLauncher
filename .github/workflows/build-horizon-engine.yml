@@ -1,0 +1,61 @@
+# Mesin Rust (Horizon): dikompilasi dari sumber, hasilnya diterbitkan sebagai Release di repo ini.
+#
+# Salin berkas ini ke .github/workflows/build-horizon-engine.yml (sekali, lewat editor web GitHub: Add file > Create
+# new file), lalu jalankan dari tab Actions > "Bangun mesin Rust (Horizon)" > Run workflow. Semua logikanya ada di
+# scripts/build-horizon-engine.sh (bisa diperbarui lewat patch), jadi berkas ini tidak perlu diubah lagi.
+# Jalankan ulang hanya bila commit= di horizon-engine.properties diganti. Panduan: docs/rust-engine.md
+name: Bangun mesin Rust (Horizon)
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "release = penuh (ThinLTO, lambat, butuh banyak RAM). fast = tanpa LTO, lebih cepat dan hemat RAM (untuk mencoba)"
+        type: choice
+        options: [release, fast]
+        default: release
+      force:
+        description: Bangun ulang walau Release untuk commit ini sudah ada
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: horizon-engine
+  cancel-in-progress: false
+
+jobs:
+  engine:
+    name: Bangun mesin Rust
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    env:
+      HORIZON_TELEMETRY_URL: "off"
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v5
+
+      # Eksporter tabel data proyek sumber dikompilasi dengan JDK yang dipatok proyek itu (Java 25).
+      - name: Pasang JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      # Sumber, unduhan Mojang sementara, dan target Rust makan beberapa GB: kerjakan di /mnt, bukan di disk akar.
+      - name: Siapkan ruang disk
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
+          sudo mkdir -p /mnt/horizon-engine
+          sudo chown "$USER" /mnt/horizon-engine
+          df -h / /mnt
+
+      - name: Bangun dan terbitkan mesin
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HORIZON_ENGINE_PROFILE: ${{ inputs.profile }}
+          HORIZON_ENGINE_FORCE: ${{ inputs.force }}
+          HORIZON_ENGINE_WORK: /mnt/horizon-engine
+        run: bash scripts/build-horizon-engine.sh --publish

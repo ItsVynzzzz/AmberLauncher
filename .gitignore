@@ -23,10 +23,11 @@ google-services.json
 build/
 app/build/
 
-# Mesin Rust (Horizon): diambil saat build oleh scripts/fetch-horizon-engine.sh, tidak disimpan di repo
+# Mesin Rust (Horizon): dipasang saat build oleh scripts/fetch-horizon-engine.sh, tidak disimpan di repo
 /app/src/main/jniLibs/arm64-v8a/libhorizon_android.so
 /app/src/main/assets/engine-data.zip
 /app/src/main/assets/licenses/horizon/
+/.horizon-engine-installed
 
 # Kotlin / OS specific
 .kotlin/

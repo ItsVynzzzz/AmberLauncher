@@ -252,6 +252,24 @@ tasks.configureEach {
     }
 }
 
+// ---- Mesin Rust (Horizon): dipasang otomatis sebelum build ----
+// scripts/fetch-horizon-engine.sh mengambil mesin yang sudah dikompilasi dari Release repo ini dan menaruhnya di
+// jniLibs/assets (cara kerjanya ada di docs/rust-engine.md). Tanpa konfigurasi, tanpa Release-nya, atau tanpa
+// jaringan, skrip itu hanya memberi tahu alasannya, dan build berjalan seperti biasa tanpa mesin Rust. Dilewati di
+// build 32-bit (mesin hanya untuk arm64), di Windows (butuh bash), dan bila HORIZON_ENGINE=off.
+val fetchHorizonEngine by tasks.registering(Exec::class) {
+    group = "amber"
+    description = "Memasang mesin Rust (Horizon) dari Release repo ini bila tersedia"
+    workingDir = rootDir
+    commandLine("bash", "scripts/fetch-horizon-engine.sh")
+    isIgnoreExitValue = true
+    outputs.upToDateWhen { false }
+    enabled = !buildArm32 &&
+        !System.getProperty("os.name").lowercase().contains("win") &&
+        File(rootDir, "scripts/fetch-horizon-engine.sh").isFile
+}
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine) }
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

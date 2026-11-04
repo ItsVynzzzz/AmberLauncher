@@ -21,24 +21,42 @@ Status: **eksperimental, belum diuji di perangkat.** PLAY langsung masuk game de
 
 ## Cara kerja pembangunan (tanpa mengurus URL atau hash)
 
-Ada dua tahap yang terpisah supaya build APK tetap cepat:
+Satu workflow, **Build APK**, mengurus semuanya dalam **satu kali run**:
 
-1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>-<patch_set>` (`-fast` di belakangnya untuk profil `fast`; tanpa `-<patch_set>` bila `patch_set=` kosong). Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`). Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
-2. **Build APK biasa** hanya mengambil hasil itu. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh` sebelum build, mengunduh paket dari Release repo yang sedang membangun, memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Tanpa Release-nya, build jalan terus tanpa mesin dan alasannya muncul di ringkasan run.
+1. **Periksa** (sekitar 15 detik). Menerapkan patch run ini dan memutuskan perlu build atau tidak (lihat "Kapan build berjalan" di bawah). Lalu memeriksa mesin: ia menghitung tanda Release mesin untuk konfigurasi *sekarang* (`scripts/build-horizon-engine.sh --print-tag`) dan menanyakan ke GitHub apakah Release itu sudah ada.
+2. **Bangun mesin Rust (Horizon)**. Hanya jalan bila Release-nya **belum ada**. Mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, menerapkan perubahan Amber (`third_party/horizon-patches/<patch_set>/*.diff`), mengompilasinya untuk arm64 dengan jalur build resmi proyek itu (sekitar 12 menit untuk profil `release`), lalu menerbitkan hasilnya sebagai **pra-rilis** di repo ini. Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
+3. **Build APK**. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh`, mengunduh paket mesin dari Release itu (di dalam jaringan GitHub, hitungan detik), memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Bila langkah 2 gagal, APK tetap dibangun tanpa mesin Rust dan run memberi peringatan jelas; run berikutnya mencoba membangun mesin lagi.
 
-Tidak ada langkah tambahan di `build-apk.yml`, dan tidak ada URL atau SHA-256 yang perlu diisi.
+**Tanda Release** mesin: `horizon-engine-<12 digit commit>[-<patch_set>-<8 digit hash isi patch>][-fast]`. Hash dihitung dari nama dan isi semua `.diff` di folder patch, jadi **mengedit patch Amber otomatis berarti mesin baru**: tidak perlu mengganti nama `patch_set=` dan tidak perlu menjalankan apa pun terpisah. Sebaliknya, selama commit, patch, dan profil tidak berubah, mesin **tidak dibangun ulang** dan tidak diunduh ulang oleh siapa pun kecuali build APK di GitHub.
+
+Workflow lama **Bangun mesin Rust (Horizon)** (`docs/workflows/build-horizon-engine.yml`) tetap boleh dipakai manual, misalnya untuk profil `fast`, tetapi tidak diperlukan lagi.
+
+### Kapan build berjalan, dan apa yang terbit
+
+| Yang terjadi | Hasil |
+| --- | --- |
+| Upload patch yang mengubah isi APK (kode, skrip, `third_party/`, `VERSION`, ...) | Build **uji**: APK ditaruh di satu Release bernama `uji` yang ditimpa tiap build. **Bukan rilis**, jadi aplikasi pengguna tidak menawarkan pembaruan. Hanya APK 64-bit. |
+| Upload patch yang hanya mengubah dokumen (`README.md`, `docs/`, `*.md`, `LICENSE`, ...) | Patch diterapkan dan disimpan ke repo. **Tanpa build, tanpa APK, tanpa Release.** |
+| Edit `.md`, `docs/`, `.github/` langsung di GitHub | Run bahkan tidak dimulai. |
+| Run workflow manual, *rilis* **tidak** dicentang | Build uji, seperti baris pertama. |
+| Run workflow manual, *rilis* **dicentang** | Rilis bernomor baru (`v0.1.0-beta.N`) dengan APK 64-bit dan 32-bit. Hanya ini yang membuat pengguna aplikasi ditawari pembaruan. |
+
+Pilihan *mesin* pada Run workflow: `otomatis` (bawaan: bangun hanya bila belum ada), `ulang` (paksa bangun ulang), `lewati` (jangan bangun mesin di run ini).
+
+Build uji mengambil nomor turunan dari rilis terakhir, misalnya `0.1.0-beta.56.uji.130`. Menurut aturan urutan versi di aplikasi, itu lebih baru daripada rilis 56 (tidak pernah dianggap pembaruan) dan lebih lama daripada rilis 57 (rilis berikutnya tetap ditawarkan). Untuk memasang build uji di HP, unduh APK-nya dari halaman Release `uji`.
+
+Jangan mengunggah patch baru saat sebuah build masih berjalan: run lama dibatalkan oleh yang baru (itulah yang menjaga patch tidak diterapkan dua kali), dan pembangunan mesin yang terpotong harus mulai dari awal.
 
 ### Menyiapkan (sekali)
 
-1. Buka `docs/workflows/build-horizon-engine.yml` di repo ini, salin isinya, lalu buat berkas baru `.github/workflows/build-horizon-engine.yml` lewat editor web GitHub (Add file > Create new file) dan tempel. Berkas di `.github/workflows/` tidak bisa dibuat lewat patch, jadi ini satu-satunya langkah manual. Semua logikanya ada di skrip yang bisa diperbarui lewat patch, jadi berkas workflow tidak perlu diubah lagi.
-2. Buka tab **Actions > Bangun mesin Rust (Horizon) > Run workflow**. Untuk percobaan pertama boleh pilih profil `fast` (tanpa LTO, lebih cepat dan hemat RAM) supaya alurnya terbukti dulu; profil `release` yang dipakai build APK secara bawaan (`profile=` di `horizon-engine.properties`).
-3. Setelah run selesai, ringkasan run mencatat ukuran, SHA-256, dan waktu tiap tahap, dan di halaman Releases muncul pra-rilis `Mesin Rust (Horizon) ...`. Jalankan build APK seperti biasa: mesin terpasang otomatis (ringkasan langkah build menulis "Mesin Rust (Horizon) ikut dibangun").
+1. Ganti isi `.github/workflows/build-apk.yml` dengan `docs/workflows/build-apk.yml` (editor web GitHub: buka berkasnya, ikon pensil, pilih semua, tempel). Berkas di `.github/workflows/` tidak bisa diubah lewat patch, jadi ini satu-satunya langkah manual. Perubahan pada folder `.github` tidak memulai run.
+2. Setelah itu cukup upload patch seperti biasa. Bila Release mesin untuk konfigurasi sekarang belum ada, run yang sama membangunnya.
 
-Bila run gagal, ringkasan run memuat tahap yang gagal, baris galatnya, dan 60 baris terakhir lognya. Salin bagian itu untuk diperbaiki.
+Bila pembangunan mesin gagal, ringkasan run memuat tahap yang gagal, baris galatnya, dan 60 baris terakhir lognya. Salin bagian itu untuk diperbaiki.
 
 ### Peluncuran dari Amber
 
-Mesin bawaan Horizon selalu menampilkan layar peluncurnya sendiri. Supaya PLAY di AmberLauncher langsung masuk game, workflow pembangun menerapkan perubahan kecil milik Amber pada salinan sumber sebelum mengompilasinya. Berkasnya ada di `third_party/horizon-patches/<patch_set>/*.diff` (nilai `patch_set=` di `horizon-engine.properties`, sekarang `amber1`) dan hanya menyentuh dua tempat di `crates/horizon-client/src/android/`: berkas baru `amber.rs` dan beberapa baris di `launcher.rs`.
+Mesin bawaan Horizon selalu menampilkan layar peluncurnya sendiri. Supaya PLAY di AmberLauncher langsung masuk game, workflow pembangun menerapkan perubahan kecil milik Amber pada salinan sumber sebelum mengompilasinya. Berkasnya ada di `third_party/horizon-patches/<patch_set>/*.diff` (nilai `patch_set=` di `horizon-engine.properties`, sekarang `amber2`) dan hanya menyentuh dua tempat di `crates/horizon-client/src/android/`: berkas baru `amber.rs` dan beberapa baris di `launcher.rs`.
 
 Alurnya:
 
@@ -47,11 +65,15 @@ Alurnya:
 3. Akun Microsoft diteruskan ke game lewat berkas sesi yang ditulis **saat main dimulai** (hanya bisa dibaca pemiliknya, dihapus game begitu dibaca, sama seperti jalur resmi proyek sumber). Akun offline memakai namanya saja.
 4. Saat game ditutup normal, mesin menutup dirinya dan pemain kembali ke launcher. Bila game berhenti karena galat, layar mesin tampil dengan pesannya.
 
+**Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber2/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan di atas `amber1` pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
+
+Sisi launcher: token Microsoft yang berumur kurang dari 16 jam dipakai langsung dan diperbarui di latar (sebelumnya PLAY menunggu sampai 12 detik bila token lebih tua dari 8 jam), peralihan ke layar mesin tanpa animasi, latar jendela mesin hitam, dan proses `:horizon` tidak lagi memuat kamus terjemahan.
+
 Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan berkas itu dan menampilkan layar peluncur Horizon seperti sebelumnya. Perubahan Amber dijaga sekecil mungkin; bila `commit=` diganti, berkas `.diff` harus dicek ulang terhadap sumber baru (skrip pembangun berhenti dengan pesan jelas bila tidak cocok).
 
 ### Mengganti versi mesin
 
-Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), jalankan workflow pembangun sekali, lalu build APK. Mengubah isi `.diff` atau `patch_set=` juga berarti menjalankan workflow itu lagi (ganti nama `patch_set=` bila ingin tag Release baru tanpa memakai *force*). Bila `commit=` diganti tetapi workflow belum dijalankan, build APK tetap lolos tanpa mesin dan memberi tahu bahwa Release-nya belum ada.
+Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), lalu upload perubahannya sebagai patch seperti biasa: run yang sama membangun mesin barunya. Mengedit isi `.diff` juga cukup begitu (hash isinya ikut di tanda Release). Perlu folder patch baru? Buat `third_party/horizon-patches/<nama baru>/` dan ganti `patch_set=`. Bila mesinnya gagal dibangun, build APK tetap lolos tanpa mesin dan memberi peringatan.
 
 ### Build di komputer sendiri
 

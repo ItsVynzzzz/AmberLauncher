@@ -21,10 +21,13 @@ class NuxApplication : Application() {
         } catch (_: Throwable) {
         }
 
-        // Bahasa tampilan (Indonesia / English). Dipanggil di tiap proses, termasuk proses game.
-        try {
-            Tr.init(this)
-        } catch (_: Throwable) {
+        // Bahasa tampilan (Indonesia / English). Dipanggil di tiap proses, termasuk proses game. Proses mesin Rust
+        // (:horizon) tidak menampilkan layar launcher, jadi kamusnya tidak perlu dimuat di sana.
+        if (!isEngineProcess()) {
+            try {
+                Tr.init(this)
+            } catch (_: Throwable) {
+            }
         }
 
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
@@ -48,6 +51,13 @@ class NuxApplication : Application() {
             android.os.Process.killProcess(android.os.Process.myPid())
             System.exit(10)
         }
+    }
+
+    /** True di proses :horizon (mesin Rust). Mesin itu butuh Android 9 ke atas, jadi di bawahnya selalu false. */
+    private fun isEngineProcess(): Boolean = try {
+        android.os.Build.VERSION.SDK_INT >= 28 && Application.getProcessName()?.endsWith(":horizon") == true
+    } catch (_: Throwable) {
+        false
     }
 
     /** Mencatat layar yang dibuka dan ditutup (tanpa logcat; hanya ke buku harian launcher). */

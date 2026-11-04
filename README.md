@@ -66,7 +66,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Akun** Microsoft, Ely.by, dan offline.
 - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
 - **Laporan crash** dengan opsi unggah log ke mclo.gs.
-- **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis.
+- **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
 - **Antarmuka multibahasa**: Indonesia, English, Español, dan Tiếng Việt.
 - **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
 

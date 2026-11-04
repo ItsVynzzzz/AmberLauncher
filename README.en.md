@@ -66,7 +66,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Accounts**: Microsoft, Ely.by, and offline.
 - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
 - **Crash reports** with optional log upload to mclo.gs.
-- **In-app updates**, with the 32-bit/64-bit APK chosen automatically.
+- **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
 - **Multilingual interface**: Bahasa Indonesia, English, Español, and Tiếng Việt.
 - **Optional**: TouchController mod support and the Rust engine (Horizon), both still experimental.
 

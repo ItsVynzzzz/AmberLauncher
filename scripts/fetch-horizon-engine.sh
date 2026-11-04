@@ -7,7 +7,8 @@
 # Semuanya ada di .gitignore dan tidak pernah disimpan ke repo.
 #
 # Mesinnya dikompilasi dari sumber oleh workflow "Bangun mesin Rust (Horizon)" (scripts/build-horizon-engine.sh)
-# dan diterbitkan sebagai Release bertanda horizon-engine-<12 digit commit>[-<patch_set>][-fast]. Skrip ini hanya
+# dan diterbitkan sebagai Release bertanda horizon-engine-<12 digit commit>[-<patch_set>-<hash isi patch>][-fast].
+# Hash isi patch ikut di tanda itu, jadi mengedit patch Amber otomatis berarti mesin baru. Skrip ini hanya
 # mengambil hasilnya.
 # Dipanggil otomatis oleh Gradle sebelum build (app/build.gradle.kts, tugas fetchHorizonEngine).
 #
@@ -88,6 +89,25 @@ sha256_of() {
 
 size_of() { wc -c < "$1" | tr -d '[:space:]'; }
 
+# 8 digit pertama hash isi perubahan Amber di folder $1 (nama dan isi tiap .diff, urut nama). HARUS sama dengan
+# patch_hash() di scripts/build-horizon-engine.sh: itu yang membuat mesin yang terpasang pasti dibangun dari isi
+# patch yang ada di repo ini, bukan dari versi lamanya.
+patch_hash() {
+  local list
+  list="$(mktemp)"
+  (
+    cd "$1"
+    export LC_ALL=C
+    shopt -s nullglob
+    for f in *.diff; do
+      printf '%s\n' "$f"
+      cat "$f"
+    done
+  ) > "$list"
+  sha256_of "$list" | cut -c1-8
+  rm -f "$list"
+}
+
 REMOVE=0
 FORCE=0
 BUNDLE_LOCAL=""
@@ -144,8 +164,16 @@ fi
 case "$PROFILE" in release | fast) ;; *) fail 1 "profile= harus release atau fast." ;; esac
 [[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || fail 1 "patch_set= hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
 
+PATCH_HASH=""
+if [ -n "$PATCH_SET" ]; then
+  PATCH_DIR="$ROOT/third_party/horizon-patches/$PATCH_SET"
+  ls "$PATCH_DIR"/*.diff > /dev/null 2>&1 \
+    || fail 1 "patch_set=$PATCH_SET tidak punya berkas .diff di third_party/horizon-patches/$PATCH_SET/."
+  PATCH_HASH="$(patch_hash "$PATCH_DIR")"
+fi
+
 # Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
-WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET}"
+WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH}"
 if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
   && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
   say "sudah terpasang (commit ${COMMIT:0:12}, $PROFILE)."
@@ -158,7 +186,7 @@ command -v curl > /dev/null 2>&1 || [ -n "$BUNDLE_LOCAL" ] || fail 1 "perintah c
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET}"
+TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET-$PATCH_HASH}"
 [ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
 
 BUNDLE="$TMP/$BUNDLE_NAME"
@@ -216,7 +244,7 @@ else
 Dicari di:$TRIED
 Tag yang dicari: $TAG
 
-Jalankan sekali workflow \"Bangun mesin Rust (Horizon)\" (tab Actions > Run workflow). Hasilnya diterbitkan sebagai Release bertanda itu, dan build APK berikutnya memasangnya otomatis. Panduan: docs/rust-engine.md"
+Di GitHub Actions, workflow \"Build APK\" membangun mesin ini otomatis di run yang sama bila Release-nya belum ada (kalau tidak ada, run itu pasti gagal membangunnya: lihat job \"Bangun mesin Rust (Horizon)\"). Cara manual: tab Actions > \"Bangun mesin Rust (Horizon)\" > Run workflow. Panduan: docs/rust-engine.md"
   fi
 
   WANT_SHA="$(tr -d '\r' < "$TMP/sha256.txt" | head -n 1 | cut -d' ' -f1 | tr 'A-F' 'a-f')"
@@ -254,6 +282,8 @@ M="$TMP/engine.properties"
   || fail 4 "paket dibangun dari commit lain ($(manifest source_commit "$M")), bukan yang dipatok ($COMMIT)."
 [ "$(manifest patch_set "$M")" = "$PATCH_SET" ] \
   || fail 4 "paket memakai perubahan sumber '$(manifest patch_set "$M")', bukan '$PATCH_SET' yang diminta."
+[ "$(manifest patch_hash "$M")" = "$PATCH_HASH" ] \
+  || fail 4 "paket dibangun dari isi patch '$(manifest patch_hash "$M")', bukan '$PATCH_HASH' yang ada di repo ini. Bangun ulang mesinnya."
 [ "$(manifest so_sha256 "$M")" = "$(sha256_of "$TMP/lib.so")" ] || fail 4 "libhorizon_android.so tidak cocok dengan catatan di paket."
 [ "$(manifest data_sha256 "$M")" = "$(sha256_of "$TMP/engine-data.zip")" ] || fail 4 "engine-data.zip tidak cocok dengan catatan di paket."
 

@@ -1,6 +1,7 @@
 package com.israadev.nuxlauncher.core.horizon
 
 import android.app.ActivityManager
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 import java.io.File
@@ -69,8 +71,14 @@ object HorizonEngine {
 
     // Batas menunggu pembaruan sesi Microsoft sebelum game tetap dijalankan (sama dengan GameLauncher).
     private const val SESSION_REFRESH_TIMEOUT_MS = 12_000L
+
+    // Token Minecraft berlaku 24 jam. Token yang umurnya di bawah batas ini tetap dipakai langsung dan diperbarui di
+    // latar untuk peluncuran berikutnya, supaya menu tidak menunggu jaringan sampai 12 detik. Masih tersisa 8 jam
+    // lebih untuk masuk server online.
+    private const val FAST_START_MAX_TOKEN_AGE_MS = 16L * 60L * 60L * 1000L
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val starting = AtomicBoolean(false)
+    private val refreshing = AtomicBoolean(false)
 
     // Android melaporkan RAM sedikit di bawah angka di kotak HP, jadi HP "4 GB" biasanya terbaca sekitar 3,6 GiB.
     private const val LOW_RAM_BYTES = 3_400L * 1024L * 1024L
@@ -164,6 +172,12 @@ object HorizonEngine {
         if (!MicrosoftAuthService.needsRefresh(account)) {
             return start(appContext, instance, account)
         }
+        val tokenAge = account.tokenIssuedAt?.let { System.currentTimeMillis() - it }
+        if (tokenAge != null && tokenAge in 0L..FAST_START_MAX_TOKEN_AGE_MS) {
+            LauncherLog.event("Peluncuran", "Token Microsoft masih sah (umur ${tokenAge / 60_000} menit): mesin Rust langsung dibuka, sesi diperbarui di latar")
+            refreshInBackground(appContext, account)
+            return start(appContext, instance, account)
+        }
         Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
         scope.launch {
             var launchAccount = account
@@ -195,6 +209,23 @@ object HorizonEngine {
         return true
     }
 
+    /** Memperbarui sesi Microsoft tanpa membuat peluncuran menunggu; hasilnya dipakai peluncuran berikutnya. */
+    private fun refreshInBackground(context: Context, account: UserAccount) {
+        if (!refreshing.compareAndSet(false, true)) return
+        scope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    MicrosoftAuthService.refreshMicrosoftAccount(account).getOrNull()
+                        ?.let { fresh -> AccountManager.updateAccount(context, fresh) }
+                }
+            } catch (e: Exception) {
+                LauncherLog.w("HorizonEngine", "Pembaruan sesi Microsoft di latar gagal", e)
+            } finally {
+                refreshing.set(false)
+            }
+        }
+    }
+
     /** Menulis permintaan peluncuran lalu membuka mesin. Selalu melepas penanda [starting]. */
     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
         return try {
@@ -215,7 +246,9 @@ object HorizonEngine {
                 Intent()
                     .setClassName(context.packageName, ACTIVITY_CLASS)
                     // REORDER_TO_FRONT: bila mesin masih berjalan di latar, kembali ke sana, bukan membuka yang kedua.
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT),
+                // Tanpa animasi peralihan: layar mesin muncul seketika begitu siap.
+                ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle()
             )
             true
         } catch (e: Exception) {

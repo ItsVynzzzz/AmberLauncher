@@ -22,12 +22,19 @@
 # bila bukan JAVA_HOME), HORIZON_ENGINE_JOBS (batas proses paralel cargo; kecilkan bila kehabisan RAM),
 # HORIZON_ENGINE_FORCE=true (sama dengan --force).
 #
+# Tanda Release: horizon-engine-<12 digit commit>[-<patch_set>-<hash isi patch>][-fast]. Hash 8 digit itu dihitung
+# dari nama dan isi berkas third_party/horizon-patches/<patch_set>/*.diff, jadi mengedit patch Amber otomatis
+# berarti mesin baru (tidak perlu mengganti nama patch_set). Build APK memakai tanda yang sama untuk memutuskan
+# apakah mesin perlu dibangun (lihat --print-tag).
+#
 # Pemakaian:
 #   scripts/build-horizon-engine.sh [--publish] [--force] [--src FOLDER] [--work FOLDER]
+#   scripts/build-horizon-engine.sh --print-tag
 #     --publish  terbitkan hasilnya sebagai Release (butuh gh dan GH_TOKEN dengan hak menulis konten)
 #     --force    bangun dan terbitkan ulang walau Release untuk commit ini sudah ada
 #     --src      pakai salinan sumber yang sudah ada (HEAD-nya harus tepat commit yang dipatok)
 #     --work     folder kerja (disarankan di disk yang lapang: sumber, unduhan, dan target Rust beberapa GB)
+#     --print-tag  hanya cetak tanda Release untuk konfigurasi sekarang lalu keluar (tanpa membangun apa pun)
 
 set -euo pipefail
 
@@ -41,8 +48,11 @@ prop() {
     | tail -n 1 | sed -E 's/^[^=]*=[[:space:]]*//; s/[[:space:]]+$//'
 }
 
+die() { echo "build-horizon-engine: $*" >&2; exit 1; }
+
 PUBLISH=0
 FORCE=0
+PRINT_TAG=0
 [ "${HORIZON_ENGINE_FORCE:-}" = "true" ] && FORCE=1
 SRC_ARG=""
 WORK="${HORIZON_ENGINE_WORK:-}"
@@ -50,6 +60,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --publish) PUBLISH=1; shift ;;
     --force) FORCE=1; shift ;;
+    --print-tag) PRINT_TAG=1; shift ;;
     --src | --work)
       [ $# -ge 2 ] || { echo "$1 butuh nilai." >&2; exit 1; }
       if [ "$1" = "--src" ]; then SRC_ARG="$2"; else WORK="$2"; fi
@@ -72,6 +83,44 @@ PATCH_SET="${HORIZON_ENGINE_PATCH_SET-$(prop patch_set)}"
 PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
 NDK_VERSION="$(prop ndk)"
 NDK_VERSION="${NDK_VERSION:-28.2.13676358}"
+
+# 8 digit pertama hash isi perubahan Amber di folder $1 (nama dan isi tiap .diff, urut nama). HARUS sama dengan
+# patch_hash() di scripts/fetch-horizon-engine.sh.
+patch_hash() {
+  (
+    cd "$1"
+    export LC_ALL=C
+    shopt -s nullglob
+    for f in *.diff; do
+      printf '%s\n' "$f"
+      cat "$f"
+    done
+  ) | sha256sum | cut -c1-8
+}
+
+# Mengisi PATCH_DIR, PATCH_HASH, dan TAG dari konfigurasi sekarang.
+engine_tag() {
+  PATCH_DIR="" PATCH_HASH=""
+  if [ -n "$PATCH_SET" ]; then
+    PATCH_DIR="$ROOT/third_party/horizon-patches/$PATCH_SET"
+    ls "$PATCH_DIR"/*.diff > /dev/null 2>&1 \
+      || die "patch_set=$PATCH_SET tidak punya berkas .diff di third_party/horizon-patches/$PATCH_SET/."
+    PATCH_HASH="$(patch_hash "$PATCH_DIR")"
+  fi
+  TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET-$PATCH_HASH}"
+  [ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
+}
+
+# --print-tag: hanya cetak tanda Release, tanpa membuat folder, mengunduh, atau membangun apa pun.
+if [ "$PRINT_TAG" = 1 ]; then
+  [[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal (isi commit= di horizon-engine.properties)."
+  case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." ;; esac
+  [[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || die "patch_set hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
+  engine_tag
+  echo "$TAG"
+  exit 0
+fi
+
 [ -n "$WORK" ] || WORK="${RUNNER_TEMP:-/tmp}/horizon-engine"
 mkdir -p "$WORK"
 WORK="$(cd "$WORK" && pwd)"
@@ -150,7 +199,6 @@ on_exit() {
 }
 trap on_exit EXIT
 
-die() { echo "build-horizon-engine: $*" >&2; exit 1; }
 
 # ---- Pemeriksaan konfigurasi ----
 [ -n "$REPO" ] || die "source_repo belum diisi di horizon-engine.properties."
@@ -160,9 +208,8 @@ case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." 
 [[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || die "patch_set hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
 [ "$(uname -s)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ] || die "skrip ini hanya untuk Linux x86-64 (runner GitHub Actions)."
 
-TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET}"
-[ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
-echo "Sumber: $REPO @ $COMMIT ($PROFILE), perubahan Amber: ${PATCH_SET:-tanpa}, NDK $NDK_VERSION, tag Release: $TAG"
+engine_tag
+echo "Sumber: $REPO @ $COMMIT ($PROFILE), perubahan Amber: ${PATCH_SET:-tanpa}${PATCH_HASH:+ ($PATCH_HASH)}, NDK $NDK_VERSION, tag Release: $TAG"
 
 if [ "$PUBLISH" = 1 ]; then
   command -v gh > /dev/null 2>&1 || die "--publish butuh perintah gh."
@@ -304,7 +351,7 @@ DATA_ZIP="$(printf '%s\n' "$DATA_ZIP" | tail -n 1)"
 [ -f "$DATA_ZIP" ] || die "tabel data tidak terbentuk: $DATA_ZIP"
 logged bash "$ROOT/scripts/package-horizon-engine.sh" \
   --so "$STAGE/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
-  --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
+  --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
   --readelf "$NDK_BIN/llvm-readelf"
 
 # ---- 6. Terbitkan ----
@@ -319,7 +366,7 @@ if [ "$PUBLISH" = 1 ]; then
     echo
     echo "- Sumber: $REPO"
     echo "- Commit: \`$COMMIT\`"
-    [ -z "$PATCH_SET" ] || echo "- Perubahan Amber pada sumber: \`$PATCH_SET\` (third_party/horizon-patches/$PATCH_SET)"
+    [ -z "$PATCH_SET" ] || echo "- Perubahan Amber pada sumber: \`$PATCH_SET\`, isi \`$PATCH_HASH\` (third_party/horizon-patches/$PATCH_SET)"
     echo "- Profil: $PROFILE, NDK $NDK_VERSION, $(rustc --version)"
     echo
     echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"

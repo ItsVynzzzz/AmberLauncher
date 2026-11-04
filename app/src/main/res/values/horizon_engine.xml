@@ -2,6 +2,8 @@
 <resources>
     <!-- Tema layar mesin Rust (Horizon): layar penuh tanpa bilah judul, sama dengan Horizon Android (MIT). -->
     <style name="HorizonGameTheme" parent="android:style/Theme.Material.NoActionBar">
+        <!-- Hitam sejak jendela pertama: tanpa kilatan putih sebelum permukaan mesin siap. -->
+        <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>

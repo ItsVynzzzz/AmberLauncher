@@ -7,7 +7,8 @@
 # Semuanya ada di .gitignore dan tidak pernah disimpan ke repo.
 #
 # Mesinnya dikompilasi dari sumber oleh workflow "Bangun mesin Rust (Horizon)" (scripts/build-horizon-engine.sh)
-# dan diterbitkan sebagai Release bertanda horizon-engine-<12 digit commit>. Skrip ini hanya mengambil hasilnya.
+# dan diterbitkan sebagai Release bertanda horizon-engine-<12 digit commit>[-<patch_set>][-fast]. Skrip ini hanya
+# mengambil hasilnya.
 # Dipanggil otomatis oleh Gradle sebelum build (app/build.gradle.kts, tugas fetchHorizonEngine).
 #
 # OPSIONAL dan tidak pernah menggagalkan build: tanpa konfigurasi atau tanpa Release-nya, skrip memberi tahu
@@ -17,6 +18,7 @@
 #   HORIZON_ENGINE=off                  lewati sama sekali (build 32-bit, atau build tanpa jaringan)
 #   HORIZON_ENGINE_COMMIT               commit sumber mesin yang dipatok (40 digit heksadesimal)
 #   HORIZON_ENGINE_PROFILE              release (bawaan) atau fast
+#   HORIZON_ENGINE_PATCH_SET            perubahan Amber pada sumber mesin (kosong = mesin tanpa perubahan)
 #   HORIZON_ENGINE_RELEASE_REPO         pemilik/repo tempat Release mesin (bawaan: repo yang sedang membangun)
 #
 # Pemakaian:
@@ -131,15 +133,19 @@ PROFILE="${HORIZON_ENGINE_PROFILE:-}"
 [ -n "$PROFILE" ] || PROFILE="$(prop profile)"
 PROFILE="${PROFILE:-release}"
 
+PATCH_SET="${HORIZON_ENGINE_PATCH_SET-$(prop patch_set)}"
+PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
+
 if [ -z "$COMMIT" ]; then
   say "tidak dikonfigurasi (commit= kosong di horizon-engine.properties), dilewati."
   exit 0
 fi
 [[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || fail 1 "commit= harus 40 digit heksadesimal."
 case "$PROFILE" in release | fast) ;; *) fail 1 "profile= harus release atau fast." ;; esac
+[[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || fail 1 "patch_set= hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
 
 # Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
-WANT_STAMP="$COMMIT $PROFILE"
+WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET}"
 if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
   && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
   say "sudah terpasang (commit ${COMMIT:0:12}, $PROFILE)."
@@ -152,7 +158,7 @@ command -v curl > /dev/null 2>&1 || [ -n "$BUNDLE_LOCAL" ] || fail 1 "perintah c
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-TAG="horizon-engine-${COMMIT:0:12}"
+TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET}"
 [ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
 
 BUNDLE="$TMP/$BUNDLE_NAME"
@@ -246,6 +252,8 @@ M="$TMP/engine.properties"
 [ "$(manifest abi "$M")" = "arm64-v8a" ] || fail 4 "paket bukan untuk arm64-v8a."
 [ "$(manifest source_commit "$M")" = "$COMMIT" ] \
   || fail 4 "paket dibangun dari commit lain ($(manifest source_commit "$M")), bukan yang dipatok ($COMMIT)."
+[ "$(manifest patch_set "$M")" = "$PATCH_SET" ] \
+  || fail 4 "paket memakai perubahan sumber '$(manifest patch_set "$M")', bukan '$PATCH_SET' yang diminta."
 [ "$(manifest so_sha256 "$M")" = "$(sha256_of "$TMP/lib.so")" ] || fail 4 "libhorizon_android.so tidak cocok dengan catatan di paket."
 [ "$(manifest data_sha256 "$M")" = "$(sha256_of "$TMP/engine-data.zip")" ] || fail 4 "engine-data.zip tidak cocok dengan catatan di paket."
 
@@ -273,14 +281,14 @@ cp "$TMP/LICENSE" "$TMP/THIRD_PARTY_NOTICES.md" "$LICENSE_DIR/"
 chmod 644 "$SO_DEST" "$DATA_DEST"
 printf '%s\n' "$WANT_STAMP" > "$STAMP"
 
-say "terpasang (commit ${COMMIT:0:12}, $PROFILE)."
+say "terpasang (commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
 say "  libhorizon_android.so -> $(size_of "$SO_DEST") byte, sha256 $(sha256_of "$SO_DEST")"
 say "  engine-data.zip -> $(size_of "$DATA_DEST") byte, sha256 $(sha256_of "$DATA_DEST")"
 if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
   {
     echo "### Mesin Rust (Horizon) ikut dibangun"
     echo
-    echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)"
+    echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
     echo "- \`libhorizon_android.so\`: $(size_of "$SO_DEST") byte"
     echo "- \`engine-data.zip\`: $(size_of "$DATA_DEST") byte"
   } >> "$GITHUB_STEP_SUMMARY"

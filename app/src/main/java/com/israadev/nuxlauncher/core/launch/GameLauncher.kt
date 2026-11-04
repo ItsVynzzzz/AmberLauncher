@@ -38,7 +38,7 @@ object GameLauncher {
     fun launch(context: Context, instance: Instance, account: UserAccount) {
         // Jaring pengaman: instance mesin Rust tidak lewat JVM (tombol PLAY di Beranda sudah mencabangkannya lebih dulu)
         if (HorizonEngine.isEngine(instance.loader)) {
-            HorizonEngine.launch(context, instance)
+            HorizonEngine.launch(context, instance, account)
             return
         }
         LauncherLog.event(

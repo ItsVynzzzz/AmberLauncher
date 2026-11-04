@@ -16,6 +16,7 @@
 #   source_repo   alamat git sumber mesin (https://)          HORIZON_ENGINE_SOURCE_REPO
 #   commit        commit sumber yang dipatok (40 digit)         HORIZON_ENGINE_COMMIT
 #   profile       release (ThinLTO, lambat) atau fast           HORIZON_ENGINE_PROFILE
+#   patch_set     perubahan Amber pada sumber (kosong = tanpa)   HORIZON_ENGINE_PATCH_SET
 #   ndk           versi NDK Android                             (bawaan 28.2.13676358)
 # Lainnya: HORIZON_ENGINE_WORK (folder kerja; bawaan $RUNNER_TEMP/horizon-engine), HORIZON_ENGINE_JDK (JDK 25
 # bila bukan JAVA_HOME), HORIZON_ENGINE_JOBS (batas proses paralel cargo; kecilkan bila kehabisan RAM),
@@ -67,6 +68,8 @@ COMMIT="${HORIZON_ENGINE_COMMIT:-$(prop commit)}"
 COMMIT="$(printf '%s' "$COMMIT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
 PROFILE="${HORIZON_ENGINE_PROFILE:-$(prop profile)}"
 PROFILE="${PROFILE:-release}"
+PATCH_SET="${HORIZON_ENGINE_PATCH_SET-$(prop patch_set)}"
+PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
 NDK_VERSION="$(prop ndk)"
 NDK_VERSION="${NDK_VERSION:-28.2.13676358}"
 [ -n "$WORK" ] || WORK="${RUNNER_TEMP:-/tmp}/horizon-engine"
@@ -128,7 +131,7 @@ on_exit() {
     echo "### Mesin Rust (Horizon) GAGAL dibangun"
     echo
     echo "- Tahap: **$PHASE** (kode keluar $rc), setelah $(fmt_time $((SECONDS - STARTED)))"
-    echo "- Sumber: \`${REPO:-?}\` commit \`${COMMIT:0:12}\` ($PROFILE)"
+    echo "- Sumber: \`${REPO:-?}\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
     if [ -n "$errors" ]; then
       echo
       echo "Baris galat:"
@@ -154,11 +157,12 @@ die() { echo "build-horizon-engine: $*" >&2; exit 1; }
 case "$REPO" in https://*) ;; *) die "source_repo harus diawali https://" ;; esac
 [[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal (isi commit= di horizon-engine.properties)."
 case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." ;; esac
+[[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || die "patch_set hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
 [ "$(uname -s)" = "Linux" ] && [ "$(uname -m)" = "x86_64" ] || die "skrip ini hanya untuk Linux x86-64 (runner GitHub Actions)."
 
-TAG="horizon-engine-${COMMIT:0:12}"
+TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET}"
 [ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
-echo "Sumber: $REPO @ $COMMIT ($PROFILE), NDK $NDK_VERSION, tag Release: $TAG"
+echo "Sumber: $REPO @ $COMMIT ($PROFILE), perubahan Amber: ${PATCH_SET:-tanpa}, NDK $NDK_VERSION, tag Release: $TAG"
 
 if [ "$PUBLISH" = 1 ]; then
   command -v gh > /dev/null 2>&1 || die "--publish butuh perintah gh."
@@ -171,7 +175,7 @@ if [ "$PUBLISH" = 1 ]; then
       {
         echo "### Mesin Rust (Horizon): sudah ada"
         echo
-        echo "Release \`$TAG\` sudah berisi mesin untuk commit \`${COMMIT:0:12}\` ($PROFILE). Tidak ada yang dibangun. Pilih *force* untuk membangun ulang."
+        echo "Release \`$TAG\` sudah berisi mesin untuk commit \`${COMMIT:0:12}\` ($PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET}). Tidak ada yang dibangun. Pilih *force* untuk membangun ulang."
       } | summary
       PHASE="selesai"
       exit 0
@@ -194,6 +198,27 @@ fi
 for f in tools/android_prepare.py tools/android_build.py research-lock.json rust-toolchain.toml LICENSE THIRD_PARTY_NOTICES.md; do
   [ -f "$SRC/$f" ] || die "sumber tidak berisi $f: bentuk repo sumber berubah, patokan perlu ditinjau."
 done
+
+# Perubahan kecil milik AmberLauncher (third_party/horizon-patches/<patch_set>/*.diff), diterapkan berurutan nama.
+# Salinan --src yang sudah pernah diberi patch dikenali dan dilewati. Tidak ada commit baru dibuat.
+if [ -n "$PATCH_SET" ]; then
+  PATCH_DIR="$ROOT/third_party/horizon-patches/$PATCH_SET"
+  shopt -s nullglob
+  PATCH_FILES=("$PATCH_DIR"/*.diff)
+  shopt -u nullglob
+  [ "${#PATCH_FILES[@]}" -gt 0 ] || die "patch_set=$PATCH_SET tidak punya berkas .diff di third_party/horizon-patches/$PATCH_SET/."
+  for p in "${PATCH_FILES[@]}"; do
+    if git -C "$SRC" apply --check "$p" > /dev/null 2>&1; then
+      logged git -C "$SRC" apply "$p"
+      echo "Perubahan Amber diterapkan: ${p##*/}"
+    elif git -C "$SRC" apply --reverse --check "$p" > /dev/null 2>&1; then
+      echo "Perubahan Amber sudah terpasang di sumber ini: ${p##*/}"
+    else
+      git -C "$SRC" apply --check "$p" 2>&1 | tee -a "$PHASE_LOG" || true
+      die "${p##*/} tidak cocok dengan sumber pada commit yang dipatok. Buat ulang berkasnya dari sumber di commit itu."
+    fi
+  done
+fi
 
 # ---- 2. Alat ----
 phase 02-alat "2/6 Siapkan alat (Python, JDK, NDK, Rust)"
@@ -279,7 +304,7 @@ DATA_ZIP="$(printf '%s\n' "$DATA_ZIP" | tail -n 1)"
 [ -f "$DATA_ZIP" ] || die "tabel data tidak terbentuk: $DATA_ZIP"
 logged bash "$ROOT/scripts/package-horizon-engine.sh" \
   --so "$STAGE/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
-  --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
+  --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
   --readelf "$NDK_BIN/llvm-readelf"
 
 # ---- 6. Terbitkan ----
@@ -294,6 +319,7 @@ if [ "$PUBLISH" = 1 ]; then
     echo
     echo "- Sumber: $REPO"
     echo "- Commit: \`$COMMIT\`"
+    [ -z "$PATCH_SET" ] || echo "- Perubahan Amber pada sumber: \`$PATCH_SET\` (third_party/horizon-patches/$PATCH_SET)"
     echo "- Profil: $PROFILE, NDK $NDK_VERSION, $(rustc --version)"
     echo
     echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"
@@ -302,7 +328,7 @@ if [ "$PUBLISH" = 1 ]; then
   TARGET_SHA="${GITHUB_SHA:-$(git -C "$ROOT" rev-parse HEAD)}"
   # Pra-rilis dengan tag bukan nomor versi: tidak dianggap pembaruan aplikasi dan tidak mengubah penomoran versi.
   logged gh release create "$TAG" "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256" \
-    --prerelease --target "$TARGET_SHA" --title "Mesin Rust (Horizon) ${COMMIT:0:12} ($PROFILE)" --notes-file "$NOTES"
+    --prerelease --target "$TARGET_SHA" --title "Mesin Rust (Horizon) ${COMMIT:0:12}${PATCH_SET:+ + $PATCH_SET} ($PROFILE)" --notes-file "$NOTES"
 else
   echo "Tanpa --publish: paket ada di $OUT"
 fi
@@ -316,7 +342,7 @@ val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
 {
   echo "### Mesin Rust (Horizon) berhasil dibangun"
   echo
-  echo "- Sumber: \`$REPO\` commit \`${COMMIT:0:12}\` ($PROFILE)"
+  echo "- Sumber: \`$REPO\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
   echo "- Alat: $(val rust), NDK $NDK_VERSION, javac $JAVA_HAVE"
   echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
   echo "- \`engine-data.zip\`: $(val data_bytes) byte"

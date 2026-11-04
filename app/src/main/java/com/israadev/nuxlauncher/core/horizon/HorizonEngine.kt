@@ -4,23 +4,39 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
+import com.israadev.nuxlauncher.core.models.UserAccount
 import com.israadev.nuxlauncher.ui.i18n.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import org.json.JSONObject
 import java.io.File
+import java.io.IOException
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Mesin Rust (Horizon): pengganti SELURUH client Java Minecraft, bukan loader mod seperti Fabric atau
  * Forge. Di jalur ini tidak ada JVM, client.jar, maupun library Java, dan mod Java tidak bisa dijalankannya.
  *
- * Cara kerja (tahap 1):
+ * Cara kerja:
  * - Mesin berupa satu pustaka native (libhorizon_android.so) dari proyek Horizon Android (MIT). Pustaka itu
  *   dijalankan oleh [ACTIVITY_CLASS] di proses sendiri (:horizon). Proses terpisah itu penting: mesin
  *   memanggil process::exit saat selesai, dan itu tidak boleh ikut mematikan launcher.
  * - Pustaka dan data tabelnya TIDAK disimpan di repo. scripts/fetch-horizon-engine.sh menaruhnya saat build
  *   (lihat docs/rust-engine.md). Tanpa keduanya instance Rust tidak bisa dibuat: [availability] menolaknya.
- * - Sumber daya game (sekitar 500 MiB) diunduh dari Mojang oleh mesinnya sendiri saat pertama dibuka, lewat
- *   layar peluncur milik Horizon. Akun juga diatur di sana; belum dihubungkan ke akun launcher.
+ * - PLAY menulis [LAUNCH_FILE] (akun yang dipilih di launcher: offline atau Microsoft) ke folder data mesin lalu
+ *   membuka [ACTIVITY_CLASS]. Mesin yang dikompilasi dengan perubahan Amber (patch_set di horizon-engine.properties)
+ *   membaca berkas itu, memasang sumber daya game bila belum ada, langsung bermain dengan akun tadi, dan menutup
+ *   dirinya saat game selesai sehingga pemain kembali ke launcher. Mesin tanpa perubahan itu mengabaikan berkasnya
+ *   dan menampilkan layar peluncur Horizon seperti biasa.
+ * - Sumber daya game (sekitar 500 MiB) diunduh dari Mojang oleh mesinnya sendiri saat pertama dibuka.
  */
 object HorizonEngine {
     /** Nilai `Instance.loader` untuk instance yang dijalankan mesin Rust. */
@@ -47,6 +63,14 @@ object HorizonEngine {
 
     private const val LIBRARY_FILE = "libhorizon_android.so"
     private const val MIN_SDK = 28
+
+    /** Berkas permintaan peluncuran di folder data mesin ([engineHome]); dibaca lalu dihapus oleh mesin. */
+    private const val LAUNCH_FILE = "amber-launch.json"
+
+    // Batas menunggu pembaruan sesi Microsoft sebelum game tetap dijalankan (sama dengan GameLauncher).
+    private const val SESSION_REFRESH_TIMEOUT_MS = 12_000L
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val starting = AtomicBoolean(false)
 
     // Android melaporkan RAM sedikit di bawah angka di kotak HP, jadi HP "4 GB" biasanya terbaca sekitar 3,6 GiB.
     private const val LOW_RAM_BYTES = 3_400L * 1024L * 1024L
@@ -85,31 +109,153 @@ object HorizonEngine {
         return Availability.Ready(lowRam = totalRamBytes(context) < LOW_RAM_BYTES)
     }
 
+    /** Folder data mesin: sama dengan getFilesDir() milik HorizonActivity di proses :horizon. */
+    private fun engineHome(context: Context): File = File(context.filesDir, "horizon")
+
+    /** Nama pemain untuk mesin: 1 sampai 16 karakter ASCII yang tercetak, tanpa spasi (aturan Minecraft di mesin). */
+    private fun validEngineName(name: String): Boolean =
+        name.length in 1..16 && name.all { it.code in 33..126 }
+
     /**
-     * Membuka mesin Rust. Tidak ada JVM dan tidak ada sesi Microsoft dari launcher: peluncur milik Horizon
-     * yang tampil dan mengurus unduhan sumber daya, akun, dan dunia. Mengembalikan false bila tidak terbuka.
+     * Membuka mesin Rust dengan akun yang dipilih di launcher (offline atau Microsoft). Tidak ada JVM. Akun
+     * Microsoft yang token-nya sudah lama diperbarui dulu, seperti GameLauncher. Mengembalikan false bila
+     * permintaannya ditolak (mesin tidak ada, jenis akun belum didukung); true bila peluncuran dimulai.
      */
-    fun launch(context: Context, instance: Instance): Boolean {
+    fun launch(context: Context, instance: Instance, account: UserAccount): Boolean {
         val status = availability(context)
         if (status is Availability.Unavailable) {
             Toast.makeText(context, status.reason, Toast.LENGTH_LONG).show()
             return false
         }
+        val type = account.safeAccountType
+        if (type != "offline" && type != "microsoft") {
+            Toast.makeText(
+                context,
+                "Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.",
+                Toast.LENGTH_LONG
+            ).show()
+            return false
+        }
+        if (type == "offline" && !validEngineName(account.username)) {
+            Toast.makeText(
+                context,
+                "Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.",
+                Toast.LENGTH_LONG
+            ).show()
+            return false
+        }
+        if (type == "microsoft" && (account.safeAccessToken == "0" || account.uuid.isBlank())) {
+            Toast.makeText(
+                context,
+                "Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.",
+                Toast.LENGTH_LONG
+            ).show()
+            return false
+        }
         if (status is Availability.Ready && status.lowRam) {
             Toast.makeText(context, LOW_RAM_WARNING, Toast.LENGTH_LONG).show()
         }
-        LauncherLog.event("Peluncuran", "Membuka mesin Rust (Horizon) untuk instance ${instance.name}")
+        // Ketukan ganda pada tombol main tidak boleh memulai dua peluncuran sekaligus.
+        if (!starting.compareAndSet(false, true)) {
+            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: mesin Rust sedang dibuka")
+            return true
+        }
+        val appContext = context.applicationContext
+        if (!MicrosoftAuthService.needsRefresh(account)) {
+            return start(appContext, instance, account)
+        }
+        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
+        scope.launch {
+            var launchAccount = account
+            try {
+                // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
+                val job = async(Dispatchers.IO) {
+                    MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
+                        result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
+                    }
+                }
+                val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
+                val fresh = result?.getOrNull()
+                if (fresh != null) {
+                    launchAccount = fresh
+                    LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum membuka mesin Rust")
+                } else {
+                    LauncherLog.w("HorizonEngine", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
+                    Toast.makeText(
+                        appContext,
+                        "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                LauncherLog.w("HorizonEngine", "Pembaruan sesi Microsoft gagal", e)
+            }
+            start(appContext, instance, launchAccount)
+        }
+        return true
+    }
+
+    /** Menulis permintaan peluncuran lalu membuka mesin. Selalu melepas penanda [starting]. */
+    private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
         return try {
+            val firstRun = !File(engineHome(context), ".local/horizon-client/$SUPPORTED_MC_VERSION").isDirectory
+            writeLaunchFile(context, account)
+            if (firstRun) {
+                Toast.makeText(
+                    context,
+                    "Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            LauncherLog.event(
+                "Peluncuran",
+                "Membuka mesin Rust (Horizon) untuk instance ${instance.name}, akun=${account.safeAccountType}"
+            )
             context.startActivity(
                 Intent()
                     .setClassName(context.packageName, ACTIVITY_CLASS)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    // REORDER_TO_FRONT: bila mesin masih berjalan di latar, kembali ke sana, bukan membuka yang kedua.
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             )
             true
         } catch (e: Exception) {
             LauncherLog.e("Peluncuran", "Mesin Rust (Horizon) gagal dibuka", e)
             Toast.makeText(context, "Mesin Rust gagal dibuka: ${e.message}", Toast.LENGTH_LONG).show()
             false
+        } finally {
+            starting.set(false)
+        }
+    }
+
+    /**
+     * Berkas permintaan untuk mesin: {"version":1,"type":"offline|microsoft","name","uuid","access_token","xuid"}.
+     * Ditulis ke berkas sementara lalu dipindah, supaya mesin tidak pernah membaca separuh isinya. Hanya bisa
+     * dibaca aplikasi ini; mesin menghapusnya begitu dibaca dan menolaknya bila lebih tua dari dua menit.
+     */
+    private fun writeLaunchFile(context: Context, account: UserAccount) {
+        val dir = engineHome(context)
+        if (!dir.isDirectory && !dir.mkdirs()) throw IOException("Folder data mesin tidak bisa dibuat")
+        val microsoft = account.safeAccountType == "microsoft"
+        val json = JSONObject()
+            .put("version", 1)
+            .put("type", if (microsoft) "microsoft" else "offline")
+            .put("name", account.username)
+        if (microsoft) {
+            json.put("uuid", account.uuid)
+            json.put("access_token", account.safeAccessToken)
+            account.xuid?.takeIf { it.isNotBlank() }?.let { json.put("xuid", it) }
+        }
+        val target = File(dir, LAUNCH_FILE)
+        val temp = File(dir, "$LAUNCH_FILE.tmp")
+        temp.writeText(json.toString())
+        temp.setReadable(false, false)
+        temp.setReadable(true, true)
+        temp.setWritable(false, false)
+        temp.setWritable(true, true)
+        target.delete()
+        if (!temp.renameTo(target)) {
+            temp.delete()
+            throw IOException("Berkas peluncuran tidak bisa disimpan")
         }
     }
 

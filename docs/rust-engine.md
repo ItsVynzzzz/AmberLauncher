@@ -2,14 +2,15 @@
 
 Pilihan **Rust** di layar Buat Instance menjalankan Minecraft lewat **Horizon**, yaitu Minecraft Java yang ditulis ulang dalam Rust (bukan Java). Mesinnya dikompilasi dari sumber proyek **Horizon Android** (Vasysik, MIT) di CI repo ini sendiri, lalu ikut dikemas ke APK AmberLauncher. Tidak ada APK Horizon yang dipasang, dan pengguna cukup membuat instance lalu menekan PLAY, seperti Fabric, Forge, atau NeoForge.
 
-Status: **eksperimental, belum diuji di perangkat.** Peluncuran masih lewat layar peluncur milik Horizon (lihat "Rencana berikutnya").
+Status: **eksperimental, belum diuji di perangkat.** PLAY langsung masuk game dengan akun yang dipilih di launcher (offline atau Microsoft), tanpa layar peluncur Horizon. Itu butuh mesin yang dikompilasi dengan perubahan Amber (lihat "Peluncuran dari Amber").
 
 ## Apa ini, dan apa bukan
 
 - Mesin ini **menggantikan seluruh client Java**. Tidak ada JVM, `client.jar`, atau library Java, jadi mod Fabric, Forge, NeoForge, dan mod Java apa pun **tidak bisa dipakai**. Horizon punya format mod native sendiri (`.hmod`), tidak bisa dipasang lewat layar Mod launcher.
 - Hanya Minecraft **26.3** (versi yang dipatok proyek Horizon). Satu-satunya versi di daftar.
 - Sumber daya game (sekitar 500 MiB) diunduh **oleh mesinnya sendiri** dari Mojang saat pertama dibuka. Launcher tidak mengunduhnya.
-- Layar peluncur, login, dan dunia permainan masih diurus UI milik Horizon. **Akun launcher belum dihubungkan** (rencana berikutnya, termasuk akun offline).
+- Akun diambil dari launcher: **offline** dan **Microsoft**. Akun Ely.by belum didukung mesin ini.
+- Layar mesin sendiri hanya tampil untuk unduhan sumber daya pertama (sekitar 500 MiB, kemajuannya digambar mesin) dan bila terjadi galat.
 - Ini proyek pihak ketiga, tidak berafiliasi dengan Mojang atau Microsoft.
 
 ## Syarat perangkat
@@ -22,7 +23,7 @@ Status: **eksperimental, belum diuji di perangkat.** Peluncuran masih lewat laya
 
 Ada dua tahap yang terpisah supaya build APK tetap cepat:
 
-1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>`. Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`). Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
+1. **Workflow "Bangun mesin Rust (Horizon)"** (manual, sekali per versi mesin). Ia mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, mengompilasinya untuk arm64 dengan jalur build resmi proyek itu, lalu menerbitkan hasilnya sebagai **Release pra-rilis** di repo ini dengan tag `horizon-engine-<12 digit commit>-<patch_set>` (`-fast` di belakangnya untuk profil `fast`; tanpa `-<patch_set>` bila `patch_set=` kosong). Satu run memakan waktu lama (puluhan menit sampai lebih dari satu jam, terutama profil `release`). Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
 2. **Build APK biasa** hanya mengambil hasil itu. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh` sebelum build, mengunduh paket dari Release repo yang sedang membangun, memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Tanpa Release-nya, build jalan terus tanpa mesin dan alasannya muncul di ringkasan run.
 
 Tidak ada langkah tambahan di `build-apk.yml`, dan tidak ada URL atau SHA-256 yang perlu diisi.
@@ -35,9 +36,22 @@ Tidak ada langkah tambahan di `build-apk.yml`, dan tidak ada URL atau SHA-256 ya
 
 Bila run gagal, ringkasan run memuat tahap yang gagal, baris galatnya, dan 60 baris terakhir lognya. Salin bagian itu untuk diperbaiki.
 
+### Peluncuran dari Amber
+
+Mesin bawaan Horizon selalu menampilkan layar peluncurnya sendiri. Supaya PLAY di AmberLauncher langsung masuk game, workflow pembangun menerapkan perubahan kecil milik Amber pada salinan sumber sebelum mengompilasinya. Berkasnya ada di `third_party/horizon-patches/<patch_set>/*.diff` (nilai `patch_set=` di `horizon-engine.properties`, sekarang `amber1`) dan hanya menyentuh dua tempat di `crates/horizon-client/src/android/`: berkas baru `amber.rs` dan beberapa baris di `launcher.rs`.
+
+Alurnya:
+
+1. PLAY pada instance Rust menulis `amber-launch.json` (jenis akun, nama, dan untuk Microsoft uuid, token Minecraft, xuid) ke `files/horizon/`, lalu membuka mesin. Akun Microsoft yang token-nya sudah lama diperbarui dulu, sama seperti game Java. Berkas itu hanya bisa dibaca aplikasi ini.
+2. Mesin membaca berkas itu **sekali lalu menghapusnya**, dan menolaknya bila lebih tua dari 2 menit. Bila sumber daya game belum ada, mesin mengunduhnya (layar kemajuan milik mesin); begitu selesai, ia langsung bermain.
+3. Akun Microsoft diteruskan ke game lewat berkas sesi yang ditulis **saat main dimulai** (hanya bisa dibaca pemiliknya, dihapus game begitu dibaca, sama seperti jalur resmi proyek sumber). Akun offline memakai namanya saja.
+4. Saat game ditutup normal, mesin menutup dirinya dan pemain kembali ke launcher. Bila game berhenti karena galat, layar mesin tampil dengan pesannya.
+
+Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan berkas itu dan menampilkan layar peluncur Horizon seperti sebelumnya. Perubahan Amber dijaga sekecil mungkin; bila `commit=` diganti, berkas `.diff` harus dicek ulang terhadap sumber baru (skrip pembangun berhenti dengan pesan jelas bila tidak cocok).
+
 ### Mengganti versi mesin
 
-Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa), jalankan workflow pembangun sekali, lalu build APK. Bila `commit=` diganti tetapi workflow belum dijalankan, build APK tetap lolos tanpa mesin dan memberi tahu bahwa Release-nya belum ada.
+Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), jalankan workflow pembangun sekali, lalu build APK. Mengubah isi `.diff` atau `patch_set=` juga berarti menjalankan workflow itu lagi (ganti nama `patch_set=` bila ingin tag Release baru tanpa memakai *force*). Bila `commit=` diganti tetapi workflow belum dijalankan, build APK tetap lolos tanpa mesin dan memberi tahu bahwa Release-nya belum ada.
 
 ### Build di komputer sendiri
 
@@ -72,6 +86,7 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 
 - Horizon dan port Android-nya berlisensi **MIT**, Copyright (c) 2026 Ludovic Marie and the Horizon contributors. Pemberitahuan lisensinya dikemas ke APK di `assets/licenses/horizon/` (diambil dari sumber yang dikompilasi; salinan cadangan ada di `third_party/horizon/`). Skrip menolak memasang mesin tanpa pemberitahuan itu.
 - `app/src/main/java/dev/horizon/android/HorizonActivity.java` diadaptasi dari Horizon Android (MIT), dengan perubahan: folder data diarahkan ke subfolder `horizon`.
+- Mesin dikompilasi dengan perubahan kecil milik Amber (`third_party/horizon-patches/`), yang diperbolehkan MIT; berkas `.diff`-nya terbuka di repo ini.
 - MIT kompatibel dengan GPL-3.0 milik AmberLauncher. **Aku bukan pengacara.**
 - Untuk menyusun tabel data mesin, workflow pembangun **mengunduh sementara berkas Mojang** (jar game dan aset) ke runner dan menjalankan eksporter proyek sumber, persis seperti jalur build publik proyek itu. Hanya berkas dalam daftar putih proyek sumber (`generated_engine_file`: tabel hasil generate, tanpa jar, aset, atau sumber Mojang) yang masuk ke paket. Berkas Mojang tidak disimpan ke repo atau Release. Meski begitu, pernyataan di README bahwa AmberLauncher tidak menyertakan salinan game perlu kamu tinjau terhadap isi `engine-data.zip`; keputusan akhirnya ada padamu.
 
@@ -83,9 +98,10 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `dev/horizon/android/HorizonActivity.java` | `NativeActivity` yang memuat `libhorizon_android.so`. Paket dan nama kelas **tidak boleh diganti**: fungsi JNI di pustakanya terikat padanya |
 | `AndroidManifest.xml` | Mendaftarkan activity itu di proses `:horizon` |
 | `CreateInstanceScreen.kt` | Opsi Rust di rel loader; versi 26.3 terpilih otomatis; Install dimatikan bila mesin tidak tersedia |
-| `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust membuka mesin, tanpa cek akun, Java, atau unduhan launcher |
+| `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust memakai akun yang dipilih lalu membuka mesin, tanpa Java atau unduhan launcher |
+| `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
-| `horizon-engine.properties` | Patokan: sumber, commit, profil, NDK, repo Release |
+| `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |
 | `scripts/build-horizon-engine.sh` | Mengompilasi mesin dari sumber (dipakai workflow pembangun) dan menerbitkan Release |
 | `scripts/prepare-horizon-data.py` | Menyiapkan tabel data memakai berkas versi Mojang yang dipatok (pembungkus `tools/android_prepare.py` milik sumber) |
 | `scripts/package-horizon-engine.sh` | Mengemas pustaka, data, lisensi, dan manifest menjadi satu paket zip |
@@ -98,9 +114,9 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
 
 1. Jalankan workflow pembangun sampai selesai, lalu build APK (ringkasan langkah build menulis "Mesin Rust (Horizon) ikut dibangun"), dan pasang APK-nya.
 2. Buat Instance: opsi **Rust** muncul, 26.3 sudah terpilih, tombol Install aktif tanpa peringatan merah.
-3. Install, lalu PLAY di Beranda: layar peluncur Horizon terbuka.
-4. Login dan unduh sumber daya (sekitar 500 MiB), lalu masuk ke dunia.
-5. Keluar dari mesin: launcher harus kembali tampil dan tetap hidup.
+3. Pilih akun **offline**, Install, lalu PLAY di Beranda. Pertama kali: layar mesin mengunduh sumber daya (sekitar 500 MiB), lalu game langsung mulai tanpa menekan apa pun. Nama pemain di game sama dengan nama akun.
+4. Keluar dari game: launcher harus kembali tampil dan tetap hidup. PLAY lagi: langsung masuk game (tanpa unduhan).
+5. Ulangi dengan akun **Microsoft**: nama dan skin sesuai akun, dan masuk server online tanpa "Invalid session".
 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
 
@@ -110,11 +126,13 @@ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses
 
 - Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
 - Tanpa mod Java, tanpa Fabric, Forge, NeoForge, dan layar Mod launcher tidak berlaku untuk instance Rust.
-- Login dan unduhan sumber daya masih lewat UI Horizon; akun launcher belum dipakai.
+- Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
+- Server tujuan, mod, dan pengaturan mesin belum bisa diatur dari launcher.
 - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
 - Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
 
 ## Rencana berikutnya
 
-- **Ronde 2**: patch kecil di sisi Rust (pada salinan sumber di CI) supaya mesin mau dimulai tanpa layar peluncur Horizon, dari berkas permintaan yang ditulis AmberLauncher (versi, folder, akun, server), dengan mode siapkan sumber daya dan mode main, serta berkas kemajuan yang bisa dibaca launcher.
-- **Ronde 3**: sisi AmberLauncher: PLAY langsung masuk ke mesin dengan akun yang dipilih di launcher. **Akun offline** (hanya nama) dan akun Microsoft (sesi dari token yang sudah diperbarui launcher) sama-sama didukung, serta progres unduhan sumber daya di UI launcher sendiri.
+- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher, dan pengaturan mesin dibuat tempatnya sendiri di launcher.
+- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
+- Akun Ely.by.

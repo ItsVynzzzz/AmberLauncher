@@ -6,11 +6,11 @@
 #   libhorizon_android.so        mesinnya (arm64, sudah di-strip)
 #   engine-data.zip              tabel data mesin hasil generate
 #   LICENSE, THIRD_PARTY_NOTICES.md   pemberitahuan lisensi MIT dari sumber yang dikompilasi
-#   engine.properties            keterangan: sumber, commit, versi alat, ukuran dan SHA-256 tiap berkas
+#   engine.properties            keterangan: sumber, commit, perubahan Amber (patch_set), versi alat, ukuran dan SHA-256 tiap berkas
 #
 # Pemakaian:
 #   package-horizon-engine.sh --so BERKAS --data BERKAS --license-dir FOLDER --out FOLDER \
-#       --repo URL --commit SHA40 --profile release|fast [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
+#       --repo URL --commit SHA40 --profile release|fast [--patch-set NAMA] [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
 #
 # Hasil: FOLDER/horizon-engine-arm64-v8a.zip dan FOLDER/horizon-engine-arm64-v8a.zip.sha256
 
@@ -20,10 +20,10 @@ BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
 
 die() { echo "package-horizon-engine: $*" >&2; exit 1; }
 
-SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" RUST="" NDK="" READELF=""
+SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" RUST="" NDK="" READELF=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --so | --data | --license-dir | --out | --repo | --commit | --profile | --rust | --ndk | --readelf)
+    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --rust | --ndk | --readelf)
       [ $# -ge 2 ] || die "$1 butuh nilai."
       case "$1" in
         --so) SO="$2" ;;
@@ -33,6 +33,7 @@ while [ $# -gt 0 ]; do
         --repo) REPO="$2" ;;
         --commit) COMMIT="$2" ;;
         --profile) PROFILE="$2" ;;
+        --patch-set) PATCH_SET="$2" ;;
         --rust) RUST="$2" ;;
         --ndk) NDK="$2" ;;
         --readelf) READELF="$2" ;;
@@ -52,6 +53,7 @@ for v in SO DATA LICENSE_DIR OUT REPO COMMIT PROFILE; do
 done
 [[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal."
 case "$PROFILE" in release | fast) ;; *) die "profile harus release atau fast." ;; esac
+[[ -z $PATCH_SET || $PATCH_SET =~ ^[a-z0-9]{1,20}$ ]] || die "patch-set hanya boleh huruf kecil dan angka (paling banyak 20 karakter)."
 [ -f "$SO" ] || die "pustaka tidak ada: $SO"
 [ -f "$DATA" ] || die "data mesin tidak ada: $DATA"
 for f in LICENSE THIRD_PARTY_NOTICES.md; do
@@ -93,6 +95,7 @@ cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
   echo "source_repo=$REPO"
   echo "source_commit=$COMMIT"
   echo "profile=$PROFILE"
+  echo "patch_set=$PATCH_SET"
   echo "rust=$RUST"
   echo "ndk=$NDK"
   echo "build_id=$BUILD_ID"

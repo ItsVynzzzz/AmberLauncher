@@ -274,16 +274,16 @@ fun DashboardScreen() {
 
     // Tombol PLAY / UNDUH: unduh dulu bila belum lengkap, siapkan Java bila belum ada, lalu luncurkan.
     fun startInstance(inst: Instance) {
-        // Mesin Rust (Horizon): tanpa JVM, tanpa unduhan lewat launcher, dan akunnya diurus layar milik mesinnya
-        if (HorizonEngine.isEngine(inst.loader)) {
-            HorizonEngine.launch(context, inst)
-            return
-        }
-
         val account = currentAccount
         if (account == null) {
             Toast.makeText(context, "Silakan buat atau pilih akun terlebih dahulu!", Toast.LENGTH_SHORT).show()
             currentTab = "accounts"
+            return
+        }
+
+        // Mesin Rust (Horizon): tanpa JVM dan tanpa unduhan lewat launcher; langsung masuk game dengan akun yang dipilih
+        if (HorizonEngine.isEngine(inst.loader)) {
+            HorizonEngine.launch(context, inst, account)
             return
         }
 

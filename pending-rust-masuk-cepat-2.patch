@@ -1,0 +1,821 @@
+diff --git a/docs/workflows/build-apk.yml b/docs/workflows/build-apk.yml
+new file mode 100644
+index 0000000..430e0c9
+--- /dev/null
++++ b/docs/workflows/build-apk.yml
+@@ -0,0 +1,813 @@
++name: Build APK
++
++# Cara pakai singkat:
++#  - Upload patch (pending-*.patch) ke repo: dibangun sebagai BUILD UJI. APK-nya ditaruh di satu Release bernama
++#    "uji" yang ditimpa tiap build. Itu BUKAN rilis, jadi aplikasi pengguna tidak menawarkan pembaruan.
++#    Patch yang hanya mengubah dokumen (README, docs, ...) cukup disimpan ke repo, tanpa build dan tanpa APK.
++#  - Run workflow manual: dibangun seperti biasa. Centang "rilis" hanya bila memang mau menerbitkan versi baru
++#    (inilah satu-satunya yang membuat pengguna aplikasi ditawari pembaruan).
++#  - Mesin Rust (Horizon) dibangun otomatis di run yang sama, hanya bila Release mesin untuk konfigurasi
++#    sekarang belum ada. Tidak perlu menjalankan workflow mesin terpisah.
++
++on:
++  workflow_dispatch:
++    inputs:
++      rilis:
++        description: "Terbitkan sebagai rilis versi baru (pengguna aplikasi akan ditawari pembaruan). Kosongkan untuk build uji."
++        type: boolean
++        default: false
++      mesin:
++        description: "Mesin Rust (Horizon): otomatis = bangun hanya bila belum ada, ulang = paksa bangun ulang, lewati = jangan bangun"
++        type: choice
++        options: [otomatis, ulang, lewati]
++        default: otomatis
++  push:
++    branches: [main]
++    # Perubahan yang tidak masuk APK tidak memulai run sama sekali. Patch (*.patch) tetap memulai run,
++    # lalu tahap 1 memutuskan apakah isinya perlu build.
++    paths-ignore:
++      - "**.md"
++      - "docs/**"
++      - ".github/**"
++      - "LICENSE"
++
++permissions:
++  contents: write
++
++concurrency:
++  group: build-${{ github.ref }}
++  cancel-in-progress: true
++
++jobs:
++  # Tahap 1 (sekitar 15 detik): memeriksa patch dan menentukan perlu build atau tidak, SEBELUM
++  # menghabiskan menit runner untuk Gradle. Kesalahan patch berhenti di sini dengan penjelasan
++  # yang bisa dibaca di halaman ringkasan run (cocok dibuka dari HP).
++  periksa:
++    name: Periksa patch dan perubahan
++    runs-on: ubuntu-24.04
++    timeout-minutes: 10
++    outputs:
++      build: ${{ steps.cek.outputs.build }}
++      simpan: ${{ steps.cek.outputs.simpan }}
++      patches: ${{ steps.cek.outputs.patches }}
++      mesin: ${{ steps.mesin.outputs.perlu }}
++
++    steps:
++      - name: Ambil kode
++        uses: actions/checkout@v5
++        with:
++          # Riwayat dan tag lengkap dibutuhkan untuk membandingkan dengan rilis terakhir dan untuk 3-way merge
++          fetch-depth: 0
++
++      - name: Periksa patch dan perubahan
++        id: cek
++        env:
++          EVENT: ${{ github.event_name }}
++        run: |
++          set -u
++          shopt -s nullglob
++          SUM="$GITHUB_STEP_SUMMARY"
++          ERR="$RUNNER_TEMP/apply-err.txt"
++
++          # Berhenti dengan satu baris anotasi (tampil di daftar run) dan penjelasan lengkap di ringkasan.
++          fail() {
++            echo "::error title=Build dihentikan::$1"
++            { echo "### Build dihentikan: $1"; echo; printf '%s\n' "$2"; } >> "$SUM"
++            exit 1
++          }
++
++          # File di patch yang isinya sudah berubah di repo sejak patch dibuat. Dibandingkan lewat
++          # hash "index <lama>..<baru>" pada kepala tiap file di patch.
++          stale_files() {
++            local path old cur
++            while read -r path old; do
++              if [ -z "$path" ] || [[ $old =~ ^0+$ ]]; then continue; fi
++              cur=$(git rev-parse -q --verify "HEAD:$path" 2>/dev/null || true)
++              if [ -z "$cur" ]; then
++                echo "- \`$path\` tidak ada lagi di repo"
++              elif [[ $cur != "$old"* ]]; then
++                echo "- \`$path\` sudah berubah di repo sejak patch dibuat"
++              fi
++            done < <(awk '/^diff --git /{p=$3; sub(/^a\//,"",p)} /^index /{split($2,h,"[.][.]"); print p, h[1]}' "$1")
++          }
++
++          # Semua *.patch di akar repo dianggap patch, bukan hanya yang bernama pending-*.patch.
++          # Syaratnya satu: punya penanda akhir "# FIN part=N/M files=X" (bukti file tidak terpotong).
++          FILES=(*.patch)
++          NAMES=()
++          TOTAL=0
++          NOTES=""
++          FIN_RE='^# FIN part=([0-9]+)/([0-9]+) files=([0-9]+)$'
++
++          for f in "${FILES[@]}"; do
++            if [[ ! $f =~ ^[A-Za-z0-9._-]+$ ]]; then
++              fail "nama file patch tidak aman ($f)" "Pakai huruf, angka, titik, minus, atau garis bawah saja, tanpa spasi. Contoh: \`pending-perbaikan-mouse.patch\`."
++            fi
++
++            ACTUAL=$(grep -c '^diff --git ' "$f" || true)
++            LAST=$(awk 'NF { l = $0 } END { print l }' "$f")
++            LAST=${LAST%$'\r'}
++
++            if [[ ! $LAST =~ $FIN_RE ]]; then
++              BODY="File \`$f\` tidak punya penanda akhir \`# FIN ...\`. Penanda itu bukti file tidak terpotong saat diupload (mis. dari HP), jadi tanpa penanda patch tidak diterapkan.
++
++          Cara memperbaiki, pilih yang sesuai:
++
++          - Terpotong saat upload: upload ulang file aslinya.
++          - Patch dibuat tanpa penanda: tambahkan satu baris di paling akhir file, persis seperti ini (angka 1/1 untuk patch tunggal; kalau patch dibagi N bagian, pakai nomor bagian dan N):
++
++              # FIN part=1/1 files=$ACTUAL
++
++          - File ini bukan untuk diterapkan (sisa lama): hapus dari repo."
++              if [[ $f != pending-* ]]; then
++                BODY="$BODY
++
++          Nama file sebaiknya juga diawali \`pending-\`, mis. \`pending-$f\`."
++              fi
++              fail "$f tidak punya penanda akhir" "$BODY"
++            fi
++            PART_TOTAL=${BASH_REMATCH[2]}
++            EXPECT=${BASH_REMATCH[3]}
++
++            if [ "$EXPECT" != "$ACTUAL" ]; then
++              fail "$f terpotong saat diupload" "Penanda akhir menyebut $EXPECT file, tetapi hanya ditemukan $ACTUAL file di dalam patch. Upload ulang file aslinya sampai utuh."
++            fi
++
++            if [ "$PART_TOTAL" != "${#FILES[@]}" ]; then
++              # shellcheck disable=SC2016
++              LIST=$(printf '%s\n' "${FILES[@]}" | sed 's/^/- `/; s/$/`/')
++              fail "jumlah file patch tidak cocok" "Ada ${#FILES[@]} file patch di repo, tetapi penanda akhir menyebut total $PART_TOTAL bagian:
++
++          $LIST
++
++          - Salah satunya sisa patch lama yang gagal? Hapus file lamanya, atau upload perbaikan dengan nama yang sama supaya menimpa.
++          - Patch yang dibagi beberapa bagian? Upload semua bagian sekaligus."
++            fi
++
++            if grep -q '^diff --git a/\.github/workflows/' "$f"; then
++              fail "$f mengubah file workflow" "GitHub tidak mengizinkan workflow mengubah file di \`.github/workflows/\` dengan token bawaannya, jadi walau build lolos perubahan itu tidak bisa disimpan ke repo. Ubah file workflow langsung lewat GitHub (Edit file, atau Add file > Upload files), lalu keluarkan dari patch."
++            fi
++
++            if [[ $f != pending-* ]]; then
++              echo "::warning title=Nama patch::$f tidak diawali pending-, tetap diterapkan karena penanda akhirnya valid."
++              NOTES="$NOTES
++          - \`$f\`: nama sebaiknya diawali \`pending-\`, tetap diterapkan karena penanda akhirnya valid."
++            fi
++
++            NAMES+=("$f")
++            TOTAL=$((TOTAL + ACTUAL))
++          done
++
++          # Coba terapkan sungguhan (checkout ini dibuang setelah job selesai). Gagal ketat -> coba 3-way
++          # merge, karena repo sering berubah sejak patch dibuat.
++          for f in "${NAMES[@]}"; do
++            if git apply --index --whitespace=nowarn "$f" 2> "$ERR"; then
++              continue
++            fi
++            STRICT=$(head -n 12 "$ERR")
++            if git apply --index --3way --whitespace=nowarn "$f" > /dev/null 2>&1; then
++              echo "::warning title=Patch digabung 3-way::$f tidak cocok persis dengan repo sekarang, digabung dengan 3-way merge."
++              NOTES="$NOTES
++          - \`$f\` tidak cocok persis dengan repo sekarang, jadi digabung dengan 3-way merge. Hasilnya tetap diuji oleh build."
++              continue
++            fi
++            STALE=$(stale_files "$f")
++            BODY="Isi patch tidak cocok dengan kode di repo sekarang (commit $(git rev-parse --short HEAD)), dan penggabungan 3-way juga gagal."
++            if [ -n "$STALE" ]; then
++              BODY="$BODY
++
++          File yang sudah berubah di repo sejak patch dibuat:
++
++          $STALE"
++            fi
++            BODY="$BODY
++
++          Buat ulang patch dari versi repo terbaru lalu upload lagi. Pesan dari git:
++
++          \`\`\`
++          $STRICT
++          \`\`\`"
++            fail "gagal menerapkan $f" "$BODY"
++          done
++
++          if [ "${#NAMES[@]}" -gt 0 ]; then
++            CHANGED=$(git diff --cached --name-only | wc -l)
++            if [ "$CHANGED" != "$TOTAL" ]; then
++              fail "jumlah file berubah tidak sama dengan isi patch" "Patch menyebut $TOTAL file, tetapi setelah diterapkan yang berubah $CHANGED file. Periksa isi patch, lalu upload ulang."
++            fi
++          fi
++
++          # Apakah berkas $1 ikut menentukan isi APK? Dokumen, workflow, file patch, dan lisensi tidak. Isi folder
++          # app, gradle, scripts, dan third_party selalu dianggap ya (termasuk .md di dalamnya, karena bisa
++          # dikemas ke APK); berkas lain di akar (VERSION, build.gradle.kts, ...) juga ya.
++          memengaruhi_apk() {
++            case "$1" in
++              app/* | gradle/* | scripts/* | third_party/*) return 0 ;;
++              docs/* | .github/* | *.md | *.patch | LICENSE* | .gitignore | .gitattributes | .editorconfig) return 1 ;;
++              *) return 0 ;;
++            esac
++          }
++          # Dari daftar nama berkas di stdin, ambil yang ikut menentukan isi APK.
++          yang_masuk_apk() {
++            local p
++            while IFS= read -r p; do
++              if memengaruhi_apk "$p"; then echo "$p"; fi
++            done
++          }
++
++          # Perlu build? Hanya bila ada yang berubah di dalam APK. Patch yang cuma mengubah dokumen (README, docs,
++          # ...) tetap disimpan ke repo (tahap "simpan"), tetapi tanpa build, tanpa APK, tanpa pembaruan untuk pengguna.
++          PREV=""
++          CHG=""
++          SIMPAN=false
++          if [ "${#NAMES[@]}" -gt 0 ]; then
++            CHG=$(git diff --cached --name-only --no-renames | yang_masuk_apk | head -n 5 || true)
++          fi
++          if [ "$EVENT" = "workflow_dispatch" ]; then
++            BUILD=true
++            REASON="dijalankan manual"
++            if [ "${#NAMES[@]}" -gt 0 ]; then REASON="$REASON, dengan ${#NAMES[@]} patch yang akan diterapkan"; fi
++          elif [ "${#NAMES[@]}" -gt 0 ]; then
++            if [ -n "$CHG" ]; then
++              BUILD=true
++              REASON="${#NAMES[@]} patch mengubah isi APK"
++            else
++              BUILD=false
++              SIMPAN=true
++              REASON="patch hanya mengubah dokumen atau berkas yang tidak masuk APK"
++            fi
++          else
++            # Tanpa patch: bandingkan dengan acuan terakhir, yaitu rilis bernomor atau build uji, mana yang lebih baru.
++            PREV=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
++            REF="$PREV"
++            if git rev-parse -q --verify refs/tags/uji > /dev/null 2>&1 \
++              && { [ -z "$PREV" ] || git merge-base --is-ancestor "$PREV" refs/tags/uji; }; then
++              REF=refs/tags/uji
++            fi
++            if [ -z "$REF" ]; then
++              BUILD=true
++              REASON="belum ada build sebelumnya"
++            else
++              CHG=$(git diff --name-only --no-renames "$REF" HEAD | yang_masuk_apk | head -n 5 || true)
++              if [ -n "$CHG" ]; then
++                BUILD=true
++                REASON="isi APK berubah sejak ${REF#refs/tags/}"
++              else
++                BUILD=false
++                REASON="tidak ada perubahan yang masuk APK sejak ${REF#refs/tags/} (hanya dokumen, file patch, atau workflow)"
++              fi
++            fi
++          fi
++
++          {
++            echo "### Hasil pemeriksaan"
++            echo
++            if [ "${#NAMES[@]}" -gt 0 ]; then
++              echo "Patch yang akan diterapkan:"
++              echo
++              for f in "${NAMES[@]}"; do echo "- \`$f\`"; done
++              if [ -n "$NOTES" ]; then echo; printf '%s\n' "$NOTES"; fi
++              echo
++            fi
++            if [ "$BUILD" = true ]; then
++              echo "Build: **jalan** ($REASON)."
++              if [ -n "$CHG" ]; then
++                echo
++                echo "Berkas yang masuk APK (contoh):"
++                echo
++                printf '%s\n' "$CHG" | sed 's/^/- `/; s/$/`/'
++              fi
++            elif [ "$SIMPAN" = true ]; then
++              echo "Build: **tidak perlu** ($REASON). Patch tetap diterapkan dan disimpan ke repo; tidak ada APK baru dan tidak ada pembaruan untuk pengguna. Untuk tetap membangun APK, jalankan workflow ini manual (Run workflow)."
++            else
++              echo "Build: **dilewati** ($REASON). Untuk tetap membangun APK, jalankan workflow ini manual (Run workflow)."
++            fi
++          } >> "$SUM"
++          echo "$REASON"
++
++          {
++            echo "build=$BUILD"
++            echo "simpan=$SIMPAN"
++            echo "patches=${NAMES[*]:-}"
++          } >> "$GITHUB_OUTPUT"
++
++      # Mesin Rust (Horizon): dibangun di run yang SAMA, hanya bila Release-nya untuk konfigurasi sekarang (commit
++      # sumber + isi patch Amber + profil, sesudah patch run ini diterapkan di langkah di atas) belum ada.
++      - name: Periksa mesin Rust (Horizon)
++        id: mesin
++        if: steps.cek.outputs.build == 'true'
++        env:
++          GH_TOKEN: ${{ github.token }}
++          PILIHAN: ${{ inputs.mesin }}
++        run: |
++          set -u
++          PILIHAN="${PILIHAN:-otomatis}"
++          PERLU=false
++          TAG=""
++          if [ "$PILIHAN" = lewati ]; then
++            WHY="dilewati atas permintaan (pilihan mesin = lewati)"
++          elif ! grep -qEs '^[[:space:]]*commit[[:space:]]*=[[:space:]]*[0-9a-fA-F]{40}' horizon-engine.properties; then
++            WHY="mesin Rust tidak dikonfigurasi (commit= di horizon-engine.properties kosong)"
++          elif ! grep -qs -- '--print-tag' scripts/build-horizon-engine.sh; then
++            WHY="skrip pembangun mesin di repo ini belum bisa dipakai otomatis"
++          elif ! TAG="$(bash scripts/build-horizon-engine.sh --print-tag 2> "$RUNNER_TEMP/tag-err.txt")"; then
++            TAG=""
++            WHY="konfigurasi mesin tidak valid: $(head -n 1 "$RUNNER_TEMP/tag-err.txt")"
++            echo "::warning title=Mesin Rust (Horizon)::$WHY"
++          elif [ "$PILIHAN" = ulang ]; then
++            PERLU=true
++            WHY="dibangun ulang atas permintaan ($TAG)"
++          elif OUT="$(gh release view "$TAG" --json tagName 2>&1)"; then
++            WHY="Release $TAG sudah ada, tidak ada yang perlu dibangun"
++          elif printf '%s' "$OUT" | grep -qi 'not found'; then
++            PERLU=true
++            WHY="Release $TAG belum ada, mesin dibangun di run ini"
++          else
++            WHY="Release $TAG tidak bisa diperiksa sekarang ($OUT), mesin tidak dibangun di run ini"
++            echo "::warning title=Mesin Rust (Horizon)::$WHY"
++          fi
++          echo "Mesin Rust (Horizon): $WHY"
++          {
++            echo
++            echo "Mesin Rust (Horizon): **$([ "$PERLU" = true ] && echo dibangun di run ini || echo tidak dibangun)** ($WHY)."
++          } >> "$GITHUB_STEP_SUMMARY"
++          echo "perlu=$PERLU" >> "$GITHUB_OUTPUT"
++
++  # Patch yang tidak mengubah isi APK (README, docs, ...): cukup diterapkan dan disimpan ke repo. Tanpa Gradle,
++  # tanpa APK, tanpa Release, jadi pengguna aplikasi tidak mendapat "pembaruan" yang isinya tidak ada.
++  simpan:
++    name: Simpan patch (tanpa build)
++    needs: periksa
++    if: needs.periksa.outputs.simpan == 'true'
++    runs-on: ubuntu-24.04
++    timeout-minutes: 10
++
++    steps:
++      - name: Ambil kode
++        uses: actions/checkout@v5
++        with:
++          fetch-depth: 0
++
++      - name: Terapkan dan simpan patch ke repo
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++        run: |
++          for f in $PATCHES; do
++            echo "Menerapkan $f ..."
++            if git apply --index --whitespace=nowarn "$f"; then
++              continue
++            fi
++            if git apply --index --3way --whitespace=nowarn "$f"; then
++              echo "::warning::$f digabung dengan 3-way merge."
++              continue
++            fi
++            echo "::error::Gagal menerapkan $f padahal pemeriksaan awal lolos. Coba jalankan ulang workflow."
++            exit 1
++          done
++          git config user.name "github-actions[bot]"
++          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
++          # Nama patch sudah divalidasi di tahap 1 (tanpa spasi), jadi pemisahan kata di sini aman.
++          # shellcheck disable=SC2086
++          git rm -q -f $PATCHES
++          git commit -m "Terapkan patch (tanpa build, hanya dokumen)"
++          for i in 1 2 3; do
++            if git push; then
++              {
++                echo "### Patch disimpan"
++                echo
++                echo "Patch ($PATCHES) sudah diterapkan dan disimpan ke repo. Tidak ada build, tidak ada APK baru, dan tidak ada Release."
++              } >> "$GITHUB_STEP_SUMMARY"
++              exit 0
++            fi
++            echo "Push ditolak (main berubah selama proses). Mengambil perubahan terbaru lalu mencoba lagi ($i/3) ..."
++            if ! git pull --rebase; then
++              git rebase --abort || true
++              echo "::error::Perubahan terbaru di main tidak bisa digabung otomatis dengan penghapusan patch ini."
++              exit 1
++            fi
++          done
++          echo "::error::Push gagal setelah 3 percobaan."
++          exit 1
++
++  # Mesin Rust (Horizon): dikompilasi dari sumber dan diterbitkan sebagai Release (tag horizon-engine-...), hanya
++  # bila belum ada untuk konfigurasi sekarang. Hasilnya diambil build APK di bawah lewat Gradle. Berjalan di run
++  # yang sama supaya cukup satu kali "Run workflow" (atau satu kali upload patch).
++  mesin:
++    name: Bangun mesin Rust (Horizon)
++    needs: periksa
++    if: needs.periksa.outputs.build == 'true' && needs.periksa.outputs.mesin == 'true'
++    runs-on: ubuntu-24.04
++    timeout-minutes: 120
++    # Satu pembangunan mesin pada satu waktu (juga terhadap workflow "Bangun mesin Rust (Horizon)" manual)
++    concurrency:
++      group: horizon-engine
++      cancel-in-progress: false
++    env:
++      HORIZON_TELEMETRY_URL: "off"
++
++    steps:
++      - name: Ambil kode
++        uses: actions/checkout@v5
++
++      # Patch run ini (mis. berkas horizon-engine.properties dan third_party/horizon-patches di dalamnya) harus sudah
++      # terpasang sebelum mesin dibangun, karena merekalah yang menentukan isi mesinnya.
++      - name: Terapkan patch
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++        run: |
++          for f in $PATCHES; do
++            echo "Menerapkan $f ..."
++            if git apply --index --whitespace=nowarn "$f"; then
++              continue
++            fi
++            if git apply --index --3way --whitespace=nowarn "$f"; then
++              echo "::warning::$f digabung dengan 3-way merge."
++              continue
++            fi
++            echo "::error::Gagal menerapkan $f padahal pemeriksaan awal lolos. Coba jalankan ulang workflow."
++            exit 1
++          done
++
++      # Eksporter tabel data proyek sumber dikompilasi dengan JDK yang dipatok proyek itu (Java 25).
++      - name: Pasang JDK 25
++        uses: actions/setup-java@v5
++        with:
++          distribution: temurin
++          java-version: 25
++
++      # Sumber, unduhan Mojang sementara, dan target Rust makan beberapa GB: kerjakan di /mnt, bukan di disk akar.
++      - name: Siapkan ruang disk
++        run: |
++          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
++          sudo mkdir -p /mnt/horizon-engine
++          sudo chown "$USER" /mnt/horizon-engine
++          df -h / /mnt
++
++      - name: Bangun dan terbitkan mesin
++        env:
++          GH_TOKEN: ${{ github.token }}
++          HORIZON_ENGINE_FORCE: ${{ inputs.mesin == 'ulang' }}
++          HORIZON_ENGINE_WORK: /mnt/horizon-engine
++        run: bash scripts/build-horizon-engine.sh --publish
++
++  # Tahap 2: build APK. Hanya jalan bila tahap 1 lolos dan memang ada yang masuk APK. Tanpa centang "rilis" hasilnya
++  # build uji (Release "uji", ditimpa tiap build, tidak ditawarkan aplikasi sebagai pembaruan); dengan centang "rilis"
++  # hasilnya rilis bernomor baru.
++  build:
++    name: Build APK
++    needs: [periksa, mesin]
++    # `mesin` boleh dilewati (Release-nya sudah ada) atau gagal: APK tetap dibangun, hanya tanpa mesin Rust.
++    # !cancelled() supaya dilewatinya `mesin` tidak ikut melewati build ini.
++    if: ${{ !cancelled() && needs.periksa.outputs.build == 'true' && needs.mesin.result != 'cancelled' }}
++    runs-on: ubuntu-24.04
++    # APK 32-bit (hanya pada rilis) dibangun setelah APK 64-bit (Gradle kedua + NDK), jadi batas waktunya dilonggarkan
++    timeout-minutes: 80
++    env:
++      RILIS: ${{ inputs.rilis == true && 'true' || 'false' }}
++
++    steps:
++      - name: Ambil kode
++        uses: actions/checkout@v5
++        with:
++          # Riwayat dan tag lengkap dibutuhkan untuk menentukan nomor versi dan catatan perubahan
++          fetch-depth: 0
++
++      # Mesin Rust gagal dibangun: jangan diam. APK tetap dibangun supaya perubahan lain tidak tertahan.
++      - name: Catat bila mesin Rust gagal dibangun
++        if: needs.mesin.result == 'failure'
++        run: |
++          echo "MESIN_GAGAL=true" >> "$GITHUB_ENV"
++          echo "::warning title=Mesin Rust (Horizon) gagal dibangun::APK ini dibangun TANPA mesin Rust. Lihat job 'Bangun mesin Rust (Horizon)' di run ini."
++          {
++            echo "### Peringatan: mesin Rust gagal dibangun"
++            echo
++            echo "APK di bawah ini dibangun **tanpa** mesin Rust. Penyebabnya ada di job *Bangun mesin Rust (Horizon)* pada run ini. Run berikutnya mencoba membangun mesin lagi otomatis."
++          } >> "$GITHUB_STEP_SUMMARY"
++
++      # Daftar patch sudah diperiksa di tahap 1, jadi di sini cukup diterapkan. Dijalankan paling awal
++      # supaya berkas VERSION dan Gradle wrapper dari patch ikut terbaca dan diperiksa.
++      - name: Terapkan patch
++        id: patch
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++        run: |
++          if [ -z "$PATCHES" ]; then
++            echo "Tidak ada patch, build seperti biasa."
++            exit 0
++          fi
++          for f in $PATCHES; do
++            echo "Menerapkan $f ..."
++            if git apply --index --whitespace=nowarn "$f"; then
++              continue
++            fi
++            if git apply --index --3way --whitespace=nowarn "$f"; then
++              echo "::warning::$f digabung dengan 3-way merge."
++              continue
++            fi
++            echo "::error::Gagal menerapkan $f padahal pemeriksaan awal lolos. Coba jalankan ulang workflow."
++            exit 1
++          done
++          echo "applied=true" >> "$GITHUB_OUTPUT"
++
++      - name: Periksa keaslian Gradle wrapper
++        uses: gradle/actions/wrapper-validation@v4
++
++      - name: Pasang JDK 17
++        uses: actions/setup-java@v5
++        with:
++          distribution: temurin
++          java-version: 17
++
++      - name: Terima lisensi dan pasang platform SDK 37 (Android SDK sudah ada di runner)
++        run: |
++          SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
++          SDKM="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
++          yes | "$SDKM" --licenses > /dev/null || true
++          "$SDKM" "platforms;android-37" || echo "Platform 37 tidak terpasang manual, Gradle akan mengunduh sendiri"
++
++      - name: Siapkan kunci tanda tangan rilis (dari Secrets)
++        env:
++          AMBER_KEYSTORE_BASE64: ${{ secrets.AMBER_KEYSTORE_BASE64 }}
++          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
++          IS_FORK: ${{ github.event.repository.fork }}
++        run: |
++          if [ -n "$AMBER_KEYSTORE_BASE64" ] && [ -n "$AMBER_KEYSTORE_PASSWORD" ]; then
++            KEYSTORE_PATH="$RUNNER_TEMP/amber-release.p12"
++            printf '%s' "$AMBER_KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$KEYSTORE_PATH"
++            chmod 600 "$KEYSTORE_PATH"
++            PASS="$(printf '%s' "$AMBER_KEYSTORE_PASSWORD" | tr -d ' \r\n')"
++            if ! keytool -list -v -keystore "$KEYSTORE_PATH" -storetype PKCS12 -storepass "$PASS" -alias amber > "$RUNNER_TEMP/keytool.txt" 2>&1; then
++              echo "::error::Kunci rilis tidak bisa dibuka. Periksa isi Secrets AMBER_KEYSTORE_BASE64 dan AMBER_KEYSTORE_PASSWORD (harus persis sama dengan isi file yang diberikan)."
++              exit 1
++            fi
++            echo "Kunci rilis terpasang. Sidik jari sertifikat:"
++            grep -E "SHA256:" "$RUNNER_TEMP/keytool.txt" || true
++            rm -f "$RUNNER_TEMP/keytool.txt"
++            echo "AMBER_KEYSTORE_FILE=$KEYSTORE_PATH" >> "$GITHUB_ENV"
++          elif [ "$IS_FORK" = "true" ]; then
++            echo "Kunci rilis tidak ada (wajar untuk fork). APK ditandatangani kunci debug."
++          else
++            echo "::error::Kunci tanda tangan rilis belum dipasang. Isi Secrets AMBER_KEYSTORE_BASE64 dan AMBER_KEYSTORE_PASSWORD di Settings > Secrets and variables > Actions."
++            exit 1
++          fi
++
++      # Dijalankan setelah patch diterapkan, supaya berkas VERSION dari patch ikut terbaca.
++      # Rilis: nomor build = nomor terakhir pada tag v<VERSION>.<n> ditambah 1 (mulai dari 1). Run yang
++      # dibatalkan atau gagal tidak memakai nomor karena tag baru dibuat di langkah Release.
++      # Build uji (tanpa centang "rilis"): tidak membuat tag bernomor sama sekali.
++      - name: Tentukan nomor versi
++        run: |
++          BASE=""
++          if [ -f VERSION ]; then
++            BASE="$(tr -d ' \r\n' < VERSION)"
++          fi
++          BASE="${BASE:-0.1.0-beta}"
++          PREFIX="v${BASE}."
++          LAST="$(git tag -l "${PREFIX}*" | sed "s/^${PREFIX}//" | grep -E '^[0-9]+$' | sort -n | tail -n 1 || true)"
++          NEXT=$(( ${LAST:-0} + 1 ))
++          if [ "$RILIS" = true ]; then
++            VERSION_NAME="${BASE}.${NEXT}"
++            RELEASE_TAG="v${VERSION_NAME}"
++          else
++            # Build uji: nomornya turunan dari rilis terakhir (0.1.0-beta.56.uji.130). Menurut aturan urutan versi di
++            # aplikasi, itu lebih baru daripada rilis 56 tetapi lebih lama daripada rilis 57, jadi rilis resmi
++            # berikutnya tetap ditawarkan dan build uji tidak pernah dianggap pembaruan. Tag "uji" bukan nomor versi,
++            # sehingga aplikasi melewatinya.
++            VERSION_NAME="${BASE}.${LAST:-0}.uji.${GITHUB_RUN_NUMBER}"
++            RELEASE_TAG="uji"
++          fi
++          # Tag rilis terdekat sebelumnya (seri versi apa pun) sebagai batas catatan perubahan
++          PREV_TAG="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
++          {
++            echo "VERSION_NAME=${VERSION_NAME}"
++            echo "RELEASE_TAG=${RELEASE_TAG}"
++            echo "PREV_TAG=${PREV_TAG}"
++          } >> "$GITHUB_ENV"
++          echo "Versi build ini: ${VERSION_NAME} (rilis=${RILIS}, sebelumnya: ${PREV_TAG:-belum ada})"
++
++      - name: Pasang Gradle dan cache
++        uses: gradle/actions/setup-gradle@v4
++
++      # Keluaran Gradle disimpan ke berkas supaya kesalahan kompilasi bisa dirangkum bila build gagal.
++      - name: Build APK release
++        env:
++          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
++          AMBER_VERSION_NAME: ${{ env.VERSION_NAME }}
++          # Kunci API CurseForge dari Secrets; ikut dibuild ke APK (kosong = pengguna mengisi sendiri di aplikasi)
++          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
++        run: |
++          set -o pipefail
++          chmod +x gradlew
++          ./gradlew assembleRelease --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
++
++      - name: Siapkan file APK
++        run: |
++          APK=$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)
++          test -n "$APK"
++          mkdir -p dist
++          # Nama berkas sengaja panjang dan jelas supaya pengguna tidak salah pilih 32-bit/64-bit.
++          # Aplikasi memilih APK pembaruan lewat kata "32bit" di nama (lihat ReleaseParser): APK 64-bit
++          # tidak boleh memuat "32bit", APK 32-bit wajib memuatnya.
++          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
++          ls -lh dist
++          APKSIGNER=$(ls -d "${ANDROID_HOME:-/usr/local/lib/android/sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1)
++          if [ -n "$APKSIGNER" ]; then
++            echo "Sidik jari tanda tangan APK:"
++            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk" | grep -i "SHA-256" || true
++          fi
++
++      # APK 32-bit dibangun terpisah (scripts/build-arm32.sh, ada setelah patch 32-bit diterapkan) dan
++      # TIDAK boleh menggagalkan APK 64-bit: bila langkah ini gagal, rilis tetap terbit dengan APK
++      # 64-bit saja dan penyebabnya bisa dibaca di log langkah ini. Skrip bekerja di salinan repo,
++      # jadi pohon kerja asli tidak berubah. Hanya untuk rilis: build uji cukup 64-bit (lebih cepat).
++      - name: Bangun APK 32-bit (armeabi-v7a)
++        if: hashFiles('scripts/build-arm32.sh') != '' && env.RILIS == 'true'
++        continue-on-error: true
++        env:
++          AMBER_KEYSTORE_PASSWORD: ${{ secrets.AMBER_KEYSTORE_PASSWORD }}
++          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
++        run: bash scripts/build-arm32.sh
++
++      # Skrip 32-bit menamai hasilnya "...-32bit.apk"; di sini diganti ke nama yang jelas bagi pengguna.
++      # Tanpa APK 32-bit (langkah di atas gagal atau tidak ada) langkah ini tidak melakukan apa-apa.
++      - name: Beri nama jelas pada APK 32-bit
++        run: |
++          SRC="dist/AmberLauncher-${VERSION_NAME}-32bit.apk"
++          if [ -f "$SRC" ]; then
++            mv "$SRC" "dist/AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
++          else
++            echo "Tidak ada APK 32-bit pada build ini (build uji tidak membuatnya); hanya APK 64-bit."
++          fi
++          ls -lh dist
++
++      - name: Simpan sebagai artifact
++        uses: actions/upload-artifact@v4
++        with:
++          name: AmberLauncher-${{ env.VERSION_NAME }}
++          path: dist/*.apk
++          retention-days: 14
++
++      # Patch disimpan ke repo SEBELUM rilis dibuat, supaya tag rilis menunjuk ke commit yang isinya
++      # sama dengan APK (sebelumnya tag menunjuk ke commit tanpa patch). Bila main berubah selama
++      # build, perubahan terbaru diambil dulu (rebase) lalu push diulang.
++      - name: Simpan perubahan patch ke repo (hanya jika build lolos)
++        id: simpan
++        if: steps.patch.outputs.applied == 'true'
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++        run: |
++          git config user.name "github-actions[bot]"
++          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
++          # Nama patch sudah divalidasi di tahap 1 (tanpa spasi), jadi pemisahan kata di sini aman.
++          # shellcheck disable=SC2086
++          git rm -q -f $PATCHES
++          git commit -m "Terapkan patch (build lolos)"
++          for i in 1 2 3; do
++            if git push; then
++              exit 0
++            fi
++            echo "Push ditolak (main berubah selama build). Mengambil perubahan terbaru lalu mencoba lagi ($i/3) ..."
++            if ! git pull --rebase; then
++              git rebase --abort || true
++              echo "::error::Perubahan terbaru di main tidak bisa digabung otomatis dengan penghapusan patch ini."
++              exit 1
++            fi
++          done
++          echo "::error::Push gagal setelah 3 percobaan."
++          exit 1
++
++      # Catatan perubahan diambil dari judul commit sejak rilis sebelumnya, jadi tulis judul commit
++      # yang jelas. Judul bawaan GitHub (mis. "Add files via upload") dan commit bot disaring.
++      # Rilis (centang "rilis"): Release bernomor baru, ditawarkan aplikasi sebagai pembaruan.
++      # Build uji: satu Release "uji" yang dihapus dan dibuat ulang tiap build, tidak pernah ditawarkan.
++      - name: Buat Release dengan catatan perubahan
++        env:
++          GH_TOKEN: ${{ github.token }}
++        run: |
++          NOTES="$RUNNER_TEMP/release-notes.md"
++          if [ -n "$PREV_TAG" ]; then
++            LOG="$(git log --no-merges --pretty='%s' "${PREV_TAG}..HEAD" || true)"
++          else
++            LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
++          fi
++          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
++          APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
++          APK32="AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
++          BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
++          # Catatan rilis ditulis dalam bahasa Inggris supaya mudah dipahami semua orang. Baris panduan
++          # unduhan sengaja memuat tautan "https://" atau diawali "#": aplikasi menyaring baris seperti itu
++          # saat menampilkan catatan di pop-up pembaruan, jadi panduan ini tidak ikut muncul di sana.
++          {
++            echo "## What's new in ${VERSION_NAME}"
++            echo
++            if [ -n "$LOG" ]; then
++              printf '%s\n' "$LOG" | sed 's/^/- /'
++            else
++              echo "- Fixes and small improvements."
++            fi
++            echo
++            echo "### Which file should I download?"
++            echo
++            echo "- **64-bit (arm64-v8a): pick this one if you are not sure.** [${APK64}](${BASE}/${APK64}) Works on almost every phone made in the last several years."
++            if ls dist/*-32bit-*.apk > /dev/null 2>&1; then
++              echo "- **32-bit (armeabi-v7a): old phones only.** [${APK32}](${BASE}/${APK32}) For old phones with a 32-bit CPU. It is slower, game RAM is limited to about 1.2 GB, and some renderers are missing. Only pick it if the 64-bit file will not install on your phone."
++            fi
++            if [ -n "$PREV_TAG" ]; then
++              echo
++              echo "Full changelog: https://github.com/${GITHUB_REPOSITORY}/compare/${PREV_TAG}...${RELEASE_TAG}"
++            fi
++          } > "$NOTES"
++          cat "$NOTES"
++
++          if [ "$RILIS" != true ]; then
++            # Build uji: catatan sendiri, lalu Release "uji" dibuat ulang (tag ikut dipindah ke commit ini).
++            {
++              echo "## Build uji, bukan rilis"
++              echo
++              echo "Versi ${VERSION_NAME}, dibangun otomatis dari commit \`$(git rev-parse --short HEAD)\` pada $(date -u '+%Y-%m-%d %H:%M UTC'). Berkas di sini ditimpa oleh build uji berikutnya. Aplikasi pengguna tidak menawarkannya sebagai pembaruan; hanya rilis bernomor yang ditawarkan."
++              echo
++              echo "- **64-bit (arm64-v8a):** [${APK64}](${BASE}/${APK64})"
++              if [ "${MESIN_GAGAL:-}" = true ]; then
++                echo "- Peringatan: mesin Rust gagal dibangun, APK ini tanpa mesin Rust."
++              fi
++              echo
++              echo "### Perubahan sejak ${PREV_TAG:-awal}"
++              echo
++              if [ -n "$LOG" ]; then
++                printf '%s\n' "$LOG" | sed 's/^/- /'
++              else
++                echo "- Perbaikan kecil."
++              fi
++            } > "$NOTES"
++            gh release delete uji --cleanup-tag --yes > /dev/null 2>&1 || true
++            gh release create uji dist/*.apk --target "$(git rev-parse HEAD)" --prerelease --title "Build uji terbaru (bukan rilis)" --notes-file "$NOTES"
++            exit 0
++          fi
++
++          # Versi dengan tanda "-" (mis. 0.1.0-beta.3) ditandai pra-rilis
++          PRE=""
++          case "$VERSION_NAME" in *-*) PRE="--prerelease" ;; esac
++          if ! gh release create "$RELEASE_TAG" dist/*.apk --target "$(git rev-parse HEAD)" --title "AmberLauncher ${VERSION_NAME}" --notes-file "$NOTES" $PRE; then
++            # Bila dijalankan ulang dan rilisnya sudah ada, cukup timpa berkas APK-nya
++            gh release upload "$RELEASE_TAG" dist/*.apk --clobber
++          fi
++
++      - name: Ringkasan hasil
++        if: success()
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++        run: |
++          {
++            if [ "$RILIS" = true ]; then
++              echo "### Selesai: rilis ${VERSION_NAME}"
++              echo
++              echo "APK sudah dirilis: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}"
++              echo
++              echo "Pengguna aplikasi akan ditawari pembaruan ini."
++            else
++              echo "### Selesai: build uji ${VERSION_NAME}"
++              echo
++              echo "APK ada di: https://github.com/${GITHUB_REPOSITORY}/releases/tag/uji (ditimpa tiap build uji)."
++              echo
++              echo "Ini bukan rilis: aplikasi pengguna tidak menawarkannya sebagai pembaruan. Untuk menerbitkan versi baru, jalankan workflow ini manual dan centang *rilis*."
++            fi
++            if [ -n "$PATCHES" ]; then
++              echo
++              echo "Patch yang diterapkan dan disimpan ke repo: $PATCHES"
++            fi
++          } >> "$GITHUB_STEP_SUMMARY"
++
++      # Bila gagal: rangkum penyebabnya di halaman ringkasan supaya tidak perlu menggulir log panjang.
++      - name: Ringkasan kegagalan
++        if: failure()
++        env:
++          PATCHES: ${{ needs.periksa.outputs.patches }}
++          SIMPAN: ${{ steps.simpan.outcome }}
++        run: |
++          {
++            echo "### Build gagal"
++            echo
++            if [ -n "$PATCHES" ]; then
++              if [ "$SIMPAN" = "success" ]; then
++                echo "Patch ($PATCHES) sudah tersimpan ke repo. Yang gagal adalah langkah sesudahnya (rilis); jalankan ulang workflow ini (Run workflow) untuk mencoba lagi."
++              else
++                echo "Patch ($PATCHES) TIDAK disimpan ke repo dan filenya tetap ada. Perbaiki lalu upload ulang patch dengan nama yang sama (menimpa file lama)."
++              fi
++              echo
++            fi
++            LOG="$RUNNER_TEMP/gradle.log"
++            if [ -f "$LOG" ]; then
++              ERRS="$(grep -E '^e: |: error: |^\* What went wrong:' -A2 "$LOG" | sed -E 's#file://##; s#/home/runner/work/[^/]+/[^/]+/##' | head -n 40 || true)"
++              if [ -n "$ERRS" ]; then
++                echo "Kesalahan yang ditemukan di keluaran Gradle:"
++                echo
++                echo '```'
++                printf '%s\n' "$ERRS"
++                echo '```'
++              else
++                echo "Tidak ada baris kesalahan kompilasi di keluaran Gradle. Lihat log langkah yang berwarna merah."
++              fi
++            else
++              echo "Gagal sebelum Gradle berjalan. Lihat log langkah yang berwarna merah."
++            fi
++          } >> "$GITHUB_STEP_SUMMARY"
+
+# FIN part=2/2 files=1

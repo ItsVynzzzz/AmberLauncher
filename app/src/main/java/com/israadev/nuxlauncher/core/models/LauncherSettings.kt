@@ -22,15 +22,10 @@ data class LauncherSettings(
     // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
     // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
     val buttonLookDrag: Boolean = false,
-    // Eksperimental, bawaan mati. Bila modnya terpasang: kontrol bawaan disembunyikan dan semua
-    // sentuhan diteruskan ke mod. Namanya sengaja baru supaya nilai "aktif" dari versi sebelumnya tidak terbawa.
+    // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
+    // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
+    // dari versi sebelumnya tidak terbawa.
     val touchControllerEnabled: Boolean = false,
-    // Hanya berlaku bila touchControllerEnabled nyala: sembunyikan tombol dan mouse virtual launcher,
-    // semua sentuhan hanya untuk mod. Bawaan mati = launcher dan mod aktif berdampingan.
-    val touchControllerExclusive: Boolean = false,
-    // Controller (gamepad) langsung bisa dipakai: tanpa mod, stick/tombol diterjemahkan jadi keyboard+mouse.
-    // Bila mod controller terdeteksi (Controlify, dsb.), controller diteruskan ke mod dan emulasi ini diam.
-    val gamepadEmulation: Boolean = true,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
 

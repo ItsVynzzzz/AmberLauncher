@@ -11,6 +11,7 @@ import com.movtery.zalithlauncher.bridge.ZLBridgeStates
 import com.movtery.zalithlauncher.game.sdl.SdlBridge
 import com.movtery.zalithlauncher.game.sdl.handleGamepadKeyEvent
 import com.movtery.zalithlauncher.game.sdl.handleGamepadMotionEvent
+import kotlin.math.abs
 import org.libsdl.app.SDLControllerManager
 import org.lwjgl.glfw.CallbackBridge
 
@@ -25,6 +26,9 @@ import org.lwjgl.glfw.CallbackBridge
  * Tidak ada pekerjaan saat controller diam: pencacah frame hanya berjalan selama stick digerakkan.
  */
 object GamepadRouter {
+
+    /** Gerakan stick/trigger/hat di atas ini dianggap disengaja (di bawahnya diabaikan sebagai drift). */
+    private const val DELIBERATE = 0.5f
 
     /** Diisi layar game: menggeser kursor menu (dalam piksel layar). */
     @Volatile
@@ -81,6 +85,23 @@ object GamepadRouter {
         (event.source and InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK &&
             event.actionMasked == MotionEvent.ACTION_MOVE
 
+    /**
+     * Stick atau tombol arah digerakkan dengan sengaja (bukan sekadar getar atau drift)? Dipakai untuk
+     * menyembunyikan tombol layar otomatis begitu controller dipakai, sama seperti saat mouse fisik dipakai.
+     * Tanpa alokasi; hanya dipanggil per kejadian gerak.
+     */
+    fun isDeliberate(event: MotionEvent): Boolean {
+        findAxes(event)
+        return abs(event.getAxisValue(MotionEvent.AXIS_X)) > DELIBERATE ||
+            abs(event.getAxisValue(MotionEvent.AXIS_Y)) > DELIBERATE ||
+            abs(event.getAxisValue(rightX)) > DELIBERATE ||
+            abs(event.getAxisValue(rightY)) > DELIBERATE ||
+            abs(event.getAxisValue(MotionEvent.AXIS_HAT_X)) > DELIBERATE ||
+            abs(event.getAxisValue(MotionEvent.AXIS_HAT_Y)) > DELIBERATE ||
+            (leftTrigger >= 0 && event.getAxisValue(leftTrigger) > DELIBERATE) ||
+            (rightTrigger >= 0 && event.getAxisValue(rightTrigger) > DELIBERATE)
+    }
+
     /** True bila kejadian sudah ditangani dan tidak perlu diteruskan ke jalur lain. */
     fun onKey(event: KeyEvent): Boolean {
         val code = event.keyCode
@@ -96,7 +117,7 @@ object GamepadRouter {
             forwardKey(event)
             return true
         }
-        if (pad >= 0 && SettingsManager.settings.value.gamepadEmulation) {
+        if (pad >= 0) {
             note("emulasi keyboard+mouse")
             applySettings()
             syncMode()
@@ -120,8 +141,6 @@ object GamepadRouter {
             }
             return true
         }
-        if (!SettingsManager.settings.value.gamepadEmulation) return false
-
         findAxes(event)
         applySettings()
         syncMode()

@@ -43,12 +43,9 @@ fun SwitchableMouseLayout(
     // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
     hotbarSlotAt: ((Offset) -> Int)? = null,
     onHotbarSelect: (Int) -> Unit = {},
-    // Mod TouchController aktif: semua sentuhan jari diteruskan mentah ke penerima ini (koordinat
-    // 0..1) dan lapisan ini tidak menggerakkan kamera atau kursor sendiri. Mouse fisik tetap jalan.
+    // Mod TouchController tersambung: sentuhan jari saat bermain juga diteruskan mentah ke penerima ini
+    // (koordinat 0..1), sementara lapisan ini tetap bekerja seperti biasa.
     touchSink: TouchSink? = null,
-    // true = hanya mod yang memegang sentuhan (kamera/kursor launcher dimatikan). false = launcher
-    // bekerja seperti biasa dan jari yang menyentuh area game saat bermain juga dikirim ke mod.
-    touchExclusive: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
     onMouse: () -> Unit = {},
@@ -84,7 +81,6 @@ fun SwitchableMouseLayout(
     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
     val currentTouchSink by rememberUpdatedState(touchSink)
-    val currentTouchExclusive by rememberUpdatedState(touchExclusive)
     val currentOnTap by rememberUpdatedState(onTap)
     val currentOnLongPress by rememberUpdatedState(onLongPress)
     val currentOnLongPressEnd by rememberUpdatedState(onLongPressEnd)
@@ -158,7 +154,7 @@ fun SwitchableMouseLayout(
                     var longPressJob: Job? = null
                     // Slot hotbar yang disentuh jari ini (-1 = bukan hotbar). Hanya saat bermain.
                     var hotbarSlot = -1
-                    // Jari yang sedang diteruskan ke mod pada mode berdampingan.
+                    // Jari yang sedang diteruskan ke mod.
                     val forwarder = TouchForwarder()
                     // Status kursor terkunci pada kejadian sebelumnya, untuk mendeteksi pergantian mode.
                     var lastCaptured = currentCursorMode == CURSOR_DISABLED
@@ -167,9 +163,9 @@ fun SwitchableMouseLayout(
                         while (true) {
                             val event = awaitPointerEvent()
 
-                            // Mod TouchController (lihat touchSink/touchExclusive di atas).
+                            // Mod TouchController (lihat touchSink di atas).
                             val sink = currentTouchSink
-                            if (sink != null && !currentTouchExclusive) {
+                            if (sink != null) {
                                 // Berdampingan: sentuhan tetap diproses launcher di bawah (tidak dikonsumsi),
                                 // dan salinannya dikirim ke mod hanya saat bermain (kursor terkunci). Di menu
                                 // game launcher yang bekerja sendiri, kalau tidak klik akan terhitung dua kali.
@@ -191,33 +187,6 @@ fun SwitchableMouseLayout(
                                         forwarder.move(sink, key, c.position.x * invW, c.position.y * invH)
                                     }
                                 }
-                            } else if (sink != null) {
-                                if (activePointerId != null) {
-                                    longPressJob?.cancel()
-                                    activePointerId = null
-                                    hotbarSlot = -1
-                                    isDragging = false
-                                }
-                                val sinkChanges = event.changes
-                                val invW = if (currentScreenWidth > 0f) 1f / currentScreenWidth else 0f
-                                val invH = if (currentScreenHeight > 0f) 1f / currentScreenHeight else 0f
-                                for (ci in sinkChanges.indices) {
-                                    val c = sinkChanges[ci]
-                                    if (c.type != PointerType.Touch) continue
-                                    if (c.changedToDown()) {
-                                        checkPhysicalMouseMode(false)
-                                        currentOnTouch()
-                                        sink.onDown(c.id.value, c.position.x * invW, c.position.y * invH)
-                                        c.consume()
-                                    } else if (c.changedToUpIgnoreConsumed()) {
-                                        sink.onUp(c.id.value)
-                                        c.consume()
-                                    } else if (c.pressed && c.positionChanged()) {
-                                        sink.onMove(c.id.value, c.position.x * invW, c.position.y * invH)
-                                        c.consume()
-                                    }
-                                }
-                                continue
                             }
 
                             // Mode kursor berganti (inventori dibuka/ditutup) saat jari sudah menempel: jari yang

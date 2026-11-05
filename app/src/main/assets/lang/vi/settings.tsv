@@ -99,8 +99,6 @@ Nyalakan Mode Hemat	B\u1eadt Ch\u1ebf \u0111\u1ed9 Ti\u1ebft ki\u1ec7m
 Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	B\u1eadt ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh c\u1ee7a h\u1ec7 th\u1ed1ng v\u00e0 V-Sync c\u1ee7a Zink, \u0111\u1ed3ng th\u1eddi gi\u1edbi h\u1ea1n t\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i t\u1ed1i \u0111a 80%.
 Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	C\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n ch\u1ea1y game ti\u1ebfp theo. T\u1eaft \u0111i s\u1ebd kh\u00f4i ph\u1ee5c c\u00e0i \u0111\u1eb7t tr\u01b0\u1edbc \u0111\u00f3.
 Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	M\u00e0n h\u00ecnh 90/120 Hz \u0111\u01b0\u1ee3c kh\u00f3a \u1edf 60 Hz khi ch\u01a1i \u0111\u1ec3 chuy\u1ec3n \u0111\u1ed9ng m\u01b0\u1ee3t h\u01a1n v\u00e0 \u0111\u1ee1 n\u00f3ng h\u01a1n m\u1ed9t ch\u00fat. Ph\u00f9 h\u1ee3p n\u1ebfu game hi\u1ebfm khi \u0111\u1ea1t 90 FPS. HUD FPS hi\u1ec3n th\u1ecb Hz \u0111ang ho\u1ea1t \u0111\u1ed9ng.
-TouchController saja	Ch\u1ec9 TouchController
-Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	\u1ea8n n\u00fat v\u00e0 chu\u1ed9t \u1ea3o c\u1ee7a launcher (ch\u1ec9 c\u00f2n b\u00e1nh r\u0103ng menu) khi mod \u0111\u00e3 k\u1ebft n\u1ed1i. D\u00f9ng khi hai ki\u1ec3u \u0111i\u1ec1u khi\u1ec3n xung \u0111\u1ed9t, v\u00ed d\u1ee5 camera xoay hai l\u1ea7n.
 Cadangan & bagikan layout	Sao l\u01b0u & chia s\u1ebb b\u1ed1 c\u1ee5c
 Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	L\u01b0u b\u1ed1 c\u1ee5c n\u00fat v\u00e0o t\u1ec7p .json \u0111\u1ec3 sao l\u01b0u ho\u1eb7c chia s\u1ebb, ho\u1eb7c t\u1ea3i t\u1eeb t\u1ec7p c\u1ee7a ng\u01b0\u1eddi kh\u00e1c.
 Ekspor	Xu\u1ea5t
@@ -126,8 +124,6 @@ Menyiapkan log...	\u0110ang chu\u1ea9n b\u1ecb nh\u1eadt k\u00fd...
 Gagal menyiapkan log launcher.	Kh\u00f4ng th\u1ec3 chu\u1ea9n b\u1ecb nh\u1eadt k\u00fd launcher.
 Lokasi: {0}	V\u1ecb tr\u00ed: {0}
 Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	G\u1eedi qua WhatsApp, Telegram ho\u1eb7c Google Drive b\u1eb1ng n\u00fat Chia s\u1ebb, ho\u1eb7c l\u1ea5y tr\u1ef1c ti\u1ebfp t\u1eeb th\u01b0 m\u1ee5c \u0111\u00f3 b\u1eb1ng tr\u00ecnh qu\u1ea3n l\u00fd t\u1ec7p.
-Dukungan controller	H\u1ed7 tr\u1ee3 tay c\u1ea7m
-Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	C\u1eafm tay c\u1ea7m v\u00e0 ch\u01a1i: c\u1ea7n tr\u00e1i \u0111i, c\u1ea7n ph\u1ea3i xoay camera, A nh\u1ea3y, RT \u0111\u00e1nh, LT \u0111\u1eb7t/d\u00f9ng, Y m\u1edf t\u00fai \u0111\u1ed3, Start = Esc. Trong menu c\u1ea7n g\u1ea1t di chuy\u1ec3n con tr\u1ecf. N\u1ebfu ph\u00e1t hi\u1ec7n mod tay c\u1ea7m (v\u00ed d\u1ee5 Controlify), tay c\u1ea7m s\u1ebd giao cho mod.
 Plugin native library	Plugin thư viện gốc
 Belum ada plugin terpasang	Chưa cài plugin nào
 Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Cài APK plugin thư viện gốc (định dạng Zalith/FCL) mà mod cần, ví dụ Distant Horizons, rồi chạm để quét lại.
@@ -135,3 +131,9 @@ Pindai	Quét
 Memindai...	Đang quét...
 Pindai ulang plugin	Quét lại plugin
 Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Dùng sau khi cài hoặc gỡ plugin. Plugin cũng được quét tự động mỗi lần trò chơi khởi động.
+Kontrol sentuh	Điều khiển cảm ứng
+Kamera dan kursor	Camera và con trỏ
+Controller dan mouse fisik	Tay cầm và chuột vật lý
+Lanjutan	Nâng cao
+Langsung bisa dipakai	Dùng được ngay
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Không cần bật hay cài đặt gì. Cắm tay cầm (gamepad) rồi chơi: cần trái để đi, cần phải xoay camera, A nhảy, RT đánh, LT đặt/dùng, Y mở túi đồ, Start = Esc. Trong menu, cần gạt di chuyển con trỏ. Chuột và bàn phím vật lý cũng dùng được ngay. Nút trên màn hình tự ẩn khi dùng tay cầm hoặc chuột. Tốc độ cần gạt theo độ nhạy camera và con trỏ ở trên. Nếu phát hiện mod tay cầm (ví dụ Controlify), tay cầm được giao thẳng cho mod.

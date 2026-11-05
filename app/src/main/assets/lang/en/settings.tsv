@@ -100,8 +100,6 @@ Nyalakan Mode Hemat	Turn on Power Saver Mode
 Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Turns on the system's sustained performance mode and Zink V-Sync, and caps the resolution scale at 80%.
 Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Applies the next time the game starts. Turning it off restores your previous settings.
 Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	A 90/120 Hz screen is locked to 60 Hz while playing for smoother motion and slightly less heat. Good if the game rarely reaches 90 FPS. The FPS HUD shows the active Hz.
-TouchController saja	TouchController only
-Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.	Hide the launcher's buttons and virtual mouse (only the menu gear stays) while the mod is connected. Use it if the two controls clash, for example the camera turning twice.
 Cadangan & bagikan layout	Back up & share layout
 Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Save the button layout to a .json file to back it up or share it, or load one from someone else's file.
 Ekspor	Export
@@ -127,8 +125,6 @@ Menyiapkan log...	Preparing log...
 Gagal menyiapkan log launcher.	Could not prepare the launcher log.
 Lokasi: {0}	Location: {0}
 Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Send it through WhatsApp, Telegram or Google Drive with the Share button, or take it straight from that folder with a file manager.
-Dukungan controller	Controller support
-Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Plug in a controller and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the sticks move the cursor. If a controller mod (e.g. Controlify) is detected, the controller is handed over to the mod.
 Plugin native library	Native library plugins
 Belum ada plugin terpasang	No plugins installed
 Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Install the native library plugin APK (Zalith/FCL format) that a mod needs, for example Distant Horizons, then tap to scan again.
@@ -136,3 +132,9 @@ Pindai	Scan
 Memindai...	Scanning...
 Pindai ulang plugin	Rescan plugins
 Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Use after installing or removing a plugin. Plugins are also scanned automatically every time the game starts.
+Kontrol sentuh	Touch controls
+Kamera dan kursor	Camera and cursor
+Controller dan mouse fisik	Controller and physical mouse
+Lanjutan	Advanced
+Langsung bisa dipakai	Works right away
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	No need to turn anything on or set anything up. Plug in a controller (gamepad) and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the stick moves the cursor. A physical mouse and keyboard work right away too. On-screen buttons hide by themselves when a controller or mouse is used. Stick speed follows the camera and cursor sensitivity above. If a controller mod (e.g. Controlify) is detected, the controller is handed straight to the mod.

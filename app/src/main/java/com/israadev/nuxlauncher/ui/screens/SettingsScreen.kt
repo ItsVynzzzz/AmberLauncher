@@ -138,8 +138,6 @@ fun SettingsScreen(
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
-    var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
-    var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
 
     var resolutionRatio by remember(currentSettings.resolutionRatio) { mutableIntStateOf(currentSettings.resolutionRatio) }
@@ -202,8 +200,6 @@ fun SettingsScreen(
             hotbarTouchEnabled = hotbarTouch,
             buttonLookDrag = buttonLookDrag,
             touchControllerEnabled = touchControllerEnabled,
-            touchControllerExclusive = touchControllerExclusive,
-            gamepadEmulation = gamepadEmulation,
             mouseSizeDp = mouseSizeDp,
             resolutionRatio = resolutionRatio,
             autoOptimizeMinecraft = autoOptimizeMC,
@@ -245,7 +241,7 @@ fun SettingsScreen(
         }
     }
 
-    // Kategori aktif: 0 = Game, 1 = Tampilan, 2 = Kontrol, 3 = Tentang. Isinya digulir sendiri.
+    // Kategori aktif: 0 = Game, 1 = Kontrol, 2 = Tampilan, 3 = Tentang. Isinya digulir sendiri.
     var section by remember { mutableIntStateOf(0) }
     var query by remember { mutableStateOf("") }
     val searching = query.isNotBlank()
@@ -306,8 +302,8 @@ fun SettingsScreen(
             ) {
                 listOf(
                     Triple(0, "Game", Icons.Outlined.ViewInAr),
-                    Triple(1, "Tampilan", Icons.Outlined.Image),
-                    Triple(2, "Kontrol", Icons.Outlined.SportsEsports),
+                    Triple(1, "Kontrol", Icons.Outlined.SportsEsports),
+                    Triple(2, "Tampilan", Icons.Outlined.Image),
                     Triple(3, "Tentang", Icons.Outlined.Info)
                 ).forEach { (index, label, icon) ->
                     AmberSideItem(
@@ -393,28 +389,6 @@ fun SettingsScreen(
                                 }
                             }
                         )
-                            SettingDivider()
-                            SettingFrame("Argumen JVM tambahan", "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.") {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 9.dp)
-                        ) {
-                            SettingRowText(
-                                title = "Argumen JVM tambahan",
-                                desc = "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan."
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            NuxTextField(
-                                value = customJvmArgs,
-                                onValueChange = {
-                                    customJvmArgs = it
-                                    commitSettings()
-                                },
-                                placeholder = "Contoh: -XX:+UseG1GC"
-                            )
-                        }
-                            }
                         }
 
                         if (!searching) PowerSaverCard()
@@ -442,16 +416,6 @@ fun SettingsScreen(
                                 )
                             }
                         SettingDivider()
-                        SettingSwitchRow(
-                            title = "Optimasi otomatis options.txt",
-                            desc = "Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.",
-                            checked = autoOptimizeMC,
-                            onCheckedChange = {
-                                autoOptimizeMC = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
                         // Rentang 40-125% kelipatan 5, sama dengan slider "Resolusi render" di menu dalam game.
                         SettingSliderRow(
                             title = "Skala resolusi layar",
@@ -477,6 +441,97 @@ fun SettingsScreen(
                                 }
                             )
                         }
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Optimasi otomatis options.txt",
+                            desc = "Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.",
+                            checked = autoOptimizeMC,
+                            onCheckedChange = {
+                                autoOptimizeMC = it
+                                commitSettings()
+                            }
+                        )
+                        }
+
+                        SettingsGroup("Perekaman layar") {
+                        // Rekam layar bawaan (tombol Rekam ada di menu dalam game). Bawaannya sengaja hemat.
+                        SettingChoiceRow(
+                            title = "Kualitas rekaman layar",
+                            desc = "Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.",
+                            options = listOf("eco" to "Hemat", "light" to "Ringan", "high" to "Tajam"),
+                            selected = recordQuality,
+                            onSelect = {
+                                recordQuality = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "FPS rekaman",
+                            desc = "30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.",
+                            options = listOf(30 to "30 fps", 60 to "60 fps"),
+                            selected = recordFps,
+                            onSelect = {
+                                recordFps = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Isi rekaman",
+                            desc = "Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.",
+                            options = listOf(false to "Game saja", true to "Dengan tombol"),
+                            selected = recordWithControls,
+                            onSelect = {
+                                recordWithControls = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Rekam suara mikrofon",
+                            desc = "Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.",
+                            checked = recordMic,
+                            onCheckedChange = {
+                                recordMic = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Hentikan rekaman saat HP terlalu panas",
+                            desc = "Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.",
+                            checked = recordThermalGuard,
+                            onCheckedChange = {
+                                recordThermalGuard = it
+                                commitSettings()
+                            }
+                        )
+                        }
+
+                        // Pengaturan untuk pengguna mahir: tidak perlu disentuh untuk bermain.
+                        SettingsGroup("Lanjutan") {
+                            SettingFrame("Argumen JVM tambahan", "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 9.dp)
+                        ) {
+                            SettingRowText(
+                                title = "Argumen JVM tambahan",
+                                desc = "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan."
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            NuxTextField(
+                                value = customJvmArgs,
+                                onValueChange = {
+                                    customJvmArgs = it
+                                    commitSettings()
+                                },
+                                placeholder = "Contoh: -XX:+UseG1GC"
+                            )
+                        }
+                            }
                         SettingDivider()
                         SettingChoiceRow(
                             title = "Driver Vulkan",
@@ -565,210 +620,10 @@ fun SettingsScreen(
                             )
                         }
                         }
-
-                        SettingsGroup("Perekaman layar") {
-                        // Rekam layar bawaan (tombol Rekam ada di menu dalam game). Bawaannya sengaja hemat.
-                        SettingChoiceRow(
-                            title = "Kualitas rekaman layar",
-                            desc = "Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.",
-                            options = listOf("eco" to "Hemat", "light" to "Ringan", "high" to "Tajam"),
-                            selected = recordQuality,
-                            onSelect = {
-                                recordQuality = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingChoiceRow(
-                            title = "FPS rekaman",
-                            desc = "30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.",
-                            options = listOf(30 to "30 fps", 60 to "60 fps"),
-                            selected = recordFps,
-                            onSelect = {
-                                recordFps = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingChoiceRow(
-                            title = "Isi rekaman",
-                            desc = "Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.",
-                            options = listOf(false to "Game saja", true to "Dengan tombol"),
-                            selected = recordWithControls,
-                            onSelect = {
-                                recordWithControls = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Rekam suara mikrofon",
-                            desc = "Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.",
-                            checked = recordMic,
-                            onCheckedChange = {
-                                recordMic = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Hentikan rekaman saat HP terlalu panas",
-                            desc = "Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.",
-                            checked = recordThermalGuard,
-                            onCheckedChange = {
-                                recordThermalGuard = it
-                                commitSettings()
-                            }
-                        )
-                        }
-                    }
-
-                    // ===================== TAMPILAN =====================
-                    if (searching || section == 1) {
-                        SettingsGroup("Latar") {
-                            SettingBackgroundRow(onChange = onChangeBackground)
-                            SettingDivider()
-                            SettingSliderRow(
-                                title = "Redupkan latar",
-                                desc = "Seberapa gelap latar di layar selain Home.",
-                                valueText = "$bgDim%",
-                                value = bgDim.toFloat(),
-                                valueRange = 0f..100f,
-                                steps = 19,
-                                onValueChange = {
-                                    bgDim = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
-                                    commitSettings()
-                                }
-                            )
-                            SettingDivider()
-                        SettingSwitchRow(
-                            title = "Gerakkan GIF dan video",
-                            desc = "Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.",
-                            checked = bgAnimate,
-                            onCheckedChange = {
-                                bgAnimate = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Jeda saat Hemat Baterai",
-                            desc = "GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.",
-                            checked = bgPauseOnPowerSave,
-                            onCheckedChange = {
-                                bgPauseOnPowerSave = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Suara video",
-                            desc = "Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.",
-                            checked = bgSound,
-                            onCheckedChange = {
-                                bgSound = it
-                                commitSettings()
-                            }
-                        )
-                        if (bgSound) {
-                            SettingSliderRow(
-                                title = "Volume video",
-                                valueText = "$bgVolume%",
-                                value = bgVolume.toFloat(),
-                                valueRange = 0f..100f,
-                                steps = 19,
-                                onValueChange = {
-                                    bgVolume = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
-                                    commitSettings()
-                                }
-                            )
-                        }
-                        }
-
-                        SettingsGroup("Tema") {
-                            SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 10.dp)
-                                ) {
-                                    SettingRowText(
-                                        title = "Aksen warna",
-                                        desc = "Warna tombol dan penanda terpilih di seluruh launcher."
-                                    )
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        AMBER_ACCENTS.forEach { accent ->
-                                            val picked = accent.id == accentId
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(44.dp)
-                                                    .clip(CircleShape)
-                                                    .background(accent.base, CircleShape)
-                                                    .border(
-                                                        if (picked) 2.5.dp else 1.dp,
-                                                        if (picked) Color.White else AmberUi.BorderStrong,
-                                                        CircleShape
-                                                    )
-                                                    .clickable {
-                                                        accentId = accent.id
-                                                        AmberUi.setAccent(accent.id)
-                                                        commitSettings()
-                                                    },
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                if (picked) {
-                                                    Icon(
-                                                        imageVector = Icons.Outlined.Check,
-                                                        contentDescription = accent.label,
-                                                        tint = Color.White,
-                                                        modifier = Modifier.size(22.dp)
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                    Text(
-                                        text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
-                                        color = AmberUi.TextDim,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.padding(top = 6.dp)
-                                    )
-                                }
-                            }
-                            SettingDivider()
-                            SettingChoiceRow(
-                                title = "Gaya tampilan",
-                                desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol."
-                                } else {
-                                    "Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default."
-                                },
-                                options = AmberStyle.entries.map { it.id to it.label },
-                                selected = uiStyleId,
-                                onSelect = {
-                                    uiStyleId = it
-                                    AmberUi.setStyle(it)
-                                    commitSettings()
-                                }
-                            )
-                        }
-
-                        SettingsGroup("Bahasa") {
-                            SettingValueRow(
-                                title = "Bahasa",
-                                desc = "Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.",
-                                value = languageOptions.firstOrNull { it.first == appLanguage }?.second ?: "",
-                                onClick = { showLanguageDialog = true }
-                            )
-                        }
                     }
 
                     // ===================== KONTROL =====================
-                    if (searching || section == 2) {
+                    if (searching || section == 1) {
                         if (!searching) SettingsGroup("Tata letak kontrol") {
                         Row(
                             modifier = Modifier
@@ -860,22 +715,8 @@ fun SettingsScreen(
                         }
 
                         }
-                        SettingsGroup("Input dan sensitivitas") {
-                        SettingChoiceRow(
-                            title = "Mode mouse di menu",
-                            desc = if (mouseMode == "CLICK") {
-                                "Sentuh tombol atau slot menu langsung di mana jari menekan."
-                            } else {
-                                "Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik."
-                            },
-                            options = listOf("SLIDE" to "Slide (trackpad)", "CLICK" to "Click (langsung)"),
-                            selected = mouseMode,
-                            onSelect = {
-                                mouseMode = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
+
+                        SettingsGroup("Kontrol sentuh") {
                         SettingSwitchRow(
                             title = "Pukul lewat layar",
                             desc = "Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.",
@@ -915,27 +756,9 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "TouchController saja",
-                            desc = "Sembunyikan tombol dan mouse virtual launcher (hanya gerigi menu yang tersisa) selama mod tersambung. Dipakai bila kontrol ganda saling bentrok, misalnya kamera berputar dua kali.",
-                            checked = touchControllerExclusive,
-                            onCheckedChange = {
-                                touchControllerExclusive = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Dukungan controller",
-                            desc = "Colok controller lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.",
-                            checked = gamepadEmulation,
-                            onCheckedChange = {
-                                gamepadEmulation = it
-                                commitSettings()
-                            }
-                        )
-                        SettingDivider()
+                        }
+
+                        SettingsGroup("Kamera dan kursor") {
                         SettingSliderRow(
                             title = "Sensitivitas kamera",
                             desc = "Kecepatan memutar pandangan di dalam game.",
@@ -945,6 +768,21 @@ fun SettingsScreen(
                             steps = 25,
                             onValueChange = {
                                 captureSensitivity = it.roundToInt()
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingChoiceRow(
+                            title = "Mode mouse di menu",
+                            desc = if (mouseMode == "CLICK") {
+                                "Sentuh tombol atau slot menu langsung di mana jari menekan."
+                            } else {
+                                "Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik."
+                            },
+                            options = listOf("SLIDE" to "Slide (trackpad)", "CLICK" to "Click (langsung)"),
+                            selected = mouseMode,
+                            onSelect = {
+                                mouseMode = it
                                 commitSettings()
                             }
                         )
@@ -973,6 +811,170 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
+
+                        // Tidak ada sakelar: controller dan mouse fisik langsung bekerja begitu dipakai.
+                        SettingsGroup("Controller dan mouse fisik") {
+                            SettingFrame(
+                                "Langsung bisa dipakai",
+                                PHYSICAL_INPUT_DESC
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 9.dp)
+                                ) {
+                                    SettingRowText(
+                                        title = "Langsung bisa dipakai",
+                                        desc = PHYSICAL_INPUT_DESC
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // ===================== TAMPILAN =====================
+                    if (searching || section == 2) {
+                        SettingsGroup("Bahasa") {
+                            SettingValueRow(
+                                title = "Bahasa",
+                                desc = "Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.",
+                                value = languageOptions.firstOrNull { it.first == appLanguage }?.second ?: "",
+                                onClick = { showLanguageDialog = true }
+                            )
+                        }
+
+                        SettingsGroup("Tema") {
+                            SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 10.dp)
+                                ) {
+                                    SettingRowText(
+                                        title = "Aksen warna",
+                                        desc = "Warna tombol dan penanda terpilih di seluruh launcher."
+                                    )
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        AMBER_ACCENTS.forEach { accent ->
+                                            val picked = accent.id == accentId
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(44.dp)
+                                                    .clip(CircleShape)
+                                                    .background(accent.base, CircleShape)
+                                                    .border(
+                                                        if (picked) 2.5.dp else 1.dp,
+                                                        if (picked) Color.White else AmberUi.BorderStrong,
+                                                        CircleShape
+                                                    )
+                                                    .clickable {
+                                                        accentId = accent.id
+                                                        AmberUi.setAccent(accent.id)
+                                                        commitSettings()
+                                                    },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (picked) {
+                                                    Icon(
+                                                        imageVector = Icons.Outlined.Check,
+                                                        contentDescription = accent.label,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(22.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Text(
+                                        text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
+                                        color = AmberUi.TextDim,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(top = 6.dp)
+                                    )
+                                }
+                            }
+                            SettingDivider()
+                            SettingChoiceRow(
+                                title = "Gaya tampilan",
+                                desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol."
+                                } else {
+                                    "Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default."
+                                },
+                                options = AmberStyle.entries.map { it.id to it.label },
+                                selected = uiStyleId,
+                                onSelect = {
+                                    uiStyleId = it
+                                    AmberUi.setStyle(it)
+                                    commitSettings()
+                                }
+                            )
+                        }
+
+                        SettingsGroup("Latar") {
+                            SettingBackgroundRow(onChange = onChangeBackground)
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Redupkan latar",
+                                desc = "Seberapa gelap latar di layar selain Home.",
+                                valueText = "$bgDim%",
+                                value = bgDim.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 19,
+                                onValueChange = {
+                                    bgDim = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
+                                    commitSettings()
+                                }
+                            )
+                            SettingDivider()
+                        SettingSwitchRow(
+                            title = "Gerakkan GIF dan video",
+                            desc = "Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.",
+                            checked = bgAnimate,
+                            onCheckedChange = {
+                                bgAnimate = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Jeda saat Hemat Baterai",
+                            desc = "GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.",
+                            checked = bgPauseOnPowerSave,
+                            onCheckedChange = {
+                                bgPauseOnPowerSave = it
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
+                            title = "Suara video",
+                            desc = "Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.",
+                            checked = bgSound,
+                            onCheckedChange = {
+                                bgSound = it
+                                commitSettings()
+                            }
+                        )
+                        if (bgSound) {
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Volume video",
+                                valueText = "$bgVolume%",
+                                value = bgVolume.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 19,
+                                onValueChange = {
+                                    bgVolume = ((it / 5f).roundToInt() * 5).coerceIn(0, 100)
+                                    commitSettings()
+                                }
+                            )
+                        }
                         }
                     }
 
@@ -1013,8 +1015,6 @@ fun SettingsScreen(
                     hotbarTouch = reset.hotbarTouchEnabled
                     buttonLookDrag = reset.buttonLookDrag
                     touchControllerEnabled = reset.touchControllerEnabled
-                    touchControllerExclusive = reset.touchControllerExclusive
-                    gamepadEmulation = reset.gamepadEmulation
                     mouseSizeDp = reset.mouseSizeDp
                     resolutionRatio = reset.resolutionRatio
                     autoOptimizeMC = reset.autoOptimizeMinecraft
@@ -1390,6 +1390,15 @@ fun SettingsScreen(
         )
     }
 }
+
+/** Keterangan baris info controller/mouse fisik. Konstanta supaya judul kartu dan teks pencarian selalu sama. */
+private const val PHYSICAL_INPUT_DESC =
+    "Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, " +
+        "A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. " +
+        "Mouse dan keyboard fisik juga langsung bisa dipakai. " +
+        "Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. " +
+        "Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. " +
+        "Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod."
 
 /** Satu kelompok pengaturan: judul kecil + kartu panjang. Saat mencari, baris tampil sendiri-sendiri. */
 @Composable

@@ -1,19 +1,11 @@
 package com.israadev.nuxlauncher.ui.control
 
-import android.view.InputDevice
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewTreeObserver
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.*
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.israadev.nuxlauncher.core.controls.TouchForwarder
@@ -23,6 +15,7 @@ import com.israadev.nuxlauncher.ui.components.FocusableBox
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
 import com.movtery.zalithlauncher.bridge.CURSOR_ENABLED
+import com.movtery.zalithlauncher.bridge.ZLBridgeStates
 import com.movtery.zalithlauncher.game.sdl.SdlBridge
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
@@ -56,7 +49,6 @@ fun SwitchableMouseLayout(
     // true = hanya mod yang memegang sentuhan (kamera/kursor launcher dimatikan). false = launcher
     // bekerja seperti biasa dan jari yang menyentuh area game saat bermain juga dikirim ke mod.
     touchExclusive: Boolean = false,
-    requestPointerCapture: Boolean = false,
     onCursorPositionChange: (Offset) -> Unit,
     onPhysicalMouseModeChange: (Boolean) -> Unit = {},
     onMouse: () -> Unit = {},
@@ -104,30 +96,39 @@ fun SwitchableMouseLayout(
     // Blok sentuh di bawah tidak pernah dimulai ulang, jadi nilai yang bisa berubah dibaca lewat State.
     val currentScreenWidth by rememberUpdatedState(screenWidth)
     val currentScreenHeight by rememberUpdatedState(screenHeight)
-    val currentRequestPointerCapture by rememberUpdatedState(requestPointerCapture)
 
     val isCaptured = currentCursorMode == CURSOR_DISABLED
 
-    var isPhysicalMouseMode by remember {
-        mutableStateOf(
-            if (PhysicalMouseChecker.physicalMouseConnected) {
-                !requestPointerCapture
-            } else {
-                false
-            }
-        )
-    }
+    // Mouse fisik sedang dipakai (diketahui dari event, bukan dari pengaturan). Menyembunyikan penunjuk
+    // virtual launcher; yang terlihat adalah penunjuk sistem Android.
+    var isPhysicalMouseMode by remember { mutableStateOf(PhysicalMouseChecker.physicalMouseConnected) }
 
     fun checkPhysicalMouseMode(using: Boolean) {
-        val newMode = !currentRequestPointerCapture && using
-        if (isPhysicalMouseMode != newMode) {
-            isPhysicalMouseMode = newMode
-            currentOnPhysicalMouseModeChange(newMode)
+        if (isPhysicalMouseMode != using) {
+            isPhysicalMouseMode = using
+            currentOnPhysicalMouseModeChange(using)
         }
     }
 
-    // In gameplay mode (CURSOR_DISABLED), pointer capture is mandatory so external mouse controls camera
-    val capturePointer = isCaptured || requestPointerCapture
+    // Saat bermain (kursor game terkunci) mouse fisik ditangkap Android dan menggerakkan kamera.
+    // Di menu mouse tidak ditangkap: Android memberi posisi absolut dan menggambar penunjuknya sendiri.
+    val capturePointer = isCaptured
+
+    // Bentuk penunjuk sistem mengikuti bentuk kursor game. State-nya hanya dibaca di FocusableBox,
+    // jadi pergantian bentuk tidak menyusun ulang lapisan ini.
+    val cursorShapeState = ZLBridgeStates.cursorShape.collectAsStateWithLifecycle()
+    val hoverIcon = remember { derivedStateOf { cursorShapeState.value.composeIcon } }
+
+    // Penerus tombol dan gulir mouse fisik ke game. Satu instance dipakai kedua jalur (menu dan bermain).
+    val sendMouseButton = remember<(Int, Boolean) -> Unit> {
+        { button, pressed ->
+            val glfwBtn = MouseButtons.toGlfw(button)
+            if (glfwBtn != null) CallbackBridge.sendMouseButton(glfwBtn, pressed)
+        }
+    }
+    val sendMouseScroll = remember<(Offset) -> Unit> {
+        { scroll -> CallbackBridge.sendScroll(scroll.x.toDouble(), scroll.y.toDouble()) }
+    }
 
     val composeFocusCount by SdlBridge.composeFocus.collectAsStateWithLifecycle()
 
@@ -386,43 +387,30 @@ fun SwitchableMouseLayout(
                     }
                 }
             }
-            // 2. Physical mouse events in menu mode (when not captured)
+            // 2. Mouse fisik di menu game (kursor tidak terkunci): posisi absolut, klik, gulir.
             .then(
-                Modifier.mouseEventModifier(
+                Modifier.physicalMouseHover(
                     disabled = capturePointer,
                     onMouse = {
                         checkPhysicalMouseMode(true)
                         currentOnMouse()
                     },
                     onMouseMove = { pos ->
-                        val newX = pos.x.coerceIn(0f, screenWidth)
-                        val newY = pos.y.coerceIn(0f, screenHeight)
-                        val newPos = Offset(newX, newY)
-                        currentOnCursorPositionChange(newPos)
+                        val newX = pos.x.coerceIn(0f, currentScreenWidth)
+                        val newY = pos.y.coerceIn(0f, currentScreenHeight)
+                        currentOnCursorPositionChange(Offset(newX, newY))
                         sendScaledCursor(newX, newY)
                     },
-                    onMouseScroll = { scroll ->
-                        CallbackBridge.sendScroll(scroll.x.toDouble(), scroll.y.toDouble())
-                    },
-                    onMouseButton = { button, pressed ->
-                        val glfwBtn = when (button) {
-                            MotionEvent.BUTTON_PRIMARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT
-                            MotionEvent.BUTTON_SECONDARY, MotionEvent.BUTTON_STYLUS_SECONDARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT
-                            MotionEvent.BUTTON_TERTIARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE
-                            MotionEvent.BUTTON_BACK -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT
-                            else -> null
-                        }
-                        if (glfwBtn != null) {
-                            CallbackBridge.sendMouseButton(glfwBtn, pressed)
-                        }
-                    }
+                    onMouseScroll = sendMouseScroll,
+                    onMouseButton = sendMouseButton
                 )
             ),
-        requestKey = cursorMode to composeFocusCount
+        requestKey = cursorMode to composeFocusCount,
+        hoverIcon = hoverIcon
     )
 
-    // 3. Hardware Pointer Capture (Active when in game / CURSOR_DISABLED)
-    SimpleMouseCapture(
+    // 3. Pointer capture (aktif saat bermain / CURSOR_DISABLED): gerakan relatif jadi delta kamera.
+    PhysicalMouseCapture(
         enabled = capturePointer,
         onMouse = {
             checkPhysicalMouseMode(true)
@@ -431,21 +419,8 @@ fun SwitchableMouseLayout(
         onMouseMove = { delta ->
             currentOnCapturedMove(delta)
         },
-        onMouseScroll = { scroll ->
-            CallbackBridge.sendScroll(scroll.x.toDouble(), scroll.y.toDouble())
-        },
-        onMouseButton = { button, pressed ->
-            val glfwBtn = when (button) {
-                MotionEvent.BUTTON_PRIMARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT
-                MotionEvent.BUTTON_SECONDARY, MotionEvent.BUTTON_STYLUS_SECONDARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT
-                MotionEvent.BUTTON_TERTIARY -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE
-                MotionEvent.BUTTON_BACK -> LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT
-                else -> null
-            }
-            if (glfwBtn != null) {
-                CallbackBridge.sendMouseButton(glfwBtn, pressed)
-            }
-        }
+        onMouseScroll = sendMouseScroll,
+        onMouseButton = sendMouseButton
     )
 }
 
@@ -463,170 +438,4 @@ internal fun List<PointerInputChange>.anyPressed(): Boolean {
         if (this[i].pressed) return true
     }
     return false
-}
-
-@Composable
-private fun SimpleMouseCapture(
-    enabled: Boolean,
-    onMouse: () -> Unit,
-    onMouseMove: (Offset) -> Unit,
-    onMouseScroll: (Offset) -> Unit,
-    onMouseButton: (button: Int, pressed: Boolean) -> Unit
-) {
-    val view = LocalView.current
-    val currentOnMouse by rememberUpdatedState(onMouse)
-    val currentOnMouseMove by rememberUpdatedState(onMouseMove)
-    val currentOnMouseScroll by rememberUpdatedState(onMouseScroll)
-    val currentOnMouseButton by rememberUpdatedState(onMouseButton)
-
-    fun syncCaptureState() {
-        if (enabled) {
-            if (view.hasWindowFocus()) {
-                view.requestPointerCapture()
-            }
-        } else {
-            view.releasePointerCapture()
-        }
-    }
-
-    val composeFocus by SdlBridge.composeFocus.collectAsStateWithLifecycle()
-    LaunchedEffect(composeFocus) {
-        syncCaptureState()
-    }
-
-    DisposableEffect(view, enabled) {
-        view.setOnCapturedPointerListener(null)
-
-        val focusListener = ViewTreeObserver.OnWindowFocusChangeListener { hasFocus ->
-            if (enabled && hasFocus) {
-                view.requestPointerCapture()
-            }
-        }
-        view.viewTreeObserver.addOnWindowFocusChangeListener(focusListener)
-        syncCaptureState()
-
-        if (enabled) {
-            val pointerListener = View.OnCapturedPointerListener { _, event ->
-                currentOnMouse()
-                when (event.actionMasked) {
-                    MotionEvent.ACTION_HOVER_MOVE, MotionEvent.ACTION_MOVE -> {
-                        val relX = event.getAxisValue(MotionEvent.AXIS_RELATIVE_X)
-                        val relY = event.getAxisValue(MotionEvent.AXIS_RELATIVE_Y)
-                        var deltaX = relX
-                        var deltaY = relY
-
-                        val historySize = event.historySize
-                        for (i in 0 until historySize) {
-                            deltaX += event.getHistoricalAxisValue(MotionEvent.AXIS_RELATIVE_X, i)
-                            deltaY += event.getHistoricalAxisValue(MotionEvent.AXIS_RELATIVE_Y, i)
-                        }
-
-                        // Fallback only if relative axes are not provided and event.x/y is relative
-                        if (deltaX == 0f && deltaY == 0f && (event.x != 0f || event.y != 0f)) {
-                            if (Math.abs(event.x) < 300f && Math.abs(event.y) < 300f) {
-                                deltaX = event.x
-                                deltaY = event.y
-                            }
-                        }
-
-                        currentOnMouseMove(Offset(deltaX, deltaY))
-                        true
-                    }
-                    MotionEvent.ACTION_SCROLL -> {
-                        val scrollX = event.getAxisValue(MotionEvent.AXIS_HSCROLL)
-                        val scrollY = event.getAxisValue(MotionEvent.AXIS_VSCROLL)
-                        currentOnMouseScroll(Offset(scrollX, scrollY))
-                        true
-                    }
-                    MotionEvent.ACTION_DOWN, MotionEvent.ACTION_BUTTON_PRESS -> {
-                        currentOnMouseButton(event.actionButton, true)
-                        true
-                    }
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_BUTTON_RELEASE -> {
-                        currentOnMouseButton(event.actionButton, false)
-                        true
-                    }
-                    else -> false
-                }
-            }
-            view.setOnCapturedPointerListener(pointerListener)
-        } else {
-            view.setOnCapturedPointerListener(null)
-        }
-
-        onDispose {
-            view.viewTreeObserver.removeOnWindowFocusChangeListener(focusListener)
-            view.setOnCapturedPointerListener(null)
-        }
-    }
-}
-
-/**
- * Intercept hardware mouse events (movement, clicks, scroll wheel) in uncaptured / menu mode
- */
-@OptIn(ExperimentalComposeUiApi::class)
-private fun Modifier.mouseEventModifier(
-    disabled: Boolean,
-    onMouse: () -> Unit = {},
-    onMouseMove: (Offset) -> Unit = {},
-    onMouseScroll: (Offset) -> Unit = {},
-    onMouseButton: (Int, Boolean) -> Unit = { _, _ -> },
-) = composed {
-    val currentDisabled by rememberUpdatedState(disabled)
-    val currentOnMouse by rememberUpdatedState(onMouse)
-    val currentOnMouseMove by rememberUpdatedState(onMouseMove)
-    val currentOnMouseScroll by rememberUpdatedState(onMouseScroll)
-    val currentOnMouseButton by rememberUpdatedState(onMouseButton)
-
-    var lastButtons by remember { mutableIntStateOf(0) }
-
-    pointerInteropFilter { event ->
-        if (currentDisabled) {
-            return@pointerInteropFilter false
-        }
-
-        val isMouse = event.isFromSource(InputDevice.SOURCE_MOUSE) ||
-                event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)
-        val isStylus = event.isFromSource(InputDevice.SOURCE_STYLUS)
-        if (!isMouse && !isStylus) {
-            return@pointerInteropFilter false
-        }
-
-        currentOnMouse()
-
-        val buttons = event.buttonState
-        val changed = lastButtons xor buttons
-
-        fun dispatchButton(button: Int) {
-            if (changed and button != 0) {
-                val pressed = buttons and button != 0
-                currentOnMouseButton(button, pressed)
-            }
-        }
-
-        dispatchButton(MotionEvent.BUTTON_PRIMARY)
-        dispatchButton(MotionEvent.BUTTON_SECONDARY)
-        dispatchButton(MotionEvent.BUTTON_TERTIARY)
-        dispatchButton(MotionEvent.BUTTON_BACK)
-        dispatchButton(MotionEvent.BUTTON_FORWARD)
-        dispatchButton(MotionEvent.BUTTON_STYLUS_SECONDARY)
-
-        lastButtons = buttons
-
-        when (event.actionMasked) {
-            MotionEvent.ACTION_HOVER_MOVE,
-            MotionEvent.ACTION_MOVE -> {
-                currentOnMouseMove(Offset(event.x, event.y))
-            }
-            MotionEvent.ACTION_SCROLL -> {
-                currentOnMouseScroll(
-                    Offset(
-                        event.getAxisValue(MotionEvent.AXIS_HSCROLL),
-                        event.getAxisValue(MotionEvent.AXIS_VSCROLL)
-                    )
-                )
-            }
-        }
-        true
-    }
 }

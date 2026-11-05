@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
+import com.israadev.nuxlauncher.ui.control.MouseDiag
 import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
@@ -372,6 +373,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun onDestroy() {
         super.onDestroy()
+        MouseDiag.sink = null
         archiveGameLogOnce()
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
@@ -514,6 +516,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PhysicalMouseChecker.initChecker(this)
+        // Catatan jalur masuk mouse fisik (satu baris per jalur per sesi) ke log game.
+        MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
         SettingsManager.init(this)
         ControlLayoutManager.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && SettingsManager.settings.value.sustainedPerformanceMode) {
@@ -847,6 +851,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         // menu Minecraft berpindah sendiri saat mouse digerakkan. Panah keyboard asli bersumber
         // keyboard, jadi tidak terpengaruh.
         if (source and InputDevice.SOURCE_CLASS_TRACKBALL != 0 && event.isDpadArrow()) {
+            MouseDiag.once("panah-sintetis-ditelan", source, 0, event.action, 0)
             return true
         }
 
@@ -895,6 +900,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             return super.dispatchTrackballEvent(event)
         }
         if (event.actionMasked == MotionEvent.ACTION_MOVE) {
+            MouseDiag.once("trackball", event.source, event.getToolType(0), event.actionMasked, event.buttonState)
             isControlVisibleState.value = false
             val s = SettingsManager.settings.value
             if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) {
@@ -1948,16 +1954,11 @@ fun GameScreen(
                 }
             )
         } else {
-            // Physical Mouse Mode State (Zalith-style: auto-hide virtual pointer when physical mouse is used)
+            // Mouse fisik sedang dipakai (dari event). Penunjuk virtual disembunyikan; yang terlihat
+            // adalah penunjuk sistem Android.
             var isPhysicalMouseMode by remember {
-            mutableStateOf(
-                if (PhysicalMouseChecker.physicalMouseConnected) {
-                    launcherSettings.physicalMouseMode
-                } else {
-                    false
-                }
-            )
-        }
+                mutableStateOf(PhysicalMouseChecker.physicalMouseConnected)
+            }
 
         // 2. Zalith-Style Touchpad & Input Controller Layer
         SwitchableMouseLayout(
@@ -1978,7 +1979,6 @@ fun GameScreen(
                 CallbackBridge.sendKeyPress(key, false)
                 hostView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
             },
-            requestPointerCapture = !launcherSettings.physicalMouseMode,
             onCursorPositionChange = { newPos ->
                 cursorX = newPos.x
                 cursorY = newPos.y
@@ -2051,8 +2051,8 @@ fun GameScreen(
             gameCursorMode == CURSOR_ENABLED
         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
             false
-        } else if (PhysicalMouseChecker.physicalMouseConnected && isPhysicalMouseMode && launcherSettings.physicalMouseMode) {
-            // Sembunyikan mouse virtual jika mouse fisik eksternal terhubung & sedang digunakan
+        } else if (isPhysicalMouseMode) {
+            // Mouse fisik sedang dipakai: penunjuk sistem Android yang terlihat, bukan panah launcher.
             false
         } else {
             gameCursorMode == CURSOR_ENABLED

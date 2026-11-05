@@ -33,7 +33,6 @@ data class LauncherSettings(
     val gamepadEmulation: Boolean = true,
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     val hideMouseInClickMode: Boolean = true,
-    val physicalMouseMode: Boolean = true, // Auto-hide virtual cursor & enable system cursor when physical mouse is used
 
     // Graphics & Performance
     val resolutionRatio: Int = 100, // 40% - 125%, kelipatan 5 (slider di Pengaturan dan menu dalam game)

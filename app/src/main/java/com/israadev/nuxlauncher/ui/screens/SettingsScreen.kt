@@ -141,7 +141,6 @@ fun SettingsScreen(
     var touchControllerExclusive by remember(currentSettings.touchControllerExclusive) { mutableStateOf(currentSettings.touchControllerExclusive) }
     var gamepadEmulation by remember(currentSettings.gamepadEmulation) { mutableStateOf(currentSettings.gamepadEmulation) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
-    var physicalMouseMode by remember(currentSettings.physicalMouseMode) { mutableStateOf(currentSettings.physicalMouseMode) }
 
     var resolutionRatio by remember(currentSettings.resolutionRatio) { mutableIntStateOf(currentSettings.resolutionRatio) }
     var autoOptimizeMC by remember(currentSettings.autoOptimizeMinecraft) { mutableStateOf(currentSettings.autoOptimizeMinecraft) }
@@ -206,7 +205,6 @@ fun SettingsScreen(
             touchControllerExclusive = touchControllerExclusive,
             gamepadEmulation = gamepadEmulation,
             mouseSizeDp = mouseSizeDp,
-            physicalMouseMode = physicalMouseMode,
             resolutionRatio = resolutionRatio,
             autoOptimizeMinecraft = autoOptimizeMC,
             sustainedPerformanceMode = sustainedPerf,
@@ -975,16 +973,6 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
-                        SettingDivider()
-                        SettingSwitchRow(
-                            title = "Mode mouse fisik (auto-hide)",
-                            desc = "Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.",
-                            checked = physicalMouseMode,
-                            onCheckedChange = {
-                                physicalMouseMode = it
-                                commitSettings()
-                            }
-                        )
                         }
                     }
 
@@ -1028,7 +1016,6 @@ fun SettingsScreen(
                     touchControllerExclusive = reset.touchControllerExclusive
                     gamepadEmulation = reset.gamepadEmulation
                     mouseSizeDp = reset.mouseSizeDp
-                    physicalMouseMode = reset.physicalMouseMode
                     resolutionRatio = reset.resolutionRatio
                     autoOptimizeMC = reset.autoOptimizeMinecraft
                     sustainedPerf = reset.sustainedPerformanceMode

@@ -1,0 +1,889 @@
+diff --git a/app/src/main/assets/lang/en/rust-settings.tsv b/app/src/main/assets/lang/en/rust-settings.tsv
+new file mode 100644
+index 0000000..5f600b3
+--- /dev/null
++++ b/app/src/main/assets/lang/en/rust-settings.tsv
+@@ -0,0 +1,55 @@
++# Pengaturan > Rust (tab pengaturan mesin Rust)
++Mesin Rust	Rust engine
++Performa	Performance
++Layar	Screen
++Permainan	Gameplay
++Mesin Rust (Horizon)	Rust engine (Horizon)
++Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Replaces the whole Java client: no JVM and no Java mods.
++Tidak tersedia	Unavailable
++Siap	Ready
++Sumber daya game	Game resources
++Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Downloaded automatically on the first PLAY, about 500 MiB.
++Belum diunduh	Not downloaded yet
++Versi Minecraft	Minecraft version
++Satu-satunya versi yang dikerjakan mesin ini.	The only version this engine supports.
++Berlaku untuk instance Rust	Applies to Rust instances
++Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	Choices on this tab are used by Rust instances only and take effect on the next PLAY. Vanilla, Fabric and Forge instances are not affected.
++Renderer Rust	Rust renderer
++Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	Compatible is the safest on every phone. Fast Vulkan uses GPU batching. OpenGL ES is still experimental.
++Vulkan kompatibel	Compatible Vulkan
++Vulkan cepat	Fast Vulkan
++Skala resolusi Rust	Rust resolution scale
++Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Lowering the render resolution makes the game lighter, but the picture gets blurrier.
++Laju layar	Refresh rate
++Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	A request to Android, not an FPS cap. A rate the screen does not support may be ignored.
++Bawaan sistem	System default
++Petunjuk performa	Performance hints
++Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Tells Android the game needs steady performance. Only useful on phones that support it.
++Batas pekerja chunk	Chunk worker limit
++Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limits the workers that generate and assemble chunks, not every app thread. A small value lowers CPU load but loads the world more slowly.
++Tanpa batas	No limit
++Cache RAM	RAM cache
++Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Decoded sounds (80%) and empty mesh buffers (20%), recreated at the same quality. Not a limit on total RAM or VRAM. A small value can add CPU work.
++Bawaan (80 MiB)	Default (80 MiB)
++Arah layar	Screen orientation
++Arah layar saat bermain. Bawaannya landscape.	The screen orientation while playing. Landscape by default.
++Landscape terbalik	Reverse landscape
++Portrait terbalik	Reverse portrait
++Rasio layar	Aspect ratio
++Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limits the game view to a set ratio. Native follows the phone's screen ratio.
++Asli	Native
++Layar penuh imersif	Immersive fullscreen
++Menyembunyikan bilah navigasi dan bilah status saat bermain.	Hides the navigation and status bars while playing.
++Hindari poni layar	Avoid the display cutout
++Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Shifts the game view so the camera hole or notch does not cover it.
++Perangkat input	Input device
++Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Auto picks between touch, keyboard and mouse, or a gamepad depending on what is connected.
++Layar sentuh	Touch screen
++Keyboard dan mouse	Keyboard and mouse
++Server otomatis	Auto-join server
++Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	Leave empty to play in your own world. If filled in, PLAY joins this server directly.
++Contoh: mc.contoh.com:25565	Example: mc.example.com:25565
++Setel ulang pengaturan Rust	Reset Rust settings
++Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Puts every choice on this tab back to the engine defaults. Instances and worlds are not touched.
++Setel ulang	Reset
++Pengaturan Rust dikembalikan ke bawaan.	Rust settings were put back to the defaults.
+diff --git a/app/src/main/assets/lang/es/rust-settings.tsv b/app/src/main/assets/lang/es/rust-settings.tsv
+new file mode 100644
+index 0000000..b69570f
+--- /dev/null
++++ b/app/src/main/assets/lang/es/rust-settings.tsv
+@@ -0,0 +1,57 @@
++# Pengaturan > Rust (tab pengaturan mesin Rust)
++Mesin Rust	Motor Rust
++Performa	Rendimiento
++Layar	Pantalla
++Permainan	Partida
++Mesin Rust (Horizon)	Motor Rust (Horizon)
++Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Sustituye todo el cliente Java: sin JVM y sin mods de Java.
++Tidak tersedia	No disponible
++Siap	Listo
++Sumber daya game	Recursos del juego
++Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Se descargan solos en el primer PLAY, unos 500 MiB.
++Belum diunduh	A\u00fan sin descargar
++Versi Minecraft	Versi\u00f3n de Minecraft
++Satu-satunya versi yang dikerjakan mesin ini.	La \u00fanica versi\u00f3n que admite este motor.
++Berlaku untuk instance Rust	Se aplica a instancias Rust
++Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	Las opciones de esta pesta\u00f1a solo las usan las instancias Rust y se aplican en el pr\u00f3ximo PLAY. Las instancias Vanilla, Fabric y Forge no se ven afectadas.
++Renderer Rust	Renderizador Rust
++Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	Compatible es lo m\u00e1s seguro en cualquier tel\u00e9fono. Vulkan r\u00e1pido usa batching de GPU. OpenGL ES sigue siendo experimental.
++Vulkan kompatibel	Vulkan compatible
++Vulkan cepat	Vulkan r\u00e1pido
++Skala resolusi Rust	Escala de resoluci\u00f3n Rust
++Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Bajar la resoluci\u00f3n de render alivia el juego, pero la imagen se ve m\u00e1s borrosa.
++Laju layar	Frecuencia de pantalla
++Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	Es una petici\u00f3n a Android, no un l\u00edmite de FPS. Si la pantalla no admite la frecuencia, puede ignorarse.
++Bawaan sistem	Predeterminado del sistema
++Petunjuk performa	Sugerencias de rendimiento
++Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Avisa a Android de que el juego necesita un rendimiento estable. Solo sirve en tel\u00e9fonos que lo admiten.
++Batas pekerja chunk	L\u00edmite de trabajadores de chunks
++Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limita los trabajadores que generan y montan chunks, no todos los hilos de la app. Un valor bajo reduce la carga de CPU, pero el mundo carga m\u00e1s lento.
++Tanpa batas	Sin l\u00edmite
++Cache RAM	Cach\u00e9 de RAM
++Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Sonidos ya decodificados (80%) y buffers de malla vac\u00edos (20%), que se recrean con la misma calidad. No es un l\u00edmite de RAM ni de VRAM totales. Un valor bajo puede aumentar el trabajo de la CPU.
++Bawaan (80 MiB)	Predeterminado (80 MiB)
++Arah layar	Orientaci\u00f3n de pantalla
++Arah layar saat bermain. Bawaannya landscape.	La orientaci\u00f3n de la pantalla al jugar. Por defecto, horizontal.
++Landscape	Horizontal
++Landscape terbalik	Horizontal invertido
++Portrait	Vertical
++Portrait terbalik	Vertical invertido
++Rasio layar	Relaci\u00f3n de aspecto
++Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limita la vista del juego a una relaci\u00f3n concreta. Nativa sigue la relaci\u00f3n de la pantalla del tel\u00e9fono.
++Asli	Nativa
++Layar penuh imersif	Pantalla completa inmersiva
++Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta las barras de navegaci\u00f3n y de estado al jugar.
++Hindari poni layar	Evitar el notch de la pantalla
++Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desplaza la vista del juego para que no la tape el agujero de la c\u00e1mara o el notch.
++Perangkat input	Dispositivo de entrada
++Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Autom\u00e1tico elige entre t\u00e1ctil, teclado y rat\u00f3n o mando seg\u00fan lo que est\u00e9 conectado.
++Layar sentuh	Pantalla t\u00e1ctil
++Keyboard dan mouse	Teclado y rat\u00f3n
++Server otomatis	Servidor autom\u00e1tico
++Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	D\u00e9jalo vac\u00edo para jugar en tu propio mundo. Si lo rellenas, PLAY entra directo a este servidor.
++Contoh: mc.contoh.com:25565	Ejemplo: mc.ejemplo.com:25565
++Setel ulang pengaturan Rust	Restablecer ajustes de Rust
++Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Devuelve todas las opciones de esta pesta\u00f1a a los valores del motor. No se tocan instancias ni mundos.
++Setel ulang	Restablecer
++Pengaturan Rust dikembalikan ke bawaan.	Los ajustes de Rust volvieron a los valores predeterminados.
+diff --git a/app/src/main/assets/lang/vi/rust-settings.tsv b/app/src/main/assets/lang/vi/rust-settings.tsv
+new file mode 100644
+index 0000000..69de4c6
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/rust-settings.tsv
+@@ -0,0 +1,57 @@
++# Pengaturan > Rust (tab pengaturan mesin Rust)
++Mesin Rust	Engine Rust
++Performa	Hi\u1ec7u n\u0103ng
++Layar	M\u00e0n h\u00ecnh
++Permainan	Ch\u01a1i game
++Mesin Rust (Horizon)	Engine Rust (Horizon)
++Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Thay th\u1ebf to\u00e0n b\u1ed9 client Java: kh\u00f4ng c\u00f3 JVM v\u00e0 kh\u00f4ng d\u00f9ng mod Java.
++Tidak tersedia	Kh\u00f4ng kh\u1ea3 d\u1ee5ng
++Siap	S\u1eb5n s\u00e0ng
++Sumber daya game	T\u00e0i nguy\u00ean game
++Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	T\u1ef1 t\u1ea3i \u1edf l\u1ea7n PLAY \u0111\u1ea7u ti\u00ean, kho\u1ea3ng 500 MiB.
++Belum diunduh	Ch\u01b0a t\u1ea3i
++Versi Minecraft	Phi\u00ean b\u1ea3n Minecraft
++Satu-satunya versi yang dikerjakan mesin ini.	Phi\u00ean b\u1ea3n duy nh\u1ea5t engine n\u00e0y h\u1ed7 tr\u1ee3.
++Berlaku untuk instance Rust	\u00c1p d\u1ee5ng cho instance Rust
++Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	C\u00e1c l\u1ef1a ch\u1ecdn \u1edf tab n\u00e0y ch\u1ec9 d\u00f9ng cho instance Rust v\u00e0 c\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n PLAY ti\u1ebfp theo. Instance Vanilla, Fabric v\u00e0 Forge kh\u00f4ng b\u1ecb \u1ea3nh h\u01b0\u1edfng.
++Renderer Rust	Renderer Rust
++Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	T\u01b0\u01a1ng th\u00edch l\u00e0 an to\u00e0n nh\u1ea5t tr\u00ean m\u1ecdi \u0111i\u1ec7n tho\u1ea1i. Vulkan nhanh d\u00f9ng batching GPU. OpenGL ES v\u1eabn \u0111ang th\u1eed nghi\u1ec7m.
++Vulkan kompatibel	Vulkan t\u01b0\u01a1ng th\u00edch
++Vulkan cepat	Vulkan nhanh
++Skala resolusi Rust	T\u1ec9 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i Rust
++Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Gi\u1ea3m \u0111\u1ed9 ph\u00e2n gi\u1ea3i render gi\u00fap game nh\u1eb9 h\u01a1n nh\u01b0ng h\u00ecnh \u1ea3nh s\u1ebd m\u1edd h\u01a1n.
++Laju layar	T\u1ea7n s\u1ed1 qu\u00e9t
++Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	\u0110\u00e2y l\u00e0 y\u00eau c\u1ea7u g\u1eedi Android, kh\u00f4ng ph\u1ea3i gi\u1edbi h\u1ea1n FPS. T\u1ea7n s\u1ed1 m\u00e0 m\u00e0n h\u00ecnh kh\u00f4ng h\u1ed7 tr\u1ee3 c\u00f3 th\u1ec3 b\u1ecb b\u1ecf qua.
++Bawaan sistem	M\u1eb7c \u0111\u1ecbnh h\u1ec7 th\u1ed1ng
++Petunjuk performa	G\u1ee3i \u00fd hi\u1ec7u n\u0103ng
++Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	B\u00e1o cho Android bi\u1ebft game c\u1ea7n hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh. Ch\u1ec9 c\u00f3 \u00edch tr\u00ean \u0111i\u1ec7n tho\u1ea1i h\u1ed7 tr\u1ee3.
++Batas pekerja chunk	Gi\u1edbi h\u1ea1n worker chunk
++Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Gi\u1edbi h\u1ea1n s\u1ed1 worker t\u1ea1o v\u00e0 gh\u00e9p chunk, kh\u00f4ng ph\u1ea3i m\u1ecdi lu\u1ed3ng c\u1ee7a \u1ee9ng d\u1ee5ng. Gi\u00e1 tr\u1ecb nh\u1ecf gi\u1ea3m t\u1ea3i CPU nh\u01b0ng t\u1ea3i th\u1ebf gi\u1edbi ch\u1eadm h\u01a1n.
++Tanpa batas	Kh\u00f4ng gi\u1edbi h\u1ea1n
++Cache RAM	B\u1ed9 nh\u1edb \u0111\u1ec7m RAM
++Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	\u00c2m thanh \u0111\u00e3 gi\u1ea3i m\u00e3 (80%) v\u00e0 b\u1ed9 \u0111\u1ec7m mesh tr\u1ed1ng (20%), \u0111\u01b0\u1ee3c t\u1ea1o l\u1ea1i v\u1edbi c\u00f9ng ch\u1ea5t l\u01b0\u1ee3ng. Kh\u00f4ng ph\u1ea3i gi\u1edbi h\u1ea1n t\u1ed5ng RAM hay VRAM. Gi\u00e1 tr\u1ecb nh\u1ecf c\u00f3 th\u1ec3 t\u0103ng vi\u1ec7c cho CPU.
++Bawaan (80 MiB)	M\u1eb7c \u0111\u1ecbnh (80 MiB)
++Arah layar	H\u01b0\u1edbng m\u00e0n h\u00ecnh
++Arah layar saat bermain. Bawaannya landscape.	H\u01b0\u1edbng m\u00e0n h\u00ecnh khi ch\u01a1i. M\u1eb7c \u0111\u1ecbnh l\u00e0 ngang.
++Landscape	Ngang
++Landscape terbalik	Ngang ng\u01b0\u1ee3c
++Portrait	D\u1ecdc
++Portrait terbalik	D\u1ecdc ng\u01b0\u1ee3c
++Rasio layar	T\u1ec9 l\u1ec7 khung h\u00ecnh
++Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Gi\u1edbi h\u1ea1n khung nh\u00ecn game theo m\u1ed9t t\u1ec9 l\u1ec7. G\u1ed1c theo t\u1ec9 l\u1ec7 m\u00e0n h\u00ecnh c\u1ee7a \u0111i\u1ec7n tho\u1ea1i.
++Asli	G\u1ed1c
++Layar penuh imersif	To\u00e0n m\u00e0n h\u00ecnh \u0111\u1eafm ch\u00ecm
++Menyembunyikan bilah navigasi dan bilah status saat bermain.	\u1ea8n thanh \u0111i\u1ec1u h\u01b0\u1edbng v\u00e0 thanh tr\u1ea1ng th\u00e1i khi ch\u01a1i.
++Hindari poni layar	Tr\u00e1nh tai th\u1ecf m\u00e0n h\u00ecnh
++Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	D\u1ecbch khung game \u0111\u1ec3 l\u1ed7 camera ho\u1eb7c tai th\u1ecf kh\u00f4ng che m\u1ea5t.
++Perangkat input	Thi\u1ebft b\u1ecb nh\u1eadp
++Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	T\u1ef1 \u0111\u1ed9ng ch\u1ecdn gi\u1eefa c\u1ea3m \u1ee9ng, b\u00e0n ph\u00edm v\u00e0 chu\u1ed9t, ho\u1eb7c tay c\u1ea7m t\u00f9y thi\u1ebft b\u1ecb \u0111ang k\u1ebft n\u1ed1i.
++Layar sentuh	M\u00e0n h\u00ecnh c\u1ea3m \u1ee9ng
++Keyboard dan mouse	B\u00e0n ph\u00edm v\u00e0 chu\u1ed9t
++Server otomatis	M\u00e1y ch\u1ee7 t\u1ef1 v\u00e0o
++Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	\u0110\u1ec3 tr\u1ed1ng \u0111\u1ec3 ch\u01a1i th\u1ebf gi\u1edbi ri\u00eang. N\u1ebfu \u0111i\u1ec1n, PLAY s\u1ebd v\u00e0o th\u1eb3ng m\u00e1y ch\u1ee7 n\u00e0y.
++Contoh: mc.contoh.com:25565	V\u00ed d\u1ee5: mc.vidu.com:25565
++Setel ulang pengaturan Rust	\u0110\u1eb7t l\u1ea1i c\u00e0i \u0111\u1eb7t Rust
++Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	\u0110\u01b0a m\u1ecdi l\u1ef1a ch\u1ecdn \u1edf tab n\u00e0y v\u1ec1 m\u1eb7c \u0111\u1ecbnh c\u1ee7a engine. Instance v\u00e0 th\u1ebf gi\u1edbi kh\u00f4ng b\u1ecb \u0111\u1ee5ng t\u1edbi.
++Setel ulang	\u0110\u1eb7t l\u1ea1i
++Pengaturan Rust dikembalikan ke bawaan.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i c\u00e0i \u0111\u1eb7t Rust v\u1ec1 m\u1eb7c \u0111\u1ecbnh.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+index 61c12e3..73d8dbc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+@@ -118,7 +118,14 @@ object HorizonEngine {
+     }
+ 
+     /** Folder data mesin: sama dengan getFilesDir() milik HorizonActivity di proses :horizon. */
+-    private fun engineHome(context: Context): File = File(context.filesDir, "horizon")
++    internal fun engineHome(context: Context): File = File(context.filesDir, "horizon")
++
++    /**
++     * True bila sumber daya game sudah terpasang di folder mesin. Bila belum, PLAY pertama mengunduh sekitar
++     * 500 MiB lebih dulu. Hanya memeriksa satu folder, jadi aman dipanggil dari komposisi UI.
++     */
++    fun gameInstalled(context: Context): Boolean =
++        File(engineHome(context), ".local/horizon-client/$SUPPORTED_MC_VERSION").isDirectory
+ 
+     /** Nama pemain untuk mesin: 1 sampai 16 karakter ASCII yang tercetak, tanpa spasi (aturan Minecraft di mesin). */
+     private fun validEngineName(name: String): Boolean =
+@@ -229,7 +236,7 @@ object HorizonEngine {
+     /** Menulis permintaan peluncuran lalu membuka mesin. Selalu melepas penanda [starting]. */
+     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
+         return try {
+-            val firstRun = !File(engineHome(context), ".local/horizon-client/$SUPPORTED_MC_VERSION").isDirectory
++            val firstRun = !gameInstalled(context)
+             writeLaunchFile(context, account)
+             if (firstRun) {
+                 Toast.makeText(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+new file mode 100644
+index 0000000..82ffd25
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+@@ -0,0 +1,239 @@
++package com.israadev.nuxlauncher.core.horizon
++
++import android.content.Context
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asStateFlow
++import org.json.JSONObject
++import java.io.File
++import java.util.concurrent.Executors
++import java.util.concurrent.atomic.AtomicInteger
++
++/**
++ * Pengaturan khusus mesin Rust (Horizon). Pengaturan ini tidak sama dengan pengaturan jalur Java (Fabric, Forge,
++ * dan kawan-kawan): tidak ada JVM, RAM Java, argumen JVM, atau driver Zink di sini.
++ *
++ * Semua nilainya disimpan di berkas config milik mesin sendiri (`android-launcher.json`, lihat [RustSettingsStore]),
++ * dengan nama kunci dan nilai persis seperti yang dibaca mesin. Nilai yang tidak dikenal mesin membuat SELURUH config
++ * jatuh ke bawaan, jadi setiap nilai di bawah ini hanya boleh salah satu dari yang tercantum.
++ */
++data class RustSettings(
++    /** `vulkan-compatibility` (bawaan, paling aman), `vulkan` (batching GPU), `open-gl` (eksperimental). */
++    val renderer: String = RustSettingsStore.RENDERER_COMPAT,
++    /** Skala resolusi render, 25 sampai 100 persen. */
++    val renderScale: Int = 100,
++    /** Batas pekerja pembuat dan perakit chunk. 0 = tanpa batas tambahan. */
++    val workerLimit: Int = 0,
++    /** Anggaran cache RAM sekali pakai (MiB). 0 = bawaan mesin (80 MiB). */
++    val cacheBudgetMib: Int = 0,
++    /** Permintaan laju layar (Hz). 0 = bawaan sistem. */
++    val displayHz: Int = 0,
++    /** Petunjuk performa ke Android (hanya berguna di HP yang mendukungnya). */
++    val performanceHints: Boolean = false,
++    /** `auto`, `touch`, `keyboard-mouse`, atau `controller`. */
++    val inputHost: String = "auto",
++    /** `landscape`, `portrait`, `reverse-landscape`, `reverse-portrait`, atau `auto`. */
++    val orientation: String = "landscape",
++    /** Sembunyikan bilah navigasi dan status saat bermain. */
++    val immersive: Boolean = true,
++    /** Hindari area poni/lubang kamera. */
++    val avoidCutout: Boolean = false,
++    /** `native`, `wide` (16:9), `classic` (4:3), atau `square` (1:1). */
++    val aspect: String = "native",
++    /** Alamat server (`host` atau `host:port`) yang langsung dimasuki saat PLAY. Kosong = dunia sendiri. */
++    val server: String = ""
++)
++
++/**
++ * Membaca dan menulis config mesin Rust, langsung di berkas yang dibaca mesin: `<folder data mesin>/android-launcher.json`.
++ *
++ * - Hanya kunci milik tab Rust yang diubah. Kunci lain di berkas itu (profil, nama, proxy, dan seterusnya, yang
++ *   mungkin ditambah versi mesin yang lebih baru) dibiarkan apa adanya.
++ * - Berkas tidak dibuat sampai pemain benar-benar mengubah sesuatu. Selama itu mesin memakai bawaannya.
++ * - Penulisan satu per satu berurutan di satu utas latar (bukan di utas UI) dan atomik (tulis ke berkas sementara
++ *   lalu dipindah), jadi mesin tidak pernah membaca separuh isi.
++ * - Perubahan berlaku pada PLAY berikutnya; mesin membaca config saat dibuka.
++ */
++object RustSettingsStore {
++    const val RENDERER_COMPAT = "vulkan-compatibility"
++
++    private const val TAG = "RustSettings"
++    private const val CONFIG_FILE = "android-launcher.json"
++    private const val TEMP_FILE = "android-launcher.amber-tmp"
++
++    val RENDERERS = setOf(RENDERER_COMPAT, "vulkan", "open-gl")
++    val INPUT_HOSTS = setOf("auto", "touch", "keyboard-mouse", "controller")
++    val ORIENTATIONS = setOf("landscape", "portrait", "reverse-landscape", "reverse-portrait", "auto")
++    val ASPECTS = setOf("native", "wide", "classic", "square")
++
++    /** Laju layar yang diterima mesin (DISPLAY_RATES di mesin); nilai lain dibuang mesin menjadi 0. */
++    val DISPLAY_RATES = listOf(0, 30, 60, 90, 120, 144, 165)
++
++    /** Pilihan cepat skala render (PRESETS di mesin). */
++    val RENDER_SCALE_PRESETS = listOf(100, 85, 75, 67, 50, 25)
++
++    /** Pilihan anggaran cache (MiB) seperti di layar peluncur Horizon. */
++    val CACHE_BUDGETS = listOf(0, 16, 32, 64, 128, 256)
++
++    const val MAX_WORKERS = 16
++    private const val MAX_SERVER_CHARS = 260
++
++    private val state = MutableStateFlow(RustSettings())
++    val settings: StateFlow<RustSettings> = state.asStateFlow()
++
++    // Satu utas untuk semua berkas: urutan tulis sama dengan urutan ketukan, dan UI tidak pernah menunggu disk.
++    private val io = Executors.newSingleThreadExecutor { task ->
++        Thread(task, "rust-settings").apply { isDaemon = true }
++    }
++
++    // Naik setiap ada perubahan dari pemain. Hasil baca yang mulai sebelum perubahan itu dibuang, supaya
++    // pembacaan lama tidak menimpa pilihan yang baru saja diketuk.
++    private val revision = AtomicInteger(0)
++    private val lock = Any()
++
++    /** Folder data mesin. Sama dengan [HorizonEngine.engineHome]; satu sumber agar tidak bisa berselisih. */
++    private fun configFile(context: Context): File = File(HorizonEngine.engineHome(context), CONFIG_FILE)
++
++    /** Membaca ulang dari berkas (dipanggil saat tab dibuka). Hasilnya masuk ke [settings]. */
++    fun reload(context: Context) {
++        val file = configFile(context.applicationContext)
++        val startedAt = revision.get()
++        io.execute {
++            val loaded = try {
++                parse(readJson(file))
++            } catch (e: Exception) {
++                LauncherLog.w(TAG, "Config mesin Rust tidak terbaca, memakai bawaan: ${e.message}", e)
++                RustSettings()
++            }
++            synchronized(lock) {
++                if (revision.get() == startedAt) state.value = loaded
++            }
++        }
++    }
++
++    /** Mengubah pengaturan: tampilan langsung berubah, berkas ditulis di latar. */
++    fun update(context: Context, change: (RustSettings) -> RustSettings) {
++        val file = configFile(context.applicationContext)
++        val next = synchronized(lock) {
++            val candidate = sanitize(change(state.value))
++            // Slider yang digeser mengirim nilai sama berkali-kali; tidak perlu menulis ulang berkas.
++            if (candidate == state.value) return
++            revision.incrementAndGet()
++            state.value = candidate
++            candidate
++        }
++        io.execute { write(file, next, reset = false) }
++    }
++
++    /** Mengembalikan semua kunci milik tab Rust ke bawaan mesin (kuncinya dihapus dari berkas). */
++    fun reset(context: Context) {
++        val file = configFile(context.applicationContext)
++        synchronized(lock) {
++            revision.incrementAndGet()
++            state.value = RustSettings()
++        }
++        io.execute { write(file, RustSettings(), reset = true) }
++    }
++
++    // ---- baca ----
++
++    private fun readJson(file: File): JSONObject {
++        if (!file.isFile) return JSONObject()
++        return try {
++            JSONObject(file.readText())
++        } catch (e: Exception) {
++            // Berkas rusak: mesin sendiri juga memperlakukannya sebagai kosong.
++            LauncherLog.w(TAG, "android-launcher.json rusak, dianggap kosong: ${e.message}")
++            JSONObject()
++        }
++    }
++
++    private fun parse(json: JSONObject): RustSettings {
++        val defaults = RustSettings()
++        return sanitize(
++            RustSettings(
++                renderer = json.optString("renderer", defaults.renderer),
++                renderScale = json.optInt("render_scale", defaults.renderScale),
++                workerLimit = json.optInt("worker_limit", defaults.workerLimit),
++                cacheBudgetMib = json.optInt("cache_budget_mib", defaults.cacheBudgetMib),
++                displayHz = json.optInt("display_hz", defaults.displayHz),
++                performanceHints = json.optBoolean("performance_hints", defaults.performanceHints),
++                inputHost = json.optString("input_host", defaults.inputHost),
++                orientation = json.optString("orientation", defaults.orientation),
++                immersive = json.optBoolean("immersive", defaults.immersive),
++                avoidCutout = json.optBoolean("avoid_cutout", defaults.avoidCutout),
++                aspect = json.optString("aspect", defaults.aspect),
++                server = if (json.isNull("server")) "" else json.optString("server", "")
++            )
++        )
++    }
++
++    /** Memaksa setiap nilai ke yang boleh dibaca mesin. Nilai asing kembali ke bawaan, angka dijepit. */
++    private fun sanitize(s: RustSettings): RustSettings {
++        val defaults = RustSettings()
++        return s.copy(
++            renderer = if (s.renderer in RENDERERS) s.renderer else defaults.renderer,
++            renderScale = s.renderScale.coerceIn(25, 100),
++            workerLimit = s.workerLimit.coerceIn(0, 64),
++            cacheBudgetMib = s.cacheBudgetMib.coerceIn(0, 1024),
++            displayHz = if (s.displayHz in DISPLAY_RATES) s.displayHz else 0,
++            inputHost = if (s.inputHost in INPUT_HOSTS) s.inputHost else defaults.inputHost,
++            orientation = if (s.orientation in ORIENTATIONS) s.orientation else defaults.orientation,
++            aspect = if (s.aspect in ASPECTS) s.aspect else defaults.aspect,
++            server = cleanServer(s.server)
++        )
++    }
++
++    /** Alamat server tanpa spasi dan tanpa karakter kontrol; dibatasi panjangnya. Kosong tetap kosong. */
++    fun cleanServer(raw: String): String =
++        raw.filter { !it.isWhitespace() && it.code >= 32 }.take(MAX_SERVER_CHARS)
++
++    // ---- tulis ----
++
++    private fun write(file: File, s: RustSettings, reset: Boolean) {
++        try {
++            val dir = file.parentFile ?: return
++            if (!dir.isDirectory && !dir.mkdirs()) {
++                LauncherLog.w(TAG, "Folder data mesin tidak bisa dibuat: $dir")
++                return
++            }
++            if (reset && !file.isFile) return // tidak ada yang perlu dihapus
++            val json = readJson(file)
++            if (reset) {
++                for (key in OWN_KEYS) json.remove(key)
++            } else {
++                json.put("renderer", s.renderer)
++                json.put("render_scale", s.renderScale)
++                json.put("worker_limit", s.workerLimit)
++                json.put("cache_budget_mib", s.cacheBudgetMib)
++                json.put("display_hz", s.displayHz)
++                json.put("performance_hints", s.performanceHints)
++                json.put("input_host", s.inputHost)
++                json.put("orientation", s.orientation)
++                json.put("immersive", s.immersive)
++                json.put("avoid_cutout", s.avoidCutout)
++                json.put("aspect", s.aspect)
++                json.put("server", s.server)
++            }
++            val temp = File(dir, TEMP_FILE)
++            temp.writeText(json.toString(2))
++            // rename(2) di Android menimpa berkas lama secara atomik, jadi mesin tidak pernah melihat berkas hilang.
++            // Bila sebuah HP menolak menimpa, hapus yang lama lalu pindahkan.
++            if (!temp.renameTo(file)) {
++                if (file.exists()) file.delete()
++                if (!temp.renameTo(file)) {
++                    temp.delete()
++                    LauncherLog.w(TAG, "Config mesin Rust tidak bisa disimpan: $file")
++                }
++            }
++        } catch (e: Exception) {
++            LauncherLog.w(TAG, "Config mesin Rust gagal ditulis: ${e.message}", e)
++        }
++    }
++
++    private val OWN_KEYS = listOf(
++        "renderer", "render_scale", "worker_limit", "cache_budget_mib", "display_hz", "performance_hints",
++        "input_host", "orientation", "immersive", "avoid_cutout", "aspect", "server"
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+new file mode 100644
+index 0000000..c5739d1
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+@@ -0,0 +1,324 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.collectAsState
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.horizon.HorizonEngine
++import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import kotlin.math.roundToInt
++
++/**
++ * Isi tab Rust di layar Pengaturan. Pengaturan mesin Rust (Horizon) berbeda dari jalur Java (Fabric, Forge, dan
++ * kawan-kawan), jadi punya tab sendiri dan tidak dicampur ke tab Game. Setiap fungsi di sini mengisi satu kelompok
++ * (SettingsGroup di SettingsScreen). Nilainya disimpan oleh [RustSettingsStore] ke config milik mesin sendiri dan
++ * berlaku pada PLAY berikutnya.
++ */
++
++/** Membaca ulang config mesin dari berkas setiap tab dibuka. Tidak menggambar apa pun. */
++@Composable
++fun RustSettingsLoader() {
++    val context = LocalContext.current
++    LaunchedEffect(Unit) { RustSettingsStore.reload(context) }
++}
++
++/** Baris keterangan: judul + keterangan di kiri, nilai teks di kanan (tidak bisa diketuk). */
++@Composable
++private fun RustInfoRow(title: String, desc: String?, value: String, warn: Boolean = false) {
++    SettingFrame(title, desc) {
++        Row(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(vertical = 10.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            SettingRowText(title = title, desc = desc, modifier = Modifier.weight(1f))
++            Spacer(modifier = Modifier.width(12.dp))
++            Text(
++                text = value,
++                color = if (warn) AmberUi.Danger else AmberUi.Text,
++                fontSize = 15.sp,
++                fontWeight = FontWeight.SemiBold,
++                maxLines = 1
++            )
++        }
++    }
++}
++
++/** Status mesin dan sumber daya game, plus catatan bahwa pengaturan ini hanya untuk instance Rust. */
++@Composable
++fun RustStatusRows() {
++    val context = LocalContext.current
++    val availability = remember { HorizonEngine.availability(context) }
++    val installed = remember { HorizonEngine.gameInstalled(context) }
++
++    val unavailable = availability as? HorizonEngine.Availability.Unavailable
++    val lowRam = (availability as? HorizonEngine.Availability.Ready)?.lowRam == true
++    RustInfoRow(
++        title = "Mesin Rust (Horizon)",
++        desc = when {
++            unavailable != null -> unavailable.reason
++            lowRam -> HorizonEngine.LOW_RAM_WARNING
++            else -> "Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java."
++        },
++        value = if (unavailable != null) "Tidak tersedia" else "Siap",
++        warn = unavailable != null
++    )
++    SettingDivider()
++    RustInfoRow(
++        title = "Sumber daya game",
++        desc = "Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.",
++        value = if (installed) "Terpasang" else "Belum diunduh"
++    )
++    SettingDivider()
++    RustInfoRow(
++        title = "Versi Minecraft",
++        desc = "Satu-satunya versi yang dikerjakan mesin ini.",
++        value = HorizonEngine.SUPPORTED_MC_VERSION
++    )
++    SettingDivider()
++    SettingFrame(
++        "Berlaku untuk instance Rust",
++        "Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh."
++    ) {
++        SettingRowText(
++            title = "Berlaku untuk instance Rust",
++            desc = "Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.",
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(vertical = 10.dp)
++        )
++    }
++}
++
++/** Renderer dan skala resolusi. */
++@Composable
++fun RustGraphicsRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    SettingChoiceRow(
++        title = "Renderer Rust",
++        desc = "Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.",
++        options = listOf(
++            RustSettingsStore.RENDERER_COMPAT to "Vulkan kompatibel",
++            "vulkan" to "Vulkan cepat",
++            "open-gl" to "OpenGL ES"
++        ),
++        selected = s.renderer,
++        onSelect = { value -> RustSettingsStore.update(context) { it.copy(renderer = value) } }
++    )
++    SettingDivider()
++    SettingSliderRow(
++        title = "Skala resolusi Rust",
++        desc = "Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.",
++        valueText = "${s.renderScale}%",
++        value = s.renderScale.toFloat(),
++        valueRange = 25f..100f,
++        steps = 14,
++        onValueChange = { raw ->
++            val percent = ((raw / 5f).roundToInt() * 5).coerceIn(25, 100)
++            RustSettingsStore.update(context) { it.copy(renderScale = percent) }
++        },
++        footer = {
++            Row(
++                modifier = Modifier
++                    .padding(top = 8.dp)
++                    .horizontalScroll(rememberScrollState()),
++                horizontalArrangement = Arrangement.spacedBy(8.dp)
++            ) {
++                RustSettingsStore.RENDER_SCALE_PRESETS.forEach { preset ->
++                    SettingChip(
++                        text = "$preset%",
++                        selected = s.renderScale == preset,
++                        onClick = { RustSettingsStore.update(context) { it.copy(renderScale = preset) } }
++                    )
++                }
++            }
++        }
++    )
++}
++
++/** Laju layar, petunjuk performa, batas pekerja chunk, dan cache. */
++@Composable
++fun RustPerformanceRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    SettingChoiceRow(
++        title = "Laju layar",
++        desc = "Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.",
++        options = RustSettingsStore.DISPLAY_RATES.map { hz -> hz to (if (hz == 0) "Bawaan sistem" else "$hz Hz") },
++        selected = s.displayHz,
++        onSelect = { hz -> RustSettingsStore.update(context) { it.copy(displayHz = hz) } }
++    )
++    SettingDivider()
++    SettingSwitchRow(
++        title = "Petunjuk performa",
++        desc = "Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.",
++        checked = s.performanceHints,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(performanceHints = on) } }
++    )
++    SettingDivider()
++    SettingSliderRow(
++        title = "Batas pekerja chunk",
++        desc = "Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.",
++        valueText = if (s.workerLimit == 0) "Tanpa batas" else "${s.workerLimit}",
++        value = s.workerLimit.toFloat(),
++        valueRange = 0f..RustSettingsStore.MAX_WORKERS.toFloat(),
++        steps = RustSettingsStore.MAX_WORKERS - 1,
++        onValueChange = { raw ->
++            val limit = raw.roundToInt().coerceIn(0, RustSettingsStore.MAX_WORKERS)
++            RustSettingsStore.update(context) { it.copy(workerLimit = limit) }
++        }
++    )
++    SettingDivider()
++    SettingChoiceRow(
++        title = "Cache RAM",
++        desc = "Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.",
++        options = RustSettingsStore.CACHE_BUDGETS.map { mib -> mib to (if (mib == 0) "Bawaan (80 MiB)" else "$mib MiB") },
++        selected = s.cacheBudgetMib,
++        onSelect = { mib -> RustSettingsStore.update(context) { it.copy(cacheBudgetMib = mib) } }
++    )
++}
++
++/** Arah layar, rasio, mode layar penuh, dan area poni. */
++@Composable
++fun RustScreenRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    SettingChoiceRow(
++        title = "Arah layar",
++        desc = "Arah layar saat bermain. Bawaannya landscape.",
++        options = listOf(
++            "landscape" to "Landscape",
++            "reverse-landscape" to "Landscape terbalik",
++            "portrait" to "Portrait",
++            "reverse-portrait" to "Portrait terbalik",
++            "auto" to "Otomatis"
++        ),
++        selected = s.orientation,
++        onSelect = { value -> RustSettingsStore.update(context) { it.copy(orientation = value) } }
++    )
++    SettingDivider()
++    SettingChoiceRow(
++        title = "Rasio layar",
++        desc = "Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.",
++        options = listOf(
++            "native" to "Asli",
++            "wide" to "16:9",
++            "classic" to "4:3",
++            "square" to "1:1"
++        ),
++        selected = s.aspect,
++        onSelect = { value -> RustSettingsStore.update(context) { it.copy(aspect = value) } }
++    )
++    SettingDivider()
++    SettingSwitchRow(
++        title = "Layar penuh imersif",
++        desc = "Menyembunyikan bilah navigasi dan bilah status saat bermain.",
++        checked = s.immersive,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(immersive = on) } }
++    )
++    SettingDivider()
++    SettingSwitchRow(
++        title = "Hindari poni layar",
++        desc = "Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.",
++        checked = s.avoidCutout,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(avoidCutout = on) } }
++    )
++}
++
++/** Perangkat input utama mesin. */
++@Composable
++fun RustControlRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    SettingChoiceRow(
++        title = "Perangkat input",
++        desc = "Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.",
++        options = listOf(
++            "auto" to "Otomatis",
++            "touch" to "Layar sentuh",
++            "keyboard-mouse" to "Keyboard dan mouse",
++            "controller" to "Gamepad"
++        ),
++        selected = s.inputHost,
++        onSelect = { value -> RustSettingsStore.update(context) { it.copy(inputHost = value) } }
++    )
++}
++
++/** Server yang langsung dimasuki saat PLAY, dan tombol setel ulang. */
++@Composable
++fun RustGameRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    // Teks isian dipegang di sini agar kursor tidak melompat; disamakan ulang bila config selesai dibaca.
++    var text by remember { mutableStateOf(s.server) }
++    LaunchedEffect(s.server) {
++        if (RustSettingsStore.cleanServer(text) != s.server) text = s.server
++    }
++
++    SettingFrame(
++        "Server otomatis",
++        "Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini."
++    ) {
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(vertical = 9.dp)
++        ) {
++            SettingRowText(
++                title = "Server otomatis",
++                desc = "Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini."
++            )
++            Spacer(modifier = Modifier.height(8.dp))
++            NuxTextField(
++                value = text,
++                onValueChange = { raw ->
++                    val cleaned = RustSettingsStore.cleanServer(raw)
++                    text = cleaned
++                    RustSettingsStore.update(context) { it.copy(server = cleaned) }
++                },
++                placeholder = "Contoh: mc.contoh.com:25565"
++            )
++        }
++    }
++    SettingDivider()
++    SettingActionRow(
++        title = "Setel ulang pengaturan Rust",
++        desc = "Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.",
++        actionLabel = "Setel ulang",
++        onClick = {
++            RustSettingsStore.reset(context)
++            text = ""
++            Toast.makeText(context, "Pengaturan Rust dikembalikan ke bawaan.", Toast.LENGTH_SHORT).show()
++        },
++        danger = true
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 0bb4138..6ea39dd 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -241,7 +241,8 @@ fun SettingsScreen(
+         }
+     }
+ 
+-    // Kategori aktif: 0 = Game, 1 = Kontrol, 2 = Tampilan, 3 = Tentang. Isinya digulir sendiri.
++    // Kategori aktif: 0 = Game, 1 = Kontrol, 2 = Tampilan, 3 = Tentang, 4 = Rust (urutan di sisi kiri: Game, Rust,
++    // Kontrol, Tampilan, Tentang). Isinya digulir sendiri.
+     var section by remember { mutableIntStateOf(0) }
+     var query by remember { mutableStateOf("") }
+     val searching = query.isNotBlank()
+@@ -302,6 +303,8 @@ fun SettingsScreen(
+             ) {
+                 listOf(
+                     Triple(0, "Game", Icons.Outlined.ViewInAr),
++                    // Mesin Rust punya pengaturan sendiri yang berbeda dari jalur Java, jadi tidak digabung ke Game.
++                    Triple(4, "Rust", Icons.Outlined.Memory),
+                     Triple(1, "Kontrol", Icons.Outlined.SportsEsports),
+                     Triple(2, "Tampilan", Icons.Outlined.Image),
+                     Triple(3, "Tentang", Icons.Outlined.Info)
+@@ -622,6 +625,18 @@ fun SettingsScreen(
+                         }
+                     }
+ 
++                    // ===================== RUST =====================
++                    // Pengaturan mesin Rust (Horizon). Disimpan di config mesin sendiri, tidak lewat LauncherSettings.
++                    if (searching || section == 4) {
++                        RustSettingsLoader()
++                        SettingsGroup("Mesin Rust") { RustStatusRows() }
++                        SettingsGroup("Grafis") { RustGraphicsRows() }
++                        SettingsGroup("Performa") { RustPerformanceRows() }
++                        SettingsGroup("Layar") { RustScreenRows() }
++                        SettingsGroup("Kontrol") { RustControlRows() }
++                        SettingsGroup("Permainan") { RustGameRows() }
++                    }
++
+                     // ===================== KONTROL =====================
+                     if (searching || section == 1) {
+                         if (!searching) SettingsGroup("Tata letak kontrol") {
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 2c87290..011b86e 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -71,6 +71,18 @@ Sisi launcher: token Microsoft yang berumur kurang dari 16 jam dipakai langsung
+ 
+ Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan berkas itu dan menampilkan layar peluncur Horizon seperti sebelumnya. Perubahan Amber dijaga sekecil mungkin; bila `commit=` diganti, berkas `.diff` harus dicek ulang terhadap sumber baru (skrip pembangun berhenti dengan pesan jelas bila tidak cocok).
+ 
++### Pengaturan Rust
++
++Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, laju layar, petunjuk performa, batas pekerja chunk, cache RAM, arah dan rasio layar, layar penuh imersif, poni, perangkat input, server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
++
++Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`). Karena itu:
++
++- Tidak ada perubahan pada mesin, jadi **tidak perlu membangun ulang mesin**; cukup APK baru.
++- Perubahan berlaku pada PLAY berikutnya (mesin membaca config saat dibuka) dan hanya untuk instance Rust. Instance Java tidak terpengaruh.
++- Hanya kunci milik tab ini yang disentuh. Kunci lain di berkas itu dibiarkan, dan berkasnya baru dibuat saat pemain mengubah sesuatu. Tombol setel ulang menghapus kunci-kunci itu sehingga mesin memakai bawaannya.
++- Tulis berurutan dan atomik (berkas sementara lalu dipindah) di utas latar. Nilai di luar yang dikenal mesin tidak pernah ditulis, karena satu nilai asing membuat mesin membuang seluruh config.
++- Layar peluncur milik mesin menulis berkas yang sama; keduanya saling konsisten karena memakai nama kunci yang sama.
++
+ ### Mengganti versi mesin
+ 
+ Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), lalu upload perubahannya sebagai patch seperti biasa: run yang sama membangun mesin barunya. Mengedit isi `.diff` juga cukup begitu (hash isinya ikut di tanda Release). Perlu folder patch baru? Buat `third_party/horizon-patches/<nama baru>/` dan ganti `patch_set=`. Bila mesinnya gagal dibangun, build APK tetap lolos tanpa mesin dan memberi peringatan.
+@@ -121,6 +133,8 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
+ | `AndroidManifest.xml` | Mendaftarkan activity itu di proses `:horizon` |
+ | `CreateInstanceScreen.kt` | Opsi Rust di rel loader; versi 26.3 terpilih otomatis; Install dimatikan bila mesin tidak tersedia |
+ | `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust memakai akun yang dipilih lalu membuka mesin, tanpa Java atau unduhan launcher |
++| `core/horizon/RustSettings.kt` | Membaca dan menulis `android-launcher.json` (pengaturan tab Rust) tanpa menyentuh kunci lain |
++| `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
+ | `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
+ | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
+ | `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |
+@@ -141,6 +155,7 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
+ 5. Ulangi dengan akun **Microsoft**: nama dan skin sesuai akun, dan masuk server online tanpa "Invalid session".
+ 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
+ 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
++8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
+ 
+ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
+ 
+@@ -149,12 +164,12 @@ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses
+ - Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
+ - Tanpa mod Java, tanpa Fabric, Forge, NeoForge, dan layar Mod launcher tidak berlaku untuk instance Rust.
+ - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
+-- Server tujuan, mod, dan pengaturan mesin belum bisa diatur dari launcher.
++- Mod belum bisa diatur dari launcher. Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
+ - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
+ - Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
+ 
+ ## Rencana berikutnya
+ 
+-- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher, dan pengaturan mesin dibuat tempatnya sendiri di launcher.
++- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher.
+ - Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
+ - Akun Ely.by.
+# FIN part=1/1 files=8

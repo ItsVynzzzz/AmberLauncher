@@ -9,3 +9,26 @@ Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fab
 Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	Ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft {0}. Ch\u00ednh engine s\u1ebd t\u1ea3i t\u00e0i nguy\u00ean game (kho\u1ea3ng 500 MiB) \u1edf l\u1ea7n m\u1edf \u0111\u1ea7u ti\u00ean.
 Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Th\u1eed nghi\u1ec7m: y\u00eau c\u1ea7u Android 9 tr\u1edf l\u00ean v\u00e0 \u0111i\u1ec7n tho\u1ea1i 64-bit.
 Tanpa Java	Kh\u00f4ng d\u00f9ng Java
+# Shader dan Resource Pack untuk mesin Rust
+Jenis berkas ini belum didukung mesin Rust.	Lo\u1ea1i t\u1ec7p n\u00e0y ch\u01b0a \u0111\u01b0\u1ee3c engine Rust h\u1ed7 tr\u1ee3.
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	T\u00ean t\u1ec7p kh\u00f4ng ph\u00f9 h\u1ee3p v\u1edbi engine Rust (qu\u00e1 d\u00e0i ho\u1eb7c ch\u1ee9a k\u00fd t\u1ef1 b\u1ecb c\u1ea5m).
+Mesin Rust hanya menerima berkas .zip di sini.	Engine Rust ch\u1ec9 nh\u1eadn t\u1ec7p .zip \u1edf \u0111\u00e2y.
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	T\u1ec7p l\u1edbn h\u01a1n 256 MB, qu\u00e1 l\u1edbn \u0111\u1ed1i v\u1edbi engine Rust.
+Arsip rusak atau tidak bisa dibaca.	T\u1ec7p n\u00e9n b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c.
+Arsip berisi terlalu banyak berkas.	T\u1ec7p n\u00e9n ch\u1ee9a qu\u00e1 nhi\u1ec1u t\u1ec7p.
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	T\u1ec7p n\u00e9n ch\u1ee9a \u0111\u01b0\u1eddng d\u1eabn kh\u00f4ng an to\u00e0n ho\u1eb7c tr\u00f9ng l\u1eb7p n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	T\u1ec7p n\u00e9n qu\u00e1 l\u1edbn sau khi gi\u1ea3i n\u00e9n (h\u01a1n 512 MB).
+Metadata resource pack (pack.mcmeta) tidak valid.	Si\u00eau d\u1eef li\u1ec7u resource pack (pack.mcmeta) kh\u00f4ng h\u1ee3p l\u1ec7.
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i resource pack: kh\u00f4ng t\u00ecm th\u1ea5y pack.mcmeta \u1edf g\u1ed1c t\u1ec7p n\u00e9n.
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i shader pack: kh\u00f4ng t\u00ecm th\u1ea5y th\u01b0 m\u1ee5c shaders \u1edf g\u1ed1c t\u1ec7p n\u00e9n.
+Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	\u0110\u00e2y l\u00e0 shader g\u1ed1c c\u1ee7a Horizon. H\u00e3y c\u00e0i t\u1eeb menu Nh\u1eadp b\u00ean trong engine Rust (\u0111\u1ecbnh d\u1ea1ng .hshader).
+Tidak ada berkas .zip yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .zip ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	Ngu\u1ed3n kh\u00f4ng cung c\u1ea5p m\u00e3 ki\u1ec3m tra c\u1ee7a t\u1ec7p n\u00ean kh\u00f4ng th\u1ec3 x\u00e1c minh b\u1ea3n t\u1ea3i xu\u1ed1ng.
+Gagal menyimpan berkas ke folder mesin Rust.	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p v\u00e0o th\u01b0 m\u1ee5c c\u1ee7a engine Rust.
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	C\u00e0i \u0111\u1eb7t game ch\u01b0a \u0111\u01b0\u1ee3c t\u1ea1o. H\u00e3y m\u1edf game m\u1ed9t l\u1ea7n, v\u00e0o C\u00e0i \u0111\u1eb7t v\u00e0 \u0111\u1ed5i m\u1ed9t t\u00f9y ch\u1ecdn, r\u1ed3i th\u1eed l\u1ea1i.
+Gagal menyimpan pilihan ke pengaturan mesin.	Kh\u00f4ng th\u1ec3 l\u01b0u l\u1ef1a ch\u1ecdn v\u00e0o c\u00e0i \u0111\u1eb7t c\u1ee7a engine.
+Memeriksa {0}...	\u0110ang ki\u1ec3m tra {0}...
+Gagal membuka berkas yang dipilih	Kh\u00f4ng th\u1ec3 m\u1edf t\u1ec7p \u0111\u00e3 ch\u1ecdn
+Coba ubah kata kunci	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Engine Rust: b\u1eadt c\u00f4ng t\u1eafc trong danh s\u00e1ch \u0110\u00e3 c\u00e0i \u0111\u1ec3 d\u00f9ng. C\u00f3 hi\u1ec7u l\u1ef1c v\u00e0o l\u1ea7n m\u1edf game ti\u1ebfp theo.
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shader tr\u00ean engine Rust v\u1eabn \u0111ang th\u1eed nghi\u1ec7m v\u00e0 c\u00f3 th\u1ec3 l\u00e0m n\u1eb7ng \u0111i\u1ec7n tho\u1ea1i n\u00e0y.

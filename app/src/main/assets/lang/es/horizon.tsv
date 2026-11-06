@@ -9,3 +9,26 @@ Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fab
 Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	Solo admite Minecraft {0}. El propio motor descarga los recursos del juego (unos 500 MiB) la primera vez que se abre.
 Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Experimental: requiere Android 9 o superior y un tel\u00e9fono de 64 bits.
 Tanpa Java	Sin Java
+# Shader dan Resource Pack untuk mesin Rust
+Jenis berkas ini belum didukung mesin Rust.	Este tipo de archivo a\u00fan no es compatible con el motor Rust.
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	El nombre del archivo no es adecuado para el motor Rust (demasiado largo o con caracteres prohibidos).
+Mesin Rust hanya menerima berkas .zip di sini.	El motor Rust solo acepta archivos .zip aqu\u00ed.
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	El archivo supera los 256 MB, demasiado grande para el motor Rust.
+Arsip rusak atau tidak bisa dibaca.	El archivo comprimido est\u00e1 da\u00f1ado o no se puede leer.
+Arsip berisi terlalu banyak berkas.	El archivo comprimido contiene demasiados archivos.
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	El archivo comprimido contiene rutas peligrosas o duplicadas, as\u00ed que no se instal\u00f3.
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	El archivo comprimido es demasiado grande al descomprimirse (m\u00e1s de 512 MB).
+Metadata resource pack (pack.mcmeta) tidak valid.	Los metadatos del paquete de recursos (pack.mcmeta) no son v\u00e1lidos.
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Este archivo no es un paquete de recursos: no se encontr\u00f3 pack.mcmeta en la ra\u00edz del archivo comprimido.
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Este archivo no es un paquete de shaders: no se encontr\u00f3 la carpeta shaders en la ra\u00edz del archivo comprimido.
+Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	Es un shader nativo de Horizon. Inst\u00e1lalo desde el men\u00fa Importar dentro del motor Rust (formato .hshader).
+Tidak ada berkas .zip yang cocok di versi ini.	No hay ning\u00fan archivo .zip compatible en esta versi\u00f3n.
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	La fuente no proporciona la suma de verificaci\u00f3n del archivo, as\u00ed que no se puede comprobar la descarga.
+Gagal menyimpan berkas ke folder mesin Rust.	No se pudo guardar el archivo en la carpeta del motor Rust.
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	Los ajustes del juego a\u00fan no se han creado. Abre el juego una vez, entra en Ajustes, cambia una opci\u00f3n y vuelve a intentarlo.
+Gagal menyimpan pilihan ke pengaturan mesin.	No se pudo guardar la selecci\u00f3n en los ajustes del motor.
+Memeriksa {0}...	Comprobando {0}...
+Gagal membuka berkas yang dipilih	No se pudo abrir el archivo seleccionado
+Coba ubah kata kunci	Prueba a cambiar la palabra clave
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Motor Rust: activa el interruptor en la lista de instalados para usarlo. Se aplica la pr\u00f3xima vez que abras el juego.
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Los shaders del motor Rust a\u00fan son experimentales y pueden resultar pesados para este tel\u00e9fono.

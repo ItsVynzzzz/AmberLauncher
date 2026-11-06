@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.israadev.nuxlauncher.core.horizon.HorizonContent
+import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.mods.CurseForgeApi
@@ -185,8 +187,16 @@ fun ModsScreen(
     // Mode: "installed" (kelola isi instance) | "browse" (jelajah Modrinth)
     val mainMode = if (mode == ModsMode.MANAGE) "installed" else "browse"
 
+    // Mesin Rust (Horizon) hanya memakai Shader dan Resource Pack, dan hanya dari Modrinth
+    val rustInstance = HorizonEngine.isEngine(selectedInstance?.loader)
+
     // Item Type: "mods" | "modpacks" | "resourcepacks" | "shaderpacks" | "datapacks"
-    var activeType by remember { mutableStateOf(initialType) }
+    var activeTypeState by remember { mutableStateOf(initialType) }
+    val activeType = if (rustInstance && !HorizonContent.supports(activeTypeState)) {
+        HorizonContent.TYPE_SHADERS
+    } else {
+        activeTypeState
+    }
 
     // World state for Datapacks
     var worlds by remember { mutableStateOf<List<WorldInfo>>(emptyList()) }
@@ -212,7 +222,7 @@ fun ModsScreen(
     var browseSource by remember { mutableStateOf(NuxModManager.SOURCE_MODRINTH) }
     var showKeyDialog by remember { mutableStateOf(false) }
     var keyProblem by remember { mutableStateOf(false) }
-    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE
+    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
     val sourceLabel = if (isCurseForge) "CurseForge" else "Modrinth"
     var showCategoryMenu by remember { mutableStateOf(false) }
     var showVersionMenu by remember { mutableStateOf(false) }
@@ -267,7 +277,7 @@ fun ModsScreen(
         isSearching = true
         searchErrorMessage = null
         keyProblem = false
-        val source = browseSource
+        val source = if (rustInstance) NuxModManager.SOURCE_MODRINTH else browseSource
         scope.launch {
             val cat = if (selectedCategory == "Semua") null else selectedCategory
             val res = NuxModManager.searchProjects(
@@ -489,7 +499,11 @@ fun ModsScreen(
                 if (failure is CurseForgeApi.KeyException) showKeyDialog = true
                 Toast.makeText(
                     context,
-                    failure?.message ?: "Tidak ada versi cocok untuk ${inst.mcVersion}!",
+                    failure?.message ?: if (rustInstance) {
+                        HorizonContent.MSG_NO_ZIP
+                    } else {
+                        "Tidak ada versi cocok untuk ${inst.mcVersion}!"
+                    },
                     Toast.LENGTH_LONG
                 ).show()
                 downloadingProjectIds = downloadingProjectIds - hit.projectId
@@ -597,7 +611,7 @@ fun ModsScreen(
                 onSettings = onOpenSettings
             )
             if (mainMode == "browse") {
-                ModsSourcePill(
+                if (!rustInstance) ModsSourcePill(
                     selectedSource = browseSource,
                     onSelect = { src ->
                         if (src != browseSource) {
@@ -666,13 +680,13 @@ fun ModsScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                MODS_TYPE_ITEMS.forEach { (typeId, typeLabel, typeIcon) ->
+                MODS_TYPE_ITEMS.filter { !rustInstance || HorizonContent.supports(it.first) }.forEach { (typeId, typeLabel, typeIcon) ->
                     AmberSideItem(
                         icon = typeIcon,
                         label = typeLabel,
                         selected = activeType == typeId,
                         onClick = {
-                            activeType = typeId
+                            activeTypeState = typeId
                             selectedCategory = "Semua"
                         }
                     )
@@ -723,11 +737,14 @@ fun ModsScreen(
                                     onClick = { showCategoryMenu = true }
                                 )
                             }
-                            AmberFilterPill(
-                                label = "Versi",
-                                value = if (filterByGameVersion) "Auto" else "Semua",
-                                onClick = { showVersionMenu = true }
-                            )
+                            // Shader dan resource pack untuk mesin Rust tidak disaring per versi game
+                            if (!rustInstance) {
+                                AmberFilterPill(
+                                    label = "Versi",
+                                    value = if (filterByGameVersion) "Auto" else "Semua",
+                                    onClick = { showVersionMenu = true }
+                                )
+                            }
                             if (activeType == "mods" || activeType == "modpacks") {
                                 AmberFilterPill(
                                     label = "Loader",
@@ -742,6 +759,10 @@ fun ModsScreen(
                             )
                         }
                     }
+                }
+
+                if (rustInstance) {
+                    RustNotice(isShader = activeType == HorizonContent.TYPE_SHADERS)
                 }
 
                 // =====================================================================
@@ -780,8 +801,21 @@ fun ModsScreen(
                                     item = item,
                                     onToggle = {
                                         scope.launch {
-                                            val targetWorld = if (activeType == "datapacks") selectedWorld else null
-                                            NuxModManager.toggleItemEnabled(context, currentInst, activeType, item, targetWorld)
+                                            if (rustInstance) {
+                                                // Mesin Rust: pilihan disimpan di pengaturan mesin, bukan ganti nama berkas
+                                                val picked = NuxModManager.toggleEngineItem(context, activeType, item)
+                                                val problem = picked.exceptionOrNull()
+                                                if (problem != null) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        problem.message ?: HorizonContent.MSG_SELECT,
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
+                                            } else {
+                                                val targetWorld = if (activeType == "datapacks") selectedWorld else null
+                                                NuxModManager.toggleItemEnabled(context, currentInst, activeType, item, targetWorld)
+                                            }
                                             reloadInstalled()
                                         }
                                     },
@@ -810,13 +844,17 @@ fun ModsScreen(
                     } else if (searchHits.isEmpty()) {
                         ModsMessage(
                             icon = Icons.Outlined.SearchOff,
-                            title = if (filterByGameVersion) {
+                            title = if (filterByGameVersion && !rustInstance) {
                                 "Tidak ada hasil cocok untuk Minecraft ${currentInst.mcVersion} (${currentInst.loader.uppercase()})"
                             } else {
                                 "Tidak ada hasil ditemukan untuk kata kunci ini"
                             },
-                            subtitle = "Coba ubah kata kunci atau nonaktifkan filter versi",
-                            actionLabel = if (filterByGameVersion) "Cari di semua versi Minecraft" else null,
+                            subtitle = if (rustInstance) {
+                                "Coba ubah kata kunci"
+                            } else {
+                                "Coba ubah kata kunci atau nonaktifkan filter versi"
+                            },
+                            actionLabel = if (filterByGameVersion && !rustInstance) "Cari di semua versi Minecraft" else null,
                             onAction = {
                                 filterByGameVersion = false
                                 currentPage = 1
@@ -1577,6 +1615,37 @@ private fun ModsTagChip(text: String) {
             fontSize = 12.sp,
             maxLines = 1
         )
+    }
+}
+
+/** Catatan singkat di atas daftar untuk instance mesin Rust (Horizon). */
+@Composable
+private fun RustNotice(isShader: Boolean) {
+    val shape = RoundedCornerShape(16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp)
+            .clip(shape)
+            .background(AmberUi.Surface, shape)
+            .border(1.dp, AmberUi.Border, shape)
+            .padding(horizontal = 14.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = "Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.",
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 17.sp
+        )
+        if (isShader) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.",
+                color = AmberUi.TextDim,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+        }
     }
 }
 

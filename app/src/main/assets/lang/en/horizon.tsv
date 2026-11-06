@@ -9,3 +9,26 @@ Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fab
 Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	Supports Minecraft {0} only. The engine itself downloads the game resources (about 500 MiB) the first time it opens.
 Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Experimental: needs Android 9 or newer and a 64-bit phone.
 Tanpa Java	No Java
+# Shader dan Resource Pack untuk mesin Rust
+Jenis berkas ini belum didukung mesin Rust.	This file type isn't supported by the Rust engine yet.
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	The file name isn't suitable for the Rust engine (too long or contains forbidden characters).
+Mesin Rust hanya menerima berkas .zip di sini.	The Rust engine only accepts .zip files here.
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	The file is larger than 256 MB, too big for the Rust engine.
+Arsip rusak atau tidak bisa dibaca.	The archive is damaged or cannot be read.
+Arsip berisi terlalu banyak berkas.	The archive contains too many files.
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	The archive contains unsafe or duplicate paths, so it was not installed.
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	The archive is too large once unpacked (over 512 MB).
+Metadata resource pack (pack.mcmeta) tidak valid.	The resource pack metadata (pack.mcmeta) is not valid.
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	This file is not a resource pack: pack.mcmeta was not found at the top level of the archive.
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	This file is not a shader pack: no shaders folder was found at the top level of the archive.
+Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	This is a native Horizon shader. Install it from the Import menu inside the Rust engine (.hshader format).
+Tidak ada berkas .zip yang cocok di versi ini.	No matching .zip file in this version.
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	The source provides no file checksum, so the download cannot be verified.
+Gagal menyimpan berkas ke folder mesin Rust.	Failed to save the file to the Rust engine folder.
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	Game settings have not been created yet. Open the game once, go to Settings and change one option, then try again.
+Gagal menyimpan pilihan ke pengaturan mesin.	Failed to save the choice to the engine settings.
+Memeriksa {0}...	Checking {0}...
+Gagal membuka berkas yang dipilih	Could not open the selected file
+Coba ubah kata kunci	Try changing the keyword
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Rust engine: turn on the switch in the Installed list to use it. It applies the next time the game opens.
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shaders on the Rust engine are still experimental and may be heavy for this phone.

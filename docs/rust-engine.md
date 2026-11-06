@@ -137,6 +137,7 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
 | `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
+| `core/horizon/HorizonContent.kt` | Shader dan Resource Pack untuk instance Rust: memasang, memilih, dan menghapus langsung di folder dan berkas pengaturan mesin (lihat bagian di bawah) |
 | `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |
 | `scripts/build-horizon-engine.sh` | Mengompilasi mesin dari sumber (dipakai workflow pembangun) dan menerbitkan Release |
 | `scripts/prepare-horizon-data.py` | Menyiapkan tabel data memakai berkas versi Mojang yang dipatok (pembungkus `tools/android_prepare.py` milik sumber) |
@@ -145,6 +146,19 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `app/build.gradle.kts` (`fetchHorizonEngine`) | Menjalankan skrip pengambil sebelum build; tidak pernah menggagalkan build |
 
 Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam data aplikasi, terpisah dari data launcher. Menghapus instance Rust dari launcher **tidak** menghapus data itu karena dipakai bersama; hapus lewat Pengaturan Android > Info aplikasi > Hapus data.
+
+## Shader dan Resource Pack (layar Mod untuk instance Rust)
+
+Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya dari Modrinth, tanpa saringan versi game. Semua berkasnya memakai folder dan pengaturan yang sama dengan mesin, jadi apa yang dipasang atau dipilih di Amber langsung terlihat di mesin:
+
+- Shader: folder `files/horizon/shaderpacks/`. Satu shader aktif dicatat di `files/horizon/horizon-graphics.txt` (baris `pickedShaderPack:<nama berkas>`). Hidupkan saklarnya di daftar Terpasang untuk memilihnya; mematikannya mengosongkan pilihan.
+- Resource Pack: folder `files/horizon/resourcepacks/`. Daftar aktif ada di baris `resourcePacks:` pada `files/horizon/options.txt` (yang terakhir paling atas). Berkas `options.txt` dibuat oleh game, bukan oleh launcher (tanpa baris versi, mesin menganggapnya berkas versi sangat lama dan mengisi ulang pengaturan grafik); bila belum ada, saklar menampilkan petunjuk untuk membuka game sekali dulu.
+- Perubahan dibaca mesin saat game dibuka, jadi berlaku pada permainan berikutnya.
+- Unduhan hanya menerima berkas `.zip` yang punya sidik jari (dicocokkan setelah unduh), paling besar 256 MB, lalu diperiksa dengan aturan mesin sendiri (nama berkas polos, jalur entri aman, total isi paling besar 512 MB, `pack.mcmeta` untuk resource pack, folder `shaders/` untuk shader). Versi yang mencantumkan 26.3 diurutkan lebih dulu, sisanya mengikuti urutan Modrinth. Dependensi diabaikan.
+- Shader asli Horizon (`.hshader`, berisi `horizon-shaders.toml`) tidak dipasang dari Amber; pasang lewat menu Impor di dalam mesin.
+- Bila pengguna memakai profil selain 0 di dalam mesin (`android-launcher.json`, kunci `profile`), Amber mengikuti folder profil itu.
+- Dukungan shader di mesin masih eksperimental dan bisa berat di HP lemah, jadi shader yang baru diunduh tidak dipilih otomatis.
+- Setiap kali versi mesin dinaikkan, periksa ulang bahwa shader pack masih ada di sumber mesin (desktop Horizon menghapusnya pada 24 Oktober 2026 dan berjanji mengembalikannya ditulis ulang): `crates/horizon-shaders` dan `game/shader_packs.rs`.
 
 ## Daftar uji di perangkat
 
@@ -156,15 +170,17 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
 8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
+9. Shader: buka layar Mod pada instance Rust, unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
+10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
 
 Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
 
 ## Batasan saat ini
 
 - Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
-- Tanpa mod Java, tanpa Fabric, Forge, NeoForge, dan layar Mod launcher tidak berlaku untuk instance Rust.
+- Tanpa mod Java, tanpa Fabric, Forge, NeoForge. Layar Mod untuk instance Rust hanya berisi Shader dan Resource Pack.
 - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
-- Mod belum bisa diatur dari launcher. Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
+- Mod belum bisa diatur dari launcher (hanya Shader dan Resource Pack). Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
 - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
 - Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
 

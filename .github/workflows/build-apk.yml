@@ -605,15 +605,14 @@ jobs:
           APK=$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)
           test -n "$APK"
           mkdir -p dist
-          # Nama berkas sengaja panjang dan jelas supaya pengguna tidak salah pilih 32-bit/64-bit.
           # Aplikasi memilih APK pembaruan lewat kata "32bit" di nama (lihat ReleaseParser): APK 64-bit
           # tidak boleh memuat "32bit", APK 32-bit wajib memuatnya.
-          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
+          cp "$APK" "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a.apk"
           ls -lh dist
           APKSIGNER=$(ls -d "${ANDROID_HOME:-/usr/local/lib/android/sdk}"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1)
           if [ -n "$APKSIGNER" ]; then
             echo "Sidik jari tanda tangan APK:"
-            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk" | grep -i "SHA-256" || true
+            "$APKSIGNER" verify --print-certs "dist/AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a.apk" | grep -i "SHA-256" || true
           fi
 
       # APK 32-bit dibangun terpisah (scripts/build-arm32.sh, ada setelah patch 32-bit diterapkan) dan
@@ -634,7 +633,7 @@ jobs:
         run: |
           SRC="dist/AmberLauncher-${VERSION_NAME}-32bit.apk"
           if [ -f "$SRC" ]; then
-            mv "$SRC" "dist/AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
+            mv "$SRC" "dist/AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a.apk"
           else
             echo "Tidak ada APK 32-bit pada build ini (build uji tidak membuatnya); hanya APK 64-bit."
           fi
@@ -691,12 +690,10 @@ jobs:
             LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
           fi
           LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
-          APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
-          APK32="AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
+          APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a.apk"
           BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
-          # Catatan rilis ditulis dalam bahasa Inggris supaya mudah dipahami semua orang. Baris panduan
-          # unduhan sengaja memuat tautan "https://" atau diawali "#": aplikasi menyaring baris seperti itu
-          # saat menampilkan catatan di pop-up pembaruan, jadi panduan ini tidak ikut muncul di sana.
+          # Catatan rilis ditulis dalam bahasa Inggris supaya mudah dipahami semua orang. Baris tautan
+          # "https://" disaring aplikasi saat menampilkan catatan di pop-up pembaruan.
           {
             echo "## What's new in ${VERSION_NAME}"
             echo
@@ -704,13 +701,6 @@ jobs:
               printf '%s\n' "$LOG" | sed 's/^/- /'
             else
               echo "- Fixes and small improvements."
-            fi
-            echo
-            echo "### Which file should I download?"
-            echo
-            echo "- **64-bit (arm64-v8a): pick this one if you are not sure.** [${APK64}](${BASE}/${APK64}) Works on almost every phone made in the last several years."
-            if ls dist/*-32bit-*.apk > /dev/null 2>&1; then
-              echo "- **32-bit (armeabi-v7a): old phones only.** [${APK32}](${BASE}/${APK32}) For old phones with a 32-bit CPU. It is slower, game RAM is limited to about 1.2 GB, and some renderers are missing. Only pick it if the 64-bit file will not install on your phone."
             fi
             if [ -n "$PREV_TAG" ]; then
               echo

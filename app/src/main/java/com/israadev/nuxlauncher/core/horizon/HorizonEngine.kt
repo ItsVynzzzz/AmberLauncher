@@ -10,6 +10,7 @@ import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
+import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -237,6 +238,8 @@ object HorizonEngine {
     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
         return try {
             val firstRun = !gameInstalled(context)
+            // Tombol layar mesin mengikuti tata letak Amber (atau dikembalikan ke bawaan mesin bila dimatikan).
+            RustTouchLayout.sync(context, SettingsManager.settings.value.rustAmberControls)
             writeLaunchFile(context, account)
             if (firstRun) {
                 Toast.makeText(

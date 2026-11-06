@@ -44,6 +44,8 @@ Layar penuh imersif	Pantalla completa inmersiva
 Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta las barras de navegaci\u00f3n y de estado al jugar.
 Hindari poni layar	Evitar el notch de la pantalla
 Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desplaza la vista del juego para que no la tape el agujero de la c\u00e1mara o el notch.
+Kontrol Amber	Controles de Amber
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin (gaya Bedrock). Berlaku di PLAY berikutnya.	Los botones en pantalla siguen el editor de controles de Amber (posici\u00f3n, tama\u00f1o y botones), as\u00ed que solo hay un conjunto de controles. Desact\u00edvalo para usar los controles del motor (estilo Bedrock). Se aplica en el pr\u00f3ximo PLAY.
 Perangkat input	Dispositivo de entrada
 Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Autom\u00e1tico elige entre t\u00e1ctil, teclado y rat\u00f3n o mando seg\u00fan lo que est\u00e9 conectado.
 Layar sentuh	Pantalla t\u00e1ctil

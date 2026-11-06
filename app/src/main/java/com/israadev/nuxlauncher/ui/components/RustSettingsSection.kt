@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
+import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -257,7 +258,17 @@ fun RustScreenRows() {
 fun RustControlRows() {
     val context = LocalContext.current
     val s by RustSettingsStore.settings.collectAsState()
+    val launcher by SettingsManager.settings.collectAsState()
 
+    SettingSwitchRow(
+        title = "Kontrol Amber",
+        desc = "Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin (gaya Bedrock). Berlaku di PLAY berikutnya.",
+        checked = launcher.rustAmberControls,
+        onCheckedChange = { on ->
+            SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(rustAmberControls = on))
+        }
+    )
+    SettingDivider()
     SettingChoiceRow(
         title = "Perangkat input",
         desc = "Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.",

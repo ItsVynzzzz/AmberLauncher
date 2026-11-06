@@ -119,11 +119,19 @@ fun SwitchableMouseLayout(
     val sendMouseButton = remember<(Int, Boolean) -> Unit> {
         { button, pressed ->
             val glfwBtn = MouseButtons.toGlfw(button)
-            if (glfwBtn != null) CallbackBridge.sendMouseButton(glfwBtn, pressed)
+            if (glfwBtn != null) {
+                MouseDiag.buttonsSent++
+                CallbackBridge.sendMouseButton(glfwBtn, pressed)
+            } else {
+                MouseDiag.buttonsDropped++
+            }
         }
     }
     val sendMouseScroll = remember<(Offset) -> Unit> {
-        { scroll -> CallbackBridge.sendScroll(scroll.x.toDouble(), scroll.y.toDouble()) }
+        { scroll ->
+            MouseDiag.scrollSent++
+            CallbackBridge.sendScroll(scroll.x.toDouble(), scroll.y.toDouble())
+        }
     }
 
     val composeFocusCount by SdlBridge.composeFocus.collectAsStateWithLifecycle()
@@ -367,6 +375,7 @@ fun SwitchableMouseLayout(
                     onMouseMove = { pos ->
                         val newX = pos.x.coerceIn(0f, currentScreenWidth)
                         val newY = pos.y.coerceIn(0f, currentScreenHeight)
+                        MouseDiag.cursorSent++
                         currentOnCursorPositionChange(Offset(newX, newY))
                         sendScaledCursor(newX, newY)
                     },
@@ -386,6 +395,7 @@ fun SwitchableMouseLayout(
             currentOnMouse()
         },
         onMouseMove = { delta ->
+            MouseDiag.deltaSent++
             currentOnCapturedMove(delta)
         },
         onMouseScroll = sendMouseScroll,

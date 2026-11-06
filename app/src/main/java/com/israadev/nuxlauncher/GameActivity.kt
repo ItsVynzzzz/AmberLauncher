@@ -273,6 +273,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     override fun onStop() {
+        MouseDiag.summary("berhenti")
+        MouseDiag.devices()
         ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
         // Jari yang masih tercatat di mod tidak akan pernah menerima "angkat" bila aplikasi keluar layar.
         touchBridge?.onCancelAll()
@@ -504,6 +506,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         } catch (_: Throwable) {}
     }
 
+    override fun onPointerCaptureChanged(hasCapture: Boolean) {
+        super.onPointerCaptureChanged(hasCapture)
+        MouseDiag.captureChanged(hasCapture)
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -518,6 +525,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         PhysicalMouseChecker.initChecker(this)
         // Catatan jalur masuk mouse fisik (satu baris per jalur per sesi) ke log game.
         MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
+        MouseDiag.devices()
         SettingsManager.init(this)
         ControlLayoutManager.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && SettingsManager.settings.value.sustainedPerformanceMode) {
@@ -851,7 +859,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         // menu Minecraft berpindah sendiri saat mouse digerakkan. Panah keyboard asli bersumber
         // keyboard, jadi tidak terpengaruh.
         if (source and InputDevice.SOURCE_CLASS_TRACKBALL != 0 && event.isDpadArrow()) {
-            MouseDiag.once("panah-sintetis-ditelan", source, 0, event.action, 0)
+            MouseDiag.once(MouseDiag.ARROW_SWALLOWED, source, 0, event.action, 0)
             return true
         }
 
@@ -888,6 +896,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
             // Physical mouse action detected -> hide touch controls
             isControlVisibleState.value = false
+            MouseDiag.actGeneric++
+            MouseDiag.once(MouseDiag.ACT_GENERIC, event)
         }
         return super.dispatchGenericMotionEvent(event)
     }
@@ -904,7 +914,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             return super.dispatchTrackballEvent(event)
         }
         if (event.actionMasked == MotionEvent.ACTION_MOVE) {
-            MouseDiag.once("trackball", event.source, event.getToolType(0), event.actionMasked, event.buttonState)
+            MouseDiag.trackballEvents++
+            MouseDiag.once(MouseDiag.TRACKBALL, event)
             isControlVisibleState.value = false
             val s = SettingsManager.settings.value
             if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) {
@@ -922,6 +933,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
             isControlVisibleState.value = false
+            MouseDiag.actTouch++
+            MouseDiag.once(MouseDiag.ACT_TOUCH, event)
         }
         return super.dispatchTouchEvent(event)
     }
@@ -1851,6 +1864,10 @@ fun GameScreen(
     }
 
     val gameCursorMode by ZLBridgeStates.cursorMode.collectAsState()
+    // Catatan diagnosis mouse: kursor game berganti antara menu dan bermain (hanya beberapa kali per sesi).
+    LaunchedEffect(gameCursorMode) {
+        MouseDiag.cursorMode(gameCursorMode == CURSOR_DISABLED)
+    }
     val launcherSettings by SettingsManager.settings.collectAsState()
     val customButtons by ControlLayoutManager.buttons.collectAsState()
     val mouseControlMode = if (launcherSettings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE

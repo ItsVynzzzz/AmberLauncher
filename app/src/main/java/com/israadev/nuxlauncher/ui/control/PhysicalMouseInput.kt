@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.control
 
+import android.os.Build
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +18,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
+import com.movtery.zalithlauncher.bridge.ZLBridgeStates
 import com.movtery.zalithlauncher.game.sdl.SdlBridge
 import kotlin.math.hypot
 
@@ -108,21 +112,160 @@ internal class CapturedMouseButtons(private val onMouseButton: (Int, Boolean) ->
 }
 
 /**
- * Catatan diagnosis. Menulis SATU baris per jalur per sesi (maksimal beberapa baris), dipicu event
- * pertama di jalur itu. Tidak ada biaya per event. Dipakai untuk melihat dari log perangkat mana
- * mouse masuk lewat jalur apa, karena mouse yang "tidak bekerja" biasanya soal jalur masuknya.
+ * Catatan diagnosis mouse fisik. Ditulis ke panel log game DAN ke buku harian launcher ([LauncherLog]),
+ * jadi barisnya ikut di laporan launcher yang dibagikan dari Pengaturan.
+ *
+ * Isinya, supaya laporan "mouse tidak berfungsi" bisa dipetakan ke penyebabnya:
+ *  - perangkat: mouse/touchpad/trackball/stylus yang dilihat Android.
+ *  - satu baris per jalur masuk (sumber, alat, aksi, tombol event pertama).
+ *  - kursor game (menu atau terkunci) tiap kali berganti.
+ *  - ringkasan jumlah event: yang tiba di Activity, yang sampai ke penangan menu/tangkap, dan yang
+ *    benar-benar diteruskan ke game. Selisih antar angka menunjukkan di mana event hilang.
+ *
+ * Biaya per event hanya satu penambahan Int dan satu uji bit: tanpa alokasi, tanpa kunci, tanpa tulis
+ * berkas. Semua event input datang di thread utama, jadi penghitung biasa cukup. Penulisan log terjadi
+ * paling banyak beberapa lusin kali per sesi.
  */
 internal object MouseDiag {
+    // Jalur (bit). Satu baris log per jalur per sesi.
+    const val MENU_MOUSE = 1
+    const val MENU_STYLUS = 2
+    const val CAPTURE = 4
+    const val CAPTURE_TOUCHPAD = 8
+    const val TRACKBALL = 16
+    const val ARROW_SWALLOWED = 32
+    const val ACT_GENERIC = 64
+    const val ACT_TOUCH = 128
+    const val MENU_IGNORED = 256
+
+    private const val MAX_SUMMARIES = 10
+    private const val MAX_MODE_LOGS = 8
+    private const val MAX_CAPTURE_LOGS = 8
+    private const val MAX_DEVICE_LOGS = 3
+
     @Volatile
     var sink: ((String) -> Unit)? = null
-    private val seen = HashSet<String>()
 
-    fun once(path: String, source: Int, toolType: Int, action: Int, buttons: Int) {
-        val out = sink ?: return
-        synchronized(seen) {
-            if (!seen.add(path)) return
+    private var seenMask = 0
+    private var summaries = 0
+    private var lastTotal = -1
+    private var modeLogs = 0
+    private var captureLogs = 0
+    private var deviceLogs = 0
+    private var lastDevices = ""
+
+    // Event yang tiba di GameActivity (sebelum Compose): generik = hover/gulir/tangkap, sentuh = klik.
+    @JvmField var actGeneric = 0
+    @JvmField var actTouch = 0
+    // Event yang sampai ke penangan menu, yang diabaikan karena game sedang mengunci kursor, dan penangan tangkap.
+    @JvmField var menuEvents = 0
+    @JvmField var menuIgnored = 0
+    @JvmField var captureEvents = 0
+    @JvmField var trackballEvents = 0
+    // Yang diteruskan ke game.
+    @JvmField var cursorSent = 0
+    @JvmField var deltaSent = 0
+    @JvmField var buttonsSent = 0
+    @JvmField var buttonsDropped = 0
+    @JvmField var scrollSent = 0
+
+    private fun pathName(path: Int) = when (path) {
+        MENU_MOUSE -> "menu-mouse"
+        MENU_STYLUS -> "menu-stylus"
+        CAPTURE -> "tangkap"
+        CAPTURE_TOUCHPAD -> "tangkap-touchpad"
+        TRACKBALL -> "trackball"
+        ARROW_SWALLOWED -> "panah-sintetis-ditelan"
+        ACT_GENERIC -> "aktivitas-generik"
+        ACT_TOUCH -> "aktivitas-sentuh"
+        MENU_IGNORED -> "menu-diabaikan-saat-terkunci"
+        else -> "jalur-$path"
+    }
+
+    private fun emit(body: String) {
+        LauncherLog.event("Mouse", body)
+        sink?.invoke("[Mouse] $body")
+    }
+
+    /** Catat event pertama pada [path]. Setelah itu hanya satu uji bit. */
+    fun once(path: Int, source: Int, toolType: Int, action: Int, buttons: Int) {
+        if ((seenMask and path) != 0) return
+        seenMask = seenMask or path
+        emit("jalur=${pathName(path)} sumber=0x${Integer.toHexString(source)} alat=$toolType aksi=$action tombol=$buttons")
+    }
+
+    fun once(path: Int, event: MotionEvent) {
+        if ((seenMask and path) != 0) return
+        once(path, event.source, event.getToolType(0), event.actionMasked, event.buttonState)
+    }
+
+    /** Perangkat penunjuk yang dilihat Android. Hanya ditulis bila daftarnya berubah. */
+    fun devices() {
+        if (deviceLogs >= MAX_DEVICE_LOGS) return
+        try {
+            val sb = StringBuilder()
+            for (id in InputDevice.getDeviceIds()) {
+                val d = InputDevice.getDevice(id) ?: continue
+                val pointerLike = d.supportsSource(InputDevice.SOURCE_MOUSE) ||
+                    d.supportsSource(InputDevice.SOURCE_MOUSE_RELATIVE) ||
+                    d.supportsSource(InputDevice.SOURCE_TOUCHPAD) ||
+                    d.supportsSource(InputDevice.SOURCE_TRACKBALL) ||
+                    d.supportsSource(InputDevice.SOURCE_STYLUS)
+                if (!pointerLike) continue
+                if (sb.isNotEmpty()) sb.append(" | ")
+                sb.append(d.name).append(" #").append(id)
+                    .append(" sumber=0x").append(Integer.toHexString(d.sources))
+                    .append(" v").append(d.vendorId).append(" p").append(d.productId)
+                if (Build.VERSION.SDK_INT >= 29) sb.append(if (d.isExternal) " luar" else " dalam")
+            }
+            val text = if (sb.isEmpty()) "tidak ada mouse/touchpad/trackball/stylus terdeteksi" else sb.toString()
+            if (text == lastDevices) return
+            lastDevices = text
+            deviceLogs++
+            emit("perangkat: $text")
+        } catch (_: Throwable) {
         }
-        out("[Mouse] jalur=$path sumber=0x${Integer.toHexString(source)} alat=$toolType aksi=$action tombol=$buttons")
+    }
+
+    /** Kursor game berganti: menu (bebas) atau bermain (terkunci). Sekaligus rangkuman sejauh ini. */
+    fun cursorMode(captured: Boolean) {
+        if (modeLogs >= MAX_MODE_LOGS) return
+        modeLogs++
+        emit("kursor game=${if (captured) "terkunci (bermain)" else "bebas (menu)"} sdl=${SdlBridge.sdlEnabled}")
+        summary("ganti-mode")
+    }
+
+    /** Android memberi atau mencabut pointer capture dari jendela. */
+    fun captureChanged(has: Boolean) {
+        if (captureLogs >= MAX_CAPTURE_LOGS) return
+        captureLogs++
+        emit("pointer-capture jendela=$has")
+    }
+
+    /** Permintaan pointer capture dikirim. Hasilnya datang lewat [captureChanged]. */
+    fun captureRequested(windowFocus: Boolean, viewFocus: Boolean) {
+        if (captureLogs >= MAX_CAPTURE_LOGS) return
+        captureLogs++
+        emit("pointer-capture diminta fokusJendela=$windowFocus fokusView=$viewFocus")
+    }
+
+    /**
+     * Rangkuman jumlah event. Dilewati bila tidak ada yang berubah sejak rangkuman terakhir, tapi rangkuman
+     * pertama selalu ditulis: angka nol semua berarti Android tidak mengirim satu pun event mouse.
+     */
+    fun summary(reason: String) {
+        val total = actGeneric + actTouch + menuEvents + menuIgnored + captureEvents + trackballEvents +
+            cursorSent + deltaSent + buttonsSent + buttonsDropped + scrollSent
+        if (total == lastTotal || summaries >= MAX_SUMMARIES) return
+        lastTotal = total
+        summaries++
+        val mode = if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) "terkunci" else "bebas"
+        emit(
+            "ringkasan($reason) kursor=$mode sdl=${SdlBridge.sdlEnabled} " +
+                "aktivitas[generik=$actGeneric sentuh=$actTouch] " +
+                "menu[masuk=$menuEvents diabaikan=$menuIgnored] tangkap[masuk=$captureEvents] trackball=$trackballEvents " +
+                "ke-game[kursor=$cursorSent delta=$deltaSent tombol=$buttonsSent tombolTakDipetakan=$buttonsDropped gulir=$scrollSent]"
+        )
     }
 }
 
@@ -147,6 +290,7 @@ internal fun PhysicalMouseCapture(
 
     fun syncCaptureState() {
         if (enabled) {
+            MouseDiag.captureRequested(view.hasWindowFocus(), view.hasFocus())
             if (view.hasWindowFocus()) {
                 view.requestPointerCapture()
             }
@@ -189,10 +333,8 @@ internal fun PhysicalMouseCapture(
 
             val pointerListener = View.OnCapturedPointerListener { _, event ->
                 val isTouchpad = event.isFromSource(InputDevice.SOURCE_TOUCHPAD)
-                MouseDiag.once(
-                    if (isTouchpad) "tangkap-touchpad" else "tangkap",
-                    event.source, event.getToolType(0), event.actionMasked, event.buttonState
-                )
+                MouseDiag.captureEvents++
+                MouseDiag.once(if (isTouchpad) MouseDiag.CAPTURE_TOUCHPAD else MouseDiag.CAPTURE, event)
                 if (!isTouchpad) {
                     physicalButtons.onEvent(event.actionMasked, event.actionButton, event.buttonState)
                 }
@@ -364,6 +506,12 @@ internal fun Modifier.physicalMouseHover(
 
     pointerInteropFilter { event ->
         if (currentDisabled) {
+            // Game sedang mengunci kursor, jadi mouse seharusnya lewat jalur tangkap. Event mouse yang
+            // tetap sampai ke sini berarti pointer capture tidak diberikan Android.
+            if (event.isFromSource(InputDevice.SOURCE_MOUSE)) {
+                MouseDiag.menuIgnored++
+                MouseDiag.once(MouseDiag.MENU_IGNORED, event)
+            }
             return@pointerInteropFilter false
         }
 
@@ -374,10 +522,8 @@ internal fun Modifier.physicalMouseHover(
             return@pointerInteropFilter false
         }
 
-        MouseDiag.once(
-            if (isMouse) "menu-mouse" else "menu-stylus",
-            event.source, event.getToolType(0), event.actionMasked, event.buttonState
-        )
+        MouseDiag.menuEvents++
+        MouseDiag.once(if (isMouse) MouseDiag.MENU_MOUSE else MouseDiag.MENU_STYLUS, event)
         currentOnMouse()
 
         if (event.actionMasked == MotionEvent.ACTION_CANCEL) {

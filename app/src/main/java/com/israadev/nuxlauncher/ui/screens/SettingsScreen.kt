@@ -241,7 +241,8 @@ fun SettingsScreen(
         }
     }
 
-    // Kategori aktif: 0 = Game, 1 = Kontrol, 2 = Tampilan, 3 = Tentang. Isinya digulir sendiri.
+    // Kategori aktif: 0 = Game, 1 = Kontrol, 2 = Tampilan, 3 = Tentang, 4 = Rust (urutan di sisi kiri: Game, Rust,
+    // Kontrol, Tampilan, Tentang). Isinya digulir sendiri.
     var section by remember { mutableIntStateOf(0) }
     var query by remember { mutableStateOf("") }
     val searching = query.isNotBlank()
@@ -302,6 +303,8 @@ fun SettingsScreen(
             ) {
                 listOf(
                     Triple(0, "Game", Icons.Outlined.ViewInAr),
+                    // Mesin Rust punya pengaturan sendiri yang berbeda dari jalur Java, jadi tidak digabung ke Game.
+                    Triple(4, "Rust", Icons.Outlined.Memory),
                     Triple(1, "Kontrol", Icons.Outlined.SportsEsports),
                     Triple(2, "Tampilan", Icons.Outlined.Image),
                     Triple(3, "Tentang", Icons.Outlined.Info)
@@ -620,6 +623,18 @@ fun SettingsScreen(
                             )
                         }
                         }
+                    }
+
+                    // ===================== RUST =====================
+                    // Pengaturan mesin Rust (Horizon). Disimpan di config mesin sendiri, tidak lewat LauncherSettings.
+                    if (searching || section == 4) {
+                        RustSettingsLoader()
+                        SettingsGroup("Mesin Rust") { RustStatusRows() }
+                        SettingsGroup("Grafis") { RustGraphicsRows() }
+                        SettingsGroup("Performa") { RustPerformanceRows() }
+                        SettingsGroup("Layar") { RustScreenRows() }
+                        SettingsGroup("Kontrol") { RustControlRows() }
+                        SettingsGroup("Permainan") { RustGameRows() }
                     }
 
                     // ===================== KONTROL =====================

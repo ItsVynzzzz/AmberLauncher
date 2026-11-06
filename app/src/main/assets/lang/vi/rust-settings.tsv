@@ -1,0 +1,57 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Engine Rust
+Performa	Hi\u1ec7u n\u0103ng
+Layar	M\u00e0n h\u00ecnh
+Permainan	Ch\u01a1i game
+Mesin Rust (Horizon)	Engine Rust (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Thay th\u1ebf to\u00e0n b\u1ed9 client Java: kh\u00f4ng c\u00f3 JVM v\u00e0 kh\u00f4ng d\u00f9ng mod Java.
+Tidak tersedia	Kh\u00f4ng kh\u1ea3 d\u1ee5ng
+Siap	S\u1eb5n s\u00e0ng
+Sumber daya game	T\u00e0i nguy\u00ean game
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	T\u1ef1 t\u1ea3i \u1edf l\u1ea7n PLAY \u0111\u1ea7u ti\u00ean, kho\u1ea3ng 500 MiB.
+Belum diunduh	Ch\u01b0a t\u1ea3i
+Versi Minecraft	Phi\u00ean b\u1ea3n Minecraft
+Satu-satunya versi yang dikerjakan mesin ini.	Phi\u00ean b\u1ea3n duy nh\u1ea5t engine n\u00e0y h\u1ed7 tr\u1ee3.
+Berlaku untuk instance Rust	\u00c1p d\u1ee5ng cho instance Rust
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	C\u00e1c l\u1ef1a ch\u1ecdn \u1edf tab n\u00e0y ch\u1ec9 d\u00f9ng cho instance Rust v\u00e0 c\u00f3 hi\u1ec7u l\u1ef1c \u1edf l\u1ea7n PLAY ti\u1ebfp theo. Instance Vanilla, Fabric v\u00e0 Forge kh\u00f4ng b\u1ecb \u1ea3nh h\u01b0\u1edfng.
+Renderer Rust	Renderer Rust
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	T\u01b0\u01a1ng th\u00edch l\u00e0 an to\u00e0n nh\u1ea5t tr\u00ean m\u1ecdi \u0111i\u1ec7n tho\u1ea1i. Vulkan nhanh d\u00f9ng batching GPU. OpenGL ES v\u1eabn \u0111ang th\u1eed nghi\u1ec7m.
+Vulkan kompatibel	Vulkan t\u01b0\u01a1ng th\u00edch
+Vulkan cepat	Vulkan nhanh
+Skala resolusi Rust	T\u1ec9 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i Rust
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Gi\u1ea3m \u0111\u1ed9 ph\u00e2n gi\u1ea3i render gi\u00fap game nh\u1eb9 h\u01a1n nh\u01b0ng h\u00ecnh \u1ea3nh s\u1ebd m\u1edd h\u01a1n.
+Laju layar	T\u1ea7n s\u1ed1 qu\u00e9t
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	\u0110\u00e2y l\u00e0 y\u00eau c\u1ea7u g\u1eedi Android, kh\u00f4ng ph\u1ea3i gi\u1edbi h\u1ea1n FPS. T\u1ea7n s\u1ed1 m\u00e0 m\u00e0n h\u00ecnh kh\u00f4ng h\u1ed7 tr\u1ee3 c\u00f3 th\u1ec3 b\u1ecb b\u1ecf qua.
+Bawaan sistem	M\u1eb7c \u0111\u1ecbnh h\u1ec7 th\u1ed1ng
+Petunjuk performa	G\u1ee3i \u00fd hi\u1ec7u n\u0103ng
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	B\u00e1o cho Android bi\u1ebft game c\u1ea7n hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh. Ch\u1ec9 c\u00f3 \u00edch tr\u00ean \u0111i\u1ec7n tho\u1ea1i h\u1ed7 tr\u1ee3.
+Batas pekerja chunk	Gi\u1edbi h\u1ea1n worker chunk
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Gi\u1edbi h\u1ea1n s\u1ed1 worker t\u1ea1o v\u00e0 gh\u00e9p chunk, kh\u00f4ng ph\u1ea3i m\u1ecdi lu\u1ed3ng c\u1ee7a \u1ee9ng d\u1ee5ng. Gi\u00e1 tr\u1ecb nh\u1ecf gi\u1ea3m t\u1ea3i CPU nh\u01b0ng t\u1ea3i th\u1ebf gi\u1edbi ch\u1eadm h\u01a1n.
+Tanpa batas	Kh\u00f4ng gi\u1edbi h\u1ea1n
+Cache RAM	B\u1ed9 nh\u1edb \u0111\u1ec7m RAM
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	\u00c2m thanh \u0111\u00e3 gi\u1ea3i m\u00e3 (80%) v\u00e0 b\u1ed9 \u0111\u1ec7m mesh tr\u1ed1ng (20%), \u0111\u01b0\u1ee3c t\u1ea1o l\u1ea1i v\u1edbi c\u00f9ng ch\u1ea5t l\u01b0\u1ee3ng. Kh\u00f4ng ph\u1ea3i gi\u1edbi h\u1ea1n t\u1ed5ng RAM hay VRAM. Gi\u00e1 tr\u1ecb nh\u1ecf c\u00f3 th\u1ec3 t\u0103ng vi\u1ec7c cho CPU.
+Bawaan (80 MiB)	M\u1eb7c \u0111\u1ecbnh (80 MiB)
+Arah layar	H\u01b0\u1edbng m\u00e0n h\u00ecnh
+Arah layar saat bermain. Bawaannya landscape.	H\u01b0\u1edbng m\u00e0n h\u00ecnh khi ch\u01a1i. M\u1eb7c \u0111\u1ecbnh l\u00e0 ngang.
+Landscape	Ngang
+Landscape terbalik	Ngang ng\u01b0\u1ee3c
+Portrait	D\u1ecdc
+Portrait terbalik	D\u1ecdc ng\u01b0\u1ee3c
+Rasio layar	T\u1ec9 l\u1ec7 khung h\u00ecnh
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Gi\u1edbi h\u1ea1n khung nh\u00ecn game theo m\u1ed9t t\u1ec9 l\u1ec7. G\u1ed1c theo t\u1ec9 l\u1ec7 m\u00e0n h\u00ecnh c\u1ee7a \u0111i\u1ec7n tho\u1ea1i.
+Asli	G\u1ed1c
+Layar penuh imersif	To\u00e0n m\u00e0n h\u00ecnh \u0111\u1eafm ch\u00ecm
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	\u1ea8n thanh \u0111i\u1ec1u h\u01b0\u1edbng v\u00e0 thanh tr\u1ea1ng th\u00e1i khi ch\u01a1i.
+Hindari poni layar	Tr\u00e1nh tai th\u1ecf m\u00e0n h\u00ecnh
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	D\u1ecbch khung game \u0111\u1ec3 l\u1ed7 camera ho\u1eb7c tai th\u1ecf kh\u00f4ng che m\u1ea5t.
+Perangkat input	Thi\u1ebft b\u1ecb nh\u1eadp
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	T\u1ef1 \u0111\u1ed9ng ch\u1ecdn gi\u1eefa c\u1ea3m \u1ee9ng, b\u00e0n ph\u00edm v\u00e0 chu\u1ed9t, ho\u1eb7c tay c\u1ea7m t\u00f9y thi\u1ebft b\u1ecb \u0111ang k\u1ebft n\u1ed1i.
+Layar sentuh	M\u00e0n h\u00ecnh c\u1ea3m \u1ee9ng
+Keyboard dan mouse	B\u00e0n ph\u00edm v\u00e0 chu\u1ed9t
+Server otomatis	M\u00e1y ch\u1ee7 t\u1ef1 v\u00e0o
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	\u0110\u1ec3 tr\u1ed1ng \u0111\u1ec3 ch\u01a1i th\u1ebf gi\u1edbi ri\u00eang. N\u1ebfu \u0111i\u1ec1n, PLAY s\u1ebd v\u00e0o th\u1eb3ng m\u00e1y ch\u1ee7 n\u00e0y.
+Contoh: mc.contoh.com:25565	V\u00ed d\u1ee5: mc.vidu.com:25565
+Setel ulang pengaturan Rust	\u0110\u1eb7t l\u1ea1i c\u00e0i \u0111\u1eb7t Rust
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	\u0110\u01b0a m\u1ecdi l\u1ef1a ch\u1ecdn \u1edf tab n\u00e0y v\u1ec1 m\u1eb7c \u0111\u1ecbnh c\u1ee7a engine. Instance v\u00e0 th\u1ebf gi\u1edbi kh\u00f4ng b\u1ecb \u0111\u1ee5ng t\u1edbi.
+Setel ulang	\u0110\u1eb7t l\u1ea1i
+Pengaturan Rust dikembalikan ke bawaan.	\u0110\u00e3 \u0111\u1eb7t l\u1ea1i c\u00e0i \u0111\u1eb7t Rust v\u1ec1 m\u1eb7c \u0111\u1ecbnh.

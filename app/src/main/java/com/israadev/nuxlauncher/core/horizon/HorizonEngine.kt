@@ -118,7 +118,14 @@ object HorizonEngine {
     }
 
     /** Folder data mesin: sama dengan getFilesDir() milik HorizonActivity di proses :horizon. */
-    private fun engineHome(context: Context): File = File(context.filesDir, "horizon")
+    internal fun engineHome(context: Context): File = File(context.filesDir, "horizon")
+
+    /**
+     * True bila sumber daya game sudah terpasang di folder mesin. Bila belum, PLAY pertama mengunduh sekitar
+     * 500 MiB lebih dulu. Hanya memeriksa satu folder, jadi aman dipanggil dari komposisi UI.
+     */
+    fun gameInstalled(context: Context): Boolean =
+        File(engineHome(context), ".local/horizon-client/$SUPPORTED_MC_VERSION").isDirectory
 
     /** Nama pemain untuk mesin: 1 sampai 16 karakter ASCII yang tercetak, tanpa spasi (aturan Minecraft di mesin). */
     private fun validEngineName(name: String): Boolean =
@@ -229,7 +236,7 @@ object HorizonEngine {
     /** Menulis permintaan peluncuran lalu membuka mesin. Selalu melepas penanda [starting]. */
     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
         return try {
-            val firstRun = !File(engineHome(context), ".local/horizon-client/$SUPPORTED_MC_VERSION").isDirectory
+            val firstRun = !gameInstalled(context)
             writeLaunchFile(context, account)
             if (firstRun) {
                 Toast.makeText(

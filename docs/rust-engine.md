@@ -71,6 +71,18 @@ Sisi launcher: token Microsoft yang berumur kurang dari 16 jam dipakai langsung 
 
 Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan berkas itu dan menampilkan layar peluncur Horizon seperti sebelumnya. Perubahan Amber dijaga sekecil mungkin; bila `commit=` diganti, berkas `.diff` harus dicek ulang terhadap sumber baru (skrip pembangun berhenti dengan pesan jelas bila tidak cocok).
 
+### Pengaturan Rust
+
+Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, laju layar, petunjuk performa, batas pekerja chunk, cache RAM, arah dan rasio layar, layar penuh imersif, poni, perangkat input, server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
+
+Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`). Karena itu:
+
+- Tidak ada perubahan pada mesin, jadi **tidak perlu membangun ulang mesin**; cukup APK baru.
+- Perubahan berlaku pada PLAY berikutnya (mesin membaca config saat dibuka) dan hanya untuk instance Rust. Instance Java tidak terpengaruh.
+- Hanya kunci milik tab ini yang disentuh. Kunci lain di berkas itu dibiarkan, dan berkasnya baru dibuat saat pemain mengubah sesuatu. Tombol setel ulang menghapus kunci-kunci itu sehingga mesin memakai bawaannya.
+- Tulis berurutan dan atomik (berkas sementara lalu dipindah) di utas latar. Nilai di luar yang dikenal mesin tidak pernah ditulis, karena satu nilai asing membuat mesin membuang seluruh config.
+- Layar peluncur milik mesin menulis berkas yang sama; keduanya saling konsisten karena memakai nama kunci yang sama.
+
 ### Mengganti versi mesin
 
 Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), lalu upload perubahannya sebagai patch seperti biasa: run yang sama membangun mesin barunya. Mengedit isi `.diff` juga cukup begitu (hash isinya ikut di tanda Release). Perlu folder patch baru? Buat `third_party/horizon-patches/<nama baru>/` dan ganti `patch_set=`. Bila mesinnya gagal dibangun, build APK tetap lolos tanpa mesin dan memberi peringatan.
@@ -121,6 +133,8 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `AndroidManifest.xml` | Mendaftarkan activity itu di proses `:horizon` |
 | `CreateInstanceScreen.kt` | Opsi Rust di rel loader; versi 26.3 terpilih otomatis; Install dimatikan bila mesin tidak tersedia |
 | `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust memakai akun yang dipilih lalu membuka mesin, tanpa Java atau unduhan launcher |
+| `core/horizon/RustSettings.kt` | Membaca dan menulis `android-launcher.json` (pengaturan tab Rust) tanpa menyentuh kunci lain |
+| `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
 | `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
 | `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |
@@ -141,6 +155,7 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
 5. Ulangi dengan akun **Microsoft**: nama dan skin sesuai akun, dan masuk server online tanpa "Invalid session".
 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
+8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
 
 Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
 
@@ -149,12 +164,12 @@ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses
 - Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
 - Tanpa mod Java, tanpa Fabric, Forge, NeoForge, dan layar Mod launcher tidak berlaku untuk instance Rust.
 - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
-- Server tujuan, mod, dan pengaturan mesin belum bisa diatur dari launcher.
+- Mod belum bisa diatur dari launcher. Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
 - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
 - Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
 
 ## Rencana berikutnya
 
-- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher, dan pengaturan mesin dibuat tempatnya sendiri di launcher.
+- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher.
 - Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
 - Akun Ely.by.

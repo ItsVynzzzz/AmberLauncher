@@ -1,0 +1,55 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Rust engine
+Performa	Performance
+Layar	Screen
+Permainan	Gameplay
+Mesin Rust (Horizon)	Rust engine (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Replaces the whole Java client: no JVM and no Java mods.
+Tidak tersedia	Unavailable
+Siap	Ready
+Sumber daya game	Game resources
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Downloaded automatically on the first PLAY, about 500 MiB.
+Belum diunduh	Not downloaded yet
+Versi Minecraft	Minecraft version
+Satu-satunya versi yang dikerjakan mesin ini.	The only version this engine supports.
+Berlaku untuk instance Rust	Applies to Rust instances
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	Choices on this tab are used by Rust instances only and take effect on the next PLAY. Vanilla, Fabric and Forge instances are not affected.
+Renderer Rust	Rust renderer
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	Compatible is the safest on every phone. Fast Vulkan uses GPU batching. OpenGL ES is still experimental.
+Vulkan kompatibel	Compatible Vulkan
+Vulkan cepat	Fast Vulkan
+Skala resolusi Rust	Rust resolution scale
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Lowering the render resolution makes the game lighter, but the picture gets blurrier.
+Laju layar	Refresh rate
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	A request to Android, not an FPS cap. A rate the screen does not support may be ignored.
+Bawaan sistem	System default
+Petunjuk performa	Performance hints
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Tells Android the game needs steady performance. Only useful on phones that support it.
+Batas pekerja chunk	Chunk worker limit
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limits the workers that generate and assemble chunks, not every app thread. A small value lowers CPU load but loads the world more slowly.
+Tanpa batas	No limit
+Cache RAM	RAM cache
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Decoded sounds (80%) and empty mesh buffers (20%), recreated at the same quality. Not a limit on total RAM or VRAM. A small value can add CPU work.
+Bawaan (80 MiB)	Default (80 MiB)
+Arah layar	Screen orientation
+Arah layar saat bermain. Bawaannya landscape.	The screen orientation while playing. Landscape by default.
+Landscape terbalik	Reverse landscape
+Portrait terbalik	Reverse portrait
+Rasio layar	Aspect ratio
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limits the game view to a set ratio. Native follows the phone's screen ratio.
+Asli	Native
+Layar penuh imersif	Immersive fullscreen
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	Hides the navigation and status bars while playing.
+Hindari poni layar	Avoid the display cutout
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Shifts the game view so the camera hole or notch does not cover it.
+Perangkat input	Input device
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Auto picks between touch, keyboard and mouse, or a gamepad depending on what is connected.
+Layar sentuh	Touch screen
+Keyboard dan mouse	Keyboard and mouse
+Server otomatis	Auto-join server
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	Leave empty to play in your own world. If filled in, PLAY joins this server directly.
+Contoh: mc.contoh.com:25565	Example: mc.example.com:25565
+Setel ulang pengaturan Rust	Reset Rust settings
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Puts every choice on this tab back to the engine defaults. Instances and worlds are not touched.
+Setel ulang	Reset
+Pengaturan Rust dikembalikan ke bawaan.	Rust settings were put back to the defaults.

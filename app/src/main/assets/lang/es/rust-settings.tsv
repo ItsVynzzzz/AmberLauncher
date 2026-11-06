@@ -1,0 +1,57 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Motor Rust
+Performa	Rendimiento
+Layar	Pantalla
+Permainan	Partida
+Mesin Rust (Horizon)	Motor Rust (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Sustituye todo el cliente Java: sin JVM y sin mods de Java.
+Tidak tersedia	No disponible
+Siap	Listo
+Sumber daya game	Recursos del juego
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Se descargan solos en el primer PLAY, unos 500 MiB.
+Belum diunduh	A\u00fan sin descargar
+Versi Minecraft	Versi\u00f3n de Minecraft
+Satu-satunya versi yang dikerjakan mesin ini.	La \u00fanica versi\u00f3n que admite este motor.
+Berlaku untuk instance Rust	Se aplica a instancias Rust
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	Las opciones de esta pesta\u00f1a solo las usan las instancias Rust y se aplican en el pr\u00f3ximo PLAY. Las instancias Vanilla, Fabric y Forge no se ven afectadas.
+Renderer Rust	Renderizador Rust
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	Compatible es lo m\u00e1s seguro en cualquier tel\u00e9fono. Vulkan r\u00e1pido usa batching de GPU. OpenGL ES sigue siendo experimental.
+Vulkan kompatibel	Vulkan compatible
+Vulkan cepat	Vulkan r\u00e1pido
+Skala resolusi Rust	Escala de resoluci\u00f3n Rust
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Bajar la resoluci\u00f3n de render alivia el juego, pero la imagen se ve m\u00e1s borrosa.
+Laju layar	Frecuencia de pantalla
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	Es una petici\u00f3n a Android, no un l\u00edmite de FPS. Si la pantalla no admite la frecuencia, puede ignorarse.
+Bawaan sistem	Predeterminado del sistema
+Petunjuk performa	Sugerencias de rendimiento
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Avisa a Android de que el juego necesita un rendimiento estable. Solo sirve en tel\u00e9fonos que lo admiten.
+Batas pekerja chunk	L\u00edmite de trabajadores de chunks
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limita los trabajadores que generan y montan chunks, no todos los hilos de la app. Un valor bajo reduce la carga de CPU, pero el mundo carga m\u00e1s lento.
+Tanpa batas	Sin l\u00edmite
+Cache RAM	Cach\u00e9 de RAM
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Sonidos ya decodificados (80%) y buffers de malla vac\u00edos (20%), que se recrean con la misma calidad. No es un l\u00edmite de RAM ni de VRAM totales. Un valor bajo puede aumentar el trabajo de la CPU.
+Bawaan (80 MiB)	Predeterminado (80 MiB)
+Arah layar	Orientaci\u00f3n de pantalla
+Arah layar saat bermain. Bawaannya landscape.	La orientaci\u00f3n de la pantalla al jugar. Por defecto, horizontal.
+Landscape	Horizontal
+Landscape terbalik	Horizontal invertido
+Portrait	Vertical
+Portrait terbalik	Vertical invertido
+Rasio layar	Relaci\u00f3n de aspecto
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limita la vista del juego a una relaci\u00f3n concreta. Nativa sigue la relaci\u00f3n de la pantalla del tel\u00e9fono.
+Asli	Nativa
+Layar penuh imersif	Pantalla completa inmersiva
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta las barras de navegaci\u00f3n y de estado al jugar.
+Hindari poni layar	Evitar el notch de la pantalla
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desplaza la vista del juego para que no la tape el agujero de la c\u00e1mara o el notch.
+Perangkat input	Dispositivo de entrada
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Autom\u00e1tico elige entre t\u00e1ctil, teclado y rat\u00f3n o mando seg\u00fan lo que est\u00e9 conectado.
+Layar sentuh	Pantalla t\u00e1ctil
+Keyboard dan mouse	Teclado y rat\u00f3n
+Server otomatis	Servidor autom\u00e1tico
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	D\u00e9jalo vac\u00edo para jugar en tu propio mundo. Si lo rellenas, PLAY entra directo a este servidor.
+Contoh: mc.contoh.com:25565	Ejemplo: mc.ejemplo.com:25565
+Setel ulang pengaturan Rust	Restablecer ajustes de Rust
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Devuelve todas las opciones de esta pesta\u00f1a a los valores del motor. No se tocan instancias ni mundos.
+Setel ulang	Restablecer
+Pengaturan Rust dikembalikan ke bawaan.	Los ajustes de Rust volvieron a los valores predeterminados.

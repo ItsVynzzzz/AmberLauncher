@@ -4,6 +4,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,27 +22,47 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.ui.components.AmberAlert
+import com.israadev.nuxlauncher.ui.components.AmberButton
+import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
 import com.israadev.nuxlauncher.ui.theme.Amber
 
 /**
  * Dialog proses unduh game. Batang kemajuan digambar langsung tanpa animasi: lebarnya mengikuti
  * nilai terbaru; tidak ada indikator berputar yang menggambar ulang terus-menerus.
+ *
+ * [onCancel] bila diisi memunculkan tombol Batal. Dialog tetap tidak bisa ditutup dengan ketukan di
+ * luar atau tombol kembali, jadi unduhan tidak terhenti tanpa sengaja.
  */
 @Composable
 fun NuxDownloadProgressDialog(
     instanceName: String,
     progress: Float,
     message: String,
-    onDismissRequest: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
+    onCancel: (() -> Unit)? = null
 ) {
     val fraction = progress.coerceIn(0f, 1f)
     val percent = (fraction * 100f).toInt()
+
+    val cancelActions: (@Composable RowScope.() -> Unit)? = if (onCancel == null) {
+        null
+    } else {
+        {
+            AmberButton(
+                text = "Batal",
+                onClick = onCancel,
+                modifier = Modifier.weight(1f),
+                style = AmberButtonStyle.Ghost
+            )
+        }
+    }
 
     AmberAlert(
         onDismissRequest = onDismissRequest,
         title = "Mengunduh game",
         icon = "download",
-        accent = Amber.Yellow
+        accent = Amber.Yellow,
+        actions = cancelActions
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

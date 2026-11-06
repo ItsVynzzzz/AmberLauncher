@@ -13,6 +13,8 @@ Gagal menyiapkan OpenJDK: {~0}	Failed to prepare OpenJDK: {0}
 Membuka folder instance...	Opening instance folder...
 Latar belakang dikembalikan ke bawaan	Background restored to default
 Instance {0} berhasil dibuat!	Instance {0} created!
+Instance {0} dibuat. Mengunduh game...	Instance {0} created. Downloading the game...
+Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.	Download canceled. Press DOWNLOAD to continue.
 Instance {0} berhasil dihapus!	Instance {0} deleted!
 Tambah akun	Add account
 Ganti akun	Switch account

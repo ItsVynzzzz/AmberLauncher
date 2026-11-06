@@ -13,6 +13,8 @@ Gagal menyiapkan OpenJDK: {~0}	No se pudo preparar OpenJDK: {0}
 Membuka folder instance...	Abriendo la carpeta de la instancia...
 Latar belakang dikembalikan ke bawaan	Fondo restablecido al predeterminado
 Instance {0} berhasil dibuat!	\u00a1Instancia {0} creada!
+Instance {0} dibuat. Mengunduh game...	Instancia {0} creada. Descargando el juego...
+Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.	Descarga cancelada. Toca DESCARGAR para continuar.
 Instance {0} berhasil dihapus!	\u00a1Instancia {0} eliminada!
 Tambah akun	A\u00f1adir cuenta
 Ganti akun	Cambiar de cuenta

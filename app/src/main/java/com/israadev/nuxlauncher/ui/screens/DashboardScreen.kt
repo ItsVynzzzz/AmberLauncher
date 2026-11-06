@@ -160,7 +160,9 @@ import com.israadev.nuxlauncher.ui.theme.NuxReadable
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import java.io.File
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -208,6 +210,8 @@ fun DashboardScreen() {
     // Download progress state
     var isDownloading by remember { mutableStateOf(false) }
     var downloadTargetName by remember { mutableStateOf("") }
+    // Job unduhan yang sedang jalan; dipegang supaya tombol Batal di dialog bisa menghentikannya.
+    var downloadJob by remember { mutableStateOf<Job?>(null) }
     // Kemajuan unduhan disimpan di objek tersendiri yang hanya dibaca dialog,
     // sehingga tiap kemajuan tidak menggambar ulang seluruh layar Home.
     val dl = remember { DownloadUiState() }
@@ -272,6 +276,49 @@ fun DashboardScreen() {
         selectedInstance?.let { it.isDownloaded && InstanceManager.isInstanceDownloaded(context, it) } ?: false
     }
 
+    // Pasang instance: siapkan Java, lalu unduh client, library, dan aset game. Dipakai tombol UNDUH
+    // dan dipanggil otomatis begitu instance baru dibuat, supaya mod tidak lagi ditaruh sebelum
+    // instance terpasang. Dialog unduhan memblokir layar sampai selesai atau dibatalkan.
+    fun installInstance(inst: Instance) {
+        if (isDownloading) return
+        val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
+        isDownloading = true
+        downloadTargetName = inst.name
+        dl.progress = 0f
+        dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
+
+        downloadJob = scope.launch {
+            JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
+                dl.progress = p
+                dl.message = msg
+            }
+            // Dibatalkan lewat tombol Batal: layar sudah dikembalikan oleh pemanggil, jangan disentuh lagi.
+            if (!isActive) return@launch
+
+            val res = downloader.downloadInstance(inst) { p, msg ->
+                dl.progress = p
+                dl.message = msg
+            }
+            if (!isActive) return@launch
+
+            isDownloading = false
+            downloadJob = null
+            if (res.isSuccess) {
+                Toast.makeText(context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    // Tombol Batal di dialog unduhan. Berkas yang sudah selesai tetap dipakai; tekan UNDUH untuk melanjutkan.
+    fun cancelInstall() {
+        downloadJob?.cancel()
+        downloadJob = null
+        isDownloading = false
+        Toast.makeText(context, "Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.", Toast.LENGTH_SHORT).show()
+    }
+
     // Tombol PLAY / UNDUH: unduh dulu bila belum lengkap, siapkan Java bila belum ada, lalu luncurkan.
     fun startInstance(inst: Instance) {
         val account = currentAccount
@@ -289,29 +336,7 @@ fun DashboardScreen() {
 
         val isFullyDownloaded = inst.isDownloaded && InstanceManager.isInstanceDownloaded(context, inst)
         if (!isFullyDownloaded) {
-            val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
-            isDownloading = true
-            downloadTargetName = inst.name
-            dl.progress = 0f
-            dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
-
-            scope.launch {
-                JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
-                    dl.progress = p
-                    dl.message = msg
-                }
-
-                val res = downloader.downloadInstance(inst) { p, msg ->
-                    dl.progress = p
-                    dl.message = msg
-                }
-                isDownloading = false
-                if (res.isSuccess) {
-                    Toast.makeText(context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG).show()
-                }
-            }
+            installInstance(inst)
         } else {
             val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
             if (!JavaRuntimeManager.isRuntimeInstalled(context, targetRuntime)) {
@@ -478,8 +503,15 @@ fun DashboardScreen() {
                                 onNavigateBack = { currentTab = "home" },
                                 onInstanceCreated = { newInst ->
                                     InstanceManager.createInstance(context, newInst)
-                                    Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
                                     currentTab = "home"
+                                    if (newInst.isDownloaded) {
+                                        // Mesin Horizon (Rust) tidak butuh unduhan lewat launcher
+                                        Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        // Langsung unduh supaya mod tidak ditambahkan sebelum instance terpasang
+                                        Toast.makeText(context, "Instance ${newInst.name} dibuat. Mengunduh game...", Toast.LENGTH_SHORT).show()
+                                        installInstance(newInst)
+                                    }
                                 },
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -592,7 +624,7 @@ fun DashboardScreen() {
 
         // Download Progress Dialog
         if (isDownloading) {
-            DownloadDialogHost(name = downloadTargetName, state = dl)
+            DownloadDialogHost(name = downloadTargetName, state = dl, onCancel = { cancelInstall() })
         }
 
         // Unsupported Renderer Warning Dialog (Persis seperti Zalith)
@@ -1205,11 +1237,12 @@ private class DownloadUiState {
 }
 
 @Composable
-private fun DownloadDialogHost(name: String, state: DownloadUiState) {
+private fun DownloadDialogHost(name: String, state: DownloadUiState, onCancel: () -> Unit) {
     NuxDownloadProgressDialog(
         instanceName = name,
         progress = state.progress,
-        message = state.message
+        message = state.message,
+        onCancel = onCancel
     )
 }
 

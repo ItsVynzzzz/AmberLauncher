@@ -1,0 +1,119 @@
+diff --git a/README.en.md b/README.en.md
+index 07ee89f..bcacec0 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -58,7 +58,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
+ 
+ **Controls**
+ - **Touch control editor**: adjust the position, size, and buttons on screen however you like.
+-- **Touch hotbar** (Bedrock style): tap the hotbar to select a slot. It can be turned off under **Settings > Controls**.
++- **Touch hotbar** (Bedrock style): tap the hotbar to select a slot, also with a second finger while the camera is being dragged. It can be turned off under **Settings > Controls**.
+ - **Controller (gamepad) support**, including mods such as Controlify.
+ - **Joystick auto-sprint** can be turned off, and on-screen Shift/Ctrl/Alt buttons are sent as modifiers (for example Shift + click in the inventory).
+ 
+diff --git a/README.md b/README.md
+index 7c09f2a..34bb041 100644
+--- a/README.md
++++ b/README.md
+@@ -58,7 +58,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan >
+ 
+ **Kontrol**
+ - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar sesukamu.
+-- **Hotbar sentuh** gaya Bedrock: ketuk hotbar untuk memilih slot. Bisa dimatikan di **Pengaturan > Kontrol**.
++- **Hotbar sentuh** gaya Bedrock: ketuk hotbar untuk memilih slot, juga dengan jari lain saat kamera sedang digeser. Bisa dimatikan di **Pengaturan > Kontrol**.
+ - **Controller (gamepad)** didukung, termasuk mod seperti Controlify.
+ - **Lari otomatis joystick** bisa dimatikan, dan tombol Shift/Ctrl/Alt di layar ikut terbaca sebagai modifier (misalnya Shift + klik di inventory).
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index 92f9c78..3dcbe58 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+@@ -162,6 +162,13 @@ fun SwitchableMouseLayout(
+                     var longPressJob: Job? = null
+                     // Slot hotbar yang disentuh jari ini (-1 = bukan hotbar). Hanya saat bermain.
+                     var hotbarSlot = -1
++                    // Jari KEDUA yang mengetuk hotbar saat jari pertama masih memegang kamera (atau ketukan lain).
++                    // Dulu hanya satu jari yang dilacak, jadi hotbar tidak bisa diketuk selama layar sedang digeser.
++                    // Jari ini tidak menggerakkan kamera; ketukan singkatnya saja yang memilih slot.
++                    var hotbarPointerId: PointerId? = null
++                    var hotbarPointerSlot = -1
++                    var hotbarPointerStart = Offset.Zero
++                    var hotbarPointerMoved = false
+                     // Jari yang sedang diteruskan ke mod.
+                     val forwarder = TouchForwarder()
+                     // Status kursor terkunci pada kejadian sebelumnya, untuk mendeteksi pergantian mode.
+@@ -202,6 +209,8 @@ fun SwitchableMouseLayout(
+                             val capturedNow0 = currentCursorMode == CURSOR_DISABLED
+                             if (capturedNow0 != lastCaptured) {
+                                 lastCaptured = capturedNow0
++                                // Ketukan hotbar tambahan tidak berlaku lagi setelah mode berganti (inventori dibuka/ditutup).
++                                hotbarPointerId = null
+                                 val heldId = activePointerId
+                                 if (heldId != null) {
+                                     longPressJob?.cancel()
+@@ -236,6 +245,35 @@ fun SwitchableMouseLayout(
+                                 checkPhysicalMouseMode(false)
+                                 currentOnTouch()
+ 
++                                // Jari tambahan saat bermain (kursor terkunci): satu jari sudah memegang kamera atau
++                                // ketukan, tetapi hotbar tetap harus bisa diketuk dengan jari lain.
++                                if (activePointerId != null && !downEvent.isConsumed &&
++                                    hotbarPointerId == null && currentCursorMode == CURSOR_DISABLED
++                                ) {
++                                    val lookup = currentHotbarSlotAt
++                                    if (lookup != null) {
++                                        val slotHere = lookup(downEvent.position)
++                                        if (slotHere >= 0) {
++                                            // Jari baru jatuh di hotbar: ketukan singkatnya memilih slot dan jari
++                                            // pertama (kamera) tidak terganggu.
++                                            hotbarPointerId = downEvent.id
++                                            hotbarPointerSlot = slotHere
++                                            hotbarPointerStart = downEvent.position
++                                            hotbarPointerMoved = false
++                                        } else if (hotbarSlot >= 0 && !isDragging && !longPressTriggered) {
++                                            // Jari pertama masih menunggu ketukan di hotbar, lalu jari baru jatuh di luar
++                                            // hotbar: jari baru menjadi jari kamera, jari pertama tetap menjadi ketukan hotbar.
++                                            hotbarPointerId = activePointerId
++                                            hotbarPointerSlot = hotbarSlot
++                                            hotbarPointerStart = startPosition
++                                            hotbarPointerMoved = false
++                                            longPressJob?.cancel()
++                                            activePointerId = null
++                                            hotbarSlot = -1
++                                        }
++                                    }
++                                }
++
+                                 if (activePointerId == null && !downEvent.isConsumed) {
+                                     activePointerId = downEvent.id
+                                     startPosition = downEvent.position
+@@ -354,9 +392,28 @@ fun SwitchableMouseLayout(
+                                 }
+                             }
+ 
++                            // Jari hotbar tambahan: tidak menggerakkan kamera. Bila diangkat tanpa bergeser, slotnya dipilih.
++                            hotbarPointerId?.let { hotbarId ->
++                                val hc = event.changes.firstFast { it.id == hotbarId }
++                                if (hc == null) {
++                                    hotbarPointerId = null
++                                } else if (hc.changedToUpIgnoreConsumed()) {
++                                    if (!hotbarPointerMoved && currentCursorMode == CURSOR_DISABLED) {
++                                        currentOnHotbarSelect(hotbarPointerSlot)
++                                    }
++                                    hc.consume()
++                                    hotbarPointerId = null
++                                } else if (!hotbarPointerMoved &&
++                                    (hc.position - hotbarPointerStart).getDistance() > viewConfiguration.touchSlop
++                                ) {
++                                    hotbarPointerMoved = true
++                                }
++                            }
++
+                             if (!event.changes.anyPressed()) {
+                                 activePointerId = null
+                                 hotbarSlot = -1
++                                hotbarPointerId = null
+                                 isDragging = false
+                                 longPressJob?.cancel()
+                             }
+# FIN part=1/1 files=3

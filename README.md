@@ -58,7 +58,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 
 **Kontrol**
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar sesukamu.
-- **Hotbar sentuh** gaya Bedrock: ketuk hotbar untuk memilih slot. Bisa dimatikan di **Pengaturan > Kontrol**.
+- **Hotbar sentuh** gaya Bedrock: ketuk hotbar untuk memilih slot, juga dengan jari lain saat kamera sedang digeser. Bisa dimatikan di **Pengaturan > Kontrol**.
 - **Controller (gamepad)** didukung, termasuk mod seperti Controlify.
 - **Lari otomatis joystick** bisa dimatikan, dan tombol Shift/Ctrl/Alt di layar ikut terbaca sebagai modifier (misalnya Shift + klik di inventory).
 

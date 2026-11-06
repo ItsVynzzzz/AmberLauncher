@@ -58,7 +58,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 
 **Controls**
 - **Touch control editor**: adjust the position, size, and buttons on screen however you like.
-- **Touch hotbar** (Bedrock style): tap the hotbar to select a slot. It can be turned off under **Settings > Controls**.
+- **Touch hotbar** (Bedrock style): tap the hotbar to select a slot, also with a second finger while the camera is being dragged. It can be turned off under **Settings > Controls**.
 - **Controller (gamepad) support**, including mods such as Controlify.
 - **Joystick auto-sprint** can be turned off, and on-screen Shift/Ctrl/Alt buttons are sent as modifiers (for example Shift + click in the inventory).
 

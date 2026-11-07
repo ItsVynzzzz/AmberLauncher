@@ -43,7 +43,7 @@ Menyembunyikan bilah navigasi dan bilah status saat bermain.	Hides the navigatio
 Hindari poni layar	Avoid the display cutout
 Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Shifts the game view so the camera hole or notch does not cover it.
 Kontrol Amber	Amber controls
-Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin (gaya Bedrock). Berlaku di PLAY berikutnya.	The on-screen buttons follow the Amber control editor (position, size, and buttons), so there is only one set of controls. Turn it off to use the engine's own controls (Bedrock style). Applies on the next PLAY.
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	The on-screen buttons follow the Amber control editor (position, size, and buttons), so there is only one set of controls. Turn it off to use the engine's own controls. Applies on the next PLAY.
 Perangkat input	Input device
 Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Auto picks between touch, keyboard and mouse, or a gamepad depending on what is connected.
 Layar sentuh	Touch screen
@@ -55,3 +55,11 @@ Setel ulang pengaturan Rust	Reset Rust settings
 Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Puts every choice on this tab back to the engine defaults. Instances and worlds are not touched.
 Setel ulang	Reset
 Pengaturan Rust dikembalikan ke bawaan.	Rust settings were put back to the defaults.
+Mode performa	Performance mode
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	Normal uses the engine defaults. Super saver lowers render distance, particles, clouds, and shadows. Battery saver caps at 60 FPS with VSync. Max FPS removes the FPS cap and turns VSync off. These modes change the game video settings on PLAY.
+Normal	Normal
+Super hemat	Super saver
+Hemat baterai	Battery saver
+FPS maksimum	Max FPS
+Kurangi animasi game	Reduce game animations
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Turns off animated textures, chunk fade, camera bobbing while walking, and menu blur. Lighter on weak phones.

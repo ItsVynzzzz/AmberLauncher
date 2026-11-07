@@ -162,12 +162,32 @@ fun RustGraphicsRows() {
     )
 }
 
-/** Laju layar, petunjuk performa, batas pekerja chunk, dan cache. */
+/** Mode performa, animasi, laju layar, petunjuk performa, batas pekerja chunk, dan cache. */
 @Composable
 fun RustPerformanceRows() {
     val context = LocalContext.current
     val s by RustSettingsStore.settings.collectAsState()
 
+    SettingChoiceRow(
+        title = "Mode performa",
+        desc = "Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.",
+        options = listOf(
+            RustSettingsStore.PERF_NORMAL to "Normal",
+            RustSettingsStore.PERF_SUPER to "Super hemat",
+            RustSettingsStore.PERF_BATTERY to "Hemat baterai",
+            RustSettingsStore.PERF_FPS to "FPS maksimum"
+        ),
+        selected = s.perfMode,
+        onSelect = { value -> RustSettingsStore.update(context) { it.copy(perfMode = value) } }
+    )
+    SettingDivider()
+    SettingSwitchRow(
+        title = "Kurangi animasi game",
+        desc = "Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.",
+        checked = s.gameAnimationsOff,
+        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(gameAnimationsOff = on) } }
+    )
+    SettingDivider()
     SettingChoiceRow(
         title = "Laju layar",
         desc = "Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.",
@@ -262,7 +282,7 @@ fun RustControlRows() {
 
     SettingSwitchRow(
         title = "Kontrol Amber",
-        desc = "Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin (gaya Bedrock). Berlaku di PLAY berikutnya.",
+        desc = "Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.",
         checked = launcher.rustAmberControls,
         onCheckedChange = { on ->
             SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(rustAmberControls = on))

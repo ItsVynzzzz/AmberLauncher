@@ -45,7 +45,7 @@ Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta las barras d
 Hindari poni layar	Evitar el notch de la pantalla
 Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desplaza la vista del juego para que no la tape el agujero de la c\u00e1mara o el notch.
 Kontrol Amber	Controles de Amber
-Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin (gaya Bedrock). Berlaku di PLAY berikutnya.	Los botones en pantalla siguen el editor de controles de Amber (posici\u00f3n, tama\u00f1o y botones), as\u00ed que solo hay un conjunto de controles. Desact\u00edvalo para usar los controles del motor (estilo Bedrock). Se aplica en el pr\u00f3ximo PLAY.
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	Los botones en pantalla siguen el editor de controles de Amber (posici\u00f3n, tama\u00f1o y botones), as\u00ed que solo hay un conjunto de controles. Desact\u00edvalo para usar los controles del motor. Se aplica en el pr\u00f3ximo PLAY.
 Perangkat input	Dispositivo de entrada
 Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Autom\u00e1tico elige entre t\u00e1ctil, teclado y rat\u00f3n o mando seg\u00fan lo que est\u00e9 conectado.
 Layar sentuh	Pantalla t\u00e1ctil
@@ -57,3 +57,11 @@ Setel ulang pengaturan Rust	Restablecer ajustes de Rust
 Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Devuelve todas las opciones de esta pesta\u00f1a a los valores del motor. No se tocan instancias ni mundos.
 Setel ulang	Restablecer
 Pengaturan Rust dikembalikan ke bawaan.	Los ajustes de Rust volvieron a los valores predeterminados.
+Mode performa	Modo de rendimiento
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	Normal usa los valores del motor. Ahorro extremo reduce la distancia de renderizado, las part\u00edculas, las nubes y las sombras. Ahorro de bater\u00eda limita a 60 FPS con VSync. FPS m\u00e1ximos quita el l\u00edmite de FPS y desactiva VSync. Estos modos cambian los ajustes de v\u00eddeo del juego al pulsar PLAY.
+Normal	Normal
+Super hemat	Ahorro extremo
+Hemat baterai	Ahorro de bater\u00eda
+FPS maksimum	FPS m\u00e1ximos
+Kurangi animasi game	Reducir animaciones del juego
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Desactiva texturas animadas, el desvanecimiento de chunks, el balanceo de c\u00e1mara al caminar y el desenfoque de men\u00fas. M\u00e1s ligero en m\u00f3viles d\u00e9biles.

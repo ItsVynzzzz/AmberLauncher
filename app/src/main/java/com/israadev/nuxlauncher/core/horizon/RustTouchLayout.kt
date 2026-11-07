@@ -5,6 +5,7 @@ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.crash.LauncherLog
+import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode as Key
 import org.json.JSONArray
 import org.json.JSONObject
@@ -12,24 +13,29 @@ import java.io.File
 import java.io.IOException
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 /**
- * Membuat tombol layar mesin Rust mengikuti tata letak kontrol Amber, tanpa mengubah mesin dan tanpa lapisan
- * tambahan di atasnya.
+ * Membuat kontrol layar mesin Rust memakai tata letak DAN tampilan kontrol Amber, tanpa mengubah mesin dan tanpa
+ * lapisan tambahan di atasnya.
  *
- * Mesin menggambar dan menangani sentuhan tombolnya sendiri (itu satu-satunya cara tombol bisa disentuh di dalam
- * jendela mesin), tetapi posisi, ukuran, dan tombol mana yang tampil dibaca dari `horizon-touch.json` di folder
- * data mesin. Di sini tata letak Amber diterjemahkan ke berkas itu sebelum mesin dibuka (saat PLAY):
+ * Mesin (Horizon 0.7.8 ke atas) punya gaya kontrol "GoyControl": joystick dan tombol statis yang bisa diatur
+ * posisi, ukuran, warna, bentuk, dan labelnya lewat `horizon-touch.json` di folder data mesin. Di sini tata letak
+ * Amber diterjemahkan ke gaya itu sebelum mesin dibuka (saat PLAY), jadi hanya ada satu set kontrol:
  *
- * - Joystick, serang, pakai, lompat, jongkok, lari, inventori, chat, ESC, F3, F5, dan tukar tangan memakai tombol
- *   mesin yang sesuai, di posisi dan ukuran milik Amber.
- * - Tombol keyboard/mouse lain di tata letak Amber ditambahkan sebagai tombol kustom mesin.
- * - Tombol mesin yang tidak ada di tata letak Amber disembunyikan, kecuali gerak, lompat, serang, dan pakai
- *   (tanpa itu game tidak bisa dimainkan; kalau tidak ada di Amber, tombol mesin dipakai di tempat bawaannya).
+ * - Joystick Amber menjadi joystick mesin (tetap di tempatnya, lari otomatis mengikuti pilihan Amber).
+ * - Setiap tombol keyboard/mouse Amber menjadi tombol mesin di posisi dan ukuran yang sama, dengan label, sudut
+ *   membulat, kaca gelap, garis putih tipis, dan warna kuning saat ditekan seperti tombol Amber. Pilihan tombol
+ *   tahan/kunci (toggle), kombinasi tombol, dan kapan tampil (main/menu/selalu) ikut dibawa.
+ * - Widget gulir hotbar menjadi dua tombol (naik/turun). Tombol sistem HIDE GUI menjadi F1 dan MENU menjadi ESC
+ *   (mesin tidak punya menu Amber); FPS, keyboard, dan makro perintah/turbo tidak punya padanan dan dilewati.
+ * - Geser dari tombol serang/pakai/lompat hanya ikut memutar kamera bila pilihan itu menyala di Pengaturan Amber.
  *
- * Hanya kunci yang diperlukan yang ditulis; kunci lain di berkas itu dibiarkan. Berkas aslinya disalin dulu ke
- * `horizon-touch.amber-backup.json` dan dipulihkan saat pilihan ini dimatikan. Tidak ada pekerjaan selain
- * satu kali tulis berkas kecil per PLAY, dan setiap kegagalan hanya dicatat (game tetap dibuka).
+ * Hanya kunci yang diperlukan yang ditulis; kunci lain di berkas itu (sensitivitas, giroskop, dan seterusnya)
+ * dibiarkan. Berkas aslinya disalin dulu ke `horizon-touch.amber-backup.json` dan dipulihkan saat pilihan ini
+ * dimatikan. Tidak ada pekerjaan selain satu kali tulis berkas kecil per PLAY, dan setiap kegagalan hanya dicatat
+ * (game tetap dibuka).
  */
 object RustTouchLayout {
     private const val TAG = "RustTouchLayout"
@@ -38,31 +44,15 @@ object RustTouchLayout {
     private const val BACKUP_FILE = "horizon-touch.amber-backup.json"
     private const val TEMP_FILE = "horizon-touch.amber-tmp"
 
-    // Urutan kontrol di mesin (enum Control): dipakai sebagai indeks larik tata letak dan visibilitas.
-    private const val MOVE = 0
-    private const val SPRINT = 1
-    private const val JUMP = 2
-    private const val SNEAK = 3
-    private const val ATTACK = 4
-    private const val USE = 5
-    private const val CHAT = 6
-    private const val PAUSE = 7
-    private const val INVENTORY = 9
-    private const val DEBUG = 10
-    private const val PERSPECTIVE = 11
-    private const val OFFHAND = 12
-    private const val CONTROLS = 14
-    private const val MAX_CUSTOM = 32
+    private const val CONTROLS = 14 // jumlah kontrol bawaan mesin (enum Control)
+    private const val MOVE = 0 // indeks kontrol gerak (joystick) di mesin
+    private const val MAX_CUSTOM = 32 // batas tombol kustom mesin
 
-    // Nilai button_visibility mesin: 0 otomatis, 1 selalu tampil, 2 disembunyikan.
-    private const val SHOWN = 1
-    private const val HIDDEN = 2
+    /** Tinggi ruang UI mesin dalam satuan "dp mesin" (mesin menargetkan 410..440): dasar skala sudut dan garis. */
+    private const val ENGINE_UI_HEIGHT = 430f
 
-    /** Gerak, lompat, serang, dan pakai: tanpa ini game tidak bisa dimainkan lewat sentuhan. */
-    private val ESSENTIAL = intArrayOf(MOVE, JUMP, ATTACK, USE)
-
-    /** Tata letak bawaan mesin (x, y, ukuran), untuk kontrol yang tidak diatur Amber dan sebagai isi awal. */
-    private val DEFAULTS = arrayOf(
+    /** Tata letak bawaan mesin (x, y, ukuran) untuk 14 kontrol; hanya pengisi karena gaya Goy memakai tombol kustom. */
+    private val FILLER = arrayOf(
         floatArrayOf(0.13f, 0.76f, 0.32f),
         floatArrayOf(0.72f, 0.78f, 0.105f),
         floatArrayOf(0.92f, 0.78f, 0.16f),
@@ -78,20 +68,36 @@ object RustTouchLayout {
         floatArrayOf(0.80f, 0.96f, 0.075f),
         floatArrayOf(0.92f, 0.36f, 0.12f)
     )
-    private const val DEFAULT_OPACITY = 0.65f
 
-    /** Satu penempatan: pusat (x, y) 0..1 dari layar, ukuran sebagai pecahan tinggi layar, dan kepekatan. */
-    private class Place(val x: Float, val y: Float, val size: Float, val opacity: Float)
+    // Warna tampilan Amber (ControlSkin).
+    private const val YELLOW = 0xFFD60A
+    private const val YELLOW_SOFT = 0xFFE566
+    private const val WHITE = 0xFFFFFF
+    private const val BLACK = 0x000000
 
-    private class Plan(
-        val slots: Array<Place?>,
-        val custom: List<Pair<String, Place>>,
-        val autoSprint: Boolean?
+    /** Posisi dan ukuran satu elemen: pusat (0..1 dari layar), ukuran dasar sebagai pecahan tinggi layar, rasio lebar/tinggi. */
+    private class Place(val x: Float, val y: Float, val size: Float, val wr: Float, val hr: Float)
+
+    private class Joy(val place: Place, val opacity: Float, val autoSprint: Boolean, val inGame: Boolean, val inMenu: Boolean)
+
+    private class Btn(
+        val label: String,
+        val keys: List<String>,
+        val place: Place,
+        val opacity: Float,
+        val primary: Boolean,
+        val cornerDp: Float,
+        val toggle: Boolean,
+        val passthrough: Boolean,
+        val inGame: Boolean,
+        val inMenu: Boolean
     )
+
+    private class Plan(val joy: Joy?, val buttons: List<Btn>, val scale: Float)
 
     /**
      * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. Tidak pernah
-     * melempar: kegagalan hanya dicatat dan mesin memakai tombol bawaannya.
+     * melempar: kegagalan hanya dicatat dan mesin memakai kontrol bawaannya.
      */
     fun sync(context: Context, enabled: Boolean) {
         try {
@@ -119,14 +125,16 @@ object RustTouchLayout {
             ControlLayoutManager.init(context)
             ControlLayoutManager.buttons.value
         }
-        if (buttons.isEmpty()) return
+        val heightDp = surfaceHeightDp(context, config?.optString("orientation", "landscape"))
+        val plan = plan(buttons, heightDp, SettingsManager.settings.value.buttonLookDrag)
+        // Tata letak tanpa joystick dan tanpa tombol apa pun jangan diterapkan: game jadi tidak bisa dikendalikan.
+        if (plan.joy == null && plan.buttons.isEmpty()) return
 
         // Salinan berkas asli disimpan sekali, sebelum Amber menyentuhnya pertama kali.
         if (!backup.isFile) {
             writeAtomic(backup, if (touch.isFile) touch.readText() else "{}")
         }
 
-        val plan = plan(buttons, surfaceHeightDp(context, config?.optString("orientation", "landscape")))
         val json = build(readObject(touch) ?: JSONObject(), plan)
         val text = json.toString(2)
         if (touch.isFile && touch.readText() == text) return
@@ -148,71 +156,125 @@ object RustTouchLayout {
 
     // ---- terjemahan tata letak ----
 
-    private fun plan(buttons: List<CustomControlButton>, heightDp: Float): Plan {
-        val slots = arrayOfNulls<Place>(CONTROLS)
-        val custom = ArrayList<Pair<String, Place>>()
-        var autoSprint: Boolean? = null
+    private fun plan(buttons: List<CustomControlButton>, heightDp: Float, lookDrag: Boolean): Plan {
+        val scale = ENGINE_UI_HEIGHT / heightDp
+        var joy: Joy? = null
+        val out = ArrayList<Btn>()
+
+        fun add(btn: Btn) {
+            if (out.size < MAX_CUSTOM) out.add(btn)
+        }
+
+        // Tombol sistem (HIDE GUI, MENU) menjadi tombol keyboard: ditambahkan terakhir dan dilewati bila tombol
+        // keyboard yang sama (mis. ESC) sudah ada di tata letak, supaya tidak ada dua tombol yang sama.
+        val system = ArrayList<CustomControlButton>()
+
         for (b in buttons) {
-            if (b.isSystem || b.isScroll || b.isMacro) continue
-            // Tombol khusus menu (mis. Shift di inventori) tidak punya padanan: mesin mengatur menunya sendiri.
-            if (b.showMode == ControlShowMode.MENU) continue
-            val place = placeOf(b, heightDp)
-            val slot = slotOf(b)
-            if (slot >= 0 && slots[slot] == null) {
-                slots[slot] = place
-                if (slot == MOVE) autoSprint = b.autoSprint
+            val inGame = b.showMode != ControlShowMode.MENU
+            val inMenu = b.showMode != ControlShowMode.GAME
+            val k = b.opacity.coerceIn(0.15f, 1f)
+
+            if (b.isJoystick) {
+                if (joy == null) joy = Joy(placeOf(b.xPercent, b.yPercent, b.widthDp.toFloat(), b.heightDp.toFloat(), heightDp), k, b.autoSprint, inGame, inMenu)
                 continue
             }
-            if (b.isJoystick) continue
-            val token = tokenOf(b) ?: continue
-            if (custom.size < MAX_CUSTOM && custom.none { it.first == token }) custom.add(token to place)
+            if (b.isScroll) {
+                // Widget gulir hotbar: separuh atas = gulir naik, separuh bawah = gulir turun.
+                val halfH = b.heightDp / 2f
+                val up = placeOf(b.xPercent, b.yPercent - quarter(b, heightDp), b.widthDp.toFloat(), halfH, heightDp)
+                val down = placeOf(b.xPercent, b.yPercent + quarter(b, heightDp), b.widthDp.toFloat(), halfH, heightDp)
+                add(Btn("UP", listOf("mouse.scroll.up"), up, k, false, b.cornerRadiusDp.toFloat(), false, false, inGame, inMenu))
+                add(Btn("DN", listOf("mouse.scroll.down"), down, k, false, b.cornerRadiusDp.toFloat(), false, false, inGame, inMenu))
+                continue
+            }
+
+            if (b.isSystem) {
+                system.add(b)
+                continue
+            }
+            buttonOf(b, heightDp, lookDrag)?.let { add(it) }
         }
-        return Plan(slots, custom, autoSprint)
+        for (b in system) {
+            val btn = buttonOf(b, heightDp, lookDrag) ?: continue
+            if (out.none { it.keys == btn.keys }) add(btn)
+        }
+        return Plan(joy, out, scale)
     }
 
-    private fun placeOf(b: CustomControlButton, heightDp: Float): Place {
-        val size = ((b.widthDp + b.heightDp) / 2f) / heightDp
-        return Place(
-            x = (b.xPercent / 100f).coerceIn(0.025f, 0.975f),
-            y = (b.yPercent / 100f).coerceIn(0.025f, 0.975f),
-            size = size.coerceIn(0.045f, 0.45f),
-            opacity = b.opacity.coerceIn(0.1f, 1f)
+    /** Tombol Amber biasa (keyboard, mouse, kombinasi, atau sistem yang punya padanan) sebagai tombol mesin. */
+    private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean): Btn? {
+        val keys = keysOf(b)
+        if (keys.isEmpty()) return null
+        return Btn(
+            label = labelOf(b),
+            keys = keys,
+            place = placeOf(b.xPercent, b.yPercent, b.widthDp.toFloat(), b.heightDp.toFloat(), heightDp),
+            opacity = b.opacity.coerceIn(0.15f, 1f),
+            primary = !b.isSystem && b.heightDp >= 56,
+            cornerDp = b.cornerRadiusDp.toFloat(),
+            toggle = b.isToggle || (b.isMacro && b.macroType == "COMBO"),
+            passthrough = lookDrag && !b.isSystem && !b.isMacro && (b.isMouseButton || b.keyCode == Key.GLFW_KEY_SPACE),
+            inGame = b.showMode != ControlShowMode.MENU,
+            inMenu = b.showMode != ControlShowMode.GAME
         )
     }
 
-    /** Tombol Amber ini sama dengan kontrol bawaan mesin yang mana? -1 = tidak ada padanannya. */
-    private fun slotOf(b: CustomControlButton): Int = when {
-        b.isJoystick -> MOVE
-        b.isMouseButton -> when (b.mouseButton) {
-            Key.GLFW_MOUSE_BUTTON_LEFT -> ATTACK
-            Key.GLFW_MOUSE_BUTTON_RIGHT -> USE
-            else -> -1
-        }
-        else -> when (b.keyCode) {
-            Key.GLFW_KEY_SPACE -> JUMP
-            Key.GLFW_KEY_LEFT_SHIFT -> SNEAK
-            Key.GLFW_KEY_LEFT_CONTROL -> SPRINT
-            Key.GLFW_KEY_E -> INVENTORY
-            Key.GLFW_KEY_T -> CHAT
-            Key.GLFW_KEY_ESCAPE -> PAUSE
-            Key.GLFW_KEY_F3 -> DEBUG
-            Key.GLFW_KEY_F5 -> PERSPECTIVE
-            Key.GLFW_KEY_F -> OFFHAND
-            else -> -1
-        }
+    /** Pergeseran vertikal (persen layar) dari pusat widget gulir ke pusat separuh atas/bawahnya. */
+    private fun quarter(b: CustomControlButton, heightDp: Float): Float = (b.heightDp / 4f) / heightDp * 100f
+
+    private fun placeOf(xPercent: Float, yPercent: Float, widthDp: Float, heightDp: Float, screenHeightDp: Float): Place {
+        val wFrac = widthDp / screenHeightDp
+        val hFrac = heightDp / screenHeightDp
+        val size = sqrt(wFrac * hFrac).coerceIn(0.045f, 0.45f)
+        return Place(
+            x = (xPercent / 100f).coerceIn(0.025f, 0.975f),
+            y = (yPercent / 100f).coerceIn(0.025f, 0.975f),
+            size = size,
+            wr = (wFrac / size).coerceIn(0.4f, 3.2f),
+            hr = (hFrac / size).coerceIn(0.4f, 3.2f)
+        )
     }
 
-    /** Token tombol kustom mesin untuk tombol Amber ini, atau null bila mesin tidak mengenal tombolnya. */
+    private fun labelOf(b: CustomControlButton): String {
+        val name = b.name.trim()
+        return if (name.isNotEmpty()) name.take(9) else ""
+    }
+
+    /** Daftar token tombol mesin untuk tombol Amber ini (satu sampai tiga); kosong bila tidak punya padanan. */
+    private fun keysOf(b: CustomControlButton): List<String> {
+        if (b.isSystem) {
+            return when (b.systemAction) {
+                "HIDE_GUI" -> listOf("key.keyboard.f1")
+                "MENU", "CLOSE" -> listOf("key.keyboard.escape")
+                else -> emptyList() // FPS dan keyboard layar milik launcher, tidak ada di mesin
+            }
+        }
+        if (b.isMacro) {
+            if (b.macroType != "COMBO") return emptyList()
+            val codes = if (b.macroComboKeys.isNotEmpty()) b.macroComboKeys else if (b.macroComboKey != 0) listOf(b.macroComboKey) else emptyList()
+            val tokens = ArrayList<String>()
+            tokenOf(b)?.let { tokens.add(it) }
+            for (code in codes) keyToken(code)?.let { if (it !in tokens) tokens.add(it) }
+            return tokens.take(3)
+        }
+        return listOfNotNull(tokenOf(b))
+    }
+
+    /** Token tombol/mouse mesin untuk tombol utama Amber ini, atau null bila mesin tidak mengenalnya. */
     private fun tokenOf(b: CustomControlButton): String? {
         if (b.isMouseButton) {
             return when (b.mouseButton) {
-                Key.GLFW_MOUSE_BUTTON_LEFT -> "action:key.attack"
-                Key.GLFW_MOUSE_BUTTON_RIGHT -> "action:key.use"
-                Key.GLFW_MOUSE_BUTTON_MIDDLE -> "action:key.pickItem"
+                Key.GLFW_MOUSE_BUTTON_LEFT -> "key.mouse.left"
+                Key.GLFW_MOUSE_BUTTON_RIGHT -> "key.mouse.right"
+                Key.GLFW_MOUSE_BUTTON_MIDDLE -> "key.mouse.middle"
                 else -> null
             }
         }
-        val code = b.keyCode
+        return keyToken(b.keyCode)
+    }
+
+    /** Kode tombol GLFW ke token keyboard mesin (`key.keyboard.*`); null bila mesin tidak mengenalnya. */
+    private fun keyToken(code: Int): String? {
         val name = when (code) {
             in 65..90 -> ('a' + (code - 65)).toString() // A..Z
             in 48..57 -> (code - 48).toString() // 0..9
@@ -267,79 +329,124 @@ object RustTouchLayout {
     // ---- berkas mesin ----
 
     private fun build(json: JSONObject, plan: Plan): JSONObject {
+        json.put("control_style", "goy-control")
         json.put("mode", "crosshair")
-        json.put("split_controls", false)
-        plan.autoSprint?.let { json.put("sprint_with_joystick", it) }
+        json.put("split_controls", true)
+        json.put("left_handed", false)
+        json.put("button_scale", 1.0)
+        json.put("horizontal_margin", 0.0)
+        json.put("vertical_margin", 0.0)
+        json.put("dynamic_joystick", false)
+        // Menu kontrol mengambang milik mesin disembunyikan: tata letak diatur dari editor kontrol Amber.
+        json.put("show_control_hub", false)
+        plan.joy?.let { json.put("sprint_with_joystick", it.autoSprint) }
+        // Selalu preset bawaan, supaya mesin tidak menyimpan tata letak Amber ke preset pemain.
+        json.put("preset_id", "default")
+        json.put("active_profile", "default")
+        json.put("active_goy_preset", "default")
+        json.put("joystick_style", joystickStyle(plan.joy?.opacity ?: 0.9f, plan.scale))
 
-        // Tiga baris tata letak (satu per mode) wajib lengkap; hanya baris mode crosshair yang diubah.
-        val rows = readRows(json.optJSONArray("layouts"))
-        for (slot in 0 until CONTROLS) {
-            plan.slots[slot]?.let { rows[0][slot] = floatArrayOf(it.x, it.y, it.size, it.opacity) }
-        }
+        // Tiga baris tata letak (satu per mode) wajib lengkap; gaya Goy hanya memakai baris joystick.
         val layouts = JSONArray()
-        for (row in rows) {
-            val out = JSONArray()
-            for (p in row) out.put(placement(p[0], p[1], p[2], p[3]))
-            layouts.put(out)
+        repeat(3) {
+            val row = JSONArray()
+            for (i in 0 until CONTROLS) {
+                val f = FILLER[i]
+                val p = placement(f[0], f[1], f[2], 1f, 1f, 0.65f)
+                val joy = plan.joy
+                if (i == MOVE && joy != null) {
+                    row.put(
+                        placement(joy.place.x, joy.place.y, joy.place.size, joy.place.wr, joy.place.hr, joy.opacity)
+                            .put("visible_in_game", joy.inGame)
+                            .put("visible_in_menu", joy.inMenu)
+                    )
+                } else {
+                    row.put(p)
+                }
+            }
+            layouts.put(row)
         }
         json.put("layouts", layouts)
 
+        // Gaya Goy hanya memakai joystick bawaan mesin; kontrol bawaan lain diganti tombol kustom di bawah.
         val visibility = JSONArray()
-        for (slot in 0 until CONTROLS) {
-            val shown = plan.slots[slot] != null || slot in ESSENTIAL
-            visibility.put(if (shown) SHOWN else HIDDEN)
-        }
+        for (i in 0 until CONTROLS) visibility.put(if (i == MOVE && plan.joy != null) 1 else 2)
         json.put("button_visibility", visibility)
 
         val custom = JSONArray()
-        for ((token, p) in plan.custom) {
-            // Satu penempatan per mode mesin (tiga); semuanya sama karena mode dikunci ke crosshair.
-            val perMode = JSONArray()
-            repeat(3) { perMode.put(placement(p.x, p.y, p.size, p.opacity)) }
-            custom.put(JSONObject().put("key", token).put("layouts", perMode))
-        }
+        for (b in plan.buttons) custom.put(customButton(b, plan.scale))
         json.put("custom_buttons", custom)
         return json
     }
 
-    /** Baris tata letak yang ada di berkas (dilengkapi sampai 14 kontrol), atau bawaan mesin bila tidak valid. */
-    private fun readRows(array: JSONArray?): Array<Array<FloatArray>> {
-        if (array == null || array.length() != 3) return defaultRows()
-        val rows = defaultRows()
-        for (r in 0 until 3) {
-            val row = array.optJSONArray(r) ?: return defaultRows()
-            val n = row.length()
-            if (n != 10 && n != 12 && n != 14) return defaultRows()
-            for (i in 0 until n) {
-                val p = row.optJSONObject(i) ?: continue
-                val c = p.optJSONArray("center") ?: continue
-                if (c.length() != 2) continue
-                val x = c.optDouble(0, Double.NaN)
-                val y = c.optDouble(1, Double.NaN)
-                val size = p.optDouble("size", Double.NaN)
-                val opacity = p.optDouble("opacity", Double.NaN)
-                if (x.isNaN() || y.isNaN() || size.isNaN() || opacity.isNaN()) continue
-                rows[r][i] = floatArrayOf(x.toFloat(), y.toFloat(), size.toFloat(), opacity.toFloat())
-            }
-        }
-        return rows
+    /** Joystick berwarna kaca gelap dengan garis putih tipis dan kenop terang, seperti joystick Amber. */
+    private fun joystickStyle(k: Float, scale: Float): JSONObject = JSONObject()
+        .put("stick_stroke", round(1.5f * scale))
+        .put("stick_stroke_color", argb(fade(0.34f + 0.30f * k, k), WHITE))
+        .put("stick_color", argb(fade(0.12f + 0.08f * k, k), WHITE))
+        .put("stick_opacity", 1.0)
+        .put("stick_size", 0.36)
+        .put("base_stroke", round(1.2f * scale))
+        .put("base_stroke_color", argb(fade(0.16f + 0.12f * k, k), WHITE))
+        .put("base_color", argb(fade(0.20f * (0.4f + 0.6f * k), k), BLACK))
+        .put("base_opacity", 1.0)
+        .put("base_roundness", 50.0)
+        .put("move_area", "absolute-fixed")
+
+    /**
+     * Satu tombol Amber sebagai tombol statis mesin. Mesin mengalikan alfa warna dengan kepekatan tombol, jadi
+     * alfa yang diinginkan dibagi kepekatan (dibatasi 1) supaya hasil akhirnya sama dengan gambar Amber.
+     */
+    private fun customButton(b: Btn, scale: Float): JSONObject {
+        val k = b.opacity
+        val fillBase = if (b.primary) 0.30f else 0.22f
+        val edgeBase = if (b.primary) 0.22f else 0.16f
+        // Satu penempatan per mode mesin (tiga); isinya sama karena mode dikunci ke crosshair.
+        fun styled(): JSONObject = placement(b.place.x, b.place.y, b.place.size, b.place.wr, b.place.hr, k)
+            .put("passthrough", b.passthrough)
+            .put("toggleable", b.toggle)
+            .put("swipeable", false)
+            .put("shape", 0)
+            .put("icon_id", 0)
+            .put("use_goy_style", true)
+            .put("stroke_size", round((if (b.primary) 1.3f else 1.2f) * scale))
+            .put("stroke_margin", 0.0)
+            .put("stroke_roundness", round(min(b.cornerDp * scale, 50f)))
+            .put("roundness", round(min(b.cornerDp * scale, 50f)))
+            .put("shadow_size", 0.0)
+            .put("stroke_color", argb(fade(edgeBase + 0.14f * k, k), WHITE))
+            .put("button_color", argb(fade(fillBase * (0.4f + 0.6f * k), k), BLACK))
+            .put("on_click_color", argb(fade(0.34f + 0.30f * k, k), YELLOW))
+            .put("on_click_stroke_color", argb(fade(0.85f, k), YELLOW_SOFT))
+            .put("on_toggle_color", argb(fade(0.18f, k), YELLOW))
+            .put("on_toggle_stroke_color", argb(1f, YELLOW))
+            .put("visible_in_game", b.inGame)
+            .put("visible_in_menu", b.inMenu)
+        val layouts = JSONArray()
+        repeat(3) { layouts.put(styled()) }
+        return JSONObject()
+            .put("key", b.keys[0])
+            .put("second_key", b.keys.getOrElse(1) { "" })
+            .put("third_key", b.keys.getOrElse(2) { "" })
+            .put("custom_label", b.label)
+            .put("always_visible", b.inMenu)
+            .put("layouts", layouts)
     }
 
-    /** Tiga baris tata letak bawaan mesin; baris D-Pad (ketiga) punya lompat dan jongkok yang sedikit berbeda. */
-    private fun defaultRows(): Array<Array<FloatArray>> {
-        val rows = Array(3) {
-            Array(CONTROLS) { i -> floatArrayOf(DEFAULTS[i][0], DEFAULTS[i][1], DEFAULTS[i][2], DEFAULT_OPACITY) }
-        }
-        rows[2][SNEAK] = floatArrayOf(0.13f, 0.76f, 0.10f, DEFAULT_OPACITY)
-        rows[2][JUMP] = floatArrayOf(0.90f, 0.78f, 0.14f, DEFAULT_OPACITY)
-        return rows
-    }
-
-    private fun placement(x: Float, y: Float, size: Float, opacity: Float): JSONObject =
+    private fun placement(x: Float, y: Float, size: Float, wr: Float, hr: Float, opacity: Float): JSONObject =
         JSONObject()
             .put("center", JSONArray().put(round(x)).put(round(y)))
             .put("size", round(size))
             .put("opacity", round(opacity))
+            .put("width_ratio", round(wr))
+            .put("height_ratio", round(hr))
+
+    /** Alfa yang dibagi kepekatan tombol (mesin mengalikannya lagi), dibatasi 0..1. */
+    private fun fade(alpha: Float, opacity: Float): Float = (alpha / opacity).coerceIn(0f, 1f)
+
+    /** Warna ARGB tanpa tanda (0xAARRGGBB) sebagai Long, bentuk yang dibaca mesin (u32). */
+    private fun argb(alpha: Float, rgb: Int): Long =
+        ((alpha * 255f).roundToInt().coerceIn(0, 255).toLong() shl 24) or (rgb.toLong() and 0xFFFFFFL)
 
     private fun round(v: Float): Double = Math.round(v * 1000f) / 1000.0
 

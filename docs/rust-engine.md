@@ -75,28 +75,33 @@ Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan b
 
 ### Pengaturan Rust
 
-Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, laju layar, petunjuk performa, batas pekerja chunk, cache RAM, arah dan rasio layar, layar penuh imersif, poni, perangkat input, server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
+Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, mode performa (Normal, Super hemat, Hemat baterai, FPS maksimum), kurangi animasi game, laju layar, petunjuk performa, batas pekerja chunk, cache RAM, arah dan rasio layar, layar penuh imersif, poni, perangkat input, server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
 
-Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`). Karena itu:
+Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`, dan sejak mesin 0.7.8 `super_perf_mode`, `battery_perf_mode`, `max_fps_mode`, `disable_game_animations`). Karena itu:
 
 - Tidak ada perubahan pada mesin, jadi **tidak perlu membangun ulang mesin**; cukup APK baru.
 - Perubahan berlaku pada PLAY berikutnya (mesin membaca config saat dibuka) dan hanya untuk instance Rust. Instance Java tidak terpengaruh.
 - Hanya kunci milik tab ini yang disentuh. Kunci lain di berkas itu dibiarkan, dan berkasnya baru dibuat saat pemain mengubah sesuatu. Tombol setel ulang menghapus kunci-kunci itu sehingga mesin memakai bawaannya.
 - Tulis berurutan dan atomik (berkas sementara lalu dipindah) di utas latar. Nilai di luar yang dikenal mesin tidak pernah ditulis, karena satu nilai asing membuat mesin membuang seluruh config.
 - Layar peluncur milik mesin menulis berkas yang sama; keduanya saling konsisten karena memakai nama kunci yang sama.
+- **Mode performa** hanya satu pilihan karena mesin menganggap ketiga mode (super, baterai, FPS) saling meniadakan; launcher menulis ketiga kuncinya sekaligus. Mesin menerapkannya pada PLAY dengan mengubah `options.txt` game (jarak render, awan, partikel, batas FPS, dan seterusnya), sama seperti saat dipilih di layar pengaturan mesin. Kunci lain milik mesin 0.7.8 (`fast_chunk_upload`, `zero_latency_touch`, dan seterusnya) dibiarkan di bawaan mesin.
 
 #### Kontrol Amber (Pengaturan > Rust > Kontrol)
 
-Saklar **Kontrol Amber** (bawaan hidup) membuat tombol layar mesin mengikuti tata letak dari editor kontrol Amber, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Mesin tetap menggambar dan menangani sentuhan tombolnya sendiri (satu-satunya cara tombol bisa disentuh di jendela mesin); yang berubah hanya posisi, ukuran, dan tombol mana yang tampil. Tampilannya tetap gaya mesin, bukan gaya Amber.
+Saklar **Kontrol Amber** (bawaan hidup) membuat tombol layar mesin memakai **tata letak dan tampilan editor kontrol Amber**, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Mesin tetap menggambar dan menangani sentuhan tombolnya sendiri (satu-satunya cara tombol bisa disentuh di jendela mesin). Yang dipakai adalah gaya **GoyControl** mesin 0.7.8 (kontrol hitam), karena gaya ini bisa diatur warna, sudut, label, dan posisi tiap tombolnya. Gaya Bedrock bawaan mesin tidak dipakai selama saklar hidup.
 
 Cara kerjanya: saat PLAY, `core/horizon/RustTouchLayout.kt` menerjemahkan tata letak Amber ke `horizon-touch.json` di folder data mesin (`files/horizon/`, atau `profiles/profile-N/` untuk profil mesin lain), lalu mesin membacanya saat dibuka. Tidak ada kode yang berjalan saat bermain.
 
-- Joystick, serang, pakai, lompat, jongkok, lari (Ctrl), inventori (E), chat (T), ESC, F3, F5, dan tukar tangan (F) memakai tombol mesin yang sesuai di posisi dan ukuran milik Amber. Dorong joystick sampai tepi untuk lari mengikuti pilihan joystick Amber.
-- Tombol keyboard atau mouse lain di tata letak Amber ditambahkan sebagai tombol kustom mesin (paling banyak 32). Tombol FPS, keyboard, sembunyikan GUI, menu, hotbar geser, makro, dan tombol khusus menu tidak punya padanan dan dilewati.
-- Tombol mesin yang tidak ada di tata letak Amber disembunyikan, kecuali gerak, lompat, serang, dan pakai: bila tidak ada di Amber, tombol mesin dipakai di tempat bawaannya supaya game tetap bisa dimainkan.
-- Hanya kunci yang diperlukan yang ditulis (`mode`, `layouts`, `button_visibility`, `custom_buttons`, `sprint_with_joystick`); sisanya dibiarkan.
+- **Tampilan.** Warna meniru kulit Amber: isi kaca hitam, tepi putih tipis, sudut membulat sesuai editor, kuning saat ditekan atau aktif. Joystick memakai lingkaran hitam dengan cincin putih dan tombol bulat. Tidak ada ikon: tombol memakai label teks (nama tombol di editor, paling banyak 9 huruf).
+- **Posisi dan ukuran.** Titik tengah, lebar, tinggi, dan transparansi tiap tombol mengikuti editor Amber. Ukuran dalam dp diubah ke pecahan tinggi layar, jadi tombol tampak sama di HP yang berbeda.
+- **Tombol yang ikut.** Tombol keyboard dan mouse (paling banyak 32), kombinasi 2 sampai 3 tombol (jadi tombol kunci), tombol tahan/toggle, dan joystick (lari otomatis mengikuti pilihan Amber). Hotbar geser menjadi dua tombol **UP** dan **DN** (gulir). Sembunyikan GUI menjadi F1, dan menu atau tutup menjadi ESC, bila belum ada tombol lain yang sudah mengirim tombol yang sama.
+- **Yang dilewati.** Tombol FPS, keyboard layar, dan makro perintah tidak punya padanan di mesin.
+- **Tombol bawaan mesin** disembunyikan semua, kecuali joystick gerak: tata letak Amber-lah satu-satunya yang tampil. Tombol bawaan Amber sudah memuat serang, pakai, lompat, jongkok, dan seterusnya, jadi game tetap bisa dimainkan. Bila tata letak Amber tidak punya joystick dan tombol sama sekali, berkas mesin tidak disentuh.
+- **Geser lihat.** Bila "Geser kamera dari tombol" (`buttonLookDrag`) hidup, tombol serang, pakai, dan lompat meneruskan gerakan jari ke kamera, seperti di Amber.
+- Hanya kunci yang diperlukan yang ditulis (`control_style`, `mode`, `layouts`, `button_visibility`, `joystick_style`, `custom_buttons`, dan beberapa pengaturan tata letak); sisanya dibiarkan. Hasilnya sudah diuji terhadap definisi berkas dari kode mesin 0.7.8 (bisa dibaca, tidak ada tombol yang dibuang, dan tersimpan ulang tanpa perubahan).
 - Berkas asli disalin ke `horizon-touch.amber-backup.json` sebelum Amber menyentuhnya, dan dipulihkan pada PLAY berikutnya setelah saklar dimatikan. Tanpa berkas asli, mesin kembali ke bawaannya.
 - Perubahan tata letak di editor Amber berlaku pada PLAY berikutnya. Tidak ada perubahan pada mesin, jadi tidak perlu membangun ulang mesin.
+- Menu pop-up milik mesin (Horizon) tidak diubah; hanya tombol layar yang mengikuti Amber.
 
 ### Mengganti versi mesin
 
@@ -150,7 +155,7 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `DashboardScreen.kt`, `GameLauncher.kt` | PLAY pada instance Rust memakai akun yang dipilih lalu membuka mesin, tanpa Java atau unduhan launcher |
 | `core/horizon/RustSettings.kt` | Membaca dan menulis `android-launcher.json` (pengaturan tab Rust) tanpa menyentuh kunci lain |
 | `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
-| `core/horizon/RustTouchLayout.kt` | Menerjemahkan tata letak kontrol Amber ke `horizon-touch.json` mesin saat PLAY (saklar Kontrol Amber) |
+| `core/horizon/RustTouchLayout.kt` | Menerjemahkan tata letak dan kulit kontrol Amber ke gaya GoyControl di `horizon-touch.json` mesin saat PLAY (saklar Kontrol Amber) |
 | `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
 | `core/horizon/HorizonContent.kt` | Shader dan Resource Pack untuk instance Rust: memasang, memilih, dan menghapus langsung di folder dan berkas pengaturan mesin (lihat bagian di bawah) |
@@ -186,7 +191,8 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
 8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
-   Di bagian **Kontrol**, saklar **Kontrol Amber** hidup: PLAY lagi dan tombol layar mesin muncul di posisi dan ukuran seperti di editor kontrol Amber (joystick, serang, pakai, lompat, dan seterusnya), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali.
+   Di bagian **Kontrol**, saklar **Kontrol Amber** hidup: PLAY lagi dan tombol layar mesin tampil berwarna dan bertata letak seperti editor kontrol Amber (kaca gelap, sudut membulat, kuning saat ditekan), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali.
+   Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya).
 9. Shader: buka layar Mod pada instance Rust, unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
 10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
 

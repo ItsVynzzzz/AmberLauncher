@@ -42,7 +42,14 @@ data class RustSettings(
     /** `native`, `wide` (16:9), `classic` (4:3), atau `square` (1:1). */
     val aspect: String = "native",
     /** Alamat server (`host` atau `host:port`) yang langsung dimasuki saat PLAY. Kosong = dunia sendiri. */
-    val server: String = ""
+    val server: String = "",
+    /**
+     * Mode performa mesin sejak 0.7.8: `normal`, `super` (`super_perf_mode`), `battery` (`battery_perf_mode`), atau
+     * `fps` (`max_fps_mode`). Mesin memperlakukan ketiganya sebagai saling meniadakan, jadi di sini hanya satu pilihan.
+     */
+    val perfMode: String = RustSettingsStore.PERF_NORMAL,
+    /** `disable_game_animations`: tekstur beranimasi, fade chunk, goyang kamera, dan blur menu dimatikan. */
+    val gameAnimationsOff: Boolean = false
 )
 
 /**
@@ -66,6 +73,12 @@ object RustSettingsStore {
     val INPUT_HOSTS = setOf("auto", "touch", "keyboard-mouse", "controller")
     val ORIENTATIONS = setOf("landscape", "portrait", "reverse-landscape", "reverse-portrait", "auto")
     val ASPECTS = setOf("native", "wide", "classic", "square")
+
+    const val PERF_NORMAL = "normal"
+    const val PERF_SUPER = "super"
+    const val PERF_BATTERY = "battery"
+    const val PERF_FPS = "fps"
+    val PERF_MODES = setOf(PERF_NORMAL, PERF_SUPER, PERF_BATTERY, PERF_FPS)
 
     /** Laju layar yang diterima mesin (DISPLAY_RATES di mesin); nilai lain dibuang mesin menjadi 0. */
     val DISPLAY_RATES = listOf(0, 30, 60, 90, 120, 144, 165)
@@ -164,7 +177,15 @@ object RustSettingsStore {
                 immersive = json.optBoolean("immersive", defaults.immersive),
                 avoidCutout = json.optBoolean("avoid_cutout", defaults.avoidCutout),
                 aspect = json.optString("aspect", defaults.aspect),
-                server = if (json.isNull("server")) "" else json.optString("server", "")
+                server = if (json.isNull("server")) "" else json.optString("server", ""),
+                // Urutan yang sama dengan mesin saat menerapkannya: super lebih dulu, lalu baterai, lalu FPS.
+                perfMode = when {
+                    json.optBoolean("super_perf_mode", false) -> PERF_SUPER
+                    json.optBoolean("battery_perf_mode", false) -> PERF_BATTERY
+                    json.optBoolean("max_fps_mode", false) -> PERF_FPS
+                    else -> PERF_NORMAL
+                },
+                gameAnimationsOff = json.optBoolean("disable_game_animations", defaults.gameAnimationsOff)
             )
         )
     }
@@ -181,6 +202,7 @@ object RustSettingsStore {
             inputHost = if (s.inputHost in INPUT_HOSTS) s.inputHost else defaults.inputHost,
             orientation = if (s.orientation in ORIENTATIONS) s.orientation else defaults.orientation,
             aspect = if (s.aspect in ASPECTS) s.aspect else defaults.aspect,
+            perfMode = if (s.perfMode in PERF_MODES) s.perfMode else defaults.perfMode,
             server = cleanServer(s.server)
         )
     }
@@ -215,6 +237,11 @@ object RustSettingsStore {
                 json.put("avoid_cutout", s.avoidCutout)
                 json.put("aspect", s.aspect)
                 json.put("server", s.server)
+                // Ketiga kunci ditulis bersama supaya tidak pernah ada dua mode menyala sekaligus.
+                json.put("super_perf_mode", s.perfMode == PERF_SUPER)
+                json.put("battery_perf_mode", s.perfMode == PERF_BATTERY)
+                json.put("max_fps_mode", s.perfMode == PERF_FPS)
+                json.put("disable_game_animations", s.gameAnimationsOff)
             }
             val temp = File(dir, TEMP_FILE)
             temp.writeText(json.toString(2))
@@ -234,6 +261,7 @@ object RustSettingsStore {
 
     private val OWN_KEYS = listOf(
         "renderer", "render_scale", "worker_limit", "cache_budget_mib", "display_hz", "performance_hints",
-        "input_host", "orientation", "immersive", "avoid_cutout", "aspect", "server"
+        "input_host", "orientation", "immersive", "avoid_cutout", "aspect", "server",
+        "super_perf_mode", "battery_perf_mode", "max_fps_mode", "disable_game_animations"
     )
 }

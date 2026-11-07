@@ -59,6 +59,10 @@ data class LauncherSettings(
     // (tanpa flag GC tambahan dari launcher).
     val generalGcMode: String = "auto",
 
+    // MobileGlues: launcher memberi folder config sendiri (MG_DIR_PATH) supaya MobileGlues membaca config.json
+    // dan cache terjemahan shader menyala. Mati = MobileGlues memakai bawaan paksanya (tanpa cache).
+    val mobileGluesConfig: Boolean = true,
+
     // Mode Hemat: preset sekali ketuk (mode performa stabil sistem, V-Sync Zink, resolusi maks 80%).
     // Nilai sebelum dinyalakan disimpan supaya bisa dikembalikan saat dimatikan.
     val powerSaverMode: Boolean = false,

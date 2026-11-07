@@ -59,6 +59,7 @@ import com.israadev.nuxlauncher.core.models.LauncherSettings
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
+import com.israadev.nuxlauncher.core.renderer.MobileGluesConfig
 import com.israadev.nuxlauncher.core.plugin.NativePluginManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
@@ -417,6 +418,10 @@ fun SettingsScreen(
                                         showRendererConfigDialog = true
                                     }
                                 )
+                            }
+                            if (MobileGluesConfig.isMobileGlues(activeRendererInfo.libraryName)) {
+                                SettingDivider()
+                                MobileGluesCacheRow()
                             }
                         SettingDivider()
                         // Rentang 40-125% kelipatan 5, sama dengan slider "Resolusi render" di menu dalam game.

@@ -93,6 +93,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.renderer.GlErrorPolicy
+import com.israadev.nuxlauncher.core.renderer.MobileGluesConfig
 import com.israadev.nuxlauncher.core.renderer.ElfDeps
 import com.israadev.nuxlauncher.core.controls.DexClassScanner
 import com.israadev.nuxlauncher.core.controls.GuiScaleReader
@@ -1148,6 +1149,25 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     }
                 } catch (e: Exception) {
                     LoggerBridge.append("▷ [Renderer V2 Env Warning] Gagal menginjeksi V2 env: ${e.message}")
+                }
+                // MobileGlues hanya membaca config.json (cache shader dan lain-lain) bila launcher dikenalnya.
+                // Tanpa MG_DIR_PATH ia berkata "Unsupported launcher detected" dan memaksa semua ke bawaan, termasuk
+                // cache terjemahan shader mati. Bila MG_DIR_PATH sudah diisi renderer/plugin, itu dihormati.
+                try {
+                    if (activeSettings.mobileGluesConfig &&
+                        MobileGluesConfig.isMobileGlues(rendererSoName) &&
+                        Os.getenv(MobileGluesConfig.ENV_DIR).isNullOrBlank()
+                    ) {
+                        val mgDir = MobileGluesConfig.prepare(this@GameActivity, File(glLibPath))
+                        if (mgDir != null) {
+                            Os.setenv(MobileGluesConfig.ENV_DIR, mgDir.absolutePath, true)
+                            LoggerBridge.append("▷ [MobileGlues] Config launcher dipakai: ${mgDir.absolutePath}")
+                        } else {
+                            LoggerBridge.append("▷ [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya")
+                        }
+                    }
+                } catch (e: Throwable) {
+                    LoggerBridge.append("▷ [MobileGlues Warning] Config launcher dilewati: ${e.message}")
                 }
                 try {
                     Os.getenv("MG_DIR_PATH")?.takeIf { it.isNotBlank() }?.let { GameLogArchive.noteMgDir(this@GameActivity, it) }

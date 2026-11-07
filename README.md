@@ -111,7 +111,7 @@ AmberLauncher adalah turunan (fork) dari NUX Launcher, yang berbasis Zalith Laun
 | [Fold Craft Launcher](https://github.com/FCL-Team/FoldCraftLauncher) | Tim FCL | GPL-3.0 |
 | [MobileGlues](https://github.com/MobileGlues/MobileGlues) | Tim MobileGlues | LGPL-2.1 |
 | [GL4ES](https://github.com/ptitSeb/gl4es) | ptitSeb | MIT |
-| [Horizon](https://github.com/horizon-rust/horizon) dan [port Android-nya](https://github.com/Vasysik/horizon-android) (opsional) | Ludovic Marie, Vasysik, dan kontributor | MIT |
+| [Horizon](https://github.com/horizon-rust/horizon) dan [port Android-nya](https://github.com/starling-client/starling) (opsional) | Ludovic Marie, Vasysik, dan kontributor | MIT |
 
 Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan [Ely.by](https://ely.by) atas sistem skin dan autentikasinya.
 

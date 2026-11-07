@@ -56,7 +56,7 @@ Bila pembangunan mesin gagal, ringkasan run memuat tahap yang gagal, baris galat
 
 ### Peluncuran dari Amber
 
-Mesin bawaan Horizon selalu menampilkan layar peluncurnya sendiri. Supaya PLAY di AmberLauncher langsung masuk game, workflow pembangun menerapkan perubahan kecil milik Amber pada salinan sumber sebelum mengompilasinya. Berkasnya ada di `third_party/horizon-patches/<patch_set>/*.diff` (nilai `patch_set=` di `horizon-engine.properties`, sekarang `amber2`) dan hanya menyentuh dua tempat di `crates/horizon-client/src/android/`: berkas baru `amber.rs` dan beberapa baris di `launcher.rs`.
+Mesin bawaan Horizon selalu menampilkan layar peluncurnya sendiri. Supaya PLAY di AmberLauncher langsung masuk game, workflow pembangun menerapkan perubahan kecil milik Amber pada salinan sumber sebelum mengompilasinya. Berkasnya ada di `third_party/horizon-patches/<patch_set>/*.diff` (nilai `patch_set=` di `horizon-engine.properties`, sekarang `amber3`) dan hanya menyentuh dua tempat di `crates/horizon-client/src/android/`: berkas baru `amber.rs` dan beberapa baris di `launcher.rs`.
 
 Alurnya:
 
@@ -68,6 +68,8 @@ Alurnya:
 **Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber2/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan di atas `amber1` pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
 
 Sisi launcher: token Microsoft yang berumur kurang dari 16 jam dipakai langsung dan diperbarui di latar (sebelumnya PLAY menunggu sampai 12 detik bila token lebih tua dari 8 jam), peralihan ke layar mesin tanpa animasi, latar jendela mesin hitam, dan proses `:horizon` tidak lagi memuat kamus terjemahan.
+
+**Versi mesin dan `amber3`.** Mesin dipatok ke Horizon Android 0.7.8 (commit `68a2c4dd1b9a`, repo Starling, cabang `android`). Launcher mesin dirombak di versi ini, jadi patch ditulis ulang sebagai `amber3`: pre-warm sesi akun milik mesin dimatikan bila akun datang dari Amber (kalau tidak, PLAY menunggu jaringan), dan skin offline milik mesin tidak ikut akun Microsoft dari Amber. `amber1` dan `amber2` tetap disimpan untuk commit lama `844ef35f2b14`; kembali ke versi lama berarti mengganti `commit=` dan `patch_set=` bersama-sama. Aktivitas mesin di manifest kini memuat `navigation` pada `configChanges` (mencolok gamepad atau keyboard tidak lagi membuat ulang aktivitas), dan layar penuh imersif mati secara bawaan mengikuti mesin. Mesin 0.7.8 sudah menerima akun Ely.by, tetapi jembatan Amber belum meneruskannya.
 
 Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan berkas itu dan menampilkan layar peluncur Horizon seperti sebelumnya. Perubahan Amber dijaga sekecil mungkin; bila `commit=` diganti, berkas `.diff` harus dicek ulang terhadap sumber baru (skrip pembangun berhenti dengan pesan jelas bila tidak cocok).
 

@@ -111,7 +111,7 @@ AmberLauncher is a fork of NUX Launcher, which is based on Zalith Launcher 2 and
 | [Fold Craft Launcher](https://github.com/FCL-Team/FoldCraftLauncher) | FCL Team | GPL-3.0 |
 | [MobileGlues](https://github.com/MobileGlues/MobileGlues) | MobileGlues Team | LGPL-2.1 |
 | [GL4ES](https://github.com/ptitSeb/gl4es) | ptitSeb | MIT |
-| [Horizon](https://github.com/horizon-rust/horizon) and its [Android port](https://github.com/Vasysik/horizon-android) (optional) | Ludovic Marie, Vasysik, and contributors | MIT |
+| [Horizon](https://github.com/horizon-rust/horizon) and its [Android port](https://github.com/starling-client/starling) (optional) | Ludovic Marie, Vasysik, and contributors | MIT |
 
 Thanks also to [Modrinth](https://modrinth.com) for its public API and to [Ely.by](https://ely.by) for its skin and authentication system.
 

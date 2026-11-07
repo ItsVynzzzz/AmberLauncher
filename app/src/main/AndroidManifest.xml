@@ -192,7 +192,7 @@
             android:exported="false"
             android:process=":horizon"
             android:screenOrientation="sensorLandscape"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|density|screenLayout"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|navigation|density|screenLayout"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/HorizonGameTheme">
             <meta-data

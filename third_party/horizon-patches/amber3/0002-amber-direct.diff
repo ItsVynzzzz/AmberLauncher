@@ -1,0 +1,83 @@
+diff --git a/crates/horizon-client/src/android/launcher.rs b/crates/horizon-client/src/android/launcher.rs
+index a8c9659d6..b70822f9f 100644
+--- a/crates/horizon-client/src/android/launcher.rs
++++ b/crates/horizon-client/src/android/launcher.rs
+@@ -80,6 +80,11 @@ pub(super) struct Launcher {
+     amber_play: bool,
+     /// The game ends by closing this activity, back to AmberLauncher.
+     from_amber: bool,
++    /// Started by AmberLauncher with the game already installed: the game builds its own renderer, so the
++    /// launcher screen (a full graphics renderer that would be dropped at once) is never created.
++    amber_direct: bool,
++    /// `open` ran in direct mode: the native window exists and the game can start.
++    amber_direct_open: bool,
+ }
+ 
+ impl Launcher {
+@@ -185,6 +190,7 @@ impl Launcher {
+         }
+         let amber = amber::take(&home);
+         let from_amber = amber.is_some();
++        let amber_direct = from_amber && horizon_client::official_install::ready(&home);
+         // Pre-warm Microsoft session in background at startup so pressing Play doesn't stall.
+         // Not when AmberLauncher brings its own account: the engine's account is not used then.
+         let prewarm_session_worker = if !from_amber
+@@ -266,6 +272,8 @@ impl Launcher {
+             amber,
+             amber_play: from_amber,
+             from_amber,
++            amber_direct,
++            amber_direct_open: false,
+         }
+     }
+ 
+@@ -310,6 +318,8 @@ impl Launcher {
+         if let Ok(message) = std::fs::read_to_string(self.home.join("android-error.txt")) {
+             self.error = Some(message);
+         }
++        // From here on the launcher screen may be needed (an error to show), so `open` builds it again.
++        self.amber_direct = false;
+         if self.from_amber && self.error.is_none() {
+             // Started from AmberLauncher: closing this activity returns to it.
+             events.exit();
+@@ -354,6 +364,11 @@ impl Launcher {
+             renderer.resize(size.width, size.height);
+             return Ok(());
+         }
++        if self.amber_direct {
++            // Straight into the game: skip the launcher window, its atlas and its renderer.
++            self.amber_direct_open = true;
++            return Ok(());
++        }
+         let window = Arc::new(
+             events.create_window(Window::default_attributes().with_title("Horizon Android"))?,
+         );
+@@ -1007,7 +1022,7 @@ impl ApplicationHandler for Launcher {
+         }
+ 
+         if self.amber_play
+-            && self.renderer.is_some()
++            && (self.renderer.is_some() || self.amber_direct_open)
+             && self.worker.is_none()
+             && self.session_worker.is_none()
+             && !self.launch_pending_tick
+@@ -1026,6 +1041,19 @@ impl ApplicationHandler for Launcher {
+                 return;
+             }
+         }
++        if self.amber_direct_open
++            && self.error.is_some()
++            && self.game.is_none()
++            && self.renderer.is_none()
++        {
++            // Without the launcher screen the error would stay invisible: build it now.
++            self.amber_direct = false;
++            self.amber_direct_open = false;
++            if let Err(error) = self.open(events) {
++                self.fail(error);
++                events.exit();
++            }
++        }
+         if let Some(window) = &self.window {
+             window.request_redraw();
+         }

@@ -35,8 +35,8 @@ data class RustSettings(
     val inputHost: String = "auto",
     /** `landscape`, `portrait`, `reverse-landscape`, `reverse-portrait`, atau `auto`. */
     val orientation: String = "landscape",
-    /** Sembunyikan bilah navigasi dan status saat bermain. */
-    val immersive: Boolean = true,
+    /** Sembunyikan bilah navigasi dan status saat bermain. Bawaan mesin sejak 0.7.8: mati (laporan macet). */
+    val immersive: Boolean = false,
     /** Hindari area poni/lubang kamera. */
     val avoidCutout: Boolean = false,
     /** `native`, `wide` (16:9), `classic` (4:3), atau `square` (1:1). */

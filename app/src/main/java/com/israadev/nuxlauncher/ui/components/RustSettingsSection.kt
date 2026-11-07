@@ -240,7 +240,7 @@ fun RustScreenRows() {
     SettingDivider()
     SettingSwitchRow(
         title = "Layar penuh imersif",
-        desc = "Menyembunyikan bilah navigasi dan bilah status saat bermain.",
+        desc = "Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.",
         checked = s.immersive,
         onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(immersive = on) } }
     )

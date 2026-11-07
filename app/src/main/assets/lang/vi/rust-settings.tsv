@@ -65,3 +65,5 @@ Hemat baterai	Ti\u1ebft ki\u1ec7m pin
 FPS maksimum	FPS t\u1ed1i \u0111a
 Kurangi animasi game	Gi\u1ea3m ho\u1ea1t \u1ea3nh trong game
 Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	T\u1eaft texture ho\u1ea1t \u1ea3nh, hi\u1ec7u \u1ee9ng m\u1edd d\u1ea7n chunk, l\u1eafc camera khi \u0111i b\u1ed9 v\u00e0 l\u00e0m m\u1edd menu. Nh\u1eb9 h\u01a1n tr\u00ean m\u00e1y y\u1ebfu.
+Menu garis tiga	Menu ba g\u1ea1ch
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	N\u00fat ba g\u1ea1ch tr\u00ean m\u00e0n h\u00ecnh game m\u1edf menu nhanh c\u1ee7a engine (preset, \u0111i\u1ec1u khi\u1ec3n, c\u00e0i \u0111\u1eb7t). M\u00e0u s\u1eafc theo m\u00e0u nh\u1ea5n c\u1ee7a Amber. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.

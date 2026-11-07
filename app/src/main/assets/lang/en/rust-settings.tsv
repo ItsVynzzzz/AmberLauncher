@@ -63,3 +63,5 @@ Hemat baterai	Battery saver
 FPS maksimum	Max FPS
 Kurangi animasi game	Reduce game animations
 Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Turns off animated textures, chunk fade, camera bobbing while walking, and menu blur. Lighter on weak phones.
+Menu garis tiga	Three-line menu
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	The three-line button on the game screen that opens the engine's quick menu (presets, controls, settings). Its colors follow the Amber accent. Applies on the next PLAY.

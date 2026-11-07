@@ -1,0 +1,250 @@
+diff --git a/crates/horizon-client/src/game/android_input.rs b/crates/horizon-client/src/game/android_input.rs
+index ffc5c991e..a6aa6336d 100644
+--- a/crates/horizon-client/src/game/android_input.rs
++++ b/crates/horizon-client/src/game/android_input.rs
+@@ -962,6 +962,15 @@ impl Game<'_> {
+                     let _ = self.pad.touch.settings.save();
+                     std::process::exit(0);
+                 }
++                InGameMenuAction::ExitToInstance => {
++                    let _ = self.pad.touch.settings.save();
++                    // Save the world first; the game loop finishes the closing save and then returns to the
++                    // app that started the game. Only if the save cannot even begin, leave at once.
++                    if let Err(error) = self.begin_closing_save(true) {
++                        self.error = Some(error);
++                        std::process::exit(0);
++                    }
++                }
+                 InGameMenuAction::OpenLogs => {
+                     // Logs are private to the app; the SAF provider shares the Reports
+                     // folder the diagnostics exporter writes into.
+diff --git a/crates/horizon-client/src/game/startup_menu.rs b/crates/horizon-client/src/game/startup_menu.rs
+index 73cc4acda..379377d07 100644
+--- a/crates/horizon-client/src/game/startup_menu.rs
++++ b/crates/horizon-client/src/game/startup_menu.rs
+@@ -1582,6 +1582,11 @@ impl Loading {
+                         let _ = self.menu.controls.settings.save();
+                         std::process::exit(0);
+                     }
++                    InGameMenuAction::ExitToInstance => {
++                        // On the title screen there is no world to save.
++                        let _ = self.menu.controls.settings.save();
++                        crate::game::exit_app(event_loop);
++                    }
+                     InGameMenuAction::OpenLogs => {
+                         let _ = crate::platform::open_documents("reports");
+                     }
+diff --git a/crates/horizon-client/src/touch_ui.rs b/crates/horizon-client/src/touch_ui.rs
+index d9cba4c48..2a2625ed0 100644
+--- a/crates/horizon-client/src/touch_ui.rs
++++ b/crates/horizon-client/src/touch_ui.rs
+@@ -161,6 +161,8 @@ pub enum InGameMenuAction {
+     OpenKeyboard,
+     /// Kill the game process now (no save, no shutdown sequence).
+     ForceKill,
++    /// Save the world and leave the game: back to the app that started it (AmberLauncher).
++    ExitToInstance,
+     /// Open the game's log folder in the system file manager.
+     OpenLogs,
+     /// The naming field of a preset dialog was tapped: show the system keyboard.
+@@ -1573,7 +1575,8 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
+     let dh = (h - 12.0).clamp(264.0, 420.0);
+     let dx = (w - dw) * 0.5;
+     let dy = (h - dh) * 0.5;
+-    let side_w = (dw * 0.25).clamp(114.0, 148.0);
++    // Narrow rail like AmberLauncher's sidebar: icon over label.
++    let side_w = 72.0;
+     let cx = dx + side_w + 16.0;
+     let cw = dw - side_w - 32.0;
+     let body_top = dy + 54.0;
+@@ -1581,6 +1584,36 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
+     (dw, dh, dx, dy, side_w, cx, cw, body_top, body_h)
+ }
+ 
++/// Horizontal center (0..1) of the control being edited, written by the drawing so the touch code docks the
++/// inspector on the same side. `0x3F00_0000` is `0.5f32`.
++static INSPECTOR_SELECTED_X: std::sync::atomic::AtomicU32 =
++    std::sync::atomic::AtomicU32::new(0x3F00_0000);
++
++/// Inspector panel `(dw, dh, dx, dy)`, docked to the side opposite the selected control (like AmberLauncher's
++/// control editor) so the control being edited is never covered. Shared by drawing and touch.
++fn inspector_rect(w: f32, h: f32) -> (f32, f32, f32, f32) {
++    let sel_x = f32::from_bits(INSPECTOR_SELECTED_X.load(std::sync::atomic::Ordering::Relaxed));
++    let dw = (w * 0.52).clamp(350.0, 640.0);
++    let dh = (h - 12.0).clamp(256.0, 384.0);
++    let dx = if sel_x >= 0.5 {
++        8.0
++    } else {
++        (w - dw - 8.0).max(0.0)
++    };
++    let dy = (h - dh) * 0.5;
++    (dw, dh, dx, dy)
++}
++
++/// Rail sidebar geometry shared by drawing and touch: `(compact, pitch, pill_w, pill_h, exit_h)`.
++/// Compact (short screens) drops the labels so the five tabs and the exit button never overlap.
++fn hub_rail_metrics(dh: f32) -> (bool, f32, f32, f32, f32) {
++    if dh < 330.0 {
++        (true, 32.0, 40.0, 28.0, 34.0)
++    } else {
++        (false, 52.0, 52.0, 32.0, 52.0)
++    }
++}
++
+ impl TouchUi {
+     fn step_animations(&self) -> (f32, f32) {
+         let open_target = if self.floating_menu { 1.0 } else { 0.0 };
+@@ -2146,11 +2179,12 @@ impl TouchUi {
+                 return Some(InGameMenuAction::Close);
+             }
+ 
+-            // Left Sidebar Category Tabs (Recommended, Controls, Aiming, Buttons, Advanced)
++            // Left rail tabs and the exit button (same geometry as the drawing).
++            let (_, rail_pitch, _, _, exit_h) = hub_rail_metrics(dh);
+             let tab_start_y = dy + 54.0;
+             for ti in 0..5u8 {
+-                let ty = tab_start_y + ti as f32 * 39.0;
+-                if inside([dx + 10.0, ty, side_w - 16.0, 35.0]) {
++                let ty = tab_start_y + ti as f32 * rail_pitch;
++                if inside([dx + 2.0, ty, side_w - 2.0, rail_pitch]) {
+                     if self.hub_tab != ti {
+                         self.hub_tab = ti;
+                         self.hub_scroll = 0.0;
+@@ -2160,6 +2194,10 @@ impl TouchUi {
+                     return Some(InGameMenuAction::Close);
+                 }
+             }
++            if inside([dx + 2.0, dy + dh - exit_h - 14.0, side_w - 2.0, exit_h + 8.0]) {
++                self.floating_menu = false;
++                return Some(InGameMenuAction::ExitToInstance);
++            }
+ 
+             // Check if touch started on sliders or quick chips in Tab 0 (Recommended)
+             if self.hub_tab == 0 && inside(content_pane) {
+@@ -2701,33 +2739,72 @@ impl TouchUi {
+         ui.border(done_r[0], done_r[1], done_r[2], done_r[3], 9.0, border_c);
+         ui.centered_fit(Face::SemiBold, 11.0, done_r, text_c, "Done");
+ 
+-        // Left Sidebar Navigation Tabs (Recommended, Controls, Aiming, Buttons, Advanced)
++        // Left rail like AmberLauncher's sidebar (Utama, Kontrol, Bidik, Tombol, Lanjut): the icon sits in a
++        // pill that is filled with the accent when selected, the label is under it. The red button at the
++        // bottom saves the world and leaves the game, back to the instance.
+         let tabs: [(Icon, &str); 5] = [
+-            (Icon::HorizonLogo, "Recommended"),
+-            (Icon::Gamepad, "Controls"),
+-            (Icon::Crosshair, "Aiming"),
+-            (Icon::MicrosoftGrid, "Buttons"),
+-            (Icon::Flask, "Advanced"),
++            (Icon::HorizonLogo, "Utama"),
++            (Icon::Gamepad, "Kontrol"),
++            (Icon::Crosshair, "Bidik"),
++            (Icon::MicrosoftGrid, "Tombol"),
++            (Icon::Flask, "Lanjut"),
+         ];
++        let (rail_compact, rail_pitch, pill_w, pill_h, exit_h) = hub_rail_metrics(dh);
++        let rail_cx = dx + side_w * 0.5 + 1.0;
++        let rail_icon = if rail_compact { 16.0 } else { 18.0 };
+         let tab_start_y = dy + 54.0;
+         for (ti, (ic, lbl)) in tabs.into_iter().enumerate() {
+-            let ty = tab_start_y + ti as f32 * 39.0;
++            let ty = tab_start_y + ti as f32 * rail_pitch;
+             let active = self.hub_tab == ti as u8;
+-            let tr = [dx + 10.0, ty, side_w - 18.0, 34.0];
++            let pill = [rail_cx - pill_w * 0.5, ty + 2.0, pill_w, pill_h];
+             if active {
+-                ui.rounded(tr[0], tr[1], tr[2], tr[3], 10.0, accent);
+-                ui.rounded(tr[0] - 4.0, tr[1] + 7.0, 3.0, 20.0, 1.5, accent_hi);
++                ui.rounded(pill[0], pill[1], pill[2], pill[3], pill_h * 0.5, accent);
+             }
+-            let fg = if active { text_c } else { muted_c };
+-            ui.icon(ic, tr[0] + 9.0, tr[1] + 9.0, 15.0, fg);
+-            ui.text(
+-                if active { Face::SemiBold } else { Face::Medium },
+-                10.6,
+-                tr[0] + 29.0,
+-                tr[1] + 8.0,
+-                fg,
+-                lbl,
++            ui.icon(
++                ic,
++                rail_cx - rail_icon * 0.5,
++                pill[1] + (pill_h - rail_icon) * 0.5,
++                rail_icon,
++                if active { accent_fg } else { muted_c },
++            );
++            if !rail_compact {
++                ui.centered_fit(
++                    Face::SemiBold,
++                    9.4,
++                    [dx + 4.0, pill[1] + pill_h + 3.0, side_w - 4.0, 12.0],
++                    if active { accent_hi } else { muted_c },
++                    lbl,
++                );
++            }
++        }
++        {
++            let ey = dy + dh - exit_h - 10.0;
++            let pill = [rail_cx - pill_w * 0.5, ey, pill_w, pill_h];
++            ui.rounded(
++                pill[0],
++                pill[1],
++                pill[2],
++                pill[3],
++                pill_h * 0.5,
++                color::with_alpha(danger_c, 0.22),
+             );
++            ui.border(pill[0], pill[1], pill[2], pill[3], pill_h * 0.5, danger_c);
++            ui.icon(
++                Icon::ArrowLeft,
++                rail_cx - rail_icon * 0.5,
++                pill[1] + (pill_h - rail_icon) * 0.5,
++                rail_icon,
++                danger_c,
++            );
++            if !rail_compact {
++                ui.centered_fit(
++                    Face::SemiBold,
++                    9.4,
++                    [dx + 4.0, pill[1] + pill_h + 3.0, side_w - 4.0, 12.0],
++                    danger_c,
++                    "Keluar",
++                );
++            }
+         }
+ 
+         // Scrollable Right Content Panel with scissor clip and tab transition slide
+@@ -4686,11 +4763,17 @@ pub fn draw_hud_editor(
+ 
+     // 8. Component Property Inspector Dialog — Studio Layout matching `90511.png` (when ed.props_open == true)
+     if ed.props_open {
+-        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 208));
+-        let dw = (w - 16.0).clamp(350.0, 640.0);
+-        let dh = (h - 12.0).clamp(256.0, 384.0);
+-        let dx = (w - dw) * 0.5;
+-        let dy = (h - dh) * 0.5;
++        // Light scrim: the control being edited stays visible next to the docked panel.
++        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 70));
++        let sel_x = if let Some(idx) = ed.selected_custom {
++            tc.custom_placement(idx).center[0]
++        } else if let Some(c) = ed.selected {
++            tc.placement(c).center[0]
++        } else {
++            0.5
++        };
++        INSPECTOR_SELECTED_X.store(sel_x.to_bits(), std::sync::atomic::Ordering::Relaxed);
++        let (dw, dh, dx, dy) = inspector_rect(w, h);
+ 
+         // Material Design 3 Expressive Tonal Surface Palette synchronized with active theme
+         let st_outer = theme.bg_solid;
+@@ -6956,10 +7039,7 @@ pub fn touch_hud_editor(
+ 
+         // 3. If Component Property Inspector Dialog is open (Studio Layout matching `90511.png`):
+         if ed.props_open {
+-            let dw = (w - 16.0).clamp(350.0, 640.0);
+-            let dh = (h - 12.0).clamp(256.0, 384.0);
+-            let dx = (w - dw) * 0.5;
+-            let dy = (h - dh) * 0.5;
++            let (dw, dh, dx, dy) = inspector_rect(w, h);
+ 
+             // Close via top-left [X] button, top-right [✓ Done] button, or outside tap
+             if inside([dx + 12.0, dy + 9.0, 26.0, 26.0])

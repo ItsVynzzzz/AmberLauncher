@@ -240,6 +240,8 @@ object HorizonEngine {
             val firstRun = !gameInstalled(context)
             // Tombol layar mesin mengikuti tata letak Amber (atau dikembalikan ke bawaan mesin bila dimatikan).
             RustTouchLayout.sync(context, SettingsManager.settings.value.rustAmberControls)
+            // Warna UI mesin (menu garis tiga, editor kontrol, layar mesin) mengikuti aksen Amber.
+            RustSettingsStore.syncTheme(context, SettingsManager.settings.value.accentColor)
             writeLaunchFile(context, account)
             if (firstRun) {
                 Toast.makeText(

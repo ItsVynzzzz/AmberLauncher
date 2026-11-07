@@ -29,6 +29,8 @@ data class LauncherSettings(
     val mouseSizeDp: Int = 24, // 16 - 48 dp
     // Mesin Rust: tombol layar mengikuti tata letak kontrol Amber (bukan kontrol bawaan mesin). Diterapkan saat PLAY.
     val rustAmberControls: Boolean = true,
+    // Mesin Rust: tombol bergaris tiga di layar game yang membuka menu cepat mesin. Bawaan nyala. Diterapkan saat PLAY.
+    val rustControlHub: Boolean = true,
     val hideMouseInClickMode: Boolean = true,
 
     // Graphics & Performance

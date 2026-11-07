@@ -289,6 +289,15 @@ fun RustControlRows() {
         }
     )
     SettingDivider()
+    SettingSwitchRow(
+        title = "Menu garis tiga",
+        desc = "Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.",
+        checked = launcher.rustControlHub,
+        onCheckedChange = { on ->
+            SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(rustControlHub = on))
+        }
+    )
+    SettingDivider()
     SettingChoiceRow(
         title = "Perangkat input",
         desc = "Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.",

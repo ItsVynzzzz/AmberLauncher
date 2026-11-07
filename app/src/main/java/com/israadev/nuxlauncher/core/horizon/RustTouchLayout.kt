@@ -337,8 +337,9 @@ object RustTouchLayout {
         json.put("horizontal_margin", 0.0)
         json.put("vertical_margin", 0.0)
         json.put("dynamic_joystick", false)
-        // Menu kontrol mengambang milik mesin disembunyikan: tata letak diatur dari editor kontrol Amber.
-        json.put("show_control_hub", false)
+        // Menu garis tiga (tombol yang membuka menu cepat mesin) mengikuti Pengaturan Rust > Menu garis tiga.
+        // Tata letak tombol tetap datang dari editor kontrol Amber setiap PLAY.
+        json.put("show_control_hub", SettingsManager.settings.value.rustControlHub)
         plan.joy?.let { json.put("sprint_with_joystick", it.autoSprint) }
         // Selalu preset bawaan, supaya mesin tidak menyimpan tata letak Amber ke preset pemain.
         json.put("preset_id", "default")

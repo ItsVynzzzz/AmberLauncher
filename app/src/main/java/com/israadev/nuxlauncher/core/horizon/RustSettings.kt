@@ -105,6 +105,9 @@ object RustSettingsStore {
     private val revision = AtomicInteger(0)
     private val lock = Any()
 
+    // Baca-ubah-tulis android-launcher.json: tulisan pengaturan (di latar) dan tema (saat PLAY) tidak boleh saling menimpa.
+    private val fileLock = Any()
+
     /** Folder data mesin. Sama dengan [HorizonEngine.engineHome]; satu sumber agar tidak bisa berselisih. */
     private fun configFile(context: Context): File = File(HorizonEngine.engineHome(context), CONFIG_FILE)
 
@@ -213,7 +216,10 @@ object RustSettingsStore {
 
     // ---- tulis ----
 
-    private fun write(file: File, s: RustSettings, reset: Boolean) {
+    private fun write(file: File, s: RustSettings, reset: Boolean) =
+        synchronized(fileLock) { writeLocked(file, s, reset) }
+
+    private fun writeLocked(file: File, s: RustSettings, reset: Boolean) {
         try {
             val dir = file.parentFile ?: return
             if (!dir.isDirectory && !dir.mkdirs()) {
@@ -243,19 +249,46 @@ object RustSettingsStore {
                 json.put("max_fps_mode", s.perfMode == PERF_FPS)
                 json.put("disable_game_animations", s.gameAnimationsOff)
             }
-            val temp = File(dir, TEMP_FILE)
-            temp.writeText(json.toString(2))
-            // rename(2) di Android menimpa berkas lama secara atomik, jadi mesin tidak pernah melihat berkas hilang.
-            // Bila sebuah HP menolak menimpa, hapus yang lama lalu pindahkan.
-            if (!temp.renameTo(file)) {
-                if (file.exists()) file.delete()
-                if (!temp.renameTo(file)) {
-                    temp.delete()
-                    LauncherLog.w(TAG, "Config mesin Rust tidak bisa disimpan: $file")
-                }
-            }
+            commit(dir, file, json)
         } catch (e: Exception) {
             LauncherLog.w(TAG, "Config mesin Rust gagal ditulis: ${e.message}", e)
+        }
+    }
+
+    private fun commit(dir: File, file: File, json: JSONObject) {
+        val temp = File(dir, TEMP_FILE)
+        temp.writeText(json.toString(2))
+        // rename(2) di Android menimpa berkas lama secara atomik, jadi mesin tidak pernah melihat berkas hilang.
+        // Bila sebuah HP menolak menimpa, hapus yang lama lalu pindahkan.
+        if (!temp.renameTo(file)) {
+            if (file.exists()) file.delete()
+            if (!temp.renameTo(file)) {
+                temp.delete()
+                LauncherLog.w(TAG, "Config mesin Rust tidak bisa disimpan: $file")
+            }
+        }
+    }
+
+    /**
+     * Menyamakan tema UI mesin dengan aksen Amber ([RustTheme]). Dipanggil saat PLAY, sebelum mesin dibuka,
+     * dan sengaja berjalan di thread pemanggil: mesin membaca berkas ini begitu mulai, jadi tidak boleh
+     * ada yang tertunda. Kunci lain di berkas tidak disentuh.
+     */
+    fun syncTheme(context: Context, accentId: String?) {
+        try {
+            val file = configFile(context.applicationContext)
+            val dir = file.parentFile ?: return
+            if (!dir.isDirectory && !dir.mkdirs()) return
+            synchronized(fileLock) {
+                val json = readJson(file)
+                val theme = RustTheme.json(accentId)
+                val current = json.optJSONObject("theme")
+                if (current != null && theme.keys().asSequence().all { current.opt(it) == theme.opt(it) }) return
+                json.put("theme", theme)
+                commit(dir, file, json)
+            }
+        } catch (e: Exception) {
+            LauncherLog.w(TAG, "Tema mesin Rust gagal diselaraskan: ${e.message}", e)
         }
     }
 

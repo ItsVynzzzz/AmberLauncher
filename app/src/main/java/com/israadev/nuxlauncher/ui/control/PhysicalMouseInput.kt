@@ -84,6 +84,11 @@ internal class CapturedMouseButtons(private val onMouseButton: (Int, Boolean) ->
         update(0)
     }
 
+    /** Tekan atau lepas satu tombol tanpa mengubah tombol lain. Tidak mengirim bila statusnya sudah sama. */
+    fun set(button: Int, pressed: Boolean) {
+        update(if (pressed) heldButtons or button else heldButtons and button.inv())
+    }
+
     private fun update(buttons: Int) {
         val changed = heldButtons xor buttons
         heldButtons = buttons
@@ -142,9 +147,19 @@ internal object MouseDiag {
     private const val MAX_MODE_LOGS = 8
     private const val MAX_CAPTURE_LOGS = 8
     private const val MAX_DEVICE_LOGS = 3
+    private const val MAX_COMBO_LOGS = 40
+
+    // Kelompok kombinasi (aksi, tombol) yang dicatat: di Activity (sentuh/generik) dan di filter Compose.
+    const val COMBO_TOUCH = 0
+    const val COMBO_GENERIC = 1
+    const val COMBO_FILTER = 2
 
     @Volatile
     var sink: ((String) -> Unit)? = null
+
+    // 3 kelompok x 128 kombinasi (aksi 0..15 x tombol 0..7), 2 Long per kelompok.
+    private val comboSeen = LongArray(6)
+    private var comboLogs = 0
 
     private var seenMask = 0
     private var summaries = 0
@@ -168,6 +183,32 @@ internal object MouseDiag {
     @JvmField var buttonsSent = 0
     @JvmField var buttonsDropped = 0
     @JvmField var scrollSent = 0
+    // Penangan mouse menu di Activity: ditangani / dilewati (lapisan launcher terbuka atau game mengunci kursor) /
+    // klik kanan yang datang sebagai tombol BACK.
+    @JvmField var actMenu = 0
+    @JvmField var actMenuBlocked = 0
+    @JvmField var actBack = 0
+
+    private fun comboName(group: Int) = when (group) {
+        COMBO_TOUCH -> "activity-sentuh"
+        COMBO_GENERIC -> "activity-generik"
+        else -> "filter-compose"
+    }
+
+    /**
+     * Catat setiap kombinasi (aksi, tombol) yang BERBEDA, sekali saja per kelompok. Menjawab pertanyaan
+     * "event klik jenis apa yang tiba di mana". Satu uji bit per event, tanpa alokasi.
+     */
+    fun combo(group: Int, action: Int, buttons: Int) {
+        val idx = ((action and 15) shl 3) or (buttons and 7)
+        val word = group * 2 + (idx ushr 6)
+        val bit = 1L shl (idx and 63)
+        if ((comboSeen[word] and bit) != 0L) return
+        comboSeen[word] = comboSeen[word] or bit
+        if (comboLogs >= MAX_COMBO_LOGS) return
+        comboLogs++
+        emit("kombinasi ${comboName(group)} aksi=$action tombol=$buttons")
+    }
 
     private fun pathName(path: Int) = when (path) {
         MENU_MOUSE -> "menu-mouse"
@@ -255,14 +296,14 @@ internal object MouseDiag {
      */
     fun summary(reason: String) {
         val total = actGeneric + actTouch + menuEvents + menuIgnored + captureEvents + trackballEvents +
-            cursorSent + deltaSent + buttonsSent + buttonsDropped + scrollSent
+            cursorSent + deltaSent + buttonsSent + buttonsDropped + scrollSent + actMenu + actMenuBlocked + actBack
         if (total == lastTotal || summaries >= MAX_SUMMARIES) return
         lastTotal = total
         summaries++
         val mode = if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) "terkunci" else "bebas"
         emit(
             "ringkasan($reason) kursor=$mode sdl=${SdlBridge.sdlEnabled} " +
-                "aktivitas[generik=$actGeneric sentuh=$actTouch] " +
+                "aktivitas[generik=$actGeneric sentuh=$actTouch ditangani=$actMenu dilewati=$actMenuBlocked back=$actBack] " +
                 "menu[masuk=$menuEvents diabaikan=$menuIgnored] tangkap[masuk=$captureEvents] trackball=$trackballEvents " +
                 "ke-game[kursor=$cursorSent delta=$deltaSent tombol=$buttonsSent tombolTakDipetakan=$buttonsDropped gulir=$scrollSent]"
         )
@@ -524,14 +565,19 @@ internal fun Modifier.physicalMouseHover(
 
         MouseDiag.menuEvents++
         MouseDiag.once(if (isMouse) MouseDiag.MENU_MOUSE else MouseDiag.MENU_STYLUS, event)
+        MouseDiag.combo(MouseDiag.COMBO_FILTER, event.actionMasked, event.buttonState)
         currentOnMouse()
 
+        // Tombol dan gulir mouse (bukan stylus) dikirim dari GameActivity lewat MenuMouse, sebelum Compose.
+        // Di sini keduanya dilewati supaya tidak terkirim dua kali; posisi hover tetap diteruskan.
+        val activityOwned = isMouse && MenuMouse.enabled
+
         if (event.actionMasked == MotionEvent.ACTION_CANCEL) {
-            buttons.reset()
+            if (!activityOwned) buttons.reset()
             return@pointerInteropFilter true
         }
 
-        buttons.onSnapshot(event.buttonState)
+        if (!activityOwned) buttons.onSnapshot(event.buttonState)
 
         when (event.actionMasked) {
             MotionEvent.ACTION_HOVER_MOVE,
@@ -554,12 +600,14 @@ internal fun Modifier.physicalMouseHover(
             }
 
             MotionEvent.ACTION_SCROLL -> {
-                currentOnMouseScroll(
-                    Offset(
-                        event.getAxisValue(MotionEvent.AXIS_HSCROLL),
-                        event.getAxisValue(MotionEvent.AXIS_VSCROLL)
+                if (!activityOwned) {
+                    currentOnMouseScroll(
+                        Offset(
+                            event.getAxisValue(MotionEvent.AXIS_HSCROLL),
+                            event.getAxisValue(MotionEvent.AXIS_VSCROLL)
+                        )
                     )
-                )
+                }
             }
         }
         true

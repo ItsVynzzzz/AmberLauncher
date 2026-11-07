@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
+import com.israadev.nuxlauncher.ui.control.MenuMouse
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.control.MouseDiag
 import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
@@ -171,6 +172,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     // Minecraft 26.x: permukaan game berupa TextureView (lihat shouldUseTextureView)
     private var useTextureView = false
     private var gameTextureView: TextureView? = null
+    // Tampilan Compose penuh layar. Dipakai MenuMouse untuk mengubah koordinat jendela ke koordinat game.
+    private var gameComposeView: View? = null
     private var gameTextureSurface: android.view.Surface? = null
     private val isControlVisibleState = mutableStateOf(true)
     private val isGameRenderingState = mutableStateOf(false)
@@ -274,6 +277,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     }
 
     override fun onStop() {
+        MenuMouse.reset()
         MouseDiag.summary("berhenti")
         MouseDiag.devices()
         ScreenRecorder.hold(ScreenRecorder.Hold.SCREEN)
@@ -518,6 +522,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             applyImmersiveFullscreen()
         } else {
             GamepadRouter.reset()
+            MenuMouse.reset()
         }
     }
 
@@ -633,6 +638,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             }
         }
 
+        gameComposeView = composeView
         setContentView(composeView)
         applyImmersiveFullscreen()
         applyDeviceDisplayProfile()
@@ -869,7 +875,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             source and InputDevice.SOURCE_MOUSE_RELATIVE == InputDevice.SOURCE_MOUSE_RELATIVE) {
             if (event.keyCode == KeyEvent.KEYCODE_BACK) {
                 val isDown = event.action == KeyEvent.ACTION_DOWN
-                CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
+                // Di menu game tombolnya lewat pelacak yang sama dengan event gerak mouse (tidak terkirim ganda).
+                if (!MenuMouse.onBackKey(isDown)) {
+                    CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
+                }
                 return true
             }
         }
@@ -899,6 +908,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             isControlVisibleState.value = false
             MouseDiag.actGeneric++
             MouseDiag.once(MouseDiag.ACT_GENERIC, event)
+            MouseDiag.combo(MouseDiag.COMBO_GENERIC, event.actionMasked, event.buttonState)
+            // Menu game: tombol dan gulir mouse dikirim dari sini, sebelum Compose (lihat MenuMouse).
+            MenuMouse.onGeneric(event)
         }
         return super.dispatchGenericMotionEvent(event)
     }
@@ -936,6 +948,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             isControlVisibleState.value = false
             MouseDiag.actTouch++
             MouseDiag.once(MouseDiag.ACT_TOUCH, event)
+            MouseDiag.combo(MouseDiag.COMBO_TOUCH, event.actionMasked, event.buttonState)
+            // Menu game: klik dan seret mouse dikirim dari sini, sebelum Compose (lihat MenuMouse).
+            MenuMouse.onTouch(event, gameComposeView)
         }
         return super.dispatchTouchEvent(event)
     }
@@ -1829,6 +1844,13 @@ fun GameScreen(
     var isConsoleVisible by remember { mutableStateOf(false) }
     var isConsoleExpanded by remember { mutableStateOf(false) }
     var showExitConfirmDialog by remember { mutableStateOf(false) }
+    // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
+    // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
+    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay
+    SideEffect { MenuMouse.overlayOpen = overlayCoversGame }
+    LaunchedEffect(overlayCoversGame) {
+        if (overlayCoversGame) MenuMouse.reset()
+    }
     var currentFps by remember { mutableIntStateOf(0) }
     var fpsMode by remember { mutableStateOf(FpsMode.NORMAL) }
     val context = LocalContext.current
@@ -1886,6 +1908,8 @@ fun GameScreen(
     val gameCursorMode by ZLBridgeStates.cursorMode.collectAsState()
     // Catatan diagnosis mouse: kursor game berganti antara menu dan bermain (hanya beberapa kali per sesi).
     LaunchedEffect(gameCursorMode) {
+        // Game mengunci kursor (mis. klik "Play" lalu dunia dimuat): tombol menu yang tertahan dilepas.
+        if (gameCursorMode == CURSOR_DISABLED) MenuMouse.reset()
         MouseDiag.cursorMode(gameCursorMode == CURSOR_DISABLED)
     }
     val launcherSettings by SettingsManager.settings.collectAsState()

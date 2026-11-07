@@ -1,0 +1,497 @@
+diff --git a/app/src/main/assets/lang/en/rust-settings.tsv b/app/src/main/assets/lang/en/rust-settings.tsv
+index bd9218f..1a346ed 100644
+--- a/app/src/main/assets/lang/en/rust-settings.tsv
++++ b/app/src/main/assets/lang/en/rust-settings.tsv
+@@ -63,3 +63,5 @@ Hemat baterai	Battery saver
+ FPS maksimum	Max FPS
+ Kurangi animasi game	Reduce game animations
+ Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Turns off animated textures, chunk fade, camera bobbing while walking, and menu blur. Lighter on weak phones.
++Menu garis tiga	Three-line menu
++Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	The three-line button on the game screen that opens the engine's quick menu (presets, controls, settings). Its colors follow the Amber accent. Applies on the next PLAY.
+diff --git a/app/src/main/assets/lang/es/rust-settings.tsv b/app/src/main/assets/lang/es/rust-settings.tsv
+index 36a7818..d18a760 100644
+--- a/app/src/main/assets/lang/es/rust-settings.tsv
++++ b/app/src/main/assets/lang/es/rust-settings.tsv
+@@ -65,3 +65,5 @@ Hemat baterai	Ahorro de bater\u00eda
+ FPS maksimum	FPS m\u00e1ximos
+ Kurangi animasi game	Reducir animaciones del juego
+ Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Desactiva texturas animadas, el desvanecimiento de chunks, el balanceo de c\u00e1mara al caminar y el desenfoque de men\u00fas. M\u00e1s ligero en m\u00f3viles d\u00e9biles.
++Menu garis tiga	Men\u00fa de tres l\u00edneas
++Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	El bot\u00f3n de tres l\u00edneas en la pantalla del juego que abre el men\u00fa r\u00e1pido del motor (preajustes, controles, ajustes). Sus colores siguen el acento de Amber. Se aplica en el pr\u00f3ximo PLAY.
+diff --git a/app/src/main/assets/lang/vi/rust-settings.tsv b/app/src/main/assets/lang/vi/rust-settings.tsv
+index dd3a612..078ff7e 100644
+--- a/app/src/main/assets/lang/vi/rust-settings.tsv
++++ b/app/src/main/assets/lang/vi/rust-settings.tsv
+@@ -65,3 +65,5 @@ Hemat baterai	Ti\u1ebft ki\u1ec7m pin
+ FPS maksimum	FPS t\u1ed1i \u0111a
+ Kurangi animasi game	Gi\u1ea3m ho\u1ea1t \u1ea3nh trong game
+ Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	T\u1eaft texture ho\u1ea1t \u1ea3nh, hi\u1ec7u \u1ee9ng m\u1edd d\u1ea7n chunk, l\u1eafc camera khi \u0111i b\u1ed9 v\u00e0 l\u00e0m m\u1edd menu. Nh\u1eb9 h\u01a1n tr\u00ean m\u00e1y y\u1ebfu.
++Menu garis tiga	Menu ba g\u1ea1ch
++Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	N\u00fat ba g\u1ea1ch tr\u00ean m\u00e0n h\u00ecnh game m\u1edf menu nhanh c\u1ee7a engine (preset, \u0111i\u1ec1u khi\u1ec3n, c\u00e0i \u0111\u1eb7t). M\u00e0u s\u1eafc theo m\u00e0u nh\u1ea5n c\u1ee7a Amber. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+index 53cf329..8d1c100 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+@@ -240,6 +240,8 @@ object HorizonEngine {
+             val firstRun = !gameInstalled(context)
+             // Tombol layar mesin mengikuti tata letak Amber (atau dikembalikan ke bawaan mesin bila dimatikan).
+             RustTouchLayout.sync(context, SettingsManager.settings.value.rustAmberControls)
++            // Warna UI mesin (menu garis tiga, editor kontrol, layar mesin) mengikuti aksen Amber.
++            RustSettingsStore.syncTheme(context, SettingsManager.settings.value.accentColor)
+             writeLaunchFile(context, account)
+             if (firstRun) {
+                 Toast.makeText(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+index b42bac7..cc2ca2f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+@@ -105,6 +105,9 @@ object RustSettingsStore {
+     private val revision = AtomicInteger(0)
+     private val lock = Any()
+ 
++    // Baca-ubah-tulis android-launcher.json: tulisan pengaturan (di latar) dan tema (saat PLAY) tidak boleh saling menimpa.
++    private val fileLock = Any()
++
+     /** Folder data mesin. Sama dengan [HorizonEngine.engineHome]; satu sumber agar tidak bisa berselisih. */
+     private fun configFile(context: Context): File = File(HorizonEngine.engineHome(context), CONFIG_FILE)
+ 
+@@ -213,7 +216,10 @@ object RustSettingsStore {
+ 
+     // ---- tulis ----
+ 
+-    private fun write(file: File, s: RustSettings, reset: Boolean) {
++    private fun write(file: File, s: RustSettings, reset: Boolean) =
++        synchronized(fileLock) { writeLocked(file, s, reset) }
++
++    private fun writeLocked(file: File, s: RustSettings, reset: Boolean) {
+         try {
+             val dir = file.parentFile ?: return
+             if (!dir.isDirectory && !dir.mkdirs()) {
+@@ -243,19 +249,46 @@ object RustSettingsStore {
+                 json.put("max_fps_mode", s.perfMode == PERF_FPS)
+                 json.put("disable_game_animations", s.gameAnimationsOff)
+             }
+-            val temp = File(dir, TEMP_FILE)
+-            temp.writeText(json.toString(2))
+-            // rename(2) di Android menimpa berkas lama secara atomik, jadi mesin tidak pernah melihat berkas hilang.
+-            // Bila sebuah HP menolak menimpa, hapus yang lama lalu pindahkan.
++            commit(dir, file, json)
++        } catch (e: Exception) {
++            LauncherLog.w(TAG, "Config mesin Rust gagal ditulis: ${e.message}", e)
++        }
++    }
++
++    private fun commit(dir: File, file: File, json: JSONObject) {
++        val temp = File(dir, TEMP_FILE)
++        temp.writeText(json.toString(2))
++        // rename(2) di Android menimpa berkas lama secara atomik, jadi mesin tidak pernah melihat berkas hilang.
++        // Bila sebuah HP menolak menimpa, hapus yang lama lalu pindahkan.
++        if (!temp.renameTo(file)) {
++            if (file.exists()) file.delete()
+             if (!temp.renameTo(file)) {
+-                if (file.exists()) file.delete()
+-                if (!temp.renameTo(file)) {
+-                    temp.delete()
+-                    LauncherLog.w(TAG, "Config mesin Rust tidak bisa disimpan: $file")
+-                }
++                temp.delete()
++                LauncherLog.w(TAG, "Config mesin Rust tidak bisa disimpan: $file")
++            }
++        }
++    }
++
++    /**
++     * Menyamakan tema UI mesin dengan aksen Amber ([RustTheme]). Dipanggil saat PLAY, sebelum mesin dibuka,
++     * dan sengaja berjalan di thread pemanggil: mesin membaca berkas ini begitu mulai, jadi tidak boleh
++     * ada yang tertunda. Kunci lain di berkas tidak disentuh.
++     */
++    fun syncTheme(context: Context, accentId: String?) {
++        try {
++            val file = configFile(context.applicationContext)
++            val dir = file.parentFile ?: return
++            if (!dir.isDirectory && !dir.mkdirs()) return
++            synchronized(fileLock) {
++                val json = readJson(file)
++                val theme = RustTheme.json(accentId)
++                val current = json.optJSONObject("theme")
++                if (current != null && theme.keys().asSequence().all { current.opt(it) == theme.opt(it) }) return
++                json.put("theme", theme)
++                commit(dir, file, json)
+             }
+         } catch (e: Exception) {
+-            LauncherLog.w(TAG, "Config mesin Rust gagal ditulis: ${e.message}", e)
++            LauncherLog.w(TAG, "Tema mesin Rust gagal diselaraskan: ${e.message}", e)
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTheme.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTheme.kt
+new file mode 100644
+index 0000000..812a1f1
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTheme.kt
+@@ -0,0 +1,44 @@
++package com.israadev.nuxlauncher.core.horizon
++
++import androidx.compose.ui.graphics.toArgb
++import com.israadev.nuxlauncher.ui.theme.AMBER_ACCENTS
++import com.israadev.nuxlauncher.ui.theme.AmberAccent
++import org.json.JSONObject
++
++/**
++ * Warna UI mesin Rust (menu garis tiga, editor kontrol, layar mesin) mengikuti Amber. Mesin membaca satu
++ * kunci `theme` di android-launcher.json dan memakainya di semua layarnya, jadi cukup ditulis di sini.
++ *
++ * Dasarnya sama dengan AmberUi: latar gelap 121115 dan kaca gelap 1B1720. Mesin memakai satu warna aksen
++ * untuk isian tombol sekaligus teks dan ikon di atas latar gelap, sedangkan Amber memisahkan aksen (isian)
++ * dan aksen terang (teks). Karena itu yang dikirim adalah campuran keduanya, supaya biru Amber tetap
++ * terlihat sama tetapi teks di atasnya terbaca.
++ */
++internal object RustTheme {
++    private const val BACKGROUND = "#121115"
++    private const val SURFACE = "#1B1720"
++    private const val SOFT_SHARE = 0.45f
++
++    /** Nilai kunci `theme`. Semua enum memakai ejaan mesin (huruf kecil); mesin juga membersihkan hex yang salah. */
++    fun json(accentId: String?): JSONObject {
++        val accent = AMBER_ACCENTS.firstOrNull { it.id == accentId } ?: AMBER_ACCENTS.first()
++        return JSONObject()
++            .put("preset", "custom")
++            .put("appearance", "dark")
++            .put("background_mode", "solid")
++            .put("custom_bg_hex", BACKGROUND)
++            .put("custom_surface_hex", SURFACE)
++            .put("custom_accent_hex", accentHex(accent))
++    }
++
++    internal fun accentHex(accent: AmberAccent): String {
++        val base = accent.base.toArgb()
++        val soft = accent.soft.toArgb()
++        fun channel(shift: Int): Int {
++            val a = (base shr shift) and 0xFF
++            val b = (soft shr shift) and 0xFF
++            return (a + (b - a) * SOFT_SHARE).toInt().coerceIn(0, 255)
++        }
++        return "#%02X%02X%02X".format(channel(16), channel(8), channel(0))
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+index 21418d6..d463bb3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+@@ -337,8 +337,9 @@ object RustTouchLayout {
+         json.put("horizontal_margin", 0.0)
+         json.put("vertical_margin", 0.0)
+         json.put("dynamic_joystick", false)
+-        // Menu kontrol mengambang milik mesin disembunyikan: tata letak diatur dari editor kontrol Amber.
+-        json.put("show_control_hub", false)
++        // Menu garis tiga (tombol yang membuka menu cepat mesin) mengikuti Pengaturan Rust > Menu garis tiga.
++        // Tata letak tombol tetap datang dari editor kontrol Amber setiap PLAY.
++        json.put("show_control_hub", SettingsManager.settings.value.rustControlHub)
+         plan.joy?.let { json.put("sprint_with_joystick", it.autoSprint) }
+         // Selalu preset bawaan, supaya mesin tidak menyimpan tata letak Amber ke preset pemain.
+         json.put("preset_id", "default")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index e963b1c..007863b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -29,6 +29,8 @@ data class LauncherSettings(
+     val mouseSizeDp: Int = 24, // 16 - 48 dp
+     // Mesin Rust: tombol layar mengikuti tata letak kontrol Amber (bukan kontrol bawaan mesin). Diterapkan saat PLAY.
+     val rustAmberControls: Boolean = true,
++    // Mesin Rust: tombol bergaris tiga di layar game yang membuka menu cepat mesin. Bawaan nyala. Diterapkan saat PLAY.
++    val rustControlHub: Boolean = true,
+     val hideMouseInClickMode: Boolean = true,
+ 
+     // Graphics & Performance
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+index e44c3ca..5077b8c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+@@ -289,6 +289,15 @@ fun RustControlRows() {
+         }
+     )
+     SettingDivider()
++    SettingSwitchRow(
++        title = "Menu garis tiga",
++        desc = "Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.",
++        checked = launcher.rustControlHub,
++        onCheckedChange = { on ->
++            SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(rustControlHub = on))
++        }
++    )
++    SettingDivider()
+     SettingChoiceRow(
+         title = "Perangkat input",
+         desc = "Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.",
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 93c4676..26f5047 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -88,7 +88,9 @@ Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas confi
+ 
+ #### Kontrol Amber (Pengaturan > Rust > Kontrol)
+ 
+-Saklar **Kontrol Amber** (bawaan hidup) membuat tombol layar mesin memakai **tata letak dan tampilan editor kontrol Amber**, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Mesin tetap menggambar dan menangani sentuhan tombolnya sendiri (satu-satunya cara tombol bisa disentuh di jendela mesin). Yang dipakai adalah gaya **GoyControl** mesin 0.7.8 (kontrol hitam), karena gaya ini bisa diatur warna, sudut, label, dan posisi tiap tombolnya. Gaya Bedrock bawaan mesin tidak dipakai selama saklar hidup.
++Saklar **Kontrol Amber** (bawaan hidup) membuat tombol layar mesin memakai **tata letak dan tampilan editor kontrol Amber**, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Tombol **Menu garis tiga** (menu cepat milik mesin, kunci `show_control_hub`) nyala secara bawaan dan bisa dimatikan di Pengaturan Rust; letak tombol tetap diambil dari editor Amber setiap PLAY, jadi perubahan tata letak yang dibuat di dalam editor mesin tidak bertahan.
++
++**Tema UI mesin.** Saat PLAY, Amber menulis kunci `theme` di `android-launcher.json` (`core/horizon/RustTheme.kt`): preset `custom`, mode gelap, latar `#121115`, kaca `#1B1720`, dan aksen yang dipilih di Pengaturan > Tampilan (dicampur dengan versi terangnya supaya teks terbaca di atas gelap). Mesin memakai satu tema ini di semua layarnya, termasuk menu garis tiga dan editor kontrolnya, jadi warna dan aksennya sama dengan Amber. Selain warna, `amber3/0003-amber-hub-editor.diff` mengubah dua layar mesin: (1) sidebar menu garis tiga menjadi rail ala sidebar Amber (ikon dalam pil beraksen, label di bawahnya, label Indonesia singkat) dengan tombol merah **Keluar** di bawahnya, yang menyimpan dunia lalu kembali ke instance (`begin_closing_save` lalu jalur keluar biasa mesin; dari layar judul langsung keluar); (2) panel properti di editor kontrol menempel di sisi berlawanan dari kontrol yang dipilih, seperti panel editor Amber, dengan latar yang tidak lagi digelapkan, jadi kontrol yang diedit tetap terlihat. Isi tab dan panel masih berbahasa Inggris dan bertata letak mesin. Mesin tetap menggambar dan menangani sentuhan tombolnya sendiri (satu-satunya cara tombol bisa disentuh di jendela mesin). Yang dipakai adalah gaya **GoyControl** mesin 0.7.8 (kontrol hitam), karena gaya ini bisa diatur warna, sudut, label, dan posisi tiap tombolnya. Gaya Bedrock bawaan mesin tidak dipakai selama saklar hidup.
+ 
+ Cara kerjanya: saat PLAY, `core/horizon/RustTouchLayout.kt` menerjemahkan tata letak Amber ke `horizon-touch.json` di folder data mesin (`files/horizon/`, atau `profiles/profile-N/` untuk profil mesin lain), lalu mesin membacanya saat dibuka. Tidak ada kode yang berjalan saat bermain.
+ 
+diff --git a/third_party/horizon-patches/amber3/0003-amber-hub-editor.diff b/third_party/horizon-patches/amber3/0003-amber-hub-editor.diff
+new file mode 100644
+index 0000000..7c41457
+--- /dev/null
++++ b/third_party/horizon-patches/amber3/0003-amber-hub-editor.diff
+@@ -0,0 +1,250 @@
++diff --git a/crates/horizon-client/src/game/android_input.rs b/crates/horizon-client/src/game/android_input.rs
++index ffc5c991e..a6aa6336d 100644
++--- a/crates/horizon-client/src/game/android_input.rs
+++++ b/crates/horizon-client/src/game/android_input.rs
++@@ -962,6 +962,15 @@ impl Game<'_> {
++                     let _ = self.pad.touch.settings.save();
++                     std::process::exit(0);
++                 }
+++                InGameMenuAction::ExitToInstance => {
+++                    let _ = self.pad.touch.settings.save();
+++                    // Save the world first; the game loop finishes the closing save and then returns to the
+++                    // app that started the game. Only if the save cannot even begin, leave at once.
+++                    if let Err(error) = self.begin_closing_save(true) {
+++                        self.error = Some(error);
+++                        std::process::exit(0);
+++                    }
+++                }
++                 InGameMenuAction::OpenLogs => {
++                     // Logs are private to the app; the SAF provider shares the Reports
++                     // folder the diagnostics exporter writes into.
++diff --git a/crates/horizon-client/src/game/startup_menu.rs b/crates/horizon-client/src/game/startup_menu.rs
++index 73cc4acda..379377d07 100644
++--- a/crates/horizon-client/src/game/startup_menu.rs
+++++ b/crates/horizon-client/src/game/startup_menu.rs
++@@ -1582,6 +1582,11 @@ impl Loading {
++                         let _ = self.menu.controls.settings.save();
++                         std::process::exit(0);
++                     }
+++                    InGameMenuAction::ExitToInstance => {
+++                        // On the title screen there is no world to save.
+++                        let _ = self.menu.controls.settings.save();
+++                        crate::game::exit_app(event_loop);
+++                    }
++                     InGameMenuAction::OpenLogs => {
++                         let _ = crate::platform::open_documents("reports");
++                     }
++diff --git a/crates/horizon-client/src/touch_ui.rs b/crates/horizon-client/src/touch_ui.rs
++index d9cba4c48..2a2625ed0 100644
++--- a/crates/horizon-client/src/touch_ui.rs
+++++ b/crates/horizon-client/src/touch_ui.rs
++@@ -161,6 +161,8 @@ pub enum InGameMenuAction {
++     OpenKeyboard,
++     /// Kill the game process now (no save, no shutdown sequence).
++     ForceKill,
+++    /// Save the world and leave the game: back to the app that started it (AmberLauncher).
+++    ExitToInstance,
++     /// Open the game's log folder in the system file manager.
++     OpenLogs,
++     /// The naming field of a preset dialog was tapped: show the system keyboard.
++@@ -1573,7 +1575,8 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
++     let dh = (h - 12.0).clamp(264.0, 420.0);
++     let dx = (w - dw) * 0.5;
++     let dy = (h - dh) * 0.5;
++-    let side_w = (dw * 0.25).clamp(114.0, 148.0);
+++    // Narrow rail like AmberLauncher's sidebar: icon over label.
+++    let side_w = 72.0;
++     let cx = dx + side_w + 16.0;
++     let cw = dw - side_w - 32.0;
++     let body_top = dy + 54.0;
++@@ -1581,6 +1584,36 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
++     (dw, dh, dx, dy, side_w, cx, cw, body_top, body_h)
++ }
++ 
+++/// Horizontal center (0..1) of the control being edited, written by the drawing so the touch code docks the
+++/// inspector on the same side. `0x3F00_0000` is `0.5f32`.
+++static INSPECTOR_SELECTED_X: std::sync::atomic::AtomicU32 =
+++    std::sync::atomic::AtomicU32::new(0x3F00_0000);
+++
+++/// Inspector panel `(dw, dh, dx, dy)`, docked to the side opposite the selected control (like AmberLauncher's
+++/// control editor) so the control being edited is never covered. Shared by drawing and touch.
+++fn inspector_rect(w: f32, h: f32) -> (f32, f32, f32, f32) {
+++    let sel_x = f32::from_bits(INSPECTOR_SELECTED_X.load(std::sync::atomic::Ordering::Relaxed));
+++    let dw = (w * 0.52).clamp(350.0, 640.0);
+++    let dh = (h - 12.0).clamp(256.0, 384.0);
+++    let dx = if sel_x >= 0.5 {
+++        8.0
+++    } else {
+++        (w - dw - 8.0).max(0.0)
+++    };
+++    let dy = (h - dh) * 0.5;
+++    (dw, dh, dx, dy)
+++}
+++
+++/// Rail sidebar geometry shared by drawing and touch: `(compact, pitch, pill_w, pill_h, exit_h)`.
+++/// Compact (short screens) drops the labels so the five tabs and the exit button never overlap.
+++fn hub_rail_metrics(dh: f32) -> (bool, f32, f32, f32, f32) {
+++    if dh < 330.0 {
+++        (true, 32.0, 40.0, 28.0, 34.0)
+++    } else {
+++        (false, 52.0, 52.0, 32.0, 52.0)
+++    }
+++}
+++
++ impl TouchUi {
++     fn step_animations(&self) -> (f32, f32) {
++         let open_target = if self.floating_menu { 1.0 } else { 0.0 };
++@@ -2146,11 +2179,12 @@ impl TouchUi {
++                 return Some(InGameMenuAction::Close);
++             }
++ 
++-            // Left Sidebar Category Tabs (Recommended, Controls, Aiming, Buttons, Advanced)
+++            // Left rail tabs and the exit button (same geometry as the drawing).
+++            let (_, rail_pitch, _, _, exit_h) = hub_rail_metrics(dh);
++             let tab_start_y = dy + 54.0;
++             for ti in 0..5u8 {
++-                let ty = tab_start_y + ti as f32 * 39.0;
++-                if inside([dx + 10.0, ty, side_w - 16.0, 35.0]) {
+++                let ty = tab_start_y + ti as f32 * rail_pitch;
+++                if inside([dx + 2.0, ty, side_w - 2.0, rail_pitch]) {
++                     if self.hub_tab != ti {
++                         self.hub_tab = ti;
++                         self.hub_scroll = 0.0;
++@@ -2160,6 +2194,10 @@ impl TouchUi {
++                     return Some(InGameMenuAction::Close);
++                 }
++             }
+++            if inside([dx + 2.0, dy + dh - exit_h - 14.0, side_w - 2.0, exit_h + 8.0]) {
+++                self.floating_menu = false;
+++                return Some(InGameMenuAction::ExitToInstance);
+++            }
++ 
++             // Check if touch started on sliders or quick chips in Tab 0 (Recommended)
++             if self.hub_tab == 0 && inside(content_pane) {
++@@ -2701,33 +2739,72 @@ impl TouchUi {
++         ui.border(done_r[0], done_r[1], done_r[2], done_r[3], 9.0, border_c);
++         ui.centered_fit(Face::SemiBold, 11.0, done_r, text_c, "Done");
++ 
++-        // Left Sidebar Navigation Tabs (Recommended, Controls, Aiming, Buttons, Advanced)
+++        // Left rail like AmberLauncher's sidebar (Utama, Kontrol, Bidik, Tombol, Lanjut): the icon sits in a
+++        // pill that is filled with the accent when selected, the label is under it. The red button at the
+++        // bottom saves the world and leaves the game, back to the instance.
++         let tabs: [(Icon, &str); 5] = [
++-            (Icon::HorizonLogo, "Recommended"),
++-            (Icon::Gamepad, "Controls"),
++-            (Icon::Crosshair, "Aiming"),
++-            (Icon::MicrosoftGrid, "Buttons"),
++-            (Icon::Flask, "Advanced"),
+++            (Icon::HorizonLogo, "Utama"),
+++            (Icon::Gamepad, "Kontrol"),
+++            (Icon::Crosshair, "Bidik"),
+++            (Icon::MicrosoftGrid, "Tombol"),
+++            (Icon::Flask, "Lanjut"),
++         ];
+++        let (rail_compact, rail_pitch, pill_w, pill_h, exit_h) = hub_rail_metrics(dh);
+++        let rail_cx = dx + side_w * 0.5 + 1.0;
+++        let rail_icon = if rail_compact { 16.0 } else { 18.0 };
++         let tab_start_y = dy + 54.0;
++         for (ti, (ic, lbl)) in tabs.into_iter().enumerate() {
++-            let ty = tab_start_y + ti as f32 * 39.0;
+++            let ty = tab_start_y + ti as f32 * rail_pitch;
++             let active = self.hub_tab == ti as u8;
++-            let tr = [dx + 10.0, ty, side_w - 18.0, 34.0];
+++            let pill = [rail_cx - pill_w * 0.5, ty + 2.0, pill_w, pill_h];
++             if active {
++-                ui.rounded(tr[0], tr[1], tr[2], tr[3], 10.0, accent);
++-                ui.rounded(tr[0] - 4.0, tr[1] + 7.0, 3.0, 20.0, 1.5, accent_hi);
+++                ui.rounded(pill[0], pill[1], pill[2], pill[3], pill_h * 0.5, accent);
++             }
++-            let fg = if active { text_c } else { muted_c };
++-            ui.icon(ic, tr[0] + 9.0, tr[1] + 9.0, 15.0, fg);
++-            ui.text(
++-                if active { Face::SemiBold } else { Face::Medium },
++-                10.6,
++-                tr[0] + 29.0,
++-                tr[1] + 8.0,
++-                fg,
++-                lbl,
+++            ui.icon(
+++                ic,
+++                rail_cx - rail_icon * 0.5,
+++                pill[1] + (pill_h - rail_icon) * 0.5,
+++                rail_icon,
+++                if active { accent_fg } else { muted_c },
+++            );
+++            if !rail_compact {
+++                ui.centered_fit(
+++                    Face::SemiBold,
+++                    9.4,
+++                    [dx + 4.0, pill[1] + pill_h + 3.0, side_w - 4.0, 12.0],
+++                    if active { accent_hi } else { muted_c },
+++                    lbl,
+++                );
+++            }
+++        }
+++        {
+++            let ey = dy + dh - exit_h - 10.0;
+++            let pill = [rail_cx - pill_w * 0.5, ey, pill_w, pill_h];
+++            ui.rounded(
+++                pill[0],
+++                pill[1],
+++                pill[2],
+++                pill[3],
+++                pill_h * 0.5,
+++                color::with_alpha(danger_c, 0.22),
++             );
+++            ui.border(pill[0], pill[1], pill[2], pill[3], pill_h * 0.5, danger_c);
+++            ui.icon(
+++                Icon::ArrowLeft,
+++                rail_cx - rail_icon * 0.5,
+++                pill[1] + (pill_h - rail_icon) * 0.5,
+++                rail_icon,
+++                danger_c,
+++            );
+++            if !rail_compact {
+++                ui.centered_fit(
+++                    Face::SemiBold,
+++                    9.4,
+++                    [dx + 4.0, pill[1] + pill_h + 3.0, side_w - 4.0, 12.0],
+++                    danger_c,
+++                    "Keluar",
+++                );
+++            }
++         }
++ 
++         // Scrollable Right Content Panel with scissor clip and tab transition slide
++@@ -4686,11 +4763,17 @@ pub fn draw_hud_editor(
++ 
++     // 8. Component Property Inspector Dialog — Studio Layout matching `90511.png` (when ed.props_open == true)
++     if ed.props_open {
++-        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 208));
++-        let dw = (w - 16.0).clamp(350.0, 640.0);
++-        let dh = (h - 12.0).clamp(256.0, 384.0);
++-        let dx = (w - dw) * 0.5;
++-        let dy = (h - dh) * 0.5;
+++        // Light scrim: the control being edited stays visible next to the docked panel.
+++        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 70));
+++        let sel_x = if let Some(idx) = ed.selected_custom {
+++            tc.custom_placement(idx).center[0]
+++        } else if let Some(c) = ed.selected {
+++            tc.placement(c).center[0]
+++        } else {
+++            0.5
+++        };
+++        INSPECTOR_SELECTED_X.store(sel_x.to_bits(), std::sync::atomic::Ordering::Relaxed);
+++        let (dw, dh, dx, dy) = inspector_rect(w, h);
++ 
++         // Material Design 3 Expressive Tonal Surface Palette synchronized with active theme
++         let st_outer = theme.bg_solid;
++@@ -6956,10 +7039,7 @@ pub fn touch_hud_editor(
++ 
++         // 3. If Component Property Inspector Dialog is open (Studio Layout matching `90511.png`):
++         if ed.props_open {
++-            let dw = (w - 16.0).clamp(350.0, 640.0);
++-            let dh = (h - 12.0).clamp(256.0, 384.0);
++-            let dx = (w - dw) * 0.5;
++-            let dy = (h - dh) * 0.5;
+++            let (dw, dh, dx, dy) = inspector_rect(w, h);
++ 
++             // Close via top-left [X] button, top-right [✓ Done] button, or outside tap
++             if inside([dx + 12.0, dy + 9.0, 26.0, 26.0])
+# FIN part=1/1 files=11

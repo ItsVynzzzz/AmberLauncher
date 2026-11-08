@@ -42,11 +42,39 @@ internal object MenuMouse {
     private var syntheticDown = false
     private var backDirect = false
 
+    // Tombol GLFW yang sedang tertekan akibat mouse fisik (bit = nomor tombol). Dipakai SEMUA jalur mouse
+    // fisik (menu absolut, pointer capture, klik kanan lewat BACK) sebagai pintu terakhir ke game.
+    private var heldGlfw = 0
+
+    /**
+     * Kirim tombol mouse fisik ke game. Tekan ganda atau lepas ganda dibuang, mis. klik kanan yang datang
+     * dua kali (tombol BACK + event gerak), jadi game tidak pernah menerima satu klik dua kali.
+     */
+    fun sendButton(glfw: Int, pressed: Boolean) {
+        if (glfw < 0 || glfw > 30) {
+            CallbackBridge.sendMouseButton(glfw, pressed)
+            return
+        }
+        val bit = 1 shl glfw
+        if (((heldGlfw and bit) != 0) == pressed) return
+        heldGlfw = if (pressed) heldGlfw or bit else heldGlfw and bit.inv()
+        CallbackBridge.sendMouseButton(glfw, pressed)
+    }
+
+    private fun releaseHeld() {
+        var glfw = 0
+        while (heldGlfw != 0 && glfw <= 30) {
+            if ((heldGlfw and (1 shl glfw)) != 0) sendButton(glfw, false)
+            glfw++
+        }
+        heldGlfw = 0
+    }
+
     private val buttons = CapturedMouseButtons { button, pressed ->
         val glfw = MouseButtons.toGlfw(button)
         if (glfw != null) {
             MouseDiag.buttonsSent++
-            CallbackBridge.sendMouseButton(glfw, pressed)
+            sendButton(glfw, pressed)
         } else {
             MouseDiag.buttonsDropped++
         }
@@ -72,10 +100,15 @@ internal object MenuMouse {
         buttons.set(button, pressed)
     }
 
-    /** Lepaskan semua tombol yang masih tertahan (sekali per tombol). */
-    fun reset() {
+    private fun resetMenu() {
         syntheticDown = false
         buttons.reset()
+    }
+
+    /** Lepaskan semua tombol mouse fisik yang masih tertahan (sekali per tombol), dari jalur mana pun. */
+    fun reset() {
+        resetMenu()
+        releaseHeld()
     }
 
     /**
@@ -87,14 +120,14 @@ internal object MenuMouse {
         if (!event.isFromSource(InputDevice.SOURCE_MOUSE)) return
         if (!canHandle()) {
             MouseDiag.actMenuBlocked++
-            reset()
+            resetMenu()
             return
         }
         MouseDiag.actMenu++
 
         val action = event.actionMasked
         if (action == MotionEvent.ACTION_CANCEL) {
-            reset()
+            resetMenu()
             return
         }
 
@@ -130,7 +163,7 @@ internal object MenuMouse {
         if (!event.isFromSource(InputDevice.SOURCE_MOUSE)) return
         if (!canHandle()) {
             MouseDiag.actMenuBlocked++
-            reset()
+            resetMenu()
             return
         }
         MouseDiag.actMenu++

@@ -43,6 +43,10 @@ fun SwitchableMouseLayout(
     // Mouse launcher di menu: false saat lapisan launcher (menu dalam game, dialog, editor, loading) menutupi
     // game, supaya penunjuk sistem Android bisa dipakai di lapisan itu.
     menuCaptureAllowed: Boolean = true,
+    // Pengali kecepatan khusus mouse fisik (1 = sama dengan sensitivitas di atas): kursor launcher di menu dan
+    // kamera saat bermain. Tidak memengaruhi jari.
+    physicalCursorSpeed: Float = 1f,
+    physicalCameraSpeed: Float = 1f,
     // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
     hotbarSlotAt: ((Offset) -> Int)? = null,
     onHotbarSelect: (Int) -> Unit = {},
@@ -80,6 +84,8 @@ fun SwitchableMouseLayout(
     val currentCursorMode by rememberUpdatedState(cursorMode)
     val currentCursorPos by rememberUpdatedState(cursorPosition)
     val currentSensitivity by rememberUpdatedState(cursorSensitivity)
+    val currentPhysicalCursorSpeed by rememberUpdatedState(physicalCursorSpeed)
+    val currentPhysicalCameraSpeed by rememberUpdatedState(physicalCameraSpeed)
     val currentTouchAttack by rememberUpdatedState(touchAttackEnabled)
     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
@@ -136,7 +142,9 @@ fun SwitchableMouseLayout(
             val glfwBtn = MouseButtons.toGlfw(button)
             if (glfwBtn != null) {
                 MouseDiag.buttonsSent++
-                CallbackBridge.sendMouseButton(glfwBtn, pressed)
+                // Pintu bersama semua jalur mouse fisik: tekan/lepas ganda dibuang, dan tombol yang tertahan
+                // bisa dilepas sekaligus saat fokus hilang (MenuMouse.reset).
+                MenuMouse.sendButton(glfwBtn, pressed)
             } else {
                 MouseDiag.buttonsDropped++
             }
@@ -164,7 +172,7 @@ fun SwitchableMouseLayout(
     // Mouse launcher di menu: menggeser kursor launcher sebesar gerakan relatif mouse, lalu memberi tahu game.
     fun moveMenuCursor(delta: Offset) {
         val cur = currentCursorPos()
-        val sens = currentSensitivity
+        val sens = currentSensitivity * currentPhysicalCursorSpeed
         val nx = (cur.x + delta.x * sens).coerceIn(0f, currentScreenWidth)
         val ny = (cur.y + delta.y * sens).coerceIn(0f, currentScreenHeight)
         MouseDiag.cursorSent++
@@ -495,7 +503,7 @@ fun SwitchableMouseLayout(
         onMouseMove = { delta ->
             if (currentCursorMode == CURSOR_DISABLED) {
                 MouseDiag.deltaSent++
-                currentOnCapturedMove(delta)
+                currentOnCapturedMove(delta * currentPhysicalCameraSpeed)
             } else {
                 moveMenuCursor(delta)
             }

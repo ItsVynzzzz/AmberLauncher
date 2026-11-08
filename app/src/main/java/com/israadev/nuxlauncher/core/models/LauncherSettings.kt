@@ -35,6 +35,15 @@ data class LauncherSettings(
     val rustControlHub: Boolean = true,
     val hideMouseInClickMode: Boolean = true,
 
+    // Mouse fisik. false (bawaan) = mouse fisik menggerakkan kursor launcher di menu (pointer capture, jalur yang
+    // sama dengan saat bermain), jadi gambar, ukuran, dan hotspot kursor bisa diatur. true = kursor sistem Android.
+    val physicalMouseSystemPointer: Boolean = false,
+    // Pengali (persen) di atas sensitivitas kursor / kamera di atas, khusus mouse fisik. 100 = sama persis.
+    val physicalMouseCursorSpeed: Int = 100, // 20 - 300
+    val physicalMouseCameraSpeed: Int = 100, // 20 - 300
+    // Hotspot kursor per bentuk, dalam persen kotak kursor: "arrow.x", "arrow.y", "hand.x", dst. Kosong = bawaan.
+    val pointerHotspots: Map<String, Int> = emptyMap(),
+
     // Graphics & Performance
     val resolutionRatio: Int = 100, // 40% - 125%, kelipatan 5 (slider di Pengaturan dan menu dalam game)
     val autoOptimizeMinecraft: Boolean = true,

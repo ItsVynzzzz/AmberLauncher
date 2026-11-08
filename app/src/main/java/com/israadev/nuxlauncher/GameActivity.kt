@@ -61,6 +61,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -69,12 +70,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -122,7 +117,9 @@ import com.israadev.nuxlauncher.ui.control.LauncherMouse
 import com.israadev.nuxlauncher.ui.control.MenuMouse
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.control.MouseDiag
+import com.israadev.nuxlauncher.ui.control.PointerStyle
 import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
+import com.israadev.nuxlauncher.ui.control.drawPointer
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
@@ -917,7 +914,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 val isDown = event.action == KeyEvent.ACTION_DOWN
                 // Di menu game tombolnya lewat pelacak yang sama dengan event gerak mouse (tidak terkirim ganda).
                 if (!MenuMouse.onBackKey(isDown)) {
-                    CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
+                    // Pelacak yang sama dengan jalur gerak/tangkap: klik kanan yang datang dua kali tidak terkirim ganda.
+                    MenuMouse.sendButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
                 }
                 return true
             }
@@ -2077,7 +2075,10 @@ fun GameScreen(
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
             // Lapisan launcher di atas game memakai penunjuk sistem; tanpa lapisan itu, mouse ditangkap.
-            menuCaptureAllowed = !overlayCoversGame,
+            // Pilihan "Pakai kursor sistem Android" mematikan penangkapan di menu: yang terlihat penunjuk sistem.
+            menuCaptureAllowed = !overlayCoversGame && !launcherSettings.physicalMouseSystemPointer,
+            physicalCursorSpeed = launcherSettings.physicalMouseCursorSpeed.coerceIn(10, 400) / 100f,
+            physicalCameraSpeed = launcherSettings.physicalMouseCameraSpeed.coerceIn(10, 400) / 100f,
             hotbarSlotAt = hotbarLookup,
             touchSink = touchSink,
             onHotbarSelect = { slot ->
@@ -2180,7 +2181,8 @@ fun GameScreen(
                 x = { cursorX },
                 y = { cursorY },
                 isPressed = { isMousePressed },
-                cursorSizeDp = launcherSettings.mouseSizeDp
+                cursorSizeDp = launcherSettings.mouseSizeDp,
+                hotspots = launcherSettings.pointerHotspots
             )
         }
 
@@ -2326,9 +2328,11 @@ fun GameScreen(
 }
 
 /**
- * Kursor panah untuk menu game. Posisinya diberikan lewat lambda dan hanya dibaca saat lapisan
- * digeser (tanpa menyusun ulang dan tanpa menggambar ulang panahnya); bentuk panah dibuat sekali.
- * Belum ada posisi (0, 0) = tidak terlihat.
+ * Kursor menu game, dalam bentuk yang mengikuti kursor game (panah, tangan, kolom teks, dst.). Posisinya diberikan
+ * lewat lambda dan hanya dibaca saat lapisan digeser (graphicsLayer): menggerakkan kursor tidak menyusun ulang
+ * dan tidak menggambar ulang gambarnya. Hanya pergantian bentuk atau gambar yang menyusun ulang fungsi ini.
+ * Gambar bawaan berupa path vektor kecil, gambar kustom didecode sekali dan disimpan (lihat [PointerStyle]).
+ * Hotspot (titik ujung kursor) diletakkan tepat di posisi kursor. Belum ada posisi (0, 0) = tidak terlihat.
  */
 @Composable
 fun VirtualCursorPointer(
@@ -2336,27 +2340,17 @@ fun VirtualCursorPointer(
     y: () -> Float,
     isPressed: () -> Boolean = { false },
     cursorSizeDp: Int = 24,
+    hotspots: Map<String, Int> = emptyMap(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val d = LocalDensity.current.density
-    val arrow = remember(d) {
-        Path().apply {
-            moveTo(0f, 0f)
-            lineTo(0f, 22f * d)
-            lineTo(5.5f * d, 16.5f * d)
-            lineTo(10.5f * d, 24.5f * d)
-            lineTo(13.5f * d, 23f * d)
-            lineTo(8.5f * d, 15f * d)
-            lineTo(15.5f * d, 15f * d)
-            close()
-        }
-    }
-    val arrowShadow = remember(arrow, d) {
-        Path().apply { addPath(arrow, Offset(2f * d, 2f * d)) }
-    }
-    val outline = remember(d) {
-        Stroke(width = 1.8f * d, cap = StrokeCap.Round, join = StrokeJoin.Round)
-    }
+    val shape by ZLBridgeStates.cursorShape.collectAsStateWithLifecycle()
+    val glyph = PointerStyle.glyphFor(shape, d)
+    val custom = PointerStyle.bitmap(context, shape)
+    val hotX = PointerStyle.hotspotX(hotspots, shape) / 100f
+    val hotY = PointerStyle.hotspotY(hotspots, shape) / 100f
+    val sizePx = cursorSizeDp * d
 
     Box(
         modifier = modifier
@@ -2364,17 +2358,10 @@ fun VirtualCursorPointer(
             .graphicsLayer {
                 val px = x()
                 val py = y()
-                translationX = px
-                translationY = py
+                translationX = px - hotX * sizePx
+                translationY = py - hotY * sizePx
                 alpha = if (px > 0f && py > 0f) 1f else 0f
             }
-            .drawBehind {
-                val k = (cursorSizeDp / 24f) * (if (isPressed()) 0.88f else 1.0f)
-                scale(k, pivot = Offset.Zero) {
-                    drawPath(path = arrowShadow, color = Color.Black.copy(alpha = 0.45f), style = Fill)
-                    drawPath(path = arrow, color = Color.White, style = Fill)
-                    drawPath(path = arrow, color = Color.Black, style = outline)
-                }
-            }
+            .drawBehind { drawPointer(glyph, custom, d, sizePx, hotX, hotY, isPressed()) }
     )
 }

@@ -227,6 +227,8 @@ fun SettingSliderRow(
     onValueChange: (Float) -> Unit,
     desc: String? = null,
     warn: Boolean = false,
+    // Dipanggil saat jari diangkat. Dipakai pengaturan yang ditulis ke berkas hanya sekali per geser.
+    onValueChangeFinished: (() -> Unit)? = null,
     footer: (@Composable () -> Unit)? = null
 ) {
     SettingFrame(title, desc) {
@@ -248,6 +250,7 @@ fun SettingSliderRow(
             Slider(
                 value = value,
                 onValueChange = onValueChange,
+                onValueChangeFinished = onValueChangeFinished,
                 valueRange = valueRange,
                 steps = steps,
                 colors = SliderDefaults.colors(

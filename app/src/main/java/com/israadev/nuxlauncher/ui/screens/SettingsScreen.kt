@@ -140,6 +140,9 @@ fun SettingsScreen(
     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+    var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
+    var physicalCursorSpeed by remember(currentSettings.physicalMouseCursorSpeed) { mutableIntStateOf(currentSettings.physicalMouseCursorSpeed) }
+    var physicalCameraSpeed by remember(currentSettings.physicalMouseCameraSpeed) { mutableIntStateOf(currentSettings.physicalMouseCameraSpeed) }
 
     var resolutionRatio by remember(currentSettings.resolutionRatio) { mutableIntStateOf(currentSettings.resolutionRatio) }
     var autoOptimizeMC by remember(currentSettings.autoOptimizeMinecraft) { mutableStateOf(currentSettings.autoOptimizeMinecraft) }
@@ -202,6 +205,9 @@ fun SettingsScreen(
             buttonLookDrag = buttonLookDrag,
             touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
+            physicalMouseSystemPointer = physicalSystemPointer,
+            physicalMouseCursorSpeed = physicalCursorSpeed,
+            physicalMouseCameraSpeed = physicalCameraSpeed,
             resolutionRatio = resolutionRatio,
             autoOptimizeMinecraft = autoOptimizeMC,
             sustainedPerformanceMode = sustainedPerf,
@@ -835,6 +841,55 @@ fun SettingsScreen(
                         )
                         }
 
+                        // Gambar, hotspot, dan ukuran kursor launcher (dipakai di menu game oleh jari, controller,
+                        // dan mouse fisik). Gambar kustom didecode sekali dan disimpan; slider hanya menulis saat dilepas.
+                        SettingsGroup("Penunjuk kursor") {
+                            PointerSettingsCards(
+                                hotspots = currentSettings.pointerHotspots,
+                                onHotspotsChange = { map ->
+                                    SettingsManager.updateSettings(
+                                        context,
+                                        SettingsManager.settings.value.copy(pointerHotspots = map)
+                                    )
+                                }
+                            )
+                        }
+
+                        SettingsGroup("Mouse fisik") {
+                            SettingSwitchRow(
+                                title = "Pakai kursor sistem Android",
+                                desc = "Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot " +
+                                    "kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.",
+                                checked = physicalSystemPointer,
+                                onCheckedChange = {
+                                    physicalSystemPointer = it
+                                    commitSettings()
+                                }
+                            )
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Kecepatan kursor mouse",
+                                desc = "Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.",
+                                valueText = "$physicalCursorSpeed%",
+                                value = physicalCursorSpeed.toFloat(),
+                                valueRange = 20f..300f,
+                                steps = 27,
+                                onValueChange = { physicalCursorSpeed = it.roundToInt() },
+                                onValueChangeFinished = { commitSettings() }
+                            )
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Kecepatan kamera mouse",
+                                desc = "Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.",
+                                valueText = "$physicalCameraSpeed%",
+                                value = physicalCameraSpeed.toFloat(),
+                                valueRange = 20f..300f,
+                                steps = 27,
+                                onValueChange = { physicalCameraSpeed = it.roundToInt() },
+                                onValueChangeFinished = { commitSettings() }
+                            )
+                        }
+
                         // Tidak ada sakelar: controller dan mouse fisik langsung bekerja begitu dipakai.
                         SettingsGroup("Controller dan mouse fisik") {
                             SettingFrame(
@@ -1038,6 +1093,9 @@ fun SettingsScreen(
                     buttonLookDrag = reset.buttonLookDrag
                     touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
+                    physicalSystemPointer = reset.physicalMouseSystemPointer
+                    physicalCursorSpeed = reset.physicalMouseCursorSpeed
+                    physicalCameraSpeed = reset.physicalMouseCameraSpeed
                     resolutionRatio = reset.resolutionRatio
                     autoOptimizeMC = reset.autoOptimizeMinecraft
                     sustainedPerf = reset.sustainedPerformanceMode

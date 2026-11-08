@@ -1,0 +1,525 @@
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index fdb5d3b..d25729e 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -258,3 +258,4 @@ tasks.configureEach {
+ // jaringan, skrip itu hanya memberi tahu alasannya, dan build berjalan seperti biasa tanpa mesin Rust. Dilewati di
+-// build 32-bit (mesin hanya untuk arm64), di Windows (butuh bash), dan bila HORIZON_ENGINE=off.
++// build 32-bit (scripts/build-arm32.sh memasang mesin 32-bit sendiri), di Windows (butuh bash), dan bila
++// HORIZON_ENGINE=off.
+ val fetchHorizonEngine by tasks.registering(Exec::class) {
+diff --git a/app/src/main/assets/lang/en/horizon.tsv b/app/src/main/assets/lang/en/horizon.tsv
+index d3ae0fd..57e09fe 100644
+--- a/app/src/main/assets/lang/en/horizon.tsv
++++ b/app/src/main/assets/lang/en/horizon.tsv
+@@ -34 +34,4 @@ Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat g
+ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shaders on the Rust engine are still experimental and may be heavy for this phone.
++# Mesin Rust di HP 32-bit
++Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	The 32-bit Rust engine is only available on ARM (armeabi-v7a) phones.
++Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental on 32-bit phones: needs Android 9 or newer and may be slower.
+diff --git a/app/src/main/assets/lang/es/horizon.tsv b/app/src/main/assets/lang/es/horizon.tsv
+index 5d75f87..960b265 100644
+--- a/app/src/main/assets/lang/es/horizon.tsv
++++ b/app/src/main/assets/lang/es/horizon.tsv
+@@ -34 +34,4 @@ Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat g
+ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Los shaders del motor Rust a\u00fan son experimentales y pueden resultar pesados para este tel\u00e9fono.
++# Mesin Rust di HP 32-bit
++Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	El motor Rust de 32 bits solo est\u00e1 disponible en tel\u00e9fonos ARM (armeabi-v7a).
++Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental en tel\u00e9fonos de 32 bits: requiere Android 9 o superior y puede ser m\u00e1s lento.
+diff --git a/app/src/main/assets/lang/vi/horizon.tsv b/app/src/main/assets/lang/vi/horizon.tsv
+index edd6d44..7272bdd 100644
+--- a/app/src/main/assets/lang/vi/horizon.tsv
++++ b/app/src/main/assets/lang/vi/horizon.tsv
+@@ -34 +34,4 @@ Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat g
+ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shader tr\u00ean engine Rust v\u1eabn \u0111ang th\u1eed nghi\u1ec7m v\u00e0 c\u00f3 th\u1ec3 l\u00e0m n\u1eb7ng \u0111i\u1ec7n tho\u1ea1i n\u00e0y.
++# Mesin Rust di HP 32-bit
++Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	Engine Rust 32-bit ch\u1ec9 c\u00f3 tr\u00ean \u0111i\u1ec7n tho\u1ea1i ARM (armeabi-v7a).
++Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Th\u1eed nghi\u1ec7m tr\u00ean \u0111i\u1ec7n tho\u1ea1i 32-bit: y\u00eau c\u1ea7u Android 9 tr\u1edf l\u00ean v\u00e0 c\u00f3 th\u1ec3 ch\u1eadm h\u01a1n.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+index 942822d..e99dfb9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+@@ -7,2 +7,4 @@ import android.os.Environment
+ import com.israadev.nuxlauncher.core.account.AccountManager
++import com.israadev.nuxlauncher.core.horizon.HorizonContent
++import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+@@ -19,2 +21,3 @@ import java.util.Locale
+ import java.util.Properties
++import org.json.JSONObject
+ 
+@@ -49,2 +52,8 @@ object GameLogArchive {
+     private const val MAX_LISTED = 80
++    private const val MAX_ENGINE_LOG_BYTES = 160L * 1024L
++    private const val MAX_ENGINE_SHADER_LINES = 80
++    private val ENGINE_SETTING_KEYS = listOf(
++        "renderer", "render_scale", "super_perf_mode", "battery_perf_mode", "max_fps_mode",
++        "disable_game_animations", "performance_hints", "worker_limit", "cache_budget_mib", "profile"
++    )
+ 
+@@ -302,2 +311,4 @@ object GameLogArchive {
+ 
++        writeEngineSection(context, w)
++
+         w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
+@@ -308,2 +319,61 @@ object GameLogArchive {
+ 
++    /**
++     * Mesin Rust (Horizon) berjalan di proses lain dan mencatat dirinya sendiri di `performance/diagnostic.log`
++     * (sudah disamarkan oleh mesin): pengaturan yang dibaca, shader yang dimuat (baris "shader pack ..." memuat
++     * nama folder dan daftar programnya, atau alasan gagalnya), dan peringatan. Dua bagian pertama berguna saat
++     * shader tidak tampil seperti seharusnya. Tidak ditulis bila mesin belum pernah dijalankan.
++     */
++    private fun writeEngineSection(context: Context, w: Writer) {
++        try {
++            val home = HorizonEngine.engineHome(context)
++            if (!home.isDirectory) return
++            val game = HorizonContent.gameHome(home)
++            w.section("Mesin Rust (Horizon)")
++
++            val config = File(home, "android-launcher.json")
++            val shown = ArrayList<String>()
++            if (config.isFile && config.length() < 64L * 1024L) {
++                val json = JSONObject(config.readText())
++                for (key in ENGINE_SETTING_KEYS) {
++                    if (json.has(key)) shown.add(key + "=" + json.opt(key))
++                }
++            }
++            w.line("Pengaturan mesin: " + if (shown.isEmpty()) "(bawaan mesin)" else shown.joinToString(", "))
++
++            for (folder in listOf("shaderpacks", "resourcepacks")) {
++                val items = File(game, folder).listFiles()?.sortedBy { it.name.lowercase() }.orEmpty()
++                w.line("Folder " + folder + ": " + if (items.isEmpty()) "kosong atau tidak ada" else "")
++                items.take(MAX_LISTED).forEach {
++                    w.line("  " + it.name + if (it.isDirectory) " (folder)" else " (" + sizeText(it.length()) + ")")
++                }
++            }
++
++            val graphics = File(game, "horizon-graphics.txt")
++            if (graphics.isFile) {
++                w.line("")
++                w.line("-- horizon-graphics.txt (pickedShaderPack = shader yang dipilih) --")
++                writeHead(w, graphics, MAX_CONFIG_BYTES)
++            }
++
++            val log = File(home, "performance/diagnostic.log")
++            if (log.isFile && log.length() > 0L) {
++                val shaderLines = log.useLines { lines ->
++                    lines.filter { it.contains("shader pack", ignoreCase = true) }.toList()
++                }
++                w.section("Mesin Rust: baris shader (" + shaderLines.size + ")")
++                if (shaderLines.isEmpty()) {
++                    w.line("(tidak ada baris shader; shader belum dipilih atau belum sempat dimuat)")
++                } else {
++                    writeLines(w, shaderLines.takeLast(MAX_ENGINE_SHADER_LINES).joinToString("\n"))
++                }
++                w.section("Mesin Rust: log terakhir")
++                writeTail(w, log, MAX_ENGINE_LOG_BYTES)
++            } else {
++                w.line("Log mesin: belum ada (mesin belum pernah dijalankan di HP ini).")
++            }
++        } catch (_: Throwable) {
++            w.line("(log mesin Rust tidak bisa dibaca)")
++        }
++    }
++
+     private fun storageText(context: Context): String {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+index 8d1c100..08c1630 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonEngine.kt
+@@ -109,4 +109,9 @@ object HorizonEngine {
+         }
+-        if ("arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
+-            return Availability.Unavailable("Mesin Rust hanya tersedia untuk HP 64-bit (arm64).")
++        // APK 64-bit membawa mesin arm64; APK 32-bit membawa mesin armeabi-v7a (eksperimental).
++        if (android.os.Process.is64Bit()) {
++            if ("arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
++                return Availability.Unavailable("Mesin Rust hanya tersedia untuk HP 64-bit (arm64).")
++            }
++        } else if ("armeabi-v7a" !in Build.SUPPORTED_32_BIT_ABIS) {
++            return Availability.Unavailable("Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).")
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+index e4263b4..a54c476 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+@@ -652,3 +652,7 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
+         Text(
+-            text = "Eksperimental: butuh Android 9 ke atas dan HP 64-bit.",
++            text = if (android.os.Process.is64Bit()) {
++                "Eksperimental: butuh Android 9 ke atas dan HP 64-bit."
++            } else {
++                "Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat."
++            },
+             color = AmberUi.TextDim,
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 26f5047..44fd67c 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -17,3 +17,3 @@ Status: **eksperimental, belum diuji di perangkat.** PLAY langsung masuk game de
+ 
+-- Android 9 (API 28) ke atas, HP 64-bit (arm64). Selain itu opsinya ditolak dengan pesan yang jelas.
++- Android 9 (API 28) ke atas. APK 64-bit menjalankan mesin arm64; APK 32-bit menjalankan mesin armeabi-v7a (**eksperimental**, lihat "APK 32-bit"). Perangkat lain ditolak dengan pesan yang jelas.
+ - RAM disarankan 4 GB ke atas. Di bawah itu tetap boleh dicoba, dengan peringatan.
+@@ -26,3 +26,3 @@ Satu workflow, **Build APK**, mengurus semuanya dalam **satu kali run**:
+ 1. **Periksa** (sekitar 15 detik). Menerapkan patch run ini dan memutuskan perlu build atau tidak (lihat "Kapan build berjalan" di bawah). Lalu memeriksa mesin: ia menghitung tanda Release mesin untuk konfigurasi *sekarang* (`scripts/build-horizon-engine.sh --print-tag`) dan menanyakan ke GitHub apakah Release itu sudah ada.
+-2. **Bangun mesin Rust (Horizon)**. Hanya jalan bila Release-nya **belum ada**. Mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, menerapkan perubahan Amber (`third_party/horizon-patches/<patch_set>/*.diff`), mengompilasinya untuk arm64 dengan jalur build resmi proyek itu (sekitar 12 menit untuk profil `release`), lalu menerbitkan hasilnya sebagai **pra-rilis** di repo ini. Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
++2. **Bangun mesin Rust (Horizon)**. Hanya jalan bila Release-nya **belum ada**. Mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, menerapkan perubahan Amber (`third_party/horizon-patches/<patch_set>/*.diff`), mengompilasinya untuk arm64 dengan jalur build resmi proyek itu (sekitar 12 menit untuk profil `release`), lalu untuk armeabi-v7a (32-bit, eksperimental; bila gagal, mesin arm64 tetap terbit), dan menerbitkan hasilnya sebagai **pra-rilis** di repo ini. Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
+ 3. **Build APK**. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh`, mengunduh paket mesin dari Release itu (di dalam jaringan GitHub, hitungan detik), memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Bila langkah 2 gagal, APK tetap dibangun tanpa mesin Rust dan run memberi peringatan jelas; run berikutnya mencoba membangun mesin lagi.
+@@ -67,3 +67,3 @@ Alurnya:
+ 
+-**Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber2/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan di atas `amber1` pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
++**Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber3/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan berurutan (0001 lalu 0002) pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
+ 
+@@ -123,5 +123,12 @@ Mengompilasi mesin sendiri (Linux x86-64, JDK 25, NDK 28.2, Rust, Python 3.11):
+ 
+-### APK 32-bit
++### APK 32-bit (eksperimental)
+ 
+-Mesin hanya untuk arm64. Build 32-bit melewati langkah ini dan `scripts/build-arm32.sh` membuang pustaka dan data mesin dari salinan kerjanya, jadi APK 32-bit tidak membesar.
++Horizon Android sendiri menyediakan build ARMv7 yang ia sebut eksperimental, dan Amber mengikutinya:
++
++- Workflow pembangun mesin juga mengompilasi `armeabi-v7a` (setelah arm64 selesai) dan menerbitkannya di Release yang sama sebagai `horizon-engine-armeabi-v7a.zip`. Bila langkah itu gagal, Release tetap terbit dengan paket arm64 saja; ringkasan run menuliskan baris galatnya.
++- `scripts/build-arm32.sh` memasang paket itu ke APK 32-bit lewat `scripts/fetch-horizon-engine.sh --abi armeabi-v7a`. Tanpa paketnya APK 32-bit tetap dibangun, hanya tanpa mesin Rust (pilihan Rust di HP itu menampilkan "belum disertakan").
++- APK 32-bit hanya dibangun pada **rilis** (Run workflow dengan "rilis" dicentang); build uji hanya 64-bit.
++- Bedanya dengan 64-bit (dari proyek sumber): tanpa runtime mod `.hmod` dan tanpa jaminan performa di GPU lama. Renderer bawaannya sama (Vulkan kompatibel); bila HP tidak punya Vulkan yang sehat, coba OpenGL ES di Pengaturan > Rust. Android minimal tetap 9 (API 28).
++- Mesin 32-bit menambah ukuran APK 32-bit (pustaka ditambah tabel data mesin).
++- Release mesin yang terbit sebelum langkah 32-bit ada tidak punya paketnya. Jalankan Build APK sekali dengan pilihan mesin = ulang supaya Release itu dibangun lagi lengkap.
+ 
+@@ -137,3 +144,3 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
+ - Yang kamu percayai adalah kode sumber di commit itu: **periksa sendiri** sebelum mengganti `commit=`. Aku belum pernah menjalankan hasil build-nya di perangkat.
+-- Paket diperiksa lagi saat dipasang: SHA-256 paket harus cocok dengan berkas `.sha256` di Release yang sama (menangkap unduhan rusak, bukan Release yang diubah orang yang punya akses tulis ke repo ini), SHA-256 tiap berkas harus cocok dengan manifest di dalamnya, dan pustaka harus ELF 64-bit arm64. Tidak ada isi paket yang dijalankan saat build.
++- Paket diperiksa lagi saat dipasang: SHA-256 paket harus cocok dengan berkas `.sha256` di Release yang sama (menangkap unduhan rusak, bukan Release yang diubah orang yang punya akses tulis ke repo ini), SHA-256 tiap berkas harus cocok dengan manifest di dalamnya, dan pustaka harus ELF yang sesuai ABI paket (64-bit arm64, atau 32-bit ARM untuk paket armeabi-v7a). Tidak ada isi paket yang dijalankan saat build.
+ - Release mesin ditandai pra-rilis dengan tag yang bukan nomor versi, jadi tidak dianggap pembaruan aplikasi oleh pemeriksa pembaruan dan tidak mengubah penomoran versi build.
+@@ -183,2 +190,3 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
+ - Dukungan shader di mesin masih eksperimental dan bisa berat di HP lemah, jadi shader yang baru diunduh tidak dipilih otomatis.
++- Bila shader tidak tampil seperti seharusnya (mis. hanya kabut yang berubah): mainkan sebentar, keluar dari game, lalu Pengaturan > Log game > Log launcher > Bagikan. Laporannya memuat bagian "Mesin Rust (Horizon)": pengaturan mesin, isi folder shaderpacks dan resourcepacks, `horizon-graphics.txt`, dan baris "shader pack ..." dari `files/horizon/performance/diagnostic.log` (daftar program yang berhasil dimuat, atau alasan gagalnya).
+ - Setiap kali versi mesin dinaikkan, periksa ulang bahwa shader pack masih ada di sumber mesin (desktop Horizon menghapusnya pada 24 Oktober 2026 dan berjanji mengembalikannya ditulis ulang): `crates/horizon-shaders` dan `game/shader_packs.rs`.
+@@ -199,4 +207,5 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
+ 10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
++11. HP 32-bit (opsional, hanya rilis): pasang `AmberLauncher-...-32bit-armeabi-v7a.apk`, buat instance Rust. Bila build mesin 32-bit lolos, PLAY membuka mesin; bila tidak, layar Buat Instance menyebut mesin belum disertakan.
+ 
+-Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
++Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log mesin Rust) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
+ 
+@@ -204,3 +213,3 @@ Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses
+ 
+-- Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
++- Hanya Minecraft 26.3, API 28 ke atas. arm64 untuk APK 64-bit; armeabi-v7a (APK 32-bit) eksperimental dan belum pernah diuji di perangkat.
+ - Tanpa mod Java, tanpa Fabric, Forge, NeoForge. Layar Mod untuk instance Rust hanya berisi Shader dan Resource Pack.
+diff --git a/scripts/build-arm32.sh b/scripts/build-arm32.sh
+index b44e237..a520d17 100755
+--- a/scripts/build-arm32.sh
++++ b/scripts/build-arm32.sh
+@@ -18,2 +18,4 @@
+ #                                         memasukkan isi AAR lokal ke APK, jadi harus disalin sendiri.
++#   - Mesin Rust (Horizon) 32-bit       : Release mesin repo ini (paket armeabi-v7a, eksperimental), lewat
++#                                         scripts/fetch-horizon-engine.sh --abi armeabi-v7a.
+ # Yang TIDAK ada untuk 32-bit (hulu pun tidak menyediakan): Turnip (libvulkan_freedreno).
+@@ -79,4 +81,4 @@ rm -rf "$APP/jniLibs/arm64-v8a"
+ rm -f "$APP"/assets/runtimes/*/bin-arm64.tar.xz
+-# Mesin Rust (Horizon) hanya untuk arm64 (pustakanya ada di jniLibs/arm64-v8a, sudah dibuang di atas): data
+-# tabel dan lisensinya jadi beban tak terpakai di APK 32-bit
++# Mesin Rust (Horizon) arm64 (pustakanya ada di jniLibs/arm64-v8a, sudah dibuang di atas) tidak berguna di APK
++# 32-bit: data tabel dan lisensinya juga dibuang. Mesin 32-bit sendiri dipasang di bawah.
+ rm -f "$APP/assets/engine-data.zip"
+@@ -90,2 +92,18 @@ done
+ 
++# Mesin Rust (Horizon) 32-bit, eksperimental. Diambil dari Release yang sama dengan mesin arm64 (dibangun di job
++# "Bangun mesin Rust (Horizon)"). Tidak pernah menggagalkan APK 32-bit: tanpa paketnya (belum ada, gagal dibangun,
++# atau tidak cocok) APK dibangun tanpa mesin dan pilihan Rust tidak aktif di HP 32-bit. Skrip fetch memberi
++# peringatan dengan alasannya.
++STAGE="mesin Rust 32-bit"
++echo "== Mesin Rust (Horizon) 32-bit =="
++ENGINE32=0
++if [ -f "$WORK/scripts/fetch-horizon-engine.sh" ]; then
++  if bash "$WORK/scripts/fetch-horizon-engine.sh" --abi armeabi-v7a --force; then
++    [ -f "$APP/jniLibs/armeabi-v7a/libhorizon_android.so" ] && ENGINE32=1
++  else
++    echo "::warning title=Mesin Rust 32-bit tidak dipasang::APK 32-bit dibangun tanpa mesin Rust. Alasannya ada di log langkah ini."
++  fi
++fi
++echo "Mesin Rust 32-bit terpasang: $ENGINE32"
++
+ STAGE="4/6 ambil MobileGlues, runtime Java, LWJGL"
+@@ -143,2 +161,10 @@ done
+ 
++if [ "$ENGINE32" = 1 ]; then
++  if grep -q "lib/armeabi-v7a/libhorizon_android.so" <<< "$APK_LIST"; then
++    echo "Mesin Rust (Horizon) 32-bit ikut di APK."
++  else
++    echo "::warning title=Mesin Rust 32-bit tidak ikut APK::Pustakanya terpasang di pohon kerja tetapi tidak ada di APK 32-bit."
++  fi
++fi
++
+ mkdir -p "$OUT"
+diff --git a/scripts/build-horizon-engine.sh b/scripts/build-horizon-engine.sh
+index 36a7bab..e605b38 100755
+--- a/scripts/build-horizon-engine.sh
++++ b/scripts/build-horizon-engine.sh
+@@ -1,4 +1,4 @@
+ #!/usr/bin/env bash
+-# Mengompilasi mesin Rust (Horizon) dari SUMBER untuk Android arm64, lalu (opsional) menerbitkannya sebagai
+-# Release di repo ini. Dijalankan oleh workflow "Bangun mesin Rust (Horizon)" di GitHub Actions (runner Linux
++# Mengompilasi mesin Rust (Horizon) dari SUMBER untuk Android arm64 (dan armeabi-v7a, eksperimental), lalu
++# (opsional) menerbitkannya sebagai Release di repo ini. Dijalankan oleh workflow "Bangun mesin Rust (Horizon)" di GitHub Actions (runner Linux
+ # x86-64), sekali setiap patokan commit diganti; build APK biasa hanya mengambil hasilnya
+@@ -11,3 +11,5 @@
+ # Tahap: sumber, alat, data (menyiapkan tabel data dari berkas Mojang yang diunduh sementara), kompilasi,
+-# kemas, terbitkan. Ringkasan waktu dan ukuran ditulis ke ringkasan run; bila gagal, ringkasan memuat tahap
++# kemas, mesin 32-bit, terbitkan. Mesin 32-bit (armeabi-v7a) dibangun SETELAH arm64 selesai dan dikemas, dan
++# kegagalannya tidak menggagalkan apa pun: Release tetap terbit dengan paket arm64 saja, dan ringkasan run
++# menjelaskan kenapa paket 32-bit tidak ada. Ringkasan waktu dan ukuran ditulis ke ringkasan run; bila gagal, ringkasan memuat tahap
+ # yang gagal dan ujung lognya supaya bisa disalin.
+@@ -22,3 +24,3 @@
+ # bila bukan JAVA_HOME), HORIZON_ENGINE_JOBS (batas proses paralel cargo; kecilkan bila kehabisan RAM),
+-# HORIZON_ENGINE_FORCE=true (sama dengan --force).
++# HORIZON_ENGINE_FORCE=true (sama dengan --force), HORIZON_ENGINE_ARM32=off (lewati mesin 32-bit).
+ #
+@@ -43,2 +45,3 @@ CONFIG="$ROOT/horizon-engine.properties"
+ BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
++BUNDLE_NAME32="horizon-engine-armeabi-v7a.zip"
+ 
+@@ -356,2 +359,43 @@ logged bash "$ROOT/scripts/package-horizon-engine.sh" \
+ 
++# ---- 5b. Mesin 32-bit (armeabi-v7a), eksperimental ----
++# Tidak pernah menggagalkan run: bila apa pun di sini gagal, paket 32-bit tidak dibuat dan Release terbit dengan paket
++# arm64 saja. Build 32-bit proyek sumber: tanpa fitur bawaan kecuali audio (tanpa runtime mod .hmod), API 27.
++ARM32_STATE="dilewati"
++ARM32_NOTE=""
++build_arm32() {
++  local lib32 stage32
++  logged rustup target add --toolchain "$RUST_CHANNEL" armv7-linux-androideabi || return 1
++  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
++    --abi armeabi-v7a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK") || return 1
++  lib32="$TARGET_DIR/armv7-linux-androideabi/$PROFILE/libhorizon_android.so"
++  if [ ! -f "$lib32" ]; then
++    echo "kompilasi selesai tetapi pustaka 32-bit tidak ada: $lib32"
++    return 1
++  fi
++  echo "Pustaka mentah 32-bit: $(wc -c < "$lib32" | tr -d ' ') byte"
++  stage32="$WORK/stage32"
++  rm -rf "$stage32"
++  mkdir -p "$stage32"
++  cp "$lib32" "$stage32/libhorizon_android.so" || return 1
++  logged "$NDK_BIN/llvm-strip" --strip-unneeded "$stage32/libhorizon_android.so" || return 1
++  logged bash "$ROOT/scripts/package-horizon-engine.sh" --abi armeabi-v7a \
++    --so "$stage32/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
++    --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
++    --readelf "$NDK_BIN/llvm-readelf" || return 1
++}
++if [ "${HORIZON_ENGINE_ARM32:-on}" = "off" ]; then
++  ARM32_NOTE="dimatikan (HORIZON_ENGINE_ARM32=off)"
++  echo "Mesin 32-bit: $ARM32_NOTE"
++else
++  phase 05b-arm32 "5b/6 Kompilasi mesin 32-bit (armeabi-v7a, eksperimental, profil $PROFILE)"
++  if build_arm32; then
++    ARM32_STATE="dibuat"
++  else
++    ARM32_STATE="gagal"
++    rm -f "$OUT/$BUNDLE_NAME32" "$OUT/$BUNDLE_NAME32.sha256"
++    ARM32_NOTE="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | grep -E '^(error|Error|ERROR)|panicked|No such file|not found' | head -n 10 || true)"
++    echo "::warning title=Mesin 32-bit gagal dibangun::Paket arm64 tetap terbit tanpa paket 32-bit. Baris galatnya ada di ringkasan run."
++  fi
++fi
++
+ # ---- 6. Terbitkan ----
+@@ -364,3 +408,7 @@ if [ "$PUBLISH" = 1 ]; then
+   {
+-    echo "Mesin Rust (Horizon) untuk Android arm64, dikompilasi dari sumber oleh workflow di repo ini."
++    if [ "$ARM32_STATE" = "dibuat" ]; then
++      echo "Mesin Rust (Horizon) untuk Android arm64 dan armeabi-v7a (32-bit, eksperimental), dikompilasi dari sumber oleh workflow di repo ini."
++    else
++      echo "Mesin Rust (Horizon) untuk Android arm64, dikompilasi dari sumber oleh workflow di repo ini."
++    fi
+     echo
+@@ -376,3 +424,7 @@ if [ "$PUBLISH" = 1 ]; then
+   # Pra-rilis dengan tag bukan nomor versi: tidak dianggap pembaruan aplikasi dan tidak mengubah penomoran versi.
+-  logged gh release create "$TAG" "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256" \
++  ASSETS=("$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256")
++  if [ "$ARM32_STATE" = "dibuat" ]; then
++    ASSETS+=("$OUT/$BUNDLE_NAME32" "$OUT/$BUNDLE_NAME32.sha256")
++  fi
++  logged gh release create "$TAG" "${ASSETS[@]}" \
+     --prerelease --target "$TARGET_SHA" --title "Mesin Rust (Horizon) ${COMMIT:0:12}${PATCH_SET:+ + $PATCH_SET} ($PROFILE)" --notes-file "$NOTES"
+@@ -395,3 +447,18 @@ val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
+   echo "- \`engine-data.zip\`: $(val data_bytes) byte"
+-  echo "- Paket: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
++  echo "- Paket arm64: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
++  case "$ARM32_STATE" in
++    dibuat) echo "- Paket 32-bit (armeabi-v7a, eksperimental): $(wc -c < "$OUT/$BUNDLE_NAME32" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME32.sha256")\`" ;;
++    gagal)
++      echo "- Paket 32-bit: **GAGAL dibangun** (paket arm64 tidak terpengaruh; APK 32-bit dibangun tanpa mesin Rust)."
++      if [ -n "$ARM32_NOTE" ]; then
++        echo
++        echo "Baris galat mesin 32-bit:"
++        echo
++        echo '```'
++        printf '%s\n' "$ARM32_NOTE"
++        echo '```'
++      fi
++      ;;
++    *) echo "- Paket 32-bit: dilewati, $ARM32_NOTE." ;;
++  esac
+   [ "$PUBLISH" = 1 ] && echo "- Release: \`$TAG\` (pra-rilis). Build APK berikutnya memasangnya otomatis." || true
+diff --git a/scripts/fetch-horizon-engine.sh b/scripts/fetch-horizon-engine.sh
+index 9471e8e..181a33c 100755
+--- a/scripts/fetch-horizon-engine.sh
++++ b/scripts/fetch-horizon-engine.sh
+@@ -3,3 +3,3 @@
+ # dikemas Gradle:
+-#   app/src/main/jniLibs/arm64-v8a/libhorizon_android.so   mesinnya (arm64)
++#   app/src/main/jniLibs/<abi>/libhorizon_android.so        mesinnya (abi: arm64-v8a, atau armeabi-v7a dengan --abi)
+ #   app/src/main/assets/engine-data.zip                     tabel data mesin
+@@ -18,3 +18,3 @@
+ # Konfigurasi dibaca dari horizon-engine.properties di akar repo. Variabel lingkungan menang atasnya:
+-#   HORIZON_ENGINE=off                  lewati sama sekali (build 32-bit, atau build tanpa jaringan)
++#   HORIZON_ENGINE=off                  lewati sama sekali (build tanpa jaringan)
+ #   HORIZON_ENGINE_COMMIT               commit sumber mesin yang dipatok (40 digit heksadesimal)
+@@ -27,2 +27,3 @@
+ #   scripts/fetch-horizon-engine.sh --force           pasang ulang walau sudah terpasang
++#   scripts/fetch-horizon-engine.sh --abi armeabi-v7a mesin 32-bit (eksperimental; dipakai scripts/build-arm32.sh)
+ #   scripts/fetch-horizon-engine.sh --bundle BERKAS   pasang dari paket zip yang sudah ada di komputer
+@@ -40,3 +41,3 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ MAIN="$ROOT/app/src/main"
+-SO_DEST="$MAIN/jniLibs/arm64-v8a/libhorizon_android.so"
++ABI="arm64-v8a"
+ DATA_DEST="$MAIN/assets/engine-data.zip"
+@@ -46,3 +47,2 @@ STAMP="$ROOT/.horizon-engine-installed"
+ CONFIG="$ROOT/horizon-engine.properties"
+-BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
+ MAX_BUNDLE_BYTES=$((600 * 1024 * 1024))
+@@ -115,2 +115,7 @@ while [ $# -gt 0 ]; do
+   case "$1" in
++    --abi)
++      [ $# -ge 2 ] || fail 1 "--abi butuh arm64-v8a atau armeabi-v7a."
++      ABI="$2"
++      shift 2
++      ;;
+     --bundle)
+@@ -136,4 +141,11 @@ done
+ 
++case "$ABI" in
++  arm64-v8a | armeabi-v7a) ;;
++  *) fail 1 "--abi harus arm64-v8a atau armeabi-v7a." ;;
++esac
++SO_DEST="$MAIN/jniLibs/$ABI/libhorizon_android.so"
++BUNDLE_NAME="horizon-engine-$ABI.zip"
++
+ if [ "$REMOVE" = 1 ]; then
+-  rm -f "$SO_DEST" "$DATA_DEST" "$STAMP"
++  rm -f "$MAIN/jniLibs/arm64-v8a/libhorizon_android.so" "$MAIN/jniLibs/armeabi-v7a/libhorizon_android.so" "$DATA_DEST" "$STAMP"
+   rm -rf "$LICENSE_DIR"
+@@ -175,6 +187,6 @@ fi
+ # Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
+-WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH}"
++WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH} $ABI"
+ if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
+   && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
+-  say "sudah terpasang (commit ${COMMIT:0:12}, $PROFILE)."
++  say "sudah terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE)."
+   exit 0
+@@ -244,3 +256,3 @@ else
+ Dicari di:$TRIED
+-Tag yang dicari: $TAG
++Tag yang dicari: $TAG (berkas $BUNDLE_NAME)
+ 
+@@ -279,3 +291,3 @@ M="$TMP/engine.properties"
+ [ "$(manifest schema "$M")" = "1" ] || fail 4 "format paket tidak dikenal (schema bukan 1)."
+-[ "$(manifest abi "$M")" = "arm64-v8a" ] || fail 4 "paket bukan untuk arm64-v8a."
++[ "$(manifest abi "$M")" = "$ABI" ] || fail 4 "paket bukan untuk $ABI."
+ [ "$(manifest source_commit "$M")" = "$COMMIT" ] \
+@@ -289,7 +301,12 @@ M="$TMP/engine.properties"
+ 
+-# Pustaka harus ELF 64-bit little-endian untuk arm64: byte 0-3 = 7f 45 4c 46, byte 4 = 02, byte 5 = 01,
+-# dan e_machine (byte 18-19) = b7 00 (AArch64).
++# Kepala ELF little-endian: 7f 45 4c 46, kelas (01 = 32-bit, 02 = 64-bit), data 01, dan e_machine (byte 18-19):
++# b7 00 = AArch64 (arm64), 28 00 = ARM (armeabi-v7a).
+ HEADER="$(od -An -v -tx1 -N20 "$TMP/lib.so" | tr -d ' \n')"
+-if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
+-  fail 4 "libhorizon_android.so bukan pustaka ELF 64-bit arm64 (AArch64)."
++if [ "$ABI" = "arm64-v8a" ]; then
++  WANT_ELF="7f454c4602" WANT_MACHINE="b700" WANT_DESC="ELF 64-bit arm64 (AArch64)"
++else
++  WANT_ELF="7f454c4601" WANT_MACHINE="2800" WANT_DESC="ELF 32-bit ARM (armeabi-v7a)"
++fi
++if [ "${HEADER:0:10}" != "$WANT_ELF" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "$WANT_MACHINE" ]; then
++  fail 4 "libhorizon_android.so bukan pustaka $WANT_DESC."
+ fi
+@@ -313,3 +330,3 @@ printf '%s\n' "$WANT_STAMP" > "$STAMP"
+ 
+-say "terpasang (commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
++say "terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
+ say "  libhorizon_android.so -> $(size_of "$SO_DEST") byte, sha256 $(sha256_of "$SO_DEST")"
+@@ -321,2 +338,3 @@ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+     echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
++    echo "- ABI: \`$ABI\`"
+     echo "- \`libhorizon_android.so\`: $(size_of "$SO_DEST") byte"
+diff --git a/scripts/package-horizon-engine.sh b/scripts/package-horizon-engine.sh
+index b9530b5..9181ad0 100755
+--- a/scripts/package-horizon-engine.sh
++++ b/scripts/package-horizon-engine.sh
+@@ -5,3 +5,3 @@
+ # Isi paket (nama berkas tetap, dibaca scripts/fetch-horizon-engine.sh):
+-#   libhorizon_android.so        mesinnya (arm64, sudah di-strip)
++#   libhorizon_android.so        mesinnya (arm64 atau armeabi-v7a sesuai --abi, sudah di-strip)
+ #   engine-data.zip              tabel data mesin hasil generate
+@@ -12,5 +12,6 @@
+ #   package-horizon-engine.sh --so BERKAS --data BERKAS --license-dir FOLDER --out FOLDER \
+-#       --repo URL --commit SHA40 --profile release|fast [--patch-set NAMA --patch-hash HEX8] [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
++#       --repo URL --commit SHA40 --profile release|fast [--abi arm64-v8a|armeabi-v7a] [--patch-set NAMA --patch-hash HEX8] \
++#       [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
+ #
+-# Hasil: FOLDER/horizon-engine-arm64-v8a.zip dan FOLDER/horizon-engine-arm64-v8a.zip.sha256
++# Hasil: FOLDER/horizon-engine-<abi>.zip dan FOLDER/horizon-engine-<abi>.zip.sha256 (abi bawaan arm64-v8a)
+ 
+@@ -18,10 +19,8 @@ set -euo pipefail
+ 
+-BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
+-
+ die() { echo "package-horizon-engine: $*" >&2; exit 1; }
+ 
+-SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" PATCH_HASH="" RUST="" NDK="" READELF=""
++SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" PATCH_HASH="" RUST="" NDK="" READELF="" ABI="arm64-v8a"
+ while [ $# -gt 0 ]; do
+   case "$1" in
+-    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf)
++    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf | --abi)
+       [ $# -ge 2 ] || die "$1 butuh nilai."
+@@ -40,2 +39,3 @@ while [ $# -gt 0 ]; do
+         --readelf) READELF="$2" ;;
++        --abi) ABI="$2" ;;
+       esac
+@@ -62,2 +62,7 @@ else
+ fi
++case "$ABI" in
++  arm64-v8a | armeabi-v7a) ;;
++  *) die "abi harus arm64-v8a atau armeabi-v7a." ;;
++esac
++BUNDLE_NAME="horizon-engine-$ABI.zip"
+ [ -f "$SO" ] || die "pustaka tidak ada: $SO"
+@@ -75,6 +80,12 @@ size_of() { wc -c < "$1" | tr -d '[:space:]'; }
+ 
+-# ELF 64-bit little-endian untuk arm64: 7f 45 4c 46, kelas 02, data 01, e_machine (byte 18-19) = b7 00.
++# Kepala ELF little-endian: 7f 45 4c 46, kelas (01 = 32-bit, 02 = 64-bit), data 01, dan e_machine (byte 18-19):
++# b7 00 = AArch64 (arm64), 28 00 = ARM (armeabi-v7a).
+ HEADER="$(od -An -v -tx1 -N20 "$SO" | tr -d ' \n')"
+-if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
+-  die "$SO bukan pustaka ELF 64-bit arm64 (AArch64)."
++if [ "$ABI" = "arm64-v8a" ]; then
++  WANT_ELF="7f454c4602" WANT_MACHINE="b700" WANT_DESC="ELF 64-bit arm64 (AArch64)"
++else
++  WANT_ELF="7f454c4601" WANT_MACHINE="2800" WANT_DESC="ELF 32-bit ARM (armeabi-v7a)"
++fi
++if [ "${HEADER:0:10}" != "$WANT_ELF" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "$WANT_MACHINE" ]; then
++  die "$SO bukan pustaka $WANT_DESC."
+ fi
+@@ -99,3 +110,3 @@ cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
+   echo "schema=1"
+-  echo "abi=arm64-v8a"
++  echo "abi=$ABI"
+   echo "source_repo=$REPO"
+
+
+# FIN part=1/1 files=12

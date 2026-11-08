@@ -67,10 +67,16 @@ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.VersionItem
+import com.israadev.nuxlauncher.core.vulkan.McVulkan
+import com.israadev.nuxlauncher.core.vulkan.VerdictLevel
+import com.israadev.nuxlauncher.core.vulkan.VulkanCheck
+import com.israadev.nuxlauncher.core.vulkan.VulkanReport
+import com.israadev.nuxlauncher.core.vulkan.VulkanState
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.amberGlass
 import java.util.UUID
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 /** Filter jenis versi Minecraft di layar Buat Instance. */
@@ -253,6 +259,9 @@ fun CreateInstanceScreen(
     } else {
         visibleVersions
     }
+
+    // Ada versi Minecraft 26.x ke atas di daftar: tampilkan peringatan dan pengecekan Vulkan di atasnya.
+    val hasYearVersions = remember(shownVersions) { shownVersions.any { McVulkan.isYearVersion(it.id) } }
 
     val supportedPending = !noLoaderVersions && supportedKey != selectedLoader
     val listLoading = !isEngine && (isLoadingVersions || supportedPending)
@@ -474,6 +483,8 @@ fun CreateInstanceScreen(
                     ) {
                         if (isEngine) {
                             item(key = "engine-notice") { CiEngineNotice(status = engineStatus) }
+                        } else if (hasYearVersions) {
+                            item(key = "mc26-notice") { CiModernNotice(selectedMc = selectedVersion) }
                         }
                         items(shownVersions, key = { it.id }) { item ->
                             val isSelected = item.id == selectedVersion
@@ -671,6 +682,85 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
             Text(
                 text = HorizonEngine.LOW_RAM_WARNING,
                 color = CI_SNAPSHOT_COLOR,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+        }
+    }
+}
+
+/**
+ * Peringatan di atas daftar versi bila ada Minecraft 26.x ke atas: versi itu memakai Java 25 dan mesin grafis
+ * baru yang belum bisa dijalankan semua HP, jadi pemain diberi tahu lebih dulu bahwa gagal dibuka belum tentu
+ * salah launcher. Di bawahnya hasil pengecekan Vulkan HP ini (berjalan otomatis sekali, di proses terpisah;
+ * lihat VulkanCheck), dinilai untuk versi yang sedang dipilih. Kunci teksnya ada di
+ * assets/lang/<bahasa>/minecraft26.tsv.
+ */
+@Composable
+private fun CiModernNotice(selectedMc: String?) {
+    val context = LocalContext.current
+    var report by remember { mutableStateOf<VulkanReport?>(null) }
+    LaunchedEffect(Unit) {
+        report = try {
+            VulkanCheck.ensure(context)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            VulkanReport(VulkanState.NO_RESPONSE, detail = e.javaClass.simpleName)
+        }
+    }
+    val verdict = remember(report, selectedMc) { McVulkan.verdict(report, selectedMc) }
+    val verdictColor = when (verdict.level) {
+        VerdictLevel.OK -> CI_RELEASE_COLOR
+        VerdictLevel.WARN -> CI_SNAPSHOT_COLOR
+        VerdictLevel.BAD -> AmberUi.Danger
+        VerdictLevel.CHECKING, VerdictLevel.INFO -> AmberUi.TextDim
+    }
+
+    val shape = RoundedCornerShape(20.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .amberGlass(shape)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text(
+            text = "MINECRAFT 26.X KE ATAS",
+            color = AmberUi.TextDim,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.2.sp,
+            maxLines = 1
+        )
+        Text(
+            text = "Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.",
+            color = AmberUi.Text,
+            fontSize = 13.sp,
+            lineHeight = 18.sp
+        )
+        Text(
+            text = "Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.",
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 17.sp
+        )
+        Text(
+            text = verdict.text,
+            color = verdictColor,
+            fontSize = 13.sp,
+            fontWeight = if (verdict.level == VerdictLevel.BAD || verdict.level == VerdictLevel.WARN) {
+                FontWeight.SemiBold
+            } else {
+                FontWeight.Normal
+            },
+            lineHeight = 18.sp
+        )
+        if (verdict.detail.isNotEmpty()) {
+            Text(
+                text = verdict.detail,
+                color = AmberUi.TextDim,
                 fontSize = 12.sp,
                 lineHeight = 17.sp
             )

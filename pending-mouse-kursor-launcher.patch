@@ -1,0 +1,1023 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 6f9caeb..885d11c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -61,6 +61,7 @@ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.isActive
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
++import androidx.lifecycle.compose.collectAsStateWithLifecycle
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.alpha
+@@ -69,12 +70,6 @@ import androidx.compose.ui.draw.drawBehind
+ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.graphics.Brush
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.Path
+-import androidx.compose.ui.graphics.StrokeCap
+-import androidx.compose.ui.graphics.StrokeJoin
+-import androidx.compose.ui.graphics.drawscope.Fill
+-import androidx.compose.ui.graphics.drawscope.Stroke
+-import androidx.compose.ui.graphics.drawscope.scale
+ import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.input.pointer.pointerInteropFilter
+@@ -122,7 +117,9 @@ import com.israadev.nuxlauncher.ui.control.LauncherMouse
+ import com.israadev.nuxlauncher.ui.control.MenuMouse
+ import com.israadev.nuxlauncher.ui.control.MouseControlMode
+ import com.israadev.nuxlauncher.ui.control.MouseDiag
++import com.israadev.nuxlauncher.ui.control.PointerStyle
+ import com.israadev.nuxlauncher.ui.control.SwitchableMouseLayout
++import com.israadev.nuxlauncher.ui.control.drawPointer
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+ import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+@@ -917,7 +914,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 val isDown = event.action == KeyEvent.ACTION_DOWN
+                 // Di menu game tombolnya lewat pelacak yang sama dengan event gerak mouse (tidak terkirim ganda).
+                 if (!MenuMouse.onBackKey(isDown)) {
+-                    CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
++                    // Pelacak yang sama dengan jalur gerak/tangkap: klik kanan yang datang dua kali tidak terkirim ganda.
++                    MenuMouse.sendButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, isDown)
+                 }
+                 return true
+             }
+@@ -2077,7 +2075,10 @@ fun GameScreen(
+             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
+             touchAttackEnabled = launcherSettings.touchAttackEnabled,
+             // Lapisan launcher di atas game memakai penunjuk sistem; tanpa lapisan itu, mouse ditangkap.
+-            menuCaptureAllowed = !overlayCoversGame,
++            // Pilihan "Pakai kursor sistem Android" mematikan penangkapan di menu: yang terlihat penunjuk sistem.
++            menuCaptureAllowed = !overlayCoversGame && !launcherSettings.physicalMouseSystemPointer,
++            physicalCursorSpeed = launcherSettings.physicalMouseCursorSpeed.coerceIn(10, 400) / 100f,
++            physicalCameraSpeed = launcherSettings.physicalMouseCameraSpeed.coerceIn(10, 400) / 100f,
+             hotbarSlotAt = hotbarLookup,
+             touchSink = touchSink,
+             onHotbarSelect = { slot ->
+@@ -2180,7 +2181,8 @@ fun GameScreen(
+                 x = { cursorX },
+                 y = { cursorY },
+                 isPressed = { isMousePressed },
+-                cursorSizeDp = launcherSettings.mouseSizeDp
++                cursorSizeDp = launcherSettings.mouseSizeDp,
++                hotspots = launcherSettings.pointerHotspots
+             )
+         }
+ 
+@@ -2326,9 +2328,11 @@ fun GameScreen(
+ }
+ 
+ /**
+- * Kursor panah untuk menu game. Posisinya diberikan lewat lambda dan hanya dibaca saat lapisan
+- * digeser (tanpa menyusun ulang dan tanpa menggambar ulang panahnya); bentuk panah dibuat sekali.
+- * Belum ada posisi (0, 0) = tidak terlihat.
++ * Kursor menu game, dalam bentuk yang mengikuti kursor game (panah, tangan, kolom teks, dst.). Posisinya diberikan
++ * lewat lambda dan hanya dibaca saat lapisan digeser (graphicsLayer): menggerakkan kursor tidak menyusun ulang
++ * dan tidak menggambar ulang gambarnya. Hanya pergantian bentuk atau gambar yang menyusun ulang fungsi ini.
++ * Gambar bawaan berupa path vektor kecil, gambar kustom didecode sekali dan disimpan (lihat [PointerStyle]).
++ * Hotspot (titik ujung kursor) diletakkan tepat di posisi kursor. Belum ada posisi (0, 0) = tidak terlihat.
+  */
+ @Composable
+ fun VirtualCursorPointer(
+@@ -2336,27 +2340,17 @@ fun VirtualCursorPointer(
+     y: () -> Float,
+     isPressed: () -> Boolean = { false },
+     cursorSizeDp: Int = 24,
++    hotspots: Map<String, Int> = emptyMap(),
+     modifier: Modifier = Modifier
+ ) {
++    val context = LocalContext.current
+     val d = LocalDensity.current.density
+-    val arrow = remember(d) {
+-        Path().apply {
+-            moveTo(0f, 0f)
+-            lineTo(0f, 22f * d)
+-            lineTo(5.5f * d, 16.5f * d)
+-            lineTo(10.5f * d, 24.5f * d)
+-            lineTo(13.5f * d, 23f * d)
+-            lineTo(8.5f * d, 15f * d)
+-            lineTo(15.5f * d, 15f * d)
+-            close()
+-        }
+-    }
+-    val arrowShadow = remember(arrow, d) {
+-        Path().apply { addPath(arrow, Offset(2f * d, 2f * d)) }
+-    }
+-    val outline = remember(d) {
+-        Stroke(width = 1.8f * d, cap = StrokeCap.Round, join = StrokeJoin.Round)
+-    }
++    val shape by ZLBridgeStates.cursorShape.collectAsStateWithLifecycle()
++    val glyph = PointerStyle.glyphFor(shape, d)
++    val custom = PointerStyle.bitmap(context, shape)
++    val hotX = PointerStyle.hotspotX(hotspots, shape) / 100f
++    val hotY = PointerStyle.hotspotY(hotspots, shape) / 100f
++    val sizePx = cursorSizeDp * d
+ 
+     Box(
+         modifier = modifier
+@@ -2364,17 +2358,10 @@ fun VirtualCursorPointer(
+             .graphicsLayer {
+                 val px = x()
+                 val py = y()
+-                translationX = px
+-                translationY = py
++                translationX = px - hotX * sizePx
++                translationY = py - hotY * sizePx
+                 alpha = if (px > 0f && py > 0f) 1f else 0f
+             }
+-            .drawBehind {
+-                val k = (cursorSizeDp / 24f) * (if (isPressed()) 0.88f else 1.0f)
+-                scale(k, pivot = Offset.Zero) {
+-                    drawPath(path = arrowShadow, color = Color.Black.copy(alpha = 0.45f), style = Fill)
+-                    drawPath(path = arrow, color = Color.White, style = Fill)
+-                    drawPath(path = arrow, color = Color.Black, style = outline)
+-                }
+-            }
++            .drawBehind { drawPointer(glyph, custom, d, sizePx, hotX, hotY, isPressed()) }
+     )
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index b1e5fab..cea99b4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -35,6 +35,15 @@ data class LauncherSettings(
+     val rustControlHub: Boolean = true,
+     val hideMouseInClickMode: Boolean = true,
+ 
++    // Mouse fisik. false (bawaan) = mouse fisik menggerakkan kursor launcher di menu (pointer capture, jalur yang
++    // sama dengan saat bermain), jadi gambar, ukuran, dan hotspot kursor bisa diatur. true = kursor sistem Android.
++    val physicalMouseSystemPointer: Boolean = false,
++    // Pengali (persen) di atas sensitivitas kursor / kamera di atas, khusus mouse fisik. 100 = sama persis.
++    val physicalMouseCursorSpeed: Int = 100, // 20 - 300
++    val physicalMouseCameraSpeed: Int = 100, // 20 - 300
++    // Hotspot kursor per bentuk, dalam persen kotak kursor: "arrow.x", "arrow.y", "hand.x", dst. Kosong = bawaan.
++    val pointerHotspots: Map<String, Int> = emptyMap(),
++
+     // Graphics & Performance
+     val resolutionRatio: Int = 100, // 40% - 125%, kelipatan 5 (slider di Pengaturan dan menu dalam game)
+     val autoOptimizeMinecraft: Boolean = true,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+index 544deca..b191066 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+@@ -227,6 +227,8 @@ fun SettingSliderRow(
+     onValueChange: (Float) -> Unit,
+     desc: String? = null,
+     warn: Boolean = false,
++    // Dipanggil saat jari diangkat. Dipakai pengaturan yang ditulis ke berkas hanya sekali per geser.
++    onValueChangeFinished: (() -> Unit)? = null,
+     footer: (@Composable () -> Unit)? = null
+ ) {
+     SettingFrame(title, desc) {
+@@ -248,6 +250,7 @@ fun SettingSliderRow(
+             Slider(
+                 value = value,
+                 onValueChange = onValueChange,
++                onValueChangeFinished = onValueChangeFinished,
+                 valueRange = valueRange,
+                 steps = steps,
+                 colors = SliderDefaults.colors(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/PointerSettingsCards.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PointerSettingsCards.kt
+new file mode 100644
+index 0000000..b56c3cf
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/PointerSettingsCards.kt
+@@ -0,0 +1,224 @@
++package com.israadev.nuxlauncher.ui.components
++
++import android.net.Uri
++import androidx.activity.compose.rememberLauncherForActivityResult
++import androidx.activity.result.contract.ActivityResultContracts
++import androidx.compose.foundation.Canvas
++import androidx.compose.foundation.background
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material3.Slider
++import androidx.compose.material3.SliderDefaults
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.drawscope.translate
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.platform.LocalDensity
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.ui.control.PointerStyle
++import com.israadev.nuxlauncher.ui.control.drawPointer
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.screens.AmberPillButton
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.movtery.zalithlauncher.bridge.CursorShape
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import kotlin.math.roundToInt
++
++/**
++ * Kartu pengaturan penunjuk (kursor) launcher, satu baris per bentuk kursor game: pratinjau, ganti gambar,
++ * atur hotspot, dan kembalikan ke bawaan. Ukuran kursor diatur di slider "Ukuran kursor virtual".
++ */
++@Composable
++fun PointerSettingsCards(
++    hotspots: Map<String, Int>,
++    onHotspotsChange: (Map<String, Int>) -> Unit
++) {
++    val context = LocalContext.current
++    val scope = rememberCoroutineScope()
++    var pickShape by remember { mutableStateOf<CursorShape?>(null) }
++    var openShape by remember { mutableStateOf<CursorShape?>(null) }
++
++    val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
++        val shape = pickShape
++        pickShape = null
++        if (uri != null && shape != null) {
++            scope.launch {
++                val ok = withContext(Dispatchers.IO) { PointerStyle.importImage(context, shape, uri) }
++                if (ok) {
++                    PointerStyle.bump()
++                } else {
++                    Toast.makeText(context, "Gambar tidak bisa dibaca", Toast.LENGTH_SHORT).show()
++                }
++            }
++        }
++    }
++
++    PointerStyle.shapes.forEachIndexed { index, shape ->
++        if (index > 0) SettingDivider()
++
++        val title = PointerStyle.title(shape)
++        val summary = PointerStyle.summary(shape)
++        val savedX = PointerStyle.hotspotX(hotspots, shape)
++        val savedY = PointerStyle.hotspotY(hotspots, shape)
++        // Nilai yang sedang digeser: dipakai pratinjau dan slider, baru ditulis ke pengaturan saat jari diangkat.
++        var hotX by remember(shape, savedX) { mutableIntStateOf(savedX) }
++        var hotY by remember(shape, savedY) { mutableIntStateOf(savedY) }
++        val hasCustomImage = PointerStyle.bitmap(context, shape) != null
++        val hasCustomHotspot = PointerStyle.hasHotspot(hotspots, shape)
++        val editing = openShape == shape
++
++        SettingFrame(title, summary) {
++            Column(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .padding(vertical = 10.dp)
++            ) {
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    PointerPreview(shape = shape, hotX = hotX, hotY = hotY, showHotspot = editing)
++                    Spacer(modifier = Modifier.width(12.dp))
++                    SettingRowText(title = title, desc = summary, modifier = Modifier.weight(1f))
++                }
++                Spacer(modifier = Modifier.height(8.dp))
++                Row(
++                    modifier = Modifier.horizontalScroll(rememberScrollState()),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberPillButton(
++                        text = if (hasCustomImage) "Ganti gambar" else "Pilih gambar",
++                        onClick = {
++                            pickShape = shape
++                            picker.launch("image/*")
++                        },
++                        filled = false
++                    )
++                    AmberPillButton(
++                        text = if (editing) "Tutup hotspot" else "Atur hotspot",
++                        onClick = { openShape = if (editing) null else shape },
++                        filled = false
++                    )
++                    if (hasCustomImage || hasCustomHotspot) {
++                        AmberPillButton(
++                            text = "Reset",
++                            onClick = {
++                                if (hasCustomImage) PointerStyle.removeImage(context, shape)
++                                if (hasCustomHotspot) onHotspotsChange(PointerStyle.withoutHotspot(hotspots, shape))
++                            },
++                            filled = false,
++                            danger = true
++                        )
++                    }
++                }
++                if (editing) {
++                    Spacer(modifier = Modifier.height(6.dp))
++                    Text(
++                        text = "Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        lineHeight = 16.sp
++                    )
++                    HotspotSlider(
++                        label = "Hotspot X",
++                        value = hotX,
++                        onChange = { hotX = it },
++                        onFinished = { onHotspotsChange(PointerStyle.withHotspot(hotspots, shape, hotX, hotY)) }
++                    )
++                    HotspotSlider(
++                        label = "Hotspot Y",
++                        value = hotY,
++                        onChange = { hotY = it },
++                        onFinished = { onHotspotsChange(PointerStyle.withHotspot(hotspots, shape, hotX, hotY)) }
++                    )
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun HotspotSlider(label: String, value: Int, onChange: (Int) -> Unit, onFinished: () -> Unit) {
++    Row(verticalAlignment = Alignment.CenterVertically) {
++        Text(
++            text = label,
++            color = AmberUi.TextDim,
++            fontSize = 12.sp,
++            modifier = Modifier.width(76.dp)
++        )
++        Slider(
++            value = value.toFloat(),
++            onValueChange = { onChange(it.roundToInt()) },
++            onValueChangeFinished = onFinished,
++            valueRange = 0f..100f,
++            modifier = Modifier.weight(1f),
++            colors = SliderDefaults.colors(
++                thumbColor = Color.White,
++                activeTrackColor = AmberUi.AccentSoft,
++                inactiveTrackColor = AmberUi.BorderStrong,
++                activeTickColor = Color.Transparent,
++                inactiveTickColor = Color.Transparent
++            )
++        )
++        Text(
++            text = "$value%",
++            color = AmberUi.Text,
++            fontSize = 13.sp,
++            fontWeight = FontWeight.Bold,
++            textAlign = TextAlign.End,
++            modifier = Modifier.width(52.dp)
++        )
++    }
++}
++
++/** Pratinjau kecil kursor (gambar kustom atau bentuk bawaan); titik merah menandai hotspot saat diatur. */
++@Composable
++private fun PointerPreview(shape: CursorShape, hotX: Int, hotY: Int, showHotspot: Boolean) {
++    val context = LocalContext.current
++    val d = LocalDensity.current.density
++    val custom = PointerStyle.bitmap(context, shape)
++    val glyph = PointerStyle.glyphFor(shape, d)
++    val hx = hotX / 100f
++    val hy = hotY / 100f
++    Canvas(
++        modifier = Modifier
++            .size(48.dp)
++            .clip(RoundedCornerShape(10.dp))
++            .background(AmberUi.SurfaceRaised)
++    ) {
++        val sizePx = 32f * d
++        translate(left = 8f * d, top = 8f * d) {
++            drawPointer(glyph, custom, d, sizePx, hx, hy, false)
++            if (showHotspot) {
++                drawCircle(
++                    color = Color(0xFFFF3B30),
++                    radius = 2.5f * d,
++                    center = Offset(hx * sizePx, hy * sizePx)
++                )
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/MenuMouse.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/MenuMouse.kt
+index aac3436..394aa23 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/MenuMouse.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/MenuMouse.kt
+@@ -42,11 +42,39 @@ internal object MenuMouse {
+     private var syntheticDown = false
+     private var backDirect = false
+ 
++    // Tombol GLFW yang sedang tertekan akibat mouse fisik (bit = nomor tombol). Dipakai SEMUA jalur mouse
++    // fisik (menu absolut, pointer capture, klik kanan lewat BACK) sebagai pintu terakhir ke game.
++    private var heldGlfw = 0
++
++    /**
++     * Kirim tombol mouse fisik ke game. Tekan ganda atau lepas ganda dibuang, mis. klik kanan yang datang
++     * dua kali (tombol BACK + event gerak), jadi game tidak pernah menerima satu klik dua kali.
++     */
++    fun sendButton(glfw: Int, pressed: Boolean) {
++        if (glfw < 0 || glfw > 30) {
++            CallbackBridge.sendMouseButton(glfw, pressed)
++            return
++        }
++        val bit = 1 shl glfw
++        if (((heldGlfw and bit) != 0) == pressed) return
++        heldGlfw = if (pressed) heldGlfw or bit else heldGlfw and bit.inv()
++        CallbackBridge.sendMouseButton(glfw, pressed)
++    }
++
++    private fun releaseHeld() {
++        var glfw = 0
++        while (heldGlfw != 0 && glfw <= 30) {
++            if ((heldGlfw and (1 shl glfw)) != 0) sendButton(glfw, false)
++            glfw++
++        }
++        heldGlfw = 0
++    }
++
+     private val buttons = CapturedMouseButtons { button, pressed ->
+         val glfw = MouseButtons.toGlfw(button)
+         if (glfw != null) {
+             MouseDiag.buttonsSent++
+-            CallbackBridge.sendMouseButton(glfw, pressed)
++            sendButton(glfw, pressed)
+         } else {
+             MouseDiag.buttonsDropped++
+         }
+@@ -72,12 +100,17 @@ internal object MenuMouse {
+         buttons.set(button, pressed)
+     }
+ 
+-    /** Lepaskan semua tombol yang masih tertahan (sekali per tombol). */
+-    fun reset() {
++    private fun resetMenu() {
+         syntheticDown = false
+         buttons.reset()
+     }
+ 
++    /** Lepaskan semua tombol mouse fisik yang masih tertahan (sekali per tombol), dari jalur mana pun. */
++    fun reset() {
++        resetMenu()
++        releaseHeld()
++    }
++
+     /**
+      * Event sentuh dari mouse: ACTION_DOWN / MOVE (saat tombol ditahan) / UP. Dipanggil dari
+      * GameActivity.dispatchTouchEvent sebelum Compose. [content] dipakai untuk mengubah koordinat
+@@ -87,14 +120,14 @@ internal object MenuMouse {
+         if (!event.isFromSource(InputDevice.SOURCE_MOUSE)) return
+         if (!canHandle()) {
+             MouseDiag.actMenuBlocked++
+-            reset()
++            resetMenu()
+             return
+         }
+         MouseDiag.actMenu++
+ 
+         val action = event.actionMasked
+         if (action == MotionEvent.ACTION_CANCEL) {
+-            reset()
++            resetMenu()
+             return
+         }
+ 
+@@ -130,7 +163,7 @@ internal object MenuMouse {
+         if (!event.isFromSource(InputDevice.SOURCE_MOUSE)) return
+         if (!canHandle()) {
+             MouseDiag.actMenuBlocked++
+-            reset()
++            resetMenu()
+             return
+         }
+         MouseDiag.actMenu++
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/PointerStyle.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/PointerStyle.kt
+new file mode 100644
+index 0000000..5f0f386
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/PointerStyle.kt
+@@ -0,0 +1,372 @@
++package com.israadev.nuxlauncher.ui.control
++
++import android.content.Context
++import android.graphics.Bitmap
++import android.graphics.BitmapFactory
++import android.net.Uri
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.geometry.Rect
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.ImageBitmap
++import androidx.compose.ui.graphics.Path
++import androidx.compose.ui.graphics.StrokeCap
++import androidx.compose.ui.graphics.StrokeJoin
++import androidx.compose.ui.graphics.asImageBitmap
++import androidx.compose.ui.graphics.drawscope.DrawScope
++import androidx.compose.ui.graphics.drawscope.Fill
++import androidx.compose.ui.graphics.drawscope.Stroke
++import androidx.compose.ui.graphics.drawscope.scale
++import androidx.compose.ui.unit.IntSize
++import com.movtery.zalithlauncher.bridge.CursorShape
++import java.io.File
++
++/*
++ * Tampilan kursor launcher (kursor virtual): satu gambar per bentuk kursor game (panah, tangan, kursor teks,
++ * crosshair, ubah ukuran, pindahkan, tidak diizinkan), masing-masing bisa diganti gambar sendiri dan diberi
++ * hotspot (titik yang dianggap ujung kursor, dalam persen kotak kursor).
++ *
++ * Tanpa gambar kustom, bentuknya digambar dari path vektor kecil (tanpa berkas gambar bawaan, tanpa decode).
++ * Gambar kustom didecode sekali, dikecilkan ke maksimal 192 px, dan disimpan sebagai ImageBitmap di cache
++ * sampai gambarnya berubah. Menggambar kursor tidak mengalokasikan apa pun per frame.
++ */
++internal object PointerStyle {
++    private const val MAX_SIDE = 192
++    private const val DIR = "pointers"
++
++    /** Naik tiap kali gambar kustom berubah, supaya tampilan yang membacanya ikut diperbarui. */
++    var revision by mutableIntStateOf(0)
++        private set
++
++    fun bump() {
++        revision++
++    }
++
++    val shapes: List<CursorShape> = CursorShape.values().toList()
++
++    fun key(shape: CursorShape): String = when (shape) {
++        CursorShape.Arrow -> "arrow"
++        CursorShape.IBeam -> "ibeam"
++        CursorShape.Hand -> "hand"
++        CursorShape.CrossHair -> "crosshair"
++        CursorShape.ResizeNS -> "resize_ns"
++        CursorShape.ResizeEW -> "resize_ew"
++        CursorShape.ResizeAll -> "resize_all"
++        CursorShape.NotAllowed -> "not_allowed"
++    }
++
++    fun title(shape: CursorShape): String = when (shape) {
++        CursorShape.Arrow -> "Penunjuk (Default)"
++        CursorShape.IBeam -> "Penunjuk (Kursor Teks)"
++        CursorShape.Hand -> "Penunjuk (Tangan)"
++        CursorShape.CrossHair -> "Penunjuk (Crosshair)"
++        CursorShape.ResizeNS -> "Penunjuk (Atas/Bawah)"
++        CursorShape.ResizeEW -> "Penunjuk (Kiri/Kanan)"
++        CursorShape.ResizeAll -> "Penunjuk (Pindahkan)"
++        CursorShape.NotAllowed -> "Penunjuk (Tidak Diizinkan)"
++    }
++
++    fun summary(shape: CursorShape): String = when (shape) {
++        CursorShape.Arrow -> "Bentuk biasa. Dipakai di semua versi Minecraft."
++        CursorShape.IBeam -> "MC 1.21.9+: dipakai saat kursor di atas kolom teks."
++        CursorShape.Hand -> "MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik."
++        CursorShape.CrossHair -> "MC 1.21.9+: bentuk crosshair."
++        CursorShape.ResizeNS -> "MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah."
++        CursorShape.ResizeEW -> "MC 1.21.9+: dipakai di komponen penggeser (slider)."
++        CursorShape.ResizeAll -> "MC 1.21.9+: bentuk pindahkan."
++        CursorShape.NotAllowed -> "MC 1.21.9+: dipakai di komponen yang dinonaktifkan."
++    }
++
++    // Hotspot bawaan (persen). Panah: ujungnya di pojok kiri atas. Tangan: ujung jari telunjuk.
++    fun defaultHotspotX(shape: CursorShape): Int = when (shape) {
++        CursorShape.Arrow -> 0
++        CursorShape.Hand -> 41
++        else -> 50
++    }
++
++    fun defaultHotspotY(shape: CursorShape): Int = when (shape) {
++        CursorShape.Arrow -> 0
++        CursorShape.Hand -> 6
++        else -> 50
++    }
++
++    fun hotspotX(map: Map<String, Int>, shape: CursorShape): Int =
++        (map[key(shape) + ".x"] ?: defaultHotspotX(shape)).coerceIn(0, 100)
++
++    fun hotspotY(map: Map<String, Int>, shape: CursorShape): Int =
++        (map[key(shape) + ".y"] ?: defaultHotspotY(shape)).coerceIn(0, 100)
++
++    fun hasHotspot(map: Map<String, Int>, shape: CursorShape): Boolean =
++        map.containsKey(key(shape) + ".x") || map.containsKey(key(shape) + ".y")
++
++    fun withHotspot(map: Map<String, Int>, shape: CursorShape, x: Int, y: Int): Map<String, Int> {
++        val out = HashMap<String, Int>(map)
++        out[key(shape) + ".x"] = x.coerceIn(0, 100)
++        out[key(shape) + ".y"] = y.coerceIn(0, 100)
++        return out
++    }
++
++    fun withoutHotspot(map: Map<String, Int>, shape: CursorShape): Map<String, Int> {
++        val out = HashMap<String, Int>(map)
++        out.remove(key(shape) + ".x")
++        out.remove(key(shape) + ".y")
++        return out
++    }
++
++    // ---------------------------------------------------------------- gambar kustom
++
++    private fun dir(context: Context): File = File(context.filesDir, DIR)
++
++    fun file(context: Context, shape: CursorShape): File = File(dir(context), key(shape) + ".png")
++
++    private class Entry(val revision: Int, val bitmap: ImageBitmap?)
++
++    // Hanya diakses dari thread utama (saat menyusun tampilan).
++    private val cache = HashMap<String, Entry>()
++
++    /**
++     * Gambar kustom untuk bentuk ini, atau null bila memakai bentuk vektor bawaan. Dipanggil saat menyusun
++     * tampilan: membaca [revision], jadi tampilan ikut disusun ulang begitu gambarnya diganti atau dihapus.
++     */
++    fun bitmap(context: Context, shape: CursorShape): ImageBitmap? {
++        val rev = revision
++        val k = key(shape)
++        val hit = cache[k]
++        if (hit != null && hit.revision == rev) return hit.bitmap
++        val f = file(context, shape)
++        val bmp: ImageBitmap? = if (f.isFile) {
++            try {
++                BitmapFactory.decodeFile(f.path)?.asImageBitmap()
++            } catch (_: Throwable) {
++                null
++            }
++        } else {
++            null
++        }
++        cache[k] = Entry(rev, bmp)
++        return bmp
++    }
++
++    /**
++     * Salin gambar pilihan pengguna jadi gambar kursor. Dijalankan di thread IO. Hasilnya dibuat persegi
++     * (gambar di pojok kiri atas) dan dikecilkan ke maksimal 192 px, jadi hotspot dalam persen selalu merujuk
++     * ke kotak yang sama. Mengembalikan false bila gambar tidak bisa dibaca.
++     */
++    fun importImage(context: Context, shape: CursorShape, uri: Uri): Boolean {
++        return try {
++            val resolver = context.contentResolver
++            val bounds = BitmapFactory.Options()
++            bounds.inJustDecodeBounds = true
++            resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
++            if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return false
++
++            var sample = 1
++            while (maxOf(bounds.outWidth, bounds.outHeight) / sample > MAX_SIDE * 2) sample *= 2
++            val opts = BitmapFactory.Options()
++            opts.inSampleSize = sample
++            val src = resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, opts) }
++                ?: return false
++
++            val side = maxOf(src.width, src.height)
++            val square = Bitmap.createBitmap(side, side, Bitmap.Config.ARGB_8888)
++            android.graphics.Canvas(square).drawBitmap(src, 0f, 0f, null)
++            val result = if (side > MAX_SIDE) Bitmap.createScaledBitmap(square, MAX_SIDE, MAX_SIDE, true) else square
++
++            val folder = dir(context)
++            folder.mkdirs()
++            val target = file(context, shape)
++            val tmp = File(folder, key(shape) + ".tmp")
++            tmp.outputStream().use { result.compress(Bitmap.CompressFormat.PNG, 100, it) }
++            if (!tmp.renameTo(target)) {
++                target.delete()
++                if (!tmp.renameTo(target)) return false
++            }
++            true
++        } catch (_: Throwable) {
++            false
++        }
++    }
++
++    /** Hapus gambar kustom (kembali ke bentuk bawaan). */
++    fun removeImage(context: Context, shape: CursorShape) {
++        file(context, shape).delete()
++        bump()
++    }
++
++    // ---------------------------------------------------------------- bentuk vektor bawaan
++
++    /**
++     * Bentuk bawaan dalam kisi 24 x 24 (dikali kepadatan layar). [fill] diisi putih dengan garis tepi hitam,
++     * [lines] digambar sebagai garis tebal hitam lalu garis tipis berwarna [lineColor].
++     */
++    class Glyph(
++        val fill: Path?,
++        val shadow: Path?,
++        val lines: Path?,
++        val lineColor: Color,
++        val outline: Stroke,
++        val lineBack: Stroke,
++        val lineFront: Stroke
++    )
++
++    // Bentuk bawaan dibuat sekali per bentuk dan kepadatan layar, bukan tiap kali bentuk kursor game berganti
++    // (kursor sering bolak-balik panah/tangan saat melewati tombol). Hanya diakses dari thread utama.
++    private var glyphDensity = 0f
++    private val glyphCache = arrayOfNulls<Glyph>(shapes.size)
++
++    fun glyphFor(shape: CursorShape, d: Float): Glyph {
++        if (glyphDensity != d) {
++            glyphDensity = d
++            java.util.Arrays.fill(glyphCache, null)
++        }
++        val i = shape.ordinal
++        return glyphCache[i] ?: glyph(shape, d).also { glyphCache[i] = it }
++    }
++
++    private fun glyph(shape: CursorShape, d: Float): Glyph {
++        var fill: Path? = null
++        var shadow: Path? = null
++        var lines: Path? = null
++        var lineColor = Color.White
++
++        when (shape) {
++            CursorShape.Arrow -> {
++                val arrow = Path()
++                arrow.moveTo(0f, 0f)
++                arrow.lineTo(0f, 22f * d)
++                arrow.lineTo(5.5f * d, 16.5f * d)
++                arrow.lineTo(10.5f * d, 24.5f * d)
++                arrow.lineTo(13.5f * d, 23f * d)
++                arrow.lineTo(8.5f * d, 15f * d)
++                arrow.lineTo(15.5f * d, 15f * d)
++                arrow.close()
++                val sh = Path()
++                sh.addPath(arrow, Offset(2f * d, 2f * d))
++                fill = arrow
++                shadow = sh
++            }
++
++            CursorShape.Hand -> fill = polygon(
++                d,
++                8f, 1.5f, 11.5f, 1.5f, 11.5f, 9f, 13.5f, 9f, 13.5f, 10f, 16f, 10f, 16f, 11f,
++                18.5f, 11f, 18.5f, 12f, 21f, 12f, 21f, 19f, 18.5f, 22.5f, 10.5f, 22.5f,
++                7.5f, 18.5f, 4f, 13f, 5.2f, 11.8f, 8f, 14.2f
++            )
++
++            CursorShape.IBeam -> {
++                val p = Path()
++                p.moveTo(12f * d, 3f * d)
++                p.lineTo(12f * d, 21f * d)
++                p.moveTo(8.5f * d, 3f * d)
++                p.lineTo(15.5f * d, 3f * d)
++                p.moveTo(8.5f * d, 21f * d)
++                p.lineTo(15.5f * d, 21f * d)
++                lines = p
++            }
++
++            CursorShape.CrossHair -> {
++                val p = Path()
++                p.moveTo(12f * d, 3f * d)
++                p.lineTo(12f * d, 21f * d)
++                p.moveTo(3f * d, 12f * d)
++                p.lineTo(21f * d, 12f * d)
++                lines = p
++            }
++
++            CursorShape.ResizeNS -> fill = polygon(
++                d,
++                12f, 2f, 17f, 8f, 13.5f, 8f, 13.5f, 16f, 17f, 16f, 12f, 22f, 7f, 16f, 10.5f, 16f, 10.5f, 8f, 7f, 8f
++            )
++
++            CursorShape.ResizeEW -> fill = polygon(
++                d,
++                2f, 12f, 8f, 7f, 8f, 10.5f, 16f, 10.5f, 16f, 7f, 22f, 12f, 16f, 17f, 16f, 13.5f, 8f, 13.5f, 8f, 17f
++            )
++
++            CursorShape.ResizeAll -> fill = polygon(
++                d,
++                12f, 1.5f, 16f, 6f, 13.2f, 6f, 13.2f, 10.8f, 18f, 10.8f, 18f, 8f, 22.5f, 12f, 18f, 16f,
++                18f, 13.2f, 13.2f, 13.2f, 13.2f, 18f, 16f, 18f, 12f, 22.5f, 8f, 18f, 10.8f, 18f,
++                10.8f, 13.2f, 6f, 13.2f, 6f, 16f, 1.5f, 12f, 6f, 8f, 6f, 10.8f, 10.8f, 10.8f, 10.8f, 6f, 8f, 6f
++            )
++
++            CursorShape.NotAllowed -> {
++                val p = Path()
++                p.addOval(Rect(3f * d, 3f * d, 21f * d, 21f * d))
++                p.moveTo(5.6f * d, 5.6f * d)
++                p.lineTo(18.4f * d, 18.4f * d)
++                lines = p
++                lineColor = Color(0xFFE53935)
++            }
++        }
++
++        return Glyph(
++            fill = fill,
++            shadow = shadow,
++            lines = lines,
++            lineColor = lineColor,
++            outline = Stroke(width = 1.8f * d, cap = StrokeCap.Round, join = StrokeJoin.Round),
++            lineBack = Stroke(width = 4.4f * d, cap = StrokeCap.Round, join = StrokeJoin.Round),
++            lineFront = Stroke(width = 2.2f * d, cap = StrokeCap.Round, join = StrokeJoin.Round)
++        )
++    }
++
++    /** Poligon tertutup dari pasangan x, y dalam kisi 24 x 24. */
++    private fun polygon(d: Float, vararg xy: Float): Path {
++        val p = Path()
++        var i = 0
++        while (i + 1 < xy.size) {
++            if (i == 0) p.moveTo(xy[i] * d, xy[i + 1] * d) else p.lineTo(xy[i] * d, xy[i + 1] * d)
++            i += 2
++        }
++        p.close()
++        return p
++    }
++}
++
++/** Gambar satu bentuk bawaan di kisi 24 x 24 (dikali kepadatan layar). */
++internal fun DrawScope.drawGlyph(g: PointerStyle.Glyph) {
++    val lines = g.lines
++    if (lines != null) {
++        drawPath(path = lines, color = Color.Black, style = g.lineBack)
++        drawPath(path = lines, color = g.lineColor, style = g.lineFront)
++    }
++    val fill = g.fill
++    if (fill != null) {
++        val shadow = g.shadow
++        if (shadow != null) {
++            drawPath(path = shadow, color = Color.Black.copy(alpha = 0.45f), style = Fill)
++        }
++        drawPath(path = fill, color = Color.White, style = Fill)
++        drawPath(path = fill, color = Color.Black, style = g.outline)
++    }
++}
++
++/**
++ * Gambar kursor di kotak persegi [sizePx] yang pojok kiri atasnya ada di titik (0, 0). Titik hotspot
++ * ([hotX], [hotY], 0..1 dari kotak) jadi pusat efek "ditekan" (mengecil sedikit). Gambar kustom dipakai bila
++ * ada, kalau tidak bentuk vektor bawaan.
++ */
++internal fun DrawScope.drawPointer(
++    glyph: PointerStyle.Glyph,
++    custom: ImageBitmap?,
++    d: Float,
++    sizePx: Float,
++    hotX: Float,
++    hotY: Float,
++    pressed: Boolean
++) {
++    val press = if (pressed) 0.88f else 1.0f
++    scale(press, pivot = Offset(hotX * sizePx, hotY * sizePx)) {
++        if (custom != null) {
++            val side = sizePx.toInt().coerceAtLeast(1)
++            drawImage(custom, dstSize = IntSize(side, side))
++        } else {
++            scale(sizePx / (24f * d), pivot = Offset.Zero) {
++                drawGlyph(glyph)
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index 2cf65e8..c6c383d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+@@ -43,6 +43,10 @@ fun SwitchableMouseLayout(
+     // Mouse launcher di menu: false saat lapisan launcher (menu dalam game, dialog, editor, loading) menutupi
+     // game, supaya penunjuk sistem Android bisa dipakai di lapisan itu.
+     menuCaptureAllowed: Boolean = true,
++    // Pengali kecepatan khusus mouse fisik (1 = sama dengan sensitivitas di atas): kursor launcher di menu dan
++    // kamera saat bermain. Tidak memengaruhi jari.
++    physicalCursorSpeed: Float = 1f,
++    physicalCameraSpeed: Float = 1f,
+     // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
+     hotbarSlotAt: ((Offset) -> Int)? = null,
+     onHotbarSelect: (Int) -> Unit = {},
+@@ -80,6 +84,8 @@ fun SwitchableMouseLayout(
+     val currentCursorMode by rememberUpdatedState(cursorMode)
+     val currentCursorPos by rememberUpdatedState(cursorPosition)
+     val currentSensitivity by rememberUpdatedState(cursorSensitivity)
++    val currentPhysicalCursorSpeed by rememberUpdatedState(physicalCursorSpeed)
++    val currentPhysicalCameraSpeed by rememberUpdatedState(physicalCameraSpeed)
+     val currentTouchAttack by rememberUpdatedState(touchAttackEnabled)
+     val currentHotbarSlotAt by rememberUpdatedState(hotbarSlotAt)
+     val currentOnHotbarSelect by rememberUpdatedState(onHotbarSelect)
+@@ -136,7 +142,9 @@ fun SwitchableMouseLayout(
+             val glfwBtn = MouseButtons.toGlfw(button)
+             if (glfwBtn != null) {
+                 MouseDiag.buttonsSent++
+-                CallbackBridge.sendMouseButton(glfwBtn, pressed)
++                // Pintu bersama semua jalur mouse fisik: tekan/lepas ganda dibuang, dan tombol yang tertahan
++                // bisa dilepas sekaligus saat fokus hilang (MenuMouse.reset).
++                MenuMouse.sendButton(glfwBtn, pressed)
+             } else {
+                 MouseDiag.buttonsDropped++
+             }
+@@ -164,7 +172,7 @@ fun SwitchableMouseLayout(
+     // Mouse launcher di menu: menggeser kursor launcher sebesar gerakan relatif mouse, lalu memberi tahu game.
+     fun moveMenuCursor(delta: Offset) {
+         val cur = currentCursorPos()
+-        val sens = currentSensitivity
++        val sens = currentSensitivity * currentPhysicalCursorSpeed
+         val nx = (cur.x + delta.x * sens).coerceIn(0f, currentScreenWidth)
+         val ny = (cur.y + delta.y * sens).coerceIn(0f, currentScreenHeight)
+         MouseDiag.cursorSent++
+@@ -495,7 +503,7 @@ fun SwitchableMouseLayout(
+         onMouseMove = { delta ->
+             if (currentCursorMode == CURSOR_DISABLED) {
+                 MouseDiag.deltaSent++
+-                currentOnCapturedMove(delta)
++                currentOnCapturedMove(delta * currentPhysicalCameraSpeed)
+             } else {
+                 moveMenuCursor(delta)
+             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 4db29a5..9220135 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -140,6 +140,9 @@ fun SettingsScreen(
+     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
++    var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
++    var physicalCursorSpeed by remember(currentSettings.physicalMouseCursorSpeed) { mutableIntStateOf(currentSettings.physicalMouseCursorSpeed) }
++    var physicalCameraSpeed by remember(currentSettings.physicalMouseCameraSpeed) { mutableIntStateOf(currentSettings.physicalMouseCameraSpeed) }
+ 
+     var resolutionRatio by remember(currentSettings.resolutionRatio) { mutableIntStateOf(currentSettings.resolutionRatio) }
+     var autoOptimizeMC by remember(currentSettings.autoOptimizeMinecraft) { mutableStateOf(currentSettings.autoOptimizeMinecraft) }
+@@ -202,6 +205,9 @@ fun SettingsScreen(
+             buttonLookDrag = buttonLookDrag,
+             touchControllerEnabled = touchControllerEnabled,
+             mouseSizeDp = mouseSizeDp,
++            physicalMouseSystemPointer = physicalSystemPointer,
++            physicalMouseCursorSpeed = physicalCursorSpeed,
++            physicalMouseCameraSpeed = physicalCameraSpeed,
+             resolutionRatio = resolutionRatio,
+             autoOptimizeMinecraft = autoOptimizeMC,
+             sustainedPerformanceMode = sustainedPerf,
+@@ -835,6 +841,55 @@ fun SettingsScreen(
+                         )
+                         }
+ 
++                        // Gambar, hotspot, dan ukuran kursor launcher (dipakai di menu game oleh jari, controller,
++                        // dan mouse fisik). Gambar kustom didecode sekali dan disimpan; slider hanya menulis saat dilepas.
++                        SettingsGroup("Penunjuk kursor") {
++                            PointerSettingsCards(
++                                hotspots = currentSettings.pointerHotspots,
++                                onHotspotsChange = { map ->
++                                    SettingsManager.updateSettings(
++                                        context,
++                                        SettingsManager.settings.value.copy(pointerHotspots = map)
++                                    )
++                                }
++                            )
++                        }
++
++                        SettingsGroup("Mouse fisik") {
++                            SettingSwitchRow(
++                                title = "Pakai kursor sistem Android",
++                                desc = "Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot " +
++                                    "kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.",
++                                checked = physicalSystemPointer,
++                                onCheckedChange = {
++                                    physicalSystemPointer = it
++                                    commitSettings()
++                                }
++                            )
++                            SettingDivider()
++                            SettingSliderRow(
++                                title = "Kecepatan kursor mouse",
++                                desc = "Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.",
++                                valueText = "$physicalCursorSpeed%",
++                                value = physicalCursorSpeed.toFloat(),
++                                valueRange = 20f..300f,
++                                steps = 27,
++                                onValueChange = { physicalCursorSpeed = it.roundToInt() },
++                                onValueChangeFinished = { commitSettings() }
++                            )
++                            SettingDivider()
++                            SettingSliderRow(
++                                title = "Kecepatan kamera mouse",
++                                desc = "Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.",
++                                valueText = "$physicalCameraSpeed%",
++                                value = physicalCameraSpeed.toFloat(),
++                                valueRange = 20f..300f,
++                                steps = 27,
++                                onValueChange = { physicalCameraSpeed = it.roundToInt() },
++                                onValueChangeFinished = { commitSettings() }
++                            )
++                        }
++
+                         // Tidak ada sakelar: controller dan mouse fisik langsung bekerja begitu dipakai.
+                         SettingsGroup("Controller dan mouse fisik") {
+                             SettingFrame(
+@@ -1038,6 +1093,9 @@ fun SettingsScreen(
+                     buttonLookDrag = reset.buttonLookDrag
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     mouseSizeDp = reset.mouseSizeDp
++                    physicalSystemPointer = reset.physicalMouseSystemPointer
++                    physicalCursorSpeed = reset.physicalMouseCursorSpeed
++                    physicalCameraSpeed = reset.physicalMouseCameraSpeed
+                     resolutionRatio = reset.resolutionRatio
+                     autoOptimizeMC = reset.autoOptimizeMinecraft
+                     sustainedPerf = reset.sustainedPerformanceMode
+# FIN part=1/1 files=8

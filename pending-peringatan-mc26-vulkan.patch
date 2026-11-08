@@ -1,0 +1,749 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index a9ea493..8c0f1f1 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -214,6 +214,16 @@
+             android:process=":forge"
+             android:foregroundServiceType="dataSync" />
+ 
++        <!--
++            Proses :vkcheck sendiri: pengecekan dukungan Vulkan memuat driver grafis HP, dan driver yang bermasalah
++            bisa menutup prosesnya. Dengan proses terpisah, yang mati hanya :vkcheck, bukan launcher. Hidup beberapa
++            detik lalu mematikan dirinya sendiri.
++        -->
++        <service
++            android:name=".core.vulkan.VulkanCheckService"
++            android:exported="false"
++            android:process=":vkcheck" />
++
+         <activity
+             android:name=".ui.activities.ErrorActivity"
+             android:exported="false"
+diff --git a/app/src/main/assets/lang/en/minecraft26.tsv b/app/src/main/assets/lang/en/minecraft26.tsv
+new file mode 100644
+index 0000000..9cfb6fd
+--- /dev/null
++++ b/app/src/main/assets/lang/en/minecraft26.tsv
+@@ -0,0 +1,11 @@
++# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
++MINECRAFT 26.X KE ATAS	MINECRAFT 26.X AND ABOVE
++Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	This version uses Java 25 and a new graphics engine. Not every phone can run it, especially ones with an old or incomplete Vulkan driver.
++Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	If the game fails to open, the cause may be the phone or this game version, not the launcher. Try a different renderer in Settings, or use Minecraft 1.21.x.
++Memeriksa dukungan Vulkan HP ini...	Checking this phone's Vulkan support...
++Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	This version uses OpenGL. Vulkan is only used from Minecraft 26.2.
++Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	The Vulkan check is not available in this build, so the phone's Vulkan support can't be confirmed.
++Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	The Vulkan check did not finish. This phone's Vulkan driver may have problems, so Minecraft 26.2 and above may fail if it uses Vulkan.
++HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	This phone has no usable Vulkan driver. Minecraft 26.2 and above can't use Vulkan here; choose Prefer OpenGL in the game's video settings.
++Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	This phone's Vulkan meets the requirements of Minecraft 26.2 and above.
++Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	This phone's Vulkan does not meet the requirements of Minecraft 26.2 and above. If the game uses Vulkan, it may fail to start; choose Prefer OpenGL in the game's video settings.
+diff --git a/app/src/main/assets/lang/es/minecraft26.tsv b/app/src/main/assets/lang/es/minecraft26.tsv
+new file mode 100644
+index 0000000..134fb29
+--- /dev/null
++++ b/app/src/main/assets/lang/es/minecraft26.tsv
+@@ -0,0 +1,11 @@
++# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
++MINECRAFT 26.X KE ATAS	MINECRAFT 26.X EN ADELANTE
++Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	Esta versi\u00f3n usa Java 25 y un nuevo motor gr\u00e1fico. No todos los tel\u00e9fonos pueden ejecutarla, sobre todo los que tienen un controlador Vulkan antiguo o incompleto.
++Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	Si el juego no se abre, la causa puede ser el tel\u00e9fono o esta versi\u00f3n del juego, no el launcher. Prueba otro renderizador en Ajustes, o usa Minecraft 1.21.x.
++Memeriksa dukungan Vulkan HP ini...	Comprobando la compatibilidad Vulkan de este tel\u00e9fono...
++Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	Esta versi\u00f3n usa OpenGL. Vulkan solo se usa a partir de Minecraft 26.2.
++Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	La comprobaci\u00f3n de Vulkan no est\u00e1 disponible en esta compilaci\u00f3n, as\u00ed que no se puede confirmar la compatibilidad Vulkan del tel\u00e9fono.
++Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	La comprobaci\u00f3n de Vulkan no termin\u00f3. El controlador Vulkan de este tel\u00e9fono puede tener problemas, as\u00ed que Minecraft 26.2 en adelante puede fallar si usa Vulkan.
++HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	Este tel\u00e9fono no tiene un controlador Vulkan utilizable. Minecraft 26.2 en adelante no puede usar Vulkan aqu\u00ed; elige Prefer OpenGL en los ajustes de video del juego.
++Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	El Vulkan de este tel\u00e9fono cumple los requisitos de Minecraft 26.2 en adelante.
++Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	El Vulkan de este tel\u00e9fono no cumple los requisitos de Minecraft 26.2 en adelante. Si el juego usa Vulkan, puede fallar al iniciar; elige Prefer OpenGL en los ajustes de video del juego.
+diff --git a/app/src/main/assets/lang/vi/minecraft26.tsv b/app/src/main/assets/lang/vi/minecraft26.tsv
+new file mode 100644
+index 0000000..1475af1
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/minecraft26.tsv
+@@ -0,0 +1,11 @@
++# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
++MINECRAFT 26.X KE ATAS	MINECRAFT 26.X TR\u1ede L\u00caN
++Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	Phi\u00ean b\u1ea3n n\u00e0y d\u00f9ng Java 25 v\u00e0 c\u00f4ng c\u1ee5 \u0111\u1ed3 h\u1ecda m\u1edbi. Kh\u00f4ng ph\u1ea3i \u0111i\u1ec7n tho\u1ea1i n\u00e0o c\u0169ng ch\u1ea1y \u0111\u01b0\u1ee3c, nh\u1ea5t l\u00e0 m\u00e1y c\u00f3 tr\u00ecnh \u0111i\u1ec1u khi\u1ec3n Vulkan c\u0169 ho\u1eb7c thi\u1ebfu.
++Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	N\u1ebfu game kh\u00f4ng m\u1edf \u0111\u01b0\u1ee3c, nguy\u00ean nh\u00e2n c\u00f3 th\u1ec3 l\u00e0 \u0111i\u1ec7n tho\u1ea1i ho\u1eb7c phi\u00ean b\u1ea3n game n\u00e0y, kh\u00f4ng ph\u1ea3i launcher. H\u00e3y th\u1eed tr\u00ecnh k\u1ebft xu\u1ea5t kh\u00e1c trong C\u00e0i \u0111\u1eb7t, ho\u1eb7c d\u00f9ng Minecraft 1.21.x.
++Memeriksa dukungan Vulkan HP ini...	\u0110ang ki\u1ec3m tra h\u1ed7 tr\u1ee3 Vulkan c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y...
++Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	Phi\u00ean b\u1ea3n n\u00e0y d\u00f9ng OpenGL. Vulkan ch\u1ec9 \u0111\u01b0\u1ee3c d\u00f9ng t\u1eeb Minecraft 26.2.
++Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	B\u1ea3n build n\u00e0y kh\u00f4ng c\u00f3 c\u00f4ng c\u1ee5 ki\u1ec3m tra Vulkan n\u00ean ch\u01b0a th\u1ec3 x\u00e1c nh\u1eadn \u0111i\u1ec7n tho\u1ea1i c\u00f3 h\u1ed7 tr\u1ee3 Vulkan hay kh\u00f4ng.
++Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	Vi\u1ec7c ki\u1ec3m tra Vulkan kh\u00f4ng ho\u00e0n t\u1ea5t. Tr\u00ecnh \u0111i\u1ec1u khi\u1ec3n Vulkan c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y c\u00f3 th\u1ec3 g\u1eb7p v\u1ea5n \u0111\u1ec1, n\u00ean Minecraft 26.2 tr\u1edf l\u00ean c\u00f3 nguy c\u01a1 l\u1ed7i n\u1ebfu d\u00f9ng Vulkan.
++HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	\u0110i\u1ec7n tho\u1ea1i n\u00e0y kh\u00f4ng c\u00f3 tr\u00ecnh \u0111i\u1ec1u khi\u1ec3n Vulkan d\u00f9ng \u0111\u01b0\u1ee3c. Minecraft 26.2 tr\u1edf l\u00ean kh\u00f4ng th\u1ec3 d\u00f9ng Vulkan \u1edf \u0111\u00e2y; h\u00e3y ch\u1ecdn Prefer OpenGL trong c\u00e0i \u0111\u1eb7t video c\u1ee7a game.
++Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	Vulkan c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y \u0111\u00e1p \u1ee9ng y\u00eau c\u1ea7u c\u1ee7a Minecraft 26.2 tr\u1edf l\u00ean.
++Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	Vulkan c\u1ee7a \u0111i\u1ec7n tho\u1ea1i n\u00e0y ch\u01b0a \u0111\u00e1p \u1ee9ng y\u00eau c\u1ea7u c\u1ee7a Minecraft 26.2 tr\u1edf l\u00ean. N\u1ebfu game d\u00f9ng Vulkan, game c\u00f3 th\u1ec3 kh\u00f4ng kh\u1edfi \u0111\u1ed9ng \u0111\u01b0\u1ee3c; h\u00e3y ch\u1ecdn Prefer OpenGL trong c\u00e0i \u0111\u1eb7t video c\u1ee7a game.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/McVulkan.kt b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/McVulkan.kt
+new file mode 100644
+index 0000000..d35ac15
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/McVulkan.kt
+@@ -0,0 +1,133 @@
++package com.israadev.nuxlauncher.core.vulkan
++
++import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
++
++/** Tingkat kabar dari [McVulkan.verdict]; UI memilih warnanya dari sini. */
++enum class VerdictLevel { CHECKING, OK, INFO, WARN, BAD }
++
++/**
++ * Kesimpulan satu baris untuk pemain. [text] kalimat tetap berbahasa Indonesia (kuncinya ada di
++ * assets/lang/<bahasa>/minecraft26.tsv supaya ikut diterjemahkan); [detail] berisi nilai teknis (versi Vulkan,
++ * nama ekstensi) yang sengaja tidak diterjemahkan, boleh kosong.
++ */
++class Verdict(val level: VerdictLevel, val text: String, val detail: String = "")
++
++/**
++ * Syarat Vulkan Minecraft versi bernomor tahun (26.x ke atas) dan penilaiannya terhadap [VulkanReport] HP ini.
++ *
++ * Minecraft mulai punya backend Vulkan pada 26.2 (sebelumnya OpenGL). Daftar ekstensi dan fitur yang wajib ada
++ * mengikuti tabel kebutuhan ZalithLauncher 2 (VulkanRequirements, versi 1) yang disusun dari kode game; dengan
++ * dasar Vulkan 1.2. Penilaian ini perkiraan: lolos berarti syarat yang dikenal terpenuhi, bukan jaminan game jalan.
++ */
++object McVulkan {
++    /** Versi Minecraft pertama dengan backend Vulkan. */
++    const val FIRST_VULKAN_MC = "26.2"
++
++    private class Need(
++        val name: String,
++        val isFeature: Boolean,
++        val from: String,
++        /** Versi terakhir (ikut dihitung) yang membutuhkannya; null = seterusnya. */
++        val through: String? = null
++    ) {
++        fun appliesTo(release: String): Boolean {
++            if (NuxVersionUtils.compare(release, from) < 0) return false
++            return through == null || NuxVersionUtils.compare(release, through) <= 0
++        }
++    }
++
++    private val NEEDS = listOf(
++        Need("VK_KHR_synchronization2", false, "26.2"),
++        Need("VK_EXT_vertex_attribute_divisor", false, "26.2"),
++        Need("VK_KHR_swapchain", false, "26.2"),
++        Need("VK_KHR_dynamic_rendering", false, "26.2", "26.3"),
++        Need("VK_KHR_push_descriptor", false, "26.2", "26.3"),
++        Need("multiDrawIndirect", true, "26.2"),
++        Need("samplerAnisotropy", true, "26.2"),
++        Need("shaderDrawParameters", true, "26.2"),
++        Need("timelineSemaphore", true, "26.2"),
++        Need("hostQueryReset", true, "26.2"),
++        Need("synchronization2", true, "26.2"),
++        Need("vertexAttributeInstanceRateDivisor", true, "26.2"),
++        Need("dynamicRendering", true, "26.2", "26.3"),
++        Need("fillModeNonSolid", true, "26.2", "26.2"),
++        Need("drawIndirectFirstInstance", true, "26.3")
++    )
++
++    /** True untuk versi bernomor tahun: "26.1", "26.2-snapshot-3", "27.0". Bukan "1.21", "b1.7.3", atau "24w14a". */
++    fun isYearVersion(mcVersion: String): Boolean {
++        val s = mcVersion.trimStart()
++        var number = 0
++        var i = 0
++        while (i < s.length && i < 4 && s[i] in '0'..'9') {
++            number = number * 10 + (s[i] - '0')
++            i++
++        }
++        return i > 0 && number >= 26 && (i == s.length || s[i] == '.' || s[i] == '-')
++    }
++
++    /** "26.2-snapshot-3", "26.2-pre-1", "26.2-rc-1" dinilai sebagai "26.2" (versi rilis yang mereka tuju). */
++    private fun release(mcVersion: String): String {
++        val dash = mcVersion.indexOf('-')
++        return (if (dash > 0) mcVersion.substring(0, dash) else mcVersion).trim()
++    }
++
++    /** True bila versi ini memakai (atau bisa memakai) backend Vulkan. */
++    fun usesVulkan(mcVersion: String): Boolean =
++        isYearVersion(mcVersion) && NuxVersionUtils.compare(release(mcVersion), FIRST_VULKAN_MC) >= 0
++
++    /** Syarat Vulkan [mcVersion] yang tidak dipenuhi HP ini (kosong = semua terpenuhi). */
++    fun missing(report: VulkanReport, mcVersion: String): List<String> {
++        val rel = release(mcVersion)
++        val out = ArrayList<String>()
++        if (!report.meetsBaseline) out.add("Vulkan 1.2")
++        for (need in NEEDS) {
++            if (need.appliesTo(rel) && !report.has(need.name, need.isFeature)) out.add(need.name)
++        }
++        return out
++    }
++
++    /**
++     * Kesimpulan untuk pemain. [mcVersion] null = belum ada versi dipilih (dinilai untuk 26.2 ke atas).
++     * [report] null = pengecekan masih berjalan.
++     */
++    fun verdict(report: VulkanReport?, mcVersion: String?): Verdict {
++        if (report == null) {
++            return Verdict(VerdictLevel.CHECKING, "Memeriksa dukungan Vulkan HP ini...")
++        }
++        val picked = mcVersion?.takeIf { isYearVersion(it) }
++        if (picked != null && !usesVulkan(picked)) {
++            return Verdict(VerdictLevel.INFO, "Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.")
++        }
++        return when (report.state) {
++            VulkanState.UNAVAILABLE -> Verdict(
++                VerdictLevel.INFO,
++                "Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan."
++            )
++            VulkanState.NO_RESPONSE -> Verdict(
++                VerdictLevel.WARN,
++                "Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan."
++            )
++            VulkanState.NO_VULKAN -> Verdict(
++                VerdictLevel.BAD,
++                "HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game."
++            )
++            VulkanState.OK -> {
++                val lacking = missing(report, picked ?: FIRST_VULKAN_MC)
++                if (lacking.isEmpty()) {
++                    Verdict(VerdictLevel.OK, "Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.", "Vulkan ${report.versionText}")
++                } else {
++                    val shown = lacking.take(MAX_LISTED).joinToString(", ")
++                    val more = if (lacking.size > MAX_LISTED) " +${lacking.size - MAX_LISTED}" else ""
++                    Verdict(
++                        VerdictLevel.BAD,
++                        "Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.",
++                        "Vulkan ${report.versionText}. $shown$more"
++                    )
++                }
++            }
++        }
++    }
++
++    private const val MAX_LISTED = 5
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheck.kt b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheck.kt
+new file mode 100644
+index 0000000..c0730dd
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheck.kt
+@@ -0,0 +1,222 @@
++package com.israadev.nuxlauncher.core.vulkan
++
++import android.content.ComponentName
++import android.content.Context
++import android.content.Intent
++import android.content.ServiceConnection
++import android.os.Build
++import android.os.IBinder
++import android.os.SystemClock
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.sync.Mutex
++import kotlinx.coroutines.sync.withLock
++import kotlinx.coroutines.withContext
++import org.json.JSONArray
++import org.json.JSONObject
++import java.io.File
++import java.util.concurrent.atomic.AtomicBoolean
++
++/** Keadaan hasil pengecekan Vulkan. */
++enum class VulkanState {
++    /** Vulkan terbaca; versi, ekstensi, dan fiturnya ada di laporan. */
++    OK,
++
++    /** HP tidak punya driver Vulkan yang bisa dibuka. */
++    NO_VULKAN,
++
++    /** Pemeriksa Vulkan tidak ada di build ini (mis. build 32-bit). */
++    UNAVAILABLE,
++
++    /** Proses pemeriksa mati atau tidak menjawab: driver Vulkan HP kemungkinan bermasalah. */
++    NO_RESPONSE
++}
++
++/** Laporan dukungan Vulkan HP ini. */
++class VulkanReport(
++    val state: VulkanState,
++    val major: Int = 0,
++    val minor: Int = 0,
++    val patch: Int = 0,
++    val extensions: Set<String> = emptySet(),
++    val features: Map<String, Boolean> = emptyMap(),
++    val detail: String = ""
++) {
++    val versionText: String get() = "$major.$minor.$patch"
++
++    /** Vulkan 1.2 ke atas: syarat dasar Minecraft yang memakai Vulkan. */
++    val meetsBaseline: Boolean get() = major > 1 || (major == 1 && minor >= 2)
++
++    fun has(name: String, isFeature: Boolean): Boolean =
++        if (isFeature) features[name] == true else name in extensions
++
++    internal fun toJson(key: String): String {
++        val json = JSONObject()
++        json.put("format", VulkanCheck.FORMAT)
++        json.put("key", key)
++        json.put("state", state.name)
++        json.put("major", major)
++        json.put("minor", minor)
++        json.put("patch", patch)
++        json.put("extensions", JSONArray(extensions.toList()))
++        val featureJson = JSONObject()
++        for ((name, supported) in features) featureJson.put(name, supported)
++        json.put("features", featureJson)
++        json.put("detail", detail)
++        return json.toString()
++    }
++
++    internal companion object {
++        /** Null bila teksnya rusak, formatnya lama, atau bukan hasil untuk HP/versi Android ini. */
++        fun fromJson(text: String, key: String): VulkanReport? = try {
++            val json = JSONObject(text)
++            if (json.optInt("format", -1) != VulkanCheck.FORMAT || json.optString("key") != key) {
++                null
++            } else {
++                val ext = json.optJSONArray("extensions")
++                val extSet = HashSet<String>()
++                if (ext != null) for (i in 0 until ext.length()) extSet.add(ext.optString(i))
++                val featureJson = json.optJSONObject("features")
++                val featureMap = HashMap<String, Boolean>()
++                if (featureJson != null) {
++                    val names = featureJson.keys()
++                    while (names.hasNext()) {
++                        val name = names.next()
++                        featureMap[name] = featureJson.optBoolean(name, false)
++                    }
++                }
++                VulkanReport(
++                    state = VulkanState.valueOf(json.getString("state")),
++                    major = json.optInt("major"),
++                    minor = json.optInt("minor"),
++                    patch = json.optInt("patch"),
++                    extensions = extSet,
++                    features = featureMap,
++                    detail = json.optString("detail")
++                )
++            }
++        } catch (_: Exception) {
++            null
++        }
++    }
++}
++
++/**
++ * Pengecekan otomatis dukungan Vulkan HP, dipakai untuk memperingatkan sebelum pemain mengunduh Minecraft 26.x.
++ *
++ * Pengecekannya memuat driver Vulkan HP lewat pustaka native. Driver yang bermasalah bisa menutup prosesnya,
++ * jadi pengecekan SELALU berjalan di proses `:vkcheck` sendiri ([VulkanCheckService]) dan launcher hanya membaca
++ * berkas hasilnya. Hasil yang pasti (OK, tidak ada Vulkan, pemeriksa tidak ada) disimpan per HP dan versi
++ * Android, jadi pengecekan hanya berjalan sekali. Proses yang mati atau macet tidak disimpan (diulang pada
++ * peluncuran launcher berikutnya) tetapi dicatat selama sesi ini supaya tidak berulang terus.
++ */
++object VulkanCheck {
++    /** Naikkan bila format berkas hasil atau cara menilainya berubah, supaya hasil lama dibuang. */
++    internal const val FORMAT = 1
++
++    internal const val DIR_NAME = "vulkan-check"
++    internal const val RESULT_NAME = "result.json"
++
++    /** Ada selama pengecekan berjalan: bila masih ada saat proses mulai lagi, percobaan sebelumnya mati. */
++    internal const val MARKER_NAME = "check.running"
++
++    private const val TAG = "Vulkan"
++    private const val WAIT_MS = 15_000L
++    private const val POLL_MS = 150L
++
++    private val lock = Mutex()
++
++    @Volatile
++    private var sessionFailure: VulkanReport? = null
++
++    internal fun dir(context: Context): File = File(context.filesDir, DIR_NAME)
++
++    /** Hasil hanya berlaku untuk HP dan versi Android yang sama. */
++    internal fun deviceKey(): String = "$FORMAT|${Build.FINGERPRINT}|${Build.VERSION.SDK_INT}"
++
++    /** Hasil tersimpan yang masih berlaku, tanpa memulai pengecekan. */
++    fun cached(context: Context): VulkanReport? = read(File(dir(context), RESULT_NAME))
++
++    /**
++     * Hasil tersimpan, atau menjalankan pengecekan di proses terpisah dan menunggunya (paling lama sekitar 15
++     * detik). Aman dipanggil dari mana saja; panggilan bersamaan menunggu pengecekan yang sama.
++     */
++    suspend fun ensure(context: Context): VulkanReport = lock.withLock {
++        cached(context) ?: sessionFailure ?: withContext(Dispatchers.IO) {
++            runIsolated(context.applicationContext)
++        }
++    }
++
++    private fun read(file: File): VulkanReport? = try {
++        if (file.isFile) VulkanReport.fromJson(file.readText(), deviceKey()) else null
++    } catch (_: Exception) {
++        null
++    }
++
++    private suspend fun runIsolated(app: Context): VulkanReport {
++        val dir = dir(app)
++        val resultFile = File(dir, RESULT_NAME)
++        try {
++            dir.mkdirs()
++            resultFile.delete()
++            // Percobaan baru: marker dari percobaan yang mati sebelumnya tidak berlaku lagi.
++            File(dir, MARKER_NAME).delete()
++        } catch (_: Exception) {
++        }
++
++        val gone = AtomicBoolean(false)
++        val connection = object : ServiceConnection {
++            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {}
++            override fun onServiceDisconnected(name: ComponentName?) {
++                gone.set(true)
++            }
++
++            override fun onBindingDied(name: ComponentName?) {
++                gone.set(true)
++            }
++        }
++        val bound = try {
++            app.bindService(Intent(app, VulkanCheckService::class.java), connection, Context.BIND_AUTO_CREATE)
++        } catch (e: Throwable) {
++            LauncherLog.w(TAG, "Proses pemeriksa Vulkan tidak bisa dimulai: ${e.message}")
++            false
++        }
++        if (!bound) return fail("proses pemeriksa tidak bisa dimulai")
++
++        try {
++            val deadline = SystemClock.elapsedRealtime() + WAIT_MS
++            while (true) {
++                read(resultFile)?.let { return it.also { r -> logResult(r) } }
++                if (gone.get()) {
++                    // Prosesnya sudah tidak ada: lihat berkas hasil sekali lagi (ditulis sebelum ia mati).
++                    delay(200)
++                    read(resultFile)?.let { return it.also { r -> logResult(r) } }
++                    return fail("proses pemeriksa berhenti sebelum selesai")
++                }
++                if (SystemClock.elapsedRealtime() >= deadline) return fail("pemeriksa tidak menjawab dalam ${WAIT_MS / 1000} detik")
++                delay(POLL_MS)
++            }
++        } finally {
++            try {
++                app.unbindService(connection)
++            } catch (_: Throwable) {
++            }
++        }
++    }
++
++    private fun fail(why: String): VulkanReport {
++        LauncherLog.w(TAG, "Pengecekan Vulkan tidak selesai: $why")
++        return VulkanReport(VulkanState.NO_RESPONSE, detail = why).also { sessionFailure = it }
++    }
++
++    private fun logResult(report: VulkanReport) {
++        val summary = when (report.state) {
++            VulkanState.OK -> "Vulkan ${report.versionText}, ${report.extensions.size} ekstensi"
++            VulkanState.NO_VULKAN -> "HP tidak punya driver Vulkan yang bisa dibuka"
++            VulkanState.UNAVAILABLE -> "pemeriksa tidak ada di build ini (${report.detail})"
++            VulkanState.NO_RESPONSE -> "tidak ada jawaban"
++        }
++        LauncherLog.event(TAG, "Pengecekan Vulkan: $summary")
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheckService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheckService.kt
+new file mode 100644
+index 0000000..4a937f3
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/vulkan/VulkanCheckService.kt
+@@ -0,0 +1,112 @@
++package com.israadev.nuxlauncher.core.vulkan
++
++import android.app.Service
++import android.content.Context
++import android.content.Intent
++import android.os.Binder
++import android.os.IBinder
++import android.os.Process
++import com.movtery.zalithlauncher.utils.device.VulkanChecker
++import java.io.File
++import java.util.concurrent.atomic.AtomicBoolean
++import kotlin.concurrent.thread
++
++/**
++ * Menjalankan pengecekan Vulkan di proses `:vkcheck` sendiri (lihat AndroidManifest).
++ *
++ * Pengecekannya memuat driver Vulkan HP. Driver yang bermasalah bisa menutup prosesnya (atau macet), dan di
++ * proses terpisah itu hanya `:vkcheck` yang mati, bukan launcher. Prosesnya hidup beberapa detik saja: begitu
++ * hasilnya ditulis (atau bila macet lewat [WATCHDOG_MS]) ia mematikan dirinya sendiri, seperti proses `:forge`.
++ *
++ * Hubungan dengan proses utama lewat berkas di [VulkanCheck.dir]: [VulkanCheck.RESULT_NAME] (ditulis paling
++ * akhir) dan [VulkanCheck.MARKER_NAME] (ada selama pengecekan; bila sudah ada saat proses ini mulai, percobaan
++ * sebelumnya mati, jadi tidak diulang supaya Android tidak memulai ulang layanan ini tanpa henti).
++ *
++ * Semua Throwable ditangkap di sini: pengendali galat launcher (NuxApplication) berlaku di proses ini juga dan
++ * akan memunculkan layar galat bila ada yang lolos.
++ */
++class VulkanCheckService : Service() {
++
++    private companion object {
++        /** Batas macet: lebih lama dari yang ditunggu proses utama (15 detik). */
++        const val WATCHDOG_MS = 18_000L
++    }
++
++    private val started = AtomicBoolean(false)
++
++    override fun onBind(intent: Intent?): IBinder {
++        begin()
++        return Binder()
++    }
++
++    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
++        begin()
++        return START_NOT_STICKY
++    }
++
++    private fun begin() {
++        if (!started.compareAndSet(false, true)) return
++        val app = applicationContext
++        thread(name = "Amber-Vulkan-Watchdog", isDaemon = true) {
++            try {
++                Thread.sleep(WATCHDOG_MS)
++            } catch (_: InterruptedException) {
++            }
++            Process.killProcess(Process.myPid())
++        }
++        thread(name = "Amber-Vulkan-Check") {
++            try {
++                runCheck(app)
++            } catch (_: Throwable) {
++            } finally {
++                Process.killProcess(Process.myPid())
++            }
++        }
++    }
++
++    private fun runCheck(app: Context) {
++        val dir = VulkanCheck.dir(app)
++        dir.mkdirs()
++        val marker = File(dir, VulkanCheck.MARKER_NAME)
++        if (marker.exists()) return
++        marker.writeText(System.currentTimeMillis().toString())
++
++        val report = measure()
++
++        val temp = File(dir, VulkanCheck.RESULT_NAME + ".tmp")
++        val result = File(dir, VulkanCheck.RESULT_NAME)
++        temp.writeText(report.toJson(VulkanCheck.deviceKey()))
++        if (!temp.renameTo(result)) {
++            result.delete()
++            if (!temp.renameTo(result)) {
++                temp.delete()
++                return
++            }
++        }
++        marker.delete()
++    }
++
++    private fun measure(): VulkanReport {
++        val log = StringBuilder()
++        val caps = try {
++            VulkanChecker.check { level, message ->
++                if (log.length < 600) log.append('[').append(level).append("] ").append(message).append('\n')
++            }
++        } catch (e: LinkageError) {
++            // Pustaka libvulkan_check.so tidak ikut di build ini (atau tidak cocok): hasil pasti, bukan galat sementara.
++            return VulkanReport(VulkanState.UNAVAILABLE, detail = e.javaClass.simpleName)
++        }
++        return if (caps == null) {
++            VulkanReport(VulkanState.NO_VULKAN, detail = log.toString().trim())
++        } else {
++            VulkanReport(
++                state = VulkanState.OK,
++                major = caps.apiVersionMajor,
++                minor = caps.apiVersionMinor,
++                patch = caps.apiVersionPatch,
++                extensions = caps.extensions.toHashSet(),
++                features = HashMap(caps.features)
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+index a54c476..9e09c1d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+@@ -67,10 +67,16 @@ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.manifest.MojangManifestService
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.VersionItem
++import com.israadev.nuxlauncher.core.vulkan.McVulkan
++import com.israadev.nuxlauncher.core.vulkan.VerdictLevel
++import com.israadev.nuxlauncher.core.vulkan.VulkanCheck
++import com.israadev.nuxlauncher.core.vulkan.VulkanReport
++import com.israadev.nuxlauncher.core.vulkan.VulkanState
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+ import com.israadev.nuxlauncher.ui.theme.amberGlass
+ import java.util.UUID
++import kotlinx.coroutines.CancellationException
+ import kotlinx.coroutines.launch
+ 
+ /** Filter jenis versi Minecraft di layar Buat Instance. */
+@@ -254,6 +260,9 @@ fun CreateInstanceScreen(
+         visibleVersions
+     }
+ 
++    // Ada versi Minecraft 26.x ke atas di daftar: tampilkan peringatan dan pengecekan Vulkan di atasnya.
++    val hasYearVersions = remember(shownVersions) { shownVersions.any { McVulkan.isYearVersion(it.id) } }
++
+     val supportedPending = !noLoaderVersions && supportedKey != selectedLoader
+     val listLoading = !isEngine && (isLoadingVersions || supportedPending)
+ 
+@@ -474,6 +483,8 @@ fun CreateInstanceScreen(
+                     ) {
+                         if (isEngine) {
+                             item(key = "engine-notice") { CiEngineNotice(status = engineStatus) }
++                        } else if (hasYearVersions) {
++                            item(key = "mc26-notice") { CiModernNotice(selectedMc = selectedVersion) }
+                         }
+                         items(shownVersions, key = { it.id }) { item ->
+                             val isSelected = item.id == selectedVersion
+@@ -678,6 +689,85 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
+     }
+ }
+ 
++/**
++ * Peringatan di atas daftar versi bila ada Minecraft 26.x ke atas: versi itu memakai Java 25 dan mesin grafis
++ * baru yang belum bisa dijalankan semua HP, jadi pemain diberi tahu lebih dulu bahwa gagal dibuka belum tentu
++ * salah launcher. Di bawahnya hasil pengecekan Vulkan HP ini (berjalan otomatis sekali, di proses terpisah;
++ * lihat VulkanCheck), dinilai untuk versi yang sedang dipilih. Kunci teksnya ada di
++ * assets/lang/<bahasa>/minecraft26.tsv.
++ */
++@Composable
++private fun CiModernNotice(selectedMc: String?) {
++    val context = LocalContext.current
++    var report by remember { mutableStateOf<VulkanReport?>(null) }
++    LaunchedEffect(Unit) {
++        report = try {
++            VulkanCheck.ensure(context)
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Throwable) {
++            VulkanReport(VulkanState.NO_RESPONSE, detail = e.javaClass.simpleName)
++        }
++    }
++    val verdict = remember(report, selectedMc) { McVulkan.verdict(report, selectedMc) }
++    val verdictColor = when (verdict.level) {
++        VerdictLevel.OK -> CI_RELEASE_COLOR
++        VerdictLevel.WARN -> CI_SNAPSHOT_COLOR
++        VerdictLevel.BAD -> AmberUi.Danger
++        VerdictLevel.CHECKING, VerdictLevel.INFO -> AmberUi.TextDim
++    }
++
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .amberGlass(shape)
++            .padding(horizontal = 14.dp, vertical = 12.dp),
++        verticalArrangement = Arrangement.spacedBy(6.dp)
++    ) {
++        Text(
++            text = "MINECRAFT 26.X KE ATAS",
++            color = AmberUi.TextDim,
++            fontSize = 11.sp,
++            fontWeight = FontWeight.Bold,
++            letterSpacing = 1.2.sp,
++            maxLines = 1
++        )
++        Text(
++            text = "Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.",
++            color = AmberUi.Text,
++            fontSize = 13.sp,
++            lineHeight = 18.sp
++        )
++        Text(
++            text = "Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.",
++            color = AmberUi.TextDim,
++            fontSize = 12.sp,
++            lineHeight = 17.sp
++        )
++        Text(
++            text = verdict.text,
++            color = verdictColor,
++            fontSize = 13.sp,
++            fontWeight = if (verdict.level == VerdictLevel.BAD || verdict.level == VerdictLevel.WARN) {
++                FontWeight.SemiBold
++            } else {
++                FontWeight.Normal
++            },
++            lineHeight = 18.sp
++        )
++        if (verdict.detail.isNotEmpty()) {
++            Text(
++                text = verdict.detail,
++                color = AmberUi.TextDim,
++                fontSize = 12.sp,
++                lineHeight = 17.sp
++            )
++        }
++    }
++}
++
+ /** Lencana kecil (jenis versi, Terbaru, Disarankan). */
+ @Composable
+ private fun CiTag(text: String, color: Color) {
+diff --git a/app/src/main/java/com/movtery/zalithlauncher/utils/device/VulkanChecker.kt b/app/src/main/java/com/movtery/zalithlauncher/utils/device/VulkanChecker.kt
+new file mode 100644
+index 0000000..4c3f6f6
+--- /dev/null
++++ b/app/src/main/java/com/movtery/zalithlauncher/utils/device/VulkanChecker.kt
+@@ -0,0 +1,59 @@
++package com.movtery.zalithlauncher.utils.device
++
++import androidx.annotation.Keep
++
++/**
++ * Hasil mentah pustaka native libvulkan_check.so (bawaan APK).
++ *
++ * Nama kelas ini, urutan, dan tipe parameter konstruktornya terikat pada kode native lewat JNI
++ * (`(IIILjava/util/List;Ljava/util/Map;)V`): jangan diubah.
++ */
++@Keep
++data class VulkanCapabilities(
++    val apiVersionMajor: Int,
++    val apiVersionMinor: Int,
++    val apiVersionPatch: Int,
++    /** Nama semua ekstensi perangkat yang disediakan driver. */
++    val extensions: List<String>,
++    /** Fitur perangkat Vulkan yang diperiksa pustaka native, nama fitur ke didukung atau tidak. */
++    val features: Map<String, Boolean>
++)
++
++/** Penerima baris log dari pustaka native. Nama metode `log` terikat pada kode native (JNI). */
++@Keep
++fun interface VulkanLogCallback {
++    fun log(level: String, message: String)
++}
++
++/**
++ * Pintu ke pustaka native libvulkan_check.so. Nama objek dan kedua fungsi native terikat pada nama simbol JNI
++ * di pustaka itu (`Java_com_movtery_zalithlauncher_utils_device_VulkanChecker_*`): jangan diubah.
++ *
++ * Memuat driver Vulkan HP di proses pemanggilnya, dan driver yang bermasalah bisa menutup proses itu.
++ * Karena itu pemanggilnya HANYA proses terpisah `:vkcheck` (lihat core/vulkan/VulkanCheckService).
++ */
++@Keep
++object VulkanChecker {
++
++    /**
++     * Menanyakan driver Vulkan bawaan HP (tanpa driver kustom). Null bila Vulkan tidak ada atau tidak bisa
++     * dibuka. Melempar [UnsatisfiedLinkError] bila pustakanya tidak ikut di build ini.
++     */
++    fun check(onLog: (level: String, message: String) -> Unit): VulkanCapabilities? {
++        System.loadLibrary("vulkan_check")
++        nativeSetLogCallback(VulkanLogCallback { level, message -> onLog(level, message) })
++        return nativeCheckVulkan(null, null, null)
++    }
++
++    @Keep
++    @JvmStatic
++    private external fun nativeSetLogCallback(callback: VulkanLogCallback?)
++
++    @Keep
++    @JvmStatic
++    private external fun nativeCheckVulkan(
++        driverPath: String?,
++        nativeDir: String?,
++        cacheDir: String?
++    ): VulkanCapabilities?
++}
+# FIN part=1/1 files=9

@@ -650,7 +650,11 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
             lineHeight = 17.sp
         )
         Text(
-            text = "Eksperimental: butuh Android 9 ke atas dan HP 64-bit.",
+            text = if (android.os.Process.is64Bit()) {
+                "Eksperimental: butuh Android 9 ke atas dan HP 64-bit."
+            } else {
+                "Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat."
+            },
             color = AmberUi.TextDim,
             fontSize = 12.sp,
             lineHeight = 17.sp

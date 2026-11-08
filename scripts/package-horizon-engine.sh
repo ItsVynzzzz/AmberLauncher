@@ -3,27 +3,26 @@
 # Dipanggil oleh scripts/build-horizon-engine.sh; dipisah supaya bisa diuji tanpa mengompilasi apa pun.
 #
 # Isi paket (nama berkas tetap, dibaca scripts/fetch-horizon-engine.sh):
-#   libhorizon_android.so        mesinnya (arm64, sudah di-strip)
+#   libhorizon_android.so        mesinnya (arm64 atau armeabi-v7a sesuai --abi, sudah di-strip)
 #   engine-data.zip              tabel data mesin hasil generate
 #   LICENSE, THIRD_PARTY_NOTICES.md   pemberitahuan lisensi MIT dari sumber yang dikompilasi
 #   engine.properties            keterangan: sumber, commit, perubahan Amber (patch_set dan hash isinya), versi alat, ukuran dan SHA-256 tiap berkas
 #
 # Pemakaian:
 #   package-horizon-engine.sh --so BERKAS --data BERKAS --license-dir FOLDER --out FOLDER \
-#       --repo URL --commit SHA40 --profile release|fast [--patch-set NAMA --patch-hash HEX8] [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
+#       --repo URL --commit SHA40 --profile release|fast [--abi arm64-v8a|armeabi-v7a] [--patch-set NAMA --patch-hash HEX8] \
+#       [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
 #
-# Hasil: FOLDER/horizon-engine-arm64-v8a.zip dan FOLDER/horizon-engine-arm64-v8a.zip.sha256
+# Hasil: FOLDER/horizon-engine-<abi>.zip dan FOLDER/horizon-engine-<abi>.zip.sha256 (abi bawaan arm64-v8a)
 
 set -euo pipefail
 
-BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
-
 die() { echo "package-horizon-engine: $*" >&2; exit 1; }
 
-SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" PATCH_HASH="" RUST="" NDK="" READELF=""
+SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" PATCH_HASH="" RUST="" NDK="" READELF="" ABI="arm64-v8a"
 while [ $# -gt 0 ]; do
   case "$1" in
-    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf)
+    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf | --abi)
       [ $# -ge 2 ] || die "$1 butuh nilai."
       case "$1" in
         --so) SO="$2" ;;
@@ -38,6 +37,7 @@ while [ $# -gt 0 ]; do
         --rust) RUST="$2" ;;
         --ndk) NDK="$2" ;;
         --readelf) READELF="$2" ;;
+        --abi) ABI="$2" ;;
       esac
       shift 2
       ;;
@@ -60,6 +60,11 @@ if [ -n "$PATCH_SET" ]; then
 else
   [ -z "$PATCH_HASH" ] || die "patch-hash tanpa patch-set."
 fi
+case "$ABI" in
+  arm64-v8a | armeabi-v7a) ;;
+  *) die "abi harus arm64-v8a atau armeabi-v7a." ;;
+esac
+BUNDLE_NAME="horizon-engine-$ABI.zip"
 [ -f "$SO" ] || die "pustaka tidak ada: $SO"
 [ -f "$DATA" ] || die "data mesin tidak ada: $DATA"
 for f in LICENSE THIRD_PARTY_NOTICES.md; do
@@ -73,10 +78,16 @@ sha256_of() {
 }
 size_of() { wc -c < "$1" | tr -d '[:space:]'; }
 
-# ELF 64-bit little-endian untuk arm64: 7f 45 4c 46, kelas 02, data 01, e_machine (byte 18-19) = b7 00.
+# Kepala ELF little-endian: 7f 45 4c 46, kelas (01 = 32-bit, 02 = 64-bit), data 01, dan e_machine (byte 18-19):
+# b7 00 = AArch64 (arm64), 28 00 = ARM (armeabi-v7a).
 HEADER="$(od -An -v -tx1 -N20 "$SO" | tr -d ' \n')"
-if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
-  die "$SO bukan pustaka ELF 64-bit arm64 (AArch64)."
+if [ "$ABI" = "arm64-v8a" ]; then
+  WANT_ELF="7f454c4602" WANT_MACHINE="b700" WANT_DESC="ELF 64-bit arm64 (AArch64)"
+else
+  WANT_ELF="7f454c4601" WANT_MACHINE="2800" WANT_DESC="ELF 32-bit ARM (armeabi-v7a)"
+fi
+if [ "${HEADER:0:10}" != "$WANT_ELF" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "$WANT_MACHINE" ]; then
+  die "$SO bukan pustaka $WANT_DESC."
 fi
 unzip -tq "$DATA" > /dev/null 2>&1 || die "data mesin bukan zip yang utuh: $DATA"
 
@@ -97,7 +108,7 @@ cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
 
 {
   echo "schema=1"
-  echo "abi=arm64-v8a"
+  echo "abi=$ABI"
   echo "source_repo=$REPO"
   echo "source_commit=$COMMIT"
   echo "profile=$PROFILE"

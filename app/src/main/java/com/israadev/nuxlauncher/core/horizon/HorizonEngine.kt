@@ -107,8 +107,13 @@ object HorizonEngine {
         if (Build.VERSION.SDK_INT < MIN_SDK) {
             return Availability.Unavailable("Mesin Rust butuh Android 9 (API 28) ke atas.")
         }
-        if ("arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
-            return Availability.Unavailable("Mesin Rust hanya tersedia untuk HP 64-bit (arm64).")
+        // APK 64-bit membawa mesin arm64; APK 32-bit membawa mesin armeabi-v7a (eksperimental).
+        if (android.os.Process.is64Bit()) {
+            if ("arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
+                return Availability.Unavailable("Mesin Rust hanya tersedia untuk HP 64-bit (arm64).")
+            }
+        } else if ("armeabi-v7a" !in Build.SUPPORTED_32_BIT_ABIS) {
+            return Availability.Unavailable("Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).")
         }
         if (!isBundled(context)) {
             return Availability.Unavailable(

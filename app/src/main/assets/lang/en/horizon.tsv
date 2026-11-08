@@ -32,3 +32,6 @@ Gagal membuka berkas yang dipilih	Could not open the selected file
 Coba ubah kata kunci	Try changing the keyword
 Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Rust engine: turn on the switch in the Installed list to use it. It applies the next time the game opens.
 Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shaders on the Rust engine are still experimental and may be heavy for this phone.
+# Mesin Rust di HP 32-bit
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	The 32-bit Rust engine is only available on ARM (armeabi-v7a) phones.
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental on 32-bit phones: needs Android 9 or newer and may be slower.

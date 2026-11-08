@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Memasang mesin Rust (Horizon) ke pohon kerja dari Release repo ini sendiri, lalu menaruh dua berkas yang
 # dikemas Gradle:
-#   app/src/main/jniLibs/arm64-v8a/libhorizon_android.so   mesinnya (arm64)
+#   app/src/main/jniLibs/<abi>/libhorizon_android.so        mesinnya (abi: arm64-v8a, atau armeabi-v7a dengan --abi)
 #   app/src/main/assets/engine-data.zip                     tabel data mesin
 # beserta pemberitahuan lisensi MIT-nya di app/src/main/assets/licenses/horizon/.
 # Semuanya ada di .gitignore dan tidak pernah disimpan ke repo.
@@ -16,7 +16,7 @@
 # alasannya lalu keluar, dan build berjalan seperti biasa tanpa mesin Rust.
 #
 # Konfigurasi dibaca dari horizon-engine.properties di akar repo. Variabel lingkungan menang atasnya:
-#   HORIZON_ENGINE=off                  lewati sama sekali (build 32-bit, atau build tanpa jaringan)
+#   HORIZON_ENGINE=off                  lewati sama sekali (build tanpa jaringan)
 #   HORIZON_ENGINE_COMMIT               commit sumber mesin yang dipatok (40 digit heksadesimal)
 #   HORIZON_ENGINE_PROFILE              release (bawaan) atau fast
 #   HORIZON_ENGINE_PATCH_SET            perubahan Amber pada sumber mesin (kosong = mesin tanpa perubahan)
@@ -25,6 +25,7 @@
 # Pemakaian:
 #   scripts/fetch-horizon-engine.sh                   ambil dari Release dan pasang
 #   scripts/fetch-horizon-engine.sh --force           pasang ulang walau sudah terpasang
+#   scripts/fetch-horizon-engine.sh --abi armeabi-v7a mesin 32-bit (eksperimental; dipakai scripts/build-arm32.sh)
 #   scripts/fetch-horizon-engine.sh --bundle BERKAS   pasang dari paket zip yang sudah ada di komputer
 #   scripts/fetch-horizon-engine.sh --remove          hapus berkas mesin yang pernah dipasang
 #
@@ -38,13 +39,12 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MAIN="$ROOT/app/src/main"
-SO_DEST="$MAIN/jniLibs/arm64-v8a/libhorizon_android.so"
+ABI="arm64-v8a"
 DATA_DEST="$MAIN/assets/engine-data.zip"
 LICENSE_DIR="$MAIN/assets/licenses/horizon"
 LICENSE_FALLBACK="$ROOT/third_party/horizon"
 STAMP="$ROOT/.horizon-engine-installed"
 CONFIG="$ROOT/horizon-engine.properties"
-BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
 MAX_BUNDLE_BYTES=$((600 * 1024 * 1024))
 
 say() { echo "Mesin Rust (Horizon): $*"; }
@@ -113,6 +113,11 @@ FORCE=0
 BUNDLE_LOCAL=""
 while [ $# -gt 0 ]; do
   case "$1" in
+    --abi)
+      [ $# -ge 2 ] || fail 1 "--abi butuh arm64-v8a atau armeabi-v7a."
+      ABI="$2"
+      shift 2
+      ;;
     --bundle)
       [ $# -ge 2 ] || fail 1 "--bundle butuh jalur berkas paket."
       BUNDLE_LOCAL="$2"
@@ -134,8 +139,15 @@ while [ $# -gt 0 ]; do
   esac
 done
 
+case "$ABI" in
+  arm64-v8a | armeabi-v7a) ;;
+  *) fail 1 "--abi harus arm64-v8a atau armeabi-v7a." ;;
+esac
+SO_DEST="$MAIN/jniLibs/$ABI/libhorizon_android.so"
+BUNDLE_NAME="horizon-engine-$ABI.zip"
+
 if [ "$REMOVE" = 1 ]; then
-  rm -f "$SO_DEST" "$DATA_DEST" "$STAMP"
+  rm -f "$MAIN/jniLibs/arm64-v8a/libhorizon_android.so" "$MAIN/jniLibs/armeabi-v7a/libhorizon_android.so" "$DATA_DEST" "$STAMP"
   rm -rf "$LICENSE_DIR"
   say "berkas mesin dihapus dari pohon kerja."
   exit 0
@@ -173,10 +185,10 @@ if [ -n "$PATCH_SET" ]; then
 fi
 
 # Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
-WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH}"
+WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH} $ABI"
 if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
   && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
-  say "sudah terpasang (commit ${COMMIT:0:12}, $PROFILE)."
+  say "sudah terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE)."
   exit 0
 fi
 
@@ -242,7 +254,7 @@ else
     fail 5 "Release mesin belum ada, jadi mesin TIDAK dipasang (build tetap jalan tanpa mesin Rust).
 
 Dicari di:$TRIED
-Tag yang dicari: $TAG
+Tag yang dicari: $TAG (berkas $BUNDLE_NAME)
 
 Di GitHub Actions, workflow \"Build APK\" membangun mesin ini otomatis di run yang sama bila Release-nya belum ada (kalau tidak ada, run itu pasti gagal membangunnya: lihat job \"Bangun mesin Rust (Horizon)\"). Cara manual: tab Actions > \"Bangun mesin Rust (Horizon)\" > Run workflow. Panduan: docs/rust-engine.md"
   fi
@@ -277,7 +289,7 @@ extract engine-data.zip "$TMP/engine-data.zip" || fail 4 "paket tidak berisi eng
 
 M="$TMP/engine.properties"
 [ "$(manifest schema "$M")" = "1" ] || fail 4 "format paket tidak dikenal (schema bukan 1)."
-[ "$(manifest abi "$M")" = "arm64-v8a" ] || fail 4 "paket bukan untuk arm64-v8a."
+[ "$(manifest abi "$M")" = "$ABI" ] || fail 4 "paket bukan untuk $ABI."
 [ "$(manifest source_commit "$M")" = "$COMMIT" ] \
   || fail 4 "paket dibangun dari commit lain ($(manifest source_commit "$M")), bukan yang dipatok ($COMMIT)."
 [ "$(manifest patch_set "$M")" = "$PATCH_SET" ] \
@@ -287,11 +299,16 @@ M="$TMP/engine.properties"
 [ "$(manifest so_sha256 "$M")" = "$(sha256_of "$TMP/lib.so")" ] || fail 4 "libhorizon_android.so tidak cocok dengan catatan di paket."
 [ "$(manifest data_sha256 "$M")" = "$(sha256_of "$TMP/engine-data.zip")" ] || fail 4 "engine-data.zip tidak cocok dengan catatan di paket."
 
-# Pustaka harus ELF 64-bit little-endian untuk arm64: byte 0-3 = 7f 45 4c 46, byte 4 = 02, byte 5 = 01,
-# dan e_machine (byte 18-19) = b7 00 (AArch64).
+# Kepala ELF little-endian: 7f 45 4c 46, kelas (01 = 32-bit, 02 = 64-bit), data 01, dan e_machine (byte 18-19):
+# b7 00 = AArch64 (arm64), 28 00 = ARM (armeabi-v7a).
 HEADER="$(od -An -v -tx1 -N20 "$TMP/lib.so" | tr -d ' \n')"
-if [ "${HEADER:0:10}" != "7f454c4602" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "b700" ]; then
-  fail 4 "libhorizon_android.so bukan pustaka ELF 64-bit arm64 (AArch64)."
+if [ "$ABI" = "arm64-v8a" ]; then
+  WANT_ELF="7f454c4602" WANT_MACHINE="b700" WANT_DESC="ELF 64-bit arm64 (AArch64)"
+else
+  WANT_ELF="7f454c4601" WANT_MACHINE="2800" WANT_DESC="ELF 32-bit ARM (armeabi-v7a)"
+fi
+if [ "${HEADER:0:10}" != "$WANT_ELF" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "$WANT_MACHINE" ]; then
+  fail 4 "libhorizon_android.so bukan pustaka $WANT_DESC."
 fi
 unzip -tq "$TMP/engine-data.zip" > /dev/null 2>&1 || fail 4 "engine-data.zip di paket rusak (bukan zip yang utuh)."
 
@@ -311,7 +328,7 @@ cp "$TMP/LICENSE" "$TMP/THIRD_PARTY_NOTICES.md" "$LICENSE_DIR/"
 chmod 644 "$SO_DEST" "$DATA_DEST"
 printf '%s\n' "$WANT_STAMP" > "$STAMP"
 
-say "terpasang (commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
+say "terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
 say "  libhorizon_android.so -> $(size_of "$SO_DEST") byte, sha256 $(sha256_of "$SO_DEST")"
 say "  engine-data.zip -> $(size_of "$DATA_DEST") byte, sha256 $(sha256_of "$DATA_DEST")"
 if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
@@ -319,6 +336,7 @@ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
     echo "### Mesin Rust (Horizon) ikut dibangun"
     echo
     echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
+    echo "- ABI: \`$ABI\`"
     echo "- \`libhorizon_android.so\`: $(size_of "$SO_DEST") byte"
     echo "- \`engine-data.zip\`: $(size_of "$DATA_DEST") byte"
   } >> "$GITHUB_STEP_SUMMARY"

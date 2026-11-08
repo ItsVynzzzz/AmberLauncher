@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import com.israadev.nuxlauncher.core.account.AccountManager
+import com.israadev.nuxlauncher.core.horizon.HorizonContent
+import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.update.UpdateChecker
@@ -17,6 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Properties
+import org.json.JSONObject
 
 /**
  * Menyimpan log setiap sesi game ke folder `logs` di data launcher, supaya log tidak hilang saat
@@ -47,6 +50,12 @@ object GameLogArchive {
     private const val MAX_EXTRA_BYTES = 128L * 1024L
     private const val MAX_CONFIG_BYTES = 8L * 1024L
     private const val MAX_LISTED = 80
+    private const val MAX_ENGINE_LOG_BYTES = 160L * 1024L
+    private const val MAX_ENGINE_SHADER_LINES = 80
+    private val ENGINE_SETTING_KEYS = listOf(
+        "renderer", "render_scale", "super_perf_mode", "battery_perf_mode", "max_fps_mode",
+        "disable_game_animations", "performance_hints", "worker_limit", "cache_budget_mib", "profile"
+    )
 
     private const val LOG_NAME = "latestlog.txt"
     private const val META_NAME = "last-session.properties"
@@ -300,10 +309,71 @@ object GameLogArchive {
         val events = LauncherLog.recentText(context, 0L, MAX_LAUNCHER_REPORT_BYTES)
         if (events.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, events)
 
+        writeEngineSection(context, w)
+
         w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
         val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
         if (logcat.isBlank()) w.line("(tidak tersedia di HP ini atau kosong)") else writeLines(w, logcat.trimEnd('\n'))
         w.flush()
+    }
+
+    /**
+     * Mesin Rust (Horizon) berjalan di proses lain dan mencatat dirinya sendiri di `performance/diagnostic.log`
+     * (sudah disamarkan oleh mesin): pengaturan yang dibaca, shader yang dimuat (baris "shader pack ..." memuat
+     * nama folder dan daftar programnya, atau alasan gagalnya), dan peringatan. Dua bagian pertama berguna saat
+     * shader tidak tampil seperti seharusnya. Tidak ditulis bila mesin belum pernah dijalankan.
+     */
+    private fun writeEngineSection(context: Context, w: Writer) {
+        try {
+            val home = HorizonEngine.engineHome(context)
+            if (!home.isDirectory) return
+            val game = HorizonContent.gameHome(home)
+            w.section("Mesin Rust (Horizon)")
+
+            val config = File(home, "android-launcher.json")
+            val shown = ArrayList<String>()
+            if (config.isFile && config.length() < 64L * 1024L) {
+                val json = JSONObject(config.readText())
+                for (key in ENGINE_SETTING_KEYS) {
+                    if (json.has(key)) shown.add(key + "=" + json.opt(key))
+                }
+            }
+            w.line("Pengaturan mesin: " + if (shown.isEmpty()) "(bawaan mesin)" else shown.joinToString(", "))
+
+            for (folder in listOf("shaderpacks", "resourcepacks")) {
+                val items = File(game, folder).listFiles()?.sortedBy { it.name.lowercase() }.orEmpty()
+                w.line("Folder " + folder + ": " + if (items.isEmpty()) "kosong atau tidak ada" else "")
+                items.take(MAX_LISTED).forEach {
+                    w.line("  " + it.name + if (it.isDirectory) " (folder)" else " (" + sizeText(it.length()) + ")")
+                }
+            }
+
+            val graphics = File(game, "horizon-graphics.txt")
+            if (graphics.isFile) {
+                w.line("")
+                w.line("-- horizon-graphics.txt (pickedShaderPack = shader yang dipilih) --")
+                writeHead(w, graphics, MAX_CONFIG_BYTES)
+            }
+
+            val log = File(home, "performance/diagnostic.log")
+            if (log.isFile && log.length() > 0L) {
+                val shaderLines = log.useLines { lines ->
+                    lines.filter { it.contains("shader pack", ignoreCase = true) }.toList()
+                }
+                w.section("Mesin Rust: baris shader (" + shaderLines.size + ")")
+                if (shaderLines.isEmpty()) {
+                    w.line("(tidak ada baris shader; shader belum dipilih atau belum sempat dimuat)")
+                } else {
+                    writeLines(w, shaderLines.takeLast(MAX_ENGINE_SHADER_LINES).joinToString("\n"))
+                }
+                w.section("Mesin Rust: log terakhir")
+                writeTail(w, log, MAX_ENGINE_LOG_BYTES)
+            } else {
+                w.line("Log mesin: belum ada (mesin belum pernah dijalankan di HP ini).")
+            }
+        } catch (_: Throwable) {
+            w.line("(log mesin Rust tidak bisa dibaca)")
+        }
     }
 
     private fun storageText(context: Context): String {

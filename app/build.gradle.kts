@@ -256,7 +256,8 @@ tasks.configureEach {
 // scripts/fetch-horizon-engine.sh mengambil mesin yang sudah dikompilasi dari Release repo ini dan menaruhnya di
 // jniLibs/assets (cara kerjanya ada di docs/rust-engine.md). Tanpa konfigurasi, tanpa Release-nya, atau tanpa
 // jaringan, skrip itu hanya memberi tahu alasannya, dan build berjalan seperti biasa tanpa mesin Rust. Dilewati di
-// build 32-bit (mesin hanya untuk arm64), di Windows (butuh bash), dan bila HORIZON_ENGINE=off.
+// build 32-bit (scripts/build-arm32.sh memasang mesin 32-bit sendiri), di Windows (butuh bash), dan bila
+// HORIZON_ENGINE=off.
 val fetchHorizonEngine by tasks.registering(Exec::class) {
     group = "amber"
     description = "Memasang mesin Rust (Horizon) dari Release repo ini bila tersedia"

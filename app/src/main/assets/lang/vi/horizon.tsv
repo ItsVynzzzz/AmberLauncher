@@ -32,3 +32,6 @@ Gagal membuka berkas yang dipilih	Kh\u00f4ng th\u1ec3 m\u1edf t\u1ec7p \u0111\u0
 Coba ubah kata kunci	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a
 Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Engine Rust: b\u1eadt c\u00f4ng t\u1eafc trong danh s\u00e1ch \u0110\u00e3 c\u00e0i \u0111\u1ec3 d\u00f9ng. C\u00f3 hi\u1ec7u l\u1ef1c v\u00e0o l\u1ea7n m\u1edf game ti\u1ebfp theo.
 Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shader tr\u00ean engine Rust v\u1eabn \u0111ang th\u1eed nghi\u1ec7m v\u00e0 c\u00f3 th\u1ec3 l\u00e0m n\u1eb7ng \u0111i\u1ec7n tho\u1ea1i n\u00e0y.
+# Mesin Rust di HP 32-bit
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	Engine Rust 32-bit ch\u1ec9 c\u00f3 tr\u00ean \u0111i\u1ec7n tho\u1ea1i ARM (armeabi-v7a).
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Th\u1eed nghi\u1ec7m tr\u00ean \u0111i\u1ec7n tho\u1ea1i 32-bit: y\u00eau c\u1ea7u Android 9 tr\u1edf l\u00ean v\u00e0 c\u00f3 th\u1ec3 ch\u1eadm h\u01a1n.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Mengompilasi mesin Rust (Horizon) dari SUMBER untuk Android arm64, lalu (opsional) menerbitkannya sebagai
-# Release di repo ini. Dijalankan oleh workflow "Bangun mesin Rust (Horizon)" di GitHub Actions (runner Linux
+# Mengompilasi mesin Rust (Horizon) dari SUMBER untuk Android arm64 (dan armeabi-v7a, eksperimental), lalu
+# (opsional) menerbitkannya sebagai Release di repo ini. Dijalankan oleh workflow "Bangun mesin Rust (Horizon)" di GitHub Actions (runner Linux
 # x86-64), sekali setiap patokan commit diganti; build APK biasa hanya mengambil hasilnya
 # (scripts/fetch-horizon-engine.sh), jadi tidak menunggu kompilasi Rust.
 #
@@ -9,7 +9,9 @@
 # berhenti sebelum Gradle: yang dibutuhkan hanya pustaka native dan tabel datanya.
 #
 # Tahap: sumber, alat, data (menyiapkan tabel data dari berkas Mojang yang diunduh sementara), kompilasi,
-# kemas, terbitkan. Ringkasan waktu dan ukuran ditulis ke ringkasan run; bila gagal, ringkasan memuat tahap
+# kemas, mesin 32-bit, terbitkan. Mesin 32-bit (armeabi-v7a) dibangun SETELAH arm64 selesai dan dikemas, dan
+# kegagalannya tidak menggagalkan apa pun: Release tetap terbit dengan paket arm64 saja, dan ringkasan run
+# menjelaskan kenapa paket 32-bit tidak ada. Ringkasan waktu dan ukuran ditulis ke ringkasan run; bila gagal, ringkasan memuat tahap
 # yang gagal dan ujung lognya supaya bisa disalin.
 #
 # Konfigurasi dari horizon-engine.properties (variabel lingkungan HORIZON_ENGINE_* menang atasnya):
@@ -20,7 +22,7 @@
 #   ndk           versi NDK Android                             (bawaan 28.2.13676358)
 # Lainnya: HORIZON_ENGINE_WORK (folder kerja; bawaan $RUNNER_TEMP/horizon-engine), HORIZON_ENGINE_JDK (JDK 25
 # bila bukan JAVA_HOME), HORIZON_ENGINE_JOBS (batas proses paralel cargo; kecilkan bila kehabisan RAM),
-# HORIZON_ENGINE_FORCE=true (sama dengan --force).
+# HORIZON_ENGINE_FORCE=true (sama dengan --force), HORIZON_ENGINE_ARM32=off (lewati mesin 32-bit).
 #
 # Tanda Release: horizon-engine-<12 digit commit>[-<patch_set>-<hash isi patch>][-fast]. Hash 8 digit itu dihitung
 # dari nama dan isi berkas third_party/horizon-patches/<patch_set>/*.diff, jadi mengedit patch Amber otomatis
@@ -41,6 +43,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG="$ROOT/horizon-engine.properties"
 BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
+BUNDLE_NAME32="horizon-engine-armeabi-v7a.zip"
 
 prop() {
   [ -f "$CONFIG" ] || return 0
@@ -354,6 +357,47 @@ logged bash "$ROOT/scripts/package-horizon-engine.sh" \
   --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
   --readelf "$NDK_BIN/llvm-readelf"
 
+# ---- 5b. Mesin 32-bit (armeabi-v7a), eksperimental ----
+# Tidak pernah menggagalkan run: bila apa pun di sini gagal, paket 32-bit tidak dibuat dan Release terbit dengan paket
+# arm64 saja. Build 32-bit proyek sumber: tanpa fitur bawaan kecuali audio (tanpa runtime mod .hmod), API 27.
+ARM32_STATE="dilewati"
+ARM32_NOTE=""
+build_arm32() {
+  local lib32 stage32
+  logged rustup target add --toolchain "$RUST_CHANNEL" armv7-linux-androideabi || return 1
+  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
+    --abi armeabi-v7a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK") || return 1
+  lib32="$TARGET_DIR/armv7-linux-androideabi/$PROFILE/libhorizon_android.so"
+  if [ ! -f "$lib32" ]; then
+    echo "kompilasi selesai tetapi pustaka 32-bit tidak ada: $lib32"
+    return 1
+  fi
+  echo "Pustaka mentah 32-bit: $(wc -c < "$lib32" | tr -d ' ') byte"
+  stage32="$WORK/stage32"
+  rm -rf "$stage32"
+  mkdir -p "$stage32"
+  cp "$lib32" "$stage32/libhorizon_android.so" || return 1
+  logged "$NDK_BIN/llvm-strip" --strip-unneeded "$stage32/libhorizon_android.so" || return 1
+  logged bash "$ROOT/scripts/package-horizon-engine.sh" --abi armeabi-v7a \
+    --so "$stage32/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
+    --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
+    --readelf "$NDK_BIN/llvm-readelf" || return 1
+}
+if [ "${HORIZON_ENGINE_ARM32:-on}" = "off" ]; then
+  ARM32_NOTE="dimatikan (HORIZON_ENGINE_ARM32=off)"
+  echo "Mesin 32-bit: $ARM32_NOTE"
+else
+  phase 05b-arm32 "5b/6 Kompilasi mesin 32-bit (armeabi-v7a, eksperimental, profil $PROFILE)"
+  if build_arm32; then
+    ARM32_STATE="dibuat"
+  else
+    ARM32_STATE="gagal"
+    rm -f "$OUT/$BUNDLE_NAME32" "$OUT/$BUNDLE_NAME32.sha256"
+    ARM32_NOTE="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | grep -E '^(error|Error|ERROR)|panicked|No such file|not found' | head -n 10 || true)"
+    echo "::warning title=Mesin 32-bit gagal dibangun::Paket arm64 tetap terbit tanpa paket 32-bit. Baris galatnya ada di ringkasan run."
+  fi
+fi
+
 # ---- 6. Terbitkan ----
 if [ "$PUBLISH" = 1 ]; then
   phase 06-terbit "6/6 Terbitkan Release $TAG"
@@ -362,7 +406,11 @@ if [ "$PUBLISH" = 1 ]; then
   fi
   NOTES="$WORK/release-notes.md"
   {
-    echo "Mesin Rust (Horizon) untuk Android arm64, dikompilasi dari sumber oleh workflow di repo ini."
+    if [ "$ARM32_STATE" = "dibuat" ]; then
+      echo "Mesin Rust (Horizon) untuk Android arm64 dan armeabi-v7a (32-bit, eksperimental), dikompilasi dari sumber oleh workflow di repo ini."
+    else
+      echo "Mesin Rust (Horizon) untuk Android arm64, dikompilasi dari sumber oleh workflow di repo ini."
+    fi
     echo
     echo "- Sumber: $REPO"
     echo "- Commit: \`$COMMIT\`"
@@ -374,7 +422,11 @@ if [ "$PUBLISH" = 1 ]; then
   } > "$NOTES"
   TARGET_SHA="${GITHUB_SHA:-$(git -C "$ROOT" rev-parse HEAD)}"
   # Pra-rilis dengan tag bukan nomor versi: tidak dianggap pembaruan aplikasi dan tidak mengubah penomoran versi.
-  logged gh release create "$TAG" "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256" \
+  ASSETS=("$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256")
+  if [ "$ARM32_STATE" = "dibuat" ]; then
+    ASSETS+=("$OUT/$BUNDLE_NAME32" "$OUT/$BUNDLE_NAME32.sha256")
+  fi
+  logged gh release create "$TAG" "${ASSETS[@]}" \
     --prerelease --target "$TARGET_SHA" --title "Mesin Rust (Horizon) ${COMMIT:0:12}${PATCH_SET:+ + $PATCH_SET} ($PROFILE)" --notes-file "$NOTES"
 else
   echo "Tanpa --publish: paket ada di $OUT"
@@ -393,7 +445,22 @@ val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
   echo "- Alat: $(val rust), NDK $NDK_VERSION, javac $JAVA_HAVE"
   echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
   echo "- \`engine-data.zip\`: $(val data_bytes) byte"
-  echo "- Paket: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
+  echo "- Paket arm64: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
+  case "$ARM32_STATE" in
+    dibuat) echo "- Paket 32-bit (armeabi-v7a, eksperimental): $(wc -c < "$OUT/$BUNDLE_NAME32" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME32.sha256")\`" ;;
+    gagal)
+      echo "- Paket 32-bit: **GAGAL dibangun** (paket arm64 tidak terpengaruh; APK 32-bit dibangun tanpa mesin Rust)."
+      if [ -n "$ARM32_NOTE" ]; then
+        echo
+        echo "Baris galat mesin 32-bit:"
+        echo
+        echo '```'
+        printf '%s\n' "$ARM32_NOTE"
+        echo '```'
+      fi
+      ;;
+    *) echo "- Paket 32-bit: dilewati, $ARM32_NOTE." ;;
+  esac
   [ "$PUBLISH" = 1 ] && echo "- Release: \`$TAG\` (pra-rilis). Build APK berikutnya memasangnya otomatis." || true
   echo
   echo "| Tahap | Waktu |"

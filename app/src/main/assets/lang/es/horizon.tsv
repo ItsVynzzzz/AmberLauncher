@@ -32,3 +32,6 @@ Gagal membuka berkas yang dipilih	No se pudo abrir el archivo seleccionado
 Coba ubah kata kunci	Prueba a cambiar la palabra clave
 Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Motor Rust: activa el interruptor en la lista de instalados para usarlo. Se aplica la pr\u00f3xima vez que abras el juego.
 Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Los shaders del motor Rust a\u00fan son experimentales y pueden resultar pesados para este tel\u00e9fono.
+# Mesin Rust di HP 32-bit
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	El motor Rust de 32 bits solo est\u00e1 disponible en tel\u00e9fonos ARM (armeabi-v7a).
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental en tel\u00e9fonos de 32 bits: requiere Android 9 o superior y puede ser m\u00e1s lento.

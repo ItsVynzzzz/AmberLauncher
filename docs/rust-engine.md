@@ -15,7 +15,7 @@ Status: **eksperimental, belum diuji di perangkat.** PLAY langsung masuk game de
 
 ## Syarat perangkat
 
-- Android 9 (API 28) ke atas, HP 64-bit (arm64). Selain itu opsinya ditolak dengan pesan yang jelas.
+- Android 9 (API 28) ke atas. APK 64-bit menjalankan mesin arm64; APK 32-bit menjalankan mesin armeabi-v7a (**eksperimental**, lihat "APK 32-bit"). Perangkat lain ditolak dengan pesan yang jelas.
 - RAM disarankan 4 GB ke atas. Di bawah itu tetap boleh dicoba, dengan peringatan.
 - Ruang kosong sekitar 500 MiB untuk sumber daya, plus koneksi internet saat pertama dibuka.
 
@@ -24,7 +24,7 @@ Status: **eksperimental, belum diuji di perangkat.** PLAY langsung masuk game de
 Satu workflow, **Build APK**, mengurus semuanya dalam **satu kali run**:
 
 1. **Periksa** (sekitar 15 detik). Menerapkan patch run ini dan memutuskan perlu build atau tidak (lihat "Kapan build berjalan" di bawah). Lalu memeriksa mesin: ia menghitung tanda Release mesin untuk konfigurasi *sekarang* (`scripts/build-horizon-engine.sh --print-tag`) dan menanyakan ke GitHub apakah Release itu sudah ada.
-2. **Bangun mesin Rust (Horizon)**. Hanya jalan bila Release-nya **belum ada**. Mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, menerapkan perubahan Amber (`third_party/horizon-patches/<patch_set>/*.diff`), mengompilasinya untuk arm64 dengan jalur build resmi proyek itu (sekitar 12 menit untuk profil `release`), lalu menerbitkan hasilnya sebagai **pra-rilis** di repo ini. Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
+2. **Bangun mesin Rust (Horizon)**. Hanya jalan bila Release-nya **belum ada**. Mengambil sumber Horizon Android pada **commit yang dipatok** di `horizon-engine.properties`, menerapkan perubahan Amber (`third_party/horizon-patches/<patch_set>/*.diff`), mengompilasinya untuk arm64 dengan jalur build resmi proyek itu (sekitar 12 menit untuk profil `release`), lalu untuk armeabi-v7a (32-bit, eksperimental; bila gagal, mesin arm64 tetap terbit), dan menerbitkan hasilnya sebagai **pra-rilis** di repo ini. Untuk tabel datanya, ia memakai berkas versi Mojang yang **dipatok** proyek sumber (`scripts/prepare-horizon-data.py`), karena Mojang sesekali menerbitkan ulang berkas itu dan mesin menolak versi yang tidak dikenalnya.
 3. **Build APK**. Tugas Gradle `fetchHorizonEngine` menjalankan `scripts/fetch-horizon-engine.sh`, mengunduh paket mesin dari Release itu (di dalam jaringan GitHub, hitungan detik), memeriksanya, dan menaruh pustaka serta data mesin untuk dikemas. Bila langkah 2 gagal, APK tetap dibangun tanpa mesin Rust dan run memberi peringatan jelas; run berikutnya mencoba membangun mesin lagi.
 
 **Tanda Release** mesin: `horizon-engine-<12 digit commit>[-<patch_set>-<8 digit hash isi patch>][-fast]`. Hash dihitung dari nama dan isi semua `.diff` di folder patch, jadi **mengedit patch Amber otomatis berarti mesin baru**: tidak perlu mengganti nama `patch_set=` dan tidak perlu menjalankan apa pun terpisah. Sebaliknya, selama commit, patch, dan profil tidak berubah, mesin **tidak dibangun ulang** dan tidak diunduh ulang oleh siapa pun kecuali build APK di GitHub.
@@ -65,7 +65,7 @@ Alurnya:
 3. Akun Microsoft diteruskan ke game lewat berkas sesi yang ditulis **saat main dimulai** (hanya bisa dibaca pemiliknya, dihapus game begitu dibaca, sama seperti jalur resmi proyek sumber). Akun offline memakai namanya saja.
 4. Saat game ditutup normal, mesin menutup dirinya dan pemain kembali ke launcher. Bila game berhenti karena galat, layar mesin tampil dengan pesannya.
 
-**Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber2/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan di atas `amber1` pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
+**Masuk langsung (`amber2`, performa).** Mesin bawaan selalu membuat layar peluncurnya dulu: jendela, atlas HUD, dan satu renderer grafis penuh, yang langsung dibuang lagi begitu game dimulai (game membuat renderernya sendiri). Itu pekerjaan ganda tepat di jalur PLAY. Dari `amber2`, bila permintaan Amber ada dan game sudah terpasang, mesin tidak membuat layar peluncur sama sekali dan langsung memulai game. Bila game belum terpasang (unduhan pertama) layar peluncur tetap dibuat untuk menampilkan kemajuan, dan bila memulai game gagal, layar itu dibuat saat itu juga supaya galatnya terbaca. Patch ada di `third_party/horizon-patches/amber3/0002-amber-direct.diff`. Dibuat tanpa bisa dikompilasi atau dijalankan di sandbox: dicek hanya dapat diterapkan berurutan (0001 lalu 0002) pada commit yang dipatok. Dampaknya pada waktu muat belum diukur.
 
 Sisi launcher: token Microsoft yang berumur kurang dari 16 jam dipakai langsung dan diperbarui di latar (sebelumnya PLAY menunggu sampai 12 detik bila token lebih tua dari 8 jam), peralihan ke layar mesin tanpa animasi, latar jendela mesin hitam, dan proses `:horizon` tidak lagi memuat kamus terjemahan.
 
@@ -121,9 +121,16 @@ Gradle menjalankan skrip itu sendiri di Linux dan macOS (butuh `bash`, `curl`, `
 
 Mengompilasi mesin sendiri (Linux x86-64, JDK 25, NDK 28.2, Rust, Python 3.11): `bash scripts/build-horizon-engine.sh --work /folder/lapang`. Butuh puluhan GB disk dan RAM besar.
 
-### APK 32-bit
+### APK 32-bit (eksperimental)
 
-Mesin hanya untuk arm64. Build 32-bit melewati langkah ini dan `scripts/build-arm32.sh` membuang pustaka dan data mesin dari salinan kerjanya, jadi APK 32-bit tidak membesar.
+Horizon Android sendiri menyediakan build ARMv7 yang ia sebut eksperimental, dan Amber mengikutinya:
+
+- Workflow pembangun mesin juga mengompilasi `armeabi-v7a` (setelah arm64 selesai) dan menerbitkannya di Release yang sama sebagai `horizon-engine-armeabi-v7a.zip`. Bila langkah itu gagal, Release tetap terbit dengan paket arm64 saja; ringkasan run menuliskan baris galatnya.
+- `scripts/build-arm32.sh` memasang paket itu ke APK 32-bit lewat `scripts/fetch-horizon-engine.sh --abi armeabi-v7a`. Tanpa paketnya APK 32-bit tetap dibangun, hanya tanpa mesin Rust (pilihan Rust di HP itu menampilkan "belum disertakan").
+- APK 32-bit hanya dibangun pada **rilis** (Run workflow dengan "rilis" dicentang); build uji hanya 64-bit.
+- Bedanya dengan 64-bit (dari proyek sumber): tanpa runtime mod `.hmod` dan tanpa jaminan performa di GPU lama. Renderer bawaannya sama (Vulkan kompatibel); bila HP tidak punya Vulkan yang sehat, coba OpenGL ES di Pengaturan > Rust. Android minimal tetap 9 (API 28).
+- Mesin 32-bit menambah ukuran APK 32-bit (pustaka ditambah tabel data mesin).
+- Release mesin yang terbit sebelum langkah 32-bit ada tidak punya paketnya. Jalankan Build APK sekali dengan pilihan mesin = ulang supaya Release itu dibangun lagi lengkap.
 
 ### Ukuran APK
 
@@ -135,7 +142,7 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 
 - Sumbernya dipatok pada **satu commit** (40 digit). Skrip pembangun menolak bila HEAD hasil ambil bukan commit itu, dan skrip pengambil menolak paket yang manifest-nya menyebut commit lain.
 - Yang kamu percayai adalah kode sumber di commit itu: **periksa sendiri** sebelum mengganti `commit=`. Aku belum pernah menjalankan hasil build-nya di perangkat.
-- Paket diperiksa lagi saat dipasang: SHA-256 paket harus cocok dengan berkas `.sha256` di Release yang sama (menangkap unduhan rusak, bukan Release yang diubah orang yang punya akses tulis ke repo ini), SHA-256 tiap berkas harus cocok dengan manifest di dalamnya, dan pustaka harus ELF 64-bit arm64. Tidak ada isi paket yang dijalankan saat build.
+- Paket diperiksa lagi saat dipasang: SHA-256 paket harus cocok dengan berkas `.sha256` di Release yang sama (menangkap unduhan rusak, bukan Release yang diubah orang yang punya akses tulis ke repo ini), SHA-256 tiap berkas harus cocok dengan manifest di dalamnya, dan pustaka harus ELF yang sesuai ABI paket (64-bit arm64, atau 32-bit ARM untuk paket armeabi-v7a). Tidak ada isi paket yang dijalankan saat build.
 - Release mesin ditandai pra-rilis dengan tag yang bukan nomor versi, jadi tidak dianggap pembaruan aplikasi oleh pemeriksa pembaruan dan tidak mengubah penomoran versi build.
 
 ## Lisensi dan data Mojang
@@ -181,6 +188,7 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
 - Shader asli Horizon (`.hshader`, berisi `horizon-shaders.toml`) tidak dipasang dari Amber; pasang lewat menu Impor di dalam mesin.
 - Bila pengguna memakai profil selain 0 di dalam mesin (`android-launcher.json`, kunci `profile`), Amber mengikuti folder profil itu.
 - Dukungan shader di mesin masih eksperimental dan bisa berat di HP lemah, jadi shader yang baru diunduh tidak dipilih otomatis.
+- Bila shader tidak tampil seperti seharusnya (mis. hanya kabut yang berubah): mainkan sebentar, keluar dari game, lalu Pengaturan > Log game > Log launcher > Bagikan. Laporannya memuat bagian "Mesin Rust (Horizon)": pengaturan mesin, isi folder shaderpacks dan resourcepacks, `horizon-graphics.txt`, dan baris "shader pack ..." dari `files/horizon/performance/diagnostic.log` (daftar program yang berhasil dimuat, atau alasan gagalnya).
 - Setiap kali versi mesin dinaikkan, periksa ulang bahwa shader pack masih ada di sumber mesin (desktop Horizon menghapusnya pada 24 Oktober 2026 dan berjanji mengembalikannya ditulis ulang): `crates/horizon-shaders` dan `game/shader_packs.rs`.
 
 ## Daftar uji di perangkat
@@ -197,12 +205,13 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
    Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya).
 9. Shader: buka layar Mod pada instance Rust, unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
 10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
+11. HP 32-bit (opsional, hanya rilis): pasang `AmberLauncher-...-32bit-armeabi-v7a.apk`, buat instance Rust. Bila build mesin 32-bit lolos, PLAY membuka mesin; bila tidak, layar Buat Instance menyebut mesin belum disertakan.
 
-Bila gagal, kirim isi log launcher (buku harian) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
+Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log mesin Rust) dan logcat dengan filter proses `:horizon`. Kegagalan paling mungkin: `UnsatisfiedLinkError` (nama kelas atau pustaka tidak cocok), layar hitam (Vulkan/GLES tidak didukung), atau game tertutup sendiri (RAM kurang).
 
 ## Batasan saat ini
 
-- Hanya Minecraft 26.3, hanya arm64, API 28 ke atas.
+- Hanya Minecraft 26.3, API 28 ke atas. arm64 untuk APK 64-bit; armeabi-v7a (APK 32-bit) eksperimental dan belum pernah diuji di perangkat.
 - Tanpa mod Java, tanpa Fabric, Forge, NeoForge. Layar Mod untuk instance Rust hanya berisi Shader dan Resource Pack.
 - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
 - Mod belum bisa diatur dari launcher (hanya Shader dan Resource Pack). Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).

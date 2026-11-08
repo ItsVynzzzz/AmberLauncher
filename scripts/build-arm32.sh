@@ -16,6 +16,8 @@
 #   - SDL, OpenAL, kopper-zink, NG-GL4ES,
 #     spirv-cross, LWJGL natives        : diekstrak dari AAR app/libs (armeabi-v7a). Gradle tidak
 #                                         memasukkan isi AAR lokal ke APK, jadi harus disalin sendiri.
+#   - Mesin Rust (Horizon) 32-bit       : Release mesin repo ini (paket armeabi-v7a, eksperimental), lewat
+#                                         scripts/fetch-horizon-engine.sh --abi armeabi-v7a.
 # Yang TIDAK ada untuk 32-bit (hulu pun tidak menyediakan): Turnip (libvulkan_freedreno).
 set -euo pipefail
 
@@ -77,8 +79,8 @@ cp -r "$UPMAIN/jni" "$APP/jni"
 # Buang bagian 64-bit dari salinan (tidak ikut APK 32-bit)
 rm -rf "$APP/jniLibs/arm64-v8a"
 rm -f "$APP"/assets/runtimes/*/bin-arm64.tar.xz
-# Mesin Rust (Horizon) hanya untuk arm64 (pustakanya ada di jniLibs/arm64-v8a, sudah dibuang di atas): data
-# tabel dan lisensinya jadi beban tak terpakai di APK 32-bit
+# Mesin Rust (Horizon) arm64 (pustakanya ada di jniLibs/arm64-v8a, sudah dibuang di atas) tidak berguna di APK
+# 32-bit: data tabel dan lisensinya juga dibuang. Mesin 32-bit sendiri dipasang di bawah.
 rm -f "$APP/assets/engine-data.zip"
 rm -rf "$APP/assets/licenses/horizon"
 
@@ -87,6 +89,22 @@ mkdir -p "$APP/jniLibs/armeabi-v7a"
 for lib in libEGL_angle libGLESv2_angle libOSMesa_8 libgl4es_114 libjnidispatch libshaderconv libunpack200; do
   cp "$UPMAIN/jniLibs/armeabi-v7a/$lib.so" "$APP/jniLibs/armeabi-v7a/$lib.so"
 done
+
+# Mesin Rust (Horizon) 32-bit, eksperimental. Diambil dari Release yang sama dengan mesin arm64 (dibangun di job
+# "Bangun mesin Rust (Horizon)"). Tidak pernah menggagalkan APK 32-bit: tanpa paketnya (belum ada, gagal dibangun,
+# atau tidak cocok) APK dibangun tanpa mesin dan pilihan Rust tidak aktif di HP 32-bit. Skrip fetch memberi
+# peringatan dengan alasannya.
+STAGE="mesin Rust 32-bit"
+echo "== Mesin Rust (Horizon) 32-bit =="
+ENGINE32=0
+if [ -f "$WORK/scripts/fetch-horizon-engine.sh" ]; then
+  if bash "$WORK/scripts/fetch-horizon-engine.sh" --abi armeabi-v7a --force; then
+    [ -f "$APP/jniLibs/armeabi-v7a/libhorizon_android.so" ] && ENGINE32=1
+  else
+    echo "::warning title=Mesin Rust 32-bit tidak dipasang::APK 32-bit dibangun tanpa mesin Rust. Alasannya ada di log langkah ini."
+  fi
+fi
+echo "Mesin Rust 32-bit terpasang: $ENGINE32"
 
 STAGE="4/6 ambil MobileGlues, runtime Java, LWJGL"
 echo "== 4/6 Ambil MobileGlues dan runtime Java 32-bit dari riwayat repo =="
@@ -140,6 +158,14 @@ for lib in libpojavexec libexithook liblinkerhook libdriver_helper libjnidispatc
     exit 1
   fi
 done
+
+if [ "$ENGINE32" = 1 ]; then
+  if grep -q "lib/armeabi-v7a/libhorizon_android.so" <<< "$APK_LIST"; then
+    echo "Mesin Rust (Horizon) 32-bit ikut di APK."
+  else
+    echo "::warning title=Mesin Rust 32-bit tidak ikut APK::Pustakanya terpasang di pohon kerja tetapi tidak ada di APK 32-bit."
+  fi
+fi
 
 mkdir -p "$OUT"
 cp "$APK" "$OUT/$APK_NAME"

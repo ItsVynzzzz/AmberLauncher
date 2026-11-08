@@ -776,6 +776,8 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        SettingDivider()
+                        TypingPreviewSettingRow()
                         }
 
                         SettingsGroup("Kamera dan kursor") {

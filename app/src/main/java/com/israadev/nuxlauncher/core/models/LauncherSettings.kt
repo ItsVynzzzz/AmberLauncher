@@ -19,6 +19,8 @@ data class LauncherSettings(
     val touchAttackEnabled: Boolean = false,
     // Hotbar sentuh gaya Bedrock: ketuk hotbar game untuk memilih slot saat bermain.
     val hotbarTouchEnabled: Boolean = true,
+    // Bar kecil di atas keyboard layar yang menampilkan huruf yang sedang diketik (keyboard menutupi kotak chat game).
+    val typingPreview: Boolean = true,
     // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
     // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
     val buttonLookDrag: Boolean = false,

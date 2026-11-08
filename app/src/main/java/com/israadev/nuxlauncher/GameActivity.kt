@@ -108,6 +108,8 @@ import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.components.GamepadFocusProvider
 import com.israadev.nuxlauncher.core.game.input.EfficientAndroidLWJGLKeycode
 import com.israadev.nuxlauncher.core.game.input.HidableInputLayout
+import com.israadev.nuxlauncher.core.game.input.TypingMirror
+import com.israadev.nuxlauncher.core.game.input.TypingPreviewBar
 import com.israadev.nuxlauncher.core.game.input.TouchCharInput
 import com.israadev.nuxlauncher.ui.components.NuxBadge
 import com.israadev.nuxlauncher.ui.components.NuxButton
@@ -1846,6 +1848,8 @@ fun GameScreen(
         if (touchSink != null && (showInGameSettingsDialog || isCustomGuiEditorActive)) touchSink.onCancelAll()
     }
     var isKeyboardRequested by remember { mutableStateOf(false) }
+    // Huruf yang dikirim keyboard layar ke game; dibaca bar preview di atas keyboard.
+    val typingMirror = remember { TypingMirror() }
     var isConsoleVisible by remember { mutableStateOf(false) }
     var isConsoleExpanded by remember { mutableStateOf(false) }
     var showExitConfirmDialog by remember { mutableStateOf(false) }
@@ -2106,7 +2110,8 @@ fun GameScreen(
             HidableInputLayout(
                 onClose = {
                     isKeyboardRequested = false
-                }
+                },
+                mirror = typingMirror
             )
         }
 
@@ -2183,6 +2188,11 @@ fun GameScreen(
                     inMenu = gameCursorMode != CURSOR_DISABLED
                 )
             }
+        }
+
+        // Preview ketikan di atas keyboard layar: di atas tombol kontrol supaya tidak tertutup, di bawah dialog.
+        if (isKeyboardRequested && launcherSettings.typingPreview) {
+            TypingPreviewBar(typingMirror)
         }
 
         // Konfirmasi keluar

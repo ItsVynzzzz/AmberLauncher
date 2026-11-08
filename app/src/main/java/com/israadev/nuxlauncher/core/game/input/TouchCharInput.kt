@@ -156,6 +156,8 @@ class TouchCharInput @JvmOverloads constructor(
 @Composable
 fun HidableInputLayout(
     onClose: () -> Unit,
+    // Salinan huruf yang dikirim ke game, dibaca bar preview di atas keyboard (lihat TypingPreview.kt).
+    mirror: TypingMirror = remember { TypingMirror() },
     keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
 ) {
     var view by remember { mutableStateOf<TouchCharInput?>(null) }
@@ -186,9 +188,11 @@ fun HidableInputLayout(
                         object : TouchCharInput.InputListener {
                             override fun onSend(char: Char) {
                                 CallbackBridge.sendChar(char, 0)
+                                mirror.append(char)
                             }
 
                             override fun onBackspace() {
+                                mirror.backspace()
                                 CallbackBridge.sendKeycode(
                                     LwjglGlfwKeycode.GLFW_KEY_BACKSPACE,
                                     '\u0008',
@@ -206,6 +210,7 @@ fun HidableInputLayout(
                             }
 
                             override fun onEnter() {
+                                mirror.clear()
                                 CallbackBridge.sendKeyPress(LwjglGlfwKeycode.GLFW_KEY_ENTER)
                                 onClose()
                             }
@@ -222,6 +227,7 @@ fun HidableInputLayout(
 
     DisposableEffect(Unit) {
         onDispose {
+            mirror.clear()
             view?.disableKeyboard()
             keyboardController?.hide()
             view = null

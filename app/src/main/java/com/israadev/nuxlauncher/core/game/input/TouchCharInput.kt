@@ -1,6 +1,7 @@
 package com.israadev.nuxlauncher.core.game.input
 
 import android.content.Context
+import android.os.SystemClock
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -27,7 +28,16 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.zalithlauncher.bridge.LoggerBridge
 import org.lwjgl.glfw.CallbackBridge
+
+/** Catatan diagnosis ke log game; tidak boleh menjatuhkan input bila pustaka log belum siap. */
+private fun noteKeyboard(message: String) {
+    try {
+        LoggerBridge.append("▷ [Keyboard] $message")
+    } catch (_: Throwable) {
+    }
+}
 
 /**
  * Hidden EditText input view that bridges Android IME (Gboard, Samsung Keyboard, etc.)
@@ -56,6 +66,19 @@ class TouchCharInput @JvmOverloads constructor(
 
         @JvmStatic
         fun isActive(): Boolean = sActiveInput != null
+
+        // Kapan sesi ketik layar terakhir berakhir (uptimeMillis). Awalnya jauh di masa lalu.
+        @Volatile
+        private var sLastEndedAt = -1_000_000L
+
+        /**
+         * True bila sesi ketik layar sedang aktif atau baru berakhir dalam [windowMs] ms. Keyboard layar masih
+         * bisa mengirim sisa tombol (hapus, enter) sesaat setelah sesinya ditutup; tombol itu bukan keyboard
+         * fisik dan tidak boleh dianggap begitu.
+         */
+        @JvmStatic
+        fun recentlyActive(windowMs: Long): Boolean =
+            sActiveInput != null || SystemClock.uptimeMillis() - sLastEndedAt < windowMs
     }
 
     private var mIsDoingInternalChanges = false
@@ -93,6 +116,7 @@ class TouchCharInput @JvmOverloads constructor(
         isEnabled = false
         if (sActiveInput === this) {
             sActiveInput = null
+            sLastEndedAt = SystemClock.uptimeMillis()
         }
     }
 
@@ -125,6 +149,10 @@ class TouchCharInput @JvmOverloads constructor(
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
         if (!hasWindowFocus) {
+            // Dicatat supaya "keyboard layar tiba-tiba hilang saat mengetik" bisa dikenali dari log.
+            if (sActiveInput === this) {
+                noteKeyboard("Sesi ketik layar ditutup: jendela game kehilangan fokus")
+            }
             disableKeyboard()
         }
     }
@@ -240,6 +268,7 @@ fun HidableInputLayout(
 
     LaunchedEffect(imeVisible) {
         if (lastImeVisible && !imeVisible) {
+            noteKeyboard("Sesi ketik layar ditutup: keyboard tidak terlihat lagi")
             onClose()
         }
         lastImeVisible = imeVisible

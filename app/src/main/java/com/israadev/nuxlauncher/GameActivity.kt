@@ -166,6 +166,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         const val EXTRA_INSTALLED_MODS = "extra_installed_mods"
         const val EXTRA_EXTRA_JVM_ARGS = "extra_extra_jvm_args"
         const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
+
+        // Setelah sesi ketik layar berakhir, tombol sisa dari keyboard layar yang datang dalam rentang ini
+        // tidak dianggap keyboard fisik (tidak menyembunyikan kontrol).
+        private const val SOFT_KEY_GRACE_MS = 1500L
     }
 
     private val liveLogs = mutableStateListOf<String>()
@@ -854,6 +858,35 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         } catch (_: Throwable) {}
     }
 
+    /**
+     * Menyembunyikan tombol layar karena perangkat input lain dipakai, dan mencatat penyebabnya ke log game
+     * SEKALI setiap kali tombol berubah dari terlihat ke tersembunyi (tanpa banjir log), supaya laporan
+     * "kontrol tiba-tiba hilang" bisa ditelusuri dari log.
+     */
+    private fun hideControlsFor(reason: String) {
+        if (!isControlVisibleState.value) return
+        isControlVisibleState.value = false
+        noteControlsHidden(reason)
+    }
+
+    private fun noteControlsHidden(reason: String) {
+        try {
+            LoggerBridge.append("▷ [Kontrol] Tombol layar disembunyikan otomatis: $reason")
+        } catch (_: Throwable) {
+            // Pustaka log belum siap: tombol tetap disembunyikan, hanya catatannya yang dilewati.
+        }
+    }
+
+    /**
+     * True bila tombol ini berasal dari keyboard fisik. Tombol dari keyboard layar (IME) tidak dihitung: ia
+     * bertanda FLAG_SOFT_KEYBOARD dan/atau datang dari perangkat virtual (id negatif), dan sisanya masih bisa
+     * dikirim sesaat setelah sesi ketik layar ditutup.
+     */
+    private fun isPhysicalKeyboardKey(event: KeyEvent): Boolean =
+        event.deviceId >= 0 &&
+            (event.flags and KeyEvent.FLAG_SOFT_KEYBOARD) == 0 &&
+            !TouchCharInput.recentlyActive(SOFT_KEY_GRACE_MS)
+
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // If soft keyboard IME input view is active, allow standard handling
         if (TouchCharInput.isActive()) {
@@ -862,7 +895,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
         // Controller: diteruskan ke mod (SDL/GLFW) atau diterjemahkan menjadi keyboard+mouse
         if (GamepadRouter.isPadKey(event)) {
-            if (event.action == KeyEvent.ACTION_DOWN) isControlVisibleState.value = false
+            if (event.action == KeyEvent.ACTION_DOWN) hideControlsFor("tombol controller")
             if (GamepadRouter.onKey(event)) return true
         }
 
@@ -890,9 +923,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             }
         }
 
-        // Physical keyboard key pressed -> automatically hide touch controls
-        if (event.action == KeyEvent.ACTION_DOWN) {
-            isControlVisibleState.value = false
+        // Physical keyboard key pressed -> automatically hide touch controls. Tombol dari keyboard layar tidak
+        // termasuk (lihat isPhysicalKeyboardKey): dulu semua tombol di sini menyembunyikan kontrol, jadi tombol
+        // sisa dari keyboard layar yang baru ditutup ikut menghilangkan seluruh kontrol.
+        if (event.action == KeyEvent.ACTION_DOWN && isPhysicalKeyboardKey(event)) {
+            hideControlsFor("keyboard fisik (${KeyEvent.keyCodeToString(event.keyCode)}, device=${event.deviceId})")
         }
 
         val index = EfficientAndroidLWJGLKeycode.getIndexByKey(event.keyCode)
@@ -907,12 +942,12 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
         if (GamepadRouter.isPadMotion(event)) {
             // Controller dipakai: tombol layar disembunyikan otomatis, seperti saat mouse fisik dipakai.
-            if (GamepadRouter.isDeliberate(event)) isControlVisibleState.value = false
+            if (GamepadRouter.isDeliberate(event)) hideControlsFor("gerakan controller")
             if (GamepadRouter.onMotion(event)) return true
         }
         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
             // Physical mouse action detected -> hide touch controls
-            isControlVisibleState.value = false
+            hideControlsFor("mouse fisik (gerak/klik/gulir)")
             MouseDiag.actGeneric++
             MouseDiag.once(MouseDiag.ACT_GENERIC, event)
             MouseDiag.combo(MouseDiag.COMBO_GENERIC, event.actionMasked, event.buttonState)
@@ -936,7 +971,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         if (event.actionMasked == MotionEvent.ACTION_MOVE) {
             MouseDiag.trackballEvents++
             MouseDiag.once(MouseDiag.TRACKBALL, event)
-            isControlVisibleState.value = false
+            hideControlsFor("trackball/touchpad")
             val s = SettingsManager.settings.value
             if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) {
                 val sens = s.captureSensitivity / 100f
@@ -952,7 +987,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.isFromSource(InputDevice.SOURCE_MOUSE) || event.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
-            isControlVisibleState.value = false
+            hideControlsFor("mouse fisik (sentuhan dari sumber mouse)")
             MouseDiag.actTouch++
             MouseDiag.once(MouseDiag.ACT_TOUCH, event)
             MouseDiag.combo(MouseDiag.COMBO_TOUCH, event.actionMasked, event.buttonState)
@@ -2060,7 +2095,13 @@ fun GameScreen(
             },
             onMouse = {
                 isPhysicalMouseMode = true
-                isControlVisible = false
+                if (isControlVisible) {
+                    isControlVisible = false
+                    try {
+                        LoggerBridge.append("▷ [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh")
+                    } catch (_: Throwable) {
+                    }
+                }
             },
             onTouch = {
                 isPhysicalMouseMode = false

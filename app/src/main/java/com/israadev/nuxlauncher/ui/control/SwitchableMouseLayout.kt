@@ -40,6 +40,9 @@ fun SwitchableMouseLayout(
     cursorPosition: () -> Offset,
     cursorSensitivity: Float = 1.0f,
     touchAttackEnabled: Boolean = true,
+    // Mouse launcher di menu: false saat lapisan launcher (menu dalam game, dialog, editor, loading) menutupi
+    // game, supaya penunjuk sistem Android bisa dipakai di lapisan itu.
+    menuCaptureAllowed: Boolean = true,
     // Hotbar sentuh: mengembalikan slot 0..8 di titik sentuh (atau -1). Null = fitur mati.
     hotbarSlotAt: ((Offset) -> Int)? = null,
     onHotbarSelect: (Int) -> Unit = {},
@@ -95,20 +98,32 @@ fun SwitchableMouseLayout(
 
     val isCaptured = currentCursorMode == CURSOR_DISABLED
 
-    // Mouse fisik sedang dipakai (diketahui dari event, bukan dari pengaturan). Menyembunyikan penunjuk
-    // virtual launcher; yang terlihat adalah penunjuk sistem Android.
+    // Mouse fisik sedang dipakai (diketahui dari event, bukan dari pengaturan). Di menu, mouse ditangkap dan
+    // kursor yang terlihat milik launcher; bila Android belum memberi capture, penunjuk sistem jadi cadangan.
     var isPhysicalMouseMode by remember { mutableStateOf(PhysicalMouseChecker.physicalMouseConnected) }
 
+    // Mouse sungguhan (bukan touchpad, bukan stylus) terlihat memakai event. Hanya ini yang boleh ditangkap di
+    // menu. Tidak diisi dari daftar perangkat: sebagian keyboard 2.4G memuat antarmuka mouse yang tidak pernah
+    // bergerak, dan itu akan menyembunyikan penunjuk sistem tanpa ada mouse yang dipakai.
+    var realMouseActive by remember { mutableStateOf(false) }
+
     fun checkPhysicalMouseMode(using: Boolean) {
+        if (!using) realMouseActive = false
         if (isPhysicalMouseMode != using) {
             isPhysicalMouseMode = using
             currentOnPhysicalMouseModeChange(using)
         }
     }
 
-    // Saat bermain (kursor game terkunci) mouse fisik ditangkap Android dan menggerakkan kamera.
-    // Di menu mouse tidak ditangkap: Android memberi posisi absolut dan menggambar penunjuknya sendiri.
-    val capturePointer = isCaptured
+    // Mouse fisik ditangkap Android (penunjuk sistem hilang) dalam dua keadaan:
+    //  - bermain (kursor game terkunci): gerakan relatif menggerakkan kamera;
+    //  - menu, selama mouse fisik sedang dipakai dan tidak ada lapisan launcher di atas game: gerakan relatif
+    //    menggeser kursor milik launcher (digambar GameActivity), sama seperti jari di mode trackpad.
+    // Penunjuk sistem hanya dipakai sebagai cadangan selama Android belum benar-benar memberi capture.
+    val menuCaptureWanted = !isCaptured && realMouseActive && menuCaptureAllowed
+    val capturePointer = isCaptured || menuCaptureWanted
+    val captureHeld by LauncherMouse.captureHeld
+    val launcherMouseOn = menuCaptureWanted && captureHeld
 
     // Bentuk penunjuk sistem mengikuti bentuk kursor game. State-nya hanya dibaca di FocusableBox,
     // jadi pergantian bentuk tidak menyusun ulang lapisan ini.
@@ -144,6 +159,27 @@ fun SwitchableMouseLayout(
         val targetX = if (sw > 0 && winW > 0) x * (winW.toFloat() / sw) else x
         val targetY = if (sh > 0 && winH > 0) y * (winH.toFloat() / sh) else y
         CallbackBridge.sendCursorPos(targetX, targetY)
+    }
+
+    // Mouse launcher di menu: menggeser kursor launcher sebesar gerakan relatif mouse, lalu memberi tahu game.
+    fun moveMenuCursor(delta: Offset) {
+        val cur = currentCursorPos()
+        val sens = currentSensitivity
+        val nx = (cur.x + delta.x * sens).coerceIn(0f, currentScreenWidth)
+        val ny = (cur.y + delta.y * sens).coerceIn(0f, currentScreenHeight)
+        MouseDiag.cursorSent++
+        currentOnCursorPositionChange(Offset(nx, ny))
+        sendScaledCursor(nx, ny)
+    }
+
+    // Game bisa memindahkan kursornya sendiri (ke tengah saat layar baru terbuka): posisi kursor launcher
+    // disamakan sebelum klik dan gulir.
+    DisposableEffect(Unit) {
+        LauncherMouse.syncCursor = {
+            val p = currentCursorPos()
+            sendScaledCursor(p.x, p.y)
+        }
+        onDispose { LauncherMouse.syncCursor = null }
     }
 
     FocusableBox(
@@ -424,11 +460,15 @@ fun SwitchableMouseLayout(
             // 2. Mouse fisik di menu game (kursor tidak terkunci): posisi absolut, klik, gulir.
             .then(
                 Modifier.physicalMouseHover(
-                    disabled = capturePointer,
+                    // Mati hanya bila capture benar-benar dipegang (bermain, atau mouse launcher di menu).
+                    // Selama menunggu capture di menu, penunjuk sistem tetap berfungsi sebagai cadangan.
+                    disabled = isCaptured || launcherMouseOn,
                     onMouse = {
                         checkPhysicalMouseMode(true)
                         currentOnMouse()
                     },
+                    onRealMouse = { realMouseActive = true },
+                    onStylus = { realMouseActive = false },
                     onMouseMove = { pos ->
                         val newX = pos.x.coerceIn(0f, currentScreenWidth)
                         val newY = pos.y.coerceIn(0f, currentScreenHeight)
@@ -451,12 +491,27 @@ fun SwitchableMouseLayout(
             checkPhysicalMouseMode(true)
             currentOnMouse()
         },
+        onRealMouse = { realMouseActive = true },
         onMouseMove = { delta ->
-            MouseDiag.deltaSent++
-            currentOnCapturedMove(delta)
+            if (currentCursorMode == CURSOR_DISABLED) {
+                MouseDiag.deltaSent++
+                currentOnCapturedMove(delta)
+            } else {
+                moveMenuCursor(delta)
+            }
         },
-        onMouseScroll = sendMouseScroll,
-        onMouseButton = sendMouseButton
+        onMouseScroll = { scroll ->
+            if (currentCursorMode != CURSOR_DISABLED) LauncherMouse.syncCursor?.invoke()
+            sendMouseScroll(scroll)
+        },
+        onMouseButton = { button, pressed ->
+            if (currentCursorMode == CURSOR_DISABLED) {
+                sendMouseButton(button, pressed)
+            } else {
+                // Menu: pelacak yang sama dengan klik kanan KEYCODE_BACK, jadi tidak terkirim dua kali.
+                MenuMouse.setButton(button, pressed)
+            }
+        }
     )
 }
 

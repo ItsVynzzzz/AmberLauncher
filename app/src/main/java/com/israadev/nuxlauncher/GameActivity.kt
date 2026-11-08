@@ -116,6 +116,7 @@ import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
+import com.israadev.nuxlauncher.ui.control.LauncherMouse
 import com.israadev.nuxlauncher.ui.control.MenuMouse
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
 import com.israadev.nuxlauncher.ui.control.MouseDiag
@@ -513,6 +514,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     override fun onPointerCaptureChanged(hasCapture: Boolean) {
         super.onPointerCaptureChanged(hasCapture)
+        // Keadaan sebenarnya dari Android: menentukan apakah kursor launcher atau penunjuk sistem yang dipakai di menu.
+        LauncherMouse.captureHeld.value = hasCapture
         MouseDiag.captureChanged(hasCapture)
     }
 
@@ -529,6 +532,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PhysicalMouseChecker.initChecker(this)
+        // Activity baru belum memegang pointer capture, apa pun keadaan activity sebelumnya.
+        LauncherMouse.captureHeld.value = false
         // Catatan jalur masuk mouse fisik (satu baris per jalur per sesi) ke log game.
         MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
         MouseDiag.devices()
@@ -2032,6 +2037,8 @@ fun GameScreen(
             cursorPosition = { Offset(cursorX, cursorY) },
             cursorSensitivity = launcherSettings.cursorSensitivity / 100f,
             touchAttackEnabled = launcherSettings.touchAttackEnabled,
+            // Lapisan launcher di atas game memakai penunjuk sistem; tanpa lapisan itu, mouse ditangkap.
+            menuCaptureAllowed = !overlayCoversGame,
             hotbarSlotAt = hotbarLookup,
             touchSink = touchSink,
             onHotbarSelect = { slot ->
@@ -2103,14 +2110,18 @@ fun GameScreen(
             )
         }
 
-        // 3. Visible Desktop Virtual Cursor Pointer (Zalith Style - automatically visible ONLY in menus, hidden when external mouse is active)
-        val shouldShowPointer = if (padCursorShown) {
+        // 3. Kursor menu milik launcher. Terlihat di menu untuk jari/controller, dan untuk mouse fisik yang sedang
+        // ditangkap (penunjuk sistem Android hilang selama capture). Tanpa capture, mouse memakai penunjuk sistem.
+        val launcherMouseOn = isPhysicalMouseMode && !overlayCoversGame && LauncherMouse.captureHeld.value
+        val shouldShowPointer = if (launcherMouseOn) {
+            gameCursorMode == CURSOR_ENABLED
+        } else if (padCursorShown) {
             // Kursor digerakkan controller: panah harus terlihat walau mode ketuk menyembunyikannya.
             gameCursorMode == CURSOR_ENABLED
         } else if (mouseControlMode == MouseControlMode.CLICK && launcherSettings.hideMouseInClickMode) {
             false
         } else if (isPhysicalMouseMode) {
-            // Mouse fisik sedang dipakai: penunjuk sistem Android yang terlihat, bukan panah launcher.
+            // Mouse fisik tanpa capture (cadangan): penunjuk sistem Android yang terlihat, bukan panah launcher.
             false
         } else {
             gameCursorMode == CURSOR_ENABLED

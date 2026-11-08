@@ -52,8 +52,25 @@ internal object MenuMouse {
         }
     }
 
-    private fun canHandle(): Boolean =
+    /** Kursor menu game tampil dan tidak ada lapisan launcher di atasnya. */
+    private fun menuActive(): Boolean =
         enabled && !overlayOpen && ZLBridgeStates.cursorMode.value != CURSOR_DISABLED
+
+    /**
+     * Event absolut (hover/sentuh) ditangani di sini hanya bila mouse tidak ditangkap. Saat mouse launcher
+     * aktif (capture dipegang) event itu tidak datang lagi, dan bila ada yang nyasar, posisi absolutnya akan
+     * melompatkan kursor launcher.
+     */
+    private fun canHandle(): Boolean = menuActive() && !LauncherMouse.captureHeld.value
+
+    /**
+     * Tombol dari jalur tangkap (mouse launcher di menu). Memakai pelacak yang sama dengan klik kanan yang
+     * datang sebagai KEYCODE_BACK, jadi satu klik tidak pernah terkirim dua kali.
+     */
+    fun setButton(button: Int, pressed: Boolean) {
+        if (pressed && LauncherMouse.captureHeld.value) LauncherMouse.syncCursor?.invoke()
+        buttons.set(button, pressed)
+    }
 
     /** Lepaskan semua tombol yang masih tertahan (sekali per tombol). */
     fun reset() {
@@ -147,12 +164,12 @@ internal object MenuMouse {
     fun onBackKey(down: Boolean): Boolean {
         MouseDiag.actBack++
         if (down) {
-            if (!canHandle()) {
+            if (!menuActive()) {
                 backDirect = true
                 return false
             }
             backDirect = false
-            buttons.set(MotionEvent.BUTTON_SECONDARY, true)
+            setButton(MotionEvent.BUTTON_SECONDARY, true)
             return true
         }
         if (backDirect) {

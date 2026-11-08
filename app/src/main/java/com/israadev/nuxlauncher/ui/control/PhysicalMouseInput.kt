@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,10 +29,14 @@ import kotlin.math.hypot
 /*
  * Mouse fisik (mouse sistem Android), mengikuti cara Zalith Launcher 2.
  *
- * Dua jalur, dan hanya satu yang aktif pada satu waktu:
- *  - Menu game (kursor Minecraft tampil): Android tidak menangkap mouse. Posisi absolut dari event
- *    hover/move dikirim sebagai posisi kursor GLFW, dan penunjuk yang terlihat adalah penunjuk sistem
- *    Android (bentuknya mengikuti bentuk kursor game). Launcher tidak menggambar penunjuk sendiri.
+ * Tiga jalur, dan hanya satu yang aktif pada satu waktu:
+ *  - Menu game, mouse launcher (utama): mouse ditangkap lewat pointer capture, jadi penunjuk sistem Android
+ *    hilang. Gerakan relatif menggeser kursor milik launcher (digambar launcher, dikirim ke game sebagai
+ *    posisi kursor GLFW), dan klik datang dari event tangkap yang sama. Tidak bergantung pada posisi hover,
+ *    bentuk penunjuk, atau klik yang menyamar sebagai event sentuh.
+ *  - Menu game, penunjuk sistem (cadangan): dipakai selama Android belum atau tidak memberi pointer capture
+ *    (mis. jendela tanpa fokus). Posisi absolut dari event hover/move dikirim sebagai posisi kursor GLFW,
+ *    dan penunjuk yang terlihat adalah penunjuk sistem (bentuknya mengikuti bentuk kursor game).
  *  - Bermain (kursor Minecraft terkunci): mouse ditangkap lewat pointer capture, gerakan relatif dikirim
  *    sebagai delta kamera.
  *
@@ -48,6 +53,23 @@ internal object MouseButtons {
         // di GameActivity.dispatchKeyEvent. Dipetakan lagi di sini akan membuat klik kanan terkirim dua kali.
         else -> null
     }
+}
+
+/**
+ * Status mouse launcher di menu game. [captureHeld] diisi dari GameActivity.onPointerCaptureChanged, jadi
+ * mencerminkan keadaan SEBENARNYA (Android memegang capture), bukan sekadar permintaan. Selama true di menu,
+ * kursor yang terlihat milik launcher dan jalur penunjuk sistem dimatikan; begitu false, jalur penunjuk
+ * sistem langsung bekerja lagi.
+ */
+internal object LauncherMouse {
+    val captureHeld = mutableStateOf(false)
+
+    /**
+     * Mengirim posisi kursor launcher ke game. Game bisa memindahkan kursornya sendiri (ke tengah saat layar
+     * baru terbuka), jadi posisi disamakan sebelum klik dan gulir. Diisi oleh SwitchableMouseLayout.
+     */
+    @JvmField
+    var syncCursor: (() -> Unit)? = null
 }
 
 /**
@@ -143,9 +165,9 @@ internal object MouseDiag {
     const val ACT_TOUCH = 128
     const val MENU_IGNORED = 256
 
-    private const val MAX_SUMMARIES = 10
-    private const val MAX_MODE_LOGS = 8
-    private const val MAX_CAPTURE_LOGS = 8
+    private const val MAX_SUMMARIES = 14
+    private const val MAX_MODE_LOGS = 20
+    private const val MAX_CAPTURE_LOGS = 20
     private const val MAX_DEVICE_LOGS = 3
     private const val MAX_COMBO_LOGS = 40
 
@@ -287,7 +309,8 @@ internal object MouseDiag {
     fun captureRequested(windowFocus: Boolean, viewFocus: Boolean) {
         if (captureLogs >= MAX_CAPTURE_LOGS) return
         captureLogs++
-        emit("pointer-capture diminta fokusJendela=$windowFocus fokusView=$viewFocus")
+        val mode = if (ZLBridgeStates.cursorMode.value == CURSOR_DISABLED) "bermain" else "menu"
+        emit("pointer-capture diminta mode=$mode fokusJendela=$windowFocus fokusView=$viewFocus")
     }
 
     /**
@@ -319,12 +342,15 @@ internal object MouseDiag {
 internal fun PhysicalMouseCapture(
     enabled: Boolean,
     onMouse: () -> Unit,
+    // Gerakan dari mouse sungguhan (bukan touchpad): tanda bahwa mouse launcher boleh dipakai di menu.
+    onRealMouse: () -> Unit = {},
     onMouseMove: (Offset) -> Unit,
     onMouseScroll: (Offset) -> Unit,
     onMouseButton: (button: Int, pressed: Boolean) -> Unit
 ) {
     val view by rememberUpdatedState(LocalView.current)
     val currentOnMouse by rememberUpdatedState(onMouse)
+    val currentOnRealMouse by rememberUpdatedState(onRealMouse)
     val currentOnMouseMove by rememberUpdatedState(onMouseMove)
     val currentOnMouseScroll by rememberUpdatedState(onMouseScroll)
     val currentOnMouseButton by rememberUpdatedState(onMouseButton)
@@ -469,6 +495,7 @@ internal fun PhysicalMouseCapture(
                             deltaY += event.getHistoricalAxisValue(MotionEvent.AXIS_RELATIVE_Y, i)
                         }
 
+                        if (!isTouchpad) currentOnRealMouse()
                         currentOnMouse()
                         currentOnMouseMove(Offset(deltaX, deltaY))
                         true
@@ -527,12 +554,18 @@ internal fun PhysicalMouseCapture(
 internal fun Modifier.physicalMouseHover(
     disabled: Boolean,
     onMouse: () -> Unit = {},
+    // Mouse sungguhan (bukan touchpad, bukan stylus): layout boleh menangkapnya dan memakai kursor launcher.
+    onRealMouse: () -> Unit = {},
+    // Stylus: tetap lewat penunjuk sistem, jadi penangkapan mouse dilepas.
+    onStylus: () -> Unit = {},
     onMouseMove: (Offset) -> Unit = {},
     onMouseScroll: (Offset) -> Unit = {},
     onMouseButton: (Int, Boolean) -> Unit = { _, _ -> },
 ) = composed {
     val currentDisabled by rememberUpdatedState(disabled)
     val currentOnMouse by rememberUpdatedState(onMouse)
+    val currentOnRealMouse by rememberUpdatedState(onRealMouse)
+    val currentOnStylus by rememberUpdatedState(onStylus)
     val currentOnMouseMove by rememberUpdatedState(onMouseMove)
     val currentOnMouseScroll by rememberUpdatedState(onMouseScroll)
     val currentOnMouseButton by rememberUpdatedState(onMouseButton)
@@ -566,6 +599,12 @@ internal fun Modifier.physicalMouseHover(
         MouseDiag.menuEvents++
         MouseDiag.once(if (isMouse) MouseDiag.MENU_MOUSE else MouseDiag.MENU_STYLUS, event)
         MouseDiag.combo(MouseDiag.COMBO_FILTER, event.actionMasked, event.buttonState)
+        if (isMouse) {
+            // Touchpad yang melapor sebagai mouse tidak ikut: tap-to-click-nya hanya dikenali jalur penunjuk sistem.
+            if (event.device?.supportsSource(InputDevice.SOURCE_TOUCHPAD) != true) currentOnRealMouse()
+        } else {
+            currentOnStylus()
+        }
         currentOnMouse()
 
         // Tombol dan gulir mouse (bukan stylus) dikirim dari GameActivity lewat MenuMouse, sebelum Compose.

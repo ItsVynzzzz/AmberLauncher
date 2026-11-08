@@ -16,7 +16,7 @@ object LwjglManager {
         if (versionJsonFile != null && versionJsonFile.exists()) {
             try {
                 val content = versionJsonFile.readText()
-                if (content.contains("org.lwjgl:lwjgl:3.4.") || content.contains("org.lwjgl.lwjgl:lwjgl:3.4.") || content.contains("3.4.1")) {
+                if (content.contains("org.lwjgl:lwjgl:3.4.") || content.contains("org.lwjgl.lwjgl:lwjgl:3.4.")) {
                     return "3.4.1"
                 }
             } catch (_: Exception) {}
@@ -25,6 +25,24 @@ object LwjglManager {
             return "3.4.1"
         }
         return "3.3.3"
+    }
+
+    /**
+     * Versi yang memakai LWJGL 2 (Minecraft 1.12.2 ke bawah) butuh jembatan lwjglx di classpath supaya
+     * kelas LWJGL 2 seperti org.lwjgl.opengl.Display dan org.lwjgl.input.Keyboard tersedia di atas LWJGL 3.
+     * Tanpa itu game langsung crash dengan NoClassDefFoundError. Penentu utamanya berkas versi Mojang
+     * (library org.lwjgl.lwjgl:lwjgl:2.x); nomor versi dipakai hanya bila berkasnya belum terbaca.
+     */
+    fun usesLwjgl2(mcVersion: String, versionJsonFile: File? = null): Boolean {
+        if (versionJsonFile != null && versionJsonFile.exists()) {
+            try {
+                val content = versionJsonFile.readText()
+                if (content.contains("org.lwjgl.lwjgl:lwjgl:2.")) return true
+                if (content.contains("org.lwjgl:lwjgl:3.")) return false
+            } catch (_: Exception) {}
+        }
+        val minor = Regex("""^1\.(\d+)""").find(mcVersion)?.groupValues?.get(1)?.toIntOrNull() ?: return false
+        return minor <= 12
     }
 
     fun prepareLauncherComponents(context: Context): File? {
@@ -87,7 +105,13 @@ object LwjglManager {
         val nativesDir = File(targetDir, "natives")
 
         val marker = File(targetDir, ".extracted")
-        if (marker.exists()) {
+        // Penanda saja tidak cukup: bila ekstraksi sebelumnya tidak lengkap (atau versi lama aplikasi
+        // belum membawa jembatan lwjglx), berkas inti dicek dulu dan ekstraksi diulang bila ada yang hilang.
+        val extractionComplete = marker.exists() &&
+            File(targetDir, "lwjgl.jar").exists() &&
+            File(targetDir, "lwjgl-lwjglx.jar").exists() &&
+            File(nativesDir, "liblwjgl.so").exists()
+        if (extractionComplete) {
             ensureSharedNatives(context, nativesDir)
             ensureSpirvCross(context, nativesDir)
             return nativesDir
@@ -107,12 +131,11 @@ object LwjglManager {
         return nativesDir
     }
 
-    fun getLwjglJars(context: Context, lwjglVersion: String = "3.3.3"): List<File> {
+    fun getLwjglJars(context: Context, lwjglVersion: String = "3.3.3", withLwjglx: Boolean = false): List<File> {
+        // Idempoten dan murah bila sudah lengkap; memperbaiki ekstraksi yang tidak lengkap.
+        prepareLwjgl(context, lwjglVersion)
         val targetDir = File(context.filesDir, "components/lwjgl/$lwjglVersion")
-        if (!targetDir.exists()) {
-            prepareLwjgl(context, lwjglVersion)
-        }
-        val isLwjgl2 = lwjglVersion.startsWith("2.")
+        val isLwjgl2 = withLwjglx || lwjglVersion.startsWith("2.")
         val jars = targetDir.listFiles { file ->
             file.isFile && file.name.endsWith(".jar") && (isLwjgl2 || file.name != "lwjgl-lwjglx.jar")
         } ?: emptyArray()
@@ -128,14 +151,7 @@ object LwjglManager {
     }
 
     fun getNativesDir(context: Context, lwjglVersion: String = "3.3.3"): File {
-        val dir = File(context.filesDir, "components/lwjgl/$lwjglVersion/natives")
-        if (!dir.exists() || dir.listFiles()?.isEmpty() == true) {
-            prepareLwjgl(context, lwjglVersion)
-        } else {
-            ensureSharedNatives(context, dir)
-            ensureSpirvCross(context, dir)
-        }
-        return dir
+        return prepareLwjgl(context, lwjglVersion)
     }
 
     /** Menyalin pustaka native yang dipakai bersama bila belum ada di folder natives versi ini. */

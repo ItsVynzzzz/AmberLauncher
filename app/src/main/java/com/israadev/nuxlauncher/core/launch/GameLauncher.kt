@@ -187,7 +187,9 @@ object GameLauncher {
         val versionJsonFile = File(versionDir, "${instance.mcVersion}.json")
         val lwjglVersion = LwjglManager.getLwjglVersion(instance.mcVersion, versionJsonFile)
         val lwjglNativesDir = LwjglManager.getNativesDir(context, lwjglVersion)
-        val lwjglJars = LwjglManager.getLwjglJars(context, lwjglVersion)
+        // Minecraft 1.12.2 ke bawah memakai LWJGL 2: tanpa jembatan lwjglx game crash karena kelas LWJGL tidak ditemukan
+        val needsLwjglx = LwjglManager.usesLwjgl2(instance.mcVersion, versionJsonFile)
+        val lwjglJars = LwjglManager.getLwjglJars(context, lwjglVersion, withLwjglx = needsLwjglx)
         LwjglManager.prepareLauncherComponents(context)
 
         // Build classpath: Android LWJGL jars first, Fabric libraries, Mojang non-LWJGL libraries, then client.jar
@@ -334,7 +336,7 @@ object GameLauncher {
         LauncherLog.event(
             "Peluncuran",
             "Memulai game: runtime=$runtimeName (terpasang=${com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.isRuntimeInstalled(context, runtimeName)}), " +
-                "LWJGL=$lwjglVersion, wrapper=$useWrapper, classpath=${classpathEntries.size} berkas, " +
+                "LWJGL=$lwjglVersion, lwjglx=$needsLwjglx, wrapper=$useWrapper, classpath=${classpathEntries.size} berkas, " +
                 "mainClass=$mainClass, mod=${installedMods.size}"
         )
 

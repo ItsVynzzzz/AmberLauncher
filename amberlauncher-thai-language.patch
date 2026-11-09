@@ -1,0 +1,1691 @@
+diff --git a/README.en.md b/README.en.md
+index daa6358..77f6885 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -67,7 +67,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
+ - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
+ - **Crash reports** with optional log upload to mclo.gs.
+ - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
+-- **Multilingual interface**: Bahasa Indonesia, English, Español, and Tiếng Việt.
++- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, and ภาษาไทย.
+ - **Optional**: TouchController mod support and the Rust engine (Horizon), both still experimental.
+ 
+ **Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.
+diff --git a/README.md b/README.md
+index 3258726..d091386 100644
+--- a/README.md
++++ b/README.md
+@@ -67,7 +67,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan >
+ - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
+ - **Laporan crash** dengan opsi unggah log ke mclo.gs.
+ - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
+-- **Antarmuka multibahasa**: Indonesia, English, Español, dan Tiếng Việt.
++- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, dan ภาษาไทย.
+ - **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
+ 
+ **Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
+diff --git a/app/src/main/assets/lang/th/about.tsv b/app/src/main/assets/lang/th/about.tsv
+new file mode 100644
+index 0000000..3eeaf3d
+--- /dev/null
++++ b/app/src/main/assets/lang/th/about.tsv
+@@ -0,0 +1,43 @@
++# Dialog Tentang dan Lisensi
++Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.	ตัวเปิดเกมนี้ ซอร์สโค้ดเปิดเผยและสามารถศึกษา แก้ไข และแจกจ่ายต่อได้ภายใต้เงื่อนไข GPL-3.0 เดียวกัน
++Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.	สถาปัตยกรรมบริดจ์ JNI เนทีฟ (ZLBridge), การเชื่อมต่อ SDL3 surface, การรับอินพุตจากเกมแพดโดยตรง, การจัดการ DNS และการปรับแต่งการรัน OpenJDK บนมือถือ
++Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.	โปรเจกต์ผู้บุกเบิกการเปิด Minecraft Java Edition บน Android มี LWJGL 3 เวอร์ชันพอร์ต, GLFW stubs, AWT stubs และการเชื่อมต่อ renderer กราฟิกสำหรับมือถือ
++NUX Launcher (sumber asal fork)	NUX Launcher (ต้นทางของฟอร์ก)
++Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.	โปรเจกต์ต้นทางที่ AmberLauncher ฟอร์กมา ซอร์สโค้ดเปิดภายใต้ GNU GPL-3.0
++Arsitektur runtime JVM, ZLBridge JNI, integrasi SDL3, direct gamepad, dan optimasi Android	สถาปัตยกรรมรันไทม์ JVM, ZLBridge JNI, การเชื่อมต่อ SDL3, เกมแพดโดยตรง และการปรับแต่งสำหรับ Android
++Mesin peluncuran Java Minecraft Android, LWJGL 3 Android Natives, GLFW Stub	เอนจินเปิดเกม Minecraft Java บน Android, LWJGL 3 เนทีฟสำหรับ Android, GLFW stub
++Penerjemah modern OpenGL 4.0 ke OpenGL ES 3.2 untuk Minecraft 1.17+	ตัวแปลง OpenGL 4.0 สมัยใหม่เป็น OpenGL ES 3.2 สำหรับ Minecraft 1.17+
++Pustaka binding grafis, audio (OpenAL), dan jendela game Java	ไลบรารีเชื่อมต่อกราฟิก เสียง (OpenAL) และหน้าต่างสำหรับเกม Java
++Manajemen surface rendering native, touch input, dan audio output	การจัดการ surface เรนเดอร์เนทีฟ การรับสัมผัส และเอาต์พุตเสียง
++Vulkan-to-OpenGL translation & driver akselerasi GPU mobile	การแปลง Vulkan เป็น OpenGL และไดรเวอร์เร่งความเร็ว GPU มือถือ
++Mesin penerjemah OpenGL ES berbasis backend Vulkan	เอนจินแปล OpenGL ES ที่ใช้แบ็กเอนด์ Vulkan
++Dynamic binary instrumentation dan hook Android library	Dynamic binary instrumentation และการ hook ไลบรารีของ Android
++Toolkit UI modern, deklaratif, dan responsif	ชุดเครื่องมือ UI สมัยใหม่ แบบ declarative และตอบสนองได้ดี
++Katalog publik mod, modpack, shaderpack, dan resource pack	แคตตาล็อกสาธารณะของ Mod, modpack, shaderpack และ resource pack
++Editor teks dan log penampil performa tinggi	ตัวแก้ไขข้อความและตัวดูล็อกประสิทธิภาพสูง
++Viewer interaktif 3D skin & jubah Minecraft berbasis WebGL	ตัวดูสกินและผ้าคลุม Minecraft แบบ 3D โต้ตอบได้ บน WebGL
++Klien HTTP jaringan performa tinggi	ไคลเอนต์เครือข่าย HTTP ประสิทธิภาพสูง
++Ringkasan	สรุป
++Pustaka ({0})	ไลบรารี ({0})
++Tentang AmberLauncher	เกี่ยวกับ AmberLauncher
++Peluncur Minecraft Java untuk Android, ringan dan sederhana.	ตัวเปิด Minecraft Java สำหรับ Android เบาและเรียบง่าย
++AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.	AmberLauncher เป็นตัวเปิดเกมอิสระที่ดัดแปลงจาก NUX Launcher ซึ่งมาจาก Zalith Launcher 2 และ PojavLauncher อีกทอดหนึ่ง แอปนี้ไม่ใช่แอปทางการของ Zalith Launcher Team, NUX Launcher หรือ Mojang Studios
++Proyek dan hak cipta	โปรเจกต์และลิขสิทธิ์
++Penafian Minecraft	ข้อสงวนสิทธิ์ของ Minecraft
++Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.	ไม่ใช่ผลิตภัณฑ์ทางการของ Minecraft ไม่ได้รับการรับรองจากหรือเกี่ยวข้องกับ Mojang Studios หรือ Microsoft Minecraft เป็นเครื่องหมายการค้าของ Mojang AB / Microsoft Corporation ทรัพยากรของเกมทั้งหมดดาวน์โหลดตรงจากเซิร์ฟเวอร์เผยแพร่ทางการของ Mojang
++Pustaka open source	ไลบรารีโอเพนซอร์ส
++Ketuk untuk membuka halaman proyeknya.	แตะเพื่อเปิดหน้าโปรเจกต์
++Lisensi yang menaungi AmberLauncher.	สัญญาอนุญาตที่ครอบคลุม AmberLauncher
++Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.	โปรเจกต์นี้ได้รับอนุญาตภายใต้เงื่อนไขของ GNU General Public License เวอร์ชัน 3.0
++Empat kebebasan perangkat lunak bebas	เสรีภาพสำคัญสี่ประการของซอฟต์แวร์เสรี
++Kebebasan untuk menjalankan program untuk keperluan apa pun.	เสรีภาพในการรันโปรแกรมเพื่อวัตถุประสงค์ใดก็ได้
++Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.	เสรีภาพในการศึกษาการทำงานของโปรแกรมและปรับให้เหมาะกับความต้องการของคุณ
++Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.	เสรีภาพในการแจกจ่ายสำเนาเพื่อช่วยเหลือผู้อื่น
++Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.	เสรีภาพในการปรับปรุงโปรแกรมและเผยแพร่การปรับปรุงนั้นสู่สาธารณะ
++Ketentuan tambahan (GPLv3 Pasal 7)	เงื่อนไขเพิ่มเติม (GPLv3 มาตรา 7)
++Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.	เวอร์ชันที่ดัดแปลงต้องไม่ใช้ชื่อทางการค้า 'ZalithLauncher' หรือ 'ZL' ในทางที่ผิด
++Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.	เวอร์ชันที่ดัดแปลงต้องระบุว่าเป็น 'Unofficial Modified Version'
++Hak cipta penulis asli (Copyright \u00a9 MovTery & PojavLauncherTeam) tidak boleh dihapus.	ต้องไม่ลบลิขสิทธิ์ของผู้เขียนต้นฉบับ (Copyright \u00a9 MovTery & PojavLauncherTeam)
++Baca teks lisensi lengkap	อ่านข้อความสัญญาอนุญาตฉบับเต็ม
++Versi {0}	เวอร์ชัน {0}
++Klien proxy untuk mod kontrol sentuh TouchController	ไคลเอนต์พร็อกซีสำหรับ Mod ควบคุมแบบสัมผัส TouchController
+diff --git a/app/src/main/assets/lang/th/accounts.tsv b/app/src/main/assets/lang/th/accounts.tsv
+new file mode 100644
+index 0000000..3e223be
+--- /dev/null
++++ b/app/src/main/assets/lang/th/accounts.tsv
+@@ -0,0 +1,116 @@
++# Akun, login Microsoft dan Ely.by
++Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	สกินและเคปของบัญชี Ely.by จัดการโดยตรงที่ https://account.ely.by
++Belum ada akun tersimpan	ยังไม่มีบัญชีที่บันทึกไว้
++{0} akun tersimpan \u00b7 ketuk untuk berganti	บัญชีที่บันทึกไว้ {0} บัญชี \u00b7 แตะเพื่อสลับ
++Profil aktif	โปรไฟล์ที่ใช้งานอยู่
++Skin & Jubah	สกินและเคป
++Belum ada profil aktif	ยังไม่มีโปรไฟล์ที่ใช้งานอยู่
++Pilih atau tambahkan akun untuk mulai bermain.	เลือกหรือเพิ่มบัญชีเพื่อเริ่มเล่น
++Tambahkan akun Offline, Microsoft, atau Ely.by.	เพิ่มบัญชี Offline, Microsoft หรือ Ely.by
++Aktif	ใช้งานอยู่
++Gunakan	ใช้
++Akun {0} berhasil ditambahkan!	เพิ่มบัญชี {0} สำเร็จ!
++Hapus akun?	ลบบัญชี?
++Hapus profil '{0}' ({1}) dari perangkat ini?	ลบโปรไฟล์ '{0}' ({1}) ออกจากอุปกรณ์นี้หรือไม่?
++Profil '{0}' dihapus	ลบโปรไฟล์ '{0}' แล้ว
++Akun resmi Microsoft	บัญชี Microsoft อย่างเป็นทางการ
++Akun terverifikasi Ely.by	บัญชี Ely.by ที่ยืนยันแล้ว
++Akun offline / lokal	บัญชีออฟไลน์ / ในเครื่อง
++Pilih cara masuk ke Minecraft	เลือกวิธีเข้าสู่ระบบ Minecraft
++Lokal \u00b7 tanpa login	ในเครื่อง \u00b7 ไม่ต้องเข้าสู่ระบบ
++Resmi \u00b7 akun Mojang	ทางการ \u00b7 บัญชี Mojang
++Browser \u00b7 skin & jubah	เบราว์เซอร์ \u00b7 สกินและเคป
++Nama pemain (Steve, Alex...)	ชื่อผู้เล่น (Steve, Alex...)
++Username tidak boleh kosong	ชื่อผู้ใช้ต้องไม่ว่าง
++Simpan akun	บันทึกบัญชี
++Masuk dengan akun Microsoft / Xbox	เข้าสู่ระบบด้วยบัญชี Microsoft / Xbox
++Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	หน้าต่างการให้สิทธิ์เปิดในตัวเปิดเกมเลย ไม่ต้องออกจากแอป
++Gagal memulai otorisasi Microsoft.	เริ่มการให้สิทธิ์ Microsoft ไม่สำเร็จ
++Menghubungi...	กำลังเชื่อมต่อ...
++Masuk dengan Microsoft	เข้าสู่ระบบด้วย Microsoft
++Menunggu otorisasi di browser Ely.by...	กำลังรอการให้สิทธิ์ในเบราว์เซอร์ Ely.by...
++Kode disalin	คัดลอกรหัสแล้ว
++Salin	คัดลอก
++Buka lagi	เปิดอีกครั้ง
++Masuk dengan akun Ely.by	เข้าสู่ระบบด้วยบัญชี Ely.by
++Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	เบราว์เซอร์จะเปิดอัตโนมัติเพื่อยืนยันบัญชี Ely.by โดยไม่ต้องพิมพ์รหัสผ่าน
++Buka browser Ely.by	เปิดเบราว์เซอร์ Ely.by
++Menunggu otorisasi akun di halaman web Microsoft...	กำลังรอการให้สิทธิ์บัญชีบนหน้าเว็บ Microsoft...
++Kode '{0}' telah disalin!	คัดลอกรหัส '{0}' แล้ว!
++Token diterima! Memproses autentikasi Minecraft & Xbox...	ได้รับโทเค็นแล้ว! กำลังประมวลผลการยืนยันตัวตน Minecraft และ Xbox...
++Gagal memproses autentikasi Minecraft.	ประมวลผลการยืนยันตัวตน Minecraft ไม่สำเร็จ
++Otorisasi Microsoft gagal.	การให้สิทธิ์ Microsoft ล้มเหลว
++LOGIN AKUN MICROSOFT	เข้าสู่ระบบบัญชี MICROSOFT
++Masuk dan konfirmasi langsung di jendela aman ini	เข้าสู่ระบบและยืนยันได้ในหน้าต่างที่ปลอดภัยนี้เลย
++Kode '{0}' disalin!	คัดลอกรหัส '{0}' แล้ว!
++KODE:	รหัส:
++Salin Kode	คัดลอกรหัส
++Buka di Browser Eksternal	เปิดในเบราว์เซอร์ภายนอก
++Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	แตะ 'ดำเนินการต่อ' ในหน้าด้านบนหลังจากใส่รหัสแล้ว
++Gagal memulai otorisasi Ely.by.	เริ่มการให้สิทธิ์ Ely.by ไม่สำเร็จ
++Otorisasi Ely.by gagal.	การให้สิทธิ์ Ely.by ล้มเหลว
++Terjadi kesalahan saat login Ely.by.	เกิดข้อผิดพลาดขณะเข้าสู่ระบบ Ely.by
++Gagal memulai login Ely.by Device Code ({0}): {1}	เริ่มการเข้าสู่ระบบ Ely.by ด้วย Device Code ไม่สำเร็จ ({0}): {1}
++Login dibatalkan oleh pengguna.	ผู้ใช้ยกเลิกการเข้าสู่ระบบ
++Menunggu konfirmasi di browser...	กำลังรอการยืนยันในเบราว์เซอร์...
++Memperlambat polling...	กำลังลดความถี่ polling...
++Ely.by OAuth Error: {0}	ข้อผิดพลาด OAuth ของ Ely.by: {0}
++Waktu otorisasi Ely.by habis.	การให้สิทธิ์ Ely.by หมดเวลา
++Mengambil informasi akun Ely.by...	กำลังดึงข้อมูลบัญชี Ely.by...
++Gagal mengambil info akun Ely.by ({0})	ดึงข้อมูลบัญชี Ely.by ไม่สำเร็จ ({0})
++Mengambil UUID Minecraft untuk {0}...	กำลังดึง UUID Minecraft ของ {0}...
++Gagal login ke Ely.by (HTTP {0}): {1}	เข้าสู่ระบบ Ely.by ไม่สำเร็จ (HTTP {0}): {1}
++Profil Ely.by tidak ditemukan dalam respon.	ไม่พบโปรไฟล์ Ely.by ในข้อมูลตอบกลับ
++Gagal memulai login Microsoft (HTTP {0}): {1}	เริ่มการเข้าสู่ระบบ Microsoft ไม่สำเร็จ (HTTP {0}): {1}
++Token berhasil diterima! Menghubungkan ke Xbox Live...	ได้รับโทเค็นแล้ว! กำลังเชื่อมต่อกับ Xbox Live...
++Menunggu otorisasi di halaman web...	กำลังรอการให้สิทธิ์บนหน้าเว็บ...
++Memperlambat frekuensi polling...	กำลังลดความถี่ polling...
++Kode login kedaluwarsa. Silakan mulai ulang.	รหัสเข้าสู่ระบบหมดอายุ กรุณาเริ่มใหม่
++Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	รหัสให้สิทธิ์ถูกใช้ไปแล้วหรือหมดอายุ กรุณาแตะเข้าสู่ระบบเพื่อขอรหัสใหม่
++Otorisasi ditolak ({0}): {1}	การให้สิทธิ์ถูกปฏิเสธ ({0}): {1}
++Microsoft OAuth Error: {0}	ข้อผิดพลาด OAuth ของ Microsoft: {0}
++Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	การเชื่อมต่อเครือข่ายหลุดซ้ำๆ ขณะรอ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
++Waktu otorisasi habis (timeout). Silakan coba lagi.	การให้สิทธิ์หมดเวลา (timeout) กรุณาลองอีกครั้ง
++Autentikasi dengan Xbox Live...	กำลังยืนยันตัวตนกับ Xbox Live...
++Gagal autentikasi Xbox Live (HTTP {0}): {1}	การยืนยันตัวตน Xbox Live ล้มเหลว (HTTP {0}): {1}
++Gagal memperoleh token Xbox Live atau UserHash.	ขอโทเค็น Xbox Live หรือ UserHash ไม่สำเร็จ
++Meminta otorisasi XSTS Minecraft...	กำลังขอการให้สิทธิ์ XSTS ของ Minecraft...
++Akun ini telah dilarang/diblokir dari Xbox Live.	บัญชีนี้ถูกแบนหรือบล็อกจาก Xbox Live
++Akun dibatasi oleh kontrol orang tua (Restricted).	บัญชีถูกจำกัดโดยการควบคุมโดยผู้ปกครอง (Restricted)
++Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	บัญชี Microsoft นี้ยังไม่มีโปรไฟล์ Xbox กรุณาสร้างแท็กเกมเมอร์ (gamertag) ที่ xbox.com ก่อน
++Akun belum menyetujui Ketentuan Layanan Xbox Live.	บัญชียังไม่ได้ยอมรับข้อกำหนดการให้บริการของ Xbox Live
++Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	Xbox Live ไม่พร้อมใช้งานในประเทศ/ภูมิภาคของบัญชีคุณ
++Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	บัญชีต้องยืนยันอายุว่าเป็นผู้ใหญ่ (Proof of Age)
++Batas waktu bermain harian Xbox Live telah tercapai.	ถึงขีดจำกัดเวลาเล่นรายวันของ Xbox Live แล้ว
++Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	เป็นบัญชีของผู้เยาว์ (Child Account) ผู้ปกครองต้องเชื่อมโยงกับบัญชีครอบครัว (Family Safety)
++Otorisasi XSTS gagal (HTTP {0}): {1}	การให้สิทธิ์ XSTS ล้มเหลว (HTTP {0}): {1}
++Gagal memperoleh token XSTS.	ขอโทเค็น XSTS ไม่สำเร็จ
++Menghubungkan ke Mojang Minecraft Services...	กำลังเชื่อมต่อกับ Mojang Minecraft Services...
++Gagal login ke layanan Minecraft ({0}): {1}	เข้าสู่ระบบบริการ Minecraft ไม่สำเร็จ ({0}): {1}
++Layanan Minecraft tidak mengembalikan token akses.	บริการ Minecraft ไม่ได้ส่งโทเค็นเข้าถึงกลับมา
++Mengambil profil pemain Minecraft Java...	กำลังดึงโปรไฟล์ผู้เล่น Minecraft Java...
++Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	บัญชี Microsoft นี้ยังไม่มีสิทธิ์ใช้งานเกม Minecraft: Java Edition
++Gagal mengambil profil Minecraft ({0}): {1}	ดึงโปรไฟล์ Minecraft ไม่สำเร็จ ({0}): {1}
++Tidak ada refresh token tersimpan.	ไม่มี refresh token ที่บันทึกไว้
++Gagal memperbarui token Microsoft ({0}): {1}	รีเฟรชโทเค็น Microsoft ไม่สำเร็จ ({0}): {1}
++Token pembaruan kosong.	refresh token ว่างเปล่า
++Memperbarui sesi Microsoft...	กำลังรีเฟรชเซสชัน Microsoft...
++Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	รีเฟรชเซสชัน Microsoft ไม่ได้ เกมจะยังเริ่มได้ แต่ฟีเจอร์ออนไลน์อาจต้องเข้าสู่ระบบใหม่
++Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	เชื่อมต่อกับเซิร์ฟเวอร์ Microsoft ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง
++Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	เริ่มการเข้าสู่ระบบ Microsoft ไม่สำเร็จ (รหัส {0}) ลองอีกครั้งภายหลัง
++Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	พยายามเข้าสู่ระบบมากเกินไป รอสักครู่แล้วลองอีกครั้ง
++Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	การยืนยันตัวตน Xbox Live ล้มเหลว (รหัส {0}) ลองอีกครั้งภายหลัง
++Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	การให้สิทธิ์ XSTS ล้มเหลว (รหัส {0}) ลองอีกครั้งภายหลัง
++Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	เซิร์ฟเวอร์ Minecraft มีปัญหา (รหัส {0}) ลองอีกครั้งในอีกสักครู่
++Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	บริการ Minecraft ปฏิเสธการเข้าสู่ระบบ (รหัส {0}) ลองอีกครั้งภายหลัง หากเกิดซ้ำ ให้แจ้งผู้พัฒนาตัวเปิดเกม
++Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	บัญชีนี้ยังไม่มีโปรไฟล์ Minecraft Java ตรวจสอบว่าคุณมี Minecraft: Java Edition (หรือ Game Pass สำหรับ PC) แล้ว จากนั้นสร้างชื่อผู้เล่นที่ minecraft.net/profile
++Gagal mengambil profil Minecraft (kode {0}).	โหลดโปรไฟล์ Minecraft ไม่สำเร็จ (รหัส {0})
++Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	รีเฟรชเซสชัน Microsoft ไม่สำเร็จ (รหัส {0}) กรุณาเข้าสู่ระบบใหม่
++Kode login tidak dikenali. Silakan mulai ulang.	ไม่รู้จักรหัสเข้าสู่ระบบ กรุณาเริ่มใหม่
++Login ditolak di halaman Microsoft. Silakan mulai ulang.	การเข้าสู่ระบบถูกปฏิเสธบนหน้า Microsoft กรุณาเริ่มใหม่
++Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	Mojang ปฏิเสธแอปตัวเปิดเกมนี้ (Invalid app registration, รหัส 403) Client ID สำหรับเข้าสู่ระบบยังไม่ได้รับอนุมัติ โปรดติดต่อผู้พัฒนาตัวเปิดเกม
++Menunggu login di browser...	กำลังรอการเข้าสู่ระบบในเบราว์เซอร์...
++Selesaikan login di browser, lalu kembali ke sini	เข้าสู่ระบบในเบราว์เซอร์ให้เสร็จ แล้วกลับมาที่นี่
++Tidak ada browser yang bisa dibuka	ไม่มีเบราว์เซอร์ที่เปิดได้
++Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	คัดลอกรหัสแล้ว หากช่องรหัสในเบราว์เซอร์ยังว่าง ให้วางรหัสแล้วเลือกดำเนินการต่อ
++Buka di browser	เปิดในเบราว์เซอร์
+diff --git a/app/src/main/assets/lang/th/common.tsv b/app/src/main/assets/lang/th/common.tsv
+new file mode 100644
+index 0000000..31194b6
+--- /dev/null
++++ b/app/src/main/assets/lang/th/common.tsv
+@@ -0,0 +1,39 @@
++# Kata umum
++Tutup	ปิด
++TUTUP	ปิด
++Batal	ยกเลิก
++BATAL	ยกเลิก
++Hapus	ลบ
++Keluar	ออก
++Ganti	เปลี่ยน
++Nanti	ไว้ทีหลัง
++Pengaturan	การตั้งค่า
++Akun	บัญชี
++Mod	Mod
++Tentang & Lisensi	เกี่ยวกับและสัญญาอนุญาต
++Tentang & lisensi	เกี่ยวกับและสัญญาอนุญาต
++Bahasa	ภาษา
++Ikuti sistem	ตามระบบ
++Seimbang	สมดุล
++Bawaan	ค่าเริ่มต้น
++Sistem	ระบบ
++Halus	เบา
++Sedang	ปานกลาง
++Kuat	แรง
++Buka folder	เปิดโฟลเดอร์
++Buka pengaturan	เปิดการตั้งค่า
++Ubah instance	แก้ไข instance
++Hapus instance	ลบ instance
++Lihat log	ดูล็อก
++Home	หน้าหลัก
++PLAY	เล่น
++Menu	เมนู
++Keyboard	คีย์บอร์ด
++Log	ล็อก
++Debug	ดีบัก
++Renderer	Renderer
++Renderer {0}	Renderer {0}
++Default	ค่าเริ่มต้น
++DEFAULT	ค่าเริ่มต้น
++Ambient	แสงบรรยากาศ
++Slide (trackpad)	สไลด์ (แทร็กแพด)
+diff --git a/app/src/main/assets/lang/th/crash.tsv b/app/src/main/assets/lang/th/crash.tsv
+new file mode 100644
+index 0000000..5263edc
+--- /dev/null
++++ b/app/src/main/assets/lang/th/crash.tsv
+@@ -0,0 +1,70 @@
++# Panel crash: penjelasan sumber crash dan bantuan AI
++AmberLauncher berhenti	AmberLauncher หยุดทำงาน
++Minecraft berhenti mendadak	Minecraft หยุดทำงานกะทันหัน
++Aplikasi tertutup karena kesalahan tak terduga	แอปปิดลงเพราะข้อผิดพลาดที่ไม่คาดคิด
++Kembali ke launcher	กลับไปที่ตัวเปิดเกม
++Penjelasan	คำอธิบาย
++Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	แครชไม่ได้หมายความว่าตัวเปิดเกมเสียเสมอไป Mod, RAM ของมือถือ และไดรเวอร์กราฟิกเป็นสาเหตุบ่อยกว่ามาก ดังนั้นควรหาสาเหตุก่อนแจ้งผู้พัฒนา
++Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	ตัวเปิดเกมหยุดทำงานกะทันหันเพราะข้อผิดพลาดที่ไม่คาดคิด ส่งล็อกให้ผู้พัฒนาเพื่อให้แก้ไขได้
++Dugaan penyebab	สาเหตุที่น่าจะเป็น
++Kesalahan di dalam AmberLauncher	ข้อผิดพลาดภายใน AmberLauncher
++Memori (RAM) HP habis	หน่วยความจำ (RAM) ของมือถือหมด
++Renderer atau driver grafis	Renderer หรือไดรเวอร์กราฟิก
++Mod, versi Java, atau file game	Mod, เวอร์ชัน Java หรือไฟล์เกม
++Belum bisa dipastikan	ยังระบุไม่ได้
++Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	ครั้งนี้ตัวเปิดเกมเองที่หยุดทำงาน ไม่ใช่เกมหรือ Mod การแจ้งผู้พัฒนาช่วยให้แก้ไขได้มาก
++Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	ระบบหยุดเกมเพราะ RAM ของมือถือไม่พอสำหรับเกม Mod หรือการตั้งค่ากราฟิกที่ใช้อยู่ โดยปกติไม่ใช่ความเสียหายของตัวเปิดเกม ลองลดการจัดสรร RAM ของเกม (ไม่เกินครึ่งหนึ่งของ RAM มือถือ) ลด Mod และปิดแอปอื่น
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	เกมหยุดทำงานในส่วนกราฟิกหรือไลบรารีที่มากับมือถือ สาเหตุที่พบบ่อยคือ renderer ไม่เหมาะกับมือถือเครื่องนี้ ลองเปลี่ยน renderer ในการตั้งค่า instance หากทุก renderer ล้มเหลว จึงอาจเป็นปัญหาของตัวเปิดเกม
++Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	เกมเกิดข้อผิดพลาดขณะทำงาน มักเกิดจาก Mod ที่ไม่ตรงกับเวอร์ชันเกมหรือ loader, Mod ที่ขาดส่วนที่ต้องพึ่งพา (dependency) หรือเวอร์ชัน Java ไม่เหมาะสม โดยปกติไม่ใช่ความเสียหายของตัวเปิดเกม
++Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	ต้องดูเนื้อหาในล็อกจึงจะเห็นสาเหตุ AI ช่วยอ่านให้คุณได้
++Detail teknis	รายละเอียดทางเทคนิค
++Kesalahan tak terduga di dalam aplikasi	ข้อผิดพลาดที่ไม่คาดคิดภายในแอป
++Status keluar: {~0}	สถานะการออก: {0}
++Cari solusi dengan AI	หาวิธีแก้ด้วย AI
++Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	คัดลอกล็อกพร้อมคำถามที่เตรียมไว้ แล้ววางในแชท AI โดยปกติ AI จะชี้สาเหตุและวิธีแก้ได้ ให้ส่งข้อความล็อก ไม่ใช่ภาพหน้าจอ
++Salin log untuk AI	คัดลอกล็อกสำหรับ AI
++Atau buka langsung (log otomatis disalin)	หรือเปิดโดยตรง (คัดลอกล็อกให้อัตโนมัติ)
++Lapor ke pengembang	แจ้งผู้พัฒนา
++Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	หาก AI สรุปว่าปัญหาอยู่ที่ตัวเปิดเกม ค่อยแจ้งบน GitHub ล็อกจะถูกคัดลอกให้อัตโนมัติ เพียงวางในรายงาน
++Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	แจ้งบน GitHub เพื่อให้แก้ไขได้ ล็อกจะถูกคัดลอกให้อัตโนมัติ เพียงวางในรายงาน
++Lapor di GitHub	แจ้งบน GitHub
++Cara lain membagikan log	วิธีอื่นในการแชร์ล็อก
++Bagikan file	แชร์ไฟล์
++Tautan mclo.gs	ลิงก์ mclo.gs
++Mengunggah...	กำลังอัปโหลด...
++Buka tautan	เปิดลิงก์
++Log untuk AI disalin. Tempel di kolom chat AI.	คัดลอกล็อกสำหรับ AI แล้ว วางในช่องแชท AI
++Log disalin. Tempel di laporan.	คัดลอกล็อกแล้ว วางในรายงาน
++Tidak bisa membuka tautan.	เปิดลิงก์ไม่ได้
++Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	สวัสดี Minecraft Java Edition ของฉันแครชบนมือถือ Android เมื่อเปิดผ่าน AmberLauncher ช่วยอธิบายสาเหตุด้วยภาษาง่ายๆ (ฉันเป็นมือใหม่) แล้วบอกวิธีแก้ทีละขั้นตอน หากสาเหตุมาจาก Mod โปรดระบุว่าต้องลบหรือเปลี่ยน Mod ตัวไหน
++Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	สวัสดี แอป AmberLauncher (ตัวเปิด Minecraft Java Edition สำหรับ Android) หยุดทำงานเอง ช่วยอธิบายสาเหตุด้วยภาษาง่ายๆ (ฉันเป็นมือใหม่) และแนะนำสิ่งที่ฉันลองได้ หากคุณคิดว่าเป็นบั๊กของตัวเปิดเกม ช่วยบอกด้วย
++Perangkat: {0}	อุปกรณ์: {0}
++Versi Minecraft: {0}	เวอร์ชัน Minecraft: {0}
++Grafis: {0}	กราฟิก: {0}
++Jumlah mod: {0}	จำนวน Mod: {0}
++Daftar mod: {0}	รายชื่อ Mod: {0}
++Isi log crash:	เนื้อหาล็อกแครช:
++Turunkan RAM ke {0} MB	ลด RAM เหลือ {0} MB
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	เพิ่มพื้นที่ว่างให้มือถือ เพิ่มกลับได้ที่ การตั้งค่า > หน่วยความจำ
++Pakai renderer Otomatis	ใช้ renderer แบบอัตโนมัติ
++Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	renderer ที่คุณเลือกอาจไม่เหมาะกับมือถือเครื่องนี้ โหมดอัตโนมัติจะเลือกอันที่เหมาะที่สุด
++Coba renderer {0}	ลอง renderer {0}
++Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	renderer ปัจจุบันน่าจะมีปัญหาบนมือถือเครื่องนี้ เปลี่ยนอีกครั้งได้ที่ การตั้งค่า > กราฟิก
++Matikan shader	ปิด shader
++Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shader ทำให้ GPU และหน่วยความจำทำงานหนัก เปิดกลับได้จากเมนูวิดีโอของเกม
++Nonaktifkan mod tersangka	ปิดใช้งาน Mod ที่น่าสงสัย
++Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mod ที่ถูกกล่าวถึงในล็อก: {0} เปิดใช้งานอีกครั้งได้ในเมนู Mod
++Reset Java ke Otomatis	รีเซ็ต Java เป็นอัตโนมัติ
++Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	เวอร์ชัน Java ที่เลือกอาจไม่ตรงกับเกมนี้ โหมดอัตโนมัติจะเลือกเวอร์ชันที่เหมาะสม
++RAM game diturunkan ke {0} MB.	ลด RAM ของเกมเหลือ {0} MB แล้ว
++Renderer dikembalikan ke Otomatis.	ตั้ง renderer กลับเป็นอัตโนมัติแล้ว
++Renderer diganti ke {0}.	เปลี่ยน renderer เป็น {0} แล้ว
++Shader dimatikan.	ปิด shader แล้ว
++Mod dinonaktifkan: {0}.	ปิดใช้งาน Mod แล้ว: {0}
++Java dikembalikan ke Otomatis.	ตั้ง Java กลับเป็นอัตโนมัติแล้ว
++Gagal menerapkan. Coba lewat Pengaturan.	ใช้ไม่สำเร็จ ลองทำผ่านการตั้งค่า
++Pemulihan cepat	กู้คืนด่วน
++Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	แตะเพื่อลองวิธีแก้ที่น่าจะช่วยได้มากที่สุด ทุกอย่างย้อนกลับได้
++Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	บันทึกการเปลี่ยนแปลงแล้ว กลับไปที่ตัวเปิดเกมแล้วเริ่มเกมอีกครั้ง
++Sudah diterapkan	ใช้แล้ว
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	เกมหยุดทำงานในส่วนกราฟิกหรือไลบรารีที่มากับมือถือ สาเหตุที่พบบ่อยคือ renderer ไม่เหมาะกับมือถือเครื่องนี้ ลองเปลี่ยน renderer ที่ การตั้งค่า > กราฟิก หากทุก renderer ล้มเหลว จึงอาจเป็นปัญหาของตัวเปิดเกม
+diff --git a/app/src/main/assets/lang/th/dialogs.tsv b/app/src/main/assets/lang/th/dialogs.tsv
+new file mode 100644
+index 0000000..01d7d7e
+--- /dev/null
++++ b/app/src/main/assets/lang/th/dialogs.tsv
+@@ -0,0 +1,183 @@
++# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
++Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	ตัวเปิดเกมเกิดข้อผิดพลาดภายในที่คอมโพเนนต์ UI หรือโปรเซสเบื้องหลังของระบบ
++INCIDENT DIAGNOSTICS \u00b7 JVM TERMINATION	การวินิจฉัยเหตุการณ์ \u00b7 JVM ยุติการทำงาน
++STATUS PELUNCUR	สถานะตัวเปิดเกม
++INFORMASI SESI GAME	ข้อมูลเซสชันเกม
++{0} Mod	{0} Mod
++Log: {0}	ล็อก: {0}
++DIAGNOSA KELUAR SISTEM	การวินิจฉัยการออกจากระบบ
++SOLUSI & SARAN PEMULIHAN	วิธีแก้และคำแนะนำการกู้คืน
++Log berhasil diunggah & tautan disalin!	อัปโหลดล็อกสำเร็จและคัดลอกลิงก์แล้ว!
++Gagal mengunggah: {~0}	อัปโหลดไม่สำเร็จ: {0}
++MENGUNGGAH LOG...	กำลังอัปโหลดล็อก...
++BUKA TAUTAN MCLO.GS	เปิดลิงก์ MCLO.GS
++UNGGAH TAUTAN LOG (MCLO.GS)	อัปโหลดลิงก์ล็อก (MCLO.GS)
++BAGIKAN	แชร์
++Log disalin ke clipboard!	คัดลอกล็อกไปยังคลิปบอร์ดแล้ว!
++SALIN	คัดลอก
++LOG CRASH	ล็อกแครช
++Disalin ke papan klip!	คัดลอกไปยังคลิปบอร์ดแล้ว!
++Gagal membaca file log: {0}	อ่านไฟล์ล็อกไม่สำเร็จ: {0}
++Tidak ada rincian log yang tersedia.	ไม่มีรายละเอียดล็อก
++Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	ตัวเปิดเกมเกิดข้อผิดพลาดภายในที่คอมโพเนนต์ UI หรือโปรเซสเบื้องหลัง กรุณาแจ้งล็อก stack trace นี้ให้ผู้พัฒนา AmberLauncher
++Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	ตัวเปิดเกมเกิดข้อผิดพลาดที่ไม่คาดคิด (Uncaught Exception)
++JVM dihentikan karena sinyal fatal {0} ({1}).	JVM ถูกหยุดด้วยสัญญาณร้ายแรง {0} ({1})
++JVM keluar dengan kode {0} ({1}).	JVM ออกด้วยรหัส {0} ({1})
++PELUNCUR MENGALAMI KESALAHAN	ตัวเปิดเกมพบข้อผิดพลาด
++GAME MENGALAMI CRASH	เกมแครช
++Rotasi Layar	การหมุนหน้าจอ
++Tautan berhasil diunggah & disalin!	อัปโหลดลิงก์สำเร็จและคัดลอกแล้ว!
++Log berhasil disalin ke clipboard!	คัดลอกล็อกไปยังคลิปบอร์ดสำเร็จ!
++Aplikasi AmberLauncher	แอป AmberLauncher
++Lokasi Log: {0}	ตำแหน่งล็อก: {0}
++STATUS PENGHENTIAN PROSES	สถานะการยุติโปรเซส
++CATATAN ANALISIS LOG	บันทึกการวิเคราะห์ล็อก
++MENGUNGGAH LOG KE MCLO.GS...	กำลังอัปโหลดล็อกไปยัง MCLO.GS...
++UNGGAH TAUTAN (MCLO.GS)	อัปโหลดลิงก์ (MCLO.GS)
++BAGIKAN LOG	แชร์ล็อก
++SALIN TEKS	คัดลอกข้อความ
++MULAI ULANG	เริ่มใหม่
++Unknown	ไม่ทราบ
++MINECRAFT MENGALAMI CRASH	MINECRAFT แครช
++JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	JVM ออกด้วยรหัส {0} (Signal: {1}).\nตรวจสอบไฟล์ล็อกเพื่อดูรายละเอียดเพิ่มเติม
++Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	โปรเซสเกมหยุดกะทันหัน (อาจถูกระบบหยุดเพราะ RAM หมด หรือไดรเวอร์เนทีฟแครช)
++SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (CPU ไม่รองรับคำสั่ง)
++SIGABRT (Native Assertion / Abort)	SIGABRT (Native Assertion / Abort)
++SIGBUS (Kesalahan Bus Memori)	SIGBUS (ข้อผิดพลาดบัสหน่วยความจำ)
++SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (ข้อผิดพลาดการคำนวณทศนิยม)
++SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (ถูก OS หยุด / RAM หมด)
++SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (เข้าถึงหน่วยความจำผิดกฎ / Segfault)
++SIGTERM (Permintaan Terminasi)	SIGTERM (คำขอให้ยุติ)
++Selesai Normal (0)	เสร็จสิ้นตามปกติ (0)
++Kesalahan Inisialisasi Mod / Java Exception (1)	ข้อผิดพลาดการเริ่มต้น Mod / Java Exception (1)
++Dihentikan Pengguna (SIGINT 130)	ผู้ใช้หยุด (SIGINT 130)
++Native Driver Abort (SIGABRT 134)	Native Driver Abort (SIGABRT 134)
++Kehabisan Memori RAM / OOM (SIGKILL 137)	RAM หมด / OOM (SIGKILL 137)
++Crash Driver Grafis / Segfault (SIGSEGV 139)	ไดรเวอร์กราฟิกแครช / Segfault (SIGSEGV 139)
++Kegagalan Bootstrap Mesin Virtual (-1)	Bootstrap เครื่องเสมือนล้มเหลว (-1)
++Kode Keluar {0}	รหัสออก {0}
++Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	หากต้องการรายละเอียดสาเหตุ โปรดตรวจสอบไฟล์ล็อก หากแก้ปัญหาด้วยตัวเองไม่ได้ ให้ส่งไฟล์ล็อกให้ผู้ที่หรือทีมที่วิเคราะห์ได้ อย่าถ่ายภาพหน้าจอปัจจุบันเพียงอย่างเดียว เพราะภาพหน้าจอให้ข้อมูลทางเทคนิคไม่เพียงพอที่จะแก้ปัญหา
++JVM digugurkan karena sinyal fatal {0} ({1}).	JVM ถูกยกเลิกด้วยสัญญาณร้ายแรง {0} ({1})
++File log tidak ditemukan.	ไม่พบไฟล์ล็อก
++Log Crash AmberLauncher - {0}	ล็อกแครช AmberLauncher - {0}
++Bagikan Log Crash: {0}	แชร์ล็อกแครช: {0}
++Tidak ada aplikasi untuk membagikan file ini.	ไม่มีแอปสำหรับแชร์ไฟล์นี้
++Gagal membagikan file: {0}	แชร์ไฟล์ไม่สำเร็จ: {0}
++Konten log kosong.	เนื้อหาล็อกว่างเปล่า
++Gagal mengunggah log (HTTP {0}): {1}	อัปโหลดล็อกไม่สำเร็จ (HTTP {0}): {1}
++Server mclo.gs tidak mengembalikan URL.	เซิร์ฟเวอร์ mclo.gs ไม่ส่ง URL กลับมา
++File log tidak ditemukan: {0}	ไม่พบไฟล์ล็อก: {0}
++Tombol kedua	ปุ่มที่สอง
++Pilih tombol	เลือกปุ่ม
++Ditekan bersamaan dengan tombol utama	กดพร้อมกับปุ่มหลัก
++Ketuk kategori, lalu ketuk tombolnya	แตะหมวดหมู่ แล้วแตะปุ่ม
++Cari tombol	ค้นหาปุ่ม
++Ketik nama tombol, misalnya Shift atau F3	พิมพ์ชื่อปุ่ม เช่น Shift หรือ F3
++Tidak ada yang cocok	ไม่พบที่ตรงกัน
++Cari tombol (W, Shift, F3, Tab...)	ค้นหาปุ่ม (W, Shift, F3, Tab...)
++Mouse	เมาส์
++Gerakan	การเคลื่อนที่
++Aksi	การกระทำ
++Angka & Hotbar	ตัวเลขและ Hotbar
++Fungsi (F1-F12)	ฟังก์ชัน (F1-F12)
++Modifier & Kontrol	Modifier และ Control
++Navigasi	การนำทาง
++Alfabet (A - Z)	ตัวอักษร (A - Z)
++Simbol	สัญลักษณ์
++Umum	ทั่วไป
++Modifier	Modifier
++Alfabet	ตัวอักษร
++Angka	ตัวเลข
++None	ไม่มี
++Key {0}	ปุ่ม {0}
++Mouse Kiri (Attack/Break)	เมาส์ซ้าย (โจมตี/ทุบ)
++Mouse Kanan (Use/Place)	เมาส์ขวา (ใช้/วาง)
++Mouse Tengah (Pick Block)	เมาส์กลาง (เลือกบล็อก)
++Mouse Tombol 4	ปุ่มเมาส์ 4
++Mouse Tombol 5	ปุ่มเมาส์ 5
++Scroll Wheel (Slide Naik/Turun)	ลูกกลิ้งเมาส์ (เลื่อนขึ้น/ลง)
++W (Maju)	W (เดินหน้า)
++A (Kiri)	A (ซ้าย)
++S (Mundur)	S (ถอยหลัง)
++D (Kanan)	D (ขวา)
++SPACE (Lompat)	SPACE (กระโดด)
++LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (ย่อ/Sneak)
++LEFT CTRL (Sprint/Lari)	LEFT CTRL (วิ่ง/Sprint)
++E (Inventory)	E (ช่องเก็บของ)
++Q (Drop Item)	Q (ทิ้งไอเทม)
++F (Swap Hand)	F (สลับมือ)
++T (Buka Chat)	T (เปิดแชท)
++/ (Buka Command)	/ (เปิดคำสั่ง)
++ENTER (Kirim/Pilih)	ENTER (ส่ง/เลือก)
++ESCAPE (Pause/Menu)	ESCAPE (หยุดชั่วคราว/เมนู)
++TAB (Daftar Player)	TAB (รายชื่อผู้เล่น)
++BACKSPACE (Hapus)	BACKSPACE (ลบ)
++F1 (Sembunyikan HUD)	F1 (ซ่อน HUD)
++F2 (Screenshot)	F2 (ภาพหน้าจอ)
++F3 (Debug Layar)	F3 (หน้าจอดีบัก)
++F4 (Shader / Spectator)	F4 (Shader / Spectator)
++F5 (Ubah Perspektif)	F5 (เปลี่ยนมุมมอง)
++F8 (Cinematic Camera)	F8 (กล้องภาพยนตร์)
++F11 (Fullscreen)	F11 (เต็มหน้าจอ)
++1 (Slot 1)	1 (ช่อง 1)
++2 (Slot 2)	2 (ช่อง 2)
++3 (Slot 3)	3 (ช่อง 3)
++4 (Slot 4)	4 (ช่อง 4)
++5 (Slot 5)	5 (ช่อง 5)
++6 (Slot 6)	6 (ช่อง 6)
++7 (Slot 7)	7 (ช่อง 7)
++8 (Slot 8)	8 (ช่อง 8)
++9 (Slot 9)	9 (ช่อง 9)
++Panah Atas (UP)	ลูกศรขึ้น (UP)
++Panah Bawah (DOWN)	ลูกศรลง (DOWN)
++Panah Kiri (LEFT)	ลูกศรซ้าย (LEFT)
++Panah Kanan (RIGHT)	ลูกศรขวา (RIGHT)
++KURUNG BUKA ( [ { )	วงเล็บเปิด ( [ { )
++KURUNG TUTUP ( ] } )	วงเล็บปิด ( ] } )
++Numpad . (Titik)	Numpad . (จุด)
++Numpad / (Bagi)	Numpad / (หาร)
++Numpad * (Kali)	Numpad * (คูณ)
++Numpad - (Kurang)	Numpad - (ลบ)
++Numpad + (Tambah)	Numpad + (บวก)
++Numpad = (Sama Dengan)	Numpad = (เท่ากับ)
++KONFIGURASI RENDERER	การกำหนดค่า RENDERER
++Tidak dapat membuka panel aplikasi	เปิดแผงของแอปไม่ได้
++Buka Panel Aplikasi {0}	เปิดแผงแอป {0}
++Akses pengaturan driver native, benchmark, dan preferensi aplikasi	เข้าถึงการตั้งค่าไดรเวอร์เนทีฟ เบนช์มาร์ก และค่ากำหนดของแอป
++Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	ไม่มีตัวแปรสภาพแวดล้อมที่กำหนดค่าได้สำหรับ renderer นี้
++PENGATURAN ENVIRONMENT VARIABLES	การตั้งค่าตัวแปรสภาพแวดล้อม
++Pengaturan direset ke default	รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นแล้ว
++RESET DEFAULT	รีเซ็ตเป็นค่าเริ่มต้น
++SIMPAN & TUTUP	บันทึกและปิด
++Nilai aktif: 	ค่าที่ใช้งาน: 
++Masukkan nilai (opsional)	ใส่ค่า (ไม่บังคับ)
++Auto (Rekomendasi)	อัตโนมัติ (แนะนำ)
++Otomatis Cerdas	อัตโนมัติอัจฉริยะ
++Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	เลือก renderer ที่เหมาะสมและเสถียรที่สุดโดยอัตโนมัติตามเวอร์ชัน Minecraft ที่รันอยู่
++Semua Versi Minecraft	ทุกเวอร์ชัน Minecraft
++Rekomendasi Utama (Mali & Adreno)	ตัวเลือกแนะนำ (Mali & Adreno)
++Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Wrapper OpenGL ES 3.x สมัยใหม่ที่ทำงานตรงบนไดรเวอร์ทางการของระบบ เสถียรที่สุดและได้ FPS สูงสุดสำหรับ GPU Mali & Adreno บน MC รุ่นใหม่ (1.17 \u2013 26.3)
++Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	ไลบรารีกราฟิก OpenGL 4.0 MobileGlues สำหรับ Minecraft 1.17 \u2013 1.21.1 เข้ากันได้สูงกับ GPU มือถือหลายแบบ รวมถึง Mali
++Paling Stabil untuk MC Lama	เสถียรที่สุดสำหรับ MC รุ่นเก่า
++Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Wrapper OpenGL ES 2.0 แบบคลาสสิก เข้ากันได้กับ Minecraft 1.7.10 \u2013 1.16.5 และอุปกรณ์สเปกต่ำ
++Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	แปลง OpenGL เดสก์ท็อป 4.6 เป็น Vulkan รองรับ shader mod สมัยใหม่ (Iris/Oculus) และ Mod ขั้นสูง
++Khusus GPU Adreno	เฉพาะ GPU Adreno
++Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	ไดรเวอร์ Mesa Gallium Freedreno แบบโอเพนซอร์สที่ปรับแต่งมาเพื่อชิป Snapdragon / GPU Adreno โดยเฉพาะ
++Pustaka grafis MobileGL (Vulkan & GLES backend)	ไลบรารีกราฟิก MobileGL (แบ็กเอนด์ Vulkan & GLES)
++Renderer eksternal dari APK: {0} ({1})	Renderer ภายนอกจาก APK: {0} ({1})
++Plugin Eksternal	ปลั๊กอินภายนอก
++Renderer APK: {0} ({1})	Renderer APK: {0} ({1})
++Close	ปิด
++mclo.gs link	ลิงก์ mclo.gs
++Crash Log	ล็อกแครช
++LAUNCHER ERROR	ข้อผิดพลาดของ LAUNCHER
++EXIT CODE {0}	รหัสออก {0}
++TERMINAL LOG / STACK TRACE	ล็อกเทอร์มินัล / STACK TRACE
++Impor layout kontrol?	นำเข้าเลย์เอาต์การควบคุม?
++Ganti layout	แทนที่เลย์เอาต์
++Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	เลย์เอาต์ปุ่มปัจจุบันจะถูกแทนที่ด้วยปุ่ม {0} ปุ่มจากไฟล์นี้
++Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	ไฟล์นี้มีปุ่มมาโคร {0} ปุ่มที่พิมพ์แชทหรือคำสั่งอัตโนมัติ ตรวจสอบก่อนใช้บนเซิร์ฟเวอร์
++Utama	หลัก
++Navigasi & Numpad	การนำทางและ Numpad
++Ketuk tombol yang diinginkan	แตะปุ่มที่ต้องการ
++Error: {0}	ข้อผิดพลาด: {0}
+diff --git a/app/src/main/assets/lang/th/editor.tsv b/app/src/main/assets/lang/th/editor.tsv
+new file mode 100644
+index 0000000..a51f1a4
+--- /dev/null
++++ b/app/src/main/assets/lang/th/editor.tsv
+@@ -0,0 +1,70 @@
++# Editor tata letak kontrol
++\u2713 Layout tombol in-game disimpan!	\u2713 บันทึกเลย์เอาต์ปุ่มในเกมแล้ว!
++Selesai	เสร็จสิ้น
++Kembali	กลับ
++Tombol baru ditambahkan di tengah layar!	เพิ่มปุ่มใหม่ตรงกลางหน้าจอแล้ว!
+++ TOMBOL	+ ปุ่ม
++Joystick WASD ditambahkan!	เพิ่มจอยสติ๊ก WASD แล้ว!
++\u2713 Layout GUI berhasil disimpan!	\u2713 บันทึกเลย์เอาต์ GUI สำเร็จ!
++PENGATURAN TOMBOL	การตั้งค่าปุ่ม
++Posisi: {0}% x {1}%	ตำแหน่ง: {0}% x {1}%
++Label Teks Tombol:	ข้อความบนปุ่ม:
++\ud83d\udd12 Tetap	\ud83d\udd12 คงที่
++Label tombol...	ข้อความบนปุ่ม...
++Tipe Kontrol:	ประเภทการควบคุม:
++\ud83d\udd79 Virtual Analog Joystick (WASD)	\ud83d\udd79 จอยสติ๊กอนาล็อกเสมือน (WASD)
++Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	อนาล็อก 8 ทิศทางที่ลื่นไหล ขยับตัวละครแทนปุ่ม W, A, S, D
++Ukuran Joystick (Diameter):	ขนาดจอยสติ๊ก (เส้นผ่านศูนย์กลาง):
++Transparansi (Opacity):	ความโปร่งใส (Opacity):
++Lari otomatis:	วิ่งอัตโนมัติ:
++Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	ดันไปที่ขอบวงกลมเพื่อวิ่ง ปิดไว้หากต้องการวิ่งด้วยปุ่ม CTRL ของคุณเอง
++Tombol / Aksi Input:	ปุ่ม / การทำงานของอินพุต:
++Indikator FPS In-Game	ตัวแสดง FPS ในเกม
++Toggle Keyboard Layar	สลับคีย์บอร์ดบนหน้าจอ
++Sembunyikan/Tampilkan GUI	ซ่อน/แสดง GUI
++Buka Menu (pengaturan dan keluar)	เปิดเมนู (ตั้งค่าและออก)
++Aksi Sistem Launcher	การทำงานของระบบ Launcher
++Mouse Kiri (Attack)	เมาส์ซ้าย (โจมตี)
++Mouse Kanan (Use)	เมาส์ขวา (ใช้)
++Mouse Tengah (Pick)	เมาส์กลาง (เลือก)
++Mouse Btn {0}	ปุ่มเมาส์ {0}
++Key Code {0}	รหัสปุ่ม {0}
++Ubah >	เปลี่ยน >
++Lebar (Width):	ความกว้าง:
++Tinggi (Height):	ความสูง:
++Kebulatan Sudut:	ความมนของมุม:
++Mode Toggle:	โหมดสลับ:
++Sekali tap untuk kunci	แตะครั้งเดียวเพื่อล็อก
++\u26a1 FITUR MAKRO	\u26a1 ฟีเจอร์มาโคร
++Jadikan tombol ini sebagai makro otomatis	ตั้งปุ่มนี้เป็นมาโครอัตโนมัติ
++Pilih Mode Makro:	เลือกโหมดมาโคร:
++\u2328 Chat/Perintah	\u2328 แชท/คำสั่ง
++Ketik otomatis	พิมพ์อัตโนมัติ
++\ud83d\udd17 Kombinasi	\ud83d\udd17 คอมโบ
++Multi-Key	หลายปุ่ม
++\u26a1 Turbo Click	\u26a1 คลิกเทอร์โบ
++Auto-clicker	ออโต้คลิกเกอร์
++Teks / Perintah yang diketik otomatis:	ข้อความ / คำสั่งที่พิมพ์อัตโนมัติ:
++Misal: /gamemode creative atau /home	ตัวอย่าง: /gamemode creative หรือ /home
++Template Cepat:	เทมเพลตด่วน:
++Urutan Key Kombinasi:	ลำดับปุ่มคอมโบ:
++Hapus Semua	ลบทั้งหมด
++Belum ada key kombinasi. Tambahkan key di bawah.	ยังไม่มีปุ่มคอมโบ เพิ่มปุ่มด้านล่าง
++Tambah Key ke Kombinasi	เพิ่มปุ่มในคอมโบ
++Tambah Cepat:	เพิ่มด่วน:
++Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	ทำงานตามลำดับจากบน (#1) ลงล่างเมื่อกด
++Interval Auto-Click:	ช่วงเวลาออโต้คลิก:
++Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	ปุ่มจะกดและปล่อยซ้ำๆ อย่างรวดเร็วมากโดยอัตโนมัติขณะที่กดค้างไว้
++Tombol dihapus	ลบปุ่มแล้ว
++HAPUS TOMBOL	ลบปุ่ม
++\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 ลบปุ่มระบบไม่ได้
++MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	โหมดในเกม \u00b7 ลากปุ่มให้ตรงกับ HUD ของเกม แล้วแตะเสร็จสิ้น
++Reset Layout GUI?	รีเซ็ตเลย์เอาต์ GUI?
++Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	ตำแหน่งปุ่มและการปรับแต่งทั้งหมดจะถูกคืนเป็นเลย์เอาต์เริ่มต้นมาตรฐานของ AmberLauncher
++Layout direset ke standar	รีเซ็ตเลย์เอาต์เป็นค่ามาตรฐานแล้ว
++Tampil saat:	แสดงเมื่อ:
++Selalu	เสมอ
++Saat main	ขณะเล่น
++Saat menu	ขณะอยู่ในเมนู
++Menu = inventori, chat, dan layar lain di dalam game.	เมนู = ช่องเก็บของ แชท และหน้าจออื่นๆ ในเกม
++Semua tombol	ทุกปุ่ม
+diff --git a/app/src/main/assets/lang/th/game.tsv b/app/src/main/assets/lang/th/game.tsv
+new file mode 100644
+index 0000000..9cc6a9f
+--- /dev/null
++++ b/app/src/main/assets/lang/th/game.tsv
+@@ -0,0 +1,92 @@
++# Menu in-game, loading, dan dialog kecil
++Tombol	ปุ่ม
++Atur tombol	จัดปุ่ม
++TAMPILAN	การแสดงผล
++Resolusi render	ความละเอียดเรนเดอร์
++Hemat 50%	ประหยัด 50%
++Seimbang 75%	สมดุล 75%
++Penuh 100%	เต็ม 100%
++Pin FPS di layar	ปักหมุด FPS บนหน้าจอ
++Tetap tampil saat tombol layar disembunyikan	แสดงต่อเนื่องแม้ซ่อนปุ่มบนหน้าจอ
++KAMERA DAN KURSOR	กล้องและเคอร์เซอร์
++Kecepatan kamera	ความเร็วกล้อง
++Kecepatan kursor	ความเร็วเคอร์เซอร์
++Mode sentuh	โหมดสัมผัส
++Geser	เลื่อน
++Ketuk	แตะ
++Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	เลื่อน: หน้าจอทำหน้าที่เป็นแทร็กแพด แตะ: นิ้วของคุณเป็นเคอร์เซอร์โดยตรง
++Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	กดปุ่มโจมตีหรือกระโดดค้างไว้แล้วเลื่อนนิ้วเพื่อหมุนกล้อง ปิดไว้สำหรับ PvP
++PINTAS	ทางลัด
++Kamera	กล้อง
++Jeda	หยุดชั่วคราว
++Pemain	ผู้เล่น
++Sembunyi HUD	ซ่อน HUD
++Keluar dari game	ออกจากเกม
++Keluar dari game?	ออกจากเกมหรือไม่?
++Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft จะถูกหยุดและคุณจะกลับไปที่ตัวเปิดเกม โลกที่ยังไม่ได้บันทึกอาจสูญหาย
++sisa RAM	RAM เหลือ
++PANAS	ร้อน
++Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	แตะไอคอนเฟืองหรือตัวเลข FPS บนหน้าจอเพื่อเปิดเมนู ออกจากเกมด้วยปุ่มสีแดงในเมนู
++Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	บั๊กเป็นเรื่องปกติ เพราะไม่มีสิ่งใดสมบูรณ์แบบนอกจากพระผู้เป็นเจ้า
++Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	ปิด Vertical Sync (VSync) ในการตั้งค่า Renderer หากเจออาการกระตุกหรือหน้าจอดำว่างหลังโลโก้ Mojang
++Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	หากหน้าจอ Minecraft ถูกตัดหรืออยู่ในแนวตั้ง ให้เปิดการหมุนหน้าจออัตโนมัติของมือถือและจับหน้าจอในแนวนอน (Landscape) ก่อนกดเล่น
++Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	ใช้ Renderer MobileGlues เพื่อประหยัดแบตเตอรี่และเข้ากันได้กับ shaderpack ดีที่สุด
++Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	หาก Minecraft แครชตอนเริ่มบน GPU Mali/Adreno ลองเปิด 'DISABLE_SUBGROUP' ในการตั้งค่า renderer
++Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	เปิด OpenGL NoError ในการตั้งค่า MobileGlues เพื่อเพิ่ม FPS ขณะเล่น
++Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	ใช้ปุ่ม HIDE GUI เพื่อซ่อนปุ่มเสมือนบนหน้าจอเมื่อเล่นด้วยคีย์บอร์ดและเมาส์จริง
++Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	ตั้งการจัดสรร RAM ให้เหมาะกับมือถือ: 2GB\u20133GB เพียงพอแล้วสำหรับ Minecraft 1.20+ ที่ไม่มี modpack หนักๆ
++Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	ปรับความไวเคอร์เซอร์ในการตั้งค่าการควบคุมเพื่อเล็งและมองรอบๆ ได้แม่นยำขึ้น
++Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	เลือกไดรเวอร์ Vulkan แบบ Turnip บนอุปกรณ์ Snapdragon เพื่อประสิทธิภาพกราฟิกและความเสถียรสูงสุด
++Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	คุณปรับตำแหน่งและขนาดปุ่มควบคุมได้ตามต้องการในเมนูปรับแต่งปุ่ม
++Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	ใช้ฟีเจอร์ Import Addon เพื่อติดตั้ง modpack (.mrpack), Mod (.jar) และ resource pack ได้ทันที!
++Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	แตะปุ่ม ESC บนหน้าจอเพื่อเปิดเมนูหยุดชั่วคราวหรือย้อนกลับไปเมนูก่อนหน้า
++Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	กดปุ่ม F3 เพื่อดูพิกัด ไบโอม และกราฟประสิทธิภาพ FPS ในเกม
++Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	เปิดโหมดเต็มหน้าจอ (Fullscreen) ในการตั้งค่าเพื่อไม่ให้ติดรอยบาก/กล้องหน้าและขยายมุมมอง
++Memuat Minecraft {0}	กำลังโหลด Minecraft {0}
++Tutup loading	ปิดการโหลด
++Menyiapkan mesin Java dan grafis...	กำลังเตรียมเอนจิน Java และกราฟิก...
++Izin penyimpanan	สิทธิ์เข้าถึงที่เก็บข้อมูล
++AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher เก็บโลก Mod และการตั้งค่าไว้ในโฟลเดอร์ nuxlauncher บนที่เก็บข้อมูลของมือถือ เพื่อให้สำรองและย้ายได้ง่าย
++Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android จะเปิดหน้าการตั้งค่า ให้เปิดสิทธิ์เข้าถึงไฟล์ทั้งหมดสำหรับ AmberLauncher แล้วกลับมาที่นี่
++Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	หากเลือกไว้ทีหลัง เกมก็ยังใช้งานได้ ข้อมูลจะถูกเก็บในโฟลเดอร์ส่วนตัวของแอป ซึ่งเปิดจากตัวจัดการไฟล์ได้ไม่ง่าย
++Hapus instance?	ลบ instance?
++Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	โลก Mod เซฟ และการกำหนดค่าทั้งหมดใน instance นี้จะถูกลบถาวรและกู้คืนไม่ได้
++Perender tidak cocok	Renderer เข้ากันไม่ได้
++Tetap jalankan	เปิดเกมต่อไป
++Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Renderer นี้ไม่ได้รับการรองรับอย่างเป็นทางการสำหรับ Minecraft {0} การบังคับใช้อาจทำให้ภาพผิดเพี้ยน หน้าจอค้าง หรือเกมแครช ดำเนินการต่อหรือไม่?
++Dukungan resmi: {0}	รองรับอย่างเป็นทางการ: {0}
++Mengunduh game	กำลังดาวน์โหลดเกม
++Menyiapkan file game...	กำลังเตรียมไฟล์เกม...
++Rekam layar	บันทึกหน้าจอ
++Merekam	กำลังบันทึก
++Dijeda	หยุดชั่วคราว
++Ketuk untuk mulai	แตะเพื่อเริ่ม
++Merekam layar	กำลังบันทึกหน้าจอ
++Ketuk Berhenti untuk menyimpan rekaman.	แตะหยุดเพื่อบันทึกวิดีโอ
++Berhenti	หยุด
++Merekam {0}x{1} \u00b7 {2} fps	กำลังบันทึก {0}x{1} \u00b7 {2} fps
++Izin merekam layar tidak diberikan	ไม่ได้รับอนุญาตให้บันทึกหน้าจอ
++Izin mikrofon ditolak, merekam tanpa suara	ไมโครโฟนถูกปฏิเสธ บันทึกโดยไม่มีเสียง
++Perekam layar tidak tersedia di HP ini	มือถือเครื่องนี้ไม่มีตัวบันทึกหน้าจอ
++Perekam layar tidak tersedia di HP ini.	มือถือเครื่องนี้ไม่มีตัวบันทึกหน้าจอ
++HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	มือถือเครื่องนี้ไม่มีตัวเข้ารหัสวิดีโอแบบฮาร์ดแวร์ ยกเลิกการบันทึกเพื่อไม่ให้เกมกระตุก
++Ruang penyimpanan kurang untuk merekam.	พื้นที่เก็บข้อมูลไม่พอสำหรับบันทึก
++Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	พื้นที่เก็บข้อมูลเต็ม บันทึกและหยุดการบันทึกแล้ว
++Perekam mengalami kesalahan. Rekaman dihentikan.	ตัวบันทึกเกิดข้อผิดพลาด หยุดการบันทึกแล้ว
++Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	ระบบหยุดการจับภาพหน้าจอ บันทึกวิดีโอไว้แล้ว
++Rekaman terlalu singkat, tidak disimpan.	วิดีโอที่บันทึกสั้นเกินไป จึงไม่ได้บันทึกไว้
++Rekaman disimpan di Movies/AmberLauncher	บันทึกวิดีโอไว้ที่ Movies/AmberLauncher
++Rekaman disimpan: {0}	บันทึกวิดีโอแล้ว: {0}
++HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	มือถือร้อนเกินไป บันทึกและหยุดการบันทึกเพื่อให้เกมลื่นไหล
++Gagal memulai rekaman: {~0}	เริ่มการบันทึกไม่สำเร็จ: {0}
++Gagal menyiapkan rekaman: {0}	เตรียมการบันทึกไม่สำเร็จ: {0}
++REKAM	บันทึก
++Berhenti merekam	หยุดบันทึก
++Game saja	เฉพาะเกม
++Dengan tombol	พร้อมปุ่ม
++Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	การบันทึกจะหยุดชั่วคราวขณะเมนูเปิดอยู่ และดำเนินต่ออัตโนมัติเมื่อปิดเมนู
++Tombol layar ikut terekam di video.	ปุ่มบนหน้าจอจะถูกบันทึกลงในวิดีโอด้วย
++Tombol layar disembunyikan dari video (tetap bisa disentuh).	ปุ่มบนหน้าจอถูกซ่อนจากวิดีโอ (ยังแตะใช้งานได้)
++izin tangkap layar tidak valid	สิทธิ์จับภาพหน้าจอไม่ถูกต้อง
++tidak bisa membuat berkas di Movies	สร้างไฟล์ใน Movies ไม่ได้
++tidak bisa membuka berkas rekaman	เปิดไฟล์บันทึกไม่ได้
+diff --git a/app/src/main/assets/lang/th/home.tsv b/app/src/main/assets/lang/th/home.tsv
+new file mode 100644
+index 0000000..1b77185
+--- /dev/null
++++ b/app/src/main/assets/lang/th/home.tsv
+@@ -0,0 +1,35 @@
++# Beranda dan sidebar
++Memproses berkas...	กำลังประมวลผลไฟล์...
++Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan	ตั้งวิดีโอเป็นพื้นหลังแล้ว เสียงและแสงบรรยากาศตั้งได้ที่ การตั้งค่า > การแสดงผล
++Latar belakang diganti	เปลี่ยนพื้นหลังแล้ว
++Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px	ไฟล์ใหญ่เกินไป: รูปภาพหรือ GIF สูงสุด 30 MB, วิดีโอสูงสุด 200 MB และความละเอียด 2560 px
++Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	ใช้ไฟล์นี้ไม่ได้ ให้ใช้รูปภาพ, GIF หรือวิดีโอ MP4 (H.264)
++Silakan buat atau pilih akun terlebih dahulu!	กรุณาสร้างหรือเลือกบัญชีก่อน!
++Menyiapkan OpenJDK ({0})...	กำลังเตรียม OpenJDK ({0})...
++Instalasi selesai! Tekan PLAY untuk bermain.	ติดตั้งเสร็จแล้ว! กดเล่นเพื่อเริ่มเกม
++Gagal mengunduh: {~0}	ดาวน์โหลดไม่สำเร็จ: {0}
++Meluncurkan {0}...	กำลังเปิด {0}...
++Gagal menyiapkan OpenJDK: {~0}	เตรียม OpenJDK ไม่สำเร็จ: {0}
++Membuka folder instance...	กำลังเปิดโฟลเดอร์ instance...
++Latar belakang dikembalikan ke bawaan	คืนค่าพื้นหลังเป็นค่าเริ่มต้นแล้ว
++Instance {0} berhasil dibuat!	สร้าง instance {0} สำเร็จ!
++Instance {0} dibuat. Mengunduh game...	สร้าง instance {0} แล้ว กำลังดาวน์โหลดเกม...
++Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.	ยกเลิกการดาวน์โหลดแล้ว กดดาวน์โหลดเพื่อดำเนินการต่อ
++Instance {0} berhasil dihapus!	ลบ instance {0} สำเร็จ!
++Tambah akun	เพิ่มบัญชี
++Ganti akun	สลับบัญชี
++Ganti latar belakang	เปลี่ยนพื้นหลัง
++Ganti instance	สลับ instance
++UNDUH	ดาวน์โหลด
++Buka folder instance	เปิดโฟลเดอร์ instance
++Belum ada instance	ยังไม่มี instance
++Buat instance Minecraft pertamamu untuk mulai bermain.	สร้าง instance Minecraft แรกของคุณเพื่อเริ่มเล่น
++TAMBAH	เพิ่ม
++Video tidak bisa diputar di HP ini, latar memakai gambar diam	มือถือเครื่องนี้เล่นวิดีโอไม่ได้ จึงใช้ภาพนิ่งเป็นพื้นหลังแทน
++LATAR BELAKANG	พื้นหลัง
++Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps (MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.	รูปภาพเบาที่สุด GIF เคลื่อนไหวได้โดยใช้ทรัพยากรน้อย วิดีโอลื่นที่สุดและเป็น HD 60 fps ได้ (MP4 H.264 สูงสุด 200 MB) แต่ใช้แบตเตอรี่มากกว่า เสียงวิดีโอ แสงบรรยากาศ และโหมดประหยัดแบตเตอรี่ตั้งได้ที่ การตั้งค่า > การแสดงผล
++PILIH FOTO / GIF / VIDEO	เลือกรูปภาพ / GIF / วิดีโอ
++KEMBALI KE BAWAAN	คืนค่าเริ่มต้น
++PILIH INSTANCE	เลือก instance
++Belum ada instance. Buat yang pertama di bawah.	ยังไม่มี instance สร้างอันแรกด้านล่าง
++TAMBAH INSTANCE	เพิ่ม instance
+diff --git a/app/src/main/assets/lang/th/horizon.tsv b/app/src/main/assets/lang/th/horizon.tsv
+new file mode 100644
+index 0000000..c7d3322
+--- /dev/null
++++ b/app/src/main/assets/lang/th/horizon.tsv
+@@ -0,0 +1,62 @@
++# Mesin Rust (Horizon)
++Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	เอนจิน Rust ยังไม่รวมอยู่ในบิลด์นี้ วิธีเพิ่มดูได้ที่ docs/rust-engine.md
++Mesin Rust butuh Android 9 (API 28) ke atas.	เอนจิน Rust ต้องใช้ Android 9 (API 28) ขึ้นไป
++Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	เอนจิน Rust ใช้ได้เฉพาะมือถือ 64 บิต (arm64)
++RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	RAM ของมือถือเครื่องนี้ค่อนข้างจำกัดสำหรับเอนจิน Rust (แนะนำ 4 GB ขึ้นไป) เกมอาจปิดเอง
++Mesin Rust gagal dibuka: {0}	เปิดเอนจิน Rust ไม่สำเร็จ: {0}
++MESIN RUST (HORIZON)	เอนจิน RUST (HORIZON)
++Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	เอนจิน Rust แทนที่ไคลเอนต์ Minecraft Java ทั้งหมด: ไม่ใช้ Java และไม่รองรับ Mod ของ Fabric, Forge หรือ NeoForge
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	รองรับเฉพาะ Minecraft {0} เอนจินจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) เองเมื่อเปิดครั้งแรก
++Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	ทดลอง: ต้องใช้ Android 9 ขึ้นไปและมือถือ 64 บิต
++Tanpa Java	ไม่ใช้ Java
++Jenis berkas ini belum didukung mesin Rust.	เอนจิน Rust ยังไม่รองรับไฟล์ประเภทนี้
++Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	ชื่อไฟล์ไม่เหมาะกับเอนจิน Rust (ยาวเกินไปหรือมีอักขระต้องห้าม)
++Mesin Rust hanya menerima berkas .zip di sini.	เอนจิน Rust รับเฉพาะไฟล์ .zip ที่นี่
++Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	ไฟล์ใหญ่กว่า 256 MB ใหญ่เกินไปสำหรับเอนจิน Rust
++Arsip rusak atau tidak bisa dibaca.	ไฟล์บีบอัดเสียหายหรืออ่านไม่ได้
++Arsip berisi terlalu banyak berkas.	ไฟล์บีบอัดมีไฟล์มากเกินไป
++Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	ไฟล์บีบอัดมีพาธอันตรายหรือซ้ำกัน จึงไม่ได้ติดตั้ง
++Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	เนื้อหาในไฟล์บีบอัดใหญ่เกินไปเมื่อแตกไฟล์ (เกิน 512 MB)
++Metadata resource pack (pack.mcmeta) tidak valid.	เมทาดาทา resource pack (pack.mcmeta) ไม่ถูกต้อง
++Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ resource pack: ไม่พบ pack.mcmeta ที่ระดับบนสุดของไฟล์บีบอัด
++Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ shader pack: ไม่พบโฟลเดอร์ shaders ที่ระดับบนสุดของไฟล์บีบอัด
++Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	นี่คือ shader เนทีฟของ Horizon ให้ติดตั้งจากเมนูนำเข้าภายในเอนจิน Rust (รูปแบบ .hshader)
++Tidak ada berkas .zip yang cocok di versi ini.	ไม่มีไฟล์ .zip ที่ตรงกันในเวอร์ชันนี้
++Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	แหล่งที่มาไม่ให้ค่าเช็กซัมของไฟล์ จึงตรวจสอบการดาวน์โหลดไม่ได้
++Gagal menyimpan berkas ke folder mesin Rust.	บันทึกไฟล์ลงโฟลเดอร์เอนจิน Rust ไม่สำเร็จ
++Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	ยังไม่ได้สร้างการตั้งค่าเกม ให้เปิดเกมหนึ่งครั้ง เข้าไปที่การตั้งค่า เปลี่ยนตัวเลือกหนึ่งอย่าง แล้วลองอีกครั้ง
++Gagal menyimpan pilihan ke pengaturan mesin.	บันทึกตัวเลือกลงการตั้งค่าเอนจินไม่สำเร็จ
++Memeriksa {0}...	กำลังตรวจสอบ {0}...
++Gagal membuka berkas yang dipilih	เปิดไฟล์ที่เลือกไม่สำเร็จ
++Coba ubah kata kunci	ลองเปลี่ยนคำค้นหา
++Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	เอนจิน Rust: เปิดสวิตช์ในรายการที่ติดตั้งเพื่อใช้งาน มีผลเมื่อเปิดเกมครั้งถัดไป
++Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	shader บนเอนจิน Rust ยังอยู่ในขั้นทดลองและอาจทำให้มือถือทำงานหนัก
++Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	เอนจิน Rust 32 บิตใช้ได้เฉพาะมือถือ ARM (armeabi-v7a)
++Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	ทดลองบนมือถือ 32 บิต: ต้องใช้ Android 9 ขึ้นไปและอาจช้ากว่า
++Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Mod ของเอนจิน Rust ใช้รูปแบบ .hmod ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge
++Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	ไฟล์ Mod ใหญ่กว่า 32 MB ใหญ่เกินไปสำหรับเอนจิน Rust
++Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	เนื้อหาของ Mod ใหญ่เกินไปเมื่อแตกไฟล์ (เกิน 64 MB)
++Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	นี่ไม่ใช่ Mod ของ Horizon: ไม่พบ horizon-mod.toml ที่ระดับบนสุดของไฟล์บีบอัด
++Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	manifest ของ Mod (horizon-mod.toml) ไม่ถูกต้องหรือไม่รองรับ
++Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Mod นี้ไม่มีโค้ด (mod.wasm) และไม่ใช่ Mod เนื้อหา (ความสามารถ registries) จึงติดตั้งไม่ได้
++Kode mod (mod.wasm) lebih dari 32 MB.	โค้ดของ Mod (mod.wasm) ใหญ่กว่า 32 MB
++Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	มี Mod รูปแบบโฟลเดอร์ที่ใช้ id เดียวกันอยู่แล้ว ให้ลบอันเก่าก่อน
++Gagal menyimpan pilihan mod ke pengaturan mesin.	บันทึกตัวเลือก Mod ลงการตั้งค่าเอนจินไม่สำเร็จ
++Mod hanya bisa dihidupkan di APK 64-bit.	เปิดใช้ Mod ได้เฉพาะใน APK 64 บิต
++Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	ไม่พบ Mod หรืออ่าน manifest ไม่ได้
++Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	กดปุ่ม Z ค้างเพื่อซูม ปรับได้ที่ Options > Mods ในเกม
++Peta kecil yang bisa diatur di sudut layar	แผนที่ขนาดเล็กที่ปรับแต่งได้ที่มุมหน้าจอ
++Resep dan kegunaan item di samping inventori	สูตรและการใช้งานไอเทมข้างช่องเก็บของ
++Modul F3 yang bisa diatur untuk layar debug	โมดูล F3 ที่ปรับแต่งได้สำหรับหน้าจอดีบัก
++Resep	สูตร
++Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	อ่านแคตตาล็อก Mod ของ Horizon ไม่ได้ ลองอีกครั้งภายหลัง
++Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	แคตตาล็อก Horizon ใช้รูปแบบที่ใหม่กว่า กรุณาอัปเดต Amber
++Tidak ada berkas .hmod yang cocok di versi ini.	ไม่มีไฟล์ .hmod ที่ตรงกันในเวอร์ชันนี้
++Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	แคตตาล็อกไม่ให้ค่าเช็กซัม SHA-256 จึงตรวจสอบการดาวน์โหลดไม่ได้
++Alamat unduhan mod tidak dikenali, jadi ditolak.	ไม่รู้จักที่อยู่ดาวน์โหลด Mod จึงถูกปฏิเสธ
++Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ Mod ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง
++Memuat data dari Horizon...	กำลังโหลดข้อมูลจาก Horizon...
++Gagal memuat dari Horizon	โหลดจาก Horizon ไม่สำเร็จ
++Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Mod ของเอนจิน Rust ใช้รูปแบบ .hmod (ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge) Mod ที่มีโค้ดจะถูกติดตั้งในสถานะปิด ให้เปิดหลังจากตรวจสอบสิทธิ์ของมันที่ Options > Mods ในเกม
++Konten	เนื้อหา
++Berkode	มีโค้ด
+diff --git a/app/src/main/assets/lang/th/instances.tsv b/app/src/main/assets/lang/th/instances.tsv
+new file mode 100644
+index 0000000..48c09cc
+--- /dev/null
++++ b/app/src/main/assets/lang/th/instances.tsv
+@@ -0,0 +1,133 @@
++# Tambah/Ubah instance, unduhan, Java
++Semua	ทั้งหมด
++INSTANCE ARCHITECT	ตัวสร้าง INSTANCE
++Buat Instance Baru	สร้าง Instance ใหม่
++NAMA INSTANCE	ชื่อ INSTANCE
++Default: {0} {1}	ค่าเริ่มต้น: {0} {1}
++MOD LOADER ENGINE	เอนจิน MOD LOADER
++Memuat loader Fabric...	กำลังโหลด Fabric loader...
++\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี Fabric สำหรับ {0}
++SPESIFIKASI TARGET	สเปกเป้าหมาย
++Memuat Fabric...	กำลังโหลด Fabric...
++Fabric Tidak Tersedia	ไม่มี Fabric
++Buat Instance Sekarang	สร้าง Instance เลย
++Cari versi ({0})...	ค้นหาเวอร์ชัน ({0})...
++DAFTAR VERSI	รายการเวอร์ชัน
++{0} versi ditemukan	พบ {0} เวอร์ชัน
++Memuat manifest Mojang...	กำลังโหลด Mojang manifest...
++Tidak ada versi yang cocok	ไม่มีเวอร์ชันที่ตรงกัน
++Auto ({0})	อัตโนมัติ ({0})
++Nama	ชื่อ
++Nama instance	ชื่อ instance
++Lihat mod	ดู Mod
++{0} terpasang	ติดตั้งแล้ว {0}
++Hapus '{0}'?	ลบ '{0}'?
++Semua world, mod, dan file instance dihapus permanen.	โลก Mod และไฟล์ instance ทั้งหมดจะถูกลบถาวร
++Ya, hapus	ใช่ ลบเลย
++Nama instance tidak boleh kosong	ชื่อ instance ต้องไม่ว่าง
++Instance berhasil diperbarui!	อัปเดต instance สำเร็จ!
++Simpan	บันทึก
++Mengambil metadata versi {0}...	กำลังดึงเมทาดาทาของเวอร์ชัน {0}...
++Versi {0} tidak ditemukan di manifest Mojang	ไม่พบเวอร์ชัน {0} ใน Mojang manifest
++Membaca konfigurasi versi...	กำลังอ่านการกำหนดค่าเวอร์ชัน...
++Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	กำลังดาวน์โหลดไคลเอนต์ Minecraft ({0} / {1} MB - {2}%)...
++Mengunduh libraries ({0}/{1})...	กำลังดาวน์โหลดไลบรารี ({0}/{1})...
++Memverifikasi asset index {0}...	กำลังตรวจสอบ asset index {0}...
++Mengunduh aset game ({0}/{1})...	กำลังดาวน์โหลดทรัพยากรของเกม ({0}/{1})...
++Menyiapkan Fabric Loader...	กำลังเตรียม Fabric Loader...
++Tidak dapat menemukan Fabric loader untuk versi {0}	ไม่พบ Fabric loader สำหรับเวอร์ชัน {0}
++Mengambil profil Fabric ({0})...	กำลังดึงโปรไฟล์ Fabric ({0})...
++Gagal memuat profil Fabric: {~0}	โหลดโปรไฟล์ Fabric ไม่สำเร็จ: {0}
++Mengunduh library Fabric ({0}/{1})...	กำลังดาวน์โหลดไลบรารี Fabric ({0}/{1})...
++Instalasi selesai!	ติดตั้งเสร็จแล้ว!
++Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	ปฏิเสธที่อยู่ดาวน์โหลดเพราะไม่ได้ใช้ HTTPS: {0}
++Isi unduhan tidak cocok dengan sidik jari resmi: {0}	เนื้อหาที่ดาวน์โหลดไม่ตรงกับลายนิ้วมือ (fingerprint) ทางการ: {0}
++Failed to download {0}: {1}	ดาวน์โหลด {0} ไม่สำเร็จ: {1}
++Failed to download {0}	ดาวน์โหลด {0} ไม่สำเร็จ
++Empty body for {0}	ไม่มีเนื้อหาสำหรับ {0}
++HTTP Error {0} from {1}	ข้อผิดพลาด HTTP {0} จาก {1}
++HTTP Error {0}	ข้อผิดพลาด HTTP {0}
++Empty response body	เนื้อหาตอบกลับว่างเปล่า
++Tidak dapat memuat versi Fabric untuk {0}	โหลดเวอร์ชัน Fabric สำหรับ {0} ไม่ได้
++Gagal memuat profil Fabric untuk {0} ({1})	โหลดโปรไฟล์ Fabric สำหรับ {0} ไม่สำเร็จ ({1})
++Mengekstrak Java Runtime ({0} universal)...	กำลังแตกไฟล์ Java Runtime ({0} universal)...
++Mengekstrak runtime universal ({0})	กำลังแตกไฟล์รันไทม์ universal ({0})
++Mengekstrak Java Runtime ({0} bin-{1})...	กำลังแตกไฟล์ Java Runtime ({0} bin-{1})...
++Mengekstrak native binary ({0} {1})	กำลังแตกไฟล์ native binary ({0} {1})
++Memverifikasi izin sistem OpenJDK...	กำลังตรวจสอบสิทธิ์ระบบของ OpenJDK...
++Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	การตรวจสอบ OpenJDK {0} ไม่สมบูรณ์หลังแตกไฟล์
++Ekstraksi OpenJDK {0} selesai!	แตกไฟล์ OpenJDK {0} เสร็จแล้ว!
++Membongkar bytecode Java 8: {0} ({1}/{2})...	กำลังแกะ bytecode ของ Java 8: {0} ({1}/{2})...
++Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ Fabric ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
++Lokasi folder disalin ke clipboard:\n{0}	คัดลอกตำแหน่งโฟลเดอร์ไปยังคลิปบอร์ดแล้ว:\n{0}
++Folder: {0}	โฟลเดอร์: {0}
++Buka Folder	เปิดโฟลเดอร์
++Unable to resolve host "{0}": System DNS and Fallback DoH failed	ไม่สามารถ resolve โฮสต์ "{0}": DNS ของระบบและ DoH สำรองล้มเหลว
++Memuat versi Forge...	กำลังโหลดเวอร์ชัน Forge...
++\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี Forge สำหรับ {0}
++\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge ใช้ได้เฉพาะ Minecraft 1.13 ขึ้นไป
++Disarankan	แนะนำ
++Terbaru	ล่าสุด
++Memuat Forge...	กำลังโหลด Forge...
++Forge Tidak Tersedia	ไม่มี Forge
++Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ Forge ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
++Mengunduh installer Forge {0}...	กำลังดาวน์โหลดตัวติดตั้ง Forge {0}...
++Mengunduh library Forge ({0}/{1})...	กำลังดาวน์โหลดไลบรารี Forge ({0}/{1})...
++Menyiapkan Java ({0})...	กำลังเตรียม Java ({0})...
++Memasang Forge {0}...	กำลังติดตั้ง Forge {0}...
++Memasang Forge {0} ({1}/{2})...	กำลังติดตั้ง Forge {0} ({1}/{2})...
++Forge {0} terpasang	ติดตั้ง Forge {0} แล้ว
++Tidak dapat menemukan Forge untuk versi {0}	ไม่พบ Forge สำหรับเวอร์ชัน {0}
++Tidak ada versi Forge untuk {0}	ไม่มีเวอร์ชัน Forge สำหรับ {0}
++Versi Forge belum dipilih	ยังไม่ได้เลือกเวอร์ชัน Forge
++Forge hanya mendukung Minecraft 1.13 ke atas	Forge รองรับเฉพาะ Minecraft 1.13 ขึ้นไป
++Installer Forge {0} rusak atau tidak lengkap	ตัวติดตั้ง Forge {0} เสียหายหรือไม่สมบูรณ์
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง Forge นี้ (Amber ต้องใช้ Forge 1.13 ขึ้นไป)
++Installer Forge untuk Minecraft {0}, bukan {1}	ตัวติดตั้ง Forge นี้สำหรับ Minecraft {0} ไม่ใช่ {1}
++Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี Forge ไม่สำเร็จ: {0} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
++Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	ตัวติดตั้ง Forge ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({0})
++Gagal menyiapkan Java {0}: {1}	เตรียม Java {0} ไม่สำเร็จ: {1}
++Installer Forge gagal (kode {0}): {1}	ตัวติดตั้ง Forge ล้มเหลว (รหัส {0}): {1}
++Installer Forge gagal (kode {0})	ตัวติดตั้ง Forge ล้มเหลว (รหัส {0})
++Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang ไม่มี mappings สำหรับ Minecraft {0}
++Pemasangan Forge	การติดตั้ง Forge
++Memasang Forge	กำลังติดตั้ง Forge
++Proses ini hanya berjalan sekali per versi Forge.	ขั้นตอนนี้ทำเพียงครั้งเดียวต่อเวอร์ชัน Forge
++Forge dipasang sekali saat instance diunduh pertama kali.	Forge จะถูกติดตั้งครั้งเดียวเมื่อดาวน์โหลด instance ครั้งแรก
++Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้ง Forge (เหลือ {0} MB ต้องการอย่างน้อย {1} MB)
++Memuat versi NeoForge...	กำลังโหลดเวอร์ชัน NeoForge...
++\u26a0\ufe0f NeoForge belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี NeoForge สำหรับ {0}
++\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	\u26a0\ufe0f NeoForge ใช้ได้เฉพาะ Minecraft 1.20.2 ขึ้นไป
++Memuat NeoForge...	กำลังโหลด NeoForge...
++NeoForge Tidak Tersedia	ไม่มี NeoForge
++Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ NeoForge ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
++Mengunduh installer NeoForge {0}...	กำลังดาวน์โหลดตัวติดตั้ง NeoForge {0}...
++Mengunduh library NeoForge ({0}/{1})...	กำลังดาวน์โหลดไลบรารี NeoForge ({0}/{1})...
++Memasang NeoForge {0}...	กำลังติดตั้ง NeoForge {0}...
++Memasang NeoForge {0} ({1}/{2})...	กำลังติดตั้ง NeoForge {0} ({1}/{2})...
++NeoForge {0} terpasang	ติดตั้ง NeoForge {0} แล้ว
++Tidak dapat menemukan NeoForge untuk versi {0}	ไม่พบ NeoForge สำหรับเวอร์ชัน {0}
++Tidak ada versi NeoForge untuk {0}	ไม่มีเวอร์ชัน NeoForge สำหรับ {0}
++Versi NeoForge belum dipilih	ยังไม่ได้เลือกเวอร์ชัน NeoForge
++NeoForge hanya mendukung Minecraft 1.20.2 ke atas	NeoForge รองรับเฉพาะ Minecraft 1.20.2 ขึ้นไป
++Installer NeoForge {0} rusak atau tidak lengkap	ตัวติดตั้ง NeoForge {0} เสียหายหรือไม่สมบูรณ์
++Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง NeoForge นี้ (Amber ต้องใช้ NeoForge 1.20.2 ขึ้นไป)
++Installer NeoForge untuk Minecraft {0}, bukan {1}	ตัวติดตั้ง NeoForge นี้สำหรับ Minecraft {0} ไม่ใช่ {1}
++Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี NeoForge ไม่สำเร็จ: {0} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
++Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	ตัวติดตั้ง NeoForge ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({0})
++Installer NeoForge gagal (kode {0}): {1}	ตัวติดตั้ง NeoForge ล้มเหลว (รหัส {0}): {1}
++Installer NeoForge gagal (kode {0})	ตัวติดตั้ง NeoForge ล้มเหลว (รหัส {0})
++Memasang NeoForge	กำลังติดตั้ง NeoForge
++Proses ini hanya berjalan sekali per versi NeoForge.	ขั้นตอนนี้ทำเพียงครั้งเดียวต่อเวอร์ชัน NeoForge
++NeoForge dipasang sekali saat instance diunduh pertama kali.	NeoForge จะถูกติดตั้งครั้งเดียวเมื่อดาวน์โหลด instance ครั้งแรก
++Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้ง NeoForge (เหลือ {0} MB ต้องการอย่างน้อย {1} MB)
++Buat Instance	สร้าง Instance
++Cari versi...	ค้นหาเวอร์ชัน...
++Memuat versi Minecraft...	กำลังโหลดเวอร์ชัน Minecraft...
++Memuat versi yang didukung {0}...	กำลังโหลดเวอร์ชันที่ {0} รองรับ...
++Gagal memuat daftar versi Minecraft	โหลดรายการเวอร์ชัน Minecraft ไม่สำเร็จ
++Dirilis {0}	เผยแพร่เมื่อ {0}
++LOADER {0}	{0} LOADER
++Memuat loader {0}...	กำลังโหลด {0} loader...
++Loader {0} belum tersedia untuk Minecraft {1}	ยังไม่มี loader {0} สำหรับ Minecraft {1}
++Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	เลือกเวอร์ชันล่าสุดให้อัตโนมัติ แตะเวอร์ชันอื่นหากต้องการ loader ที่เก่ากว่า
+diff --git a/app/src/main/assets/lang/th/minecraft26.tsv b/app/src/main/assets/lang/th/minecraft26.tsv
+new file mode 100644
+index 0000000..c4c8088
+--- /dev/null
++++ b/app/src/main/assets/lang/th/minecraft26.tsv
+@@ -0,0 +1,11 @@
++# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
++MINECRAFT 26.X KE ATAS	MINECRAFT 26.X ขึ้นไป
++Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	เวอร์ชันนี้ใช้ Java 25 และเอนจินกราฟิกใหม่ มือถือบางรุ่นยังรันไม่ได้ โดยเฉพาะรุ่นที่ไดรเวอร์ Vulkan เก่าหรือไม่ครบถ้วน
++Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	หากเปิดเกมไม่ได้ สาเหตุอาจมาจากมือถือหรือเกมเวอร์ชันนี้ ไม่ใช่ตัวเปิดเกม ลองเปลี่ยน renderer ในการตั้งค่า หรือใช้ Minecraft 1.21.x
++Memeriksa dukungan Vulkan HP ini...	กำลังตรวจสอบการรองรับ Vulkan ของมือถือเครื่องนี้...
++Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	เวอร์ชันนี้ใช้ OpenGL โดย Vulkan เริ่มใช้ตั้งแต่ Minecraft 26.2
++Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	การตรวจสอบ Vulkan ใช้ไม่ได้ในบิลด์นี้ จึงยืนยันการรองรับ Vulkan ของมือถือไม่ได้
++Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	การตรวจสอบ Vulkan ไม่เสร็จสิ้น ไดรเวอร์ Vulkan ของมือถือเครื่องนี้อาจมีปัญหา Minecraft 26.2 ขึ้นไปจึงอาจล้มเหลวหากใช้ Vulkan
++HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	มือถือเครื่องนี้ไม่มีไดรเวอร์ Vulkan ที่ใช้งานได้ Minecraft 26.2 ขึ้นไปใช้ Vulkan บนเครื่องนี้ไม่ได้ ให้เลือก Prefer OpenGL ในการตั้งค่าวิดีโอของเกม
++Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	Vulkan ของมือถือเครื่องนี้ตรงตามข้อกำหนดของ Minecraft 26.2 ขึ้นไป
++Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	Vulkan ของมือถือเครื่องนี้ยังไม่ตรงตามข้อกำหนดของ Minecraft 26.2 ขึ้นไป หากเกมใช้ Vulkan อาจเริ่มไม่ขึ้น ให้เลือก Prefer OpenGL ในการตั้งค่าวิดีโอของเกม
+diff --git a/app/src/main/assets/lang/th/misc.tsv b/app/src/main/assets/lang/th/misc.tsv
+new file mode 100644
+index 0000000..3681c19
+--- /dev/null
++++ b/app/src/main/assets/lang/th/misc.tsv
+@@ -0,0 +1,57 @@
++# Sisa teks: Home, kategori mod, pesan galat, toast in-game
++RAM bebas {0} GB	RAM ว่าง {0} GB
++Otomatis	อัตโนมัติ
++\u26a1 Optimization	\u26a1 การเพิ่มประสิทธิภาพ
++\u2699\ufe0f Technology	\u2699\ufe0f เทคโนโลยี
++\ud83e\ude84 Magic	\ud83e\ude84 เวทมนตร์
++\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f การผจญภัย
++\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f ยูทิลิตี้
++\ud83c\udfa8 Decoration	\ud83c\udfa8 การตกแต่ง
++\ud83d\udcdc Quests	\ud83d\udcdc เควสต์
++\u2728 Simplistic	\u2728 เรียบง่าย
++\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f ดั้งเดิม
++\ud83c\udf05 Realistic	\ud83c\udf05 สมจริง
++\ud83c\udfa8 Stylized	\ud83c\udfa8 เน้นสไตล์
++\ud83d\udd2e Fantasy	\ud83d\udd2e แฟนตาซี
++\ud83c\udf0d Worldgen	\ud83c\udf0d การสร้างโลก
++Buy me a coffee	เลี้ยงกาแฟฉันหน่อย
++Mengunduh {0}...	กำลังดาวน์โหลด {0}...
++Mengekstrak	กำลังแตกไฟล์
++{~0}: {1} ({2} file)	{0}: {1} ({2} ไฟล์)
++Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, หน้าจอ 90 Hz
++\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc ปักหมุด FPS (แสดงต่อเนื่องแม้ซ่อน GUI)
++\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc กำลังแสดง Live Log ของ Minecraft
++FPS Mode Normal (Mengikuti visibilitas GUI)	FPS โหมดปกติ (ตามการแสดง GUI)
++Gagal menyiapkan OpenJDK ({0}): {~1}	เตรียม OpenJDK ({0}) ไม่สำเร็จ: {1}
++LAUNCHER EXCEPTION	ข้อผิดพลาดของ LAUNCHER
++Forge hanya mendukung Minecraft {0} ke atas	Forge รองรับ Minecraft {0} ขึ้นไปเท่านั้น
++Installer Forge gagal	ตัวติดตั้ง Forge ล้มเหลว
++version.json di installer Forge tidak terbaca	อ่าน version.json ในตัวติดตั้ง Forge ไม่ได้
++Path library Forge tidak aman: {0}	พาธไลบรารี Forge ไม่ปลอดภัย: {0}
++dan {0} lainnya	และอีก {0} รายการ
++Path mappings tidak aman: {0}	พาธ mappings ไม่ปลอดภัย: {0}
++Alamat mappings Mojang kosong	ที่อยู่ mappings ของ Mojang ว่างเปล่า
++install_profile.json tidak ada di installer Forge	ไม่พบ install_profile.json ในตัวติดตั้ง Forge
++install_profile.json tidak terbaca	อ่าน install_profile.json ไม่ได้
++{0} tidak ada di installer Forge	ไม่พบ {0} ในตัวติดตั้ง Forge
++Tidak bisa membuat {0}	สร้าง {0} ไม่ได้
++HTTP {0} dari {1}	HTTP {0} จาก {1}
++Respons kosong dari {0}	ไม่มีข้อมูลตอบกลับจาก {0}
++Unduhan dibatalkan	ยกเลิกการดาวน์โหลดแล้ว
++Content-Range tidak cocok	Content-Range ไม่ตรงกัน
++Range ditolak	Range ถูกปฏิเสธ
++Balasan kosong	ไม่มีข้อมูลตอบกลับ
++Unduhan belum lengkap ({0} dari {1} byte)	ดาวน์โหลดไม่สมบูรณ์ ({0} จาก {1} ไบต์)
++Berkas kosong	ไฟล์ว่างเปล่า
++balasan bukan daftar rilis	ข้อมูลตอบกลับไม่ใช่รายการรุ่น
++NeoForge hanya mendukung Minecraft {0} ke atas	NeoForge รองรับ Minecraft {0} ขึ้นไปเท่านั้น
++Installer NeoForge gagal	ตัวติดตั้ง NeoForge ล้มเหลว
++version.json di installer NeoForge tidak terbaca	อ่าน version.json ในตัวติดตั้ง NeoForge ไม่ได้
++Path library NeoForge tidak aman: {0}	พาธไลบรารี NeoForge ไม่ปลอดภัย: {0}
++install_profile.json tidak ada di installer NeoForge	ไม่พบ install_profile.json ในตัวติดตั้ง NeoForge
++{0} tidak ada di installer NeoForge	ไม่พบ {0} ในตัวติดตั้ง NeoForge
++\ud83c\udff0 Medieval	\ud83c\udff0 ยุคกลาง
++Resource Pack (.zip)	Resource Pack (.zip)
++MOD LOADER	ตัวโหลด MOD
++Lokal	ในเครื่อง
++Renderer {~0}	Renderer {0}
+diff --git a/app/src/main/assets/lang/th/mobileglues.tsv b/app/src/main/assets/lang/th/mobileglues.tsv
+new file mode 100644
+index 0000000..1134f67
+--- /dev/null
++++ b/app/src/main/assets/lang/th/mobileglues.tsv
+@@ -0,0 +1,3 @@
++# Pengaturan > Game > Grafis: cache shader MobileGlues
++Cache shader MobileGlues	แคช shader ของ MobileGlues
++Menyimpan hasil terjemahan shader di HP, jadi game berikutnya memuat shader lebih cepat dan lebih sedikit patah-patah. Dimatikan = MobileGlues memakai pengaturan bawaannya tanpa cache. Berlaku saat game dijalankan berikutnya.	เก็บ shader ที่แปลแล้วไว้ในมือถือ เกมครั้งถัดไปจึงโหลด shader ได้เร็วขึ้นและกระตุกน้อยลง ปิด = MobileGlues ใช้ค่าเริ่มต้นของตัวเองโดยไม่มีแคช มีผลเมื่อเปิดเกมครั้งถัดไป
+diff --git a/app/src/main/assets/lang/th/mods.tsv b/app/src/main/assets/lang/th/mods.tsv
+new file mode 100644
+index 0000000..817ce83
+--- /dev/null
++++ b/app/src/main/assets/lang/th/mods.tsv
+@@ -0,0 +1,200 @@
++# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
++mods	Mod
++modpacks	modpack
++shaderpacks	shader pack
++resourcepacks	resource pack
++datapacks	data pack
++format yang didukung	รูปแบบที่รองรับ
++File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	ข้ามไฟล์ "{0}" แล้ว! {1} รองรับเฉพาะรูปแบบ {2}
++{0} file diabaikan karena format tidak didukung ({~1})!	ข้าม {0} ไฟล์เพราะไม่รองรับรูปแบบ ({1})!
++Membaca arsip modpack...	กำลังอ่านไฟล์บีบอัด modpack...
++Berhasil mengimpor dan memasang {0} modpack!	นำเข้าและติดตั้ง modpack {0} รายการสำเร็จ!
++Gagal mengimpor modpack: {~0}	นำเข้า modpack ไม่สำเร็จ: {0}
++Berhasil mengimpor {0} file {~1}!	นำเข้า {0} ไฟล์ ({1}) สำเร็จ!
++Gagal mengimpor file: {~0}	นำเข้าไฟล์ไม่สำเร็จ: {0}
++Mencari versi...	กำลังค้นหาเวอร์ชัน...
++Tidak ada versi cocok untuk {0}!	ไม่มีเวอร์ชันที่เข้ากันได้สำหรับ {0}!
++Mengunduh...	กำลังดาวน์โหลด...
++Modpack {0} berhasil dipasang!	ติดตั้ง modpack {0} สำเร็จ!
++Berhasil memasang {0} beserta {1} dependensi!	ติดตั้ง {0} พร้อมส่วนที่ต้องพึ่งพา {1} รายการสำเร็จ!
++Berhasil memasang {0}!	ติดตั้ง {0} สำเร็จ!
++Memulai pengunduhan...	กำลังเริ่มดาวน์โหลด...
++Gagal terhubung ke Modrinth	เชื่อมต่อ Modrinth ไม่ได้
++Pilih atau buat instance di Home untuk mulai memasang mod.	เลือกหรือสร้าง instance ที่หน้าหลักเพื่อเริ่มติดตั้ง Mod
++Kembali ke Home	กลับไปหน้าหลัก
++Terpasang ({0})	ติดตั้งแล้ว ({0})
++Jelajah	เรียกดู
++Resource	Resource
++Shader	Shader
++Cari di Modrinth...	ค้นหาใน Modrinth...
++Cari di {0} item...	ค้นหาใน {0} รายการ...
++World: {0}	โลก: {0}
++Tidak ada world	ไม่มีโลก
++Semua versi	ทุกเวอร์ชัน
++Pilih instance terlebih dahulu!	กรุณาเลือก instance ก่อน!
++Impor	นำเข้า
++Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	instance นี้ยังไม่มีโลก เปิดเกมเพื่อสร้างโลกก่อน
++Belum ada {~0} terpasang di instance ini	ยังไม่มี {0} ที่ติดตั้งใน instance นี้
++Tidak ada item yang cocok	ไม่มีรายการที่ตรงกัน
++Jelajahi Modrinth	เรียกดู Modrinth
++Memuat data dari Modrinth...	กำลังโหลดข้อมูลจาก Modrinth...
++Gagal memuat dari Modrinth	โหลดจาก Modrinth ไม่สำเร็จ
++Terjadi kesalahan jaringan	เกิดข้อผิดพลาดของเครือข่าย
++Tidak ada hasil cocok untuk Minecraft {0} ({1})	ไม่มีผลลัพธ์ที่ตรงกับ Minecraft {0} ({1})
++Tidak ada hasil ditemukan untuk kata kunci ini	ไม่พบผลลัพธ์สำหรับคำค้นหานี้
++Coba ubah kata kunci atau nonaktifkan filter versi	ลองเปลี่ยนคำค้นหาหรือปิดตัวกรองเวอร์ชัน
++Cari di semua versi Minecraft	ค้นหาในทุกเวอร์ชัน Minecraft
++Sebelumnya	ก่อนหน้า
++Selanjutnya	ถัดไป
++Pilih instance	เลือก instance
++Pilih world	เลือกโลก
++Hapus modpack?	ลบ modpack?
++Hapus {~0}?	ลบ {0}?
++Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	แน่ใจหรือไม่ว่าต้องการลบ modpack "{0}"? Mod ทั้งหมดที่ติดตั้งจาก modpack นี้จะถูกลบออกจาก instance ด้วย
++Yakin ingin menghapus "{0}" dari instance ini?	แน่ใจหรือไม่ว่าต้องการลบ "{0}" ออกจาก instance นี้?
++Modpack dan semua mod berhasil dihapus!	ลบ modpack และ Mod ทั้งหมดแล้ว!
++{0} berhasil dihapus!	ลบ {0} แล้ว!
++Mengimpor & memasang modpack	กำลังนำเข้าและติดตั้ง modpack
++Membaca daftar mod dan mengunduh file...	กำลังอ่านรายการ Mod และดาวน์โหลดไฟล์...
++{0} / {1} file mod	ไฟล์ Mod {0} / {1}
++Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	ตัวเปิดเกมกำลังอ่านรายการ Mod และดาวน์โหลด modpack โปรดรอสักครู่
++Tangkapan layar	ภาพหน้าจอ
++Pratinjau gambar	พรีวิวรูปภาพ
++NONAKTIF	ปิดใช้งาน
++Tidak ada deskripsi	ไม่มีคำอธิบาย
++oleh {0}	โดย {0}
++Unduh...	ดาวน์โหลด...
++Terpasang	ติดตั้งแล้ว
++Pasang pack	ติดตั้งแพ็ก
++Versi dipilih	เวอร์ชันที่เลือก
++Sedang mengunduh dan memasang...	กำลังดาวน์โหลดและติดตั้ง...
++Sudah terpasang	ติดตั้งแล้ว
++Pasang modpack	ติดตั้ง modpack
++Pasang ke instance	ติดตั้งลงใน instance
++Versi ({0})	เวอร์ชัน ({0})
++Screenshot	ภาพหน้าจอ
++Deskripsi	คำอธิบาย
++Tidak ada ringkasan deskripsi.	ไม่มีคำอธิบายโดยสรุป
++Tidak ada versi yang didukung	ไม่มีเวอร์ชันที่รองรับ
++Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	โปรเจกต์นี้ไม่มีรุ่นที่เข้ากันได้กับ Minecraft {0} ({1})
++Versi {0} \u00b7 MC {1}	เวอร์ชัน {0} \u00b7 MC {1}
++Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	modpack จะถูกแตกไฟล์ลง instance โดยตรง (overrides, การกำหนดค่า และ manifest)
++Dependensi wajib ikut terpasang otomatis.	ส่วนที่ต้องพึ่งพาที่จำเป็นจะถูกติดตั้งให้อัตโนมัติ
++Mod terpasang	Mod ที่ติดตั้ง
++Belum ada resource pack	ยังไม่มี resource pack
++Belum ada shader	ยังไม่มี shader
++Belum ada mod terpasang	ยังไม่มี Mod ที่ติดตั้ง
++Pasang lewat menu Mod di sidebar.	ติดตั้งผ่านเมนู Mod ที่แถบด้านข้าง
++Nonaktif \u00b7 {0}	ปิดใช้งาน \u00b7 {0}
++Resource Pack (.zip)	Resource Pack (.zip)
++PASANG ADDON EKSTERNAL	ติดตั้ง ADDON ภายนอก
++Pemasang Addon	ตัวติดตั้ง Addon
++Tipe file: {0} \u00b7 Siap dipasang	ประเภทไฟล์: {0} \u00b7 พร้อมติดตั้ง
++KATEGORI ADDON	หมวดหมู่ ADDON
++TARGET INSTANCE MINECRAFT	INSTANCE MINECRAFT เป้าหมาย
++\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f ยังไม่ได้สร้าง instance Minecraft! สร้าง instance ที่หน้าหลักก่อน
++Memasang addon...	กำลังติดตั้ง addon...
++Gagal: {~0}	ไม่สำเร็จ: {0}
++Mempersiapkan pemasangan...	กำลังเตรียมการติดตั้ง...
++\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 ติดตั้ง "{0}" ลงใน {1} สำเร็จ!
++Terjadi kesalahan yang tidak diketahui	เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ
++Gagal memasang: {~0}	ติดตั้งไม่สำเร็จ: {0}
++MEMASANG...	กำลังติดตั้ง...
++PASANG SEKARANG	ติดตั้งเลย
++{0} mod terpasang	ติดตั้ง Mod แล้ว {0} รายการ
++Menyalin file {0}...	กำลังคัดลอกไฟล์ {0}...
++Gagal membaca file sumber	อ่านไฟล์ต้นทางไม่ได้
++Membaca daftar modpack...	กำลังอ่านรายการ modpack...
++Modrinth API error code: {0}	รหัสข้อผิดพลาด Modrinth API: {0}
++Empty response	ไม่มีข้อมูลตอบกลับ
++Gagal mengambil detail project: {~0}	ดึงรายละเอียดโปรเจกต์ไม่สำเร็จ: {0}
++Gagal mengambil versi project: {~0}	ดึงเวอร์ชันของโปรเจกต์ไม่สำเร็จ: {0}
++Mengekstrak dan menyiapkan modpack...	กำลังแตกไฟล์และเตรียม modpack...
++Menyelesaikan dependensi: {0}...	กำลังแก้ส่วนที่ต้องพึ่งพา: {0}...
++Membaca daftar modpack ({0} mod ditemukan)...	กำลังอ่านรายการ modpack (พบ Mod {0} รายการ)...
++Mengunduh mod ({0}/{1}): {2}...	กำลังดาวน์โหลด Mod ({0}/{1}): {2}...
++Mod sudah ada ({0}/{1}): {2}	มี Mod อยู่แล้ว ({0}/{1}): {2}
++Mengekstrak konfigurasi modpack...	กำลังแตกไฟล์การกำหนดค่าของ modpack...
++Mengekstrak file arsip modpack...	กำลังแตกไฟล์บีบอัดของ modpack...
++Selesai! {0} mod berhasil dipasang.	เสร็จสิ้น! ติดตั้ง Mod {0} รายการสำเร็จ
++Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	เสร็จสิ้นพร้อมหมายเหตุ: ติดตั้ง Mod แล้ว {0} รายการ มี {1} ไฟล์ที่ล้มเหลวหรือถูกข้าม ลองติดตั้งใหม่หากมี Mod ขาดหาย
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	modpack นี้ต้องใช้ {0} แต่ AmberLauncher รองรับเฉพาะ Fabric ในขณะนี้
++Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ Fabric สร้าง instance Fabric ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
++Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	modpack นี้สำหรับ Minecraft {0} แต่ instance นี้ใช้ {1} เลือกหรือสร้าง instance ที่เป็นเวอร์ชันเดียวกัน
++Alamat unduhan ditolak karena tidak memakai HTTPS	ปฏิเสธที่อยู่ดาวน์โหลดเพราะไม่ได้ใช้ HTTPS
++Gagal mengunduh file: HTTP {0}	ดาวน์โหลดไฟล์ไม่สำเร็จ: HTTP {0}
++Body stream kosong	body stream ว่างเปล่า
++Gagal menyimpan file unduhan	บันทึกไฟล์ที่ดาวน์โหลดไม่สำเร็จ
++Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	ไฟล์ {0} เสียหายหรือถูกแก้ไขระหว่างทาง (ลายนิ้วมือไม่ตรงกัน) จึงไม่ได้ติดตั้ง
++Isi modpack terlalu besar, pemasangan dibatalkan.	เนื้อหา modpack ใหญ่เกินไป ยกเลิกการติดตั้ง
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	modpack นี้ต้องใช้ {0} แต่ AmberLauncher รองรับเฉพาะ Fabric, Forge และ NeoForge ในขณะนี้
++Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ Forge สร้าง instance Forge ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
++Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ NeoForge สร้าง instance NeoForge ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
++Kategori	หมวดหมู่
++Versi	เวอร์ชัน
++Urutkan	เรียงตาม
++Relevansi	ความเกี่ยวข้อง
++Unduhan	ดาวน์โหลด
++Pengikut	ผู้ติดตาม
++Diperbarui	อัปเดตล่าสุด
++Semua loader	ทุก loader
++Pilih kategori	เลือกหมวดหมู่
++Pilih versi	เลือกเวอร์ชัน
++Pilih loader	เลือก loader
++Cari mod...	ค้นหา Mod...
++Cari modpack...	ค้นหา modpack...
++Cari shader...	ค้นหา shader...
++Cari resource pack...	ค้นหา resource pack...
++Cari datapack...	ค้นหา datapack...
++CurseForge belum tersedia di versi ini	เวอร์ชันนี้ยังไม่มี CurseForge
++Optimasi	การเพิ่มประสิทธิภาพ
++Teknologi	เทคโนโลยี
++Sihir	เวทมนตร์
++Petualangan	การผจญภัย
++Utilitas	ยูทิลิตี้
++Dekorasi	การตกแต่ง
++Perlengkapan	อุปกรณ์
++Makanan	อาหาร
++Penyimpanan	การเก็บของ
++Pustaka	ไลบรารี
++Realistis	สมจริง
++Fantasi	แฟนตาซี
++INSTANCE AKTIF	INSTANCE ที่ใช้งานอยู่
++Mod & konten	Mod และเนื้อหา
++Tambah	เพิ่ม
++Game	เกม
++Tentang	เกี่ยวกับ
++Cari pengaturan...	ค้นหาการตั้งค่า...
++Perekaman layar	การบันทึกหน้าจอ
++Latar	พื้นหลัง
++Foto, GIF, atau video	รูปภาพ GIF หรือวิดีโอ
++Redupkan latar	หรี่พื้นหลัง
++Seberapa gelap latar di layar selain Home.	ความมืดของพื้นหลังบนหน้าจออื่นที่ไม่ใช่หน้าหลัก
++Aksen warna	สีเน้น
++Warna tombol dan penanda terpilih di seluruh launcher.	สีของปุ่มและเครื่องหมายที่เลือกทั่วทั้งตัวเปิดเกม
++Gaya tampilan	สไตล์การแสดงผล
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	ค่าเริ่มต้นใช้ธีมของ AmberLauncher เอง Liquid Glass ทำให้พื้นหลังหลังแผงและปุ่มเบลอ
++Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Liquid Glass ต้องใช้ Android 12 ขึ้นไป มือถือเครื่องนี้จะใช้ค่าเริ่มต้นโดยอัตโนมัติ
++Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	ภาษาของข้อความในตัวเปิดเกม มีผลทันทีโดยไม่ต้องเริ่มแอปใหม่
++Pengaturan khusus untuk renderer yang sedang dipakai.	การตั้งค่าเฉพาะสำหรับ renderer ที่ใช้อยู่
++Atur	ตั้งค่า
++Tata letak kontrol	เลย์เอาต์การควบคุม
++Aplikasi	แอป
++Informasi aplikasi, lisensi GPL-3.0, dan kredit.	ข้อมูลแอป สัญญาอนุญาต GPL-3.0 และเครดิต
++Reset ke default	รีเซ็ตเป็นค่าเริ่มต้น
++Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	การตั้งค่าทั้งหมดกลับเป็นค่าเริ่มต้น การเปลี่ยนแปลงอื่นจะบันทึกอัตโนมัติ
++Belum ada akun	ยังไม่มีบัญชี
++Pilih akun untuk bermain	เลือกบัญชีเพื่อเล่น
++Akun aktif untuk bermain	บัญชีที่ใช้เล่น
++Jenis akun	ประเภทบัญชี
++Status login	สถานะการเข้าสู่ระบบ
++Tersambung	เชื่อมต่อแล้ว
++Perlu disegarkan	ต้องรีเฟรช
++Segarkan login	รีเฟรชการเข้าสู่ระบบ
++Menyegarkan...	กำลังรีเฟรช...
++Login berhasil disegarkan	รีเฟรชการเข้าสู่ระบบสำเร็จ
++Gagal menyegarkan login	รีเฟรชการเข้าสู่ระบบไม่สำเร็จ
++Pasang	ติดตั้ง
++Tema	ธีม
++Klasik	คลาสสิก
++Home	หน้าหลัก
+diff --git a/app/src/main/assets/lang/th/rust-settings.tsv b/app/src/main/assets/lang/th/rust-settings.tsv
+new file mode 100644
+index 0000000..cacb556
+--- /dev/null
++++ b/app/src/main/assets/lang/th/rust-settings.tsv
+@@ -0,0 +1,69 @@
++# Pengaturan > Rust (tab pengaturan mesin Rust)
++Mesin Rust	เอนจิน Rust
++Performa	ประสิทธิภาพ
++Layar	หน้าจอ
++Permainan	การเล่น
++Mesin Rust (Horizon)	เอนจิน Rust (Horizon)
++Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	แทนที่ไคลเอนต์ Java ทั้งหมด: ไม่ใช้ JVM และไม่รองรับ Mod ของ Java
++Tidak tersedia	ไม่พร้อมใช้งาน
++Siap	พร้อม
++Sumber daya game	ทรัพยากรของเกม
++Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	ดาวน์โหลดอัตโนมัติเมื่อกดเล่นครั้งแรก ประมาณ 500 MiB
++Belum diunduh	ยังไม่ได้ดาวน์โหลด
++Versi Minecraft	เวอร์ชัน Minecraft
++Satu-satunya versi yang dikerjakan mesin ini.	เวอร์ชันเดียวที่เอนจินนี้รองรับ
++Berlaku untuk instance Rust	ใช้กับ instance Rust
++Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	ตัวเลือกในแท็บนี้ใช้กับ instance Rust เท่านั้น และมีผลเมื่อกดเล่นครั้งถัดไป instance แบบ Vanilla, Fabric และ Forge ไม่ได้รับผลกระทบ
++Renderer Rust	Renderer ของ Rust
++Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	แบบเข้ากันได้ปลอดภัยที่สุดบนมือถือทุกเครื่อง Vulkan แบบเร็วใช้การทำ batching บน GPU ส่วน OpenGL ES ยังอยู่ในขั้นทดลอง
++Vulkan kompatibel	Vulkan แบบเข้ากันได้
++Vulkan cepat	Vulkan แบบเร็ว
++Skala resolusi Rust	สเกลความละเอียดของ Rust
++Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	การลดความละเอียดเรนเดอร์ทำให้เกมเบาลง แต่ภาพจะเบลอขึ้น
++Laju layar	อัตรารีเฟรชหน้าจอ
++Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	เป็นคำขอไปยัง Android ไม่ใช่ขีดจำกัด FPS ของเกม อัตราที่หน้าจอไม่รองรับอาจถูกละเลย
++Bawaan sistem	ค่าเริ่มต้นของระบบ
++Petunjuk performa	คำแนะนำด้านประสิทธิภาพ
++Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	แจ้ง Android ว่าเกมต้องการประสิทธิภาพที่คงที่ มีประโยชน์เฉพาะบนมือถือที่รองรับ
++Batas pekerja chunk	ขีดจำกัด worker ของ chunk
++Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	จำกัดจำนวน worker ที่สร้างและประกอบ chunk ไม่ใช่เธรดทั้งหมดของแอป ค่าน้อยช่วยลดภาระ CPU แต่โหลดโลกช้าลง
++Tanpa batas	ไม่จำกัด
++Cache RAM	แคช RAM
++Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	เสียงที่ถอดรหัสแล้ว (80%) และบัฟเฟอร์ mesh ว่าง (20%) สร้างใหม่ด้วยคุณภาพเท่าเดิม ไม่ใช่ขีดจำกัดของ RAM หรือ VRAM ทั้งหมด ค่าน้อยอาจเพิ่มงานให้ CPU
++Bawaan (80 MiB)	ค่าเริ่มต้น (80 MiB)
++Arah layar	การวางแนวหน้าจอ
++Arah layar saat bermain. Bawaannya landscape.	การวางแนวหน้าจอขณะเล่น ค่าเริ่มต้นคือแนวนอน
++Landscape	แนวนอน
++Landscape terbalik	แนวนอนกลับด้าน
++Portrait	แนวตั้ง
++Portrait terbalik	แนวตั้งกลับด้าน
++Rasio layar	อัตราส่วนหน้าจอ
++Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	จำกัดมุมมองเกมให้อยู่ในอัตราส่วนที่กำหนด ตัวเลือกดั้งเดิมจะตามอัตราส่วนหน้าจอของมือถือ
++Asli	ดั้งเดิม
++Layar penuh imersif	เต็มหน้าจอแบบสมจริง (Immersive)
++Menyembunyikan bilah navigasi dan bilah status saat bermain.	ซ่อนแถบนำทางและแถบสถานะขณะเล่น
++Hindari poni layar	เลี่ยงรอยบากหน้าจอ
++Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	ขยับมุมมองเกมไม่ให้ถูกรูกล้องหรือรอยบากบัง
++Kontrol Amber	การควบคุม Amber
++Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	ตำแหน่ง ขนาด และปุ่มบนหน้าจอเป็นไปตามตัวแก้ไขการควบคุมของ Amber จึงมีชุดควบคุมเพียงชุดเดียว ปิดเพื่อใช้การควบคุมของเอนจินเอง มีผลเมื่อกดเล่นครั้งถัดไป
++Perangkat input	อุปกรณ์อินพุต
++Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	โหมดอัตโนมัติจะเลือกเองระหว่างหน้าจอสัมผัส คีย์บอร์ดและเมาส์ หรือเกมแพด ตามที่เชื่อมต่ออยู่
++Layar sentuh	หน้าจอสัมผัส
++Keyboard dan mouse	คีย์บอร์ดและเมาส์
++Server otomatis	เข้าเซิร์ฟเวอร์อัตโนมัติ
++Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	เว้นว่างไว้เพื่อเล่นในโลกของคุณเอง หากกรอก การกดเล่นจะเข้าเซิร์ฟเวอร์นี้ทันที
++Contoh: mc.contoh.com:25565	ตัวอย่าง: mc.example.com:25565
++Setel ulang pengaturan Rust	รีเซ็ตการตั้งค่า Rust
++Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	คืนตัวเลือกทั้งหมดในแท็บนี้เป็นค่าเริ่มต้นของเอนจิน instance และโลกจะไม่ถูกแตะต้อง
++Setel ulang	รีเซ็ต
++Pengaturan Rust dikembalikan ke bawaan.	คืนการตั้งค่า Rust เป็นค่าเริ่มต้นแล้ว
++Mode performa	โหมดประสิทธิภาพ
++Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	ปกติใช้ค่าเริ่มต้นของเอนจิน ประหยัดสุดๆ ลดระยะเรนเดอร์ อนุภาค เมฆ และเงา ประหยัดแบตเตอรี่จำกัด 60 FPS พร้อม VSync FPS สูงสุดปลดขีดจำกัด FPS และปิด VSync โหมดเหล่านี้เปลี่ยนการตั้งค่าวิดีโอของเกมเมื่อกดเล่น
++Normal	ปกติ
++Super hemat	ประหยัดสุดๆ
++Hemat baterai	ประหยัดแบตเตอรี่
++FPS maksimum	FPS สูงสุด
++Kurangi animasi game	ลดแอนิเมชันในเกม
++Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	ปิดเท็กซ์เจอร์เคลื่อนไหว การเฟดของ chunk การโยกของกล้องขณะเดิน และการเบลอเมนู เบาลงบนมือถือที่ไม่แรง
++Menu garis tiga	เมนูสามขีด
++Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	ปุ่มสามขีดบนหน้าจอเกมที่เปิดเมนูด่วนของเอนจิน (พรีเซ็ต การควบคุม การตั้งค่า) สีเป็นไปตามสีเน้นของ Amber มีผลเมื่อกดเล่นครั้งถัดไป
+diff --git a/app/src/main/assets/lang/th/settings.tsv b/app/src/main/assets/lang/th/settings.tsv
+new file mode 100644
+index 0000000..c7cbdee
+--- /dev/null
++++ b/app/src/main/assets/lang/th/settings.tsv
+@@ -0,0 +1,136 @@
++# Pengaturan
++{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} คอร์ CPU
++Memori	หน่วยความจำ
++Grafis	กราฟิก
++Kontrol	การควบคุม
++Tampilan	การแสดงผล
++Memori game (RAM)	หน่วยความจำเกม (RAM)
++Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	ใหญ่เกินไปสำหรับมือถือเครื่องนี้ เกมและมือถืออาจช้าลง
++Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	ขีดจำกัดหน่วยความจำ Java (-Xmx) ค่าที่มากกว่าไม่ได้เร็วกว่าเสมอไป
++1,5 GB	1.5 GB
++Argumen JVM tambahan	อาร์กิวเมนต์ JVM เพิ่มเติม
++Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	ไม่บังคับ สำหรับผู้ใช้ขั้นสูง ใส่ค่าผิดอาจทำให้เกมรันไม่ได้
++Contoh: -XX:+UseG1GC	ตัวอย่าง: -XX:+UseG1GC
++Konfigurasi renderer	การตั้งค่า renderer
++Optimasi otomatis options.txt	ปรับ options.txt ให้เหมาะสมอัตโนมัติ
++Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	ปิดเมฆและเงาโดยอัตโนมัติเพื่อให้ได้ FPS สูงขึ้น
++Skala resolusi layar	สเกลความละเอียดหน้าจอ
++Lebih kecil = FPS lebih tinggi, gambar lebih buram.	น้อยลง = FPS สูงขึ้น ภาพเบลอขึ้น
++Driver Vulkan	ไดรเวอร์ Vulkan
++Pilih implementasi driver Vulkan yang dipakai sistem/game.	เลือกการใช้งานไดรเวอร์ Vulkan ที่ระบบ/เกมใช้
++API grafis	API กราฟิก
++Atur API grafis yang dipakai Minecraft modern 26.2+.	กำหนด API กราฟิกที่ Minecraft รุ่นใหม่ 26.2+ ใช้
++Gunakan driver Vulkan sistem	ใช้ไดรเวอร์ Vulkan ของระบบ
++Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	บังคับใช้ไดรเวอร์ Vulkan ที่มากับมือถือ (ไม่ใช่ Turnip) มีผลกับ renderer Zink
++V-Sync Zink	V-Sync ของ Zink
++Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	การซิงก์แนวตั้งสำหรับ renderer Kopper Zink ผ่านอินเทอร์เฟซของระบบ
++Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	ภาษาของข้อความในตัวเปิดเกม ตามระบบจะใช้ภาษาของมือถือ
++Latar Beranda	พื้นหลังหน้าหลัก
++Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	รูปภาพเบาที่สุด GIF เคลื่อนไหวได้โดยใช้ทรัพยากรน้อย วิดีโอลื่นที่สุด (HD สูงสุด 60 fps) แต่ใช้แบตเตอรี่มากกว่า
++Ganti latar	เปลี่ยนพื้นหลัง
++Gerakkan GIF dan video	ทำให้ GIF และวิดีโอเคลื่อนไหว
++Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	ปิดเพื่อแสดงภาพนิ่งเท่านั้น ประหยัดแบตเตอรี่และ RAM ที่สุด
++Jeda saat Hemat Baterai	หยุดเมื่อเปิดโหมดประหยัดแบตเตอรี่
++GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIF และวิดีโอจะหยุดอัตโนมัติขณะที่โหมดประหยัดแบตเตอรี่ของมือถือเปิดอยู่
++Suara video	เสียงวิดีโอ
++Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	ปิดเป็นค่าเริ่มต้น ปิดเสียงอัตโนมัติเมื่อมีแอปอื่นกำลังเล่นเสียงอยู่
++Volume video	ระดับเสียงวิดีโอ
++Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	แสงนุ่มๆ ที่แถบด้านข้างและขอบการ์ดของหน้าหลัก สีเป็นไปตาม GIF หรือวิดีโอ ไม่มีผลกับรูปภาพ
++Kekuatan ambient	ความเข้มของแสงบรรยากาศ
++Kustomisasi kontrol virtual	ปรับแต่งการควบคุมเสมือน
++Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	เปลี่ยนเลย์เอาต์ปุ่ม ขนาด ความโปร่งใส การเลื่อน hotbar และการแมปปุ่มของ Minecraft
++Buka editor	เปิดตัวแก้ไข
++Mode mouse di menu	โหมดเมาส์ในเมนู
++Sentuh tombol atau slot menu langsung di mana jari menekan.	แตะปุ่มหรือช่องในเมนูได้โดยตรงตรงจุดที่นิ้วกด
++Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	เลื่อนนิ้วเพื่อขยับเคอร์เซอร์เสมือน แตะหน้าจอเพื่อคลิก
++Click (langsung)	คลิก (โดยตรง)
++Pukul lewat layar	โจมตีโดยแตะหน้าจอ
++Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	แตะหรือกดค้างที่พื้นที่ว่างของหน้าจอเพื่อโจมตี ปิดเพื่อไม่ให้การลากกล้องโจมตีไปด้วย ให้ใช้ปุ่มโจมตีแทน
++Sensitivitas kamera	ความไวกล้อง
++Kecepatan memutar pandangan di dalam game.	ความเร็วในการหมุนมุมมองในเกม
++Sensitivitas kursor virtual	ความไวเคอร์เซอร์เสมือน
++Kecepatan kursor saat berada di menu Minecraft.	ความเร็วเคอร์เซอร์ขณะอยู่ในเมนู Minecraft
++Ukuran kursor virtual	ขนาดเคอร์เซอร์เสมือน
++Mode mouse fisik (auto-hide)	โหมดเมาส์จริง (ซ่อนอัตโนมัติ)
++Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	ซ่อนเคอร์เซอร์เสมือนอัตโนมัติเมื่อเชื่อมต่อเมาส์ภายนอก
++Perubahan tersimpan otomatis	การเปลี่ยนแปลงบันทึกอัตโนมัติ
++Pengaturan di-reset ke default!	รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นแล้ว!
++Reset default	รีเซ็ตเป็นค่าเริ่มต้น
++PILIH RENDERER GRAFIK	เลือก RENDERER กราฟิก
++Sesuaikan backend grafis dengan Minecraft & GPU perangkat	ปรับแบ็กเอนด์กราฟิกให้เหมาะกับเวอร์ชัน Minecraft และ GPU ของอุปกรณ์
++Renderer diubah ke: {0}	เปลี่ยน renderer เป็น: {0}
++Konfigurasi {0}	การตั้งค่า {0}
++Kesesuaian: {0}	ความเข้ากันได้: {0}
++PERINGATAN DRIVER ADRENO	คำเตือนไดรเวอร์ ADRENO
++Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	ตัวเปิดเกมตรวจพบว่าอุปกรณ์ของคุณใช้ GPU Adreno การเปิดตัวเลือกนี้อาจทำให้ renderer Zink ใช้งานไม่ได้หรือแครช แน่ใจหรือไม่ว่าต้องการเปิด?
++AKTIFKAN	เปิดใช้งาน
++Mode GC (pembersih memori Java)	โหมด GC (ตัวเก็บกวาดหน่วยความจำ Java)
++Kunci layar 60 Hz	ล็อกหน้าจอที่ 60 Hz
++Kualitas rekaman layar	คุณภาพการบันทึกหน้าจอ
++Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	ยิ่งเล็กยิ่งเบาสำหรับมือถือ ประหยัด 540p เบา 720p คมชัด 1080p
++Hemat	ประหยัด
++Ringan	เบา
++Tajam	คมชัด
++FPS rekaman	FPS ของการบันทึก
++30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps เบากว่ามาก 60 fps สำหรับมือถือที่แรงเท่านั้น
++Rekam suara mikrofon	บันทึกเสียงไมโครโฟน
++Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	เพิ่มเสียงจากไมโครโฟนลงในวิดีโอ เสียงของเกมยังไม่ถูกบันทึก
++Hentikan rekaman saat HP terlalu panas	หยุดบันทึกเมื่อมือถือร้อนเกินไป
++Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	บันทึกวิดีโอและหยุดอัตโนมัติเพื่อไม่ให้เกมช้าลงเพราะความร้อน
++Isi rekaman	เนื้อหาที่บันทึก
++Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	เฉพาะเกม: ซ่อนปุ่มบนหน้าจอจากวิดีโอ (ยังแตะใช้งานได้) พร้อมปุ่ม: บันทึกปุ่มบนหน้าจอลงในวิดีโอด้วย เปลี่ยนได้จากเมนูในเกมเช่นกัน
++Hotbar sentuh	Hotbar แบบสัมผัส
++Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	แตะ hotbar ที่ด้านล่างของหน้าจอเพื่อเลือกช่อง เหมือนใน Minecraft Bedrock ตำแหน่งช่องเป็นไปตาม GUI scale ของเกม
++Geser kamera dari tombol	ลากกล้องจากปุ่ม
++Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	การกดปุ่มโจมตี ใช้ หรือกระโดดค้างแล้วเลื่อนนิ้วจะหมุนกล้องด้วย ปิดเพื่อไม่ให้มุมมองเลื่อนระหว่างต่อสู้ (PvP)
++Dukungan TouchController	รองรับ TouchController
++Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	ทดลอง หากติดตั้งและเชื่อมต่อ Mod TouchController แล้ว การสัมผัสขณะเล่นจะถูกส่งต่อไปยัง Mod ด้วย ปุ่มและเมาส์เสมือนของตัวเปิดเกมยังคงทำงาน จึงใช้ได้พร้อมกันทั้งสองอย่าง
++Optimasi HP RAM kecil	ปรับแต่งมือถือ RAM น้อย
++RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	มือถือเครื่องนี้มี RAM {0} MB จึงปรับวิธีทำงานของตัวเก็บกวาดหน่วยความจำ Java ได้
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: เบาที่สุดสำหรับโปรเซสเซอร์ แต่การหยุด GC นานขึ้นเล็กน้อย ลองใช้หากเกมกระตุกบ่อย
++Bawaan: tanpa flag GC tambahan dari launcher.	ค่าเริ่มต้น: ไม่มีแฟลก GC เพิ่มเติมจากตัวเปิดเกม
++Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	อัตโนมัติ: G1 พร้อมหน่วยความจำจำกัด เหมาะกับมือถือส่วนใหญ่ ลองอันนี้ก่อน
++Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	มีผลเมื่อเปิดเกมครั้งถัดไป หากต้องการเปรียบเทียบ ให้ดูบรรทัด [Kinerja] ในล็อกเกม
++Mode Hemat	โหมดประหยัด
++Untuk HP yang cepat panas atau baterainya cepat habis.	สำหรับมือถือที่ร้อนเร็วหรือแบตเตอรี่หมดเร็ว
++Nyalakan Mode Hemat	เปิดโหมดประหยัด
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	เปิดโหมดประสิทธิภาพคงที่ของระบบและ V-Sync ของ Zink พร้อมจำกัดสเกลความละเอียดสูงสุดที่ 80%
++Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	มีผลเมื่อเปิดเกมครั้งถัดไป เมื่อปิดอีกครั้ง การตั้งค่าก่อนหน้าจะถูกกู้คืน
++Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	หน้าจอ 90/120 Hz จะถูกล็อกที่ 60 Hz ขณะเล่นเพื่อให้การเคลื่อนไหวสม่ำเสมอขึ้นและร้อนน้อยลงเล็กน้อย เหมาะเมื่อเกมไม่ค่อยถึง 90 FPS HUD FPS แสดง Hz ที่ใช้งานอยู่
++Cadangan & bagikan layout	สำรองและแชร์เลย์เอาต์
++Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	บันทึกเลย์เอาต์ปุ่มเป็นไฟล์ .json เพื่อสำรองหรือแชร์ หรือโหลดจากไฟล์ของคนอื่น
++Ekspor	ส่งออก
++Layout kontrol disimpan ke berkas	บันทึกเลย์เอาต์การควบคุมลงไฟล์แล้ว
++Gagal menyimpan berkas	บันทึกไฟล์ไม่สำเร็จ
++Berkas terlalu besar untuk layout kontrol	ไฟล์ใหญ่เกินไปสำหรับเลย์เอาต์การควบคุม
++Berkas tidak berisi tombol	ไฟล์ไม่มีปุ่ม
++Berkas ini bukan layout kontrol yang valid	ไฟล์นี้ไม่ใช่เลย์เอาต์การควบคุมที่ถูกต้อง
++Layout kontrol diimpor ({0} tombol)	นำเข้าเลย์เอาต์การควบคุมแล้ว ({0} ปุ่ม)
++Log game	ล็อกเกม
++Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	ทุกครั้งที่ออกจาก Minecraft ล็อกของเซสชันนั้นจะถูกบันทึกอัตโนมัติ (10 รายการล่าสุด) โดยไม่มีโทเค็นบัญชี หากมีปัญหา เช่น shader ไม่โหลด ให้แชร์ล็อกล่าสุดให้ผู้พัฒนา
++Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	ยังไม่มีล็อก เล่นเกมหนึ่งครั้งแล้วออก ล็อกจะถูกบันทึกอัตโนมัติ
++Log terbaru	ล็อกล่าสุด
++Log sebelumnya	ล็อกก่อนหน้า
++Bagikan	แชร์
++Hapus semua log	ลบล็อกทั้งหมด
++Ketuk lagi untuk menghapus	แตะอีกครั้งเพื่อลบ
++Log dihapus.	ลบล็อกแล้ว
++Log launcher	ล็อกตัวเปิดเกม
++Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	เหตุการณ์ภายในตัวเปิดเกมนอกตัวเกม เช่น การดาวน์โหลด การเข้าสู่ระบบ และข้อความแสดงข้อผิดพลาด แชร์หากปัญหาเกิดก่อนเกมเริ่ม
++Menyiapkan log...	กำลังเตรียมล็อก...
++Gagal menyiapkan log launcher.	เตรียมล็อกของตัวเปิดเกมไม่สำเร็จ
++Lokasi: {0}	ตำแหน่ง: {0}
++Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	ส่งผ่าน WhatsApp, Telegram หรือ Google Drive ด้วยปุ่มแชร์ หรือหยิบจากโฟลเดอร์นั้นโดยตรงผ่านตัวจัดการไฟล์
++Plugin native library	ปลั๊กอิน native library
++Belum ada plugin terpasang	ยังไม่มีปลั๊กอินที่ติดตั้ง
++Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	ติดตั้ง APK ปลั๊กอิน native library (รูปแบบ Zalith/FCL) ที่ Mod ต้องการ เช่น Distant Horizons แล้วแตะเพื่อสแกนใหม่
++Pindai	สแกน
++Memindai...	กำลังสแกน...
++Pindai ulang plugin	สแกนปลั๊กอินใหม่
++Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	ใช้หลังติดตั้งหรือลบปลั๊กอิน ปลั๊กอินจะถูกสแกนอัตโนมัติทุกครั้งที่เปิดเกมด้วย
++Kontrol sentuh	การควบคุมแบบสัมผัส
++Kamera dan kursor	กล้องและเคอร์เซอร์
++Controller dan mouse fisik	คอนโทรลเลอร์และเมาส์จริง
++Lanjutan	ขั้นสูง
++Langsung bisa dipakai	ใช้ได้ทันที
++Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	ไม่ต้องเปิดหรือตั้งค่าอะไร เสียบคอนโทรลเลอร์ (เกมแพด) แล้วเล่นได้เลย: สติ๊กซ้ายเดิน สติ๊กขวามองรอบๆ A กระโดด RT โจมตี LT วาง/ใช้ Y เปิดช่องเก็บของ Start = Esc ในเมนูสติ๊กจะขยับเคอร์เซอร์ เมาส์และคีย์บอร์ดจริงก็ใช้ได้ทันทีเช่นกัน ปุ่มบนหน้าจอจะซ่อนเองเมื่อใช้คอนโทรลเลอร์หรือเมาส์ ความเร็วสติ๊กเป็นไปตามความไวกล้องและเคอร์เซอร์ด้านบน หากตรวจพบ Mod คอนโทรลเลอร์ (เช่น Controlify) คอนโทรลเลอร์จะถูกส่งให้ Mod โดยตรง
+diff --git a/app/src/main/assets/lang/th/skin.tsv b/app/src/main/assets/lang/th/skin.tsv
+new file mode 100644
+index 0000000..17db2be
+--- /dev/null
++++ b/app/src/main/assets/lang/th/skin.tsv
+@@ -0,0 +1,68 @@
++# Wardrobe: skin dan jubah
++Gagal memuat jubah: {0}	โหลดเคปไม่สำเร็จ: {0}
++Memvalidasi skin...	กำลังตรวจสอบสกิน...
++Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	โหลดสกินในพรีวิวแล้ว ({0}) \u2014 กดบันทึกเพื่อใช้งาน
++File tidak valid	ไฟล์ไม่ถูกต้อง
++Memvalidasi cape...	กำลังตรวจสอบเคป...
++Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	โหลดเคปกำหนดเองในพรีวิวแล้ว \u2014 กดบันทึกเพื่อใช้งาน
++File cape tidak valid	ไฟล์เคปไม่ถูกต้อง
++WARDROBE & CUSTOM SKIN	ตู้เสื้อผ้าและสกินกำหนดเอง
++Kustomisasi tampilan skin dan jubah pemain Minecraft	ปรับแต่งสกินและเคปของผู้เล่น Minecraft ของคุณ
++3D (DRAG / PUTAR)	3D (ลาก / หมุน)
++Putar Otomatis	หมุนอัตโนมัติ
++Reset Kamera	รีเซ็ตกล้อง
++Jalan	เดิน
++Diam	ยืนนิ่ง
++Lari	วิ่ง
++Sapa	โบกมือ
++KUSTOM SKIN	สกินกำหนดเอง
++JUBAH / CAPE	เคป
++Sistem Skin & Jubah Ely.by	ระบบสกินและเคป Ely.by
++Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	บัญชี Ely.by ใช้เซิร์ฟเวอร์ skinsystem แบบรวมศูนย์ หากต้องการเปลี่ยนสกินหรือประเภทโมเดลแขน ให้อัปโหลดโดยตรงที่เว็บไซต์ทางการของ ely.by เพื่อให้ซิงก์ในเกม
++KUNJUNGI ACCOUNT.ELY.BY	ไปที่ ACCOUNT.ELY.BY
++PILIH FILE SKIN (.PNG)	เลือกไฟล์สกิน (.PNG)
++TIPE MODEL LENGAN:	ประเภทโมเดลแขน:
++Model Klasik dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดลคลาสสิกแล้ว (พรีวิว) \u2014 กดบันทึก
++Klasik	คลาสสิก
++Lengan tebal (4px)	แขนหนา (4px)
++Model Slim dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดล Slim แล้ว (พรีวิว) \u2014 กดบันทึก
++Lengan ramping (3px)	แขนเรียว (3px)
++Skin direset ke default Steve (Preview) \u2014 Klik Simpan	รีเซ็ตสกินเป็น Steve เริ่มต้นแล้ว (พรีวิว) \u2014 กดบันทึก
++\u21ba Reset ke Skin Default (Klasik)	\u21ba รีเซ็ตเป็นสกินเริ่มต้น (คลาสสิก)
++JUBAH RESMI MINECRAFT.NET:	เคปทางการจาก MINECRAFT.NET:
++Memuat jubah dari Minecraft.net...	กำลังโหลดเคปจาก Minecraft.net...
++Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	บัญชี Microsoft ของคุณยังไม่มีเคปทางการบน Minecraft.net
++Jubah dilepas (Preview) \u2014 Klik Simpan	ถอดเคปแล้ว (พรีวิว) \u2014 กดบันทึก
++Tanpa Jubah (Lepas Cape)	ไม่สวมเคป (ถอดเคป)
++Jubah {0} dipilih (Preview) \u2014 Klik Simpan	เลือกเคป {0} แล้ว (พรีวิว) \u2014 กดบันทึก
++AKTIF DI MOJANG	ใช้งานอยู่บน MOJANG
++Sistem Skin & Cape Ely.by	ระบบสกินและเคป Ely.by
++Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	บัญชี Ely.by ใช้เซิร์ฟเวอร์ skinsystem ทางการ สกินและเคปทั้งหมดจัดการผ่านเว็บไซต์ ely.by โดยตรง และจะแสดงในเกมโดยอัตโนมัติ
++BUKA WEBSITE ELY.BY	เปิดเว็บไซต์ ELY.BY
++PILIH FILE CAPE KUSTOM (.PNG)	เลือกไฟล์เคปกำหนดเอง (.PNG)
++ATAU PILIH PRESET JUBAH:	หรือเลือกเคปที่ตั้งไว้ล่วงหน้า:
++Cape dilepas (Preview) \u2014 Klik Simpan	ถอดเคปแล้ว (พรีวิว) \u2014 กดบันทึก
++Menyinkronkan ke Minecraft.net...	กำลังซิงก์ไปยัง Minecraft.net...
++Gagal memperbarui Minecraft.net: {~0}	อัปเดต Minecraft.net ไม่สำเร็จ: {0}
++Perubahan berhasil diterapkan ke Minecraft.net!	นำการเปลี่ยนแปลงไปใช้บน Minecraft.net สำเร็จ!
++Skin & Cape berhasil disimpan!	บันทึกสกินและเคปสำเร็จ!
++SIMPAN KE MOJANG	บันทึกไปที่ MOJANG
++SIMPAN PERUBAHAN	บันทึกการเปลี่ยนแปลง
++Jubah Resmi Minecraft	เคปทางการของ Minecraft
++Jubah Aktif Minecraft	เคป Minecraft ที่ใช้งานอยู่
++{0} Cape	เคป {0}
++Gagal memuat jubah Minecraft.	โหลดเคป Minecraft ไม่สำเร็จ
++Respon profil kosong	การตอบกลับโปรไฟล์ว่างเปล่า
++Gagal mengubah jubah.	เปลี่ยนเคปไม่สำเร็จ
++Gagal mengunggah skin.	อัปโหลดสกินไม่สำเร็จ
++Gagal membaca file dari penyimpanan.	อ่านไฟล์จากที่เก็บข้อมูลไม่สำเร็จ
++Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	รูปแบบสกินไม่ถูกต้อง ขนาดต้องเป็น 64x64 หรือ 64x32 พิกเซล
++Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	รูปแบบเคปไม่ถูกต้อง ขนาดต้องเป็น 64x32 หรือ 128x64 พิกเซล
++Tanpa Cape	ไม่มีเคป
++Reset / Lepas cape	รีเซ็ต / ถอดเคป
++Klasik merah resmi Mojang	สีแดงคลาสสิกอย่างเป็นทางการของ Mojang
++Creeper emas peringatan 15 tahun	Creeper สีทองฉลองครบรอบ 15 ปี
++Jubah biru kehormatan migrasi	เคปสีน้ำเงินเพื่อเกียรติสำหรับการย้ายบัญชี
++Motif sakura edisi 1.20	ลายซากุระ รุ่น 1.20
++Edisi emas pencipta	รุ่นทองสำหรับผู้สร้าง
++Edisi Java & Bedrock bundle	รุ่นบันเดิล Java & Bedrock
+diff --git a/app/src/main/assets/lang/th/typing.tsv b/app/src/main/assets/lang/th/typing.tsv
+new file mode 100644
+index 0000000..dfd5ce0
+--- /dev/null
++++ b/app/src/main/assets/lang/th/typing.tsv
+@@ -0,0 +1,4 @@
++# Pengaturan > Kontrol sentuh: preview ketikan (bar di atas keyboard layar)
++Preview ketikan	พรีวิวการพิมพ์
++Saat keyboard layar terbuka, huruf yang kamu ketik tampil di bar kecil tepat di atas keyboard supaya bisa diperiksa sebelum dikirim. Hanya menampilkan yang kamu ketik sejak keyboard dibuka.	ขณะที่คีย์บอร์ดบนหน้าจอเปิดอยู่ ตัวอักษรที่คุณพิมพ์จะแสดงในแถบเล็กเหนือคีย์บอร์ดพอดี เพื่อให้ตรวจสอบก่อนส่งได้ แสดงเฉพาะสิ่งที่พิมพ์ตั้งแต่เปิดคีย์บอร์ด
++Ketikanmu tampil di sini	สิ่งที่คุณพิมพ์จะแสดงที่นี่
+diff --git a/app/src/main/assets/lang/th/update.tsv b/app/src/main/assets/lang/th/update.tsv
+new file mode 100644
+index 0000000..1a0f584
+--- /dev/null
++++ b/app/src/main/assets/lang/th/update.tsv
+@@ -0,0 +1,84 @@
++# Pembaruan aplikasi (pop-up versi baru dari GitHub)
++Pembaruan tersedia	มีการอัปเดตใหม่
++Versi {0} sudah tersedia. Kamu memakai versi {1}.	เวอร์ชัน {0} พร้อมให้ใช้งานแล้ว คุณกำลังใช้เวอร์ชัน {1}
++Yang baru	มีอะไรใหม่
++Lewati	ข้าม
++Unduh	ดาวน์โหลด
++Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	ดาวน์โหลดขาดตอน แตะลองอีกครั้ง การดาวน์โหลดจะต่อจากส่วนที่ได้แล้ว
++Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	พื้นที่เก็บข้อมูลไม่พอ ล้างพื้นที่ประมาณ {0} MB แล้วลองอีกครั้ง
++Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	ไฟล์ที่ดาวน์โหลดเสียหาย (ไม่ตรงกับไฟล์บน GitHub) แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
++Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	ไม่พบไฟล์ APK บน GitHub (รหัส 404) รุ่นนี้อาจถูกลบไปแล้ว
++GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub ปฏิเสธการดาวน์โหลด (รหัส 403) ลองอีกครั้งภายหลัง
++GitHub membalas kode {0} saat mengunduh.	GitHub ตอบกลับด้วยรหัส {0} ขณะดาวน์โหลด
++Balasan GitHub kosong.	การตอบกลับจาก GitHub ว่างเปล่า
++Balasan GitHub terlalu besar.	การตอบกลับจาก GitHub ใหญ่เกินไป
++GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub มีปัญหา (รหัส {0}) ลองอีกครั้งภายหลัง
++GitHub membalas kode {0}.	GitHub ตอบกลับด้วยรหัส {0}
++Tidak ada koneksi internet.	ไม่มีการเชื่อมต่ออินเทอร์เน็ต
++Koneksi terlalu lambat. Coba lagi.	การเชื่อมต่อช้าเกินไป ลองอีกครั้ง
++Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	การเชื่อมต่อที่ปลอดภัยไปยัง GitHub ล้มเหลว ตรวจสอบวันที่และเวลาของมือถือ
++Koneksi internet terputus. Coba lagi.	การเชื่อมต่ออินเทอร์เน็ตหลุด ลองอีกครั้ง
++Terjadi kesalahan yang tidak terduga.	เกิดข้อผิดพลาดที่ไม่คาดคิด
++Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	ถึงขีดจำกัดคำขอของ GitHub แล้ว (มักเกิดเพราะหลายคนใช้เครือข่ายเดียวกัน) ลองอีกครั้งประมาณเวลา {0}
++Unduhan gagal: {0}	ดาวน์โหลดไม่สำเร็จ: {0}
++Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	ไฟล์อัปเดตหายไป แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
++Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	เกมยังทำงานอยู่ ปิดเกมก่อนเพื่อไม่ให้ข้อมูลสูญหาย แล้วลองอีกครั้ง
++Pemasangan gagal: {0}	ติดตั้งไม่สำเร็จ: {0}
++Pemasangan dibatalkan.	ยกเลิกการติดตั้งแล้ว
++Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	อ่านไฟล์อัปเดตเป็น APK ไม่ได้ แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
++Berkas ini bukan APK AmberLauncher.	ไฟล์นี้ไม่ใช่ APK ของ AmberLauncher
++APK ini tidak lebih baru dari versi yang terpasang.	APK นี้ไม่ได้ใหม่กว่าเวอร์ชันที่ติดตั้งอยู่
++Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	ลายเซ็นของ APK ต่างจากแอปที่ติดตั้งอยู่ Android จึงจะปฏิเสธการอัปเดตนี้
++Pemasangan diblokir oleh sistem atau Play Protect.	ระบบหรือ Play Protect บล็อกการติดตั้ง
++Pemasangan diblokir oleh sistem atau Play Protect.{0}	ระบบหรือ Play Protect บล็อกการติดตั้ง{0}
++Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android ปฏิเสธการอัปเดตนี้: ลายเซ็นหรือเวอร์ชันไม่ตรงกับแอปที่ติดตั้งอยู่
++Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android ปฏิเสธการอัปเดตนี้: ลายเซ็นหรือเวอร์ชันไม่ตรงกับแอปที่ติดตั้งอยู่{0}
++APK ini tidak cocok dengan HP kamu.	APK นี้เข้ากันไม่ได้กับมือถือของคุณ
++APK ini tidak cocok dengan HP kamu.{0}	APK นี้เข้ากันไม่ได้กับมือถือของคุณ{0}
++APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	APK เสียหายหรือไม่ถูกต้อง แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
++APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	APK เสียหายหรือไม่ถูกต้อง แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่{0}
++Ruang penyimpanan tidak cukup untuk memasang pembaruan.	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งการอัปเดต
++Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งการอัปเดต{0}
++Pemasangan gagal.	ติดตั้งไม่สำเร็จ
++Pemasangan gagal.{0}	ติดตั้งไม่สำเร็จ{0}
++Balasan GitHub tidak bisa dibaca.	อ่านการตอบกลับจาก GitHub ไม่ได้
++Daftar rilis tersimpan tidak bisa dibaca.	อ่านรายการรุ่นที่บันทึกไว้ไม่ได้
++Pembaruan	การอัปเดต
++Versi terpasang	เวอร์ชันที่ติดตั้ง
++Memeriksa...	กำลังตรวจสอบ...
++Lihat pembaruan	ดูการอัปเดต
++Buka	เปิด
++Periksa pembaruan	ตรวจสอบการอัปเดต
++Periksa otomatis	ตรวจสอบอัตโนมัติ
++Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	ตรวจหาเวอร์ชันใหม่บน GitHub ทุกครั้งที่เปิดตัวเปิดเกม (ใช้ข้อมูลเพียงไม่กี่ KB) หากมี จะมีป๊อปอัปให้ดาวน์โหลดและติดตั้ง
++Semua rilis	ทุกรุ่น
++Daftar versi dan catatan perubahannya di GitHub.	รายการเวอร์ชันและบันทึกการเปลี่ยนแปลงบน GitHub
++Buka GitHub	เปิด GitHub
++Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	การอัปเดตจะดาวน์โหลดและติดตั้งจากภายในตัวเปิดเกม Android ยังคงขอการยืนยันการติดตั้งหนึ่งครั้ง และต้องปิดเกมก่อน
++Belum diperiksa. Ketuk Periksa pembaruan.	ยังไม่ได้ตรวจสอบ แตะตรวจสอบการอัปเดต
++Memeriksa pembaruan...	กำลังตรวจสอบการอัปเดต...
++Sudah versi terbaru. Diperiksa pukul {0}.	เป็นเวอร์ชันล่าสุดแล้ว ตรวจสอบเมื่อเวลา {0}
++Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	เวอร์ชัน {0} ออกแล้ว แต่ APK สำหรับมือถือเครื่องนี้ ({1}) ยังไม่พร้อมใช้งาน ลองอีกครั้งภายหลัง
++Versi {0} tersedia.	เวอร์ชัน {0} พร้อมใช้งาน
++Mengunduh versi {0}... {1}%	กำลังดาวน์โหลดเวอร์ชัน {0}... {1}%
++Versi {0} siap dipasang.	เวอร์ชัน {0} พร้อมติดตั้ง
++Butuh izin memasang aplikasi dari Android.	ต้องได้รับอนุญาตจาก Android เพื่อติดตั้งแอป
++Menunggu konfirmasi pemasangan dari Android...	กำลังรอการยืนยันการติดตั้งจาก Android...
++Ukuran unduhan: {0} MB	ขนาดดาวน์โหลด: {0} MB
++Kamu sedang memakai data seluler, unduhan ini memakai kuota.	คุณกำลังใช้อินเทอร์เน็ตมือถือ การดาวน์โหลดนี้จะใช้โควตาข้อมูล
++Mengunduh pembaruan	กำลังดาวน์โหลดการอัปเดต
++Sembunyikan	ซ่อน
++Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	การดาวน์โหลดทำงานขณะที่ตัวเปิดเกมเปิดอยู่ หากขาดตอน ให้แตะดาวน์โหลดอีกครั้ง จะต่อจากส่วนที่ได้แล้ว
++Siap dipasang	พร้อมติดตั้ง
++Pasang	ติดตั้ง
++Versi {0} sudah diunduh dan diperiksa.	ดาวน์โหลดและตรวจสอบเวอร์ชัน {0} แล้ว
++Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android จะขอให้ยืนยันการติดตั้ง ตัวเปิดเกมจะปิดระหว่างติดตั้ง ให้เปิดใหม่อีกครั้งเมื่อติดตั้งเสร็จ
++Izin pemasangan diperlukan	ต้องมีสิทธิ์ติดตั้ง
++Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android ต้องได้รับอนุญาตเพื่อให้ AmberLauncher ติดตั้งการอัปเดตของตัวเองได้
++Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	เปิด "อนุญาตจากแหล่งที่มานี้" แล้วกลับมาที่นี่ การติดตั้งจะดำเนินต่ออัตโนมัติ
++Memasang pembaruan	กำลังติดตั้งการอัปเดต
++Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	ทำตามข้อความยืนยันจาก Android ตัวเปิดเกมจะปิดเองเมื่อติดตั้งเสร็จ
++Pembaruan gagal	อัปเดตไม่สำเร็จ
++Coba lagi	ลองอีกครั้ง
++Pemasangan gagal. ({~0})	ติดตั้งไม่สำเร็จ ({0})
++layar konfirmasi tidak bisa dibuka	เปิดหน้าจอยืนยันไม่ได้
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/HomeInfo.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/HomeInfo.kt
+index 939111c..b14f82b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/HomeInfo.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/HomeInfo.kt
+@@ -21,10 +21,10 @@ object HomeInfo {
+         else -> 0
+     }
+ 
+-    /** Contoh: "RAM bebas 1,4 GB" (koma desimal; Inggris memakai titik; 1 GB = 1024 MB). */
++    /** Contoh: "RAM bebas 1,4 GB" (koma desimal; Inggris dan Thai memakai titik; 1 GB = 1024 MB). */
+     fun ramText(freeMb: Int): String {
+         val gb = freeMb.coerceAtLeast(0) / 1024f
+-        val locale = if (Tr.effective == Tr.EN) Locale.US else Locale.forLanguageTag("id-ID")
++        val locale = if (Tr.effective == Tr.EN || Tr.effective == Tr.TH) Locale.US else Locale.forLanguageTag("id-ID")
+         val value = String.format(locale, "%.1f", gb)
+         return "RAM bebas $value GB"
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+index 063e653..ab70b2e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+@@ -10,8 +10,8 @@ import java.util.Locale
+  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
+  *
+  * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
+- * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
+- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol atau Vietnam memakai bahasa itu, dan bahasa
++ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], atau [TH]. Pada pilihan [SYSTEM], HP
++ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, atau Thai memakai bahasa itu, dan bahasa
+  * lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
+  */
+ object Tr {
+@@ -20,12 +20,13 @@ object Tr {
+     const val EN = "en"
+     const val ES = "es"
+     const val VI = "vi"
++    const val TH = "th"
+ 
+     /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
+     const val DEFAULT_CHOICE = EN
+ 
+     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
+-    private val DICTIONARY_LANGS = setOf(EN, ES, VI)
++    private val DICTIONARY_LANGS = setOf(EN, ES, VI, TH)
+ 
+     private const val PREFS_NAME = "amber_launcher_prefs"
+     private const val KEY_LANGUAGE = "language"
+@@ -34,12 +35,12 @@ object Tr {
+     @Volatile
+     private var translator: Translator? = null
+ 
+-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], atau [VI]. */
++    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], atau [TH]. */
+     @Volatile
+     var choice: String = DEFAULT_CHOICE
+         private set
+ 
+-    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], atau [VI]. */
++    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], atau [TH]. */
+     @Volatile
+     var effective: String = ID
+         private set
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 63f3a41..89979d4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -262,7 +262,8 @@ fun SettingsScreen(
+         Tr.ID to "Bahasa Indonesia",
+         Tr.EN to "English",
+         Tr.ES to "Espa\u00f1ol",
+-        Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
++        Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
++        Tr.TH to "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22"
+     )
+ 
+     Column(

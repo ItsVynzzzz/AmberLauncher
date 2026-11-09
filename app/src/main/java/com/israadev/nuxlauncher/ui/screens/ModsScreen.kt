@@ -822,7 +822,10 @@ fun ModsScreen(
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                             contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
-                            items(filteredInstalled, key = { it.id }) { item ->
+                            // Kunci dari nama berkas asli (unik per folder). Jangan pakai `id`: namanya tanpa ".disabled",
+                            // jadi "X.jar" dan "X.jar.disabled" yang sama-sama ada di folder mods kembar kuncinya dan
+                            // LazyColumn melempar "Key ... was already used" lalu launcher menutup diri.
+                            items(filteredInstalled, key = { it.originalFilename }) { item ->
                                 val rustModItem = rustInstance && activeType == HorizonContent.TYPE_MODS
                                 InstalledItemRow(
                                     item = item,

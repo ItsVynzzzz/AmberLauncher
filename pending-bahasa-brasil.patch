@@ -1,0 +1,1702 @@
+diff --git a/README.en.md b/README.en.md
+index daa6358..a8d5a3d 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -67,7 +67,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
+ - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
+ - **Crash reports** with optional log upload to mclo.gs.
+ - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
+-- **Multilingual interface**: Bahasa Indonesia, English, Español, and Tiếng Việt.
++- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, and Português (Brasil).
+ - **Optional**: TouchController mod support and the Rust engine (Horizon), both still experimental.
+ 
+ **Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.
+diff --git a/README.md b/README.md
+index 3258726..a2af9e1 100644
+--- a/README.md
++++ b/README.md
+@@ -67,7 +67,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan >
+ - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
+ - **Laporan crash** dengan opsi unggah log ke mclo.gs.
+ - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
+-- **Antarmuka multibahasa**: Indonesia, English, Español, dan Tiếng Việt.
++- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, dan Português (Brasil).
+ - **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
+ 
+ **Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
+diff --git a/app/src/main/assets/lang/pt/about.tsv b/app/src/main/assets/lang/pt/about.tsv
+new file mode 100644
+index 0000000..2f1e6ef
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/about.tsv
+@@ -0,0 +1,43 @@
++# Dialog Tentang dan Lisensi
++Peluncur ini. Kode sumbernya terbuka dan boleh dipelajari, diubah, dan dibagikan lagi dengan syarat GPL-3.0 yang sama.	Este launcher. Seu c\u00f3digo-fonte \u00e9 aberto e pode ser estudado, modificado e compartilhado novamente sob os mesmos termos da GPL-3.0.
++Komponen arsitektur bridge JNI native (ZLBridge), integrasi SDL3 surface, direct gamepad input, penanganan resolusi DNS, dan optimasi eksekusi OpenJDK mobile.	Componentes da arquitetura da ponte JNI nativa (ZLBridge), integra\u00e7\u00e3o da superf\u00edcie SDL3, entrada direta de gamepad, tratamento de resolu\u00e7\u00e3o de DNS e otimiza\u00e7\u00f5es para executar o OpenJDK em dispositivos m\u00f3veis.
++Proyek pionir peluncuran Minecraft Java Edition di Android. Menyediakan porting LWJGL 3, GLFW Stubs, AWT stubs, dan integrasi grafis renderer mobile.	O projeto pioneiro para executar o Minecraft Java Edition no Android. Fornece o port do LWJGL 3, stubs de GLFW e AWT e a integra\u00e7\u00e3o de renderizadores gr\u00e1ficos para dispositivos m\u00f3veis.
++NUX Launcher (sumber asal fork)	NUX Launcher (origem do fork)
++Proyek asal yang di-fork oleh AmberLauncher. Kode sumber terbuka di bawah GNU GPL-3.0.	O projeto original do qual o AmberLauncher \u00e9 um fork. C\u00f3digo aberto sob a GNU GPL-3.0.
++Arsitektur runtime JVM, ZLBridge JNI, integrasi SDL3, direct gamepad, dan optimasi Android	Arquitetura do runtime da JVM, ZLBridge JNI, integra\u00e7\u00e3o do SDL3, gamepad direto e otimiza\u00e7\u00f5es para Android
++Mesin peluncuran Java Minecraft Android, LWJGL 3 Android Natives, GLFW Stub	Motor de execu\u00e7\u00e3o do Minecraft Java no Android, bin\u00e1rios nativos do LWJGL 3 para Android e stub do GLFW
++Penerjemah modern OpenGL 4.0 ke OpenGL ES 3.2 untuk Minecraft 1.17+	Tradutor moderno de OpenGL 4.0 para OpenGL ES 3.2 para o Minecraft 1.17+
++Pustaka binding grafis, audio (OpenAL), dan jendela game Java	Biblioteca de bindings para gr\u00e1ficos, \u00e1udio (OpenAL) e janelas de jogos em Java
++Manajemen surface rendering native, touch input, dan audio output	Gerenciamento nativo da superf\u00edcie de renderiza\u00e7\u00e3o, da entrada por toque e da sa\u00edda de \u00e1udio
++Vulkan-to-OpenGL translation & driver akselerasi GPU mobile	Tradu\u00e7\u00e3o de Vulkan para OpenGL e drivers de acelera\u00e7\u00e3o de GPU para dispositivos m\u00f3veis
++Mesin penerjemah OpenGL ES berbasis backend Vulkan	Motor de tradu\u00e7\u00e3o de OpenGL ES baseado em um backend Vulkan
++Dynamic binary instrumentation dan hook Android library	Instrumenta\u00e7\u00e3o bin\u00e1ria din\u00e2mica e hook de bibliotecas do Android
++Toolkit UI modern, deklaratif, dan responsif	Toolkit de interface moderno, declarativo e responsivo
++Katalog publik mod, modpack, shaderpack, dan resource pack	Cat\u00e1logo p\u00fablico de mods, modpacks, shader packs e pacotes de recursos
++Editor teks dan log penampil performa tinggi	Editor de texto e visualizador de logs de alto desempenho
++Viewer interaktif 3D skin & jubah Minecraft berbasis WebGL	Visualizador 3D interativo de skins e capas do Minecraft baseado em WebGL
++Klien HTTP jaringan performa tinggi	Cliente HTTP de rede de alto desempenho
++Ringkasan	Resumo
++Pustaka ({0})	Bibliotecas ({0})
++Tentang AmberLauncher	Sobre o AmberLauncher
++Peluncur Minecraft Java untuk Android, ringan dan sederhana.	Um launcher de Minecraft Java para Android, leve e simples.
++AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.	O AmberLauncher \u00e9 um launcher independente, modificado a partir do NUX Launcher, que por sua vez deriva do Zalith Launcher 2 e do PojavLauncher. Este aplicativo n\u00e3o \u00e9 um aplicativo oficial da equipe do Zalith Launcher, do NUX Launcher nem da Mojang Studios.
++Proyek dan hak cipta	Projetos e direitos autorais
++Penafian Minecraft	Aviso sobre o Minecraft
++Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.	N\u00e3o \u00e9 um produto oficial do Minecraft. N\u00e3o \u00e9 aprovado pela Mojang Studios nem pela Microsoft, nem est\u00e1 associado a elas. Minecraft \u00e9 uma marca registrada da Mojang AB / Microsoft Corporation. Todos os recursos do jogo s\u00e3o baixados diretamente dos servidores de distribui\u00e7\u00e3o oficiais da Mojang.
++Pustaka open source	Bibliotecas de c\u00f3digo aberto
++Ketuk untuk membuka halaman proyeknya.	Toque para abrir a p\u00e1gina do projeto.
++Lisensi yang menaungi AmberLauncher.	A licen\u00e7a que ampara o AmberLauncher.
++Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.	Este projeto \u00e9 licenciado sob os termos da GNU General Public License vers\u00e3o 3.0.
++Empat kebebasan perangkat lunak bebas	As quatro liberdades do software livre
++Kebebasan untuk menjalankan program untuk keperluan apa pun.	A liberdade de executar o programa para qualquer finalidade.
++Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.	A liberdade de estudar como o programa funciona e adapt\u00e1-lo \u00e0s suas necessidades.
++Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.	A liberdade de redistribuir c\u00f3pias para ajudar o pr\u00f3ximo.
++Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.	A liberdade de aprimorar o programa e publicar esses aprimoramentos para o p\u00fablico.
++Ketentuan tambahan (GPLv3 Pasal 7)	Termos adicionais (GPLv3, se\u00e7\u00e3o 7)
++Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.	Vers\u00f5es modificadas n\u00e3o devem fazer uso indevido do nome comercial 'ZalithLauncher' ou 'ZL'.
++Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.	Vers\u00f5es modificadas devem informar que se trata de uma 'Unofficial Modified Version'.
++Hak cipta penulis asli (Copyright \u00a9 MovTery & PojavLauncherTeam) tidak boleh dihapus.	O copyright dos autores originais (Copyright \u00a9 MovTery & PojavLauncherTeam) n\u00e3o deve ser removido.
++Baca teks lisensi lengkap	Ler o texto completo da licen\u00e7a
++Versi {0}	Vers\u00e3o {0}
++Klien proxy untuk mod kontrol sentuh TouchController	Cliente proxy para o mod de controles por toque TouchController
+diff --git a/app/src/main/assets/lang/pt/accounts.tsv b/app/src/main/assets/lang/pt/accounts.tsv
+new file mode 100644
+index 0000000..5094a7e
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/accounts.tsv
+@@ -0,0 +1,117 @@
++# Akun, login Microsoft dan Ely.by
++Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	Skin e capa da conta Ely.by s\u00e3o gerenciadas diretamente em https://account.ely.by
++Belum ada akun tersimpan	Nenhuma conta salva ainda
++{0} akun tersimpan \u00b7 ketuk untuk berganti	{0} contas salvas \u00b7 toque para trocar
++Profil aktif	Perfil ativo
++Skin & Jubah	Skin e capa
++Belum ada profil aktif	Nenhum perfil ativo ainda
++Pilih atau tambahkan akun untuk mulai bermain.	Escolha ou adicione uma conta para come\u00e7ar a jogar.
++Tambahkan akun Offline, Microsoft, atau Ely.by.	Adicione uma conta Offline, Microsoft ou Ely.by.
++Aktif	Ativa
++Gunakan	Usar
++Akun {0} berhasil ditambahkan!	Conta {0} adicionada com sucesso!
++Hapus akun?	Excluir conta?
++Hapus profil '{0}' ({1}) dari perangkat ini?	Excluir o perfil '{0}' ({1}) deste dispositivo?
++Profil '{0}' dihapus	Perfil '{0}' exclu\u00eddo
++Akun resmi Microsoft	Conta oficial da Microsoft
++Akun terverifikasi Ely.by	Conta verificada do Ely.by
++Akun offline / lokal	Conta offline / local
++Pilih cara masuk ke Minecraft	Escolha como entrar no Minecraft
++Lokal \u00b7 tanpa login	Local \u00b7 sem login
++Resmi \u00b7 akun Mojang	Oficial \u00b7 conta Mojang
++Browser \u00b7 skin & jubah	Navegador \u00b7 skin e capa
++Nama pemain (Steve, Alex...)	Nome do jogador (Steve, Alex...)
++Username tidak boleh kosong	O nome de usu\u00e1rio n\u00e3o pode ficar em branco
++Simpan akun	Salvar conta
++Masuk dengan akun Microsoft / Xbox	Entrar com a conta Microsoft / Xbox
++Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	A janela de autoriza\u00e7\u00e3o abre diretamente no launcher, sem precisar sair do aplicativo.
++Gagal memulai otorisasi Microsoft.	Falha ao iniciar a autoriza\u00e7\u00e3o da Microsoft.
++Menghubungi...	Conectando...
++Masuk dengan Microsoft	Entrar com a Microsoft
++Menunggu otorisasi di browser Ely.by...	Aguardando a autoriza\u00e7\u00e3o no navegador do Ely.by...
++Kode disalin	C\u00f3digo copiado
++Salin	Copiar
++Buka lagi	Abrir de novo
++Masuk dengan akun Ely.by	Entrar com a conta Ely.by
++Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	O navegador \u00e9 aberto automaticamente para confirmar a conta Ely.by, sem digitar senha.
++Buka browser Ely.by	Abrir navegador do Ely.by
++Menunggu otorisasi akun di halaman web Microsoft...	Aguardando a autoriza\u00e7\u00e3o da conta na p\u00e1gina da Microsoft...
++Kode '{0}' telah disalin!	C\u00f3digo '{0}' copiado!
++Token diterima! Memproses autentikasi Minecraft & Xbox...	Token recebido! Processando a autentica\u00e7\u00e3o do Minecraft e do Xbox...
++Gagal memproses autentikasi Minecraft.	Falha ao processar a autentica\u00e7\u00e3o do Minecraft.
++Otorisasi Microsoft gagal.	Falha na autoriza\u00e7\u00e3o da Microsoft.
++LOGIN AKUN MICROSOFT	LOGIN DA CONTA MICROSOFT
++Masuk dan konfirmasi langsung di jendela aman ini	Entre e confirme diretamente nesta janela segura
++Kode '{0}' disalin!	C\u00f3digo '{0}' copiado!
++KODE:	C\u00d3DIGO:
++Salin Kode	Copiar c\u00f3digo
++Buka di Browser Eksternal	Abrir no navegador externo
++Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	Clique em 'Continuar' na p\u00e1gina acima depois de inserir o c\u00f3digo
++Gagal memulai otorisasi Ely.by.	Falha ao iniciar a autoriza\u00e7\u00e3o do Ely.by.
++Otorisasi Ely.by gagal.	Falha na autoriza\u00e7\u00e3o do Ely.by.
++Terjadi kesalahan saat login Ely.by.	Ocorreu um erro no login do Ely.by.
++Gagal memulai login Ely.by Device Code ({0}): {1}	Falha ao iniciar o login do Ely.by Device Code ({0}): {1}
++Login dibatalkan oleh pengguna.	Login cancelado pelo usu\u00e1rio.
++Menunggu konfirmasi di browser...	Aguardando a confirma\u00e7\u00e3o no navegador...
++Memperlambat polling...	Reduzindo a frequ\u00eancia de polling...
++Ely.by OAuth Error: {0}	Erro de OAuth do Ely.by: {0}
++Waktu otorisasi Ely.by habis.	O tempo de autoriza\u00e7\u00e3o do Ely.by esgotou.
++Mengambil informasi akun Ely.by...	Obtendo as informa\u00e7\u00f5es da conta Ely.by...
++Gagal mengambil info akun Ely.by ({0})	Falha ao obter as informa\u00e7\u00f5es da conta Ely.by ({0})
++Mengambil UUID Minecraft untuk {0}...	Obtendo o UUID do Minecraft para {0}...
++Gagal login ke Ely.by (HTTP {0}): {1}	Falha ao fazer login no Ely.by (HTTP {0}): {1}
++Profil Ely.by tidak ditemukan dalam respon.	Perfil do Ely.by n\u00e3o encontrado na resposta.
++Gagal memulai login Microsoft (HTTP {0}): {1}	Falha ao iniciar o login da Microsoft (HTTP {0}): {1}
++Token berhasil diterima! Menghubungkan ke Xbox Live...	Token recebido com sucesso! Conectando ao Xbox Live...
++Menunggu otorisasi di halaman web...	Aguardando a autoriza\u00e7\u00e3o na p\u00e1gina da web...
++Memperlambat frekuensi polling...	Reduzindo a frequ\u00eancia de polling...
++Kode login kedaluwarsa. Silakan mulai ulang.	O c\u00f3digo de login expirou. Comece novamente.
++Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	O c\u00f3digo de autoriza\u00e7\u00e3o j\u00e1 foi usado ou expirou. Clique em Login para obter um novo c\u00f3digo.
++Otorisasi ditolak ({0}): {1}	Autoriza\u00e7\u00e3o negada ({0}): {1}
++Microsoft OAuth Error: {0}	Erro de OAuth da Microsoft: {0}
++Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	A conex\u00e3o de rede caiu repetidas vezes durante o polling. Verifique sua conex\u00e3o com a internet.
++Waktu otorisasi habis (timeout). Silakan coba lagi.	O tempo de autoriza\u00e7\u00e3o esgotou (timeout). Tente novamente.
++Autentikasi dengan Xbox Live...	Autenticando no Xbox Live...
++Gagal autentikasi Xbox Live (HTTP {0}): {1}	Falha na autentica\u00e7\u00e3o do Xbox Live (HTTP {0}): {1}
++Gagal memperoleh token Xbox Live atau UserHash.	Falha ao obter o token do Xbox Live ou o UserHash.
++Meminta otorisasi XSTS Minecraft...	Solicitando a autoriza\u00e7\u00e3o XSTS do Minecraft...
++Akun ini telah dilarang/diblokir dari Xbox Live.	Esta conta foi banida/bloqueada do Xbox Live.
++Akun dibatasi oleh kontrol orang tua (Restricted).	A conta est\u00e1 restringida pelo controle dos pais (Restricted).
++Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	Esta conta Microsoft ainda n\u00e3o tem perfil Xbox. Crie primeiro uma gamertag em xbox.com.
++Akun belum menyetujui Ketentuan Layanan Xbox Live.	A conta ainda n\u00e3o aceitou os Termos de Servi\u00e7o do Xbox Live.
++Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	O servi\u00e7o Xbox Live n\u00e3o est\u00e1 dispon\u00edvel no pa\u00eds/regi\u00e3o da sua conta.
++Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	A conta precisa de verifica\u00e7\u00e3o de maioridade (Proof of Age).
++Batas waktu bermain harian Xbox Live telah tercapai.	O limite di\u00e1rio de tempo de jogo do Xbox Live foi atingido.
++Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	Conta de menor de idade (Child Account). Precisa ser vinculada a uma conta de fam\u00edlia (Family Safety) pelos pais.
++Otorisasi XSTS gagal (HTTP {0}): {1}	Falha na autoriza\u00e7\u00e3o XSTS (HTTP {0}): {1}
++Gagal memperoleh token XSTS.	Falha ao obter o token XSTS.
++Menghubungkan ke Mojang Minecraft Services...	Conectando aos Mojang Minecraft Services...
++Gagal login ke layanan Minecraft ({0}): {1}	Falha ao fazer login nos servi\u00e7os do Minecraft ({0}): {1}
++Layanan Minecraft tidak mengembalikan token akses.	O servi\u00e7o do Minecraft n\u00e3o retornou um token de acesso.
++Mengambil profil pemain Minecraft Java...	Obtendo o perfil de jogador do Minecraft Java...
++Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	Esta conta Microsoft ainda n\u00e3o tem a licen\u00e7a do jogo Minecraft: Java Edition.
++Gagal mengambil profil Minecraft ({0}): {1}	Falha ao obter o perfil do Minecraft ({0}): {1}
++Tidak ada refresh token tersimpan.	N\u00e3o h\u00e1 refresh token salvo.
++Gagal memperbarui token Microsoft ({0}): {1}	Falha ao renovar o token da Microsoft ({0}): {1}
++Token pembaruan kosong.	O token de renova\u00e7\u00e3o est\u00e1 vazio.
++# Login Microsoft: sesi diperbarui otomatis dan pesan galat lebih jelas
++Memperbarui sesi Microsoft...	Renovando a sess\u00e3o da Microsoft...
++Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	N\u00e3o foi poss\u00edvel renovar a sess\u00e3o da Microsoft. O jogo continua sendo iniciado, mas os recursos online podem exigir um novo login.
++Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	N\u00e3o foi poss\u00edvel conectar ao servidor da Microsoft. Verifique a conex\u00e3o com a internet e tente novamente.
++Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	Falha ao iniciar o login da Microsoft (c\u00f3digo {0}). Tente novamente mais tarde.
++Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	Muitas tentativas de login. Aguarde alguns minutos e tente novamente.
++Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	Falha na autentica\u00e7\u00e3o do Xbox Live (c\u00f3digo {0}). Tente novamente mais tarde.
++Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	Falha na autoriza\u00e7\u00e3o XSTS (c\u00f3digo {0}). Tente novamente mais tarde.
++Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	O servidor do Minecraft est\u00e1 com problemas (c\u00f3digo {0}). Tente novamente em alguns minutos.
++Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	O servi\u00e7o do Minecraft recusou o login (c\u00f3digo {0}). Tente novamente mais tarde. Se continuar acontecendo, avise o desenvolvedor do launcher.
++Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	Esta conta ainda n\u00e3o tem um perfil do Minecraft Java. Verifique se voc\u00ea possui o Minecraft: Java Edition (ou o Game Pass para PC) e crie um nome de jogador em minecraft.net/profile.
++Gagal mengambil profil Minecraft (kode {0}).	Falha ao obter o perfil do Minecraft (c\u00f3digo {0}).
++Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	Falha ao renovar a sess\u00e3o da Microsoft (c\u00f3digo {0}). Fa\u00e7a login novamente.
++Kode login tidak dikenali. Silakan mulai ulang.	C\u00f3digo de login n\u00e3o reconhecido. Comece novamente.
++Login ditolak di halaman Microsoft. Silakan mulai ulang.	O login foi recusado na p\u00e1gina da Microsoft. Comece novamente.
++Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	A Mojang recusou este launcher (Invalid app registration, c\u00f3digo 403). O Client ID de login ainda n\u00e3o foi aprovado; entre em contato com o desenvolvedor do launcher.
++Menunggu login di browser...	Aguardando o login no navegador...
++Selesaikan login di browser, lalu kembali ke sini	Conclua o login no navegador e volte aqui
++Tidak ada browser yang bisa dibuka	N\u00e3o h\u00e1 navegador dispon\u00edvel para abrir
++Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	O c\u00f3digo j\u00e1 foi copiado. Se o campo de c\u00f3digo no navegador ainda estiver vazio, cole-o e escolha Continuar.
++Buka di browser	Abrir no navegador
+diff --git a/app/src/main/assets/lang/pt/common.tsv b/app/src/main/assets/lang/pt/common.tsv
+new file mode 100644
+index 0000000..98a49f9
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/common.tsv
+@@ -0,0 +1,39 @@
++# Kata umum
++Tutup	Fechar
++TUTUP	FECHAR
++Batal	Cancelar
++BATAL	CANCELAR
++Hapus	Excluir
++Keluar	Sair
++Ganti	Trocar
++Nanti	Depois
++Pengaturan	Configura\u00e7\u00f5es
++Akun	Contas
++Mod	Mods
++Tentang & Lisensi	Sobre e licen\u00e7a
++Tentang & lisensi	Sobre e licen\u00e7a
++Bahasa	Idioma
++Ikuti sistem	Seguir o sistema
++Seimbang	Equilibrado
++Bawaan	Padr\u00e3o
++Sistem	Sistema
++Halus	Sutil
++Sedang	M\u00e9dia
++Kuat	Forte
++Buka folder	Abrir pasta
++Buka pengaturan	Abrir configura\u00e7\u00f5es
++Ubah instance	Editar inst\u00e2ncia
++Hapus instance	Excluir inst\u00e2ncia
++Lihat log	Ver log
++Home	In\u00edcio
++PLAY	JOGAR
++Menu	Menu
++Keyboard	Teclado
++Log	Log
++Debug	Depura\u00e7\u00e3o
++Renderer	Renderizador
++Renderer {0}	Renderizador {0}
++Default	Padr\u00e3o
++DEFAULT	PADR\u00c3O
++Ambient	Luz ambiente
++Slide (trackpad)	Deslizar (trackpad)
+diff --git a/app/src/main/assets/lang/pt/crash.tsv b/app/src/main/assets/lang/pt/crash.tsv
+new file mode 100644
+index 0000000..4fd42fa
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/crash.tsv
+@@ -0,0 +1,71 @@
++# Panel crash: penjelasan sumber crash dan bantuan AI
++AmberLauncher berhenti	O AmberLauncher parou
++Minecraft berhenti mendadak	O Minecraft parou de repente
++Aplikasi tertutup karena kesalahan tak terduga	O aplicativo foi fechado por um erro inesperado
++Kembali ke launcher	Voltar ao launcher
++Penjelasan	Explica\u00e7\u00e3o
++Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	Um crash nem sempre significa que o launcher est\u00e1 com defeito. Mods, a RAM do celular e drivers gr\u00e1ficos s\u00e3o causas muito mais frequentes, ent\u00e3o investigue primeiro antes de avisar o desenvolvedor.
++Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	O launcher parou de repente por um erro inesperado. Envie o log ao desenvolvedor para que possa ser corrigido.
++Dugaan penyebab	Causa prov\u00e1vel
++Kesalahan di dalam AmberLauncher	Erro dentro do AmberLauncher
++Memori (RAM) HP habis	A mem\u00f3ria (RAM) do celular acabou
++Renderer atau driver grafis	Renderizador ou driver gr\u00e1fico
++Mod, versi Java, atau file game	Mod, vers\u00e3o do Java ou arquivos do jogo
++Belum bisa dipastikan	Ainda n\u00e3o \u00e9 poss\u00edvel determinar
++Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	Desta vez foi o pr\u00f3prio launcher que parou, n\u00e3o o jogo nem um mod. Um relat\u00f3rio ao desenvolvedor ajuda muito a corrigir o problema.
++Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	O jogo foi encerrado pelo sistema porque a RAM do celular n\u00e3o foi suficiente para o jogo, os mods ou as configura\u00e7\u00f5es gr\u00e1ficas em uso. Normalmente n\u00e3o \u00e9 defeito do launcher. Tente reduzir a RAM alocada ao jogo (no m\u00e1ximo metade da RAM do celular), reduzir os mods e fechar outros aplicativos.
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	O jogo parou na parte gr\u00e1fica ou nas bibliotecas nativas do celular. A causa mais comum \u00e9 um renderizador pouco compat\u00edvel com este celular. Tente trocar o renderizador nas configura\u00e7\u00f5es da inst\u00e2ncia. Se todos os renderizadores falharem, a\u00ed sim o problema pode estar no launcher.
++Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	O jogo teve um erro durante a execu\u00e7\u00e3o. O mais comum \u00e9 um mod incompat\u00edvel com a vers\u00e3o do jogo ou com o loader, um mod sem suas depend\u00eancias, ou uma vers\u00e3o do Java inadequada. Normalmente n\u00e3o \u00e9 defeito do launcher.
++Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	A causa s\u00f3 aparece no conte\u00fado do log. Uma IA pode ajudar voc\u00ea a l\u00ea-lo.
++Detail teknis	Detalhes t\u00e9cnicos
++Kesalahan tak terduga di dalam aplikasi	Erro inesperado dentro do aplicativo
++Status keluar: {~0}	C\u00f3digo de sa\u00edda: {0}
++Cari solusi dengan AI	Buscar solu\u00e7\u00e3o com IA
++Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Copie o log junto com a pergunta e cole no chat de uma IA. Normalmente ela consegue indicar a causa e como corrigir. Envie o texto do log, n\u00e3o uma captura de tela.
++Salin log untuk AI	Copiar log para a IA
++Atau buka langsung (log otomatis disalin)	Ou abra diretamente (o log \u00e9 copiado automaticamente)
++Lapor ke pengembang	Avisar o desenvolvedor
++Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	S\u00f3 se a IA concluir que o problema est\u00e1 no launcher, a\u00ed sim relate no GitHub. O log \u00e9 copiado automaticamente, basta colar no relato.
++Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	Relate no GitHub para que possa ser corrigido. O log \u00e9 copiado automaticamente, basta colar no relato.
++Lapor di GitHub	Relatar no GitHub
++Cara lain membagikan log	Outras formas de compartilhar o log
++Bagikan file	Compartilhar arquivo
++Tautan mclo.gs	Link do mclo.gs
++Mengunggah...	Enviando...
++Buka tautan	Abrir link
++Log untuk AI disalin. Tempel di kolom chat AI.	Log para a IA copiado. Cole no campo de chat da IA.
++Log disalin. Tempel di laporan.	Log copiado. Cole no relato.
++Tidak bisa membuka tautan.	N\u00e3o foi poss\u00edvel abrir o link.
++Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Ol\u00e1, meu Minecraft Java Edition travou no celular Android ao ser executado pelo AmberLauncher. Explique a causa em linguagem simples (sou iniciante) e depois d\u00ea os passos de corre\u00e7\u00e3o um por um. Se a causa for um mod, diga qual mod precisa ser removido ou trocado.
++Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Ol\u00e1, o aplicativo AmberLauncher (launcher do Minecraft Java Edition para Android) parou sozinho. Explique a causa em linguagem simples (sou iniciante) e d\u00ea sugest\u00f5es que eu possa tentar. Se voc\u00ea acha que \u00e9 um bug do launcher, diga.
++Perangkat: {0}	Dispositivo: {0}
++Versi Minecraft: {0}	Vers\u00e3o do Minecraft: {0}
++Grafis: {0}	Gr\u00e1ficos: {0}
++Jumlah mod: {0}	Quantidade de mods: {0}
++Daftar mod: {0}	Lista de mods: {0}
++Isi log crash:	Conte\u00fado do log de crash:
++# Pemulihan crash sekali ketuk
++Turunkan RAM ke {0} MB	Reduzir a RAM para {0} MB
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	D\u00e1 mais espa\u00e7o ao celular. Pode ser aumentada de novo em Configura\u00e7\u00f5es > Mem\u00f3ria.
++Pakai renderer Otomatis	Usar o renderizador Autom\u00e1tico
++Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	O renderizador escolhido por voc\u00ea pode n\u00e3o ser muito compat\u00edvel com este celular. O Autom\u00e1tico escolhe o mais adequado.
++Coba renderer {0}	Tentar o renderizador {0}
++Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	O renderizador atual parece estar com problemas neste celular. Pode ser trocado novamente em Configura\u00e7\u00f5es > Gr\u00e1ficos.
++Matikan shader	Desativar shaders
++Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Os shaders sobrecarregam a GPU e a mem\u00f3ria. Podem ser reativados no menu de v\u00eddeo do jogo.
++Nonaktifkan mod tersangka	Desativar o mod suspeito
++Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mod citado no log: {0}. Pode ser reativado no menu Mods.
++Reset Java ke Otomatis	Redefinir Java para Autom\u00e1tico
++Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	A vers\u00e3o do Java escolhida pode n\u00e3o ser compat\u00edvel com este jogo. O Autom\u00e1tico escolhe a vers\u00e3o adequada.
++RAM game diturunkan ke {0} MB.	RAM do jogo reduzida para {0} MB.
++Renderer dikembalikan ke Otomatis.	Renderizador restaurado para Autom\u00e1tico.
++Renderer diganti ke {0}.	Renderizador trocado para {0}.
++Shader dimatikan.	Shaders desativados.
++Mod dinonaktifkan: {0}.	Mod desativado: {0}.
++Java dikembalikan ke Otomatis.	Java restaurado para Autom\u00e1tico.
++Gagal menerapkan. Coba lewat Pengaturan.	Falha ao aplicar. Tente pelas Configura\u00e7\u00f5es.
++Pemulihan cepat	Recupera\u00e7\u00e3o r\u00e1pida
++Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Toque para tentar a corre\u00e7\u00e3o com maior chance de ajudar. Tudo pode ser desfeito.
++Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	As altera\u00e7\u00f5es foram salvas. Volte ao launcher e inicie o jogo novamente.
++Sudah diterapkan	J\u00e1 aplicado
++Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	O jogo parou na parte gr\u00e1fica ou nas bibliotecas nativas do celular. A causa mais comum \u00e9 um renderizador pouco compat\u00edvel com este celular. Tente trocar o renderizador em Configura\u00e7\u00f5es > Gr\u00e1ficos. Se todos os renderizadores falharem, a\u00ed sim o problema pode estar no launcher.
+diff --git a/app/src/main/assets/lang/pt/dialogs.tsv b/app/src/main/assets/lang/pt/dialogs.tsv
+new file mode 100644
+index 0000000..f4db574
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/dialogs.tsv
+@@ -0,0 +1,184 @@
++# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
++Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	O launcher encontrou um erro interno em um componente da interface ou em um processo de segundo plano do sistema.
++INCIDENT DIAGNOSTICS \u00b7 JVM TERMINATION	DIAGN\u00d3STICO DO INCIDENTE \u00b7 ENCERRAMENTO DA JVM
++STATUS PELUNCUR	STATUS DO LAUNCHER
++INFORMASI SESI GAME	INFORMA\u00c7\u00d5ES DA SESS\u00c3O DO JOGO
++{0} Mod	{0} mods
++Log: {0}	Log: {0}
++DIAGNOSA KELUAR SISTEM	DIAGN\u00d3STICO DE SA\u00cdDA DO SISTEMA
++SOLUSI & SARAN PEMULIHAN	SOLU\u00c7\u00d5ES E SUGEST\u00d5ES DE RECUPERA\u00c7\u00c3O
++Log berhasil diunggah & tautan disalin!	Log enviado com sucesso e link copiado!
++Gagal mengunggah: {~0}	Falha ao enviar: {0}
++MENGUNGGAH LOG...	ENVIANDO O LOG...
++BUKA TAUTAN MCLO.GS	ABRIR LINK DO MCLO.GS
++UNGGAH TAUTAN LOG (MCLO.GS)	ENVIAR LOG E GERAR LINK (MCLO.GS)
++BAGIKAN	COMPARTILHAR
++Log disalin ke clipboard!	Log copiado para a \u00e1rea de transfer\u00eancia!
++SALIN	COPIAR
++LOG CRASH	LOG DE CRASH
++Disalin ke papan klip!	Copiado para a \u00e1rea de transfer\u00eancia!
++Gagal membaca file log: {0}	Falha ao ler o arquivo de log: {0}
++Tidak ada rincian log yang tersedia.	Nenhum detalhe de log dispon\u00edvel.
++Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	O launcher encontrou um erro interno em um componente da interface ou em um processo em segundo plano. Relate este log de stacktrace ao desenvolvedor do AmberLauncher.
++Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	O launcher encontrou um erro inesperado (Uncaught Exception).
++JVM dihentikan karena sinyal fatal {0} ({1}).	A JVM foi encerrada por um sinal fatal {0} ({1}).
++JVM keluar dengan kode {0} ({1}).	A JVM saiu com o c\u00f3digo {0} ({1}).
++PELUNCUR MENGALAMI KESALAHAN	O LAUNCHER ENCONTROU UM ERRO
++GAME MENGALAMI CRASH	O JOGO TRAVOU
++Rotasi Layar	Rota\u00e7\u00e3o de tela
++Tautan berhasil diunggah & disalin!	Link enviado e copiado com sucesso!
++Log berhasil disalin ke clipboard!	Log copiado para a \u00e1rea de transfer\u00eancia com sucesso!
++Aplikasi AmberLauncher	Aplicativo AmberLauncher
++Lokasi Log: {0}	Local do log: {0}
++STATUS PENGHENTIAN PROSES	STATUS DO ENCERRAMENTO DO PROCESSO
++CATATAN ANALISIS LOG	NOTAS DA AN\u00c1LISE DO LOG
++MENGUNGGAH LOG KE MCLO.GS...	ENVIANDO O LOG PARA O MCLO.GS...
++UNGGAH TAUTAN (MCLO.GS)	ENVIAR E GERAR LINK (MCLO.GS)
++BAGIKAN LOG	COMPARTILHAR LOG
++SALIN TEKS	COPIAR TEXTO
++MULAI ULANG	REINICIAR
++Unknown	Desconhecido
++MINECRAFT MENGALAMI CRASH	O MINECRAFT TRAVOU
++JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	A JVM saiu com o c\u00f3digo {0} (Signal: {1}).\nVerifique o arquivo de log para mais detalhes.
++Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	O processo do jogo parou de repente (possivelmente encerrado pelo sistema por falta de RAM ou por um crash de driver nativo).
++SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (Instru\u00e7\u00e3o de CPU n\u00e3o compat\u00edvel)
++SIGABRT (Native Assertion / Abort)	SIGABRT (Native Assertion / Abort)
++SIGBUS (Kesalahan Bus Memori)	SIGBUS (Erro de barramento de mem\u00f3ria)
++SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (Erro de c\u00e1lculo de ponto flutuante)
++SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (Encerrado pelo SO / Sem RAM)
++SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (Acesso ilegal \u00e0 mem\u00f3ria / Segfault)
++SIGTERM (Permintaan Terminasi)	SIGTERM (Solicita\u00e7\u00e3o de t\u00e9rmino)
++Selesai Normal (0)	Encerrado normalmente (0)
++Kesalahan Inisialisasi Mod / Java Exception (1)	Erro de inicializa\u00e7\u00e3o de mod / Java Exception (1)
++Dihentikan Pengguna (SIGINT 130)	Encerrado pelo usu\u00e1rio (SIGINT 130)
++Native Driver Abort (SIGABRT 134)	Native Driver Abort (SIGABRT 134)
++Kehabisan Memori RAM / OOM (SIGKILL 137)	Sem mem\u00f3ria RAM / OOM (SIGKILL 137)
++Crash Driver Grafis / Segfault (SIGSEGV 139)	Crash do driver gr\u00e1fico / Segfault (SIGSEGV 139)
++Kegagalan Bootstrap Mesin Virtual (-1)	Falha no bootstrap da m\u00e1quina virtual (-1)
++Kode Keluar {0}	C\u00f3digo de sa\u00edda {0}
++Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	Para detalhes sobre a causa, verifique o arquivo de log. Se voc\u00ea n\u00e3o conseguir resolver o problema sozinho, envie o arquivo de log para algu\u00e9m ou uma equipe que possa analis\u00e1-lo. N\u00e3o tire apenas uma captura da tela atual, pois ela n\u00e3o fornece informa\u00e7\u00f5es t\u00e9cnicas suficientes para resolver o problema.
++JVM digugurkan karena sinyal fatal {0} ({1}).	A JVM foi abortada por um sinal fatal {0} ({1}).
++File log tidak ditemukan.	Arquivo de log n\u00e3o encontrado.
++Log Crash AmberLauncher - {0}	Log de crash do AmberLauncher - {0}
++Bagikan Log Crash: {0}	Compartilhar log de crash: {0}
++Tidak ada aplikasi untuk membagikan file ini.	N\u00e3o h\u00e1 aplicativo para compartilhar este arquivo.
++Gagal membagikan file: {0}	Falha ao compartilhar o arquivo: {0}
++Konten log kosong.	O conte\u00fado do log est\u00e1 vazio.
++Gagal mengunggah log (HTTP {0}): {1}	Falha ao enviar o log (HTTP {0}): {1}
++Server mclo.gs tidak mengembalikan URL.	O servidor mclo.gs n\u00e3o retornou uma URL.
++File log tidak ditemukan: {0}	Arquivo de log n\u00e3o encontrado: {0}
++Tombol kedua	Segundo bot\u00e3o
++Pilih tombol	Escolher bot\u00e3o
++Ditekan bersamaan dengan tombol utama	Pressionado junto com o bot\u00e3o principal
++Ketuk kategori, lalu ketuk tombolnya	Toque na categoria e depois no bot\u00e3o
++Cari tombol	Buscar bot\u00e3o
++Ketik nama tombol, misalnya Shift atau F3	Digite o nome do bot\u00e3o, por exemplo Shift ou F3
++Tidak ada yang cocok	Nada encontrado
++Cari tombol (W, Shift, F3, Tab...)	Buscar bot\u00e3o (W, Shift, F3, Tab...)
++Mouse	Mouse
++Gerakan	Movimento
++Aksi	A\u00e7\u00e3o
++Angka & Hotbar	N\u00fameros e Hotbar
++Fungsi (F1-F12)	Fun\u00e7\u00f5es (F1-F12)
++Modifier & Kontrol	Modificadores e Controle
++Navigasi	Navega\u00e7\u00e3o
++Alfabet (A - Z)	Alfabeto (A - Z)
++Simbol	S\u00edmbolos
++Umum	Geral
++Modifier	Modificadores
++Alfabet	Alfabeto
++Angka	N\u00fameros
++None	Nenhum
++Key {0}	Tecla {0}
++Mouse Kiri (Attack/Break)	Mouse esquerdo (Attack/Break)
++Mouse Kanan (Use/Place)	Mouse direito (Use/Place)
++Mouse Tengah (Pick Block)	Mouse do meio (Pick Block)
++Mouse Tombol 4	Bot\u00e3o 4 do mouse
++Mouse Tombol 5	Bot\u00e3o 5 do mouse
++Scroll Wheel (Slide Naik/Turun)	Scroll Wheel (rolar para cima/baixo)
++W (Maju)	W (Frente)
++A (Kiri)	A (Esquerda)
++S (Mundur)	S (Para tr\u00e1s)
++D (Kanan)	D (Direita)
++SPACE (Lompat)	SPACE (Pular)
++LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (Sneak/Agachar)
++LEFT CTRL (Sprint/Lari)	LEFT CTRL (Sprint/Correr)
++E (Inventory)	E (Invent\u00e1rio)
++Q (Drop Item)	Q (Largar item)
++F (Swap Hand)	F (Trocar de m\u00e3o)
++T (Buka Chat)	T (Abrir chat)
++/ (Buka Command)	/ (Abrir comando)
++ENTER (Kirim/Pilih)	ENTER (Enviar/Selecionar)
++ESCAPE (Pause/Menu)	ESCAPE (Pausa/Menu)
++TAB (Daftar Player)	TAB (Lista de jogadores)
++BACKSPACE (Hapus)	BACKSPACE (Apagar)
++F1 (Sembunyikan HUD)	F1 (Ocultar HUD)
++F2 (Screenshot)	F2 (Captura de tela)
++F3 (Debug Layar)	F3 (Tela de depura\u00e7\u00e3o)
++F4 (Shader / Spectator)	F4 (Shader / Spectator)
++F5 (Ubah Perspektif)	F5 (Mudar perspectiva)
++F8 (Cinematic Camera)	F8 (Cinematic Camera)
++F11 (Fullscreen)	F11 (Fullscreen)
++1 (Slot 1)	1 (Slot 1)
++2 (Slot 2)	2 (Slot 2)
++3 (Slot 3)	3 (Slot 3)
++4 (Slot 4)	4 (Slot 4)
++5 (Slot 5)	5 (Slot 5)
++6 (Slot 6)	6 (Slot 6)
++7 (Slot 7)	7 (Slot 7)
++8 (Slot 8)	8 (Slot 8)
++9 (Slot 9)	9 (Slot 9)
++Panah Atas (UP)	Seta para cima (UP)
++Panah Bawah (DOWN)	Seta para baixo (DOWN)
++Panah Kiri (LEFT)	Seta para a esquerda (LEFT)
++Panah Kanan (RIGHT)	Seta para a direita (RIGHT)
++KURUNG BUKA ( [ { )	ABRIR COLCHETE ( [ { )
++KURUNG TUTUP ( ] } )	FECHAR COLCHETE ( ] } )
++Numpad . (Titik)	Numpad . (Ponto)
++Numpad / (Bagi)	Numpad / (Dividir)
++Numpad * (Kali)	Numpad * (Multiplicar)
++Numpad - (Kurang)	Numpad - (Subtrair)
++Numpad + (Tambah)	Numpad + (Somar)
++Numpad = (Sama Dengan)	Numpad = (Igual)
++KONFIGURASI RENDERER	CONFIGURA\u00c7\u00c3O DO RENDERIZADOR
++Tidak dapat membuka panel aplikasi	N\u00e3o foi poss\u00edvel abrir o painel do aplicativo
++Buka Panel Aplikasi {0}	Abrir painel do aplicativo {0}
++Akses pengaturan driver native, benchmark, dan preferensi aplikasi	Acesse as configura\u00e7\u00f5es do driver nativo, benchmark e prefer\u00eancias do aplicativo
++Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	N\u00e3o h\u00e1 vari\u00e1veis de ambiente configur\u00e1veis para este renderizador.
++PENGATURAN ENVIRONMENT VARIABLES	CONFIGURA\u00c7\u00d5ES DE VARI\u00c1VEIS DE AMBIENTE
++Pengaturan direset ke default	Configura\u00e7\u00f5es redefinidas para o padr\u00e3o
++RESET DEFAULT	REDEFINIR PADR\u00c3O
++SIMPAN & TUTUP	SALVAR E FECHAR
++Nilai aktif: 	Valor ativo: 
++Masukkan nilai (opsional)	Insira um valor (opcional)
++Auto (Rekomendasi)	Auto (Recomendado)
++Otomatis Cerdas	Autom\u00e1tico inteligente
++Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	Escolhe automaticamente o renderizador mais otimizado e est\u00e1vel com base na vers\u00e3o do Minecraft em execu\u00e7\u00e3o.
++Semua Versi Minecraft	Todas as vers\u00f5es do Minecraft
++Rekomendasi Utama (Mali & Adreno)	Principal recomenda\u00e7\u00e3o (Mali e Adreno)
++Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Wrapper moderno de OpenGL ES 3.x diretamente sobre o driver oficial do sistema. O mais est\u00e1vel e com o FPS m\u00e1ximo para GPUs Mali e Adreno no Minecraft moderno (1.17 \u2013 26.3).
++Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	Biblioteca gr\u00e1fica OpenGL 4.0 MobileGlues para o Minecraft 1.17 \u2013 1.21.1. Alta compatibilidade com v\u00e1rias GPUs m\u00f3veis, incluindo Mali.
++Paling Stabil untuk MC Lama	O mais est\u00e1vel para Minecraft antigo
++Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Wrapper cl\u00e1ssico de OpenGL ES 2.0. Compat\u00edvel com o Minecraft 1.7.10 \u2013 1.16.5 e dispositivos de baixa especifica\u00e7\u00e3o.
++Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	Traduz o OpenGL desktop 4.6 para Vulkan. Suporta mods de shader modernos (Iris/Oculus) e mods avan\u00e7ados.
++Khusus GPU Adreno	Exclusivo para GPUs Adreno
++Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	Driver Mesa Gallium Freedreno de c\u00f3digo aberto, otimizado especificamente para chipsets Snapdragon / GPUs Adreno.
++Pustaka grafis MobileGL (Vulkan & GLES backend)	Biblioteca gr\u00e1fica MobileGL (backends Vulkan e GLES)
++Renderer eksternal dari APK: {0} ({1})	Renderizador externo de APK: {0} ({1})
++Plugin Eksternal	Plugin externo
++Renderer APK: {0} ({1})	Renderizador de APK: {0} ({1})
++Close	Fechar
++mclo.gs link	Link do mclo.gs
++Crash Log	Log de crash
++LAUNCHER ERROR	ERRO DO LAUNCHER
++EXIT CODE {0}	C\u00d3DIGO DE SA\u00cdDA {0}
++TERMINAL LOG / STACK TRACE	LOG DO TERMINAL / STACK TRACE
++Impor layout kontrol?	Importar layout de controles?
++Ganti layout	Substituir layout
++Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	O layout de bot\u00f5es atual ser\u00e1 substitu\u00eddo pelos {0} bot\u00f5es deste arquivo.
++Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Este arquivo cont\u00e9m {0} bot\u00f5es de macro que digitam chat ou comandos automaticamente. Verifique antes de usar em servidores.
++Utama	Principal
++Navigasi & Numpad	Navega\u00e7\u00e3o e Numpad
++Ketuk tombol yang diinginkan	Toque no bot\u00e3o desejado
++# Entradas adicionales (ausentes en es)
++Error: {0}	Erro: {0}
+diff --git a/app/src/main/assets/lang/pt/editor.tsv b/app/src/main/assets/lang/pt/editor.tsv
+new file mode 100644
+index 0000000..7ae0915
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/editor.tsv
+@@ -0,0 +1,70 @@
++# Editor tata letak kontrol
++\u2713 Layout tombol in-game disimpan!	\u2713 Layout dos bot\u00f5es no jogo salvo!
++Selesai	Concluir
++Kembali	Voltar
++Tombol baru ditambahkan di tengah layar!	Novo bot\u00e3o adicionado no centro da tela!
+++ TOMBOL	+ BOT\u00c3O
++Joystick WASD ditambahkan!	Joystick WASD adicionado!
++\u2713 Layout GUI berhasil disimpan!	\u2713 Layout da GUI salvo com sucesso!
++PENGATURAN TOMBOL	CONFIGURA\u00c7\u00d5ES DO BOT\u00c3O
++Posisi: {0}% x {1}%	Posi\u00e7\u00e3o: {0}% x {1}%
++Label Teks Tombol:	Texto do bot\u00e3o:
++\ud83d\udd12 Tetap	\ud83d\udd12 Fixo
++Label tombol...	Texto do bot\u00e3o...
++Tipe Kontrol:	Tipo de controle:
++\ud83d\udd79 Virtual Analog Joystick (WASD)	\ud83d\udd79 Joystick anal\u00f3gico virtual (WASD)
++Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	Anal\u00f3gico suave de 8 dire\u00e7\u00f5es que move o personagem no lugar das teclas W, A, S, D.
++Ukuran Joystick (Diameter):	Tamanho do joystick (di\u00e2metro):
++Transparansi (Opacity):	Transpar\u00eancia (opacidade):
++Lari otomatis:	Correr automaticamente:
++Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	Empurre at\u00e9 a borda do c\u00edrculo para correr. Desative se preferir correr com o seu pr\u00f3prio bot\u00e3o CTRL.
++Tombol / Aksi Input:	Bot\u00e3o / a\u00e7\u00e3o de entrada:
++Indikator FPS In-Game	Indicador de FPS no jogo
++Toggle Keyboard Layar	Alternar teclado na tela
++Sembunyikan/Tampilkan GUI	Ocultar/Mostrar GUI
++Buka Menu (pengaturan dan keluar)	Abrir menu (configura\u00e7\u00f5es e sair)
++Aksi Sistem Launcher	A\u00e7\u00f5es do sistema do launcher
++Mouse Kiri (Attack)	Mouse esquerdo (Attack)
++Mouse Kanan (Use)	Mouse direito (Use)
++Mouse Tengah (Pick)	Mouse do meio (Pick)
++Mouse Btn {0}	Bot\u00e3o {0} do mouse
++Key Code {0}	Key Code {0}
++Ubah >	Alterar >
++Lebar (Width):	Largura (Width):
++Tinggi (Height):	Altura (Height):
++Kebulatan Sudut:	Arredondamento dos cantos:
++Mode Toggle:	Modo Toggle:
++Sekali tap untuk kunci	Um toque para travar
++\u26a1 FITUR MAKRO	\u26a1 RECURSO DE MACRO
++Jadikan tombol ini sebagai makro otomatis	Transforme este bot\u00e3o em um macro autom\u00e1tico
++Pilih Mode Makro:	Escolha o modo de macro:
++\u2328 Chat/Perintah	\u2328 Chat/Comando
++Ketik otomatis	Digita automaticamente
++\ud83d\udd17 Kombinasi	\ud83d\udd17 Combina\u00e7\u00e3o
++Multi-Key	Multi-Key
++\u26a1 Turbo Click	\u26a1 Turbo Click
++Auto-clicker	Auto-clicker
++Teks / Perintah yang diketik otomatis:	Texto / comando digitado automaticamente:
++Misal: /gamemode creative atau /home	Ex.: /gamemode creative ou /home
++Template Cepat:	Modelos r\u00e1pidos:
++Urutan Key Kombinasi:	Sequ\u00eancia de teclas da combina\u00e7\u00e3o:
++Hapus Semua	Limpar tudo
++Belum ada key kombinasi. Tambahkan key di bawah.	Ainda n\u00e3o h\u00e1 teclas na combina\u00e7\u00e3o. Adicione teclas abaixo.
++Tambah Key ke Kombinasi	Adicionar tecla \u00e0 combina\u00e7\u00e3o
++Tambah Cepat:	Adi\u00e7\u00e3o r\u00e1pida:
++Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Executado em sequ\u00eancia, de cima (#1) para baixo, ao ser pressionado.
++Interval Auto-Click:	Intervalo do auto-click:
++Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	O bot\u00e3o pressiona e solta repetidamente, muito r\u00e1pido e de forma autom\u00e1tica, enquanto estiver pressionado.
++Tombol dihapus	Bot\u00e3o exclu\u00eddo
++HAPUS TOMBOL	EXCLUIR BOT\u00c3O
++\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 Bot\u00f5es do sistema n\u00e3o podem ser exclu\u00eddos
++MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	MODO NO JOGO \u00b7 Arraste os bot\u00f5es conforme o HUD do jogo e toque em CONCLUIR
++Reset Layout GUI?	Redefinir o layout da GUI?
++Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Todas as posi\u00e7\u00f5es dos bot\u00f5es e personaliza\u00e7\u00f5es voltar\u00e3o ao layout inicial padr\u00e3o do AmberLauncher.
++Layout direset ke standar	Layout redefinido para o padr\u00e3o
++Tampil saat:	Exibir quando:
++Selalu	Sempre
++Saat main	Jogando
++Saat menu	No menu
++Menu = inventori, chat, dan layar lain di dalam game.	Menu = invent\u00e1rio, chat e outras telas dentro do jogo.
++Semua tombol	Todos os bot\u00f5es
+diff --git a/app/src/main/assets/lang/pt/game.tsv b/app/src/main/assets/lang/pt/game.tsv
+new file mode 100644
+index 0000000..53ae86f
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/game.tsv
+@@ -0,0 +1,94 @@
++# Menu in-game, loading, dan dialog kecil
++Tombol	Bot\u00f5es
++Atur tombol	Configurar bot\u00f5es
++TAMPILAN	TELA
++Resolusi render	Resolu\u00e7\u00e3o de renderiza\u00e7\u00e3o
++Hemat 50%	Economia 50%
++Seimbang 75%	Equilibrado 75%
++Penuh 100%	Total 100%
++Pin FPS di layar	Fixar FPS na tela
++Tetap tampil saat tombol layar disembunyikan	Continua vis\u00edvel ao ocultar os bot\u00f5es da tela
++KAMERA DAN KURSOR	C\u00c2MERA E CURSOR
++Kecepatan kamera	Velocidade da c\u00e2mera
++Kecepatan kursor	Velocidade do cursor
++Mode sentuh	Modo de toque
++Geser	Deslizar
++Ketuk	Tocar
++Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Deslizar: a tela vira um trackpad. Tocar: o dedo vira diretamente o cursor.
++Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Segure o bot\u00e3o de atacar ou pular e deslize o dedo para girar a c\u00e2mera. Desative para PvP.
++PINTAS	ATALHOS
++Kamera	C\u00e2mera
++Jeda	Pausa
++Pemain	Jogadores
++Sembunyi HUD	Ocultar HUD
++Keluar dari game	Sair do jogo
++Keluar dari game?	Sair do jogo?
++Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	O Minecraft ser\u00e1 encerrado e voc\u00ea voltar\u00e1 ao launcher. Mundos n\u00e3o salvos podem ser perdidos.
++sisa RAM	RAM livre
++PANAS	CALOR
++Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	Toque no \u00edcone de engrenagem ou no n\u00famero de FPS na tela para abrir o menu. Saia do jogo pelo bot\u00e3o vermelho dentro do menu.
++Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	Bugs s\u00e3o normais, pois ningu\u00e9m \u00e9 perfeito, exceto Deus Todo-Poderoso.
++Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	Desative o Vertical Sync (VSync) nas configura\u00e7\u00f5es do Renderizador se houver engasgos (stuttering) ou tela preta depois do logotipo da Mojang.
++Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	Se a tela do Minecraft aparecer cortada ou na vertical, ative a rota\u00e7\u00e3o autom\u00e1tica do celular e coloque a tela na horizontal (Landscape) antes de tocar em Jogar.
++Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	Use o MobileGlues Renderer para melhor economia de bateria e compatibilidade com shader packs.
++Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	Se o Minecraft travar ao iniciar em GPUs Mali/Adreno, tente ativar 'DISABLE_SUBGROUP' nas configura\u00e7\u00f5es do renderizador.
++Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	Ative o OpenGL NoError nas configura\u00e7\u00f5es do MobileGlues para aumentar o FPS durante o jogo.
++Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	Use o bot\u00e3o HIDE GUI para ocultar os bot\u00f5es virtuais da tela ao jogar com teclado e mouse f\u00edsicos.
++Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	Ajuste a aloca\u00e7\u00e3o de RAM conforme as especifica\u00e7\u00f5es do celular: 2GB\u20133GB j\u00e1 \u00e9 bastante para o Minecraft 1.20+ sem modpacks pesados.
++Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Altere a sensibilidade do cursor em Configura\u00e7\u00f5es de Controle para mirar e direcionar a vis\u00e3o com mais precis\u00e3o.
++Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	Escolha o Vulkan Driver Turnip em dispositivos Snapdragon para desempenho gr\u00e1fico e estabilidade m\u00e1ximos.
++Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	Voc\u00ea pode ajustar a posi\u00e7\u00e3o e o tamanho dos bot\u00f5es de controle como quiser no menu de Personaliza\u00e7\u00e3o de Bot\u00f5es.
++Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	Use o recurso Import Addon para instalar Modpacks (.mrpack), Mods (.jar) e Resource Packs instantaneamente!
++Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	Toque no bot\u00e3o ESC na tela para abrir o menu de pausa ou voltar ao menu anterior.
++Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Pressione a tecla F3 para ver informa\u00e7\u00f5es de coordenadas, bioma e o gr\u00e1fico de desempenho de FPS dentro do jogo.
++Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	Ative o modo Fullscreen nas Configura\u00e7\u00f5es para ignorar o notch/c\u00e2mera frontal e ampliar a vis\u00e3o.
++Memuat Minecraft {0}	Carregando o Minecraft {0}
++Tutup loading	Fechar carregamento
++Menyiapkan mesin Java dan grafis...	Preparando o motor Java e gr\u00e1fico...
++Izin penyimpanan	Permiss\u00e3o de armazenamento
++AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	O AmberLauncher guarda mundos, mods e configura\u00e7\u00f5es na pasta nuxlauncher do armazenamento do celular, para facilitar o backup e a transfer\u00eancia.
++Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	O Android abrir\u00e1 a p\u00e1gina de configura\u00e7\u00f5es. Ative a permiss\u00e3o de acesso a todos os arquivos para o AmberLauncher e volte aqui.
++Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	Se escolher Depois, o jogo continua funcionando. Os dados ficam na pasta privada do aplicativo, que n\u00e3o \u00e9 f\u00e1cil de abrir pelo gerenciador de arquivos.
++Hapus instance?	Excluir inst\u00e2ncia?
++Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	Todos os mundos, mods, savegames e configura\u00e7\u00f5es desta inst\u00e2ncia ser\u00e3o exclu\u00eddos permanentemente e n\u00e3o poder\u00e3o ser recuperados.
++Perender tidak cocok	Renderizador incompat\u00edvel
++Tetap jalankan	Executar mesmo assim
++Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Este renderizador n\u00e3o \u00e9 oficialmente compat\u00edvel com o Minecraft {0}. For\u00e7\u00e1-lo pode causar falhas visuais, tela congelada ou travamento do jogo. Continuar?
++Dukungan resmi: {0}	Suporte oficial: {0}
++Mengunduh game	Baixando o jogo
++Menyiapkan file game...	Preparando os arquivos do jogo...
++# Rekam layar bawaan
++Rekam layar	Gravar tela
++Merekam	Gravando
++Dijeda	Em pausa
++Ketuk untuk mulai	Toque para come\u00e7ar
++Merekam layar	Gravando a tela
++Ketuk Berhenti untuk menyimpan rekaman.	Toque em Parar para salvar a grava\u00e7\u00e3o.
++Berhenti	Parar
++Merekam {0}x{1} \u00b7 {2} fps	Gravando {0}x{1} ~ {2} fps
++Izin merekam layar tidak diberikan	A permiss\u00e3o para gravar a tela n\u00e3o foi concedida
++Izin mikrofon ditolak, merekam tanpa suara	Permiss\u00e3o de microfone negada, gravando sem som
++Perekam layar tidak tersedia di HP ini	O gravador de tela n\u00e3o est\u00e1 dispon\u00edvel neste celular
++Perekam layar tidak tersedia di HP ini.	O gravador de tela n\u00e3o est\u00e1 dispon\u00edvel neste celular.
++HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	Este celular n\u00e3o tem um encoder de v\u00eddeo por hardware. A grava\u00e7\u00e3o foi cancelada para o jogo n\u00e3o ficar com lag.
++Ruang penyimpanan kurang untuk merekam.	Espa\u00e7o de armazenamento insuficiente para gravar.
++Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	Armazenamento cheio. A grava\u00e7\u00e3o foi salva e interrompida.
++Perekam mengalami kesalahan. Rekaman dihentikan.	O gravador encontrou um erro. A grava\u00e7\u00e3o foi interrompida.
++Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	A captura de tela foi interrompida pelo sistema. A grava\u00e7\u00e3o foi salva.
++Rekaman terlalu singkat, tidak disimpan.	Grava\u00e7\u00e3o muito curta, n\u00e3o foi salva.
++Rekaman disimpan di Movies/AmberLauncher	Grava\u00e7\u00e3o salva em Movies/AmberLauncher
++Rekaman disimpan: {0}	Grava\u00e7\u00e3o salva: {0}
++HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	O celular est\u00e1 quente demais. A grava\u00e7\u00e3o foi salva e interrompida para o jogo continuar fluido.
++Gagal memulai rekaman: {~0}	Falha ao iniciar a grava\u00e7\u00e3o: {0}
++Gagal menyiapkan rekaman: {0}	Falha ao preparar a grava\u00e7\u00e3o: {0}
++# Pembaruan otomatis dan rekam layar (tambahan)
++REKAM	GRAVAR
++Berhenti merekam	Parar de gravar
++Game saja	S\u00f3 o jogo
++Dengan tombol	Com bot\u00f5es
++Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	A grava\u00e7\u00e3o \u00e9 pausada enquanto o menu est\u00e1 aberto e continua automaticamente quando ele \u00e9 fechado.
++Tombol layar ikut terekam di video.	Os bot\u00f5es da tela aparecem no v\u00eddeo.
++Tombol layar disembunyikan dari video (tetap bisa disentuh).	Os bot\u00f5es da tela s\u00e3o ocultados do v\u00eddeo (ainda podem ser tocados).
++izin tangkap layar tidak valid	permiss\u00e3o de captura de tela inv\u00e1lida
++tidak bisa membuat berkas di Movies	n\u00e3o foi poss\u00edvel criar o arquivo em Movies
++tidak bisa membuka berkas rekaman	n\u00e3o foi poss\u00edvel abrir o arquivo de grava\u00e7\u00e3o
+diff --git a/app/src/main/assets/lang/pt/home.tsv b/app/src/main/assets/lang/pt/home.tsv
+new file mode 100644
+index 0000000..5cab770
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/home.tsv
+@@ -0,0 +1,35 @@
++# Beranda dan sidebar
++Memproses berkas...	Processando arquivo...
++Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan	V\u00eddeo definido como plano de fundo. O som e a luz ambiente s\u00e3o ajustados em Configura\u00e7\u00f5es > Apar\u00eancia
++Latar belakang diganti	Plano de fundo alterado
++Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px	Muito grande: fotos ou GIFs at\u00e9 30 MB, v\u00eddeos at\u00e9 200 MB e resolu\u00e7\u00e3o de 2560 px
++Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	N\u00e3o \u00e9 poss\u00edvel usar este arquivo. Use uma foto, um GIF ou um v\u00eddeo MP4 (H.264)
++Silakan buat atau pilih akun terlebih dahulu!	Primeiro crie ou escolha uma conta!
++Menyiapkan OpenJDK ({0})...	Preparando o OpenJDK ({0})...
++Instalasi selesai! Tekan PLAY untuk bermain.	Instala\u00e7\u00e3o conclu\u00edda! Toque em JOGAR para come\u00e7ar.
++Gagal mengunduh: {~0}	Falha ao baixar: {0}
++Meluncurkan {0}...	Iniciando {0}...
++Gagal menyiapkan OpenJDK: {~0}	Falha ao preparar o OpenJDK: {0}
++Membuka folder instance...	Abrindo a pasta da inst\u00e2ncia...
++Latar belakang dikembalikan ke bawaan	Plano de fundo restaurado para o padr\u00e3o
++Instance {0} berhasil dibuat!	Inst\u00e2ncia {0} criada com sucesso!
++Instance {0} dibuat. Mengunduh game...	Inst\u00e2ncia {0} criada. Baixando o jogo...
++Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.	Download cancelado. Toque em BAIXAR para continuar.
++Instance {0} berhasil dihapus!	Inst\u00e2ncia {0} exclu\u00edda com sucesso!
++Tambah akun	Adicionar conta
++Ganti akun	Trocar de conta
++Ganti latar belakang	Trocar plano de fundo
++Ganti instance	Trocar de inst\u00e2ncia
++UNDUH	BAIXAR
++Buka folder instance	Abrir pasta da inst\u00e2ncia
++Belum ada instance	Ainda n\u00e3o h\u00e1 inst\u00e2ncias
++Buat instance Minecraft pertamamu untuk mulai bermain.	Crie sua primeira inst\u00e2ncia do Minecraft para come\u00e7ar a jogar.
++TAMBAH	ADICIONAR
++Video tidak bisa diputar di HP ini, latar memakai gambar diam	Este celular n\u00e3o consegue reproduzir o v\u00eddeo, ent\u00e3o o plano de fundo usa uma imagem est\u00e1tica
++LATAR BELAKANG	PLANO DE FUNDO
++Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps (MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.	Fotos s\u00e3o o mais leve. GIFs se movem com pouco consumo. V\u00eddeos s\u00e3o o mais fluido e podem ser HD a 60 fps (MP4 H.264, at\u00e9 200 MB), mas gastam mais bateria. O som do v\u00eddeo, a luz ambiente e a economia de bateria s\u00e3o ajustados em Configura\u00e7\u00f5es > Apar\u00eancia.
++PILIH FOTO / GIF / VIDEO	ESCOLHER FOTO / GIF / V\u00cdDEO
++KEMBALI KE BAWAAN	VOLTAR AO PADR\u00c3O
++PILIH INSTANCE	ESCOLHER INST\u00c2NCIA
++Belum ada instance. Buat yang pertama di bawah.	Ainda n\u00e3o h\u00e1 inst\u00e2ncias. Crie a primeira abaixo.
++TAMBAH INSTANCE	ADICIONAR INST\u00c2NCIA
+diff --git a/app/src/main/assets/lang/pt/horizon.tsv b/app/src/main/assets/lang/pt/horizon.tsv
+new file mode 100644
+index 0000000..25ef2f1
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/horizon.tsv
+@@ -0,0 +1,72 @@
++# Mesin Rust (Horizon)
++Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	O motor Rust n\u00e3o est\u00e1 inclu\u00eddo nesta build. Como adicion\u00e1-lo: docs/rust-engine.md.
++Mesin Rust butuh Android 9 (API 28) ke atas.	O motor Rust requer Android 9 (API 28) ou superior.
++Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	O motor Rust s\u00f3 est\u00e1 dispon\u00edvel para celulares de 64 bits (arm64).
++RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	A RAM deste celular \u00e9 limitada para o motor Rust (recomendados 4 GB ou mais). O jogo pode fechar sozinho.
++Mesin Rust gagal dibuka: {0}	Falha ao abrir o motor Rust: {0}
++MESIN RUST (HORIZON)	MOTOR RUST (HORIZON)
++Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	O motor Rust substitui todo o cliente Java do Minecraft: sem Java e sem mods Fabric, Forge ou NeoForge.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	S\u00f3 \u00e9 compat\u00edvel com o Minecraft {0}. O pr\u00f3prio motor baixa os recursos do jogo (cerca de 500 MiB) na primeira abertura.
++Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Experimental: requer Android 9 ou superior e um celular de 64 bits.
++Tanpa Java	Sem Java
++# Shader dan Resource Pack untuk mesin Rust
++Jenis berkas ini belum didukung mesin Rust.	Este tipo de arquivo ainda n\u00e3o \u00e9 compat\u00edvel com o motor Rust.
++Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	O nome do arquivo n\u00e3o \u00e9 adequado para o motor Rust (muito longo ou com caracteres proibidos).
++Mesin Rust hanya menerima berkas .zip di sini.	O motor Rust s\u00f3 aceita arquivos .zip aqui.
++Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	O arquivo tem mais de 256 MB, grande demais para o motor Rust.
++Arsip rusak atau tidak bisa dibaca.	O arquivo compactado est\u00e1 corrompido ou n\u00e3o pode ser lido.
++Arsip berisi terlalu banyak berkas.	O arquivo compactado cont\u00e9m arquivos demais.
++Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	O arquivo compactado cont\u00e9m caminhos perigosos ou duplicados, ent\u00e3o n\u00e3o foi instalado.
++Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	O conte\u00fado do arquivo compactado fica grande demais depois de extra\u00eddo (mais de 512 MB).
++Metadata resource pack (pack.mcmeta) tidak valid.	Os metadados do pacote de recursos (pack.mcmeta) s\u00e3o inv\u00e1lidos.
++Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Este arquivo n\u00e3o \u00e9 um pacote de recursos: pack.mcmeta n\u00e3o foi encontrado na raiz do arquivo compactado.
++Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Este arquivo n\u00e3o \u00e9 um shader pack: a pasta shaders n\u00e3o foi encontrada na raiz do arquivo compactado.
++Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	Este \u00e9 um shader nativo do Horizon. Instale-o pela fonte Horizon na tela Explorar (formato .hshader).
++Tidak ada berkas .zip yang cocok di versi ini.	N\u00e3o h\u00e1 nenhum arquivo .zip compat\u00edvel nesta vers\u00e3o.
++Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	A fonte n\u00e3o fornece o hash do arquivo, ent\u00e3o o download n\u00e3o pode ser verificado.
++Gagal menyimpan berkas ke folder mesin Rust.	Falha ao salvar o arquivo na pasta do motor Rust.
++Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	As configura\u00e7\u00f5es do jogo ainda n\u00e3o foram criadas. Abra o jogo uma vez, entre em Configura\u00e7\u00f5es, altere uma op\u00e7\u00e3o e tente de novo.
++Gagal menyimpan pilihan ke pengaturan mesin.	Falha ao salvar a sele\u00e7\u00e3o nas configura\u00e7\u00f5es do motor.
++Memeriksa {0}...	Verificando {0}...
++Gagal membuka berkas yang dipilih	Falha ao abrir o arquivo selecionado
++Coba ubah kata kunci	Tente mudar a palavra-chave
++Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Motor Rust: ative a chave na lista de instalados para us\u00e1-lo. Vale na pr\u00f3xima vez que o jogo for aberto.
++Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Os shaders do motor Rust ainda est\u00e3o em fase de teste e podem pesar no celular.
++# Mesin Rust di HP 32-bit
++Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	O motor Rust de 32 bits s\u00f3 est\u00e1 dispon\u00edvel para celulares ARM (armeabi-v7a).
++Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental em celulares de 32 bits: requer Android 9 ou superior e pode ser mais lento.
++# Mod mesin Rust (.hmod), modul bawaan, dan katalog Horizon
++Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Os mods do motor Rust usam o formato .hmod, n\u00e3o .jar do Fabric ou do Forge.
++Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	O arquivo do mod tem mais de 32 MB, grande demais para o motor Rust.
++Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	O conte\u00fado do mod fica grande demais depois de extra\u00eddo (mais de 64 MB).
++Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	Este n\u00e3o \u00e9 um mod do Horizon: horizon-mod.toml n\u00e3o foi encontrado na raiz do arquivo.
++Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	O manifesto do mod (horizon-mod.toml) \u00e9 inv\u00e1lido ou n\u00e3o \u00e9 compat\u00edvel.
++Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Este mod n\u00e3o traz c\u00f3digo (mod.wasm) e n\u00e3o \u00e9 um mod de conte\u00fado (capacidade registries), ent\u00e3o n\u00e3o pode ser instalado.
++Kode mod (mod.wasm) lebih dari 32 MB.	O c\u00f3digo do mod (mod.wasm) tem mais de 32 MB.
++Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	J\u00e1 existe um mod em formato de pasta com o mesmo id. Exclua o anterior primeiro.
++Gagal menyimpan pilihan mod ke pengaturan mesin.	Falha ao salvar a sele\u00e7\u00e3o de mods nas configura\u00e7\u00f5es do motor.
++Mod hanya bisa dihidupkan di APK 64-bit.	Os mods s\u00f3 podem ser ativados no APK de 64 bits.
++Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	Mod n\u00e3o encontrado ou o manifesto n\u00e3o p\u00f4de ser lido.
++Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Segure a tecla Z para dar zoom; configur\u00e1vel em Options > Mods dentro do jogo
++Peta kecil yang bisa diatur di sudut layar	Um minimapa configur\u00e1vel no canto da tela
++Resep dan kegunaan item di samping inventori	Receitas e usos dos itens ao lado do invent\u00e1rio
++Modul F3 yang bisa diatur untuk layar debug	M\u00f3dulos configur\u00e1veis para a tela de depura\u00e7\u00e3o F3
++Resep	Receitas
++Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	N\u00e3o foi poss\u00edvel ler o cat\u00e1logo do Horizon. Tente novamente mais tarde.
++Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	O cat\u00e1logo do Horizon usa um formato mais novo. Atualize o Amber.
++Tidak ada berkas yang cocok di versi ini.	N\u00e3o h\u00e1 nenhum arquivo compat\u00edvel nesta vers\u00e3o.
++Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	O cat\u00e1logo n\u00e3o fornece hash SHA-256, ent\u00e3o o download n\u00e3o pode ser verificado.
++Alamat unduhan tidak dikenali, jadi ditolak.	O endere\u00e7o de download n\u00e3o \u00e9 reconhecido, ent\u00e3o foi recusado.
++Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	O tamanho do arquivo n\u00e3o confere com o do cat\u00e1logo, ent\u00e3o n\u00e3o foi instalado.
++Memuat data dari Horizon...	Carregando dados do Horizon...
++Gagal memuat dari Horizon	Falha ao carregar do Horizon
++Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Os mods do motor Rust usam o formato .hmod (n\u00e3o .jar do Fabric ou do Forge). Mods com c\u00f3digo s\u00e3o instalados desativados; ative-os depois de revisar as permiss\u00f5es em Options > Mods dentro do jogo.
++Konten	Conte\u00fado
++Berkode	Com c\u00f3digo
++# Katalog Horizon untuk shader dan resource pack
++Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	Este n\u00e3o \u00e9 um shader nativo do Horizon: horizon-shaders.toml n\u00e3o foi encontrado na raiz do arquivo compactado.
++Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	O shader nativo do Horizon \u00e9 grande demais (arquivo com mais de 16 MB, conte\u00fado com mais de 8 MB, ou algum arquivo interno grande demais).
++Sumber Horizon: shader asli mesin Rust (.hshader).	Fonte Horizon: shaders nativos do motor Rust (.hshader).
++Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fonte Modrinth: shaders cl\u00e1ssicos; a compatibilidade com o motor Rust ainda \u00e9 limitada.
++Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fonte Horizon: pacotes de recursos criados ou testados para o motor Rust.
++Coba ubah kata kunci atau pindah ke sumber Modrinth	Tente mudar a palavra-chave ou trocar para a fonte Modrinth
+diff --git a/app/src/main/assets/lang/pt/instances.tsv b/app/src/main/assets/lang/pt/instances.tsv
+new file mode 100644
+index 0000000..b7ecf23
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/instances.tsv
+@@ -0,0 +1,133 @@
++# Tambah/Ubah instance, unduhan, Java
++Semua	Todas
++INSTANCE ARCHITECT	ARQUITETO DE INST\u00c2NCIAS
++Buat Instance Baru	Criar nova inst\u00e2ncia
++NAMA INSTANCE	NOME DA INST\u00c2NCIA
++Default: {0} {1}	Padr\u00e3o: {0} {1}
++MOD LOADER ENGINE	MOTOR DO MOD LOADER
++Memuat loader Fabric...	Carregando o loader do Fabric...
++\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f O Fabric ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
++SPESIFIKASI TARGET	ESPECIFICA\u00c7\u00d5ES DE DESTINO
++Memuat Fabric...	Carregando o Fabric...
++Fabric Tidak Tersedia	Fabric indispon\u00edvel
++Buat Instance Sekarang	Criar inst\u00e2ncia agora
++Cari versi ({0})...	Buscar vers\u00e3o ({0})...
++DAFTAR VERSI	LISTA DE VERS\u00d5ES
++{0} versi ditemukan	{0} vers\u00f5es encontradas
++Memuat manifest Mojang...	Carregando o manifesto da Mojang...
++Tidak ada versi yang cocok	Nenhuma vers\u00e3o correspondente
++Auto ({0})	Auto ({0})
++Nama	Nome
++Nama instance	Nome da inst\u00e2ncia
++Lihat mod	Ver mods
++{0} terpasang	{0} instalados
++Hapus '{0}'?	Excluir '{0}'?
++Semua world, mod, dan file instance dihapus permanen.	Todos os mundos, mods e arquivos da inst\u00e2ncia ser\u00e3o exclu\u00eddos permanentemente.
++Ya, hapus	Sim, excluir
++Nama instance tidak boleh kosong	O nome da inst\u00e2ncia n\u00e3o pode ficar em branco
++Instance berhasil diperbarui!	Inst\u00e2ncia atualizada com sucesso!
++Simpan	Salvar
++Mengambil metadata versi {0}...	Obtendo os metadados da vers\u00e3o {0}...
++Versi {0} tidak ditemukan di manifest Mojang	A vers\u00e3o {0} n\u00e3o foi encontrada no manifesto da Mojang
++Membaca konfigurasi versi...	Lendo a configura\u00e7\u00e3o da vers\u00e3o...
++Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	Baixando o cliente do Minecraft ({0} / {1} MB - {2}%)...
++Mengunduh libraries ({0}/{1})...	Baixando as bibliotecas ({0}/{1})...
++Memverifikasi asset index {0}...	Verificando o asset index {0}...
++Mengunduh aset game ({0}/{1})...	Baixando os recursos do jogo ({0}/{1})...
++Menyiapkan Fabric Loader...	Preparando o Fabric Loader...
++Tidak dapat menemukan Fabric loader untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o Fabric Loader para a vers\u00e3o {0}
++Mengambil profil Fabric ({0})...	Obtendo o perfil do Fabric ({0})...
++Gagal memuat profil Fabric: {~0}	Falha ao carregar o perfil do Fabric: {0}
++Mengunduh library Fabric ({0}/{1})...	Baixando as bibliotecas do Fabric ({0}/{1})...
++Instalasi selesai!	Instala\u00e7\u00e3o conclu\u00edda!
++Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	Endere\u00e7o de download recusado por n\u00e3o usar HTTPS: {0}
++Isi unduhan tidak cocok dengan sidik jari resmi: {0}	O conte\u00fado baixado n\u00e3o confere com o hash oficial: {0}
++Failed to download {0}: {1}	Falha ao baixar {0}: {1}
++Failed to download {0}	Falha ao baixar {0}
++Empty body for {0}	Corpo vazio para {0}
++HTTP Error {0} from {1}	Erro HTTP {0} de {1}
++HTTP Error {0}	Erro HTTP {0}
++Empty response body	Corpo da resposta vazio
++Tidak dapat memuat versi Fabric untuk {0}	N\u00e3o foi poss\u00edvel carregar as vers\u00f5es do Fabric para {0}
++Gagal memuat profil Fabric untuk {0} ({1})	Falha ao carregar o perfil do Fabric para {0} ({1})
++Mengekstrak Java Runtime ({0} universal)...	Extraindo o Java Runtime ({0} universal)...
++Mengekstrak runtime universal ({0})	Extraindo o runtime universal ({0})
++Mengekstrak Java Runtime ({0} bin-{1})...	Extraindo o Java Runtime ({0} bin-{1})...
++Mengekstrak native binary ({0} {1})	Extraindo o bin\u00e1rio nativo ({0} {1})
++Memverifikasi izin sistem OpenJDK...	Verificando as permiss\u00f5es do sistema para o OpenJDK...
++Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	A verifica\u00e7\u00e3o do OpenJDK {0} est\u00e1 incompleta ap\u00f3s a extra\u00e7\u00e3o.
++Ekstraksi OpenJDK {0} selesai!	Extra\u00e7\u00e3o do OpenJDK {0} conclu\u00edda!
++Membongkar bytecode Java 8: {0} ({1}/{2})...	Descompactando o bytecode do Java 8: {0} ({1}/{2})...
++Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do Fabric ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
++Lokasi folder disalin ke clipboard:\n{0}	Caminho da pasta copiado para a \u00e1rea de transfer\u00eancia:\n{0}
++Folder: {0}	Pasta: {0}
++Buka Folder	Abrir pasta
++Unable to resolve host "{0}": System DNS and Fallback DoH failed	N\u00e3o foi poss\u00edvel resolver o host "{0}": o DNS do sistema e o DoH de fallback falharam
++Memuat versi Forge...	Carregando vers\u00f5es do Forge...
++\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f O Forge ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
++\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f O Forge \u00e9 apenas para o Minecraft 1.13 ou superior
++Disarankan	Recomendada
++Terbaru	Mais recente
++Memuat Forge...	Carregando o Forge...
++Forge Tidak Tersedia	Forge indispon\u00edvel
++Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do Forge ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
++Mengunduh installer Forge {0}...	Baixando o instalador do Forge {0}...
++Mengunduh library Forge ({0}/{1})...	Baixando as bibliotecas do Forge ({0}/{1})...
++Menyiapkan Java ({0})...	Preparando o Java ({0})...
++Memasang Forge {0}...	Instalando o Forge {0}...
++Memasang Forge {0} ({1}/{2})...	Instalando o Forge {0} ({1}/{2})...
++Forge {0} terpasang	Forge {0} instalado
++Tidak dapat menemukan Forge untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o Forge para a vers\u00e3o {0}
++Tidak ada versi Forge untuk {0}	N\u00e3o h\u00e1 vers\u00e3o do Forge para {0}
++Versi Forge belum dipilih	Nenhuma vers\u00e3o do Forge selecionada
++Forge hanya mendukung Minecraft 1.13 ke atas	O Forge s\u00f3 \u00e9 compat\u00edvel com o Minecraft 1.13 ou superior
++Installer Forge {0} rusak atau tidak lengkap	O instalador do Forge {0} est\u00e1 corrompido ou incompleto
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Formato de instalador do Forge n\u00e3o reconhecido (o Amber exige o Forge 1.13 ou superior)
++Installer Forge untuk Minecraft {0}, bukan {1}	O instalador do Forge \u00e9 para o Minecraft {0}, n\u00e3o {1}
++Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do Forge: {0}. Verifique a conex\u00e3o e tente novamente.
++Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	O instalador do Forge terminou, mas o jar do Minecraft modificado (patched) n\u00e3o foi encontrado ({0})
++Gagal menyiapkan Java {0}: {1}	Falha ao preparar o Java {0}: {1}
++Installer Forge gagal (kode {0}): {1}	Falha no instalador do Forge (c\u00f3digo {0}): {1}
++Installer Forge gagal (kode {0})	Falha no instalador do Forge (c\u00f3digo {0})
++Mojang tidak menyediakan mappings untuk Minecraft {0}	A Mojang n\u00e3o fornece mappings para o Minecraft {0}
++Pemasangan Forge	Instala\u00e7\u00e3o do Forge
++Memasang Forge	Instalando o Forge
++Proses ini hanya berjalan sekali per versi Forge.	Este processo s\u00f3 \u00e9 executado uma vez por vers\u00e3o do Forge.
++Forge dipasang sekali saat instance diunduh pertama kali.	O Forge \u00e9 instalado uma \u00fanica vez, quando a inst\u00e2ncia \u00e9 baixada pela primeira vez.
++Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Espa\u00e7o de armazenamento insuficiente para instalar o Forge (restam {0} MB, m\u00ednimo necess\u00e1rio {1} MB)
++Memuat versi NeoForge...	Carregando vers\u00f5es do NeoForge...
++\u26a0\ufe0f NeoForge belum tersedia untuk {0}	\u26a0\ufe0f O NeoForge ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
++\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	\u26a0\ufe0f O NeoForge \u00e9 apenas para o Minecraft 1.20.2 ou superior
++Memuat NeoForge...	Carregando o NeoForge...
++NeoForge Tidak Tersedia	NeoForge indispon\u00edvel
++Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do NeoForge ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
++Mengunduh installer NeoForge {0}...	Baixando o instalador do NeoForge {0}...
++Mengunduh library NeoForge ({0}/{1})...	Baixando as bibliotecas do NeoForge ({0}/{1})...
++Memasang NeoForge {0}...	Instalando o NeoForge {0}...
++Memasang NeoForge {0} ({1}/{2})...	Instalando o NeoForge {0} ({1}/{2})...
++NeoForge {0} terpasang	NeoForge {0} instalado
++Tidak dapat menemukan NeoForge untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o NeoForge para a vers\u00e3o {0}
++Tidak ada versi NeoForge untuk {0}	N\u00e3o h\u00e1 vers\u00e3o do NeoForge para {0}
++Versi NeoForge belum dipilih	Nenhuma vers\u00e3o do NeoForge selecionada
++NeoForge hanya mendukung Minecraft 1.20.2 ke atas	O NeoForge s\u00f3 \u00e9 compat\u00edvel com o Minecraft 1.20.2 ou superior
++Installer NeoForge {0} rusak atau tidak lengkap	O instalador do NeoForge {0} est\u00e1 corrompido ou incompleto
++Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	Formato de instalador do NeoForge n\u00e3o reconhecido (o Amber exige o NeoForge 1.20.2 ou superior)
++Installer NeoForge untuk Minecraft {0}, bukan {1}	O instalador do NeoForge \u00e9 para o Minecraft {0}, n\u00e3o {1}
++Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do NeoForge: {0}. Verifique a conex\u00e3o e tente novamente.
++Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	O instalador do NeoForge terminou, mas o jar do Minecraft modificado (patched) n\u00e3o foi encontrado ({0})
++Installer NeoForge gagal (kode {0}): {1}	Falha no instalador do NeoForge (c\u00f3digo {0}): {1}
++Installer NeoForge gagal (kode {0})	Falha no instalador do NeoForge (c\u00f3digo {0})
++Memasang NeoForge	Instalando o NeoForge
++Proses ini hanya berjalan sekali per versi NeoForge.	Este processo s\u00f3 \u00e9 executado uma vez por vers\u00e3o do NeoForge.
++NeoForge dipasang sekali saat instance diunduh pertama kali.	O NeoForge \u00e9 instalado uma \u00fanica vez, quando a inst\u00e2ncia \u00e9 baixada pela primeira vez.
++Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	Espa\u00e7o de armazenamento insuficiente para instalar o NeoForge (restam {0} MB, m\u00ednimo necess\u00e1rio {1} MB)
++Buat Instance	Criar inst\u00e2ncia
++Cari versi...	Buscar vers\u00e3o...
++Memuat versi Minecraft...	Carregando vers\u00f5es do Minecraft...
++Memuat versi yang didukung {0}...	Carregando vers\u00f5es compat\u00edveis com {0}...
++Gagal memuat daftar versi Minecraft	Falha ao carregar a lista de vers\u00f5es do Minecraft
++Dirilis {0}	Lan\u00e7ada em {0}
++LOADER {0}	LOADER {0}
++Memuat loader {0}...	Carregando o loader {0}...
++Loader {0} belum tersedia untuk Minecraft {1}	O loader {0} ainda n\u00e3o est\u00e1 dispon\u00edvel para o Minecraft {1}
++Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	A vers\u00e3o mais recente \u00e9 escolhida automaticamente. Toque em outra vers\u00e3o se precisar de um loader mais antigo.
+diff --git a/app/src/main/assets/lang/pt/minecraft26.tsv b/app/src/main/assets/lang/pt/minecraft26.tsv
+new file mode 100644
+index 0000000..3d740bd
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/minecraft26.tsv
+@@ -0,0 +1,11 @@
++# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
++MINECRAFT 26.X KE ATAS	MINECRAFT 26.X EM DIANTE
++Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	Esta vers\u00e3o usa Java 25 e um novo motor gr\u00e1fico. Nem todo celular consegue execut\u00e1-la, principalmente os que t\u00eam driver Vulkan antigo ou incompleto.
++Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	Se o jogo n\u00e3o abrir, a causa pode ser o celular ou esta vers\u00e3o do jogo, n\u00e3o o launcher. Tente trocar o renderizador em Configura\u00e7\u00f5es ou use o Minecraft 1.21.x.
++Memeriksa dukungan Vulkan HP ini...	Verificando o suporte a Vulkan deste celular...
++Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	Esta vers\u00e3o usa OpenGL. O Vulkan s\u00f3 \u00e9 usado a partir do Minecraft 26.2.
++Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	A verifica\u00e7\u00e3o do Vulkan n\u00e3o est\u00e1 dispon\u00edvel nesta build, ent\u00e3o n\u00e3o \u00e9 poss\u00edvel confirmar o suporte a Vulkan do celular.
++Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	A verifica\u00e7\u00e3o do Vulkan n\u00e3o foi conclu\u00edda. O driver Vulkan deste celular pode ter problemas, ent\u00e3o o Minecraft 26.2 em diante pode falhar se usar Vulkan.
++HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	Este celular n\u00e3o tem um driver Vulkan utiliz\u00e1vel. O Minecraft 26.2 em diante n\u00e3o pode usar Vulkan aqui; escolha Prefer OpenGL nas configura\u00e7\u00f5es de v\u00eddeo do jogo.
++Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	O Vulkan deste celular atende aos requisitos do Minecraft 26.2 em diante.
++Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	O Vulkan deste celular n\u00e3o atende aos requisitos do Minecraft 26.2 em diante. Se o jogo usar Vulkan, pode falhar ao iniciar; escolha Prefer OpenGL nas configura\u00e7\u00f5es de v\u00eddeo do jogo.
+diff --git a/app/src/main/assets/lang/pt/misc.tsv b/app/src/main/assets/lang/pt/misc.tsv
+new file mode 100644
+index 0000000..db0950b
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/misc.tsv
+@@ -0,0 +1,58 @@
++# Sisa teks: Home, kategori mod, pesan galat, toast in-game
++RAM bebas {0} GB	RAM livre {0} GB
++Otomatis	Autom\u00e1tico
++\u26a1 Optimization	\u26a1 Otimiza\u00e7\u00e3o
++\u2699\ufe0f Technology	\u2699\ufe0f Tecnologia
++\ud83e\ude84 Magic	\ud83e\ude84 Magia
++\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f Aventura
++\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f Utilidades
++\ud83c\udfa8 Decoration	\ud83c\udfa8 Decora\u00e7\u00e3o
++\ud83d\udcdc Quests	\ud83d\udcdc Miss\u00f5es
++\u2728 Simplistic	\u2728 Simplista
++\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f Tradicional
++\ud83c\udf05 Realistic	\ud83c\udf05 Realista
++\ud83c\udfa8 Stylized	\ud83c\udfa8 Estilizado
++\ud83d\udd2e Fantasy	\ud83d\udd2e Fantasia
++\ud83c\udf0d Worldgen	\ud83c\udf0d Gera\u00e7\u00e3o de mundo
++Buy me a coffee	Me pague um caf\u00e9
++Mengunduh {0}...	Baixando {0}...
++Mengekstrak	Extraindo
++{~0}: {1} ({2} file)	{0}: {1} ({2} arquivos)
++Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, 4 GB de RAM, tela de 90 Hz
++\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc FPS fixado (continua vis\u00edvel com a GUI oculta)
++\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc Exibindo o log ao vivo do Minecraft
++FPS Mode Normal (Mengikuti visibilitas GUI)	FPS em modo normal (segue a visibilidade da GUI)
++Gagal menyiapkan OpenJDK ({0}): {~1}	Falha ao preparar o OpenJDK ({0}): {1}
++LAUNCHER EXCEPTION	EXCE\u00c7\u00c3O DO LAUNCHER
++Forge hanya mendukung Minecraft {0} ke atas	O Forge s\u00f3 \u00e9 compat\u00edvel com o Minecraft {0} ou superior
++Installer Forge gagal	Falha no instalador do Forge
++version.json di installer Forge tidak terbaca	N\u00e3o foi poss\u00edvel ler o version.json do instalador do Forge
++Path library Forge tidak aman: {0}	Caminho de biblioteca do Forge inseguro: {0}
++dan {0} lainnya	e mais {0}
++Path mappings tidak aman: {0}	Caminho de mappings inseguro: {0}
++Alamat mappings Mojang kosong	O endere\u00e7o dos mappings da Mojang est\u00e1 vazio
++install_profile.json tidak ada di installer Forge	install_profile.json n\u00e3o existe no instalador do Forge
++install_profile.json tidak terbaca	N\u00e3o foi poss\u00edvel ler o install_profile.json
++{0} tidak ada di installer Forge	{0} n\u00e3o existe no instalador do Forge
++Tidak bisa membuat {0}	N\u00e3o foi poss\u00edvel criar {0}
++HTTP {0} dari {1}	HTTP {0} de {1}
++Respons kosong dari {0}	Resposta vazia de {0}
++Unduhan dibatalkan	Download cancelado
++Content-Range tidak cocok	Content-Range n\u00e3o confere
++Range ditolak	Range recusado
++Balasan kosong	Resposta vazia
++Unduhan belum lengkap ({0} dari {1} byte)	Download incompleto ({0} de {1} bytes)
++Berkas kosong	Arquivo vazio
++balasan bukan daftar rilis	a resposta n\u00e3o \u00e9 uma lista de vers\u00f5es
++NeoForge hanya mendukung Minecraft {0} ke atas	O NeoForge s\u00f3 \u00e9 compat\u00edvel com o Minecraft {0} ou superior
++Installer NeoForge gagal	Falha no instalador do NeoForge
++version.json di installer NeoForge tidak terbaca	N\u00e3o foi poss\u00edvel ler o version.json do instalador do NeoForge
++Path library NeoForge tidak aman: {0}	Caminho de biblioteca do NeoForge inseguro: {0}
++install_profile.json tidak ada di installer NeoForge	install_profile.json n\u00e3o existe no instalador do NeoForge
++{0} tidak ada di installer NeoForge	{0} n\u00e3o existe no instalador do NeoForge
++# Entradas adicionales (ausentes en es)
++\ud83c\udff0 Medieval	\ud83c\udff0 Medieval
++Resource Pack (.zip)	Pacote de recursos (.zip)
++MOD LOADER	CARREGADOR DE MODS
++Lokal	Local
++Renderer {~0}	Renderizador {0}
+diff --git a/app/src/main/assets/lang/pt/mobileglues.tsv b/app/src/main/assets/lang/pt/mobileglues.tsv
+new file mode 100644
+index 0000000..70c5641
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/mobileglues.tsv
+@@ -0,0 +1,3 @@
++# Pengaturan > Game > Grafis: cache shader MobileGlues
++Cache shader MobileGlues	Cache de shaders do MobileGlues
++Menyimpan hasil terjemahan shader di HP, jadi game berikutnya memuat shader lebih cepat dan lebih sedikit patah-patah. Dimatikan = MobileGlues memakai pengaturan bawaannya tanpa cache. Berlaku saat game dijalankan berikutnya.	Guarda no celular os shaders j\u00e1 traduzidos, de modo que o pr\u00f3ximo jogo os carrega mais r\u00e1pido e com menos travamentos. Desativado = o MobileGlues usa suas configura\u00e7\u00f5es padr\u00e3o, sem cache. Vale a partir da pr\u00f3xima vez que o jogo for iniciado.
+diff --git a/app/src/main/assets/lang/pt/mods.tsv b/app/src/main/assets/lang/pt/mods.tsv
+new file mode 100644
+index 0000000..94f69f8
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/mods.tsv
+@@ -0,0 +1,204 @@
++# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
++mods	mods
++modpacks	modpacks
++shaderpacks	shader packs
++resourcepacks	pacotes de recursos
++datapacks	pacotes de dados
++format yang didukung	formato compat\u00edvel
++File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	O arquivo "{0}" foi ignorado! Formatos compat\u00edveis para {1}: apenas {2}
++{0} file diabaikan karena format tidak didukung ({~1})!	{0} arquivo(s) ignorado(s) porque o formato n\u00e3o \u00e9 compat\u00edvel ({1})!
++Membaca arsip modpack...	Lendo o arquivo do modpack...
++Berhasil mengimpor dan memasang {0} modpack!	{0} modpack(s) importado(s) e instalado(s) com sucesso!
++Gagal mengimpor modpack: {~0}	Falha ao importar o modpack: {0}
++Berhasil mengimpor {0} file {~1}!	{0} arquivo(s) importado(s) com sucesso ({1})!
++Gagal mengimpor file: {~0}	Falha ao importar o arquivo: {0}
++Mencari versi...	Buscando vers\u00f5es...
++Tidak ada versi cocok untuk {0}!	Nenhuma vers\u00e3o compat\u00edvel para {0}!
++Mengunduh...	Baixando...
++Modpack {0} berhasil dipasang!	Modpack {0} instalado com sucesso!
++Berhasil memasang {0} beserta {1} dependensi!	{0} instalado com sucesso, junto com {1} depend\u00eancias!
++Berhasil memasang {0}!	{0} instalado com sucesso!
++Memulai pengunduhan...	Iniciando o download...
++Gagal terhubung ke Modrinth	Falha ao conectar ao Modrinth
++Pilih atau buat instance di Home untuk mulai memasang mod.	Escolha ou crie uma inst\u00e2ncia no In\u00edcio para come\u00e7ar a instalar mods.
++Kembali ke Home	Voltar ao In\u00edcio
++Terpasang ({0})	Instalados ({0})
++Jelajah	Explorar
++Resource	Recursos
++Shader	Shaders
++Cari di Modrinth...	Buscar no Modrinth...
++Cari di {0} item...	Buscar em {0} itens...
++World: {0}	Mundo: {0}
++Tidak ada world	Nenhum mundo
++Semua versi	Todas as vers\u00f5es
++Pilih instance terlebih dahulu!	Escolha uma inst\u00e2ncia primeiro!
++Impor	Importar
++Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	Ainda n\u00e3o h\u00e1 mundos nesta inst\u00e2ncia. Abra o jogo para criar um mundo primeiro.
++Belum ada {~0} terpasang di instance ini	Ainda n\u00e3o h\u00e1 {0} instalados nesta inst\u00e2ncia
++Tidak ada item yang cocok	Nenhum item correspondente
++Jelajahi Modrinth	Explorar o Modrinth
++Memuat data dari Modrinth...	Carregando dados do Modrinth...
++Gagal memuat dari Modrinth	Falha ao carregar do Modrinth
++Terjadi kesalahan jaringan	Ocorreu um erro de rede
++Tidak ada hasil cocok untuk Minecraft {0} ({1})	Nenhum resultado compat\u00edvel com o Minecraft {0} ({1})
++Tidak ada hasil ditemukan untuk kata kunci ini	Nenhum resultado encontrado para esta palavra-chave
++Coba ubah kata kunci atau nonaktifkan filter versi	Tente mudar a palavra-chave ou desative o filtro de vers\u00e3o
++Cari di semua versi Minecraft	Buscar em todas as vers\u00f5es do Minecraft
++Sebelumnya	Anterior
++Selanjutnya	Pr\u00f3xima
++Pilih instance	Escolher inst\u00e2ncia
++Pilih world	Escolher mundo
++Hapus modpack?	Excluir o modpack?
++Hapus {~0}?	Excluir {0}?
++Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	Tem certeza de que deseja excluir o modpack "{0}"? Todos os mods instalados a partir deste modpack tamb\u00e9m ser\u00e3o removidos da inst\u00e2ncia.
++Yakin ingin menghapus "{0}" dari instance ini?	Tem certeza de que deseja excluir "{0}" desta inst\u00e2ncia?
++Modpack dan semua mod berhasil dihapus!	Modpack e todos os mods exclu\u00eddos com sucesso!
++{0} berhasil dihapus!	{0} exclu\u00eddo com sucesso!
++Mengimpor & memasang modpack	Importando e instalando o modpack
++Membaca daftar mod dan mengunduh file...	Lendo a lista de mods e baixando os arquivos...
++{0} / {1} file mod	{0} / {1} arquivos de mod
++Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	O launcher est\u00e1 lendo a lista de mods e baixando o modpack. Aguarde.
++Tangkapan layar	Capturas de tela
++Pratinjau gambar	Pr\u00e9via da imagem
++NONAKTIF	DESATIVADO
++Tidak ada deskripsi	Sem descri\u00e7\u00e3o
++oleh {0}	por {0}
++Unduh...	Baixar...
++Terpasang	Instalado
++Pasang pack	Instalar pack
++Versi dipilih	Vers\u00e3o selecionada
++Sedang mengunduh dan memasang...	Baixando e instalando...
++Sudah terpasang	J\u00e1 instalado
++Pasang modpack	Instalar modpack
++Pasang ke instance	Instalar na inst\u00e2ncia
++Versi ({0})	Vers\u00f5es ({0})
++Screenshot	Captura de tela
++Deskripsi	Descri\u00e7\u00e3o
++Tidak ada ringkasan deskripsi.	Sem resumo da descri\u00e7\u00e3o.
++Tidak ada versi yang didukung	Nenhuma vers\u00e3o compat\u00edvel
++Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	Este projeto n\u00e3o tem uma vers\u00e3o compat\u00edvel com o Minecraft {0} ({1}).
++Versi {0} \u00b7 MC {1}	Vers\u00e3o {0} \u00b7 MC {1}
++Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	O modpack \u00e9 extra\u00eddo diretamente na inst\u00e2ncia (overrides, configura\u00e7\u00f5es e manifest).
++Dependensi wajib ikut terpasang otomatis.	As depend\u00eancias obrigat\u00f3rias s\u00e3o instaladas automaticamente.
++Mod terpasang	Mods instalados
++Belum ada resource pack	Ainda n\u00e3o h\u00e1 pacotes de recursos
++Belum ada shader	Ainda n\u00e3o h\u00e1 shaders
++Belum ada mod terpasang	Ainda n\u00e3o h\u00e1 mods instalados
++Pasang lewat menu Mod di sidebar.	Instale pelo menu Mods na barra lateral.
++Nonaktif \u00b7 {0}	Desativado \u00b7 {0}
++Resource Pack (.zip)	Pacote de recursos (.zip)
++PASANG ADDON EKSTERNAL	INSTALAR ADDON EXTERNO
++Pemasang Addon	Instalador de addons
++Tipe file: {0} \u00b7 Siap dipasang	Tipo de arquivo: {0} \u00b7 Pronto para instalar
++KATEGORI ADDON	CATEGORIA DO ADDON
++TARGET INSTANCE MINECRAFT	INST\u00c2NCIA DE DESTINO DO MINECRAFT
++\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f Nenhuma inst\u00e2ncia do Minecraft foi criada ainda! Crie uma inst\u00e2ncia primeiro no In\u00edcio.
++Memasang addon...	Instalando o addon...
++Gagal: {~0}	Falha: {0}
++Mempersiapkan pemasangan...	Preparando a instala\u00e7\u00e3o...
++\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 "{0}" instalado com sucesso em {1}!
++Terjadi kesalahan yang tidak diketahui	Ocorreu um erro desconhecido
++Gagal memasang: {~0}	Falha na instala\u00e7\u00e3o: {0}
++MEMASANG...	INSTALANDO...
++PASANG SEKARANG	INSTALAR AGORA
++{0} mod terpasang	{0} mods instalados
++Menyalin file {0}...	Copiando o arquivo {0}...
++Gagal membaca file sumber	Falha ao ler o arquivo de origem
++Membaca daftar modpack...	Lendo a lista de modpacks...
++Modrinth API error code: {0}	C\u00f3digo de erro da API do Modrinth: {0}
++Empty response	Resposta vazia
++Gagal mengambil detail project: {~0}	Falha ao obter os detalhes do projeto: {0}
++Gagal mengambil versi project: {~0}	Falha ao obter as vers\u00f5es do projeto: {0}
++Mengekstrak dan menyiapkan modpack...	Extraindo e preparando o modpack...
++Menyelesaikan dependensi: {0}...	Resolvendo depend\u00eancias: {0}...
++Membaca daftar modpack ({0} mod ditemukan)...	Lendo a lista do modpack ({0} mods encontrados)...
++Mengunduh mod ({0}/{1}): {2}...	Baixando mod ({0}/{1}): {2}...
++Mod sudah ada ({0}/{1}): {2}	O mod j\u00e1 existe ({0}/{1}): {2}
++Mengekstrak konfigurasi modpack...	Extraindo a configura\u00e7\u00e3o do modpack...
++Mengekstrak file arsip modpack...	Extraindo os arquivos do modpack...
++Selesai! {0} mod berhasil dipasang.	Conclu\u00eddo! {0} mods instalados com sucesso.
++Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	Conclu\u00eddo com ressalvas: {0} mods instalados, {1} arquivos falharam ou foram ignorados. Tente instalar de novo se faltar algum mod.
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	Este modpack exige {0}, mas atualmente o AmberLauncher s\u00f3 \u00e9 compat\u00edvel com o Fabric.
++Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	Este modpack exige o Fabric. Crie primeiro uma inst\u00e2ncia Fabric e depois instale o modpack nela.
++Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	Este modpack \u00e9 para o Minecraft {0}, mas esta inst\u00e2ncia usa {1}. Escolha ou crie uma inst\u00e2ncia com a mesma vers\u00e3o.
++Alamat unduhan ditolak karena tidak memakai HTTPS	Endere\u00e7o de download recusado por n\u00e3o usar HTTPS
++Gagal mengunduh file: HTTP {0}	Falha ao baixar o arquivo: HTTP {0}
++Body stream kosong	Body stream vazio
++Gagal menyimpan file unduhan	Falha ao salvar o arquivo baixado
++Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	O arquivo {0} est\u00e1 corrompido ou foi alterado no caminho (hash n\u00e3o confere), ent\u00e3o n\u00e3o foi instalado.
++Isi modpack terlalu besar, pemasangan dibatalkan.	O conte\u00fado do modpack \u00e9 grande demais; a instala\u00e7\u00e3o foi cancelada.
++Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack exige {0}, mas atualmente o AmberLauncher s\u00f3 \u00e9 compat\u00edvel com Fabric, Forge e NeoForge.
++Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Este modpack exige o Forge. Crie primeiro uma inst\u00e2ncia Forge e depois instale o modpack nela.
++Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Este modpack exige o NeoForge. Crie primeiro uma inst\u00e2ncia NeoForge e depois instale o modpack nela.
++# Tampilan baru layar Mod: filter, sumber, dan label kartu
++Kategori	Categoria
++Versi	Vers\u00e3o
++Urutkan	Ordenar
++Relevansi	Relev\u00e2ncia
++Unduhan	Downloads
++Pengikut	Seguidores
++Diperbarui	Atualizado
++Semua loader	Todos os loaders
++Pilih kategori	Escolher categoria
++Pilih versi	Escolher vers\u00e3o
++Pilih loader	Escolher loader
++Cari mod...	Buscar mods...
++Cari modpack...	Buscar modpacks...
++Cari shader...	Buscar shaders...
++Cari resource pack...	Buscar pacotes de recursos...
++Cari datapack...	Buscar pacotes de dados...
++CurseForge belum tersedia di versi ini	O CurseForge ainda n\u00e3o est\u00e1 dispon\u00edvel nesta vers\u00e3o
++Optimasi	Otimiza\u00e7\u00e3o
++Teknologi	Tecnologia
++Sihir	Magia
++Petualangan	Aventura
++Utilitas	Utilidades
++Dekorasi	Decora\u00e7\u00e3o
++Perlengkapan	Equipamentos
++Makanan	Comida
++Penyimpanan	Armazenamento
++Pustaka	Bibliotecas
++Realistis	Realista
++Fantasi	Fantasia
++# Home baru dan layar kelola konten instance
++INSTANCE AKTIF	INST\u00c2NCIA ATIVA
++Mod & konten	Mods e conte\u00fado
++Tambah	Adicionar
++# Layar Akun dan Pengaturan baru
++Game	Jogo
++Tentang	Sobre
++Cari pengaturan...	Buscar configura\u00e7\u00f5es...
++Perekaman layar	Grava\u00e7\u00e3o de tela
++Latar	Plano de fundo
++Foto, GIF, atau video	Foto, GIF ou v\u00eddeo
++Redupkan latar	Escurecer o plano de fundo
++Seberapa gelap latar di layar selain Home.	O quanto o plano de fundo escurece nas telas que n\u00e3o s\u00e3o o In\u00edcio.
++Aksen warna	Cor de destaque
++Warna tombol dan penanda terpilih di seluruh launcher.	Cor dos bot\u00f5es e dos marcadores selecionados em todo o launcher.
++Gaya tampilan	Estilo visual
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	O Padr\u00e3o usa o tema pr\u00f3prio do AmberLauncher. O Liquid Glass desfoca o plano de fundo atr\u00e1s dos pain\u00e9is e bot\u00f5es.
++Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	O Liquid Glass exige o Android 12 ou superior. Neste celular, o Padr\u00e3o \u00e9 usado automaticamente.
++Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Idioma dos textos do launcher. Vale na hora, sem reiniciar.
++Pengaturan khusus untuk renderer yang sedang dipakai.	Configura\u00e7\u00f5es espec\u00edficas do renderizador em uso.
++Atur	Ajustar
++Tata letak kontrol	Layout dos controles
++Aplikasi	Aplicativo
++Informasi aplikasi, lisensi GPL-3.0, dan kredit.	Informa\u00e7\u00f5es do aplicativo, licen\u00e7a GPL-3.0 e cr\u00e9ditos.
++Reset ke default	Redefinir para o padr\u00e3o
++Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	Todas as configura\u00e7\u00f5es voltam ao padr\u00e3o. As demais altera\u00e7\u00f5es s\u00e3o salvas automaticamente.
++Belum ada akun	Ainda n\u00e3o h\u00e1 conta
++Pilih akun untuk bermain	Escolha uma conta para jogar
++Akun aktif untuk bermain	Conta ativa para jogar
++Jenis akun	Tipo de conta
++Status login	Status do login
++Tersambung	Conectado
++Perlu disegarkan	Precisa ser renovado
++Segarkan login	Renovar login
++Menyegarkan...	Renovando...
++Login berhasil disegarkan	Login renovado com sucesso
++Gagal menyegarkan login	Falha ao renovar o login
++# Entradas adicionales (ausentes en es)
++Pasang	Instalar
++Tema	Tema
++Klasik	Cl\u00e1ssico
++Home	In\u00edcio
+diff --git a/app/src/main/assets/lang/pt/rust-settings.tsv b/app/src/main/assets/lang/pt/rust-settings.tsv
+new file mode 100644
+index 0000000..cb6373f
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/rust-settings.tsv
+@@ -0,0 +1,69 @@
++# Pengaturan > Rust (tab pengaturan mesin Rust)
++Mesin Rust	Motor Rust
++Performa	Desempenho
++Layar	Tela
++Permainan	Jogabilidade
++Mesin Rust (Horizon)	Motor Rust (Horizon)
++Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Substitui todo o cliente Java: sem JVM e sem mods Java.
++Tidak tersedia	Indispon\u00edvel
++Siap	Pronto
++Sumber daya game	Recursos do jogo
++Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Baixados automaticamente no primeiro JOGAR, cerca de 500 MiB.
++Belum diunduh	Ainda n\u00e3o baixado
++Versi Minecraft	Vers\u00e3o do Minecraft
++Satu-satunya versi yang dikerjakan mesin ini.	A \u00fanica vers\u00e3o com que este motor trabalha.
++Berlaku untuk instance Rust	Vale para inst\u00e2ncias Rust
++Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	As op\u00e7\u00f5es desta aba s\u00e3o usadas apenas por inst\u00e2ncias Rust e valem a partir do pr\u00f3ximo JOGAR. Inst\u00e2ncias Vanilla, Fabric e Forge n\u00e3o s\u00e3o afetadas.
++Renderer Rust	Renderizador Rust
++Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	O mais seguro em compatibilidade para todos os celulares. O Vulkan r\u00e1pido usa batching de GPU. O OpenGL ES ainda \u00e9 experimental.
++Vulkan kompatibel	Vulkan compat\u00edvel
++Vulkan cepat	Vulkan r\u00e1pido
++Skala resolusi Rust	Escala de resolu\u00e7\u00e3o do Rust
++Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Reduzir a resolu\u00e7\u00e3o de renderiza\u00e7\u00e3o deixa o jogo mais leve, mas a imagem fica mais borrada.
++Laju layar	Taxa de atualiza\u00e7\u00e3o da tela
++Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	\u00c9 um pedido ao Android, n\u00e3o um limite de FPS do jogo. Taxas n\u00e3o compat\u00edveis com a tela podem ser ignoradas.
++Bawaan sistem	Padr\u00e3o do sistema
++Petunjuk performa	Dica de desempenho
++Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Avisa o Android que o jogo precisa de desempenho est\u00e1vel. S\u00f3 \u00e9 \u00fatil em celulares compat\u00edveis.
++Batas pekerja chunk	Limite de workers de chunk
++Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limite dos workers que criam e montam chunks, n\u00e3o de todas as threads do aplicativo. Valores baixos reduzem a carga da CPU, mas carregam o mundo mais devagar.
++Tanpa batas	Sem limite
++Cache RAM	Cache de RAM
++Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Sons j\u00e1 decodificados (80%) e buffers de malha vazios (20%), recriados com a mesma qualidade. N\u00e3o \u00e9 o limite total de RAM ou VRAM. Valores baixos podem aumentar o trabalho da CPU.
++Bawaan (80 MiB)	Padr\u00e3o (80 MiB)
++Arah layar	Orienta\u00e7\u00e3o da tela
++Arah layar saat bermain. Bawaannya landscape.	Orienta\u00e7\u00e3o da tela durante o jogo. O padr\u00e3o \u00e9 paisagem.
++Landscape	Paisagem
++Landscape terbalik	Paisagem invertida
++Portrait	Retrato
++Portrait terbalik	Retrato invertido
++Rasio layar	Propor\u00e7\u00e3o da tela
++Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limita a exibi\u00e7\u00e3o do jogo a uma propor\u00e7\u00e3o espec\u00edfica. Nativa segue a propor\u00e7\u00e3o da tela do celular.
++Asli	Nativa
++Layar penuh imersif	Tela cheia imersiva
++Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta a barra de navega\u00e7\u00e3o e a barra de status durante o jogo.
++Hindari poni layar	Evitar o notch
++Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desloca a exibi\u00e7\u00e3o do jogo para n\u00e3o ser coberta pelo furo da c\u00e2mera ou pelo notch.
++Kontrol Amber	Controles do Amber
++Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	Posi\u00e7\u00e3o, tamanho e bot\u00f5es da tela seguem o editor de controles do Amber, ent\u00e3o existe s\u00f3 um conjunto de controles. Desative para usar os controles padr\u00e3o do motor. Vale no pr\u00f3ximo JOGAR.
++Perangkat input	Dispositivo de entrada
++Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	O modo Autom\u00e1tico escolhe sozinho entre tela de toque, teclado e mouse ou gamepad, conforme o que estiver conectado.
++Layar sentuh	Tela de toque
++Keyboard dan mouse	Teclado e mouse
++Server otomatis	Servidor autom\u00e1tico
++Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	Deixe em branco para jogar no seu pr\u00f3prio mundo. Se preenchido, JOGAR entra direto neste servidor.
++Contoh: mc.contoh.com:25565	Exemplo: mc.exemplo.com:25565
++Setel ulang pengaturan Rust	Redefinir configura\u00e7\u00f5es do Rust
++Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Restaura todas as op\u00e7\u00f5es desta aba para o padr\u00e3o do motor. Inst\u00e2ncias e mundos n\u00e3o s\u00e3o tocados.
++Setel ulang	Redefinir
++Pengaturan Rust dikembalikan ke bawaan.	As configura\u00e7\u00f5es do Rust foram restauradas para o padr\u00e3o.
++Mode performa	Modo de desempenho
++Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	Normal usa o padr\u00e3o do motor. Super economia reduz a dist\u00e2ncia de renderiza\u00e7\u00e3o, part\u00edculas, nuvens e sombras. Economia de bateria limita a 60 FPS com VSync. FPS m\u00e1ximo remove o limite de FPS e desativa o VSync. Este modo altera as configura\u00e7\u00f5es de v\u00eddeo do jogo ao JOGAR.
++Normal	Normal
++Super hemat	Super economia
++Hemat baterai	Economia de bateria
++FPS maksimum	FPS m\u00e1ximo
++Kurangi animasi game	Reduzir anima\u00e7\u00f5es do jogo
++Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Desativa texturas animadas, fade de chunks, balan\u00e7o da c\u00e2mera ao andar e blur dos menus. Mais leve em celulares fracos.
++Menu garis tiga	Menu de tr\u00eas linhas
++Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	O bot\u00e3o de tr\u00eas linhas na tela do jogo que abre o menu r\u00e1pido do motor (presets, controles, configura\u00e7\u00f5es). A cor segue o destaque do Amber. Vale no pr\u00f3ximo JOGAR.
+diff --git a/app/src/main/assets/lang/pt/settings.tsv b/app/src/main/assets/lang/pt/settings.tsv
+new file mode 100644
+index 0000000..f0a543e
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/settings.tsv
+@@ -0,0 +1,140 @@
++# Pengaturan
++{0} GB RAM \u00b7 {1} inti CPU	{0} GB de RAM \u00b7 {1} n\u00facleos de CPU
++Memori	Mem\u00f3ria
++Grafis	Gr\u00e1ficos
++Kontrol	Controles
++Tampilan	Apar\u00eancia
++Memori game (RAM)	Mem\u00f3ria do jogo (RAM)
++Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Grande demais para este celular; o jogo e o celular podem ficar lentos.
++Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Limite de mem\u00f3ria do Java (-Xmx). Maior nem sempre \u00e9 mais r\u00e1pido.
++1,5 GB	1,5 GB
++Argumen JVM tambahan	Argumentos extras da JVM
++Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Opcional, para usu\u00e1rios avan\u00e7ados. Preencher errado pode impedir o jogo de iniciar.
++Contoh: -XX:+UseG1GC	Exemplo: -XX:+UseG1GC
++Konfigurasi renderer	Configura\u00e7\u00e3o do renderizador
++Optimasi otomatis options.txt	Otimiza\u00e7\u00e3o autom\u00e1tica do options.txt
++Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Desativa nuvens e sombras automaticamente para aumentar o FPS.
++Skala resolusi layar	Escala da resolu\u00e7\u00e3o da tela
++Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Menor = mais FPS, imagem mais borrada.
++Driver Vulkan	Driver Vulkan
++Pilih implementasi driver Vulkan yang dipakai sistem/game.	Escolha a implementa\u00e7\u00e3o do driver Vulkan usada pelo sistema/jogo.
++API grafis	API gr\u00e1fica
++Atur API grafis yang dipakai Minecraft modern 26.2+.	Defina a API gr\u00e1fica usada pelo Minecraft moderno 26.2+.
++Gunakan driver Vulkan sistem	Usar o driver Vulkan do sistema
++Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	For\u00e7a o uso do driver Vulkan nativo do celular (n\u00e3o o Turnip). Afeta o renderizador Zink.
++V-Sync Zink	V-Sync do Zink
++Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Sincroniza\u00e7\u00e3o vertical para o renderizador Kopper Zink por meio da interface do sistema.
++Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Idioma dos textos do launcher. Seguir o sistema usa o idioma do celular.
++Latar Beranda	Plano de fundo do In\u00edcio
++Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Fotos s\u00e3o o mais leve, GIFs se movem com pouco consumo, v\u00eddeos s\u00e3o o mais fluido (HD, at\u00e9 60 fps), mas gastam mais bateria.
++Ganti latar	Trocar plano de fundo
++Gerakkan GIF dan video	Animar GIFs e v\u00eddeos
++Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	Desative para mostrar apenas a imagem est\u00e1tica. \u00c9 o que mais economiza bateria e RAM.
++Jeda saat Hemat Baterai	Pausar na Economia de bateria
++GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIFs e v\u00eddeos pausam automaticamente enquanto o modo de Economia de bateria do celular estiver ativo.
++Suara video	Som do v\u00eddeo
++Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Desativado por padr\u00e3o. Fica mudo automaticamente se outro aplicativo estiver tocando m\u00fasica.
++Volume video	Volume do v\u00eddeo
++Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	Brilho suave na barra lateral e nas bordas dos cart\u00f5es do In\u00edcio. A cor segue o conte\u00fado do GIF ou v\u00eddeo. N\u00e3o vale para fotos.
++Kekuatan ambient	Intensidade da luz ambiente
++Kustomisasi kontrol virtual	Personalizar controles virtuais
++Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Altere o layout dos bot\u00f5es, o tamanho, a transpar\u00eancia, o scroll da hotbar e o mapeamento das teclas do Minecraft.
++Buka editor	Abrir editor
++Mode mouse di menu	Modo mouse nos menus
++Sentuh tombol atau slot menu langsung di mana jari menekan.	Toque no bot\u00e3o ou no slot do menu diretamente onde o dedo pressionar.
++Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Deslize o dedo para mover o cursor virtual; toque na tela para clicar.
++Click (langsung)	Click (direto)
++Pukul lewat layar	Atacar pela tela
++Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Toque ou segure em uma \u00e1rea vazia da tela para atacar. Desative para que deslizar a c\u00e2mera n\u00e3o ataque junto; use o bot\u00e3o de ataque.
++Sensitivitas kamera	Sensibilidade da c\u00e2mera
++Kecepatan memutar pandangan di dalam game.	Velocidade de giro da vis\u00e3o dentro do jogo.
++Sensitivitas kursor virtual	Sensibilidade do cursor virtual
++Kecepatan kursor saat berada di menu Minecraft.	Velocidade do cursor nos menus do Minecraft.
++Ukuran kursor virtual	Tamanho do cursor virtual
++Mode mouse fisik (auto-hide)	Modo mouse f\u00edsico (auto-hide)
++Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Oculta o cursor virtual automaticamente quando um mouse externo est\u00e1 conectado.
++Perubahan tersimpan otomatis	As altera\u00e7\u00f5es s\u00e3o salvas automaticamente
++Pengaturan di-reset ke default!	Configura\u00e7\u00f5es redefinidas para o padr\u00e3o!
++Reset default	Redefinir padr\u00e3o
++PILIH RENDERER GRAFIK	ESCOLHER RENDERIZADOR GR\u00c1FICO
++Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Ajuste o backend gr\u00e1fico ao Minecraft e \u00e0 GPU do dispositivo
++Renderer diubah ke: {0}	Renderizador alterado para: {0}
++Konfigurasi {0}	Configura\u00e7\u00e3o do {0}
++Kesesuaian: {0}	Compatibilidade: {0}
++PERINGATAN DRIVER ADRENO	AVISO SOBRE O DRIVER ADRENO
++Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	O launcher detectou que o seu dispositivo usa uma GPU Adreno. Ativar esta op\u00e7\u00e3o pode fazer o renderizador Zink n\u00e3o funcionar ou travar. Tem certeza de que deseja ativ\u00e1-la?
++AKTIFKAN	ATIVAR
++Mode GC (pembersih memori Java)	Modo GC (coletor de mem\u00f3ria do Java)
++Kunci layar 60 Hz	Travar a tela em 60 Hz
++# Rekam layar bawaan
++Kualitas rekaman layar	Qualidade da grava\u00e7\u00e3o de tela
++Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	Quanto menor, mais leve para o celular. Economia 540p, Leve 720p, N\u00edtida 1080p.
++Hemat	Economia
++Ringan	Leve
++Tajam	N\u00edtida
++FPS rekaman	FPS da grava\u00e7\u00e3o
++30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps \u00e9 bem mais leve. 60 fps apenas para celulares potentes.
++Rekam suara mikrofon	Gravar som do microfone
++Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	Adiciona o som do microfone \u00e0 grava\u00e7\u00e3o. O som do jogo ainda n\u00e3o \u00e9 gravado.
++Hentikan rekaman saat HP terlalu panas	Parar a grava\u00e7\u00e3o quando o celular esquentar demais
++Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	Salva a grava\u00e7\u00e3o e para automaticamente para que o jogo n\u00e3o fique lento por causa do calor.
++# Pembaruan otomatis dan rekam layar (tambahan)
++Isi rekaman	Conte\u00fado da grava\u00e7\u00e3o
++Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	S\u00f3 o jogo: os bot\u00f5es da tela s\u00e3o ocultados do v\u00eddeo (ainda podem ser tocados). Com bot\u00f5es: os bot\u00f5es da tela aparecem no v\u00eddeo. Tamb\u00e9m pode ser alterado pelo menu dentro do jogo.
++Hotbar sentuh	Hotbar por toque
++Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toque na hotbar na parte inferior da tela para escolher o slot, como no Minecraft Bedrock. A posi\u00e7\u00e3o dos slots segue o GUI scale do jogo.
++Geser kamera dari tombol	Deslizar a c\u00e2mera a partir dos bot\u00f5es
++Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Segurar o bot\u00e3o de atacar, usar ou pular e deslizar o dedo tamb\u00e9m gira a c\u00e2mera. Desative para que a vis\u00e3o n\u00e3o se mova durante lutas (PvP).
++Dukungan TouchController	Suporte ao TouchController
++Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. Se o mod TouchController estiver instalado e conectado, os toques durante o jogo tamb\u00e9m s\u00e3o repassados ao mod. Os bot\u00f5es e o mouse virtual do launcher continuam ativos, ent\u00e3o os dois podem ser usados juntos.
++# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
++Optimasi HP RAM kecil	Otimiza\u00e7\u00e3o para celulares com pouca RAM
++RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	A RAM deste celular \u00e9 de {0} MB, ent\u00e3o o funcionamento do coletor de mem\u00f3ria do Java pode ser ajustado.
++Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: o mais leve para o processador, com pausas de GC um pouco mais longas. Tente se o jogo engasgar com frequ\u00eancia.
++Bawaan: tanpa flag GC tambahan dari launcher.	Padr\u00e3o: sem flags de GC adicionais do launcher.
++Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Autom\u00e1tico: G1 com mem\u00f3ria limitada, adequado para a maioria dos celulares. Tente este primeiro.
++Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Vale na pr\u00f3xima vez que o jogo for executado. Para comparar, veja a linha [Kinerja] no log do jogo.
++Mode Hemat	Modo Economia
++Untuk HP yang cepat panas atau baterainya cepat habis.	Para celulares que esquentam r\u00e1pido ou cuja bateria acaba r\u00e1pido.
++Nyalakan Mode Hemat	Ativar o Modo Economia
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Ativa o modo de desempenho est\u00e1vel do sistema e o V-Sync do Zink, al\u00e9m de limitar a escala de resolu\u00e7\u00e3o m\u00e1xima a 80%.
++Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Vale na pr\u00f3xima vez que o jogo for executado. Ao desativar, as configura\u00e7\u00f5es anteriores s\u00e3o restauradas.
++Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Telas de 90/120 Hz s\u00e3o travadas em 60 Hz durante o jogo para um movimento mais uniforme e um pouco menos de calor. Indicado quando o jogo raramente chega a 90 FPS. O HUD de FPS mostra o Hz ativo.
++Cadangan & bagikan layout	Backup e compartilhamento de layout
++Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Salve o layout dos bot\u00f5es em um arquivo .json para backup ou compartilhamento, ou carregue o arquivo de outra pessoa.
++Ekspor	Exportar
++Layout kontrol disimpan ke berkas	Layout de controles salvo no arquivo
++Gagal menyimpan berkas	Falha ao salvar o arquivo
++Berkas terlalu besar untuk layout kontrol	Arquivo grande demais para um layout de controles
++Berkas tidak berisi tombol	O arquivo n\u00e3o cont\u00e9m bot\u00f5es
++Berkas ini bukan layout kontrol yang valid	Este arquivo n\u00e3o \u00e9 um layout de controles v\u00e1lido
++Layout kontrol diimpor ({0} tombol)	Layout de controles importado ({0} bot\u00f5es)
++# Log game: simpan otomatis dan bagikan
++Log game	Log do jogo
++Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	Sempre que voc\u00ea sai do Minecraft, o log dessa sess\u00e3o \u00e9 salvo automaticamente (os 10 \u00faltimos), sem o token da conta. Se houver algum problema, por exemplo um shader que n\u00e3o carrega, compartilhe o log mais recente com o desenvolvedor.
++Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	Ainda n\u00e3o h\u00e1 logs. Jogue uma vez e saia; o log \u00e9 salvo automaticamente.
++Log terbaru	Log mais recente
++Log sebelumnya	Logs anteriores
++Bagikan	Compartilhar
++Hapus semua log	Excluir todos os logs
++Ketuk lagi untuk menghapus	Toque de novo para excluir
++Log dihapus.	Logs exclu\u00eddos.
++Log launcher	Log do launcher
++Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	Eventos dentro do launcher fora do jogo, como downloads, login e mensagens de erro. Compartilhe se o problema aparecer antes de o jogo iniciar.
++Menyiapkan log...	Preparando o log...
++Gagal menyiapkan log launcher.	Falha ao preparar o log do launcher.
++Lokasi: {0}	Local: {0}
++Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Envie pelo WhatsApp, Telegram ou Google Drive usando o bot\u00e3o Compartilhar, ou pegue direto na pasta pelo gerenciador de arquivos.
++Plugin native library	Plugin de native library
++Belum ada plugin terpasang	Nenhum plugin instalado ainda
++Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Instale o APK de plugin de native library (formato Zalith/FCL) exigido pelo mod, por exemplo o Distant Horizons, e toque para escanear de novo.
++Pindai	Escanear
++Memindai...	Escaneando...
++Pindai ulang plugin	Escanear plugins de novo
++Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Use depois de instalar ou remover um plugin. Os plugins tamb\u00e9m s\u00e3o escaneados automaticamente cada vez que o jogo \u00e9 executado.
++Kontrol sentuh	Controle por toque
++Kamera dan kursor	C\u00e2mera e cursor
++Controller dan mouse fisik	Controle e mouse f\u00edsicos
++Lanjutan	Avan\u00e7ado
++Langsung bisa dipakai	Pronto para usar
++Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	N\u00e3o precisa ativar nem configurar. Conecte um controle (gamepad) e jogue: o anal\u00f3gico esquerdo anda, o direito move a c\u00e2mera, A pula, RT ataca, LT coloca, Y abre o invent\u00e1rio, Start = Esc. Nos menus, o anal\u00f3gico move o cursor. Mouse e teclado f\u00edsicos tamb\u00e9m funcionam na hora. Os bot\u00f5es da tela se escondem sozinhos quando um controle ou mouse \u00e9 usado. A velocidade do anal\u00f3gico segue a sensibilidade da c\u00e2mera e do cursor acima. Se um mod de controle (por exemplo, o Controlify) for detectado, o controle \u00e9 entregue diretamente ao mod.
+diff --git a/app/src/main/assets/lang/pt/skin.tsv b/app/src/main/assets/lang/pt/skin.tsv
+new file mode 100644
+index 0000000..9e6814b
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/skin.tsv
+@@ -0,0 +1,68 @@
++# Wardrobe: skin dan jubah
++Gagal memuat jubah: {0}	Falha ao carregar a capa: {0}
++Memvalidasi skin...	Validando a skin...
++Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	Skin carregada na pr\u00e9via ({0}) \u2014 Clique em Salvar para aplicar
++File tidak valid	Arquivo inv\u00e1lido
++Memvalidasi cape...	Validando a capa...
++Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	Capa personalizada carregada na pr\u00e9via \u2014 Clique em Salvar para aplicar
++File cape tidak valid	Arquivo de capa inv\u00e1lido
++WARDROBE & CUSTOM SKIN	GUARDA-ROUPA E SKIN PERSONALIZADA
++Kustomisasi tampilan skin dan jubah pemain Minecraft	Personalize a apar\u00eancia da skin e da capa do jogador do Minecraft
++3D (DRAG / PUTAR)	3D (ARRASTAR / GIRAR)
++Putar Otomatis	Girar automaticamente
++Reset Kamera	Redefinir c\u00e2mera
++Jalan	Andar
++Diam	Parado
++Lari	Correr
++Sapa	Acenar
++KUSTOM SKIN	SKIN PERSONALIZADA
++JUBAH / CAPE	CAPA
++Sistem Skin & Jubah Ely.by	Sistema de skin e capa do Ely.by
++Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	A conta Ely.by usa um servidor centralizado de skinsystem. Para trocar a skin ou o tipo de modelo dos bra\u00e7os, envie diretamente pelo site oficial ely.by para sincronizar dentro do jogo.
++KUNJUNGI ACCOUNT.ELY.BY	VISITAR ACCOUNT.ELY.BY
++PILIH FILE SKIN (.PNG)	ESCOLHER ARQUIVO DE SKIN (.PNG)
++TIPE MODEL LENGAN:	TIPO DE MODELO DOS BRA\u00c7OS:
++Model Klasik dipilih (Preview) \u2014 Klik Simpan	Modelo Cl\u00e1ssico selecionado (Pr\u00e9via) \u2014 Clique em Salvar
++Klasik	Cl\u00e1ssico
++Lengan tebal (4px)	Bra\u00e7os grossos (4px)
++Model Slim dipilih (Preview) \u2014 Klik Simpan	Modelo Slim selecionado (Pr\u00e9via) \u2014 Clique em Salvar
++Lengan ramping (3px)	Bra\u00e7os finos (3px)
++Skin direset ke default Steve (Preview) \u2014 Klik Simpan	Skin redefinida para o Steve padr\u00e3o (Pr\u00e9via) \u2014 Clique em Salvar
++\u21ba Reset ke Skin Default (Klasik)	\u21ba Redefinir para a skin padr\u00e3o (Cl\u00e1ssico)
++JUBAH RESMI MINECRAFT.NET:	CAPA OFICIAL DO MINECRAFT.NET:
++Memuat jubah dari Minecraft.net...	Carregando capas do Minecraft.net...
++Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	Sua conta Microsoft ainda n\u00e3o tem uma capa oficial no Minecraft.net.
++Jubah dilepas (Preview) \u2014 Klik Simpan	Capa removida (Pr\u00e9via) \u2014 Clique em Salvar
++Tanpa Jubah (Lepas Cape)	Sem capa (remover capa)
++Jubah {0} dipilih (Preview) \u2014 Klik Simpan	Capa {0} selecionada (Pr\u00e9via) \u2014 Clique em Salvar
++AKTIF DI MOJANG	ATIVA NA MOJANG
++Sistem Skin & Cape Ely.by	Sistema de skin e capa do Ely.by
++Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	A conta Ely.by usa o servidor oficial de skinsystem. Todas as skins e capas s\u00e3o gerenciadas diretamente pelo site ely.by e aparecem automaticamente dentro do jogo.
++BUKA WEBSITE ELY.BY	ABRIR O SITE DO ELY.BY
++PILIH FILE CAPE KUSTOM (.PNG)	ESCOLHER ARQUIVO DE CAPA PERSONALIZADA (.PNG)
++ATAU PILIH PRESET JUBAH:	OU ESCOLHA UMA CAPA PREDEFINIDA:
++Cape dilepas (Preview) \u2014 Klik Simpan	Capa removida (Pr\u00e9via) \u2014 Clique em Salvar
++Menyinkronkan ke Minecraft.net...	Sincronizando com o Minecraft.net...
++Gagal memperbarui Minecraft.net: {~0}	Falha ao atualizar o Minecraft.net: {0}
++Perubahan berhasil diterapkan ke Minecraft.net!	Altera\u00e7\u00f5es aplicadas com sucesso no Minecraft.net!
++Skin & Cape berhasil disimpan!	Skin e capa salvas com sucesso!
++SIMPAN KE MOJANG	SALVAR NA MOJANG
++SIMPAN PERUBAHAN	SALVAR ALTERA\u00c7\u00d5ES
++Jubah Resmi Minecraft	Capa oficial do Minecraft
++Jubah Aktif Minecraft	Capa ativa do Minecraft
++{0} Cape	Capa {0}
++Gagal memuat jubah Minecraft.	Falha ao carregar as capas do Minecraft.
++Respon profil kosong	Resposta de perfil vazia
++Gagal mengubah jubah.	Falha ao alterar a capa.
++Gagal mengunggah skin.	Falha ao enviar a skin.
++Gagal membaca file dari penyimpanan.	Falha ao ler o arquivo do armazenamento.
++Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	Formato de skin inv\u00e1lido. O tamanho deve ser 64x64 ou 64x32 pixels.
++Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	Formato de capa inv\u00e1lido. O tamanho deve ser 64x32 ou 128x64 pixels.
++Tanpa Cape	Sem capa
++Reset / Lepas cape	Redefinir / remover capa
++Klasik merah resmi Mojang	Cl\u00e1ssica vermelha oficial da Mojang
++Creeper emas peringatan 15 tahun	Creeper dourado do 15\u00ba anivers\u00e1rio
++Jubah biru kehormatan migrasi	Capa azul de honra da migra\u00e7\u00e3o
++Motif sakura edisi 1.20	Estampa de sakura da edi\u00e7\u00e3o 1.20
++Edisi emas pencipta	Edi\u00e7\u00e3o dourada dos criadores
++Edisi Java & Bedrock bundle	Pacote das edi\u00e7\u00f5es Java e Bedrock
+diff --git a/app/src/main/assets/lang/pt/typing.tsv b/app/src/main/assets/lang/pt/typing.tsv
+new file mode 100644
+index 0000000..bb4d93a
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/typing.tsv
+@@ -0,0 +1,4 @@
++# Pengaturan > Kontrol sentuh: preview ketikan (bar di atas keyboard layar)
++Preview ketikan	Pr\u00e9via da digita\u00e7\u00e3o
++Saat keyboard layar terbuka, huruf yang kamu ketik tampil di bar kecil tepat di atas keyboard supaya bisa diperiksa sebelum dikirim. Hanya menampilkan yang kamu ketik sejak keyboard dibuka.	Enquanto o teclado na tela est\u00e1 aberto, as letras que voc\u00ea digita aparecem em uma barra pequena logo acima do teclado, para que voc\u00ea possa conferi-las antes de enviar. Mostra apenas o que voc\u00ea digitou desde que o teclado foi aberto.
++Ketikanmu tampil di sini	O que voc\u00ea digitar aparece aqui
+diff --git a/app/src/main/assets/lang/pt/update.tsv b/app/src/main/assets/lang/pt/update.tsv
+new file mode 100644
+index 0000000..9fb2dfb
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/update.tsv
+@@ -0,0 +1,85 @@
++# Pembaruan aplikasi (pop-up versi baru dari GitHub)
++Pembaruan tersedia	Atualiza\u00e7\u00e3o dispon\u00edvel
++Versi {0} sudah tersedia. Kamu memakai versi {1}.	A vers\u00e3o {0} j\u00e1 est\u00e1 dispon\u00edvel. Voc\u00ea est\u00e1 usando a vers\u00e3o {1}.
++Yang baru	Novidades
++Lewati	Pular
++Unduh	Baixar
++# Pengecekan, unduhan, dan pemasangan pembaruan
++Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	Download interrompido. Toque em Tentar novamente; o download continua de onde parou.
++Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	Espa\u00e7o de armazenamento insuficiente. Libere cerca de {0} MB e tente novamente.
++Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	O arquivo baixado est\u00e1 corrompido (n\u00e3o confere com o do GitHub). Toque em Tentar novamente para baixar de novo.
++Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	O arquivo APK n\u00e3o foi encontrado no GitHub (c\u00f3digo 404). A vers\u00e3o pode ter sido removida.
++GitHub menolak unduhan (kode 403). Coba lagi nanti.	O GitHub recusou o download (c\u00f3digo 403). Tente novamente mais tarde.
++GitHub membalas kode {0} saat mengunduh.	O GitHub respondeu com o c\u00f3digo {0} durante o download.
++Balasan GitHub kosong.	A resposta do GitHub veio vazia.
++Balasan GitHub terlalu besar.	A resposta do GitHub \u00e9 grande demais.
++GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	O GitHub est\u00e1 com problemas (c\u00f3digo {0}). Tente novamente mais tarde.
++GitHub membalas kode {0}.	O GitHub respondeu com o c\u00f3digo {0}.
++Tidak ada koneksi internet.	Sem conex\u00e3o com a internet.
++Koneksi terlalu lambat. Coba lagi.	Conex\u00e3o lenta demais. Tente novamente.
++Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	Falha na conex\u00e3o segura com o GitHub. Verifique a data e a hora do celular.
++Koneksi internet terputus. Coba lagi.	A conex\u00e3o com a internet caiu. Tente novamente.
++Terjadi kesalahan yang tidak terduga.	Ocorreu um erro inesperado.
++Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	O limite de requisi\u00e7\u00f5es do GitHub foi atingido (geralmente porque muita gente usa a mesma rede). Tente novamente por volta das {0}.
++Unduhan gagal: {0}	Falha no download: {0}
++Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	O arquivo de atualiza\u00e7\u00e3o sumiu. Toque em Tentar novamente para baixar de novo.
++Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	O jogo ainda est\u00e1 em execu\u00e7\u00e3o. Feche o jogo primeiro para n\u00e3o perder dados e tente novamente.
++Pemasangan gagal: {0}	Falha na instala\u00e7\u00e3o: {0}
++Pemasangan dibatalkan.	Instala\u00e7\u00e3o cancelada.
++Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	N\u00e3o foi poss\u00edvel ler o arquivo de atualiza\u00e7\u00e3o como APK. Toque em Tentar novamente para baixar de novo.
++Berkas ini bukan APK AmberLauncher.	Este arquivo n\u00e3o \u00e9 um APK do AmberLauncher.
++APK ini tidak lebih baru dari versi yang terpasang.	Este APK n\u00e3o \u00e9 mais novo que a vers\u00e3o instalada.
++Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	A assinatura do APK \u00e9 diferente da do aplicativo instalado, ent\u00e3o o Android vai recusar esta atualiza\u00e7\u00e3o.
++Pemasangan diblokir oleh sistem atau Play Protect.	A instala\u00e7\u00e3o foi bloqueada pelo sistema ou pelo Play Protect.
++Pemasangan diblokir oleh sistem atau Play Protect.{0}	A instala\u00e7\u00e3o foi bloqueada pelo sistema ou pelo Play Protect.{0}
++Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	O Android recusou esta atualiza\u00e7\u00e3o: a assinatura ou a vers\u00e3o n\u00e3o confere com o aplicativo instalado.
++Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	O Android recusou esta atualiza\u00e7\u00e3o: a assinatura ou a vers\u00e3o n\u00e3o confere com o aplicativo instalado.{0}
++APK ini tidak cocok dengan HP kamu.	Este APK n\u00e3o \u00e9 compat\u00edvel com o seu celular.
++APK ini tidak cocok dengan HP kamu.{0}	Este APK n\u00e3o \u00e9 compat\u00edvel com o seu celular.{0}
++APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	APK corrompido ou inv\u00e1lido. Toque em Tentar novamente para baixar de novo.
++APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	APK corrompido ou inv\u00e1lido. Toque em Tentar novamente para baixar de novo.{0}
++Ruang penyimpanan tidak cukup untuk memasang pembaruan.	Espa\u00e7o de armazenamento insuficiente para instalar a atualiza\u00e7\u00e3o.
++Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	Espa\u00e7o de armazenamento insuficiente para instalar a atualiza\u00e7\u00e3o.{0}
++Pemasangan gagal.	Falha na instala\u00e7\u00e3o.
++Pemasangan gagal.{0}	Falha na instala\u00e7\u00e3o.{0}
++Balasan GitHub tidak bisa dibaca.	N\u00e3o foi poss\u00edvel ler a resposta do GitHub.
++Daftar rilis tersimpan tidak bisa dibaca.	N\u00e3o foi poss\u00edvel ler a lista de vers\u00f5es salva.
++Pembaruan	Atualiza\u00e7\u00e3o
++Versi terpasang	Vers\u00e3o instalada
++Memeriksa...	Verificando...
++Lihat pembaruan	Ver atualiza\u00e7\u00e3o
++Buka	Abrir
++Periksa pembaruan	Verificar atualiza\u00e7\u00f5es
++Periksa otomatis	Verifica\u00e7\u00e3o autom\u00e1tica
++Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	Procura uma nova vers\u00e3o no GitHub toda vez que o launcher \u00e9 aberto (apenas alguns KB). Se houver, aparece um pop-up para baixar e instalar.
++Semua rilis	Todas as vers\u00f5es
++Daftar versi dan catatan perubahannya di GitHub.	Lista de vers\u00f5es e notas de altera\u00e7\u00f5es no GitHub.
++Buka GitHub	Abrir o GitHub
++Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	A atualiza\u00e7\u00e3o \u00e9 baixada e instalada de dentro do launcher. O Android ainda pede uma confirma\u00e7\u00e3o de instala\u00e7\u00e3o, e o jogo precisa ser fechado antes.
++Belum diperiksa. Ketuk Periksa pembaruan.	Ainda n\u00e3o verificado. Toque em Verificar atualiza\u00e7\u00f5es.
++Memeriksa pembaruan...	Verificando atualiza\u00e7\u00f5es...
++Sudah versi terbaru. Diperiksa pukul {0}.	J\u00e1 est\u00e1 na vers\u00e3o mais recente. Verificado \u00e0s {0}.
++Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	A vers\u00e3o {0} j\u00e1 foi lan\u00e7ada, mas o APK para este celular ({1}) ainda n\u00e3o est\u00e1 dispon\u00edvel. Tente novamente mais tarde.
++Versi {0} tersedia.	A vers\u00e3o {0} est\u00e1 dispon\u00edvel.
++Mengunduh versi {0}... {1}%	Baixando a vers\u00e3o {0}... {1}%
++Versi {0} siap dipasang.	A vers\u00e3o {0} est\u00e1 pronta para instalar.
++Butuh izin memasang aplikasi dari Android.	\u00c9 necess\u00e1ria a permiss\u00e3o do Android para instalar aplicativos.
++Menunggu konfirmasi pemasangan dari Android...	Aguardando a confirma\u00e7\u00e3o de instala\u00e7\u00e3o do Android...
++Ukuran unduhan: {0} MB	Tamanho do download: {0} MB
++Kamu sedang memakai data seluler, unduhan ini memakai kuota.	Voc\u00ea est\u00e1 usando dados m\u00f3veis; este download consome sua franquia.
++Mengunduh pembaruan	Baixando a atualiza\u00e7\u00e3o
++Sembunyikan	Ocultar
++Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	O download continua enquanto o launcher estiver aberto. Se for interrompido, toque em Baixar de novo; ele continua de onde parou.
++Siap dipasang	Pronto para instalar
++Pasang	Instalar
++Versi {0} sudah diunduh dan diperiksa.	A vers\u00e3o {0} foi baixada e verificada.
++Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	O Android vai pedir a confirma\u00e7\u00e3o da instala\u00e7\u00e3o. O launcher \u00e9 fechado durante a instala\u00e7\u00e3o; abra-o de novo quando terminar.
++Izin pemasangan diperlukan	Permiss\u00e3o de instala\u00e7\u00e3o necess\u00e1ria
++Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	O Android precisa de permiss\u00e3o para que o AmberLauncher possa instalar as pr\u00f3prias atualiza\u00e7\u00f5es.
++Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	Ative "Permitir desta fonte" e volte aqui. A instala\u00e7\u00e3o continua automaticamente.
++Memasang pembaruan	Instalando a atualiza\u00e7\u00e3o
++Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	Siga a confirma\u00e7\u00e3o do Android. O launcher \u00e9 fechado automaticamente quando a instala\u00e7\u00e3o termina.
++Pembaruan gagal	Falha na atualiza\u00e7\u00e3o
++Coba lagi	Tentar novamente
++Pemasangan gagal. ({~0})	Falha na instala\u00e7\u00e3o. ({0})
++layar konfirmasi tidak bisa dibuka	n\u00e3o foi poss\u00edvel abrir a tela de confirma\u00e7\u00e3o
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+index 063e653..9c9ff3e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+@@ -10,9 +10,9 @@ import java.util.Locale
+  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
+  *
+  * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
+- * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
+- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol atau Vietnam memakai bahasa itu, dan bahasa
+- * lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
++ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], atau [PT]. Pada pilihan [SYSTEM], HP
++ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, atau Portugis (Brasil) memakai
++ * bahasa itu, dan bahasa lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
+  */
+ object Tr {
+     const val SYSTEM = "system"
+@@ -20,12 +20,13 @@ object Tr {
+     const val EN = "en"
+     const val ES = "es"
+     const val VI = "vi"
++    const val PT = "pt"
+ 
+     /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
+     const val DEFAULT_CHOICE = EN
+ 
+     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
+-    private val DICTIONARY_LANGS = setOf(EN, ES, VI)
++    private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT)
+ 
+     private const val PREFS_NAME = "amber_launcher_prefs"
+     private const val KEY_LANGUAGE = "language"
+@@ -34,12 +35,12 @@ object Tr {
+     @Volatile
+     private var translator: Translator? = null
+ 
+-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], atau [VI]. */
++    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], atau [PT]. */
+     @Volatile
+     var choice: String = DEFAULT_CHOICE
+         private set
+ 
+-    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], atau [VI]. */
++    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], atau [PT]. */
+     @Volatile
+     var effective: String = ID
+         private set
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 63f3a41..57f6189 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -262,7 +262,8 @@ fun SettingsScreen(
+         Tr.ID to "Bahasa Indonesia",
+         Tr.EN to "English",
+         Tr.ES to "Espa\u00f1ol",
+-        Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
++        Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
++        Tr.PT to "Portugu\u00eas (Brasil)"
+     )
+ 
+     Column(
+# FIN part=1/1 files=23

@@ -1,0 +1,689 @@
+diff --git a/app/src/main/assets/lang/en/horizon.tsv b/app/src/main/assets/lang/en/horizon.tsv
+index 12ae992..441c18f 100644
+--- a/app/src/main/assets/lang/en/horizon.tsv
++++ b/app/src/main/assets/lang/en/horizon.tsv
+@@ -23,3 +23,3 @@ Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	This
+ Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	This file is not a shader pack: no shaders folder was found at the top level of the archive.
+-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	This is a native Horizon shader. Install it from the Import menu inside the Rust engine (.hshader format).
++Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	This is a native Horizon shader. Install it from the Horizon source on the Browse screen (.hshader format).
+ Tidak ada berkas .zip yang cocok di versi ini.	No matching .zip file in this version.
+@@ -54,8 +54,8 @@ Modul F3 yang bisa diatur untuk layar debug	Configurable modules for the F3 debu
+ Resep	Recipes
+-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	The Horizon mod catalog could not be read. Please try again later.
++Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	The Horizon catalog could not be read. Please try again later.
+ Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	The Horizon catalog uses a newer format. Please update Amber.
+-Tidak ada berkas .hmod yang cocok di versi ini.	No matching .hmod file in this version.
++Tidak ada berkas yang cocok di versi ini.	No matching file in this version.
+ Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	The catalog gives no SHA-256 checksum, so the download cannot be verified.
+-Alamat unduhan mod tidak dikenali, jadi ditolak.	The mod download address is not recognized, so it was rejected.
+-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	The mod file size does not match the catalog, so it was not installed.
++Alamat unduhan tidak dikenali, jadi ditolak.	The download address is not recognized, so it was rejected.
++Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	The file size does not match the catalog, so it was not installed.
+ Memuat data dari Horizon...	Loading data from Horizon...
+@@ -65 +65,8 @@ Konten	Content
+ Berkode	Has code
++# Katalog Horizon untuk shader dan resource pack
++Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	This is not a native Horizon shader: horizon-shaders.toml was not found at the top level of the archive.
++Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	The native Horizon shader is too large (file over 16 MB, contents over 8 MB, or a single file that is too big).
++Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon source: native Rust engine shaders (.hshader).
++Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth source: classic shaders, compatibility with the Rust engine is still limited.
++Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon source: resource packs made or tested for the Rust engine.
++Coba ubah kata kunci atau pindah ke sumber Modrinth	Try changing the keyword or switch to the Modrinth source
+diff --git a/app/src/main/assets/lang/es/horizon.tsv b/app/src/main/assets/lang/es/horizon.tsv
+index 51b0337..271c658 100644
+--- a/app/src/main/assets/lang/es/horizon.tsv
++++ b/app/src/main/assets/lang/es/horizon.tsv
+@@ -23,3 +23,3 @@ Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Este
+ Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Este archivo no es un paquete de shaders: no se encontr\u00f3 la carpeta shaders en la ra\u00edz del archivo comprimido.
+-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	Es un shader nativo de Horizon. Inst\u00e1lalo desde el men\u00fa Importar dentro del motor Rust (formato .hshader).
++Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	Es un shader nativo de Horizon. Inst\u00e1lalo desde la fuente Horizon en la pantalla Explorar (formato .hshader).
+ Tidak ada berkas .zip yang cocok di versi ini.	No hay ning\u00fan archivo .zip compatible en esta versi\u00f3n.
+@@ -54,8 +54,8 @@ Modul F3 yang bisa diatur untuk layar debug	M\u00f3dulos configurables para la p
+ Resep	Recetas
+-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	No se pudo leer el cat\u00e1logo de mods de Horizon. Int\u00e9ntalo de nuevo m\u00e1s tarde.
++Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	No se pudo leer el cat\u00e1logo de Horizon. Int\u00e9ntalo de nuevo m\u00e1s tarde.
+ Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	El cat\u00e1logo de Horizon usa un formato m\u00e1s nuevo. Actualiza Amber.
+-Tidak ada berkas .hmod yang cocok di versi ini.	No hay ning\u00fan archivo .hmod compatible en esta versi\u00f3n.
++Tidak ada berkas yang cocok di versi ini.	No hay ning\u00fan archivo compatible en esta versi\u00f3n.
+ Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	El cat\u00e1logo no ofrece una suma SHA-256, as\u00ed que la descarga no se puede verificar.
+-Alamat unduhan mod tidak dikenali, jadi ditolak.	No se reconoce la direcci\u00f3n de descarga del mod, as\u00ed que se rechaz\u00f3.
+-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	El tama\u00f1o del archivo del mod no coincide con el cat\u00e1logo, as\u00ed que no se instal\u00f3.
++Alamat unduhan tidak dikenali, jadi ditolak.	No se reconoce la direcci\u00f3n de descarga, as\u00ed que se rechaz\u00f3.
++Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	El tama\u00f1o del archivo no coincide con el cat\u00e1logo, as\u00ed que no se instal\u00f3.
+ Memuat data dari Horizon...	Cargando datos de Horizon...
+@@ -65 +65,8 @@ Konten	Contenido
+ Berkode	Con c\u00f3digo
++# Katalog Horizon untuk shader dan resource pack
++Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	No es un shader nativo de Horizon: no se encontr\u00f3 horizon-shaders.toml en la ra\u00edz del archivo.
++Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	El shader nativo de Horizon es demasiado grande (archivo de m\u00e1s de 16 MB, contenido de m\u00e1s de 8 MB o un archivo interno demasiado grande).
++Sumber Horizon: shader asli mesin Rust (.hshader).	Fuente Horizon: shaders nativos del motor Rust (.hshader).
++Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fuente Modrinth: shaders cl\u00e1sicos; la compatibilidad con el motor Rust a\u00fan es limitada.
++Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fuente Horizon: resource packs creados o probados para el motor Rust.
++Coba ubah kata kunci atau pindah ke sumber Modrinth	Prueba a cambiar la palabra clave o cambia a la fuente Modrinth
+diff --git a/app/src/main/assets/lang/vi/horizon.tsv b/app/src/main/assets/lang/vi/horizon.tsv
+index 1e3112b..d4ff356 100644
+--- a/app/src/main/assets/lang/vi/horizon.tsv
++++ b/app/src/main/assets/lang/vi/horizon.tsv
+@@ -23,3 +23,3 @@ Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	T\u1
+ Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i shader pack: kh\u00f4ng t\u00ecm th\u1ea5y th\u01b0 m\u1ee5c shaders \u1edf g\u1ed1c t\u1ec7p n\u00e9n.
+-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	\u0110\u00e2y l\u00e0 shader g\u1ed1c c\u1ee7a Horizon. H\u00e3y c\u00e0i t\u1eeb menu Nh\u1eadp b\u00ean trong engine Rust (\u0111\u1ecbnh d\u1ea1ng .hshader).
++Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	\u0110\u00e2y l\u00e0 shader g\u1ed1c c\u1ee7a Horizon. H\u00e3y c\u00e0i t\u1eeb ngu\u1ed3n Horizon tr\u00ean m\u00e0n h\u00ecnh Duy\u1ec7t (\u0111\u1ecbnh d\u1ea1ng .hshader).
+ Tidak ada berkas .zip yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .zip ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
+@@ -54,8 +54,8 @@ Modul F3 yang bisa diatur untuk layar debug	C\u00e1c m\u00f4-\u0111un c\u00f3 th
+ Resep	C\u00f4ng th\u1ee9c
+-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh m\u1ee5c mod Horizon. H\u00e3y th\u1eed l\u1ea1i sau.
++Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh m\u1ee5c Horizon. H\u00e3y th\u1eed l\u1ea1i sau.
+ Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	Danh m\u1ee5c Horizon d\u00f9ng \u0111\u1ecbnh d\u1ea1ng m\u1edbi h\u01a1n. H\u00e3y c\u1eadp nh\u1eadt Amber.
+-Tidak ada berkas .hmod yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .hmod ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
++Tidak ada berkas yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
+ Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	Danh m\u1ee5c kh\u00f4ng cung c\u1ea5p m\u00e3 b\u0103m SHA-256 n\u00ean kh\u00f4ng th\u1ec3 ki\u1ec3m tra b\u1ea3n t\u1ea3i.
+-Alamat unduhan mod tidak dikenali, jadi ditolak.	\u0110\u1ecba ch\u1ec9 t\u1ea3i mod kh\u00f4ng \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n n\u00ean \u0111\u00e3 b\u1ecb t\u1eeb ch\u1ed1i.
+-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	K\u00edch th\u01b0\u1edbc t\u1ec7p mod kh\u00f4ng kh\u1edbp v\u1edbi danh m\u1ee5c n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
++Alamat unduhan tidak dikenali, jadi ditolak.	\u0110\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n n\u00ean \u0111\u00e3 b\u1ecb t\u1eeb ch\u1ed1i.
++Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	K\u00edch th\u01b0\u1edbc t\u1ec7p kh\u00f4ng kh\u1edbp v\u1edbi danh m\u1ee5c n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+ Memuat data dari Horizon...	\u0110ang t\u1ea3i d\u1eef li\u1ec7u t\u1eeb Horizon...
+@@ -65 +65,8 @@ Konten	N\u1ed9i dung
+ Berkode	C\u00f3 m\u00e3
++# Katalog Horizon untuk shader dan resource pack
++Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	\u0110\u00e2y kh\u00f4ng ph\u1ea3i shader g\u1ed1c c\u1ee7a Horizon: kh\u00f4ng t\u00ecm th\u1ea5y horizon-shaders.toml \u1edf th\u01b0 m\u1ee5c g\u1ed1c c\u1ee7a t\u1ec7p n\u00e9n.
++Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	Shader g\u1ed1c c\u1ee7a Horizon qu\u00e1 l\u1edbn (t\u1ec7p tr\u00ean 16 MB, n\u1ed9i dung tr\u00ean 8 MB, ho\u1eb7c c\u00f3 t\u1ec7p b\u00ean trong qu\u00e1 l\u1edbn).
++Sumber Horizon: shader asli mesin Rust (.hshader).	Ngu\u1ed3n Horizon: shader g\u1ed1c c\u1ee7a engine Rust (.hshader).
++Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Ngu\u1ed3n Modrinth: shader c\u1ed5 \u0111i\u1ec3n, kh\u1ea3 n\u0103ng t\u01b0\u01a1ng th\u00edch v\u1edbi engine Rust v\u1eabn c\u00f2n h\u1ea1n ch\u1ebf.
++Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Ngu\u1ed3n Horizon: resource pack \u0111\u01b0\u1ee3c t\u1ea1o ho\u1eb7c th\u1eed nghi\u1ec7m cho engine Rust.
++Coba ubah kata kunci atau pindah ke sumber Modrinth	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a ho\u1eb7c chuy\u1ec3n sang ngu\u1ed3n Modrinth
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
+index a15a9f5..c31d13a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
+@@ -53,2 +53,11 @@ object HorizonContent {
+ 
++    /** Shader asli Horizon: zip berekstensi .hshader dengan horizon-shaders.toml di dasar arsip (crate horizon-shader-api). */
++    const val NATIVE_SHADER_EXTENSION = ".hshader"
++    private const val NATIVE_MANIFEST = "horizon-shaders.toml"
++    private const val NATIVE_MAX_FILE_BYTES = 16L * 1024L * 1024L
++    private const val NATIVE_MAX_ENTRIES = 512
++    private const val NATIVE_MAX_WGSL_BYTES = 256L * 1024L
++    private const val NATIVE_MAX_OTHER_BYTES = 1L shl 20
++    private const val NATIVE_MAX_TOTAL_BYTES = 8L shl 20
++
+     // Pesan galat ditampilkan apa adanya ke pengguna; semuanya ada di kamus bahasa (mods.tsv).
+@@ -65,3 +74,5 @@ object HorizonContent {
+     const val MSG_NOT_SHADER = "Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip."
+-    const val MSG_NATIVE = "Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader)."
++    const val MSG_NATIVE = "Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader)."
++    const val MSG_NATIVE_MANIFEST = "Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip."
++    const val MSG_NATIVE_BIG = "Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar)."
+     const val MSG_NO_ZIP = "Tidak ada berkas .zip yang cocok di versi ini."
+@@ -297,2 +308,7 @@ object HorizonContent {
+         if (!plainName(name)) throw IOException(MSG_NAME)
++        // Shader asli Horizon (.hshader) punya aturan paket sendiri; hanya jenis Shader yang menerimanya
++        if (itemType == TYPE_SHADERS && name.lowercase().endsWith(NATIVE_SHADER_EXTENSION)) {
++            validateNativeShader(file)
++            return
++        }
+         if (!name.lowercase().endsWith(".zip")) throw IOException(MSG_FORMAT)
+@@ -312,11 +328,3 @@ object HorizonContent {
+                     val raw = entry.name
+-                    if (raw.isEmpty() ||
+-                        raw.toByteArray(Charsets.UTF_8).size > MAX_ENTRY_PATH_BYTES ||
+-                        raw.any { it.isISOControl() || it == '\\' || it == ':' } ||
+-                        raw.startsWith("/") ||
+-                        raw.split('/').any { it == ".." || it == "." } ||
+-                        !seen.add(raw)
+-                    ) {
+-                        throw IOException(MSG_UNSAFE)
+-                    }
++                    if (isUnsafeEntry(raw) || !seen.add(raw)) throw IOException(MSG_UNSAFE)
+                     val size = entry.size
+@@ -361,2 +369,47 @@ object HorizonContent {
+ 
++    /**
++     * Pemeriksaan bentuk paket .hshader seperti horizon_shader_api::Pack::read: zip, paling banyak 512 entri,
++     * path entri aman, horizon-shaders.toml di dasar arsip, berkas .wgsl paling besar 256 KB, berkas lain 1 MB,
++     * total isi 8 MB. Isi WGSL dan manifestnya sendiri tidak dibaca di sini: katalog dan mesin memeriksanya
++     * (mesin menolak paket yang rusak sebelum memuatnya).
++     */
++    private fun validateNativeShader(file: File) {
++        if (file.length() > NATIVE_MAX_FILE_BYTES) throw IOException(MSG_NATIVE_BIG)
++        var hasManifest = false
++        try {
++            ZipFile(file).use { zip ->
++                if (zip.size() > NATIVE_MAX_ENTRIES) throw IOException(MSG_TOO_MANY)
++                val seen = HashSet<String>()
++                var total = 0L
++                val entries = zip.entries()
++                while (entries.hasMoreElements()) {
++                    val entry = entries.nextElement()
++                    val raw = entry.name
++                    if (isUnsafeEntry(raw) || !seen.add(raw)) throw IOException(MSG_UNSAFE)
++                    if (entry.isDirectory) continue
++                    val size = entry.size
++                    if (size < 0L) throw IOException(MSG_BROKEN)
++                    val limit = if (raw.endsWith(".wgsl")) NATIVE_MAX_WGSL_BYTES else NATIVE_MAX_OTHER_BYTES
++                    if (size > limit) throw IOException(MSG_NATIVE_BIG)
++                    total += size
++                    if (total > NATIVE_MAX_TOTAL_BYTES) throw IOException(MSG_NATIVE_BIG)
++                    if (raw == NATIVE_MANIFEST) hasManifest = true
++                }
++            }
++        } catch (e: IOException) {
++            throw if (isOurMessage(e.message)) e else IOException(MSG_BROKEN)
++        } catch (_: Exception) {
++            throw IOException(MSG_BROKEN)
++        }
++        if (!hasManifest) throw IOException(MSG_NATIVE_MANIFEST)
++    }
++
++    /** Path entri arsip yang ditolak mesin: kosong, terlalu panjang, berkarakter terlarang, mutlak, atau berisi ".." / ".". */
++    private fun isUnsafeEntry(raw: String): Boolean =
++        raw.isEmpty() ||
++            raw.toByteArray(Charsets.UTF_8).size > MAX_ENTRY_PATH_BYTES ||
++            raw.any { it.isISOControl() || it == '\\' || it == ':' } ||
++            raw.startsWith("/") ||
++            raw.split('/').any { it == ".." || it == "." }
++
+     private fun isOurMessage(message: String?): Boolean = message != null && message in OUR_MESSAGES
+@@ -365,3 +418,4 @@ object HorizonContent {
+         MSG_TYPE, MSG_NAME, MSG_FORMAT, MSG_TOO_BIG, MSG_BROKEN, MSG_TOO_MANY, MSG_UNSAFE, MSG_EXPANDED,
+-        MSG_META, MSG_NOT_RESOURCE, MSG_NOT_SHADER, MSG_NATIVE, MSG_NO_ZIP, MSG_NO_HASH, MSG_SAVE
++        MSG_META, MSG_NOT_RESOURCE, MSG_NOT_SHADER, MSG_NATIVE, MSG_NATIVE_MANIFEST, MSG_NATIVE_BIG,
++        MSG_NO_ZIP, MSG_NO_HASH, MSG_SAVE
+     )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonRegistry.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonRegistry.kt
+index 4156b7e..2672cdf 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonRegistry.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonRegistry.kt
+@@ -13,9 +13,12 @@ import java.io.IOException
+ /**
+- * Katalog mod Horizon (registry resmi mesin): satu berkas `index.json` yang dibangun CI repo horizon-mods.
++ * Katalog Horizon (registry resmi mesin): satu berkas `index.json` yang dibangun CI repo horizon-mods.
+  * Aturan mengikuti docs/api/mod-index.md milik mesin (schema 1):
+- * - Hanya proyek berjenis `mod` (berkas .hmod) yang dibaca di sini; jenis lain dilewati.
+- * - Setiap berkas wajib: nama polos berakhiran .hmod, alamat `https://github.com/<pemilik>/<repo>/releases/download/
+- *   <tag>/<nama>` (satu-satunya bentuk yang diterima mesin), ukuran, dan SHA-256 huruf kecil. Yang tidak lengkap dibuang.
++ * - Tiga jenis proyek dibaca di sini: `mod` (berkas .hmod), `shader` (shader asli Horizon, berkas .hshader) dan
++ *   `resourcepack` (berkas .zip). Jenis lain (modpack, native-mod, dst.) dilewati.
++ * - Setiap berkas wajib: nama polos berakhiran sesuai jenisnya, alamat `https://github.com/horizon-rust/horizon-mods/
++ *   releases/download/<tag>/<nama>` (satu-satunya tempat unduh yang diterima mesin, index::FILE_HOST), ukuran, dan
++ *   SHA-256 huruf kecil. Yang tidak lengkap dibuang.
+  * - Daftar `revoked` (berkas yang ditarik) tidak pernah ditawarkan.
+- * - Yang ditawarkan hanya versi untuk versi game mesin, dan hanya yang paling besar 32 MB (batas mesin di Android).
++ * - Yang ditawarkan hanya versi untuk versi game mesin, dan hanya yang tidak melewati batas ukuran jenisnya
++ *   ([maxBytes]: mod 32 MB karena batas mesin di Android, shader 16 MB, resource pack 64 MB sesuai batas katalog).
+  *
+@@ -33,9 +36,40 @@ object HorizonRegistry {
+ 
+-    // Pesan galat ditampilkan apa adanya ke pengguna; semuanya ada di kamus bahasa (mods.tsv).
+-    const val MSG_INDEX = "Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti."
++    /** Jenis proyek di katalog yang dipakai Amber (nama persis seperti di index.json). */
++    const val KIND_MOD = "mod"
++    const val KIND_SHADER = "shader"
++    const val KIND_RESOURCE_PACK = "resourcepack"
++
++    // Pesan galat ditampilkan apa adanya ke pengguna; semuanya ada di kamus bahasa (horizon.tsv).
++    const val MSG_INDEX = "Katalog Horizon tidak bisa dibaca. Coba lagi nanti."
+     const val MSG_NEWER = "Katalog Horizon memakai format yang lebih baru. Perbarui Amber."
+-    const val MSG_NO_FILE = "Tidak ada berkas .hmod yang cocok di versi ini."
++    const val MSG_NO_FILE = "Tidak ada berkas yang cocok di versi ini."
+     const val MSG_HASH = "Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa."
+-    const val MSG_URL = "Alamat unduhan mod tidak dikenali, jadi ditolak."
+-    const val MSG_SIZE = "Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang."
++    const val MSG_URL = "Alamat unduhan tidak dikenali, jadi ditolak."
++    const val MSG_SIZE = "Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang."
++
++    /** Jenis katalog untuk satu jenis isi di layar Mod (null bila katalog tidak melayaninya). */
++    fun kindFor(itemType: String): String? = when (itemType) {
++        HorizonContent.TYPE_MODS -> KIND_MOD
++        HorizonContent.TYPE_SHADERS -> KIND_SHADER
++        HorizonContent.TYPE_RESOURCES -> KIND_RESOURCE_PACK
++        else -> null
++    }
++
++    /** Ekstensi berkas tiap jenis, sama dengan yang dipakai mesin (huruf kecil, dengan titik). */
++    fun extensionOf(kind: String): String? = when (kind) {
++        KIND_MOD -> HorizonMods.EXTENSION
++        KIND_SHADER -> HorizonContent.NATIVE_SHADER_EXTENSION
++        KIND_RESOURCE_PACK -> ".zip"
++        else -> null
++    }
++
++    /** Ukuran berkas terbesar yang ditawarkan per jenis. */
++    fun maxBytes(kind: String): Long = when (kind) {
++        KIND_MOD -> HorizonMods.MAX_FILE_BYTES
++        KIND_SHADER -> 16L * 1024L * 1024L
++        else -> 64L * 1024L * 1024L
++    }
++
++    /** Versi hasil [toVersions] ditandai dengan titik dua di id ("proyek:versi"); id Modrinth tidak pernah memuatnya. */
++    fun isRegistryVersion(version: ModrinthVersion): Boolean = version.id.contains(':')
+ 
+@@ -43,4 +77,5 @@ object HorizonRegistry {
+     private val SHA256_RE = Regex("[0-9a-f]{64}")
++    // Sama dengan index::FILE_HOST milik mesin: hanya rilis repo horizon-mods, tanpa subfolder, query, atau fragmen
+     private val URL_RE = Regex(
+-        "https://github\\.com/[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}/releases/download/[^/?#\\s]{1,200}/[^/?#\\s]{1,200}"
++        "https://github\\.com/horizon-rust/horizon-mods/releases/download/[^/?#\\s]{1,200}/[^/?#\\s]{1,200}"
+     )
+@@ -69,3 +104,4 @@ object HorizonRegistry {
+         val downloads: Long,
+-        val versions: List<VersionInfo>
++        val versions: List<VersionInfo>,
++        val kind: String = KIND_MOD
+     )
+@@ -75,5 +111,6 @@ object HorizonRegistry {
+ 
+-    class Index(val mods: List<ProjectInfo>, val revoked: List<Revoked>)
++    /** Semua proyek yang dikenal (mod, shader, resource pack); id unik di seluruh katalog. */
++    class Index(val projects: List<ProjectInfo>, val revoked: List<Revoked>)
+ 
+-    /** Alamat unduhan yang diterima mesin: rilis GitHub, dan nama di ujung alamat sama dengan nama berkasnya. */
++    /** Alamat unduhan yang diterima mesin: rilis repo horizon-mods di GitHub, dan nama di ujung alamat sama dengan nama berkasnya. */
+     fun acceptedUrl(url: String, name: String): Boolean = URL_RE.matches(url) && url.substringAfterLast('/') == name
+@@ -97,3 +134,3 @@ object HorizonRegistry {
+ 
+-        val mods = ArrayList<ProjectInfo>()
++        val projects = ArrayList<ProjectInfo>()
+         val seen = HashSet<String>()
+@@ -101,6 +138,7 @@ object HorizonRegistry {
+             val p = element.asObjectOrNull() ?: continue
+-            if (p.string("kind") != "mod") continue
++            val kind = p.string("kind") ?: continue
++            if (extensionOf(kind) == null) continue
+             val id = p.string("id") ?: continue
+             if (!ID_RE.matches(id) || !seen.add(id)) continue
+-            val versions = p.array("versions").mapNotNull { e -> e.asObjectOrNull()?.let { o -> parseVersion(o) } }
++            val versions = p.array("versions").mapNotNull { e -> e.asObjectOrNull()?.let { o -> parseVersion(o, kind) } }
+             if (versions.isEmpty()) continue
+@@ -108,3 +146,3 @@ object HorizonRegistry {
+             val icon = p.string("icon")?.takeIf { it.startsWith("https://") }
+-            mods.add(
++            projects.add(
+                 ProjectInfo(
+@@ -119,3 +157,4 @@ object HorizonRegistry {
+                     downloads = p.long("downloads") ?: 0L,
+-                    versions = versions
++                    versions = versions,
++                    kind = kind
+                 )
+@@ -132,6 +171,6 @@ object HorizonRegistry {
+         }
+-        return Index(mods, revoked)
++        return Index(projects, revoked)
+     }
+ 
+-    private fun parseVersion(v: JsonObject): VersionInfo? {
++    private fun parseVersion(v: JsonObject, kind: String): VersionInfo? {
+         val version = v.string("version")?.takeIf { it.isNotBlank() } ?: return null
+@@ -143,5 +182,6 @@ object HorizonRegistry {
+         val sha = f.string("sha256") ?: return null
+-        if (!HorizonContent.plainName(name) || !name.endsWith(HorizonMods.EXTENSION)) return null
++        val extension = extensionOf(kind) ?: return null
++        if (!HorizonContent.plainName(name) || !name.endsWith(extension)) return null
+         if (!acceptedUrl(url, name)) return null
+-        if (size <= 0L || size > HorizonMods.MAX_FILE_BYTES || !isSha256(sha)) return null
++        if (size <= 0L || size > maxBytes(kind) || !isSha256(sha)) return null
+         return VersionInfo(
+@@ -168,3 +208,5 @@ object HorizonRegistry {
+ 
+-    fun find(index: Index, id: String): ProjectInfo? = index.mods.firstOrNull { it.id == id }
++    /** Satu proyek menurut id; bila [kind] diberikan, proyek dengan jenis lain dianggap tidak ada. */
++    fun find(index: Index, id: String, kind: String? = null): ProjectInfo? =
++        index.projects.firstOrNull { it.id == id && (kind == null || it.kind == kind) }
+ 
+@@ -175,2 +217,3 @@ object HorizonRegistry {
+         index: Index,
++        kind: String,
+         query: String,
+@@ -183,3 +226,4 @@ object HorizonRegistry {
+         val scored = ArrayList<Pair<Int, ProjectInfo>>()
+-        for (project in index.mods) {
++        for (project in index.projects) {
++            if (project.kind != kind) continue
+             if (usableVersions(index, project, game).isEmpty()) continue
+@@ -216,6 +260,7 @@ object HorizonRegistry {
+         val newest = usableVersions(index, p, game).firstOrNull()
+-        val tag = if (newest != null && contentOnly(newest)) "konten" else "berkode"
++        // Hanya mod yang diberi label (konten murni atau berkode); shader dan resource pack tanpa label
++        val tags = if (p.kind != KIND_MOD) emptyList<String>() else listOf(if (newest != null && contentOnly(newest)) "konten" else "berkode")
+         return ModrinthSearchHit(
+             projectId = p.id,
+-            projectType = "mod",
++            projectType = p.kind,
+             slug = p.id,
+@@ -224,4 +269,4 @@ object HorizonRegistry {
+             description = p.summary,
+-            categories = listOf(tag),
+-            displayCategories = listOf(tag),
++            categories = tags,
++            displayCategories = tags,
+             versions = listOf(game),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index 0976d9e..b149d0a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -62,5 +62,6 @@ object NuxModManager {
+ 
+-    /** Sumber unduhan di layar Mod. */
++    /** Sumber unduhan di layar Mod. Horizon hanya untuk instance mesin Rust (mod, shader asli, resource pack). */
+     const val SOURCE_MODRINTH = "modrinth"
+     const val SOURCE_CURSEFORGE = "curseforge"
++    const val SOURCE_HORIZON = "horizon"
+ 
+@@ -472,3 +473,6 @@ object NuxModManager {
+     ): Result<List<String>> {
+-        if (itemType == HorizonContent.TYPE_MODS) return downloadHorizonMod(context, version, onProgress)
++        // Mod selalu dari katalog Horizon; shader dan resource pack bila versinya berasal dari katalog itu
++        if (itemType == HorizonContent.TYPE_MODS || HorizonRegistry.isRegistryVersion(version)) {
++            return downloadHorizonFile(context, version, itemType, onProgress)
++        }
+         var staged: File? = null
+@@ -505,8 +509,11 @@ object NuxModManager {
+     /**
+-     * Mengunduh satu mod dari katalog Horizon: alamat harus rilis GitHub, ukuran dan SHA-256 harus sama dengan
+-     * katalog, lalu berkasnya diperiksa dengan aturan mesin sebelum masuk ke folder mod. Dependensi tidak ada.
++     * Mengunduh satu berkas dari katalog Horizon (mod, shader asli, atau resource pack): alamat harus rilis GitHub,
++     * ukuran dan SHA-256 harus sama dengan katalog, lalu berkasnya diperiksa dengan aturan mesin sebelum masuk ke
++     * folder tujuan. Dependensi tidak ada. Mod yang sama diganti (id manifest), shader dan resource pack yang
++     * namanya sudah ada dilewati.
+      */
+-    private fun downloadHorizonMod(
++    private fun downloadHorizonFile(
+         context: Context,
+         version: ModrinthVersion,
++        itemType: String,
+         onProgress: (String) -> Unit
+@@ -515,2 +522,4 @@ object NuxModManager {
+         return try {
++            val kind = HorizonRegistry.kindFor(itemType) ?: throw java.io.IOException(HorizonContent.MSG_TYPE)
++            val extension = HorizonRegistry.extensionOf(kind) ?: throw java.io.IOException(HorizonContent.MSG_TYPE)
+             val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
+@@ -519,19 +528,25 @@ object NuxModManager {
+             val sha256 = file.hashes?.get("sha256")?.trim()?.lowercase().orEmpty()
++            if (!name.endsWith(extension)) throw java.io.IOException(HorizonRegistry.MSG_NO_FILE)
+             if (!HorizonRegistry.acceptedUrl(file.url, name)) throw java.io.IOException(HorizonRegistry.MSG_URL)
+             if (!HorizonRegistry.isSha256(sha256)) throw java.io.IOException(HorizonRegistry.MSG_HASH)
+-            if (file.size <= 0L || file.size > HorizonMods.MAX_FILE_BYTES) throw java.io.IOException(HorizonMods.MSG_TOO_BIG)
++            if (file.size <= 0L || file.size > HorizonRegistry.maxBytes(kind)) {
++                throw java.io.IOException(if (kind == HorizonRegistry.KIND_MOD) HorizonMods.MSG_TOO_BIG else HorizonContent.MSG_TOO_BIG)
++            }
+ 
+-            val stageDir = File(context.cacheDir, "horizon-dl")
+-            if (!stageDir.isDirectory && !stageDir.mkdirs()) throw java.io.IOException(HorizonContent.MSG_SAVE)
+-            val target = File(stageDir, name)
+-            staged = target
+-            onProgress("Mengunduh $name...")
+-            downloadFile(file.url, target, file.size)
+-            if (target.length() != file.size) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
+-            verifyHashes(target, file.hashes)
+-            onProgress("Memeriksa $name...")
+-            val finalName = HorizonContent.install(
+-                target, HorizonEngine.engineHome(context), HorizonContent.TYPE_MODS, name
+-            ).getOrThrow()
+-            Result.success(listOf(finalName))
++            val home = HorizonEngine.engineHome(context)
++            if (kind != HorizonRegistry.KIND_MOD && HorizonContent.exists(home, itemType, name)) {
++                Result.success(emptyList())
++            } else {
++                val stageDir = File(context.cacheDir, "horizon-dl")
++                if (!stageDir.isDirectory && !stageDir.mkdirs()) throw java.io.IOException(HorizonContent.MSG_SAVE)
++                val target = File(stageDir, name)
++                staged = target
++                onProgress("Mengunduh $name...")
++                downloadFile(file.url, target, file.size)
++                if (target.length() != file.size) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
++                verifyHashes(target, file.hashes)
++                onProgress("Memeriksa $name...")
++                val finalName = HorizonContent.install(target, home, itemType, name).getOrThrow()
++                Result.success(listOf(finalName))
++            }
+         } catch (e: Exception) {
+@@ -618,6 +633,11 @@ object NuxModManager {
+     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
+-        // Mesin Rust: hanya Modrinth, dan tanpa saringan versi Minecraft (shader tidak terikat versi game)
++        // Mesin Rust: Modrinth atau katalog Horizon, tanpa CurseForge dan tanpa saringan versi Minecraft
+         val engineSearch = HorizonEngine.isEngine(instance?.loader)
+-        // Mod untuk mesin Rust datang dari katalog Horizon, bukan Modrinth
+-        if (engineSearch && itemType == HorizonContent.TYPE_MODS) {
++        // Mod untuk mesin Rust selalu dari katalog Horizon; shader dan resource pack dari Horizon bila sumber itu dipilih
++        val horizonKind = if (engineSearch && (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)) {
++            HorizonRegistry.kindFor(itemType)
++        } else {
++            null
++        }
++        if (horizonKind != null) {
+             return@withContext try {
+@@ -625,3 +645,3 @@ object NuxModManager {
+                     HorizonRegistry.search(
+-                        horizonIndex(), query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
++                        horizonIndex(), horizonKind, query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
+                     )
+@@ -709,6 +729,6 @@ object NuxModManager {
+         projectId: String,
+-        horizonMod: Boolean = false
++        horizon: Boolean = false
+     ): Result<ModrinthProject> = withContext(Dispatchers.IO) {
+-        // Mod untuk mesin Rust: detail dari katalog Horizon
+-        if (horizonMod) {
++        // Proyek dari katalog Horizon (mesin Rust): detail diambil dari katalog, bukan Modrinth
++        if (horizon) {
+             return@withContext try {
+@@ -776,9 +796,18 @@ object NuxModManager {
+         itemType: String,
+-        filterByGameVersion: Boolean = true
++        filterByGameVersion: Boolean = true,
++        source: String = SOURCE_MODRINTH
+     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
+-        // Mod untuk mesin Rust: versi dari katalog Horizon yang cocok dengan versi game mesin
+-        if (HorizonEngine.isEngine(instance?.loader) && itemType == HorizonContent.TYPE_MODS) {
++        // Mesin Rust: mod (dan shader/resource pack bila sumbernya Horizon) dari katalog Horizon, versi yang cocok
++        // dengan versi game mesin
++        val horizonKind = if (HorizonEngine.isEngine(instance?.loader) &&
++            (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)
++        ) {
++            HorizonRegistry.kindFor(itemType)
++        } else {
++            null
++        }
++        if (horizonKind != null) {
+             return@withContext try {
+                 val index = horizonIndex()
+-                val project = HorizonRegistry.find(index, projectId)
++                val project = HorizonRegistry.find(index, projectId, horizonKind)
+                     ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index d86deca..b2c7969 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -227,5 +227,12 @@ fun ModsScreen(
+     val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
+-    // Mod mesin Rust datang dari katalog Horizon; shader dan resource pack tetap dari Modrinth
++    // Mesin Rust: mod selalu dari katalog Horizon; shader dan resource pack dari Horizon atau Modrinth (pilihan pengguna)
++    var rustSource by remember { mutableStateOf(NuxModManager.SOURCE_HORIZON) }
+     val rustMods = rustInstance && activeType == HorizonContent.TYPE_MODS
+-    val sourceLabel = if (isCurseForge) "CurseForge" else if (rustMods) "Horizon" else "Modrinth"
++    val rustHorizon = rustInstance && (rustMods || rustSource == NuxModManager.SOURCE_HORIZON)
++    val activeSource = if (rustInstance) {
++        if (rustHorizon) NuxModManager.SOURCE_HORIZON else NuxModManager.SOURCE_MODRINTH
++    } else {
++        browseSource
++    }
++    val sourceLabel = if (isCurseForge) "CurseForge" else if (rustHorizon) "Horizon" else "Modrinth"
+     var showCategoryMenu by remember { mutableStateOf(false) }
+@@ -283,3 +290,3 @@ fun ModsScreen(
+         keyProblem = false
+-        val source = if (rustInstance) NuxModManager.SOURCE_MODRINTH else browseSource
++        val source = activeSource
+         scope.launch {
+@@ -316,3 +323,3 @@ fun ModsScreen(
+     // Trigger reload when tab, type, world or instance changes
+-    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource) {
++    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource, rustSource) {
+         if (selectedInstance != null) {
+@@ -485,4 +492,4 @@ fun ModsScreen(
+         scope.launch {
+-            val pRes = NuxModManager.getProjectDetails(hit.projectId, horizonMod = rustMods)
+-            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
++            val pRes = NuxModManager.getProjectDetails(hit.projectId, horizon = rustHorizon)
++            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType, source = activeSource)
+             detailProject = pRes.getOrNull()
+@@ -500,3 +507,3 @@ fun ModsScreen(
+             downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mencari versi...")
+-            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
++            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType, source = activeSource)
+             val compList = vRes.getOrNull()
+@@ -634,3 +641,16 @@ fun ModsScreen(
+                     }
+-                )
++                ) else if (!rustMods) {
++                    // Shader dan resource pack mesin Rust: katalog Horizon atau Modrinth (mod hanya dari Horizon)
++                    RustSourcePill(
++                        selectedSource = rustSource,
++                        onSelect = { src ->
++                            if (src != rustSource) {
++                                rustSource = src
++                                selectedCategory = "Semua"
++                                selectedSort = "relevance"
++                                currentPage = 1
++                            }
++                        }
++                    )
++                }
+             } else {
+@@ -738,3 +758,3 @@ fun ModsScreen(
+                             // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
+-                            if (!isCurseForge && !rustMods) {
++                            if (!isCurseForge && !rustHorizon) {
+                                 AmberFilterPill(
+@@ -770,3 +790,3 @@ fun ModsScreen(
+                 if (rustInstance) {
+-                    RustNotice(type = activeType)
++                    RustNotice(type = activeType, horizon = rustHorizon)
+                 }
+@@ -860,3 +880,5 @@ fun ModsScreen(
+                             },
+-                            subtitle = if (rustInstance) {
++                            subtitle = if (rustInstance && rustHorizon && !rustMods) {
++                                "Coba ubah kata kunci atau pindah ke sumber Modrinth"
++                            } else if (rustInstance) {
+                                 "Coba ubah kata kunci"
+@@ -1464,2 +1486,34 @@ private fun ModsSourcePill(
+ 
++/** Pil sumber untuk shader dan resource pack mesin Rust: katalog Horizon atau Modrinth. */
++@Composable
++private fun RustSourcePill(
++    selectedSource: String,
++    onSelect: (String) -> Unit
++) {
++    Row(
++        modifier = Modifier
++            .height(48.dp)
++            .clip(CircleShape)
++            .amberGlass(CircleShape)
++            .padding(horizontal = 4.dp),
++        horizontalArrangement = Arrangement.spacedBy(4.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        ModsSourceChip(
++            selected = selectedSource == NuxModManager.SOURCE_HORIZON,
++            iconRes = null,
++            iconSize = 0.dp,
++            label = "Horizon",
++            onClick = { onSelect(NuxModManager.SOURCE_HORIZON) }
++        )
++        ModsSourceChip(
++            selected = selectedSource == NuxModManager.SOURCE_MODRINTH,
++            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth,
++            iconSize = 20.dp,
++            label = "Modrinth",
++            onClick = { onSelect(NuxModManager.SOURCE_MODRINTH) }
++        )
++    }
++}
++
+ @Composable
+@@ -1467,3 +1521,3 @@ private fun ModsSourceChip(
+     selected: Boolean,
+-    iconRes: Int,
++    iconRes: Int?,
+     iconSize: androidx.compose.ui.unit.Dp,
+@@ -1489,9 +1543,11 @@ private fun ModsSourceChip(
+     ) {
+-        Icon(
+-            painter = painterResource(id = iconRes),
+-            contentDescription = null,
+-            tint = AmberUi.Text,
+-            modifier = Modifier.size(iconSize)
+-        )
+-        Spacer(modifier = Modifier.width(8.dp))
++        if (iconRes != null) {
++            Icon(
++                painter = painterResource(id = iconRes),
++                contentDescription = null,
++                tint = AmberUi.Text,
++                modifier = Modifier.size(iconSize)
++            )
++            Spacer(modifier = Modifier.width(8.dp))
++        }
+         Text(
+@@ -1631,3 +1687,3 @@ private fun ModsTagChip(text: String) {
+ @Composable
+-private fun RustNotice(type: String) {
++private fun RustNotice(type: String, horizon: Boolean) {
+     val shape = RoundedCornerShape(16.dp)
+@@ -1657,2 +1713,19 @@ private fun RustNotice(type: String) {
+         }
++        if (type == HorizonContent.TYPE_SHADERS || type == HorizonContent.TYPE_RESOURCES) {
++            val sourceNote = when {
++                type == HorizonContent.TYPE_SHADERS && horizon -> "Sumber Horizon: shader asli mesin Rust (.hshader)."
++                type == HorizonContent.TYPE_SHADERS -> "Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas."
++                horizon -> "Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust."
++                else -> null
++            }
++            if (sourceNote != null) {
++                Spacer(modifier = Modifier.height(4.dp))
++                Text(
++                    text = sourceNote,
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp
++                )
++            }
++        }
+         if (type == HorizonContent.TYPE_MODS) {
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index b415104..19c2536 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -181,3 +181,3 @@ Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam da
+ 
+-Untuk instance Rust, layar Mod punya tiga tab: Mod, Shader, dan Resource Pack. Shader dan Resource Pack datang dari Modrinth (tanpa saringan versi game); Mod datang dari katalog Horizon atau dari berkas `.hmod` di HP. Semua berkasnya memakai folder dan pengaturan yang sama dengan mesin, jadi apa yang dipasang atau dipilih di Amber langsung terlihat di mesin.
++Untuk instance Rust, layar Mod punya tiga tab: Mod, Shader, dan Resource Pack. Shader dan Resource Pack datang dari katalog Horizon (shader asli dan resource pack untuk mesin) atau dari Modrinth (zip klasik), dipilih lewat pil sumber di layar Jelajahi; Mod datang dari katalog Horizon atau dari berkas `.hmod` di HP. Semua berkasnya memakai folder dan pengaturan yang sama dengan mesin, jadi apa yang dipasang atau dipilih di Amber langsung terlihat di mesin.
+ 
+@@ -192,3 +192,3 @@ Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dik
+ - Mod baru yang hanya berisi konten langsung hidup. Mod berkode dipasang dalam keadaan mati; pengguna menghidupkannya sendiri setelah memeriksa izinnya di Options > Mods dalam game.
+-- Katalog: `https://horizon-rust.github.io/horizon-mods/index.json` (schema 1), disimpan di memori 10 menit. Hanya proyek `mod` yang punya versi untuk 26.3, bukan yang ditarik (`revoked`), berkas `.hmod` paling besar 32 MB, dan alamat unduhan berbentuk rilis GitHub (`https://github.com/<pemilik>/<repo>/releases/download/<tag>/<nama>`, sama seperti yang diterima mesin). Unduhan harus sama persis dengan ukuran dan SHA-256 di katalog sebelum dipasang. Tanda tangan minisign belum diperiksa di Amber.
++- Katalog: `https://horizon-rust.github.io/horizon-mods/index.json` (schema 1), disimpan di memori 10 menit. Hanya proyek `mod` yang punya versi untuk 26.3, bukan yang ditarik (`revoked`), berkas `.hmod` paling besar 32 MB, dan alamat unduhan berbentuk rilis repo horizon-mods (`https://github.com/horizon-rust/horizon-mods/releases/download/<tag>/<nama>`, satu-satunya tempat unduh yang diterima mesin). Unduhan harus sama persis dengan ukuran dan SHA-256 di katalog sebelum dipasang. Tanda tangan minisign belum diperiksa di Amber.
+ - APK 32-bit: mesin tidak menjalankan mod di sana, jadi Amber menolak menghidupkannya dan menampilkan catatan; memasang dan menghapus tetap bisa.
+@@ -201,4 +201,5 @@ Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dik
+ - Perubahan dibaca mesin saat game dibuka, jadi berlaku pada permainan berikutnya.
+-- Unduhan hanya menerima berkas `.zip` yang punya sidik jari (dicocokkan setelah unduh), paling besar 256 MB, lalu diperiksa dengan aturan mesin sendiri (nama berkas polos, jalur entri aman, total isi paling besar 512 MB, `pack.mcmeta` untuk resource pack, folder `shaders/` untuk shader). Versi yang mencantumkan 26.3 diurutkan lebih dulu, sisanya mengikuti urutan Modrinth. Dependensi diabaikan.
+-- Shader asli Horizon (`.hshader`, berisi `horizon-shaders.toml`) belum bisa dipasang dari Amber; pasang lewat menu Impor di dalam mesin.
++- Sumber Modrinth: hanya berkas `.zip` yang punya sidik jari (dicocokkan setelah unduh), paling besar 256 MB, lalu diperiksa dengan aturan mesin sendiri (nama berkas polos, jalur entri aman, total isi paling besar 512 MB, `pack.mcmeta` untuk resource pack, folder `shaders/` untuk shader). Versi yang mencantumkan 26.3 diurutkan lebih dulu, sisanya mengikuti urutan Modrinth. Dependensi diabaikan.
++- Sumber Horizon (bawaan untuk Shader dan Resource Pack): katalog yang sama dengan tab Mod, dengan dua jenis tambahan. `shader` = shader asli Horizon (`.hshader`, paling besar 16 MB) dan `resourcepack` = resource pack `.zip` yang dibuat atau diuji untuk mesin (paling besar 64 MB). Aturan unduhannya sama dengan mod: hanya versi untuk 26.3, bukan yang ditarik, alamat rilis horizon-mods, ukuran dan SHA-256 harus sama dengan katalog. Berkas `.hshader` diperiksa bentuknya seperti paket mesin (zip, paling banyak 512 entri, jalur entri aman, `horizon-shaders.toml` di dasar arsip, berkas `.wgsl` paling besar 256 KB, berkas lain 1 MB, total isi 8 MB); isi WGSL dan manifestnya diperiksa katalog dan mesin sendiri. Saklar di daftar Terpasang memilih berkasnya lewat `pickedShaderPack` seperti shader lain. Filter Kategori tidak ada untuk sumber ini.
++- Shader asli yang diunduh dari Modrinth sebagai `.zip` (berisi `horizon-shaders.toml`) ditolak dengan petunjuk untuk memakai sumber Horizon. Impor berkas `.hshader` dari HP belum ada di Amber.
+ - Bila pengguna memakai profil selain 0 di dalam mesin (`android-launcher.json`, kunci `profile`), Amber mengikuti folder profil itu.
+@@ -222,4 +223,4 @@ Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dik
+    Di Jelajahi, cari satu mod dari Horizon dan pasang: ia muncul di Terpasang (hidup bila mod konten, mati bila berkode), dan tampil di Options > Mods dalam game. Impor satu berkas `.hmod` dari HP: terpasang; impor lagi berkas yang sama: diganti tanpa dobel. Coba impor `.jar` Fabric: ditolak dengan penjelasan.
+-   Shader: unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
+-10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
++   Shader: di Jelajahi, sumber **Horizon** tampil lebih dulu. Pasang satu shader asli, hidupkan saklarnya di daftar Terpasang, lalu PLAY: di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang. Pindah ke **Modrinth** untuk shader klasik (zip) dan coba cara yang sama. Bila katalog Horizon belum punya shader atau resource pack, daftarnya kosong dan layar menyarankan pindah ke Modrinth.
++10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack (dari Horizon atau Modrinth), hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
+ 11. HP 32-bit (opsional, hanya rilis): pasang `AmberLauncher-...-32bit-armeabi-v7a.apk`, buat instance Rust. Bila build mesin 32-bit lolos, PLAY membuka mesin; bila tidak, layar Buat Instance menyebut mesin belum disertakan.
+@@ -239,3 +240,3 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ 
+-- Katalog Horizon untuk shader asli (`.hshader`) dan resource pack, serta pembaruan mod dari katalog.
++- Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
+ - Pengaturan mesin yang belum ada di tab Rust (profil, proxy, gamepad, dan opsi performa lain).
+
+
+# FIN part=1/1 files=8

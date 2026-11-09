@@ -691,10 +691,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private fun flushPendingLogs() {
         logFlushScheduled.set(false)
         var moved = 0
+        // Baris dikumpulkan dulu lalu dimasukkan ke daftar sekaligus: tiap perubahan daftar Compose menyalin
+        // daftar dan menandai tampilan kotor, jadi ratusan perubahan per putaran membuat thread utama
+        // tersendat di HP lemah saat game ramai mencatat log (memuat dunia, mod yang cerewet).
+        val batch = ArrayList<String>(64)
         while (moved < 500) {
             val line = pendingLogs.poll() ?: break
             moved++
-            liveLogs.add(line)
+            batch.add(line)
             // Deteksi sekunder jika frame grafik atau sistem audio game mulai aktif
             if (!isGameRenderingState.value) {
                 if (line.contains("OpenAL initialized") ||
@@ -705,8 +709,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 }
             }
         }
-        while (liveLogs.size > 200) {
-            liveLogs.removeAt(0)
+        if (batch.isNotEmpty()) {
+            liveLogs.addAll(batch)
+            val excess = liveLogs.size - 200
+            if (excess > 0) liveLogs.subList(0, excess).clear()
         }
         // Masih ada sisa (lonjakan log): jadwalkan putaran berikutnya.
         if (!pendingLogs.isEmpty() && logFlushScheduled.compareAndSet(false, true)) {
@@ -1749,7 +1755,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 extraGameArgs.forEach { jvmArgs.add(it) }
 
                 LoggerBridge.appendTitle("JVM Launch Command")
-                jvmArgs.forEach { LoggerBridge.append("▷ $it") }
+                // Nilai setelah --accessToken tidak dicatat. Token ada di baris tersendiri, sehingga penyamar log
+                // (yang bekerja per baris) tidak mengenalinya bila bentuknya bukan JWT.
+                var maskNextArg = false
+                jvmArgs.forEach { arg ->
+                    LoggerBridge.append(if (maskNextArg) "▷ ***" else "▷ $arg")
+                    maskNextArg = arg == "--accessToken"
+                }
 
                 CrashManager.onGameSessionStarted(
                     context = this,

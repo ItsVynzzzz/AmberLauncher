@@ -1,26 +1,26 @@
 diff --git a/README.en.md b/README.en.md
-index daa6358..77f6885 100644
+index a8d5a3d..f584410 100644
 --- a/README.en.md
 +++ b/README.en.md
 @@ -67,7 +67,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
  - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
  - **Crash reports** with optional log upload to mclo.gs.
  - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
--- **Multilingual interface**: Bahasa Indonesia, English, Español, and Tiếng Việt.
-+- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, and ภาษาไทย.
+-- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, and Português (Brasil).
++- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), and ภาษาไทย.
  - **Optional**: TouchController mod support and the Rust engine (Horizon), both still experimental.
  
  **Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.
 diff --git a/README.md b/README.md
-index 3258726..d091386 100644
+index a2af9e1..18b1a2a 100644
 --- a/README.md
 +++ b/README.md
 @@ -67,7 +67,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan >
  - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
  - **Laporan crash** dengan opsi unggah log ke mclo.gs.
  - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
--- **Antarmuka multibahasa**: Indonesia, English, Español, dan Tiếng Việt.
-+- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, dan ภาษาไทย.
+-- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, dan Português (Brasil).
++- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), dan ภาษาไทย.
  - **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
  
  **Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
@@ -722,10 +722,10 @@ index 0000000..1b77185
 +TAMBAH INSTANCE	เพิ่ม instance
 diff --git a/app/src/main/assets/lang/th/horizon.tsv b/app/src/main/assets/lang/th/horizon.tsv
 new file mode 100644
-index 0000000..c7d3322
+index 0000000..49f578c
 --- /dev/null
 +++ b/app/src/main/assets/lang/th/horizon.tsv
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,68 @@
 +# Mesin Rust (Horizon)
 +Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	เอนจิน Rust ยังไม่รวมอยู่ในบิลด์นี้ วิธีเพิ่มดูได้ที่ docs/rust-engine.md
 +Mesin Rust butuh Android 9 (API 28) ke atas.	เอนจิน Rust ต้องใช้ Android 9 (API 28) ขึ้นไป
@@ -748,7 +748,6 @@ index 0000000..c7d3322
 +Metadata resource pack (pack.mcmeta) tidak valid.	เมทาดาทา resource pack (pack.mcmeta) ไม่ถูกต้อง
 +Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ resource pack: ไม่พบ pack.mcmeta ที่ระดับบนสุดของไฟล์บีบอัด
 +Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ shader pack: ไม่พบโฟลเดอร์ shaders ที่ระดับบนสุดของไฟล์บีบอัด
-+Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	นี่คือ shader เนทีฟของ Horizon ให้ติดตั้งจากเมนูนำเข้าภายในเอนจิน Rust (รูปแบบ .hshader)
 +Tidak ada berkas .zip yang cocok di versi ini.	ไม่มีไฟล์ .zip ที่ตรงกันในเวอร์ชันนี้
 +Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	แหล่งที่มาไม่ให้ค่าเช็กซัมของไฟล์ จึงตรวจสอบการดาวน์โหลดไม่ได้
 +Gagal menyimpan berkas ke folder mesin Rust.	บันทึกไฟล์ลงโฟลเดอร์เอนจิน Rust ไม่สำเร็จ
@@ -777,17 +776,24 @@ index 0000000..c7d3322
 +Resep dan kegunaan item di samping inventori	สูตรและการใช้งานไอเทมข้างช่องเก็บของ
 +Modul F3 yang bisa diatur untuk layar debug	โมดูล F3 ที่ปรับแต่งได้สำหรับหน้าจอดีบัก
 +Resep	สูตร
-+Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	อ่านแคตตาล็อก Mod ของ Horizon ไม่ได้ ลองอีกครั้งภายหลัง
 +Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	แคตตาล็อก Horizon ใช้รูปแบบที่ใหม่กว่า กรุณาอัปเดต Amber
-+Tidak ada berkas .hmod yang cocok di versi ini.	ไม่มีไฟล์ .hmod ที่ตรงกันในเวอร์ชันนี้
 +Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	แคตตาล็อกไม่ให้ค่าเช็กซัม SHA-256 จึงตรวจสอบการดาวน์โหลดไม่ได้
-+Alamat unduhan mod tidak dikenali, jadi ditolak.	ไม่รู้จักที่อยู่ดาวน์โหลด Mod จึงถูกปฏิเสธ
-+Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ Mod ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง
 +Memuat data dari Horizon...	กำลังโหลดข้อมูลจาก Horizon...
 +Gagal memuat dari Horizon	โหลดจาก Horizon ไม่สำเร็จ
 +Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Mod ของเอนจิน Rust ใช้รูปแบบ .hmod (ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge) Mod ที่มีโค้ดจะถูกติดตั้งในสถานะปิด ให้เปิดหลังจากตรวจสอบสิทธิ์ของมันที่ Options > Mods ในเกม
 +Konten	เนื้อหา
 +Berkode	มีโค้ด
++Alamat unduhan tidak dikenali, jadi ditolak.	ไม่รู้จักที่อยู่ดาวน์โหลด จึงถูกปฏิเสธ
++Coba ubah kata kunci atau pindah ke sumber Modrinth	ลองเปลี่ยนคำค้นหาหรือสลับไปใช้แหล่ง Modrinth
++Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	นี่ไม่ใช่ shader เนทีฟของ Horizon: ไม่พบ horizon-shaders.toml ที่ระดับบนสุดของไฟล์บีบอัด
++Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	นี่คือ shader เนทีฟของ Horizon ให้ติดตั้งจากแหล่ง Horizon ในหน้าเรียกดู (รูปแบบ .hshader)
++Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	อ่านแคตตาล็อก Horizon ไม่ได้ ลองอีกครั้งภายหลัง
++Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	shader เนทีฟของ Horizon ใหญ่เกินไป (ไฟล์เกิน 16 MB, เนื้อหาเกิน 8 MB หรือมีไฟล์ที่ใหญ่เกินไป)
++Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	แหล่ง Horizon: resource pack ที่สร้างหรือทดสอบสำหรับเอนจิน Rust
++Sumber Horizon: shader asli mesin Rust (.hshader).	แหล่ง Horizon: shader เนทีฟของเอนจิน Rust (.hshader)
++Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	แหล่ง Modrinth: shader แบบคลาสสิก ความเข้ากันได้กับเอนจิน Rust ยังจำกัด
++Tidak ada berkas yang cocok di versi ini.	ไม่มีไฟล์ที่ตรงกันในเวอร์ชันนี้
++Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง
 diff --git a/app/src/main/assets/lang/th/instances.tsv b/app/src/main/assets/lang/th/instances.tsv
 new file mode 100644
 index 0000000..48c09cc
@@ -1018,10 +1024,10 @@ index 0000000..1134f67
 +Menyimpan hasil terjemahan shader di HP, jadi game berikutnya memuat shader lebih cepat dan lebih sedikit patah-patah. Dimatikan = MobileGlues memakai pengaturan bawaannya tanpa cache. Berlaku saat game dijalankan berikutnya.	เก็บ shader ที่แปลแล้วไว้ในมือถือ เกมครั้งถัดไปจึงโหลด shader ได้เร็วขึ้นและกระตุกน้อยลง ปิด = MobileGlues ใช้ค่าเริ่มต้นของตัวเองโดยไม่มีแคช มีผลเมื่อเปิดเกมครั้งถัดไป
 diff --git a/app/src/main/assets/lang/th/mods.tsv b/app/src/main/assets/lang/th/mods.tsv
 new file mode 100644
-index 0000000..817ce83
+index 0000000..2487629
 --- /dev/null
 +++ b/app/src/main/assets/lang/th/mods.tsv
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,198 @@
 +# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
 +mods	Mod
 +modpacks	modpack
@@ -1110,7 +1116,6 @@ index 0000000..817ce83
 +Belum ada mod terpasang	ยังไม่มี Mod ที่ติดตั้ง
 +Pasang lewat menu Mod di sidebar.	ติดตั้งผ่านเมนู Mod ที่แถบด้านข้าง
 +Nonaktif \u00b7 {0}	ปิดใช้งาน \u00b7 {0}
-+Resource Pack (.zip)	Resource Pack (.zip)
 +PASANG ADDON EKSTERNAL	ติดตั้ง ADDON ภายนอก
 +Pemasang Addon	ตัวติดตั้ง Addon
 +Tipe file: {0} \u00b7 Siap dipasang	ประเภทไฟล์: {0} \u00b7 พร้อมติดตั้ง
@@ -1221,7 +1226,6 @@ index 0000000..817ce83
 +Pasang	ติดตั้ง
 +Tema	ธีม
 +Klasik	คลาสสิก
-+Home	หน้าหลัก
 diff --git a/app/src/main/assets/lang/th/rust-settings.tsv b/app/src/main/assets/lang/th/rust-settings.tsv
 new file mode 100644
 index 0000000..cacb556
@@ -1441,10 +1445,10 @@ index 0000000..c7cbdee
 +Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	ไม่ต้องเปิดหรือตั้งค่าอะไร เสียบคอนโทรลเลอร์ (เกมแพด) แล้วเล่นได้เลย: สติ๊กซ้ายเดิน สติ๊กขวามองรอบๆ A กระโดด RT โจมตี LT วาง/ใช้ Y เปิดช่องเก็บของ Start = Esc ในเมนูสติ๊กจะขยับเคอร์เซอร์ เมาส์และคีย์บอร์ดจริงก็ใช้ได้ทันทีเช่นกัน ปุ่มบนหน้าจอจะซ่อนเองเมื่อใช้คอนโทรลเลอร์หรือเมาส์ ความเร็วสติ๊กเป็นไปตามความไวกล้องและเคอร์เซอร์ด้านบน หากตรวจพบ Mod คอนโทรลเลอร์ (เช่น Controlify) คอนโทรลเลอร์จะถูกส่งให้ Mod โดยตรง
 diff --git a/app/src/main/assets/lang/th/skin.tsv b/app/src/main/assets/lang/th/skin.tsv
 new file mode 100644
-index 0000000..17db2be
+index 0000000..f8c052c
 --- /dev/null
 +++ b/app/src/main/assets/lang/th/skin.tsv
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,67 @@
 +# Wardrobe: skin dan jubah
 +Gagal memuat jubah: {0}	โหลดเคปไม่สำเร็จ: {0}
 +Memvalidasi skin...	กำลังตรวจสอบสกิน...
@@ -1470,7 +1474,6 @@ index 0000000..17db2be
 +PILIH FILE SKIN (.PNG)	เลือกไฟล์สกิน (.PNG)
 +TIPE MODEL LENGAN:	ประเภทโมเดลแขน:
 +Model Klasik dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดลคลาสสิกแล้ว (พรีวิว) \u2014 กดบันทึก
-+Klasik	คลาสสิก
 +Lengan tebal (4px)	แขนหนา (4px)
 +Model Slim dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดล Slim แล้ว (พรีวิว) \u2014 กดบันทึก
 +Lengan ramping (3px)	แขนเรียว (3px)
@@ -1525,10 +1528,10 @@ index 0000000..dfd5ce0
 +Ketikanmu tampil di sini	สิ่งที่คุณพิมพ์จะแสดงที่นี่
 diff --git a/app/src/main/assets/lang/th/update.tsv b/app/src/main/assets/lang/th/update.tsv
 new file mode 100644
-index 0000000..1a0f584
+index 0000000..cf97274
 --- /dev/null
 +++ b/app/src/main/assets/lang/th/update.tsv
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,83 @@
 +# Pembaruan aplikasi (pop-up versi baru dari GitHub)
 +Pembaruan tersedia	มีการอัปเดตใหม่
 +Versi {0} sudah tersedia. Kamu memakai versi {1}.	เวอร์ชัน {0} พร้อมให้ใช้งานแล้ว คุณกำลังใช้เวอร์ชัน {1}
@@ -1601,7 +1604,6 @@ index 0000000..1a0f584
 +Sembunyikan	ซ่อน
 +Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	การดาวน์โหลดทำงานขณะที่ตัวเปิดเกมเปิดอยู่ หากขาดตอน ให้แตะดาวน์โหลดอีกครั้ง จะต่อจากส่วนที่ได้แล้ว
 +Siap dipasang	พร้อมติดตั้ง
-+Pasang	ติดตั้ง
 +Versi {0} sudah diunduh dan diperiksa.	ดาวน์โหลดและตรวจสอบเวอร์ชัน {0} แล้ว
 +Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android จะขอให้ยืนยันการติดตั้ง ตัวเปิดเกมจะปิดระหว่างติดตั้ง ให้เปิดใหม่อีกครั้งเมื่อติดตั้งเสร็จ
 +Izin pemasangan diperlukan	ต้องมีสิทธิ์ติดตั้ง
@@ -1631,61 +1633,62 @@ index 939111c..b14f82b 100644
          return "RAM bebas $value GB"
      }
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
-index 063e653..ab70b2e 100644
+index 9c9ff3e..3c572ca 100644
 --- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
 +++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
 @@ -10,8 +10,8 @@ import java.util.Locale
   * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
   *
   * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
-- * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], atau [VI]. Pada pilihan [SYSTEM], HP
-- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol atau Vietnam memakai bahasa itu, dan bahasa
-+ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], atau [TH]. Pada pilihan [SYSTEM], HP
-+ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, atau Thai memakai bahasa itu, dan bahasa
-  * lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
+- * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], atau [PT]. Pada pilihan [SYSTEM], HP
+- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, atau Portugis (Brasil) memakai
++ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], [PT], atau [TH]. Pada pilihan [SYSTEM], HP
++ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, Portugis (Brasil), atau Thai memakai
+  * bahasa itu, dan bahasa lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
   */
  object Tr {
-@@ -20,12 +20,13 @@ object Tr {
-     const val EN = "en"
+@@ -21,12 +21,13 @@ object Tr {
      const val ES = "es"
      const val VI = "vi"
+     const val PT = "pt"
 +    const val TH = "th"
  
      /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
      const val DEFAULT_CHOICE = EN
  
      /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
--    private val DICTIONARY_LANGS = setOf(EN, ES, VI)
-+    private val DICTIONARY_LANGS = setOf(EN, ES, VI, TH)
+-    private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT)
++    private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT, TH)
  
      private const val PREFS_NAME = "amber_launcher_prefs"
      private const val KEY_LANGUAGE = "language"
-@@ -34,12 +35,12 @@ object Tr {
+@@ -35,12 +36,12 @@ object Tr {
      @Volatile
      private var translator: Translator? = null
  
--    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], atau [VI]. */
-+    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], atau [TH]. */
+-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], atau [PT]. */
++    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], [PT], atau [TH]. */
      @Volatile
      var choice: String = DEFAULT_CHOICE
          private set
  
--    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], atau [VI]. */
-+    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], atau [TH]. */
+-    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], atau [PT]. */
++    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], [PT], atau [TH]. */
      @Volatile
      var effective: String = ID
          private set
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
-index 63f3a41..89979d4 100644
+index 57f6189..0b9670b 100644
 --- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
 +++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
-@@ -262,7 +262,8 @@ fun SettingsScreen(
-         Tr.ID to "Bahasa Indonesia",
+@@ -263,7 +263,8 @@ fun SettingsScreen(
          Tr.EN to "English",
          Tr.ES to "Espa\u00f1ol",
--        Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
-+        Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
+         Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
+-        Tr.PT to "Portugu\u00eas (Brasil)"
++        Tr.PT to "Portugu\u00eas (Brasil)",
 +        Tr.TH to "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22"
      )
  
      Column(
+# FIN part=1/1 files=24

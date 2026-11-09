@@ -35,3 +35,31 @@ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shaders on the Rus
 # Mesin Rust di HP 32-bit
 Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	The 32-bit Rust engine is only available on ARM (armeabi-v7a) phones.
 Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental on 32-bit phones: needs Android 9 or newer and may be slower.
+# Mod mesin Rust (.hmod), modul bawaan, dan katalog Horizon
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Rust engine mods use the .hmod format, not Fabric or Forge .jar files.
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	The mod file is over 32 MB, too large for the Rust engine.
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	The mod is too large once unpacked (over 64 MB).
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	This is not a Horizon mod: horizon-mod.toml was not found at the top level of the archive.
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	The mod manifest (horizon-mod.toml) is not valid or not supported.
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	This mod has no code (mod.wasm) and is not a content mod (registries capability), so it cannot be installed.
+Kode mod (mod.wasm) lebih dari 32 MB.	The mod code (mod.wasm) is over 32 MB.
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	A folder mod with the same id already exists. Remove the old one first.
+Gagal menyimpan pilihan mod ke pengaturan mesin.	Failed to save the mod choice to the engine settings.
+Mod hanya bisa dihidupkan di APK 64-bit.	Mods can only be turned on in the 64-bit APK.
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	The mod was not found or its manifest could not be read.
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Hold the Z key to zoom; configurable in Options > Mods in the game
+Peta kecil yang bisa diatur di sudut layar	A configurable map in the screen corner
+Resep dan kegunaan item di samping inventori	Item recipes and uses beside the inventory
+Modul F3 yang bisa diatur untuk layar debug	Configurable modules for the F3 debug screen
+Resep	Recipes
+Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	The Horizon mod catalog could not be read. Please try again later.
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	The Horizon catalog uses a newer format. Please update Amber.
+Tidak ada berkas .hmod yang cocok di versi ini.	No matching .hmod file in this version.
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	The catalog gives no SHA-256 checksum, so the download cannot be verified.
+Alamat unduhan mod tidak dikenali, jadi ditolak.	The mod download address is not recognized, so it was rejected.
+Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	The mod file size does not match the catalog, so it was not installed.
+Memuat data dari Horizon...	Loading data from Horizon...
+Gagal memuat dari Horizon	Failed to load from Horizon
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Rust engine mods use the .hmod format (not Fabric or Forge .jar files). Mods that contain code are installed turned off; turn them on after reviewing their permissions in Options > Mods in the game.
+Konten	Content
+Berkode	Has code

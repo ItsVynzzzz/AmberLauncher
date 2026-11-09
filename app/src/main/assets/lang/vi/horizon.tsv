@@ -35,3 +35,31 @@ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Shader tr\u00ean e
 # Mesin Rust di HP 32-bit
 Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	Engine Rust 32-bit ch\u1ec9 c\u00f3 tr\u00ean \u0111i\u1ec7n tho\u1ea1i ARM (armeabi-v7a).
 Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Th\u1eed nghi\u1ec7m tr\u00ean \u0111i\u1ec7n tho\u1ea1i 32-bit: y\u00eau c\u1ea7u Android 9 tr\u1edf l\u00ean v\u00e0 c\u00f3 th\u1ec3 ch\u1eadm h\u01a1n.
+# Mod mesin Rust (.hmod), modul bawaan, dan katalog Horizon
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Mod c\u1ee7a engine Rust d\u00f9ng \u0111\u1ecbnh d\u1ea1ng .hmod, kh\u00f4ng ph\u1ea3i t\u1ec7p .jar c\u1ee7a Fabric hay Forge.
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	T\u1ec7p mod l\u1edbn h\u01a1n 32 MB, qu\u00e1 l\u1edbn cho engine Rust.
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	Mod qu\u00e1 l\u1edbn sau khi gi\u1ea3i n\u00e9n (h\u01a1n 64 MB).
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	\u0110\u00e2y kh\u00f4ng ph\u1ea3i mod Horizon: kh\u00f4ng t\u00ecm th\u1ea5y horizon-mod.toml \u1edf g\u1ed1c c\u1ee7a t\u1ec7p n\u00e9n.
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	Manifest c\u1ee7a mod (horizon-mod.toml) kh\u00f4ng h\u1ee3p l\u1ec7 ho\u1eb7c kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3.
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Mod n\u00e0y kh\u00f4ng c\u00f3 m\u00e3 (mod.wasm) v\u00e0 kh\u00f4ng ph\u1ea3i mod n\u1ed9i dung (quy\u1ec1n registries), n\u00ean kh\u00f4ng th\u1ec3 c\u00e0i \u0111\u1eb7t.
+Kode mod (mod.wasm) lebih dari 32 MB.	M\u00e3 c\u1ee7a mod (mod.wasm) l\u1edbn h\u01a1n 32 MB.
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	\u0110\u00e3 c\u00f3 m\u1ed9t mod d\u1ea1ng th\u01b0 m\u1ee5c v\u1edbi c\u00f9ng id. H\u00e3y x\u00f3a mod c\u0169 tr\u01b0\u1edbc.
+Gagal menyimpan pilihan mod ke pengaturan mesin.	Kh\u00f4ng th\u1ec3 l\u01b0u l\u1ef1a ch\u1ecdn mod v\u00e0o c\u00e0i \u0111\u1eb7t engine.
+Mod hanya bisa dihidupkan di APK 64-bit.	Ch\u1ec9 c\u00f3 th\u1ec3 b\u1eadt mod trong APK 64-bit.
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	Kh\u00f4ng t\u00ecm th\u1ea5y mod ho\u1eb7c kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c manifest c\u1ee7a n\u00f3.
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Gi\u1eef ph\u00edm Z \u0111\u1ec3 thu ph\u00f3ng; ch\u1ec9nh trong Options > Mods trong game
+Peta kecil yang bisa diatur di sudut layar	B\u1ea3n \u0111\u1ed3 nh\u1ecf c\u00f3 th\u1ec3 t\u00f9y ch\u1ec9nh \u1edf g\u00f3c m\u00e0n h\u00ecnh
+Resep dan kegunaan item di samping inventori	C\u00f4ng th\u1ee9c v\u00e0 c\u00f4ng d\u1ee5ng c\u1ee7a v\u1eadt ph\u1ea9m b\u00ean c\u1ea1nh t\u00fai \u0111\u1ed3
+Modul F3 yang bisa diatur untuk layar debug	C\u00e1c m\u00f4-\u0111un c\u00f3 th\u1ec3 t\u00f9y ch\u1ec9nh cho m\u00e0n h\u00ecnh debug F3
+Resep	C\u00f4ng th\u1ee9c
+Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh m\u1ee5c mod Horizon. H\u00e3y th\u1eed l\u1ea1i sau.
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	Danh m\u1ee5c Horizon d\u00f9ng \u0111\u1ecbnh d\u1ea1ng m\u1edbi h\u01a1n. H\u00e3y c\u1eadp nh\u1eadt Amber.
+Tidak ada berkas .hmod yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .hmod ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	Danh m\u1ee5c kh\u00f4ng cung c\u1ea5p m\u00e3 b\u0103m SHA-256 n\u00ean kh\u00f4ng th\u1ec3 ki\u1ec3m tra b\u1ea3n t\u1ea3i.
+Alamat unduhan mod tidak dikenali, jadi ditolak.	\u0110\u1ecba ch\u1ec9 t\u1ea3i mod kh\u00f4ng \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n n\u00ean \u0111\u00e3 b\u1ecb t\u1eeb ch\u1ed1i.
+Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	K\u00edch th\u01b0\u1edbc t\u1ec7p mod kh\u00f4ng kh\u1edbp v\u1edbi danh m\u1ee5c n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+Memuat data dari Horizon...	\u0110ang t\u1ea3i d\u1eef li\u1ec7u t\u1eeb Horizon...
+Gagal memuat dari Horizon	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c t\u1eeb Horizon
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Mod c\u1ee7a engine Rust d\u00f9ng \u0111\u1ecbnh d\u1ea1ng .hmod (kh\u00f4ng ph\u1ea3i t\u1ec7p .jar c\u1ee7a Fabric hay Forge). Mod c\u00f3 m\u00e3 \u0111\u01b0\u1ee3c c\u00e0i \u1edf tr\u1ea1ng th\u00e1i t\u1eaft; h\u00e3y b\u1eadt sau khi xem quy\u1ec1n c\u1ee7a ch\u00fang trong Options > Mods trong game.
+Konten	N\u1ed9i dung
+Berkode	C\u00f3 m\u00e3

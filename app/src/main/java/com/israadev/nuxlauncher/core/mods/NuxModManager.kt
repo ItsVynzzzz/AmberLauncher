@@ -9,6 +9,8 @@ import com.google.gson.reflect.TypeToken
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.HorizonMods
+import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.utils.SafePaths
@@ -441,6 +443,10 @@ object NuxModManager {
     suspend fun toggleEngineItem(context: Context, itemType: String, item: InstalledModItem): Result<Unit> =
         withContext(Dispatchers.IO) {
             try {
+                // Mesin tidak menjalankan mod di APK 32-bit; mematikan tetap boleh
+                if (itemType == HorizonContent.TYPE_MODS && !item.isEnabled && !android.os.Process.is64Bit()) {
+                    throw java.io.IOException(HorizonMods.MSG_NEED_64)
+                }
                 HorizonContent.setEnabled(
                     HorizonEngine.engineHome(context),
                     itemType,
@@ -464,6 +470,7 @@ object NuxModManager {
         itemType: String,
         onProgress: (String) -> Unit
     ): Result<List<String>> {
+        if (itemType == HorizonContent.TYPE_MODS) return downloadHorizonMod(context, version, onProgress)
         var staged: File? = null
         return try {
             if (!HorizonContent.supports(itemType)) throw java.io.IOException(HorizonContent.MSG_TYPE)
@@ -493,6 +500,85 @@ object NuxModManager {
         } finally {
             staged?.delete()
         }
+    }
+
+    /**
+     * Mengunduh satu mod dari katalog Horizon: alamat harus rilis GitHub, ukuran dan SHA-256 harus sama dengan
+     * katalog, lalu berkasnya diperiksa dengan aturan mesin sebelum masuk ke folder mod. Dependensi tidak ada.
+     */
+    private fun downloadHorizonMod(
+        context: Context,
+        version: ModrinthVersion,
+        onProgress: (String) -> Unit
+    ): Result<List<String>> {
+        var staged: File? = null
+        return try {
+            val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
+                ?: throw java.io.IOException(HorizonRegistry.MSG_NO_FILE)
+            val name = SafePaths.fileName(file.filename)
+            val sha256 = file.hashes?.get("sha256")?.trim()?.lowercase().orEmpty()
+            if (!HorizonRegistry.acceptedUrl(file.url, name)) throw java.io.IOException(HorizonRegistry.MSG_URL)
+            if (!HorizonRegistry.isSha256(sha256)) throw java.io.IOException(HorizonRegistry.MSG_HASH)
+            if (file.size <= 0L || file.size > HorizonMods.MAX_FILE_BYTES) throw java.io.IOException(HorizonMods.MSG_TOO_BIG)
+
+            val stageDir = File(context.cacheDir, "horizon-dl")
+            if (!stageDir.isDirectory && !stageDir.mkdirs()) throw java.io.IOException(HorizonContent.MSG_SAVE)
+            val target = File(stageDir, name)
+            staged = target
+            onProgress("Mengunduh $name...")
+            downloadFile(file.url, target, file.size)
+            if (target.length() != file.size) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
+            verifyHashes(target, file.hashes)
+            onProgress("Memeriksa $name...")
+            val finalName = HorizonContent.install(
+                target, HorizonEngine.engineHome(context), HorizonContent.TYPE_MODS, name
+            ).getOrThrow()
+            Result.success(listOf(finalName))
+        } catch (e: Exception) {
+            Result.failure(e)
+        } finally {
+            staged?.delete()
+        }
+    }
+
+    /** Katalog Horizon disimpan di memori 10 menit supaya mencari dan membuka detail tidak mengunduhnya terus. */
+    @Volatile
+    private var horizonIndexCache: Pair<Long, HorizonRegistry.Index>? = null
+    private const val HORIZON_INDEX_TTL_MS = 10L * 60L * 1000L
+
+    private fun horizonIndex(): HorizonRegistry.Index {
+        val cached = horizonIndexCache
+        val now = System.currentTimeMillis()
+        if (cached != null && now - cached.first < HORIZON_INDEX_TTL_MS) return cached.second
+        val index = try {
+            val request = Request.Builder()
+                .url(HorizonRegistry.INDEX_URL)
+                .header("User-Agent", USER_AGENT)
+                .build()
+            val text = httpClient.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+                val body = response.body ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+                val out = java.io.ByteArrayOutputStream()
+                body.byteStream().use { input ->
+                    val buffer = ByteArray(32 * 1024)
+                    while (true) {
+                        val read = input.read(buffer)
+                        if (read < 0) break
+                        if (out.size() + read > HorizonRegistry.MAX_INDEX_BYTES) {
+                            throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+                        }
+                        out.write(buffer, 0, read)
+                    }
+                }
+                out.toString(Charsets.UTF_8.name())
+            }
+            HorizonRegistry.parse(text)
+        } catch (e: java.io.IOException) {
+            // Galat jaringan dari pustaka berbahasa Inggris; ganti dengan pesan yang sudah diterjemahkan
+            throw if (e.message == HorizonRegistry.MSG_NEWER) e else java.io.IOException(HorizonRegistry.MSG_INDEX)
+        }
+        horizonIndexCache = now to index
+        return index
     }
 
     /** Impor berkas dari HP untuk mesin Rust: disalin ke berkas sementara (paling besar 256 MB), diperiksa, lalu dipasang. */
@@ -532,6 +618,18 @@ object NuxModManager {
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
         // Mesin Rust: hanya Modrinth, dan tanpa saringan versi Minecraft (shader tidak terikat versi game)
         val engineSearch = HorizonEngine.isEngine(instance?.loader)
+        // Mod untuk mesin Rust datang dari katalog Horizon, bukan Modrinth
+        if (engineSearch && itemType == HorizonContent.TYPE_MODS) {
+            return@withContext try {
+                Result.success(
+                    HorizonRegistry.search(
+                        horizonIndex(), query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
+                    )
+                )
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
         if (source == SOURCE_CURSEFORGE && !engineSearch) {
             return@withContext CurseForgeApi.search(
                 queryText = query,
@@ -607,7 +705,20 @@ object NuxModManager {
     /**
      * Mengambil detail lengkap suatu project dari Modrinth
      */
-    suspend fun getProjectDetails(projectId: String): Result<ModrinthProject> = withContext(Dispatchers.IO) {
+    suspend fun getProjectDetails(
+        projectId: String,
+        horizonMod: Boolean = false
+    ): Result<ModrinthProject> = withContext(Dispatchers.IO) {
+        // Mod untuk mesin Rust: detail dari katalog Horizon
+        if (horizonMod) {
+            return@withContext try {
+                val project = HorizonRegistry.find(horizonIndex(), projectId)
+                    ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+                Result.success(HorizonRegistry.toProject(project, HorizonEngine.SUPPORTED_MC_VERSION))
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
         if (CurseForgeMapper.isCurseForgeId(projectId)) {
             return@withContext CurseForgeApi.projectDetails(projectId)
         }
@@ -665,6 +776,18 @@ object NuxModManager {
         itemType: String,
         filterByGameVersion: Boolean = true
     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
+        // Mod untuk mesin Rust: versi dari katalog Horizon yang cocok dengan versi game mesin
+        if (HorizonEngine.isEngine(instance?.loader) && itemType == HorizonContent.TYPE_MODS) {
+            return@withContext try {
+                val index = horizonIndex()
+                val project = HorizonRegistry.find(index, projectId)
+                    ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
+                val list = HorizonRegistry.toVersions(index, project, HorizonEngine.SUPPORTED_MC_VERSION)
+                if (list.isEmpty()) Result.failure(java.io.IOException(HorizonRegistry.MSG_NO_FILE)) else Result.success(list)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
         // Mesin Rust: semua versi yang punya berkas .zip; yang mencantumkan versi game mesin diurutkan lebih dulu
         if (HorizonEngine.isEngine(instance?.loader)) {
             return@withContext getProjectVersions(projectId)
@@ -1226,7 +1349,7 @@ object NuxModManager {
      * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
      * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
      */
-    private fun downloadFile(url: String, destFile: File) {
+    private fun downloadFile(url: String, destFile: File, maxBytes: Long = Long.MAX_VALUE) {
         if (!url.trim().startsWith("https://", ignoreCase = true)) {
             throw java.io.IOException("Alamat unduhan ditolak karena tidak memakai HTTPS")
         }
@@ -1244,7 +1367,16 @@ object NuxModManager {
                 val body = response.body ?: throw Exception("Body stream kosong")
                 body.byteStream().use { input ->
                     FileOutputStream(partFile).use { output ->
-                        input.copyTo(output)
+                        val buffer = ByteArray(64 * 1024)
+                        var total = 0L
+                        while (true) {
+                            val read = input.read(buffer)
+                            if (read < 0) break
+                            total += read
+                            // Sumber yang mengirim lebih banyak dari yang dijanjikan dihentikan di tengah jalan
+                            if (total > maxBytes) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
+                            output.write(buffer, 0, read)
+                        }
                     }
                 }
             }
@@ -1259,16 +1391,18 @@ object NuxModManager {
     }
 
     /**
-     * Mencocokkan sidik jari (sha512, atau sha1 bila tidak ada) berkas dengan yang diumumkan sumbernya.
+     * Mencocokkan sidik jari (sha256 dari katalog Horizon, atau sha512, atau sha1 bila tidak ada) berkas dengan yang diumumkan sumbernya.
      * Bila tidak cocok, berkas dihapus dan dilempar IOException. Tanpa sidik jari, tidak ada yang diperiksa.
      */
     private fun verifyHashes(file: File, hashes: Map<String, String>?) {
         val map = hashes ?: return
+        val sha256 = map["sha256"]?.trim().orEmpty()
         val sha512 = map["sha512"]?.trim().orEmpty()
         val sha1 = map["sha1"]?.trim().orEmpty()
         val algorithm: String
         val expected: String
         when {
+            sha256.isNotEmpty() -> { algorithm = "SHA-256"; expected = sha256 }
             sha512.isNotEmpty() -> { algorithm = "SHA-512"; expected = sha512 }
             sha1.isNotEmpty() -> { algorithm = "SHA-1"; expected = sha1 }
             else -> return

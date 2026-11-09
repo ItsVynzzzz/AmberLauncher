@@ -177,15 +177,30 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 
 Data mesin (dunia, profil, sumber daya, log) ada di `files/horizon/` di dalam data aplikasi, terpisah dari data launcher. Menghapus instance Rust dari launcher **tidak** menghapus data itu karena dipakai bersama; hapus lewat Pengaturan Android > Info aplikasi > Hapus data.
 
-## Shader dan Resource Pack (layar Mod untuk instance Rust)
+## Mod, Shader, dan Resource Pack (layar Mod untuk instance Rust)
 
-Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya dari Modrinth, tanpa saringan versi game. Semua berkasnya memakai folder dan pengaturan yang sama dengan mesin, jadi apa yang dipasang atau dipilih di Amber langsung terlihat di mesin:
+Untuk instance Rust, layar Mod punya tiga tab: Mod, Shader, dan Resource Pack. Shader dan Resource Pack datang dari Modrinth (tanpa saringan versi game); Mod datang dari katalog Horizon atau dari berkas `.hmod` di HP. Semua berkasnya memakai folder dan pengaturan yang sama dengan mesin, jadi apa yang dipasang atau dipilih di Amber langsung terlihat di mesin.
+
+### Mod (tab Mod)
+
+Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dikenalnya: empat modul bawaan dan mod berformat `.hmod` (data dan aset, atau kode WASM yang berjalan dalam kotak pasir). Kode: `core/horizon/HorizonMods.kt` (berkas, validasi, hidup/mati) dan `core/horizon/HorizonRegistry.kt` (katalog).
+
+- Modul bawaan (Zoom, Minimap, Resep, SmartF3) tampil di daftar Terpasang tanpa tombol hapus. Semuanya mati sampai dihidupkan.
+- Berkas `.hmod` ada di `files/horizon/horizon-mods/<id>.hmod` (id dari manifest, sama untuk pembaruan). Mod berbentuk folder yang dipasang dari dalam mesin ikut tampil dan bisa dihidupkan atau dimatikan, tetapi tidak dihapus dari Amber.
+- Hidup/mati ditulis ke `files/horizon/horizon-mods.txt` sebagai baris `mod.<id>:true`. Baris lain di berkas itu (misalnya tombol milik mod) dibiarkan apa adanya. Mod yang tidak tercantum dianggap mati. Perubahan berlaku saat game dibuka lagi.
+- Pasang dari berkas: tombol Impor menerima `.hmod` (maksimal 32 MB). Diperiksa seperti mesin: arsip zip tanpa jalur berbahaya, `horizon-mod.toml` di dasar arsip dan sah (id, api 0.1 sampai 0.3, kemampuan, namespace), isi paling besar 64 MB, `mod.wasm` paling besar 32 MB, dan kode wajib ada kecuali mod konten murni (kemampuan `registries`). Isi kode WASM sendiri diperiksa mesin saat game dimuat. Mod dengan id yang sama menggantikan yang lama dan pilihan hidup/matinya dipertahankan.
+- Mod baru yang hanya berisi konten langsung hidup. Mod berkode dipasang dalam keadaan mati; pengguna menghidupkannya sendiri setelah memeriksa izinnya di Options > Mods dalam game.
+- Katalog: `https://horizon-rust.github.io/horizon-mods/index.json` (schema 1), disimpan di memori 10 menit. Hanya proyek `mod` yang punya versi untuk 26.3, bukan yang ditarik (`revoked`), berkas `.hmod` paling besar 32 MB, dan alamat unduhan berbentuk rilis GitHub (`https://github.com/<pemilik>/<repo>/releases/download/<tag>/<nama>`, sama seperti yang diterima mesin). Unduhan harus sama persis dengan ukuran dan SHA-256 di katalog sebelum dipasang. Tanda tangan minisign belum diperiksa di Amber.
+- APK 32-bit: mesin tidak menjalankan mod di sana, jadi Amber menolak menghidupkannya dan menampilkan catatan; memasang dan menghapus tetap bisa.
+- Tidak ada penyaringan kemampuan di katalog: mod berkode ikut tampil dengan tanda "Berkode", mod konten murni dengan tanda "Konten".
+
+### Shader dan Resource Pack
 
 - Shader: folder `files/horizon/shaderpacks/`. Satu shader aktif dicatat di `files/horizon/horizon-graphics.txt` (baris `pickedShaderPack:<nama berkas>`). Hidupkan saklarnya di daftar Terpasang untuk memilihnya; mematikannya mengosongkan pilihan.
 - Resource Pack: folder `files/horizon/resourcepacks/`. Daftar aktif ada di baris `resourcePacks:` pada `files/horizon/options.txt` (yang terakhir paling atas). Berkas `options.txt` dibuat oleh game, bukan oleh launcher (tanpa baris versi, mesin menganggapnya berkas versi sangat lama dan mengisi ulang pengaturan grafik); bila belum ada, saklar menampilkan petunjuk untuk membuka game sekali dulu.
 - Perubahan dibaca mesin saat game dibuka, jadi berlaku pada permainan berikutnya.
 - Unduhan hanya menerima berkas `.zip` yang punya sidik jari (dicocokkan setelah unduh), paling besar 256 MB, lalu diperiksa dengan aturan mesin sendiri (nama berkas polos, jalur entri aman, total isi paling besar 512 MB, `pack.mcmeta` untuk resource pack, folder `shaders/` untuk shader). Versi yang mencantumkan 26.3 diurutkan lebih dulu, sisanya mengikuti urutan Modrinth. Dependensi diabaikan.
-- Shader asli Horizon (`.hshader`, berisi `horizon-shaders.toml`) tidak dipasang dari Amber; pasang lewat menu Impor di dalam mesin.
+- Shader asli Horizon (`.hshader`, berisi `horizon-shaders.toml`) belum bisa dipasang dari Amber; pasang lewat menu Impor di dalam mesin.
 - Bila pengguna memakai profil selain 0 di dalam mesin (`android-launcher.json`, kunci `profile`), Amber mengikuti folder profil itu.
 - Dukungan shader di mesin masih eksperimental dan bisa berat di HP lemah, jadi shader yang baru diunduh tidak dipilih otomatis.
 - Bila shader tidak tampil seperti seharusnya (mis. hanya kabut yang berubah): mainkan sebentar, keluar dari game, lalu Pengaturan > Log game > Log launcher > Bagikan. Laporannya memuat bagian "Mesin Rust (Horizon)": pengaturan mesin, isi folder shaderpacks dan resourcepacks, `horizon-graphics.txt`, dan baris "shader pack ..." dari `files/horizon/performance/diagnostic.log` (daftar program yang berhasil dimuat, atau alasan gagalnya).
@@ -203,7 +218,9 @@ Untuk instance Rust, layar Mod hanya menampilkan Shader dan Resource Pack, hanya
 8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
    Di bagian **Kontrol**, saklar **Kontrol Amber** hidup: PLAY lagi dan tombol layar mesin tampil berwarna dan bertata letak seperti editor kontrol Amber (kaca gelap, sudut membulat, kuning saat ditekan), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali.
    Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya).
-9. Shader: buka layar Mod pada instance Rust, unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
+9. Mod: buka layar Mod pada instance Rust. Tab Mod menampilkan empat modul bawaan (mati) tanpa tombol hapus. Hidupkan **Zoom**, PLAY, lalu tahan Z di game: pandangan membesar; matikan lalu PLAY: tidak lagi.
+   Di Jelajahi, cari satu mod dari Horizon dan pasang: ia muncul di Terpasang (hidup bila mod konten, mati bila berkode), dan tampil di Options > Mods dalam game. Impor satu berkas `.hmod` dari HP: terpasang; impor lagi berkas yang sama: diganti tanpa dobel. Coba impor `.jar` Fabric: ditolak dengan penjelasan.
+   Shader: unduh satu shader dari Modrinth, hidupkan saklarnya di daftar Terpasang, lalu PLAY. Di dalam mesin shader itu sudah terpilih dan tampil di game; matikan saklar lalu PLAY lagi: shader hilang.
 10. Resource Pack: setelah game pernah dibuka dan satu pengaturan diubah (supaya `options.txt` ada), unduh satu resource pack, hidupkan saklarnya, lalu PLAY: teksturnya berlaku. Pilihan yang sama terlihat di layar resource pack milik mesin.
 11. HP 32-bit (opsional, hanya rilis): pasang `AmberLauncher-...-32bit-armeabi-v7a.apk`, buat instance Rust. Bila build mesin 32-bit lolos, PLAY membuka mesin; bila tidak, layar Buat Instance menyebut mesin belum disertakan.
 
@@ -212,14 +229,15 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log 
 ## Batasan saat ini
 
 - Hanya Minecraft 26.3, API 28 ke atas. arm64 untuk APK 64-bit; armeabi-v7a (APK 32-bit) eksperimental dan belum pernah diuji di perangkat.
-- Tanpa mod Java, tanpa Fabric, Forge, NeoForge. Layar Mod untuk instance Rust hanya berisi Shader dan Resource Pack.
+- Tanpa mod Java, tanpa Fabric, Forge, NeoForge: mesin Rust bukan Minecraft Java, jadi mod `.jar` tidak bisa berjalan. Yang tersedia adalah modul bawaan, mod `.hmod` (katalog Horizon atau impor berkas), Shader, dan Resource Pack.
 - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
-- Mod belum bisa diatur dari launcher (hanya Shader dan Resource Pack). Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
+- Mod `.hmod` belum bisa dipasang lewat tautan, dan mod Java belum bisa diporting ke mesin dari Amber (itu fitur peluncur mesin sendiri). Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
 - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
 - Perilaku di perangkat nyata (kinerja, kestabilan, kebutuhan RAM sebenarnya, ukuran APK) belum diuji.
 
 ## Rencana berikutnya
 
-- Mod milik Horizon (`.hmod`) dikelola dari layar Mod launcher.
+- Katalog Horizon untuk shader asli (`.hshader`) dan resource pack, serta pembaruan mod dari katalog.
+- Pengaturan mesin yang belum ada di tab Rust (profil, proxy, gamepad, dan opsi performa lain).
 - Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
 - Akun Ely.by.

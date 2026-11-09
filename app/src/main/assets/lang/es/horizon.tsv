@@ -35,3 +35,31 @@ Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Los shaders del mo
 # Mesin Rust di HP 32-bit
 Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	El motor Rust de 32 bits solo est\u00e1 disponible en tel\u00e9fonos ARM (armeabi-v7a).
 Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental en tel\u00e9fonos de 32 bits: requiere Android 9 o superior y puede ser m\u00e1s lento.
+# Mod mesin Rust (.hmod), modul bawaan, dan katalog Horizon
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Los mods del motor Rust usan el formato .hmod, no archivos .jar de Fabric o Forge.
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	El archivo del mod supera los 32 MB, demasiado grande para el motor Rust.
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	El mod es demasiado grande al descomprimirse (m\u00e1s de 64 MB).
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	Esto no es un mod de Horizon: no se encontr\u00f3 horizon-mod.toml en la ra\u00edz del archivo.
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	El manifiesto del mod (horizon-mod.toml) no es v\u00e1lido o no es compatible.
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Este mod no incluye c\u00f3digo (mod.wasm) y no es un mod de contenido (capacidad registries), por lo que no se puede instalar.
+Kode mod (mod.wasm) lebih dari 32 MB.	El c\u00f3digo del mod (mod.wasm) supera los 32 MB.
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	Ya existe un mod en carpeta con el mismo id. Elimina primero el anterior.
+Gagal menyimpan pilihan mod ke pengaturan mesin.	No se pudo guardar la selecci\u00f3n de mods en los ajustes del motor.
+Mod hanya bisa dihidupkan di APK 64-bit.	Los mods solo se pueden activar en el APK de 64 bits.
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	No se encontr\u00f3 el mod o no se pudo leer su manifiesto.
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Mant\u00e9n la tecla Z para hacer zoom; se configura en Options > Mods dentro del juego
+Peta kecil yang bisa diatur di sudut layar	Un minimapa configurable en la esquina de la pantalla
+Resep dan kegunaan item di samping inventori	Recetas y usos de los objetos junto al inventario
+Modul F3 yang bisa diatur untuk layar debug	M\u00f3dulos configurables para la pantalla de depuraci\u00f3n F3
+Resep	Recetas
+Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	No se pudo leer el cat\u00e1logo de mods de Horizon. Int\u00e9ntalo de nuevo m\u00e1s tarde.
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	El cat\u00e1logo de Horizon usa un formato m\u00e1s nuevo. Actualiza Amber.
+Tidak ada berkas .hmod yang cocok di versi ini.	No hay ning\u00fan archivo .hmod compatible en esta versi\u00f3n.
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	El cat\u00e1logo no ofrece una suma SHA-256, as\u00ed que la descarga no se puede verificar.
+Alamat unduhan mod tidak dikenali, jadi ditolak.	No se reconoce la direcci\u00f3n de descarga del mod, as\u00ed que se rechaz\u00f3.
+Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	El tama\u00f1o del archivo del mod no coincide con el cat\u00e1logo, as\u00ed que no se instal\u00f3.
+Memuat data dari Horizon...	Cargando datos de Horizon...
+Gagal memuat dari Horizon	No se pudo cargar desde Horizon
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Los mods del motor Rust usan el formato .hmod (no archivos .jar de Fabric o Forge). Los mods con c\u00f3digo se instalan desactivados; act\u00edvalos despu\u00e9s de revisar sus permisos en Options > Mods dentro del juego.
+Konten	Contenido
+Berkode	Con c\u00f3digo

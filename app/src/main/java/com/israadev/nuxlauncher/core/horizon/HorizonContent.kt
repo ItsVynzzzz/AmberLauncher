@@ -31,6 +31,9 @@ object HorizonContent {
     const val TYPE_SHADERS = "shaderpacks"
     const val TYPE_RESOURCES = "resourcepacks"
 
+    /** Mod (.hmod dan modul bawaan mesin): diurus oleh [HorizonMods]. */
+    const val TYPE_MODS = "mods"
+
     /** Batas ukuran berkas dari mesin (content_files::MAX_INPUT). */
     const val MAX_FILE_BYTES = 256L * 1024L * 1024L
     private const val MAX_EXPANDED_BYTES = 512L * 1024L * 1024L
@@ -71,9 +74,14 @@ object HorizonContent {
     private val gson = GsonBuilder().disableHtmlEscaping().create()
 
     /** True bila [itemType] (jenis di layar Mod) bisa dipakai mesin Rust. */
-    fun supports(itemType: String): Boolean = itemType == TYPE_SHADERS || itemType == TYPE_RESOURCES
+    fun supports(itemType: String): Boolean =
+        itemType == TYPE_SHADERS || itemType == TYPE_RESOURCES || itemType == TYPE_MODS
 
-    private fun folderOf(itemType: String): String = if (itemType == TYPE_SHADERS) "shaderpacks" else "resourcepacks"
+    private fun folderOf(itemType: String): String = when (itemType) {
+        TYPE_SHADERS -> "shaderpacks"
+        TYPE_MODS -> HorizonMods.FOLDER
+        else -> "resourcepacks"
+    }
 
     /**
      * Folder game yang dipakai mesin: [home] untuk profil 0 (bawaan), atau profiles/profile-N bila pengguna
@@ -114,6 +122,7 @@ object HorizonContent {
 
     /** Berkas shader / resource pack di folder mesin, lengkap dengan status "dipilih" dari berkas pengaturan. */
     fun installed(home: File, itemType: String): List<InstalledModItem> {
+        if (itemType == TYPE_MODS) return HorizonMods.installed(home)
         if (!supports(itemType)) return emptyList()
         val files = dirFor(home, itemType).listFiles() ?: return emptyList()
         val on = enabledNames(home, itemType)
@@ -175,6 +184,10 @@ object HorizonContent {
      * mengisi ulang beberapa pengaturan grafik dengan nilai standar yang lebih berat.
      */
     fun setEnabled(home: File, itemType: String, fileName: String, on: Boolean) {
+        if (itemType == TYPE_MODS) {
+            HorizonMods.setEnabled(home, fileName, on)
+            return
+        }
         if (!supports(itemType)) throw IOException(MSG_TYPE)
         if (!plainName(fileName)) throw IOException(MSG_NAME)
         val game = gameHome(home)
@@ -209,6 +222,7 @@ object HorizonContent {
 
     /** Menghapus berkas. Bila sedang dipilih, pilihannya dilepas juga supaya mesin tidak mencari berkas yang hilang. */
     fun delete(home: File, itemType: String, fileName: String): Boolean {
+        if (itemType == TYPE_MODS) return HorizonMods.delete(home, fileName)
         if (!supports(itemType) || !plainName(fileName)) return false
         val file = File(dirFor(home, itemType), fileName)
         if (!file.isFile) return false
@@ -234,6 +248,7 @@ object HorizonContent {
      * Mengembalikan nama akhir di folder mesin.
      */
     fun install(staged: File, home: File, itemType: String, name: String): Result<String> {
+        if (itemType == TYPE_MODS) return HorizonMods.install(staged, home, name)
         return try {
             if (!supports(itemType)) throw IOException(MSG_TYPE)
             validate(staged, itemType, name)
@@ -351,7 +366,7 @@ object HorizonContent {
         MSG_META, MSG_NOT_RESOURCE, MSG_NOT_SHADER, MSG_NATIVE, MSG_NO_ZIP, MSG_NO_HASH, MSG_SAVE
     )
 
-    private fun uniqueFile(dir: File, name: String): File {
+    internal fun uniqueFile(dir: File, name: String): File {
         val first = File(dir, name)
         if (!first.exists()) return first
         val dot = name.lastIndexOf('.')
@@ -364,7 +379,7 @@ object HorizonContent {
         throw IOException(MSG_SAVE)
     }
 
-    private fun moveInto(staged: File, dest: File) {
+    internal fun moveInto(staged: File, dest: File) {
         if (staged.renameTo(dest)) return
         val part = File(dest.parentFile, dest.name + ".part")
         try {

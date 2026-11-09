@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.mods.CurseForgeApi
@@ -59,9 +60,10 @@ import java.text.DecimalFormat
 import com.israadev.nuxlauncher.ui.components.AmberSpinner
 import com.israadev.nuxlauncher.ui.components.AmberWaitBar
 
-private fun getMimeTypesForType(type: String): Array<String> {
+private fun getMimeTypesForType(type: String, rust: Boolean = false): Array<String> {
     return when (type) {
-        "mods" -> arrayOf(
+        // Mod mesin Rust (.hmod) tidak punya jenis MIME resmi; pilih semua berkas lalu periksa ekstensinya
+        "mods" -> if (rust) arrayOf("*/*") else arrayOf(
             "application/java-archive",
             "application/x-java-archive",
             "application/x-jar",
@@ -80,19 +82,19 @@ private fun getMimeTypesForType(type: String): Array<String> {
     }
 }
 
-private fun isValidExtensionForType(itemType: String, filename: String): Boolean {
+private fun isValidExtensionForType(itemType: String, filename: String, rust: Boolean = false): Boolean {
     val lower = filename.lowercase()
     return when (itemType) {
-        "mods" -> lower.endsWith(".jar")
+        "mods" -> if (rust) lower.endsWith(".hmod") else lower.endsWith(".jar")
         "modpacks" -> lower.endsWith(".mrpack") || lower.endsWith(".zip")
         "shaderpacks", "resourcepacks", "datapacks" -> lower.endsWith(".zip")
         else -> false
     }
 }
 
-private fun getAllowedExtensionLabel(itemType: String): String {
+private fun getAllowedExtensionLabel(itemType: String, rust: Boolean = false): String {
     return when (itemType) {
-        "mods" -> ".jar"
+        "mods" -> if (rust) ".hmod" else ".jar"
         "modpacks" -> ".mrpack, .zip"
         "shaderpacks" -> ".zip (Shaderpack)"
         "resourcepacks" -> ".zip (Resource Pack)"
@@ -223,7 +225,9 @@ fun ModsScreen(
     var showKeyDialog by remember { mutableStateOf(false) }
     var keyProblem by remember { mutableStateOf(false) }
     val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
-    val sourceLabel = if (isCurseForge) "CurseForge" else "Modrinth"
+    // Mod mesin Rust datang dari katalog Horizon; shader dan resource pack tetap dari Modrinth
+    val rustMods = rustInstance && activeType == HorizonContent.TYPE_MODS
+    val sourceLabel = if (isCurseForge) "CurseForge" else if (rustMods) "Horizon" else "Modrinth"
     var showCategoryMenu by remember { mutableStateOf(false) }
     var showVersionMenu by remember { mutableStateOf(false) }
     var showLoaderMenu by remember { mutableStateOf(false) }
@@ -353,7 +357,7 @@ fun ModsScreen(
 
                 for (uri in uris) {
                     val fileName = getFileNameFromUri(context, uri)
-                    if (isValidExtensionForType(activeType, fileName)) {
+                    if (isValidExtensionForType(activeType, fileName, rustInstance)) {
                         validUris.add(Pair(uri, fileName))
                     } else {
                         rejectedNames.add(fileName)
@@ -361,7 +365,7 @@ fun ModsScreen(
                 }
 
                 if (rejectedNames.isNotEmpty()) {
-                    val hint = getAllowedExtensionLabel(activeType)
+                    val hint = getAllowedExtensionLabel(activeType, rustInstance)
                     val msg = if (rejectedNames.size == 1) {
                         "File \"${rejectedNames.first()}\" diabaikan! Format yang didukung untuk $activeType hanya $hint"
                     } else {
@@ -461,6 +465,8 @@ fun ModsScreen(
 
     // Apakah hasil pencarian ini sudah terpasang di instance aktif
     fun isHitInstalled(hit: ModrinthSearchHit): Boolean = installedItems.any { inst ->
+        // Modul bawaan mesin Rust bukan hasil katalog; hanya berkas .hmod yang dihitung
+        if (rustMods && !HorizonMods.removable(inst)) return@any false
         val titleMatches = inst.name.equals(hit.title, ignoreCase = true)
         val slugMatches = !hit.slug.isNullOrBlank() && inst.filename.contains(hit.slug, ignoreCase = true)
         val idMatches = inst.id.equals(hit.projectId, ignoreCase = true)
@@ -477,7 +483,7 @@ fun ModsScreen(
         selectedVersion = null
         isDetailLoading = true
         scope.launch {
-            val pRes = NuxModManager.getProjectDetails(hit.projectId)
+            val pRes = NuxModManager.getProjectDetails(hit.projectId, horizonMod = rustMods)
             val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
             detailProject = pRes.getOrNull()
             val vers = vRes.getOrNull() ?: emptyList()
@@ -634,7 +640,7 @@ fun ModsScreen(
                         if (selectedInstance == null) {
                             Toast.makeText(context, "Pilih instance terlebih dahulu!", Toast.LENGTH_SHORT).show()
                         } else {
-                            filePicker.launch(getMimeTypesForType(activeType))
+                            filePicker.launch(getMimeTypesForType(activeType, rustInstance))
                         }
                     }
                 )
@@ -730,7 +736,7 @@ fun ModsScreen(
 
                         if (mainMode == "browse") {
                             // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
-                            if (!isCurseForge) {
+                            if (!isCurseForge && !rustMods) {
                                 AmberFilterPill(
                                     label = "Kategori",
                                     value = modsPlainLabel(selectedCategoryLabel),
@@ -745,7 +751,7 @@ fun ModsScreen(
                                     onClick = { showVersionMenu = true }
                                 )
                             }
-                            if (activeType == "mods" || activeType == "modpacks") {
+                            if (!rustInstance && (activeType == "mods" || activeType == "modpacks")) {
                                 AmberFilterPill(
                                     label = "Loader",
                                     value = if (filterByLoader) "Auto" else "Semua",
@@ -762,7 +768,7 @@ fun ModsScreen(
                 }
 
                 if (rustInstance) {
-                    RustNotice(isShader = activeType == HorizonContent.TYPE_SHADERS)
+                    RustNotice(type = activeType)
                 }
 
                 // =====================================================================
@@ -797,8 +803,11 @@ fun ModsScreen(
                             contentPadding = PaddingValues(bottom = 12.dp)
                         ) {
                             items(filteredInstalled, key = { it.id }) { item ->
+                                val rustModItem = rustInstance && activeType == HorizonContent.TYPE_MODS
                                 InstalledItemRow(
                                     item = item,
+                                    deletable = !rustModItem || HorizonMods.removable(item),
+                                    subtitle = if (rustModItem && !HorizonMods.removable(item)) item.description else null,
                                     onToggle = {
                                         scope.launch {
                                             if (rustInstance) {
@@ -1620,7 +1629,7 @@ private fun ModsTagChip(text: String) {
 
 /** Catatan singkat di atas daftar untuk instance mesin Rust (Horizon). */
 @Composable
-private fun RustNotice(isShader: Boolean) {
+private fun RustNotice(type: String) {
     val shape = RoundedCornerShape(16.dp)
     Column(
         modifier = Modifier
@@ -1637,7 +1646,7 @@ private fun RustNotice(isShader: Boolean) {
             fontSize = 12.sp,
             lineHeight = 17.sp
         )
-        if (isShader) {
+        if (type == HorizonContent.TYPE_SHADERS) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.",
@@ -1645,6 +1654,24 @@ private fun RustNotice(isShader: Boolean) {
                 fontSize = 12.sp,
                 lineHeight = 17.sp
             )
+        }
+        if (type == HorizonContent.TYPE_MODS) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.",
+                color = AmberUi.TextDim,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+            if (!android.os.Process.is64Bit()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = HorizonMods.MSG_NEED_64,
+                    color = AmberUi.TextDim,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp
+                )
+            }
         }
     }
 }
@@ -1731,7 +1758,9 @@ private fun ColumnScope.ModsLoading(text: String? = null) {
 private fun InstalledItemRow(
     item: InstalledModItem,
     onToggle: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    deletable: Boolean = true,
+    subtitle: String? = null
 ) {
     val shape = RoundedCornerShape(24.dp)
     Row(
@@ -1772,7 +1801,7 @@ private fun InstalledItemRow(
                 }
             }
             Text(
-                text = "${item.filename} · ${formatBytes(item.sizeBytes)}",
+                text = subtitle ?: "${item.filename} · ${formatBytes(item.sizeBytes)}",
                 fontSize = 12.sp,
                 color = AmberUi.TextDim,
                 maxLines = 1,
@@ -1794,13 +1823,15 @@ private fun InstalledItemRow(
             )
         )
 
-        ModsIconButton(
-            icon = Icons.Outlined.Delete,
-            description = "Hapus",
-            onClick = onDelete,
-            tint = NuxColors.ErrorRed,
-            ring = false
-        )
+        if (deletable) {
+            ModsIconButton(
+                icon = Icons.Outlined.Delete,
+                description = "Hapus",
+                onClick = onDelete,
+                tint = NuxColors.ErrorRed,
+                ring = false
+            )
+        }
     }
 }
 

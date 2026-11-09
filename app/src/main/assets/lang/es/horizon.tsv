@@ -21,7 +21,7 @@ Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	El archivo comprimid
 Metadata resource pack (pack.mcmeta) tidak valid.	Los metadatos del paquete de recursos (pack.mcmeta) no son v\u00e1lidos.
 Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Este archivo no es un paquete de recursos: no se encontr\u00f3 pack.mcmeta en la ra\u00edz del archivo comprimido.
 Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Este archivo no es un paquete de shaders: no se encontr\u00f3 la carpeta shaders en la ra\u00edz del archivo comprimido.
-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	Es un shader nativo de Horizon. Inst\u00e1lalo desde el men\u00fa Importar dentro del motor Rust (formato .hshader).
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	Es un shader nativo de Horizon. Inst\u00e1lalo desde la fuente Horizon en la pantalla Explorar (formato .hshader).
 Tidak ada berkas .zip yang cocok di versi ini.	No hay ning\u00fan archivo .zip compatible en esta versi\u00f3n.
 Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	La fuente no proporciona la suma de verificaci\u00f3n del archivo, as\u00ed que no se puede comprobar la descarga.
 Gagal menyimpan berkas ke folder mesin Rust.	No se pudo guardar el archivo en la carpeta del motor Rust.
@@ -52,14 +52,21 @@ Peta kecil yang bisa diatur di sudut layar	Un minimapa configurable en la esquin
 Resep dan kegunaan item di samping inventori	Recetas y usos de los objetos junto al inventario
 Modul F3 yang bisa diatur untuk layar debug	M\u00f3dulos configurables para la pantalla de depuraci\u00f3n F3
 Resep	Recetas
-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	No se pudo leer el cat\u00e1logo de mods de Horizon. Int\u00e9ntalo de nuevo m\u00e1s tarde.
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	No se pudo leer el cat\u00e1logo de Horizon. Int\u00e9ntalo de nuevo m\u00e1s tarde.
 Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	El cat\u00e1logo de Horizon usa un formato m\u00e1s nuevo. Actualiza Amber.
-Tidak ada berkas .hmod yang cocok di versi ini.	No hay ning\u00fan archivo .hmod compatible en esta versi\u00f3n.
+Tidak ada berkas yang cocok di versi ini.	No hay ning\u00fan archivo compatible en esta versi\u00f3n.
 Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	El cat\u00e1logo no ofrece una suma SHA-256, as\u00ed que la descarga no se puede verificar.
-Alamat unduhan mod tidak dikenali, jadi ditolak.	No se reconoce la direcci\u00f3n de descarga del mod, as\u00ed que se rechaz\u00f3.
-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	El tama\u00f1o del archivo del mod no coincide con el cat\u00e1logo, as\u00ed que no se instal\u00f3.
+Alamat unduhan tidak dikenali, jadi ditolak.	No se reconoce la direcci\u00f3n de descarga, as\u00ed que se rechaz\u00f3.
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	El tama\u00f1o del archivo no coincide con el cat\u00e1logo, as\u00ed que no se instal\u00f3.
 Memuat data dari Horizon...	Cargando datos de Horizon...
 Gagal memuat dari Horizon	No se pudo cargar desde Horizon
 Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Los mods del motor Rust usan el formato .hmod (no archivos .jar de Fabric o Forge). Los mods con c\u00f3digo se instalan desactivados; act\u00edvalos despu\u00e9s de revisar sus permisos en Options > Mods dentro del juego.
 Konten	Contenido
 Berkode	Con c\u00f3digo
+# Katalog Horizon untuk shader dan resource pack
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	No es un shader nativo de Horizon: no se encontr\u00f3 horizon-shaders.toml en la ra\u00edz del archivo.
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	El shader nativo de Horizon es demasiado grande (archivo de m\u00e1s de 16 MB, contenido de m\u00e1s de 8 MB o un archivo interno demasiado grande).
+Sumber Horizon: shader asli mesin Rust (.hshader).	Fuente Horizon: shaders nativos del motor Rust (.hshader).
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fuente Modrinth: shaders cl\u00e1sicos; la compatibilidad con el motor Rust a\u00fan es limitada.
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fuente Horizon: resource packs creados o probados para el motor Rust.
+Coba ubah kata kunci atau pindah ke sumber Modrinth	Prueba a cambiar la palabra clave o cambia a la fuente Modrinth

@@ -60,9 +60,10 @@ object NuxModManager {
     private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
     private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
 
-    /** Sumber unduhan di layar Mod. */
+    /** Sumber unduhan di layar Mod. Horizon hanya untuk instance mesin Rust (mod, shader asli, resource pack). */
     const val SOURCE_MODRINTH = "modrinth"
     const val SOURCE_CURSEFORGE = "curseforge"
+    const val SOURCE_HORIZON = "horizon"
 
     /** Loader yang didukung launcher saat ini. Ganti di sini bila nanti loader lain ditambahkan. */
     private const val SUPPORTED_LOADER = "fabric"
@@ -470,7 +471,10 @@ object NuxModManager {
         itemType: String,
         onProgress: (String) -> Unit
     ): Result<List<String>> {
-        if (itemType == HorizonContent.TYPE_MODS) return downloadHorizonMod(context, version, onProgress)
+        // Mod selalu dari katalog Horizon; shader dan resource pack bila versinya berasal dari katalog itu
+        if (itemType == HorizonContent.TYPE_MODS || HorizonRegistry.isRegistryVersion(version)) {
+            return downloadHorizonFile(context, version, itemType, onProgress)
+        }
         var staged: File? = null
         return try {
             if (!HorizonContent.supports(itemType)) throw java.io.IOException(HorizonContent.MSG_TYPE)
@@ -503,37 +507,48 @@ object NuxModManager {
     }
 
     /**
-     * Mengunduh satu mod dari katalog Horizon: alamat harus rilis GitHub, ukuran dan SHA-256 harus sama dengan
-     * katalog, lalu berkasnya diperiksa dengan aturan mesin sebelum masuk ke folder mod. Dependensi tidak ada.
+     * Mengunduh satu berkas dari katalog Horizon (mod, shader asli, atau resource pack): alamat harus rilis GitHub,
+     * ukuran dan SHA-256 harus sama dengan katalog, lalu berkasnya diperiksa dengan aturan mesin sebelum masuk ke
+     * folder tujuan. Dependensi tidak ada. Mod yang sama diganti (id manifest), shader dan resource pack yang
+     * namanya sudah ada dilewati.
      */
-    private fun downloadHorizonMod(
+    private fun downloadHorizonFile(
         context: Context,
         version: ModrinthVersion,
+        itemType: String,
         onProgress: (String) -> Unit
     ): Result<List<String>> {
         var staged: File? = null
         return try {
+            val kind = HorizonRegistry.kindFor(itemType) ?: throw java.io.IOException(HorizonContent.MSG_TYPE)
+            val extension = HorizonRegistry.extensionOf(kind) ?: throw java.io.IOException(HorizonContent.MSG_TYPE)
             val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
                 ?: throw java.io.IOException(HorizonRegistry.MSG_NO_FILE)
             val name = SafePaths.fileName(file.filename)
             val sha256 = file.hashes?.get("sha256")?.trim()?.lowercase().orEmpty()
+            if (!name.endsWith(extension)) throw java.io.IOException(HorizonRegistry.MSG_NO_FILE)
             if (!HorizonRegistry.acceptedUrl(file.url, name)) throw java.io.IOException(HorizonRegistry.MSG_URL)
             if (!HorizonRegistry.isSha256(sha256)) throw java.io.IOException(HorizonRegistry.MSG_HASH)
-            if (file.size <= 0L || file.size > HorizonMods.MAX_FILE_BYTES) throw java.io.IOException(HorizonMods.MSG_TOO_BIG)
+            if (file.size <= 0L || file.size > HorizonRegistry.maxBytes(kind)) {
+                throw java.io.IOException(if (kind == HorizonRegistry.KIND_MOD) HorizonMods.MSG_TOO_BIG else HorizonContent.MSG_TOO_BIG)
+            }
 
-            val stageDir = File(context.cacheDir, "horizon-dl")
-            if (!stageDir.isDirectory && !stageDir.mkdirs()) throw java.io.IOException(HorizonContent.MSG_SAVE)
-            val target = File(stageDir, name)
-            staged = target
-            onProgress("Mengunduh $name...")
-            downloadFile(file.url, target, file.size)
-            if (target.length() != file.size) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
-            verifyHashes(target, file.hashes)
-            onProgress("Memeriksa $name...")
-            val finalName = HorizonContent.install(
-                target, HorizonEngine.engineHome(context), HorizonContent.TYPE_MODS, name
-            ).getOrThrow()
-            Result.success(listOf(finalName))
+            val home = HorizonEngine.engineHome(context)
+            if (kind != HorizonRegistry.KIND_MOD && HorizonContent.exists(home, itemType, name)) {
+                Result.success(emptyList())
+            } else {
+                val stageDir = File(context.cacheDir, "horizon-dl")
+                if (!stageDir.isDirectory && !stageDir.mkdirs()) throw java.io.IOException(HorizonContent.MSG_SAVE)
+                val target = File(stageDir, name)
+                staged = target
+                onProgress("Mengunduh $name...")
+                downloadFile(file.url, target, file.size)
+                if (target.length() != file.size) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
+                verifyHashes(target, file.hashes)
+                onProgress("Memeriksa $name...")
+                val finalName = HorizonContent.install(target, home, itemType, name).getOrThrow()
+                Result.success(listOf(finalName))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         } finally {
@@ -616,14 +631,19 @@ object NuxModManager {
         filterByLoader: Boolean = true,
         source: String = SOURCE_MODRINTH
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
-        // Mesin Rust: hanya Modrinth, dan tanpa saringan versi Minecraft (shader tidak terikat versi game)
+        // Mesin Rust: Modrinth atau katalog Horizon, tanpa CurseForge dan tanpa saringan versi Minecraft
         val engineSearch = HorizonEngine.isEngine(instance?.loader)
-        // Mod untuk mesin Rust datang dari katalog Horizon, bukan Modrinth
-        if (engineSearch && itemType == HorizonContent.TYPE_MODS) {
+        // Mod untuk mesin Rust selalu dari katalog Horizon; shader dan resource pack dari Horizon bila sumber itu dipilih
+        val horizonKind = if (engineSearch && (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)) {
+            HorizonRegistry.kindFor(itemType)
+        } else {
+            null
+        }
+        if (horizonKind != null) {
             return@withContext try {
                 Result.success(
                     HorizonRegistry.search(
-                        horizonIndex(), query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
+                        horizonIndex(), horizonKind, query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
                     )
                 )
             } catch (e: Exception) {
@@ -707,10 +727,10 @@ object NuxModManager {
      */
     suspend fun getProjectDetails(
         projectId: String,
-        horizonMod: Boolean = false
+        horizon: Boolean = false
     ): Result<ModrinthProject> = withContext(Dispatchers.IO) {
-        // Mod untuk mesin Rust: detail dari katalog Horizon
-        if (horizonMod) {
+        // Proyek dari katalog Horizon (mesin Rust): detail diambil dari katalog, bukan Modrinth
+        if (horizon) {
             return@withContext try {
                 val project = HorizonRegistry.find(horizonIndex(), projectId)
                     ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
@@ -774,13 +794,22 @@ object NuxModManager {
         projectId: String,
         instance: Instance?,
         itemType: String,
-        filterByGameVersion: Boolean = true
+        filterByGameVersion: Boolean = true,
+        source: String = SOURCE_MODRINTH
     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
-        // Mod untuk mesin Rust: versi dari katalog Horizon yang cocok dengan versi game mesin
-        if (HorizonEngine.isEngine(instance?.loader) && itemType == HorizonContent.TYPE_MODS) {
+        // Mesin Rust: mod (dan shader/resource pack bila sumbernya Horizon) dari katalog Horizon, versi yang cocok
+        // dengan versi game mesin
+        val horizonKind = if (HorizonEngine.isEngine(instance?.loader) &&
+            (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)
+        ) {
+            HorizonRegistry.kindFor(itemType)
+        } else {
+            null
+        }
+        if (horizonKind != null) {
             return@withContext try {
                 val index = horizonIndex()
-                val project = HorizonRegistry.find(index, projectId)
+                val project = HorizonRegistry.find(index, projectId, horizonKind)
                     ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
                 val list = HorizonRegistry.toVersions(index, project, HorizonEngine.SUPPORTED_MC_VERSION)
                 if (list.isEmpty()) Result.failure(java.io.IOException(HorizonRegistry.MSG_NO_FILE)) else Result.success(list)

@@ -21,7 +21,7 @@ Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	T\u1ec7p n\u00e9n qu
 Metadata resource pack (pack.mcmeta) tidak valid.	Si\u00eau d\u1eef li\u1ec7u resource pack (pack.mcmeta) kh\u00f4ng h\u1ee3p l\u1ec7.
 Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i resource pack: kh\u00f4ng t\u00ecm th\u1ea5y pack.mcmeta \u1edf g\u1ed1c t\u1ec7p n\u00e9n.
 Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i shader pack: kh\u00f4ng t\u00ecm th\u1ea5y th\u01b0 m\u1ee5c shaders \u1edf g\u1ed1c t\u1ec7p n\u00e9n.
-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	\u0110\u00e2y l\u00e0 shader g\u1ed1c c\u1ee7a Horizon. H\u00e3y c\u00e0i t\u1eeb menu Nh\u1eadp b\u00ean trong engine Rust (\u0111\u1ecbnh d\u1ea1ng .hshader).
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	\u0110\u00e2y l\u00e0 shader g\u1ed1c c\u1ee7a Horizon. H\u00e3y c\u00e0i t\u1eeb ngu\u1ed3n Horizon tr\u00ean m\u00e0n h\u00ecnh Duy\u1ec7t (\u0111\u1ecbnh d\u1ea1ng .hshader).
 Tidak ada berkas .zip yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .zip ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
 Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	Ngu\u1ed3n kh\u00f4ng cung c\u1ea5p m\u00e3 ki\u1ec3m tra c\u1ee7a t\u1ec7p n\u00ean kh\u00f4ng th\u1ec3 x\u00e1c minh b\u1ea3n t\u1ea3i xu\u1ed1ng.
 Gagal menyimpan berkas ke folder mesin Rust.	Kh\u00f4ng th\u1ec3 l\u01b0u t\u1ec7p v\u00e0o th\u01b0 m\u1ee5c c\u1ee7a engine Rust.
@@ -52,14 +52,21 @@ Peta kecil yang bisa diatur di sudut layar	B\u1ea3n \u0111\u1ed3 nh\u1ecf c\u00f
 Resep dan kegunaan item di samping inventori	C\u00f4ng th\u1ee9c v\u00e0 c\u00f4ng d\u1ee5ng c\u1ee7a v\u1eadt ph\u1ea9m b\u00ean c\u1ea1nh t\u00fai \u0111\u1ed3
 Modul F3 yang bisa diatur untuk layar debug	C\u00e1c m\u00f4-\u0111un c\u00f3 th\u1ec3 t\u00f9y ch\u1ec9nh cho m\u00e0n h\u00ecnh debug F3
 Resep	C\u00f4ng th\u1ee9c
-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh m\u1ee5c mod Horizon. H\u00e3y th\u1eed l\u1ea1i sau.
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c danh m\u1ee5c Horizon. H\u00e3y th\u1eed l\u1ea1i sau.
 Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	Danh m\u1ee5c Horizon d\u00f9ng \u0111\u1ecbnh d\u1ea1ng m\u1edbi h\u01a1n. H\u00e3y c\u1eadp nh\u1eadt Amber.
-Tidak ada berkas .hmod yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p .hmod ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
+Tidak ada berkas yang cocok di versi ini.	Kh\u00f4ng c\u00f3 t\u1ec7p ph\u00f9 h\u1ee3p trong phi\u00ean b\u1ea3n n\u00e0y.
 Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	Danh m\u1ee5c kh\u00f4ng cung c\u1ea5p m\u00e3 b\u0103m SHA-256 n\u00ean kh\u00f4ng th\u1ec3 ki\u1ec3m tra b\u1ea3n t\u1ea3i.
-Alamat unduhan mod tidak dikenali, jadi ditolak.	\u0110\u1ecba ch\u1ec9 t\u1ea3i mod kh\u00f4ng \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n n\u00ean \u0111\u00e3 b\u1ecb t\u1eeb ch\u1ed1i.
-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	K\u00edch th\u01b0\u1edbc t\u1ec7p mod kh\u00f4ng kh\u1edbp v\u1edbi danh m\u1ee5c n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
+Alamat unduhan tidak dikenali, jadi ditolak.	\u0110\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n n\u00ean \u0111\u00e3 b\u1ecb t\u1eeb ch\u1ed1i.
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	K\u00edch th\u01b0\u1edbc t\u1ec7p kh\u00f4ng kh\u1edbp v\u1edbi danh m\u1ee5c n\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c c\u00e0i.
 Memuat data dari Horizon...	\u0110ang t\u1ea3i d\u1eef li\u1ec7u t\u1eeb Horizon...
 Gagal memuat dari Horizon	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c t\u1eeb Horizon
 Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Mod c\u1ee7a engine Rust d\u00f9ng \u0111\u1ecbnh d\u1ea1ng .hmod (kh\u00f4ng ph\u1ea3i t\u1ec7p .jar c\u1ee7a Fabric hay Forge). Mod c\u00f3 m\u00e3 \u0111\u01b0\u1ee3c c\u00e0i \u1edf tr\u1ea1ng th\u00e1i t\u1eaft; h\u00e3y b\u1eadt sau khi xem quy\u1ec1n c\u1ee7a ch\u00fang trong Options > Mods trong game.
 Konten	N\u1ed9i dung
 Berkode	C\u00f3 m\u00e3
+# Katalog Horizon untuk shader dan resource pack
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	\u0110\u00e2y kh\u00f4ng ph\u1ea3i shader g\u1ed1c c\u1ee7a Horizon: kh\u00f4ng t\u00ecm th\u1ea5y horizon-shaders.toml \u1edf th\u01b0 m\u1ee5c g\u1ed1c c\u1ee7a t\u1ec7p n\u00e9n.
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	Shader g\u1ed1c c\u1ee7a Horizon qu\u00e1 l\u1edbn (t\u1ec7p tr\u00ean 16 MB, n\u1ed9i dung tr\u00ean 8 MB, ho\u1eb7c c\u00f3 t\u1ec7p b\u00ean trong qu\u00e1 l\u1edbn).
+Sumber Horizon: shader asli mesin Rust (.hshader).	Ngu\u1ed3n Horizon: shader g\u1ed1c c\u1ee7a engine Rust (.hshader).
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Ngu\u1ed3n Modrinth: shader c\u1ed5 \u0111i\u1ec3n, kh\u1ea3 n\u0103ng t\u01b0\u01a1ng th\u00edch v\u1edbi engine Rust v\u1eabn c\u00f2n h\u1ea1n ch\u1ebf.
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Ngu\u1ed3n Horizon: resource pack \u0111\u01b0\u1ee3c t\u1ea1o ho\u1eb7c th\u1eed nghi\u1ec7m cho engine Rust.
+Coba ubah kata kunci atau pindah ke sumber Modrinth	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a ho\u1eb7c chuy\u1ec3n sang ngu\u1ed3n Modrinth

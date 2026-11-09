@@ -225,9 +225,16 @@ fun ModsScreen(
     var showKeyDialog by remember { mutableStateOf(false) }
     var keyProblem by remember { mutableStateOf(false) }
     val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
-    // Mod mesin Rust datang dari katalog Horizon; shader dan resource pack tetap dari Modrinth
+    // Mesin Rust: mod selalu dari katalog Horizon; shader dan resource pack dari Horizon atau Modrinth (pilihan pengguna)
+    var rustSource by remember { mutableStateOf(NuxModManager.SOURCE_HORIZON) }
     val rustMods = rustInstance && activeType == HorizonContent.TYPE_MODS
-    val sourceLabel = if (isCurseForge) "CurseForge" else if (rustMods) "Horizon" else "Modrinth"
+    val rustHorizon = rustInstance && (rustMods || rustSource == NuxModManager.SOURCE_HORIZON)
+    val activeSource = if (rustInstance) {
+        if (rustHorizon) NuxModManager.SOURCE_HORIZON else NuxModManager.SOURCE_MODRINTH
+    } else {
+        browseSource
+    }
+    val sourceLabel = if (isCurseForge) "CurseForge" else if (rustHorizon) "Horizon" else "Modrinth"
     var showCategoryMenu by remember { mutableStateOf(false) }
     var showVersionMenu by remember { mutableStateOf(false) }
     var showLoaderMenu by remember { mutableStateOf(false) }
@@ -281,7 +288,7 @@ fun ModsScreen(
         isSearching = true
         searchErrorMessage = null
         keyProblem = false
-        val source = if (rustInstance) NuxModManager.SOURCE_MODRINTH else browseSource
+        val source = activeSource
         scope.launch {
             val cat = if (selectedCategory == "Semua") null else selectedCategory
             val res = NuxModManager.searchProjects(
@@ -314,7 +321,7 @@ fun ModsScreen(
     }
 
     // Trigger reload when tab, type, world or instance changes
-    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource) {
+    LaunchedEffect(selectedInstance, activeType, mainMode, selectedWorld, filterByGameVersion, filterByLoader, selectedSort, browseSource, rustSource) {
         if (selectedInstance != null) {
             reloadWorlds()
             reloadInstalled()
@@ -483,8 +490,8 @@ fun ModsScreen(
         selectedVersion = null
         isDetailLoading = true
         scope.launch {
-            val pRes = NuxModManager.getProjectDetails(hit.projectId, horizonMod = rustMods)
-            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
+            val pRes = NuxModManager.getProjectDetails(hit.projectId, horizon = rustHorizon)
+            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType, source = activeSource)
             detailProject = pRes.getOrNull()
             val vers = vRes.getOrNull() ?: emptyList()
             compatibleVersions = vers
@@ -498,7 +505,7 @@ fun ModsScreen(
         val inst = selectedInstance ?: return
         scope.launch {
             downloadingProjectIds = downloadingProjectIds + (hit.projectId to "Mencari versi...")
-            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType)
+            val vRes = NuxModManager.getCompatibleVersions(hit.projectId, inst, activeType, source = activeSource)
             val compList = vRes.getOrNull()
             if (compList.isNullOrEmpty()) {
                 val failure = vRes.exceptionOrNull()
@@ -632,7 +639,20 @@ fun ModsScreen(
                             }
                         }
                     }
-                )
+                ) else if (!rustMods) {
+                    // Shader dan resource pack mesin Rust: katalog Horizon atau Modrinth (mod hanya dari Horizon)
+                    RustSourcePill(
+                        selectedSource = rustSource,
+                        onSelect = { src ->
+                            if (src != rustSource) {
+                                rustSource = src
+                                selectedCategory = "Semua"
+                                selectedSort = "relevance"
+                                currentPage = 1
+                            }
+                        }
+                    )
+                }
             } else {
                 ModsActionPill(
                     onAdd = { onOpenBrowse(activeType) },
@@ -736,7 +756,7 @@ fun ModsScreen(
 
                         if (mainMode == "browse") {
                             // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
-                            if (!isCurseForge && !rustMods) {
+                            if (!isCurseForge && !rustHorizon) {
                                 AmberFilterPill(
                                     label = "Kategori",
                                     value = modsPlainLabel(selectedCategoryLabel),
@@ -768,7 +788,7 @@ fun ModsScreen(
                 }
 
                 if (rustInstance) {
-                    RustNotice(type = activeType)
+                    RustNotice(type = activeType, horizon = rustHorizon)
                 }
 
                 // =====================================================================
@@ -858,7 +878,9 @@ fun ModsScreen(
                             } else {
                                 "Tidak ada hasil ditemukan untuk kata kunci ini"
                             },
-                            subtitle = if (rustInstance) {
+                            subtitle = if (rustInstance && rustHorizon && !rustMods) {
+                                "Coba ubah kata kunci atau pindah ke sumber Modrinth"
+                            } else if (rustInstance) {
                                 "Coba ubah kata kunci"
                             } else {
                                 "Coba ubah kata kunci atau nonaktifkan filter versi"
@@ -1462,10 +1484,42 @@ private fun ModsSourcePill(
     }
 }
 
+/** Pil sumber untuk shader dan resource pack mesin Rust: katalog Horizon atau Modrinth. */
+@Composable
+private fun RustSourcePill(
+    selectedSource: String,
+    onSelect: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .clip(CircleShape)
+            .amberGlass(CircleShape)
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ModsSourceChip(
+            selected = selectedSource == NuxModManager.SOURCE_HORIZON,
+            iconRes = null,
+            iconSize = 0.dp,
+            label = "Horizon",
+            onClick = { onSelect(NuxModManager.SOURCE_HORIZON) }
+        )
+        ModsSourceChip(
+            selected = selectedSource == NuxModManager.SOURCE_MODRINTH,
+            iconRes = com.israadev.nuxlauncher.R.drawable.ic_source_modrinth,
+            iconSize = 20.dp,
+            label = "Modrinth",
+            onClick = { onSelect(NuxModManager.SOURCE_MODRINTH) }
+        )
+    }
+}
+
 @Composable
 private fun ModsSourceChip(
     selected: Boolean,
-    iconRes: Int,
+    iconRes: Int?,
     iconSize: androidx.compose.ui.unit.Dp,
     label: String,
     onClick: () -> Unit
@@ -1487,13 +1541,15 @@ private fun ModsSourceChip(
             .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            tint = AmberUi.Text,
-            modifier = Modifier.size(iconSize)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        if (iconRes != null) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                tint = AmberUi.Text,
+                modifier = Modifier.size(iconSize)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Text(
             text = label,
             color = if (selected) AmberUi.Text else AmberUi.TextDim,
@@ -1629,7 +1685,7 @@ private fun ModsTagChip(text: String) {
 
 /** Catatan singkat di atas daftar untuk instance mesin Rust (Horizon). */
 @Composable
-private fun RustNotice(type: String) {
+private fun RustNotice(type: String, horizon: Boolean) {
     val shape = RoundedCornerShape(16.dp)
     Column(
         modifier = Modifier
@@ -1654,6 +1710,23 @@ private fun RustNotice(type: String) {
                 fontSize = 12.sp,
                 lineHeight = 17.sp
             )
+        }
+        if (type == HorizonContent.TYPE_SHADERS || type == HorizonContent.TYPE_RESOURCES) {
+            val sourceNote = when {
+                type == HorizonContent.TYPE_SHADERS && horizon -> "Sumber Horizon: shader asli mesin Rust (.hshader)."
+                type == HorizonContent.TYPE_SHADERS -> "Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas."
+                horizon -> "Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust."
+                else -> null
+            }
+            if (sourceNote != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = sourceNote,
+                    color = AmberUi.TextDim,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp
+                )
+            }
         }
         if (type == HorizonContent.TYPE_MODS) {
             Spacer(modifier = Modifier.height(4.dp))

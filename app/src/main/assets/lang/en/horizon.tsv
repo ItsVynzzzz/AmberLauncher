@@ -21,7 +21,7 @@ Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	The archive is too l
 Metadata resource pack (pack.mcmeta) tidak valid.	The resource pack metadata (pack.mcmeta) is not valid.
 Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	This file is not a resource pack: pack.mcmeta was not found at the top level of the archive.
 Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	This file is not a shader pack: no shaders folder was found at the top level of the archive.
-Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader).	This is a native Horizon shader. Install it from the Import menu inside the Rust engine (.hshader format).
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	This is a native Horizon shader. Install it from the Horizon source on the Browse screen (.hshader format).
 Tidak ada berkas .zip yang cocok di versi ini.	No matching .zip file in this version.
 Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	The source provides no file checksum, so the download cannot be verified.
 Gagal menyimpan berkas ke folder mesin Rust.	Failed to save the file to the Rust engine folder.
@@ -52,14 +52,21 @@ Peta kecil yang bisa diatur di sudut layar	A configurable map in the screen corn
 Resep dan kegunaan item di samping inventori	Item recipes and uses beside the inventory
 Modul F3 yang bisa diatur untuk layar debug	Configurable modules for the F3 debug screen
 Resep	Recipes
-Katalog mod Horizon tidak bisa dibaca. Coba lagi nanti.	The Horizon mod catalog could not be read. Please try again later.
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	The Horizon catalog could not be read. Please try again later.
 Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	The Horizon catalog uses a newer format. Please update Amber.
-Tidak ada berkas .hmod yang cocok di versi ini.	No matching .hmod file in this version.
+Tidak ada berkas yang cocok di versi ini.	No matching file in this version.
 Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	The catalog gives no SHA-256 checksum, so the download cannot be verified.
-Alamat unduhan mod tidak dikenali, jadi ditolak.	The mod download address is not recognized, so it was rejected.
-Ukuran berkas mod tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	The mod file size does not match the catalog, so it was not installed.
+Alamat unduhan tidak dikenali, jadi ditolak.	The download address is not recognized, so it was rejected.
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	The file size does not match the catalog, so it was not installed.
 Memuat data dari Horizon...	Loading data from Horizon...
 Gagal memuat dari Horizon	Failed to load from Horizon
 Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Rust engine mods use the .hmod format (not Fabric or Forge .jar files). Mods that contain code are installed turned off; turn them on after reviewing their permissions in Options > Mods in the game.
 Konten	Content
 Berkode	Has code
+# Katalog Horizon untuk shader dan resource pack
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	This is not a native Horizon shader: horizon-shaders.toml was not found at the top level of the archive.
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	The native Horizon shader is too large (file over 16 MB, contents over 8 MB, or a single file that is too big).
+Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon source: native Rust engine shaders (.hshader).
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth source: classic shaders, compatibility with the Rust engine is still limited.
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon source: resource packs made or tested for the Rust engine.
+Coba ubah kata kunci atau pindah ke sumber Modrinth	Try changing the keyword or switch to the Modrinth source

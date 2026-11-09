@@ -51,6 +51,15 @@ object HorizonContent {
 
     private val SHADER_EXTENSIONS = listOf("vsh", "fsh", "glsl", "csh", "gsh", "tcs", "tes")
 
+    /** Shader asli Horizon: zip berekstensi .hshader dengan horizon-shaders.toml di dasar arsip (crate horizon-shader-api). */
+    const val NATIVE_SHADER_EXTENSION = ".hshader"
+    private const val NATIVE_MANIFEST = "horizon-shaders.toml"
+    private const val NATIVE_MAX_FILE_BYTES = 16L * 1024L * 1024L
+    private const val NATIVE_MAX_ENTRIES = 512
+    private const val NATIVE_MAX_WGSL_BYTES = 256L * 1024L
+    private const val NATIVE_MAX_OTHER_BYTES = 1L shl 20
+    private const val NATIVE_MAX_TOTAL_BYTES = 8L shl 20
+
     // Pesan galat ditampilkan apa adanya ke pengguna; semuanya ada di kamus bahasa (mods.tsv).
     const val MSG_TYPE = "Jenis berkas ini belum didukung mesin Rust."
     const val MSG_NAME = "Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang)."
@@ -63,7 +72,9 @@ object HorizonContent {
     const val MSG_META = "Metadata resource pack (pack.mcmeta) tidak valid."
     const val MSG_NOT_RESOURCE = "Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip."
     const val MSG_NOT_SHADER = "Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip."
-    const val MSG_NATIVE = "Ini shader asli Horizon. Pasang lewat menu Impor di dalam mesin Rust (format .hshader)."
+    const val MSG_NATIVE = "Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader)."
+    const val MSG_NATIVE_MANIFEST = "Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip."
+    const val MSG_NATIVE_BIG = "Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar)."
     const val MSG_NO_ZIP = "Tidak ada berkas .zip yang cocok di versi ini."
     const val MSG_NO_HASH = "Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa."
     const val MSG_SAVE = "Gagal menyimpan berkas ke folder mesin Rust."
@@ -295,6 +306,11 @@ object HorizonContent {
      */
     internal fun validate(file: File, itemType: String, name: String) {
         if (!plainName(name)) throw IOException(MSG_NAME)
+        // Shader asli Horizon (.hshader) punya aturan paket sendiri; hanya jenis Shader yang menerimanya
+        if (itemType == TYPE_SHADERS && name.lowercase().endsWith(NATIVE_SHADER_EXTENSION)) {
+            validateNativeShader(file)
+            return
+        }
         if (!name.lowercase().endsWith(".zip")) throw IOException(MSG_FORMAT)
         if (file.length() > MAX_FILE_BYTES) throw IOException(MSG_TOO_BIG)
 
@@ -310,15 +326,7 @@ object HorizonContent {
                 while (entries.hasMoreElements()) {
                     val entry = entries.nextElement()
                     val raw = entry.name
-                    if (raw.isEmpty() ||
-                        raw.toByteArray(Charsets.UTF_8).size > MAX_ENTRY_PATH_BYTES ||
-                        raw.any { it.isISOControl() || it == '\\' || it == ':' } ||
-                        raw.startsWith("/") ||
-                        raw.split('/').any { it == ".." || it == "." } ||
-                        !seen.add(raw)
-                    ) {
-                        throw IOException(MSG_UNSAFE)
-                    }
+                    if (isUnsafeEntry(raw) || !seen.add(raw)) throw IOException(MSG_UNSAFE)
                     val size = entry.size
                     if (size < 0L) throw IOException(MSG_BROKEN)
                     total += size
@@ -359,11 +367,57 @@ object HorizonContent {
         }
     }
 
+    /**
+     * Pemeriksaan bentuk paket .hshader seperti horizon_shader_api::Pack::read: zip, paling banyak 512 entri,
+     * path entri aman, horizon-shaders.toml di dasar arsip, berkas .wgsl paling besar 256 KB, berkas lain 1 MB,
+     * total isi 8 MB. Isi WGSL dan manifestnya sendiri tidak dibaca di sini: katalog dan mesin memeriksanya
+     * (mesin menolak paket yang rusak sebelum memuatnya).
+     */
+    private fun validateNativeShader(file: File) {
+        if (file.length() > NATIVE_MAX_FILE_BYTES) throw IOException(MSG_NATIVE_BIG)
+        var hasManifest = false
+        try {
+            ZipFile(file).use { zip ->
+                if (zip.size() > NATIVE_MAX_ENTRIES) throw IOException(MSG_TOO_MANY)
+                val seen = HashSet<String>()
+                var total = 0L
+                val entries = zip.entries()
+                while (entries.hasMoreElements()) {
+                    val entry = entries.nextElement()
+                    val raw = entry.name
+                    if (isUnsafeEntry(raw) || !seen.add(raw)) throw IOException(MSG_UNSAFE)
+                    if (entry.isDirectory) continue
+                    val size = entry.size
+                    if (size < 0L) throw IOException(MSG_BROKEN)
+                    val limit = if (raw.endsWith(".wgsl")) NATIVE_MAX_WGSL_BYTES else NATIVE_MAX_OTHER_BYTES
+                    if (size > limit) throw IOException(MSG_NATIVE_BIG)
+                    total += size
+                    if (total > NATIVE_MAX_TOTAL_BYTES) throw IOException(MSG_NATIVE_BIG)
+                    if (raw == NATIVE_MANIFEST) hasManifest = true
+                }
+            }
+        } catch (e: IOException) {
+            throw if (isOurMessage(e.message)) e else IOException(MSG_BROKEN)
+        } catch (_: Exception) {
+            throw IOException(MSG_BROKEN)
+        }
+        if (!hasManifest) throw IOException(MSG_NATIVE_MANIFEST)
+    }
+
+    /** Path entri arsip yang ditolak mesin: kosong, terlalu panjang, berkarakter terlarang, mutlak, atau berisi ".." / ".". */
+    private fun isUnsafeEntry(raw: String): Boolean =
+        raw.isEmpty() ||
+            raw.toByteArray(Charsets.UTF_8).size > MAX_ENTRY_PATH_BYTES ||
+            raw.any { it.isISOControl() || it == '\\' || it == ':' } ||
+            raw.startsWith("/") ||
+            raw.split('/').any { it == ".." || it == "." }
+
     private fun isOurMessage(message: String?): Boolean = message != null && message in OUR_MESSAGES
 
     private val OUR_MESSAGES = setOf(
         MSG_TYPE, MSG_NAME, MSG_FORMAT, MSG_TOO_BIG, MSG_BROKEN, MSG_TOO_MANY, MSG_UNSAFE, MSG_EXPANDED,
-        MSG_META, MSG_NOT_RESOURCE, MSG_NOT_SHADER, MSG_NATIVE, MSG_NO_ZIP, MSG_NO_HASH, MSG_SAVE
+        MSG_META, MSG_NOT_RESOURCE, MSG_NOT_SHADER, MSG_NATIVE, MSG_NATIVE_MANIFEST, MSG_NATIVE_BIG,
+        MSG_NO_ZIP, MSG_NO_HASH, MSG_SAVE
     )
 
     internal fun uniqueFile(dir: File, name: String): File {

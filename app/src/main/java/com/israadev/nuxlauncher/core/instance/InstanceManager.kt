@@ -463,12 +463,12 @@ object InstanceManager {
     private fun save(context: Context) {
         try {
             val file = getInstancesFile(context)
-            file.writeText(gson.toJson(_instances.value))
+            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_instances.value))
             // Also sync each instance.json in its isolated directory
             _instances.value.forEach { inst ->
                 try {
                     val instDir = getInstanceDir(context, inst)
-                    File(instDir, "instance.json").writeText(gson.toJson(inst))
+                    com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(File(instDir, "instance.json"), gson.toJson(inst))
                 } catch (_: Exception) {}
             }
         } catch (e: Exception) {

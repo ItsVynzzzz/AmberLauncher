@@ -287,6 +287,7 @@ fun DashboardScreen() {
         dl.progress = 0f
         dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
 
+        com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
         downloadJob = scope.launch {
             JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
                 dl.progress = p
@@ -307,6 +308,11 @@ fun DashboardScreen() {
                 Toast.makeText(context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
+        }.also { job ->
+            // Selesai, gagal, atau dibatalkan: penjaga proses tidak diperlukan lagi
+            job.invokeOnCompletion {
+                com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.stop(context)
             }
         }
     }

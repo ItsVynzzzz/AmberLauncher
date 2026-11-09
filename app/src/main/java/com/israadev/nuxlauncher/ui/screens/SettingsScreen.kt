@@ -187,7 +187,7 @@ fun SettingsScreen(
     var ambientIntensity by remember(currentSettings.homeAmbientIntensity) { mutableIntStateOf(currentSettings.homeAmbientIntensity) }
 
     val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
-    val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.85f).toInt().coerceAtLeast(1024) }
+    val maxAllocatableRam = remember(totalRamMb) { (totalRamMb * 0.6f).toInt().coerceAtLeast(1024) }
     val cpuCores = remember { SettingsManager.getCpuCoreCount() }
     val showRefreshLock = remember { DeviceProfiles.supportsHighRefresh(context) }
 
@@ -354,11 +354,11 @@ fun SettingsScreen(
                         if (!searching) DeviceProfileCard()
 
                         SettingsGroup("Memori") {
-                        val ramTooBig = ramMb > (totalRamMb * 0.75f)
+                        val ramTooBig = ramMb > (totalRamMb * 0.5f)
                         SettingSliderRow(
                             title = "Memori game (RAM)",
                             desc = if (ramTooBig) {
-                                "Terlalu besar untuk HP ini, game dan HP bisa jadi lambat."
+                                "Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android."
                             } else {
                                 "Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat."
                             },

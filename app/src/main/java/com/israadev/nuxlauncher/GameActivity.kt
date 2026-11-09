@@ -1629,6 +1629,15 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     }
                     if (heapInitMb > heapMaxMb) heapInitMb = heapMaxMb
                 }
+                // Heap hanya sebagian memori game (JIT, driver grafis, dan tekstur memakai memori di luar heap).
+                // Heap di atas ~60% RAM HP hampir pasti membuat Android mematikan game (kode 137), jadi nilai
+                // tersimpan yang lebih besar dari batas slider Pengaturan dibatasi di sini. Lantai 1024 MB sama dengan slider.
+                val heapCapByDeviceMb = maxOf((deviceTotalRamMb * 0.6f).toInt(), 1024)
+                if (heapMaxMb > heapCapByDeviceMb) {
+                    LoggerBridge.append("▷ [JVM] RAM game diminta $heapMaxMb MB, RAM HP $deviceTotalRamMb MB: heap dibatasi $heapCapByDeviceMb MB")
+                    heapMaxMb = heapCapByDeviceMb
+                    if (heapInitMb > heapMaxMb) heapInitMb = heapMaxMb
+                }
                 // Mode Serial dengan heap kecil: code cache JIT dikecilkan (cara Battly). Heap sudah final di sini.
                 profileFlags = profileFlags + DeviceProfiles.serialCodeCacheFlags(
                     DeviceProfiles.flagsSelectSerial(profileFlags), heapMaxMb, activeSettings.customJvmArgs

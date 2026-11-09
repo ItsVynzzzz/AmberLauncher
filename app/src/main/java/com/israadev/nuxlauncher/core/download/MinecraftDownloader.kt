@@ -51,6 +51,18 @@ class MinecraftDownloader(
         .retryOnConnectionFailure(true)
         .build()
 
+    /** Menghapus berkas sementara unduhan (`.part_`) yang sudah lama tidak disentuh, di semua folder [roots]. */
+    private fun cleanStaleParts(vararg roots: File) {
+        val cutoff = System.currentTimeMillis() - 10L * 60L * 1000L
+        for (root in roots) {
+            try {
+                root.walkTopDown()
+                    .filter { it.isFile && it.name.contains(".part_") && it.lastModified() < cutoff }
+                    .forEach { it.delete() }
+            } catch (_: Throwable) {}
+        }
+    }
+
     /** Mengunduh instance; awal, hasil, dan galatnya dicatat di buku harian launcher ([LauncherLog]). */
     suspend fun downloadInstance(
         instance: Instance,
@@ -88,6 +100,27 @@ class MinecraftDownloader(
             val versionDir = File(InstanceManager.getVersionsDir(context), instance.mcVersion)
             if (!versionDir.exists()) versionDir.mkdirs()
 
+            // Sisa berkas sementara dari unduhan yang terputus (proses dimatikan sistem) tidak pernah dihapus
+            // sendiri; di HP berpenyimpanan kecil lama-lama memakan ruang. Dibersihkan sebelum mengunduh lagi.
+            cleanStaleParts(
+                versionDir,
+                InstanceManager.getLibrariesDir(context),
+                File(InstanceManager.getAssetsDir(context), "objects")
+            )
+
+            // Unduhan baru butuh sekitar setengah GB. Gagal di tengah jalan karena penyimpanan penuh hanya
+            // memunculkan galat samar, jadi dicek di awal dengan pesan yang jelas.
+            if (!File(versionDir, "${instance.mcVersion}.jar").exists()) {
+                val freeBytes = try { versionDir.usableSpace } catch (_: Throwable) { Long.MAX_VALUE }
+                val minFreeBytes = 400L * 1024L * 1024L
+                if (freeBytes < minFreeBytes) {
+                    val freeMb = freeBytes / (1024L * 1024L)
+                    return@withContext Result.failure(
+                        IOException("Ruang penyimpanan tinggal $freeMb MB. Kosongkan minimal 500 MB lalu coba unduh lagi.")
+                    )
+                }
+            }
+
             // 1. Save version.json
             val versionJsonFile = File(versionDir, "${instance.mcVersion}.json")
             if (!versionJsonFile.exists()) {
@@ -117,13 +150,13 @@ class MinecraftDownloader(
                 )
             }
 
-            // 3. Download Libraries (paralel, 20 thread: cukup cepat dan ringan untuk HP RAM kecil)
+            // 3. Download Libraries (paralel, sampai 20 thread; lebih sedikit di HP RAM kecil)
             val libraries = detail.libraries ?: emptyList()
             val allowedLibs = libraries.filter { isLibraryAllowed(it) }
             val libDir = InstanceManager.getLibrariesDir(context)
             if (!libDir.exists()) libDir.mkdirs()
 
-            val libThreads = 20
+            val libThreads = parallelism(20)
 
             val totalLibs = allowedLibs.size
             if (totalLibs > 0) {
@@ -177,7 +210,7 @@ class MinecraftDownloader(
                     downloadFile(assetIndex.url, indexFile, expectedSha1 = assetIndex.sha1)
                 }
 
-                // Download objects (paralel, 24 thread)
+                // Download objects (paralel, sampai 24 thread; lebih sedikit di HP RAM kecil)
                 if (indexFile.exists()) {
                     try {
                         val indexContent = gson.fromJson(indexFile.readText(), AssetIndexContent::class.java)
@@ -187,7 +220,7 @@ class MinecraftDownloader(
 
                         val downloadedAssets = AtomicInteger(0)
                         val failedAssets = AtomicInteger(0)
-                        val assetThreads = 24
+                        val assetThreads = parallelism(24)
                         val semaphore = Semaphore(assetThreads)
 
                         val assetJobs = objects.map { entry ->
@@ -257,7 +290,7 @@ class MinecraftDownloader(
                 val totalFabricLibs = fabricLibs.size
                 if (totalFabricLibs > 0) {
                     val downloadedFabric = AtomicInteger(0)
-                    val sem = Semaphore(32)
+                    val sem = Semaphore(parallelism(32))
                     val fabricJobs = fabricLibs.map { lib ->
                         async {
                             sem.withPermit {
@@ -369,6 +402,19 @@ class MinecraftDownloader(
             urls.add(url.replace("https://files.minecraftforge.net/maven", "https://bmclapi2.bangbang93.com/maven"))
         }
         return urls
+    }
+
+    /**
+     * Jumlah koneksi unduh paralel menurut RAM HP. Tiap koneksi memegang buffer dan menghitung SHA-1,
+     * jadi di HP RAM kecil terlalu banyak koneksi membuat HP lag dan malah memperlambat unduhan.
+     */
+    private fun parallelism(base: Int): Int {
+        val ramMb = com.israadev.nuxlauncher.core.settings.SettingsManager.getTotalDeviceMemoryMb(context)
+        return when {
+            ramMb < 3000 -> minOf(base, 6)
+            ramMb < 4500 -> minOf(base, 12)
+            else -> base
+        }
     }
 
     /**

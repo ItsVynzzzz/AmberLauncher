@@ -127,7 +127,7 @@ object AccountManager {
     private fun saveGameAccounts(context: Context) {
         try {
             val file = getAccountsFile(context)
-            file.writeText(gson.toJson(_accounts.value))
+            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_accounts.value))
         } catch (e: Exception) {
             e.printStackTrace()
         }

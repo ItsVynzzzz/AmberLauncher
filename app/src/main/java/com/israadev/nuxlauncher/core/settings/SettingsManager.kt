@@ -104,8 +104,8 @@ object SettingsManager {
     /**
      * RAM game (MB) yang disarankan untuk HP dengan total RAM [totalRamMb]. Dipakai saat pertama
      * kali dibuka dan saat reset, supaya hasilnya selalu sama. HP 4 GB (melapor sekitar 3700 MB)
-     * tetap mendapat 1280 MB seperti sebelumnya; HP di bawah 3 GB mendapat 1024 MB agar tidak
-     * kehabisan memori.
+     * tetap mendapat 1280 MB seperti sebelumnya; HP 3 GB mendapat 1024 MB dan HP 2 GB ke bawah 768 MB,
+     * karena sisa RAM kosongnya kecil dan Android mudah mematikan game bila heap terlalu besar.
      */
     fun recommendedRamMb(totalRamMb: Int): Int = when {
         totalRamMb >= 12000 -> 4096
@@ -113,13 +113,14 @@ object SettingsManager {
         totalRamMb >= 6000 -> 2560
         totalRamMb >= 4000 -> 2048
         totalRamMb >= 3000 -> 1280
-        else -> 1024
+        totalRamMb >= 2500 -> 1024
+        else -> 768
     }
 
     private fun save(context: Context) {
         try {
             val file = getSettingsFile(context)
-            file.writeText(gson.toJson(_settings.value))
+            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_settings.value))
         } catch (e: Exception) {
             e.printStackTrace()
         }

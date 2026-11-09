@@ -214,6 +214,12 @@
             android:process=":forge"
             android:foregroundServiceType="dataSync" />
 
+        <!-- Penjaga proses selama Minecraft diunduh (proses utama, bukan proses sendiri) -->
+        <service
+            android:name=".core.download.DownloadKeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
         <!--
             Proses :vkcheck sendiri: pengecekan dukungan Vulkan memuat driver grafis HP, dan driver yang bermasalah
             bisa menutup prosesnya. Dengan proses terpisah, yang mati hanya :vkcheck, bukan launcher. Hidup beberapa

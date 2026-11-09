@@ -1,0 +1,58 @@
+name: Situs web (GitHub Pages)
+
+# Menerbitkan isi folder docs/site ke https://<pemilik>.github.io/<repo>/.
+# Sekali saja di GitHub: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+#
+# Kapan berjalan:
+#  - push ke main yang mengubah docs/site/** (mis. lewat commit biasa dari web GitHub);
+#  - setelah workflow "Build APK" selesai dengan sukses. Ini perlu karena patch yang diterapkan
+#    otomatis oleh Build APK di-commit memakai GITHUB_TOKEN, dan push seperti itu TIDAK memicu
+#    workflow lain. Dengan jalur ini perubahan situs yang masuk lewat patch ikut terbit;
+#  - manual lewat tombol Run workflow.
+# Daftar rilis/unduhan di situs diambil browser langsung dari GitHub saat halaman dibuka, jadi
+# situs tidak perlu diterbitkan ulang setiap ada rilis baru.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/site/**"
+      - ".github/workflows/pages.yml"
+  workflow_run:
+    workflows: ["Build APK"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  terbitkan:
+    name: Terbitkan situs
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Ambil kode
+        uses: actions/checkout@v5
+
+      - name: Siapkan Pages
+        uses: actions/configure-pages@v5
+
+      - name: Unggah folder situs
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/site
+
+      - name: Terbitkan
+        id: deployment
+        uses: actions/deploy-pages@v4

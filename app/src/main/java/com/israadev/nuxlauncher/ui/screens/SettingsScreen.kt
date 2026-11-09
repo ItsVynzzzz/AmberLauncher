@@ -263,7 +263,8 @@ fun SettingsScreen(
         Tr.EN to "English",
         Tr.ES to "Espa\u00f1ol",
         Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
-        Tr.PT to "Portugu\u00eas (Brasil)"
+        Tr.PT to "Portugu\u00eas (Brasil)",
+        Tr.TH to "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22"
     )
 
     Column(

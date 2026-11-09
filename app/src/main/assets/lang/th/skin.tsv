@@ -1,0 +1,67 @@
+# Wardrobe: skin dan jubah
+Gagal memuat jubah: {0}	โหลดเคปไม่สำเร็จ: {0}
+Memvalidasi skin...	กำลังตรวจสอบสกิน...
+Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	โหลดสกินในพรีวิวแล้ว ({0}) \u2014 กดบันทึกเพื่อใช้งาน
+File tidak valid	ไฟล์ไม่ถูกต้อง
+Memvalidasi cape...	กำลังตรวจสอบเคป...
+Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	โหลดเคปกำหนดเองในพรีวิวแล้ว \u2014 กดบันทึกเพื่อใช้งาน
+File cape tidak valid	ไฟล์เคปไม่ถูกต้อง
+WARDROBE & CUSTOM SKIN	ตู้เสื้อผ้าและสกินกำหนดเอง
+Kustomisasi tampilan skin dan jubah pemain Minecraft	ปรับแต่งสกินและเคปของผู้เล่น Minecraft ของคุณ
+3D (DRAG / PUTAR)	3D (ลาก / หมุน)
+Putar Otomatis	หมุนอัตโนมัติ
+Reset Kamera	รีเซ็ตกล้อง
+Jalan	เดิน
+Diam	ยืนนิ่ง
+Lari	วิ่ง
+Sapa	โบกมือ
+KUSTOM SKIN	สกินกำหนดเอง
+JUBAH / CAPE	เคป
+Sistem Skin & Jubah Ely.by	ระบบสกินและเคป Ely.by
+Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	บัญชี Ely.by ใช้เซิร์ฟเวอร์ skinsystem แบบรวมศูนย์ หากต้องการเปลี่ยนสกินหรือประเภทโมเดลแขน ให้อัปโหลดโดยตรงที่เว็บไซต์ทางการของ ely.by เพื่อให้ซิงก์ในเกม
+KUNJUNGI ACCOUNT.ELY.BY	ไปที่ ACCOUNT.ELY.BY
+PILIH FILE SKIN (.PNG)	เลือกไฟล์สกิน (.PNG)
+TIPE MODEL LENGAN:	ประเภทโมเดลแขน:
+Model Klasik dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดลคลาสสิกแล้ว (พรีวิว) \u2014 กดบันทึก
+Lengan tebal (4px)	แขนหนา (4px)
+Model Slim dipilih (Preview) \u2014 Klik Simpan	เลือกโมเดล Slim แล้ว (พรีวิว) \u2014 กดบันทึก
+Lengan ramping (3px)	แขนเรียว (3px)
+Skin direset ke default Steve (Preview) \u2014 Klik Simpan	รีเซ็ตสกินเป็น Steve เริ่มต้นแล้ว (พรีวิว) \u2014 กดบันทึก
+\u21ba Reset ke Skin Default (Klasik)	\u21ba รีเซ็ตเป็นสกินเริ่มต้น (คลาสสิก)
+JUBAH RESMI MINECRAFT.NET:	เคปทางการจาก MINECRAFT.NET:
+Memuat jubah dari Minecraft.net...	กำลังโหลดเคปจาก Minecraft.net...
+Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	บัญชี Microsoft ของคุณยังไม่มีเคปทางการบน Minecraft.net
+Jubah dilepas (Preview) \u2014 Klik Simpan	ถอดเคปแล้ว (พรีวิว) \u2014 กดบันทึก
+Tanpa Jubah (Lepas Cape)	ไม่สวมเคป (ถอดเคป)
+Jubah {0} dipilih (Preview) \u2014 Klik Simpan	เลือกเคป {0} แล้ว (พรีวิว) \u2014 กดบันทึก
+AKTIF DI MOJANG	ใช้งานอยู่บน MOJANG
+Sistem Skin & Cape Ely.by	ระบบสกินและเคป Ely.by
+Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	บัญชี Ely.by ใช้เซิร์ฟเวอร์ skinsystem ทางการ สกินและเคปทั้งหมดจัดการผ่านเว็บไซต์ ely.by โดยตรง และจะแสดงในเกมโดยอัตโนมัติ
+BUKA WEBSITE ELY.BY	เปิดเว็บไซต์ ELY.BY
+PILIH FILE CAPE KUSTOM (.PNG)	เลือกไฟล์เคปกำหนดเอง (.PNG)
+ATAU PILIH PRESET JUBAH:	หรือเลือกเคปที่ตั้งไว้ล่วงหน้า:
+Cape dilepas (Preview) \u2014 Klik Simpan	ถอดเคปแล้ว (พรีวิว) \u2014 กดบันทึก
+Menyinkronkan ke Minecraft.net...	กำลังซิงก์ไปยัง Minecraft.net...
+Gagal memperbarui Minecraft.net: {~0}	อัปเดต Minecraft.net ไม่สำเร็จ: {0}
+Perubahan berhasil diterapkan ke Minecraft.net!	นำการเปลี่ยนแปลงไปใช้บน Minecraft.net สำเร็จ!
+Skin & Cape berhasil disimpan!	บันทึกสกินและเคปสำเร็จ!
+SIMPAN KE MOJANG	บันทึกไปที่ MOJANG
+SIMPAN PERUBAHAN	บันทึกการเปลี่ยนแปลง
+Jubah Resmi Minecraft	เคปทางการของ Minecraft
+Jubah Aktif Minecraft	เคป Minecraft ที่ใช้งานอยู่
+{0} Cape	เคป {0}
+Gagal memuat jubah Minecraft.	โหลดเคป Minecraft ไม่สำเร็จ
+Respon profil kosong	การตอบกลับโปรไฟล์ว่างเปล่า
+Gagal mengubah jubah.	เปลี่ยนเคปไม่สำเร็จ
+Gagal mengunggah skin.	อัปโหลดสกินไม่สำเร็จ
+Gagal membaca file dari penyimpanan.	อ่านไฟล์จากที่เก็บข้อมูลไม่สำเร็จ
+Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	รูปแบบสกินไม่ถูกต้อง ขนาดต้องเป็น 64x64 หรือ 64x32 พิกเซล
+Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	รูปแบบเคปไม่ถูกต้อง ขนาดต้องเป็น 64x32 หรือ 128x64 พิกเซล
+Tanpa Cape	ไม่มีเคป
+Reset / Lepas cape	รีเซ็ต / ถอดเคป
+Klasik merah resmi Mojang	สีแดงคลาสสิกอย่างเป็นทางการของ Mojang
+Creeper emas peringatan 15 tahun	Creeper สีทองฉลองครบรอบ 15 ปี
+Jubah biru kehormatan migrasi	เคปสีน้ำเงินเพื่อเกียรติสำหรับการย้ายบัญชี
+Motif sakura edisi 1.20	ลายซากุระ รุ่น 1.20
+Edisi emas pencipta	รุ่นทองสำหรับผู้สร้าง
+Edisi Java & Bedrock bundle	รุ่นบันเดิล Java & Bedrock

@@ -1,0 +1,92 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	ปุ่ม
+Atur tombol	จัดปุ่ม
+TAMPILAN	การแสดงผล
+Resolusi render	ความละเอียดเรนเดอร์
+Hemat 50%	ประหยัด 50%
+Seimbang 75%	สมดุล 75%
+Penuh 100%	เต็ม 100%
+Pin FPS di layar	ปักหมุด FPS บนหน้าจอ
+Tetap tampil saat tombol layar disembunyikan	แสดงต่อเนื่องแม้ซ่อนปุ่มบนหน้าจอ
+KAMERA DAN KURSOR	กล้องและเคอร์เซอร์
+Kecepatan kamera	ความเร็วกล้อง
+Kecepatan kursor	ความเร็วเคอร์เซอร์
+Mode sentuh	โหมดสัมผัส
+Geser	เลื่อน
+Ketuk	แตะ
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	เลื่อน: หน้าจอทำหน้าที่เป็นแทร็กแพด แตะ: นิ้วของคุณเป็นเคอร์เซอร์โดยตรง
+Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	กดปุ่มโจมตีหรือกระโดดค้างไว้แล้วเลื่อนนิ้วเพื่อหมุนกล้อง ปิดไว้สำหรับ PvP
+PINTAS	ทางลัด
+Kamera	กล้อง
+Jeda	หยุดชั่วคราว
+Pemain	ผู้เล่น
+Sembunyi HUD	ซ่อน HUD
+Keluar dari game	ออกจากเกม
+Keluar dari game?	ออกจากเกมหรือไม่?
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft จะถูกหยุดและคุณจะกลับไปที่ตัวเปิดเกม โลกที่ยังไม่ได้บันทึกอาจสูญหาย
+sisa RAM	RAM เหลือ
+PANAS	ร้อน
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	แตะไอคอนเฟืองหรือตัวเลข FPS บนหน้าจอเพื่อเปิดเมนู ออกจากเกมด้วยปุ่มสีแดงในเมนู
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	บั๊กเป็นเรื่องปกติ เพราะไม่มีสิ่งใดสมบูรณ์แบบนอกจากพระผู้เป็นเจ้า
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	ปิด Vertical Sync (VSync) ในการตั้งค่า Renderer หากเจออาการกระตุกหรือหน้าจอดำว่างหลังโลโก้ Mojang
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	หากหน้าจอ Minecraft ถูกตัดหรืออยู่ในแนวตั้ง ให้เปิดการหมุนหน้าจออัตโนมัติของมือถือและจับหน้าจอในแนวนอน (Landscape) ก่อนกดเล่น
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	ใช้ Renderer MobileGlues เพื่อประหยัดแบตเตอรี่และเข้ากันได้กับ shaderpack ดีที่สุด
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	หาก Minecraft แครชตอนเริ่มบน GPU Mali/Adreno ลองเปิด 'DISABLE_SUBGROUP' ในการตั้งค่า renderer
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	เปิด OpenGL NoError ในการตั้งค่า MobileGlues เพื่อเพิ่ม FPS ขณะเล่น
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	ใช้ปุ่ม HIDE GUI เพื่อซ่อนปุ่มเสมือนบนหน้าจอเมื่อเล่นด้วยคีย์บอร์ดและเมาส์จริง
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	ตั้งการจัดสรร RAM ให้เหมาะกับมือถือ: 2GB\u20133GB เพียงพอแล้วสำหรับ Minecraft 1.20+ ที่ไม่มี modpack หนักๆ
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	ปรับความไวเคอร์เซอร์ในการตั้งค่าการควบคุมเพื่อเล็งและมองรอบๆ ได้แม่นยำขึ้น
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	เลือกไดรเวอร์ Vulkan แบบ Turnip บนอุปกรณ์ Snapdragon เพื่อประสิทธิภาพกราฟิกและความเสถียรสูงสุด
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	คุณปรับตำแหน่งและขนาดปุ่มควบคุมได้ตามต้องการในเมนูปรับแต่งปุ่ม
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	ใช้ฟีเจอร์ Import Addon เพื่อติดตั้ง modpack (.mrpack), Mod (.jar) และ resource pack ได้ทันที!
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	แตะปุ่ม ESC บนหน้าจอเพื่อเปิดเมนูหยุดชั่วคราวหรือย้อนกลับไปเมนูก่อนหน้า
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	กดปุ่ม F3 เพื่อดูพิกัด ไบโอม และกราฟประสิทธิภาพ FPS ในเกม
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	เปิดโหมดเต็มหน้าจอ (Fullscreen) ในการตั้งค่าเพื่อไม่ให้ติดรอยบาก/กล้องหน้าและขยายมุมมอง
+Memuat Minecraft {0}	กำลังโหลด Minecraft {0}
+Tutup loading	ปิดการโหลด
+Menyiapkan mesin Java dan grafis...	กำลังเตรียมเอนจิน Java และกราฟิก...
+Izin penyimpanan	สิทธิ์เข้าถึงที่เก็บข้อมูล
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher เก็บโลก Mod และการตั้งค่าไว้ในโฟลเดอร์ nuxlauncher บนที่เก็บข้อมูลของมือถือ เพื่อให้สำรองและย้ายได้ง่าย
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android จะเปิดหน้าการตั้งค่า ให้เปิดสิทธิ์เข้าถึงไฟล์ทั้งหมดสำหรับ AmberLauncher แล้วกลับมาที่นี่
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	หากเลือกไว้ทีหลัง เกมก็ยังใช้งานได้ ข้อมูลจะถูกเก็บในโฟลเดอร์ส่วนตัวของแอป ซึ่งเปิดจากตัวจัดการไฟล์ได้ไม่ง่าย
+Hapus instance?	ลบ instance?
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	โลก Mod เซฟ และการกำหนดค่าทั้งหมดใน instance นี้จะถูกลบถาวรและกู้คืนไม่ได้
+Perender tidak cocok	Renderer เข้ากันไม่ได้
+Tetap jalankan	เปิดเกมต่อไป
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Renderer นี้ไม่ได้รับการรองรับอย่างเป็นทางการสำหรับ Minecraft {0} การบังคับใช้อาจทำให้ภาพผิดเพี้ยน หน้าจอค้าง หรือเกมแครช ดำเนินการต่อหรือไม่?
+Dukungan resmi: {0}	รองรับอย่างเป็นทางการ: {0}
+Mengunduh game	กำลังดาวน์โหลดเกม
+Menyiapkan file game...	กำลังเตรียมไฟล์เกม...
+Rekam layar	บันทึกหน้าจอ
+Merekam	กำลังบันทึก
+Dijeda	หยุดชั่วคราว
+Ketuk untuk mulai	แตะเพื่อเริ่ม
+Merekam layar	กำลังบันทึกหน้าจอ
+Ketuk Berhenti untuk menyimpan rekaman.	แตะหยุดเพื่อบันทึกวิดีโอ
+Berhenti	หยุด
+Merekam {0}x{1} \u00b7 {2} fps	กำลังบันทึก {0}x{1} \u00b7 {2} fps
+Izin merekam layar tidak diberikan	ไม่ได้รับอนุญาตให้บันทึกหน้าจอ
+Izin mikrofon ditolak, merekam tanpa suara	ไมโครโฟนถูกปฏิเสธ บันทึกโดยไม่มีเสียง
+Perekam layar tidak tersedia di HP ini	มือถือเครื่องนี้ไม่มีตัวบันทึกหน้าจอ
+Perekam layar tidak tersedia di HP ini.	มือถือเครื่องนี้ไม่มีตัวบันทึกหน้าจอ
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	มือถือเครื่องนี้ไม่มีตัวเข้ารหัสวิดีโอแบบฮาร์ดแวร์ ยกเลิกการบันทึกเพื่อไม่ให้เกมกระตุก
+Ruang penyimpanan kurang untuk merekam.	พื้นที่เก็บข้อมูลไม่พอสำหรับบันทึก
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	พื้นที่เก็บข้อมูลเต็ม บันทึกและหยุดการบันทึกแล้ว
+Perekam mengalami kesalahan. Rekaman dihentikan.	ตัวบันทึกเกิดข้อผิดพลาด หยุดการบันทึกแล้ว
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	ระบบหยุดการจับภาพหน้าจอ บันทึกวิดีโอไว้แล้ว
+Rekaman terlalu singkat, tidak disimpan.	วิดีโอที่บันทึกสั้นเกินไป จึงไม่ได้บันทึกไว้
+Rekaman disimpan di Movies/AmberLauncher	บันทึกวิดีโอไว้ที่ Movies/AmberLauncher
+Rekaman disimpan: {0}	บันทึกวิดีโอแล้ว: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	มือถือร้อนเกินไป บันทึกและหยุดการบันทึกเพื่อให้เกมลื่นไหล
+Gagal memulai rekaman: {~0}	เริ่มการบันทึกไม่สำเร็จ: {0}
+Gagal menyiapkan rekaman: {0}	เตรียมการบันทึกไม่สำเร็จ: {0}
+REKAM	บันทึก
+Berhenti merekam	หยุดบันทึก
+Game saja	เฉพาะเกม
+Dengan tombol	พร้อมปุ่ม
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	การบันทึกจะหยุดชั่วคราวขณะเมนูเปิดอยู่ และดำเนินต่ออัตโนมัติเมื่อปิดเมนู
+Tombol layar ikut terekam di video.	ปุ่มบนหน้าจอจะถูกบันทึกลงในวิดีโอด้วย
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	ปุ่มบนหน้าจอถูกซ่อนจากวิดีโอ (ยังแตะใช้งานได้)
+izin tangkap layar tidak valid	สิทธิ์จับภาพหน้าจอไม่ถูกต้อง
+tidak bisa membuat berkas di Movies	สร้างไฟล์ใน Movies ไม่ได้
+tidak bisa membuka berkas rekaman	เปิดไฟล์บันทึกไม่ได้

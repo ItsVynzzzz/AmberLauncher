@@ -1,0 +1,116 @@
+# Akun, login Microsoft dan Ely.by
+Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	สกินและเคปของบัญชี Ely.by จัดการโดยตรงที่ https://account.ely.by
+Belum ada akun tersimpan	ยังไม่มีบัญชีที่บันทึกไว้
+{0} akun tersimpan \u00b7 ketuk untuk berganti	บัญชีที่บันทึกไว้ {0} บัญชี \u00b7 แตะเพื่อสลับ
+Profil aktif	โปรไฟล์ที่ใช้งานอยู่
+Skin & Jubah	สกินและเคป
+Belum ada profil aktif	ยังไม่มีโปรไฟล์ที่ใช้งานอยู่
+Pilih atau tambahkan akun untuk mulai bermain.	เลือกหรือเพิ่มบัญชีเพื่อเริ่มเล่น
+Tambahkan akun Offline, Microsoft, atau Ely.by.	เพิ่มบัญชี Offline, Microsoft หรือ Ely.by
+Aktif	ใช้งานอยู่
+Gunakan	ใช้
+Akun {0} berhasil ditambahkan!	เพิ่มบัญชี {0} สำเร็จ!
+Hapus akun?	ลบบัญชี?
+Hapus profil '{0}' ({1}) dari perangkat ini?	ลบโปรไฟล์ '{0}' ({1}) ออกจากอุปกรณ์นี้หรือไม่?
+Profil '{0}' dihapus	ลบโปรไฟล์ '{0}' แล้ว
+Akun resmi Microsoft	บัญชี Microsoft อย่างเป็นทางการ
+Akun terverifikasi Ely.by	บัญชี Ely.by ที่ยืนยันแล้ว
+Akun offline / lokal	บัญชีออฟไลน์ / ในเครื่อง
+Pilih cara masuk ke Minecraft	เลือกวิธีเข้าสู่ระบบ Minecraft
+Lokal \u00b7 tanpa login	ในเครื่อง \u00b7 ไม่ต้องเข้าสู่ระบบ
+Resmi \u00b7 akun Mojang	ทางการ \u00b7 บัญชี Mojang
+Browser \u00b7 skin & jubah	เบราว์เซอร์ \u00b7 สกินและเคป
+Nama pemain (Steve, Alex...)	ชื่อผู้เล่น (Steve, Alex...)
+Username tidak boleh kosong	ชื่อผู้ใช้ต้องไม่ว่าง
+Simpan akun	บันทึกบัญชี
+Masuk dengan akun Microsoft / Xbox	เข้าสู่ระบบด้วยบัญชี Microsoft / Xbox
+Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	หน้าต่างการให้สิทธิ์เปิดในตัวเปิดเกมเลย ไม่ต้องออกจากแอป
+Gagal memulai otorisasi Microsoft.	เริ่มการให้สิทธิ์ Microsoft ไม่สำเร็จ
+Menghubungi...	กำลังเชื่อมต่อ...
+Masuk dengan Microsoft	เข้าสู่ระบบด้วย Microsoft
+Menunggu otorisasi di browser Ely.by...	กำลังรอการให้สิทธิ์ในเบราว์เซอร์ Ely.by...
+Kode disalin	คัดลอกรหัสแล้ว
+Salin	คัดลอก
+Buka lagi	เปิดอีกครั้ง
+Masuk dengan akun Ely.by	เข้าสู่ระบบด้วยบัญชี Ely.by
+Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	เบราว์เซอร์จะเปิดอัตโนมัติเพื่อยืนยันบัญชี Ely.by โดยไม่ต้องพิมพ์รหัสผ่าน
+Buka browser Ely.by	เปิดเบราว์เซอร์ Ely.by
+Menunggu otorisasi akun di halaman web Microsoft...	กำลังรอการให้สิทธิ์บัญชีบนหน้าเว็บ Microsoft...
+Kode '{0}' telah disalin!	คัดลอกรหัส '{0}' แล้ว!
+Token diterima! Memproses autentikasi Minecraft & Xbox...	ได้รับโทเค็นแล้ว! กำลังประมวลผลการยืนยันตัวตน Minecraft และ Xbox...
+Gagal memproses autentikasi Minecraft.	ประมวลผลการยืนยันตัวตน Minecraft ไม่สำเร็จ
+Otorisasi Microsoft gagal.	การให้สิทธิ์ Microsoft ล้มเหลว
+LOGIN AKUN MICROSOFT	เข้าสู่ระบบบัญชี MICROSOFT
+Masuk dan konfirmasi langsung di jendela aman ini	เข้าสู่ระบบและยืนยันได้ในหน้าต่างที่ปลอดภัยนี้เลย
+Kode '{0}' disalin!	คัดลอกรหัส '{0}' แล้ว!
+KODE:	รหัส:
+Salin Kode	คัดลอกรหัส
+Buka di Browser Eksternal	เปิดในเบราว์เซอร์ภายนอก
+Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	แตะ 'ดำเนินการต่อ' ในหน้าด้านบนหลังจากใส่รหัสแล้ว
+Gagal memulai otorisasi Ely.by.	เริ่มการให้สิทธิ์ Ely.by ไม่สำเร็จ
+Otorisasi Ely.by gagal.	การให้สิทธิ์ Ely.by ล้มเหลว
+Terjadi kesalahan saat login Ely.by.	เกิดข้อผิดพลาดขณะเข้าสู่ระบบ Ely.by
+Gagal memulai login Ely.by Device Code ({0}): {1}	เริ่มการเข้าสู่ระบบ Ely.by ด้วย Device Code ไม่สำเร็จ ({0}): {1}
+Login dibatalkan oleh pengguna.	ผู้ใช้ยกเลิกการเข้าสู่ระบบ
+Menunggu konfirmasi di browser...	กำลังรอการยืนยันในเบราว์เซอร์...
+Memperlambat polling...	กำลังลดความถี่ polling...
+Ely.by OAuth Error: {0}	ข้อผิดพลาด OAuth ของ Ely.by: {0}
+Waktu otorisasi Ely.by habis.	การให้สิทธิ์ Ely.by หมดเวลา
+Mengambil informasi akun Ely.by...	กำลังดึงข้อมูลบัญชี Ely.by...
+Gagal mengambil info akun Ely.by ({0})	ดึงข้อมูลบัญชี Ely.by ไม่สำเร็จ ({0})
+Mengambil UUID Minecraft untuk {0}...	กำลังดึง UUID Minecraft ของ {0}...
+Gagal login ke Ely.by (HTTP {0}): {1}	เข้าสู่ระบบ Ely.by ไม่สำเร็จ (HTTP {0}): {1}
+Profil Ely.by tidak ditemukan dalam respon.	ไม่พบโปรไฟล์ Ely.by ในข้อมูลตอบกลับ
+Gagal memulai login Microsoft (HTTP {0}): {1}	เริ่มการเข้าสู่ระบบ Microsoft ไม่สำเร็จ (HTTP {0}): {1}
+Token berhasil diterima! Menghubungkan ke Xbox Live...	ได้รับโทเค็นแล้ว! กำลังเชื่อมต่อกับ Xbox Live...
+Menunggu otorisasi di halaman web...	กำลังรอการให้สิทธิ์บนหน้าเว็บ...
+Memperlambat frekuensi polling...	กำลังลดความถี่ polling...
+Kode login kedaluwarsa. Silakan mulai ulang.	รหัสเข้าสู่ระบบหมดอายุ กรุณาเริ่มใหม่
+Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	รหัสให้สิทธิ์ถูกใช้ไปแล้วหรือหมดอายุ กรุณาแตะเข้าสู่ระบบเพื่อขอรหัสใหม่
+Otorisasi ditolak ({0}): {1}	การให้สิทธิ์ถูกปฏิเสธ ({0}): {1}
+Microsoft OAuth Error: {0}	ข้อผิดพลาด OAuth ของ Microsoft: {0}
+Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	การเชื่อมต่อเครือข่ายหลุดซ้ำๆ ขณะรอ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+Waktu otorisasi habis (timeout). Silakan coba lagi.	การให้สิทธิ์หมดเวลา (timeout) กรุณาลองอีกครั้ง
+Autentikasi dengan Xbox Live...	กำลังยืนยันตัวตนกับ Xbox Live...
+Gagal autentikasi Xbox Live (HTTP {0}): {1}	การยืนยันตัวตน Xbox Live ล้มเหลว (HTTP {0}): {1}
+Gagal memperoleh token Xbox Live atau UserHash.	ขอโทเค็น Xbox Live หรือ UserHash ไม่สำเร็จ
+Meminta otorisasi XSTS Minecraft...	กำลังขอการให้สิทธิ์ XSTS ของ Minecraft...
+Akun ini telah dilarang/diblokir dari Xbox Live.	บัญชีนี้ถูกแบนหรือบล็อกจาก Xbox Live
+Akun dibatasi oleh kontrol orang tua (Restricted).	บัญชีถูกจำกัดโดยการควบคุมโดยผู้ปกครอง (Restricted)
+Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	บัญชี Microsoft นี้ยังไม่มีโปรไฟล์ Xbox กรุณาสร้างแท็กเกมเมอร์ (gamertag) ที่ xbox.com ก่อน
+Akun belum menyetujui Ketentuan Layanan Xbox Live.	บัญชียังไม่ได้ยอมรับข้อกำหนดการให้บริการของ Xbox Live
+Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	Xbox Live ไม่พร้อมใช้งานในประเทศ/ภูมิภาคของบัญชีคุณ
+Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	บัญชีต้องยืนยันอายุว่าเป็นผู้ใหญ่ (Proof of Age)
+Batas waktu bermain harian Xbox Live telah tercapai.	ถึงขีดจำกัดเวลาเล่นรายวันของ Xbox Live แล้ว
+Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	เป็นบัญชีของผู้เยาว์ (Child Account) ผู้ปกครองต้องเชื่อมโยงกับบัญชีครอบครัว (Family Safety)
+Otorisasi XSTS gagal (HTTP {0}): {1}	การให้สิทธิ์ XSTS ล้มเหลว (HTTP {0}): {1}
+Gagal memperoleh token XSTS.	ขอโทเค็น XSTS ไม่สำเร็จ
+Menghubungkan ke Mojang Minecraft Services...	กำลังเชื่อมต่อกับ Mojang Minecraft Services...
+Gagal login ke layanan Minecraft ({0}): {1}	เข้าสู่ระบบบริการ Minecraft ไม่สำเร็จ ({0}): {1}
+Layanan Minecraft tidak mengembalikan token akses.	บริการ Minecraft ไม่ได้ส่งโทเค็นเข้าถึงกลับมา
+Mengambil profil pemain Minecraft Java...	กำลังดึงโปรไฟล์ผู้เล่น Minecraft Java...
+Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	บัญชี Microsoft นี้ยังไม่มีสิทธิ์ใช้งานเกม Minecraft: Java Edition
+Gagal mengambil profil Minecraft ({0}): {1}	ดึงโปรไฟล์ Minecraft ไม่สำเร็จ ({0}): {1}
+Tidak ada refresh token tersimpan.	ไม่มี refresh token ที่บันทึกไว้
+Gagal memperbarui token Microsoft ({0}): {1}	รีเฟรชโทเค็น Microsoft ไม่สำเร็จ ({0}): {1}
+Token pembaruan kosong.	refresh token ว่างเปล่า
+Memperbarui sesi Microsoft...	กำลังรีเฟรชเซสชัน Microsoft...
+Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	รีเฟรชเซสชัน Microsoft ไม่ได้ เกมจะยังเริ่มได้ แต่ฟีเจอร์ออนไลน์อาจต้องเข้าสู่ระบบใหม่
+Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	เชื่อมต่อกับเซิร์ฟเวอร์ Microsoft ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง
+Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	เริ่มการเข้าสู่ระบบ Microsoft ไม่สำเร็จ (รหัส {0}) ลองอีกครั้งภายหลัง
+Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	พยายามเข้าสู่ระบบมากเกินไป รอสักครู่แล้วลองอีกครั้ง
+Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	การยืนยันตัวตน Xbox Live ล้มเหลว (รหัส {0}) ลองอีกครั้งภายหลัง
+Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	การให้สิทธิ์ XSTS ล้มเหลว (รหัส {0}) ลองอีกครั้งภายหลัง
+Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	เซิร์ฟเวอร์ Minecraft มีปัญหา (รหัส {0}) ลองอีกครั้งในอีกสักครู่
+Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	บริการ Minecraft ปฏิเสธการเข้าสู่ระบบ (รหัส {0}) ลองอีกครั้งภายหลัง หากเกิดซ้ำ ให้แจ้งผู้พัฒนาตัวเปิดเกม
+Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	บัญชีนี้ยังไม่มีโปรไฟล์ Minecraft Java ตรวจสอบว่าคุณมี Minecraft: Java Edition (หรือ Game Pass สำหรับ PC) แล้ว จากนั้นสร้างชื่อผู้เล่นที่ minecraft.net/profile
+Gagal mengambil profil Minecraft (kode {0}).	โหลดโปรไฟล์ Minecraft ไม่สำเร็จ (รหัส {0})
+Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	รีเฟรชเซสชัน Microsoft ไม่สำเร็จ (รหัส {0}) กรุณาเข้าสู่ระบบใหม่
+Kode login tidak dikenali. Silakan mulai ulang.	ไม่รู้จักรหัสเข้าสู่ระบบ กรุณาเริ่มใหม่
+Login ditolak di halaman Microsoft. Silakan mulai ulang.	การเข้าสู่ระบบถูกปฏิเสธบนหน้า Microsoft กรุณาเริ่มใหม่
+Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	Mojang ปฏิเสธแอปตัวเปิดเกมนี้ (Invalid app registration, รหัส 403) Client ID สำหรับเข้าสู่ระบบยังไม่ได้รับอนุมัติ โปรดติดต่อผู้พัฒนาตัวเปิดเกม
+Menunggu login di browser...	กำลังรอการเข้าสู่ระบบในเบราว์เซอร์...
+Selesaikan login di browser, lalu kembali ke sini	เข้าสู่ระบบในเบราว์เซอร์ให้เสร็จ แล้วกลับมาที่นี่
+Tidak ada browser yang bisa dibuka	ไม่มีเบราว์เซอร์ที่เปิดได้
+Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	คัดลอกรหัสแล้ว หากช่องรหัสในเบราว์เซอร์ยังว่าง ให้วางรหัสแล้วเลือกดำเนินการต่อ
+Buka di browser	เปิดในเบราว์เซอร์

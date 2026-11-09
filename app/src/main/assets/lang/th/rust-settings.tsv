@@ -1,0 +1,69 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	เอนจิน Rust
+Performa	ประสิทธิภาพ
+Layar	หน้าจอ
+Permainan	การเล่น
+Mesin Rust (Horizon)	เอนจิน Rust (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	แทนที่ไคลเอนต์ Java ทั้งหมด: ไม่ใช้ JVM และไม่รองรับ Mod ของ Java
+Tidak tersedia	ไม่พร้อมใช้งาน
+Siap	พร้อม
+Sumber daya game	ทรัพยากรของเกม
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	ดาวน์โหลดอัตโนมัติเมื่อกดเล่นครั้งแรก ประมาณ 500 MiB
+Belum diunduh	ยังไม่ได้ดาวน์โหลด
+Versi Minecraft	เวอร์ชัน Minecraft
+Satu-satunya versi yang dikerjakan mesin ini.	เวอร์ชันเดียวที่เอนจินนี้รองรับ
+Berlaku untuk instance Rust	ใช้กับ instance Rust
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	ตัวเลือกในแท็บนี้ใช้กับ instance Rust เท่านั้น และมีผลเมื่อกดเล่นครั้งถัดไป instance แบบ Vanilla, Fabric และ Forge ไม่ได้รับผลกระทบ
+Renderer Rust	Renderer ของ Rust
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	แบบเข้ากันได้ปลอดภัยที่สุดบนมือถือทุกเครื่อง Vulkan แบบเร็วใช้การทำ batching บน GPU ส่วน OpenGL ES ยังอยู่ในขั้นทดลอง
+Vulkan kompatibel	Vulkan แบบเข้ากันได้
+Vulkan cepat	Vulkan แบบเร็ว
+Skala resolusi Rust	สเกลความละเอียดของ Rust
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	การลดความละเอียดเรนเดอร์ทำให้เกมเบาลง แต่ภาพจะเบลอขึ้น
+Laju layar	อัตรารีเฟรชหน้าจอ
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	เป็นคำขอไปยัง Android ไม่ใช่ขีดจำกัด FPS ของเกม อัตราที่หน้าจอไม่รองรับอาจถูกละเลย
+Bawaan sistem	ค่าเริ่มต้นของระบบ
+Petunjuk performa	คำแนะนำด้านประสิทธิภาพ
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	แจ้ง Android ว่าเกมต้องการประสิทธิภาพที่คงที่ มีประโยชน์เฉพาะบนมือถือที่รองรับ
+Batas pekerja chunk	ขีดจำกัด worker ของ chunk
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	จำกัดจำนวน worker ที่สร้างและประกอบ chunk ไม่ใช่เธรดทั้งหมดของแอป ค่าน้อยช่วยลดภาระ CPU แต่โหลดโลกช้าลง
+Tanpa batas	ไม่จำกัด
+Cache RAM	แคช RAM
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	เสียงที่ถอดรหัสแล้ว (80%) และบัฟเฟอร์ mesh ว่าง (20%) สร้างใหม่ด้วยคุณภาพเท่าเดิม ไม่ใช่ขีดจำกัดของ RAM หรือ VRAM ทั้งหมด ค่าน้อยอาจเพิ่มงานให้ CPU
+Bawaan (80 MiB)	ค่าเริ่มต้น (80 MiB)
+Arah layar	การวางแนวหน้าจอ
+Arah layar saat bermain. Bawaannya landscape.	การวางแนวหน้าจอขณะเล่น ค่าเริ่มต้นคือแนวนอน
+Landscape	แนวนอน
+Landscape terbalik	แนวนอนกลับด้าน
+Portrait	แนวตั้ง
+Portrait terbalik	แนวตั้งกลับด้าน
+Rasio layar	อัตราส่วนหน้าจอ
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	จำกัดมุมมองเกมให้อยู่ในอัตราส่วนที่กำหนด ตัวเลือกดั้งเดิมจะตามอัตราส่วนหน้าจอของมือถือ
+Asli	ดั้งเดิม
+Layar penuh imersif	เต็มหน้าจอแบบสมจริง (Immersive)
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	ซ่อนแถบนำทางและแถบสถานะขณะเล่น
+Hindari poni layar	เลี่ยงรอยบากหน้าจอ
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	ขยับมุมมองเกมไม่ให้ถูกรูกล้องหรือรอยบากบัง
+Kontrol Amber	การควบคุม Amber
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	ตำแหน่ง ขนาด และปุ่มบนหน้าจอเป็นไปตามตัวแก้ไขการควบคุมของ Amber จึงมีชุดควบคุมเพียงชุดเดียว ปิดเพื่อใช้การควบคุมของเอนจินเอง มีผลเมื่อกดเล่นครั้งถัดไป
+Perangkat input	อุปกรณ์อินพุต
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	โหมดอัตโนมัติจะเลือกเองระหว่างหน้าจอสัมผัส คีย์บอร์ดและเมาส์ หรือเกมแพด ตามที่เชื่อมต่ออยู่
+Layar sentuh	หน้าจอสัมผัส
+Keyboard dan mouse	คีย์บอร์ดและเมาส์
+Server otomatis	เข้าเซิร์ฟเวอร์อัตโนมัติ
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	เว้นว่างไว้เพื่อเล่นในโลกของคุณเอง หากกรอก การกดเล่นจะเข้าเซิร์ฟเวอร์นี้ทันที
+Contoh: mc.contoh.com:25565	ตัวอย่าง: mc.example.com:25565
+Setel ulang pengaturan Rust	รีเซ็ตการตั้งค่า Rust
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	คืนตัวเลือกทั้งหมดในแท็บนี้เป็นค่าเริ่มต้นของเอนจิน instance และโลกจะไม่ถูกแตะต้อง
+Setel ulang	รีเซ็ต
+Pengaturan Rust dikembalikan ke bawaan.	คืนการตั้งค่า Rust เป็นค่าเริ่มต้นแล้ว
+Mode performa	โหมดประสิทธิภาพ
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	ปกติใช้ค่าเริ่มต้นของเอนจิน ประหยัดสุดๆ ลดระยะเรนเดอร์ อนุภาค เมฆ และเงา ประหยัดแบตเตอรี่จำกัด 60 FPS พร้อม VSync FPS สูงสุดปลดขีดจำกัด FPS และปิด VSync โหมดเหล่านี้เปลี่ยนการตั้งค่าวิดีโอของเกมเมื่อกดเล่น
+Normal	ปกติ
+Super hemat	ประหยัดสุดๆ
+Hemat baterai	ประหยัดแบตเตอรี่
+FPS maksimum	FPS สูงสุด
+Kurangi animasi game	ลดแอนิเมชันในเกม
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	ปิดเท็กซ์เจอร์เคลื่อนไหว การเฟดของ chunk การโยกของกล้องขณะเดิน และการเบลอเมนู เบาลงบนมือถือที่ไม่แรง
+Menu garis tiga	เมนูสามขีด
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	ปุ่มสามขีดบนหน้าจอเกมที่เปิดเมนูด่วนของเอนจิน (พรีเซ็ต การควบคุม การตั้งค่า) สีเป็นไปตามสีเน้นของ Amber มีผลเมื่อกดเล่นครั้งถัดไป

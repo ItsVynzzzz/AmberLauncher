@@ -1,0 +1,68 @@
+# Mesin Rust (Horizon)
+Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	เอนจิน Rust ยังไม่รวมอยู่ในบิลด์นี้ วิธีเพิ่มดูได้ที่ docs/rust-engine.md
+Mesin Rust butuh Android 9 (API 28) ke atas.	เอนจิน Rust ต้องใช้ Android 9 (API 28) ขึ้นไป
+Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	เอนจิน Rust ใช้ได้เฉพาะมือถือ 64 บิต (arm64)
+RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	RAM ของมือถือเครื่องนี้ค่อนข้างจำกัดสำหรับเอนจิน Rust (แนะนำ 4 GB ขึ้นไป) เกมอาจปิดเอง
+Mesin Rust gagal dibuka: {0}	เปิดเอนจิน Rust ไม่สำเร็จ: {0}
+MESIN RUST (HORIZON)	เอนจิน RUST (HORIZON)
+Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	เอนจิน Rust แทนที่ไคลเอนต์ Minecraft Java ทั้งหมด: ไม่ใช้ Java และไม่รองรับ Mod ของ Fabric, Forge หรือ NeoForge
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	รองรับเฉพาะ Minecraft {0} เอนจินจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) เองเมื่อเปิดครั้งแรก
+Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	ทดลอง: ต้องใช้ Android 9 ขึ้นไปและมือถือ 64 บิต
+Tanpa Java	ไม่ใช้ Java
+Jenis berkas ini belum didukung mesin Rust.	เอนจิน Rust ยังไม่รองรับไฟล์ประเภทนี้
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	ชื่อไฟล์ไม่เหมาะกับเอนจิน Rust (ยาวเกินไปหรือมีอักขระต้องห้าม)
+Mesin Rust hanya menerima berkas .zip di sini.	เอนจิน Rust รับเฉพาะไฟล์ .zip ที่นี่
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	ไฟล์ใหญ่กว่า 256 MB ใหญ่เกินไปสำหรับเอนจิน Rust
+Arsip rusak atau tidak bisa dibaca.	ไฟล์บีบอัดเสียหายหรืออ่านไม่ได้
+Arsip berisi terlalu banyak berkas.	ไฟล์บีบอัดมีไฟล์มากเกินไป
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	ไฟล์บีบอัดมีพาธอันตรายหรือซ้ำกัน จึงไม่ได้ติดตั้ง
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	เนื้อหาในไฟล์บีบอัดใหญ่เกินไปเมื่อแตกไฟล์ (เกิน 512 MB)
+Metadata resource pack (pack.mcmeta) tidak valid.	เมทาดาทา resource pack (pack.mcmeta) ไม่ถูกต้อง
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ resource pack: ไม่พบ pack.mcmeta ที่ระดับบนสุดของไฟล์บีบอัด
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	ไฟล์นี้ไม่ใช่ shader pack: ไม่พบโฟลเดอร์ shaders ที่ระดับบนสุดของไฟล์บีบอัด
+Tidak ada berkas .zip yang cocok di versi ini.	ไม่มีไฟล์ .zip ที่ตรงกันในเวอร์ชันนี้
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	แหล่งที่มาไม่ให้ค่าเช็กซัมของไฟล์ จึงตรวจสอบการดาวน์โหลดไม่ได้
+Gagal menyimpan berkas ke folder mesin Rust.	บันทึกไฟล์ลงโฟลเดอร์เอนจิน Rust ไม่สำเร็จ
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	ยังไม่ได้สร้างการตั้งค่าเกม ให้เปิดเกมหนึ่งครั้ง เข้าไปที่การตั้งค่า เปลี่ยนตัวเลือกหนึ่งอย่าง แล้วลองอีกครั้ง
+Gagal menyimpan pilihan ke pengaturan mesin.	บันทึกตัวเลือกลงการตั้งค่าเอนจินไม่สำเร็จ
+Memeriksa {0}...	กำลังตรวจสอบ {0}...
+Gagal membuka berkas yang dipilih	เปิดไฟล์ที่เลือกไม่สำเร็จ
+Coba ubah kata kunci	ลองเปลี่ยนคำค้นหา
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	เอนจิน Rust: เปิดสวิตช์ในรายการที่ติดตั้งเพื่อใช้งาน มีผลเมื่อเปิดเกมครั้งถัดไป
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	shader บนเอนจิน Rust ยังอยู่ในขั้นทดลองและอาจทำให้มือถือทำงานหนัก
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	เอนจิน Rust 32 บิตใช้ได้เฉพาะมือถือ ARM (armeabi-v7a)
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	ทดลองบนมือถือ 32 บิต: ต้องใช้ Android 9 ขึ้นไปและอาจช้ากว่า
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Mod ของเอนจิน Rust ใช้รูปแบบ .hmod ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	ไฟล์ Mod ใหญ่กว่า 32 MB ใหญ่เกินไปสำหรับเอนจิน Rust
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	เนื้อหาของ Mod ใหญ่เกินไปเมื่อแตกไฟล์ (เกิน 64 MB)
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	นี่ไม่ใช่ Mod ของ Horizon: ไม่พบ horizon-mod.toml ที่ระดับบนสุดของไฟล์บีบอัด
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	manifest ของ Mod (horizon-mod.toml) ไม่ถูกต้องหรือไม่รองรับ
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Mod นี้ไม่มีโค้ด (mod.wasm) และไม่ใช่ Mod เนื้อหา (ความสามารถ registries) จึงติดตั้งไม่ได้
+Kode mod (mod.wasm) lebih dari 32 MB.	โค้ดของ Mod (mod.wasm) ใหญ่กว่า 32 MB
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	มี Mod รูปแบบโฟลเดอร์ที่ใช้ id เดียวกันอยู่แล้ว ให้ลบอันเก่าก่อน
+Gagal menyimpan pilihan mod ke pengaturan mesin.	บันทึกตัวเลือก Mod ลงการตั้งค่าเอนจินไม่สำเร็จ
+Mod hanya bisa dihidupkan di APK 64-bit.	เปิดใช้ Mod ได้เฉพาะใน APK 64 บิต
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	ไม่พบ Mod หรืออ่าน manifest ไม่ได้
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	กดปุ่ม Z ค้างเพื่อซูม ปรับได้ที่ Options > Mods ในเกม
+Peta kecil yang bisa diatur di sudut layar	แผนที่ขนาดเล็กที่ปรับแต่งได้ที่มุมหน้าจอ
+Resep dan kegunaan item di samping inventori	สูตรและการใช้งานไอเทมข้างช่องเก็บของ
+Modul F3 yang bisa diatur untuk layar debug	โมดูล F3 ที่ปรับแต่งได้สำหรับหน้าจอดีบัก
+Resep	สูตร
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	แคตตาล็อก Horizon ใช้รูปแบบที่ใหม่กว่า กรุณาอัปเดต Amber
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	แคตตาล็อกไม่ให้ค่าเช็กซัม SHA-256 จึงตรวจสอบการดาวน์โหลดไม่ได้
+Memuat data dari Horizon...	กำลังโหลดข้อมูลจาก Horizon...
+Gagal memuat dari Horizon	โหลดจาก Horizon ไม่สำเร็จ
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Mod ของเอนจิน Rust ใช้รูปแบบ .hmod (ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge) Mod ที่มีโค้ดจะถูกติดตั้งในสถานะปิด ให้เปิดหลังจากตรวจสอบสิทธิ์ของมันที่ Options > Mods ในเกม
+Konten	เนื้อหา
+Berkode	มีโค้ด
+Alamat unduhan tidak dikenali, jadi ditolak.	ไม่รู้จักที่อยู่ดาวน์โหลด จึงถูกปฏิเสธ
+Coba ubah kata kunci atau pindah ke sumber Modrinth	ลองเปลี่ยนคำค้นหาหรือสลับไปใช้แหล่ง Modrinth
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	นี่ไม่ใช่ shader เนทีฟของ Horizon: ไม่พบ horizon-shaders.toml ที่ระดับบนสุดของไฟล์บีบอัด
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	นี่คือ shader เนทีฟของ Horizon ให้ติดตั้งจากแหล่ง Horizon ในหน้าเรียกดู (รูปแบบ .hshader)
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	อ่านแคตตาล็อก Horizon ไม่ได้ ลองอีกครั้งภายหลัง
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	shader เนทีฟของ Horizon ใหญ่เกินไป (ไฟล์เกิน 16 MB, เนื้อหาเกิน 8 MB หรือมีไฟล์ที่ใหญ่เกินไป)
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	แหล่ง Horizon: resource pack ที่สร้างหรือทดสอบสำหรับเอนจิน Rust
+Sumber Horizon: shader asli mesin Rust (.hshader).	แหล่ง Horizon: shader เนทีฟของเอนจิน Rust (.hshader)
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	แหล่ง Modrinth: shader แบบคลาสสิก ความเข้ากันได้กับเอนจิน Rust ยังจำกัด
+Tidak ada berkas yang cocok di versi ini.	ไม่มีไฟล์ที่ตรงกันในเวอร์ชันนี้
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง

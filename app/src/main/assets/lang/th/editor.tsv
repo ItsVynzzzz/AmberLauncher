@@ -1,0 +1,70 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	\u2713 บันทึกเลย์เอาต์ปุ่มในเกมแล้ว!
+Selesai	เสร็จสิ้น
+Kembali	กลับ
+Tombol baru ditambahkan di tengah layar!	เพิ่มปุ่มใหม่ตรงกลางหน้าจอแล้ว!
++ TOMBOL	+ ปุ่ม
+Joystick WASD ditambahkan!	เพิ่มจอยสติ๊ก WASD แล้ว!
+\u2713 Layout GUI berhasil disimpan!	\u2713 บันทึกเลย์เอาต์ GUI สำเร็จ!
+PENGATURAN TOMBOL	การตั้งค่าปุ่ม
+Posisi: {0}% x {1}%	ตำแหน่ง: {0}% x {1}%
+Label Teks Tombol:	ข้อความบนปุ่ม:
+\ud83d\udd12 Tetap	\ud83d\udd12 คงที่
+Label tombol...	ข้อความบนปุ่ม...
+Tipe Kontrol:	ประเภทการควบคุม:
+\ud83d\udd79 Virtual Analog Joystick (WASD)	\ud83d\udd79 จอยสติ๊กอนาล็อกเสมือน (WASD)
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	อนาล็อก 8 ทิศทางที่ลื่นไหล ขยับตัวละครแทนปุ่ม W, A, S, D
+Ukuran Joystick (Diameter):	ขนาดจอยสติ๊ก (เส้นผ่านศูนย์กลาง):
+Transparansi (Opacity):	ความโปร่งใส (Opacity):
+Lari otomatis:	วิ่งอัตโนมัติ:
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	ดันไปที่ขอบวงกลมเพื่อวิ่ง ปิดไว้หากต้องการวิ่งด้วยปุ่ม CTRL ของคุณเอง
+Tombol / Aksi Input:	ปุ่ม / การทำงานของอินพุต:
+Indikator FPS In-Game	ตัวแสดง FPS ในเกม
+Toggle Keyboard Layar	สลับคีย์บอร์ดบนหน้าจอ
+Sembunyikan/Tampilkan GUI	ซ่อน/แสดง GUI
+Buka Menu (pengaturan dan keluar)	เปิดเมนู (ตั้งค่าและออก)
+Aksi Sistem Launcher	การทำงานของระบบ Launcher
+Mouse Kiri (Attack)	เมาส์ซ้าย (โจมตี)
+Mouse Kanan (Use)	เมาส์ขวา (ใช้)
+Mouse Tengah (Pick)	เมาส์กลาง (เลือก)
+Mouse Btn {0}	ปุ่มเมาส์ {0}
+Key Code {0}	รหัสปุ่ม {0}
+Ubah >	เปลี่ยน >
+Lebar (Width):	ความกว้าง:
+Tinggi (Height):	ความสูง:
+Kebulatan Sudut:	ความมนของมุม:
+Mode Toggle:	โหมดสลับ:
+Sekali tap untuk kunci	แตะครั้งเดียวเพื่อล็อก
+\u26a1 FITUR MAKRO	\u26a1 ฟีเจอร์มาโคร
+Jadikan tombol ini sebagai makro otomatis	ตั้งปุ่มนี้เป็นมาโครอัตโนมัติ
+Pilih Mode Makro:	เลือกโหมดมาโคร:
+\u2328 Chat/Perintah	\u2328 แชท/คำสั่ง
+Ketik otomatis	พิมพ์อัตโนมัติ
+\ud83d\udd17 Kombinasi	\ud83d\udd17 คอมโบ
+Multi-Key	หลายปุ่ม
+\u26a1 Turbo Click	\u26a1 คลิกเทอร์โบ
+Auto-clicker	ออโต้คลิกเกอร์
+Teks / Perintah yang diketik otomatis:	ข้อความ / คำสั่งที่พิมพ์อัตโนมัติ:
+Misal: /gamemode creative atau /home	ตัวอย่าง: /gamemode creative หรือ /home
+Template Cepat:	เทมเพลตด่วน:
+Urutan Key Kombinasi:	ลำดับปุ่มคอมโบ:
+Hapus Semua	ลบทั้งหมด
+Belum ada key kombinasi. Tambahkan key di bawah.	ยังไม่มีปุ่มคอมโบ เพิ่มปุ่มด้านล่าง
+Tambah Key ke Kombinasi	เพิ่มปุ่มในคอมโบ
+Tambah Cepat:	เพิ่มด่วน:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	ทำงานตามลำดับจากบน (#1) ลงล่างเมื่อกด
+Interval Auto-Click:	ช่วงเวลาออโต้คลิก:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	ปุ่มจะกดและปล่อยซ้ำๆ อย่างรวดเร็วมากโดยอัตโนมัติขณะที่กดค้างไว้
+Tombol dihapus	ลบปุ่มแล้ว
+HAPUS TOMBOL	ลบปุ่ม
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 ลบปุ่มระบบไม่ได้
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	โหมดในเกม \u00b7 ลากปุ่มให้ตรงกับ HUD ของเกม แล้วแตะเสร็จสิ้น
+Reset Layout GUI?	รีเซ็ตเลย์เอาต์ GUI?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	ตำแหน่งปุ่มและการปรับแต่งทั้งหมดจะถูกคืนเป็นเลย์เอาต์เริ่มต้นมาตรฐานของ AmberLauncher
+Layout direset ke standar	รีเซ็ตเลย์เอาต์เป็นค่ามาตรฐานแล้ว
+Tampil saat:	แสดงเมื่อ:
+Selalu	เสมอ
+Saat main	ขณะเล่น
+Saat menu	ขณะอยู่ในเมนู
+Menu = inventori, chat, dan layar lain di dalam game.	เมนู = ช่องเก็บของ แชท และหน้าจออื่นๆ ในเกม
+Semua tombol	ทุกปุ่ม

@@ -67,7 +67,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
 - **Laporan crash** dengan opsi unggah log ke mclo.gs.
 - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
-- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, dan Português (Brasil).
+- **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), dan ภาษาไทย.
 - **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
 
 **Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.

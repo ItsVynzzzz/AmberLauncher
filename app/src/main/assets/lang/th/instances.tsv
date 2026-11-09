@@ -1,0 +1,133 @@
+# Tambah/Ubah instance, unduhan, Java
+Semua	ทั้งหมด
+INSTANCE ARCHITECT	ตัวสร้าง INSTANCE
+Buat Instance Baru	สร้าง Instance ใหม่
+NAMA INSTANCE	ชื่อ INSTANCE
+Default: {0} {1}	ค่าเริ่มต้น: {0} {1}
+MOD LOADER ENGINE	เอนจิน MOD LOADER
+Memuat loader Fabric...	กำลังโหลด Fabric loader...
+\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี Fabric สำหรับ {0}
+SPESIFIKASI TARGET	สเปกเป้าหมาย
+Memuat Fabric...	กำลังโหลด Fabric...
+Fabric Tidak Tersedia	ไม่มี Fabric
+Buat Instance Sekarang	สร้าง Instance เลย
+Cari versi ({0})...	ค้นหาเวอร์ชัน ({0})...
+DAFTAR VERSI	รายการเวอร์ชัน
+{0} versi ditemukan	พบ {0} เวอร์ชัน
+Memuat manifest Mojang...	กำลังโหลด Mojang manifest...
+Tidak ada versi yang cocok	ไม่มีเวอร์ชันที่ตรงกัน
+Auto ({0})	อัตโนมัติ ({0})
+Nama	ชื่อ
+Nama instance	ชื่อ instance
+Lihat mod	ดู Mod
+{0} terpasang	ติดตั้งแล้ว {0}
+Hapus '{0}'?	ลบ '{0}'?
+Semua world, mod, dan file instance dihapus permanen.	โลก Mod และไฟล์ instance ทั้งหมดจะถูกลบถาวร
+Ya, hapus	ใช่ ลบเลย
+Nama instance tidak boleh kosong	ชื่อ instance ต้องไม่ว่าง
+Instance berhasil diperbarui!	อัปเดต instance สำเร็จ!
+Simpan	บันทึก
+Mengambil metadata versi {0}...	กำลังดึงเมทาดาทาของเวอร์ชัน {0}...
+Versi {0} tidak ditemukan di manifest Mojang	ไม่พบเวอร์ชัน {0} ใน Mojang manifest
+Membaca konfigurasi versi...	กำลังอ่านการกำหนดค่าเวอร์ชัน...
+Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	กำลังดาวน์โหลดไคลเอนต์ Minecraft ({0} / {1} MB - {2}%)...
+Mengunduh libraries ({0}/{1})...	กำลังดาวน์โหลดไลบรารี ({0}/{1})...
+Memverifikasi asset index {0}...	กำลังตรวจสอบ asset index {0}...
+Mengunduh aset game ({0}/{1})...	กำลังดาวน์โหลดทรัพยากรของเกม ({0}/{1})...
+Menyiapkan Fabric Loader...	กำลังเตรียม Fabric Loader...
+Tidak dapat menemukan Fabric loader untuk versi {0}	ไม่พบ Fabric loader สำหรับเวอร์ชัน {0}
+Mengambil profil Fabric ({0})...	กำลังดึงโปรไฟล์ Fabric ({0})...
+Gagal memuat profil Fabric: {~0}	โหลดโปรไฟล์ Fabric ไม่สำเร็จ: {0}
+Mengunduh library Fabric ({0}/{1})...	กำลังดาวน์โหลดไลบรารี Fabric ({0}/{1})...
+Instalasi selesai!	ติดตั้งเสร็จแล้ว!
+Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	ปฏิเสธที่อยู่ดาวน์โหลดเพราะไม่ได้ใช้ HTTPS: {0}
+Isi unduhan tidak cocok dengan sidik jari resmi: {0}	เนื้อหาที่ดาวน์โหลดไม่ตรงกับลายนิ้วมือ (fingerprint) ทางการ: {0}
+Failed to download {0}: {1}	ดาวน์โหลด {0} ไม่สำเร็จ: {1}
+Failed to download {0}	ดาวน์โหลด {0} ไม่สำเร็จ
+Empty body for {0}	ไม่มีเนื้อหาสำหรับ {0}
+HTTP Error {0} from {1}	ข้อผิดพลาด HTTP {0} จาก {1}
+HTTP Error {0}	ข้อผิดพลาด HTTP {0}
+Empty response body	เนื้อหาตอบกลับว่างเปล่า
+Tidak dapat memuat versi Fabric untuk {0}	โหลดเวอร์ชัน Fabric สำหรับ {0} ไม่ได้
+Gagal memuat profil Fabric untuk {0} ({1})	โหลดโปรไฟล์ Fabric สำหรับ {0} ไม่สำเร็จ ({1})
+Mengekstrak Java Runtime ({0} universal)...	กำลังแตกไฟล์ Java Runtime ({0} universal)...
+Mengekstrak runtime universal ({0})	กำลังแตกไฟล์รันไทม์ universal ({0})
+Mengekstrak Java Runtime ({0} bin-{1})...	กำลังแตกไฟล์ Java Runtime ({0} bin-{1})...
+Mengekstrak native binary ({0} {1})	กำลังแตกไฟล์ native binary ({0} {1})
+Memverifikasi izin sistem OpenJDK...	กำลังตรวจสอบสิทธิ์ระบบของ OpenJDK...
+Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	การตรวจสอบ OpenJDK {0} ไม่สมบูรณ์หลังแตกไฟล์
+Ekstraksi OpenJDK {0} selesai!	แตกไฟล์ OpenJDK {0} เสร็จแล้ว!
+Membongkar bytecode Java 8: {0} ({1}/{2})...	กำลังแกะ bytecode ของ Java 8: {0} ({1}/{2})...
+Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ Fabric ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
+Lokasi folder disalin ke clipboard:\n{0}	คัดลอกตำแหน่งโฟลเดอร์ไปยังคลิปบอร์ดแล้ว:\n{0}
+Folder: {0}	โฟลเดอร์: {0}
+Buka Folder	เปิดโฟลเดอร์
+Unable to resolve host "{0}": System DNS and Fallback DoH failed	ไม่สามารถ resolve โฮสต์ "{0}": DNS ของระบบและ DoH สำรองล้มเหลว
+Memuat versi Forge...	กำลังโหลดเวอร์ชัน Forge...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี Forge สำหรับ {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f Forge ใช้ได้เฉพาะ Minecraft 1.13 ขึ้นไป
+Disarankan	แนะนำ
+Terbaru	ล่าสุด
+Memuat Forge...	กำลังโหลด Forge...
+Forge Tidak Tersedia	ไม่มี Forge
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ Forge ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
+Mengunduh installer Forge {0}...	กำลังดาวน์โหลดตัวติดตั้ง Forge {0}...
+Mengunduh library Forge ({0}/{1})...	กำลังดาวน์โหลดไลบรารี Forge ({0}/{1})...
+Menyiapkan Java ({0})...	กำลังเตรียม Java ({0})...
+Memasang Forge {0}...	กำลังติดตั้ง Forge {0}...
+Memasang Forge {0} ({1}/{2})...	กำลังติดตั้ง Forge {0} ({1}/{2})...
+Forge {0} terpasang	ติดตั้ง Forge {0} แล้ว
+Tidak dapat menemukan Forge untuk versi {0}	ไม่พบ Forge สำหรับเวอร์ชัน {0}
+Tidak ada versi Forge untuk {0}	ไม่มีเวอร์ชัน Forge สำหรับ {0}
+Versi Forge belum dipilih	ยังไม่ได้เลือกเวอร์ชัน Forge
+Forge hanya mendukung Minecraft 1.13 ke atas	Forge รองรับเฉพาะ Minecraft 1.13 ขึ้นไป
+Installer Forge {0} rusak atau tidak lengkap	ตัวติดตั้ง Forge {0} เสียหายหรือไม่สมบูรณ์
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง Forge นี้ (Amber ต้องใช้ Forge 1.13 ขึ้นไป)
+Installer Forge untuk Minecraft {0}, bukan {1}	ตัวติดตั้ง Forge นี้สำหรับ Minecraft {0} ไม่ใช่ {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี Forge ไม่สำเร็จ: {0} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	ตัวติดตั้ง Forge ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({0})
+Gagal menyiapkan Java {0}: {1}	เตรียม Java {0} ไม่สำเร็จ: {1}
+Installer Forge gagal (kode {0}): {1}	ตัวติดตั้ง Forge ล้มเหลว (รหัส {0}): {1}
+Installer Forge gagal (kode {0})	ตัวติดตั้ง Forge ล้มเหลว (รหัส {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	Mojang ไม่มี mappings สำหรับ Minecraft {0}
+Pemasangan Forge	การติดตั้ง Forge
+Memasang Forge	กำลังติดตั้ง Forge
+Proses ini hanya berjalan sekali per versi Forge.	ขั้นตอนนี้ทำเพียงครั้งเดียวต่อเวอร์ชัน Forge
+Forge dipasang sekali saat instance diunduh pertama kali.	Forge จะถูกติดตั้งครั้งเดียวเมื่อดาวน์โหลด instance ครั้งแรก
+Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้ง Forge (เหลือ {0} MB ต้องการอย่างน้อย {1} MB)
+Memuat versi NeoForge...	กำลังโหลดเวอร์ชัน NeoForge...
+\u26a0\ufe0f NeoForge belum tersedia untuk {0}	\u26a0\ufe0f ยังไม่มี NeoForge สำหรับ {0}
+\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	\u26a0\ufe0f NeoForge ใช้ได้เฉพาะ Minecraft 1.20.2 ขึ้นไป
+Memuat NeoForge...	กำลังโหลด NeoForge...
+NeoForge Tidak Tersedia	ไม่มี NeoForge
+Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ NeoForge ({0}) กรุณากดปุ่มดาวน์โหลดที่ instance!
+Mengunduh installer NeoForge {0}...	กำลังดาวน์โหลดตัวติดตั้ง NeoForge {0}...
+Mengunduh library NeoForge ({0}/{1})...	กำลังดาวน์โหลดไลบรารี NeoForge ({0}/{1})...
+Memasang NeoForge {0}...	กำลังติดตั้ง NeoForge {0}...
+Memasang NeoForge {0} ({1}/{2})...	กำลังติดตั้ง NeoForge {0} ({1}/{2})...
+NeoForge {0} terpasang	ติดตั้ง NeoForge {0} แล้ว
+Tidak dapat menemukan NeoForge untuk versi {0}	ไม่พบ NeoForge สำหรับเวอร์ชัน {0}
+Tidak ada versi NeoForge untuk {0}	ไม่มีเวอร์ชัน NeoForge สำหรับ {0}
+Versi NeoForge belum dipilih	ยังไม่ได้เลือกเวอร์ชัน NeoForge
+NeoForge hanya mendukung Minecraft 1.20.2 ke atas	NeoForge รองรับเฉพาะ Minecraft 1.20.2 ขึ้นไป
+Installer NeoForge {0} rusak atau tidak lengkap	ตัวติดตั้ง NeoForge {0} เสียหายหรือไม่สมบูรณ์
+Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง NeoForge นี้ (Amber ต้องใช้ NeoForge 1.20.2 ขึ้นไป)
+Installer NeoForge untuk Minecraft {0}, bukan {1}	ตัวติดตั้ง NeoForge นี้สำหรับ Minecraft {0} ไม่ใช่ {1}
+Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี NeoForge ไม่สำเร็จ: {0} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
+Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	ตัวติดตั้ง NeoForge ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({0})
+Installer NeoForge gagal (kode {0}): {1}	ตัวติดตั้ง NeoForge ล้มเหลว (รหัส {0}): {1}
+Installer NeoForge gagal (kode {0})	ตัวติดตั้ง NeoForge ล้มเหลว (รหัส {0})
+Memasang NeoForge	กำลังติดตั้ง NeoForge
+Proses ini hanya berjalan sekali per versi NeoForge.	ขั้นตอนนี้ทำเพียงครั้งเดียวต่อเวอร์ชัน NeoForge
+NeoForge dipasang sekali saat instance diunduh pertama kali.	NeoForge จะถูกติดตั้งครั้งเดียวเมื่อดาวน์โหลด instance ครั้งแรก
+Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้ง NeoForge (เหลือ {0} MB ต้องการอย่างน้อย {1} MB)
+Buat Instance	สร้าง Instance
+Cari versi...	ค้นหาเวอร์ชัน...
+Memuat versi Minecraft...	กำลังโหลดเวอร์ชัน Minecraft...
+Memuat versi yang didukung {0}...	กำลังโหลดเวอร์ชันที่ {0} รองรับ...
+Gagal memuat daftar versi Minecraft	โหลดรายการเวอร์ชัน Minecraft ไม่สำเร็จ
+Dirilis {0}	เผยแพร่เมื่อ {0}
+LOADER {0}	{0} LOADER
+Memuat loader {0}...	กำลังโหลด {0} loader...
+Loader {0} belum tersedia untuk Minecraft {1}	ยังไม่มี loader {0} สำหรับ Minecraft {1}
+Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	เลือกเวอร์ชันล่าสุดให้อัตโนมัติ แตะเวอร์ชันอื่นหากต้องการ loader ที่เก่ากว่า

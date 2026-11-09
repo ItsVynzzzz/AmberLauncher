@@ -10,8 +10,8 @@ import java.util.Locale
  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
  *
  * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
- * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], atau [PT]. Pada pilihan [SYSTEM], HP
- * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, atau Portugis (Brasil) memakai
+ * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], [PT], atau [TH]. Pada pilihan [SYSTEM], HP
+ * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, Portugis (Brasil), atau Thai memakai
  * bahasa itu, dan bahasa lain jatuh ke bahasa Inggris. Bahasa baru cukup ditambah di [DICTIONARY_LANGS] dan folder kamusnya.
  */
 object Tr {
@@ -21,12 +21,13 @@ object Tr {
     const val ES = "es"
     const val VI = "vi"
     const val PT = "pt"
+    const val TH = "th"
 
     /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
     const val DEFAULT_CHOICE = EN
 
     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
-    private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT)
+    private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT, TH)
 
     private const val PREFS_NAME = "amber_launcher_prefs"
     private const val KEY_LANGUAGE = "language"
@@ -35,12 +36,12 @@ object Tr {
     @Volatile
     private var translator: Translator? = null
 
-    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], atau [PT]. */
+    /** Pilihan pengguna saat ini: [SYSTEM], [ID], [EN], [ES], [VI], [PT], atau [TH]. */
     @Volatile
     var choice: String = DEFAULT_CHOICE
         private set
 
-    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], atau [PT]. */
+    /** Bahasa yang benar-benar dipakai: [ID], [EN], [ES], [VI], [PT], atau [TH]. */
     @Volatile
     var effective: String = ID
         private set

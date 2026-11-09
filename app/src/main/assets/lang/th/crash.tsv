@@ -1,0 +1,70 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	AmberLauncher หยุดทำงาน
+Minecraft berhenti mendadak	Minecraft หยุดทำงานกะทันหัน
+Aplikasi tertutup karena kesalahan tak terduga	แอปปิดลงเพราะข้อผิดพลาดที่ไม่คาดคิด
+Kembali ke launcher	กลับไปที่ตัวเปิดเกม
+Penjelasan	คำอธิบาย
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	แครชไม่ได้หมายความว่าตัวเปิดเกมเสียเสมอไป Mod, RAM ของมือถือ และไดรเวอร์กราฟิกเป็นสาเหตุบ่อยกว่ามาก ดังนั้นควรหาสาเหตุก่อนแจ้งผู้พัฒนา
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	ตัวเปิดเกมหยุดทำงานกะทันหันเพราะข้อผิดพลาดที่ไม่คาดคิด ส่งล็อกให้ผู้พัฒนาเพื่อให้แก้ไขได้
+Dugaan penyebab	สาเหตุที่น่าจะเป็น
+Kesalahan di dalam AmberLauncher	ข้อผิดพลาดภายใน AmberLauncher
+Memori (RAM) HP habis	หน่วยความจำ (RAM) ของมือถือหมด
+Renderer atau driver grafis	Renderer หรือไดรเวอร์กราฟิก
+Mod, versi Java, atau file game	Mod, เวอร์ชัน Java หรือไฟล์เกม
+Belum bisa dipastikan	ยังระบุไม่ได้
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	ครั้งนี้ตัวเปิดเกมเองที่หยุดทำงาน ไม่ใช่เกมหรือ Mod การแจ้งผู้พัฒนาช่วยให้แก้ไขได้มาก
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	ระบบหยุดเกมเพราะ RAM ของมือถือไม่พอสำหรับเกม Mod หรือการตั้งค่ากราฟิกที่ใช้อยู่ โดยปกติไม่ใช่ความเสียหายของตัวเปิดเกม ลองลดการจัดสรร RAM ของเกม (ไม่เกินครึ่งหนึ่งของ RAM มือถือ) ลด Mod และปิดแอปอื่น
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	เกมหยุดทำงานในส่วนกราฟิกหรือไลบรารีที่มากับมือถือ สาเหตุที่พบบ่อยคือ renderer ไม่เหมาะกับมือถือเครื่องนี้ ลองเปลี่ยน renderer ในการตั้งค่า instance หากทุก renderer ล้มเหลว จึงอาจเป็นปัญหาของตัวเปิดเกม
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	เกมเกิดข้อผิดพลาดขณะทำงาน มักเกิดจาก Mod ที่ไม่ตรงกับเวอร์ชันเกมหรือ loader, Mod ที่ขาดส่วนที่ต้องพึ่งพา (dependency) หรือเวอร์ชัน Java ไม่เหมาะสม โดยปกติไม่ใช่ความเสียหายของตัวเปิดเกม
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	ต้องดูเนื้อหาในล็อกจึงจะเห็นสาเหตุ AI ช่วยอ่านให้คุณได้
+Detail teknis	รายละเอียดทางเทคนิค
+Kesalahan tak terduga di dalam aplikasi	ข้อผิดพลาดที่ไม่คาดคิดภายในแอป
+Status keluar: {~0}	สถานะการออก: {0}
+Cari solusi dengan AI	หาวิธีแก้ด้วย AI
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	คัดลอกล็อกพร้อมคำถามที่เตรียมไว้ แล้ววางในแชท AI โดยปกติ AI จะชี้สาเหตุและวิธีแก้ได้ ให้ส่งข้อความล็อก ไม่ใช่ภาพหน้าจอ
+Salin log untuk AI	คัดลอกล็อกสำหรับ AI
+Atau buka langsung (log otomatis disalin)	หรือเปิดโดยตรง (คัดลอกล็อกให้อัตโนมัติ)
+Lapor ke pengembang	แจ้งผู้พัฒนา
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	หาก AI สรุปว่าปัญหาอยู่ที่ตัวเปิดเกม ค่อยแจ้งบน GitHub ล็อกจะถูกคัดลอกให้อัตโนมัติ เพียงวางในรายงาน
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	แจ้งบน GitHub เพื่อให้แก้ไขได้ ล็อกจะถูกคัดลอกให้อัตโนมัติ เพียงวางในรายงาน
+Lapor di GitHub	แจ้งบน GitHub
+Cara lain membagikan log	วิธีอื่นในการแชร์ล็อก
+Bagikan file	แชร์ไฟล์
+Tautan mclo.gs	ลิงก์ mclo.gs
+Mengunggah...	กำลังอัปโหลด...
+Buka tautan	เปิดลิงก์
+Log untuk AI disalin. Tempel di kolom chat AI.	คัดลอกล็อกสำหรับ AI แล้ว วางในช่องแชท AI
+Log disalin. Tempel di laporan.	คัดลอกล็อกแล้ว วางในรายงาน
+Tidak bisa membuka tautan.	เปิดลิงก์ไม่ได้
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	สวัสดี Minecraft Java Edition ของฉันแครชบนมือถือ Android เมื่อเปิดผ่าน AmberLauncher ช่วยอธิบายสาเหตุด้วยภาษาง่ายๆ (ฉันเป็นมือใหม่) แล้วบอกวิธีแก้ทีละขั้นตอน หากสาเหตุมาจาก Mod โปรดระบุว่าต้องลบหรือเปลี่ยน Mod ตัวไหน
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	สวัสดี แอป AmberLauncher (ตัวเปิด Minecraft Java Edition สำหรับ Android) หยุดทำงานเอง ช่วยอธิบายสาเหตุด้วยภาษาง่ายๆ (ฉันเป็นมือใหม่) และแนะนำสิ่งที่ฉันลองได้ หากคุณคิดว่าเป็นบั๊กของตัวเปิดเกม ช่วยบอกด้วย
+Perangkat: {0}	อุปกรณ์: {0}
+Versi Minecraft: {0}	เวอร์ชัน Minecraft: {0}
+Grafis: {0}	กราฟิก: {0}
+Jumlah mod: {0}	จำนวน Mod: {0}
+Daftar mod: {0}	รายชื่อ Mod: {0}
+Isi log crash:	เนื้อหาล็อกแครช:
+Turunkan RAM ke {0} MB	ลด RAM เหลือ {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	เพิ่มพื้นที่ว่างให้มือถือ เพิ่มกลับได้ที่ การตั้งค่า > หน่วยความจำ
+Pakai renderer Otomatis	ใช้ renderer แบบอัตโนมัติ
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	renderer ที่คุณเลือกอาจไม่เหมาะกับมือถือเครื่องนี้ โหมดอัตโนมัติจะเลือกอันที่เหมาะที่สุด
+Coba renderer {0}	ลอง renderer {0}
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	renderer ปัจจุบันน่าจะมีปัญหาบนมือถือเครื่องนี้ เปลี่ยนอีกครั้งได้ที่ การตั้งค่า > กราฟิก
+Matikan shader	ปิด shader
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Shader ทำให้ GPU และหน่วยความจำทำงานหนัก เปิดกลับได้จากเมนูวิดีโอของเกม
+Nonaktifkan mod tersangka	ปิดใช้งาน Mod ที่น่าสงสัย
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mod ที่ถูกกล่าวถึงในล็อก: {0} เปิดใช้งานอีกครั้งได้ในเมนู Mod
+Reset Java ke Otomatis	รีเซ็ต Java เป็นอัตโนมัติ
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	เวอร์ชัน Java ที่เลือกอาจไม่ตรงกับเกมนี้ โหมดอัตโนมัติจะเลือกเวอร์ชันที่เหมาะสม
+RAM game diturunkan ke {0} MB.	ลด RAM ของเกมเหลือ {0} MB แล้ว
+Renderer dikembalikan ke Otomatis.	ตั้ง renderer กลับเป็นอัตโนมัติแล้ว
+Renderer diganti ke {0}.	เปลี่ยน renderer เป็น {0} แล้ว
+Shader dimatikan.	ปิด shader แล้ว
+Mod dinonaktifkan: {0}.	ปิดใช้งาน Mod แล้ว: {0}
+Java dikembalikan ke Otomatis.	ตั้ง Java กลับเป็นอัตโนมัติแล้ว
+Gagal menerapkan. Coba lewat Pengaturan.	ใช้ไม่สำเร็จ ลองทำผ่านการตั้งค่า
+Pemulihan cepat	กู้คืนด่วน
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	แตะเพื่อลองวิธีแก้ที่น่าจะช่วยได้มากที่สุด ทุกอย่างย้อนกลับได้
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	บันทึกการเปลี่ยนแปลงแล้ว กลับไปที่ตัวเปิดเกมแล้วเริ่มเกมอีกครั้ง
+Sudah diterapkan	ใช้แล้ว
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	เกมหยุดทำงานในส่วนกราฟิกหรือไลบรารีที่มากับมือถือ สาเหตุที่พบบ่อยคือ renderer ไม่เหมาะกับมือถือเครื่องนี้ ลองเปลี่ยน renderer ที่ การตั้งค่า > กราฟิก หากทุก renderer ล้มเหลว จึงอาจเป็นปัญหาของตัวเปิดเกม

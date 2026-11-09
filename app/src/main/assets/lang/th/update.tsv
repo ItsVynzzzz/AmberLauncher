@@ -1,0 +1,83 @@
+# Pembaruan aplikasi (pop-up versi baru dari GitHub)
+Pembaruan tersedia	มีการอัปเดตใหม่
+Versi {0} sudah tersedia. Kamu memakai versi {1}.	เวอร์ชัน {0} พร้อมให้ใช้งานแล้ว คุณกำลังใช้เวอร์ชัน {1}
+Yang baru	มีอะไรใหม่
+Lewati	ข้าม
+Unduh	ดาวน์โหลด
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	ดาวน์โหลดขาดตอน แตะลองอีกครั้ง การดาวน์โหลดจะต่อจากส่วนที่ได้แล้ว
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	พื้นที่เก็บข้อมูลไม่พอ ล้างพื้นที่ประมาณ {0} MB แล้วลองอีกครั้ง
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	ไฟล์ที่ดาวน์โหลดเสียหาย (ไม่ตรงกับไฟล์บน GitHub) แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	ไม่พบไฟล์ APK บน GitHub (รหัส 404) รุ่นนี้อาจถูกลบไปแล้ว
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub ปฏิเสธการดาวน์โหลด (รหัส 403) ลองอีกครั้งภายหลัง
+GitHub membalas kode {0} saat mengunduh.	GitHub ตอบกลับด้วยรหัส {0} ขณะดาวน์โหลด
+Balasan GitHub kosong.	การตอบกลับจาก GitHub ว่างเปล่า
+Balasan GitHub terlalu besar.	การตอบกลับจาก GitHub ใหญ่เกินไป
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub มีปัญหา (รหัส {0}) ลองอีกครั้งภายหลัง
+GitHub membalas kode {0}.	GitHub ตอบกลับด้วยรหัส {0}
+Tidak ada koneksi internet.	ไม่มีการเชื่อมต่ออินเทอร์เน็ต
+Koneksi terlalu lambat. Coba lagi.	การเชื่อมต่อช้าเกินไป ลองอีกครั้ง
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	การเชื่อมต่อที่ปลอดภัยไปยัง GitHub ล้มเหลว ตรวจสอบวันที่และเวลาของมือถือ
+Koneksi internet terputus. Coba lagi.	การเชื่อมต่ออินเทอร์เน็ตหลุด ลองอีกครั้ง
+Terjadi kesalahan yang tidak terduga.	เกิดข้อผิดพลาดที่ไม่คาดคิด
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	ถึงขีดจำกัดคำขอของ GitHub แล้ว (มักเกิดเพราะหลายคนใช้เครือข่ายเดียวกัน) ลองอีกครั้งประมาณเวลา {0}
+Unduhan gagal: {0}	ดาวน์โหลดไม่สำเร็จ: {0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	ไฟล์อัปเดตหายไป แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	เกมยังทำงานอยู่ ปิดเกมก่อนเพื่อไม่ให้ข้อมูลสูญหาย แล้วลองอีกครั้ง
+Pemasangan gagal: {0}	ติดตั้งไม่สำเร็จ: {0}
+Pemasangan dibatalkan.	ยกเลิกการติดตั้งแล้ว
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	อ่านไฟล์อัปเดตเป็น APK ไม่ได้ แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
+Berkas ini bukan APK AmberLauncher.	ไฟล์นี้ไม่ใช่ APK ของ AmberLauncher
+APK ini tidak lebih baru dari versi yang terpasang.	APK นี้ไม่ได้ใหม่กว่าเวอร์ชันที่ติดตั้งอยู่
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	ลายเซ็นของ APK ต่างจากแอปที่ติดตั้งอยู่ Android จึงจะปฏิเสธการอัปเดตนี้
+Pemasangan diblokir oleh sistem atau Play Protect.	ระบบหรือ Play Protect บล็อกการติดตั้ง
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	ระบบหรือ Play Protect บล็อกการติดตั้ง{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android ปฏิเสธการอัปเดตนี้: ลายเซ็นหรือเวอร์ชันไม่ตรงกับแอปที่ติดตั้งอยู่
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android ปฏิเสธการอัปเดตนี้: ลายเซ็นหรือเวอร์ชันไม่ตรงกับแอปที่ติดตั้งอยู่{0}
+APK ini tidak cocok dengan HP kamu.	APK นี้เข้ากันไม่ได้กับมือถือของคุณ
+APK ini tidak cocok dengan HP kamu.{0}	APK นี้เข้ากันไม่ได้กับมือถือของคุณ{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	APK เสียหายหรือไม่ถูกต้อง แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	APK เสียหายหรือไม่ถูกต้อง แตะลองอีกครั้งเพื่อดาวน์โหลดใหม่{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งการอัปเดต
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งการอัปเดต{0}
+Pemasangan gagal.	ติดตั้งไม่สำเร็จ
+Pemasangan gagal.{0}	ติดตั้งไม่สำเร็จ{0}
+Balasan GitHub tidak bisa dibaca.	อ่านการตอบกลับจาก GitHub ไม่ได้
+Daftar rilis tersimpan tidak bisa dibaca.	อ่านรายการรุ่นที่บันทึกไว้ไม่ได้
+Pembaruan	การอัปเดต
+Versi terpasang	เวอร์ชันที่ติดตั้ง
+Memeriksa...	กำลังตรวจสอบ...
+Lihat pembaruan	ดูการอัปเดต
+Buka	เปิด
+Periksa pembaruan	ตรวจสอบการอัปเดต
+Periksa otomatis	ตรวจสอบอัตโนมัติ
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	ตรวจหาเวอร์ชันใหม่บน GitHub ทุกครั้งที่เปิดตัวเปิดเกม (ใช้ข้อมูลเพียงไม่กี่ KB) หากมี จะมีป๊อปอัปให้ดาวน์โหลดและติดตั้ง
+Semua rilis	ทุกรุ่น
+Daftar versi dan catatan perubahannya di GitHub.	รายการเวอร์ชันและบันทึกการเปลี่ยนแปลงบน GitHub
+Buka GitHub	เปิด GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	การอัปเดตจะดาวน์โหลดและติดตั้งจากภายในตัวเปิดเกม Android ยังคงขอการยืนยันการติดตั้งหนึ่งครั้ง และต้องปิดเกมก่อน
+Belum diperiksa. Ketuk Periksa pembaruan.	ยังไม่ได้ตรวจสอบ แตะตรวจสอบการอัปเดต
+Memeriksa pembaruan...	กำลังตรวจสอบการอัปเดต...
+Sudah versi terbaru. Diperiksa pukul {0}.	เป็นเวอร์ชันล่าสุดแล้ว ตรวจสอบเมื่อเวลา {0}
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	เวอร์ชัน {0} ออกแล้ว แต่ APK สำหรับมือถือเครื่องนี้ ({1}) ยังไม่พร้อมใช้งาน ลองอีกครั้งภายหลัง
+Versi {0} tersedia.	เวอร์ชัน {0} พร้อมใช้งาน
+Mengunduh versi {0}... {1}%	กำลังดาวน์โหลดเวอร์ชัน {0}... {1}%
+Versi {0} siap dipasang.	เวอร์ชัน {0} พร้อมติดตั้ง
+Butuh izin memasang aplikasi dari Android.	ต้องได้รับอนุญาตจาก Android เพื่อติดตั้งแอป
+Menunggu konfirmasi pemasangan dari Android...	กำลังรอการยืนยันการติดตั้งจาก Android...
+Ukuran unduhan: {0} MB	ขนาดดาวน์โหลด: {0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	คุณกำลังใช้อินเทอร์เน็ตมือถือ การดาวน์โหลดนี้จะใช้โควตาข้อมูล
+Mengunduh pembaruan	กำลังดาวน์โหลดการอัปเดต
+Sembunyikan	ซ่อน
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	การดาวน์โหลดทำงานขณะที่ตัวเปิดเกมเปิดอยู่ หากขาดตอน ให้แตะดาวน์โหลดอีกครั้ง จะต่อจากส่วนที่ได้แล้ว
+Siap dipasang	พร้อมติดตั้ง
+Versi {0} sudah diunduh dan diperiksa.	ดาวน์โหลดและตรวจสอบเวอร์ชัน {0} แล้ว
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android จะขอให้ยืนยันการติดตั้ง ตัวเปิดเกมจะปิดระหว่างติดตั้ง ให้เปิดใหม่อีกครั้งเมื่อติดตั้งเสร็จ
+Izin pemasangan diperlukan	ต้องมีสิทธิ์ติดตั้ง
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android ต้องได้รับอนุญาตเพื่อให้ AmberLauncher ติดตั้งการอัปเดตของตัวเองได้
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	เปิด "อนุญาตจากแหล่งที่มานี้" แล้วกลับมาที่นี่ การติดตั้งจะดำเนินต่ออัตโนมัติ
+Memasang pembaruan	กำลังติดตั้งการอัปเดต
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	ทำตามข้อความยืนยันจาก Android ตัวเปิดเกมจะปิดเองเมื่อติดตั้งเสร็จ
+Pembaruan gagal	อัปเดตไม่สำเร็จ
+Coba lagi	ลองอีกครั้ง
+Pemasangan gagal. ({~0})	ติดตั้งไม่สำเร็จ ({0})
+layar konfirmasi tidak bisa dibuka	เปิดหน้าจอยืนยันไม่ได้

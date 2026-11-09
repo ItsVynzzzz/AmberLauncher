@@ -1,0 +1,136 @@
+# Pengaturan
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM \u00b7 {1} คอร์ CPU
+Memori	หน่วยความจำ
+Grafis	กราฟิก
+Kontrol	การควบคุม
+Tampilan	การแสดงผล
+Memori game (RAM)	หน่วยความจำเกม (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	ใหญ่เกินไปสำหรับมือถือเครื่องนี้ เกมและมือถืออาจช้าลง
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	ขีดจำกัดหน่วยความจำ Java (-Xmx) ค่าที่มากกว่าไม่ได้เร็วกว่าเสมอไป
+1,5 GB	1.5 GB
+Argumen JVM tambahan	อาร์กิวเมนต์ JVM เพิ่มเติม
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	ไม่บังคับ สำหรับผู้ใช้ขั้นสูง ใส่ค่าผิดอาจทำให้เกมรันไม่ได้
+Contoh: -XX:+UseG1GC	ตัวอย่าง: -XX:+UseG1GC
+Konfigurasi renderer	การตั้งค่า renderer
+Optimasi otomatis options.txt	ปรับ options.txt ให้เหมาะสมอัตโนมัติ
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	ปิดเมฆและเงาโดยอัตโนมัติเพื่อให้ได้ FPS สูงขึ้น
+Skala resolusi layar	สเกลความละเอียดหน้าจอ
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	น้อยลง = FPS สูงขึ้น ภาพเบลอขึ้น
+Driver Vulkan	ไดรเวอร์ Vulkan
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	เลือกการใช้งานไดรเวอร์ Vulkan ที่ระบบ/เกมใช้
+API grafis	API กราฟิก
+Atur API grafis yang dipakai Minecraft modern 26.2+.	กำหนด API กราฟิกที่ Minecraft รุ่นใหม่ 26.2+ ใช้
+Gunakan driver Vulkan sistem	ใช้ไดรเวอร์ Vulkan ของระบบ
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	บังคับใช้ไดรเวอร์ Vulkan ที่มากับมือถือ (ไม่ใช่ Turnip) มีผลกับ renderer Zink
+V-Sync Zink	V-Sync ของ Zink
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	การซิงก์แนวตั้งสำหรับ renderer Kopper Zink ผ่านอินเทอร์เฟซของระบบ
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	ภาษาของข้อความในตัวเปิดเกม ตามระบบจะใช้ภาษาของมือถือ
+Latar Beranda	พื้นหลังหน้าหลัก
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	รูปภาพเบาที่สุด GIF เคลื่อนไหวได้โดยใช้ทรัพยากรน้อย วิดีโอลื่นที่สุด (HD สูงสุด 60 fps) แต่ใช้แบตเตอรี่มากกว่า
+Ganti latar	เปลี่ยนพื้นหลัง
+Gerakkan GIF dan video	ทำให้ GIF และวิดีโอเคลื่อนไหว
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	ปิดเพื่อแสดงภาพนิ่งเท่านั้น ประหยัดแบตเตอรี่และ RAM ที่สุด
+Jeda saat Hemat Baterai	หยุดเมื่อเปิดโหมดประหยัดแบตเตอรี่
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIF และวิดีโอจะหยุดอัตโนมัติขณะที่โหมดประหยัดแบตเตอรี่ของมือถือเปิดอยู่
+Suara video	เสียงวิดีโอ
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	ปิดเป็นค่าเริ่มต้น ปิดเสียงอัตโนมัติเมื่อมีแอปอื่นกำลังเล่นเสียงอยู่
+Volume video	ระดับเสียงวิดีโอ
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	แสงนุ่มๆ ที่แถบด้านข้างและขอบการ์ดของหน้าหลัก สีเป็นไปตาม GIF หรือวิดีโอ ไม่มีผลกับรูปภาพ
+Kekuatan ambient	ความเข้มของแสงบรรยากาศ
+Kustomisasi kontrol virtual	ปรับแต่งการควบคุมเสมือน
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	เปลี่ยนเลย์เอาต์ปุ่ม ขนาด ความโปร่งใส การเลื่อน hotbar และการแมปปุ่มของ Minecraft
+Buka editor	เปิดตัวแก้ไข
+Mode mouse di menu	โหมดเมาส์ในเมนู
+Sentuh tombol atau slot menu langsung di mana jari menekan.	แตะปุ่มหรือช่องในเมนูได้โดยตรงตรงจุดที่นิ้วกด
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	เลื่อนนิ้วเพื่อขยับเคอร์เซอร์เสมือน แตะหน้าจอเพื่อคลิก
+Click (langsung)	คลิก (โดยตรง)
+Pukul lewat layar	โจมตีโดยแตะหน้าจอ
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	แตะหรือกดค้างที่พื้นที่ว่างของหน้าจอเพื่อโจมตี ปิดเพื่อไม่ให้การลากกล้องโจมตีไปด้วย ให้ใช้ปุ่มโจมตีแทน
+Sensitivitas kamera	ความไวกล้อง
+Kecepatan memutar pandangan di dalam game.	ความเร็วในการหมุนมุมมองในเกม
+Sensitivitas kursor virtual	ความไวเคอร์เซอร์เสมือน
+Kecepatan kursor saat berada di menu Minecraft.	ความเร็วเคอร์เซอร์ขณะอยู่ในเมนู Minecraft
+Ukuran kursor virtual	ขนาดเคอร์เซอร์เสมือน
+Mode mouse fisik (auto-hide)	โหมดเมาส์จริง (ซ่อนอัตโนมัติ)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	ซ่อนเคอร์เซอร์เสมือนอัตโนมัติเมื่อเชื่อมต่อเมาส์ภายนอก
+Perubahan tersimpan otomatis	การเปลี่ยนแปลงบันทึกอัตโนมัติ
+Pengaturan di-reset ke default!	รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นแล้ว!
+Reset default	รีเซ็ตเป็นค่าเริ่มต้น
+PILIH RENDERER GRAFIK	เลือก RENDERER กราฟิก
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	ปรับแบ็กเอนด์กราฟิกให้เหมาะกับเวอร์ชัน Minecraft และ GPU ของอุปกรณ์
+Renderer diubah ke: {0}	เปลี่ยน renderer เป็น: {0}
+Konfigurasi {0}	การตั้งค่า {0}
+Kesesuaian: {0}	ความเข้ากันได้: {0}
+PERINGATAN DRIVER ADRENO	คำเตือนไดรเวอร์ ADRENO
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	ตัวเปิดเกมตรวจพบว่าอุปกรณ์ของคุณใช้ GPU Adreno การเปิดตัวเลือกนี้อาจทำให้ renderer Zink ใช้งานไม่ได้หรือแครช แน่ใจหรือไม่ว่าต้องการเปิด?
+AKTIFKAN	เปิดใช้งาน
+Mode GC (pembersih memori Java)	โหมด GC (ตัวเก็บกวาดหน่วยความจำ Java)
+Kunci layar 60 Hz	ล็อกหน้าจอที่ 60 Hz
+Kualitas rekaman layar	คุณภาพการบันทึกหน้าจอ
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	ยิ่งเล็กยิ่งเบาสำหรับมือถือ ประหยัด 540p เบา 720p คมชัด 1080p
+Hemat	ประหยัด
+Ringan	เบา
+Tajam	คมชัด
+FPS rekaman	FPS ของการบันทึก
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps เบากว่ามาก 60 fps สำหรับมือถือที่แรงเท่านั้น
+Rekam suara mikrofon	บันทึกเสียงไมโครโฟน
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	เพิ่มเสียงจากไมโครโฟนลงในวิดีโอ เสียงของเกมยังไม่ถูกบันทึก
+Hentikan rekaman saat HP terlalu panas	หยุดบันทึกเมื่อมือถือร้อนเกินไป
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	บันทึกวิดีโอและหยุดอัตโนมัติเพื่อไม่ให้เกมช้าลงเพราะความร้อน
+Isi rekaman	เนื้อหาที่บันทึก
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	เฉพาะเกม: ซ่อนปุ่มบนหน้าจอจากวิดีโอ (ยังแตะใช้งานได้) พร้อมปุ่ม: บันทึกปุ่มบนหน้าจอลงในวิดีโอด้วย เปลี่ยนได้จากเมนูในเกมเช่นกัน
+Hotbar sentuh	Hotbar แบบสัมผัส
+Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	แตะ hotbar ที่ด้านล่างของหน้าจอเพื่อเลือกช่อง เหมือนใน Minecraft Bedrock ตำแหน่งช่องเป็นไปตาม GUI scale ของเกม
+Geser kamera dari tombol	ลากกล้องจากปุ่ม
+Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	การกดปุ่มโจมตี ใช้ หรือกระโดดค้างแล้วเลื่อนนิ้วจะหมุนกล้องด้วย ปิดเพื่อไม่ให้มุมมองเลื่อนระหว่างต่อสู้ (PvP)
+Dukungan TouchController	รองรับ TouchController
+Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	ทดลอง หากติดตั้งและเชื่อมต่อ Mod TouchController แล้ว การสัมผัสขณะเล่นจะถูกส่งต่อไปยัง Mod ด้วย ปุ่มและเมาส์เสมือนของตัวเปิดเกมยังคงทำงาน จึงใช้ได้พร้อมกันทั้งสองอย่าง
+Optimasi HP RAM kecil	ปรับแต่งมือถือ RAM น้อย
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	มือถือเครื่องนี้มี RAM {0} MB จึงปรับวิธีทำงานของตัวเก็บกวาดหน่วยความจำ Java ได้
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: เบาที่สุดสำหรับโปรเซสเซอร์ แต่การหยุด GC นานขึ้นเล็กน้อย ลองใช้หากเกมกระตุกบ่อย
+Bawaan: tanpa flag GC tambahan dari launcher.	ค่าเริ่มต้น: ไม่มีแฟลก GC เพิ่มเติมจากตัวเปิดเกม
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	อัตโนมัติ: G1 พร้อมหน่วยความจำจำกัด เหมาะกับมือถือส่วนใหญ่ ลองอันนี้ก่อน
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	มีผลเมื่อเปิดเกมครั้งถัดไป หากต้องการเปรียบเทียบ ให้ดูบรรทัด [Kinerja] ในล็อกเกม
+Mode Hemat	โหมดประหยัด
+Untuk HP yang cepat panas atau baterainya cepat habis.	สำหรับมือถือที่ร้อนเร็วหรือแบตเตอรี่หมดเร็ว
+Nyalakan Mode Hemat	เปิดโหมดประหยัด
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	เปิดโหมดประสิทธิภาพคงที่ของระบบและ V-Sync ของ Zink พร้อมจำกัดสเกลความละเอียดสูงสุดที่ 80%
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	มีผลเมื่อเปิดเกมครั้งถัดไป เมื่อปิดอีกครั้ง การตั้งค่าก่อนหน้าจะถูกกู้คืน
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	หน้าจอ 90/120 Hz จะถูกล็อกที่ 60 Hz ขณะเล่นเพื่อให้การเคลื่อนไหวสม่ำเสมอขึ้นและร้อนน้อยลงเล็กน้อย เหมาะเมื่อเกมไม่ค่อยถึง 90 FPS HUD FPS แสดง Hz ที่ใช้งานอยู่
+Cadangan & bagikan layout	สำรองและแชร์เลย์เอาต์
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	บันทึกเลย์เอาต์ปุ่มเป็นไฟล์ .json เพื่อสำรองหรือแชร์ หรือโหลดจากไฟล์ของคนอื่น
+Ekspor	ส่งออก
+Layout kontrol disimpan ke berkas	บันทึกเลย์เอาต์การควบคุมลงไฟล์แล้ว
+Gagal menyimpan berkas	บันทึกไฟล์ไม่สำเร็จ
+Berkas terlalu besar untuk layout kontrol	ไฟล์ใหญ่เกินไปสำหรับเลย์เอาต์การควบคุม
+Berkas tidak berisi tombol	ไฟล์ไม่มีปุ่ม
+Berkas ini bukan layout kontrol yang valid	ไฟล์นี้ไม่ใช่เลย์เอาต์การควบคุมที่ถูกต้อง
+Layout kontrol diimpor ({0} tombol)	นำเข้าเลย์เอาต์การควบคุมแล้ว ({0} ปุ่ม)
+Log game	ล็อกเกม
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	ทุกครั้งที่ออกจาก Minecraft ล็อกของเซสชันนั้นจะถูกบันทึกอัตโนมัติ (10 รายการล่าสุด) โดยไม่มีโทเค็นบัญชี หากมีปัญหา เช่น shader ไม่โหลด ให้แชร์ล็อกล่าสุดให้ผู้พัฒนา
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	ยังไม่มีล็อก เล่นเกมหนึ่งครั้งแล้วออก ล็อกจะถูกบันทึกอัตโนมัติ
+Log terbaru	ล็อกล่าสุด
+Log sebelumnya	ล็อกก่อนหน้า
+Bagikan	แชร์
+Hapus semua log	ลบล็อกทั้งหมด
+Ketuk lagi untuk menghapus	แตะอีกครั้งเพื่อลบ
+Log dihapus.	ลบล็อกแล้ว
+Log launcher	ล็อกตัวเปิดเกม
+Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	เหตุการณ์ภายในตัวเปิดเกมนอกตัวเกม เช่น การดาวน์โหลด การเข้าสู่ระบบ และข้อความแสดงข้อผิดพลาด แชร์หากปัญหาเกิดก่อนเกมเริ่ม
+Menyiapkan log...	กำลังเตรียมล็อก...
+Gagal menyiapkan log launcher.	เตรียมล็อกของตัวเปิดเกมไม่สำเร็จ
+Lokasi: {0}	ตำแหน่ง: {0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	ส่งผ่าน WhatsApp, Telegram หรือ Google Drive ด้วยปุ่มแชร์ หรือหยิบจากโฟลเดอร์นั้นโดยตรงผ่านตัวจัดการไฟล์
+Plugin native library	ปลั๊กอิน native library
+Belum ada plugin terpasang	ยังไม่มีปลั๊กอินที่ติดตั้ง
+Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	ติดตั้ง APK ปลั๊กอิน native library (รูปแบบ Zalith/FCL) ที่ Mod ต้องการ เช่น Distant Horizons แล้วแตะเพื่อสแกนใหม่
+Pindai	สแกน
+Memindai...	กำลังสแกน...
+Pindai ulang plugin	สแกนปลั๊กอินใหม่
+Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	ใช้หลังติดตั้งหรือลบปลั๊กอิน ปลั๊กอินจะถูกสแกนอัตโนมัติทุกครั้งที่เปิดเกมด้วย
+Kontrol sentuh	การควบคุมแบบสัมผัส
+Kamera dan kursor	กล้องและเคอร์เซอร์
+Controller dan mouse fisik	คอนโทรลเลอร์และเมาส์จริง
+Lanjutan	ขั้นสูง
+Langsung bisa dipakai	ใช้ได้ทันที
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	ไม่ต้องเปิดหรือตั้งค่าอะไร เสียบคอนโทรลเลอร์ (เกมแพด) แล้วเล่นได้เลย: สติ๊กซ้ายเดิน สติ๊กขวามองรอบๆ A กระโดด RT โจมตี LT วาง/ใช้ Y เปิดช่องเก็บของ Start = Esc ในเมนูสติ๊กจะขยับเคอร์เซอร์ เมาส์และคีย์บอร์ดจริงก็ใช้ได้ทันทีเช่นกัน ปุ่มบนหน้าจอจะซ่อนเองเมื่อใช้คอนโทรลเลอร์หรือเมาส์ ความเร็วสติ๊กเป็นไปตามความไวกล้องและเคอร์เซอร์ด้านบน หากตรวจพบ Mod คอนโทรลเลอร์ (เช่น Controlify) คอนโทรลเลอร์จะถูกส่งให้ Mod โดยตรง

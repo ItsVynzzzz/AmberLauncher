@@ -1,0 +1,35 @@
+# Beranda dan sidebar
+Memproses berkas...	กำลังประมวลผลไฟล์...
+Video dipasang sebagai latar. Suara dan ambient diatur di Pengaturan > Tampilan	ตั้งวิดีโอเป็นพื้นหลังแล้ว เสียงและแสงบรรยากาศตั้งได้ที่ การตั้งค่า > การแสดงผล
+Latar belakang diganti	เปลี่ยนพื้นหลังแล้ว
+Terlalu besar: foto atau GIF maksimal 30 MB, video maksimal 200 MB dan resolusi 2560 px	ไฟล์ใหญ่เกินไป: รูปภาพหรือ GIF สูงสุด 30 MB, วิดีโอสูงสุด 200 MB และความละเอียด 2560 px
+Berkas tidak bisa dipakai. Pakai foto, GIF, atau video MP4 (H.264)	ใช้ไฟล์นี้ไม่ได้ ให้ใช้รูปภาพ, GIF หรือวิดีโอ MP4 (H.264)
+Silakan buat atau pilih akun terlebih dahulu!	กรุณาสร้างหรือเลือกบัญชีก่อน!
+Menyiapkan OpenJDK ({0})...	กำลังเตรียม OpenJDK ({0})...
+Instalasi selesai! Tekan PLAY untuk bermain.	ติดตั้งเสร็จแล้ว! กดเล่นเพื่อเริ่มเกม
+Gagal mengunduh: {~0}	ดาวน์โหลดไม่สำเร็จ: {0}
+Meluncurkan {0}...	กำลังเปิด {0}...
+Gagal menyiapkan OpenJDK: {~0}	เตรียม OpenJDK ไม่สำเร็จ: {0}
+Membuka folder instance...	กำลังเปิดโฟลเดอร์ instance...
+Latar belakang dikembalikan ke bawaan	คืนค่าพื้นหลังเป็นค่าเริ่มต้นแล้ว
+Instance {0} berhasil dibuat!	สร้าง instance {0} สำเร็จ!
+Instance {0} dibuat. Mengunduh game...	สร้าง instance {0} แล้ว กำลังดาวน์โหลดเกม...
+Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.	ยกเลิกการดาวน์โหลดแล้ว กดดาวน์โหลดเพื่อดำเนินการต่อ
+Instance {0} berhasil dihapus!	ลบ instance {0} สำเร็จ!
+Tambah akun	เพิ่มบัญชี
+Ganti akun	สลับบัญชี
+Ganti latar belakang	เปลี่ยนพื้นหลัง
+Ganti instance	สลับ instance
+UNDUH	ดาวน์โหลด
+Buka folder instance	เปิดโฟลเดอร์ instance
+Belum ada instance	ยังไม่มี instance
+Buat instance Minecraft pertamamu untuk mulai bermain.	สร้าง instance Minecraft แรกของคุณเพื่อเริ่มเล่น
+TAMBAH	เพิ่ม
+Video tidak bisa diputar di HP ini, latar memakai gambar diam	มือถือเครื่องนี้เล่นวิดีโอไม่ได้ จึงใช้ภาพนิ่งเป็นพื้นหลังแทน
+LATAR BELAKANG	พื้นหลัง
+Foto paling ringan. GIF bergerak dengan ringan. Video paling halus dan bisa HD 60 fps (MP4 H.264, maksimal 200 MB), tapi memakai baterai lebih banyak. Suara video, ambient, dan hemat baterai diatur di Pengaturan > Tampilan.	รูปภาพเบาที่สุด GIF เคลื่อนไหวได้โดยใช้ทรัพยากรน้อย วิดีโอลื่นที่สุดและเป็น HD 60 fps ได้ (MP4 H.264 สูงสุด 200 MB) แต่ใช้แบตเตอรี่มากกว่า เสียงวิดีโอ แสงบรรยากาศ และโหมดประหยัดแบตเตอรี่ตั้งได้ที่ การตั้งค่า > การแสดงผล
+PILIH FOTO / GIF / VIDEO	เลือกรูปภาพ / GIF / วิดีโอ
+KEMBALI KE BAWAAN	คืนค่าเริ่มต้น
+PILIH INSTANCE	เลือก instance
+Belum ada instance. Buat yang pertama di bawah.	ยังไม่มี instance สร้างอันแรกด้านล่าง
+TAMBAH INSTANCE	เพิ่ม instance

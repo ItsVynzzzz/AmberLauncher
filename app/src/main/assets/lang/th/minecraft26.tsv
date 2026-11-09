@@ -1,0 +1,11 @@
+# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
+MINECRAFT 26.X KE ATAS	MINECRAFT 26.X ขึ้นไป
+Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	เวอร์ชันนี้ใช้ Java 25 และเอนจินกราฟิกใหม่ มือถือบางรุ่นยังรันไม่ได้ โดยเฉพาะรุ่นที่ไดรเวอร์ Vulkan เก่าหรือไม่ครบถ้วน
+Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	หากเปิดเกมไม่ได้ สาเหตุอาจมาจากมือถือหรือเกมเวอร์ชันนี้ ไม่ใช่ตัวเปิดเกม ลองเปลี่ยน renderer ในการตั้งค่า หรือใช้ Minecraft 1.21.x
+Memeriksa dukungan Vulkan HP ini...	กำลังตรวจสอบการรองรับ Vulkan ของมือถือเครื่องนี้...
+Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	เวอร์ชันนี้ใช้ OpenGL โดย Vulkan เริ่มใช้ตั้งแต่ Minecraft 26.2
+Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	การตรวจสอบ Vulkan ใช้ไม่ได้ในบิลด์นี้ จึงยืนยันการรองรับ Vulkan ของมือถือไม่ได้
+Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	การตรวจสอบ Vulkan ไม่เสร็จสิ้น ไดรเวอร์ Vulkan ของมือถือเครื่องนี้อาจมีปัญหา Minecraft 26.2 ขึ้นไปจึงอาจล้มเหลวหากใช้ Vulkan
+HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	มือถือเครื่องนี้ไม่มีไดรเวอร์ Vulkan ที่ใช้งานได้ Minecraft 26.2 ขึ้นไปใช้ Vulkan บนเครื่องนี้ไม่ได้ ให้เลือก Prefer OpenGL ในการตั้งค่าวิดีโอของเกม
+Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	Vulkan ของมือถือเครื่องนี้ตรงตามข้อกำหนดของ Minecraft 26.2 ขึ้นไป
+Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	Vulkan ของมือถือเครื่องนี้ยังไม่ตรงตามข้อกำหนดของ Minecraft 26.2 ขึ้นไป หากเกมใช้ Vulkan อาจเริ่มไม่ขึ้น ให้เลือก Prefer OpenGL ในการตั้งค่าวิดีโอของเกม

@@ -1,0 +1,183 @@
+# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	ตัวเปิดเกมเกิดข้อผิดพลาดภายในที่คอมโพเนนต์ UI หรือโปรเซสเบื้องหลังของระบบ
+INCIDENT DIAGNOSTICS \u00b7 JVM TERMINATION	การวินิจฉัยเหตุการณ์ \u00b7 JVM ยุติการทำงาน
+STATUS PELUNCUR	สถานะตัวเปิดเกม
+INFORMASI SESI GAME	ข้อมูลเซสชันเกม
+{0} Mod	{0} Mod
+Log: {0}	ล็อก: {0}
+DIAGNOSA KELUAR SISTEM	การวินิจฉัยการออกจากระบบ
+SOLUSI & SARAN PEMULIHAN	วิธีแก้และคำแนะนำการกู้คืน
+Log berhasil diunggah & tautan disalin!	อัปโหลดล็อกสำเร็จและคัดลอกลิงก์แล้ว!
+Gagal mengunggah: {~0}	อัปโหลดไม่สำเร็จ: {0}
+MENGUNGGAH LOG...	กำลังอัปโหลดล็อก...
+BUKA TAUTAN MCLO.GS	เปิดลิงก์ MCLO.GS
+UNGGAH TAUTAN LOG (MCLO.GS)	อัปโหลดลิงก์ล็อก (MCLO.GS)
+BAGIKAN	แชร์
+Log disalin ke clipboard!	คัดลอกล็อกไปยังคลิปบอร์ดแล้ว!
+SALIN	คัดลอก
+LOG CRASH	ล็อกแครช
+Disalin ke papan klip!	คัดลอกไปยังคลิปบอร์ดแล้ว!
+Gagal membaca file log: {0}	อ่านไฟล์ล็อกไม่สำเร็จ: {0}
+Tidak ada rincian log yang tersedia.	ไม่มีรายละเอียดล็อก
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	ตัวเปิดเกมเกิดข้อผิดพลาดภายในที่คอมโพเนนต์ UI หรือโปรเซสเบื้องหลัง กรุณาแจ้งล็อก stack trace นี้ให้ผู้พัฒนา AmberLauncher
+Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	ตัวเปิดเกมเกิดข้อผิดพลาดที่ไม่คาดคิด (Uncaught Exception)
+JVM dihentikan karena sinyal fatal {0} ({1}).	JVM ถูกหยุดด้วยสัญญาณร้ายแรง {0} ({1})
+JVM keluar dengan kode {0} ({1}).	JVM ออกด้วยรหัส {0} ({1})
+PELUNCUR MENGALAMI KESALAHAN	ตัวเปิดเกมพบข้อผิดพลาด
+GAME MENGALAMI CRASH	เกมแครช
+Rotasi Layar	การหมุนหน้าจอ
+Tautan berhasil diunggah & disalin!	อัปโหลดลิงก์สำเร็จและคัดลอกแล้ว!
+Log berhasil disalin ke clipboard!	คัดลอกล็อกไปยังคลิปบอร์ดสำเร็จ!
+Aplikasi AmberLauncher	แอป AmberLauncher
+Lokasi Log: {0}	ตำแหน่งล็อก: {0}
+STATUS PENGHENTIAN PROSES	สถานะการยุติโปรเซส
+CATATAN ANALISIS LOG	บันทึกการวิเคราะห์ล็อก
+MENGUNGGAH LOG KE MCLO.GS...	กำลังอัปโหลดล็อกไปยัง MCLO.GS...
+UNGGAH TAUTAN (MCLO.GS)	อัปโหลดลิงก์ (MCLO.GS)
+BAGIKAN LOG	แชร์ล็อก
+SALIN TEKS	คัดลอกข้อความ
+MULAI ULANG	เริ่มใหม่
+Unknown	ไม่ทราบ
+MINECRAFT MENGALAMI CRASH	MINECRAFT แครช
+JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	JVM ออกด้วยรหัส {0} (Signal: {1}).\nตรวจสอบไฟล์ล็อกเพื่อดูรายละเอียดเพิ่มเติม
+Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	โปรเซสเกมหยุดกะทันหัน (อาจถูกระบบหยุดเพราะ RAM หมด หรือไดรเวอร์เนทีฟแครช)
+SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (CPU ไม่รองรับคำสั่ง)
+SIGABRT (Native Assertion / Abort)	SIGABRT (Native Assertion / Abort)
+SIGBUS (Kesalahan Bus Memori)	SIGBUS (ข้อผิดพลาดบัสหน่วยความจำ)
+SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (ข้อผิดพลาดการคำนวณทศนิยม)
+SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (ถูก OS หยุด / RAM หมด)
+SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (เข้าถึงหน่วยความจำผิดกฎ / Segfault)
+SIGTERM (Permintaan Terminasi)	SIGTERM (คำขอให้ยุติ)
+Selesai Normal (0)	เสร็จสิ้นตามปกติ (0)
+Kesalahan Inisialisasi Mod / Java Exception (1)	ข้อผิดพลาดการเริ่มต้น Mod / Java Exception (1)
+Dihentikan Pengguna (SIGINT 130)	ผู้ใช้หยุด (SIGINT 130)
+Native Driver Abort (SIGABRT 134)	Native Driver Abort (SIGABRT 134)
+Kehabisan Memori RAM / OOM (SIGKILL 137)	RAM หมด / OOM (SIGKILL 137)
+Crash Driver Grafis / Segfault (SIGSEGV 139)	ไดรเวอร์กราฟิกแครช / Segfault (SIGSEGV 139)
+Kegagalan Bootstrap Mesin Virtual (-1)	Bootstrap เครื่องเสมือนล้มเหลว (-1)
+Kode Keluar {0}	รหัสออก {0}
+Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	หากต้องการรายละเอียดสาเหตุ โปรดตรวจสอบไฟล์ล็อก หากแก้ปัญหาด้วยตัวเองไม่ได้ ให้ส่งไฟล์ล็อกให้ผู้ที่หรือทีมที่วิเคราะห์ได้ อย่าถ่ายภาพหน้าจอปัจจุบันเพียงอย่างเดียว เพราะภาพหน้าจอให้ข้อมูลทางเทคนิคไม่เพียงพอที่จะแก้ปัญหา
+JVM digugurkan karena sinyal fatal {0} ({1}).	JVM ถูกยกเลิกด้วยสัญญาณร้ายแรง {0} ({1})
+File log tidak ditemukan.	ไม่พบไฟล์ล็อก
+Log Crash AmberLauncher - {0}	ล็อกแครช AmberLauncher - {0}
+Bagikan Log Crash: {0}	แชร์ล็อกแครช: {0}
+Tidak ada aplikasi untuk membagikan file ini.	ไม่มีแอปสำหรับแชร์ไฟล์นี้
+Gagal membagikan file: {0}	แชร์ไฟล์ไม่สำเร็จ: {0}
+Konten log kosong.	เนื้อหาล็อกว่างเปล่า
+Gagal mengunggah log (HTTP {0}): {1}	อัปโหลดล็อกไม่สำเร็จ (HTTP {0}): {1}
+Server mclo.gs tidak mengembalikan URL.	เซิร์ฟเวอร์ mclo.gs ไม่ส่ง URL กลับมา
+File log tidak ditemukan: {0}	ไม่พบไฟล์ล็อก: {0}
+Tombol kedua	ปุ่มที่สอง
+Pilih tombol	เลือกปุ่ม
+Ditekan bersamaan dengan tombol utama	กดพร้อมกับปุ่มหลัก
+Ketuk kategori, lalu ketuk tombolnya	แตะหมวดหมู่ แล้วแตะปุ่ม
+Cari tombol	ค้นหาปุ่ม
+Ketik nama tombol, misalnya Shift atau F3	พิมพ์ชื่อปุ่ม เช่น Shift หรือ F3
+Tidak ada yang cocok	ไม่พบที่ตรงกัน
+Cari tombol (W, Shift, F3, Tab...)	ค้นหาปุ่ม (W, Shift, F3, Tab...)
+Mouse	เมาส์
+Gerakan	การเคลื่อนที่
+Aksi	การกระทำ
+Angka & Hotbar	ตัวเลขและ Hotbar
+Fungsi (F1-F12)	ฟังก์ชัน (F1-F12)
+Modifier & Kontrol	Modifier และ Control
+Navigasi	การนำทาง
+Alfabet (A - Z)	ตัวอักษร (A - Z)
+Simbol	สัญลักษณ์
+Umum	ทั่วไป
+Modifier	Modifier
+Alfabet	ตัวอักษร
+Angka	ตัวเลข
+None	ไม่มี
+Key {0}	ปุ่ม {0}
+Mouse Kiri (Attack/Break)	เมาส์ซ้าย (โจมตี/ทุบ)
+Mouse Kanan (Use/Place)	เมาส์ขวา (ใช้/วาง)
+Mouse Tengah (Pick Block)	เมาส์กลาง (เลือกบล็อก)
+Mouse Tombol 4	ปุ่มเมาส์ 4
+Mouse Tombol 5	ปุ่มเมาส์ 5
+Scroll Wheel (Slide Naik/Turun)	ลูกกลิ้งเมาส์ (เลื่อนขึ้น/ลง)
+W (Maju)	W (เดินหน้า)
+A (Kiri)	A (ซ้าย)
+S (Mundur)	S (ถอยหลัง)
+D (Kanan)	D (ขวา)
+SPACE (Lompat)	SPACE (กระโดด)
+LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (ย่อ/Sneak)
+LEFT CTRL (Sprint/Lari)	LEFT CTRL (วิ่ง/Sprint)
+E (Inventory)	E (ช่องเก็บของ)
+Q (Drop Item)	Q (ทิ้งไอเทม)
+F (Swap Hand)	F (สลับมือ)
+T (Buka Chat)	T (เปิดแชท)
+/ (Buka Command)	/ (เปิดคำสั่ง)
+ENTER (Kirim/Pilih)	ENTER (ส่ง/เลือก)
+ESCAPE (Pause/Menu)	ESCAPE (หยุดชั่วคราว/เมนู)
+TAB (Daftar Player)	TAB (รายชื่อผู้เล่น)
+BACKSPACE (Hapus)	BACKSPACE (ลบ)
+F1 (Sembunyikan HUD)	F1 (ซ่อน HUD)
+F2 (Screenshot)	F2 (ภาพหน้าจอ)
+F3 (Debug Layar)	F3 (หน้าจอดีบัก)
+F4 (Shader / Spectator)	F4 (Shader / Spectator)
+F5 (Ubah Perspektif)	F5 (เปลี่ยนมุมมอง)
+F8 (Cinematic Camera)	F8 (กล้องภาพยนตร์)
+F11 (Fullscreen)	F11 (เต็มหน้าจอ)
+1 (Slot 1)	1 (ช่อง 1)
+2 (Slot 2)	2 (ช่อง 2)
+3 (Slot 3)	3 (ช่อง 3)
+4 (Slot 4)	4 (ช่อง 4)
+5 (Slot 5)	5 (ช่อง 5)
+6 (Slot 6)	6 (ช่อง 6)
+7 (Slot 7)	7 (ช่อง 7)
+8 (Slot 8)	8 (ช่อง 8)
+9 (Slot 9)	9 (ช่อง 9)
+Panah Atas (UP)	ลูกศรขึ้น (UP)
+Panah Bawah (DOWN)	ลูกศรลง (DOWN)
+Panah Kiri (LEFT)	ลูกศรซ้าย (LEFT)
+Panah Kanan (RIGHT)	ลูกศรขวา (RIGHT)
+KURUNG BUKA ( [ { )	วงเล็บเปิด ( [ { )
+KURUNG TUTUP ( ] } )	วงเล็บปิด ( ] } )
+Numpad . (Titik)	Numpad . (จุด)
+Numpad / (Bagi)	Numpad / (หาร)
+Numpad * (Kali)	Numpad * (คูณ)
+Numpad - (Kurang)	Numpad - (ลบ)
+Numpad + (Tambah)	Numpad + (บวก)
+Numpad = (Sama Dengan)	Numpad = (เท่ากับ)
+KONFIGURASI RENDERER	การกำหนดค่า RENDERER
+Tidak dapat membuka panel aplikasi	เปิดแผงของแอปไม่ได้
+Buka Panel Aplikasi {0}	เปิดแผงแอป {0}
+Akses pengaturan driver native, benchmark, dan preferensi aplikasi	เข้าถึงการตั้งค่าไดรเวอร์เนทีฟ เบนช์มาร์ก และค่ากำหนดของแอป
+Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	ไม่มีตัวแปรสภาพแวดล้อมที่กำหนดค่าได้สำหรับ renderer นี้
+PENGATURAN ENVIRONMENT VARIABLES	การตั้งค่าตัวแปรสภาพแวดล้อม
+Pengaturan direset ke default	รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นแล้ว
+RESET DEFAULT	รีเซ็ตเป็นค่าเริ่มต้น
+SIMPAN & TUTUP	บันทึกและปิด
+Nilai aktif: 	ค่าที่ใช้งาน: 
+Masukkan nilai (opsional)	ใส่ค่า (ไม่บังคับ)
+Auto (Rekomendasi)	อัตโนมัติ (แนะนำ)
+Otomatis Cerdas	อัตโนมัติอัจฉริยะ
+Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	เลือก renderer ที่เหมาะสมและเสถียรที่สุดโดยอัตโนมัติตามเวอร์ชัน Minecraft ที่รันอยู่
+Semua Versi Minecraft	ทุกเวอร์ชัน Minecraft
+Rekomendasi Utama (Mali & Adreno)	ตัวเลือกแนะนำ (Mali & Adreno)
+Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Wrapper OpenGL ES 3.x สมัยใหม่ที่ทำงานตรงบนไดรเวอร์ทางการของระบบ เสถียรที่สุดและได้ FPS สูงสุดสำหรับ GPU Mali & Adreno บน MC รุ่นใหม่ (1.17 \u2013 26.3)
+Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	ไลบรารีกราฟิก OpenGL 4.0 MobileGlues สำหรับ Minecraft 1.17 \u2013 1.21.1 เข้ากันได้สูงกับ GPU มือถือหลายแบบ รวมถึง Mali
+Paling Stabil untuk MC Lama	เสถียรที่สุดสำหรับ MC รุ่นเก่า
+Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Wrapper OpenGL ES 2.0 แบบคลาสสิก เข้ากันได้กับ Minecraft 1.7.10 \u2013 1.16.5 และอุปกรณ์สเปกต่ำ
+Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	แปลง OpenGL เดสก์ท็อป 4.6 เป็น Vulkan รองรับ shader mod สมัยใหม่ (Iris/Oculus) และ Mod ขั้นสูง
+Khusus GPU Adreno	เฉพาะ GPU Adreno
+Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	ไดรเวอร์ Mesa Gallium Freedreno แบบโอเพนซอร์สที่ปรับแต่งมาเพื่อชิป Snapdragon / GPU Adreno โดยเฉพาะ
+Pustaka grafis MobileGL (Vulkan & GLES backend)	ไลบรารีกราฟิก MobileGL (แบ็กเอนด์ Vulkan & GLES)
+Renderer eksternal dari APK: {0} ({1})	Renderer ภายนอกจาก APK: {0} ({1})
+Plugin Eksternal	ปลั๊กอินภายนอก
+Renderer APK: {0} ({1})	Renderer APK: {0} ({1})
+Close	ปิด
+mclo.gs link	ลิงก์ mclo.gs
+Crash Log	ล็อกแครช
+LAUNCHER ERROR	ข้อผิดพลาดของ LAUNCHER
+EXIT CODE {0}	รหัสออก {0}
+TERMINAL LOG / STACK TRACE	ล็อกเทอร์มินัล / STACK TRACE
+Impor layout kontrol?	นำเข้าเลย์เอาต์การควบคุม?
+Ganti layout	แทนที่เลย์เอาต์
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	เลย์เอาต์ปุ่มปัจจุบันจะถูกแทนที่ด้วยปุ่ม {0} ปุ่มจากไฟล์นี้
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	ไฟล์นี้มีปุ่มมาโคร {0} ปุ่มที่พิมพ์แชทหรือคำสั่งอัตโนมัติ ตรวจสอบก่อนใช้บนเซิร์ฟเวอร์
+Utama	หลัก
+Navigasi & Numpad	การนำทางและ Numpad
+Ketuk tombol yang diinginkan	แตะปุ่มที่ต้องการ
+Error: {0}	ข้อผิดพลาด: {0}

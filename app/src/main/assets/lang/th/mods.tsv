@@ -1,0 +1,198 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	Mod
+modpacks	modpack
+shaderpacks	shader pack
+resourcepacks	resource pack
+datapacks	data pack
+format yang didukung	รูปแบบที่รองรับ
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	ข้ามไฟล์ "{0}" แล้ว! {1} รองรับเฉพาะรูปแบบ {2}
+{0} file diabaikan karena format tidak didukung ({~1})!	ข้าม {0} ไฟล์เพราะไม่รองรับรูปแบบ ({1})!
+Membaca arsip modpack...	กำลังอ่านไฟล์บีบอัด modpack...
+Berhasil mengimpor dan memasang {0} modpack!	นำเข้าและติดตั้ง modpack {0} รายการสำเร็จ!
+Gagal mengimpor modpack: {~0}	นำเข้า modpack ไม่สำเร็จ: {0}
+Berhasil mengimpor {0} file {~1}!	นำเข้า {0} ไฟล์ ({1}) สำเร็จ!
+Gagal mengimpor file: {~0}	นำเข้าไฟล์ไม่สำเร็จ: {0}
+Mencari versi...	กำลังค้นหาเวอร์ชัน...
+Tidak ada versi cocok untuk {0}!	ไม่มีเวอร์ชันที่เข้ากันได้สำหรับ {0}!
+Mengunduh...	กำลังดาวน์โหลด...
+Modpack {0} berhasil dipasang!	ติดตั้ง modpack {0} สำเร็จ!
+Berhasil memasang {0} beserta {1} dependensi!	ติดตั้ง {0} พร้อมส่วนที่ต้องพึ่งพา {1} รายการสำเร็จ!
+Berhasil memasang {0}!	ติดตั้ง {0} สำเร็จ!
+Memulai pengunduhan...	กำลังเริ่มดาวน์โหลด...
+Gagal terhubung ke Modrinth	เชื่อมต่อ Modrinth ไม่ได้
+Pilih atau buat instance di Home untuk mulai memasang mod.	เลือกหรือสร้าง instance ที่หน้าหลักเพื่อเริ่มติดตั้ง Mod
+Kembali ke Home	กลับไปหน้าหลัก
+Terpasang ({0})	ติดตั้งแล้ว ({0})
+Jelajah	เรียกดู
+Resource	Resource
+Shader	Shader
+Cari di Modrinth...	ค้นหาใน Modrinth...
+Cari di {0} item...	ค้นหาใน {0} รายการ...
+World: {0}	โลก: {0}
+Tidak ada world	ไม่มีโลก
+Semua versi	ทุกเวอร์ชัน
+Pilih instance terlebih dahulu!	กรุณาเลือก instance ก่อน!
+Impor	นำเข้า
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	instance นี้ยังไม่มีโลก เปิดเกมเพื่อสร้างโลกก่อน
+Belum ada {~0} terpasang di instance ini	ยังไม่มี {0} ที่ติดตั้งใน instance นี้
+Tidak ada item yang cocok	ไม่มีรายการที่ตรงกัน
+Jelajahi Modrinth	เรียกดู Modrinth
+Memuat data dari Modrinth...	กำลังโหลดข้อมูลจาก Modrinth...
+Gagal memuat dari Modrinth	โหลดจาก Modrinth ไม่สำเร็จ
+Terjadi kesalahan jaringan	เกิดข้อผิดพลาดของเครือข่าย
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	ไม่มีผลลัพธ์ที่ตรงกับ Minecraft {0} ({1})
+Tidak ada hasil ditemukan untuk kata kunci ini	ไม่พบผลลัพธ์สำหรับคำค้นหานี้
+Coba ubah kata kunci atau nonaktifkan filter versi	ลองเปลี่ยนคำค้นหาหรือปิดตัวกรองเวอร์ชัน
+Cari di semua versi Minecraft	ค้นหาในทุกเวอร์ชัน Minecraft
+Sebelumnya	ก่อนหน้า
+Selanjutnya	ถัดไป
+Pilih instance	เลือก instance
+Pilih world	เลือกโลก
+Hapus modpack?	ลบ modpack?
+Hapus {~0}?	ลบ {0}?
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	แน่ใจหรือไม่ว่าต้องการลบ modpack "{0}"? Mod ทั้งหมดที่ติดตั้งจาก modpack นี้จะถูกลบออกจาก instance ด้วย
+Yakin ingin menghapus "{0}" dari instance ini?	แน่ใจหรือไม่ว่าต้องการลบ "{0}" ออกจาก instance นี้?
+Modpack dan semua mod berhasil dihapus!	ลบ modpack และ Mod ทั้งหมดแล้ว!
+{0} berhasil dihapus!	ลบ {0} แล้ว!
+Mengimpor & memasang modpack	กำลังนำเข้าและติดตั้ง modpack
+Membaca daftar mod dan mengunduh file...	กำลังอ่านรายการ Mod และดาวน์โหลดไฟล์...
+{0} / {1} file mod	ไฟล์ Mod {0} / {1}
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	ตัวเปิดเกมกำลังอ่านรายการ Mod และดาวน์โหลด modpack โปรดรอสักครู่
+Tangkapan layar	ภาพหน้าจอ
+Pratinjau gambar	พรีวิวรูปภาพ
+NONAKTIF	ปิดใช้งาน
+Tidak ada deskripsi	ไม่มีคำอธิบาย
+oleh {0}	โดย {0}
+Unduh...	ดาวน์โหลด...
+Terpasang	ติดตั้งแล้ว
+Pasang pack	ติดตั้งแพ็ก
+Versi dipilih	เวอร์ชันที่เลือก
+Sedang mengunduh dan memasang...	กำลังดาวน์โหลดและติดตั้ง...
+Sudah terpasang	ติดตั้งแล้ว
+Pasang modpack	ติดตั้ง modpack
+Pasang ke instance	ติดตั้งลงใน instance
+Versi ({0})	เวอร์ชัน ({0})
+Screenshot	ภาพหน้าจอ
+Deskripsi	คำอธิบาย
+Tidak ada ringkasan deskripsi.	ไม่มีคำอธิบายโดยสรุป
+Tidak ada versi yang didukung	ไม่มีเวอร์ชันที่รองรับ
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	โปรเจกต์นี้ไม่มีรุ่นที่เข้ากันได้กับ Minecraft {0} ({1})
+Versi {0} \u00b7 MC {1}	เวอร์ชัน {0} \u00b7 MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	modpack จะถูกแตกไฟล์ลง instance โดยตรง (overrides, การกำหนดค่า และ manifest)
+Dependensi wajib ikut terpasang otomatis.	ส่วนที่ต้องพึ่งพาที่จำเป็นจะถูกติดตั้งให้อัตโนมัติ
+Mod terpasang	Mod ที่ติดตั้ง
+Belum ada resource pack	ยังไม่มี resource pack
+Belum ada shader	ยังไม่มี shader
+Belum ada mod terpasang	ยังไม่มี Mod ที่ติดตั้ง
+Pasang lewat menu Mod di sidebar.	ติดตั้งผ่านเมนู Mod ที่แถบด้านข้าง
+Nonaktif \u00b7 {0}	ปิดใช้งาน \u00b7 {0}
+PASANG ADDON EKSTERNAL	ติดตั้ง ADDON ภายนอก
+Pemasang Addon	ตัวติดตั้ง Addon
+Tipe file: {0} \u00b7 Siap dipasang	ประเภทไฟล์: {0} \u00b7 พร้อมติดตั้ง
+KATEGORI ADDON	หมวดหมู่ ADDON
+TARGET INSTANCE MINECRAFT	INSTANCE MINECRAFT เป้าหมาย
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f ยังไม่ได้สร้าง instance Minecraft! สร้าง instance ที่หน้าหลักก่อน
+Memasang addon...	กำลังติดตั้ง addon...
+Gagal: {~0}	ไม่สำเร็จ: {0}
+Mempersiapkan pemasangan...	กำลังเตรียมการติดตั้ง...
+\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 ติดตั้ง "{0}" ลงใน {1} สำเร็จ!
+Terjadi kesalahan yang tidak diketahui	เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ
+Gagal memasang: {~0}	ติดตั้งไม่สำเร็จ: {0}
+MEMASANG...	กำลังติดตั้ง...
+PASANG SEKARANG	ติดตั้งเลย
+{0} mod terpasang	ติดตั้ง Mod แล้ว {0} รายการ
+Menyalin file {0}...	กำลังคัดลอกไฟล์ {0}...
+Gagal membaca file sumber	อ่านไฟล์ต้นทางไม่ได้
+Membaca daftar modpack...	กำลังอ่านรายการ modpack...
+Modrinth API error code: {0}	รหัสข้อผิดพลาด Modrinth API: {0}
+Empty response	ไม่มีข้อมูลตอบกลับ
+Gagal mengambil detail project: {~0}	ดึงรายละเอียดโปรเจกต์ไม่สำเร็จ: {0}
+Gagal mengambil versi project: {~0}	ดึงเวอร์ชันของโปรเจกต์ไม่สำเร็จ: {0}
+Mengekstrak dan menyiapkan modpack...	กำลังแตกไฟล์และเตรียม modpack...
+Menyelesaikan dependensi: {0}...	กำลังแก้ส่วนที่ต้องพึ่งพา: {0}...
+Membaca daftar modpack ({0} mod ditemukan)...	กำลังอ่านรายการ modpack (พบ Mod {0} รายการ)...
+Mengunduh mod ({0}/{1}): {2}...	กำลังดาวน์โหลด Mod ({0}/{1}): {2}...
+Mod sudah ada ({0}/{1}): {2}	มี Mod อยู่แล้ว ({0}/{1}): {2}
+Mengekstrak konfigurasi modpack...	กำลังแตกไฟล์การกำหนดค่าของ modpack...
+Mengekstrak file arsip modpack...	กำลังแตกไฟล์บีบอัดของ modpack...
+Selesai! {0} mod berhasil dipasang.	เสร็จสิ้น! ติดตั้ง Mod {0} รายการสำเร็จ
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	เสร็จสิ้นพร้อมหมายเหตุ: ติดตั้ง Mod แล้ว {0} รายการ มี {1} ไฟล์ที่ล้มเหลวหรือถูกข้าม ลองติดตั้งใหม่หากมี Mod ขาดหาย
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	modpack นี้ต้องใช้ {0} แต่ AmberLauncher รองรับเฉพาะ Fabric ในขณะนี้
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ Fabric สร้าง instance Fabric ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	modpack นี้สำหรับ Minecraft {0} แต่ instance นี้ใช้ {1} เลือกหรือสร้าง instance ที่เป็นเวอร์ชันเดียวกัน
+Alamat unduhan ditolak karena tidak memakai HTTPS	ปฏิเสธที่อยู่ดาวน์โหลดเพราะไม่ได้ใช้ HTTPS
+Gagal mengunduh file: HTTP {0}	ดาวน์โหลดไฟล์ไม่สำเร็จ: HTTP {0}
+Body stream kosong	body stream ว่างเปล่า
+Gagal menyimpan file unduhan	บันทึกไฟล์ที่ดาวน์โหลดไม่สำเร็จ
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	ไฟล์ {0} เสียหายหรือถูกแก้ไขระหว่างทาง (ลายนิ้วมือไม่ตรงกัน) จึงไม่ได้ติดตั้ง
+Isi modpack terlalu besar, pemasangan dibatalkan.	เนื้อหา modpack ใหญ่เกินไป ยกเลิกการติดตั้ง
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	modpack นี้ต้องใช้ {0} แต่ AmberLauncher รองรับเฉพาะ Fabric, Forge และ NeoForge ในขณะนี้
+Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ Forge สร้าง instance Forge ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ NeoForge สร้าง instance NeoForge ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
+Kategori	หมวดหมู่
+Versi	เวอร์ชัน
+Urutkan	เรียงตาม
+Relevansi	ความเกี่ยวข้อง
+Unduhan	ดาวน์โหลด
+Pengikut	ผู้ติดตาม
+Diperbarui	อัปเดตล่าสุด
+Semua loader	ทุก loader
+Pilih kategori	เลือกหมวดหมู่
+Pilih versi	เลือกเวอร์ชัน
+Pilih loader	เลือก loader
+Cari mod...	ค้นหา Mod...
+Cari modpack...	ค้นหา modpack...
+Cari shader...	ค้นหา shader...
+Cari resource pack...	ค้นหา resource pack...
+Cari datapack...	ค้นหา datapack...
+CurseForge belum tersedia di versi ini	เวอร์ชันนี้ยังไม่มี CurseForge
+Optimasi	การเพิ่มประสิทธิภาพ
+Teknologi	เทคโนโลยี
+Sihir	เวทมนตร์
+Petualangan	การผจญภัย
+Utilitas	ยูทิลิตี้
+Dekorasi	การตกแต่ง
+Perlengkapan	อุปกรณ์
+Makanan	อาหาร
+Penyimpanan	การเก็บของ
+Pustaka	ไลบรารี
+Realistis	สมจริง
+Fantasi	แฟนตาซี
+INSTANCE AKTIF	INSTANCE ที่ใช้งานอยู่
+Mod & konten	Mod และเนื้อหา
+Tambah	เพิ่ม
+Game	เกม
+Tentang	เกี่ยวกับ
+Cari pengaturan...	ค้นหาการตั้งค่า...
+Perekaman layar	การบันทึกหน้าจอ
+Latar	พื้นหลัง
+Foto, GIF, atau video	รูปภาพ GIF หรือวิดีโอ
+Redupkan latar	หรี่พื้นหลัง
+Seberapa gelap latar di layar selain Home.	ความมืดของพื้นหลังบนหน้าจออื่นที่ไม่ใช่หน้าหลัก
+Aksen warna	สีเน้น
+Warna tombol dan penanda terpilih di seluruh launcher.	สีของปุ่มและเครื่องหมายที่เลือกทั่วทั้งตัวเปิดเกม
+Gaya tampilan	สไตล์การแสดงผล
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	ค่าเริ่มต้นใช้ธีมของ AmberLauncher เอง Liquid Glass ทำให้พื้นหลังหลังแผงและปุ่มเบลอ
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Liquid Glass ต้องใช้ Android 12 ขึ้นไป มือถือเครื่องนี้จะใช้ค่าเริ่มต้นโดยอัตโนมัติ
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	ภาษาของข้อความในตัวเปิดเกม มีผลทันทีโดยไม่ต้องเริ่มแอปใหม่
+Pengaturan khusus untuk renderer yang sedang dipakai.	การตั้งค่าเฉพาะสำหรับ renderer ที่ใช้อยู่
+Atur	ตั้งค่า
+Tata letak kontrol	เลย์เอาต์การควบคุม
+Aplikasi	แอป
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	ข้อมูลแอป สัญญาอนุญาต GPL-3.0 และเครดิต
+Reset ke default	รีเซ็ตเป็นค่าเริ่มต้น
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	การตั้งค่าทั้งหมดกลับเป็นค่าเริ่มต้น การเปลี่ยนแปลงอื่นจะบันทึกอัตโนมัติ
+Belum ada akun	ยังไม่มีบัญชี
+Pilih akun untuk bermain	เลือกบัญชีเพื่อเล่น
+Akun aktif untuk bermain	บัญชีที่ใช้เล่น
+Jenis akun	ประเภทบัญชี
+Status login	สถานะการเข้าสู่ระบบ
+Tersambung	เชื่อมต่อแล้ว
+Perlu disegarkan	ต้องรีเฟรช
+Segarkan login	รีเฟรชการเข้าสู่ระบบ
+Menyegarkan...	กำลังรีเฟรช...
+Login berhasil disegarkan	รีเฟรชการเข้าสู่ระบบสำเร็จ
+Gagal menyegarkan login	รีเฟรชการเข้าสู่ระบบไม่สำเร็จ
+Pasang	ติดตั้ง
+Tema	ธีม
+Klasik	คลาสสิก

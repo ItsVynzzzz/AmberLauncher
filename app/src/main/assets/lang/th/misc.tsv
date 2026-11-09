@@ -1,0 +1,57 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	RAM ว่าง {0} GB
+Otomatis	อัตโนมัติ
+\u26a1 Optimization	\u26a1 การเพิ่มประสิทธิภาพ
+\u2699\ufe0f Technology	\u2699\ufe0f เทคโนโลยี
+\ud83e\ude84 Magic	\ud83e\ude84 เวทมนตร์
+\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f การผจญภัย
+\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f ยูทิลิตี้
+\ud83c\udfa8 Decoration	\ud83c\udfa8 การตกแต่ง
+\ud83d\udcdc Quests	\ud83d\udcdc เควสต์
+\u2728 Simplistic	\u2728 เรียบง่าย
+\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f ดั้งเดิม
+\ud83c\udf05 Realistic	\ud83c\udf05 สมจริง
+\ud83c\udfa8 Stylized	\ud83c\udfa8 เน้นสไตล์
+\ud83d\udd2e Fantasy	\ud83d\udd2e แฟนตาซี
+\ud83c\udf0d Worldgen	\ud83c\udf0d การสร้างโลก
+Buy me a coffee	เลี้ยงกาแฟฉันหน่อย
+Mengunduh {0}...	กำลังดาวน์โหลด {0}...
+Mengekstrak	กำลังแตกไฟล์
+{~0}: {1} ({2} file)	{0}: {1} ({2} ไฟล์)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, หน้าจอ 90 Hz
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc ปักหมุด FPS (แสดงต่อเนื่องแม้ซ่อน GUI)
+\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc กำลังแสดง Live Log ของ Minecraft
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS โหมดปกติ (ตามการแสดง GUI)
+Gagal menyiapkan OpenJDK ({0}): {~1}	เตรียม OpenJDK ({0}) ไม่สำเร็จ: {1}
+LAUNCHER EXCEPTION	ข้อผิดพลาดของ LAUNCHER
+Forge hanya mendukung Minecraft {0} ke atas	Forge รองรับ Minecraft {0} ขึ้นไปเท่านั้น
+Installer Forge gagal	ตัวติดตั้ง Forge ล้มเหลว
+version.json di installer Forge tidak terbaca	อ่าน version.json ในตัวติดตั้ง Forge ไม่ได้
+Path library Forge tidak aman: {0}	พาธไลบรารี Forge ไม่ปลอดภัย: {0}
+dan {0} lainnya	และอีก {0} รายการ
+Path mappings tidak aman: {0}	พาธ mappings ไม่ปลอดภัย: {0}
+Alamat mappings Mojang kosong	ที่อยู่ mappings ของ Mojang ว่างเปล่า
+install_profile.json tidak ada di installer Forge	ไม่พบ install_profile.json ในตัวติดตั้ง Forge
+install_profile.json tidak terbaca	อ่าน install_profile.json ไม่ได้
+{0} tidak ada di installer Forge	ไม่พบ {0} ในตัวติดตั้ง Forge
+Tidak bisa membuat {0}	สร้าง {0} ไม่ได้
+HTTP {0} dari {1}	HTTP {0} จาก {1}
+Respons kosong dari {0}	ไม่มีข้อมูลตอบกลับจาก {0}
+Unduhan dibatalkan	ยกเลิกการดาวน์โหลดแล้ว
+Content-Range tidak cocok	Content-Range ไม่ตรงกัน
+Range ditolak	Range ถูกปฏิเสธ
+Balasan kosong	ไม่มีข้อมูลตอบกลับ
+Unduhan belum lengkap ({0} dari {1} byte)	ดาวน์โหลดไม่สมบูรณ์ ({0} จาก {1} ไบต์)
+Berkas kosong	ไฟล์ว่างเปล่า
+balasan bukan daftar rilis	ข้อมูลตอบกลับไม่ใช่รายการรุ่น
+NeoForge hanya mendukung Minecraft {0} ke atas	NeoForge รองรับ Minecraft {0} ขึ้นไปเท่านั้น
+Installer NeoForge gagal	ตัวติดตั้ง NeoForge ล้มเหลว
+version.json di installer NeoForge tidak terbaca	อ่าน version.json ในตัวติดตั้ง NeoForge ไม่ได้
+Path library NeoForge tidak aman: {0}	พาธไลบรารี NeoForge ไม่ปลอดภัย: {0}
+install_profile.json tidak ada di installer NeoForge	ไม่พบ install_profile.json ในตัวติดตั้ง NeoForge
+{0} tidak ada di installer NeoForge	ไม่พบ {0} ในตัวติดตั้ง NeoForge
+\ud83c\udff0 Medieval	\ud83c\udff0 ยุคกลาง
+Resource Pack (.zip)	Resource Pack (.zip)
+MOD LOADER	ตัวโหลด MOD
+Lokal	ในเครื่อง
+Renderer {~0}	Renderer {0}

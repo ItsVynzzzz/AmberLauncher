@@ -21,10 +21,10 @@ object HomeInfo {
         else -> 0
     }
 
-    /** Contoh: "RAM bebas 1,4 GB" (koma desimal; Inggris memakai titik; 1 GB = 1024 MB). */
+    /** Contoh: "RAM bebas 1,4 GB" (koma desimal; Inggris dan Thai memakai titik; 1 GB = 1024 MB). */
     fun ramText(freeMb: Int): String {
         val gb = freeMb.coerceAtLeast(0) / 1024f
-        val locale = if (Tr.effective == Tr.EN) Locale.US else Locale.forLanguageTag("id-ID")
+        val locale = if (Tr.effective == Tr.EN || Tr.effective == Tr.TH) Locale.US else Locale.forLanguageTag("id-ID")
         val value = String.format(locale, "%.1f", gb)
         return "RAM bebas $value GB"
     }

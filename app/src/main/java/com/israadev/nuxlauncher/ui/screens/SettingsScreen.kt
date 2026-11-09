@@ -262,7 +262,8 @@ fun SettingsScreen(
         Tr.ID to "Bahasa Indonesia",
         Tr.EN to "English",
         Tr.ES to "Espa\u00f1ol",
-        Tr.VI to "Ti\u1ebfng Vi\u1ec7t"
+        Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
+        Tr.PT to "Portugu\u00eas (Brasil)"
     )
 
     Column(

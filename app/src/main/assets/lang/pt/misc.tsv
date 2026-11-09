@@ -1,0 +1,58 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	RAM livre {0} GB
+Otomatis	Autom\u00e1tico
+\u26a1 Optimization	\u26a1 Otimiza\u00e7\u00e3o
+\u2699\ufe0f Technology	\u2699\ufe0f Tecnologia
+\ud83e\ude84 Magic	\ud83e\ude84 Magia
+\ud83d\uddfa\ufe0f Adventure	\ud83d\uddfa\ufe0f Aventura
+\ud83d\udee0\ufe0f Utility	\ud83d\udee0\ufe0f Utilidades
+\ud83c\udfa8 Decoration	\ud83c\udfa8 Decora\u00e7\u00e3o
+\ud83d\udcdc Quests	\ud83d\udcdc Miss\u00f5es
+\u2728 Simplistic	\u2728 Simplista
+\ud83c\udfdb\ufe0f Traditional	\ud83c\udfdb\ufe0f Tradicional
+\ud83c\udf05 Realistic	\ud83c\udf05 Realista
+\ud83c\udfa8 Stylized	\ud83c\udfa8 Estilizado
+\ud83d\udd2e Fantasy	\ud83d\udd2e Fantasia
+\ud83c\udf0d Worldgen	\ud83c\udf0d Gera\u00e7\u00e3o de mundo
+Buy me a coffee	Me pague um caf\u00e9
+Mengunduh {0}...	Baixando {0}...
+Mengekstrak	Extraindo
+{~0}: {1} ({2} file)	{0}: {1} ({2} arquivos)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, 4 GB de RAM, tela de 90 Hz
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	\ud83d\udccc FPS fixado (continua vis\u00edvel com a GUI oculta)
+\ud83d\udcdc Menampilkan Live Log Minecraft	\ud83d\udcdc Exibindo o log ao vivo do Minecraft
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS em modo normal (segue a visibilidade da GUI)
+Gagal menyiapkan OpenJDK ({0}): {~1}	Falha ao preparar o OpenJDK ({0}): {1}
+LAUNCHER EXCEPTION	EXCE\u00c7\u00c3O DO LAUNCHER
+Forge hanya mendukung Minecraft {0} ke atas	O Forge s\u00f3 \u00e9 compat\u00edvel com o Minecraft {0} ou superior
+Installer Forge gagal	Falha no instalador do Forge
+version.json di installer Forge tidak terbaca	N\u00e3o foi poss\u00edvel ler o version.json do instalador do Forge
+Path library Forge tidak aman: {0}	Caminho de biblioteca do Forge inseguro: {0}
+dan {0} lainnya	e mais {0}
+Path mappings tidak aman: {0}	Caminho de mappings inseguro: {0}
+Alamat mappings Mojang kosong	O endere\u00e7o dos mappings da Mojang est\u00e1 vazio
+install_profile.json tidak ada di installer Forge	install_profile.json n\u00e3o existe no instalador do Forge
+install_profile.json tidak terbaca	N\u00e3o foi poss\u00edvel ler o install_profile.json
+{0} tidak ada di installer Forge	{0} n\u00e3o existe no instalador do Forge
+Tidak bisa membuat {0}	N\u00e3o foi poss\u00edvel criar {0}
+HTTP {0} dari {1}	HTTP {0} de {1}
+Respons kosong dari {0}	Resposta vazia de {0}
+Unduhan dibatalkan	Download cancelado
+Content-Range tidak cocok	Content-Range n\u00e3o confere
+Range ditolak	Range recusado
+Balasan kosong	Resposta vazia
+Unduhan belum lengkap ({0} dari {1} byte)	Download incompleto ({0} de {1} bytes)
+Berkas kosong	Arquivo vazio
+balasan bukan daftar rilis	a resposta n\u00e3o \u00e9 uma lista de vers\u00f5es
+NeoForge hanya mendukung Minecraft {0} ke atas	O NeoForge s\u00f3 \u00e9 compat\u00edvel com o Minecraft {0} ou superior
+Installer NeoForge gagal	Falha no instalador do NeoForge
+version.json di installer NeoForge tidak terbaca	N\u00e3o foi poss\u00edvel ler o version.json do instalador do NeoForge
+Path library NeoForge tidak aman: {0}	Caminho de biblioteca do NeoForge inseguro: {0}
+install_profile.json tidak ada di installer NeoForge	install_profile.json n\u00e3o existe no instalador do NeoForge
+{0} tidak ada di installer NeoForge	{0} n\u00e3o existe no instalador do NeoForge
+# Entradas adicionales (ausentes en es)
+\ud83c\udff0 Medieval	\ud83c\udff0 Medieval
+Resource Pack (.zip)	Pacote de recursos (.zip)
+MOD LOADER	CARREGADOR DE MODS
+Lokal	Local
+Renderer {~0}	Renderizador {0}

@@ -1,0 +1,70 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	\u2713 Layout dos bot\u00f5es no jogo salvo!
+Selesai	Concluir
+Kembali	Voltar
+Tombol baru ditambahkan di tengah layar!	Novo bot\u00e3o adicionado no centro da tela!
++ TOMBOL	+ BOT\u00c3O
+Joystick WASD ditambahkan!	Joystick WASD adicionado!
+\u2713 Layout GUI berhasil disimpan!	\u2713 Layout da GUI salvo com sucesso!
+PENGATURAN TOMBOL	CONFIGURA\u00c7\u00d5ES DO BOT\u00c3O
+Posisi: {0}% x {1}%	Posi\u00e7\u00e3o: {0}% x {1}%
+Label Teks Tombol:	Texto do bot\u00e3o:
+\ud83d\udd12 Tetap	\ud83d\udd12 Fixo
+Label tombol...	Texto do bot\u00e3o...
+Tipe Kontrol:	Tipo de controle:
+\ud83d\udd79 Virtual Analog Joystick (WASD)	\ud83d\udd79 Joystick anal\u00f3gico virtual (WASD)
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	Anal\u00f3gico suave de 8 dire\u00e7\u00f5es que move o personagem no lugar das teclas W, A, S, D.
+Ukuran Joystick (Diameter):	Tamanho do joystick (di\u00e2metro):
+Transparansi (Opacity):	Transpar\u00eancia (opacidade):
+Lari otomatis:	Correr automaticamente:
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	Empurre at\u00e9 a borda do c\u00edrculo para correr. Desative se preferir correr com o seu pr\u00f3prio bot\u00e3o CTRL.
+Tombol / Aksi Input:	Bot\u00e3o / a\u00e7\u00e3o de entrada:
+Indikator FPS In-Game	Indicador de FPS no jogo
+Toggle Keyboard Layar	Alternar teclado na tela
+Sembunyikan/Tampilkan GUI	Ocultar/Mostrar GUI
+Buka Menu (pengaturan dan keluar)	Abrir menu (configura\u00e7\u00f5es e sair)
+Aksi Sistem Launcher	A\u00e7\u00f5es do sistema do launcher
+Mouse Kiri (Attack)	Mouse esquerdo (Attack)
+Mouse Kanan (Use)	Mouse direito (Use)
+Mouse Tengah (Pick)	Mouse do meio (Pick)
+Mouse Btn {0}	Bot\u00e3o {0} do mouse
+Key Code {0}	Key Code {0}
+Ubah >	Alterar >
+Lebar (Width):	Largura (Width):
+Tinggi (Height):	Altura (Height):
+Kebulatan Sudut:	Arredondamento dos cantos:
+Mode Toggle:	Modo Toggle:
+Sekali tap untuk kunci	Um toque para travar
+\u26a1 FITUR MAKRO	\u26a1 RECURSO DE MACRO
+Jadikan tombol ini sebagai makro otomatis	Transforme este bot\u00e3o em um macro autom\u00e1tico
+Pilih Mode Makro:	Escolha o modo de macro:
+\u2328 Chat/Perintah	\u2328 Chat/Comando
+Ketik otomatis	Digita automaticamente
+\ud83d\udd17 Kombinasi	\ud83d\udd17 Combina\u00e7\u00e3o
+Multi-Key	Multi-Key
+\u26a1 Turbo Click	\u26a1 Turbo Click
+Auto-clicker	Auto-clicker
+Teks / Perintah yang diketik otomatis:	Texto / comando digitado automaticamente:
+Misal: /gamemode creative atau /home	Ex.: /gamemode creative ou /home
+Template Cepat:	Modelos r\u00e1pidos:
+Urutan Key Kombinasi:	Sequ\u00eancia de teclas da combina\u00e7\u00e3o:
+Hapus Semua	Limpar tudo
+Belum ada key kombinasi. Tambahkan key di bawah.	Ainda n\u00e3o h\u00e1 teclas na combina\u00e7\u00e3o. Adicione teclas abaixo.
+Tambah Key ke Kombinasi	Adicionar tecla \u00e0 combina\u00e7\u00e3o
+Tambah Cepat:	Adi\u00e7\u00e3o r\u00e1pida:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Executado em sequ\u00eancia, de cima (#1) para baixo, ao ser pressionado.
+Interval Auto-Click:	Intervalo do auto-click:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	O bot\u00e3o pressiona e solta repetidamente, muito r\u00e1pido e de forma autom\u00e1tica, enquanto estiver pressionado.
+Tombol dihapus	Bot\u00e3o exclu\u00eddo
+HAPUS TOMBOL	EXCLUIR BOT\u00c3O
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	\ud83d\udd12 Bot\u00f5es do sistema n\u00e3o podem ser exclu\u00eddos
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	MODO NO JOGO \u00b7 Arraste os bot\u00f5es conforme o HUD do jogo e toque em CONCLUIR
+Reset Layout GUI?	Redefinir o layout da GUI?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Todas as posi\u00e7\u00f5es dos bot\u00f5es e personaliza\u00e7\u00f5es voltar\u00e3o ao layout inicial padr\u00e3o do AmberLauncher.
+Layout direset ke standar	Layout redefinido para o padr\u00e3o
+Tampil saat:	Exibir quando:
+Selalu	Sempre
+Saat main	Jogando
+Saat menu	No menu
+Menu = inventori, chat, dan layar lain di dalam game.	Menu = invent\u00e1rio, chat e outras telas dentro do jogo.
+Semua tombol	Todos os bot\u00f5es

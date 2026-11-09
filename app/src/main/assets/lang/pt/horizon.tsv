@@ -1,0 +1,72 @@
+# Mesin Rust (Horizon)
+Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	O motor Rust n\u00e3o est\u00e1 inclu\u00eddo nesta build. Como adicion\u00e1-lo: docs/rust-engine.md.
+Mesin Rust butuh Android 9 (API 28) ke atas.	O motor Rust requer Android 9 (API 28) ou superior.
+Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	O motor Rust s\u00f3 est\u00e1 dispon\u00edvel para celulares de 64 bits (arm64).
+RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	A RAM deste celular \u00e9 limitada para o motor Rust (recomendados 4 GB ou mais). O jogo pode fechar sozinho.
+Mesin Rust gagal dibuka: {0}	Falha ao abrir o motor Rust: {0}
+MESIN RUST (HORIZON)	MOTOR RUST (HORIZON)
+Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	O motor Rust substitui todo o cliente Java do Minecraft: sem Java e sem mods Fabric, Forge ou NeoForge.
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	S\u00f3 \u00e9 compat\u00edvel com o Minecraft {0}. O pr\u00f3prio motor baixa os recursos do jogo (cerca de 500 MiB) na primeira abertura.
+Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Experimental: requer Android 9 ou superior e um celular de 64 bits.
+Tanpa Java	Sem Java
+# Shader dan Resource Pack untuk mesin Rust
+Jenis berkas ini belum didukung mesin Rust.	Este tipo de arquivo ainda n\u00e3o \u00e9 compat\u00edvel com o motor Rust.
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	O nome do arquivo n\u00e3o \u00e9 adequado para o motor Rust (muito longo ou com caracteres proibidos).
+Mesin Rust hanya menerima berkas .zip di sini.	O motor Rust s\u00f3 aceita arquivos .zip aqui.
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	O arquivo tem mais de 256 MB, grande demais para o motor Rust.
+Arsip rusak atau tidak bisa dibaca.	O arquivo compactado est\u00e1 corrompido ou n\u00e3o pode ser lido.
+Arsip berisi terlalu banyak berkas.	O arquivo compactado cont\u00e9m arquivos demais.
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	O arquivo compactado cont\u00e9m caminhos perigosos ou duplicados, ent\u00e3o n\u00e3o foi instalado.
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	O conte\u00fado do arquivo compactado fica grande demais depois de extra\u00eddo (mais de 512 MB).
+Metadata resource pack (pack.mcmeta) tidak valid.	Os metadados do pacote de recursos (pack.mcmeta) s\u00e3o inv\u00e1lidos.
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Este arquivo n\u00e3o \u00e9 um pacote de recursos: pack.mcmeta n\u00e3o foi encontrado na raiz do arquivo compactado.
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Este arquivo n\u00e3o \u00e9 um shader pack: a pasta shaders n\u00e3o foi encontrada na raiz do arquivo compactado.
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	Este \u00e9 um shader nativo do Horizon. Instale-o pela fonte Horizon na tela Explorar (formato .hshader).
+Tidak ada berkas .zip yang cocok di versi ini.	N\u00e3o h\u00e1 nenhum arquivo .zip compat\u00edvel nesta vers\u00e3o.
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	A fonte n\u00e3o fornece o hash do arquivo, ent\u00e3o o download n\u00e3o pode ser verificado.
+Gagal menyimpan berkas ke folder mesin Rust.	Falha ao salvar o arquivo na pasta do motor Rust.
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	As configura\u00e7\u00f5es do jogo ainda n\u00e3o foram criadas. Abra o jogo uma vez, entre em Configura\u00e7\u00f5es, altere uma op\u00e7\u00e3o e tente de novo.
+Gagal menyimpan pilihan ke pengaturan mesin.	Falha ao salvar a sele\u00e7\u00e3o nas configura\u00e7\u00f5es do motor.
+Memeriksa {0}...	Verificando {0}...
+Gagal membuka berkas yang dipilih	Falha ao abrir o arquivo selecionado
+Coba ubah kata kunci	Tente mudar a palavra-chave
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Motor Rust: ative a chave na lista de instalados para us\u00e1-lo. Vale na pr\u00f3xima vez que o jogo for aberto.
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Os shaders do motor Rust ainda est\u00e3o em fase de teste e podem pesar no celular.
+# Mesin Rust di HP 32-bit
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	O motor Rust de 32 bits s\u00f3 est\u00e1 dispon\u00edvel para celulares ARM (armeabi-v7a).
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Experimental em celulares de 32 bits: requer Android 9 ou superior e pode ser mais lento.
+# Mod mesin Rust (.hmod), modul bawaan, dan katalog Horizon
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Os mods do motor Rust usam o formato .hmod, n\u00e3o .jar do Fabric ou do Forge.
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	O arquivo do mod tem mais de 32 MB, grande demais para o motor Rust.
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	O conte\u00fado do mod fica grande demais depois de extra\u00eddo (mais de 64 MB).
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	Este n\u00e3o \u00e9 um mod do Horizon: horizon-mod.toml n\u00e3o foi encontrado na raiz do arquivo.
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	O manifesto do mod (horizon-mod.toml) \u00e9 inv\u00e1lido ou n\u00e3o \u00e9 compat\u00edvel.
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Este mod n\u00e3o traz c\u00f3digo (mod.wasm) e n\u00e3o \u00e9 um mod de conte\u00fado (capacidade registries), ent\u00e3o n\u00e3o pode ser instalado.
+Kode mod (mod.wasm) lebih dari 32 MB.	O c\u00f3digo do mod (mod.wasm) tem mais de 32 MB.
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	J\u00e1 existe um mod em formato de pasta com o mesmo id. Exclua o anterior primeiro.
+Gagal menyimpan pilihan mod ke pengaturan mesin.	Falha ao salvar a sele\u00e7\u00e3o de mods nas configura\u00e7\u00f5es do motor.
+Mod hanya bisa dihidupkan di APK 64-bit.	Os mods s\u00f3 podem ser ativados no APK de 64 bits.
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	Mod n\u00e3o encontrado ou o manifesto n\u00e3o p\u00f4de ser lido.
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Segure a tecla Z para dar zoom; configur\u00e1vel em Options > Mods dentro do jogo
+Peta kecil yang bisa diatur di sudut layar	Um minimapa configur\u00e1vel no canto da tela
+Resep dan kegunaan item di samping inventori	Receitas e usos dos itens ao lado do invent\u00e1rio
+Modul F3 yang bisa diatur untuk layar debug	M\u00f3dulos configur\u00e1veis para a tela de depura\u00e7\u00e3o F3
+Resep	Receitas
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	N\u00e3o foi poss\u00edvel ler o cat\u00e1logo do Horizon. Tente novamente mais tarde.
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	O cat\u00e1logo do Horizon usa um formato mais novo. Atualize o Amber.
+Tidak ada berkas yang cocok di versi ini.	N\u00e3o h\u00e1 nenhum arquivo compat\u00edvel nesta vers\u00e3o.
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	O cat\u00e1logo n\u00e3o fornece hash SHA-256, ent\u00e3o o download n\u00e3o pode ser verificado.
+Alamat unduhan tidak dikenali, jadi ditolak.	O endere\u00e7o de download n\u00e3o \u00e9 reconhecido, ent\u00e3o foi recusado.
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	O tamanho do arquivo n\u00e3o confere com o do cat\u00e1logo, ent\u00e3o n\u00e3o foi instalado.
+Memuat data dari Horizon...	Carregando dados do Horizon...
+Gagal memuat dari Horizon	Falha ao carregar do Horizon
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Os mods do motor Rust usam o formato .hmod (n\u00e3o .jar do Fabric ou do Forge). Mods com c\u00f3digo s\u00e3o instalados desativados; ative-os depois de revisar as permiss\u00f5es em Options > Mods dentro do jogo.
+Konten	Conte\u00fado
+Berkode	Com c\u00f3digo
+# Katalog Horizon untuk shader dan resource pack
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	Este n\u00e3o \u00e9 um shader nativo do Horizon: horizon-shaders.toml n\u00e3o foi encontrado na raiz do arquivo compactado.
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	O shader nativo do Horizon \u00e9 grande demais (arquivo com mais de 16 MB, conte\u00fado com mais de 8 MB, ou algum arquivo interno grande demais).
+Sumber Horizon: shader asli mesin Rust (.hshader).	Fonte Horizon: shaders nativos do motor Rust (.hshader).
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fonte Modrinth: shaders cl\u00e1ssicos; a compatibilidade com o motor Rust ainda \u00e9 limitada.
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fonte Horizon: pacotes de recursos criados ou testados para o motor Rust.
+Coba ubah kata kunci atau pindah ke sumber Modrinth	Tente mudar a palavra-chave ou trocar para a fonte Modrinth

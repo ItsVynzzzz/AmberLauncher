@@ -1,0 +1,94 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	Bot\u00f5es
+Atur tombol	Configurar bot\u00f5es
+TAMPILAN	TELA
+Resolusi render	Resolu\u00e7\u00e3o de renderiza\u00e7\u00e3o
+Hemat 50%	Economia 50%
+Seimbang 75%	Equilibrado 75%
+Penuh 100%	Total 100%
+Pin FPS di layar	Fixar FPS na tela
+Tetap tampil saat tombol layar disembunyikan	Continua vis\u00edvel ao ocultar os bot\u00f5es da tela
+KAMERA DAN KURSOR	C\u00c2MERA E CURSOR
+Kecepatan kamera	Velocidade da c\u00e2mera
+Kecepatan kursor	Velocidade do cursor
+Mode sentuh	Modo de toque
+Geser	Deslizar
+Ketuk	Tocar
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Deslizar: a tela vira um trackpad. Tocar: o dedo vira diretamente o cursor.
+Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Segure o bot\u00e3o de atacar ou pular e deslize o dedo para girar a c\u00e2mera. Desative para PvP.
+PINTAS	ATALHOS
+Kamera	C\u00e2mera
+Jeda	Pausa
+Pemain	Jogadores
+Sembunyi HUD	Ocultar HUD
+Keluar dari game	Sair do jogo
+Keluar dari game?	Sair do jogo?
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	O Minecraft ser\u00e1 encerrado e voc\u00ea voltar\u00e1 ao launcher. Mundos n\u00e3o salvos podem ser perdidos.
+sisa RAM	RAM livre
+PANAS	CALOR
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	Toque no \u00edcone de engrenagem ou no n\u00famero de FPS na tela para abrir o menu. Saia do jogo pelo bot\u00e3o vermelho dentro do menu.
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	Bugs s\u00e3o normais, pois ningu\u00e9m \u00e9 perfeito, exceto Deus Todo-Poderoso.
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	Desative o Vertical Sync (VSync) nas configura\u00e7\u00f5es do Renderizador se houver engasgos (stuttering) ou tela preta depois do logotipo da Mojang.
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	Se a tela do Minecraft aparecer cortada ou na vertical, ative a rota\u00e7\u00e3o autom\u00e1tica do celular e coloque a tela na horizontal (Landscape) antes de tocar em Jogar.
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	Use o MobileGlues Renderer para melhor economia de bateria e compatibilidade com shader packs.
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	Se o Minecraft travar ao iniciar em GPUs Mali/Adreno, tente ativar 'DISABLE_SUBGROUP' nas configura\u00e7\u00f5es do renderizador.
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	Ative o OpenGL NoError nas configura\u00e7\u00f5es do MobileGlues para aumentar o FPS durante o jogo.
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	Use o bot\u00e3o HIDE GUI para ocultar os bot\u00f5es virtuais da tela ao jogar com teclado e mouse f\u00edsicos.
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	Ajuste a aloca\u00e7\u00e3o de RAM conforme as especifica\u00e7\u00f5es do celular: 2GB\u20133GB j\u00e1 \u00e9 bastante para o Minecraft 1.20+ sem modpacks pesados.
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Altere a sensibilidade do cursor em Configura\u00e7\u00f5es de Controle para mirar e direcionar a vis\u00e3o com mais precis\u00e3o.
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	Escolha o Vulkan Driver Turnip em dispositivos Snapdragon para desempenho gr\u00e1fico e estabilidade m\u00e1ximos.
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	Voc\u00ea pode ajustar a posi\u00e7\u00e3o e o tamanho dos bot\u00f5es de controle como quiser no menu de Personaliza\u00e7\u00e3o de Bot\u00f5es.
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	Use o recurso Import Addon para instalar Modpacks (.mrpack), Mods (.jar) e Resource Packs instantaneamente!
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	Toque no bot\u00e3o ESC na tela para abrir o menu de pausa ou voltar ao menu anterior.
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Pressione a tecla F3 para ver informa\u00e7\u00f5es de coordenadas, bioma e o gr\u00e1fico de desempenho de FPS dentro do jogo.
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	Ative o modo Fullscreen nas Configura\u00e7\u00f5es para ignorar o notch/c\u00e2mera frontal e ampliar a vis\u00e3o.
+Memuat Minecraft {0}	Carregando o Minecraft {0}
+Tutup loading	Fechar carregamento
+Menyiapkan mesin Java dan grafis...	Preparando o motor Java e gr\u00e1fico...
+Izin penyimpanan	Permiss\u00e3o de armazenamento
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	O AmberLauncher guarda mundos, mods e configura\u00e7\u00f5es na pasta nuxlauncher do armazenamento do celular, para facilitar o backup e a transfer\u00eancia.
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	O Android abrir\u00e1 a p\u00e1gina de configura\u00e7\u00f5es. Ative a permiss\u00e3o de acesso a todos os arquivos para o AmberLauncher e volte aqui.
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	Se escolher Depois, o jogo continua funcionando. Os dados ficam na pasta privada do aplicativo, que n\u00e3o \u00e9 f\u00e1cil de abrir pelo gerenciador de arquivos.
+Hapus instance?	Excluir inst\u00e2ncia?
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	Todos os mundos, mods, savegames e configura\u00e7\u00f5es desta inst\u00e2ncia ser\u00e3o exclu\u00eddos permanentemente e n\u00e3o poder\u00e3o ser recuperados.
+Perender tidak cocok	Renderizador incompat\u00edvel
+Tetap jalankan	Executar mesmo assim
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Este renderizador n\u00e3o \u00e9 oficialmente compat\u00edvel com o Minecraft {0}. For\u00e7\u00e1-lo pode causar falhas visuais, tela congelada ou travamento do jogo. Continuar?
+Dukungan resmi: {0}	Suporte oficial: {0}
+Mengunduh game	Baixando o jogo
+Menyiapkan file game...	Preparando os arquivos do jogo...
+# Rekam layar bawaan
+Rekam layar	Gravar tela
+Merekam	Gravando
+Dijeda	Em pausa
+Ketuk untuk mulai	Toque para come\u00e7ar
+Merekam layar	Gravando a tela
+Ketuk Berhenti untuk menyimpan rekaman.	Toque em Parar para salvar a grava\u00e7\u00e3o.
+Berhenti	Parar
+Merekam {0}x{1} \u00b7 {2} fps	Gravando {0}x{1} ~ {2} fps
+Izin merekam layar tidak diberikan	A permiss\u00e3o para gravar a tela n\u00e3o foi concedida
+Izin mikrofon ditolak, merekam tanpa suara	Permiss\u00e3o de microfone negada, gravando sem som
+Perekam layar tidak tersedia di HP ini	O gravador de tela n\u00e3o est\u00e1 dispon\u00edvel neste celular
+Perekam layar tidak tersedia di HP ini.	O gravador de tela n\u00e3o est\u00e1 dispon\u00edvel neste celular.
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	Este celular n\u00e3o tem um encoder de v\u00eddeo por hardware. A grava\u00e7\u00e3o foi cancelada para o jogo n\u00e3o ficar com lag.
+Ruang penyimpanan kurang untuk merekam.	Espa\u00e7o de armazenamento insuficiente para gravar.
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	Armazenamento cheio. A grava\u00e7\u00e3o foi salva e interrompida.
+Perekam mengalami kesalahan. Rekaman dihentikan.	O gravador encontrou um erro. A grava\u00e7\u00e3o foi interrompida.
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	A captura de tela foi interrompida pelo sistema. A grava\u00e7\u00e3o foi salva.
+Rekaman terlalu singkat, tidak disimpan.	Grava\u00e7\u00e3o muito curta, n\u00e3o foi salva.
+Rekaman disimpan di Movies/AmberLauncher	Grava\u00e7\u00e3o salva em Movies/AmberLauncher
+Rekaman disimpan: {0}	Grava\u00e7\u00e3o salva: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	O celular est\u00e1 quente demais. A grava\u00e7\u00e3o foi salva e interrompida para o jogo continuar fluido.
+Gagal memulai rekaman: {~0}	Falha ao iniciar a grava\u00e7\u00e3o: {0}
+Gagal menyiapkan rekaman: {0}	Falha ao preparar a grava\u00e7\u00e3o: {0}
+# Pembaruan otomatis dan rekam layar (tambahan)
+REKAM	GRAVAR
+Berhenti merekam	Parar de gravar
+Game saja	S\u00f3 o jogo
+Dengan tombol	Com bot\u00f5es
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	A grava\u00e7\u00e3o \u00e9 pausada enquanto o menu est\u00e1 aberto e continua automaticamente quando ele \u00e9 fechado.
+Tombol layar ikut terekam di video.	Os bot\u00f5es da tela aparecem no v\u00eddeo.
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	Os bot\u00f5es da tela s\u00e3o ocultados do v\u00eddeo (ainda podem ser tocados).
+izin tangkap layar tidak valid	permiss\u00e3o de captura de tela inv\u00e1lida
+tidak bisa membuat berkas di Movies	n\u00e3o foi poss\u00edvel criar o arquivo em Movies
+tidak bisa membuka berkas rekaman	n\u00e3o foi poss\u00edvel abrir o arquivo de grava\u00e7\u00e3o

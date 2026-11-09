@@ -1,0 +1,71 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	O AmberLauncher parou
+Minecraft berhenti mendadak	O Minecraft parou de repente
+Aplikasi tertutup karena kesalahan tak terduga	O aplicativo foi fechado por um erro inesperado
+Kembali ke launcher	Voltar ao launcher
+Penjelasan	Explica\u00e7\u00e3o
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	Um crash nem sempre significa que o launcher est\u00e1 com defeito. Mods, a RAM do celular e drivers gr\u00e1ficos s\u00e3o causas muito mais frequentes, ent\u00e3o investigue primeiro antes de avisar o desenvolvedor.
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	O launcher parou de repente por um erro inesperado. Envie o log ao desenvolvedor para que possa ser corrigido.
+Dugaan penyebab	Causa prov\u00e1vel
+Kesalahan di dalam AmberLauncher	Erro dentro do AmberLauncher
+Memori (RAM) HP habis	A mem\u00f3ria (RAM) do celular acabou
+Renderer atau driver grafis	Renderizador ou driver gr\u00e1fico
+Mod, versi Java, atau file game	Mod, vers\u00e3o do Java ou arquivos do jogo
+Belum bisa dipastikan	Ainda n\u00e3o \u00e9 poss\u00edvel determinar
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	Desta vez foi o pr\u00f3prio launcher que parou, n\u00e3o o jogo nem um mod. Um relat\u00f3rio ao desenvolvedor ajuda muito a corrigir o problema.
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	O jogo foi encerrado pelo sistema porque a RAM do celular n\u00e3o foi suficiente para o jogo, os mods ou as configura\u00e7\u00f5es gr\u00e1ficas em uso. Normalmente n\u00e3o \u00e9 defeito do launcher. Tente reduzir a RAM alocada ao jogo (no m\u00e1ximo metade da RAM do celular), reduzir os mods e fechar outros aplicativos.
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	O jogo parou na parte gr\u00e1fica ou nas bibliotecas nativas do celular. A causa mais comum \u00e9 um renderizador pouco compat\u00edvel com este celular. Tente trocar o renderizador nas configura\u00e7\u00f5es da inst\u00e2ncia. Se todos os renderizadores falharem, a\u00ed sim o problema pode estar no launcher.
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	O jogo teve um erro durante a execu\u00e7\u00e3o. O mais comum \u00e9 um mod incompat\u00edvel com a vers\u00e3o do jogo ou com o loader, um mod sem suas depend\u00eancias, ou uma vers\u00e3o do Java inadequada. Normalmente n\u00e3o \u00e9 defeito do launcher.
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	A causa s\u00f3 aparece no conte\u00fado do log. Uma IA pode ajudar voc\u00ea a l\u00ea-lo.
+Detail teknis	Detalhes t\u00e9cnicos
+Kesalahan tak terduga di dalam aplikasi	Erro inesperado dentro do aplicativo
+Status keluar: {~0}	C\u00f3digo de sa\u00edda: {0}
+Cari solusi dengan AI	Buscar solu\u00e7\u00e3o com IA
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Copie o log junto com a pergunta e cole no chat de uma IA. Normalmente ela consegue indicar a causa e como corrigir. Envie o texto do log, n\u00e3o uma captura de tela.
+Salin log untuk AI	Copiar log para a IA
+Atau buka langsung (log otomatis disalin)	Ou abra diretamente (o log \u00e9 copiado automaticamente)
+Lapor ke pengembang	Avisar o desenvolvedor
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	S\u00f3 se a IA concluir que o problema est\u00e1 no launcher, a\u00ed sim relate no GitHub. O log \u00e9 copiado automaticamente, basta colar no relato.
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	Relate no GitHub para que possa ser corrigido. O log \u00e9 copiado automaticamente, basta colar no relato.
+Lapor di GitHub	Relatar no GitHub
+Cara lain membagikan log	Outras formas de compartilhar o log
+Bagikan file	Compartilhar arquivo
+Tautan mclo.gs	Link do mclo.gs
+Mengunggah...	Enviando...
+Buka tautan	Abrir link
+Log untuk AI disalin. Tempel di kolom chat AI.	Log para a IA copiado. Cole no campo de chat da IA.
+Log disalin. Tempel di laporan.	Log copiado. Cole no relato.
+Tidak bisa membuka tautan.	N\u00e3o foi poss\u00edvel abrir o link.
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Ol\u00e1, meu Minecraft Java Edition travou no celular Android ao ser executado pelo AmberLauncher. Explique a causa em linguagem simples (sou iniciante) e depois d\u00ea os passos de corre\u00e7\u00e3o um por um. Se a causa for um mod, diga qual mod precisa ser removido ou trocado.
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Ol\u00e1, o aplicativo AmberLauncher (launcher do Minecraft Java Edition para Android) parou sozinho. Explique a causa em linguagem simples (sou iniciante) e d\u00ea sugest\u00f5es que eu possa tentar. Se voc\u00ea acha que \u00e9 um bug do launcher, diga.
+Perangkat: {0}	Dispositivo: {0}
+Versi Minecraft: {0}	Vers\u00e3o do Minecraft: {0}
+Grafis: {0}	Gr\u00e1ficos: {0}
+Jumlah mod: {0}	Quantidade de mods: {0}
+Daftar mod: {0}	Lista de mods: {0}
+Isi log crash:	Conte\u00fado do log de crash:
+# Pemulihan crash sekali ketuk
+Turunkan RAM ke {0} MB	Reduzir a RAM para {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	D\u00e1 mais espa\u00e7o ao celular. Pode ser aumentada de novo em Configura\u00e7\u00f5es > Mem\u00f3ria.
+Pakai renderer Otomatis	Usar o renderizador Autom\u00e1tico
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	O renderizador escolhido por voc\u00ea pode n\u00e3o ser muito compat\u00edvel com este celular. O Autom\u00e1tico escolhe o mais adequado.
+Coba renderer {0}	Tentar o renderizador {0}
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	O renderizador atual parece estar com problemas neste celular. Pode ser trocado novamente em Configura\u00e7\u00f5es > Gr\u00e1ficos.
+Matikan shader	Desativar shaders
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Os shaders sobrecarregam a GPU e a mem\u00f3ria. Podem ser reativados no menu de v\u00eddeo do jogo.
+Nonaktifkan mod tersangka	Desativar o mod suspeito
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mod citado no log: {0}. Pode ser reativado no menu Mods.
+Reset Java ke Otomatis	Redefinir Java para Autom\u00e1tico
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	A vers\u00e3o do Java escolhida pode n\u00e3o ser compat\u00edvel com este jogo. O Autom\u00e1tico escolhe a vers\u00e3o adequada.
+RAM game diturunkan ke {0} MB.	RAM do jogo reduzida para {0} MB.
+Renderer dikembalikan ke Otomatis.	Renderizador restaurado para Autom\u00e1tico.
+Renderer diganti ke {0}.	Renderizador trocado para {0}.
+Shader dimatikan.	Shaders desativados.
+Mod dinonaktifkan: {0}.	Mod desativado: {0}.
+Java dikembalikan ke Otomatis.	Java restaurado para Autom\u00e1tico.
+Gagal menerapkan. Coba lewat Pengaturan.	Falha ao aplicar. Tente pelas Configura\u00e7\u00f5es.
+Pemulihan cepat	Recupera\u00e7\u00e3o r\u00e1pida
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	Toque para tentar a corre\u00e7\u00e3o com maior chance de ajudar. Tudo pode ser desfeito.
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	As altera\u00e7\u00f5es foram salvas. Volte ao launcher e inicie o jogo novamente.
+Sudah diterapkan	J\u00e1 aplicado
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	O jogo parou na parte gr\u00e1fica ou nas bibliotecas nativas do celular. A causa mais comum \u00e9 um renderizador pouco compat\u00edvel com este celular. Tente trocar o renderizador em Configura\u00e7\u00f5es > Gr\u00e1ficos. Se todos os renderizadores falharem, a\u00ed sim o problema pode estar no launcher.

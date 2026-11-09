@@ -1,0 +1,133 @@
+# Tambah/Ubah instance, unduhan, Java
+Semua	Todas
+INSTANCE ARCHITECT	ARQUITETO DE INST\u00c2NCIAS
+Buat Instance Baru	Criar nova inst\u00e2ncia
+NAMA INSTANCE	NOME DA INST\u00c2NCIA
+Default: {0} {1}	Padr\u00e3o: {0} {1}
+MOD LOADER ENGINE	MOTOR DO MOD LOADER
+Memuat loader Fabric...	Carregando o loader do Fabric...
+\u26a0\ufe0f Fabric belum tersedia untuk {0}	\u26a0\ufe0f O Fabric ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
+SPESIFIKASI TARGET	ESPECIFICA\u00c7\u00d5ES DE DESTINO
+Memuat Fabric...	Carregando o Fabric...
+Fabric Tidak Tersedia	Fabric indispon\u00edvel
+Buat Instance Sekarang	Criar inst\u00e2ncia agora
+Cari versi ({0})...	Buscar vers\u00e3o ({0})...
+DAFTAR VERSI	LISTA DE VERS\u00d5ES
+{0} versi ditemukan	{0} vers\u00f5es encontradas
+Memuat manifest Mojang...	Carregando o manifesto da Mojang...
+Tidak ada versi yang cocok	Nenhuma vers\u00e3o correspondente
+Auto ({0})	Auto ({0})
+Nama	Nome
+Nama instance	Nome da inst\u00e2ncia
+Lihat mod	Ver mods
+{0} terpasang	{0} instalados
+Hapus '{0}'?	Excluir '{0}'?
+Semua world, mod, dan file instance dihapus permanen.	Todos os mundos, mods e arquivos da inst\u00e2ncia ser\u00e3o exclu\u00eddos permanentemente.
+Ya, hapus	Sim, excluir
+Nama instance tidak boleh kosong	O nome da inst\u00e2ncia n\u00e3o pode ficar em branco
+Instance berhasil diperbarui!	Inst\u00e2ncia atualizada com sucesso!
+Simpan	Salvar
+Mengambil metadata versi {0}...	Obtendo os metadados da vers\u00e3o {0}...
+Versi {0} tidak ditemukan di manifest Mojang	A vers\u00e3o {0} n\u00e3o foi encontrada no manifesto da Mojang
+Membaca konfigurasi versi...	Lendo a configura\u00e7\u00e3o da vers\u00e3o...
+Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	Baixando o cliente do Minecraft ({0} / {1} MB - {2}%)...
+Mengunduh libraries ({0}/{1})...	Baixando as bibliotecas ({0}/{1})...
+Memverifikasi asset index {0}...	Verificando o asset index {0}...
+Mengunduh aset game ({0}/{1})...	Baixando os recursos do jogo ({0}/{1})...
+Menyiapkan Fabric Loader...	Preparando o Fabric Loader...
+Tidak dapat menemukan Fabric loader untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o Fabric Loader para a vers\u00e3o {0}
+Mengambil profil Fabric ({0})...	Obtendo o perfil do Fabric ({0})...
+Gagal memuat profil Fabric: {~0}	Falha ao carregar o perfil do Fabric: {0}
+Mengunduh library Fabric ({0}/{1})...	Baixando as bibliotecas do Fabric ({0}/{1})...
+Instalasi selesai!	Instala\u00e7\u00e3o conclu\u00edda!
+Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	Endere\u00e7o de download recusado por n\u00e3o usar HTTPS: {0}
+Isi unduhan tidak cocok dengan sidik jari resmi: {0}	O conte\u00fado baixado n\u00e3o confere com o hash oficial: {0}
+Failed to download {0}: {1}	Falha ao baixar {0}: {1}
+Failed to download {0}	Falha ao baixar {0}
+Empty body for {0}	Corpo vazio para {0}
+HTTP Error {0} from {1}	Erro HTTP {0} de {1}
+HTTP Error {0}	Erro HTTP {0}
+Empty response body	Corpo da resposta vazio
+Tidak dapat memuat versi Fabric untuk {0}	N\u00e3o foi poss\u00edvel carregar as vers\u00f5es do Fabric para {0}
+Gagal memuat profil Fabric untuk {0} ({1})	Falha ao carregar o perfil do Fabric para {0} ({1})
+Mengekstrak Java Runtime ({0} universal)...	Extraindo o Java Runtime ({0} universal)...
+Mengekstrak runtime universal ({0})	Extraindo o runtime universal ({0})
+Mengekstrak Java Runtime ({0} bin-{1})...	Extraindo o Java Runtime ({0} bin-{1})...
+Mengekstrak native binary ({0} {1})	Extraindo o bin\u00e1rio nativo ({0} {1})
+Memverifikasi izin sistem OpenJDK...	Verificando as permiss\u00f5es do sistema para o OpenJDK...
+Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	A verifica\u00e7\u00e3o do OpenJDK {0} est\u00e1 incompleta ap\u00f3s a extra\u00e7\u00e3o.
+Ekstraksi OpenJDK {0} selesai!	Extra\u00e7\u00e3o do OpenJDK {0} conclu\u00edda!
+Membongkar bytecode Java 8: {0} ({1}/{2})...	Descompactando o bytecode do Java 8: {0} ({1}/{2})...
+Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do Fabric ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
+Lokasi folder disalin ke clipboard:\n{0}	Caminho da pasta copiado para a \u00e1rea de transfer\u00eancia:\n{0}
+Folder: {0}	Pasta: {0}
+Buka Folder	Abrir pasta
+Unable to resolve host "{0}": System DNS and Fallback DoH failed	N\u00e3o foi poss\u00edvel resolver o host "{0}": o DNS do sistema e o DoH de fallback falharam
+Memuat versi Forge...	Carregando vers\u00f5es do Forge...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	\u26a0\ufe0f O Forge ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	\u26a0\ufe0f O Forge \u00e9 apenas para o Minecraft 1.13 ou superior
+Disarankan	Recomendada
+Terbaru	Mais recente
+Memuat Forge...	Carregando o Forge...
+Forge Tidak Tersedia	Forge indispon\u00edvel
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do Forge ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
+Mengunduh installer Forge {0}...	Baixando o instalador do Forge {0}...
+Mengunduh library Forge ({0}/{1})...	Baixando as bibliotecas do Forge ({0}/{1})...
+Menyiapkan Java ({0})...	Preparando o Java ({0})...
+Memasang Forge {0}...	Instalando o Forge {0}...
+Memasang Forge {0} ({1}/{2})...	Instalando o Forge {0} ({1}/{2})...
+Forge {0} terpasang	Forge {0} instalado
+Tidak dapat menemukan Forge untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o Forge para a vers\u00e3o {0}
+Tidak ada versi Forge untuk {0}	N\u00e3o h\u00e1 vers\u00e3o do Forge para {0}
+Versi Forge belum dipilih	Nenhuma vers\u00e3o do Forge selecionada
+Forge hanya mendukung Minecraft 1.13 ke atas	O Forge s\u00f3 \u00e9 compat\u00edvel com o Minecraft 1.13 ou superior
+Installer Forge {0} rusak atau tidak lengkap	O instalador do Forge {0} est\u00e1 corrompido ou incompleto
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Formato de instalador do Forge n\u00e3o reconhecido (o Amber exige o Forge 1.13 ou superior)
+Installer Forge untuk Minecraft {0}, bukan {1}	O instalador do Forge \u00e9 para o Minecraft {0}, n\u00e3o {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do Forge: {0}. Verifique a conex\u00e3o e tente novamente.
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	O instalador do Forge terminou, mas o jar do Minecraft modificado (patched) n\u00e3o foi encontrado ({0})
+Gagal menyiapkan Java {0}: {1}	Falha ao preparar o Java {0}: {1}
+Installer Forge gagal (kode {0}): {1}	Falha no instalador do Forge (c\u00f3digo {0}): {1}
+Installer Forge gagal (kode {0})	Falha no instalador do Forge (c\u00f3digo {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	A Mojang n\u00e3o fornece mappings para o Minecraft {0}
+Pemasangan Forge	Instala\u00e7\u00e3o do Forge
+Memasang Forge	Instalando o Forge
+Proses ini hanya berjalan sekali per versi Forge.	Este processo s\u00f3 \u00e9 executado uma vez por vers\u00e3o do Forge.
+Forge dipasang sekali saat instance diunduh pertama kali.	O Forge \u00e9 instalado uma \u00fanica vez, quando a inst\u00e2ncia \u00e9 baixada pela primeira vez.
+Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Espa\u00e7o de armazenamento insuficiente para instalar o Forge (restam {0} MB, m\u00ednimo necess\u00e1rio {1} MB)
+Memuat versi NeoForge...	Carregando vers\u00f5es do NeoForge...
+\u26a0\ufe0f NeoForge belum tersedia untuk {0}	\u26a0\ufe0f O NeoForge ainda n\u00e3o est\u00e1 dispon\u00edvel para {0}
+\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	\u26a0\ufe0f O NeoForge \u00e9 apenas para o Minecraft 1.20.2 ou superior
+Memuat NeoForge...	Carregando o NeoForge...
+NeoForge Tidak Tersedia	NeoForge indispon\u00edvel
+Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil do NeoForge ({0}) ainda n\u00e3o est\u00e1 instalado. Toque no bot\u00e3o BAIXAR na inst\u00e2ncia!
+Mengunduh installer NeoForge {0}...	Baixando o instalador do NeoForge {0}...
+Mengunduh library NeoForge ({0}/{1})...	Baixando as bibliotecas do NeoForge ({0}/{1})...
+Memasang NeoForge {0}...	Instalando o NeoForge {0}...
+Memasang NeoForge {0} ({1}/{2})...	Instalando o NeoForge {0} ({1}/{2})...
+NeoForge {0} terpasang	NeoForge {0} instalado
+Tidak dapat menemukan NeoForge untuk versi {0}	N\u00e3o foi poss\u00edvel encontrar o NeoForge para a vers\u00e3o {0}
+Tidak ada versi NeoForge untuk {0}	N\u00e3o h\u00e1 vers\u00e3o do NeoForge para {0}
+Versi NeoForge belum dipilih	Nenhuma vers\u00e3o do NeoForge selecionada
+NeoForge hanya mendukung Minecraft 1.20.2 ke atas	O NeoForge s\u00f3 \u00e9 compat\u00edvel com o Minecraft 1.20.2 ou superior
+Installer NeoForge {0} rusak atau tidak lengkap	O instalador do NeoForge {0} est\u00e1 corrompido ou incompleto
+Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	Formato de instalador do NeoForge n\u00e3o reconhecido (o Amber exige o NeoForge 1.20.2 ou superior)
+Installer NeoForge untuk Minecraft {0}, bukan {1}	O instalador do NeoForge \u00e9 para o Minecraft {0}, n\u00e3o {1}
+Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do NeoForge: {0}. Verifique a conex\u00e3o e tente novamente.
+Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	O instalador do NeoForge terminou, mas o jar do Minecraft modificado (patched) n\u00e3o foi encontrado ({0})
+Installer NeoForge gagal (kode {0}): {1}	Falha no instalador do NeoForge (c\u00f3digo {0}): {1}
+Installer NeoForge gagal (kode {0})	Falha no instalador do NeoForge (c\u00f3digo {0})
+Memasang NeoForge	Instalando o NeoForge
+Proses ini hanya berjalan sekali per versi NeoForge.	Este processo s\u00f3 \u00e9 executado uma vez por vers\u00e3o do NeoForge.
+NeoForge dipasang sekali saat instance diunduh pertama kali.	O NeoForge \u00e9 instalado uma \u00fanica vez, quando a inst\u00e2ncia \u00e9 baixada pela primeira vez.
+Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	Espa\u00e7o de armazenamento insuficiente para instalar o NeoForge (restam {0} MB, m\u00ednimo necess\u00e1rio {1} MB)
+Buat Instance	Criar inst\u00e2ncia
+Cari versi...	Buscar vers\u00e3o...
+Memuat versi Minecraft...	Carregando vers\u00f5es do Minecraft...
+Memuat versi yang didukung {0}...	Carregando vers\u00f5es compat\u00edveis com {0}...
+Gagal memuat daftar versi Minecraft	Falha ao carregar a lista de vers\u00f5es do Minecraft
+Dirilis {0}	Lan\u00e7ada em {0}
+LOADER {0}	LOADER {0}
+Memuat loader {0}...	Carregando o loader {0}...
+Loader {0} belum tersedia untuk Minecraft {1}	O loader {0} ainda n\u00e3o est\u00e1 dispon\u00edvel para o Minecraft {1}
+Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	A vers\u00e3o mais recente \u00e9 escolhida automaticamente. Toque em outra vers\u00e3o se precisar de um loader mais antigo.

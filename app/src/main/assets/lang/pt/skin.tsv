@@ -1,0 +1,68 @@
+# Wardrobe: skin dan jubah
+Gagal memuat jubah: {0}	Falha ao carregar a capa: {0}
+Memvalidasi skin...	Validando a skin...
+Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	Skin carregada na pr\u00e9via ({0}) \u2014 Clique em Salvar para aplicar
+File tidak valid	Arquivo inv\u00e1lido
+Memvalidasi cape...	Validando a capa...
+Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	Capa personalizada carregada na pr\u00e9via \u2014 Clique em Salvar para aplicar
+File cape tidak valid	Arquivo de capa inv\u00e1lido
+WARDROBE & CUSTOM SKIN	GUARDA-ROUPA E SKIN PERSONALIZADA
+Kustomisasi tampilan skin dan jubah pemain Minecraft	Personalize a apar\u00eancia da skin e da capa do jogador do Minecraft
+3D (DRAG / PUTAR)	3D (ARRASTAR / GIRAR)
+Putar Otomatis	Girar automaticamente
+Reset Kamera	Redefinir c\u00e2mera
+Jalan	Andar
+Diam	Parado
+Lari	Correr
+Sapa	Acenar
+KUSTOM SKIN	SKIN PERSONALIZADA
+JUBAH / CAPE	CAPA
+Sistem Skin & Jubah Ely.by	Sistema de skin e capa do Ely.by
+Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	A conta Ely.by usa um servidor centralizado de skinsystem. Para trocar a skin ou o tipo de modelo dos bra\u00e7os, envie diretamente pelo site oficial ely.by para sincronizar dentro do jogo.
+KUNJUNGI ACCOUNT.ELY.BY	VISITAR ACCOUNT.ELY.BY
+PILIH FILE SKIN (.PNG)	ESCOLHER ARQUIVO DE SKIN (.PNG)
+TIPE MODEL LENGAN:	TIPO DE MODELO DOS BRA\u00c7OS:
+Model Klasik dipilih (Preview) \u2014 Klik Simpan	Modelo Cl\u00e1ssico selecionado (Pr\u00e9via) \u2014 Clique em Salvar
+Klasik	Cl\u00e1ssico
+Lengan tebal (4px)	Bra\u00e7os grossos (4px)
+Model Slim dipilih (Preview) \u2014 Klik Simpan	Modelo Slim selecionado (Pr\u00e9via) \u2014 Clique em Salvar
+Lengan ramping (3px)	Bra\u00e7os finos (3px)
+Skin direset ke default Steve (Preview) \u2014 Klik Simpan	Skin redefinida para o Steve padr\u00e3o (Pr\u00e9via) \u2014 Clique em Salvar
+\u21ba Reset ke Skin Default (Klasik)	\u21ba Redefinir para a skin padr\u00e3o (Cl\u00e1ssico)
+JUBAH RESMI MINECRAFT.NET:	CAPA OFICIAL DO MINECRAFT.NET:
+Memuat jubah dari Minecraft.net...	Carregando capas do Minecraft.net...
+Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	Sua conta Microsoft ainda n\u00e3o tem uma capa oficial no Minecraft.net.
+Jubah dilepas (Preview) \u2014 Klik Simpan	Capa removida (Pr\u00e9via) \u2014 Clique em Salvar
+Tanpa Jubah (Lepas Cape)	Sem capa (remover capa)
+Jubah {0} dipilih (Preview) \u2014 Klik Simpan	Capa {0} selecionada (Pr\u00e9via) \u2014 Clique em Salvar
+AKTIF DI MOJANG	ATIVA NA MOJANG
+Sistem Skin & Cape Ely.by	Sistema de skin e capa do Ely.by
+Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	A conta Ely.by usa o servidor oficial de skinsystem. Todas as skins e capas s\u00e3o gerenciadas diretamente pelo site ely.by e aparecem automaticamente dentro do jogo.
+BUKA WEBSITE ELY.BY	ABRIR O SITE DO ELY.BY
+PILIH FILE CAPE KUSTOM (.PNG)	ESCOLHER ARQUIVO DE CAPA PERSONALIZADA (.PNG)
+ATAU PILIH PRESET JUBAH:	OU ESCOLHA UMA CAPA PREDEFINIDA:
+Cape dilepas (Preview) \u2014 Klik Simpan	Capa removida (Pr\u00e9via) \u2014 Clique em Salvar
+Menyinkronkan ke Minecraft.net...	Sincronizando com o Minecraft.net...
+Gagal memperbarui Minecraft.net: {~0}	Falha ao atualizar o Minecraft.net: {0}
+Perubahan berhasil diterapkan ke Minecraft.net!	Altera\u00e7\u00f5es aplicadas com sucesso no Minecraft.net!
+Skin & Cape berhasil disimpan!	Skin e capa salvas com sucesso!
+SIMPAN KE MOJANG	SALVAR NA MOJANG
+SIMPAN PERUBAHAN	SALVAR ALTERA\u00c7\u00d5ES
+Jubah Resmi Minecraft	Capa oficial do Minecraft
+Jubah Aktif Minecraft	Capa ativa do Minecraft
+{0} Cape	Capa {0}
+Gagal memuat jubah Minecraft.	Falha ao carregar as capas do Minecraft.
+Respon profil kosong	Resposta de perfil vazia
+Gagal mengubah jubah.	Falha ao alterar a capa.
+Gagal mengunggah skin.	Falha ao enviar a skin.
+Gagal membaca file dari penyimpanan.	Falha ao ler o arquivo do armazenamento.
+Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	Formato de skin inv\u00e1lido. O tamanho deve ser 64x64 ou 64x32 pixels.
+Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	Formato de capa inv\u00e1lido. O tamanho deve ser 64x32 ou 128x64 pixels.
+Tanpa Cape	Sem capa
+Reset / Lepas cape	Redefinir / remover capa
+Klasik merah resmi Mojang	Cl\u00e1ssica vermelha oficial da Mojang
+Creeper emas peringatan 15 tahun	Creeper dourado do 15\u00ba anivers\u00e1rio
+Jubah biru kehormatan migrasi	Capa azul de honra da migra\u00e7\u00e3o
+Motif sakura edisi 1.20	Estampa de sakura da edi\u00e7\u00e3o 1.20
+Edisi emas pencipta	Edi\u00e7\u00e3o dourada dos criadores
+Edisi Java & Bedrock bundle	Pacote das edi\u00e7\u00f5es Java e Bedrock

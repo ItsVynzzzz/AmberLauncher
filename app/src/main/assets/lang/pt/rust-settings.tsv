@@ -1,0 +1,69 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Motor Rust
+Performa	Desempenho
+Layar	Tela
+Permainan	Jogabilidade
+Mesin Rust (Horizon)	Motor Rust (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Substitui todo o cliente Java: sem JVM e sem mods Java.
+Tidak tersedia	Indispon\u00edvel
+Siap	Pronto
+Sumber daya game	Recursos do jogo
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Baixados automaticamente no primeiro JOGAR, cerca de 500 MiB.
+Belum diunduh	Ainda n\u00e3o baixado
+Versi Minecraft	Vers\u00e3o do Minecraft
+Satu-satunya versi yang dikerjakan mesin ini.	A \u00fanica vers\u00e3o com que este motor trabalha.
+Berlaku untuk instance Rust	Vale para inst\u00e2ncias Rust
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	As op\u00e7\u00f5es desta aba s\u00e3o usadas apenas por inst\u00e2ncias Rust e valem a partir do pr\u00f3ximo JOGAR. Inst\u00e2ncias Vanilla, Fabric e Forge n\u00e3o s\u00e3o afetadas.
+Renderer Rust	Renderizador Rust
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	O mais seguro em compatibilidade para todos os celulares. O Vulkan r\u00e1pido usa batching de GPU. O OpenGL ES ainda \u00e9 experimental.
+Vulkan kompatibel	Vulkan compat\u00edvel
+Vulkan cepat	Vulkan r\u00e1pido
+Skala resolusi Rust	Escala de resolu\u00e7\u00e3o do Rust
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Reduzir a resolu\u00e7\u00e3o de renderiza\u00e7\u00e3o deixa o jogo mais leve, mas a imagem fica mais borrada.
+Laju layar	Taxa de atualiza\u00e7\u00e3o da tela
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	\u00c9 um pedido ao Android, n\u00e3o um limite de FPS do jogo. Taxas n\u00e3o compat\u00edveis com a tela podem ser ignoradas.
+Bawaan sistem	Padr\u00e3o do sistema
+Petunjuk performa	Dica de desempenho
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Avisa o Android que o jogo precisa de desempenho est\u00e1vel. S\u00f3 \u00e9 \u00fatil em celulares compat\u00edveis.
+Batas pekerja chunk	Limite de workers de chunk
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Limite dos workers que criam e montam chunks, n\u00e3o de todas as threads do aplicativo. Valores baixos reduzem a carga da CPU, mas carregam o mundo mais devagar.
+Tanpa batas	Sem limite
+Cache RAM	Cache de RAM
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Sons j\u00e1 decodificados (80%) e buffers de malha vazios (20%), recriados com a mesma qualidade. N\u00e3o \u00e9 o limite total de RAM ou VRAM. Valores baixos podem aumentar o trabalho da CPU.
+Bawaan (80 MiB)	Padr\u00e3o (80 MiB)
+Arah layar	Orienta\u00e7\u00e3o da tela
+Arah layar saat bermain. Bawaannya landscape.	Orienta\u00e7\u00e3o da tela durante o jogo. O padr\u00e3o \u00e9 paisagem.
+Landscape	Paisagem
+Landscape terbalik	Paisagem invertida
+Portrait	Retrato
+Portrait terbalik	Retrato invertido
+Rasio layar	Propor\u00e7\u00e3o da tela
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Limita a exibi\u00e7\u00e3o do jogo a uma propor\u00e7\u00e3o espec\u00edfica. Nativa segue a propor\u00e7\u00e3o da tela do celular.
+Asli	Nativa
+Layar penuh imersif	Tela cheia imersiva
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	Oculta a barra de navega\u00e7\u00e3o e a barra de status durante o jogo.
+Hindari poni layar	Evitar o notch
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Desloca a exibi\u00e7\u00e3o do jogo para n\u00e3o ser coberta pelo furo da c\u00e2mera ou pelo notch.
+Kontrol Amber	Controles do Amber
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	Posi\u00e7\u00e3o, tamanho e bot\u00f5es da tela seguem o editor de controles do Amber, ent\u00e3o existe s\u00f3 um conjunto de controles. Desative para usar os controles padr\u00e3o do motor. Vale no pr\u00f3ximo JOGAR.
+Perangkat input	Dispositivo de entrada
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	O modo Autom\u00e1tico escolhe sozinho entre tela de toque, teclado e mouse ou gamepad, conforme o que estiver conectado.
+Layar sentuh	Tela de toque
+Keyboard dan mouse	Teclado e mouse
+Server otomatis	Servidor autom\u00e1tico
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	Deixe em branco para jogar no seu pr\u00f3prio mundo. Se preenchido, JOGAR entra direto neste servidor.
+Contoh: mc.contoh.com:25565	Exemplo: mc.exemplo.com:25565
+Setel ulang pengaturan Rust	Redefinir configura\u00e7\u00f5es do Rust
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Restaura todas as op\u00e7\u00f5es desta aba para o padr\u00e3o do motor. Inst\u00e2ncias e mundos n\u00e3o s\u00e3o tocados.
+Setel ulang	Redefinir
+Pengaturan Rust dikembalikan ke bawaan.	As configura\u00e7\u00f5es do Rust foram restauradas para o padr\u00e3o.
+Mode performa	Modo de desempenho
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	Normal usa o padr\u00e3o do motor. Super economia reduz a dist\u00e2ncia de renderiza\u00e7\u00e3o, part\u00edculas, nuvens e sombras. Economia de bateria limita a 60 FPS com VSync. FPS m\u00e1ximo remove o limite de FPS e desativa o VSync. Este modo altera as configura\u00e7\u00f5es de v\u00eddeo do jogo ao JOGAR.
+Normal	Normal
+Super hemat	Super economia
+Hemat baterai	Economia de bateria
+FPS maksimum	FPS m\u00e1ximo
+Kurangi animasi game	Reduzir anima\u00e7\u00f5es do jogo
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Desativa texturas animadas, fade de chunks, balan\u00e7o da c\u00e2mera ao andar e blur dos menus. Mais leve em celulares fracos.
+Menu garis tiga	Menu de tr\u00eas linhas
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	O bot\u00e3o de tr\u00eas linhas na tela do jogo que abre o menu r\u00e1pido do motor (presets, controles, configura\u00e7\u00f5es). A cor segue o destaque do Amber. Vale no pr\u00f3ximo JOGAR.

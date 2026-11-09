@@ -1,0 +1,184 @@
+# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	O launcher encontrou um erro interno em um componente da interface ou em um processo de segundo plano do sistema.
+INCIDENT DIAGNOSTICS \u00b7 JVM TERMINATION	DIAGN\u00d3STICO DO INCIDENTE \u00b7 ENCERRAMENTO DA JVM
+STATUS PELUNCUR	STATUS DO LAUNCHER
+INFORMASI SESI GAME	INFORMA\u00c7\u00d5ES DA SESS\u00c3O DO JOGO
+{0} Mod	{0} mods
+Log: {0}	Log: {0}
+DIAGNOSA KELUAR SISTEM	DIAGN\u00d3STICO DE SA\u00cdDA DO SISTEMA
+SOLUSI & SARAN PEMULIHAN	SOLU\u00c7\u00d5ES E SUGEST\u00d5ES DE RECUPERA\u00c7\u00c3O
+Log berhasil diunggah & tautan disalin!	Log enviado com sucesso e link copiado!
+Gagal mengunggah: {~0}	Falha ao enviar: {0}
+MENGUNGGAH LOG...	ENVIANDO O LOG...
+BUKA TAUTAN MCLO.GS	ABRIR LINK DO MCLO.GS
+UNGGAH TAUTAN LOG (MCLO.GS)	ENVIAR LOG E GERAR LINK (MCLO.GS)
+BAGIKAN	COMPARTILHAR
+Log disalin ke clipboard!	Log copiado para a \u00e1rea de transfer\u00eancia!
+SALIN	COPIAR
+LOG CRASH	LOG DE CRASH
+Disalin ke papan klip!	Copiado para a \u00e1rea de transfer\u00eancia!
+Gagal membaca file log: {0}	Falha ao ler o arquivo de log: {0}
+Tidak ada rincian log yang tersedia.	Nenhum detalhe de log dispon\u00edvel.
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	O launcher encontrou um erro interno em um componente da interface ou em um processo em segundo plano. Relate este log de stacktrace ao desenvolvedor do AmberLauncher.
+Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	O launcher encontrou um erro inesperado (Uncaught Exception).
+JVM dihentikan karena sinyal fatal {0} ({1}).	A JVM foi encerrada por um sinal fatal {0} ({1}).
+JVM keluar dengan kode {0} ({1}).	A JVM saiu com o c\u00f3digo {0} ({1}).
+PELUNCUR MENGALAMI KESALAHAN	O LAUNCHER ENCONTROU UM ERRO
+GAME MENGALAMI CRASH	O JOGO TRAVOU
+Rotasi Layar	Rota\u00e7\u00e3o de tela
+Tautan berhasil diunggah & disalin!	Link enviado e copiado com sucesso!
+Log berhasil disalin ke clipboard!	Log copiado para a \u00e1rea de transfer\u00eancia com sucesso!
+Aplikasi AmberLauncher	Aplicativo AmberLauncher
+Lokasi Log: {0}	Local do log: {0}
+STATUS PENGHENTIAN PROSES	STATUS DO ENCERRAMENTO DO PROCESSO
+CATATAN ANALISIS LOG	NOTAS DA AN\u00c1LISE DO LOG
+MENGUNGGAH LOG KE MCLO.GS...	ENVIANDO O LOG PARA O MCLO.GS...
+UNGGAH TAUTAN (MCLO.GS)	ENVIAR E GERAR LINK (MCLO.GS)
+BAGIKAN LOG	COMPARTILHAR LOG
+SALIN TEKS	COPIAR TEXTO
+MULAI ULANG	REINICIAR
+Unknown	Desconhecido
+MINECRAFT MENGALAMI CRASH	O MINECRAFT TRAVOU
+JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	A JVM saiu com o c\u00f3digo {0} (Signal: {1}).\nVerifique o arquivo de log para mais detalhes.
+Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	O processo do jogo parou de repente (possivelmente encerrado pelo sistema por falta de RAM ou por um crash de driver nativo).
+SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (Instru\u00e7\u00e3o de CPU n\u00e3o compat\u00edvel)
+SIGABRT (Native Assertion / Abort)	SIGABRT (Native Assertion / Abort)
+SIGBUS (Kesalahan Bus Memori)	SIGBUS (Erro de barramento de mem\u00f3ria)
+SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (Erro de c\u00e1lculo de ponto flutuante)
+SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (Encerrado pelo SO / Sem RAM)
+SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (Acesso ilegal \u00e0 mem\u00f3ria / Segfault)
+SIGTERM (Permintaan Terminasi)	SIGTERM (Solicita\u00e7\u00e3o de t\u00e9rmino)
+Selesai Normal (0)	Encerrado normalmente (0)
+Kesalahan Inisialisasi Mod / Java Exception (1)	Erro de inicializa\u00e7\u00e3o de mod / Java Exception (1)
+Dihentikan Pengguna (SIGINT 130)	Encerrado pelo usu\u00e1rio (SIGINT 130)
+Native Driver Abort (SIGABRT 134)	Native Driver Abort (SIGABRT 134)
+Kehabisan Memori RAM / OOM (SIGKILL 137)	Sem mem\u00f3ria RAM / OOM (SIGKILL 137)
+Crash Driver Grafis / Segfault (SIGSEGV 139)	Crash do driver gr\u00e1fico / Segfault (SIGSEGV 139)
+Kegagalan Bootstrap Mesin Virtual (-1)	Falha no bootstrap da m\u00e1quina virtual (-1)
+Kode Keluar {0}	C\u00f3digo de sa\u00edda {0}
+Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	Para detalhes sobre a causa, verifique o arquivo de log. Se voc\u00ea n\u00e3o conseguir resolver o problema sozinho, envie o arquivo de log para algu\u00e9m ou uma equipe que possa analis\u00e1-lo. N\u00e3o tire apenas uma captura da tela atual, pois ela n\u00e3o fornece informa\u00e7\u00f5es t\u00e9cnicas suficientes para resolver o problema.
+JVM digugurkan karena sinyal fatal {0} ({1}).	A JVM foi abortada por um sinal fatal {0} ({1}).
+File log tidak ditemukan.	Arquivo de log n\u00e3o encontrado.
+Log Crash AmberLauncher - {0}	Log de crash do AmberLauncher - {0}
+Bagikan Log Crash: {0}	Compartilhar log de crash: {0}
+Tidak ada aplikasi untuk membagikan file ini.	N\u00e3o h\u00e1 aplicativo para compartilhar este arquivo.
+Gagal membagikan file: {0}	Falha ao compartilhar o arquivo: {0}
+Konten log kosong.	O conte\u00fado do log est\u00e1 vazio.
+Gagal mengunggah log (HTTP {0}): {1}	Falha ao enviar o log (HTTP {0}): {1}
+Server mclo.gs tidak mengembalikan URL.	O servidor mclo.gs n\u00e3o retornou uma URL.
+File log tidak ditemukan: {0}	Arquivo de log n\u00e3o encontrado: {0}
+Tombol kedua	Segundo bot\u00e3o
+Pilih tombol	Escolher bot\u00e3o
+Ditekan bersamaan dengan tombol utama	Pressionado junto com o bot\u00e3o principal
+Ketuk kategori, lalu ketuk tombolnya	Toque na categoria e depois no bot\u00e3o
+Cari tombol	Buscar bot\u00e3o
+Ketik nama tombol, misalnya Shift atau F3	Digite o nome do bot\u00e3o, por exemplo Shift ou F3
+Tidak ada yang cocok	Nada encontrado
+Cari tombol (W, Shift, F3, Tab...)	Buscar bot\u00e3o (W, Shift, F3, Tab...)
+Mouse	Mouse
+Gerakan	Movimento
+Aksi	A\u00e7\u00e3o
+Angka & Hotbar	N\u00fameros e Hotbar
+Fungsi (F1-F12)	Fun\u00e7\u00f5es (F1-F12)
+Modifier & Kontrol	Modificadores e Controle
+Navigasi	Navega\u00e7\u00e3o
+Alfabet (A - Z)	Alfabeto (A - Z)
+Simbol	S\u00edmbolos
+Umum	Geral
+Modifier	Modificadores
+Alfabet	Alfabeto
+Angka	N\u00fameros
+None	Nenhum
+Key {0}	Tecla {0}
+Mouse Kiri (Attack/Break)	Mouse esquerdo (Attack/Break)
+Mouse Kanan (Use/Place)	Mouse direito (Use/Place)
+Mouse Tengah (Pick Block)	Mouse do meio (Pick Block)
+Mouse Tombol 4	Bot\u00e3o 4 do mouse
+Mouse Tombol 5	Bot\u00e3o 5 do mouse
+Scroll Wheel (Slide Naik/Turun)	Scroll Wheel (rolar para cima/baixo)
+W (Maju)	W (Frente)
+A (Kiri)	A (Esquerda)
+S (Mundur)	S (Para tr\u00e1s)
+D (Kanan)	D (Direita)
+SPACE (Lompat)	SPACE (Pular)
+LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (Sneak/Agachar)
+LEFT CTRL (Sprint/Lari)	LEFT CTRL (Sprint/Correr)
+E (Inventory)	E (Invent\u00e1rio)
+Q (Drop Item)	Q (Largar item)
+F (Swap Hand)	F (Trocar de m\u00e3o)
+T (Buka Chat)	T (Abrir chat)
+/ (Buka Command)	/ (Abrir comando)
+ENTER (Kirim/Pilih)	ENTER (Enviar/Selecionar)
+ESCAPE (Pause/Menu)	ESCAPE (Pausa/Menu)
+TAB (Daftar Player)	TAB (Lista de jogadores)
+BACKSPACE (Hapus)	BACKSPACE (Apagar)
+F1 (Sembunyikan HUD)	F1 (Ocultar HUD)
+F2 (Screenshot)	F2 (Captura de tela)
+F3 (Debug Layar)	F3 (Tela de depura\u00e7\u00e3o)
+F4 (Shader / Spectator)	F4 (Shader / Spectator)
+F5 (Ubah Perspektif)	F5 (Mudar perspectiva)
+F8 (Cinematic Camera)	F8 (Cinematic Camera)
+F11 (Fullscreen)	F11 (Fullscreen)
+1 (Slot 1)	1 (Slot 1)
+2 (Slot 2)	2 (Slot 2)
+3 (Slot 3)	3 (Slot 3)
+4 (Slot 4)	4 (Slot 4)
+5 (Slot 5)	5 (Slot 5)
+6 (Slot 6)	6 (Slot 6)
+7 (Slot 7)	7 (Slot 7)
+8 (Slot 8)	8 (Slot 8)
+9 (Slot 9)	9 (Slot 9)
+Panah Atas (UP)	Seta para cima (UP)
+Panah Bawah (DOWN)	Seta para baixo (DOWN)
+Panah Kiri (LEFT)	Seta para a esquerda (LEFT)
+Panah Kanan (RIGHT)	Seta para a direita (RIGHT)
+KURUNG BUKA ( [ { )	ABRIR COLCHETE ( [ { )
+KURUNG TUTUP ( ] } )	FECHAR COLCHETE ( ] } )
+Numpad . (Titik)	Numpad . (Ponto)
+Numpad / (Bagi)	Numpad / (Dividir)
+Numpad * (Kali)	Numpad * (Multiplicar)
+Numpad - (Kurang)	Numpad - (Subtrair)
+Numpad + (Tambah)	Numpad + (Somar)
+Numpad = (Sama Dengan)	Numpad = (Igual)
+KONFIGURASI RENDERER	CONFIGURA\u00c7\u00c3O DO RENDERIZADOR
+Tidak dapat membuka panel aplikasi	N\u00e3o foi poss\u00edvel abrir o painel do aplicativo
+Buka Panel Aplikasi {0}	Abrir painel do aplicativo {0}
+Akses pengaturan driver native, benchmark, dan preferensi aplikasi	Acesse as configura\u00e7\u00f5es do driver nativo, benchmark e prefer\u00eancias do aplicativo
+Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	N\u00e3o h\u00e1 vari\u00e1veis de ambiente configur\u00e1veis para este renderizador.
+PENGATURAN ENVIRONMENT VARIABLES	CONFIGURA\u00c7\u00d5ES DE VARI\u00c1VEIS DE AMBIENTE
+Pengaturan direset ke default	Configura\u00e7\u00f5es redefinidas para o padr\u00e3o
+RESET DEFAULT	REDEFINIR PADR\u00c3O
+SIMPAN & TUTUP	SALVAR E FECHAR
+Nilai aktif: 	Valor ativo: 
+Masukkan nilai (opsional)	Insira um valor (opcional)
+Auto (Rekomendasi)	Auto (Recomendado)
+Otomatis Cerdas	Autom\u00e1tico inteligente
+Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	Escolhe automaticamente o renderizador mais otimizado e est\u00e1vel com base na vers\u00e3o do Minecraft em execu\u00e7\u00e3o.
+Semua Versi Minecraft	Todas as vers\u00f5es do Minecraft
+Rekomendasi Utama (Mali & Adreno)	Principal recomenda\u00e7\u00e3o (Mali e Adreno)
+Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Wrapper moderno de OpenGL ES 3.x diretamente sobre o driver oficial do sistema. O mais est\u00e1vel e com o FPS m\u00e1ximo para GPUs Mali e Adreno no Minecraft moderno (1.17 \u2013 26.3).
+Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	Biblioteca gr\u00e1fica OpenGL 4.0 MobileGlues para o Minecraft 1.17 \u2013 1.21.1. Alta compatibilidade com v\u00e1rias GPUs m\u00f3veis, incluindo Mali.
+Paling Stabil untuk MC Lama	O mais est\u00e1vel para Minecraft antigo
+Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Wrapper cl\u00e1ssico de OpenGL ES 2.0. Compat\u00edvel com o Minecraft 1.7.10 \u2013 1.16.5 e dispositivos de baixa especifica\u00e7\u00e3o.
+Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	Traduz o OpenGL desktop 4.6 para Vulkan. Suporta mods de shader modernos (Iris/Oculus) e mods avan\u00e7ados.
+Khusus GPU Adreno	Exclusivo para GPUs Adreno
+Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	Driver Mesa Gallium Freedreno de c\u00f3digo aberto, otimizado especificamente para chipsets Snapdragon / GPUs Adreno.
+Pustaka grafis MobileGL (Vulkan & GLES backend)	Biblioteca gr\u00e1fica MobileGL (backends Vulkan e GLES)
+Renderer eksternal dari APK: {0} ({1})	Renderizador externo de APK: {0} ({1})
+Plugin Eksternal	Plugin externo
+Renderer APK: {0} ({1})	Renderizador de APK: {0} ({1})
+Close	Fechar
+mclo.gs link	Link do mclo.gs
+Crash Log	Log de crash
+LAUNCHER ERROR	ERRO DO LAUNCHER
+EXIT CODE {0}	C\u00d3DIGO DE SA\u00cdDA {0}
+TERMINAL LOG / STACK TRACE	LOG DO TERMINAL / STACK TRACE
+Impor layout kontrol?	Importar layout de controles?
+Ganti layout	Substituir layout
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	O layout de bot\u00f5es atual ser\u00e1 substitu\u00eddo pelos {0} bot\u00f5es deste arquivo.
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Este arquivo cont\u00e9m {0} bot\u00f5es de macro que digitam chat ou comandos automaticamente. Verifique antes de usar em servidores.
+Utama	Principal
+Navigasi & Numpad	Navega\u00e7\u00e3o e Numpad
+Ketuk tombol yang diinginkan	Toque no bot\u00e3o desejado
+# Entradas adicionales (ausentes en es)
+Error: {0}	Erro: {0}

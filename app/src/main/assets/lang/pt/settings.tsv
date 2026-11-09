@@ -1,0 +1,140 @@
+# Pengaturan
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB de RAM \u00b7 {1} n\u00facleos de CPU
+Memori	Mem\u00f3ria
+Grafis	Gr\u00e1ficos
+Kontrol	Controles
+Tampilan	Apar\u00eancia
+Memori game (RAM)	Mem\u00f3ria do jogo (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Grande demais para este celular; o jogo e o celular podem ficar lentos.
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Limite de mem\u00f3ria do Java (-Xmx). Maior nem sempre \u00e9 mais r\u00e1pido.
+1,5 GB	1,5 GB
+Argumen JVM tambahan	Argumentos extras da JVM
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Opcional, para usu\u00e1rios avan\u00e7ados. Preencher errado pode impedir o jogo de iniciar.
+Contoh: -XX:+UseG1GC	Exemplo: -XX:+UseG1GC
+Konfigurasi renderer	Configura\u00e7\u00e3o do renderizador
+Optimasi otomatis options.txt	Otimiza\u00e7\u00e3o autom\u00e1tica do options.txt
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Desativa nuvens e sombras automaticamente para aumentar o FPS.
+Skala resolusi layar	Escala da resolu\u00e7\u00e3o da tela
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Menor = mais FPS, imagem mais borrada.
+Driver Vulkan	Driver Vulkan
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	Escolha a implementa\u00e7\u00e3o do driver Vulkan usada pelo sistema/jogo.
+API grafis	API gr\u00e1fica
+Atur API grafis yang dipakai Minecraft modern 26.2+.	Defina a API gr\u00e1fica usada pelo Minecraft moderno 26.2+.
+Gunakan driver Vulkan sistem	Usar o driver Vulkan do sistema
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	For\u00e7a o uso do driver Vulkan nativo do celular (n\u00e3o o Turnip). Afeta o renderizador Zink.
+V-Sync Zink	V-Sync do Zink
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Sincroniza\u00e7\u00e3o vertical para o renderizador Kopper Zink por meio da interface do sistema.
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Idioma dos textos do launcher. Seguir o sistema usa o idioma do celular.
+Latar Beranda	Plano de fundo do In\u00edcio
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Fotos s\u00e3o o mais leve, GIFs se movem com pouco consumo, v\u00eddeos s\u00e3o o mais fluido (HD, at\u00e9 60 fps), mas gastam mais bateria.
+Ganti latar	Trocar plano de fundo
+Gerakkan GIF dan video	Animar GIFs e v\u00eddeos
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	Desative para mostrar apenas a imagem est\u00e1tica. \u00c9 o que mais economiza bateria e RAM.
+Jeda saat Hemat Baterai	Pausar na Economia de bateria
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	GIFs e v\u00eddeos pausam automaticamente enquanto o modo de Economia de bateria do celular estiver ativo.
+Suara video	Som do v\u00eddeo
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Desativado por padr\u00e3o. Fica mudo automaticamente se outro aplicativo estiver tocando m\u00fasica.
+Volume video	Volume do v\u00eddeo
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	Brilho suave na barra lateral e nas bordas dos cart\u00f5es do In\u00edcio. A cor segue o conte\u00fado do GIF ou v\u00eddeo. N\u00e3o vale para fotos.
+Kekuatan ambient	Intensidade da luz ambiente
+Kustomisasi kontrol virtual	Personalizar controles virtuais
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Altere o layout dos bot\u00f5es, o tamanho, a transpar\u00eancia, o scroll da hotbar e o mapeamento das teclas do Minecraft.
+Buka editor	Abrir editor
+Mode mouse di menu	Modo mouse nos menus
+Sentuh tombol atau slot menu langsung di mana jari menekan.	Toque no bot\u00e3o ou no slot do menu diretamente onde o dedo pressionar.
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	Deslize o dedo para mover o cursor virtual; toque na tela para clicar.
+Click (langsung)	Click (direto)
+Pukul lewat layar	Atacar pela tela
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	Toque ou segure em uma \u00e1rea vazia da tela para atacar. Desative para que deslizar a c\u00e2mera n\u00e3o ataque junto; use o bot\u00e3o de ataque.
+Sensitivitas kamera	Sensibilidade da c\u00e2mera
+Kecepatan memutar pandangan di dalam game.	Velocidade de giro da vis\u00e3o dentro do jogo.
+Sensitivitas kursor virtual	Sensibilidade do cursor virtual
+Kecepatan kursor saat berada di menu Minecraft.	Velocidade do cursor nos menus do Minecraft.
+Ukuran kursor virtual	Tamanho do cursor virtual
+Mode mouse fisik (auto-hide)	Modo mouse f\u00edsico (auto-hide)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Oculta o cursor virtual automaticamente quando um mouse externo est\u00e1 conectado.
+Perubahan tersimpan otomatis	As altera\u00e7\u00f5es s\u00e3o salvas automaticamente
+Pengaturan di-reset ke default!	Configura\u00e7\u00f5es redefinidas para o padr\u00e3o!
+Reset default	Redefinir padr\u00e3o
+PILIH RENDERER GRAFIK	ESCOLHER RENDERIZADOR GR\u00c1FICO
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Ajuste o backend gr\u00e1fico ao Minecraft e \u00e0 GPU do dispositivo
+Renderer diubah ke: {0}	Renderizador alterado para: {0}
+Konfigurasi {0}	Configura\u00e7\u00e3o do {0}
+Kesesuaian: {0}	Compatibilidade: {0}
+PERINGATAN DRIVER ADRENO	AVISO SOBRE O DRIVER ADRENO
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	O launcher detectou que o seu dispositivo usa uma GPU Adreno. Ativar esta op\u00e7\u00e3o pode fazer o renderizador Zink n\u00e3o funcionar ou travar. Tem certeza de que deseja ativ\u00e1-la?
+AKTIFKAN	ATIVAR
+Mode GC (pembersih memori Java)	Modo GC (coletor de mem\u00f3ria do Java)
+Kunci layar 60 Hz	Travar a tela em 60 Hz
+# Rekam layar bawaan
+Kualitas rekaman layar	Qualidade da grava\u00e7\u00e3o de tela
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	Quanto menor, mais leve para o celular. Economia 540p, Leve 720p, N\u00edtida 1080p.
+Hemat	Economia
+Ringan	Leve
+Tajam	N\u00edtida
+FPS rekaman	FPS da grava\u00e7\u00e3o
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps \u00e9 bem mais leve. 60 fps apenas para celulares potentes.
+Rekam suara mikrofon	Gravar som do microfone
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	Adiciona o som do microfone \u00e0 grava\u00e7\u00e3o. O som do jogo ainda n\u00e3o \u00e9 gravado.
+Hentikan rekaman saat HP terlalu panas	Parar a grava\u00e7\u00e3o quando o celular esquentar demais
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	Salva a grava\u00e7\u00e3o e para automaticamente para que o jogo n\u00e3o fique lento por causa do calor.
+# Pembaruan otomatis dan rekam layar (tambahan)
+Isi rekaman	Conte\u00fado da grava\u00e7\u00e3o
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	S\u00f3 o jogo: os bot\u00f5es da tela s\u00e3o ocultados do v\u00eddeo (ainda podem ser tocados). Com bot\u00f5es: os bot\u00f5es da tela aparecem no v\u00eddeo. Tamb\u00e9m pode ser alterado pelo menu dentro do jogo.
+Hotbar sentuh	Hotbar por toque
+Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	Toque na hotbar na parte inferior da tela para escolher o slot, como no Minecraft Bedrock. A posi\u00e7\u00e3o dos slots segue o GUI scale do jogo.
+Geser kamera dari tombol	Deslizar a c\u00e2mera a partir dos bot\u00f5es
+Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Segurar o bot\u00e3o de atacar, usar ou pular e deslizar o dedo tamb\u00e9m gira a c\u00e2mera. Desative para que a vis\u00e3o n\u00e3o se mova durante lutas (PvP).
+Dukungan TouchController	Suporte ao TouchController
+Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Experimental. Se o mod TouchController estiver instalado e conectado, os toques durante o jogo tamb\u00e9m s\u00e3o repassados ao mod. Os bot\u00f5es e o mouse virtual do launcher continuam ativos, ent\u00e3o os dois podem ser usados juntos.
+# Mode Hemat, kunci layar 60 Hz umum, dan GC untuk HP RAM kecil
+Optimasi HP RAM kecil	Otimiza\u00e7\u00e3o para celulares com pouca RAM
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	A RAM deste celular \u00e9 de {0} MB, ent\u00e3o o funcionamento do coletor de mem\u00f3ria do Java pode ser ajustado.
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: o mais leve para o processador, com pausas de GC um pouco mais longas. Tente se o jogo engasgar com frequ\u00eancia.
+Bawaan: tanpa flag GC tambahan dari launcher.	Padr\u00e3o: sem flags de GC adicionais do launcher.
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Autom\u00e1tico: G1 com mem\u00f3ria limitada, adequado para a maioria dos celulares. Tente este primeiro.
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Vale na pr\u00f3xima vez que o jogo for executado. Para comparar, veja a linha [Kinerja] no log do jogo.
+Mode Hemat	Modo Economia
+Untuk HP yang cepat panas atau baterainya cepat habis.	Para celulares que esquentam r\u00e1pido ou cuja bateria acaba r\u00e1pido.
+Nyalakan Mode Hemat	Ativar o Modo Economia
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Ativa o modo de desempenho est\u00e1vel do sistema e o V-Sync do Zink, al\u00e9m de limitar a escala de resolu\u00e7\u00e3o m\u00e1xima a 80%.
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Vale na pr\u00f3xima vez que o jogo for executado. Ao desativar, as configura\u00e7\u00f5es anteriores s\u00e3o restauradas.
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Telas de 90/120 Hz s\u00e3o travadas em 60 Hz durante o jogo para um movimento mais uniforme e um pouco menos de calor. Indicado quando o jogo raramente chega a 90 FPS. O HUD de FPS mostra o Hz ativo.
+Cadangan & bagikan layout	Backup e compartilhamento de layout
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	Salve o layout dos bot\u00f5es em um arquivo .json para backup ou compartilhamento, ou carregue o arquivo de outra pessoa.
+Ekspor	Exportar
+Layout kontrol disimpan ke berkas	Layout de controles salvo no arquivo
+Gagal menyimpan berkas	Falha ao salvar o arquivo
+Berkas terlalu besar untuk layout kontrol	Arquivo grande demais para um layout de controles
+Berkas tidak berisi tombol	O arquivo n\u00e3o cont\u00e9m bot\u00f5es
+Berkas ini bukan layout kontrol yang valid	Este arquivo n\u00e3o \u00e9 um layout de controles v\u00e1lido
+Layout kontrol diimpor ({0} tombol)	Layout de controles importado ({0} bot\u00f5es)
+# Log game: simpan otomatis dan bagikan
+Log game	Log do jogo
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	Sempre que voc\u00ea sai do Minecraft, o log dessa sess\u00e3o \u00e9 salvo automaticamente (os 10 \u00faltimos), sem o token da conta. Se houver algum problema, por exemplo um shader que n\u00e3o carrega, compartilhe o log mais recente com o desenvolvedor.
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	Ainda n\u00e3o h\u00e1 logs. Jogue uma vez e saia; o log \u00e9 salvo automaticamente.
+Log terbaru	Log mais recente
+Log sebelumnya	Logs anteriores
+Bagikan	Compartilhar
+Hapus semua log	Excluir todos os logs
+Ketuk lagi untuk menghapus	Toque de novo para excluir
+Log dihapus.	Logs exclu\u00eddos.
+Log launcher	Log do launcher
+Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	Eventos dentro do launcher fora do jogo, como downloads, login e mensagens de erro. Compartilhe se o problema aparecer antes de o jogo iniciar.
+Menyiapkan log...	Preparando o log...
+Gagal menyiapkan log launcher.	Falha ao preparar o log do launcher.
+Lokasi: {0}	Local: {0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Envie pelo WhatsApp, Telegram ou Google Drive usando o bot\u00e3o Compartilhar, ou pegue direto na pasta pelo gerenciador de arquivos.
+Plugin native library	Plugin de native library
+Belum ada plugin terpasang	Nenhum plugin instalado ainda
+Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	Instale o APK de plugin de native library (formato Zalith/FCL) exigido pelo mod, por exemplo o Distant Horizons, e toque para escanear de novo.
+Pindai	Escanear
+Memindai...	Escaneando...
+Pindai ulang plugin	Escanear plugins de novo
+Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Use depois de instalar ou remover um plugin. Os plugins tamb\u00e9m s\u00e3o escaneados automaticamente cada vez que o jogo \u00e9 executado.
+Kontrol sentuh	Controle por toque
+Kamera dan kursor	C\u00e2mera e cursor
+Controller dan mouse fisik	Controle e mouse f\u00edsicos
+Lanjutan	Avan\u00e7ado
+Langsung bisa dipakai	Pronto para usar
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	N\u00e3o precisa ativar nem configurar. Conecte um controle (gamepad) e jogue: o anal\u00f3gico esquerdo anda, o direito move a c\u00e2mera, A pula, RT ataca, LT coloca, Y abre o invent\u00e1rio, Start = Esc. Nos menus, o anal\u00f3gico move o cursor. Mouse e teclado f\u00edsicos tamb\u00e9m funcionam na hora. Os bot\u00f5es da tela se escondem sozinhos quando um controle ou mouse \u00e9 usado. A velocidade do anal\u00f3gico segue a sensibilidade da c\u00e2mera e do cursor acima. Se um mod de controle (por exemplo, o Controlify) for detectado, o controle \u00e9 entregue diretamente ao mod.

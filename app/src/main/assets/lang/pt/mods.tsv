@@ -1,0 +1,204 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	mods
+modpacks	modpacks
+shaderpacks	shader packs
+resourcepacks	pacotes de recursos
+datapacks	pacotes de dados
+format yang didukung	formato compat\u00edvel
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	O arquivo "{0}" foi ignorado! Formatos compat\u00edveis para {1}: apenas {2}
+{0} file diabaikan karena format tidak didukung ({~1})!	{0} arquivo(s) ignorado(s) porque o formato n\u00e3o \u00e9 compat\u00edvel ({1})!
+Membaca arsip modpack...	Lendo o arquivo do modpack...
+Berhasil mengimpor dan memasang {0} modpack!	{0} modpack(s) importado(s) e instalado(s) com sucesso!
+Gagal mengimpor modpack: {~0}	Falha ao importar o modpack: {0}
+Berhasil mengimpor {0} file {~1}!	{0} arquivo(s) importado(s) com sucesso ({1})!
+Gagal mengimpor file: {~0}	Falha ao importar o arquivo: {0}
+Mencari versi...	Buscando vers\u00f5es...
+Tidak ada versi cocok untuk {0}!	Nenhuma vers\u00e3o compat\u00edvel para {0}!
+Mengunduh...	Baixando...
+Modpack {0} berhasil dipasang!	Modpack {0} instalado com sucesso!
+Berhasil memasang {0} beserta {1} dependensi!	{0} instalado com sucesso, junto com {1} depend\u00eancias!
+Berhasil memasang {0}!	{0} instalado com sucesso!
+Memulai pengunduhan...	Iniciando o download...
+Gagal terhubung ke Modrinth	Falha ao conectar ao Modrinth
+Pilih atau buat instance di Home untuk mulai memasang mod.	Escolha ou crie uma inst\u00e2ncia no In\u00edcio para come\u00e7ar a instalar mods.
+Kembali ke Home	Voltar ao In\u00edcio
+Terpasang ({0})	Instalados ({0})
+Jelajah	Explorar
+Resource	Recursos
+Shader	Shaders
+Cari di Modrinth...	Buscar no Modrinth...
+Cari di {0} item...	Buscar em {0} itens...
+World: {0}	Mundo: {0}
+Tidak ada world	Nenhum mundo
+Semua versi	Todas as vers\u00f5es
+Pilih instance terlebih dahulu!	Escolha uma inst\u00e2ncia primeiro!
+Impor	Importar
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	Ainda n\u00e3o h\u00e1 mundos nesta inst\u00e2ncia. Abra o jogo para criar um mundo primeiro.
+Belum ada {~0} terpasang di instance ini	Ainda n\u00e3o h\u00e1 {0} instalados nesta inst\u00e2ncia
+Tidak ada item yang cocok	Nenhum item correspondente
+Jelajahi Modrinth	Explorar o Modrinth
+Memuat data dari Modrinth...	Carregando dados do Modrinth...
+Gagal memuat dari Modrinth	Falha ao carregar do Modrinth
+Terjadi kesalahan jaringan	Ocorreu um erro de rede
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	Nenhum resultado compat\u00edvel com o Minecraft {0} ({1})
+Tidak ada hasil ditemukan untuk kata kunci ini	Nenhum resultado encontrado para esta palavra-chave
+Coba ubah kata kunci atau nonaktifkan filter versi	Tente mudar a palavra-chave ou desative o filtro de vers\u00e3o
+Cari di semua versi Minecraft	Buscar em todas as vers\u00f5es do Minecraft
+Sebelumnya	Anterior
+Selanjutnya	Pr\u00f3xima
+Pilih instance	Escolher inst\u00e2ncia
+Pilih world	Escolher mundo
+Hapus modpack?	Excluir o modpack?
+Hapus {~0}?	Excluir {0}?
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	Tem certeza de que deseja excluir o modpack "{0}"? Todos os mods instalados a partir deste modpack tamb\u00e9m ser\u00e3o removidos da inst\u00e2ncia.
+Yakin ingin menghapus "{0}" dari instance ini?	Tem certeza de que deseja excluir "{0}" desta inst\u00e2ncia?
+Modpack dan semua mod berhasil dihapus!	Modpack e todos os mods exclu\u00eddos com sucesso!
+{0} berhasil dihapus!	{0} exclu\u00eddo com sucesso!
+Mengimpor & memasang modpack	Importando e instalando o modpack
+Membaca daftar mod dan mengunduh file...	Lendo a lista de mods e baixando os arquivos...
+{0} / {1} file mod	{0} / {1} arquivos de mod
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	O launcher est\u00e1 lendo a lista de mods e baixando o modpack. Aguarde.
+Tangkapan layar	Capturas de tela
+Pratinjau gambar	Pr\u00e9via da imagem
+NONAKTIF	DESATIVADO
+Tidak ada deskripsi	Sem descri\u00e7\u00e3o
+oleh {0}	por {0}
+Unduh...	Baixar...
+Terpasang	Instalado
+Pasang pack	Instalar pack
+Versi dipilih	Vers\u00e3o selecionada
+Sedang mengunduh dan memasang...	Baixando e instalando...
+Sudah terpasang	J\u00e1 instalado
+Pasang modpack	Instalar modpack
+Pasang ke instance	Instalar na inst\u00e2ncia
+Versi ({0})	Vers\u00f5es ({0})
+Screenshot	Captura de tela
+Deskripsi	Descri\u00e7\u00e3o
+Tidak ada ringkasan deskripsi.	Sem resumo da descri\u00e7\u00e3o.
+Tidak ada versi yang didukung	Nenhuma vers\u00e3o compat\u00edvel
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	Este projeto n\u00e3o tem uma vers\u00e3o compat\u00edvel com o Minecraft {0} ({1}).
+Versi {0} \u00b7 MC {1}	Vers\u00e3o {0} \u00b7 MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	O modpack \u00e9 extra\u00eddo diretamente na inst\u00e2ncia (overrides, configura\u00e7\u00f5es e manifest).
+Dependensi wajib ikut terpasang otomatis.	As depend\u00eancias obrigat\u00f3rias s\u00e3o instaladas automaticamente.
+Mod terpasang	Mods instalados
+Belum ada resource pack	Ainda n\u00e3o h\u00e1 pacotes de recursos
+Belum ada shader	Ainda n\u00e3o h\u00e1 shaders
+Belum ada mod terpasang	Ainda n\u00e3o h\u00e1 mods instalados
+Pasang lewat menu Mod di sidebar.	Instale pelo menu Mods na barra lateral.
+Nonaktif \u00b7 {0}	Desativado \u00b7 {0}
+Resource Pack (.zip)	Pacote de recursos (.zip)
+PASANG ADDON EKSTERNAL	INSTALAR ADDON EXTERNO
+Pemasang Addon	Instalador de addons
+Tipe file: {0} \u00b7 Siap dipasang	Tipo de arquivo: {0} \u00b7 Pronto para instalar
+KATEGORI ADDON	CATEGORIA DO ADDON
+TARGET INSTANCE MINECRAFT	INST\u00c2NCIA DE DESTINO DO MINECRAFT
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	\u26a0\ufe0f Nenhuma inst\u00e2ncia do Minecraft foi criada ainda! Crie uma inst\u00e2ncia primeiro no In\u00edcio.
+Memasang addon...	Instalando o addon...
+Gagal: {~0}	Falha: {0}
+Mempersiapkan pemasangan...	Preparando a instala\u00e7\u00e3o...
+\u2713 Berhasil memasang "{0}" ke {1}!	\u2713 "{0}" instalado com sucesso em {1}!
+Terjadi kesalahan yang tidak diketahui	Ocorreu um erro desconhecido
+Gagal memasang: {~0}	Falha na instala\u00e7\u00e3o: {0}
+MEMASANG...	INSTALANDO...
+PASANG SEKARANG	INSTALAR AGORA
+{0} mod terpasang	{0} mods instalados
+Menyalin file {0}...	Copiando o arquivo {0}...
+Gagal membaca file sumber	Falha ao ler o arquivo de origem
+Membaca daftar modpack...	Lendo a lista de modpacks...
+Modrinth API error code: {0}	C\u00f3digo de erro da API do Modrinth: {0}
+Empty response	Resposta vazia
+Gagal mengambil detail project: {~0}	Falha ao obter os detalhes do projeto: {0}
+Gagal mengambil versi project: {~0}	Falha ao obter as vers\u00f5es do projeto: {0}
+Mengekstrak dan menyiapkan modpack...	Extraindo e preparando o modpack...
+Menyelesaikan dependensi: {0}...	Resolvendo depend\u00eancias: {0}...
+Membaca daftar modpack ({0} mod ditemukan)...	Lendo a lista do modpack ({0} mods encontrados)...
+Mengunduh mod ({0}/{1}): {2}...	Baixando mod ({0}/{1}): {2}...
+Mod sudah ada ({0}/{1}): {2}	O mod j\u00e1 existe ({0}/{1}): {2}
+Mengekstrak konfigurasi modpack...	Extraindo a configura\u00e7\u00e3o do modpack...
+Mengekstrak file arsip modpack...	Extraindo os arquivos do modpack...
+Selesai! {0} mod berhasil dipasang.	Conclu\u00eddo! {0} mods instalados com sucesso.
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	Conclu\u00eddo com ressalvas: {0} mods instalados, {1} arquivos falharam ou foram ignorados. Tente instalar de novo se faltar algum mod.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	Este modpack exige {0}, mas atualmente o AmberLauncher s\u00f3 \u00e9 compat\u00edvel com o Fabric.
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	Este modpack exige o Fabric. Crie primeiro uma inst\u00e2ncia Fabric e depois instale o modpack nela.
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	Este modpack \u00e9 para o Minecraft {0}, mas esta inst\u00e2ncia usa {1}. Escolha ou crie uma inst\u00e2ncia com a mesma vers\u00e3o.
+Alamat unduhan ditolak karena tidak memakai HTTPS	Endere\u00e7o de download recusado por n\u00e3o usar HTTPS
+Gagal mengunduh file: HTTP {0}	Falha ao baixar o arquivo: HTTP {0}
+Body stream kosong	Body stream vazio
+Gagal menyimpan file unduhan	Falha ao salvar o arquivo baixado
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	O arquivo {0} est\u00e1 corrompido ou foi alterado no caminho (hash n\u00e3o confere), ent\u00e3o n\u00e3o foi instalado.
+Isi modpack terlalu besar, pemasangan dibatalkan.	O conte\u00fado do modpack \u00e9 grande demais; a instala\u00e7\u00e3o foi cancelada.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack exige {0}, mas atualmente o AmberLauncher s\u00f3 \u00e9 compat\u00edvel com Fabric, Forge e NeoForge.
+Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Este modpack exige o Forge. Crie primeiro uma inst\u00e2ncia Forge e depois instale o modpack nela.
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Este modpack exige o NeoForge. Crie primeiro uma inst\u00e2ncia NeoForge e depois instale o modpack nela.
+# Tampilan baru layar Mod: filter, sumber, dan label kartu
+Kategori	Categoria
+Versi	Vers\u00e3o
+Urutkan	Ordenar
+Relevansi	Relev\u00e2ncia
+Unduhan	Downloads
+Pengikut	Seguidores
+Diperbarui	Atualizado
+Semua loader	Todos os loaders
+Pilih kategori	Escolher categoria
+Pilih versi	Escolher vers\u00e3o
+Pilih loader	Escolher loader
+Cari mod...	Buscar mods...
+Cari modpack...	Buscar modpacks...
+Cari shader...	Buscar shaders...
+Cari resource pack...	Buscar pacotes de recursos...
+Cari datapack...	Buscar pacotes de dados...
+CurseForge belum tersedia di versi ini	O CurseForge ainda n\u00e3o est\u00e1 dispon\u00edvel nesta vers\u00e3o
+Optimasi	Otimiza\u00e7\u00e3o
+Teknologi	Tecnologia
+Sihir	Magia
+Petualangan	Aventura
+Utilitas	Utilidades
+Dekorasi	Decora\u00e7\u00e3o
+Perlengkapan	Equipamentos
+Makanan	Comida
+Penyimpanan	Armazenamento
+Pustaka	Bibliotecas
+Realistis	Realista
+Fantasi	Fantasia
+# Home baru dan layar kelola konten instance
+INSTANCE AKTIF	INST\u00c2NCIA ATIVA
+Mod & konten	Mods e conte\u00fado
+Tambah	Adicionar
+# Layar Akun dan Pengaturan baru
+Game	Jogo
+Tentang	Sobre
+Cari pengaturan...	Buscar configura\u00e7\u00f5es...
+Perekaman layar	Grava\u00e7\u00e3o de tela
+Latar	Plano de fundo
+Foto, GIF, atau video	Foto, GIF ou v\u00eddeo
+Redupkan latar	Escurecer o plano de fundo
+Seberapa gelap latar di layar selain Home.	O quanto o plano de fundo escurece nas telas que n\u00e3o s\u00e3o o In\u00edcio.
+Aksen warna	Cor de destaque
+Warna tombol dan penanda terpilih di seluruh launcher.	Cor dos bot\u00f5es e dos marcadores selecionados em todo o launcher.
+Gaya tampilan	Estilo visual
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	O Padr\u00e3o usa o tema pr\u00f3prio do AmberLauncher. O Liquid Glass desfoca o plano de fundo atr\u00e1s dos pain\u00e9is e bot\u00f5es.
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	O Liquid Glass exige o Android 12 ou superior. Neste celular, o Padr\u00e3o \u00e9 usado automaticamente.
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Idioma dos textos do launcher. Vale na hora, sem reiniciar.
+Pengaturan khusus untuk renderer yang sedang dipakai.	Configura\u00e7\u00f5es espec\u00edficas do renderizador em uso.
+Atur	Ajustar
+Tata letak kontrol	Layout dos controles
+Aplikasi	Aplicativo
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	Informa\u00e7\u00f5es do aplicativo, licen\u00e7a GPL-3.0 e cr\u00e9ditos.
+Reset ke default	Redefinir para o padr\u00e3o
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	Todas as configura\u00e7\u00f5es voltam ao padr\u00e3o. As demais altera\u00e7\u00f5es s\u00e3o salvas automaticamente.
+Belum ada akun	Ainda n\u00e3o h\u00e1 conta
+Pilih akun untuk bermain	Escolha uma conta para jogar
+Akun aktif untuk bermain	Conta ativa para jogar
+Jenis akun	Tipo de conta
+Status login	Status do login
+Tersambung	Conectado
+Perlu disegarkan	Precisa ser renovado
+Segarkan login	Renovar login
+Menyegarkan...	Renovando...
+Login berhasil disegarkan	Login renovado com sucesso
+Gagal menyegarkan login	Falha ao renovar o login
+# Entradas adicionales (ausentes en es)
+Pasang	Instalar
+Tema	Tema
+Klasik	Cl\u00e1ssico
+Home	In\u00edcio

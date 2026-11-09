@@ -1,14 +1,16 @@
 <div align="center">
 
+<img src="docs/site/assets/icon-192.png" alt="AmberLauncher logo" width="112" height="112">
+
 # AmberLauncher
 
-**A Minecraft Java Edition launcher for Android: lightweight, simple, and performance-first.**
+A Minecraft Java Edition launcher for Android.
 
 [![Latest release](https://img.shields.io/github/v/release/ItsVynzzzz/AmberLauncher?include_prereleases&label=release)](https://github.com/ItsVynzzzz/AmberLauncher/releases)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 
-[**Download**](#download) · [Getting started](#getting-started) · [Features](#features) · [Help](#help) · [Credits](#license-and-credits) · [Bahasa Indonesia](README.md)
+[**Download**](#download) · [Getting started](#getting-started) · [Features](#features) · [Help](#help) · [Credits](#license-and-credits) · [Website](https://itsvynzzzz.github.io/AmberLauncher/en/) · [Bahasa Indonesia](README.md)
 
 </div>
 
@@ -16,17 +18,17 @@
 
 ## About
 
-AmberLauncher aims to keep Minecraft Java running smoothly on low- and mid-range Android phones, while still feeling great on stronger ones.
+AmberLauncher is a launcher for playing Minecraft Java Edition on Android. The flow is simple: create an instance, add mods if you like, and play.
 
-- **Lightweight**: a simple interface and a small set of clear settings.
-- **Smart defaults**: game RAM, resolution scale, and render distance adapt to your phone's RAM.
-- **Ready for mods**: Vanilla, Fabric, Forge, and NeoForge, with mods from Modrinth and CurseForge.
+- **Separate instances**: each instance has its own version, mods, and settings.
+- **Automatic starting values**: game RAM, resolution scale, and render distance follow the device's RAM, and all of them can be changed.
+- **Mods and content**: Vanilla, Fabric, Forge, and NeoForge, with mods from Modrinth and CurseForge.
 
-It uses a translucent dark theme with an amber accent. It is still in beta, so your feedback means a lot.
+It uses a translucent dark theme with an amber accent. It is still in beta; bug reports and feedback are welcome.
 
 ## Download
 
-Grab the latest APK from the **[Releases](https://github.com/ItsVynzzzz/AmberLauncher/releases)** page and install it on your phone.
+The APK is available on the **[Releases](https://github.com/ItsVynzzzz/AmberLauncher/releases)** page or through the [website](https://itsvynzzzz.github.io/AmberLauncher/en/); install it on your phone.
 
 **Requirements:** Android 8.0 (API 26) or newer, 3 GB of RAM or more (4 GB is more comfortable), and a few GB of free storage.
 
@@ -51,7 +53,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Many separate instances**, each with its own version, mods, and settings.
 - **Vanilla, Fabric, Forge (1.13+), and NeoForge (1.20.2+)**. Mod and modpack search automatically matches the instance's loader.
 - **Bundled Java**: Java 8, 17, 21, and 25, with nothing else to install.
-- **Renderer choices**: Auto (recommended), Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).
+- **Renderer choices**: Auto (suggested), Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).
 
 **Mods and content**
 - **Modrinth and CurseForge** right inside the app: mods, modpacks, resource packs, shaders, and datapacks, including their dependencies. Manual file installation works too.
@@ -68,7 +70,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Crash reports** with optional log upload to mclo.gs.
 - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
 - **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), and ภาษาไทย.
-- **Optional**: TouchController mod support and the Rust engine (Horizon), both still experimental.
+- **Experimental**: TouchController mod support and the Rust engine (Horizon).
 
 **Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.
 
@@ -103,16 +105,41 @@ AmberLauncher is released under the **GNU General Public License v3.0** (see [LI
 
 AmberLauncher is a fork of NUX Launcher, which is based on Zalith Launcher 2 and PojavLauncher. In line with Zalith Launcher 2's additional terms, the names "ZalithLauncher" and "ZL" are not used, and the *Unofficial Modified Version* notice and copyright notices remain visible in the app.
 
+**Project foundation**
+
 | Project | Author | License |
 |---|---|---|
 | [NUX Launcher](https://github.com/IsraaDeveloper/nuxlabs) (fork source) | IsraaDeveloper | GPL-3.0 |
 | [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) | MovTery and contributors | GPL-3.0 |
 | [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) | artdeell, khanhtran, and team | LGPL-3.0 |
 | [Fold Craft Launcher](https://github.com/FCL-Team/FoldCraftLauncher) | FCL Team | GPL-3.0 |
+
+**Components used**
+
+| Project | Author | License |
+|---|---|---|
+| [Horizon](https://github.com/horizon-rust/horizon) and its [Android port](https://github.com/starling-client/starling) | Ludovic Marie, Vasysik, and contributors | MIT |
 | [MobileGlues](https://github.com/MobileGlues/MobileGlues) | MobileGlues Team | LGPL-2.1 |
 | [GL4ES](https://github.com/ptitSeb/gl4es) | ptitSeb | MIT |
-| [Horizon](https://github.com/horizon-rust/horizon) and its [Android port](https://github.com/starling-client/starling) (optional) | Ludovic Marie, Vasysik, and contributors | MIT |
+| [LWJGL](https://github.com/LWJGL/lwjgl3) | LWJGL team | BSD-3-Clause |
+| [SDL3 and sdl2-compat](https://github.com/libsdl-org/SDL) | Sam Lantinga and contributors | Zlib |
+| [Mesa 3D](https://mesa3d.org/) (Zink, Turnip, VirGL) | The Mesa contributors | MIT |
+| [ANGLE](https://angleproject.org/) | The ANGLE project authors | BSD-3-Clause |
+| [ByteHook](https://github.com/bytedance/bhook) | ByteDance | MIT |
+| [authlib-injector](https://github.com/yushijinhun/authlib-injector) | Yushijinhun | AGPL-3.0 |
+| [TouchController](https://github.com/TouchController/TouchController) (proxy client) | fifth_light | LGPL-3.0 |
+| [Jetpack Compose and Material 3](https://developer.android.com/jetpack/compose) | Android Open Source Project | Apache-2.0 |
+| [OkHttp and Okio](https://github.com/square/okhttp) | Square | Apache-2.0 |
+| [sora-editor](https://github.com/Rosemoe/sora-editor) | Rosemoe | LGPL-2.1 |
+| [skinview3d](https://github.com/bs-community/skinview3d) | Kent Rasmussen and contributors | MIT |
 
-Thanks also to [Modrinth](https://modrinth.com) for its public API and to [Ely.by](https://ely.by) for its skin and authentication system.
+**Thanks**
+
+- [Modrinth](https://modrinth.com) and [CurseForge](https://www.curseforge.com/minecraft) for their mod catalogs, open through their APIs.
+- [Ely.by](https://ely.by) for its skin and authentication system, and [mclo.gs](https://mclo.gs) for its log sharing service.
+- Mojang Studios and Microsoft for Minecraft and its sign-in services.
+- The [Fabric](https://fabricmc.net), [Forge](https://minecraftforge.net), [NeoForge](https://neoforged.net), and [Quilt](https://quiltmc.org) teams for the mod loaders it supports.
+- The authors of the [Controlify](https://github.com/isXander/Controlify) and TouchController mods, which make playing with a controller or touch controls more comfortable.
+- All the testers and bug reporters who help improve this launcher.
 
 *Minecraft* is a trademark of Mojang AB / Microsoft Corporation. AmberLauncher does not include or distribute a copy of the game; to play online you need a valid Minecraft Java Edition account.

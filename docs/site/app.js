@@ -237,7 +237,52 @@
     });
   }
 
+  /* ---------- Screenshot (opsional) ----------
+     Berkas assets/shots/{home,mods,akun,game}.webp dipakai bila ada. Bila tidak ada, bagian itu
+     tidak ditampilkan dan hero tetap memakai demo kontrol. */
+
+  function probe(name, ok) {
+    var base = document.body.getAttribute('data-shots');
+    if (!base) return;
+    var im = new Image();
+    im.onload = function () { ok(im); };
+    im.src = base + name + '.webp';
+  }
+
+  function setupShots() {
+    var homeCap = document.body.getAttribute('data-shot-home') || '';
+    probe('home', function (im) {
+      var stage = $('stage'), rig = $('rig'), slot = $('rig-slot');
+      if (!stage || !rig || !slot) return;
+      var fig = document.createElement('figure');
+      fig.className = 'shot';
+      var frame = document.createElement('div');
+      frame.className = 'frame';
+      im.alt = homeCap;
+      frame.appendChild(im);
+      var cap = document.createElement('figcaption');
+      cap.textContent = homeCap;
+      fig.appendChild(frame);
+      fig.appendChild(cap);
+      slot.hidden = false;
+      slot.appendChild(rig);
+      stage.appendChild(fig);
+    });
+    var gallery = $('tampilan');
+    all('[data-shot]').forEach(function (fig) {
+      probe(fig.getAttribute('data-shot'), function (im) {
+        var img = fig.querySelector('img');
+        var cap = fig.querySelector('figcaption');
+        img.src = im.src;
+        img.alt = cap ? cap.textContent : '';
+        fig.hidden = false;
+        if (gallery) gallery.hidden = false;
+      });
+    });
+  }
+
   loadRelease();
   setupCopy();
   setupRig();
+  setupShots();
 })();

@@ -1,14 +1,16 @@
 <div align="center">
 
+<img src="docs/site/assets/icon-192.png" alt="Logo AmberLauncher" width="112" height="112">
+
 # AmberLauncher
 
-**Launcher Minecraft Java Edition untuk Android: ringan, simpel, dan mengutamakan performa.**
+Launcher Minecraft Java Edition untuk Android.
 
 [![Rilis terbaru](https://img.shields.io/github/v/release/ItsVynzzzz/AmberLauncher?include_prereleases&label=rilis)](https://github.com/ItsVynzzzz/AmberLauncher/releases)
 [![Lisensi: GPL v3](https://img.shields.io/badge/Lisensi-GPLv3-blue.svg)](LICENSE)
 [![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B%20(API%2026)-3DDC84?logo=android&logoColor=white)](https://developer.android.com)
 
-[**Unduh**](#unduh) · [Cara mulai](#cara-mulai) · [Fitur](#fitur) · [Bantuan](#bantuan) · [Kredit](#lisensi-dan-kredit) · [English](README.en.md)
+[**Unduh**](#unduh) · [Cara mulai](#cara-mulai) · [Fitur](#fitur) · [Bantuan](#bantuan) · [Kredit](#lisensi-dan-kredit) · [Situs web](https://itsvynzzzz.github.io/AmberLauncher/) · [English](README.en.md)
 
 </div>
 
@@ -16,17 +18,17 @@
 
 ## Tentang
 
-AmberLauncher dibuat supaya Minecraft Java tetap lancar di HP Android kelas menengah ke bawah, dan tetap nyaman di HP yang lebih kuat.
+AmberLauncher adalah launcher untuk memainkan Minecraft Java Edition di Android. Alurnya sederhana: buat instance, pasang mod bila perlu, lalu main.
 
-- **Ringan**: tampilan sederhana, pengaturan sedikit tapi jelas.
-- **Setelan awal pintar**: RAM game, skala resolusi, dan jarak pandang menyesuaikan RAM HP-mu.
-- **Siap untuk mod**: Vanilla, Fabric, Forge, dan NeoForge, dengan mod dari Modrinth dan CurseForge.
+- **Instance terpisah**: tiap instance punya versi, mod, dan pengaturan sendiri.
+- **Setelan awal otomatis**: RAM game, skala resolusi, dan jarak pandang menyesuaikan RAM perangkat, dan semuanya bisa diubah.
+- **Mod dan konten**: Vanilla, Fabric, Forge, dan NeoForge, dengan mod dari Modrinth dan CurseForge.
 
-Tampilannya gelap transparan dengan aksen kuning amber. Masih tahap beta, jadi masukanmu sangat berarti.
+Tampilannya gelap transparan dengan aksen kuning amber. Masih tahap beta; laporan bug dan masukan dipersilakan.
 
 ## Unduh
 
-Ambil APK terbaru di halaman **[Releases](https://github.com/ItsVynzzzz/AmberLauncher/releases)**, lalu pasang di HP-mu.
+APK tersedia di halaman **[Releases](https://github.com/ItsVynzzzz/AmberLauncher/releases)** atau lewat [situs web](https://itsvynzzzz.github.io/AmberLauncher/), lalu pasang di HP-mu.
 
 **Kebutuhan:** Android 8.0 (API 26) atau lebih baru, RAM 3 GB ke atas (4 GB lebih nyaman), dan ruang kosong beberapa GB.
 
@@ -51,7 +53,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Banyak instance terpisah**, masing-masing dengan versi, mod, dan pengaturan sendiri.
 - **Vanilla, Fabric, Forge (1.13+), dan NeoForge (1.20.2+)**. Pencarian mod dan modpack otomatis disesuaikan dengan loader instance.
 - **Java bawaan**: Java 8, 17, 21, dan 25, tanpa perlu memasang apa pun.
-- **Pilihan renderer**: Auto (rekomendasi), Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).
+- **Pilihan renderer**: Auto (disarankan), Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).
 
 **Mod dan konten**
 - **Modrinth dan CurseForge** langsung dari aplikasi: mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensinya. Pemasangan file manual juga bisa.
@@ -68,7 +70,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Laporan crash** dengan opsi unggah log ke mclo.gs.
 - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
 - **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), dan ภาษาไทย.
-- **Opsional**: dukungan mod TouchController dan mesin Rust (Horizon) yang masih eksperimental.
+- **Eksperimental**: dukungan mod TouchController dan mesin Rust (Horizon).
 
 **Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
 
@@ -103,16 +105,41 @@ AmberLauncher dirilis di bawah **GNU General Public License v3.0** (lihat [LICEN
 
 AmberLauncher adalah turunan (fork) dari NUX Launcher, yang berbasis Zalith Launcher 2 dan PojavLauncher. Sesuai ketentuan tambahan Zalith Launcher 2, nama "ZalithLauncher" atau "ZL" tidak dipakai, dan keterangan *Unofficial Modified Version* serta pemberitahuan hak cipta tetap ditampilkan di aplikasi.
 
+**Dasar proyek**
+
 | Proyek | Pembuat | Lisensi |
 |---|---|---|
 | [NUX Launcher](https://github.com/IsraaDeveloper/nuxlabs) (sumber fork) | IsraaDeveloper | GPL-3.0 |
 | [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) | MovTery dan kontributor | GPL-3.0 |
 | [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) | artdeell, khanhtran, dan tim | LGPL-3.0 |
 | [Fold Craft Launcher](https://github.com/FCL-Team/FoldCraftLauncher) | Tim FCL | GPL-3.0 |
+
+**Komponen yang dipakai**
+
+| Proyek | Pembuat | Lisensi |
+|---|---|---|
+| [Horizon](https://github.com/horizon-rust/horizon) dan [port Android-nya](https://github.com/starling-client/starling) | Ludovic Marie, Vasysik, dan kontributor | MIT |
 | [MobileGlues](https://github.com/MobileGlues/MobileGlues) | Tim MobileGlues | LGPL-2.1 |
 | [GL4ES](https://github.com/ptitSeb/gl4es) | ptitSeb | MIT |
-| [Horizon](https://github.com/horizon-rust/horizon) dan [port Android-nya](https://github.com/starling-client/starling) (opsional) | Ludovic Marie, Vasysik, dan kontributor | MIT |
+| [LWJGL](https://github.com/LWJGL/lwjgl3) | Tim LWJGL | BSD-3-Clause |
+| [SDL3 dan sdl2-compat](https://github.com/libsdl-org/SDL) | Sam Lantinga dan kontributor | Zlib |
+| [Mesa 3D](https://mesa3d.org/) (Zink, Turnip, VirGL) | Para kontributor Mesa | MIT |
+| [ANGLE](https://angleproject.org/) | Para penulis proyek ANGLE | BSD-3-Clause |
+| [ByteHook](https://github.com/bytedance/bhook) | ByteDance | MIT |
+| [authlib-injector](https://github.com/yushijinhun/authlib-injector) | Yushijinhun | AGPL-3.0 |
+| [TouchController](https://github.com/TouchController/TouchController) (klien proxy) | fifth_light | LGPL-3.0 |
+| [Jetpack Compose dan Material 3](https://developer.android.com/jetpack/compose) | Android Open Source Project | Apache-2.0 |
+| [OkHttp dan Okio](https://github.com/square/okhttp) | Square | Apache-2.0 |
+| [sora-editor](https://github.com/Rosemoe/sora-editor) | Rosemoe | LGPL-2.1 |
+| [skinview3d](https://github.com/bs-community/skinview3d) | Kent Rasmussen dan kontributor | MIT |
 
-Terima kasih juga kepada [Modrinth](https://modrinth.com) atas API publiknya dan [Ely.by](https://ely.by) atas sistem skin dan autentikasinya.
+**Terima kasih**
+
+- [Modrinth](https://modrinth.com) dan [CurseForge](https://www.curseforge.com/minecraft) atas katalog mod yang terbuka lewat API.
+- [Ely.by](https://ely.by) atas sistem skin dan autentikasinya, serta [mclo.gs](https://mclo.gs) atas layanan berbagi log.
+- Mojang Studios dan Microsoft atas Minecraft dan layanan loginnya.
+- Tim [Fabric](https://fabricmc.net), [Forge](https://minecraftforge.net), [NeoForge](https://neoforged.net), dan [Quilt](https://quiltmc.org) atas mod loader yang didukung.
+- Pembuat mod [Controlify](https://github.com/isXander/Controlify) dan TouchController, yang membuat bermain dengan controller dan layar sentuh lebih nyaman.
+- Semua penguji dan pelapor bug yang membantu memperbaiki launcher ini.
 
 *Minecraft* adalah merek dagang Mojang AB / Microsoft Corporation. AmberLauncher tidak menyertakan atau membagikan salinan game; untuk bermain online, kamu perlu akun Minecraft Java Edition yang sah.

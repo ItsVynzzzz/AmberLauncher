@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AmberLauncher: launcher Minecraft Java untuk Android</title>
-<meta name="description" content="Launcher Minecraft Java Edition untuk Android yang ringan dan simpel. Mendukung Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
+<title>AmberLauncher: launcher Minecraft Java Edition untuk Android</title>
+<meta name="description" content="Launcher Minecraft Java Edition untuk Android. Mendukung Vanilla, Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
 <meta name="theme-color" content="#0e0d0b">
 <link rel="canonical" href="https://itsvynzzzz.github.io/AmberLauncher/">
 <link rel="alternate" hreflang="id" href="https://itsvynzzzz.github.io/AmberLauncher/">
@@ -13,23 +13,23 @@
 <link rel="apple-touch-icon" href="assets/icon-192.png">
 <link rel="preload" href="assets/gabarito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <meta property="og:type" content="website">
-<meta property="og:title" content="AmberLauncher: launcher Minecraft Java untuk Android">
-<meta property="og:description" content="Launcher Minecraft Java Edition untuk Android yang ringan dan simpel. Mendukung Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
+<meta property="og:title" content="AmberLauncher: launcher Minecraft Java Edition untuk Android">
+<meta property="og:description" content="Launcher Minecraft Java Edition untuk Android. Mendukung Vanilla, Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
 <meta property="og:url" content="https://itsvynzzzz.github.io/AmberLauncher/">
 <meta property="og:image" content="https://itsvynzzzz.github.io/AmberLauncher/assets/icon-192.png">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-shots="assets/shots/" data-shot-home="Layar Home AmberLauncher.">
 <a class="skip" href="#isi">Lewati ke isi</a>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="https://itsvynzzzz.github.io/AmberLauncher/"><img src="assets/icon-192.png" width="32" height="32" alt="">AmberLauncher</a>
-    <nav class="nav" aria-label="Menu"><a href="#unduh">Unduh</a><a href="#mulai">Cara mulai</a><a href="#fitur">Fitur</a><a href="#bantuan">Bantuan</a></nav>
+    <a class="brand" href="https://itsvynzzzz.github.io/AmberLauncher/"><img src="assets/icon-192.png" width="34" height="34" alt="">AmberLauncher</a>
+    <nav class="nav" aria-label="Menu"><a href="#unduh">Unduh</a><a href="#mulai">Cara mulai</a><a href="#fitur">Fitur</a><a href="#bantuan">Bantuan</a><a href="#kredit">Kredit</a></nav>
     <div class="end">
-      <a class="chip" href="en/" hreflang="en" lang="en">English</a>
-      <a class="chip" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a>
+      <a class="pill" href="en/" hreflang="en" lang="en">English</a>
+      <a class="pill" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a>
     </div>
   </div>
 </header>
@@ -37,25 +37,23 @@
 <main id="isi">
   <section class="hero">
     <div class="wrap">
-      <div>
-        <h1>Minecraft Java yang ringan di HP-mu</h1>
-        <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Setelan awalnya menyesuaikan RAM HP-mu, dan mod dari Modrinth serta CurseForge bisa dipasang langsung dari aplikasi.</p>
-        <div class="dl panel" id="unduh">
-          <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
-            <span class="t"><span class="l1">Unduh dari GitHub</span><span class="l2">Mencari versi terbaru…</span></span>
-          </a>
-          <div class="row">
-            <a data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>HP lama (32-bit)</a>
-            <a href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a>
-            <a href="#keaslian">Cek keaslian APK</a>
-          </div>
-          <p class="status" id="dl-status" role="status"></p>
-          <p class="note">Butuh Android 8.0 ke atas dan RAM 3 GB ke atas (4 GB lebih nyaman). Masih tahap beta, jadi masukanmu sangat berarti.</p>
-        </div>
+      <img class="logo" src="assets/icon-192.png" width="88" height="88" alt="">
+      <h1>Minecraft Java di Android</h1>
+      <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Buat instance, pasang mod dari Modrinth atau CurseForge, lalu main.</p>
+      <div class="cta" id="unduh">
+        <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span class="t"><span class="l1">Unduh dari GitHub</span><span class="l2">Mencari versi terbaru…</span></span>
+        </a>
+        <a class="pill big" data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>HP lama (32-bit)</a>
+        <a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a>
       </div>
-      <figure class="rig hint" id="rig">
-        <div class="frame"><svg id="scene" viewBox="0 0 324 144" role="img" aria-label="Contoh tampilan kontrol layar AmberLauncher" focusable="false">
+      <p class="status" id="dl-status" role="status"></p>
+      <p class="note">Butuh Android 8.0 ke atas dan RAM 3 GB ke atas. Masih tahap beta. <a href="#keaslian">Cek keaslian APK.</a></p>
+
+      <div class="stage" id="stage">
+        <figure class="rig hint" id="rig">
+          <div class="frame"><svg id="scene" viewBox="0 0 324 144" role="img" aria-label="Contoh tata letak kontrol layar AmberLauncher" focusable="false">
 <defs><symbol id="h" viewBox="0 0 7 6"><path d="M1 0h2v1h-2zM4 0h2v1h-2zM0 1h7v1h-7zM0 2h7v1h-7zM1 3h5v1h-5zM2 4h3v1h-3zM3 5h1v1h-1z"/></symbol></defs>
 <g id="world">
 <rect width="324" height="36" y="-12" x="0" fill="#100d08"/><rect width="324" height="36" y="24" fill="#171209"/><rect width="324" height="36" y="60" fill="#221a0c"/><rect width="324" height="40" y="96" fill="#33260f"/>
@@ -70,76 +68,100 @@
 <g class="joy"><circle class="base" cx="52" cy="98" r="32"/><circle class="ring" cx="52" cy="98" r="22"/><g class="thumb"><circle class="knob" cx="52" cy="98" r="14"/></g></g>
 <g class="pad attack" data-b="attack"><circle class="c" cx="272" cy="84" r="22"/><text class="t" x="272" y="84" font-size="7.5">SERANG</text></g><g class="pad jump" data-b="jump"><circle class="c" cx="298" cy="38" r="16"/><text class="t" x="298" y="38" font-size="6.2">JUMP</text></g><g class="pad use" data-b="use"><circle class="c" cx="232" cy="112" r="16"/><text class="t" x="232" y="112" font-size="6.2">PAKAI</text></g><g class="pad sneak" data-b="sneak"><circle class="c" cx="300" cy="122" r="13"/><text class="t" x="300" y="122" font-size="5.4">SNEAK</text></g>
 </svg></div>
-        <figcaption>Coba geser joystick atau ketuk tombolnya. Posisi, ukuran, dan tombol bisa kamu atur sendiri di editor kontrol.</figcaption>
-      </figure>
+          <figcaption>Contoh tata letak kontrol layar. Coba geser joystick atau ketuk tombolnya; posisi, ukuran, dan tombol bisa diatur di editor kontrol.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="tampilan" hidden>
+    <div class="wrap">
+      <div class="head"><h2>Tampilan</h2><p class="intro">Beberapa layar di AmberLauncher.</p></div>
+      <div class="shots">
+        <figure data-shot="mods" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>Mod: cari dan pasang dari Modrinth dan CurseForge.</figcaption></figure>
+        <figure data-shot="akun" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>Akun dan skin.</figcaption></figure>
+        <figure data-shot="game" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>Di dalam game.</figcaption></figure>
+      </div>
     </div>
   </section>
 
   <section class="sec" id="mulai">
-    <div class="wrap sec-grid">
-      <div><h2>Cara mulai</h2><p class="intro">Dari pemasangan sampai masuk ke dunia.</p></div>
-      <div class="sec-body"><ol class="steps"><li><div><b>Buka AmberLauncher.</b> Di Android 11 ke atas, izinkan akses penyimpanan agar data tersimpan di folder <code>nuxlauncher</code>. Boleh dilewati; data lalu disimpan di folder privat aplikasi.</div></li><li><div><b>Tambahkan akun</b> di menu <b>Akun</b>: Microsoft untuk bermain online, atau offline untuk bermain sendiri.</div></li><li><div><b>Buat instance</b> lewat <b>Buat Instance</b>: pilih versi Minecraft, lalu Vanilla, Fabric, Forge, atau NeoForge.</div></li><li><div>Di <b>Home</b>, tekan <b>UNDUH</b> dan tunggu selesai (butuh internet), lalu tekan <b>PLAY</b>.</div></li><li><div>Pasang mod, resource pack, dan shader lewat menu <b>Mod</b>.</div></li></ol></div>
+    <div class="wrap">
+      <div class="head"><h2>Cara mulai</h2><p class="intro">Dari pemasangan sampai masuk ke dunia.</p></div>
+      <ol class="steps"><li><b>Buka AmberLauncher.</b> Di Android 11 ke atas, izinkan akses penyimpanan agar data tersimpan di folder <code>nuxlauncher</code>. Boleh dilewati; data lalu disimpan di folder privat aplikasi.</li><li><b>Tambahkan akun</b> di menu <b>Akun</b>: Microsoft untuk bermain online, atau offline untuk bermain sendiri.</li><li><b>Buat instance</b> lewat <b>Buat Instance</b>: pilih versi Minecraft, lalu Vanilla, Fabric, Forge, atau NeoForge.</li><li>Di <b>Home</b>, tekan <b>UNDUH</b> dan tunggu selesai (butuh internet), lalu tekan <b>PLAY</b>.</li><li>Pasang mod, resource pack, dan shader lewat menu <b>Mod</b>.</li></ol>
     </div>
   </section>
 
   <section class="sec" id="fitur">
-    <div class="wrap sec-grid">
-      <div><h2>Fitur</h2><p class="intro">Sedikit pengaturan, tapi yang penting ada.</p></div>
-      <div class="sec-body">
-        <div class="group"><h3>Game</h3><ul><li><b>Banyak instance terpisah</b> <span>masing-masing dengan versi, mod, dan pengaturan sendiri.</span></li><li><b>Vanilla, Fabric, Forge (1.13+), dan NeoForge (1.20.2+).</b> <span>Pencarian mod dan modpack otomatis disesuaikan dengan loader instance.</span></li><li><b>Java bawaan:</b> <span>Java 8, 17, 21, dan 25, tanpa perlu memasang apa pun.</span></li><li><b>Pilihan renderer:</b> <span>Auto (rekomendasi), Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).</span></li></ul></div><div class="group"><h3>Mod dan konten</h3><ul><li><b>Modrinth dan CurseForge</b> <span>langsung dari aplikasi: mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensinya. Pemasangan file manual juga bisa.</span></li></ul></div><div class="group"><h3>Kontrol</h3><ul><li><b>Editor kontrol sentuh:</b> <span>atur posisi, ukuran, dan tombol layar sesukamu.</span></li><li><b>Hotbar sentuh gaya Bedrock:</b> <span>ketuk hotbar untuk memilih slot, juga dengan jari lain saat kamera sedang digeser.</span></li><li><b>Controller (gamepad)</b> <span>didukung, termasuk mod seperti Controlify.</span></li><li><b>Lari otomatis joystick</b> <span>bisa dimatikan, dan tombol Shift/Ctrl/Alt di layar ikut terbaca sebagai modifier.</span></li></ul></div><div class="group"><h3>Lainnya</h3><ul><li><b>Akun</b> <span>Microsoft, Ely.by, dan offline.</span></li><li><b>Rekam layar bawaan:</b> <span>pilih Game saja atau Dengan tombol. Memakai encoder perangkat keras, hasilnya ada di Galeri. Suara game belum ikut terekam.</span></li><li><b>Laporan crash</b> <span>dengan opsi unggah log ke mclo.gs.</span></li><li><b>Pembaruan dari dalam aplikasi,</b> <span>dengan APK 32-bit atau 64-bit dipilih otomatis.</span></li><li><b>Antarmuka multibahasa:</b> <span>Indonesia, English, Español, dan Tiếng Việt.</span></li></ul></div>
-        <p class="muted">Belum didukung: Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.</p>
-      </div>
+    <div class="wrap">
+      <div class="head"><h2>Fitur</h2><p class="intro">Yang tersedia di AmberLauncher.</p></div>
+      <div class="bento"><div class="tile panel t-game"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg><h3>Game</h3><ul><li><b>Instance terpisah:</b> <span>tiap instance punya versi, mod, dan pengaturan sendiri.</span></li><li><b>Vanilla, Fabric, Forge (1.13+), dan NeoForge (1.20.2+).</b> <span>Pencarian mod dan modpack mengikuti loader instance.</span></li><li><b>Java bawaan:</b> <span>Java 8, 17, 21, dan 25.</span></li><li><b>Setelan awal otomatis:</b> <span>RAM game, skala resolusi, dan jarak pandang menyesuaikan RAM perangkat.</span></li><li><b>Pilihan renderer:</b> <span>Auto, Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).</span></li></ul></div><div class="tile panel t-mods"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/></svg><h3>Mod dan konten</h3><ul><li><b>Modrinth dan CurseForge</b> <span>langsung dari aplikasi: mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensinya.</span></li><li><b>Pemasangan file manual</b> <span>juga bisa.</span></li></ul></div><div class="tile panel t-ctrl"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 4 4v1a3 3 0 0 1-5.2 2L14.5 14h-5l-1.3 1A3 3 0 0 1 3 13v-1a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3"/><path d="M15.5 11h.01M17.5 13h.01"/></svg><h3>Kontrol</h3><ul><li><b>Editor kontrol sentuh:</b> <span>atur posisi, ukuran, dan tombol layar.</span></li><li><b>Hotbar sentuh gaya Bedrock:</b> <span>ketuk hotbar untuk memilih slot, juga dengan jari lain saat kamera sedang digeser.</span></li><li><b>Controller (gamepad)</b> <span>didukung, termasuk mod seperti Controlify.</span></li><li><b>Lari otomatis joystick</b> <span>bisa dimatikan, dan tombol Shift/Ctrl/Alt di layar terbaca sebagai modifier.</span></li></ul><div class="rig-slot" id="rig-slot" hidden></div></div><div class="tile panel t-more"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg><h3>Lainnya</h3><ul><li><b>Akun:</b> <span>Microsoft, Ely.by, dan offline.</span></li><li><b>Rekam layar:</b> <span>pilih Game saja atau Dengan tombol. Hasilnya ada di Galeri. Suara game belum ikut terekam.</span></li><li><b>Laporan crash</b> <span>dengan opsi unggah log ke mclo.gs.</span></li><li><b>Pembaruan dari dalam aplikasi,</b> <span>dengan APK 32-bit atau 64-bit dipilih otomatis.</span></li><li><b>Antarmuka:</b> <span>Indonesia, English, Español, Tiếng Việt, Português (Brasil), dan ภาษาไทย.</span></li><li><b>Eksperimental:</b> <span>dukungan mod TouchController dan mesin Rust (Horizon).</span></li></ul></div></div>
+      <p class="muted">Belum didukung: Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.</p>
     </div>
   </section>
 
   <section class="sec" id="apk">
-    <div class="wrap sec-grid">
-      <div><h2>Pilih APK</h2><p class="intro">Kalau ragu, ambil yang 64-bit.</p></div>
-      <div class="sec-body">
-        <div class="apks panel">
-          <div class="apk">
-            <div><h3>64-bit (arm64-v8a)</h3><span class="tag">Pilihan utama</span><p>Hampir semua HP keluaran beberapa tahun terakhir.</p></div>
-            <a class="btn" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 64-bit</a>
-          </div>
-          <div class="apk">
-            <div><h3>32-bit (armeabi-v7a)</h3><span class="tag">Hanya HP lama</span><p>Untuk HP lama berCPU 32-bit. RAM game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia. Tidak selalu ada di setiap rilis.</p></div>
-            <a class="btn" data-dl="32" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 32-bit</a>
-          </div>
+    <div class="wrap">
+      <div class="head"><h2>Pilih APK</h2><p class="intro">Kalau ragu, ambil yang 64-bit.</p></div>
+      <div class="apks">
+        <div class="apk main panel">
+          <div><span class="tag">Disarankan</span><h3>64-bit (arm64-v8a)</h3><p>Hampir semua HP keluaran beberapa tahun terakhir.</p></div>
+          <a class="pill big solid" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 64-bit</a>
         </div>
-        <p class="note-p">Saat memasang pertama kali, Android bisa meminta izin memasang aplikasi dari browser atau pengelola berkasmu. Setelah itu, pembaruan bisa dipasang dari dalam launcher (Pengaturan &gt; Pembaruan).</p>
+        <div class="apk panel">
+          <div><span class="tag">Hanya HP lama</span><h3>32-bit (armeabi-v7a)</h3><p>Untuk HP lama berCPU 32-bit. RAM game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia. Tidak selalu ada di setiap rilis.</p></div>
+          <a class="pill big" data-dl="32" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 32-bit</a>
+        </div>
       </div>
+      <p class="muted">Saat memasang pertama kali, Android bisa meminta izin memasang aplikasi dari browser atau pengelola berkasmu. Setelah itu, pembaruan bisa dipasang dari dalam launcher (Pengaturan &gt; Pembaruan).</p>
     </div>
   </section>
 
   <section class="sec" id="keaslian">
-    <div class="wrap sec-grid">
-      <div><h2>Pastikan APK asli</h2><p class="intro">Untuk yang mengunduh dari tempat lain.</p></div>
-      <div class="sec-body stack">
+    <div class="wrap">
+      <div class="head"><h2>Pastikan APK asli</h2><p class="intro">Untuk yang mengunduh dari tempat lain.</p></div>
+      <div class="verify panel">
         <p>Semua APK resmi ditandatangani dengan kunci yang sama. Cocokkan sidik jari sertifikat APK dengan yang di bawah sebelum memasang.</p>
-        <div>
-          <span class="label">Sidik jari sertifikat (SHA-256)</span>
-          <div class="hash"><span class="mono" id="fp">B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F</span><button class="btn" type="button" data-copy="fp">Salin</button></div>
-        </div>
-        <div>
-          <span class="label">Cara memeriksa (alat apksigner dari Android SDK)</span>
-          <div class="cmd mono">apksigner verify --print-certs AmberLauncher-&lt;version&gt;-64bit-arm64-v8a.apk</div>
-        </div>
+        <span class="label">Sidik jari sertifikat (SHA-256)</span>
+        <div class="hash"><span class="mono" id="fp">B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F</span><button class="pill" type="button" data-copy="fp">Salin</button></div>
+        <span class="label">Cara memeriksa (alat apksigner dari Android SDK)</span>
+        <div class="cmd mono">apksigner verify --print-certs AmberLauncher-&lt;version&gt;-64bit-arm64-v8a.apk</div>
         <p class="muted">ID aplikasi: <span class="mono">com.itsvynzzzz.amberlauncher</span><br>Cara melapor celah keamanan ada di <a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/SECURITY.md">SECURITY.md</a>.</p>
       </div>
     </div>
   </section>
 
   <section class="sec" id="bantuan">
-    <div class="wrap sec-grid">
-      <div><h2>Bantuan</h2><p class="intro">Masalah yang paling sering muncul.</p></div>
-      <div class="sec-body"><ul class="faq"><li><b>Game tertutup sendiri atau crash.</b> <span>Beri RAM game tidak lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di Pengaturan. Laporan crash bisa dilihat dari dalam aplikasi.</span></li><li><b>FPS rendah.</b> <span>Kecilkan jarak pandang, turunkan rasio resolusi, atau coba renderer lain di Pengaturan.</span></li><li><b>Mod tidak jalan.</b> <span>Pastikan loader dan versi Minecraft instance sama dengan yang dibutuhkan mod.</span></li><li><b>Menemukan bug?</b> <span>Buka <a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issue</a> dan sertakan versi AmberLauncher, model HP dan versi Android, langkah yang menimbulkan masalah, serta log. Log yang dibagikan dari launcher sudah dibersihkan dari token dan kata sandi.</span></li></ul></div>
+    <div class="wrap">
+      <div class="head"><h2>Bantuan</h2><p class="intro">Masalah yang sering muncul.</p></div>
+      <ul class="qa"><li class="panel"><b>Game tertutup sendiri atau crash.</b> <span>Beri RAM game tidak lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di Pengaturan. Laporan crash bisa dilihat dari dalam aplikasi.</span></li><li class="panel"><b>FPS rendah.</b> <span>Kecilkan jarak pandang, turunkan rasio resolusi, atau coba renderer lain di Pengaturan.</span></li><li class="panel"><b>Mod tidak jalan.</b> <span>Pastikan loader dan versi Minecraft instance sama dengan yang dibutuhkan mod.</span></li><li class="panel"><b>Menemukan bug?</b> <span>Buka <a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issue</a> dan sertakan versi AmberLauncher, model HP dan versi Android, langkah yang menimbulkan masalah, serta log. Log yang dibagikan dari launcher sudah dibersihkan dari token dan kata sandi.</span></li></ul>
     </div>
   </section>
 
   <section class="sec" id="privasi">
-    <div class="wrap sec-grid">
-      <div><h2>Privasi dan keamanan</h2><p class="intro">Yang dilakukan launcher dengan akunmu.</p></div>
-      <div class="sec-body"><ul class="faq"><li><b>Kata sandi Microsoft tidak pernah disimpan.</b> <span>Login memakai jendela OAuth resmi Microsoft.</span></li><li><b>Aset dan pustaka Minecraft</b> <span>diunduh langsung dari server resmi Mojang dan dicocokkan dengan sidik jari (SHA-1) resminya.</span></li><li><b>Semua sambungan internet</b> <span>memakai HTTPS.</span></li></ul></div>
+    <div class="wrap">
+      <div class="head"><h2>Privasi dan keamanan</h2><p class="intro">Yang dilakukan launcher dengan akunmu.</p></div>
+      <ul class="qa three"><li class="panel"><b>Kata sandi Microsoft tidak pernah disimpan.</b> <span>Login memakai jendela OAuth resmi Microsoft.</span></li><li class="panel"><b>Aset dan pustaka Minecraft</b> <span>diunduh langsung dari server resmi Mojang dan dicocokkan dengan sidik jari (SHA-1) resminya.</span></li><li class="panel"><b>Semua sambungan internet</b> <span>memakai HTTPS.</span></li></ul>
+    </div>
+  </section>
+
+  <section class="sec" id="kredit">
+    <div class="wrap">
+      <div class="head"><h2>Kredit dan terima kasih</h2><p class="intro">AmberLauncher dibangun di atas kerja banyak proyek lain.</p></div>
+      <div class="creds">
+        <div class="panel tbl">
+          <h3>Dasar proyek</h3>
+          <table><thead><tr><th>Proyek</th><th>Pembuat</th><th>Lisensi</th></tr></thead><tbody><tr><td><a href="https://github.com/IsraaDeveloper/nuxlabs">NUX Launcher</a> (sumber fork)</td><td>IsraaDeveloper</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/ZalithLauncher/ZalithLauncher2">Zalith Launcher 2</a></td><td>MovTery dan kontributor</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/PojavLauncherTeam/PojavLauncher">PojavLauncher</a></td><td>artdeell, khanhtran, dan tim</td><td>LGPL-3.0</td></tr><tr><td><a href="https://github.com/FCL-Team/FoldCraftLauncher">Fold Craft Launcher</a></td><td>Tim FCL</td><td>GPL-3.0</td></tr></tbody></table>
+        </div>
+        <div class="panel tbl">
+          <h3>Komponen yang dipakai</h3>
+          <table><thead><tr><th>Proyek</th><th>Pembuat</th><th>Lisensi</th></tr></thead><tbody><tr><td><a href="https://github.com/horizon-rust/horizon">Horizon</a> dan <a href="https://github.com/starling-client/starling">port Android-nya</a></td><td>Ludovic Marie, Vasysik, dan kontributor</td><td>MIT</td></tr><tr><td><a href="https://github.com/MobileGlues/MobileGlues">MobileGlues</a></td><td>Tim MobileGlues</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/ptitSeb/gl4es">GL4ES</a></td><td>ptitSeb</td><td>MIT</td></tr><tr><td><a href="https://github.com/LWJGL/lwjgl3">LWJGL</a></td><td>Tim LWJGL</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/libsdl-org/SDL">SDL3 dan sdl2-compat</a></td><td>Sam Lantinga dan kontributor</td><td>Zlib</td></tr><tr><td><a href="https://mesa3d.org/">Mesa 3D</a> (Zink, Turnip, VirGL)</td><td>Para kontributor Mesa</td><td>MIT</td></tr><tr><td><a href="https://angleproject.org/">ANGLE</a></td><td>Para penulis proyek ANGLE</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/bytedance/bhook">ByteHook</a></td><td>ByteDance</td><td>MIT</td></tr><tr><td><a href="https://github.com/yushijinhun/authlib-injector">authlib-injector</a></td><td>Yushijinhun</td><td>AGPL-3.0</td></tr><tr><td><a href="https://github.com/TouchController/TouchController">TouchController</a> (klien proxy)</td><td>fifth_light</td><td>LGPL-3.0</td></tr><tr><td><a href="https://developer.android.com/jetpack/compose">Jetpack Compose dan Material 3</a></td><td>Android Open Source Project</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/square/okhttp">OkHttp dan Okio</a></td><td>Square</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/Rosemoe/sora-editor">sora-editor</a></td><td>Rosemoe</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/bs-community/skinview3d">skinview3d</a></td><td>Kent Rasmussen dan kontributor</td><td>MIT</td></tr><tr><td><a href="https://github.com/naipefoundry/gabarito">Gabarito</a> (font situs ini)</td><td>The Gabarito Project Authors</td><td>OFL-1.1</td></tr></tbody></table>
+        </div>
+        <div class="panel thanks">
+          <h3>Terima kasih</h3>
+          <ul><li><a href="https://modrinth.com">Modrinth</a> dan <a href="https://www.curseforge.com/minecraft">CurseForge</a> atas katalog mod yang terbuka lewat API.</li><li><a href="https://ely.by">Ely.by</a> atas sistem skin dan autentikasinya, serta <a href="https://mclo.gs">mclo.gs</a> atas layanan berbagi log.</li><li>Mojang Studios dan Microsoft atas Minecraft dan layanan loginnya.</li><li>Tim <a href="https://fabricmc.net">Fabric</a>, <a href="https://minecraftforge.net">Forge</a>, <a href="https://neoforged.net">NeoForge</a>, dan <a href="https://quiltmc.org">Quilt</a> atas mod loader yang didukung.</li><li>Pembuat mod <a href="https://github.com/isXander/Controlify">Controlify</a> dan TouchController, yang membuat bermain dengan controller dan layar sentuh lebih nyaman.</li><li>Semua penguji dan pelapor bug yang membantu memperbaiki launcher ini.</li></ul>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -147,16 +169,9 @@
 <footer class="foot">
   <div class="wrap">
     <div class="links"><a href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Rilis</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issue</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/LICENSE">Lisensi GPL v3</a></div>
-    <p>AmberLauncher adalah proyek independen dan tidak berafiliasi dengan Mojang Studios, Microsoft, maupun proyek pihak ketiga yang disebut di bawah. Minecraft adalah merek dagang Mojang AB / Microsoft Corporation. AmberLauncher tidak menyertakan atau membagikan salinan game; untuk bermain online, kamu perlu akun Minecraft Java Edition yang sah.</p>
-    <details>
-      <summary>Kredit proyek yang dipakai</summary>
-      <div class="tbl"><table>
-        <thead><tr><th>Proyek</th><th>Pembuat</th><th>Lisensi</th></tr></thead>
-        <tbody><tr><td><a href="https://github.com/IsraaDeveloper/nuxlabs">NUX Launcher</a> (sumber fork)</td><td>IsraaDeveloper</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/ZalithLauncher/ZalithLauncher2">Zalith Launcher 2</a></td><td>MovTery dan kontributor</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/PojavLauncherTeam/PojavLauncher">PojavLauncher</a></td><td>artdeell, khanhtran, dan tim</td><td>LGPL-3.0</td></tr><tr><td><a href="https://github.com/FCL-Team/FoldCraftLauncher">Fold Craft Launcher</a></td><td>Tim FCL</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/MobileGlues/MobileGlues">MobileGlues</a></td><td>Tim MobileGlues</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/ptitSeb/gl4es">GL4ES</a></td><td>ptitSeb</td><td>MIT</td></tr><tr><td><a href="https://github.com/horizon-rust/horizon">Horizon</a> (opsional)</td><td>Ludovic Marie, Vasysik, dan kontributor</td><td>MIT</td></tr></tbody>
-      </table></div>
-    </details>
+    <p>AmberLauncher adalah proyek independen dan tidak berafiliasi dengan Mojang Studios, Microsoft, maupun proyek pihak ketiga yang disebut di atas. Minecraft adalah merek dagang Mojang AB / Microsoft Corporation. AmberLauncher tidak menyertakan atau membagikan salinan game; untuk bermain online, kamu perlu akun Minecraft Java Edition yang sah.</p>
     <p>AmberLauncher dirilis di bawah GNU General Public License v3.0. Copyright © 2026 ItsVynzzzz untuk perubahan dan kode baru; kode dari proyek hulu tetap milik pembuatnya masing-masing. AmberLauncher adalah turunan (fork) dari NUX Launcher, yang berbasis Zalith Launcher 2 dan PojavLauncher. Sesuai ketentuan tambahan Zalith Launcher 2, nama “ZalithLauncher” atau “ZL” tidak dipakai, dan keterangan Unofficial Modified Version serta pemberitahuan hak cipta tetap ditampilkan di aplikasi.</p>
-    <p>Terima kasih juga kepada <a href="https://modrinth.com">Modrinth</a> atas API publiknya dan <a href="https://ely.by">Ely.by</a> atas sistem skin dan autentikasinya.</p>
+    <p>Font situs ini: Gabarito, lisensi SIL Open Font License 1.1 (<a href="assets/OFL-Gabarito.txt">teks lisensi</a>).</p>
   </div>
 </footer>
 

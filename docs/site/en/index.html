@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AmberLauncher: a Minecraft Java launcher for Android</title>
-<meta name="description" content="A lightweight, simple Minecraft Java Edition launcher for Android. Supports Fabric, Forge, NeoForge, and mods from Modrinth and CurseForge.">
+<title>AmberLauncher: a Minecraft Java Edition launcher for Android</title>
+<meta name="description" content="A Minecraft Java Edition launcher for Android. Supports Vanilla, Fabric, Forge, NeoForge, and mods from Modrinth and CurseForge.">
 <meta name="theme-color" content="#0e0d0b">
 <link rel="canonical" href="https://itsvynzzzz.github.io/AmberLauncher/en/">
 <link rel="alternate" hreflang="id" href="https://itsvynzzzz.github.io/AmberLauncher/">
@@ -13,23 +13,23 @@
 <link rel="apple-touch-icon" href="../assets/icon-192.png">
 <link rel="preload" href="../assets/gabarito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <meta property="og:type" content="website">
-<meta property="og:title" content="AmberLauncher: a Minecraft Java launcher for Android">
-<meta property="og:description" content="A lightweight, simple Minecraft Java Edition launcher for Android. Supports Fabric, Forge, NeoForge, and mods from Modrinth and CurseForge.">
+<meta property="og:title" content="AmberLauncher: a Minecraft Java Edition launcher for Android">
+<meta property="og:description" content="A Minecraft Java Edition launcher for Android. Supports Vanilla, Fabric, Forge, NeoForge, and mods from Modrinth and CurseForge.">
 <meta property="og:url" content="https://itsvynzzzz.github.io/AmberLauncher/en/">
 <meta property="og:image" content="https://itsvynzzzz.github.io/AmberLauncher/assets/icon-192.png">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="../style.css">
 </head>
-<body>
+<body data-shots="../assets/shots/" data-shot-home="The AmberLauncher Home screen.">
 <a class="skip" href="#isi">Skip to content</a>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="https://itsvynzzzz.github.io/AmberLauncher/en/"><img src="../assets/icon-192.png" width="32" height="32" alt="">AmberLauncher</a>
-    <nav class="nav" aria-label="Menu"><a href="#unduh">Download</a><a href="#mulai">Getting started</a><a href="#fitur">Features</a><a href="#bantuan">Help</a></nav>
+    <a class="brand" href="https://itsvynzzzz.github.io/AmberLauncher/en/"><img src="../assets/icon-192.png" width="34" height="34" alt="">AmberLauncher</a>
+    <nav class="nav" aria-label="Menu"><a href="#unduh">Download</a><a href="#mulai">Getting started</a><a href="#fitur">Features</a><a href="#bantuan">Help</a><a href="#kredit">Credits</a></nav>
     <div class="end">
-      <a class="chip" href="../" hreflang="id" lang="id">Bahasa Indonesia</a>
-      <a class="chip" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a>
+      <a class="pill" href="../" hreflang="id" lang="id">Bahasa Indonesia</a>
+      <a class="pill" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a>
     </div>
   </div>
 </header>
@@ -37,25 +37,23 @@
 <main id="isi">
   <section class="hero">
     <div class="wrap">
-      <div>
-        <h1>Minecraft Java that stays light on your phone</h1>
-        <p class="lead">AmberLauncher is a Minecraft Java Edition launcher for Android. Its defaults adapt to your phone's RAM, and mods from Modrinth and CurseForge install right from the app.</p>
-        <div class="dl panel" id="unduh">
-          <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
-            <span class="t"><span class="l1">Download from GitHub</span><span class="l2">Looking for the latest version…</span></span>
-          </a>
-          <div class="row">
-            <a data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>Older phones (32-bit)</a>
-            <a href="https://github.com/ItsVynzzzz/AmberLauncher/releases">All releases</a>
-            <a href="#keaslian">Verify the APK</a>
-          </div>
-          <p class="status" id="dl-status" role="status"></p>
-          <p class="note">Needs Android 8.0 or newer and 3 GB of RAM or more (4 GB is more comfortable). Still in beta, so your feedback means a lot.</p>
-        </div>
+      <img class="logo" src="../assets/icon-192.png" width="88" height="88" alt="">
+      <h1>Minecraft Java on Android</h1>
+      <p class="lead">AmberLauncher is a Minecraft Java Edition launcher for Android. Create an instance, add mods from Modrinth or CurseForge, and play.</p>
+      <div class="cta" id="unduh">
+        <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+          <span class="t"><span class="l1">Download from GitHub</span><span class="l2">Looking for the latest version…</span></span>
+        </a>
+        <a class="pill big" data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>Older phones (32-bit)</a>
+        <a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">All releases</a>
       </div>
-      <figure class="rig hint" id="rig">
-        <div class="frame"><svg id="scene" viewBox="0 0 324 144" role="img" aria-label="Example of AmberLauncher's on-screen controls" focusable="false">
+      <p class="status" id="dl-status" role="status"></p>
+      <p class="note">Needs Android 8.0 or newer and 3 GB of RAM or more. Still in beta. <a href="#keaslian">Verify the APK.</a></p>
+
+      <div class="stage" id="stage">
+        <figure class="rig hint" id="rig">
+          <div class="frame"><svg id="scene" viewBox="0 0 324 144" role="img" aria-label="Example of AmberLauncher's on-screen control layout" focusable="false">
 <defs><symbol id="h" viewBox="0 0 7 6"><path d="M1 0h2v1h-2zM4 0h2v1h-2zM0 1h7v1h-7zM0 2h7v1h-7zM1 3h5v1h-5zM2 4h3v1h-3zM3 5h1v1h-1z"/></symbol></defs>
 <g id="world">
 <rect width="324" height="36" y="-12" x="0" fill="#100d08"/><rect width="324" height="36" y="24" fill="#171209"/><rect width="324" height="36" y="60" fill="#221a0c"/><rect width="324" height="40" y="96" fill="#33260f"/>
@@ -70,76 +68,100 @@
 <g class="joy"><circle class="base" cx="52" cy="98" r="32"/><circle class="ring" cx="52" cy="98" r="22"/><g class="thumb"><circle class="knob" cx="52" cy="98" r="14"/></g></g>
 <g class="pad attack" data-b="attack"><circle class="c" cx="272" cy="84" r="22"/><text class="t" x="272" y="84" font-size="7.5">ATTACK</text></g><g class="pad jump" data-b="jump"><circle class="c" cx="298" cy="38" r="16"/><text class="t" x="298" y="38" font-size="6.2">JUMP</text></g><g class="pad use" data-b="use"><circle class="c" cx="232" cy="112" r="16"/><text class="t" x="232" y="112" font-size="6.2">USE</text></g><g class="pad sneak" data-b="sneak"><circle class="c" cx="300" cy="122" r="13"/><text class="t" x="300" y="122" font-size="5.4">SNEAK</text></g>
 </svg></div>
-        <figcaption>Try dragging the joystick or tapping the buttons. You can change the position, size, and buttons yourself in the control editor.</figcaption>
-      </figure>
+          <figcaption>An example on-screen control layout. Try dragging the joystick or tapping the buttons; position, size, and buttons can be changed in the control editor.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="tampilan" hidden>
+    <div class="wrap">
+      <div class="head"><h2>Screens</h2><p class="intro">A few screens from AmberLauncher.</p></div>
+      <div class="shots">
+        <figure data-shot="mods" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>Mods: search and install from Modrinth and CurseForge.</figcaption></figure>
+        <figure data-shot="akun" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>Accounts and skins.</figcaption></figure>
+        <figure data-shot="game" hidden><div class="frame"><img alt="" loading="lazy" decoding="async"></div><figcaption>In the game.</figcaption></figure>
+      </div>
     </div>
   </section>
 
   <section class="sec" id="mulai">
-    <div class="wrap sec-grid">
-      <div><h2>Getting started</h2><p class="intro">From installing to joining a world.</p></div>
-      <div class="sec-body"><ol class="steps"><li><div><b>Open AmberLauncher.</b> On Android 11 and newer, allow storage access so data is kept in the <code>nuxlauncher</code> folder. You can skip it; data then stays in the app's private folder.</div></li><li><div><b>Add an account</b> under <b>Accounts</b>: Microsoft to play online, or offline to play on your own.</div></li><li><div><b>Create an instance</b> with <b>Create Instance</b>: choose a Minecraft version, then Vanilla, Fabric, Forge, or NeoForge.</div></li><li><div>On <b>Home</b>, press <b>DOWNLOAD</b> and wait for it to finish (internet required), then press <b>PLAY</b>.</div></li><li><div>Install mods, resource packs, and shaders from the <b>Mods</b> menu.</div></li></ol></div>
+    <div class="wrap">
+      <div class="head"><h2>Getting started</h2><p class="intro">From installing to joining a world.</p></div>
+      <ol class="steps"><li><b>Open AmberLauncher.</b> On Android 11 and newer, allow storage access so data is kept in the <code>nuxlauncher</code> folder. You can skip it; data then stays in the app's private folder.</li><li><b>Add an account</b> under <b>Accounts</b>: Microsoft to play online, or offline to play on your own.</li><li><b>Create an instance</b> with <b>Create Instance</b>: choose a Minecraft version, then Vanilla, Fabric, Forge, or NeoForge.</li><li>On <b>Home</b>, press <b>DOWNLOAD</b> and wait for it to finish (internet required), then press <b>PLAY</b>.</li><li>Install mods, resource packs, and shaders from the <b>Mods</b> menu.</li></ol>
     </div>
   </section>
 
   <section class="sec" id="fitur">
-    <div class="wrap sec-grid">
-      <div><h2>Features</h2><p class="intro">A small set of settings, with the important ones in place.</p></div>
-      <div class="sec-body">
-        <div class="group"><h3>Game</h3><ul><li><b>Many separate instances,</b> <span>each with its own version, mods, and settings.</span></li><li><b>Vanilla, Fabric, Forge (1.13+), and NeoForge (1.20.2+).</b> <span>Mod and modpack search automatically matches the instance's loader.</span></li><li><b>Bundled Java:</b> <span>Java 8, 17, 21, and 25, with nothing else to install.</span></li><li><b>Renderer choices:</b> <span>Auto (recommended), Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).</span></li></ul></div><div class="group"><h3>Mods and content</h3><ul><li><b>Modrinth and CurseForge</b> <span>right inside the app: mods, modpacks, resource packs, shaders, and datapacks, including their dependencies. Manual file installation works too.</span></li></ul></div><div class="group"><h3>Controls</h3><ul><li><b>Touch control editor:</b> <span>adjust the position, size, and buttons on screen however you like.</span></li><li><b>Bedrock-style touch hotbar:</b> <span>tap the hotbar to select a slot, also with a second finger while the camera is being dragged.</span></li><li><b>Controller (gamepad) support,</b> <span>including mods such as Controlify.</span></li><li><b>Joystick auto-sprint</b> <span>can be turned off, and on-screen Shift/Ctrl/Alt buttons are sent as modifiers.</span></li></ul></div><div class="group"><h3>More</h3><ul><li><b>Accounts:</b> <span>Microsoft, Ely.by, and offline.</span></li><li><b>Built-in screen recording:</b> <span>choose Game only or With buttons. It uses the hardware encoder and saves to the Gallery. Game audio is not recorded yet.</span></li><li><b>Crash reports</b> <span>with optional log upload to mclo.gs.</span></li><li><b>In-app updates,</b> <span>with the 32-bit or 64-bit APK chosen automatically.</span></li><li><b>Multilingual interface:</b> <span>Bahasa Indonesia, English, Español, and Tiếng Việt.</span></li></ul></div>
-        <p class="muted">Not supported yet: Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.</p>
-      </div>
+    <div class="wrap">
+      <div class="head"><h2>Features</h2><p class="intro">What AmberLauncher offers.</p></div>
+      <div class="bento"><div class="tile panel t-game"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg><h3>Game</h3><ul><li><b>Separate instances:</b> <span>each instance has its own version, mods, and settings.</span></li><li><b>Vanilla, Fabric, Forge (1.13+), and NeoForge (1.20.2+).</b> <span>Mod and modpack search follows the instance's loader.</span></li><li><b>Bundled Java:</b> <span>Java 8, 17, 21, and 25.</span></li><li><b>Automatic starting values:</b> <span>game RAM, resolution scale, and render distance follow the device's RAM.</span></li><li><b>Renderer choices:</b> <span>Auto, Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).</span></li></ul></div><div class="tile panel t-mods"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13v7M13 16.5h7"/></svg><h3>Mods and content</h3><ul><li><b>Modrinth and CurseForge</b> <span>right inside the app: mods, modpacks, resource packs, shaders, and datapacks, including their dependencies.</span></li><li><b>Manual file installation</b> <span>works too.</span></li></ul></div><div class="tile panel t-ctrl"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 4 4v1a3 3 0 0 1-5.2 2L14.5 14h-5l-1.3 1A3 3 0 0 1 3 13v-1a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3"/><path d="M15.5 11h.01M17.5 13h.01"/></svg><h3>Controls</h3><ul><li><b>Touch control editor:</b> <span>adjust the position, size, and buttons on screen.</span></li><li><b>Bedrock-style touch hotbar:</b> <span>tap the hotbar to select a slot, also with a second finger while the camera is being dragged.</span></li><li><b>Controller (gamepad) support,</b> <span>including mods such as Controlify.</span></li><li><b>Joystick auto-sprint</b> <span>can be turned off, and on-screen Shift/Ctrl/Alt buttons are sent as modifiers.</span></li></ul><div class="rig-slot" id="rig-slot" hidden></div></div><div class="tile panel t-more"><svg class="ico" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg><h3>More</h3><ul><li><b>Accounts:</b> <span>Microsoft, Ely.by, and offline.</span></li><li><b>Screen recording:</b> <span>choose Game only or With buttons. It saves to the Gallery. Game audio is not recorded yet.</span></li><li><b>Crash reports</b> <span>with optional log upload to mclo.gs.</span></li><li><b>In-app updates,</b> <span>with the 32-bit or 64-bit APK chosen automatically.</span></li><li><b>Interface:</b> <span>Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), and ภาษาไทย.</span></li><li><b>Experimental:</b> <span>TouchController mod support and the Rust engine (Horizon).</span></li></ul></div></div>
+      <p class="muted">Not supported yet: Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.</p>
     </div>
   </section>
 
   <section class="sec" id="apk">
-    <div class="wrap sec-grid">
-      <div><h2>Choose an APK</h2><p class="intro">If unsure, take the 64-bit one.</p></div>
-      <div class="sec-body">
-        <div class="apks panel">
-          <div class="apk">
-            <div><h3>64-bit (arm64-v8a)</h3><span class="tag">The default choice</span><p>Almost every phone made in the last several years.</p></div>
-            <a class="btn" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Download 64-bit</a>
-          </div>
-          <div class="apk">
-            <div><h3>32-bit (armeabi-v7a)</h3><span class="tag">Old phones only</span><p>For old phones with a 32-bit CPU. Game RAM is capped at about 1.2 GB and some renderers are unavailable. Not present in every release.</p></div>
-            <a class="btn" data-dl="32" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Download 32-bit</a>
-          </div>
+    <div class="wrap">
+      <div class="head"><h2>Choose an APK</h2><p class="intro">If unsure, take the 64-bit one.</p></div>
+      <div class="apks">
+        <div class="apk main panel">
+          <div><span class="tag">Suggested</span><h3>64-bit (arm64-v8a)</h3><p>Almost every phone made in the last several years.</p></div>
+          <a class="pill big solid" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Download 64-bit</a>
         </div>
-        <p class="note-p">The first time you install, Android may ask you to allow installing apps from your browser or file manager. After that, updates can be installed from inside the launcher (Settings &gt; Updates).</p>
+        <div class="apk panel">
+          <div><span class="tag">Old phones only</span><h3>32-bit (armeabi-v7a)</h3><p>For old phones with a 32-bit CPU. Game RAM is capped at about 1.2 GB and some renderers are unavailable. Not present in every release.</p></div>
+          <a class="pill big" data-dl="32" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Download 32-bit</a>
+        </div>
       </div>
+      <p class="muted">The first time you install, Android may ask you to allow installing apps from your browser or file manager. After that, updates can be installed from inside the launcher (Settings &gt; Updates).</p>
     </div>
   </section>
 
   <section class="sec" id="keaslian">
-    <div class="wrap sec-grid">
-      <div><h2>Verify the APK</h2><p class="intro">For anyone who downloaded it elsewhere.</p></div>
-      <div class="sec-body stack">
+    <div class="wrap">
+      <div class="head"><h2>Verify the APK</h2><p class="intro">For anyone who downloaded it elsewhere.</p></div>
+      <div class="verify panel">
         <p>Every official APK is signed with the same key. Compare the APK's certificate fingerprint with the one below before installing.</p>
-        <div>
-          <span class="label">Certificate fingerprint (SHA-256)</span>
-          <div class="hash"><span class="mono" id="fp">B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F</span><button class="btn" type="button" data-copy="fp">Copy</button></div>
-        </div>
-        <div>
-          <span class="label">How to check (apksigner tool from the Android SDK)</span>
-          <div class="cmd mono">apksigner verify --print-certs AmberLauncher-&lt;version&gt;-64bit-arm64-v8a.apk</div>
-        </div>
+        <span class="label">Certificate fingerprint (SHA-256)</span>
+        <div class="hash"><span class="mono" id="fp">B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F</span><button class="pill" type="button" data-copy="fp">Copy</button></div>
+        <span class="label">How to check (apksigner tool from the Android SDK)</span>
+        <div class="cmd mono">apksigner verify --print-certs AmberLauncher-&lt;version&gt;-64bit-arm64-v8a.apk</div>
         <p class="muted">App ID: <span class="mono">com.itsvynzzzz.amberlauncher</span><br>How to report a security vulnerability is in <a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/SECURITY.md">SECURITY.md</a> (Indonesian).</p>
       </div>
     </div>
   </section>
 
   <section class="sec" id="bantuan">
-    <div class="wrap sec-grid">
-      <div><h2>Help</h2><p class="intro">The problems that come up most.</p></div>
-      <div class="sec-body"><ul class="faq"><li><b>The game closes by itself or crashes.</b> <span>Give the game no more than about half of your phone's RAM, close other apps, or lower the resolution ratio in Settings. Crash reports can be viewed inside the app.</span></li><li><b>Low FPS.</b> <span>Lower the render distance, lower the resolution ratio, or try another renderer in Settings.</span></li><li><b>A mod does not work.</b> <span>Make sure the instance's loader and Minecraft version match what the mod requires.</span></li><li><b>Found a bug?</b> <span>Open an <a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">issue</a> with the AmberLauncher version, your phone model and Android version, the steps that cause the problem, and the log. Logs shared from the launcher are scrubbed of tokens and passwords.</span></li></ul></div>
+    <div class="wrap">
+      <div class="head"><h2>Help</h2><p class="intro">Problems that come up often.</p></div>
+      <ul class="qa"><li class="panel"><b>The game closes by itself or crashes.</b> <span>Give the game no more than about half of your phone's RAM, close other apps, or lower the resolution ratio in Settings. Crash reports can be viewed inside the app.</span></li><li class="panel"><b>Low FPS.</b> <span>Lower the render distance, lower the resolution ratio, or try another renderer in Settings.</span></li><li class="panel"><b>A mod does not work.</b> <span>Make sure the instance's loader and Minecraft version match what the mod requires.</span></li><li class="panel"><b>Found a bug?</b> <span>Open an <a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">issue</a> with the AmberLauncher version, your phone model and Android version, the steps that cause the problem, and the log. Logs shared from the launcher are scrubbed of tokens and passwords.</span></li></ul>
     </div>
   </section>
 
   <section class="sec" id="privasi">
-    <div class="wrap sec-grid">
-      <div><h2>Privacy and security</h2><p class="intro">What the launcher does with your account.</p></div>
-      <div class="sec-body"><ul class="faq"><li><b>Microsoft passwords are never stored.</b> <span>Sign-in uses Microsoft's official OAuth window.</span></li><li><b>Minecraft assets and libraries</b> <span>are downloaded straight from Mojang's official servers and checked against their official SHA-1 fingerprints.</span></li><li><b>All internet connections</b> <span>use HTTPS.</span></li></ul></div>
+    <div class="wrap">
+      <div class="head"><h2>Privacy and security</h2><p class="intro">What the launcher does with your account.</p></div>
+      <ul class="qa three"><li class="panel"><b>Microsoft passwords are never stored.</b> <span>Sign-in uses Microsoft's official OAuth window.</span></li><li class="panel"><b>Minecraft assets and libraries</b> <span>are downloaded straight from Mojang's official servers and checked against their official SHA-1 fingerprints.</span></li><li class="panel"><b>All internet connections</b> <span>use HTTPS.</span></li></ul>
+    </div>
+  </section>
+
+  <section class="sec" id="kredit">
+    <div class="wrap">
+      <div class="head"><h2>Credits and thanks</h2><p class="intro">AmberLauncher is built on the work of many other projects.</p></div>
+      <div class="creds">
+        <div class="panel tbl">
+          <h3>Project foundation</h3>
+          <table><thead><tr><th>Project</th><th>Author</th><th>License</th></tr></thead><tbody><tr><td><a href="https://github.com/IsraaDeveloper/nuxlabs">NUX Launcher</a> (fork source)</td><td>IsraaDeveloper</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/ZalithLauncher/ZalithLauncher2">Zalith Launcher 2</a></td><td>MovTery and contributors</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/PojavLauncherTeam/PojavLauncher">PojavLauncher</a></td><td>artdeell, khanhtran, and team</td><td>LGPL-3.0</td></tr><tr><td><a href="https://github.com/FCL-Team/FoldCraftLauncher">Fold Craft Launcher</a></td><td>FCL Team</td><td>GPL-3.0</td></tr></tbody></table>
+        </div>
+        <div class="panel tbl">
+          <h3>Components used</h3>
+          <table><thead><tr><th>Project</th><th>Author</th><th>License</th></tr></thead><tbody><tr><td><a href="https://github.com/horizon-rust/horizon">Horizon</a> and its <a href="https://github.com/starling-client/starling">Android port</a></td><td>Ludovic Marie, Vasysik, and contributors</td><td>MIT</td></tr><tr><td><a href="https://github.com/MobileGlues/MobileGlues">MobileGlues</a></td><td>MobileGlues Team</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/ptitSeb/gl4es">GL4ES</a></td><td>ptitSeb</td><td>MIT</td></tr><tr><td><a href="https://github.com/LWJGL/lwjgl3">LWJGL</a></td><td>LWJGL team</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/libsdl-org/SDL">SDL3 and sdl2-compat</a></td><td>Sam Lantinga and contributors</td><td>Zlib</td></tr><tr><td><a href="https://mesa3d.org/">Mesa 3D</a> (Zink, Turnip, VirGL)</td><td>The Mesa contributors</td><td>MIT</td></tr><tr><td><a href="https://angleproject.org/">ANGLE</a></td><td>The ANGLE project authors</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/bytedance/bhook">ByteHook</a></td><td>ByteDance</td><td>MIT</td></tr><tr><td><a href="https://github.com/yushijinhun/authlib-injector">authlib-injector</a></td><td>Yushijinhun</td><td>AGPL-3.0</td></tr><tr><td><a href="https://github.com/TouchController/TouchController">TouchController</a> (proxy client)</td><td>fifth_light</td><td>LGPL-3.0</td></tr><tr><td><a href="https://developer.android.com/jetpack/compose">Jetpack Compose and Material 3</a></td><td>Android Open Source Project</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/square/okhttp">OkHttp and Okio</a></td><td>Square</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/Rosemoe/sora-editor">sora-editor</a></td><td>Rosemoe</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/bs-community/skinview3d">skinview3d</a></td><td>Kent Rasmussen and contributors</td><td>MIT</td></tr><tr><td><a href="https://github.com/naipefoundry/gabarito">Gabarito</a> (this site's font)</td><td>The Gabarito Project Authors</td><td>OFL-1.1</td></tr></tbody></table>
+        </div>
+        <div class="panel thanks">
+          <h3>Thanks</h3>
+          <ul><li><a href="https://modrinth.com">Modrinth</a> and <a href="https://www.curseforge.com/minecraft">CurseForge</a> for their mod catalogs, open through their APIs.</li><li><a href="https://ely.by">Ely.by</a> for its skin and authentication system, and <a href="https://mclo.gs">mclo.gs</a> for its log sharing service.</li><li>Mojang Studios and Microsoft for Minecraft and its sign-in services.</li><li>The <a href="https://fabricmc.net">Fabric</a>, <a href="https://minecraftforge.net">Forge</a>, <a href="https://neoforged.net">NeoForge</a>, and <a href="https://quiltmc.org">Quilt</a> teams for the mod loaders it supports.</li><li>The authors of the <a href="https://github.com/isXander/Controlify">Controlify</a> and TouchController mods, which make playing with a controller or touch controls more comfortable.</li><li>All the testers and bug reporters who help improve this launcher.</li></ul>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -147,16 +169,9 @@
 <footer class="foot">
   <div class="wrap">
     <div class="links"><a href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Releases</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issues</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/LICENSE">GPL v3 license</a></div>
-    <p>AmberLauncher is an independent project and is not affiliated with Mojang Studios, Microsoft, or the third-party projects mentioned below. Minecraft is a trademark of Mojang AB / Microsoft Corporation. AmberLauncher does not include or distribute a copy of the game; to play online you need a valid Minecraft Java Edition account.</p>
-    <details>
-      <summary>Credits for the projects used</summary>
-      <div class="tbl"><table>
-        <thead><tr><th>Project</th><th>Author</th><th>License</th></tr></thead>
-        <tbody><tr><td><a href="https://github.com/IsraaDeveloper/nuxlabs">NUX Launcher</a> (fork source)</td><td>IsraaDeveloper</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/ZalithLauncher/ZalithLauncher2">Zalith Launcher 2</a></td><td>MovTery and contributors</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/PojavLauncherTeam/PojavLauncher">PojavLauncher</a></td><td>artdeell, khanhtran, and team</td><td>LGPL-3.0</td></tr><tr><td><a href="https://github.com/FCL-Team/FoldCraftLauncher">Fold Craft Launcher</a></td><td>FCL Team</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/MobileGlues/MobileGlues">MobileGlues</a></td><td>MobileGlues Team</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/ptitSeb/gl4es">GL4ES</a></td><td>ptitSeb</td><td>MIT</td></tr><tr><td><a href="https://github.com/horizon-rust/horizon">Horizon</a> (optional)</td><td>Ludovic Marie, Vasysik, and contributors</td><td>MIT</td></tr></tbody>
-      </table></div>
-    </details>
+    <p>AmberLauncher is an independent project and is not affiliated with Mojang Studios, Microsoft, or the third-party projects mentioned above. Minecraft is a trademark of Mojang AB / Microsoft Corporation. AmberLauncher does not include or distribute a copy of the game; to play online you need a valid Minecraft Java Edition account.</p>
     <p>AmberLauncher is released under the GNU General Public License v3.0. Copyright © 2026 ItsVynzzzz for changes and new code; code from the upstream projects remains the property of its respective authors. AmberLauncher is a fork of NUX Launcher, which is based on Zalith Launcher 2 and PojavLauncher. In line with Zalith Launcher 2's additional terms, the names “ZalithLauncher” and “ZL” are not used, and the Unofficial Modified Version notice and copyright notices remain visible in the app.</p>
-    <p>Thanks also to <a href="https://modrinth.com">Modrinth</a> for its public API and to <a href="https://ely.by">Ely.by</a> for its skin and authentication system.</p>
+    <p>This site's font: Gabarito, under the SIL Open Font License 1.1 (<a href="../assets/OFL-Gabarito.txt">license text</a>).</p>
   </div>
 </footer>
 

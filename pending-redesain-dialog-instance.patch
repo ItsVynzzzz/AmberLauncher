@@ -1,0 +1,1305 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberSheet.kt
+new file mode 100644
+index 0000000..8de0048
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberSheet.kt
+@@ -0,0 +1,458 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.gestures.detectTapGestures
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.BoxWithConstraints
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ColumnScope
++import androidx.compose.foundation.layout.PaddingValues
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.RowScope
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.WindowInsets
++import androidx.compose.foundation.layout.defaultMinSize
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.ime
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.safeDrawing
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.layout.windowInsetsPadding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.ChevronRight
++import androidx.compose.material.icons.outlined.Close
++import androidx.compose.material3.Icon
++import androidx.compose.material3.LocalContentColor
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.CompositionLocalProvider
++import androidx.compose.runtime.Immutable
++import androidx.compose.runtime.derivedStateOf
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberUpdatedState
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.Brush
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.vector.ImageVector
++import androidx.compose.ui.input.pointer.pointerInput
++import androidx.compose.ui.platform.LocalConfiguration
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.platform.LocalDensity
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.Density
++import androidx.compose.ui.unit.Dp
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import androidx.compose.ui.window.Dialog
++import androidx.compose.ui.window.DialogProperties
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.LocalNuxScaled
++import com.israadev.nuxlauncher.ui.theme.NuxColors
++import com.israadev.nuxlauncher.ui.theme.NuxSizes
++import kotlin.math.max
++import kotlin.math.min
++
++/**
++ * Keterangan ukuran panel untuk isi [AmberSheet], supaya isi bisa menyusun ulang dirinya.
++ *
++ * - [twoPane]: panel lebar tetapi pendek (HP landscape). Isi boleh dibagi dua kolom supaya tidak
++ *   perlu digulir panjang.
++ * - [narrow]: panel sempit (< 380dp). Buang ornamen dan tombol sekunder.
++ */
++@Immutable
++class SheetInfo(val twoPane: Boolean, val narrow: Boolean)
++
++/**
++ * Kerangka dialog adaptif untuk semua dialog gaya baru.
++ *
++ * Masalah yang diselesaikan (dialog lama memakai NuxDialog):
++ * 1. Tombol bawah tertutup bar sistem / taskbar tablet. Jendela dialog tidak ikut mode imersif
++ *    Activity, jadi bar sistem muncul di atas isi. Di sini seluruh isi diberi padding
++ *    WindowInsets.safeDrawing (bar sistem + poni layar + keyboard).
++ * 2. Isi terpotong di HP kecil. Tinggi panel dibatasi sisa tinggi layar, judul dan tombol bawah
++ *    SELALU terlihat, hanya bagian tengah yang bisa digulir (ada pudar di bawahnya sebagai
++ *    petunjuk masih ada isi).
++ * 3. Terlalu besar di HP kecil. Kerapatan (dp dan sp) dihitung dari tinggi layar yang benar-benar
++ *    tersedia, bukan angka tetap: layar pendek otomatis lebih rapat, tablet tidak membengkak.
++ *    Kerapatan dasar diambil dari sistem, jadi hasilnya sama di mana pun dialog dipanggil.
++ *
++ * Susunan: kepala (ikon, judul, tutup) -> badan yang bisa digulir -> kaki (tombol). Kaki opsional.
++ *
++ * @param panelWidth lebar maksimum panel. Pakai nilai besar (mis. 640dp) bila isi punya mode dua kolom.
++ * @param dismissOnScrimTap ketuk area gelap di luar panel menutup dialog. Matikan bila ada isian
++ *   yang belum disimpan supaya tidak hilang karena salah ketuk.
++ */
++@Composable
++fun AmberSheet(
++    onDismiss: () -> Unit,
++    title: String,
++    modifier: Modifier = Modifier,
++    subtitle: String? = null,
++    icon: ImageVector? = null,
++    panelWidth: Dp = 460.dp,
++    dismissOnScrimTap: Boolean = false,
++    footer: (@Composable RowScope.() -> Unit)? = null,
++    content: @Composable ColumnScope.(SheetInfo) -> Unit
++) {
++    val context = LocalContext.current
++    val configuration = LocalConfiguration.current
++    val systemDensity = remember(configuration) {
++        Density(
++            density = context.resources.displayMetrics.density,
++            fontScale = context.resources.configuration.fontScale
++        )
++    }
++    val dismiss by rememberUpdatedState(onDismiss)
++    val imeOpen = WindowInsets.ime.getBottom(LocalDensity.current) > 0
++    val edge = remember {
++        Brush.linearGradient(
++            listOf(
++                Color.White.copy(alpha = 0.42f),
++                Color.White.copy(alpha = 0.08f),
++                Color.White.copy(alpha = 0.22f)
++            )
++        )
++    }
++
++    Dialog(
++        onDismissRequest = onDismiss,
++        properties = DialogProperties(
++            usePlatformDefaultWidth = false,
++            decorFitsSystemWindows = false
++        )
++    ) {
++        GamepadWindowHook()
++
++        // Latar redup memenuhi jendela; isi di dalamnya dijauhkan dari bar sistem dan keyboard.
++        Box(
++            modifier = Modifier
++                .fillMaxSize()
++                .background(Color.Black.copy(alpha = 0.62f))
++                .then(
++                    if (dismissOnScrimTap) {
++                        Modifier.pointerInput(Unit) { detectTapGestures { dismiss() } }
++                    } else {
++                        Modifier
++                    }
++                )
++                .windowInsetsPadding(WindowInsets.safeDrawing)
++        ) {
++            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
++                // Tinggi yang benar-benar tersedia dalam dp fisik (bukan dp yang sudah diskalakan).
++                val availDp = constraints.maxHeight / systemDensity.density
++                val fit = min(max(availDp / 400f, 0.82f), 1.08f)
++                val fontScale = min(max(systemDensity.fontScale, 0.85f), 1.15f)
++                val sheetDensity = Density(
++                    density = systemDensity.density * fit,
++                    fontScale = fontScale
++                )
++
++                CompositionLocalProvider(
++                    LocalDensity provides sheetDensity,
++                    LocalContentColor provides NuxColors.DarkGray,
++                    LocalNuxScaled provides true
++                ) {
++                    BoxWithConstraints(
++                        modifier = Modifier
++                            .fillMaxSize()
++                            .padding(horizontal = 12.dp, vertical = 8.dp),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        val panelW = if (this.maxWidth < panelWidth) this.maxWidth else panelWidth
++                        val info = SheetInfo(
++                            twoPane = panelW >= 540.dp && availDp < 380f,
++                            narrow = panelW < 380.dp
++                        )
++                        SheetPanel(
++                            modifier = modifier.widthIn(max = panelW).fillMaxWidth(),
++                            title = title,
++                            subtitle = if (imeOpen) null else subtitle,
++                            icon = if (imeOpen) null else icon,
++                            edge = edge,
++                            onDismiss = onDismiss,
++                            footer = footer,
++                            info = info,
++                            content = content
++                        )
++                    }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun SheetPanel(
++    modifier: Modifier,
++    title: String,
++    subtitle: String?,
++    icon: ImageVector?,
++    edge: Brush,
++    onDismiss: () -> Unit,
++    footer: (@Composable RowScope.() -> Unit)?,
++    info: SheetInfo,
++    content: @Composable ColumnScope.(SheetInfo) -> Unit
++) {
++    val shape = RoundedCornerShape(22.dp)
++    val scroll = rememberScrollState()
++    val moreBelow by remember { derivedStateOf { scroll.canScrollForward } }
++
++    Column(
++        modifier = modifier
++            .clip(shape)
++            .background(NuxColors.Panel, shape)
++            .border(NuxSizes.GlassBorder, edge, shape)
++            // Menelan ketukan di dalam panel supaya tidak sampai ke latar (penutup dialog)
++            .pointerInput(Unit) { detectTapGestures { } }
++    ) {
++        // Kepala
++        Row(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(start = 16.dp, end = 10.dp, top = 10.dp, bottom = 8.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            if (icon != null) {
++                Box(
++                    modifier = Modifier
++                        .size(34.dp)
++                        .clip(RoundedCornerShape(11.dp))
++                        .background(NuxColors.YellowPale),
++                    contentAlignment = Alignment.Center
++                ) {
++                    Icon(
++                        imageVector = icon,
++                        contentDescription = null,
++                        tint = NuxColors.Yellow,
++                        modifier = Modifier.size(19.dp)
++                    )
++                }
++                Spacer(modifier = Modifier.width(10.dp))
++            }
++            Column(modifier = Modifier.weight(1f)) {
++                Text(
++                    text = title,
++                    color = NuxColors.DarkGray,
++                    fontWeight = FontWeight.Black,
++                    fontSize = 16.sp,
++                    letterSpacing = (-0.1).sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++                if (subtitle != null) {
++                    Text(
++                        text = subtitle,
++                        color = NuxColors.GrayNeutral,
++                        fontSize = 11.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++            }
++            NuxIconButton(
++                icon = Icons.Outlined.Close,
++                description = "Tutup",
++                onClick = onDismiss
++            )
++        }
++        SheetDivider()
++
++        // Badan: satu-satunya bagian yang menyusut dan bisa digulir
++        Box(modifier = Modifier.weight(1f, fill = false)) {
++            Column(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .verticalScroll(scroll)
++                    .padding(horizontal = 16.dp, vertical = 12.dp)
++            ) {
++                content(info)
++            }
++            if (moreBelow) {
++                Box(
++                    modifier = Modifier
++                        .align(Alignment.BottomCenter)
++                        .fillMaxWidth()
++                        .height(18.dp)
++                        .background(
++                            Brush.verticalGradient(listOf(Color.Transparent, NuxColors.Panel))
++                        )
++                )
++            }
++        }
++
++        // Kaki: tombol selalu terlihat
++        if (footer != null) {
++            SheetDivider()
++            Row(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .padding(horizontal = 16.dp, vertical = 10.dp),
++                horizontalArrangement = Arrangement.spacedBy(10.dp),
++                verticalAlignment = Alignment.CenterVertically,
++                content = footer
++            )
++        }
++    }
++}
++
++/** Garis pemisah tipis selebar penuh. */
++@Composable
++fun SheetDivider(modifier: Modifier = Modifier) {
++    Box(
++        modifier = modifier
++            .fillMaxWidth()
++            .height(1.dp)
++            .background(NuxColors.LightGray)
++    )
++}
++
++/** Judul kecil di atas satu bagian isi (Nama, Java, dll). */
++@Composable
++fun SheetLabel(text: String, modifier: Modifier = Modifier) {
++    Text(
++        text = text,
++        color = NuxColors.GrayNeutral,
++        fontWeight = FontWeight.Bold,
++        fontSize = 11.sp,
++        letterSpacing = 0.4.sp,
++        modifier = modifier.padding(bottom = 6.dp)
++    )
++}
++
++/**
++ * Tombol standar dialog: tinggi dan sudut seragam.
++ * [primary] = aksen penuh (Simpan/Tambah), [danger] = merah (Hapus), selain itu tombol berbingkai.
++ * Warna teks dipilih NuxButton sendiri supaya tetap terbaca di semua warna aksen.
++ */
++@Composable
++fun SheetButton(
++    text: String,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    primary: Boolean = false,
++    danger: Boolean = false,
++    icon: ImageVector? = null,
++    enabled: Boolean = true
++) {
++    NuxButton(
++        onClick = onClick,
++        modifier = modifier,
++        enabled = enabled,
++        backgroundColor = when {
++            danger -> NuxColors.ErrorRed
++            primary -> NuxColors.Yellow
++            else -> Color.Transparent
++        },
++        cornerRadius = 14.dp,
++        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
++    ) {
++        if (icon != null) {
++            Icon(
++                imageVector = icon,
++                contentDescription = null,
++                modifier = Modifier.size(17.dp)
++            )
++            Spacer(modifier = Modifier.width(6.dp))
++        }
++        Text(
++            text = text,
++            fontWeight = if (primary || danger) FontWeight.Black else FontWeight.Bold,
++            fontSize = 13.sp,
++            maxLines = 1,
++            overflow = TextOverflow.Ellipsis
++        )
++    }
++}
++
++/** Wadah berbingkai untuk sekumpulan baris ([SheetActionRow]) yang dipisah [SheetDivider]. */
++@Composable
++fun SheetGroup(
++    modifier: Modifier = Modifier,
++    borderColor: Color = NuxColors.CardBorder,
++    content: @Composable ColumnScope.() -> Unit
++) {
++    val shape = RoundedCornerShape(16.dp)
++    Column(
++        modifier = modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .background(NuxColors.SurfaceWhite, shape)
++            .border(NuxSizes.GlassBorder, borderColor, shape),
++        content = content
++    )
++}
++
++/** Satu baris aksi: ikon dalam kotak berwarna, nama, keterangan kecil, dan panah bila membuka halaman lain. */
++@Composable
++fun SheetActionRow(
++    icon: ImageVector,
++    label: String,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    trailing: String? = null,
++    showChevron: Boolean = false,
++    danger: Boolean = false
++) {
++    val tone = if (danger) NuxColors.ErrorRed else NuxColors.Yellow
++    Row(
++        modifier = modifier
++            .fillMaxWidth()
++            .defaultMinSize(minHeight = 46.dp)
++            .clickable { onClick() }
++            .padding(horizontal = 10.dp, vertical = 6.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Box(
++            modifier = Modifier
++                .size(30.dp)
++                .clip(RoundedCornerShape(10.dp))
++                .background(tone.copy(alpha = 0.16f)),
++            contentAlignment = Alignment.Center
++        ) {
++            Icon(
++                imageVector = icon,
++                contentDescription = null,
++                tint = tone,
++                modifier = Modifier.size(17.dp)
++            )
++        }
++        Spacer(modifier = Modifier.width(10.dp))
++        Text(
++            text = label,
++            color = if (danger) NuxColors.ErrorRed else NuxColors.DarkGray,
++            fontWeight = FontWeight.Bold,
++            fontSize = 14.sp,
++            modifier = Modifier.weight(1f)
++        )
++        if (trailing != null) {
++            Text(
++                text = trailing,
++                color = NuxColors.GrayNeutral,
++                fontSize = 12.sp,
++                maxLines = 1,
++                modifier = Modifier.padding(start = 8.dp)
++            )
++        }
++        if (showChevron) {
++            Icon(
++                imageVector = Icons.Outlined.ChevronRight,
++                contentDescription = null,
++                tint = NuxColors.GrayNeutral,
++                modifier = Modifier.size(18.dp)
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+index 92a4442..8c660b2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+@@ -1,69 +1,58 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
+-import com.israadev.nuxlauncher.ui.i18n.Toast
+-import androidx.compose.foundation.background
+-import androidx.compose.foundation.border
+-import androidx.compose.foundation.clickable
+-import androidx.compose.foundation.horizontalScroll
+ import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ExperimentalLayoutApi
++import androidx.compose.foundation.layout.FlowRow
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.Spacer
+-import androidx.compose.foundation.layout.defaultMinSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.foundation.layout.size
+-import androidx.compose.foundation.layout.width
+-import androidx.compose.foundation.layout.widthIn
+-import androidx.compose.foundation.rememberScrollState
+-import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.outlined.Check
+-import androidx.compose.material.icons.outlined.ChevronRight
+-import androidx.compose.material.icons.outlined.Close
+ import androidx.compose.material.icons.outlined.DeleteOutline
+ import androidx.compose.material.icons.outlined.Extension
+ import androidx.compose.material.icons.outlined.Folder
+-import androidx.compose.material3.Icon
+-import com.israadev.nuxlauncher.ui.i18n.Text
++import androidx.compose.material.icons.outlined.Tune
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.setValue
+-import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+-import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.text.font.FontWeight
+-import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.mods.NuxModManager
+ import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
+-import com.israadev.nuxlauncher.ui.components.NuxButton
+-import com.israadev.nuxlauncher.ui.components.NuxDialog
+-import com.israadev.nuxlauncher.ui.components.NuxIconButton
++import com.israadev.nuxlauncher.ui.components.AmberSheet
+ import com.israadev.nuxlauncher.ui.components.NuxTextField
+ import com.israadev.nuxlauncher.ui.components.SettingChip
+-import com.israadev.nuxlauncher.ui.components.SettingDivider
++import com.israadev.nuxlauncher.ui.components.SheetActionRow
++import com.israadev.nuxlauncher.ui.components.SheetButton
++import com.israadev.nuxlauncher.ui.components.SheetDivider
++import com.israadev.nuxlauncher.ui.components.SheetGroup
++import com.israadev.nuxlauncher.ui.components.SheetLabel
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ 
+ /**
+- * Dialog "Ubah instance" (tombol pensil di Home): nama, versi Java, lalu tiga baris aksi
+- * (Mod & konten, Buka folder, Hapus). "Mod & konten" membuka layar kelola mod, shader,
+- * resource pack, dan datapack milik instance ini. Tampilan dibuat lega dan sedikit isi.
++ * Dialog "Ubah instance" (tombol pensil di Home): nama, versi Java, lalu aksi (Mod & konten,
++ * Buka folder) dan zona hapus yang dipisah.
++ *
++ * Dibangun di atas [AmberSheet]: judul dan tombol Batal/Simpan selalu terlihat, tidak tertutup bar
++ * sistem, dan hanya bagian tengah yang digulir. Di HP landscape yang pendek isi dibagi dua kolom
++ * (kiri: nama + Java, kanan: aksi) supaya hampir tidak perlu menggulir.
+  */
++@OptIn(ExperimentalLayoutApi::class)
+ @Composable
+ fun NuxEditInstanceDialog(
+     instance: Instance,
+@@ -100,266 +89,163 @@ fun NuxEditInstanceDialog(
+         "jre-25" to "Java 25"
+     )
+ 
+-    NuxDialog(
+-        onDismissRequest = onDismiss,
+-        modifier = Modifier.widthIn(max = 460.dp),
+-        compact = true
+-    ) {
+-        Column(
+-            modifier = Modifier
+-                .fillMaxWidth()
+-                .padding(horizontal = 18.dp, vertical = 14.dp)
+-        ) {
+-            // Judul + tutup
+-            Row(
+-                modifier = Modifier.fillMaxWidth(),
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Column(modifier = Modifier.weight(1f)) {
+-                    Text(
+-                        text = "Ubah instance",
+-                        color = NuxColors.DarkGray,
+-                        fontWeight = FontWeight.Black,
+-                        fontSize = 17.sp,
+-                        letterSpacing = (-0.2).sp
+-                    )
+-                    Text(
+-                        text = "MC ${instance.mcVersion} · ${instance.loader.uppercase()}" +
+-                            if (instance.loaderVersion.isNotBlank()) " · ${instance.loaderVersion}" else "",
+-                        color = NuxColors.GrayNeutral,
+-                        fontSize = 11.sp,
+-                        maxLines = 1,
+-                        overflow = TextOverflow.Ellipsis
+-                    )
+-                }
+-                NuxIconButton(
+-                    icon = Icons.Outlined.Close,
+-                    description = "Tutup",
+-                    onClick = onDismiss
+-                )
+-            }
++    val subtitle = "MC ${instance.mcVersion} · ${instance.loader.uppercase()}" +
++        if (instance.loaderVersion.isNotBlank()) " · ${instance.loaderVersion}" else ""
+ 
+-            Spacer(modifier = Modifier.height(10.dp))
++    val save = {
++        val trimmed = editName.trim()
++        if (trimmed.isBlank()) {
++            Toast.makeText(context, "Nama instance tidak boleh kosong", Toast.LENGTH_SHORT).show()
++        } else {
++            val updated = instance.copy(
++                name = trimmed,
++                javaRuntime = selectedJavaRuntime
++            )
++            onInstanceUpdated(updated)
++            Toast.makeText(context, "Instance berhasil diperbarui!", Toast.LENGTH_SHORT).show()
++            onDismiss()
++        }
++    }
+ 
+-            Column(
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .weight(1f, fill = false)
+-                    .verticalScroll(rememberScrollState()),
+-                verticalArrangement = Arrangement.spacedBy(10.dp)
++    // Bagian kiri: identitas yang bisa diubah (nama dan versi Java)
++    val identity: @Composable () -> Unit = {
++        Column {
++            SheetLabel("Nama")
++            NuxTextField(
++                value = editName,
++                onValueChange = { editName = it },
++                placeholder = "Nama instance"
++            )
++        }
++        Column {
++            SheetLabel("Java")
++            FlowRow(
++                horizontalArrangement = Arrangement.spacedBy(6.dp),
++                verticalArrangement = Arrangement.spacedBy(6.dp)
+             ) {
+-                Column {
+-                    EditFieldLabel("Nama")
+-                    Spacer(modifier = Modifier.height(4.dp))
+-                    NuxTextField(
+-                        value = editName,
+-                        onValueChange = { editName = it },
+-                        placeholder = "Nama instance"
++                runtimeOptions.forEach { (key, label) ->
++                    SettingChip(
++                        text = label,
++                        selected = selectedJavaRuntime == key,
++                        onClick = { selectedJavaRuntime = key }
+                     )
+                 }
++            }
++        }
++    }
+ 
+-                Column {
+-                    EditFieldLabel("Java")
+-                    Spacer(modifier = Modifier.height(4.dp))
+-                    Row(
+-                        modifier = Modifier
+-                            .fillMaxWidth()
+-                            .horizontalScroll(rememberScrollState()),
+-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                    ) {
+-                        runtimeOptions.forEach { (key, label) ->
+-                            SettingChip(
+-                                text = label,
+-                                selected = selectedJavaRuntime == key,
+-                                onClick = { selectedJavaRuntime = key }
+-                            )
+-                        }
+-                    }
++    // Bagian kanan: aksi, lalu zona hapus yang dipisah supaya tidak tersentuh tak sengaja
++    val actions: @Composable () -> Unit = {
++        SheetGroup {
++            SheetActionRow(
++                icon = Icons.Outlined.Extension,
++                label = "Mod & konten",
++                trailing = modCount?.let { "$it terpasang" },
++                showChevron = true,
++                onClick = onOpenContent
++            )
++            SheetDivider()
++            SheetActionRow(
++                icon = Icons.Outlined.Folder,
++                label = "Buka folder instance",
++                showChevron = true,
++                onClick = {
++                    Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
++                    InstanceManager.openInstanceFolder(context, instance)
+                 }
++            )
++        }
+ 
+-                // Aksi: Mod & konten, Buka folder, Hapus
+-                val groupShape = RoundedCornerShape(16.dp)
+-                Column(
+-                    modifier = Modifier
+-                        .fillMaxWidth()
+-                        .clip(groupShape)
+-                        .background(NuxColors.SurfaceWhite, groupShape)
+-                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, groupShape)
+-                ) {
+-                    EditActionRow(
+-                        icon = Icons.Outlined.Extension,
+-                        label = "Mod & konten",
+-                        trailing = modCount?.let { "$it terpasang" },
+-                        showChevron = true,
+-                        onClick = onOpenContent
++        SheetGroup(borderColor = NuxColors.ErrorRed.copy(alpha = 0.40f)) {
++            if (!showDeleteConfirm) {
++                SheetActionRow(
++                    icon = Icons.Outlined.DeleteOutline,
++                    label = "Hapus instance",
++                    danger = true,
++                    onClick = { showDeleteConfirm = true }
++                )
++            } else {
++                Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
++                    Text(
++                        text = "Hapus '${instance.name}'?",
++                        color = NuxColors.ErrorRed,
++                        fontWeight = FontWeight.Bold,
++                        fontSize = 14.sp
+                     )
+-                    SettingDivider()
+-                    EditActionRow(
+-                        icon = Icons.Outlined.Folder,
+-                        label = "Buka folder instance",
+-                        showChevron = true,
+-                        onClick = {
+-                            Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
+-                            InstanceManager.openInstanceFolder(context, instance)
+-                        }
++                    Text(
++                        text = "Semua world, mod, dan file instance dihapus permanen.",
++                        color = NuxColors.GrayNeutral,
++                        fontSize = 11.sp,
++                        lineHeight = 15.sp,
++                        modifier = Modifier.padding(top = 2.dp)
+                     )
+-                    SettingDivider()
+-                    if (!showDeleteConfirm) {
+-                        EditActionRow(
+-                            icon = Icons.Outlined.DeleteOutline,
+-                            label = "Hapus instance",
++                    Spacer(modifier = Modifier.height(10.dp))
++                    Row(
++                        modifier = Modifier.fillMaxWidth(),
++                        horizontalArrangement = Arrangement.spacedBy(8.dp)
++                    ) {
++                        SheetButton(
++                            text = "Batal",
++                            onClick = { showDeleteConfirm = false },
++                            modifier = Modifier.weight(1f)
++                        )
++                        SheetButton(
++                            text = "Ya, hapus",
++                            onClick = {
++                                onInstanceDeleted(instance)
++                                onDismiss()
++                            },
+                             danger = true,
+-                            onClick = { showDeleteConfirm = true }
++                            modifier = Modifier.weight(1f)
+                         )
+-                    } else {
+-                        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+-                            Text(
+-                                text = "Hapus '${instance.name}'?",
+-                                color = NuxColors.ErrorRed,
+-                                fontWeight = FontWeight.Bold,
+-                                fontSize = 14.sp
+-                            )
+-                            Text(
+-                                text = "Semua world, mod, dan file instance dihapus permanen.",
+-                                color = NuxColors.GrayNeutral,
+-                                fontSize = 11.sp,
+-                                lineHeight = 15.sp,
+-                                modifier = Modifier.padding(top = 2.dp)
+-                            )
+-                            Spacer(modifier = Modifier.height(8.dp))
+-                            Row(
+-                                modifier = Modifier.fillMaxWidth(),
+-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+-                            ) {
+-                                NuxButton(
+-                                    onClick = { showDeleteConfirm = false },
+-                                    backgroundColor = Color.Transparent,
+-                                    cornerRadius = 20.dp,
+-                                    modifier = Modifier.weight(1f)
+-                                ) {
+-                                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+-                                }
+-                                NuxButton(
+-                                    onClick = {
+-                                        onInstanceDeleted(instance)
+-                                        onDismiss()
+-                                    },
+-                                    backgroundColor = NuxColors.ErrorRed,
+-                                    contentColor = NuxColors.DarkGray,
+-                                    cornerRadius = 20.dp,
+-                                    modifier = Modifier.weight(1f)
+-                                ) {
+-                                    Text("Ya, hapus", fontWeight = FontWeight.Black, fontSize = 13.sp)
+-                                }
+-                            }
+-                        }
+                     }
+                 }
+             }
+-
+-            Spacer(modifier = Modifier.height(12.dp))
+-
+-            // Batal / Simpan
+-            Row(
+-                modifier = Modifier.fillMaxWidth(),
+-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+-            ) {
+-                NuxButton(
+-                    onClick = onDismiss,
+-                    backgroundColor = Color.Transparent,
+-                    cornerRadius = 20.dp,
+-                    modifier = Modifier.weight(1f)
+-                ) {
+-                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+-                }
+-                NuxButton(
+-                    onClick = {
+-                        val trimmed = editName.trim()
+-                        if (trimmed.isBlank()) {
+-                            Toast.makeText(context, "Nama instance tidak boleh kosong", Toast.LENGTH_SHORT).show()
+-                            return@NuxButton
+-                        }
+-                        val updated = instance.copy(
+-                            name = trimmed,
+-                            javaRuntime = selectedJavaRuntime
+-                        )
+-                        onInstanceUpdated(updated)
+-                        Toast.makeText(context, "Instance berhasil diperbarui!", Toast.LENGTH_SHORT).show()
+-                        onDismiss()
+-                    },
+-                    backgroundColor = NuxColors.Yellow,
+-                    cornerRadius = 20.dp,
+-                    modifier = Modifier.weight(1.4f)
+-                ) {
+-                    Icon(
+-                        imageVector = Icons.Outlined.Check,
+-                        contentDescription = null,
+-                        modifier = Modifier.size(16.dp)
+-                    )
+-                    Spacer(modifier = Modifier.width(6.dp))
+-                    Text("Simpan", fontWeight = FontWeight.Black, fontSize = 13.sp)
+-                }
+-            }
+         }
+     }
+-}
+-
+-@Composable
+-private fun EditFieldLabel(text: String) {
+-    Text(
+-        text = text,
+-        color = NuxColors.GrayNeutral,
+-        fontWeight = FontWeight.Bold,
+-        fontSize = 11.sp
+-    )
+-}
+ 
+-/** Satu baris aksi: ikon, nama, keterangan kecil di kanan, dan panah bila membuka halaman lain. */
+-@Composable
+-private fun EditActionRow(
+-    icon: ImageVector,
+-    label: String,
+-    onClick: () -> Unit,
+-    trailing: String? = null,
+-    showChevron: Boolean = false,
+-    danger: Boolean = false
+-) {
+-    Row(
+-        modifier = Modifier
+-            .fillMaxWidth()
+-            .defaultMinSize(minHeight = 44.dp)
+-            .clickable { onClick() }
+-            .padding(horizontal = 12.dp),
+-        verticalAlignment = Alignment.CenterVertically
+-    ) {
+-        Icon(
+-            imageVector = icon,
+-            contentDescription = null,
+-            tint = if (danger) NuxColors.ErrorRed else NuxColors.Yellow,
+-            modifier = Modifier.size(20.dp)
+-        )
+-        Spacer(modifier = Modifier.width(10.dp))
+-        Text(
+-            text = label,
+-            color = if (danger) NuxColors.ErrorRed else NuxColors.DarkGray,
+-            fontWeight = FontWeight.Bold,
+-            fontSize = 14.sp,
+-            modifier = Modifier.weight(1f)
+-        )
+-        if (trailing != null) {
+-            Text(
+-                text = trailing,
+-                color = NuxColors.GrayNeutral,
+-                fontSize = 12.sp
++    AmberSheet(
++        onDismiss = onDismiss,
++        title = "Ubah instance",
++        subtitle = subtitle,
++        icon = Icons.Outlined.Tune,
++        panelWidth = 640.dp,
++        // Ada isian yang belum disimpan: jangan tutup hanya karena salah ketuk area gelap.
++        dismissOnScrimTap = false,
++        footer = {
++            SheetButton(
++                text = "Batal",
++                onClick = onDismiss,
++                modifier = Modifier.weight(1f)
+             )
+-        }
+-        if (showChevron) {
+-            Icon(
+-                imageVector = Icons.Outlined.ChevronRight,
+-                contentDescription = null,
+-                tint = NuxColors.GrayNeutral,
+-                modifier = Modifier.size(18.dp)
++            SheetButton(
++                text = "Simpan",
++                onClick = { save() },
++                primary = true,
++                icon = Icons.Outlined.Check,
++                modifier = Modifier.weight(1.4f)
+             )
+         }
++    ) { info ->
++        if (info.twoPane) {
++            Row(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(16.dp)
++            ) {
++                Column(
++                    modifier = Modifier.weight(1f),
++                    verticalArrangement = Arrangement.spacedBy(14.dp)
++                ) { identity() }
++                Column(
++                    modifier = Modifier.weight(1f),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
++                ) { actions() }
++            }
++        } else {
++            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
++                identity()
++                actions()
++            }
++        }
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 8591160..600666a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -78,6 +78,7 @@ import androidx.compose.material.icons.filled.Download
+ import androidx.compose.material.icons.filled.KeyboardArrowDown
+ import androidx.compose.material.icons.filled.PlayArrow
+ import androidx.compose.material.icons.outlined.DeleteOutline
++import androidx.compose.material.icons.outlined.Check
+ import androidx.compose.material.icons.outlined.Folder
+ import androidx.compose.material.icons.outlined.Image
+ import androidx.compose.material.icons.outlined.Info
+@@ -91,6 +92,7 @@ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.State
+ import androidx.compose.runtime.getValue
++import androidx.compose.runtime.key
+ import androidx.compose.runtime.mutableFloatStateOf
+ import androidx.compose.runtime.mutableIntStateOf
+ import androidx.compose.runtime.mutableStateOf
+@@ -117,6 +119,7 @@ import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.dp
+@@ -141,11 +144,13 @@ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.components.AmbientGlow
+ import com.israadev.nuxlauncher.ui.components.AmbientSampler
+ import com.israadev.nuxlauncher.ui.components.AmbientState
++import com.israadev.nuxlauncher.ui.components.AmberSheet
+ import com.israadev.nuxlauncher.ui.components.HomeInfo
+ import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
+ import com.israadev.nuxlauncher.ui.components.NuxButton
+ import com.israadev.nuxlauncher.ui.components.NuxDialog
+ import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
++import com.israadev.nuxlauncher.ui.components.SheetButton
+ import com.israadev.nuxlauncher.ui.components.rememberIsResumed
+ import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+@@ -1570,8 +1575,12 @@ private fun BackgroundDialog(
+ }
+ 
+ /**
+- * Dialog pemilih instance: ketuk baris untuk memilih; ikon di kanan untuk
+- * buka folder, ubah, atau hapus; tombol kuning di bawah untuk menambah instance.
++ * Dialog pemilih instance: ketuk baris untuk memilih; ikon di kanan untuk buka folder, ubah, atau
++ * hapus; tombol di bawah untuk menambah instance.
++ *
++ * Memakai [AmberSheet]: tombol "Tambah instance" menempel di bawah dan tidak tertutup bar sistem,
++ * daftar di tengah yang digulir bila instance banyak. Di panel sempit ikon "buka folder" disembunyikan
++ * (tetap ada di dialog Ubah instance).
+  */
+ @Composable
+ private fun InstancePickerDialog(
+@@ -1584,134 +1593,159 @@ private fun InstancePickerDialog(
+     onAdd: () -> Unit,
+     onDismiss: () -> Unit
+ ) {
+-    NuxDialog(
+-        onDismissRequest = onDismiss,
+-        modifier = Modifier.widthIn(max = 460.dp)
+-    ) {
+-        Column(
+-            modifier = Modifier
+-                .fillMaxWidth()
+-                .padding(16.dp)
+-        ) {
+-            Row(
+-                modifier = Modifier.fillMaxWidth(),
+-                verticalAlignment = Alignment.CenterVertically
++    AmberSheet(
++        onDismiss = onDismiss,
++        title = "PILIH INSTANCE",
++        panelWidth = 480.dp,
++        // Tidak ada isian di sini, jadi ketuk di luar panel boleh menutup.
++        dismissOnScrimTap = true,
++        footer = {
++            SheetButton(
++                text = "TAMBAH INSTANCE",
++                onClick = onAdd,
++                primary = true,
++                icon = Icons.Default.Add,
++                modifier = Modifier.fillMaxWidth()
++            )
++        }
++    ) { info ->
++        if (instances.isEmpty()) {
++            Column(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .padding(vertical = 16.dp),
++                horizontalAlignment = Alignment.CenterHorizontally
+             ) {
+-                Text(
+-                    text = "PILIH INSTANCE",
+-                    color = NuxColors.DarkGray,
+-                    fontWeight = FontWeight.Black,
+-                    fontSize = 17.sp,
+-                    letterSpacing = 0.5.sp,
+-                    modifier = Modifier.weight(1f)
+-                )
+-                PickerIconButton(
+-                    icon = Icons.Default.Close,
+-                    description = "Tutup",
+-                    tint = NuxColors.DarkGray,
+-                    onClick = onDismiss
++                Icon(
++                    imageVector = Icons.Outlined.Folder,
++                    contentDescription = null,
++                    tint = NuxColors.GrayNeutral,
++                    modifier = Modifier.size(30.dp)
+                 )
+-            }
+-
+-            Spacer(modifier = Modifier.height(8.dp))
+-
+-            if (instances.isEmpty()) {
++                Spacer(modifier = Modifier.height(6.dp))
+                 Text(
+                     text = "Belum ada instance. Buat yang pertama di bawah.",
+                     color = NuxColors.GrayNeutral,
+                     fontSize = 13.sp,
+-                    modifier = Modifier.padding(vertical = 14.dp)
++                    textAlign = TextAlign.Center
+                 )
+-            } else {
+-                LazyColumn(
+-                    modifier = Modifier
+-                        .fillMaxWidth()
+-                        .heightIn(max = 210.dp),
+-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+-                ) {
+-                    items(instances, key = { it.id }) { inst ->
+-                        val isSelected = inst.id == selectedId
+-                        val rowShape = RoundedCornerShape(16.dp)
+-                        Row(
+-                            modifier = Modifier
+-                                .fillMaxWidth()
+-                                .clip(rowShape)
+-                                .background(if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
+-                                .border(
+-                                    NuxSizes.BorderWidth,
+-                                    if (isSelected) NuxColors.Yellow else NuxColors.LightGray,
+-                                    rowShape
+-                                )
+-                                .clickable { onSelect(inst) }
+-                                .padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+-                            verticalAlignment = Alignment.CenterVertically
+-                        ) {
+-                            Column(modifier = Modifier.weight(1f)) {
+-                                Text(
+-                                    text = inst.name,
+-                                    color = NuxColors.DarkGray,
+-                                    fontWeight = FontWeight.Black,
+-                                    fontSize = 15.sp,
+-                                    maxLines = 1,
+-                                    overflow = TextOverflow.Ellipsis
+-                                )
+-                                Text(
+-                                    text = "${inst.mcVersion} · ${com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(inst.loader)}",
+-                                    color = NuxColors.GrayNeutral,
+-                                    fontSize = 12.sp,
+-                                    maxLines = 1
+-                                )
+-                            }
+-                            PickerIconButton(
+-                                icon = Icons.Outlined.Folder,
+-                                description = "Buka folder",
+-                                tint = NuxColors.DarkGray,
+-                                onClick = { onOpenFolder(inst) }
+-                            )
+-                            PickerIconButton(
+-                                icon = Icons.Outlined.Tune,
+-                                description = "Ubah instance",
+-                                tint = NuxColors.DarkGray,
+-                                onClick = { onEdit(inst) }
+-                            )
+-                            PickerIconButton(
+-                                icon = Icons.Outlined.DeleteOutline,
+-                                description = "Hapus instance",
+-                                tint = NuxColors.ErrorRed,
+-                                onClick = { onDelete(inst) }
+-                            )
+-                        }
++            }
++        } else {
++            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                instances.forEach { inst ->
++                    key(inst.id) {
++                        InstancePickerRow(
++                            inst = inst,
++                            selected = inst.id == selectedId,
++                            showFolder = !info.narrow,
++                            onSelect = { onSelect(inst) },
++                            onOpenFolder = { onOpenFolder(inst) },
++                            onEdit = { onEdit(inst) },
++                            onDelete = { onDelete(inst) }
++                        )
+                     }
+                 }
+             }
++        }
++    }
++}
+ 
+-            Spacer(modifier = Modifier.height(12.dp))
+-
+-            NuxButton(
+-                onClick = onAdd,
+-                backgroundColor = NuxColors.Yellow,
+-                contentColor = NuxColors.Ink,
+-                modifier = Modifier.fillMaxWidth(),
+-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+-            ) {
+-                Icon(
+-                    imageVector = Icons.Default.Add,
+-                    contentDescription = null,
+-                    modifier = Modifier.size(22.dp)
+-                )
+-                Spacer(modifier = Modifier.width(6.dp))
++/** Satu baris instance: huruf awal, nama, versi + loader, dan ikon aksi. Yang terpilih diberi tepi aksen dan centang. */
++@Composable
++private fun InstancePickerRow(
++    inst: Instance,
++    selected: Boolean,
++    showFolder: Boolean,
++    onSelect: () -> Unit,
++    onOpenFolder: () -> Unit,
++    onEdit: () -> Unit,
++    onDelete: () -> Unit
++) {
++    val rowShape = RoundedCornerShape(16.dp)
++    val initial = inst.name.trim().firstOrNull()?.uppercase() ?: "?"
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(rowShape)
++            .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
++            .border(
++                if (selected) 1.5.dp else NuxSizes.GlassBorder,
++                if (selected) NuxColors.Yellow else NuxColors.CardBorder,
++                rowShape
++            )
++            .clickable { onSelect() }
++            .padding(start = 8.dp, end = 2.dp, top = 6.dp, bottom = 6.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Box(
++            modifier = Modifier
++                .size(36.dp)
++                .clip(RoundedCornerShape(11.dp))
++                .background(NuxColors.YellowPale),
++            contentAlignment = Alignment.Center
++        ) {
++            Text(
++                text = initial,
++                color = NuxColors.Yellow,
++                fontWeight = FontWeight.Black,
++                fontSize = 16.sp,
++                maxLines = 1
++            )
++        }
++        Spacer(modifier = Modifier.width(10.dp))
++        Column(modifier = Modifier.weight(1f)) {
++            Row(verticalAlignment = Alignment.CenterVertically) {
+                 Text(
+-                    text = "TAMBAH INSTANCE",
++                    text = inst.name,
++                    color = NuxColors.DarkGray,
+                     fontWeight = FontWeight.Black,
+-                    fontSize = 15.sp,
+-                    letterSpacing = 0.5.sp
++                    fontSize = 14.sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis,
++                    modifier = Modifier.weight(1f, fill = false)
+                 )
++                if (selected) {
++                    Spacer(modifier = Modifier.width(6.dp))
++                    Icon(
++                        imageVector = Icons.Outlined.Check,
++                        contentDescription = null,
++                        tint = NuxColors.Yellow,
++                        modifier = Modifier.size(16.dp)
++                    )
++                }
+             }
++            Text(
++                text = "${inst.mcVersion} · ${com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(inst.loader)}",
++                color = NuxColors.GrayNeutral,
++                fontSize = 11.sp,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++        }
++        if (showFolder) {
++            PickerIconButton(
++                icon = Icons.Outlined.Folder,
++                description = "Buka folder",
++                tint = NuxColors.DarkGray,
++                onClick = onOpenFolder
++            )
+         }
++        PickerIconButton(
++            icon = Icons.Outlined.Tune,
++            description = "Ubah instance",
++            tint = NuxColors.DarkGray,
++            onClick = onEdit
++        )
++        PickerIconButton(
++            icon = Icons.Outlined.DeleteOutline,
++            description = "Hapus instance",
++            tint = NuxColors.ErrorRed,
++            onClick = onDelete
++        )
+     }
+ }
+ 
+-/** Tombol ikon bulat 40dp (target sentuh nyaman) untuk dialog pemilih instance. */
++/** Tombol ikon bulat 36dp untuk baris pemilih instance. */
+ @Composable
+ private fun PickerIconButton(
+     icon: androidx.compose.ui.graphics.vector.ImageVector,
+@@ -1721,7 +1755,7 @@ private fun PickerIconButton(
+ ) {
+     Box(
+         modifier = Modifier
+-            .size(40.dp)
++            .size(36.dp)
+             .clip(CircleShape)
+             .clickable { onClick() },
+         contentAlignment = Alignment.Center
+@@ -1730,7 +1764,7 @@ private fun PickerIconButton(
+             imageVector = icon,
+             contentDescription = description,
+             tint = tint,
+-            modifier = Modifier.size(22.dp)
++            modifier = Modifier.size(20.dp)
+         )
+     }
+ }
+# FIN part=1/1 files=3

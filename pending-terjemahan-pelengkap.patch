@@ -1,0 +1,371 @@
+diff --git a/app/src/main/assets/lang/en/pelengkap.tsv b/app/src/main/assets/lang/en/pelengkap.tsv
+new file mode 100644
+index 0000000..8741cfa
+--- /dev/null
++++ b/app/src/main/assets/lang/en/pelengkap.tsv
+@@ -0,0 +1,68 @@
++# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
++Penunjuk (Default)	Pointer (Default)
++Penunjuk (Kursor Teks)	Pointer (Text Cursor)
++Penunjuk (Tangan)	Pointer (Hand)
++Penunjuk (Crosshair)	Pointer (Crosshair)
++Penunjuk (Atas/Bawah)	Pointer (Up/Down)
++Penunjuk (Kiri/Kanan)	Pointer (Left/Right)
++Penunjuk (Pindahkan)	Pointer (Move)
++Penunjuk (Tidak Diizinkan)	Pointer (Not Allowed)
++Bentuk biasa. Dipakai di semua versi Minecraft.	Standard shape. Used in all Minecraft versions.
++MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: used when the cursor is over a text field.
++MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: used when the cursor is over a clickable element.
++MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: crosshair shape.
++MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: used on elements that scroll up/down.
++MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: used on slider elements.
++MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: move shape.
++MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: used on disabled elements.
++Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	More than half of the phone's RAM: Android may close the game on its own.
++Penunjuk kursor	Cursor pointers
++Mouse fisik	Physical mouse
++Pakai kursor sistem Android	Use the Android system cursor
++Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Off (default): the mouse moves the launcher's cursor in game menus, so the image, size and hotspot set above apply. Turn on if the mouse feels better with the default Android pointer.
++Kecepatan kursor mouse	Mouse cursor speed
++Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	A multiplier on top of the virtual cursor sensitivity, for a physical mouse in game menus only. 100% = unchanged.
++Kecepatan kamera mouse	Mouse camera speed
++Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	A multiplier on top of the camera sensitivity, for a physical mouse while playing only. 100% = unchanged.
++Gambar tidak bisa dibaca	The image could not be read
++Ganti gambar	Change image
++Pilih gambar	Choose image
++Tutup hotspot	Close hotspot
++Atur hotspot	Set hotspot
++Reset	Reset
++Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	The hotspot is the point counted as the tip of the cursor when clicking (the red dot in the preview).
++Ubah kunci API	Change API key
++Kunci API CurseForge	CurseForge API key
++Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	A key is already saved. Enter a new key to replace it, or delete this key.
++CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge needs an API key. Paste the key from the CurseForge email. The key is only stored on this phone and only sent to CurseForge.
++Tempel kunci di sini	Paste the key here
++Kunci API CurseForge belum diisi.	The CurseForge API key has not been entered.
++Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	The CurseForge API key was rejected (code {0}). Check the key and enter it again.
++CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge is rate-limiting requests. Wait a moment and try again.
++CurseForge API error: kode {0}	CurseForge API error: code {0}
++Respons kosong dari CurseForge	Empty response from CurseForge
++Respons CurseForge tidak dikenali	The CurseForge response was not recognized
++CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge only shows the first {0} results. Narrow down your search.
++Id CurseForge tidak valid	Invalid CurseForge ID
++Detail CurseForge kosong	The CurseForge details are empty
++Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	The author does not allow downloads through the launcher. Download it manually from the CurseForge website.
++File mod harus berformat .jar	A mod file must be in .jar format
++File modpack harus berformat .mrpack atau .zip	A modpack file must be in .mrpack or .zip format
++File {0} harus berformat .zip	A {0} file must be in .zip format
++Mencari alamat unduhan mod dari CurseForge...	Looking up mod download links from CurseForge...
++Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	The Rust engine only supports Offline and Microsoft accounts for now. Pick one of them in the Accounts tab.
++Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	An offline account name for the Rust engine must be 1 to 16 characters with no spaces. Create a new offline account in the Accounts tab.
++Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	This Microsoft account is not fully signed in. Sign in again from the Accounts tab.
++Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	First launch: the engine downloads the game assets (about 500 MiB). Let it finish and the game starts right after.
++Folder data mesin tidak bisa dibuat	The engine data folder could not be created
++Berkas peluncuran tidak bisa disimpan	The launch file could not be saved
++Tidak bisa menyimpan {0}	Could not save {0}
++Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Hides the navigation bar and status bar while playing. Off by default: on some phones it can make the game freeze.
++Tidak ada versi Forge yang didukung	No supported Forge versions
++Tidak ada versi NeoForge yang didukung	No supported NeoForge versions
++Tidak dapat memuat daftar versi Fabric	Could not load the Fabric version list
++Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Only {0} MB of storage is left. Free up at least 500 MB, then try downloading again.
++Unduhan game	Game downloads
++Mengunduh Minecraft	Downloading Minecraft
++Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	The download continues in the background. Do not force-close the app.
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Turns on the system stable-performance mode and Zink V-Sync, and caps the maximum resolution scale at {0}%.
+diff --git a/app/src/main/assets/lang/es/pelengkap.tsv b/app/src/main/assets/lang/es/pelengkap.tsv
+new file mode 100644
+index 0000000..143d882
+--- /dev/null
++++ b/app/src/main/assets/lang/es/pelengkap.tsv
+@@ -0,0 +1,68 @@
++# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
++Penunjuk (Default)	Puntero (predeterminado)
++Penunjuk (Kursor Teks)	Puntero (cursor de texto)
++Penunjuk (Tangan)	Puntero (mano)
++Penunjuk (Crosshair)	Puntero (mira)
++Penunjuk (Atas/Bawah)	Puntero (arriba/abajo)
++Penunjuk (Kiri/Kanan)	Puntero (izquierda/derecha)
++Penunjuk (Pindahkan)	Puntero (mover)
++Penunjuk (Tidak Diizinkan)	Puntero (no permitido)
++Bentuk biasa. Dipakai di semua versi Minecraft.	Forma normal. Se usa en todas las versiones de Minecraft.
++MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: se usa cuando el cursor est\u00e1 sobre un campo de texto.
++MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: se usa cuando el cursor est\u00e1 sobre un elemento en el que se puede hacer clic.
++MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: forma de mira.
++MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: se usa en elementos que se desplazan hacia arriba/abajo.
++MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: se usa en controles deslizantes (slider).
++MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: forma de mover.
++MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: se usa en elementos desactivados.
++Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	M\u00e1s de la mitad de la RAM del tel\u00e9fono: Android puede cerrar el juego por s\u00ed solo.
++Penunjuk kursor	Punteros del cursor
++Mouse fisik	Rat\u00f3n f\u00edsico
++Pakai kursor sistem Android	Usar el cursor del sistema Android
++Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Desactivado (predeterminado): el rat\u00f3n mueve el cursor del launcher en los men\u00fas del juego, as\u00ed que se aplican la imagen, el tama\u00f1o y el hotspot configurados arriba. Act\u00edvalo si el rat\u00f3n te resulta m\u00e1s c\u00f3modo con el puntero predeterminado de Android.
++Kecepatan kursor mouse	Velocidad del cursor del rat\u00f3n
++Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	Multiplicador sobre la sensibilidad del cursor virtual, solo para un rat\u00f3n f\u00edsico en los men\u00fas del juego. 100% = sin cambios.
++Kecepatan kamera mouse	Velocidad de la c\u00e1mara con el rat\u00f3n
++Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	Multiplicador sobre la sensibilidad de la c\u00e1mara, solo para un rat\u00f3n f\u00edsico mientras juegas. 100% = sin cambios.
++Gambar tidak bisa dibaca	No se pudo leer la imagen
++Ganti gambar	Cambiar imagen
++Pilih gambar	Elegir imagen
++Tutup hotspot	Cerrar hotspot
++Atur hotspot	Ajustar hotspot
++Reset	Restablecer
++Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	El hotspot es el punto que se toma como la punta del cursor al hacer clic (el punto rojo de la vista previa).
++Ubah kunci API	Cambiar clave de API
++Kunci API CurseForge	Clave de API de CurseForge
++Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	Ya hay una clave guardada. Introduce una nueva para reemplazarla o elimina esta clave.
++CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge necesita una clave de API. Pega la clave del correo de CurseForge. La clave solo se guarda en este tel\u00e9fono y solo se env\u00eda a CurseForge.
++Tempel kunci di sini	Pega la clave aqu\u00ed
++Kunci API CurseForge belum diisi.	A\u00fan no se ha introducido la clave de API de CurseForge.
++Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	Se rechaz\u00f3 la clave de API de CurseForge (c\u00f3digo {0}). Revisa la clave y vuelve a introducirla.
++CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge est\u00e1 limitando las solicitudes. Espera un momento e int\u00e9ntalo de nuevo.
++CurseForge API error: kode {0}	Error de la API de CurseForge: c\u00f3digo {0}
++Respons kosong dari CurseForge	Respuesta vac\u00eda de CurseForge
++Respons CurseForge tidak dikenali	No se reconoce la respuesta de CurseForge
++CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge solo muestra los primeros {0} resultados. Acota la b\u00fasqueda.
++Id CurseForge tidak valid	ID de CurseForge no v\u00e1lido
++Detail CurseForge kosong	Los detalles de CurseForge est\u00e1n vac\u00edos
++Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	El autor no permite descargas desde el launcher. Desc\u00e1rgalo manualmente desde el sitio de CurseForge.
++File mod harus berformat .jar	El archivo del mod debe tener formato .jar
++File modpack harus berformat .mrpack atau .zip	El archivo del modpack debe tener formato .mrpack o .zip
++File {0} harus berformat .zip	El archivo de {0} debe tener formato .zip
++Mencari alamat unduhan mod dari CurseForge...	Buscando los enlaces de descarga de los mods en CurseForge...
++Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	El motor Rust por ahora solo admite cuentas Offline y Microsoft. Elige una en la pesta\u00f1a Cuentas.
++Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	El nombre de una cuenta offline para el motor Rust debe tener de 1 a 16 caracteres, sin espacios. Crea una cuenta offline nueva en la pesta\u00f1a Cuentas.
++Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	Esta cuenta de Microsoft no ha iniciado sesi\u00f3n por completo. Vuelve a iniciar sesi\u00f3n desde la pesta\u00f1a Cuentas.
++Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	Primera vez: el motor descarga los recursos del juego (unos 500 MiB). D\u00e9jalo terminar y el juego empezar\u00e1 justo despu\u00e9s.
++Folder data mesin tidak bisa dibuat	No se pudo crear la carpeta de datos del motor
++Berkas peluncuran tidak bisa disimpan	No se pudo guardar el archivo de inicio
++Tidak bisa menyimpan {0}	No se pudo guardar {0}
++Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Oculta la barra de navegaci\u00f3n y la barra de estado mientras juegas. Desactivado de forma predeterminada: en algunos tel\u00e9fonos puede hacer que el juego se congele.
++Tidak ada versi Forge yang didukung	No hay versiones de Forge compatibles
++Tidak ada versi NeoForge yang didukung	No hay versiones de NeoForge compatibles
++Tidak dapat memuat daftar versi Fabric	No se pudo cargar la lista de versiones de Fabric
++Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Solo quedan {0} MB de almacenamiento. Libera al menos 500 MB y vuelve a intentar la descarga.
++Unduhan game	Descargas del juego
++Mengunduh Minecraft	Descargando Minecraft
++Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	La descarga contin\u00faa en segundo plano. No fuerces el cierre de la aplicaci\u00f3n.
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Activa el modo de rendimiento estable del sistema y la V-Sync de Zink, y limita la escala de resoluci\u00f3n m\u00e1xima al {0}%.
+diff --git a/app/src/main/assets/lang/pt/pelengkap.tsv b/app/src/main/assets/lang/pt/pelengkap.tsv
+new file mode 100644
+index 0000000..7ba406f
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/pelengkap.tsv
+@@ -0,0 +1,68 @@
++# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
++Penunjuk (Default)	Ponteiro (Padr\u00e3o)
++Penunjuk (Kursor Teks)	Ponteiro (Cursor de texto)
++Penunjuk (Tangan)	Ponteiro (M\u00e3o)
++Penunjuk (Crosshair)	Ponteiro (Mira)
++Penunjuk (Atas/Bawah)	Ponteiro (Cima/Baixo)
++Penunjuk (Kiri/Kanan)	Ponteiro (Esquerda/Direita)
++Penunjuk (Pindahkan)	Ponteiro (Mover)
++Penunjuk (Tidak Diizinkan)	Ponteiro (N\u00e3o permitido)
++Bentuk biasa. Dipakai di semua versi Minecraft.	Formato padr\u00e3o. Usado em todas as vers\u00f5es do Minecraft.
++MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: usado quando o cursor est\u00e1 sobre um campo de texto.
++MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: usado quando o cursor est\u00e1 sobre um elemento clic\u00e1vel.
++MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: formato de mira.
++MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: usado em elementos que rolam para cima/baixo.
++MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: usado em controles deslizantes (slider).
++MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: formato de mover.
++MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: usado em elementos desativados.
++Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	Mais da metade da RAM do celular: o Android pode fechar o jogo sozinho.
++Penunjuk kursor	Ponteiros do cursor
++Mouse fisik	Mouse f\u00edsico
++Pakai kursor sistem Android	Usar o cursor do sistema Android
++Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Desativado (padr\u00e3o): o mouse move o cursor do launcher nos menus do jogo, ent\u00e3o a imagem, o tamanho e o hotspot definidos acima s\u00e3o aplicados. Ative se o mouse ficar mais confort\u00e1vel com o ponteiro padr\u00e3o do Android.
++Kecepatan kursor mouse	Velocidade do cursor do mouse
++Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	Multiplicador sobre a sensibilidade do cursor virtual, apenas para mouse f\u00edsico nos menus do jogo. 100% = igual.
++Kecepatan kamera mouse	Velocidade da c\u00e2mera do mouse
++Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	Multiplicador sobre a sensibilidade da c\u00e2mera, apenas para mouse f\u00edsico durante o jogo. 100% = igual.
++Gambar tidak bisa dibaca	N\u00e3o foi poss\u00edvel ler a imagem
++Ganti gambar	Trocar imagem
++Pilih gambar	Escolher imagem
++Tutup hotspot	Fechar hotspot
++Atur hotspot	Definir hotspot
++Reset	Redefinir
++Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	O hotspot \u00e9 o ponto considerado a ponta do cursor ao clicar (o ponto vermelho na pr\u00e9-visualiza\u00e7\u00e3o).
++Ubah kunci API	Alterar chave de API
++Kunci API CurseForge	Chave de API do CurseForge
++Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	A chave j\u00e1 est\u00e1 salva. Insira uma nova chave para substitu\u00ed-la ou exclua esta chave.
++CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	O CurseForge precisa de uma chave de API. Cole a chave do e-mail do CurseForge. A chave fica apenas neste celular e \u00e9 enviada somente ao CurseForge.
++Tempel kunci di sini	Cole a chave aqui
++Kunci API CurseForge belum diisi.	A chave de API do CurseForge ainda n\u00e3o foi preenchida.
++Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	A chave de API do CurseForge foi recusada (c\u00f3digo {0}). Verifique a chave e insira-a novamente.
++CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	O CurseForge est\u00e1 limitando as requisi\u00e7\u00f5es. Aguarde um momento e tente novamente.
++CurseForge API error: kode {0}	Erro da API do CurseForge: c\u00f3digo {0}
++Respons kosong dari CurseForge	Resposta vazia do CurseForge
++Respons CurseForge tidak dikenali	A resposta do CurseForge n\u00e3o foi reconhecida
++CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	O CurseForge s\u00f3 mostra os primeiros {0} resultados. Restrinja a busca.
++Id CurseForge tidak valid	ID do CurseForge inv\u00e1lido
++Detail CurseForge kosong	Os detalhes do CurseForge est\u00e3o vazios
++Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	O autor n\u00e3o permite downloads pelo launcher. Baixe manualmente no site do CurseForge.
++File mod harus berformat .jar	O arquivo do mod deve estar no formato .jar
++File modpack harus berformat .mrpack atau .zip	O arquivo do modpack deve estar no formato .mrpack ou .zip
++File {0} harus berformat .zip	O arquivo de {0} deve estar no formato .zip
++Mencari alamat unduhan mod dari CurseForge...	Procurando os links de download dos mods no CurseForge...
++Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	O motor Rust por enquanto s\u00f3 oferece suporte a contas Offline e Microsoft. Escolha uma delas na aba Contas.
++Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	O nome de uma conta offline para o motor Rust deve ter de 1 a 16 caracteres, sem espa\u00e7os. Crie uma nova conta offline na aba Contas.
++Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	Esta conta Microsoft n\u00e3o concluiu o login. Entre novamente pela aba Contas.
++Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	Primeira abertura: o motor baixa os recursos do jogo (cerca de 500 MiB). Deixe terminar e o jogo inicia logo em seguida.
++Folder data mesin tidak bisa dibuat	N\u00e3o foi poss\u00edvel criar a pasta de dados do motor
++Berkas peluncuran tidak bisa disimpan	N\u00e3o foi poss\u00edvel salvar o arquivo de inicializa\u00e7\u00e3o
++Tidak bisa menyimpan {0}	N\u00e3o foi poss\u00edvel salvar {0}
++Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Oculta a barra de navega\u00e7\u00e3o e a barra de status durante o jogo. Desativado por padr\u00e3o: em alguns celulares pode travar o jogo.
++Tidak ada versi Forge yang didukung	Nenhuma vers\u00e3o do Forge compat\u00edvel
++Tidak ada versi NeoForge yang didukung	Nenhuma vers\u00e3o do NeoForge compat\u00edvel
++Tidak dapat memuat daftar versi Fabric	N\u00e3o foi poss\u00edvel carregar a lista de vers\u00f5es do Fabric
++Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Restam apenas {0} MB de armazenamento. Libere pelo menos 500 MB e tente baixar novamente.
++Unduhan game	Downloads do jogo
++Mengunduh Minecraft	Baixando o Minecraft
++Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	O download continua em segundo plano. N\u00e3o force o fechamento do aplicativo.
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Ativa o modo de desempenho est\u00e1vel do sistema e o V-Sync do Zink, e limita a escala m\u00e1xima de resolu\u00e7\u00e3o a {0}%.
+diff --git a/app/src/main/assets/lang/th/pelengkap.tsv b/app/src/main/assets/lang/th/pelengkap.tsv
+new file mode 100644
+index 0000000..a1f9917
+--- /dev/null
++++ b/app/src/main/assets/lang/th/pelengkap.tsv
+@@ -0,0 +1,68 @@
++# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
++Penunjuk (Default)	ตัวชี้ (ค่าเริ่มต้น)
++Penunjuk (Kursor Teks)	ตัวชี้ (เคอร์เซอร์ข้อความ)
++Penunjuk (Tangan)	ตัวชี้ (มือ)
++Penunjuk (Crosshair)	ตัวชี้ (เป้าเล็ง)
++Penunjuk (Atas/Bawah)	ตัวชี้ (ขึ้น/ลง)
++Penunjuk (Kiri/Kanan)	ตัวชี้ (ซ้าย/ขวา)
++Penunjuk (Pindahkan)	ตัวชี้ (ย้าย)
++Penunjuk (Tidak Diizinkan)	ตัวชี้ (ไม่อนุญาต)
++Bentuk biasa. Dipakai di semua versi Minecraft.	รูปแบบปกติ ใช้ได้กับ Minecraft ทุกเวอร์ชัน
++MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: ใช้เมื่อเคอร์เซอร์อยู่เหนือช่องข้อความ
++MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: ใช้เมื่อเคอร์เซอร์อยู่เหนือองค์ประกอบที่คลิกได้
++MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: รูปแบบเป้าเล็ง
++MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: ใช้กับองค์ประกอบที่เลื่อนขึ้น/ลงได้
++MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: ใช้กับแถบเลื่อน (สไลเดอร์)
++MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: รูปแบบย้าย
++MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: ใช้กับองค์ประกอบที่ปิดใช้งาน
++Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	มากกว่าครึ่งหนึ่งของ RAM มือถือ: Android อาจปิดเกมเอง
++Penunjuk kursor	ตัวชี้เคอร์เซอร์
++Mouse fisik	เมาส์จริง
++Pakai kursor sistem Android	ใช้เคอร์เซอร์ระบบของ Android
++Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	ปิด (ค่าเริ่มต้น): เมาส์จะขยับเคอร์เซอร์ของ launcher ในเมนูเกม ดังนั้นรูปภาพ ขนาด และ hotspot ที่ตั้งไว้ด้านบนจะมีผล เปิดเมื่อใช้เมาส์สะดวกกว่าด้วยตัวชี้มาตรฐานของ Android
++Kecepatan kursor mouse	ความเร็วเคอร์เซอร์เมาส์
++Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	ตัวคูณเพิ่มจากความไวของเคอร์เซอร์เสมือน ใช้กับเมาส์จริงในเมนูเกมเท่านั้น 100% = เท่าเดิม
++Kecepatan kamera mouse	ความเร็วกล้องของเมาส์
++Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	ตัวคูณเพิ่มจากความไวของกล้อง ใช้กับเมาส์จริงขณะเล่นเท่านั้น 100% = เท่าเดิม
++Gambar tidak bisa dibaca	อ่านรูปภาพไม่ได้
++Ganti gambar	เปลี่ยนรูปภาพ
++Pilih gambar	เลือกรูปภาพ
++Tutup hotspot	ปิด hotspot
++Atur hotspot	ตั้งค่า hotspot
++Reset	รีเซ็ต
++Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	Hotspot คือจุดที่นับเป็นปลายเคอร์เซอร์เมื่อคลิก (จุดสีแดงในตัวอย่าง)
++Ubah kunci API	เปลี่ยนคีย์ API
++Kunci API CurseForge	คีย์ API ของ CurseForge
++Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	บันทึกคีย์ไว้แล้ว กรอกคีย์ใหม่เพื่อแทนที่ หรือลบคีย์นี้
++CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge ต้องใช้คีย์ API วางคีย์จากอีเมลของ CurseForge คีย์จะถูกเก็บไว้ในมือถือเครื่องนี้เท่านั้น และส่งไปที่ CurseForge เท่านั้น
++Tempel kunci di sini	วางคีย์ที่นี่
++Kunci API CurseForge belum diisi.	ยังไม่ได้กรอกคีย์ API ของ CurseForge
++Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	คีย์ API ของ CurseForge ถูกปฏิเสธ (รหัส {0}) ตรวจสอบคีย์แล้วกรอกใหม่
++CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge จำกัดจำนวนคำขอ รอสักครู่แล้วลองอีกครั้ง
++CurseForge API error: kode {0}	ข้อผิดพลาด API ของ CurseForge: รหัส {0}
++Respons kosong dari CurseForge	การตอบกลับจาก CurseForge ว่างเปล่า
++Respons CurseForge tidak dikenali	ไม่รู้จักการตอบกลับจาก CurseForge
++CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge แสดงเพียง {0} ผลลัพธ์แรก โปรดจำกัดการค้นหาให้แคบลง
++Id CurseForge tidak valid	รหัส CurseForge ไม่ถูกต้อง
++Detail CurseForge kosong	รายละเอียด CurseForge ว่างเปล่า
++Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	ผู้สร้างไม่อนุญาตให้ดาวน์โหลดผ่าน launcher ดาวน์โหลดเองจากเว็บไซต์ CurseForge
++File mod harus berformat .jar	ไฟล์ Mod ต้องเป็นรูปแบบ .jar
++File modpack harus berformat .mrpack atau .zip	ไฟล์ modpack ต้องเป็นรูปแบบ .mrpack หรือ .zip
++File {0} harus berformat .zip	ไฟล์ {0} ต้องเป็นรูปแบบ .zip
++Mencari alamat unduhan mod dari CurseForge...	กำลังค้นหาลิงก์ดาวน์โหลด Mod จาก CurseForge...
++Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	เอนจิน Rust รองรับเฉพาะบัญชี Offline และ Microsoft ในตอนนี้ เลือกหนึ่งในนั้นที่แท็บบัญชี
++Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	ชื่อบัญชีออฟไลน์สำหรับเอนจิน Rust ต้องมี 1 ถึง 16 ตัวอักษรและไม่มีช่องว่าง สร้างบัญชีออฟไลน์ใหม่ที่แท็บบัญชี
++Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	บัญชี Microsoft นี้ยังเข้าสู่ระบบไม่สมบูรณ์ เข้าสู่ระบบอีกครั้งที่แท็บบัญชี
++Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	เปิดครั้งแรก: เอนจินจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) ปล่อยให้เสร็จ แล้วเกมจะเริ่มทันที
++Folder data mesin tidak bisa dibuat	สร้างโฟลเดอร์ข้อมูลของเอนจินไม่ได้
++Berkas peluncuran tidak bisa disimpan	บันทึกไฟล์เปิดเกมไม่ได้
++Tidak bisa menyimpan {0}	บันทึก {0} ไม่ได้
++Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	ซ่อนแถบนำทางและแถบสถานะขณะเล่น ปิดไว้เป็นค่าเริ่มต้น: ในมือถือบางรุ่นอาจทำให้เกมค้าง
++Tidak ada versi Forge yang didukung	ไม่มี Forge เวอร์ชันที่รองรับ
++Tidak ada versi NeoForge yang didukung	ไม่มี NeoForge เวอร์ชันที่รองรับ
++Tidak dapat memuat daftar versi Fabric	โหลดรายการเวอร์ชัน Fabric ไม่ได้
++Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	พื้นที่เก็บข้อมูลเหลือเพียง {0} MB เคลียร์พื้นที่อย่างน้อย 500 MB แล้วลองดาวน์โหลดอีกครั้ง
++Unduhan game	การดาวน์โหลดเกม
++Mengunduh Minecraft	กำลังดาวน์โหลด Minecraft
++Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	การดาวน์โหลดจะทำต่อในเบื้องหลัง อย่าบังคับปิดแอป
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	เปิดโหมดประสิทธิภาพคงที่ของระบบและ V-Sync ของ Zink พร้อมจำกัดสเกลความละเอียดสูงสุดที่ {0}%
+diff --git a/app/src/main/assets/lang/vi/pelengkap.tsv b/app/src/main/assets/lang/vi/pelengkap.tsv
+new file mode 100644
+index 0000000..68c9e86
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/pelengkap.tsv
+@@ -0,0 +1,68 @@
++# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
++Penunjuk (Default)	Con tr\u1ecf (M\u1eb7c \u0111\u1ecbnh)
++Penunjuk (Kursor Teks)	Con tr\u1ecf (Con tr\u1ecf v\u0103n b\u1ea3n)
++Penunjuk (Tangan)	Con tr\u1ecf (B\u00e0n tay)
++Penunjuk (Crosshair)	Con tr\u1ecf (T\u00e2m ng\u1eafm)
++Penunjuk (Atas/Bawah)	Con tr\u1ecf (L\u00ean/Xu\u1ed1ng)
++Penunjuk (Kiri/Kanan)	Con tr\u1ecf (Tr\u00e1i/Ph\u1ea3i)
++Penunjuk (Pindahkan)	Con tr\u1ecf (Di chuy\u1ec3n)
++Penunjuk (Tidak Diizinkan)	Con tr\u1ecf (Kh\u00f4ng \u0111\u01b0\u1ee3c ph\u00e9p)
++Bentuk biasa. Dipakai di semua versi Minecraft.	H\u00ecnh d\u1ea1ng th\u00f4ng th\u01b0\u1eddng. D\u00f9ng \u1edf m\u1ecdi phi\u00ean b\u1ea3n Minecraft.
++MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: d\u00f9ng khi con tr\u1ecf n\u1eb1m tr\u00ean \u00f4 nh\u1eadp v\u0103n b\u1ea3n.
++MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: d\u00f9ng khi con tr\u1ecf n\u1eb1m tr\u00ean th\u00e0nh ph\u1ea7n c\u00f3 th\u1ec3 nh\u1ea5p.
++MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: h\u00ecnh t\u00e2m ng\u1eafm.
++MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n c\u00f3 th\u1ec3 cu\u1ed9n l\u00ean/xu\u1ed1ng.
++MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n thanh tr\u01b0\u1ee3t (slider).
++MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: h\u00ecnh d\u1ea1ng di chuy\u1ec3n.
++MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a.
++Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	H\u01a1n m\u1ed9t n\u1eeda RAM c\u1ee7a \u0111i\u1ec7n tho\u1ea1i: Android c\u00f3 th\u1ec3 t\u1ef1 \u0111\u00f3ng game.
++Penunjuk kursor	Con tr\u1ecf chu\u1ed9t
++Mouse fisik	Chu\u1ed9t th\u1eadt
++Pakai kursor sistem Android	D\u00f9ng con tr\u1ecf h\u1ec7 th\u1ed1ng Android
++Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	T\u1eaft (m\u1eb7c \u0111\u1ecbnh): chu\u1ed9t \u0111i\u1ec1u khi\u1ec3n con tr\u1ecf c\u1ee7a launcher trong menu game, n\u00ean h\u00ecnh \u1ea3nh, k\u00edch th\u01b0\u1edbc v\u00e0 hotspot \u1edf tr\u00ean s\u1ebd \u0111\u01b0\u1ee3c \u00e1p d\u1ee5ng. B\u1eadt n\u1ebfu b\u1ea1n th\u1ea5y chu\u1ed9t d\u1ec5 d\u00f9ng h\u01a1n v\u1edbi con tr\u1ecf m\u1eb7c \u0111\u1ecbnh c\u1ee7a Android.
++Kecepatan kursor mouse	T\u1ed1c \u0111\u1ed9 con tr\u1ecf chu\u1ed9t
++Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	H\u1ec7 s\u1ed1 nh\u00e2n th\u00eam v\u00e0o \u0111\u1ed9 nh\u1ea1y con tr\u1ecf \u1ea3o, ch\u1ec9 \u00e1p d\u1ee5ng cho chu\u1ed9t th\u1eadt trong menu game. 100% = gi\u1eef nguy\u00ean.
++Kecepatan kamera mouse	T\u1ed1c \u0111\u1ed9 camera c\u1ee7a chu\u1ed9t
++Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	H\u1ec7 s\u1ed1 nh\u00e2n th\u00eam v\u00e0o \u0111\u1ed9 nh\u1ea1y camera, ch\u1ec9 \u00e1p d\u1ee5ng cho chu\u1ed9t th\u1eadt khi \u0111ang ch\u01a1i. 100% = gi\u1eef nguy\u00ean.
++Gambar tidak bisa dibaca	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c h\u00ecnh \u1ea3nh
++Ganti gambar	\u0110\u1ed5i h\u00ecnh \u1ea3nh
++Pilih gambar	Ch\u1ecdn h\u00ecnh \u1ea3nh
++Tutup hotspot	\u0110\u00f3ng hotspot
++Atur hotspot	\u0110\u1eb7t hotspot
++Reset	\u0110\u1eb7t l\u1ea1i
++Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	Hotspot l\u00e0 \u0111i\u1ec3m \u0111\u01b0\u1ee3c t\u00ednh l\u00e0 \u0111\u1ea7u con tr\u1ecf khi nh\u1ea5p (ch\u1ea5m \u0111\u1ecf trong ph\u1ea7n xem tr\u01b0\u1edbc).
++Ubah kunci API	\u0110\u1ed5i kh\u00f3a API
++Kunci API CurseForge	Kh\u00f3a API CurseForge
++Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	\u0110\u00e3 l\u01b0u kh\u00f3a. Nh\u1eadp kh\u00f3a m\u1edbi \u0111\u1ec3 thay th\u1ebf, ho\u1eb7c x\u00f3a kh\u00f3a n\u00e0y.
++CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge c\u1ea7n kh\u00f3a API. D\u00e1n kh\u00f3a t\u1eeb email c\u1ee7a CurseForge. Kh\u00f3a ch\u1ec9 \u0111\u01b0\u1ee3c l\u01b0u tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y v\u00e0 ch\u1ec9 \u0111\u01b0\u1ee3c g\u1eedi \u0111\u1ebfn CurseForge.
++Tempel kunci di sini	D\u00e1n kh\u00f3a v\u00e0o \u0111\u00e2y
++Kunci API CurseForge belum diisi.	Ch\u01b0a nh\u1eadp kh\u00f3a API CurseForge.
++Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	Kh\u00f3a API CurseForge b\u1ecb t\u1eeb ch\u1ed1i (m\u00e3 {0}). H\u00e3y ki\u1ec3m tra kh\u00f3a r\u1ed3i nh\u1eadp l\u1ea1i.
++CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge \u0111ang gi\u1edbi h\u1ea1n s\u1ed1 y\u00eau c\u1ea7u. H\u00e3y ch\u1edd m\u1ed9t l\u00e1t r\u1ed3i th\u1eed l\u1ea1i.
++CurseForge API error: kode {0}	L\u1ed7i API CurseForge: m\u00e3 {0}
++Respons kosong dari CurseForge	Ph\u1ea3n h\u1ed3i tr\u1ed1ng t\u1eeb CurseForge
++Respons CurseForge tidak dikenali	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c ph\u1ea3n h\u1ed3i c\u1ee7a CurseForge
++CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge ch\u1ec9 hi\u1ec3n th\u1ecb {0} k\u1ebft qu\u1ea3 \u0111\u1ea7u ti\u00ean. H\u00e3y thu h\u1eb9p t\u00ecm ki\u1ebfm.
++Id CurseForge tidak valid	ID CurseForge kh\u00f4ng h\u1ee3p l\u1ec7
++Detail CurseForge kosong	Chi ti\u1ebft CurseForge tr\u1ed1ng
++Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	T\u00e1c gi\u1ea3 kh\u00f4ng cho ph\u00e9p t\u1ea3i qua launcher. H\u00e3y t\u1ea3i th\u1ee7 c\u00f4ng t\u1eeb trang web CurseForge.
++File mod harus berformat .jar	T\u1ec7p mod ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .jar
++File modpack harus berformat .mrpack atau .zip	T\u1ec7p modpack ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .mrpack ho\u1eb7c .zip
++File {0} harus berformat .zip	T\u1ec7p {0} ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .zip
++Mencari alamat unduhan mod dari CurseForge...	\u0110ang t\u00ecm \u0111\u1ecba ch\u1ec9 t\u1ea3i mod t\u1eeb CurseForge...
++Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Engine Rust hi\u1ec7n m\u1edbi h\u1ed7 tr\u1ee3 t\u00e0i kho\u1ea3n Offline v\u00e0 Microsoft. H\u00e3y ch\u1ecdn m\u1ed9t trong hai \u1edf tab T\u00e0i kho\u1ea3n.
++Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	T\u00ean t\u00e0i kho\u1ea3n offline cho engine Rust ph\u1ea3i d\u00e0i t\u1eeb 1 \u0111\u1ebfn 16 k\u00fd t\u1ef1 v\u00e0 kh\u00f4ng c\u00f3 kho\u1ea3ng tr\u1eafng. H\u00e3y t\u1ea1o t\u00e0i kho\u1ea3n offline m\u1edbi \u1edf tab T\u00e0i kho\u1ea3n.
++Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	T\u00e0i kho\u1ea3n Microsoft n\u00e0y ch\u01b0a \u0111\u0103ng nh\u1eadp \u0111\u1ea7y \u0111\u1ee7. H\u00e3y \u0111\u0103ng nh\u1eadp l\u1ea1i \u1edf tab T\u00e0i kho\u1ea3n.
++Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	L\u1ea7n m\u1edf \u0111\u1ea7u ti\u00ean: engine s\u1ebd t\u1ea3i t\u00e0i nguy\u00ean game (kho\u1ea3ng 500 MiB). H\u00e3y \u0111\u1ec3 n\u00f3 ch\u1ea1y xong, game s\u1ebd b\u1eaft \u0111\u1ea7u ngay sau \u0111\u00f3.
++Folder data mesin tidak bisa dibuat	Kh\u00f4ng t\u1ea1o \u0111\u01b0\u1ee3c th\u01b0 m\u1ee5c d\u1eef li\u1ec7u c\u1ee7a engine
++Berkas peluncuran tidak bisa disimpan	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c t\u1ec7p kh\u1edfi ch\u1ea1y
++Tidak bisa menyimpan {0}	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c {0}
++Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	\u1ea8n thanh \u0111i\u1ec1u h\u01b0\u1edbng v\u00e0 thanh tr\u1ea1ng th\u00e1i khi ch\u01a1i. M\u1eb7c \u0111\u1ecbnh t\u1eaft: tr\u00ean m\u1ed9t s\u1ed1 \u0111i\u1ec7n tho\u1ea1i c\u00f3 th\u1ec3 khi\u1ebfn game b\u1ecb treo.
++Tidak ada versi Forge yang didukung	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge n\u00e0o \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
++Tidak ada versi NeoForge yang didukung	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n NeoForge n\u00e0o \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
++Tidak dapat memuat daftar versi Fabric	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c danh s\u00e1ch phi\u00ean b\u1ea3n Fabric
++Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Dung l\u01b0\u1ee3ng l\u01b0u tr\u1eef ch\u1ec9 c\u00f2n {0} MB. H\u00e3y gi\u1ea3i ph\u00f3ng \u00edt nh\u1ea5t 500 MB r\u1ed3i t\u1ea3i l\u1ea1i.
++Unduhan game	T\u1ea3i game
++Mengunduh Minecraft	\u0110ang t\u1ea3i Minecraft
++Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	Qu\u00e1 tr\u00ecnh t\u1ea3i ti\u1ebfp t\u1ee5c \u1edf n\u1ec1n. \u0110\u1eebng bu\u1ed9c d\u1eebng \u1ee9ng d\u1ee5ng.
++Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	B\u1eadt ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh c\u1ee7a h\u1ec7 th\u1ed1ng v\u00e0 V-Sync c\u1ee7a Zink, \u0111\u1ed3ng th\u1eddi gi\u1edbi h\u1ea1n t\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i t\u1ed1i \u0111a \u1edf {0}%.
+# FIN part=1/1 files=5

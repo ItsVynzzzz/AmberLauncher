@@ -459,6 +459,15 @@ fun SettingsScreen(
                         }
                         SettingDivider()
                         SettingSwitchRow(
+                            title = "Permukaan game TextureView",
+                            desc = "Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.",
+                            checked = currentSettings.forceTextureView,
+                            onCheckedChange = { on ->
+                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(forceTextureView = on))
+                            }
+                        )
+                        SettingDivider()
+                        SettingSwitchRow(
                             title = "Optimasi otomatis options.txt",
                             desc = "Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.",
                             checked = autoOptimizeMC,

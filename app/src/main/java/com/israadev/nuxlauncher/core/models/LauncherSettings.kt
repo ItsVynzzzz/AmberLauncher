@@ -68,6 +68,9 @@ data class LauncherSettings(
 
     // Kunci layar 90/120 Hz ke 60 Hz selama game berjalan (bawaan mati).
     val lockRefresh60: Boolean = false,
+    // Permukaan game selalu TextureView (bukan SurfaceView). Perbaikan bila tampilan game terputar 90 derajat
+    // di HP yang layar alaminya portrait; TextureView sedikit lebih berat (bawaan mati).
+    val forceTextureView: Boolean = false,
     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
     // (tanpa flag GC tambahan dari launcher).
     val generalGcMode: String = "auto",

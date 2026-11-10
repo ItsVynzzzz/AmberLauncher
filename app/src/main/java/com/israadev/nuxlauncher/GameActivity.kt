@@ -759,10 +759,20 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
      * layar masih miring, cek baris log "[Graphics]" untuk tahu permukaan dan backend yang dipakai.)
      *
      * TextureView sedikit lebih berat dari SurfaceView, jadi hanya dipakai untuk 26.x, dan tidak dipakai bila
-     * pemain sudah memilih "Prefer OpenGL" di options.txt (preferredGraphicsBackend:"opengl").
+     * pemain sudah memilih "Prefer OpenGL" di options.txt (preferredGraphicsBackend:"opengl") dengan renderer yang
+     * tidak membuat swapchain Vulkan sendiri. Zink (Kopper) membuatnya walau game memakai backend OpenGL, jadi untuk
+     * renderer itu TextureView tetap dipakai. Saklar "Permukaan game TextureView" di Pengaturan memaksanya untuk
+     * semua versi dan renderer.
      */
     private fun shouldUseTextureView(): Boolean {
+        val settings = SettingsManager.settings.value
+        if (settings.forceTextureView) return true
         if (!GlErrorPolicy.hasBackendChoice(mcVersion)) return false
+        val selected = settings.selectedRenderer
+        if (selected.contains("zink", ignoreCase = true) ||
+            selected.contains("kopper", ignoreCase = true) ||
+            selected.contains("vulkan", ignoreCase = true)
+        ) return true
         val backend = runCatching {
             File(gameDirPath, "options.txt").useLines { lines ->
                 lines.map { it.trim() }
@@ -1054,7 +1064,9 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                     save()
                 }
                 if (GlErrorPolicy.hasBackendChoice(mcVersion)) {
-                    LoggerBridge.append("▷ [Graphics] preferredGraphicsBackend=${MCOptions.get("preferredGraphicsBackend") ?: "(belum ada)"}, permukaan game=${if (useTextureView) "TextureView" else "SurfaceView"}")
+                    @Suppress("DEPRECATION")
+                    val displayRotation = try { windowManager.defaultDisplay.rotation * 90 } catch (_: Throwable) { -1 }
+                    LoggerBridge.append("▷ [Graphics] preferredGraphicsBackend=${MCOptions.get("preferredGraphicsBackend") ?: "(belum ada)"}, permukaan game=${if (useTextureView) "TextureView" else "SurfaceView"}, renderer=${activeSettings.selectedRenderer}, rotasi layar=${displayRotation} derajat")
                 }
                 LoggerBridge.append("▷ [MCOptions] Minecraft options verified (res=${targetWidth}x${targetHeight}, autoOptimize=${activeSettings.autoOptimizeMinecraft})")
 

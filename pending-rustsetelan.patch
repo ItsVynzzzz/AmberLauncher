@@ -1,0 +1,364 @@
+diff --git a/app/src/main/assets/lang/en/rust-settings.tsv b/app/src/main/assets/lang/en/rust-settings.tsv
+index 1a346ed..afb3eda 100644
+--- a/app/src/main/assets/lang/en/rust-settings.tsv
++++ b/app/src/main/assets/lang/en/rust-settings.tsv
+@@ -67 +67,11 @@ Menu garis tiga	Three-line menu
+ Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	The three-line button on the game screen that opens the engine's quick menu (presets, controls, settings). Its colors follow the Amber accent. Applies on the next PLAY.
++Sederhanakan daun (eksperimental)	Simplify leaves (experimental)
++Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Simplifies dense foliage to make the game lighter. The look of the leaves changes and this feature is still experimental. Applies on the next PLAY.
++Unggah chunk cepat	Fast chunk upload
++Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Raises the chunk mesh upload budget to the GPU to 4 MiB per frame, meant to reduce stutter while moving and loading the world. On by default. Turn it off if the game feels choppier instead. Applies on the next PLAY.
++Diagnostik	Diagnostics
++Rekam performa	Record performance
++Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Records frame times and chunk building while you play (up to 30 minutes) into a report on this phone. The report contains no account, chat, or world names. Recording adds a little load, so turn it off again when you do not need it. Applies on the next PLAY.
++Bagikan laporan performa	Share performance report
++Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Sends the latest recorded report through the app you choose, for example to attach when reporting a slow game.
++Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	There is no performance report yet. Turn on Record performance, play for a bit, then try again.
+diff --git a/app/src/main/assets/lang/es/rust-settings.tsv b/app/src/main/assets/lang/es/rust-settings.tsv
+index d18a760..04c0b8a 100644
+--- a/app/src/main/assets/lang/es/rust-settings.tsv
++++ b/app/src/main/assets/lang/es/rust-settings.tsv
+@@ -69 +69,11 @@ Menu garis tiga	Men\u00fa de tres l\u00edneas
+ Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	El bot\u00f3n de tres l\u00edneas en la pantalla del juego que abre el men\u00fa r\u00e1pido del motor (preajustes, controles, ajustes). Sus colores siguen el acento de Amber. Se aplica en el pr\u00f3ximo PLAY.
++Sederhanakan daun (eksperimental)	Simplificar hojas (experimental)
++Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Simplifica el follaje denso para aligerar el juego. El aspecto de las hojas cambia y esta funci\u00f3n a\u00fan es experimental. Se aplica en el pr\u00f3ximo PLAY.
++Unggah chunk cepat	Subida r\u00e1pida de chunks
++Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Sube el presupuesto de subida de mallas de chunks a la GPU a 4 MiB por fotograma, pensado para reducir los tirones al moverte y cargar el mundo. Viene activado. Desact\u00edvalo si el juego va peor. Se aplica en el pr\u00f3ximo PLAY.
++Diagnostik	Diagn\u00f3stico
++Rekam performa	Grabar rendimiento
++Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Registra los tiempos de fotograma y la creaci\u00f3n de chunks mientras juegas (hasta 30 minutos) en un informe en este tel\u00e9fono. El informe no contiene cuentas, chats ni nombres de mundos. Grabar a\u00f1ade algo de carga, as\u00ed que desact\u00edvalo cuando no lo necesites. Se aplica en el pr\u00f3ximo PLAY.
++Bagikan laporan performa	Compartir informe de rendimiento
++Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Env\u00eda el \u00faltimo informe grabado con la aplicaci\u00f3n que elijas, por ejemplo para adjuntarlo al informar de un juego lento.
++Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	A\u00fan no hay ning\u00fan informe de rendimiento. Activa Grabar rendimiento, juega un rato y vuelve a intentarlo.
+diff --git a/app/src/main/assets/lang/pt/rust-settings.tsv b/app/src/main/assets/lang/pt/rust-settings.tsv
+index cb6373f..350e8ee 100644
+--- a/app/src/main/assets/lang/pt/rust-settings.tsv
++++ b/app/src/main/assets/lang/pt/rust-settings.tsv
+@@ -69 +69,11 @@ Menu garis tiga	Menu de tr\u00eas linhas
+ Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	O bot\u00e3o de tr\u00eas linhas na tela do jogo que abre o menu r\u00e1pido do motor (presets, controles, configura\u00e7\u00f5es). A cor segue o destaque do Amber. Vale no pr\u00f3ximo JOGAR.
++Sederhanakan daun (eksperimental)	Simplificar folhagem (experimental)
++Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Simplifica a folhagem densa para deixar o jogo mais leve. A apar\u00eancia das folhas muda e este recurso ainda \u00e9 experimental. Vale no pr\u00f3ximo JOGAR.
++Unggah chunk cepat	Envio r\u00e1pido de chunks
++Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Aumenta o limite de envio das malhas de chunk para a GPU para 4 MiB por quadro, feito para reduzir travadas ao andar e carregar o mundo. Vem ativado. Desative se o jogo ficar mais travado. Vale no pr\u00f3ximo JOGAR.
++Diagnostik	Diagn\u00f3stico
++Rekam performa	Gravar desempenho
++Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Registra os tempos de quadro e a cria\u00e7\u00e3o de chunks enquanto voc\u00ea joga (at\u00e9 30 minutos) em um relat\u00f3rio neste celular. O relat\u00f3rio n\u00e3o cont\u00e9m conta, chat nem nomes de mundos. A grava\u00e7\u00e3o adiciona um pouco de carga, ent\u00e3o desative quando n\u00e3o precisar. Vale no pr\u00f3ximo JOGAR.
++Bagikan laporan performa	Compartilhar relat\u00f3rio de desempenho
++Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Envia o \u00faltimo relat\u00f3rio gravado pelo aplicativo que voc\u00ea escolher, por exemplo para anexar ao relatar um jogo lento.
++Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Ainda n\u00e3o h\u00e1 relat\u00f3rio de desempenho. Ative Gravar desempenho, jogue um pouco e tente de novo.
+diff --git a/app/src/main/assets/lang/th/rust-settings.tsv b/app/src/main/assets/lang/th/rust-settings.tsv
+index cacb556677ac7d149ccbce5eea1381fe8e72457c..53a283b14076947c484dec9c3dd8a1938297cbb3 100644
+GIT binary patch
+delta 5042
+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
+WGkd8hUp?G^6*$~1222!}XMY0;7cmq7
+
+delta 7
+Ocmcao+Tyo?MI8VRoC5a%
+
+diff --git a/app/src/main/assets/lang/vi/rust-settings.tsv b/app/src/main/assets/lang/vi/rust-settings.tsv
+index 078ff7e..f326617 100644
+--- a/app/src/main/assets/lang/vi/rust-settings.tsv
++++ b/app/src/main/assets/lang/vi/rust-settings.tsv
+@@ -69 +69,11 @@ Menu garis tiga	Menu ba g\u1ea1ch
+ Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	N\u00fat ba g\u1ea1ch tr\u00ean m\u00e0n h\u00ecnh game m\u1edf menu nhanh c\u1ee7a engine (preset, \u0111i\u1ec1u khi\u1ec3n, c\u00e0i \u0111\u1eb7t). M\u00e0u s\u1eafc theo m\u00e0u nh\u1ea5n c\u1ee7a Amber. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.
++Sederhanakan daun (eksperimental)	\u0110\u01a1n gi\u1ea3n h\u00f3a t\u00e1n l\u00e1 (th\u1eed nghi\u1ec7m)
++Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	\u0110\u01a1n gi\u1ea3n h\u00f3a t\u00e1n l\u00e1 d\u00e0y \u0111\u1eb7c \u0111\u1ec3 game nh\u1eb9 h\u01a1n. H\u00ecnh d\u1ea1ng l\u00e1 s\u1ebd thay \u0111\u1ed5i v\u00e0 t\u00ednh n\u0103ng n\u00e0y v\u1eabn \u0111ang th\u1eed nghi\u1ec7m. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.
++Unggah chunk cepat	T\u1ea3i chunk nhanh
++Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	N\u00e2ng h\u1ea1n m\u1ee9c t\u1ea3i mesh chunk l\u00ean GPU th\u00e0nh 4 MiB m\u1ed7i khung h\u00ecnh, nh\u1eb1m gi\u1ea3m gi\u1eadt khi di chuy\u1ec3n v\u00e0 t\u1ea3i th\u1ebf gi\u1edbi. M\u1eb7c \u0111\u1ecbnh b\u1eadt. H\u00e3y t\u1eaft n\u1ebfu game l\u1ea1i gi\u1eadt h\u01a1n. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.
++Diagnostik	Ch\u1ea9n \u0111o\u00e1n
++Rekam performa	Ghi hi\u1ec7u n\u0103ng
++Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Ghi th\u1eddi gian khung h\u00ecnh v\u00e0 vi\u1ec7c t\u1ea1o chunk khi b\u1ea1n ch\u01a1i (t\u1ed1i \u0111a 30 ph\u00fat) v\u00e0o m\u1ed9t b\u00e1o c\u00e1o tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y. B\u00e1o c\u00e1o kh\u00f4ng ch\u1ee9a t\u00e0i kho\u1ea3n, chat hay t\u00ean th\u1ebf gi\u1edbi. Vi\u1ec7c ghi l\u00e0m t\u0103ng nh\u1eb9 t\u1ea3i, n\u00ean h\u00e3y t\u1eaft khi kh\u00f4ng c\u1ea7n. \u00c1p d\u1ee5ng \u1edf l\u1ea7n PLAY ti\u1ebfp theo.
++Bagikan laporan performa	Chia s\u1ebb b\u00e1o c\u00e1o hi\u1ec7u n\u0103ng
++Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	G\u1eedi b\u00e1o c\u00e1o ghi g\u1ea7n nh\u1ea5t qua \u1ee9ng d\u1ee5ng b\u1ea1n ch\u1ecdn, v\u00ed d\u1ee5 \u0111\u1ec3 \u0111\u00ednh k\u00e8m khi b\u00e1o c\u00e1o game ch\u1ea1y ch\u1eadm.
++Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Ch\u01b0a c\u00f3 b\u00e1o c\u00e1o hi\u1ec7u n\u0103ng. H\u00e3y b\u1eadt Ghi hi\u1ec7u n\u0103ng, ch\u01a1i m\u1ed9t l\u00fac r\u1ed3i th\u1eed l\u1ea1i.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+index e99dfb9..b15e284 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+@@ -56,3 +56,4 @@ object GameLogArchive {
+         "renderer", "render_scale", "super_perf_mode", "battery_perf_mode", "max_fps_mode",
+-        "disable_game_animations", "performance_hints", "worker_limit", "cache_budget_mib", "profile"
++        "disable_game_animations", "fast_chunk_upload", "experimental_leaf_culling", "record_performance",
++        "performance_hints", "worker_limit", "cache_budget_mib", "profile"
+     )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt
+new file mode 100644
+index 0000000..6d6e5f5
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt
+@@ -0,0 +1,109 @@
++package com.israadev.nuxlauncher.core.horizon
++
++import android.content.ActivityNotFoundException
++import android.content.Context
++import android.content.Intent
++import android.os.Handler
++import android.os.Looper
++import androidx.core.content.FileProvider
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.crash.LogRedactor
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.i18n.Tr
++import java.io.File
++
++/**
++ * Laporan performa yang direkam mesin Rust (pengaturan "Rekam performa"). Mesin menulis satu berkas JSON per baris
++ * (`performance/horizon-performance-<waktu>.jsonl`, paling besar 8 MiB, maksimal 3 berkas) di folder data mesin.
++ * Berkas itu tidak berisi akun, chat, nama dunia, atau posisi pemain.
++ *
++ * Di sini laporan terbaru hanya dicari dan dibagikan; launcher tidak pernah mengubah atau menghapus laporan mesin.
++ * Salinan untuk dibagikan dibuat di latar (bukan di utas UI) ke folder cache yang sama dengan log game.
++ */
++object RustPerformanceReport {
++    private const val TAG = "RustPerformance"
++    private const val FOLDER = "performance"
++    private const val PREFIX = "horizon-performance-"
++    private const val EXTENSION = ".jsonl"
++    private const val SHARE_FOLDER = "shared_logs"
++
++    private const val MSG_NONE = "Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi."
++    private const val MSG_NO_APP = "Tidak ada aplikasi untuk membagikan file ini."
++    private const val MSG_FAILED = "Gagal membagikan file: "
++    private const val CHOOSER_TITLE = "Bagikan laporan performa"
++    private const val SUBJECT = "Laporan performa AmberLauncher - "
++
++    /**
++     * Laporan terbaru di [dir], atau null. Urutannya sama dengan mesin: nama berkas memuat waktu pembuatan, jadi
++     * nama terbesar adalah yang terbaru. Berkas kosong dilewati.
++     */
++    internal fun latestIn(dir: File): File? =
++        dir.listFiles { f -> f.isFile && f.length() > 0L && f.name.startsWith(PREFIX) && f.name.endsWith(EXTENSION) }
++            ?.maxByOrNull { it.name }
++
++    /** Laporan terbaru milik mesin, atau null bila belum pernah merekam. */
++    fun latest(context: Context): File? = latestIn(File(HorizonEngine.engineHome(context), FOLDER))
++
++    /** Membuka pilihan aplikasi untuk membagikan laporan terbaru. Aman dipanggil dari ketukan tombol. */
++    fun share(context: Context) {
++        val app = context.applicationContext
++        val worker = Thread({
++            var copy: File? = null
++            var error: String? = null
++            try {
++                copy = prepareCopy(app)
++            } catch (e: Exception) {
++                LauncherLog.w(TAG, "Laporan performa gagal disiapkan: ${e.message}", e)
++                error = e.message ?: e.javaClass.simpleName
++            }
++            Handler(Looper.getMainLooper()).post { deliver(app, copy, error) }
++        }, "rust-report-share")
++        worker.isDaemon = true
++        worker.start()
++    }
++
++    /** Menyalin laporan terbaru ke folder berbagi (token disamarkan seperti log lain). Null bila tidak ada laporan. */
++    private fun prepareCopy(context: Context): File? {
++        val report = latest(context) ?: return null
++        val shareDir = File(context.cacheDir, SHARE_FOLDER).apply { mkdirs() }
++        // Salinan laporan lama dibuang supaya cache tidak menumpuk (satu laporan bisa sampai 8 MiB).
++        shareDir.listFiles { f -> f.name.startsWith(PREFIX) }?.forEach { it.delete() }
++        val copy = File(shareDir, report.name)
++        report.useLines(Charsets.UTF_8) { lines ->
++            copy.bufferedWriter(Charsets.UTF_8).use { writer ->
++                for (line in lines) {
++                    writer.write(LogRedactor.redactLine(line))
++                    writer.newLine()
++                }
++            }
++        }
++        return copy
++    }
++
++    /** Dijalankan di utas UI: menampilkan pesan atau pilihan aplikasi. */
++    private fun deliver(context: Context, copy: File?, error: String?) {
++        if (copy == null) {
++            val message = if (error != null) MSG_FAILED + error else MSG_NONE
++            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
++            return
++        }
++        try {
++            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", copy)
++            val send = Intent(Intent.ACTION_SEND).apply {
++                type = "text/plain"
++                putExtra(Intent.EXTRA_STREAM, uri)
++                putExtra(Intent.EXTRA_SUBJECT, SUBJECT + copy.name)
++                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
++                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++            }
++            val chooser = Intent.createChooser(send, Tr.t(CHOOSER_TITLE)).apply {
++                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++            }
++            context.startActivity(chooser)
++        } catch (e: ActivityNotFoundException) {
++            Toast.makeText(context, MSG_NO_APP, Toast.LENGTH_SHORT).show()
++        } catch (e: Exception) {
++            Toast.makeText(context, MSG_FAILED + (e.message ?: e.javaClass.simpleName), Toast.LENGTH_SHORT).show()
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+index cc2ca2f..b80105a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustSettings.kt
+@@ -51,3 +51,9 @@ data class RustSettings(
+     /** `disable_game_animations`: tekstur beranimasi, fade chunk, goyang kamera, dan blur menu dimatikan. */
+-    val gameAnimationsOff: Boolean = false
++    val gameAnimationsOff: Boolean = false,
++    /** `fast_chunk_upload`: jatah unggah mesh chunk ke GPU naik ke 4 MiB per frame. Bawaan mesin: menyala. */
++    val fastChunkUpload: Boolean = true,
++    /** `experimental_leaf_culling`: dedaunan padat disederhanakan (tampilannya berubah). Eksperimental, mati. */
++    val leafCulling: Boolean = false,
++    /** `record_performance`: waktu frame direkam saat bermain (maksimum 30 menit). Menambah beban, mati. */
++    val recordPerformance: Boolean = false
+ )
+@@ -190,3 +196,6 @@ object RustSettingsStore {
+                 },
+-                gameAnimationsOff = json.optBoolean("disable_game_animations", defaults.gameAnimationsOff)
++                gameAnimationsOff = json.optBoolean("disable_game_animations", defaults.gameAnimationsOff),
++                fastChunkUpload = json.optBoolean("fast_chunk_upload", defaults.fastChunkUpload),
++                leafCulling = json.optBoolean("experimental_leaf_culling", defaults.leafCulling),
++                recordPerformance = json.optBoolean("record_performance", defaults.recordPerformance)
+             )
+@@ -250,2 +259,5 @@ object RustSettingsStore {
+                 json.put("disable_game_animations", s.gameAnimationsOff)
++                json.put("fast_chunk_upload", s.fastChunkUpload)
++                json.put("experimental_leaf_culling", s.leafCulling)
++                json.put("record_performance", s.recordPerformance)
+             }
+@@ -297,3 +309,4 @@ object RustSettingsStore {
+         "input_host", "orientation", "immersive", "avoid_cutout", "aspect", "server",
+-        "super_perf_mode", "battery_perf_mode", "max_fps_mode", "disable_game_animations"
++        "super_perf_mode", "battery_perf_mode", "max_fps_mode", "disable_game_animations",
++        "fast_chunk_upload", "experimental_leaf_culling", "record_performance"
+     )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+index 5077b8c..7211849 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+@@ -26,2 +26,3 @@ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
++import com.israadev.nuxlauncher.core.horizon.RustPerformanceReport
+ import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
+@@ -162,2 +163,9 @@ fun RustGraphicsRows() {
+     )
++    SettingDivider()
++    SettingSwitchRow(
++        title = "Sederhanakan daun (eksperimental)",
++        desc = "Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.",
++        checked = s.leafCulling,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(leafCulling = on) } }
++    )
+ }
+@@ -218,2 +226,9 @@ fun RustPerformanceRows() {
+     SettingDivider()
++    SettingSwitchRow(
++        title = "Unggah chunk cepat",
++        desc = "Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.",
++        checked = s.fastChunkUpload,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(fastChunkUpload = on) } }
++    )
++    SettingDivider()
+     SettingChoiceRow(
+@@ -314,2 +329,23 @@ fun RustControlRows() {
+ 
++/** Rekaman performa untuk laporan masalah: dinyalakan, dimainkan sebentar, lalu dibagikan. */
++@Composable
++fun RustDiagnosticRows() {
++    val context = LocalContext.current
++    val s by RustSettingsStore.settings.collectAsState()
++
++    SettingSwitchRow(
++        title = "Rekam performa",
++        desc = "Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.",
++        checked = s.recordPerformance,
++        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(recordPerformance = on) } }
++    )
++    SettingDivider()
++    SettingActionRow(
++        title = "Bagikan laporan performa",
++        desc = "Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.",
++        actionLabel = "Bagikan",
++        onClick = { RustPerformanceReport.share(context) }
++    )
++}
++
+ /** Server yang langsung dimasuki saat PLAY, dan tombol setel ulang. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 55a9ddc..cd0248a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -658,2 +658,3 @@ fun SettingsScreen(
+                         SettingsGroup("Kontrol") { RustControlRows() }
++                        SettingsGroup("Diagnostik") { RustDiagnosticRows() }
+                         SettingsGroup("Permainan") { RustGameRows() }
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 19c2536..4c3b198 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -77,5 +77,5 @@ Mesin tanpa perubahan ini (`patch_set=` kosong, atau Release lama) mengabaikan b
+ 
+-Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, mode performa (Normal, Super hemat, Hemat baterai, FPS maksimum), kurangi animasi game, laju layar, petunjuk performa, batas pekerja chunk, cache RAM, arah dan rasio layar, layar penuh imersif, poni, perangkat input, server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
++Pengaturan mesin Rust berbeda dari jalur Java (tidak ada JVM, RAM Java, argumen JVM, atau driver Zink), jadi punya tab sendiri: **Pengaturan > Rust**, terpisah dari tab Game. Isinya: status mesin dan sumber daya game, renderer (Vulkan kompatibel, Vulkan cepat, OpenGL ES), skala resolusi, mode performa (Normal, Super hemat, Hemat baterai, FPS maksimum), kurangi animasi game, laju layar, petunjuk performa, batas pekerja chunk, unggah chunk cepat, cache RAM, sederhanakan daun (eksperimental), arah dan rasio layar, layar penuh imersif, poni, perangkat input, rekam dan bagikan laporan performa (grup Diagnostik), server yang langsung dimasuki saat PLAY, dan tombol setel ulang.
+ 
+-Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`, dan sejak mesin 0.7.8 `super_perf_mode`, `battery_perf_mode`, `max_fps_mode`, `disable_game_animations`). Karena itu:
++Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas config milik mesin sendiri, dengan nama kunci dan nilai persis seperti yang dibaca mesin (`renderer`, `render_scale`, `worker_limit`, `cache_budget_mib`, `display_hz`, `performance_hints`, `input_host`, `orientation`, `immersive`, `avoid_cutout`, `aspect`, `server`, dan sejak mesin 0.7.8 `super_perf_mode`, `battery_perf_mode`, `max_fps_mode`, `disable_game_animations`, `fast_chunk_upload`, `experimental_leaf_culling`, `record_performance`). Karena itu:
+ 
+@@ -86,3 +86,9 @@ Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas confi
+ - Layar peluncur milik mesin menulis berkas yang sama; keduanya saling konsisten karena memakai nama kunci yang sama.
+-- **Mode performa** hanya satu pilihan karena mesin menganggap ketiga mode (super, baterai, FPS) saling meniadakan; launcher menulis ketiga kuncinya sekaligus. Mesin menerapkannya pada PLAY dengan mengubah `options.txt` game (jarak render, awan, partikel, batas FPS, dan seterusnya), sama seperti saat dipilih di layar pengaturan mesin. Kunci lain milik mesin 0.7.8 (`fast_chunk_upload`, `zero_latency_touch`, dan seterusnya) dibiarkan di bawaan mesin.
++- **Mode performa** hanya satu pilihan karena mesin menganggap ketiga mode (super, baterai, FPS) saling meniadakan; launcher menulis ketiga kuncinya sekaligus. Mesin menerapkannya pada PLAY dengan mengubah `options.txt` game (jarak render, awan, partikel, batas FPS, dan seterusnya), sama seperti saat dipilih di layar pengaturan mesin. Kunci lain milik mesin 0.7.8 dibiarkan di bawaan mesin karena sengaja tidak dipasang di tab ini (lihat "Opsi mesin yang sengaja tidak dipasang" di bawah).
++
++**Unggah chunk cepat** (`fast_chunk_upload`, bawaan mesin: menyala) menaikkan jatah unggah mesh chunk ke GPU menjadi paling sedikit 4 MiB per frame setiap PLAY (mesin menerapkannya ke `options.txt`); bila dimatikan, nilai di dalam game yang berlaku. **Sederhanakan daun** (`experimental_leaf_culling`, bawaan mesin: mati) menyederhanakan dedaunan rapat dan mengubah tampilannya; mesin sendiri menyebutnya eksperimental. Keduanya berlaku di PLAY berikutnya.
++
++**Diagnostik.** **Rekam performa** (`record_performance`, mati secara bawaan) membuat mesin merekam waktu frame dan pembuatan chunk saat bermain (paling lama 30 menit, paling besar 8 MiB, tiga berkas terakhir disimpan) ke `files/horizon/performance/horizon-performance-<waktu>.jsonl`. Mesin menyatakan laporan itu tidak berisi akun, chat, nama dunia, atau posisi. Tombol **Bagikan laporan performa** menyalin laporan terbaru ke folder cache berbagi (token disamarkan seperti log lain, di utas latar) lalu membuka pilihan aplikasi; launcher tidak pernah mengubah atau menghapus laporan milik mesin. Perekaman menambah sedikit beban, jadi hanya dinyalakan bila perlu.
++
++**Opsi mesin yang sengaja tidak dipasang** (hasil pemeriksaan kode mesin 0.7.8, bukan kelalaian): `zero_latency_touch` hanya disimpan di config dan tidak dibaca kode mana pun (tombol di layar mesin tidak berefek), `ui_scale_percent` hanya memperbesar layar peluncur milik mesin (HUD game tidak berubah; ukuran HUD diatur di dalam game), `keypad_controls` hanya migrasi sekali dari versi lama (mesin mengosongkannya setiap PLAY; keypad kini diatur di Key Binds dalam game), `proxy` hanya dibaca peluncur desktop (kode Android tidak membacanya), `disable_launcher_animations`, `shader_source`, dan `mod_source` hanya untuk layar peluncur mesin yang tidak dipakai Amber, `gpu_profile` hanya menambah waktu GPU per tahap ke laporan teknis, dan `profile`, `name`, serta `theme` diatur Amber sendiri. Pengaturan video di dalam game (jarak render, FOV, VSync, dan lain-lain) tetap diatur di menu game, karena disimpan di `options.txt` milik mesin.
+ 
+@@ -220,3 +226,4 @@ Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dik
+    Di bagian **Kontrol**, saklar **Kontrol Amber** hidup: PLAY lagi dan tombol layar mesin tampil berwarna dan bertata letak seperti editor kontrol Amber (kaca gelap, sudut membulat, kuning saat ditekan), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali.
+-   Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya).
++   Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya). Coba matikan **Unggah chunk cepat** lalu PLAY dan bandingkan terasa tidak tersendat saat berlari menembus chunk baru; nyalakan **Sederhanakan daun** dan PLAY: dedaunan tampak lebih sederhana.
++   Di bagian **Diagnostik**: nyalakan **Rekam performa**, PLAY dan main beberapa menit, keluar, lalu ketuk **Bagikan laporan performa**: pilihan aplikasi muncul dengan berkas `horizon-performance-....jsonl`. Sebelum pernah merekam, tombol itu hanya menampilkan pesan petunjuk.
+ 9. Mod: buka layar Mod pada instance Rust. Tab Mod menampilkan empat modul bawaan (mati) tanpa tombol hapus. Hidupkan **Zoom**, PLAY, lalu tahan Z di game: pandangan membesar; matikan lalu PLAY: tidak lagi.
+@@ -234,3 +241,3 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ - Akun Ely.by belum didukung; unduhan sumber daya pertama masih digambar UI mesin (bukan UI launcher).
+-- Mod `.hmod` belum bisa dipasang lewat tautan, dan mod Java belum bisa diporting ke mesin dari Amber (itu fitur peluncur mesin sendiri). Pengaturan mesin sudah ada di tab Rust, tetapi hanya sebagian (profil, proxy, gamepad, dan opsi lain milik mesin masih di layar peluncur mesin).
++- Mod `.hmod` belum bisa dipasang lewat tautan, dan mod Java belum bisa diporting ke mesin dari Amber (itu fitur peluncur mesin sendiri). Pengaturan mesin yang berfungsi di Android sudah ada di tab Rust; sisanya sengaja tidak dipasang (lihat daftar di bagian Pengaturan Rust).
+ - Pembangunan mesin belum pernah dijalankan di CI; run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
+@@ -241,3 +248,2 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
+-- Pengaturan mesin yang belum ada di tab Rust (profil, proxy, gamepad, dan opsi performa lain).
+ - Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
+
+
+# FIN part=1/1 files=11

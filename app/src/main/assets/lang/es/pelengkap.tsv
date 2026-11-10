@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	Puntero (predeterminado)
+Penunjuk (Kursor Teks)	Puntero (cursor de texto)
+Penunjuk (Tangan)	Puntero (mano)
+Penunjuk (Crosshair)	Puntero (mira)
+Penunjuk (Atas/Bawah)	Puntero (arriba/abajo)
+Penunjuk (Kiri/Kanan)	Puntero (izquierda/derecha)
+Penunjuk (Pindahkan)	Puntero (mover)
+Penunjuk (Tidak Diizinkan)	Puntero (no permitido)
+Bentuk biasa. Dipakai di semua versi Minecraft.	Forma normal. Se usa en todas las versiones de Minecraft.
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: se usa cuando el cursor est\u00e1 sobre un campo de texto.
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: se usa cuando el cursor est\u00e1 sobre un elemento en el que se puede hacer clic.
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: forma de mira.
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: se usa en elementos que se desplazan hacia arriba/abajo.
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: se usa en controles deslizantes (slider).
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: forma de mover.
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: se usa en elementos desactivados.
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	M\u00e1s de la mitad de la RAM del tel\u00e9fono: Android puede cerrar el juego por s\u00ed solo.
+Penunjuk kursor	Punteros del cursor
+Mouse fisik	Rat\u00f3n f\u00edsico
+Pakai kursor sistem Android	Usar el cursor del sistema Android
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Desactivado (predeterminado): el rat\u00f3n mueve el cursor del launcher en los men\u00fas del juego, as\u00ed que se aplican la imagen, el tama\u00f1o y el hotspot configurados arriba. Act\u00edvalo si el rat\u00f3n te resulta m\u00e1s c\u00f3modo con el puntero predeterminado de Android.
+Kecepatan kursor mouse	Velocidad del cursor del rat\u00f3n
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	Multiplicador sobre la sensibilidad del cursor virtual, solo para un rat\u00f3n f\u00edsico en los men\u00fas del juego. 100% = sin cambios.
+Kecepatan kamera mouse	Velocidad de la c\u00e1mara con el rat\u00f3n
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	Multiplicador sobre la sensibilidad de la c\u00e1mara, solo para un rat\u00f3n f\u00edsico mientras juegas. 100% = sin cambios.
+Gambar tidak bisa dibaca	No se pudo leer la imagen
+Ganti gambar	Cambiar imagen
+Pilih gambar	Elegir imagen
+Tutup hotspot	Cerrar hotspot
+Atur hotspot	Ajustar hotspot
+Reset	Restablecer
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	El hotspot es el punto que se toma como la punta del cursor al hacer clic (el punto rojo de la vista previa).
+Ubah kunci API	Cambiar clave de API
+Kunci API CurseForge	Clave de API de CurseForge
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	Ya hay una clave guardada. Introduce una nueva para reemplazarla o elimina esta clave.
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge necesita una clave de API. Pega la clave del correo de CurseForge. La clave solo se guarda en este tel\u00e9fono y solo se env\u00eda a CurseForge.
+Tempel kunci di sini	Pega la clave aqu\u00ed
+Kunci API CurseForge belum diisi.	A\u00fan no se ha introducido la clave de API de CurseForge.
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	Se rechaz\u00f3 la clave de API de CurseForge (c\u00f3digo {0}). Revisa la clave y vuelve a introducirla.
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge est\u00e1 limitando las solicitudes. Espera un momento e int\u00e9ntalo de nuevo.
+CurseForge API error: kode {0}	Error de la API de CurseForge: c\u00f3digo {0}
+Respons kosong dari CurseForge	Respuesta vac\u00eda de CurseForge
+Respons CurseForge tidak dikenali	No se reconoce la respuesta de CurseForge
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge solo muestra los primeros {0} resultados. Acota la b\u00fasqueda.
+Id CurseForge tidak valid	ID de CurseForge no v\u00e1lido
+Detail CurseForge kosong	Los detalles de CurseForge est\u00e1n vac\u00edos
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	El autor no permite descargas desde el launcher. Desc\u00e1rgalo manualmente desde el sitio de CurseForge.
+File mod harus berformat .jar	El archivo del mod debe tener formato .jar
+File modpack harus berformat .mrpack atau .zip	El archivo del modpack debe tener formato .mrpack o .zip
+File {0} harus berformat .zip	El archivo de {0} debe tener formato .zip
+Mencari alamat unduhan mod dari CurseForge...	Buscando los enlaces de descarga de los mods en CurseForge...
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	El motor Rust por ahora solo admite cuentas Offline y Microsoft. Elige una en la pesta\u00f1a Cuentas.
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	El nombre de una cuenta offline para el motor Rust debe tener de 1 a 16 caracteres, sin espacios. Crea una cuenta offline nueva en la pesta\u00f1a Cuentas.
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	Esta cuenta de Microsoft no ha iniciado sesi\u00f3n por completo. Vuelve a iniciar sesi\u00f3n desde la pesta\u00f1a Cuentas.
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	Primera vez: el motor descarga los recursos del juego (unos 500 MiB). D\u00e9jalo terminar y el juego empezar\u00e1 justo despu\u00e9s.
+Folder data mesin tidak bisa dibuat	No se pudo crear la carpeta de datos del motor
+Berkas peluncuran tidak bisa disimpan	No se pudo guardar el archivo de inicio
+Tidak bisa menyimpan {0}	No se pudo guardar {0}
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Oculta la barra de navegaci\u00f3n y la barra de estado mientras juegas. Desactivado de forma predeterminada: en algunos tel\u00e9fonos puede hacer que el juego se congele.
+Tidak ada versi Forge yang didukung	No hay versiones de Forge compatibles
+Tidak ada versi NeoForge yang didukung	No hay versiones de NeoForge compatibles
+Tidak dapat memuat daftar versi Fabric	No se pudo cargar la lista de versiones de Fabric
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Solo quedan {0} MB de almacenamiento. Libera al menos 500 MB y vuelve a intentar la descarga.
+Unduhan game	Descargas del juego
+Mengunduh Minecraft	Descargando Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	La descarga contin\u00faa en segundo plano. No fuerces el cierre de la aplicaci\u00f3n.
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Activa el modo de rendimiento estable del sistema y la V-Sync de Zink, y limita la escala de resoluci\u00f3n m\u00e1xima al {0}%.

@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	ตัวชี้ (ค่าเริ่มต้น)
+Penunjuk (Kursor Teks)	ตัวชี้ (เคอร์เซอร์ข้อความ)
+Penunjuk (Tangan)	ตัวชี้ (มือ)
+Penunjuk (Crosshair)	ตัวชี้ (เป้าเล็ง)
+Penunjuk (Atas/Bawah)	ตัวชี้ (ขึ้น/ลง)
+Penunjuk (Kiri/Kanan)	ตัวชี้ (ซ้าย/ขวา)
+Penunjuk (Pindahkan)	ตัวชี้ (ย้าย)
+Penunjuk (Tidak Diizinkan)	ตัวชี้ (ไม่อนุญาต)
+Bentuk biasa. Dipakai di semua versi Minecraft.	รูปแบบปกติ ใช้ได้กับ Minecraft ทุกเวอร์ชัน
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: ใช้เมื่อเคอร์เซอร์อยู่เหนือช่องข้อความ
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: ใช้เมื่อเคอร์เซอร์อยู่เหนือองค์ประกอบที่คลิกได้
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: รูปแบบเป้าเล็ง
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: ใช้กับองค์ประกอบที่เลื่อนขึ้น/ลงได้
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: ใช้กับแถบเลื่อน (สไลเดอร์)
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: รูปแบบย้าย
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: ใช้กับองค์ประกอบที่ปิดใช้งาน
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	มากกว่าครึ่งหนึ่งของ RAM มือถือ: Android อาจปิดเกมเอง
+Penunjuk kursor	ตัวชี้เคอร์เซอร์
+Mouse fisik	เมาส์จริง
+Pakai kursor sistem Android	ใช้เคอร์เซอร์ระบบของ Android
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	ปิด (ค่าเริ่มต้น): เมาส์จะขยับเคอร์เซอร์ของ launcher ในเมนูเกม ดังนั้นรูปภาพ ขนาด และ hotspot ที่ตั้งไว้ด้านบนจะมีผล เปิดเมื่อใช้เมาส์สะดวกกว่าด้วยตัวชี้มาตรฐานของ Android
+Kecepatan kursor mouse	ความเร็วเคอร์เซอร์เมาส์
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	ตัวคูณเพิ่มจากความไวของเคอร์เซอร์เสมือน ใช้กับเมาส์จริงในเมนูเกมเท่านั้น 100% = เท่าเดิม
+Kecepatan kamera mouse	ความเร็วกล้องของเมาส์
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	ตัวคูณเพิ่มจากความไวของกล้อง ใช้กับเมาส์จริงขณะเล่นเท่านั้น 100% = เท่าเดิม
+Gambar tidak bisa dibaca	อ่านรูปภาพไม่ได้
+Ganti gambar	เปลี่ยนรูปภาพ
+Pilih gambar	เลือกรูปภาพ
+Tutup hotspot	ปิด hotspot
+Atur hotspot	ตั้งค่า hotspot
+Reset	รีเซ็ต
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	Hotspot คือจุดที่นับเป็นปลายเคอร์เซอร์เมื่อคลิก (จุดสีแดงในตัวอย่าง)
+Ubah kunci API	เปลี่ยนคีย์ API
+Kunci API CurseForge	คีย์ API ของ CurseForge
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	บันทึกคีย์ไว้แล้ว กรอกคีย์ใหม่เพื่อแทนที่ หรือลบคีย์นี้
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge ต้องใช้คีย์ API วางคีย์จากอีเมลของ CurseForge คีย์จะถูกเก็บไว้ในมือถือเครื่องนี้เท่านั้น และส่งไปที่ CurseForge เท่านั้น
+Tempel kunci di sini	วางคีย์ที่นี่
+Kunci API CurseForge belum diisi.	ยังไม่ได้กรอกคีย์ API ของ CurseForge
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	คีย์ API ของ CurseForge ถูกปฏิเสธ (รหัส {0}) ตรวจสอบคีย์แล้วกรอกใหม่
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge จำกัดจำนวนคำขอ รอสักครู่แล้วลองอีกครั้ง
+CurseForge API error: kode {0}	ข้อผิดพลาด API ของ CurseForge: รหัส {0}
+Respons kosong dari CurseForge	การตอบกลับจาก CurseForge ว่างเปล่า
+Respons CurseForge tidak dikenali	ไม่รู้จักการตอบกลับจาก CurseForge
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge แสดงเพียง {0} ผลลัพธ์แรก โปรดจำกัดการค้นหาให้แคบลง
+Id CurseForge tidak valid	รหัส CurseForge ไม่ถูกต้อง
+Detail CurseForge kosong	รายละเอียด CurseForge ว่างเปล่า
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	ผู้สร้างไม่อนุญาตให้ดาวน์โหลดผ่าน launcher ดาวน์โหลดเองจากเว็บไซต์ CurseForge
+File mod harus berformat .jar	ไฟล์ Mod ต้องเป็นรูปแบบ .jar
+File modpack harus berformat .mrpack atau .zip	ไฟล์ modpack ต้องเป็นรูปแบบ .mrpack หรือ .zip
+File {0} harus berformat .zip	ไฟล์ {0} ต้องเป็นรูปแบบ .zip
+Mencari alamat unduhan mod dari CurseForge...	กำลังค้นหาลิงก์ดาวน์โหลด Mod จาก CurseForge...
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	เอนจิน Rust รองรับเฉพาะบัญชี Offline และ Microsoft ในตอนนี้ เลือกหนึ่งในนั้นที่แท็บบัญชี
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	ชื่อบัญชีออฟไลน์สำหรับเอนจิน Rust ต้องมี 1 ถึง 16 ตัวอักษรและไม่มีช่องว่าง สร้างบัญชีออฟไลน์ใหม่ที่แท็บบัญชี
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	บัญชี Microsoft นี้ยังเข้าสู่ระบบไม่สมบูรณ์ เข้าสู่ระบบอีกครั้งที่แท็บบัญชี
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	เปิดครั้งแรก: เอนจินจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) ปล่อยให้เสร็จ แล้วเกมจะเริ่มทันที
+Folder data mesin tidak bisa dibuat	สร้างโฟลเดอร์ข้อมูลของเอนจินไม่ได้
+Berkas peluncuran tidak bisa disimpan	บันทึกไฟล์เปิดเกมไม่ได้
+Tidak bisa menyimpan {0}	บันทึก {0} ไม่ได้
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	ซ่อนแถบนำทางและแถบสถานะขณะเล่น ปิดไว้เป็นค่าเริ่มต้น: ในมือถือบางรุ่นอาจทำให้เกมค้าง
+Tidak ada versi Forge yang didukung	ไม่มี Forge เวอร์ชันที่รองรับ
+Tidak ada versi NeoForge yang didukung	ไม่มี NeoForge เวอร์ชันที่รองรับ
+Tidak dapat memuat daftar versi Fabric	โหลดรายการเวอร์ชัน Fabric ไม่ได้
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	พื้นที่เก็บข้อมูลเหลือเพียง {0} MB เคลียร์พื้นที่อย่างน้อย 500 MB แล้วลองดาวน์โหลดอีกครั้ง
+Unduhan game	การดาวน์โหลดเกม
+Mengunduh Minecraft	กำลังดาวน์โหลด Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	การดาวน์โหลดจะทำต่อในเบื้องหลัง อย่าบังคับปิดแอป
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	เปิดโหมดประสิทธิภาพคงที่ของระบบและ V-Sync ของ Zink พร้อมจำกัดสเกลความละเอียดสูงสุดที่ {0}%

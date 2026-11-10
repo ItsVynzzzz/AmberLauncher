@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	Con tr\u1ecf (M\u1eb7c \u0111\u1ecbnh)
+Penunjuk (Kursor Teks)	Con tr\u1ecf (Con tr\u1ecf v\u0103n b\u1ea3n)
+Penunjuk (Tangan)	Con tr\u1ecf (B\u00e0n tay)
+Penunjuk (Crosshair)	Con tr\u1ecf (T\u00e2m ng\u1eafm)
+Penunjuk (Atas/Bawah)	Con tr\u1ecf (L\u00ean/Xu\u1ed1ng)
+Penunjuk (Kiri/Kanan)	Con tr\u1ecf (Tr\u00e1i/Ph\u1ea3i)
+Penunjuk (Pindahkan)	Con tr\u1ecf (Di chuy\u1ec3n)
+Penunjuk (Tidak Diizinkan)	Con tr\u1ecf (Kh\u00f4ng \u0111\u01b0\u1ee3c ph\u00e9p)
+Bentuk biasa. Dipakai di semua versi Minecraft.	H\u00ecnh d\u1ea1ng th\u00f4ng th\u01b0\u1eddng. D\u00f9ng \u1edf m\u1ecdi phi\u00ean b\u1ea3n Minecraft.
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: d\u00f9ng khi con tr\u1ecf n\u1eb1m tr\u00ean \u00f4 nh\u1eadp v\u0103n b\u1ea3n.
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: d\u00f9ng khi con tr\u1ecf n\u1eb1m tr\u00ean th\u00e0nh ph\u1ea7n c\u00f3 th\u1ec3 nh\u1ea5p.
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: h\u00ecnh t\u00e2m ng\u1eafm.
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n c\u00f3 th\u1ec3 cu\u1ed9n l\u00ean/xu\u1ed1ng.
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n thanh tr\u01b0\u1ee3t (slider).
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: h\u00ecnh d\u1ea1ng di chuy\u1ec3n.
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: d\u00f9ng \u1edf th\u00e0nh ph\u1ea7n b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a.
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	H\u01a1n m\u1ed9t n\u1eeda RAM c\u1ee7a \u0111i\u1ec7n tho\u1ea1i: Android c\u00f3 th\u1ec3 t\u1ef1 \u0111\u00f3ng game.
+Penunjuk kursor	Con tr\u1ecf chu\u1ed9t
+Mouse fisik	Chu\u1ed9t th\u1eadt
+Pakai kursor sistem Android	D\u00f9ng con tr\u1ecf h\u1ec7 th\u1ed1ng Android
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	T\u1eaft (m\u1eb7c \u0111\u1ecbnh): chu\u1ed9t \u0111i\u1ec1u khi\u1ec3n con tr\u1ecf c\u1ee7a launcher trong menu game, n\u00ean h\u00ecnh \u1ea3nh, k\u00edch th\u01b0\u1edbc v\u00e0 hotspot \u1edf tr\u00ean s\u1ebd \u0111\u01b0\u1ee3c \u00e1p d\u1ee5ng. B\u1eadt n\u1ebfu b\u1ea1n th\u1ea5y chu\u1ed9t d\u1ec5 d\u00f9ng h\u01a1n v\u1edbi con tr\u1ecf m\u1eb7c \u0111\u1ecbnh c\u1ee7a Android.
+Kecepatan kursor mouse	T\u1ed1c \u0111\u1ed9 con tr\u1ecf chu\u1ed9t
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	H\u1ec7 s\u1ed1 nh\u00e2n th\u00eam v\u00e0o \u0111\u1ed9 nh\u1ea1y con tr\u1ecf \u1ea3o, ch\u1ec9 \u00e1p d\u1ee5ng cho chu\u1ed9t th\u1eadt trong menu game. 100% = gi\u1eef nguy\u00ean.
+Kecepatan kamera mouse	T\u1ed1c \u0111\u1ed9 camera c\u1ee7a chu\u1ed9t
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	H\u1ec7 s\u1ed1 nh\u00e2n th\u00eam v\u00e0o \u0111\u1ed9 nh\u1ea1y camera, ch\u1ec9 \u00e1p d\u1ee5ng cho chu\u1ed9t th\u1eadt khi \u0111ang ch\u01a1i. 100% = gi\u1eef nguy\u00ean.
+Gambar tidak bisa dibaca	Kh\u00f4ng \u0111\u1ecdc \u0111\u01b0\u1ee3c h\u00ecnh \u1ea3nh
+Ganti gambar	\u0110\u1ed5i h\u00ecnh \u1ea3nh
+Pilih gambar	Ch\u1ecdn h\u00ecnh \u1ea3nh
+Tutup hotspot	\u0110\u00f3ng hotspot
+Atur hotspot	\u0110\u1eb7t hotspot
+Reset	\u0110\u1eb7t l\u1ea1i
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	Hotspot l\u00e0 \u0111i\u1ec3m \u0111\u01b0\u1ee3c t\u00ednh l\u00e0 \u0111\u1ea7u con tr\u1ecf khi nh\u1ea5p (ch\u1ea5m \u0111\u1ecf trong ph\u1ea7n xem tr\u01b0\u1edbc).
+Ubah kunci API	\u0110\u1ed5i kh\u00f3a API
+Kunci API CurseForge	Kh\u00f3a API CurseForge
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	\u0110\u00e3 l\u01b0u kh\u00f3a. Nh\u1eadp kh\u00f3a m\u1edbi \u0111\u1ec3 thay th\u1ebf, ho\u1eb7c x\u00f3a kh\u00f3a n\u00e0y.
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge c\u1ea7n kh\u00f3a API. D\u00e1n kh\u00f3a t\u1eeb email c\u1ee7a CurseForge. Kh\u00f3a ch\u1ec9 \u0111\u01b0\u1ee3c l\u01b0u tr\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y v\u00e0 ch\u1ec9 \u0111\u01b0\u1ee3c g\u1eedi \u0111\u1ebfn CurseForge.
+Tempel kunci di sini	D\u00e1n kh\u00f3a v\u00e0o \u0111\u00e2y
+Kunci API CurseForge belum diisi.	Ch\u01b0a nh\u1eadp kh\u00f3a API CurseForge.
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	Kh\u00f3a API CurseForge b\u1ecb t\u1eeb ch\u1ed1i (m\u00e3 {0}). H\u00e3y ki\u1ec3m tra kh\u00f3a r\u1ed3i nh\u1eadp l\u1ea1i.
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge \u0111ang gi\u1edbi h\u1ea1n s\u1ed1 y\u00eau c\u1ea7u. H\u00e3y ch\u1edd m\u1ed9t l\u00e1t r\u1ed3i th\u1eed l\u1ea1i.
+CurseForge API error: kode {0}	L\u1ed7i API CurseForge: m\u00e3 {0}
+Respons kosong dari CurseForge	Ph\u1ea3n h\u1ed3i tr\u1ed1ng t\u1eeb CurseForge
+Respons CurseForge tidak dikenali	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c ph\u1ea3n h\u1ed3i c\u1ee7a CurseForge
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge ch\u1ec9 hi\u1ec3n th\u1ecb {0} k\u1ebft qu\u1ea3 \u0111\u1ea7u ti\u00ean. H\u00e3y thu h\u1eb9p t\u00ecm ki\u1ebfm.
+Id CurseForge tidak valid	ID CurseForge kh\u00f4ng h\u1ee3p l\u1ec7
+Detail CurseForge kosong	Chi ti\u1ebft CurseForge tr\u1ed1ng
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	T\u00e1c gi\u1ea3 kh\u00f4ng cho ph\u00e9p t\u1ea3i qua launcher. H\u00e3y t\u1ea3i th\u1ee7 c\u00f4ng t\u1eeb trang web CurseForge.
+File mod harus berformat .jar	T\u1ec7p mod ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .jar
+File modpack harus berformat .mrpack atau .zip	T\u1ec7p modpack ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .mrpack ho\u1eb7c .zip
+File {0} harus berformat .zip	T\u1ec7p {0} ph\u1ea3i \u1edf \u0111\u1ecbnh d\u1ea1ng .zip
+Mencari alamat unduhan mod dari CurseForge...	\u0110ang t\u00ecm \u0111\u1ecba ch\u1ec9 t\u1ea3i mod t\u1eeb CurseForge...
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Engine Rust hi\u1ec7n m\u1edbi h\u1ed7 tr\u1ee3 t\u00e0i kho\u1ea3n Offline v\u00e0 Microsoft. H\u00e3y ch\u1ecdn m\u1ed9t trong hai \u1edf tab T\u00e0i kho\u1ea3n.
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	T\u00ean t\u00e0i kho\u1ea3n offline cho engine Rust ph\u1ea3i d\u00e0i t\u1eeb 1 \u0111\u1ebfn 16 k\u00fd t\u1ef1 v\u00e0 kh\u00f4ng c\u00f3 kho\u1ea3ng tr\u1eafng. H\u00e3y t\u1ea1o t\u00e0i kho\u1ea3n offline m\u1edbi \u1edf tab T\u00e0i kho\u1ea3n.
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	T\u00e0i kho\u1ea3n Microsoft n\u00e0y ch\u01b0a \u0111\u0103ng nh\u1eadp \u0111\u1ea7y \u0111\u1ee7. H\u00e3y \u0111\u0103ng nh\u1eadp l\u1ea1i \u1edf tab T\u00e0i kho\u1ea3n.
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	L\u1ea7n m\u1edf \u0111\u1ea7u ti\u00ean: engine s\u1ebd t\u1ea3i t\u00e0i nguy\u00ean game (kho\u1ea3ng 500 MiB). H\u00e3y \u0111\u1ec3 n\u00f3 ch\u1ea1y xong, game s\u1ebd b\u1eaft \u0111\u1ea7u ngay sau \u0111\u00f3.
+Folder data mesin tidak bisa dibuat	Kh\u00f4ng t\u1ea1o \u0111\u01b0\u1ee3c th\u01b0 m\u1ee5c d\u1eef li\u1ec7u c\u1ee7a engine
+Berkas peluncuran tidak bisa disimpan	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c t\u1ec7p kh\u1edfi ch\u1ea1y
+Tidak bisa menyimpan {0}	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c {0}
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	\u1ea8n thanh \u0111i\u1ec1u h\u01b0\u1edbng v\u00e0 thanh tr\u1ea1ng th\u00e1i khi ch\u01a1i. M\u1eb7c \u0111\u1ecbnh t\u1eaft: tr\u00ean m\u1ed9t s\u1ed1 \u0111i\u1ec7n tho\u1ea1i c\u00f3 th\u1ec3 khi\u1ebfn game b\u1ecb treo.
+Tidak ada versi Forge yang didukung	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge n\u00e0o \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
+Tidak ada versi NeoForge yang didukung	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n NeoForge n\u00e0o \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3
+Tidak dapat memuat daftar versi Fabric	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c danh s\u00e1ch phi\u00ean b\u1ea3n Fabric
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Dung l\u01b0\u1ee3ng l\u01b0u tr\u1eef ch\u1ec9 c\u00f2n {0} MB. H\u00e3y gi\u1ea3i ph\u00f3ng \u00edt nh\u1ea5t 500 MB r\u1ed3i t\u1ea3i l\u1ea1i.
+Unduhan game	T\u1ea3i game
+Mengunduh Minecraft	\u0110ang t\u1ea3i Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	Qu\u00e1 tr\u00ecnh t\u1ea3i ti\u1ebfp t\u1ee5c \u1edf n\u1ec1n. \u0110\u1eebng bu\u1ed9c d\u1eebng \u1ee9ng d\u1ee5ng.
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	B\u1eadt ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng \u1ed5n \u0111\u1ecbnh c\u1ee7a h\u1ec7 th\u1ed1ng v\u00e0 V-Sync c\u1ee7a Zink, \u0111\u1ed3ng th\u1eddi gi\u1edbi h\u1ea1n t\u1ef7 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i t\u1ed1i \u0111a \u1edf {0}%.

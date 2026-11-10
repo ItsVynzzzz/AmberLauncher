@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	Pointer (Default)
+Penunjuk (Kursor Teks)	Pointer (Text Cursor)
+Penunjuk (Tangan)	Pointer (Hand)
+Penunjuk (Crosshair)	Pointer (Crosshair)
+Penunjuk (Atas/Bawah)	Pointer (Up/Down)
+Penunjuk (Kiri/Kanan)	Pointer (Left/Right)
+Penunjuk (Pindahkan)	Pointer (Move)
+Penunjuk (Tidak Diizinkan)	Pointer (Not Allowed)
+Bentuk biasa. Dipakai di semua versi Minecraft.	Standard shape. Used in all Minecraft versions.
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: used when the cursor is over a text field.
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: used when the cursor is over a clickable element.
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: crosshair shape.
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: used on elements that scroll up/down.
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: used on slider elements.
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: move shape.
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: used on disabled elements.
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	More than half of the phone's RAM: Android may close the game on its own.
+Penunjuk kursor	Cursor pointers
+Mouse fisik	Physical mouse
+Pakai kursor sistem Android	Use the Android system cursor
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Off (default): the mouse moves the launcher's cursor in game menus, so the image, size and hotspot set above apply. Turn on if the mouse feels better with the default Android pointer.
+Kecepatan kursor mouse	Mouse cursor speed
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	A multiplier on top of the virtual cursor sensitivity, for a physical mouse in game menus only. 100% = unchanged.
+Kecepatan kamera mouse	Mouse camera speed
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	A multiplier on top of the camera sensitivity, for a physical mouse while playing only. 100% = unchanged.
+Gambar tidak bisa dibaca	The image could not be read
+Ganti gambar	Change image
+Pilih gambar	Choose image
+Tutup hotspot	Close hotspot
+Atur hotspot	Set hotspot
+Reset	Reset
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	The hotspot is the point counted as the tip of the cursor when clicking (the red dot in the preview).
+Ubah kunci API	Change API key
+Kunci API CurseForge	CurseForge API key
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	A key is already saved. Enter a new key to replace it, or delete this key.
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge needs an API key. Paste the key from the CurseForge email. The key is only stored on this phone and only sent to CurseForge.
+Tempel kunci di sini	Paste the key here
+Kunci API CurseForge belum diisi.	The CurseForge API key has not been entered.
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	The CurseForge API key was rejected (code {0}). Check the key and enter it again.
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge is rate-limiting requests. Wait a moment and try again.
+CurseForge API error: kode {0}	CurseForge API error: code {0}
+Respons kosong dari CurseForge	Empty response from CurseForge
+Respons CurseForge tidak dikenali	The CurseForge response was not recognized
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge only shows the first {0} results. Narrow down your search.
+Id CurseForge tidak valid	Invalid CurseForge ID
+Detail CurseForge kosong	The CurseForge details are empty
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	The author does not allow downloads through the launcher. Download it manually from the CurseForge website.
+File mod harus berformat .jar	A mod file must be in .jar format
+File modpack harus berformat .mrpack atau .zip	A modpack file must be in .mrpack or .zip format
+File {0} harus berformat .zip	A {0} file must be in .zip format
+Mencari alamat unduhan mod dari CurseForge...	Looking up mod download links from CurseForge...
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	The Rust engine only supports Offline and Microsoft accounts for now. Pick one of them in the Accounts tab.
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	An offline account name for the Rust engine must be 1 to 16 characters with no spaces. Create a new offline account in the Accounts tab.
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	This Microsoft account is not fully signed in. Sign in again from the Accounts tab.
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	First launch: the engine downloads the game assets (about 500 MiB). Let it finish and the game starts right after.
+Folder data mesin tidak bisa dibuat	The engine data folder could not be created
+Berkas peluncuran tidak bisa disimpan	The launch file could not be saved
+Tidak bisa menyimpan {0}	Could not save {0}
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Hides the navigation bar and status bar while playing. Off by default: on some phones it can make the game freeze.
+Tidak ada versi Forge yang didukung	No supported Forge versions
+Tidak ada versi NeoForge yang didukung	No supported NeoForge versions
+Tidak dapat memuat daftar versi Fabric	Could not load the Fabric version list
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	Only {0} MB of storage is left. Free up at least 500 MB, then try downloading again.
+Unduhan game	Game downloads
+Mengunduh Minecraft	Downloading Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	The download continues in the background. Do not force-close the app.
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Turns on the system stable-performance mode and Zink V-Sync, and caps the maximum resolution scale at {0}%.

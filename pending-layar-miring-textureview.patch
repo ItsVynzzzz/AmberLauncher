@@ -1,0 +1,56 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 14e1da3..49922aa 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -761,6 +761,16 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+      * TextureView sedikit lebih berat dari SurfaceView, jadi hanya dipakai untuk 26.x, dan tidak dipakai bila
+-     * pemain sudah memilih "Prefer OpenGL" di options.txt (preferredGraphicsBackend:"opengl").
++     * pemain sudah memilih "Prefer OpenGL" di options.txt (preferredGraphicsBackend:"opengl") dengan renderer yang
++     * tidak membuat swapchain Vulkan sendiri. Zink (Kopper) membuatnya walau game memakai backend OpenGL, jadi untuk
++     * renderer itu TextureView tetap dipakai. Saklar "Permukaan game TextureView" di Pengaturan memaksanya untuk
++     * semua versi dan renderer.
+      */
+     private fun shouldUseTextureView(): Boolean {
++        val settings = SettingsManager.settings.value
++        if (settings.forceTextureView) return true
+         if (!GlErrorPolicy.hasBackendChoice(mcVersion)) return false
++        val selected = settings.selectedRenderer
++        if (selected.contains("zink", ignoreCase = true) ||
++            selected.contains("kopper", ignoreCase = true) ||
++            selected.contains("vulkan", ignoreCase = true)
++        ) return true
+         val backend = runCatching {
+@@ -1056,3 +1066,5 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+                 if (GlErrorPolicy.hasBackendChoice(mcVersion)) {
+-                    LoggerBridge.append("▷ [Graphics] preferredGraphicsBackend=${MCOptions.get("preferredGraphicsBackend") ?: "(belum ada)"}, permukaan game=${if (useTextureView) "TextureView" else "SurfaceView"}")
++                    @Suppress("DEPRECATION")
++                    val displayRotation = try { windowManager.defaultDisplay.rotation * 90 } catch (_: Throwable) { -1 }
++                    LoggerBridge.append("▷ [Graphics] preferredGraphicsBackend=${MCOptions.get("preferredGraphicsBackend") ?: "(belum ada)"}, permukaan game=${if (useTextureView) "TextureView" else "SurfaceView"}, renderer=${activeSettings.selectedRenderer}, rotasi layar=${displayRotation} derajat")
+                 }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index cea99b4..a14bec4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -70,2 +70,5 @@ data class LauncherSettings(
+     val lockRefresh60: Boolean = false,
++    // Permukaan game selalu TextureView (bukan SurfaceView). Perbaikan bila tampilan game terputar 90 derajat
++    // di HP yang layar alaminya portrait; TextureView sedikit lebih berat (bawaan mati).
++    val forceTextureView: Boolean = false,
+     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 0b9670b..55a9ddc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -460,2 +460,11 @@ fun SettingsScreen(
+                         SettingDivider()
++                        SettingSwitchRow(
++                            title = "Permukaan game TextureView",
++                            desc = "Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.",
++                            checked = currentSettings.forceTextureView,
++                            onCheckedChange = { on ->
++                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(forceTextureView = on))
++                            }
++                        )
++                        SettingDivider()
+                         SettingSwitchRow(
+# FIN part=1/1 files=3

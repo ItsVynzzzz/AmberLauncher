@@ -78,6 +78,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
@@ -91,6 +92,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -117,6 +119,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -141,11 +144,13 @@ import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.components.AmbientGlow
 import com.israadev.nuxlauncher.ui.components.AmbientSampler
 import com.israadev.nuxlauncher.ui.components.AmbientState
+import com.israadev.nuxlauncher.ui.components.AmberSheet
 import com.israadev.nuxlauncher.ui.components.HomeInfo
 import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
+import com.israadev.nuxlauncher.ui.components.SheetButton
 import com.israadev.nuxlauncher.ui.components.rememberIsResumed
 import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
@@ -1570,8 +1575,12 @@ private fun BackgroundDialog(
 }
 
 /**
- * Dialog pemilih instance: ketuk baris untuk memilih; ikon di kanan untuk
- * buka folder, ubah, atau hapus; tombol kuning di bawah untuk menambah instance.
+ * Dialog pemilih instance: ketuk baris untuk memilih; ikon di kanan untuk buka folder, ubah, atau
+ * hapus; tombol di bawah untuk menambah instance.
+ *
+ * Memakai [AmberSheet]: tombol "Tambah instance" menempel di bawah dan tidak tertutup bar sistem,
+ * daftar di tengah yang digulir bila instance banyak. Di panel sempit ikon "buka folder" disembunyikan
+ * (tetap ada di dialog Ubah instance).
  */
 @Composable
 private fun InstancePickerDialog(
@@ -1584,134 +1593,159 @@ private fun InstancePickerDialog(
     onAdd: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    NuxDialog(
-        onDismissRequest = onDismiss,
-        modifier = Modifier.widthIn(max = 460.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+    AmberSheet(
+        onDismiss = onDismiss,
+        title = "PILIH INSTANCE",
+        panelWidth = 480.dp,
+        // Tidak ada isian di sini, jadi ketuk di luar panel boleh menutup.
+        dismissOnScrimTap = true,
+        footer = {
+            SheetButton(
+                text = "TAMBAH INSTANCE",
+                onClick = onAdd,
+                primary = true,
+                icon = Icons.Default.Add,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    ) { info ->
+        if (instances.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "PILIH INSTANCE",
-                    color = NuxColors.DarkGray,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 17.sp,
-                    letterSpacing = 0.5.sp,
-                    modifier = Modifier.weight(1f)
+                Icon(
+                    imageVector = Icons.Outlined.Folder,
+                    contentDescription = null,
+                    tint = NuxColors.GrayNeutral,
+                    modifier = Modifier.size(30.dp)
                 )
-                PickerIconButton(
-                    icon = Icons.Default.Close,
-                    description = "Tutup",
-                    tint = NuxColors.DarkGray,
-                    onClick = onDismiss
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (instances.isEmpty()) {
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Belum ada instance. Buat yang pertama di bawah.",
                     color = NuxColors.GrayNeutral,
                     fontSize = 13.sp,
-                    modifier = Modifier.padding(vertical = 14.dp)
+                    textAlign = TextAlign.Center
                 )
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 210.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(instances, key = { it.id }) { inst ->
-                        val isSelected = inst.id == selectedId
-                        val rowShape = RoundedCornerShape(16.dp)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(rowShape)
-                                .background(if (isSelected) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
-                                .border(
-                                    NuxSizes.BorderWidth,
-                                    if (isSelected) NuxColors.Yellow else NuxColors.LightGray,
-                                    rowShape
-                                )
-                                .clickable { onSelect(inst) }
-                                .padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = inst.name,
-                                    color = NuxColors.DarkGray,
-                                    fontWeight = FontWeight.Black,
-                                    fontSize = 15.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Text(
-                                    text = "${inst.mcVersion} · ${com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(inst.loader)}",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 12.sp,
-                                    maxLines = 1
-                                )
-                            }
-                            PickerIconButton(
-                                icon = Icons.Outlined.Folder,
-                                description = "Buka folder",
-                                tint = NuxColors.DarkGray,
-                                onClick = { onOpenFolder(inst) }
-                            )
-                            PickerIconButton(
-                                icon = Icons.Outlined.Tune,
-                                description = "Ubah instance",
-                                tint = NuxColors.DarkGray,
-                                onClick = { onEdit(inst) }
-                            )
-                            PickerIconButton(
-                                icon = Icons.Outlined.DeleteOutline,
-                                description = "Hapus instance",
-                                tint = NuxColors.ErrorRed,
-                                onClick = { onDelete(inst) }
-                            )
-                        }
+            }
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                instances.forEach { inst ->
+                    key(inst.id) {
+                        InstancePickerRow(
+                            inst = inst,
+                            selected = inst.id == selectedId,
+                            showFolder = !info.narrow,
+                            onSelect = { onSelect(inst) },
+                            onOpenFolder = { onOpenFolder(inst) },
+                            onEdit = { onEdit(inst) },
+                            onDelete = { onDelete(inst) }
+                        )
                     }
                 }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            NuxButton(
-                onClick = onAdd,
-                backgroundColor = NuxColors.Yellow,
-                contentColor = NuxColors.Ink,
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(22.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "TAMBAH INSTANCE",
-                    fontWeight = FontWeight.Black,
-                    fontSize = 15.sp,
-                    letterSpacing = 0.5.sp
-                )
             }
         }
     }
 }
 
-/** Tombol ikon bulat 40dp (target sentuh nyaman) untuk dialog pemilih instance. */
+/** Satu baris instance: huruf awal, nama, versi + loader, dan ikon aksi. Yang terpilih diberi tepi aksen dan centang. */
+@Composable
+private fun InstancePickerRow(
+    inst: Instance,
+    selected: Boolean,
+    showFolder: Boolean,
+    onSelect: () -> Unit,
+    onOpenFolder: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val rowShape = RoundedCornerShape(16.dp)
+    val initial = inst.name.trim().firstOrNull()?.uppercase() ?: "?"
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(rowShape)
+            .background(if (selected) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
+            .border(
+                if (selected) 1.5.dp else NuxSizes.GlassBorder,
+                if (selected) NuxColors.Yellow else NuxColors.CardBorder,
+                rowShape
+            )
+            .clickable { onSelect() }
+            .padding(start = 8.dp, end = 2.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(RoundedCornerShape(11.dp))
+                .background(NuxColors.YellowPale),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = initial,
+                color = NuxColors.Yellow,
+                fontWeight = FontWeight.Black,
+                fontSize = 16.sp,
+                maxLines = 1
+            )
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = inst.name,
+                    color = NuxColors.DarkGray,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                if (selected) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.Check,
+                        contentDescription = null,
+                        tint = NuxColors.Yellow,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+            Text(
+                text = "${inst.mcVersion} · ${com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(inst.loader)}",
+                color = NuxColors.GrayNeutral,
+                fontSize = 11.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        if (showFolder) {
+            PickerIconButton(
+                icon = Icons.Outlined.Folder,
+                description = "Buka folder",
+                tint = NuxColors.DarkGray,
+                onClick = onOpenFolder
+            )
+        }
+        PickerIconButton(
+            icon = Icons.Outlined.Tune,
+            description = "Ubah instance",
+            tint = NuxColors.DarkGray,
+            onClick = onEdit
+        )
+        PickerIconButton(
+            icon = Icons.Outlined.DeleteOutline,
+            description = "Hapus instance",
+            tint = NuxColors.ErrorRed,
+            onClick = onDelete
+        )
+    }
+}
+
+/** Tombol ikon bulat 36dp untuk baris pemilih instance. */
 @Composable
 private fun PickerIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
@@ -1721,7 +1755,7 @@ private fun PickerIconButton(
 ) {
     Box(
         modifier = Modifier
-            .size(40.dp)
+            .size(36.dp)
             .clip(CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
@@ -1730,7 +1764,7 @@ private fun PickerIconButton(
             imageVector = icon,
             contentDescription = description,
             tint = tint,
-            modifier = Modifier.size(22.dp)
+            modifier = Modifier.size(20.dp)
         )
     }
 }

@@ -54,7 +54,8 @@ object GameLogArchive {
     private const val MAX_ENGINE_SHADER_LINES = 80
     private val ENGINE_SETTING_KEYS = listOf(
         "renderer", "render_scale", "super_perf_mode", "battery_perf_mode", "max_fps_mode",
-        "disable_game_animations", "performance_hints", "worker_limit", "cache_budget_mib", "profile"
+        "disable_game_animations", "fast_chunk_upload", "experimental_leaf_culling", "record_performance",
+        "performance_hints", "worker_limit", "cache_budget_mib", "profile"
     )
 
     private const val LOG_NAME = "latestlog.txt"

@@ -67,3 +67,13 @@ Kurangi animasi game	Reduzir anima\u00e7\u00f5es do jogo
 Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Desativa texturas animadas, fade de chunks, balan\u00e7o da c\u00e2mera ao andar e blur dos menus. Mais leve em celulares fracos.
 Menu garis tiga	Menu de tr\u00eas linhas
 Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	O bot\u00e3o de tr\u00eas linhas na tela do jogo que abre o menu r\u00e1pido do motor (presets, controles, configura\u00e7\u00f5es). A cor segue o destaque do Amber. Vale no pr\u00f3ximo JOGAR.
+Sederhanakan daun (eksperimental)	Simplificar folhagem (experimental)
+Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Simplifica a folhagem densa para deixar o jogo mais leve. A apar\u00eancia das folhas muda e este recurso ainda \u00e9 experimental. Vale no pr\u00f3ximo JOGAR.
+Unggah chunk cepat	Envio r\u00e1pido de chunks
+Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Aumenta o limite de envio das malhas de chunk para a GPU para 4 MiB por quadro, feito para reduzir travadas ao andar e carregar o mundo. Vem ativado. Desative se o jogo ficar mais travado. Vale no pr\u00f3ximo JOGAR.
+Diagnostik	Diagn\u00f3stico
+Rekam performa	Gravar desempenho
+Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Registra os tempos de quadro e a cria\u00e7\u00e3o de chunks enquanto voc\u00ea joga (at\u00e9 30 minutos) em um relat\u00f3rio neste celular. O relat\u00f3rio n\u00e3o cont\u00e9m conta, chat nem nomes de mundos. A grava\u00e7\u00e3o adiciona um pouco de carga, ent\u00e3o desative quando n\u00e3o precisar. Vale no pr\u00f3ximo JOGAR.
+Bagikan laporan performa	Compartilhar relat\u00f3rio de desempenho
+Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Envia o \u00faltimo relat\u00f3rio gravado pelo aplicativo que voc\u00ea escolher, por exemplo para anexar ao relatar um jogo lento.
+Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Ainda n\u00e3o h\u00e1 relat\u00f3rio de desempenho. Ative Gravar desempenho, jogue um pouco e tente de novo.

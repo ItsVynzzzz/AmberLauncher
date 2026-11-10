@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.RustPerformanceReport
 import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.i18n.Text
@@ -160,6 +161,13 @@ fun RustGraphicsRows() {
             }
         }
     )
+    SettingDivider()
+    SettingSwitchRow(
+        title = "Sederhanakan daun (eksperimental)",
+        desc = "Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.",
+        checked = s.leafCulling,
+        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(leafCulling = on) } }
+    )
 }
 
 /** Mode performa, animasi, laju layar, petunjuk performa, batas pekerja chunk, dan cache. */
@@ -214,6 +222,13 @@ fun RustPerformanceRows() {
             val limit = raw.roundToInt().coerceIn(0, RustSettingsStore.MAX_WORKERS)
             RustSettingsStore.update(context) { it.copy(workerLimit = limit) }
         }
+    )
+    SettingDivider()
+    SettingSwitchRow(
+        title = "Unggah chunk cepat",
+        desc = "Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.",
+        checked = s.fastChunkUpload,
+        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(fastChunkUpload = on) } }
     )
     SettingDivider()
     SettingChoiceRow(
@@ -309,6 +324,27 @@ fun RustControlRows() {
         ),
         selected = s.inputHost,
         onSelect = { value -> RustSettingsStore.update(context) { it.copy(inputHost = value) } }
+    )
+}
+
+/** Rekaman performa untuk laporan masalah: dinyalakan, dimainkan sebentar, lalu dibagikan. */
+@Composable
+fun RustDiagnosticRows() {
+    val context = LocalContext.current
+    val s by RustSettingsStore.settings.collectAsState()
+
+    SettingSwitchRow(
+        title = "Rekam performa",
+        desc = "Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.",
+        checked = s.recordPerformance,
+        onCheckedChange = { on -> RustSettingsStore.update(context) { it.copy(recordPerformance = on) } }
+    )
+    SettingDivider()
+    SettingActionRow(
+        title = "Bagikan laporan performa",
+        desc = "Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.",
+        actionLabel = "Bagikan",
+        onClick = { RustPerformanceReport.share(context) }
     )
 }
 

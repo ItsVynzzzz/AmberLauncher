@@ -49,7 +49,13 @@ data class RustSettings(
      */
     val perfMode: String = RustSettingsStore.PERF_NORMAL,
     /** `disable_game_animations`: tekstur beranimasi, fade chunk, goyang kamera, dan blur menu dimatikan. */
-    val gameAnimationsOff: Boolean = false
+    val gameAnimationsOff: Boolean = false,
+    /** `fast_chunk_upload`: jatah unggah mesh chunk ke GPU naik ke 4 MiB per frame. Bawaan mesin: menyala. */
+    val fastChunkUpload: Boolean = true,
+    /** `experimental_leaf_culling`: dedaunan padat disederhanakan (tampilannya berubah). Eksperimental, mati. */
+    val leafCulling: Boolean = false,
+    /** `record_performance`: waktu frame direkam saat bermain (maksimum 30 menit). Menambah beban, mati. */
+    val recordPerformance: Boolean = false
 )
 
 /**
@@ -188,7 +194,10 @@ object RustSettingsStore {
                     json.optBoolean("max_fps_mode", false) -> PERF_FPS
                     else -> PERF_NORMAL
                 },
-                gameAnimationsOff = json.optBoolean("disable_game_animations", defaults.gameAnimationsOff)
+                gameAnimationsOff = json.optBoolean("disable_game_animations", defaults.gameAnimationsOff),
+                fastChunkUpload = json.optBoolean("fast_chunk_upload", defaults.fastChunkUpload),
+                leafCulling = json.optBoolean("experimental_leaf_culling", defaults.leafCulling),
+                recordPerformance = json.optBoolean("record_performance", defaults.recordPerformance)
             )
         )
     }
@@ -248,6 +257,9 @@ object RustSettingsStore {
                 json.put("battery_perf_mode", s.perfMode == PERF_BATTERY)
                 json.put("max_fps_mode", s.perfMode == PERF_FPS)
                 json.put("disable_game_animations", s.gameAnimationsOff)
+                json.put("fast_chunk_upload", s.fastChunkUpload)
+                json.put("experimental_leaf_culling", s.leafCulling)
+                json.put("record_performance", s.recordPerformance)
             }
             commit(dir, file, json)
         } catch (e: Exception) {
@@ -295,6 +307,7 @@ object RustSettingsStore {
     private val OWN_KEYS = listOf(
         "renderer", "render_scale", "worker_limit", "cache_budget_mib", "display_hz", "performance_hints",
         "input_host", "orientation", "immersive", "avoid_cutout", "aspect", "server",
-        "super_perf_mode", "battery_perf_mode", "max_fps_mode", "disable_game_animations"
+        "super_perf_mode", "battery_perf_mode", "max_fps_mode", "disable_game_animations",
+        "fast_chunk_upload", "experimental_leaf_culling", "record_performance"
     )
 }

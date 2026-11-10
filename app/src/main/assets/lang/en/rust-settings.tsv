@@ -65,3 +65,13 @@ Kurangi animasi game	Reduce game animations
 Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Turns off animated textures, chunk fade, camera bobbing while walking, and menu blur. Lighter on weak phones.
 Menu garis tiga	Three-line menu
 Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	The three-line button on the game screen that opens the engine's quick menu (presets, controls, settings). Its colors follow the Amber accent. Applies on the next PLAY.
+Sederhanakan daun (eksperimental)	Simplify leaves (experimental)
+Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Simplifies dense foliage to make the game lighter. The look of the leaves changes and this feature is still experimental. Applies on the next PLAY.
+Unggah chunk cepat	Fast chunk upload
+Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Raises the chunk mesh upload budget to the GPU to 4 MiB per frame, meant to reduce stutter while moving and loading the world. On by default. Turn it off if the game feels choppier instead. Applies on the next PLAY.
+Diagnostik	Diagnostics
+Rekam performa	Record performance
+Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Records frame times and chunk building while you play (up to 30 minutes) into a report on this phone. The report contains no account, chat, or world names. Recording adds a little load, so turn it off again when you do not need it. Applies on the next PLAY.
+Bagikan laporan performa	Share performance report
+Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Sends the latest recorded report through the app you choose, for example to attach when reporting a slow game.
+Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	There is no performance report yet. Turn on Record performance, play for a bit, then try again.

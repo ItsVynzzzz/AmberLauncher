@@ -656,6 +656,7 @@ fun SettingsScreen(
                         SettingsGroup("Performa") { RustPerformanceRows() }
                         SettingsGroup("Layar") { RustScreenRows() }
                         SettingsGroup("Kontrol") { RustControlRows() }
+                        SettingsGroup("Diagnostik") { RustDiagnosticRows() }
                         SettingsGroup("Permainan") { RustGameRows() }
                     }
 

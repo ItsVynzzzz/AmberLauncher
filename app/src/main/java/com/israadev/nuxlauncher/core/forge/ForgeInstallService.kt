@@ -224,6 +224,14 @@ class ForgeInstallService : Service() {
         Os.setenv("TMPDIR", cacheDir.absolutePath, true)
         Os.setenv("PATH", "$rh/bin:" + (Os.getenv("PATH") ?: "/system/bin"), true)
         Os.setenv("LD_LIBRARY_PATH", processLd, true)
+        // Installer Forge menjalankan tiap langkahnya (processor) sebagai JVM anak yang mewarisi lingkungan ini. Tanpa
+        // opsi, JVM anak memakai G1 dan kompiler C2: berat dan lambat untuk pekerjaan singkat di CPU HP. Serial GC dan
+        // hanya kompiler C1 (TieredStopAtLevel=1) lebih cepat dan lebih hemat memori untuk pekerjaan sekali jalan seperti ini.
+        Os.setenv(
+            "JAVA_TOOL_OPTIONS",
+            "-XX:+IgnoreUnrecognizedVMOptions -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:-UsePerfData",
+            true
+        )
 
         preDlopenRuntime(runtimeHome)
 
@@ -261,6 +269,7 @@ class ForgeInstallService : Service() {
             "-Djdk.lang.Process.launchMechanism=FORK",
             "-XX:+IgnoreUnrecognizedVMOptions",
             "-XX:+UseSerialGC",
+            "-XX:TieredStopAtLevel=1",
             "-Xms64M",
             "-Xmx${heapMb}M",
             "-cp", installer.absolutePath,

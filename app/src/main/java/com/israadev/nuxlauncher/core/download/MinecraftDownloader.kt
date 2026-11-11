@@ -214,8 +214,12 @@ class MinecraftDownloader(
                 if (indexFile.exists()) {
                     try {
                         val indexContent = gson.fromJson(indexFile.readText(), AssetIndexContent::class.java)
-                        val objects = indexContent.objects.entries.toList()
+                        // Berkas terbesar (musik dan suara) diunduh lebih dulu. Kalau berada di ujung antrean, satu berkas
+                        // besar yang lambat menahan seluruh unduhan padahal koneksi lainnya sudah menganggur.
+                        val objects = indexContent.objects.entries.sortedByDescending { it.value.size }
                         val totalObjects = objects.size
+                        val totalBytes = objects.sumOf { it.value.size.coerceAtLeast(0L) }
+                        val doneBytes = java.util.concurrent.atomic.AtomicLong(0L)
                         val objectsDir = File(assetsDir, "objects")
 
                         val downloadedAssets = AtomicInteger(0)
@@ -245,7 +249,11 @@ class MinecraftDownloader(
                                         }
                                     }
                                     val count = downloadedAssets.incrementAndGet()
-                                    val p = 0.65f + (count.toFloat() / totalObjects) * 0.27f
+                                    val done = doneBytes.addAndGet(entry.value.size.coerceAtLeast(0L))
+                                    // Progres menurut ukuran berkas, bukan jumlahnya: ribuan berkas kecil tidak lagi membuat
+                                    // bar melompat ke 90% lalu berhenti lama di berkas-berkas besar.
+                                    val fraction = if (totalBytes > 0L) done.toFloat() / totalBytes else count.toFloat() / totalObjects
+                                    val p = 0.65f + fraction * 0.27f
                                     onProgress(p, "Mengunduh aset game ($count/$totalObjects)...")
                                 }
                             }
@@ -405,14 +413,14 @@ class MinecraftDownloader(
     }
 
     /**
-     * Jumlah koneksi unduh paralel menurut RAM HP. Tiap koneksi memegang buffer dan menghitung SHA-1,
-     * jadi di HP RAM kecil terlalu banyak koneksi membuat HP lag dan malah memperlambat unduhan.
+     * Jumlah koneksi unduh paralel. Unduhan aset berupa ribuan berkas kecil yang dibatasi latensi, bukan kecepatan,
+     * jadi koneksi yang banyak jauh lebih cepat, dan tiap koneksi hanya memakai buffer kecil. Hanya HP dengan RAM
+     * sangat kecil yang dibatasi.
      */
     private fun parallelism(base: Int): Int {
         val ramMb = com.israadev.nuxlauncher.core.settings.SettingsManager.getTotalDeviceMemoryMb(context)
         return when {
-            ramMb < 3000 -> minOf(base, 6)
-            ramMb < 4500 -> minOf(base, 12)
+            ramMb < 2500 -> minOf(base, 12)
             else -> base
         }
     }

@@ -1,17 +1,26 @@
 package com.israadev.nuxlauncher.ui.dialogs
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Tune
@@ -21,36 +30,40 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager
-import com.israadev.nuxlauncher.ui.components.AmberSheet
-import com.israadev.nuxlauncher.ui.components.NuxTextField
-import com.israadev.nuxlauncher.ui.components.SettingChip
-import com.israadev.nuxlauncher.ui.components.SheetActionRow
-import com.israadev.nuxlauncher.ui.components.SheetButton
-import com.israadev.nuxlauncher.ui.components.SheetDivider
-import com.israadev.nuxlauncher.ui.components.SheetGroup
-import com.israadev.nuxlauncher.ui.components.SheetLabel
+import com.israadev.nuxlauncher.ui.components.AmberActionPill
+import com.israadev.nuxlauncher.ui.components.AmberChoicePill
+import com.israadev.nuxlauncher.ui.components.AmberField
+import com.israadev.nuxlauncher.ui.components.AmberPage
+import com.israadev.nuxlauncher.ui.components.AmberPageLabel
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
-import com.israadev.nuxlauncher.ui.theme.NuxColors
+import com.israadev.nuxlauncher.ui.screens.AmberPillButton
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import com.israadev.nuxlauncher.ui.theme.amberGlass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Dialog "Ubah instance" (tombol pensil di Home): nama, versi Java, lalu aksi (Mod & konten,
- * Buka folder) dan zona hapus yang dipisah.
+ * Halaman "Ubah instance" (tombol pensil di Home): nama, versi Java, aksi (Mod & konten, Buka
+ * folder), dan Hapus.
  *
- * Dibangun di atas [AmberSheet]: judul dan tombol Batal/Simpan selalu terlihat, tidak tertutup bar
- * sistem, dan hanya bagian tengah yang digulir. Di HP landscape yang pendek isi dibagi dua kolom
- * (kiri: nama + Java, kanan: aksi) supaya hampir tidak perlu menggulir.
+ * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan, bukan kotak di tengah:
+ * bar atas melayang berisi panah kembali, judul, dan tombol Simpan; di bawahnya dua kolom (kiri
+ * isian, kanan aksi berbentuk pil). Tidak ada tombol di dasar layar, jadi tidak bisa tertutup bar
+ * sistem atau taskbar tablet. Di layar sempit (HP portrait) menjadi satu kolom yang bisa digulir.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -92,7 +105,7 @@ fun NuxEditInstanceDialog(
     val subtitle = "MC ${instance.mcVersion} · ${instance.loader.uppercase()}" +
         if (instance.loaderVersion.isNotBlank()) " · ${instance.loaderVersion}" else ""
 
-    val save = {
+    val save: () -> Unit = {
         val trimmed = editName.trim()
         if (trimmed.isBlank()) {
             Toast.makeText(context, "Nama instance tidak boleh kosong", Toast.LENGTH_SHORT).show()
@@ -107,144 +120,193 @@ fun NuxEditInstanceDialog(
         }
     }
 
-    // Bagian kiri: identitas yang bisa diubah (nama dan versi Java)
+    // Isi kartu kiri: nama dan versi Java
     val identity: @Composable () -> Unit = {
-        Column {
-            SheetLabel("Nama")
-            NuxTextField(
-                value = editName,
-                onValueChange = { editName = it },
-                placeholder = "Nama instance"
-            )
-        }
-        Column {
-            SheetLabel("Java")
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                runtimeOptions.forEach { (key, label) ->
-                    SettingChip(
-                        text = label,
-                        selected = selectedJavaRuntime == key,
-                        onClick = { selectedJavaRuntime = key }
-                    )
-                }
-            }
-        }
-    }
-
-    // Bagian kanan: aksi, lalu zona hapus yang dipisah supaya tidak tersentuh tak sengaja
-    val actions: @Composable () -> Unit = {
-        SheetGroup {
-            SheetActionRow(
-                icon = Icons.Outlined.Extension,
-                label = "Mod & konten",
-                trailing = modCount?.let { "$it terpasang" },
-                showChevron = true,
-                onClick = onOpenContent
-            )
-            SheetDivider()
-            SheetActionRow(
-                icon = Icons.Outlined.Folder,
-                label = "Buka folder instance",
-                showChevron = true,
-                onClick = {
-                    Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
-                    InstanceManager.openInstanceFolder(context, instance)
-                }
-            )
-        }
-
-        SheetGroup(borderColor = NuxColors.ErrorRed.copy(alpha = 0.40f)) {
-            if (!showDeleteConfirm) {
-                SheetActionRow(
-                    icon = Icons.Outlined.DeleteOutline,
-                    label = "Hapus instance",
-                    danger = true,
-                    onClick = { showDeleteConfirm = true }
+        AmberPageLabel("Nama")
+        AmberField(
+            value = editName,
+            onValueChange = { editName = it },
+            placeholder = "Nama instance",
+            icon = Icons.Outlined.Edit
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        AmberPageLabel("Java")
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            runtimeOptions.forEach { (key, label) ->
+                AmberChoicePill(
+                    text = label,
+                    selected = selectedJavaRuntime == key,
+                    onClick = { selectedJavaRuntime = key }
                 )
-            } else {
-                Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
-                    Text(
-                        text = "Hapus '${instance.name}'?",
-                        color = NuxColors.ErrorRed,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "Semua world, mod, dan file instance dihapus permanen.",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 11.sp,
-                        lineHeight = 15.sp,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        SheetButton(
-                            text = "Batal",
-                            onClick = { showDeleteConfirm = false },
-                            modifier = Modifier.weight(1f)
-                        )
-                        SheetButton(
-                            text = "Ya, hapus",
-                            onClick = {
-                                onInstanceDeleted(instance)
-                                onDismiss()
-                            },
-                            danger = true,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
             }
         }
     }
 
-    AmberSheet(
+    // Kolom kanan: aksi berbentuk pil. Hapus dipisah paling bawah dan butuh konfirmasi.
+    val actions: @Composable () -> Unit = {
+        AmberActionPill(
+            icon = Icons.Outlined.Extension,
+            label = "Mod & konten",
+            trailing = modCount?.let { "$it terpasang" },
+            showChevron = true,
+            onClick = onOpenContent
+        )
+        AmberActionPill(
+            icon = Icons.Outlined.Folder,
+            label = "Buka folder instance",
+            showChevron = true,
+            onClick = {
+                Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
+                InstanceManager.openInstanceFolder(context, instance)
+            }
+        )
+        if (!showDeleteConfirm) {
+            AmberActionPill(
+                icon = Icons.Outlined.DeleteOutline,
+                label = "Hapus instance",
+                danger = true,
+                onClick = { showDeleteConfirm = true }
+            )
+        } else {
+            DeleteConfirmCard(
+                name = instance.name,
+                onCancel = { showDeleteConfirm = false },
+                onConfirm = {
+                    onInstanceDeleted(instance)
+                    onDismiss()
+                }
+            )
+        }
+    }
+
+    AmberPage(
         onDismiss = onDismiss,
         title = "Ubah instance",
-        subtitle = subtitle,
         icon = Icons.Outlined.Tune,
-        panelWidth = 640.dp,
-        // Ada isian yang belum disimpan: jangan tutup hanya karena salah ketuk area gelap.
-        dismissOnScrimTap = false,
-        footer = {
-            SheetButton(
-                text = "Batal",
-                onClick = onDismiss,
-                modifier = Modifier.weight(1f)
-            )
-            SheetButton(
+        subtitle = subtitle,
+        actions = {
+            AmberPillButton(
                 text = "Simpan",
-                onClick = { save() },
-                primary = true,
-                icon = Icons.Outlined.Check,
-                modifier = Modifier.weight(1.4f)
+                onClick = save,
+                icon = Icons.Outlined.Check
             )
         }
     ) { info ->
-        if (info.twoPane) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+        if (info.narrow) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
-                ) { identity() }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) { actions() }
+                EditCard { identity() }
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) { actions() }
             }
         } else {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                identity()
-                actions()
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    EditCard { identity() }
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    actions()
+                }
+            }
+        }
+    }
+}
+
+/** Kartu kaca bersudut besar untuk satu kelompok isian. */
+@Composable
+private fun EditCard(content: @Composable () -> Unit) {
+    val shape = RoundedCornerShape(24.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .amberGlass(shape)
+            .padding(16.dp)
+    ) {
+        content()
+    }
+}
+
+/** Konfirmasi hapus di tempat (menggantikan pil Hapus): pesan, lalu Batal dan Ya, hapus. */
+@Composable
+private fun DeleteConfirmCard(
+    name: String,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    val shape = RoundedCornerShape(26.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(AmberUi.Danger.copy(alpha = 0.10f), shape)
+            .border(1.dp, AmberUi.Danger.copy(alpha = 0.55f), shape)
+            .padding(14.dp)
+    ) {
+        Text(
+            text = "Hapus '$name'?",
+            color = AmberUi.Danger,
+            fontWeight = FontWeight.Bold,
+            fontSize = 14.sp,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = "Semua world, mod, dan file instance dihapus permanen.",
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            modifier = Modifier.padding(top = 2.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            AmberPillButton(
+                text = "Batal",
+                onClick = onCancel,
+                filled = false,
+                modifier = Modifier.weight(1f)
+            )
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(40.dp)
+                    .clip(CircleShape)
+                    .background(AmberUi.Danger, CircleShape)
+                    .clickable { onConfirm() },
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Ya, hapus",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    maxLines = 1
+                )
             }
         }
     }

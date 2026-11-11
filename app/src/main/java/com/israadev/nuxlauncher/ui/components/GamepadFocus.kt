@@ -1,5 +1,9 @@
 package com.israadev.nuxlauncher.ui.components
 
+import android.os.Build
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.WindowManager
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.FocusInteraction
@@ -22,6 +26,9 @@ import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.israadev.nuxlauncher.core.controls.GamepadNav
 import kotlinx.coroutines.launch
 
@@ -97,11 +104,82 @@ fun GamepadFocusProvider(content: @Composable () -> Unit) {
  */
 @Composable
 fun GamepadWindowHook() {
+    // Semua dialog memanggil hook ini, jadi bar sistem disembunyikan di sini sekali untuk semuanya.
+    ImmersiveWindowHook()
     val view = LocalView.current
     DisposableEffect(view) {
         val window = (view.parent as? DialogWindowProvider)?.window
         val undo = if (window != null) GamepadNav.install(window, allowBumper = false) else null
         onDispose { undo?.invoke() }
+    }
+}
+
+/**
+ * Menyembunyikan bar status dan bar navigasi Android di jendela dialog.
+ *
+ * Kenapa perlu: dialog adalah jendela terpisah dan TIDAK ikut mode layar penuh milik Activity.
+ * Begitu dialog (atau menu samping in-game) terbuka, Android memunculkan lagi bar status dan
+ * navigasi di atasnya, sehingga tampilan terdorong atau tertutup bar. Di sini jendela dialog
+ * meminta hal yang sama dengan Activity: bar disembunyikan, dan hanya muncul sebentar bila
+ * pengguna menggesernya dari tepi layar.
+ *
+ * Dipanggil lagi tiap jendela dapat fokus, karena sebagian HP memunculkan bar kembali saat itu.
+ */
+@Composable
+fun ImmersiveWindowHook() {
+    val view = LocalView.current
+    DisposableEffect(view) {
+        val window = (view.parent as? DialogWindowProvider)?.window
+        if (window == null) {
+            return@DisposableEffect onDispose { }
+        }
+        val hideBars: () -> Unit = {
+            try {
+                val controller = WindowCompat.getInsetsController(window, window.decorView)
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val attrs = window.attributes
+                    if (attrs.layoutInDisplayCutoutMode !=
+                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                    ) {
+                        attrs.layoutInDisplayCutoutMode =
+                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                        window.attributes = attrs
+                    }
+                }
+                @Suppress("DEPRECATION")
+                window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    )
+            } catch (_: Throwable) {
+                // Bar sistem tetap tampil di perangkat yang menolak; tampilan tetap berfungsi.
+            }
+        }
+        hideBars()
+        // Sekali lagi setelah jendela benar-benar tampil: panggilan pertama bisa terlalu awal.
+        view.post { hideBars() }
+        val focusListener = ViewTreeObserver.OnWindowFocusChangeListener { hasFocus ->
+            if (hasFocus) hideBars()
+        }
+        try {
+            val observer = view.viewTreeObserver
+            if (observer.isAlive) observer.addOnWindowFocusChangeListener(focusListener)
+        } catch (_: Throwable) {
+        }
+        onDispose {
+            try {
+                val observer = view.viewTreeObserver
+                if (observer.isAlive) observer.removeOnWindowFocusChangeListener(focusListener)
+            } catch (_: Throwable) {
+            }
+        }
     }
 }
 

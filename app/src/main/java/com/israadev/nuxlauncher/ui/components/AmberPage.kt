@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +29,7 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -40,6 +43,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,6 +52,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -141,7 +146,7 @@ fun AmberPage(
     subtitle: String? = null,
     dismissOnScrimTap: Boolean = false,
     scrimAlpha: Float = 0.82f,
-    actions: @Composable RowScope.() -> Unit = {},
+    actions: @Composable RowScope.(PageInfo) -> Unit = {},
     content: @Composable BoxScope.(PageInfo) -> Unit
 ) {
     AmberOverlay(
@@ -157,6 +162,7 @@ fun AmberPage(
                     icon = icon,
                     subtitle = if (info.narrow) null else subtitle,
                     onDismiss = onDismiss,
+                    info = info,
                     actions = actions
                 )
                 Box(
@@ -177,7 +183,8 @@ private fun AmberPageBar(
     icon: ImageVector?,
     subtitle: String?,
     onDismiss: () -> Unit,
-    actions: @Composable RowScope.() -> Unit
+    info: PageInfo,
+    actions: @Composable RowScope.(PageInfo) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -185,70 +192,74 @@ private fun AmberPageBar(
             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Pil kiri: panah kembali + judul, bentuknya sama dengan pil navigasi di layar Mod/Akun
+        // Sisi kiri memakai sisa lebar setelah aksi di kanan; judul yang kepanjangan dipotong
+        // dengan "...", sehingga tombol aksi (Simpan) tidak pernah terdorong keluar layar.
         Row(
-            modifier = Modifier
-                .height(48.dp)
-                .clip(CircleShape)
-                .amberGlass(CircleShape)
-                .padding(horizontal = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AmberRoundIcon(
-                icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                description = "Tutup",
-                onClick = onDismiss
-            )
+            // Pil kiri: panah kembali + judul, bentuknya sama dengan pil navigasi di layar Mod/Akun
             Row(
                 modifier = Modifier
-                    .height(40.dp)
+                    .height(48.dp)
                     .clip(CircleShape)
-                    .background(AmberUi.SurfaceRaised, CircleShape)
-                    .border(1.dp, AmberUi.BorderStrong, CircleShape)
-                    .padding(horizontal = 14.dp),
+                    .amberGlass(CircleShape)
+                    .padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (icon != null) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = AmberUi.Text,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-                Text(
-                    text = title,
-                    color = AmberUi.Text,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                AmberRoundIcon(
+                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
+                    description = "Tutup",
+                    onClick = onDismiss
                 )
+                Row(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .clip(CircleShape)
+                        .background(AmberUi.SurfaceRaised, CircleShape)
+                        .border(1.dp, AmberUi.BorderStrong, CircleShape)
+                        .padding(horizontal = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (icon != null) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = AmberUi.Text,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(
+                        text = title,
+                        color = AmberUi.Text,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
-        }
-
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 12.dp)
-        ) {
             if (subtitle != null) {
                 Text(
                     text = subtitle,
                     color = AmberUi.TextDim,
                     fontSize = 12.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .padding(start = 12.dp)
                 )
             }
         }
 
         Row(
+            modifier = Modifier.padding(start = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            content = actions
+            content = { actions(info) }
         )
     }
 }
@@ -432,5 +443,177 @@ fun AmberActionPill(
                 modifier = Modifier.size(18.dp)
             )
         }
+    }
+}
+
+/**
+ * Item navigasi samping berbentuk pil (sama bahasanya dengan menu samping layar Mod/Akun):
+ * ikon dalam lingkaran, judul, dan keterangan kecil bila ada. Terpilih = isian aksen.
+ */
+@Composable
+fun AmberRailItem(
+    title: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    description: String? = null,
+    tint: Color = AmberUi.AccentSoft
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = if (description != null) 56.dp else 46.dp)
+            .clip(CircleShape)
+            .then(
+                if (selected) {
+                    Modifier
+                        .background(AmberUi.Accent, CircleShape)
+                        .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                } else {
+                    Modifier.amberGlass(CircleShape)
+                }
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (icon != null) {
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(tint.copy(alpha = if (selected) 0.28f else 0.16f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = tint,
+                    modifier = Modifier.size(19.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+        } else {
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                color = AmberUi.Text,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (description != null) {
+                Text(
+                    text = description,
+                    color = AmberUi.TextDim,
+                    fontSize = 11.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Tombol pil serbaguna: terisi aksen (utama) atau hanya garis tepi, dengan keadaan memuat
+ * (spinner). [height] 44dp di dalam isi halaman, pakai 40dp di bar atas.
+ */
+@Composable
+fun AmberActionButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: ImageVector? = null,
+    loading: Boolean = false,
+    enabled: Boolean = true,
+    filled: Boolean = true,
+    height: Dp = 44.dp
+) {
+    Row(
+        modifier = modifier
+            .alpha(if (enabled) 1f else 0.45f)
+            .height(height)
+            .clip(CircleShape)
+            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
+            .border(
+                1.dp,
+                if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong,
+                CircleShape
+            )
+            .clickable(enabled = enabled && !loading) { onClick() }
+            .padding(horizontal = 18.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (loading) {
+            AmberSpinner(
+                modifier = Modifier.size(16.dp),
+                color = AmberUi.Text,
+                strokeWidth = 2.dp
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        } else if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = AmberUi.Text,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+        Text(
+            text = text,
+            color = AmberUi.Text,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+/** Kartu kaca bersudut besar untuk satu kelompok isi. */
+@Composable
+fun AmberPanel(
+    modifier: Modifier = Modifier,
+    padding: Dp = 16.dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val shape = RoundedCornerShape(24.dp)
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .amberGlass(shape)
+            .padding(padding),
+        content = content
+    )
+}
+
+/** Label kecil berbentuk pil (lisensi, status). */
+@Composable
+fun AmberTag(
+    text: String,
+    modifier: Modifier = Modifier,
+    color: Color = AmberUi.AccentSoft
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(color.copy(alpha = 0.16f))
+            .padding(horizontal = 9.dp, vertical = 3.dp)
+    ) {
+        Text(
+            text = text,
+            color = color,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
+        )
     }
 }

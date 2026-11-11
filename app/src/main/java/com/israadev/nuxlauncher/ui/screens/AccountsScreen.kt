@@ -770,44 +770,6 @@ private fun AccountTypePill(type: String) {
     }
 }
 
-/** Tombol ikon bulat 38dp (skin & jubah, hapus). */
-@Composable
-private fun AccountIconAction(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    description: String,
-    onClick: () -> Unit,
-    tint: Color = NuxColors.GrayNeutral,
-    ring: Boolean = false
-) {
-    Box(
-        modifier = Modifier
-            .size(38.dp)
-            .clip(CircleShape)
-            .then(
-                if (ring) {
-                    Modifier
-                        .background(NuxColors.SurfaceElevated, CircleShape)
-                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, CircleShape)
-                } else {
-                    Modifier
-                }
-            )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = description,
-            tint = tint,
-            modifier = Modifier.size(18.dp)
-        )
-    }
-}
-
-/**
- * Dialog tambah akun: 3 pilihan penyedia di atas, area aksi di bawah dengan tombol utama
- * kuning selebar dialog (mudah ditekan jempol). Bisa digulir bila layar pendek.
- */
 /** Dialog konfirmasi hapus akun. Dipakai di layar Akun dan di menu akun cepat Home. */
 @Composable
 internal fun DeleteAccountDialog(
@@ -918,92 +880,93 @@ internal fun AddAccountModal(
         }
     }
 
-    NuxDialog(
-        onDismissRequest = {
-            onDismiss()
-        },
-        modifier = Modifier
-            .fillMaxWidth(0.72f)
-            .wrapContentHeight(),
-        fillMaxHeight = false,
-        compact = true
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 14.dp)
-        ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+    val tintOffline = AmberUi.AccentSoft
+    val tintMicrosoft = Color(0xFF6CB6FF)
+    val tintElyBy = Color(0xFFB79CFF)
+
+    val saveOffline: () -> Unit = {
+        val cleanName = offlineName.trim()
+        if (cleanName.isBlank()) {
+            Toast.makeText(context, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show()
+        } else {
+            val offlineUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$cleanName".toByteArray(Charsets.UTF_8))
+                .toString()
+                .replace("-", "")
+            val newAcc = UserAccount(
+                id = "offline_${System.currentTimeMillis()}",
+                username = cleanName,
+                uuid = offlineUuid,
+                accessToken = "0",
+                isOffline = true,
+                accountType = "offline"
+            )
+            onAccountAdded(newAcc)
+        }
+    }
+
+    // Isi kartu kanan: judul penyedia terpilih, lalu form/aksi khusus penyedia itu.
+    val providerPanel: @Composable () -> Unit = {
+        val tint = when (selectedTab) {
+            "microsoft" -> tintMicrosoft
+            "elyby" -> tintElyBy
+            else -> tintOffline
+        }
+        val headIcon = when (selectedTab) {
+            "microsoft" -> Icons.Outlined.Language
+            "elyby" -> Icons.Outlined.Public
+            else -> Icons.Outlined.Person
+        }
+        val headTitle = when (selectedTab) {
+            "microsoft" -> "Masuk dengan akun Microsoft / Xbox"
+            "elyby" -> "Masuk dengan akun Ely.by"
+            else -> "Offline"
+        }
+        val headDesc = when (selectedTab) {
+            "microsoft" -> "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi."
+            "elyby" -> "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password."
+            else -> "Lokal · tanpa login"
+        }
+        val elyWaiting = selectedTab == "elyby" && elyLoginState is ElyByLoginState.WaitingForApproval
+
+        AmberPanel {
+            if (!elyWaiting) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(tint.copy(alpha = 0.18f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = headIcon,
+                            contentDescription = null,
+                            tint = tint,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "Tambah akun",
-                        color = NuxColors.DarkGray,
+                        text = headTitle,
+                        color = AmberUi.Text,
                         fontWeight = FontWeight.Black,
-                        fontSize = 17.sp,
-                        letterSpacing = (-0.2).sp
-                    )
-                    Text(
-                        text = "Pilih cara masuk ke Minecraft",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 11.sp
+                        fontSize = 15.sp,
+                        lineHeight = 19.sp,
+                        modifier = Modifier.weight(1f)
                     )
                 }
-                AccountIconAction(
-                    icon = Icons.Outlined.Close,
-                    description = "Tutup",
-                    ring = true,
-                    onClick = { onDismiss() }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = headDesc,
+                    color = AmberUi.TextDim,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp
                 )
+                Spacer(modifier = Modifier.height(14.dp))
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // 3 pilihan penyedia
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                ProviderCard(
-                    title = "Offline",
-                    description = "Lokal · tanpa login",
-                    isSelected = selectedTab == "offline",
-                    accentColor = NuxColors.Yellow,
-                    icon = Icons.Outlined.Person,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedTab = "offline" }
-                )
-                ProviderCard(
-                    title = "Microsoft",
-                    description = "Resmi · akun Mojang",
-                    isSelected = selectedTab == "microsoft",
-                    accentColor = NuxColors.SkyBlueDark,
-                    icon = Icons.Outlined.Language,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedTab = "microsoft" }
-                )
-                ProviderCard(
-                    title = "Ely.by",
-                    description = "Browser · skin & jubah",
-                    isSelected = selectedTab == "elyby",
-                    accentColor = NuxColors.PurpleDark,
-                    icon = Icons.Outlined.Public,
-                    modifier = Modifier.weight(1f),
-                    onClick = { selectedTab = "elyby" }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             when (selectedTab) {
-                // =============================================
-                // OFFLINE
-                // =============================================
+                // ---------------- OFFLINE ----------------
                 "offline" -> {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -1013,9 +976,10 @@ internal fun AddAccountModal(
                         // Kepala pemain (pratinjau nama)
                         Box(
                             modifier = Modifier
-                                .size(42.dp)
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(12.dp))
-                                .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(12.dp)),
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(AmberUi.SurfaceRaised, CircleShape)
+                                .border(1.dp, AmberUi.Border, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             if (offlineName.trim().isNotBlank()) {
@@ -1023,102 +987,51 @@ internal fun AddAccountModal(
                                     model = "https://mc-heads.net/avatar/${offlineName.trim()}/80",
                                     contentDescription = offlineName,
                                     modifier = Modifier
-                                        .size(34.dp)
-                                        .clip(RoundedCornerShape(8.dp)),
+                                        .size(38.dp)
+                                        .clip(RoundedCornerShape(10.dp)),
                                     fallbackInitials = offlineName.trim().take(2).uppercase(),
-                                    shape = RoundedCornerShape(8.dp),
+                                    shape = RoundedCornerShape(10.dp),
                                     maxSidePx = 128
                                 )
                             } else {
                                 Icon(
                                     imageVector = Icons.Outlined.Person,
                                     contentDescription = null,
-                                    tint = NuxColors.GrayNeutral,
-                                    modifier = Modifier.size(22.dp)
+                                    tint = AmberUi.TextDim,
+                                    modifier = Modifier.size(24.dp)
                                 )
                             }
                         }
-
-                        Box(modifier = Modifier.weight(1f)) {
-                            NuxTextField(
-                                value = offlineName,
-                                onValueChange = { offlineName = it },
-                                placeholder = "Nama pemain (Steve, Alex...)"
-                            )
-                        }
+                        AmberField(
+                            value = offlineName,
+                            onValueChange = { offlineName = it },
+                            placeholder = "Nama pemain (Steve, Alex...)",
+                            modifier = Modifier.weight(1f)
+                        )
                     }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    NuxButton(
-                        onClick = {
-                            val cleanName = offlineName.trim()
-                            if (cleanName.isBlank()) {
-                                Toast.makeText(context, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show()
-                                return@NuxButton
-                            }
-                            val offlineUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$cleanName".toByteArray(Charsets.UTF_8))
-                                .toString()
-                                .replace("-", "")
-                            val newAcc = UserAccount(
-                                id = "offline_${System.currentTimeMillis()}",
-                                username = cleanName,
-                                uuid = offlineUuid,
-                                accessToken = "0",
-                                isOffline = true,
-                                accountType = "offline"
-                            )
-                            onAccountAdded(newAcc)
-                        },
-                        backgroundColor = NuxColors.Yellow,
+                    Spacer(modifier = Modifier.height(14.dp))
+                    AmberActionButton(
+                        text = "Simpan akun",
+                        onClick = saveOffline,
+                        icon = Icons.Outlined.Check,
                         enabled = offlineName.trim().isNotBlank(),
-                        cornerRadius = 20.dp,
                         modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Simpan akun",
-                            fontWeight = FontWeight.Black,
-                            fontSize = 13.sp
-                        )
-                    }
+                    )
                 }
 
-                // =============================================
-                // MICROSOFT
-                // =============================================
+                // ---------------- MICROSOFT ----------------
                 "microsoft" -> {
-                    Text(
-                        text = "Masuk dengan akun Microsoft / Xbox",
-                        color = NuxColors.SkyBlueDark,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Text(
-                        text = "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 11.sp,
-                        lineHeight = 16.sp
-                    )
                     if (msErrorMsg != null) {
-                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = msErrorMsg!!,
-                            color = NuxColors.ErrorRed,
-                            fontSize = 11.sp,
-                            lineHeight = 16.sp
+                            color = AmberUi.Danger,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp,
+                            modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    NuxButton(
+                    AmberActionButton(
+                        text = if (isMsLoading) "Menghubungi..." else "Masuk dengan Microsoft",
                         onClick = {
                             isMsLoading = true
                             msErrorMsg = null
@@ -1135,93 +1048,70 @@ internal fun AddAccountModal(
                                 )
                             }
                         },
-                        backgroundColor = NuxColors.Yellow,
-                        enabled = !isMsLoading,
-                        cornerRadius = 20.dp,
+                        icon = Icons.Outlined.Language,
+                        loading = isMsLoading,
                         modifier = Modifier.fillMaxWidth()
-                    ) {
-                        if (isMsLoading) {
-                            AmberSpinner(
-                                modifier = Modifier.size(16.dp),
-                                color = NuxColors.GrayNeutral,
-                                strokeWidth = 2.dp
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Menghubungi...", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.Language,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Masuk dengan Microsoft", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                        }
-                    }
+                    )
                 }
 
-                // =============================================
-                // ELY.BY
-                // =============================================
+                // ---------------- ELY.BY ----------------
                 "elyby" -> {
                     when (val state = elyLoginState) {
                         is ElyByLoginState.WaitingForApproval -> {
                             val dc = state.deviceCode
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 AmberSpinner(
-                                    modifier = Modifier.size(16.dp),
-                                    color = NuxColors.PurpleDark,
+                                    modifier = Modifier.size(18.dp),
+                                    color = tintElyBy,
                                     strokeWidth = 2.dp
                                 )
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Text(
                                     text = state.statusMsg.ifBlank { "Menunggu otorisasi di browser Ely.by..." },
-                                    color = NuxColors.DarkGray,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
+                                    color = AmberUi.Text,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    lineHeight = 18.sp,
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(14.dp))
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(14.dp))
-                                        .background(NuxColors.SurfaceInput, RoundedCornerShape(14.dp))
-                                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp))
-                                        .padding(horizontal = 14.dp, vertical = 8.dp)
+                                        .weight(1f)
+                                        .height(48.dp)
+                                        .clip(CircleShape)
+                                        .background(AmberUi.SurfaceRaised, CircleShape)
+                                        .border(1.dp, AmberUi.BorderStrong, CircleShape),
+                                    contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = dc.userCode,
-                                        color = NuxColors.PurpleDark,
-                                        fontSize = 17.sp,
+                                        color = tintElyBy,
+                                        fontSize = 18.sp,
                                         fontFamily = FontFamily.Monospace,
                                         fontWeight = FontWeight.Black,
-                                        letterSpacing = 1.sp
+                                        letterSpacing = 2.sp,
+                                        maxLines = 1
                                     )
                                 }
-                                Spacer(modifier = Modifier.width(10.dp))
-                                NuxButton(
+                                AmberActionButton(
+                                    text = "Salin",
                                     onClick = {
                                         clipboardManager.setText(AnnotatedString(dc.userCode))
                                         Toast.makeText(context, "Kode disalin", Toast.LENGTH_SHORT).show()
                                     },
-                                    backgroundColor = Color.Transparent,
-                                    cornerRadius = 20.dp,
-                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.ContentCopy,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Salin", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                }
+                                    icon = Icons.Outlined.ContentCopy,
+                                    filled = false,
+                                    height = 48.dp
+                                )
                             }
 
                             Spacer(modifier = Modifier.height(14.dp))
@@ -1230,86 +1120,133 @@ internal fun AddAccountModal(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
-                                NuxButton(
+                                AmberActionButton(
+                                    text = "Buka lagi",
                                     onClick = {
                                         ElyByAuthService.openBrowser(context, dc.verificationUrlWithCode)
                                     },
-                                    backgroundColor = NuxColors.Yellow,
-                                    cornerRadius = 20.dp,
+                                    icon = Icons.Outlined.OpenInBrowser,
                                     modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Buka lagi", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                                }
-                                NuxButton(
-                                    onClick = {
-                                        ElyByAuthService.cancelLogin()
-                                    },
-                                    backgroundColor = Color.Transparent,
-                                    cornerRadius = 20.dp,
+                                )
+                                AmberActionButton(
+                                    text = "Batal",
+                                    onClick = { ElyByAuthService.cancelLogin() },
+                                    filled = false,
                                     modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                }
+                                )
                             }
                         }
                         else -> {
                             val isStarting = state is ElyByLoginState.Starting
                             val errMsg = (state as? ElyByLoginState.Error)?.message
-
-                            Text(
-                                text = "Masuk dengan akun Ely.by",
-                                color = NuxColors.PurpleDark,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Text(
-                                text = "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.",
-                                color = NuxColors.GrayNeutral,
-                                fontSize = 11.sp,
-                                lineHeight = 16.sp
-                            )
                             if (errMsg != null) {
-                                Spacer(modifier = Modifier.height(6.dp))
                                 Text(
                                     text = errMsg,
-                                    color = NuxColors.ErrorRed,
-                                    fontSize = 11.sp,
-                                    lineHeight = 16.sp
+                                    color = AmberUi.Danger,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp,
+                                    modifier = Modifier.padding(bottom = 12.dp)
                                 )
                             }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            NuxButton(
-                                onClick = {
-                                    ElyByAuthService.startLogin(context)
-                                },
-                                backgroundColor = NuxColors.Yellow,
-                                enabled = !isStarting,
-                                cornerRadius = 20.dp,
+                            AmberActionButton(
+                                text = if (isStarting) "Menghubungi..." else "Buka browser Ely.by",
+                                onClick = { ElyByAuthService.startLogin(context) },
+                                icon = Icons.Outlined.OpenInBrowser,
+                                loading = isStarting,
                                 modifier = Modifier.fillMaxWidth()
-                            ) {
-                                if (isStarting) {
-                                    AmberSpinner(
-                                        modifier = Modifier.size(16.dp),
-                                        color = NuxColors.GrayNeutral,
-                                        strokeWidth = 2.dp
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Menghubungi...", fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Outlined.OpenInBrowser,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Buka browser Ely.by", fontWeight = FontWeight.Black, fontSize = 13.sp)
-                                }
-                            }
+                            )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    AmberPage(
+        onDismiss = onDismiss,
+        title = "Tambah akun",
+        icon = Icons.Outlined.PersonAdd,
+        subtitle = "Pilih cara masuk ke Minecraft"
+    ) { info ->
+        if (info.narrow) {
+            // HP portrait: tiga pil penyedia sejajar di atas, kartu di bawahnya, semua bisa digulir.
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AmberChoicePill(
+                        text = "Offline",
+                        selected = selectedTab == "offline",
+                        onClick = { selectedTab = "offline" },
+                        modifier = Modifier.weight(1f)
+                    )
+                    AmberChoicePill(
+                        text = "Microsoft",
+                        selected = selectedTab == "microsoft",
+                        onClick = { selectedTab = "microsoft" },
+                        modifier = Modifier.weight(1f)
+                    )
+                    AmberChoicePill(
+                        text = "Ely.by",
+                        selected = selectedTab == "elyby",
+                        onClick = { selectedTab = "elyby" },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                providerPanel()
+            }
+        } else {
+            // Layar lebar: pil penyedia di rail kiri, kartu isi di kanan.
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(0.85f)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    AmberRailItem(
+                        title = "Offline",
+                        description = "Lokal · tanpa login",
+                        icon = Icons.Outlined.Person,
+                        tint = tintOffline,
+                        selected = selectedTab == "offline",
+                        onClick = { selectedTab = "offline" }
+                    )
+                    AmberRailItem(
+                        title = "Microsoft",
+                        description = "Resmi · akun Mojang",
+                        icon = Icons.Outlined.Language,
+                        tint = tintMicrosoft,
+                        selected = selectedTab == "microsoft",
+                        onClick = { selectedTab = "microsoft" }
+                    )
+                    AmberRailItem(
+                        title = "Ely.by",
+                        description = "Browser · skin & jubah",
+                        icon = Icons.Outlined.Public,
+                        tint = tintElyBy,
+                        selected = selectedTab == "elyby",
+                        onClick = { selectedTab = "elyby" }
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1.15f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    providerPanel()
                 }
             }
         }
@@ -1329,62 +1266,6 @@ internal fun AddAccountModal(
                 msDeviceCode = null
                 msErrorMsg = err
             }
-        )
-    }
-}
-
-/**
- * Kartu pilihan penyedia akun. Terpilih = tint dan tepi warna penyedia.
- */
-@Composable
-private fun ProviderCard(
-    title: String,
-    description: String,
-    isSelected: Boolean,
-    accentColor: Color,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    val shape = RoundedCornerShape(14.dp)
-    Column(
-        modifier = modifier
-            .clip(shape)
-            .background(
-                if (isSelected) accentColor.copy(alpha = 0.14f) else NuxColors.SurfaceInput,
-                shape
-            )
-            .border(
-                NuxSizes.GlassBorder,
-                if (isSelected) accentColor else NuxColors.CardBorder,
-                shape
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 8.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = if (isSelected) accentColor else NuxColors.GrayNeutral,
-                modifier = Modifier.size(16.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = title,
-                color = if (isSelected) accentColor else NuxColors.DarkGray,
-                fontWeight = FontWeight.Black,
-                fontSize = 13.sp,
-                maxLines = 1
-            )
-        }
-        Spacer(modifier = Modifier.height(3.dp))
-        Text(
-            text = description,
-            color = NuxColors.GrayNeutral,
-            fontSize = 11.sp,
-            lineHeight = 15.sp,
-            maxLines = 2
         )
     }
 }

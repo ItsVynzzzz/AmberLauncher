@@ -3,32 +3,61 @@ package com.israadev.nuxlauncher.ui.dialogs
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import com.israadev.nuxlauncher.ui.i18n.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Extension
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.OpenInBrowser
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.AppLinks
-import com.israadev.nuxlauncher.ui.components.AmberButton
-import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
-import com.israadev.nuxlauncher.ui.components.AmberIcon
-import com.israadev.nuxlauncher.ui.components.AmberSegmented
-import com.israadev.nuxlauncher.ui.components.NuxDialog
-import com.israadev.nuxlauncher.ui.components.amberTap
-import com.israadev.nuxlauncher.ui.theme.Amber
+import com.israadev.nuxlauncher.ui.components.AmberActionButton
+import com.israadev.nuxlauncher.ui.components.AmberChoicePill
+import com.israadev.nuxlauncher.ui.components.AmberPage
+import com.israadev.nuxlauncher.ui.components.AmberPageLabel
+import com.israadev.nuxlauncher.ui.components.AmberPanel
+import com.israadev.nuxlauncher.ui.components.AmberRailItem
+import com.israadev.nuxlauncher.ui.components.AmberTag
+import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.screens.AmberPillButton
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import com.israadev.nuxlauncher.ui.theme.amberGlass
 
 private const val COPY = "Copyright \u00A9"
 private const val GPL_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
@@ -198,9 +227,14 @@ private fun appVersionName(context: Context): String {
 }
 
 /**
- * Dialog Tentang: ringkasan proyek, daftar pustaka open source, dan ketentuan GPL-3.0 (termasuk
- * syarat tambahan Zalith). Di layar lebar tabnya jadi menu samping, di layar sempit jadi segmen
- * di atas. Tombol Buy Me a Coffee hanya muncul kalau AppLinks.DONATE_URL diisi.
+ * Halaman Tentang: ringkasan proyek, daftar pustaka open source, dan ketentuan GPL-3.0 (termasuk
+ * syarat tambahan Zalith).
+ *
+ * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan. Di layar lebar: rail kiri
+ * (kartu merek + tiga tab berbentuk pil) dan isi di kanan yang digulir; kartu pustaka/proyek
+ * disusun dua kolom bila ruangnya cukup. Di layar sempit: satu kolom yang digulir (merek, tiga
+ * pil tab, lalu isi). Tombol Tutup diganti panah kembali di bar atas, jadi tidak ada tombol di
+ * dasar layar. Tombol Buy Me a Coffee hanya muncul kalau AppLinks.DONATE_URL diisi.
  */
 @Composable
 fun NuxAboutDialog(
@@ -216,73 +250,98 @@ fun NuxAboutDialog(
     val donateUrl = AppLinks.DONATE_URL.trim()
     val onDonate: (() -> Unit)? = if (donateUrl.isNotEmpty()) ({ onOpen(donateUrl) }) else null
     val tabs = remember { listOf("Ringkasan", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
+    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.Extension, Icons.Outlined.Description)
 
-    NuxDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = Modifier.widthIn(max = 720.dp),
-        fillMaxHeight = true,
-        compact = true
-    ) {
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            if (maxWidth >= 520.dp) {
-                Row(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .width(208.dp)
-                            .fillMaxHeight()
-                            .padding(horizontal = 12.dp, vertical = 14.dp)
-                    ) {
-                        Brand(version)
-                        Spacer(modifier = Modifier.height(14.dp))
-                        tabs.forEachIndexed { index, label ->
-                            RailTab(label = label, selected = index == tab) { tab = index }
-                            Spacer(modifier = Modifier.height(2.dp))
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        if (onDonate != null) {
-                            DonateButton(onClick = onDonate, modifier = Modifier.fillMaxWidth())
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                        CloseButton(onClick = onDismissRequest, modifier = Modifier.fillMaxWidth())
-                    }
+    AmberPage(
+        onDismiss = onDismissRequest,
+        title = "Tentang",
+        icon = Icons.Outlined.Info,
+        subtitle = if (version.isNotBlank()) "Versi $version" else null,
+        actions = { info ->
+            if (onDonate != null) {
+                if (info.narrow) {
+                    // Layar sempit: tombol bulat saja supaya bar atas tidak sesak
                     Box(
                         modifier = Modifier
-                            .width(1.dp)
-                            .fillMaxHeight()
-                            .background(Amber.Line)
-                    )
-                    AboutContent(
-                        tab = tab,
-                        onOpen = onOpen,
-                        scroll = scroll,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(AmberUi.Accent, CircleShape)
+                            .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                            .clickable { onDonate() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Favorite,
+                            contentDescription = "Buy me a coffee",
+                            tint = AmberUi.Text,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                } else {
+                    AmberPillButton(
+                        text = "Buy me a coffee",
+                        onClick = onDonate,
+                        icon = Icons.Outlined.Favorite
                     )
                 }
-            } else {
+            }
+        }
+    ) { info ->
+        if (info.narrow) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                BrandCard(version)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    tabs.forEachIndexed { index, label ->
+                        AmberChoicePill(
+                            text = label,
+                            selected = index == tab,
+                            onClick = { tab = index },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                AboutContent(tab = tab, onOpen = onOpen)
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(14.dp)
+                        .width(232.dp)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Brand(version)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    AmberSegmented(options = tabs, selected = tab, onSelect = { tab = it })
-                    AboutContent(
-                        tab = tab,
-                        onOpen = onOpen,
-                        scroll = scroll,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                    )
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (onDonate != null) {
-                            DonateButton(onClick = onDonate, modifier = Modifier.weight(1f))
-                        }
-                        CloseButton(onClick = onDismissRequest, modifier = Modifier.weight(1f))
+                    BrandCard(version)
+                    tabs.forEachIndexed { index, label ->
+                        AmberRailItem(
+                            title = label,
+                            icon = tabIcons[index],
+                            selected = index == tab,
+                            onClick = { tab = index }
+                        )
                     }
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .verticalScroll(scroll)
+                ) {
+                    AboutContent(tab = tab, onOpen = onOpen)
                 }
             }
         }
@@ -292,40 +351,42 @@ fun NuxAboutDialog(
 @Composable
 private fun AboutContent(
     tab: Int,
-    onOpen: (String) -> Unit,
-    scroll: ScrollState,
-    modifier: Modifier = Modifier
+    onOpen: (String) -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .verticalScroll(scroll)
-            .padding(horizontal = 18.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        when (tab) {
-            0 -> OverviewTab(onOpen)
-            1 -> LibrariesTab(onOpen)
-            else -> LicenseTab(onOpen)
+    // Dua kolom hanya bila lebar isi cukup untuk dua kartu yang nyaman dibaca
+    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
+        val columns = if (maxWidth >= 520.dp) 2 else 1
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            when (tab) {
+                0 -> OverviewTab(onOpen, columns)
+                1 -> LibrariesTab(onOpen, columns)
+                else -> LicenseTab(onOpen)
+            }
         }
     }
 }
 
 @Composable
-private fun OverviewTab(onOpen: (String) -> Unit) {
+private fun OverviewTab(onOpen: (String) -> Unit, columns: Int) {
     AboutTitle(
         title = "Tentang AmberLauncher",
         subtitle = "Peluncur Minecraft Java untuk Android, ringan dan sederhana."
     )
-    Notice(
+    AboutNotice(
         title = "Unofficial Modified Version",
         body = "AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.",
         highlight = true
     )
-    SubHeading("Proyek dan hak cipta")
-    for (project in PROJECTS) {
-        ProjectRow(project, onOpen)
+    Column {
+        AmberPageLabel("Proyek dan hak cipta")
+        CardGrid(items = PROJECTS, columns = columns) { project, cardModifier ->
+            ProjectCard(project, onOpen, cardModifier)
+        }
     }
-    Notice(
+    AboutNotice(
         title = "Penafian Minecraft",
         body = "Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.",
         highlight = false
@@ -333,13 +394,13 @@ private fun OverviewTab(onOpen: (String) -> Unit) {
 }
 
 @Composable
-private fun LibrariesTab(onOpen: (String) -> Unit) {
+private fun LibrariesTab(onOpen: (String) -> Unit, columns: Int) {
     AboutTitle(
         title = "Pustaka open source",
         subtitle = "Ketuk untuk membuka halaman proyeknya."
     )
-    for (lib in LIBRARIES) {
-        LibraryRow(lib, onOpen)
+    CardGrid(items = LIBRARIES, columns = columns) { lib, cardModifier ->
+        LibraryCard(lib, onOpen, cardModifier)
     }
 }
 
@@ -349,27 +410,41 @@ private fun LicenseTab(onOpen: (String) -> Unit) {
         title = "GNU GPL-3.0",
         subtitle = "Lisensi yang menaungi AmberLauncher."
     )
-    Body("Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.")
-    SubHeading("Empat kebebasan perangkat lunak bebas")
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Numbered(1, "Kebebasan untuk menjalankan program untuk keperluan apa pun.")
-        Numbered(2, "Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.")
-        Numbered(3, "Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.")
-        Numbered(4, "Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.")
+    AmberPanel {
+        Text(
+            text = "Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.",
+            color = AmberUi.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 20.sp
+        )
     }
-    SubHeading("Ketentuan tambahan (GPLv3 Pasal 7)")
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Bullet("Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.")
-        Bullet("Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.")
-        Bullet("Hak cipta penulis asli (Copyright \u00A9 MovTery & PojavLauncherTeam) tidak boleh dihapus.")
+    Column {
+        AmberPageLabel("Empat kebebasan perangkat lunak bebas")
+        AmberPanel {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Numbered(1, "Kebebasan untuk menjalankan program untuk keperluan apa pun.")
+                Numbered(2, "Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.")
+                Numbered(3, "Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.")
+                Numbered(4, "Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.")
+            }
+        }
     }
-    Spacer(modifier = Modifier.height(2.dp))
-    AmberButton(
+    Column {
+        AmberPageLabel("Ketentuan tambahan (GPLv3 Pasal 7)")
+        AmberPanel {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Bullet("Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.")
+                Bullet("Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.")
+                Bullet("Hak cipta penulis asli (Copyright \u00A9 MovTery & PojavLauncherTeam) tidak boleh dihapus.")
+            }
+        }
+    }
+    AmberActionButton(
         text = "Baca teks lisensi lengkap",
         onClick = { onOpen(GPL_URL) },
-        modifier = Modifier.fillMaxWidth(),
-        style = AmberButtonStyle.Ghost,
-        icon = "external"
+        icon = Icons.Outlined.OpenInBrowser,
+        filled = false,
+        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -377,273 +452,241 @@ private fun LicenseTab(onOpen: (String) -> Unit) {
 // Bagian kecil
 // ---------------------------------------------------------------------------------------------
 
+/**
+ * Menyusun kartu satu kolom, atau dua kolom dengan tinggi sama per baris. [cell] menerima
+ * modifier yang harus dipasang di kartunya (lebar/tinggi sudah diatur di sini).
+ */
 @Composable
-private fun Brand(version: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Amber.Yellow),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "A",
-                color = Amber.Ink,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Black
-            )
+private fun <T> CardGrid(
+    items: List<T>,
+    columns: Int,
+    cell: @Composable (T, Modifier) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (columns <= 1) {
+            items.forEach { item -> cell(item, Modifier.fillMaxWidth()) }
+        } else {
+            items.chunked(columns).forEach { rowItems ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    rowItems.forEach { item ->
+                        cell(item, Modifier.weight(1f).fillMaxHeight())
+                    }
+                    repeat(columns - rowItems.size) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
         }
-        Spacer(modifier = Modifier.width(10.dp))
-        Column {
-            Text(
-                text = "AmberLauncher",
-                color = Amber.Text,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1
-            )
-            if (version.isNotBlank()) {
+    }
+}
+
+/** Kartu merek: logo "A", nama, versi, dan keterangan versi modifikasi tidak resmi. */
+@Composable
+private fun BrandCard(version: String) {
+    AmberPanel(padding = 14.dp) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(AmberUi.Accent, RoundedCornerShape(15.dp))
+                    .border(1.dp, AmberUi.AccentEdge, RoundedCornerShape(15.dp)),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = "Versi $version",
-                    color = Amber.TextDim,
-                    fontSize = 12.5.sp,
-                    maxLines = 1
+                    text = "A",
+                    color = AmberUi.Text,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Black
                 )
             }
-            // Pemberitahuan versi modifikasi tidak resmi (dulu tampil di Home, kini cukup di sini)
-            Text(
-                text = "UNOFFICIAL MODIFIED VERSION",
-                color = Amber.TextDim,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 0.5.sp,
-                maxLines = 1
-            )
-        }
-    }
-}
-
-@Composable
-private fun RailTab(label: String, selected: Boolean, onClick: () -> Unit) {
-    val shape = RoundedCornerShape(10.dp)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(40.dp)
-            .clip(shape)
-            .background(if (selected) Amber.YellowTint else Color.Transparent)
-            .amberTap(onClick)
-            .padding(horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .width(3.dp)
-                .height(16.dp)
-                .background(
-                    if (selected) Amber.Yellow else Color.Transparent,
-                    RoundedCornerShape(2.dp)
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "AmberLauncher",
+                    color = AmberUi.Text,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-        )
-        Spacer(modifier = Modifier.width(10.dp))
+                if (version.isNotBlank()) {
+                    Text(
+                        text = "Versi $version",
+                        color = AmberUi.TextDim,
+                        fontSize = 12.sp,
+                        maxLines = 1
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        // Pemberitahuan versi modifikasi tidak resmi (dulu tampil di Home, kini cukup di sini)
         Text(
-            text = label,
-            color = if (selected) Amber.Yellow else Amber.TextDim,
-            fontSize = 15.sp,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-            maxLines = 1
+            text = "UNOFFICIAL MODIFIED VERSION",
+            color = AmberUi.TextDim,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 0.8.sp,
+            maxLines = 2
         )
     }
-}
-
-@Composable
-private fun DonateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    AmberButton(
-        text = "Buy me a coffee",
-        onClick = onClick,
-        modifier = modifier,
-        style = AmberButtonStyle.Primary,
-        icon = "coffee"
-    )
-}
-
-@Composable
-private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    AmberButton(
-        text = "Tutup",
-        onClick = onClick,
-        modifier = modifier,
-        style = AmberButtonStyle.Ghost
-    )
 }
 
 @Composable
 private fun AboutTitle(title: String, subtitle: String) {
-    Column {
+    Column(modifier = Modifier.padding(start = 4.dp, top = 2.dp)) {
         Text(
             text = title,
-            color = Amber.Text,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
+            color = AmberUi.Text,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Black
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = subtitle,
-            color = Amber.TextDim,
-            fontSize = 14.sp,
-            lineHeight = 20.sp
-        )
-    }
-}
-
-@Composable
-private fun SubHeading(text: String) {
-    Text(
-        text = text,
-        color = Amber.Yellow,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(top = 4.dp)
-    )
-}
-
-@Composable
-private fun Body(text: String) {
-    Text(
-        text = text,
-        color = Amber.TextDim,
-        fontSize = 14.sp,
-        lineHeight = 21.sp
-    )
-}
-
-@Composable
-private fun Notice(title: String, body: String, highlight: Boolean) {
-    val shape = RoundedCornerShape(12.dp)
-    val fill = if (highlight) Amber.YellowTint else Amber.Fill
-    val line = if (highlight) Amber.Yellow.copy(alpha = 0.40f) else Amber.Line
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(fill)
-            .border(1.dp, line, shape)
-            .padding(12.dp)
-    ) {
-        Text(
-            text = title,
-            color = if (highlight) Amber.Yellow else Amber.Text,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = body,
-            color = Amber.TextDim,
+            color = AmberUi.TextDim,
             fontSize = 13.sp,
             lineHeight = 19.sp
         )
     }
 }
 
+/** Kartu pemberitahuan. [highlight] = isian aksen (penting), selain itu kaca biasa. */
 @Composable
-private fun ProjectRow(project: AboutProject, onOpen: (String) -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
+private fun AboutNotice(title: String, body: String, highlight: Boolean) {
+    val shape = RoundedCornerShape(24.dp)
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(Amber.Fill)
-            .border(1.dp, Amber.Line, shape)
-            .amberTap { onOpen(project.url) }
-            .padding(12.dp)
+            .then(
+                if (highlight) {
+                    Modifier
+                        .background(AmberUi.Accent.copy(alpha = 0.30f), shape)
+                        .border(1.dp, AmberUi.AccentEdge, shape)
+                } else {
+                    Modifier.amberGlass(shape)
+                }
+            )
+            .padding(16.dp)
     ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (highlight) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = AmberUi.AccentSoft,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+            Text(
+                text = title,
+                color = if (highlight) AmberUi.AccentSoft else AmberUi.Text,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = body,
+            color = AmberUi.TextDim,
+            fontSize = 12.5.sp,
+            lineHeight = 18.sp
+        )
+    }
+}
+
+/** Kartu kaca yang bisa diketuk (membuka halaman proyek). */
+@Composable
+private fun AboutCard(
+    onClick: () -> Unit,
+    modifier: Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    val shape = RoundedCornerShape(22.dp)
+    Column(
+        modifier = modifier
+            .clip(shape)
+            .amberGlass(shape)
+            .clickable { onClick() }
+            .padding(14.dp),
+        content = content
+    )
+}
+
+@Composable
+private fun ProjectCard(project: AboutProject, onOpen: (String) -> Unit, modifier: Modifier) {
+    AboutCard(onClick = { onOpen(project.url) }, modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = project.title,
-                color = Amber.Text,
+                color = AmberUi.Text,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            AmberIcon("external", 16.dp, Amber.TextDim)
+            Icon(
+                imageVector = Icons.Outlined.OpenInBrowser,
+                contentDescription = null,
+                tint = AmberUi.TextDim,
+                modifier = Modifier.size(16.dp)
+            )
         }
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = project.copyright,
-            color = Amber.TextFaint,
-            fontSize = 12.sp
+            color = AmberUi.TextDim.copy(alpha = 0.75f),
+            fontSize = 11.5.sp
         )
         Text(
             text = project.license,
-            color = Amber.TextFaint,
-            fontSize = 12.sp
+            color = AmberUi.TextDim.copy(alpha = 0.75f),
+            fontSize = 11.5.sp
         )
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = project.description,
-            color = Amber.TextDim,
-            fontSize = 13.sp,
-            lineHeight = 19.sp
+            color = AmberUi.TextDim,
+            fontSize = 12.5.sp,
+            lineHeight = 18.sp
         )
     }
 }
 
 @Composable
-private fun LibraryRow(lib: OpenSourceLibrary, onOpen: (String) -> Unit) {
-    val shape = RoundedCornerShape(12.dp)
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(Amber.Fill)
-            .border(1.dp, Amber.Line, shape)
-            .amberTap { onOpen(lib.url) }
-            .padding(12.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+private fun LibraryCard(lib: OpenSourceLibrary, onOpen: (String) -> Unit, modifier: Modifier) {
+    AboutCard(onClick = { onOpen(lib.url) }, modifier = modifier) {
+        Row(verticalAlignment = Alignment.Top) {
             Text(
                 text = lib.name,
-                color = Amber.Text,
+                color = AmberUi.Text,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Chip(lib.license.removeSuffix(" License"))
+            AmberTag(lib.license.removeSuffix(" License"))
         }
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = lib.copyright,
-            color = Amber.TextFaint,
-            fontSize = 12.sp
+            color = AmberUi.TextDim.copy(alpha = 0.75f),
+            fontSize = 11.5.sp
         )
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = lib.role,
-            color = Amber.TextDim,
-            fontSize = 13.sp,
-            lineHeight = 19.sp
-        )
-    }
-}
-
-@Composable
-private fun Chip(text: String) {
-    Box(
-        modifier = Modifier
-            .clip(CircleShape)
-            .background(Amber.YellowTint)
-            .padding(horizontal = 8.dp, vertical = 3.dp)
-    ) {
-        Text(
-            text = text,
-            color = Amber.Yellow,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 1
+            color = AmberUi.TextDim,
+            fontSize = 12.5.sp,
+            lineHeight = 18.sp
         )
     }
 }
@@ -653,13 +696,13 @@ private fun Numbered(number: Int, text: String) {
     Row(verticalAlignment = Alignment.Top) {
         Box(
             modifier = Modifier
-                .size(20.dp)
-                .background(Amber.YellowTint, CircleShape),
+                .size(22.dp)
+                .background(AmberUi.Accent.copy(alpha = 0.55f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = number.toString(),
-                color = Amber.Yellow,
+                color = AmberUi.Text,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -667,9 +710,9 @@ private fun Numbered(number: Int, text: String) {
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = text,
-            color = Amber.TextDim,
-            fontSize = 14.sp,
-            lineHeight = 21.sp,
+            color = AmberUi.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp,
             modifier = Modifier.weight(1f)
         )
     }
@@ -680,16 +723,16 @@ private fun Bullet(text: String) {
     Row(verticalAlignment = Alignment.Top) {
         Box(
             modifier = Modifier
-                .padding(top = 7.dp, start = 7.dp)
+                .padding(top = 7.dp, start = 8.dp)
                 .size(6.dp)
-                .background(Amber.Yellow, CircleShape)
+                .background(AmberUi.AccentSoft, CircleShape)
         )
-        Spacer(modifier = Modifier.width(13.dp))
+        Spacer(modifier = Modifier.width(14.dp))
         Text(
             text = text,
-            color = Amber.TextDim,
-            fontSize = 14.sp,
-            lineHeight = 21.sp,
+            color = AmberUi.TextDim,
+            fontSize = 13.sp,
+            lineHeight = 19.sp,
             modifier = Modifier.weight(1f)
         )
     }

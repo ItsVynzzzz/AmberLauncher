@@ -10,9 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -35,15 +34,28 @@ import com.israadev.nuxlauncher.core.skin.CapePreset
 import com.israadev.nuxlauncher.core.skin.MicrosoftCape
 import com.israadev.nuxlauncher.core.skin.MicrosoftWardrobeService
 import com.israadev.nuxlauncher.core.skin.SkinUtils
-import com.israadev.nuxlauncher.ui.components.NuxButton
-import com.israadev.nuxlauncher.ui.components.NuxDialog
+import com.israadev.nuxlauncher.ui.components.AmberActionButton
+import com.israadev.nuxlauncher.ui.components.AmberPage
+import com.israadev.nuxlauncher.ui.components.AmberPageLabel
+import com.israadev.nuxlauncher.ui.components.AmberPanel
+import com.israadev.nuxlauncher.ui.components.AmberTag
+import com.israadev.nuxlauncher.ui.components.AmberChoicePill
 import com.israadev.nuxlauncher.ui.components.PlayerSkin
-import com.israadev.nuxlauncher.ui.theme.NuxColors
-import com.israadev.nuxlauncher.ui.theme.NuxSizes
+import com.israadev.nuxlauncher.ui.theme.AmberUi
+import com.israadev.nuxlauncher.ui.theme.amberGlass
 import kotlinx.coroutines.launch
 import java.io.File
 import com.israadev.nuxlauncher.ui.components.AmberSpinner
 
+/**
+ * Halaman Wardrobe & Custom Skin: pratinjau 3D skin/jubah pemain dan pengaturannya.
+ *
+ * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan. Layar lebar: kartu
+ * pratinjau 3D di kiri (kontrol putar/kamera dan pilihan animasi melayang di atasnya), pil tab
+ * Skin/Jubah dan kartu pengaturan di kanan yang bisa digulir. Layar sempit: pratinjau di atas,
+ * pengaturan di bawahnya. Tombol Simpan ada di bar atas (bukan di dasar layar), jadi tidak bisa
+ * tertutup bar sistem atau taskbar tablet. Semua logika simpan/unggah/pratinjau tidak berubah.
+ */
 @Composable
 fun NuxWardrobeDialog(
     account: UserAccount,
@@ -182,872 +194,464 @@ fun NuxWardrobeDialog(
         }
     }
 
-    NuxDialog(
-        onDismissRequest = onDismissRequest,
-        modifier = Modifier.fillMaxWidth(0.92f),
-        fillMaxHeight = true
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 14.dp, vertical = 10.dp)
+    val openElyBy: () -> Unit = {
+        try {
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
+            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        } catch (_: Exception) {
+        }
+    }
+
+    // Simpan: akun Microsoft disinkronkan ke Minecraft.net dulu, akun offline langsung disimpan lokal.
+    val save: () -> Unit = {
+        if (isMicrosoft) {
+            scope.launch {
+                isProcessing = true
+                statusMessage = "Menyinkronkan ke Minecraft.net..."
+                var errorMsg: String? = null
+
+                val skinToUpload = currentSkinFile
+                if (isSkinFileChanged && skinToUpload != null) {
+                    val res = MicrosoftWardrobeService.uploadSkin(context, activeAccount, skinToUpload, selectedModel == "slim")
+                    if (res.isFailure) {
+                        errorMsg = res.exceptionOrNull()?.message
+                    } else {
+                        activeAccount = res.getOrThrow()
+                    }
+                }
+
+                if (isCapeChanged) {
+                    val res = MicrosoftWardrobeService.changeCape(context, activeAccount, selectedMicrosoftCapeId)
+                    if (res.isFailure) {
+                        val capeErr = res.exceptionOrNull()?.message
+                        errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
+                    } else {
+                        activeAccount = res.getOrThrow()
+                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
+                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
+                        SkinUtils.rememberMojangCape(
+                            activeAccount.id,
+                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
+                                ?.takeIf { it.id != "mojang_active_cape" }
+                                ?.url
+                        )
+                    }
+                }
+
+                isProcessing = false
+                if (errorMsg != null) {
+                    Toast.makeText(context, "Gagal memperbarui Minecraft.net: $errorMsg", Toast.LENGTH_LONG).show()
+                    statusMessage = "Gagal: $errorMsg"
+                } else {
+                    persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
+                    Toast.makeText(context, "Perubahan berhasil diterapkan ke Minecraft.net!", Toast.LENGTH_SHORT).show()
+                    onDismissRequest()
+                }
+            }
+        } else {
+            persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
+            Toast.makeText(context, "Skin & Cape berhasil disimpan!", Toast.LENGTH_SHORT).show()
+            onDismissRequest()
+        }
+    }
+
+    // Kartu pratinjau 3D (satu-satunya tempat WebView dipasang)
+    val viewport: @Composable (Modifier) -> Unit = { vpModifier ->
+        val vpShape = RoundedCornerShape(26.dp)
+        Box(
+            modifier = vpModifier
+                .clip(vpShape)
+                .background(AmberUi.SurfaceRaised, vpShape)
+                .border(1.dp, AmberUi.BorderStrong, vpShape)
         ) {
-            // Header
+            AndroidView(
+                factory = { ctx ->
+                    playerSkin.loadWebView(ctx) {
+                        isWebViewReady = true
+                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+                        playerSkin.startAnim(selectedAnim, 0.8f)
+                        playerSkin.setAutoRotate(isAutoRotating, 0.7f)
+                        playerSkin.setCamera(0, 10, 52)
+                    }
+                },
+                update = {
+                    if (isWebViewReady) {
+                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+
+            // Atas: nama akun di kiri, kontrol putar dan kamera di kanan
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "WARDROBE & CUSTOM SKIN",
-                            color = NuxColors.DarkGray,
-                            fontWeight = FontWeight.Black,
-                            fontSize = 13.5.sp,
-                            letterSpacing = 1.sp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Box(
-                            modifier = Modifier
-                                .background(NuxColors.YellowPale, RoundedCornerShape(6.dp))
-                                .padding(horizontal = 7.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = account.username,
-                                color = NuxColors.SageGreen,
-                                fontSize = 9.5.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "Kustomisasi tampilan skin dan jubah pemain Minecraft",
-                        color = NuxColors.GrayNeutral,
-                        fontSize = 9.sp
-                    )
-                }
-
                 Box(
                     modifier = Modifier
-                        .size(26.dp)
-                        .background(NuxColors.SurfaceInput, CircleShape)
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, CircleShape)
-                        .clickable {
-                            onDismissRequest()
-                        },
-                    contentAlignment = Alignment.Center
+                        .widthIn(max = 150.dp)
+                        .clip(CircleShape)
+                        .background(Color.Black.copy(alpha = 0.55f), CircleShape)
+                        .border(1.dp, AmberUi.Border, CircleShape)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Close,
-                        contentDescription = "Tutup",
-                        tint = NuxColors.GrayNeutral,
-                        modifier = Modifier.size(13.dp)
+                    Text(
+                        text = account.username,
+                        color = AmberUi.Text,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ViewportButton(
+                        icon = Icons.Outlined.RotateRight,
+                        description = "Putar Otomatis",
+                        active = isAutoRotating,
+                        onClick = {
+                            isAutoRotating = !isAutoRotating
+                            playerSkin.setAutoRotate(isAutoRotating, 0.7f)
+                        }
+                    )
+                    ViewportButton(
+                        icon = Icons.Outlined.CenterFocusStrong,
+                        description = "Reset Kamera",
+                        active = false,
+                        onClick = { playerSkin.resetCamera() }
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            // Bawah: pilihan animasi
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(10.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.55f), CircleShape)
+                    .border(1.dp, AmberUi.Border, CircleShape)
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                listOf("Walking" to "Jalan", "DefaultIdle" to "Diam", "Running" to "Lari", "Wave" to "Sapa").forEach { (animKey, label) ->
+                    val isSelected = selectedAnim == animKey
+                    Box(
+                        modifier = Modifier
+                            .height(30.dp)
+                            .clip(CircleShape)
+                            .background(if (isSelected) AmberUi.Accent else Color.Transparent, CircleShape)
+                            .clickable {
+                                selectedAnim = animKey
+                                playerSkin.startAnim(animKey, 0.8f)
+                            }
+                            .padding(horizontal = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (isSelected) AmberUi.Text else AmberUi.TextDim,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
+        }
+    }
 
-            // Main Content: Left 3D Viewport, Right Controls (Flexible Weight)
+    // Kolom pengaturan: status, tab Skin/Jubah, lalu kartu isi tab
+    val controls: @Composable ColumnScope.() -> Unit = {
+        val statusText = statusMessage
+        if (statusText != null) {
+            val statusShape = RoundedCornerShape(20.dp)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    .clip(statusShape)
+                    .amberGlass(statusShape)
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // LEFT: 3D SKIN VIEWER (Interactive)
+                val isError = statusText.startsWith("Gagal")
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .background(NuxColors.SurfaceInput, RoundedCornerShape(14.dp))
-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(14.dp))
-                        .clip(RoundedCornerShape(14.dp))
-                ) {
-                    AndroidView(
-                        factory = { ctx ->
-                            playerSkin.loadWebView(ctx) {
-                                isWebViewReady = true
-                                playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
-                                playerSkin.startAnim(selectedAnim, 0.8f)
-                                playerSkin.setAutoRotate(isAutoRotating, 0.7f)
-                                playerSkin.setCamera(0, 10, 52)
-                            }
-                        },
-                        update = {
-                            if (isWebViewReady) {
-                                playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
-                            }
-                        },
-                        modifier = Modifier.fillMaxSize()
-                    )
+                        .size(8.dp)
+                        .background(if (isError) AmberUi.Danger else AmberUi.AccentSoft, CircleShape)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = statusText,
+                    color = if (isError) AmberUi.Danger else AmberUi.Text,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
 
-                    // Top Quick Controls (Orbit Info & Camera/Rotate controls like Windows)
+        // Tab: Skin vs Jubah
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            AmberChoicePill(
+                text = "KUSTOM SKIN",
+                selected = activeTab == "skin",
+                onClick = { activeTab = "skin" },
+                modifier = Modifier.weight(1f)
+            )
+            AmberChoicePill(
+                text = "JUBAH / CAPE",
+                selected = activeTab == "cape",
+                onClick = { activeTab = "cape" },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        if (activeTab == "skin") {
+            // ============================ TAB SKIN ============================
+            if (isElyBy) {
+                ElyByGuideCard(
+                    title = "Sistem Skin & Jubah Ely.by",
+                    body = "Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.",
+                    buttonText = "KUNJUNGI ACCOUNT.ELY.BY",
+                    onOpen = openElyBy
+                )
+            } else {
+                AmberPanel {
+                    AmberActionButton(
+                        text = "PILIH FILE SKIN (.PNG)",
+                        onClick = { skinPickerLauncher.launch("image/png") },
+                        icon = Icons.Outlined.UploadFile,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(14.dp))
+                    AmberPageLabel("TIPE MODEL LENGAN:")
                     Row(
                         modifier = Modifier
-                            .align(Alignment.TopCenter)
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .height(IntrinsicSize.Min),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Box(
+                        ModelOption(
+                            title = "Klasik",
+                            subtitle = "Lengan tebal (4px)",
+                            selected = selectedModel == "classic",
+                            onClick = {
+                                selectedModel = "classic"
+                                playerSkin.loadSkin(currentSkinFile, "classic")
+                                statusMessage = "Model Klasik dipilih (Preview) — Klik Simpan"
+                            },
                             modifier = Modifier
-                                .background(Color.Black.copy(alpha = 0.65f), RoundedCornerShape(6.dp))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                .weight(1f)
+                                .fillMaxHeight()
+                        )
+                        ModelOption(
+                            title = "Slim",
+                            subtitle = "Lengan ramping (3px)",
+                            selected = selectedModel == "slim",
+                            onClick = {
+                                selectedModel = "slim"
+                                playerSkin.loadSkin(currentSkinFile, "slim")
+                                statusMessage = "Model Slim dipilih (Preview) — Klik Simpan"
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .clickable {
+                                currentSkinFile = null
+                                selectedModel = "classic"
+                                playerSkin.resetSkin()
+                                playerSkin.loadCape(currentCapeFile)
+                                statusMessage = "Skin direset ke default Steve (Preview) — Klik Simpan"
+                            }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "↺ Reset ke Skin Default (Klasik)",
+                            color = AmberUi.TextDim,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 2
+                        )
+                    }
+                }
+            }
+        } else {
+            // ============================ TAB JUBAH ============================
+            if (isMicrosoft) {
+                // Khusus akun Microsoft: hanya jubah resmi milik pengguna di minecraft.net
+                AmberPanel {
+                    AmberPageLabel("JUBAH RESMI MINECRAFT.NET:")
+                    if (isLoadingMicrosoftCapes) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            AmberSpinner(
+                                modifier = Modifier.size(16.dp),
+                                strokeWidth = 2.dp,
+                                color = AmberUi.AccentSoft
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "3D (DRAG / PUTAR)",
-                                color = NuxColors.SageGreen,
-                                fontSize = 8.5.sp,
-                                fontWeight = FontWeight.Bold
+                                text = "Memuat jubah dari Minecraft.net...",
+                                color = AmberUi.TextDim,
+                                fontSize = 12.sp
                             )
                         }
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            // Auto-rotate toggle
-                            Box(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .background(
-                                        if (isAutoRotating) NuxColors.ForestGreen else Color.Black.copy(alpha = 0.65f),
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .clickable {
-                                        isAutoRotating = !isAutoRotating
-                                        playerSkin.setAutoRotate(isAutoRotating, 0.7f)
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.RotateRight,
-                                    contentDescription = "Putar Otomatis",
-                                    tint = if (isAutoRotating) NuxColors.Ink else NuxColors.DarkGray,
-                                    modifier = Modifier.size(14.dp)
-                                )
-                            }
-
-                            // Recenter Camera
-                            Box(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .background(Color.Black.copy(alpha = 0.65f), RoundedCornerShape(6.dp))
-                                    .clickable {
-                                        playerSkin.resetCamera()
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.CenterFocusStrong,
-                                    contentDescription = "Reset Kamera",
-                                    tint = NuxColors.DarkGray,
-                                    modifier = Modifier.size(13.dp)
-                                )
-                            }
-                        }
-                    }
-
-                    // Animation Switcher bar (Walking, Idle, Running, Wave)
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(8.dp)
-                            .background(Color.Black.copy(alpha = 0.75f), RoundedCornerShape(20.dp))
-                            .padding(horizontal = 6.dp, vertical = 3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        listOf("Walking" to "Jalan", "DefaultIdle" to "Diam", "Running" to "Lari", "Wave" to "Sapa").forEach { (animKey, label) ->
-                            val isSelected = selectedAnim == animKey
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        if (isSelected) NuxColors.ForestGreen else Color.Transparent,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .clickable {
-                                        selectedAnim = animKey
-                                        playerSkin.startAnim(animKey, 0.8f)
-                                    }
-                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+                    } else if (microsoftCapes.isEmpty()) {
+                        Text(
+                            text = "Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.",
+                            color = AmberUi.TextDim,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp
+                        )
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            // Opsi lepas jubah
+                            val isNoCapeSelected = selectedMicrosoftCapeId == null
+                            WardrobeOption(
+                                selected = isNoCapeSelected,
+                                tint = CapeAccent,
+                                onClick = {
+                                    selectedMicrosoftCapeId = null
+                                    isCapeChanged = true
+                                    playerSkin.loadCapeUrl(null)
+                                    statusMessage = "Jubah dilepas (Preview) — Klik Simpan"
+                                }
                             ) {
                                 Text(
-                                    text = label,
-                                    color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral,
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold
+                                    text = "Tanpa Jubah (Lepas Cape)",
+                                    color = AmberUi.Text,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
                                 )
+                                if (isNoCapeSelected) {
+                                    AmberTag("DIPILIH", color = CapeAccent)
+                                }
+                            }
+
+                            // Daftar jubah resmi milik pengguna
+                            microsoftCapes.forEach { cape ->
+                                val isSelected = selectedMicrosoftCapeId == cape.id
+                                val isMojangActive = cape.state.equals("ACTIVE", ignoreCase = true)
+                                WardrobeOption(
+                                    selected = isSelected,
+                                    tint = CapeAccent,
+                                    onClick = {
+                                        selectedMicrosoftCapeId = cape.id
+                                        isCapeChanged = true
+                                        playerSkin.loadCapeUrl(cape.url)
+                                        statusMessage = "Jubah ${cape.alias ?: "Mojang"} dipilih (Preview) — Klik Simpan"
+                                    }
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(9.dp)
+                                            .background(CapeAccent, CircleShape)
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Text(
+                                        text = MicrosoftWardrobeService.getCapeDisplayName(cape.alias),
+                                        color = AmberUi.Text,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    if (isMojangActive) {
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        AmberTag("AKTIF DI MOJANG")
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
-                // RIGHT: TABS & CONTROLS
-                Column(
-                    modifier = Modifier
-                        .weight(1.3f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Scrollable Controls Column
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        // Section Tabs: Skin vs Cape
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                                .padding(2.5.dp),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            // Tab Skin
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .background(
-                                        if (activeTab == "skin") NuxColors.ForestGreen else Color.Transparent,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .clickable { activeTab = "skin" }
-                                    .padding(vertical = 5.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Person,
-                                        contentDescription = null,
-                                        tint = if (activeTab == "skin") NuxColors.Ink else NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = "KUSTOM SKIN",
-                                        color = NuxColors.DarkGray,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp
-                                    )
-                                }
-                            }
-
-                            // Tab Cape
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .background(
-                                        if (activeTab == "cape") Color(0xFFA855F7) else Color.Transparent,
-                                        RoundedCornerShape(6.dp)
-                                    )
-                                    .clickable { activeTab = "cape" }
-                                    .padding(vertical = 5.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Shield,
-                                        contentDescription = null,
-                                        tint = if (activeTab == "cape") NuxColors.DarkGray else NuxColors.GrayNeutral,
-                                        modifier = Modifier.size(13.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = "JUBAH / CAPE",
-                                        color = NuxColors.DarkGray,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 10.sp
-                                    )
-                                }
-                            }
-                        }
-
-                        // TAB CONTENT: SKIN
-                        if (activeTab == "skin") {
-                            Column(
+            } else if (isElyBy) {
+                ElyByGuideCard(
+                    title = "Sistem Skin & Cape Ely.by",
+                    body = "Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.",
+                    buttonText = "BUKA WEBSITE ELY.BY",
+                    onOpen = openElyBy
+                )
+            } else {
+                // Khusus akun offline: unggah jubah kustom atau pilih preset
+                AmberPanel {
+                    AmberActionButton(
+                        text = "PILIH FILE CAPE KUSTOM (.PNG)",
+                        onClick = { capePickerLauncher.launch("image/png") },
+                        icon = Icons.Outlined.UploadFile,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(14.dp))
+                    AmberPageLabel("ATAU PILIH PRESET JUBAH:")
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        SkinUtils.PRESET_CAPES.chunked(2).forEach { pair ->
+                            Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                if (isElyBy) {
-                                    // PANDUAN SKIN AKUN ELY.BY
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(Color(0xFF8E24AA).copy(alpha = 0.12f), RoundedCornerShape(8.dp))
-                                            .border(1.dp, Color(0xFF8E24AA).copy(alpha = 0.3f), RoundedCornerShape(8.dp))
-                                            .padding(10.dp)
-                                    ) {
-                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                            Text(
-                                                text = "Sistem Skin & Jubah Ely.by",
-                                                color = NuxColors.PurpleDark,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 10.sp
-                                            )
-                                            Text(
-                                                text = "Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.",
-                                                color = NuxColors.DarkGray,
-                                                fontSize = 8.5.sp,
-                                                lineHeight = 12.sp
-                                            )
-                                            NuxButton(
-                                                onClick = {
-                                                    try {
-                                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
-                                                        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                        context.startActivity(intent)
-                                                    } catch (_: Exception) {}
-                                                },
-                                                backgroundColor = Color(0xFF8E24AA),
-                                                contentColor = NuxColors.DarkGray,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(28.dp)
-                                            ) {
-                                                Text("KUNJUNGI ACCOUNT.ELY.BY", fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    // Upload Button
-                                    NuxButton(
-                                        onClick = { skinPickerLauncher.launch("image/png") },
-                                        backgroundColor = NuxColors.YellowPale,
-                                        contentColor = NuxColors.SageGreen,
-                                        cornerRadius = NuxSizes.CornerRadiusSmall,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(32.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.UploadFile,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(13.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(5.dp))
-                                        Text(
-                                            text = "PILIH FILE SKIN (.PNG)",
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 10.sp
-                                        )
-                                    }
-
-                                // Arm Model Selection (Steve vs Alex)
-                                Text(
-                                    text = "TIPE MODEL LENGAN:",
-                                    color = NuxColors.GrayNeutral,
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    // Classic (Klasik - 4px)
-                                    val isClassic = selectedModel == "classic"
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .background(
-                                                if (isClassic) NuxColors.YellowPale else NuxColors.SurfaceInput,
-                                                RoundedCornerShape(8.dp)
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (isClassic) NuxColors.ForestGreen else NuxColors.CardBorder,
-                                                RoundedCornerShape(8.dp)
-                                            )
-                                            .clickable {
-                                                selectedModel = "classic"
-                                                playerSkin.loadSkin(currentSkinFile, "classic")
-                                                statusMessage = "Model Klasik dipilih (Preview) — Klik Simpan"
-                                            }
-                                            .padding(vertical = 6.dp, horizontal = 8.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = "Klasik",
-                                                color = if (isClassic) NuxColors.SageGreen else NuxColors.DarkGray,
-                                                fontSize = 10.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            Text(
-                                                text = "Lengan tebal (4px)",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 8.sp
-                                            )
-                                        }
-                                    }
-
-                                    // Slim (Slim - 3px)
-                                    val isSlim = selectedModel == "slim"
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .background(
-                                                if (isSlim) NuxColors.YellowPale else NuxColors.SurfaceInput,
-                                                RoundedCornerShape(8.dp)
-                                            )
-                                            .border(
-                                                1.dp,
-                                                if (isSlim) NuxColors.ForestGreen else NuxColors.CardBorder,
-                                                RoundedCornerShape(8.dp)
-                                            )
-                                            .clickable {
-                                                selectedModel = "slim"
-                                                playerSkin.loadSkin(currentSkinFile, "slim")
-                                                statusMessage = "Model Slim dipilih (Preview) — Klik Simpan"
-                                            }
-                                            .padding(vertical = 6.dp, horizontal = 8.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = "Slim",
-                                                color = if (isSlim) NuxColors.SageGreen else NuxColors.DarkGray,
-                                                fontSize = 10.sp,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            Text(
-                                                text = "Lengan ramping (3px)",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 8.sp
-                                            )
-                                        }
-                                    }
-                                }
-
-                                    // Reset Skin Button
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable {
-                                                currentSkinFile = null
-                                                selectedModel = "classic"
-                                                playerSkin.resetSkin()
-                                                playerSkin.loadCape(currentCapeFile)
-                                                statusMessage = "Skin direset ke default Steve (Preview) — Klik Simpan"
-                                            }
-                                            .padding(vertical = 3.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = "↺ Reset ke Skin Default (Klasik)",
-                                            color = NuxColors.GrayNeutral,
-                                            fontSize = 9.5.sp,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
-                                }
-                            }
-                        } else {
-                            // TAB CONTENT: CAPE
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(5.dp)
-                            ) {
-                                if (isMicrosoft) {
-                                    // KHUSUS AKUN MICROSOFT: Hanya tampilkan jubah resmi milik pengguna di minecraft.net
-                                    Text(
-                                        text = "JUBAH RESMI MINECRAFT.NET:",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 8.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    if (isLoadingMicrosoftCapes) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 12.dp),
-                                            horizontalArrangement = Arrangement.Center,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            AmberSpinner(
-                                                modifier = Modifier.size(16.dp),
-                                                strokeWidth = 2.dp,
-                                                color = NuxColors.PurpleDark
-                                            )
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                            Text(
-                                                text = "Memuat jubah dari Minecraft.net...",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 9.5.sp
-                                            )
-                                        }
-                                    } else if (microsoftCapes.isEmpty()) {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
-                                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(8.dp))
-                                                .padding(10.dp)
-                                        ) {
-                                            Text(
-                                                text = "Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.",
-                                                color = NuxColors.GrayNeutral,
-                                                fontSize = 9.sp
-                                            )
-                                        }
-                                    } else {
-                                        // Opsi Lepas Cape (Tanpa Jubah)
-                                        val isNoCapeSelected = selectedMicrosoftCapeId == null
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(
-                                                    if (isNoCapeSelected) Color(0xFFA855F7).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
-                                                    RoundedCornerShape(7.dp)
-                                                )
-                                                .border(
-                                                    1.dp,
-                                                    if (isNoCapeSelected) Color(0xFFA855F7) else NuxColors.CardBorder,
-                                                    RoundedCornerShape(7.dp)
-                                                )
-                                                .clickable {
-                                                    selectedMicrosoftCapeId = null
-                                                    isCapeChanged = true
-                                                    playerSkin.loadCapeUrl(null)
-                                                    statusMessage = "Jubah dilepas (Preview) — Klik Simpan"
-                                                }
-                                                .padding(horizontal = 9.dp, vertical = 6.dp)
-                                        ) {
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Text(
-                                                    text = "Tanpa Jubah (Lepas Cape)",
-                                                    color = if (isNoCapeSelected) NuxColors.PurpleDark else NuxColors.DarkGray,
-                                                    fontSize = 9.5.sp,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                                if (isNoCapeSelected) {
-                                                    Text("DIPILIH", color = NuxColors.PurpleDark, fontSize = 8.sp, fontWeight = FontWeight.Black)
-                                                }
-                                            }
-                                        }
-
-                                        // Daftar Jubah Resmi Milik User dari minecraft.net
-                                        microsoftCapes.forEach { cape ->
-                                            val isSelected = selectedMicrosoftCapeId == cape.id
-                                            val isMojangActive = cape.state.equals("ACTIVE", ignoreCase = true)
-
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .background(
-                                                        if (isSelected) Color(0xFFA855F7).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
-                                                        RoundedCornerShape(7.dp)
-                                                    )
-                                                    .border(
-                                                        1.dp,
-                                                        if (isSelected) Color(0xFFA855F7) else NuxColors.CardBorder,
-                                                        RoundedCornerShape(7.dp)
-                                                    )
-                                                    .clickable {
-                                                        selectedMicrosoftCapeId = cape.id
-                                                        isCapeChanged = true
-                                                        playerSkin.loadCapeUrl(cape.url)
-                                                        statusMessage = "Jubah ${cape.alias ?: "Mojang"} dipilih (Preview) — Klik Simpan"
-                                                    }
-                                                    .padding(horizontal = 9.dp, vertical = 6.dp)
-                                            ) {
-                                                Row(
-                                                    modifier = Modifier.fillMaxWidth(),
-                                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                                    verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                    Row(
-                                                        verticalAlignment = Alignment.CenterVertically,
-                                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                                    ) {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .size(8.dp)
-                                                                .background(Color(0xFFA855F7), CircleShape)
-                                                        )
-                                                        Text(
-                                                            text = MicrosoftWardrobeService.getCapeDisplayName(cape.alias),
-                                                            color = if (isSelected) NuxColors.PurpleDark else NuxColors.DarkGray,
-                                                            fontSize = 9.5.sp,
-                                                            fontWeight = FontWeight.Bold
-                                                        )
-                                                    }
-
-                                                    if (isMojangActive) {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
-                                                                .padding(horizontal = 5.dp, vertical = 2.dp)
-                                                        ) {
-                                                            Text(
-                                                                text = "AKTIF DI MOJANG",
-                                                                color = NuxColors.SageGreen,
-                                                                fontSize = 7.5.sp,
-                                                                fontWeight = FontWeight.Black
-                                                            )
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else if (isElyBy) {
-                                    // PANDUAN AKUN ELY.BY
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(Color(0xFF8E24AA).copy(alpha = 0.12f), RoundedCornerShape(8.dp))
-                                            .border(1.dp, Color(0xFF8E24AA).copy(alpha = 0.3f), RoundedCornerShape(8.dp))
-                                            .padding(10.dp)
-                                    ) {
-                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                            Text(
-                                                text = "Sistem Skin & Cape Ely.by",
-                                                color = NuxColors.PurpleDark,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 10.sp
-                                            )
-                                            Text(
-                                                text = "Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.",
-                                                color = NuxColors.DarkGray,
-                                                fontSize = 8.5.sp,
-                                                lineHeight = 12.sp
-                                            )
-                                            NuxButton(
-                                                onClick = {
-                                                    try {
-                                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
-                                                        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                        context.startActivity(intent)
-                                                    } catch (_: Exception) {}
-                                                },
-                                                backgroundColor = Color(0xFF8E24AA),
-                                                contentColor = NuxColors.DarkGray,
-                                                modifier = Modifier.fillMaxWidth().height(28.dp)
-                                            ) {
-                                                Text("BUKA WEBSITE ELY.BY", fontWeight = FontWeight.Bold, fontSize = 9.sp)
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    // KHUSUS AKUN OFFLINE: Upload custom cape atau pilih preset
-                                    NuxButton(
-                                        onClick = { capePickerLauncher.launch("image/png") },
-                                        backgroundColor = Color(0xFFA855F7).copy(alpha = 0.15f),
-                                        contentColor = NuxColors.PurpleDark,
-                                        cornerRadius = NuxSizes.CornerRadiusSmall,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(30.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.UploadFile,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(12.dp)
-                                        )
-                                        Spacer(modifier = Modifier.width(5.dp))
-                                        Text(
-                                            text = "PILIH FILE CAPE KUSTOM (.PNG)",
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = 9.5.sp
-                                        )
-                                    }
-
-                                    Text(
-                                        text = "ATAU PILIH PRESET JUBAH:",
-                                        color = NuxColors.GrayNeutral,
-                                        fontSize = 8.5.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-
-                                    // Preset Capes Grid
-                                    Column(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                                    ) {
-                                        SkinUtils.PRESET_CAPES.chunked(2).forEach { pair ->
-                                            Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.spacedBy(5.dp)
-                                            ) {
-                                                pair.forEach { preset ->
-                                                    val isPresetSelected = selectedPresetCapeId == preset.id || (preset.id == "none" && currentCapeFile == null)
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .weight(1f)
-                                                            .background(
-                                                                if (isPresetSelected) Color(preset.badgeColor).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
-                                                                RoundedCornerShape(7.dp)
-                                                            )
-                                                            .border(
-                                                                1.dp,
-                                                                if (isPresetSelected) Color(preset.badgeColor) else NuxColors.CardBorder,
-                                                                RoundedCornerShape(7.dp)
-                                                            )
-                                                            .clickable {
-                                                                selectedPresetCapeId = preset.id
-                                                                scope.launch {
-                                                                    val generatedCape = SkinUtils.applyPresetCape(context, account.id, preset.id)
-                                                                    currentCapeFile = generatedCape
-                                                                    playerSkin.loadCape(generatedCape)
-                                                                    statusMessage = if (preset.id == "none") "Cape dilepas (Preview) — Klik Simpan" else "Jubah ${preset.name} dipilih (Preview) — Klik Simpan"
-                                                                }
-                                                            }
-                                                            .padding(horizontal = 7.dp, vertical = 5.dp)
-                                                    ) {
-                                                        Row(
-                                                            verticalAlignment = Alignment.CenterVertically,
-                                                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                                                        ) {
-                                                            Box(
-                                                                modifier = Modifier
-                                                                    .size(7.dp)
-                                                                    .background(Color(preset.badgeColor), CircleShape)
-                                                            )
-                                                            Text(
-                                                                text = preset.name,
-                                                                color = if (isPresetSelected) Color(preset.badgeColor) else NuxColors.DarkGray,
-                                                                fontSize = 9.sp,
-                                                                fontWeight = FontWeight.Bold,
-                                                                maxLines = 1
-                                                            )
-                                                        }
-                                                    }
-                                                }
-                                                if (pair.size == 1) {
-                                                    Spacer(modifier = Modifier.weight(1f))
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    // Bottom Action Bar (PINNED & ALWAYS VISIBLE)
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        if (statusMessage != null) {
-                            Text(
-                                text = statusMessage!!,
-                                color = NuxColors.SageGreen,
-                                fontSize = 9.sp,
-                                maxLines = 1
-                            )
-                            Spacer(modifier = Modifier.height(3.dp))
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            NuxButton(
-                                onClick = onDismissRequest,
-                                backgroundColor = NuxColors.SurfaceElevated,
-                                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
-                                contentColor = NuxColors.DarkGray,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(32.dp)
-                            ) {
-                                Text("BATAL", color = NuxColors.DarkGray, fontWeight = FontWeight.Bold, fontSize = 10.sp)
-                            }
-
-                            if (isElyBy) {
-                                NuxButton(
-                                    onClick = onDismissRequest,
-                                    backgroundColor = Color(0xFF8E24AA),
-                                    contentColor = NuxColors.DarkGray,
-                                    modifier = Modifier
-                                        .weight(1.5f)
-                                        .height(32.dp)
-                                ) {
-                                    Text("MENGERTI", fontWeight = FontWeight.Black, fontSize = 10.sp)
-                                }
-                            } else {
-                                NuxButton(
-                                    onClick = {
-                                        if (isMicrosoft) {
+                                pair.forEach { preset ->
+                                    val isPresetSelected = selectedPresetCapeId == preset.id || (preset.id == "none" && currentCapeFile == null)
+                                    val presetColor = Color(preset.badgeColor)
+                                    WardrobeOption(
+                                        selected = isPresetSelected,
+                                        tint = presetColor,
+                                        modifier = Modifier.weight(1f),
+                                        onClick = {
+                                            selectedPresetCapeId = preset.id
                                             scope.launch {
-                                                isProcessing = true
-                                                statusMessage = "Menyinkronkan ke Minecraft.net..."
-                                                var errorMsg: String? = null
-
-                                                if (isSkinFileChanged && currentSkinFile != null) {
-                                                    val res = MicrosoftWardrobeService.uploadSkin(context, activeAccount, currentSkinFile!!, selectedModel == "slim")
-                                                    if (res.isFailure) {
-                                                        errorMsg = res.exceptionOrNull()?.message
-                                                    } else {
-                                                        activeAccount = res.getOrThrow()
-                                                    }
-                                                }
-
-                                                if (isCapeChanged) {
-                                                    val res = MicrosoftWardrobeService.changeCape(context, activeAccount, selectedMicrosoftCapeId)
-                                                    if (res.isFailure) {
-                                                        val capeErr = res.exceptionOrNull()?.message
-                                                        errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
-                                                    } else {
-                                                        activeAccount = res.getOrThrow()
-                                                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
-                                                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
-                                                        SkinUtils.rememberMojangCape(
-                                                            activeAccount.id,
-                                                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
-                                                                ?.takeIf { it.id != "mojang_active_cape" }
-                                                                ?.url
-                                                        )
-                                                    }
-                                                }
-
-                                                isProcessing = false
-                                                if (errorMsg != null) {
-                                                    Toast.makeText(context, "Gagal memperbarui Minecraft.net: $errorMsg", Toast.LENGTH_LONG).show()
-                                                    statusMessage = "Gagal: $errorMsg"
-                                                } else {
-                                                    persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
-                                                    Toast.makeText(context, "Perubahan berhasil diterapkan ke Minecraft.net!", Toast.LENGTH_SHORT).show()
-                                                    onDismissRequest()
-                                                }
+                                                val generatedCape = SkinUtils.applyPresetCape(context, account.id, preset.id)
+                                                currentCapeFile = generatedCape
+                                                playerSkin.loadCape(generatedCape)
+                                                statusMessage = if (preset.id == "none") "Cape dilepas (Preview) — Klik Simpan" else "Jubah ${preset.name} dipilih (Preview) — Klik Simpan"
                                             }
-                                        } else {
-                                            persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
-                                            Toast.makeText(context, "Skin & Cape berhasil disimpan!", Toast.LENGTH_SHORT).show()
-                                            onDismissRequest()
                                         }
-                                    },
-                                    backgroundColor = NuxColors.ForestGreen,
-                                    contentColor = NuxColors.DarkGray,
-                                    enabled = !isProcessing,
-                                    modifier = Modifier
-                                        .weight(1.5f)
-                                        .height(32.dp)
-                                ) {
-                                    if (isProcessing) {
-                                        AmberSpinner(modifier = Modifier.size(13.dp), color = NuxColors.Ink, strokeWidth = 2.dp)
-                                        Spacer(modifier = Modifier.width(5.dp))
-                                    } else {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Check,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(13.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(9.dp)
+                                                .background(presetColor, CircleShape)
                                         )
-                                        Spacer(modifier = Modifier.width(5.dp))
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = preset.name,
+                                            color = AmberUi.Text,
+                                            fontSize = 12.5.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.weight(1f)
+                                        )
                                     }
-                                    Text(
-                                        text = if (isMicrosoft) "SIMPAN KE MOJANG" else "SIMPAN PERUBAHAN",
-                                        fontWeight = FontWeight.Black,
-                                        fontSize = 10.sp,
-                                        letterSpacing = 0.4.sp
-                                    )
+                                }
+                                if (pair.size == 1) {
+                                    Spacer(modifier = Modifier.weight(1f))
                                 }
                             }
                         }
@@ -1055,5 +659,229 @@ fun NuxWardrobeDialog(
                 }
             }
         }
+    }
+
+    AmberPage(
+        onDismiss = onDismissRequest,
+        title = "Wardrobe",
+        icon = Icons.Outlined.Person,
+        subtitle = account.username,
+        actions = { info ->
+            if (isElyBy) {
+                AmberActionButton(
+                    text = "MENGERTI",
+                    onClick = onDismissRequest,
+                    icon = Icons.Outlined.Check,
+                    height = 40.dp
+                )
+            } else {
+                AmberActionButton(
+                    text = if (info.narrow) "Simpan" else if (isMicrosoft) "SIMPAN KE MOJANG" else "SIMPAN PERUBAHAN",
+                    onClick = save,
+                    icon = Icons.Outlined.Check,
+                    loading = isProcessing,
+                    height = 40.dp
+                )
+            }
+        }
+    ) { info ->
+        if (info.narrow) {
+            // Layar sempit: pratinjau di atas (tidak ikut digulir supaya geser memutar model tidak
+            // bentrok dengan gulir halaman), pengaturan di bawahnya.
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                viewport(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(0.85f)
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1.15f)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    controls()
+                }
+            }
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                viewport(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                )
+                Column(
+                    modifier = Modifier
+                        .weight(1.3f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    controls()
+                }
+            }
+        }
+    }
+}
+
+private val CapeAccent = Color(0xFFC084FC)
+private val ElyByAccent = Color(0xFFB79CFF)
+
+/** Tombol bulat kecil di atas pratinjau 3D. Aktif = isian aksen. */
+@Composable
+private fun ViewportButton(
+    icon: ImageVector,
+    description: String,
+    active: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(if (active) AmberUi.Accent else Color.Black.copy(alpha = 0.55f), CircleShape)
+            .border(1.dp, if (active) AmberUi.AccentEdge else AmberUi.Border, CircleShape)
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = description,
+            tint = AmberUi.Text,
+            modifier = Modifier.size(19.dp)
+        )
+    }
+}
+
+/** Satu baris pilihan berbentuk pil. Terpilih = tepi dan isian warna [tint], selain itu kaca. */
+@Composable
+private fun WardrobeOption(
+    selected: Boolean,
+    tint: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 44.dp)
+            .clip(CircleShape)
+            .then(
+                if (selected) {
+                    Modifier
+                        .background(tint.copy(alpha = 0.20f), CircleShape)
+                        .border(1.dp, tint, CircleShape)
+                } else {
+                    Modifier.amberGlass(CircleShape)
+                }
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        content = content
+    )
+}
+
+/** Pilihan tipe lengan (Klasik / Slim): judul dan keterangan kecil. */
+@Composable
+private fun ModelOption(
+    title: String,
+    subtitle: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(20.dp)
+    Column(
+        modifier = modifier
+            .clip(shape)
+            .then(
+                if (selected) {
+                    Modifier
+                        .background(AmberUi.Accent, shape)
+                        .border(1.dp, AmberUi.AccentEdge, shape)
+                } else {
+                    Modifier.amberGlass(shape)
+                }
+            )
+            .clickable { onClick() }
+            .padding(horizontal = 14.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = title,
+            color = AmberUi.Text,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1
+        )
+        Text(
+            text = subtitle,
+            color = AmberUi.TextDim,
+            fontSize = 11.sp,
+            lineHeight = 15.sp
+        )
+    }
+}
+
+/** Panduan untuk akun Ely.by (skin & jubah dikelola lewat website mereka). */
+@Composable
+private fun ElyByGuideCard(
+    title: String,
+    body: String,
+    buttonText: String,
+    onOpen: () -> Unit
+) {
+    AmberPanel {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(ElyByAccent.copy(alpha = 0.18f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Public,
+                    contentDescription = null,
+                    tint = ElyByAccent,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = title,
+                color = AmberUi.Text,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp,
+                lineHeight = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = body,
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 17.sp
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+        AmberActionButton(
+            text = buttonText,
+            onClick = onOpen,
+            icon = Icons.Outlined.OpenInBrowser,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }

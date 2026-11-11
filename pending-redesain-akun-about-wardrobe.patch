@@ -1,0 +1,3546 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+index bf90fee..a0e6f81 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.BoxScope
+ import androidx.compose.foundation.layout.BoxWithConstraints
++import androidx.compose.foundation.layout.ColumnScope
+ import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Row
+ import androidx.compose.foundation.layout.RowScope
+ import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.WindowInsets
+ import androidx.compose.foundation.layout.WindowInsetsSides
++import androidx.compose.foundation.layout.defaultMinSize
+ import androidx.compose.foundation.layout.displayCutout
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+@@ -27,6 +29,7 @@ import androidx.compose.foundation.layout.union
+ import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.layout.windowInsetsPadding
+ import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.text.BasicTextField
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+@@ -40,6 +43,7 @@ import androidx.compose.runtime.rememberUpdatedState
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.alpha
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.SolidColor
+ import androidx.compose.ui.graphics.vector.ImageVector
+@@ -48,6 +52,7 @@ import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.sp
+ import androidx.compose.ui.window.Dialog
+ import androidx.compose.ui.window.DialogProperties
+@@ -141,7 +146,7 @@ fun AmberPage(
+     subtitle: String? = null,
+     dismissOnScrimTap: Boolean = false,
+     scrimAlpha: Float = 0.82f,
+-    actions: @Composable RowScope.() -> Unit = {},
++    actions: @Composable RowScope.(PageInfo) -> Unit = {},
+     content: @Composable BoxScope.(PageInfo) -> Unit
+ ) {
+     AmberOverlay(
+@@ -157,6 +162,7 @@ fun AmberPage(
+                     icon = icon,
+                     subtitle = if (info.narrow) null else subtitle,
+                     onDismiss = onDismiss,
++                    info = info,
+                     actions = actions
+                 )
+                 Box(
+@@ -177,7 +183,8 @@ private fun AmberPageBar(
+     icon: ImageVector?,
+     subtitle: String?,
+     onDismiss: () -> Unit,
+-    actions: @Composable RowScope.() -> Unit
++    info: PageInfo,
++    actions: @Composable RowScope.(PageInfo) -> Unit
+ ) {
+     Row(
+         modifier = Modifier
+@@ -185,70 +192,74 @@ private fun AmberPageBar(
+             .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 10.dp),
+         verticalAlignment = Alignment.CenterVertically
+     ) {
+-        // Pil kiri: panah kembali + judul, bentuknya sama dengan pil navigasi di layar Mod/Akun
++        // Sisi kiri memakai sisa lebar setelah aksi di kanan; judul yang kepanjangan dipotong
++        // dengan "...", sehingga tombol aksi (Simpan) tidak pernah terdorong keluar layar.
+         Row(
+-            modifier = Modifier
+-                .height(48.dp)
+-                .clip(CircleShape)
+-                .amberGlass(CircleShape)
+-                .padding(horizontal = 4.dp),
+-            horizontalArrangement = Arrangement.spacedBy(2.dp),
++            modifier = Modifier.weight(1f),
+             verticalAlignment = Alignment.CenterVertically
+         ) {
+-            AmberRoundIcon(
+-                icon = Icons.AutoMirrored.Outlined.ArrowBack,
+-                description = "Tutup",
+-                onClick = onDismiss
+-            )
++            // Pil kiri: panah kembali + judul, bentuknya sama dengan pil navigasi di layar Mod/Akun
+             Row(
+                 modifier = Modifier
+-                    .height(40.dp)
++                    .height(48.dp)
+                     .clip(CircleShape)
+-                    .background(AmberUi.SurfaceRaised, CircleShape)
+-                    .border(1.dp, AmberUi.BorderStrong, CircleShape)
+-                    .padding(horizontal = 14.dp),
++                    .amberGlass(CircleShape)
++                    .padding(horizontal = 4.dp),
++                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                 verticalAlignment = Alignment.CenterVertically
+             ) {
+-                if (icon != null) {
+-                    Icon(
+-                        imageVector = icon,
+-                        contentDescription = null,
+-                        tint = AmberUi.Text,
+-                        modifier = Modifier.size(18.dp)
++                AmberRoundIcon(
++                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
++                    description = "Tutup",
++                    onClick = onDismiss
++                )
++                Row(
++                    modifier = Modifier
++                        .height(40.dp)
++                        .clip(CircleShape)
++                        .background(AmberUi.SurfaceRaised, CircleShape)
++                        .border(1.dp, AmberUi.BorderStrong, CircleShape)
++                        .padding(horizontal = 14.dp),
++                    verticalAlignment = Alignment.CenterVertically
++                ) {
++                    if (icon != null) {
++                        Icon(
++                            imageVector = icon,
++                            contentDescription = null,
++                            tint = AmberUi.Text,
++                            modifier = Modifier.size(18.dp)
++                        )
++                        Spacer(modifier = Modifier.width(8.dp))
++                    }
++                    Text(
++                        text = title,
++                        color = AmberUi.Text,
++                        fontWeight = FontWeight.SemiBold,
++                        fontSize = 15.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
+                     )
+-                    Spacer(modifier = Modifier.width(8.dp))
+                 }
+-                Text(
+-                    text = title,
+-                    color = AmberUi.Text,
+-                    fontWeight = FontWeight.SemiBold,
+-                    fontSize = 15.sp,
+-                    maxLines = 1,
+-                    overflow = TextOverflow.Ellipsis
+-                )
+             }
+-        }
+-
+-        Box(
+-            modifier = Modifier
+-                .weight(1f)
+-                .padding(horizontal = 12.dp)
+-        ) {
+             if (subtitle != null) {
+                 Text(
+                     text = subtitle,
+                     color = AmberUi.TextDim,
+                     fontSize = 12.sp,
+                     maxLines = 1,
+-                    overflow = TextOverflow.Ellipsis
++                    overflow = TextOverflow.Ellipsis,
++                    modifier = Modifier
++                        .weight(1f, fill = false)
++                        .padding(start = 12.dp)
+                 )
+             }
+         }
+ 
+         Row(
++            modifier = Modifier.padding(start = 10.dp),
+             horizontalArrangement = Arrangement.spacedBy(8.dp),
+             verticalAlignment = Alignment.CenterVertically,
+-            content = actions
++            content = { actions(info) }
+         )
+     }
+ }
+@@ -434,3 +445,175 @@ fun AmberActionPill(
+         }
+     }
+ }
++
++/**
++ * Item navigasi samping berbentuk pil (sama bahasanya dengan menu samping layar Mod/Akun):
++ * ikon dalam lingkaran, judul, dan keterangan kecil bila ada. Terpilih = isian aksen.
++ */
++@Composable
++fun AmberRailItem(
++    title: String,
++    selected: Boolean,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    icon: ImageVector? = null,
++    description: String? = null,
++    tint: Color = AmberUi.AccentSoft
++) {
++    Row(
++        modifier = modifier
++            .fillMaxWidth()
++            .defaultMinSize(minHeight = if (description != null) 56.dp else 46.dp)
++            .clip(CircleShape)
++            .then(
++                if (selected) {
++                    Modifier
++                        .background(AmberUi.Accent, CircleShape)
++                        .border(1.dp, AmberUi.AccentEdge, CircleShape)
++                } else {
++                    Modifier.amberGlass(CircleShape)
++                }
++            )
++            .clickable { onClick() }
++            .padding(horizontal = 10.dp, vertical = 6.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        if (icon != null) {
++            Box(
++                modifier = Modifier
++                    .size(34.dp)
++                    .clip(CircleShape)
++                    .background(tint.copy(alpha = if (selected) 0.28f else 0.16f)),
++                contentAlignment = Alignment.Center
++            ) {
++                Icon(
++                    imageVector = icon,
++                    contentDescription = null,
++                    tint = tint,
++                    modifier = Modifier.size(19.dp)
++                )
++            }
++            Spacer(modifier = Modifier.width(10.dp))
++        } else {
++            Spacer(modifier = Modifier.width(8.dp))
++        }
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = title,
++                color = AmberUi.Text,
++                fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
++                fontSize = 14.sp,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++            if (description != null) {
++                Text(
++                    text = description,
++                    color = AmberUi.TextDim,
++                    fontSize = 11.sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++            }
++        }
++    }
++}
++
++/**
++ * Tombol pil serbaguna: terisi aksen (utama) atau hanya garis tepi, dengan keadaan memuat
++ * (spinner). [height] 44dp di dalam isi halaman, pakai 40dp di bar atas.
++ */
++@Composable
++fun AmberActionButton(
++    text: String,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    icon: ImageVector? = null,
++    loading: Boolean = false,
++    enabled: Boolean = true,
++    filled: Boolean = true,
++    height: Dp = 44.dp
++) {
++    Row(
++        modifier = modifier
++            .alpha(if (enabled) 1f else 0.45f)
++            .height(height)
++            .clip(CircleShape)
++            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
++            .border(
++                1.dp,
++                if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong,
++                CircleShape
++            )
++            .clickable(enabled = enabled && !loading) { onClick() }
++            .padding(horizontal = 18.dp),
++        horizontalArrangement = Arrangement.Center,
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        if (loading) {
++            AmberSpinner(
++                modifier = Modifier.size(16.dp),
++                color = AmberUi.Text,
++                strokeWidth = 2.dp
++            )
++            Spacer(modifier = Modifier.width(8.dp))
++        } else if (icon != null) {
++            Icon(
++                imageVector = icon,
++                contentDescription = null,
++                tint = AmberUi.Text,
++                modifier = Modifier.size(18.dp)
++            )
++            Spacer(modifier = Modifier.width(8.dp))
++        }
++        Text(
++            text = text,
++            color = AmberUi.Text,
++            fontWeight = FontWeight.SemiBold,
++            fontSize = 14.sp,
++            maxLines = 1,
++            overflow = TextOverflow.Ellipsis
++        )
++    }
++}
++
++/** Kartu kaca bersudut besar untuk satu kelompok isi. */
++@Composable
++fun AmberPanel(
++    modifier: Modifier = Modifier,
++    padding: Dp = 16.dp,
++    content: @Composable ColumnScope.() -> Unit
++) {
++    val shape = RoundedCornerShape(24.dp)
++    Column(
++        modifier = modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .amberGlass(shape)
++            .padding(padding),
++        content = content
++    )
++}
++
++/** Label kecil berbentuk pil (lisensi, status). */
++@Composable
++fun AmberTag(
++    text: String,
++    modifier: Modifier = Modifier,
++    color: Color = AmberUi.AccentSoft
++) {
++    Box(
++        modifier = modifier
++            .clip(CircleShape)
++            .background(color.copy(alpha = 0.16f))
++            .padding(horizontal = 9.dp, vertical = 3.dp)
++    ) {
++        Text(
++            text = text,
++            color = color,
++            fontSize = 11.sp,
++            fontWeight = FontWeight.SemiBold,
++            maxLines = 1
++        )
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index 9a1b0d1..53a1818 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+@@ -3,32 +3,61 @@ package com.israadev.nuxlauncher.ui.dialogs
+ import android.content.Context
+ import android.content.Intent
+ import android.net.Uri
+-import androidx.compose.foundation.ScrollState
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+-import androidx.compose.foundation.layout.*
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.BoxWithConstraints
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ColumnScope
++import androidx.compose.foundation.layout.IntrinsicSize
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.verticalScroll
+-import com.israadev.nuxlauncher.ui.i18n.Text
+-import androidx.compose.runtime.*
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Description
++import androidx.compose.material.icons.outlined.Extension
++import androidx.compose.material.icons.outlined.Favorite
++import androidx.compose.material.icons.outlined.Info
++import androidx.compose.material.icons.outlined.OpenInBrowser
++import androidx.compose.material3.Icon
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+-import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.AppLinks
+-import com.israadev.nuxlauncher.ui.components.AmberButton
+-import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
+-import com.israadev.nuxlauncher.ui.components.AmberIcon
+-import com.israadev.nuxlauncher.ui.components.AmberSegmented
+-import com.israadev.nuxlauncher.ui.components.NuxDialog
+-import com.israadev.nuxlauncher.ui.components.amberTap
+-import com.israadev.nuxlauncher.ui.theme.Amber
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.components.AmberChoicePill
++import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
++import com.israadev.nuxlauncher.ui.components.AmberPanel
++import com.israadev.nuxlauncher.ui.components.AmberRailItem
++import com.israadev.nuxlauncher.ui.components.AmberTag
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.screens.AmberPillButton
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.amberGlass
+ 
+ private const val COPY = "Copyright \u00A9"
+ private const val GPL_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
+@@ -198,9 +227,14 @@ private fun appVersionName(context: Context): String {
+ }
+ 
+ /**
+- * Dialog Tentang: ringkasan proyek, daftar pustaka open source, dan ketentuan GPL-3.0 (termasuk
+- * syarat tambahan Zalith). Di layar lebar tabnya jadi menu samping, di layar sempit jadi segmen
+- * di atas. Tombol Buy Me a Coffee hanya muncul kalau AppLinks.DONATE_URL diisi.
++ * Halaman Tentang: ringkasan proyek, daftar pustaka open source, dan ketentuan GPL-3.0 (termasuk
++ * syarat tambahan Zalith).
++ *
++ * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan. Di layar lebar: rail kiri
++ * (kartu merek + tiga tab berbentuk pil) dan isi di kanan yang digulir; kartu pustaka/proyek
++ * disusun dua kolom bila ruangnya cukup. Di layar sempit: satu kolom yang digulir (merek, tiga
++ * pil tab, lalu isi). Tombol Tutup diganti panah kembali di bar atas, jadi tidak ada tombol di
++ * dasar layar. Tombol Buy Me a Coffee hanya muncul kalau AppLinks.DONATE_URL diisi.
+  */
+ @Composable
+ fun NuxAboutDialog(
+@@ -216,74 +250,99 @@ fun NuxAboutDialog(
+     val donateUrl = AppLinks.DONATE_URL.trim()
+     val onDonate: (() -> Unit)? = if (donateUrl.isNotEmpty()) ({ onOpen(donateUrl) }) else null
+     val tabs = remember { listOf("Ringkasan", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
++    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.Extension, Icons.Outlined.Description)
+ 
+-    NuxDialog(
+-        onDismissRequest = onDismissRequest,
+-        modifier = Modifier.widthIn(max = 720.dp),
+-        fillMaxHeight = true,
+-        compact = true
+-    ) {
+-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+-            if (maxWidth >= 520.dp) {
+-                Row(modifier = Modifier.fillMaxSize()) {
+-                    Column(
++    AmberPage(
++        onDismiss = onDismissRequest,
++        title = "Tentang",
++        icon = Icons.Outlined.Info,
++        subtitle = if (version.isNotBlank()) "Versi $version" else null,
++        actions = { info ->
++            if (onDonate != null) {
++                if (info.narrow) {
++                    // Layar sempit: tombol bulat saja supaya bar atas tidak sesak
++                    Box(
+                         modifier = Modifier
+-                            .width(208.dp)
+-                            .fillMaxHeight()
+-                            .padding(horizontal = 12.dp, vertical = 14.dp)
++                            .size(48.dp)
++                            .clip(CircleShape)
++                            .background(AmberUi.Accent, CircleShape)
++                            .border(1.dp, AmberUi.AccentEdge, CircleShape)
++                            .clickable { onDonate() },
++                        contentAlignment = Alignment.Center
+                     ) {
+-                        Brand(version)
+-                        Spacer(modifier = Modifier.height(14.dp))
+-                        tabs.forEachIndexed { index, label ->
+-                            RailTab(label = label, selected = index == tab) { tab = index }
+-                            Spacer(modifier = Modifier.height(2.dp))
+-                        }
+-                        Spacer(modifier = Modifier.weight(1f))
+-                        if (onDonate != null) {
+-                            DonateButton(onClick = onDonate, modifier = Modifier.fillMaxWidth())
+-                            Spacer(modifier = Modifier.height(8.dp))
+-                        }
+-                        CloseButton(onClick = onDismissRequest, modifier = Modifier.fillMaxWidth())
++                        Icon(
++                            imageVector = Icons.Outlined.Favorite,
++                            contentDescription = "Buy me a coffee",
++                            tint = AmberUi.Text,
++                            modifier = Modifier.size(22.dp)
++                        )
+                     }
+-                    Box(
+-                        modifier = Modifier
+-                            .width(1.dp)
+-                            .fillMaxHeight()
+-                            .background(Amber.Line)
+-                    )
+-                    AboutContent(
+-                        tab = tab,
+-                        onOpen = onOpen,
+-                        scroll = scroll,
+-                        modifier = Modifier
+-                            .weight(1f)
+-                            .fillMaxHeight()
++                } else {
++                    AmberPillButton(
++                        text = "Buy me a coffee",
++                        onClick = onDonate,
++                        icon = Icons.Outlined.Favorite
+                     )
+                 }
+-            } else {
++            }
++        }
++    ) { info ->
++        if (info.narrow) {
++            Column(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .verticalScroll(scroll)
++                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
++                verticalArrangement = Arrangement.spacedBy(12.dp)
++            ) {
++                BrandCard(version)
++                Row(
++                    modifier = Modifier.fillMaxWidth(),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    tabs.forEachIndexed { index, label ->
++                        AmberChoicePill(
++                            text = label,
++                            selected = index == tab,
++                            onClick = { tab = index },
++                            modifier = Modifier.weight(1f)
++                        )
++                    }
++                }
++                AboutContent(tab = tab, onOpen = onOpen)
++            }
++        } else {
++            Row(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
++                horizontalArrangement = Arrangement.spacedBy(14.dp)
++            ) {
+                 Column(
+                     modifier = Modifier
+-                        .fillMaxSize()
+-                        .padding(14.dp)
++                        .width(232.dp)
++                        .fillMaxHeight()
++                        .verticalScroll(rememberScrollState()),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                 ) {
+-                    Brand(version)
+-                    Spacer(modifier = Modifier.height(10.dp))
+-                    AmberSegmented(options = tabs, selected = tab, onSelect = { tab = it })
+-                    AboutContent(
+-                        tab = tab,
+-                        onOpen = onOpen,
+-                        scroll = scroll,
+-                        modifier = Modifier
+-                            .weight(1f)
+-                            .fillMaxWidth()
+-                    )
+-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-                        if (onDonate != null) {
+-                            DonateButton(onClick = onDonate, modifier = Modifier.weight(1f))
+-                        }
+-                        CloseButton(onClick = onDismissRequest, modifier = Modifier.weight(1f))
++                    BrandCard(version)
++                    tabs.forEachIndexed { index, label ->
++                        AmberRailItem(
++                            title = label,
++                            icon = tabIcons[index],
++                            selected = index == tab,
++                            onClick = { tab = index }
++                        )
+                     }
+                 }
++                Column(
++                    modifier = Modifier
++                        .weight(1f)
++                        .fillMaxHeight()
++                        .verticalScroll(scroll)
++                ) {
++                    AboutContent(tab = tab, onOpen = onOpen)
++                }
+             }
+         }
+     }
+@@ -292,40 +351,42 @@ fun NuxAboutDialog(
+ @Composable
+ private fun AboutContent(
+     tab: Int,
+-    onOpen: (String) -> Unit,
+-    scroll: ScrollState,
+-    modifier: Modifier = Modifier
++    onOpen: (String) -> Unit
+ ) {
+-    Column(
+-        modifier = modifier
+-            .verticalScroll(scroll)
+-            .padding(horizontal = 18.dp, vertical = 16.dp),
+-        verticalArrangement = Arrangement.spacedBy(10.dp)
+-    ) {
+-        when (tab) {
+-            0 -> OverviewTab(onOpen)
+-            1 -> LibrariesTab(onOpen)
+-            else -> LicenseTab(onOpen)
++    // Dua kolom hanya bila lebar isi cukup untuk dua kartu yang nyaman dibaca
++    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
++        val columns = if (maxWidth >= 520.dp) 2 else 1
++        Column(
++            modifier = Modifier.fillMaxWidth(),
++            verticalArrangement = Arrangement.spacedBy(12.dp)
++        ) {
++            when (tab) {
++                0 -> OverviewTab(onOpen, columns)
++                1 -> LibrariesTab(onOpen, columns)
++                else -> LicenseTab(onOpen)
++            }
+         }
+     }
+ }
+ 
+ @Composable
+-private fun OverviewTab(onOpen: (String) -> Unit) {
++private fun OverviewTab(onOpen: (String) -> Unit, columns: Int) {
+     AboutTitle(
+         title = "Tentang AmberLauncher",
+         subtitle = "Peluncur Minecraft Java untuk Android, ringan dan sederhana."
+     )
+-    Notice(
++    AboutNotice(
+         title = "Unofficial Modified Version",
+         body = "AmberLauncher adalah peluncur independen hasil modifikasi dari NUX Launcher, yang sendirinya berasal dari Zalith Launcher 2 dan PojavLauncher. Aplikasi ini bukan aplikasi resmi Zalith Launcher Team, NUX Launcher, maupun Mojang Studios.",
+         highlight = true
+     )
+-    SubHeading("Proyek dan hak cipta")
+-    for (project in PROJECTS) {
+-        ProjectRow(project, onOpen)
++    Column {
++        AmberPageLabel("Proyek dan hak cipta")
++        CardGrid(items = PROJECTS, columns = columns) { project, cardModifier ->
++            ProjectCard(project, onOpen, cardModifier)
++        }
+     }
+-    Notice(
++    AboutNotice(
+         title = "Penafian Minecraft",
+         body = "Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.",
+         highlight = false
+@@ -333,13 +394,13 @@ private fun OverviewTab(onOpen: (String) -> Unit) {
+ }
+ 
+ @Composable
+-private fun LibrariesTab(onOpen: (String) -> Unit) {
++private fun LibrariesTab(onOpen: (String) -> Unit, columns: Int) {
+     AboutTitle(
+         title = "Pustaka open source",
+         subtitle = "Ketuk untuk membuka halaman proyeknya."
+     )
+-    for (lib in LIBRARIES) {
+-        LibraryRow(lib, onOpen)
++    CardGrid(items = LIBRARIES, columns = columns) { lib, cardModifier ->
++        LibraryCard(lib, onOpen, cardModifier)
+     }
+ }
+ 
+@@ -349,27 +410,41 @@ private fun LicenseTab(onOpen: (String) -> Unit) {
+         title = "GNU GPL-3.0",
+         subtitle = "Lisensi yang menaungi AmberLauncher."
+     )
+-    Body("Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.")
+-    SubHeading("Empat kebebasan perangkat lunak bebas")
+-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-        Numbered(1, "Kebebasan untuk menjalankan program untuk keperluan apa pun.")
+-        Numbered(2, "Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.")
+-        Numbered(3, "Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.")
+-        Numbered(4, "Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.")
++    AmberPanel {
++        Text(
++            text = "Proyek ini dilisensikan di bawah ketentuan GNU General Public License versi 3.0.",
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 20.sp
++        )
+     }
+-    SubHeading("Ketentuan tambahan (GPLv3 Pasal 7)")
+-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+-        Bullet("Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.")
+-        Bullet("Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.")
+-        Bullet("Hak cipta penulis asli (Copyright \u00A9 MovTery & PojavLauncherTeam) tidak boleh dihapus.")
++    Column {
++        AmberPageLabel("Empat kebebasan perangkat lunak bebas")
++        AmberPanel {
++            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
++                Numbered(1, "Kebebasan untuk menjalankan program untuk keperluan apa pun.")
++                Numbered(2, "Kebebasan untuk mempelajari cara kerja program dan menyesuaikannya dengan kebutuhan Anda.")
++                Numbered(3, "Kebebasan untuk mendistribusikan kembali salinan untuk membantu sesama.")
++                Numbered(4, "Kebebasan untuk menyempurnakan program dan merilis penyempurnaan tersebut kepada publik.")
++            }
++        }
+     }
+-    Spacer(modifier = Modifier.height(2.dp))
+-    AmberButton(
++    Column {
++        AmberPageLabel("Ketentuan tambahan (GPLv3 Pasal 7)")
++        AmberPanel {
++            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
++                Bullet("Modifikasi tidak boleh menyalahgunakan nama dagang 'ZalithLauncher' atau 'ZL'.")
++                Bullet("Modifikasi wajib menampilkan keterangan bahwa ini adalah 'Unofficial Modified Version'.")
++                Bullet("Hak cipta penulis asli (Copyright \u00A9 MovTery & PojavLauncherTeam) tidak boleh dihapus.")
++            }
++        }
++    }
++    AmberActionButton(
+         text = "Baca teks lisensi lengkap",
+         onClick = { onOpen(GPL_URL) },
+-        modifier = Modifier.fillMaxWidth(),
+-        style = AmberButtonStyle.Ghost,
+-        icon = "external"
++        icon = Icons.Outlined.OpenInBrowser,
++        filled = false,
++        modifier = Modifier.fillMaxWidth()
+     )
+ }
+ 
+@@ -377,273 +452,241 @@ private fun LicenseTab(onOpen: (String) -> Unit) {
+ // Bagian kecil
+ // ---------------------------------------------------------------------------------------------
+ 
++/**
++ * Menyusun kartu satu kolom, atau dua kolom dengan tinggi sama per baris. [cell] menerima
++ * modifier yang harus dipasang di kartunya (lebar/tinggi sudah diatur di sini).
++ */
+ @Composable
+-private fun Brand(version: String) {
+-    Row(verticalAlignment = Alignment.CenterVertically) {
+-        Box(
+-            modifier = Modifier
+-                .size(40.dp)
+-                .clip(RoundedCornerShape(12.dp))
+-                .background(Amber.Yellow),
+-            contentAlignment = Alignment.Center
+-        ) {
+-            Text(
+-                text = "A",
+-                color = Amber.Ink,
+-                fontSize = 22.sp,
+-                fontWeight = FontWeight.Black
+-            )
+-        }
+-        Spacer(modifier = Modifier.width(10.dp))
+-        Column {
+-            Text(
+-                text = "AmberLauncher",
+-                color = Amber.Text,
+-                fontSize = 16.sp,
+-                fontWeight = FontWeight.Bold,
+-                maxLines = 1
+-            )
+-            if (version.isNotBlank()) {
+-                Text(
+-                    text = "Versi $version",
+-                    color = Amber.TextDim,
+-                    fontSize = 12.5.sp,
+-                    maxLines = 1
+-                )
++private fun <T> CardGrid(
++    items: List<T>,
++    columns: Int,
++    cell: @Composable (T, Modifier) -> Unit
++) {
++    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
++        if (columns <= 1) {
++            items.forEach { item -> cell(item, Modifier.fillMaxWidth()) }
++        } else {
++            items.chunked(columns).forEach { rowItems ->
++                Row(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .height(IntrinsicSize.Min),
++                    horizontalArrangement = Arrangement.spacedBy(10.dp)
++                ) {
++                    rowItems.forEach { item ->
++                        cell(item, Modifier.weight(1f).fillMaxHeight())
++                    }
++                    repeat(columns - rowItems.size) {
++                        Spacer(modifier = Modifier.weight(1f))
++                    }
++                }
+             }
+-            // Pemberitahuan versi modifikasi tidak resmi (dulu tampil di Home, kini cukup di sini)
+-            Text(
+-                text = "UNOFFICIAL MODIFIED VERSION",
+-                color = Amber.TextDim,
+-                fontSize = 10.sp,
+-                fontWeight = FontWeight.Bold,
+-                letterSpacing = 0.5.sp,
+-                maxLines = 1
+-            )
+         }
+     }
+ }
+ 
++/** Kartu merek: logo "A", nama, versi, dan keterangan versi modifikasi tidak resmi. */
+ @Composable
+-private fun RailTab(label: String, selected: Boolean, onClick: () -> Unit) {
+-    val shape = RoundedCornerShape(10.dp)
+-    Row(
+-        modifier = Modifier
+-            .fillMaxWidth()
+-            .height(40.dp)
+-            .clip(shape)
+-            .background(if (selected) Amber.YellowTint else Color.Transparent)
+-            .amberTap(onClick)
+-            .padding(horizontal = 12.dp),
+-        verticalAlignment = Alignment.CenterVertically
+-    ) {
+-        Box(
+-            modifier = Modifier
+-                .width(3.dp)
+-                .height(16.dp)
+-                .background(
+-                    if (selected) Amber.Yellow else Color.Transparent,
+-                    RoundedCornerShape(2.dp)
++private fun BrandCard(version: String) {
++    AmberPanel(padding = 14.dp) {
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            Box(
++                modifier = Modifier
++                    .size(46.dp)
++                    .clip(RoundedCornerShape(15.dp))
++                    .background(AmberUi.Accent, RoundedCornerShape(15.dp))
++                    .border(1.dp, AmberUi.AccentEdge, RoundedCornerShape(15.dp)),
++                contentAlignment = Alignment.Center
++            ) {
++                Text(
++                    text = "A",
++                    color = AmberUi.Text,
++                    fontSize = 24.sp,
++                    fontWeight = FontWeight.Black
+                 )
+-        )
+-        Spacer(modifier = Modifier.width(10.dp))
++            }
++            Spacer(modifier = Modifier.width(12.dp))
++            Column(modifier = Modifier.weight(1f)) {
++                Text(
++                    text = "AmberLauncher",
++                    color = AmberUi.Text,
++                    fontSize = 16.sp,
++                    fontWeight = FontWeight.Black,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++                if (version.isNotBlank()) {
++                    Text(
++                        text = "Versi $version",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        maxLines = 1
++                    )
++                }
++            }
++        }
++        Spacer(modifier = Modifier.height(10.dp))
++        // Pemberitahuan versi modifikasi tidak resmi (dulu tampil di Home, kini cukup di sini)
+         Text(
+-            text = label,
+-            color = if (selected) Amber.Yellow else Amber.TextDim,
+-            fontSize = 15.sp,
+-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+-            maxLines = 1
++            text = "UNOFFICIAL MODIFIED VERSION",
++            color = AmberUi.TextDim,
++            fontSize = 10.sp,
++            fontWeight = FontWeight.Bold,
++            letterSpacing = 0.8.sp,
++            maxLines = 2
+         )
+     }
+ }
+ 
+-@Composable
+-private fun DonateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+-    AmberButton(
+-        text = "Buy me a coffee",
+-        onClick = onClick,
+-        modifier = modifier,
+-        style = AmberButtonStyle.Primary,
+-        icon = "coffee"
+-    )
+-}
+-
+-@Composable
+-private fun CloseButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+-    AmberButton(
+-        text = "Tutup",
+-        onClick = onClick,
+-        modifier = modifier,
+-        style = AmberButtonStyle.Ghost
+-    )
+-}
+-
+ @Composable
+ private fun AboutTitle(title: String, subtitle: String) {
+-    Column {
++    Column(modifier = Modifier.padding(start = 4.dp, top = 2.dp)) {
+         Text(
+             text = title,
+-            color = Amber.Text,
+-            fontSize = 22.sp,
+-            fontWeight = FontWeight.Bold
++            color = AmberUi.Text,
++            fontSize = 20.sp,
++            fontWeight = FontWeight.Black
+         )
+         Spacer(modifier = Modifier.height(2.dp))
+         Text(
+             text = subtitle,
+-            color = Amber.TextDim,
+-            fontSize = 14.sp,
+-            lineHeight = 20.sp
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 19.sp
+         )
+     }
+ }
+ 
++/** Kartu pemberitahuan. [highlight] = isian aksen (penting), selain itu kaca biasa. */
+ @Composable
+-private fun SubHeading(text: String) {
+-    Text(
+-        text = text,
+-        color = Amber.Yellow,
+-        fontSize = 13.sp,
+-        fontWeight = FontWeight.Bold,
+-        modifier = Modifier.padding(top = 4.dp)
+-    )
+-}
+-
+-@Composable
+-private fun Body(text: String) {
+-    Text(
+-        text = text,
+-        color = Amber.TextDim,
+-        fontSize = 14.sp,
+-        lineHeight = 21.sp
+-    )
+-}
+-
+-@Composable
+-private fun Notice(title: String, body: String, highlight: Boolean) {
+-    val shape = RoundedCornerShape(12.dp)
+-    val fill = if (highlight) Amber.YellowTint else Amber.Fill
+-    val line = if (highlight) Amber.Yellow.copy(alpha = 0.40f) else Amber.Line
++private fun AboutNotice(title: String, body: String, highlight: Boolean) {
++    val shape = RoundedCornerShape(24.dp)
+     Column(
+         modifier = Modifier
+             .fillMaxWidth()
+             .clip(shape)
+-            .background(fill)
+-            .border(1.dp, line, shape)
+-            .padding(12.dp)
++            .then(
++                if (highlight) {
++                    Modifier
++                        .background(AmberUi.Accent.copy(alpha = 0.30f), shape)
++                        .border(1.dp, AmberUi.AccentEdge, shape)
++                } else {
++                    Modifier.amberGlass(shape)
++                }
++            )
++            .padding(16.dp)
+     ) {
+-        Text(
+-            text = title,
+-            color = if (highlight) Amber.Yellow else Amber.Text,
+-            fontSize = 14.sp,
+-            fontWeight = FontWeight.Bold
+-        )
+-        Spacer(modifier = Modifier.height(4.dp))
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            if (highlight) {
++                Icon(
++                    imageVector = Icons.Outlined.Info,
++                    contentDescription = null,
++                    tint = AmberUi.AccentSoft,
++                    modifier = Modifier.size(18.dp)
++                )
++                Spacer(modifier = Modifier.width(8.dp))
++            }
++            Text(
++                text = title,
++                color = if (highlight) AmberUi.AccentSoft else AmberUi.Text,
++                fontSize = 14.sp,
++                fontWeight = FontWeight.Bold
++            )
++        }
++        Spacer(modifier = Modifier.height(6.dp))
+         Text(
+             text = body,
+-            color = Amber.TextDim,
+-            fontSize = 13.sp,
+-            lineHeight = 19.sp
++            color = AmberUi.TextDim,
++            fontSize = 12.5.sp,
++            lineHeight = 18.sp
+         )
+     }
+ }
+ 
++/** Kartu kaca yang bisa diketuk (membuka halaman proyek). */
+ @Composable
+-private fun ProjectRow(project: AboutProject, onOpen: (String) -> Unit) {
+-    val shape = RoundedCornerShape(12.dp)
++private fun AboutCard(
++    onClick: () -> Unit,
++    modifier: Modifier,
++    content: @Composable ColumnScope.() -> Unit
++) {
++    val shape = RoundedCornerShape(22.dp)
+     Column(
+-        modifier = Modifier
+-            .fillMaxWidth()
++        modifier = modifier
+             .clip(shape)
+-            .background(Amber.Fill)
+-            .border(1.dp, Amber.Line, shape)
+-            .amberTap { onOpen(project.url) }
+-            .padding(12.dp)
+-    ) {
++            .amberGlass(shape)
++            .clickable { onClick() }
++            .padding(14.dp),
++        content = content
++    )
++}
++
++@Composable
++private fun ProjectCard(project: AboutProject, onOpen: (String) -> Unit, modifier: Modifier) {
++    AboutCard(onClick = { onOpen(project.url) }, modifier = modifier) {
+         Row(verticalAlignment = Alignment.CenterVertically) {
+             Text(
+                 text = project.title,
+-                color = Amber.Text,
++                color = AmberUi.Text,
+                 fontSize = 15.sp,
+                 fontWeight = FontWeight.Bold,
+                 modifier = Modifier.weight(1f)
+             )
+             Spacer(modifier = Modifier.width(8.dp))
+-            AmberIcon("external", 16.dp, Amber.TextDim)
++            Icon(
++                imageVector = Icons.Outlined.OpenInBrowser,
++                contentDescription = null,
++                tint = AmberUi.TextDim,
++                modifier = Modifier.size(16.dp)
++            )
+         }
+         Spacer(modifier = Modifier.height(2.dp))
+         Text(
+             text = project.copyright,
+-            color = Amber.TextFaint,
+-            fontSize = 12.sp
++            color = AmberUi.TextDim.copy(alpha = 0.75f),
++            fontSize = 11.5.sp
+         )
+         Text(
+             text = project.license,
+-            color = Amber.TextFaint,
+-            fontSize = 12.sp
++            color = AmberUi.TextDim.copy(alpha = 0.75f),
++            fontSize = 11.5.sp
+         )
+-        Spacer(modifier = Modifier.height(6.dp))
++        Spacer(modifier = Modifier.height(8.dp))
+         Text(
+             text = project.description,
+-            color = Amber.TextDim,
+-            fontSize = 13.sp,
+-            lineHeight = 19.sp
++            color = AmberUi.TextDim,
++            fontSize = 12.5.sp,
++            lineHeight = 18.sp
+         )
+     }
+ }
+ 
+ @Composable
+-private fun LibraryRow(lib: OpenSourceLibrary, onOpen: (String) -> Unit) {
+-    val shape = RoundedCornerShape(12.dp)
+-    Column(
+-        modifier = Modifier
+-            .fillMaxWidth()
+-            .clip(shape)
+-            .background(Amber.Fill)
+-            .border(1.dp, Amber.Line, shape)
+-            .amberTap { onOpen(lib.url) }
+-            .padding(12.dp)
+-    ) {
+-        Row(verticalAlignment = Alignment.CenterVertically) {
++private fun LibraryCard(lib: OpenSourceLibrary, onOpen: (String) -> Unit, modifier: Modifier) {
++    AboutCard(onClick = { onOpen(lib.url) }, modifier = modifier) {
++        Row(verticalAlignment = Alignment.Top) {
+             Text(
+                 text = lib.name,
+-                color = Amber.Text,
++                color = AmberUi.Text,
+                 fontSize = 15.sp,
+                 fontWeight = FontWeight.Bold,
+                 modifier = Modifier.weight(1f)
+             )
+             Spacer(modifier = Modifier.width(8.dp))
+-            Chip(lib.license.removeSuffix(" License"))
++            AmberTag(lib.license.removeSuffix(" License"))
+         }
+         Spacer(modifier = Modifier.height(2.dp))
+         Text(
+             text = lib.copyright,
+-            color = Amber.TextFaint,
+-            fontSize = 12.sp
++            color = AmberUi.TextDim.copy(alpha = 0.75f),
++            fontSize = 11.5.sp
+         )
+-        Spacer(modifier = Modifier.height(6.dp))
++        Spacer(modifier = Modifier.height(8.dp))
+         Text(
+             text = lib.role,
+-            color = Amber.TextDim,
+-            fontSize = 13.sp,
+-            lineHeight = 19.sp
+-        )
+-    }
+-}
+-
+-@Composable
+-private fun Chip(text: String) {
+-    Box(
+-        modifier = Modifier
+-            .clip(CircleShape)
+-            .background(Amber.YellowTint)
+-            .padding(horizontal = 8.dp, vertical = 3.dp)
+-    ) {
+-        Text(
+-            text = text,
+-            color = Amber.Yellow,
+-            fontSize = 12.sp,
+-            fontWeight = FontWeight.SemiBold,
+-            maxLines = 1
++            color = AmberUi.TextDim,
++            fontSize = 12.5.sp,
++            lineHeight = 18.sp
+         )
+     }
+ }
+@@ -653,13 +696,13 @@ private fun Numbered(number: Int, text: String) {
+     Row(verticalAlignment = Alignment.Top) {
+         Box(
+             modifier = Modifier
+-                .size(20.dp)
+-                .background(Amber.YellowTint, CircleShape),
++                .size(22.dp)
++                .background(AmberUi.Accent.copy(alpha = 0.55f), CircleShape),
+             contentAlignment = Alignment.Center
+         ) {
+             Text(
+                 text = number.toString(),
+-                color = Amber.Yellow,
++                color = AmberUi.Text,
+                 fontSize = 12.sp,
+                 fontWeight = FontWeight.Bold
+             )
+@@ -667,9 +710,9 @@ private fun Numbered(number: Int, text: String) {
+         Spacer(modifier = Modifier.width(10.dp))
+         Text(
+             text = text,
+-            color = Amber.TextDim,
+-            fontSize = 14.sp,
+-            lineHeight = 21.sp,
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 19.sp,
+             modifier = Modifier.weight(1f)
+         )
+     }
+@@ -680,16 +723,16 @@ private fun Bullet(text: String) {
+     Row(verticalAlignment = Alignment.Top) {
+         Box(
+             modifier = Modifier
+-                .padding(top = 7.dp, start = 7.dp)
++                .padding(top = 7.dp, start = 8.dp)
+                 .size(6.dp)
+-                .background(Amber.Yellow, CircleShape)
++                .background(AmberUi.AccentSoft, CircleShape)
+         )
+-        Spacer(modifier = Modifier.width(13.dp))
++        Spacer(modifier = Modifier.width(14.dp))
+         Text(
+             text = text,
+-            color = Amber.TextDim,
+-            fontSize = 14.sp,
+-            lineHeight = 21.sp,
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 19.sp,
+             modifier = Modifier.weight(1f)
+         )
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+index b8af90e..7529e3b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+@@ -10,9 +10,6 @@ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.verticalScroll
+ import androidx.compose.foundation.layout.*
+-import androidx.compose.foundation.lazy.grid.GridCells
+-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+-import androidx.compose.foundation.lazy.grid.items
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material.icons.Icons
+@@ -24,8 +21,10 @@ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+ import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import androidx.compose.ui.viewinterop.AndroidView
+@@ -35,15 +34,28 @@ import com.israadev.nuxlauncher.core.skin.CapePreset
+ import com.israadev.nuxlauncher.core.skin.MicrosoftCape
+ import com.israadev.nuxlauncher.core.skin.MicrosoftWardrobeService
+ import com.israadev.nuxlauncher.core.skin.SkinUtils
+-import com.israadev.nuxlauncher.ui.components.NuxButton
+-import com.israadev.nuxlauncher.ui.components.NuxDialog
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
++import com.israadev.nuxlauncher.ui.components.AmberPanel
++import com.israadev.nuxlauncher.ui.components.AmberTag
++import com.israadev.nuxlauncher.ui.components.AmberChoicePill
+ import com.israadev.nuxlauncher.ui.components.PlayerSkin
+-import com.israadev.nuxlauncher.ui.theme.NuxColors
+-import com.israadev.nuxlauncher.ui.theme.NuxSizes
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.amberGlass
+ import kotlinx.coroutines.launch
+ import java.io.File
+ import com.israadev.nuxlauncher.ui.components.AmberSpinner
+ 
++/**
++ * Halaman Wardrobe & Custom Skin: pratinjau 3D skin/jubah pemain dan pengaturannya.
++ *
++ * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan. Layar lebar: kartu
++ * pratinjau 3D di kiri (kontrol putar/kamera dan pilihan animasi melayang di atasnya), pil tab
++ * Skin/Jubah dan kartu pengaturan di kanan yang bisa digulir. Layar sempit: pratinjau di atas,
++ * pengaturan di bawahnya. Tombol Simpan ada di bar atas (bukan di dasar layar), jadi tidak bisa
++ * tertutup bar sistem atau taskbar tablet. Semua logika simpan/unggah/pratinjau tidak berubah.
++ */
+ @Composable
+ fun NuxWardrobeDialog(
+     account: UserAccount,
+@@ -182,878 +194,694 @@ fun NuxWardrobeDialog(
+         }
+     }
+ 
+-    NuxDialog(
+-        onDismissRequest = onDismissRequest,
+-        modifier = Modifier.fillMaxWidth(0.92f),
+-        fillMaxHeight = true
+-    ) {
+-        Column(
+-            modifier = Modifier
+-                .fillMaxSize()
+-                .padding(horizontal = 14.dp, vertical = 10.dp)
++    val openElyBy: () -> Unit = {
++        try {
++            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
++            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
++            context.startActivity(intent)
++        } catch (_: Exception) {
++        }
++    }
++
++    // Simpan: akun Microsoft disinkronkan ke Minecraft.net dulu, akun offline langsung disimpan lokal.
++    val save: () -> Unit = {
++        if (isMicrosoft) {
++            scope.launch {
++                isProcessing = true
++                statusMessage = "Menyinkronkan ke Minecraft.net..."
++                var errorMsg: String? = null
++
++                val skinToUpload = currentSkinFile
++                if (isSkinFileChanged && skinToUpload != null) {
++                    val res = MicrosoftWardrobeService.uploadSkin(context, activeAccount, skinToUpload, selectedModel == "slim")
++                    if (res.isFailure) {
++                        errorMsg = res.exceptionOrNull()?.message
++                    } else {
++                        activeAccount = res.getOrThrow()
++                    }
++                }
++
++                if (isCapeChanged) {
++                    val res = MicrosoftWardrobeService.changeCape(context, activeAccount, selectedMicrosoftCapeId)
++                    if (res.isFailure) {
++                        val capeErr = res.exceptionOrNull()?.message
++                        errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
++                    } else {
++                        activeAccount = res.getOrThrow()
++                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
++                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
++                        SkinUtils.rememberMojangCape(
++                            activeAccount.id,
++                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
++                                ?.takeIf { it.id != "mojang_active_cape" }
++                                ?.url
++                        )
++                    }
++                }
++
++                isProcessing = false
++                if (errorMsg != null) {
++                    Toast.makeText(context, "Gagal memperbarui Minecraft.net: $errorMsg", Toast.LENGTH_LONG).show()
++                    statusMessage = "Gagal: $errorMsg"
++                } else {
++                    persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
++                    Toast.makeText(context, "Perubahan berhasil diterapkan ke Minecraft.net!", Toast.LENGTH_SHORT).show()
++                    onDismissRequest()
++                }
++            }
++        } else {
++            persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
++            Toast.makeText(context, "Skin & Cape berhasil disimpan!", Toast.LENGTH_SHORT).show()
++            onDismissRequest()
++        }
++    }
++
++    // Kartu pratinjau 3D (satu-satunya tempat WebView dipasang)
++    val viewport: @Composable (Modifier) -> Unit = { vpModifier ->
++        val vpShape = RoundedCornerShape(26.dp)
++        Box(
++            modifier = vpModifier
++                .clip(vpShape)
++                .background(AmberUi.SurfaceRaised, vpShape)
++                .border(1.dp, AmberUi.BorderStrong, vpShape)
+         ) {
+-            // Header
++            AndroidView(
++                factory = { ctx ->
++                    playerSkin.loadWebView(ctx) {
++                        isWebViewReady = true
++                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
++                        playerSkin.startAnim(selectedAnim, 0.8f)
++                        playerSkin.setAutoRotate(isAutoRotating, 0.7f)
++                        playerSkin.setCamera(0, 10, 52)
++                    }
++                },
++                update = {
++                    if (isWebViewReady) {
++                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
++                    }
++                },
++                modifier = Modifier.fillMaxSize()
++            )
++
++            // Atas: nama akun di kiri, kontrol putar dan kamera di kanan
+             Row(
+-                modifier = Modifier.fillMaxWidth(),
++                modifier = Modifier
++                    .align(Alignment.TopCenter)
++                    .fillMaxWidth()
++                    .padding(10.dp),
+                 horizontalArrangement = Arrangement.SpaceBetween,
+                 verticalAlignment = Alignment.CenterVertically
+             ) {
+-                Column {
+-                    Row(verticalAlignment = Alignment.CenterVertically) {
+-                        Text(
+-                            text = "WARDROBE & CUSTOM SKIN",
+-                            color = NuxColors.DarkGray,
+-                            fontWeight = FontWeight.Black,
+-                            fontSize = 13.5.sp,
+-                            letterSpacing = 1.sp
+-                        )
+-                        Spacer(modifier = Modifier.width(8.dp))
+-                        Box(
+-                            modifier = Modifier
+-                                .background(NuxColors.YellowPale, RoundedCornerShape(6.dp))
+-                                .padding(horizontal = 7.dp, vertical = 2.dp)
+-                        ) {
+-                            Text(
+-                                text = account.username,
+-                                color = NuxColors.SageGreen,
+-                                fontSize = 9.5.sp,
+-                                fontWeight = FontWeight.Bold
+-                            )
+-                        }
+-                    }
+-                    Spacer(modifier = Modifier.height(2.dp))
+-                    Text(
+-                        text = "Kustomisasi tampilan skin dan jubah pemain Minecraft",
+-                        color = NuxColors.GrayNeutral,
+-                        fontSize = 9.sp
+-                    )
+-                }
+-
+                 Box(
+                     modifier = Modifier
+-                        .size(26.dp)
+-                        .background(NuxColors.SurfaceInput, CircleShape)
+-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, CircleShape)
+-                        .clickable {
+-                            onDismissRequest()
+-                        },
+-                    contentAlignment = Alignment.Center
++                        .widthIn(max = 150.dp)
++                        .clip(CircleShape)
++                        .background(Color.Black.copy(alpha = 0.55f), CircleShape)
++                        .border(1.dp, AmberUi.Border, CircleShape)
++                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                 ) {
+-                    Icon(
+-                        imageVector = Icons.Outlined.Close,
+-                        contentDescription = "Tutup",
+-                        tint = NuxColors.GrayNeutral,
+-                        modifier = Modifier.size(13.dp)
++                    Text(
++                        text = account.username,
++                        color = AmberUi.Text,
++                        fontSize = 12.sp,
++                        fontWeight = FontWeight.SemiBold,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                    ViewportButton(
++                        icon = Icons.Outlined.RotateRight,
++                        description = "Putar Otomatis",
++                        active = isAutoRotating,
++                        onClick = {
++                            isAutoRotating = !isAutoRotating
++                            playerSkin.setAutoRotate(isAutoRotating, 0.7f)
++                        }
++                    )
++                    ViewportButton(
++                        icon = Icons.Outlined.CenterFocusStrong,
++                        description = "Reset Kamera",
++                        active = false,
++                        onClick = { playerSkin.resetCamera() }
+                     )
+                 }
+             }
+ 
+-            Spacer(modifier = Modifier.height(8.dp))
++            // Bawah: pilihan animasi
++            Row(
++                modifier = Modifier
++                    .align(Alignment.BottomCenter)
++                    .padding(10.dp)
++                    .clip(CircleShape)
++                    .background(Color.Black.copy(alpha = 0.55f), CircleShape)
++                    .border(1.dp, AmberUi.Border, CircleShape)
++                    .padding(4.dp),
++                horizontalArrangement = Arrangement.spacedBy(4.dp)
++            ) {
++                listOf("Walking" to "Jalan", "DefaultIdle" to "Diam", "Running" to "Lari", "Wave" to "Sapa").forEach { (animKey, label) ->
++                    val isSelected = selectedAnim == animKey
++                    Box(
++                        modifier = Modifier
++                            .height(30.dp)
++                            .clip(CircleShape)
++                            .background(if (isSelected) AmberUi.Accent else Color.Transparent, CircleShape)
++                            .clickable {
++                                selectedAnim = animKey
++                                playerSkin.startAnim(animKey, 0.8f)
++                            }
++                            .padding(horizontal = 12.dp),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        Text(
++                            text = label,
++                            color = if (isSelected) AmberUi.Text else AmberUi.TextDim,
++                            fontSize = 12.sp,
++                            fontWeight = FontWeight.SemiBold,
++                            maxLines = 1
++                        )
++                    }
++                }
++            }
++        }
++    }
+ 
+-            // Main Content: Left 3D Viewport, Right Controls (Flexible Weight)
++    // Kolom pengaturan: status, tab Skin/Jubah, lalu kartu isi tab
++    val controls: @Composable ColumnScope.() -> Unit = {
++        val statusText = statusMessage
++        if (statusText != null) {
++            val statusShape = RoundedCornerShape(20.dp)
+             Row(
+                 modifier = Modifier
+                     .fillMaxWidth()
+-                    .weight(1f),
+-                horizontalArrangement = Arrangement.spacedBy(10.dp)
++                    .clip(statusShape)
++                    .amberGlass(statusShape)
++                    .padding(horizontal = 14.dp, vertical = 10.dp),
++                verticalAlignment = Alignment.CenterVertically
+             ) {
+-                // LEFT: 3D SKIN VIEWER (Interactive)
++                val isError = statusText.startsWith("Gagal")
+                 Box(
+                     modifier = Modifier
+-                        .weight(1f)
+-                        .fillMaxHeight()
+-                        .background(NuxColors.SurfaceInput, RoundedCornerShape(14.dp))
+-                        .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(14.dp))
+-                        .clip(RoundedCornerShape(14.dp))
+-                ) {
+-                    AndroidView(
+-                        factory = { ctx ->
+-                            playerSkin.loadWebView(ctx) {
+-                                isWebViewReady = true
+-                                playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+-                                playerSkin.startAnim(selectedAnim, 0.8f)
+-                                playerSkin.setAutoRotate(isAutoRotating, 0.7f)
+-                                playerSkin.setCamera(0, 10, 52)
+-                            }
+-                        },
+-                        update = {
+-                            if (isWebViewReady) {
+-                                playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+-                            }
+-                        },
+-                        modifier = Modifier.fillMaxSize()
+-                    )
++                        .size(8.dp)
++                        .background(if (isError) AmberUi.Danger else AmberUi.AccentSoft, CircleShape)
++                )
++                Spacer(modifier = Modifier.width(10.dp))
++                Text(
++                    text = statusText,
++                    color = if (isError) AmberUi.Danger else AmberUi.Text,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp,
++                    maxLines = 3,
++                    overflow = TextOverflow.Ellipsis
++                )
++            }
++        }
++
++        // Tab: Skin vs Jubah
++        Row(
++            modifier = Modifier.fillMaxWidth(),
++            horizontalArrangement = Arrangement.spacedBy(8.dp)
++        ) {
++            AmberChoicePill(
++                text = "KUSTOM SKIN",
++                selected = activeTab == "skin",
++                onClick = { activeTab = "skin" },
++                modifier = Modifier.weight(1f)
++            )
++            AmberChoicePill(
++                text = "JUBAH / CAPE",
++                selected = activeTab == "cape",
++                onClick = { activeTab = "cape" },
++                modifier = Modifier.weight(1f)
++            )
++        }
+ 
+-                    // Top Quick Controls (Orbit Info & Camera/Rotate controls like Windows)
++        if (activeTab == "skin") {
++            // ============================ TAB SKIN ============================
++            if (isElyBy) {
++                ElyByGuideCard(
++                    title = "Sistem Skin & Jubah Ely.by",
++                    body = "Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.",
++                    buttonText = "KUNJUNGI ACCOUNT.ELY.BY",
++                    onOpen = openElyBy
++                )
++            } else {
++                AmberPanel {
++                    AmberActionButton(
++                        text = "PILIH FILE SKIN (.PNG)",
++                        onClick = { skinPickerLauncher.launch("image/png") },
++                        icon = Icons.Outlined.UploadFile,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                    Spacer(modifier = Modifier.height(14.dp))
++                    AmberPageLabel("TIPE MODEL LENGAN:")
+                     Row(
+                         modifier = Modifier
+-                            .align(Alignment.TopCenter)
+                             .fillMaxWidth()
+-                            .padding(8.dp),
+-                        horizontalArrangement = Arrangement.SpaceBetween,
+-                        verticalAlignment = Alignment.CenterVertically
++                            .height(IntrinsicSize.Min),
++                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                     ) {
+-                        Box(
++                        ModelOption(
++                            title = "Klasik",
++                            subtitle = "Lengan tebal (4px)",
++                            selected = selectedModel == "classic",
++                            onClick = {
++                                selectedModel = "classic"
++                                playerSkin.loadSkin(currentSkinFile, "classic")
++                                statusMessage = "Model Klasik dipilih (Preview) — Klik Simpan"
++                            },
+                             modifier = Modifier
+-                                .background(Color.Black.copy(alpha = 0.65f), RoundedCornerShape(6.dp))
+-                                .padding(horizontal = 6.dp, vertical = 2.dp)
+-                        ) {
+-                            Text(
+-                                text = "3D (DRAG / PUTAR)",
+-                                color = NuxColors.SageGreen,
+-                                fontSize = 8.5.sp,
+-                                fontWeight = FontWeight.Bold
+-                            )
+-                        }
+-
+-                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+-                            // Auto-rotate toggle
+-                            Box(
+-                                modifier = Modifier
+-                                    .size(24.dp)
+-                                    .background(
+-                                        if (isAutoRotating) NuxColors.ForestGreen else Color.Black.copy(alpha = 0.65f),
+-                                        RoundedCornerShape(6.dp)
+-                                    )
+-                                    .clickable {
+-                                        isAutoRotating = !isAutoRotating
+-                                        playerSkin.setAutoRotate(isAutoRotating, 0.7f)
+-                                    },
+-                                contentAlignment = Alignment.Center
+-                            ) {
+-                                Icon(
+-                                    imageVector = Icons.Outlined.RotateRight,
+-                                    contentDescription = "Putar Otomatis",
+-                                    tint = if (isAutoRotating) NuxColors.Ink else NuxColors.DarkGray,
+-                                    modifier = Modifier.size(14.dp)
+-                                )
+-                            }
+-
+-                            // Recenter Camera
+-                            Box(
+-                                modifier = Modifier
+-                                    .size(24.dp)
+-                                    .background(Color.Black.copy(alpha = 0.65f), RoundedCornerShape(6.dp))
+-                                    .clickable {
+-                                        playerSkin.resetCamera()
+-                                    },
+-                                contentAlignment = Alignment.Center
+-                            ) {
+-                                Icon(
+-                                    imageVector = Icons.Outlined.CenterFocusStrong,
+-                                    contentDescription = "Reset Kamera",
+-                                    tint = NuxColors.DarkGray,
+-                                    modifier = Modifier.size(13.dp)
+-                                )
+-                            }
+-                        }
++                                .weight(1f)
++                                .fillMaxHeight()
++                        )
++                        ModelOption(
++                            title = "Slim",
++                            subtitle = "Lengan ramping (3px)",
++                            selected = selectedModel == "slim",
++                            onClick = {
++                                selectedModel = "slim"
++                                playerSkin.loadSkin(currentSkinFile, "slim")
++                                statusMessage = "Model Slim dipilih (Preview) — Klik Simpan"
++                            },
++                            modifier = Modifier
++                                .weight(1f)
++                                .fillMaxHeight()
++                        )
+                     }
+-
+-                    // Animation Switcher bar (Walking, Idle, Running, Wave)
+-                    Row(
++                    Spacer(modifier = Modifier.height(6.dp))
++                    Box(
+                         modifier = Modifier
+-                            .align(Alignment.BottomCenter)
+-                            .padding(8.dp)
+-                            .background(Color.Black.copy(alpha = 0.75f), RoundedCornerShape(20.dp))
+-                            .padding(horizontal = 6.dp, vertical = 3.dp),
+-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+-                    ) {
+-                        listOf("Walking" to "Jalan", "DefaultIdle" to "Diam", "Running" to "Lari", "Wave" to "Sapa").forEach { (animKey, label) ->
+-                            val isSelected = selectedAnim == animKey
+-                            Box(
+-                                modifier = Modifier
+-                                    .background(
+-                                        if (isSelected) NuxColors.ForestGreen else Color.Transparent,
+-                                        RoundedCornerShape(12.dp)
+-                                    )
+-                                    .clickable {
+-                                        selectedAnim = animKey
+-                                        playerSkin.startAnim(animKey, 0.8f)
+-                                    }
+-                                    .padding(horizontal = 8.dp, vertical = 2.dp)
+-                            ) {
+-                                Text(
+-                                    text = label,
+-                                    color = if (isSelected) NuxColors.Ink else NuxColors.GrayNeutral,
+-                                    fontSize = 9.sp,
+-                                    fontWeight = FontWeight.Bold
+-                                )
++                            .fillMaxWidth()
++                            .clip(CircleShape)
++                            .clickable {
++                                currentSkinFile = null
++                                selectedModel = "classic"
++                                playerSkin.resetSkin()
++                                playerSkin.loadCape(currentCapeFile)
++                                statusMessage = "Skin direset ke default Steve (Preview) — Klik Simpan"
+                             }
+-                        }
++                            .padding(vertical = 10.dp),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        Text(
++                            text = "↺ Reset ke Skin Default (Klasik)",
++                            color = AmberUi.TextDim,
++                            fontSize = 12.sp,
++                            fontWeight = FontWeight.SemiBold,
++                            maxLines = 2
++                        )
+                     }
+                 }
+-
+-                // RIGHT: TABS & CONTROLS
+-                Column(
+-                    modifier = Modifier
+-                        .weight(1.3f)
+-                        .fillMaxHeight(),
+-                    verticalArrangement = Arrangement.SpaceBetween
+-                ) {
+-                    // Scrollable Controls Column
+-                    Column(
+-                        modifier = Modifier
+-                            .fillMaxWidth()
+-                            .weight(1f)
+-                            .verticalScroll(rememberScrollState()),
+-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+-                    ) {
+-                        // Section Tabs: Skin vs Cape
++            }
++        } else {
++            // ============================ TAB JUBAH ============================
++            if (isMicrosoft) {
++                // Khusus akun Microsoft: hanya jubah resmi milik pengguna di minecraft.net
++                AmberPanel {
++                    AmberPageLabel("JUBAH RESMI MINECRAFT.NET:")
++                    if (isLoadingMicrosoftCapes) {
+                         Row(
+                             modifier = Modifier
+                                 .fillMaxWidth()
+-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
+-                                .padding(2.5.dp),
+-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
++                                .padding(vertical = 12.dp),
++                            horizontalArrangement = Arrangement.Center,
++                            verticalAlignment = Alignment.CenterVertically
+                         ) {
+-                            // Tab Skin
+-                            Box(
+-                                modifier = Modifier
+-                                    .weight(1f)
+-                                    .background(
+-                                        if (activeTab == "skin") NuxColors.ForestGreen else Color.Transparent,
+-                                        RoundedCornerShape(6.dp)
+-                                    )
+-                                    .clickable { activeTab = "skin" }
+-                                    .padding(vertical = 5.dp),
+-                                contentAlignment = Alignment.Center
+-                            ) {
+-                                Row(verticalAlignment = Alignment.CenterVertically) {
+-                                    Icon(
+-                                        imageVector = Icons.Outlined.Person,
+-                                        contentDescription = null,
+-                                        tint = if (activeTab == "skin") NuxColors.Ink else NuxColors.GrayNeutral,
+-                                        modifier = Modifier.size(13.dp)
+-                                    )
+-                                    Spacer(modifier = Modifier.width(4.dp))
+-                                    Text(
+-                                        text = "KUSTOM SKIN",
+-                                        color = NuxColors.DarkGray,
+-                                        fontWeight = FontWeight.Bold,
+-                                        fontSize = 10.sp
+-                                    )
++                            AmberSpinner(
++                                modifier = Modifier.size(16.dp),
++                                strokeWidth = 2.dp,
++                                color = AmberUi.AccentSoft
++                            )
++                            Spacer(modifier = Modifier.width(8.dp))
++                            Text(
++                                text = "Memuat jubah dari Minecraft.net...",
++                                color = AmberUi.TextDim,
++                                fontSize = 12.sp
++                            )
++                        }
++                    } else if (microsoftCapes.isEmpty()) {
++                        Text(
++                            text = "Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.",
++                            color = AmberUi.TextDim,
++                            fontSize = 12.sp,
++                            lineHeight = 17.sp
++                        )
++                    } else {
++                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                            // Opsi lepas jubah
++                            val isNoCapeSelected = selectedMicrosoftCapeId == null
++                            WardrobeOption(
++                                selected = isNoCapeSelected,
++                                tint = CapeAccent,
++                                onClick = {
++                                    selectedMicrosoftCapeId = null
++                                    isCapeChanged = true
++                                    playerSkin.loadCapeUrl(null)
++                                    statusMessage = "Jubah dilepas (Preview) — Klik Simpan"
+                                 }
+-                            }
+-
+-                            // Tab Cape
+-                            Box(
+-                                modifier = Modifier
+-                                    .weight(1f)
+-                                    .background(
+-                                        if (activeTab == "cape") Color(0xFFA855F7) else Color.Transparent,
+-                                        RoundedCornerShape(6.dp)
+-                                    )
+-                                    .clickable { activeTab = "cape" }
+-                                    .padding(vertical = 5.dp),
+-                                contentAlignment = Alignment.Center
+                             ) {
+-                                Row(verticalAlignment = Alignment.CenterVertically) {
+-                                    Icon(
+-                                        imageVector = Icons.Outlined.Shield,
+-                                        contentDescription = null,
+-                                        tint = if (activeTab == "cape") NuxColors.DarkGray else NuxColors.GrayNeutral,
+-                                        modifier = Modifier.size(13.dp)
+-                                    )
+-                                    Spacer(modifier = Modifier.width(4.dp))
+-                                    Text(
+-                                        text = "JUBAH / CAPE",
+-                                        color = NuxColors.DarkGray,
+-                                        fontWeight = FontWeight.Bold,
+-                                        fontSize = 10.sp
+-                                    )
++                                Text(
++                                    text = "Tanpa Jubah (Lepas Cape)",
++                                    color = AmberUi.Text,
++                                    fontSize = 13.sp,
++                                    fontWeight = FontWeight.SemiBold,
++                                    maxLines = 1,
++                                    overflow = TextOverflow.Ellipsis,
++                                    modifier = Modifier.weight(1f)
++                                )
++                                if (isNoCapeSelected) {
++                                    AmberTag("DIPILIH", color = CapeAccent)
+                                 }
+                             }
+-                        }
+ 
+-                        // TAB CONTENT: SKIN
+-                        if (activeTab == "skin") {
+-                            Column(
+-                                modifier = Modifier.fillMaxWidth(),
+-                                verticalArrangement = Arrangement.spacedBy(6.dp)
+-                            ) {
+-                                if (isElyBy) {
+-                                    // PANDUAN SKIN AKUN ELY.BY
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .background(Color(0xFF8E24AA).copy(alpha = 0.12f), RoundedCornerShape(8.dp))
+-                                            .border(1.dp, Color(0xFF8E24AA).copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+-                                            .padding(10.dp)
+-                                    ) {
+-                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-                                            Text(
+-                                                text = "Sistem Skin & Jubah Ely.by",
+-                                                color = NuxColors.PurpleDark,
+-                                                fontWeight = FontWeight.Bold,
+-                                                fontSize = 10.sp
+-                                            )
+-                                            Text(
+-                                                text = "Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.",
+-                                                color = NuxColors.DarkGray,
+-                                                fontSize = 8.5.sp,
+-                                                lineHeight = 12.sp
+-                                            )
+-                                            NuxButton(
+-                                                onClick = {
+-                                                    try {
+-                                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
+-                                                        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+-                                                        context.startActivity(intent)
+-                                                    } catch (_: Exception) {}
+-                                                },
+-                                                backgroundColor = Color(0xFF8E24AA),
+-                                                contentColor = NuxColors.DarkGray,
+-                                                modifier = Modifier
+-                                                    .fillMaxWidth()
+-                                                    .height(28.dp)
+-                                            ) {
+-                                                Text("KUNJUNGI ACCOUNT.ELY.BY", fontSize = 9.sp, fontWeight = FontWeight.Bold)
+-                                            }
+-                                        }
+-                                    }
+-                                } else {
+-                                    // Upload Button
+-                                    NuxButton(
+-                                        onClick = { skinPickerLauncher.launch("image/png") },
+-                                        backgroundColor = NuxColors.YellowPale,
+-                                        contentColor = NuxColors.SageGreen,
+-                                        cornerRadius = NuxSizes.CornerRadiusSmall,
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .height(32.dp)
+-                                    ) {
+-                                        Icon(
+-                                            imageVector = Icons.Outlined.UploadFile,
+-                                            contentDescription = null,
+-                                            modifier = Modifier.size(13.dp)
+-                                        )
+-                                        Spacer(modifier = Modifier.width(5.dp))
+-                                        Text(
+-                                            text = "PILIH FILE SKIN (.PNG)",
+-                                            fontWeight = FontWeight.Black,
+-                                            fontSize = 10.sp
+-                                        )
++                            // Daftar jubah resmi milik pengguna
++                            microsoftCapes.forEach { cape ->
++                                val isSelected = selectedMicrosoftCapeId == cape.id
++                                val isMojangActive = cape.state.equals("ACTIVE", ignoreCase = true)
++                                WardrobeOption(
++                                    selected = isSelected,
++                                    tint = CapeAccent,
++                                    onClick = {
++                                        selectedMicrosoftCapeId = cape.id
++                                        isCapeChanged = true
++                                        playerSkin.loadCapeUrl(cape.url)
++                                        statusMessage = "Jubah ${cape.alias ?: "Mojang"} dipilih (Preview) — Klik Simpan"
+                                     }
+-
+-                                // Arm Model Selection (Steve vs Alex)
+-                                Text(
+-                                    text = "TIPE MODEL LENGAN:",
+-                                    color = NuxColors.GrayNeutral,
+-                                    fontSize = 9.sp,
+-                                    fontWeight = FontWeight.Bold
+-                                )
+-
+-                                Row(
+-                                    modifier = Modifier.fillMaxWidth(),
+-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                 ) {
+-                                    // Classic (Klasik - 4px)
+-                                    val isClassic = selectedModel == "classic"
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .weight(1f)
+-                                            .background(
+-                                                if (isClassic) NuxColors.YellowPale else NuxColors.SurfaceInput,
+-                                                RoundedCornerShape(8.dp)
+-                                            )
+-                                            .border(
+-                                                1.dp,
+-                                                if (isClassic) NuxColors.ForestGreen else NuxColors.CardBorder,
+-                                                RoundedCornerShape(8.dp)
+-                                            )
+-                                            .clickable {
+-                                                selectedModel = "classic"
+-                                                playerSkin.loadSkin(currentSkinFile, "classic")
+-                                                statusMessage = "Model Klasik dipilih (Preview) — Klik Simpan"
+-                                            }
+-                                            .padding(vertical = 6.dp, horizontal = 8.dp)
+-                                    ) {
+-                                        Column {
+-                                            Text(
+-                                                text = "Klasik",
+-                                                color = if (isClassic) NuxColors.SageGreen else NuxColors.DarkGray,
+-                                                fontSize = 10.sp,
+-                                                fontWeight = FontWeight.Bold
+-                                            )
+-                                            Text(
+-                                                text = "Lengan tebal (4px)",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 8.sp
+-                                            )
+-                                        }
+-                                    }
+-
+-                                    // Slim (Slim - 3px)
+-                                    val isSlim = selectedModel == "slim"
+                                     Box(
+                                         modifier = Modifier
+-                                            .weight(1f)
+-                                            .background(
+-                                                if (isSlim) NuxColors.YellowPale else NuxColors.SurfaceInput,
+-                                                RoundedCornerShape(8.dp)
+-                                            )
+-                                            .border(
+-                                                1.dp,
+-                                                if (isSlim) NuxColors.ForestGreen else NuxColors.CardBorder,
+-                                                RoundedCornerShape(8.dp)
+-                                            )
+-                                            .clickable {
+-                                                selectedModel = "slim"
+-                                                playerSkin.loadSkin(currentSkinFile, "slim")
+-                                                statusMessage = "Model Slim dipilih (Preview) — Klik Simpan"
+-                                            }
+-                                            .padding(vertical = 6.dp, horizontal = 8.dp)
+-                                    ) {
+-                                        Column {
+-                                            Text(
+-                                                text = "Slim",
+-                                                color = if (isSlim) NuxColors.SageGreen else NuxColors.DarkGray,
+-                                                fontSize = 10.sp,
+-                                                fontWeight = FontWeight.Bold
+-                                            )
+-                                            Text(
+-                                                text = "Lengan ramping (3px)",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 8.sp
+-                                            )
+-                                        }
+-                                    }
+-                                }
+-
+-                                    // Reset Skin Button
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .clickable {
+-                                                currentSkinFile = null
+-                                                selectedModel = "classic"
+-                                                playerSkin.resetSkin()
+-                                                playerSkin.loadCape(currentCapeFile)
+-                                                statusMessage = "Skin direset ke default Steve (Preview) — Klik Simpan"
+-                                            }
+-                                            .padding(vertical = 3.dp),
+-                                        contentAlignment = Alignment.Center
+-                                    ) {
+-                                        Text(
+-                                            text = "↺ Reset ke Skin Default (Klasik)",
+-                                            color = NuxColors.GrayNeutral,
+-                                            fontSize = 9.5.sp,
+-                                            fontWeight = FontWeight.SemiBold
+-                                        )
++                                            .size(9.dp)
++                                            .background(CapeAccent, CircleShape)
++                                    )
++                                    Spacer(modifier = Modifier.width(10.dp))
++                                    Text(
++                                        text = MicrosoftWardrobeService.getCapeDisplayName(cape.alias),
++                                        color = AmberUi.Text,
++                                        fontSize = 13.sp,
++                                        fontWeight = FontWeight.SemiBold,
++                                        maxLines = 1,
++                                        overflow = TextOverflow.Ellipsis,
++                                        modifier = Modifier.weight(1f)
++                                    )
++                                    if (isMojangActive) {
++                                        Spacer(modifier = Modifier.width(8.dp))
++                                        AmberTag("AKTIF DI MOJANG")
+                                     }
+                                 }
+                             }
+-                        } else {
+-                            // TAB CONTENT: CAPE
+-                            Column(
++                        }
++                    }
++                }
++            } else if (isElyBy) {
++                ElyByGuideCard(
++                    title = "Sistem Skin & Cape Ely.by",
++                    body = "Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.",
++                    buttonText = "BUKA WEBSITE ELY.BY",
++                    onOpen = openElyBy
++                )
++            } else {
++                // Khusus akun offline: unggah jubah kustom atau pilih preset
++                AmberPanel {
++                    AmberActionButton(
++                        text = "PILIH FILE CAPE KUSTOM (.PNG)",
++                        onClick = { capePickerLauncher.launch("image/png") },
++                        icon = Icons.Outlined.UploadFile,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                    Spacer(modifier = Modifier.height(14.dp))
++                    AmberPageLabel("ATAU PILIH PRESET JUBAH:")
++                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                        SkinUtils.PRESET_CAPES.chunked(2).forEach { pair ->
++                            Row(
+                                 modifier = Modifier.fillMaxWidth(),
+-                                verticalArrangement = Arrangement.spacedBy(5.dp)
++                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                             ) {
+-                                if (isMicrosoft) {
+-                                    // KHUSUS AKUN MICROSOFT: Hanya tampilkan jubah resmi milik pengguna di minecraft.net
+-                                    Text(
+-                                        text = "JUBAH RESMI MINECRAFT.NET:",
+-                                        color = NuxColors.GrayNeutral,
+-                                        fontSize = 8.5.sp,
+-                                        fontWeight = FontWeight.Bold
+-                                    )
+-
+-                                    if (isLoadingMicrosoftCapes) {
+-                                        Row(
+-                                            modifier = Modifier
+-                                                .fillMaxWidth()
+-                                                .padding(vertical = 12.dp),
+-                                            horizontalArrangement = Arrangement.Center,
+-                                            verticalAlignment = Alignment.CenterVertically
+-                                        ) {
+-                                            AmberSpinner(
+-                                                modifier = Modifier.size(16.dp),
+-                                                strokeWidth = 2.dp,
+-                                                color = NuxColors.PurpleDark
+-                                            )
+-                                            Spacer(modifier = Modifier.width(8.dp))
+-                                            Text(
+-                                                text = "Memuat jubah dari Minecraft.net...",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 9.5.sp
+-                                            )
+-                                        }
+-                                    } else if (microsoftCapes.isEmpty()) {
+-                                        Box(
+-                                            modifier = Modifier
+-                                                .fillMaxWidth()
+-                                                .background(NuxColors.SurfaceInput, RoundedCornerShape(8.dp))
+-                                                .border(NuxSizes.BorderWidth, NuxColors.CardBorder, RoundedCornerShape(8.dp))
+-                                                .padding(10.dp)
+-                                        ) {
+-                                            Text(
+-                                                text = "Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.",
+-                                                color = NuxColors.GrayNeutral,
+-                                                fontSize = 9.sp
+-                                            )
+-                                        }
+-                                    } else {
+-                                        // Opsi Lepas Cape (Tanpa Jubah)
+-                                        val isNoCapeSelected = selectedMicrosoftCapeId == null
+-                                        Box(
+-                                            modifier = Modifier
+-                                                .fillMaxWidth()
+-                                                .background(
+-                                                    if (isNoCapeSelected) Color(0xFFA855F7).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
+-                                                    RoundedCornerShape(7.dp)
+-                                                )
+-                                                .border(
+-                                                    1.dp,
+-                                                    if (isNoCapeSelected) Color(0xFFA855F7) else NuxColors.CardBorder,
+-                                                    RoundedCornerShape(7.dp)
+-                                                )
+-                                                .clickable {
+-                                                    selectedMicrosoftCapeId = null
+-                                                    isCapeChanged = true
+-                                                    playerSkin.loadCapeUrl(null)
+-                                                    statusMessage = "Jubah dilepas (Preview) — Klik Simpan"
+-                                                }
+-                                                .padding(horizontal = 9.dp, vertical = 6.dp)
+-                                        ) {
+-                                            Row(
+-                                                modifier = Modifier.fillMaxWidth(),
+-                                                horizontalArrangement = Arrangement.SpaceBetween,
+-                                                verticalAlignment = Alignment.CenterVertically
+-                                            ) {
+-                                                Text(
+-                                                    text = "Tanpa Jubah (Lepas Cape)",
+-                                                    color = if (isNoCapeSelected) NuxColors.PurpleDark else NuxColors.DarkGray,
+-                                                    fontSize = 9.5.sp,
+-                                                    fontWeight = FontWeight.Bold
+-                                                )
+-                                                if (isNoCapeSelected) {
+-                                                    Text("DIPILIH", color = NuxColors.PurpleDark, fontSize = 8.sp, fontWeight = FontWeight.Black)
+-                                                }
+-                                            }
+-                                        }
+-
+-                                        // Daftar Jubah Resmi Milik User dari minecraft.net
+-                                        microsoftCapes.forEach { cape ->
+-                                            val isSelected = selectedMicrosoftCapeId == cape.id
+-                                            val isMojangActive = cape.state.equals("ACTIVE", ignoreCase = true)
+-
+-                                            Box(
+-                                                modifier = Modifier
+-                                                    .fillMaxWidth()
+-                                                    .background(
+-                                                        if (isSelected) Color(0xFFA855F7).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
+-                                                        RoundedCornerShape(7.dp)
+-                                                    )
+-                                                    .border(
+-                                                        1.dp,
+-                                                        if (isSelected) Color(0xFFA855F7) else NuxColors.CardBorder,
+-                                                        RoundedCornerShape(7.dp)
+-                                                    )
+-                                                    .clickable {
+-                                                        selectedMicrosoftCapeId = cape.id
+-                                                        isCapeChanged = true
+-                                                        playerSkin.loadCapeUrl(cape.url)
+-                                                        statusMessage = "Jubah ${cape.alias ?: "Mojang"} dipilih (Preview) — Klik Simpan"
+-                                                    }
+-                                                    .padding(horizontal = 9.dp, vertical = 6.dp)
+-                                            ) {
+-                                                Row(
+-                                                    modifier = Modifier.fillMaxWidth(),
+-                                                    horizontalArrangement = Arrangement.SpaceBetween,
+-                                                    verticalAlignment = Alignment.CenterVertically
+-                                                ) {
+-                                                    Row(
+-                                                        verticalAlignment = Alignment.CenterVertically,
+-                                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                                                    ) {
+-                                                        Box(
+-                                                            modifier = Modifier
+-                                                                .size(8.dp)
+-                                                                .background(Color(0xFFA855F7), CircleShape)
+-                                                        )
+-                                                        Text(
+-                                                            text = MicrosoftWardrobeService.getCapeDisplayName(cape.alias),
+-                                                            color = if (isSelected) NuxColors.PurpleDark else NuxColors.DarkGray,
+-                                                            fontSize = 9.5.sp,
+-                                                            fontWeight = FontWeight.Bold
+-                                                        )
+-                                                    }
+-
+-                                                    if (isMojangActive) {
+-                                                        Box(
+-                                                            modifier = Modifier
+-                                                                .background(NuxColors.YellowPale, RoundedCornerShape(4.dp))
+-                                                                .padding(horizontal = 5.dp, vertical = 2.dp)
+-                                                        ) {
+-                                                            Text(
+-                                                                text = "AKTIF DI MOJANG",
+-                                                                color = NuxColors.SageGreen,
+-                                                                fontSize = 7.5.sp,
+-                                                                fontWeight = FontWeight.Black
+-                                                            )
+-                                                        }
+-                                                    }
+-                                                }
+-                                            }
+-                                        }
+-                                    }
+-                                } else if (isElyBy) {
+-                                    // PANDUAN AKUN ELY.BY
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .background(Color(0xFF8E24AA).copy(alpha = 0.12f), RoundedCornerShape(8.dp))
+-                                            .border(1.dp, Color(0xFF8E24AA).copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+-                                            .padding(10.dp)
+-                                    ) {
+-                                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-                                            Text(
+-                                                text = "Sistem Skin & Cape Ely.by",
+-                                                color = NuxColors.PurpleDark,
+-                                                fontWeight = FontWeight.Bold,
+-                                                fontSize = 10.sp
+-                                            )
+-                                            Text(
+-                                                text = "Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.",
+-                                                color = NuxColors.DarkGray,
+-                                                fontSize = 8.5.sp,
+-                                                lineHeight = 12.sp
+-                                            )
+-                                            NuxButton(
+-                                                onClick = {
+-                                                    try {
+-                                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://account.ely.by"))
+-                                                        intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+-                                                        context.startActivity(intent)
+-                                                    } catch (_: Exception) {}
+-                                                },
+-                                                backgroundColor = Color(0xFF8E24AA),
+-                                                contentColor = NuxColors.DarkGray,
+-                                                modifier = Modifier.fillMaxWidth().height(28.dp)
+-                                            ) {
+-                                                Text("BUKA WEBSITE ELY.BY", fontWeight = FontWeight.Bold, fontSize = 9.sp)
++                                pair.forEach { preset ->
++                                    val isPresetSelected = selectedPresetCapeId == preset.id || (preset.id == "none" && currentCapeFile == null)
++                                    val presetColor = Color(preset.badgeColor)
++                                    WardrobeOption(
++                                        selected = isPresetSelected,
++                                        tint = presetColor,
++                                        modifier = Modifier.weight(1f),
++                                        onClick = {
++                                            selectedPresetCapeId = preset.id
++                                            scope.launch {
++                                                val generatedCape = SkinUtils.applyPresetCape(context, account.id, preset.id)
++                                                currentCapeFile = generatedCape
++                                                playerSkin.loadCape(generatedCape)
++                                                statusMessage = if (preset.id == "none") "Cape dilepas (Preview) — Klik Simpan" else "Jubah ${preset.name} dipilih (Preview) — Klik Simpan"
+                                             }
+                                         }
+-                                    }
+-                                } else {
+-                                    // KHUSUS AKUN OFFLINE: Upload custom cape atau pilih preset
+-                                    NuxButton(
+-                                        onClick = { capePickerLauncher.launch("image/png") },
+-                                        backgroundColor = Color(0xFFA855F7).copy(alpha = 0.15f),
+-                                        contentColor = NuxColors.PurpleDark,
+-                                        cornerRadius = NuxSizes.CornerRadiusSmall,
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .height(30.dp)
+                                     ) {
+-                                        Icon(
+-                                            imageVector = Icons.Outlined.UploadFile,
+-                                            contentDescription = null,
+-                                            modifier = Modifier.size(12.dp)
++                                        Box(
++                                            modifier = Modifier
++                                                .size(9.dp)
++                                                .background(presetColor, CircleShape)
+                                         )
+-                                        Spacer(modifier = Modifier.width(5.dp))
++                                        Spacer(modifier = Modifier.width(8.dp))
+                                         Text(
+-                                            text = "PILIH FILE CAPE KUSTOM (.PNG)",
+-                                            fontWeight = FontWeight.Black,
+-                                            fontSize = 9.5.sp
++                                            text = preset.name,
++                                            color = AmberUi.Text,
++                                            fontSize = 12.5.sp,
++                                            fontWeight = FontWeight.SemiBold,
++                                            maxLines = 1,
++                                            overflow = TextOverflow.Ellipsis,
++                                            modifier = Modifier.weight(1f)
+                                         )
+                                     }
+-
+-                                    Text(
+-                                        text = "ATAU PILIH PRESET JUBAH:",
+-                                        color = NuxColors.GrayNeutral,
+-                                        fontSize = 8.5.sp,
+-                                        fontWeight = FontWeight.Bold
+-                                    )
+-
+-                                    // Preset Capes Grid
+-                                    Column(
+-                                        modifier = Modifier.fillMaxWidth(),
+-                                        verticalArrangement = Arrangement.spacedBy(4.dp)
+-                                    ) {
+-                                        SkinUtils.PRESET_CAPES.chunked(2).forEach { pair ->
+-                                            Row(
+-                                                modifier = Modifier.fillMaxWidth(),
+-                                                horizontalArrangement = Arrangement.spacedBy(5.dp)
+-                                            ) {
+-                                                pair.forEach { preset ->
+-                                                    val isPresetSelected = selectedPresetCapeId == preset.id || (preset.id == "none" && currentCapeFile == null)
+-                                                    Box(
+-                                                        modifier = Modifier
+-                                                            .weight(1f)
+-                                                            .background(
+-                                                                if (isPresetSelected) Color(preset.badgeColor).copy(alpha = 0.18f) else NuxColors.SurfaceInput,
+-                                                                RoundedCornerShape(7.dp)
+-                                                            )
+-                                                            .border(
+-                                                                1.dp,
+-                                                                if (isPresetSelected) Color(preset.badgeColor) else NuxColors.CardBorder,
+-                                                                RoundedCornerShape(7.dp)
+-                                                            )
+-                                                            .clickable {
+-                                                                selectedPresetCapeId = preset.id
+-                                                                scope.launch {
+-                                                                    val generatedCape = SkinUtils.applyPresetCape(context, account.id, preset.id)
+-                                                                    currentCapeFile = generatedCape
+-                                                                    playerSkin.loadCape(generatedCape)
+-                                                                    statusMessage = if (preset.id == "none") "Cape dilepas (Preview) — Klik Simpan" else "Jubah ${preset.name} dipilih (Preview) — Klik Simpan"
+-                                                                }
+-                                                            }
+-                                                            .padding(horizontal = 7.dp, vertical = 5.dp)
+-                                                    ) {
+-                                                        Row(
+-                                                            verticalAlignment = Alignment.CenterVertically,
+-                                                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+-                                                        ) {
+-                                                            Box(
+-                                                                modifier = Modifier
+-                                                                    .size(7.dp)
+-                                                                    .background(Color(preset.badgeColor), CircleShape)
+-                                                            )
+-                                                            Text(
+-                                                                text = preset.name,
+-                                                                color = if (isPresetSelected) Color(preset.badgeColor) else NuxColors.DarkGray,
+-                                                                fontSize = 9.sp,
+-                                                                fontWeight = FontWeight.Bold,
+-                                                                maxLines = 1
+-                                                            )
+-                                                        }
+-                                                    }
+-                                                }
+-                                                if (pair.size == 1) {
+-                                                    Spacer(modifier = Modifier.weight(1f))
+-                                                }
+-                                            }
+-                                        }
+-                                    }
++                                }
++                                if (pair.size == 1) {
++                                    Spacer(modifier = Modifier.weight(1f))
+                                 }
+                             }
+                         }
+                     }
++                }
++            }
++        }
++    }
+ 
+-                    Spacer(modifier = Modifier.height(4.dp))
+-
+-                    // Bottom Action Bar (PINNED & ALWAYS VISIBLE)
+-                    Column(modifier = Modifier.fillMaxWidth()) {
+-                        if (statusMessage != null) {
+-                            Text(
+-                                text = statusMessage!!,
+-                                color = NuxColors.SageGreen,
+-                                fontSize = 9.sp,
+-                                maxLines = 1
+-                            )
+-                            Spacer(modifier = Modifier.height(3.dp))
+-                        }
+-
+-                        Row(
+-                            modifier = Modifier.fillMaxWidth(),
+-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                        ) {
+-                            NuxButton(
+-                                onClick = onDismissRequest,
+-                                backgroundColor = NuxColors.SurfaceElevated,
+-                                borderColor = NuxColors.DarkGray.copy(alpha = 0.40f),
+-                                contentColor = NuxColors.DarkGray,
+-                                modifier = Modifier
+-                                    .weight(1f)
+-                                    .height(32.dp)
+-                            ) {
+-                                Text("BATAL", color = NuxColors.DarkGray, fontWeight = FontWeight.Bold, fontSize = 10.sp)
+-                            }
++    AmberPage(
++        onDismiss = onDismissRequest,
++        title = "Wardrobe",
++        icon = Icons.Outlined.Person,
++        subtitle = account.username,
++        actions = { info ->
++            if (isElyBy) {
++                AmberActionButton(
++                    text = "MENGERTI",
++                    onClick = onDismissRequest,
++                    icon = Icons.Outlined.Check,
++                    height = 40.dp
++                )
++            } else {
++                AmberActionButton(
++                    text = if (info.narrow) "Simpan" else if (isMicrosoft) "SIMPAN KE MOJANG" else "SIMPAN PERUBAHAN",
++                    onClick = save,
++                    icon = Icons.Outlined.Check,
++                    loading = isProcessing,
++                    height = 40.dp
++                )
++            }
++        }
++    ) { info ->
++        if (info.narrow) {
++            // Layar sempit: pratinjau di atas (tidak ikut digulir supaya geser memutar model tidak
++            // bentrok dengan gulir halaman), pengaturan di bawahnya.
++            Column(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
++                verticalArrangement = Arrangement.spacedBy(10.dp)
++            ) {
++                viewport(
++                    Modifier
++                        .fillMaxWidth()
++                        .weight(0.85f)
++                )
++                Column(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .weight(1.15f)
++                        .verticalScroll(rememberScrollState()),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
++                ) {
++                    controls()
++                }
++            }
++        } else {
++            Row(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
++                horizontalArrangement = Arrangement.spacedBy(14.dp)
++            ) {
++                viewport(
++                    Modifier
++                        .weight(1f)
++                        .fillMaxHeight()
++                )
++                Column(
++                    modifier = Modifier
++                        .weight(1.3f)
++                        .fillMaxHeight()
++                        .verticalScroll(rememberScrollState()),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
++                ) {
++                    controls()
++                }
++            }
++        }
++    }
++}
+ 
+-                            if (isElyBy) {
+-                                NuxButton(
+-                                    onClick = onDismissRequest,
+-                                    backgroundColor = Color(0xFF8E24AA),
+-                                    contentColor = NuxColors.DarkGray,
+-                                    modifier = Modifier
+-                                        .weight(1.5f)
+-                                        .height(32.dp)
+-                                ) {
+-                                    Text("MENGERTI", fontWeight = FontWeight.Black, fontSize = 10.sp)
+-                                }
+-                            } else {
+-                                NuxButton(
+-                                    onClick = {
+-                                        if (isMicrosoft) {
+-                                            scope.launch {
+-                                                isProcessing = true
+-                                                statusMessage = "Menyinkronkan ke Minecraft.net..."
+-                                                var errorMsg: String? = null
++private val CapeAccent = Color(0xFFC084FC)
++private val ElyByAccent = Color(0xFFB79CFF)
+ 
+-                                                if (isSkinFileChanged && currentSkinFile != null) {
+-                                                    val res = MicrosoftWardrobeService.uploadSkin(context, activeAccount, currentSkinFile!!, selectedModel == "slim")
+-                                                    if (res.isFailure) {
+-                                                        errorMsg = res.exceptionOrNull()?.message
+-                                                    } else {
+-                                                        activeAccount = res.getOrThrow()
+-                                                    }
+-                                                }
++/** Tombol bulat kecil di atas pratinjau 3D. Aktif = isian aksen. */
++@Composable
++private fun ViewportButton(
++    icon: ImageVector,
++    description: String,
++    active: Boolean,
++    onClick: () -> Unit
++) {
++    Box(
++        modifier = Modifier
++            .size(36.dp)
++            .clip(CircleShape)
++            .background(if (active) AmberUi.Accent else Color.Black.copy(alpha = 0.55f), CircleShape)
++            .border(1.dp, if (active) AmberUi.AccentEdge else AmberUi.Border, CircleShape)
++            .clickable { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Icon(
++            imageVector = icon,
++            contentDescription = description,
++            tint = AmberUi.Text,
++            modifier = Modifier.size(19.dp)
++        )
++    }
++}
+ 
+-                                                if (isCapeChanged) {
+-                                                    val res = MicrosoftWardrobeService.changeCape(context, activeAccount, selectedMicrosoftCapeId)
+-                                                    if (res.isFailure) {
+-                                                        val capeErr = res.exceptionOrNull()?.message
+-                                                        errorMsg = if (errorMsg != null) "$errorMsg | $capeErr" else capeErr
+-                                                    } else {
+-                                                        activeAccount = res.getOrThrow()
+-                                                        // Pratinjau di halaman Accounts langsung memakai jubah baru ini
+-                                                        // (null = tanpa jubah; "mojang_active_cape" juga berarti dilepas).
+-                                                        SkinUtils.rememberMojangCape(
+-                                                            activeAccount.id,
+-                                                            microsoftCapes.firstOrNull { it.id == selectedMicrosoftCapeId }
+-                                                                ?.takeIf { it.id != "mojang_active_cape" }
+-                                                                ?.url
+-                                                        )
+-                                                    }
+-                                                }
++/** Satu baris pilihan berbentuk pil. Terpilih = tepi dan isian warna [tint], selain itu kaca. */
++@Composable
++private fun WardrobeOption(
++    selected: Boolean,
++    tint: Color,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier,
++    content: @Composable RowScope.() -> Unit
++) {
++    Row(
++        modifier = modifier
++            .fillMaxWidth()
++            .defaultMinSize(minHeight = 44.dp)
++            .clip(CircleShape)
++            .then(
++                if (selected) {
++                    Modifier
++                        .background(tint.copy(alpha = 0.20f), CircleShape)
++                        .border(1.dp, tint, CircleShape)
++                } else {
++                    Modifier.amberGlass(CircleShape)
++                }
++            )
++            .clickable { onClick() }
++            .padding(horizontal = 14.dp, vertical = 8.dp),
++        verticalAlignment = Alignment.CenterVertically,
++        content = content
++    )
++}
+ 
+-                                                isProcessing = false
+-                                                if (errorMsg != null) {
+-                                                    Toast.makeText(context, "Gagal memperbarui Minecraft.net: $errorMsg", Toast.LENGTH_LONG).show()
+-                                                    statusMessage = "Gagal: $errorMsg"
+-                                                } else {
+-                                                    persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
+-                                                    Toast.makeText(context, "Perubahan berhasil diterapkan ke Minecraft.net!", Toast.LENGTH_SHORT).show()
+-                                                    onDismissRequest()
+-                                                }
+-                                            }
+-                                        } else {
+-                                            persistAccountChanges(currentSkinFile, currentCapeFile, selectedModel)
+-                                            Toast.makeText(context, "Skin & Cape berhasil disimpan!", Toast.LENGTH_SHORT).show()
+-                                            onDismissRequest()
+-                                        }
+-                                    },
+-                                    backgroundColor = NuxColors.ForestGreen,
+-                                    contentColor = NuxColors.DarkGray,
+-                                    enabled = !isProcessing,
+-                                    modifier = Modifier
+-                                        .weight(1.5f)
+-                                        .height(32.dp)
+-                                ) {
+-                                    if (isProcessing) {
+-                                        AmberSpinner(modifier = Modifier.size(13.dp), color = NuxColors.Ink, strokeWidth = 2.dp)
+-                                        Spacer(modifier = Modifier.width(5.dp))
+-                                    } else {
+-                                        Icon(
+-                                            imageVector = Icons.Outlined.Check,
+-                                            contentDescription = null,
+-                                            modifier = Modifier.size(13.dp)
+-                                        )
+-                                        Spacer(modifier = Modifier.width(5.dp))
+-                                    }
+-                                    Text(
+-                                        text = if (isMicrosoft) "SIMPAN KE MOJANG" else "SIMPAN PERUBAHAN",
+-                                        fontWeight = FontWeight.Black,
+-                                        fontSize = 10.sp,
+-                                        letterSpacing = 0.4.sp
+-                                    )
+-                                }
+-                            }
+-                        }
+-                    }
++/** Pilihan tipe lengan (Klasik / Slim): judul dan keterangan kecil. */
++@Composable
++private fun ModelOption(
++    title: String,
++    subtitle: String,
++    selected: Boolean,
++    onClick: () -> Unit,
++    modifier: Modifier = Modifier
++) {
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = modifier
++            .clip(shape)
++            .then(
++                if (selected) {
++                    Modifier
++                        .background(AmberUi.Accent, shape)
++                        .border(1.dp, AmberUi.AccentEdge, shape)
++                } else {
++                    Modifier.amberGlass(shape)
+                 }
++            )
++            .clickable { onClick() }
++            .padding(horizontal = 14.dp, vertical = 10.dp)
++    ) {
++        Text(
++            text = title,
++            color = AmberUi.Text,
++            fontSize = 14.sp,
++            fontWeight = FontWeight.Bold,
++            maxLines = 1
++        )
++        Text(
++            text = subtitle,
++            color = AmberUi.TextDim,
++            fontSize = 11.sp,
++            lineHeight = 15.sp
++        )
++    }
++}
++
++/** Panduan untuk akun Ely.by (skin & jubah dikelola lewat website mereka). */
++@Composable
++private fun ElyByGuideCard(
++    title: String,
++    body: String,
++    buttonText: String,
++    onOpen: () -> Unit
++) {
++    AmberPanel {
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            Box(
++                modifier = Modifier
++                    .size(36.dp)
++                    .clip(CircleShape)
++                    .background(ElyByAccent.copy(alpha = 0.18f), CircleShape),
++                contentAlignment = Alignment.Center
++            ) {
++                Icon(
++                    imageVector = Icons.Outlined.Public,
++                    contentDescription = null,
++                    tint = ElyByAccent,
++                    modifier = Modifier.size(20.dp)
++                )
+             }
++            Spacer(modifier = Modifier.width(10.dp))
++            Text(
++                text = title,
++                color = AmberUi.Text,
++                fontWeight = FontWeight.Bold,
++                fontSize = 14.sp,
++                lineHeight = 18.sp,
++                modifier = Modifier.weight(1f)
++            )
+         }
++        Spacer(modifier = Modifier.height(10.dp))
++        Text(
++            text = body,
++            color = AmberUi.TextDim,
++            fontSize = 12.sp,
++            lineHeight = 17.sp
++        )
++        Spacer(modifier = Modifier.height(14.dp))
++        AmberActionButton(
++            text = buttonText,
++            onClick = onOpen,
++            icon = Icons.Outlined.OpenInBrowser,
++            modifier = Modifier.fillMaxWidth()
++        )
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index 1fbcd08..de78b1d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -770,44 +770,6 @@ private fun AccountTypePill(type: String) {
+     }
+ }
+ 
+-/** Tombol ikon bulat 38dp (skin & jubah, hapus). */
+-@Composable
+-private fun AccountIconAction(
+-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+-    description: String,
+-    onClick: () -> Unit,
+-    tint: Color = NuxColors.GrayNeutral,
+-    ring: Boolean = false
+-) {
+-    Box(
+-        modifier = Modifier
+-            .size(38.dp)
+-            .clip(CircleShape)
+-            .then(
+-                if (ring) {
+-                    Modifier
+-                        .background(NuxColors.SurfaceElevated, CircleShape)
+-                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, CircleShape)
+-                } else {
+-                    Modifier
+-                }
+-            )
+-            .clickable { onClick() },
+-        contentAlignment = Alignment.Center
+-    ) {
+-        Icon(
+-            imageVector = icon,
+-            contentDescription = description,
+-            tint = tint,
+-            modifier = Modifier.size(18.dp)
+-        )
+-    }
+-}
+-
+-/**
+- * Dialog tambah akun: 3 pilihan penyedia di atas, area aksi di bawah dengan tombol utama
+- * kuning selebar dialog (mudah ditekan jempol). Bisa digulir bila layar pendek.
+- */
+ /** Dialog konfirmasi hapus akun. Dipakai di layar Akun dan di menu akun cepat Home. */
+ @Composable
+ internal fun DeleteAccountDialog(
+@@ -918,92 +880,93 @@ internal fun AddAccountModal(
+         }
+     }
+ 
+-    NuxDialog(
+-        onDismissRequest = {
+-            onDismiss()
+-        },
+-        modifier = Modifier
+-            .fillMaxWidth(0.72f)
+-            .wrapContentHeight(),
+-        fillMaxHeight = false,
+-        compact = true
+-    ) {
+-        Column(
+-            modifier = Modifier
+-                .fillMaxWidth()
+-                .verticalScroll(rememberScrollState())
+-                .padding(horizontal = 20.dp, vertical = 14.dp)
+-        ) {
+-            // Header
+-            Row(
+-                modifier = Modifier.fillMaxWidth(),
+-                horizontalArrangement = Arrangement.SpaceBetween,
+-                verticalAlignment = Alignment.CenterVertically
+-            ) {
+-                Column(modifier = Modifier.weight(1f)) {
++    val tintOffline = AmberUi.AccentSoft
++    val tintMicrosoft = Color(0xFF6CB6FF)
++    val tintElyBy = Color(0xFFB79CFF)
++
++    val saveOffline: () -> Unit = {
++        val cleanName = offlineName.trim()
++        if (cleanName.isBlank()) {
++            Toast.makeText(context, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show()
++        } else {
++            val offlineUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$cleanName".toByteArray(Charsets.UTF_8))
++                .toString()
++                .replace("-", "")
++            val newAcc = UserAccount(
++                id = "offline_${System.currentTimeMillis()}",
++                username = cleanName,
++                uuid = offlineUuid,
++                accessToken = "0",
++                isOffline = true,
++                accountType = "offline"
++            )
++            onAccountAdded(newAcc)
++        }
++    }
++
++    // Isi kartu kanan: judul penyedia terpilih, lalu form/aksi khusus penyedia itu.
++    val providerPanel: @Composable () -> Unit = {
++        val tint = when (selectedTab) {
++            "microsoft" -> tintMicrosoft
++            "elyby" -> tintElyBy
++            else -> tintOffline
++        }
++        val headIcon = when (selectedTab) {
++            "microsoft" -> Icons.Outlined.Language
++            "elyby" -> Icons.Outlined.Public
++            else -> Icons.Outlined.Person
++        }
++        val headTitle = when (selectedTab) {
++            "microsoft" -> "Masuk dengan akun Microsoft / Xbox"
++            "elyby" -> "Masuk dengan akun Ely.by"
++            else -> "Offline"
++        }
++        val headDesc = when (selectedTab) {
++            "microsoft" -> "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi."
++            "elyby" -> "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password."
++            else -> "Lokal · tanpa login"
++        }
++        val elyWaiting = selectedTab == "elyby" && elyLoginState is ElyByLoginState.WaitingForApproval
++
++        AmberPanel {
++            if (!elyWaiting) {
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Box(
++                        modifier = Modifier
++                            .size(40.dp)
++                            .clip(CircleShape)
++                            .background(tint.copy(alpha = 0.18f), CircleShape),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        Icon(
++                            imageVector = headIcon,
++                            contentDescription = null,
++                            tint = tint,
++                            modifier = Modifier.size(22.dp)
++                        )
++                    }
++                    Spacer(modifier = Modifier.width(12.dp))
+                     Text(
+-                        text = "Tambah akun",
+-                        color = NuxColors.DarkGray,
++                        text = headTitle,
++                        color = AmberUi.Text,
+                         fontWeight = FontWeight.Black,
+-                        fontSize = 17.sp,
+-                        letterSpacing = (-0.2).sp
+-                    )
+-                    Text(
+-                        text = "Pilih cara masuk ke Minecraft",
+-                        color = NuxColors.GrayNeutral,
+-                        fontSize = 11.sp
++                        fontSize = 15.sp,
++                        lineHeight = 19.sp,
++                        modifier = Modifier.weight(1f)
+                     )
+                 }
+-                AccountIconAction(
+-                    icon = Icons.Outlined.Close,
+-                    description = "Tutup",
+-                    ring = true,
+-                    onClick = { onDismiss() }
+-                )
+-            }
+-
+-            Spacer(modifier = Modifier.height(10.dp))
+-
+-            // 3 pilihan penyedia
+-            Row(
+-                modifier = Modifier.fillMaxWidth(),
+-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+-            ) {
+-                ProviderCard(
+-                    title = "Offline",
+-                    description = "Lokal · tanpa login",
+-                    isSelected = selectedTab == "offline",
+-                    accentColor = NuxColors.Yellow,
+-                    icon = Icons.Outlined.Person,
+-                    modifier = Modifier.weight(1f),
+-                    onClick = { selectedTab = "offline" }
+-                )
+-                ProviderCard(
+-                    title = "Microsoft",
+-                    description = "Resmi · akun Mojang",
+-                    isSelected = selectedTab == "microsoft",
+-                    accentColor = NuxColors.SkyBlueDark,
+-                    icon = Icons.Outlined.Language,
+-                    modifier = Modifier.weight(1f),
+-                    onClick = { selectedTab = "microsoft" }
+-                )
+-                ProviderCard(
+-                    title = "Ely.by",
+-                    description = "Browser · skin & jubah",
+-                    isSelected = selectedTab == "elyby",
+-                    accentColor = NuxColors.PurpleDark,
+-                    icon = Icons.Outlined.Public,
+-                    modifier = Modifier.weight(1f),
+-                    onClick = { selectedTab = "elyby" }
++                Spacer(modifier = Modifier.height(8.dp))
++                Text(
++                    text = headDesc,
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp
+                 )
++                Spacer(modifier = Modifier.height(14.dp))
+             }
+ 
+-            Spacer(modifier = Modifier.height(12.dp))
+-
+             when (selectedTab) {
+-                // =============================================
+-                // OFFLINE
+-                // =============================================
++                // ---------------- OFFLINE ----------------
+                 "offline" -> {
+                     Row(
+                         modifier = Modifier.fillMaxWidth(),
+@@ -1013,9 +976,10 @@ internal fun AddAccountModal(
+                         // Kepala pemain (pratinjau nama)
+                         Box(
+                             modifier = Modifier
+-                                .size(42.dp)
+-                                .background(NuxColors.SurfaceInput, RoundedCornerShape(12.dp))
+-                                .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(12.dp)),
++                                .size(48.dp)
++                                .clip(CircleShape)
++                                .background(AmberUi.SurfaceRaised, CircleShape)
++                                .border(1.dp, AmberUi.Border, CircleShape),
+                             contentAlignment = Alignment.Center
+                         ) {
+                             if (offlineName.trim().isNotBlank()) {
+@@ -1023,102 +987,51 @@ internal fun AddAccountModal(
+                                     model = "https://mc-heads.net/avatar/${offlineName.trim()}/80",
+                                     contentDescription = offlineName,
+                                     modifier = Modifier
+-                                        .size(34.dp)
+-                                        .clip(RoundedCornerShape(8.dp)),
++                                        .size(38.dp)
++                                        .clip(RoundedCornerShape(10.dp)),
+                                     fallbackInitials = offlineName.trim().take(2).uppercase(),
+-                                    shape = RoundedCornerShape(8.dp),
++                                    shape = RoundedCornerShape(10.dp),
+                                     maxSidePx = 128
+                                 )
+                             } else {
+                                 Icon(
+                                     imageVector = Icons.Outlined.Person,
+                                     contentDescription = null,
+-                                    tint = NuxColors.GrayNeutral,
+-                                    modifier = Modifier.size(22.dp)
++                                    tint = AmberUi.TextDim,
++                                    modifier = Modifier.size(24.dp)
+                                 )
+                             }
+                         }
+-
+-                        Box(modifier = Modifier.weight(1f)) {
+-                            NuxTextField(
+-                                value = offlineName,
+-                                onValueChange = { offlineName = it },
+-                                placeholder = "Nama pemain (Steve, Alex...)"
+-                            )
+-                        }
++                        AmberField(
++                            value = offlineName,
++                            onValueChange = { offlineName = it },
++                            placeholder = "Nama pemain (Steve, Alex...)",
++                            modifier = Modifier.weight(1f)
++                        )
+                     }
+-
+-                    Spacer(modifier = Modifier.height(10.dp))
+-
+-                    NuxButton(
+-                        onClick = {
+-                            val cleanName = offlineName.trim()
+-                            if (cleanName.isBlank()) {
+-                                Toast.makeText(context, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show()
+-                                return@NuxButton
+-                            }
+-                            val offlineUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$cleanName".toByteArray(Charsets.UTF_8))
+-                                .toString()
+-                                .replace("-", "")
+-                            val newAcc = UserAccount(
+-                                id = "offline_${System.currentTimeMillis()}",
+-                                username = cleanName,
+-                                uuid = offlineUuid,
+-                                accessToken = "0",
+-                                isOffline = true,
+-                                accountType = "offline"
+-                            )
+-                            onAccountAdded(newAcc)
+-                        },
+-                        backgroundColor = NuxColors.Yellow,
++                    Spacer(modifier = Modifier.height(14.dp))
++                    AmberActionButton(
++                        text = "Simpan akun",
++                        onClick = saveOffline,
++                        icon = Icons.Outlined.Check,
+                         enabled = offlineName.trim().isNotBlank(),
+-                        cornerRadius = 20.dp,
+                         modifier = Modifier.fillMaxWidth()
+-                    ) {
+-                        Icon(
+-                            imageVector = Icons.Outlined.Check,
+-                            contentDescription = null,
+-                            modifier = Modifier.size(18.dp)
+-                        )
+-                        Spacer(modifier = Modifier.width(8.dp))
+-                        Text(
+-                            text = "Simpan akun",
+-                            fontWeight = FontWeight.Black,
+-                            fontSize = 13.sp
+-                        )
+-                    }
++                    )
+                 }
+ 
+-                // =============================================
+-                // MICROSOFT
+-                // =============================================
++                // ---------------- MICROSOFT ----------------
+                 "microsoft" -> {
+-                    Text(
+-                        text = "Masuk dengan akun Microsoft / Xbox",
+-                        color = NuxColors.SkyBlueDark,
+-                        fontWeight = FontWeight.Bold,
+-                        fontSize = 14.sp
+-                    )
+-                    Spacer(modifier = Modifier.height(3.dp))
+-                    Text(
+-                        text = "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.",
+-                        color = NuxColors.GrayNeutral,
+-                        fontSize = 11.sp,
+-                        lineHeight = 16.sp
+-                    )
+                     if (msErrorMsg != null) {
+-                        Spacer(modifier = Modifier.height(6.dp))
+                         Text(
+                             text = msErrorMsg!!,
+-                            color = NuxColors.ErrorRed,
+-                            fontSize = 11.sp,
+-                            lineHeight = 16.sp
++                            color = AmberUi.Danger,
++                            fontSize = 12.sp,
++                            lineHeight = 17.sp,
++                            modifier = Modifier.padding(bottom = 12.dp)
+                         )
+                     }
+-
+-                    Spacer(modifier = Modifier.height(12.dp))
+-
+-                    NuxButton(
++                    AmberActionButton(
++                        text = if (isMsLoading) "Menghubungi..." else "Masuk dengan Microsoft",
+                         onClick = {
+                             isMsLoading = true
+                             msErrorMsg = null
+@@ -1135,93 +1048,70 @@ internal fun AddAccountModal(
+                                 )
+                             }
+                         },
+-                        backgroundColor = NuxColors.Yellow,
+-                        enabled = !isMsLoading,
+-                        cornerRadius = 20.dp,
++                        icon = Icons.Outlined.Language,
++                        loading = isMsLoading,
+                         modifier = Modifier.fillMaxWidth()
+-                    ) {
+-                        if (isMsLoading) {
+-                            AmberSpinner(
+-                                modifier = Modifier.size(16.dp),
+-                                color = NuxColors.GrayNeutral,
+-                                strokeWidth = 2.dp
+-                            )
+-                            Spacer(modifier = Modifier.width(8.dp))
+-                            Text("Menghubungi...", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+-                        } else {
+-                            Icon(
+-                                imageVector = Icons.Outlined.Language,
+-                                contentDescription = null,
+-                                modifier = Modifier.size(18.dp)
+-                            )
+-                            Spacer(modifier = Modifier.width(8.dp))
+-                            Text("Masuk dengan Microsoft", fontWeight = FontWeight.Black, fontSize = 13.sp)
+-                        }
+-                    }
++                    )
+                 }
+ 
+-                // =============================================
+-                // ELY.BY
+-                // =============================================
++                // ---------------- ELY.BY ----------------
+                 "elyby" -> {
+                     when (val state = elyLoginState) {
+                         is ElyByLoginState.WaitingForApproval -> {
+                             val dc = state.deviceCode
+                             Row(verticalAlignment = Alignment.CenterVertically) {
+                                 AmberSpinner(
+-                                    modifier = Modifier.size(16.dp),
+-                                    color = NuxColors.PurpleDark,
++                                    modifier = Modifier.size(18.dp),
++                                    color = tintElyBy,
+                                     strokeWidth = 2.dp
+                                 )
+                                 Spacer(modifier = Modifier.width(10.dp))
+                                 Text(
+                                     text = state.statusMsg.ifBlank { "Menunggu otorisasi di browser Ely.by..." },
+-                                    color = NuxColors.DarkGray,
+-                                    fontSize = 12.sp,
+-                                    fontWeight = FontWeight.Bold
++                                    color = AmberUi.Text,
++                                    fontSize = 13.sp,
++                                    fontWeight = FontWeight.Bold,
++                                    lineHeight = 18.sp,
++                                    modifier = Modifier.weight(1f)
+                                 )
+                             }
+ 
+-                            Spacer(modifier = Modifier.height(10.dp))
++                            Spacer(modifier = Modifier.height(14.dp))
+ 
+                             Row(
+                                 modifier = Modifier.fillMaxWidth(),
++                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                 verticalAlignment = Alignment.CenterVertically
+                             ) {
+                                 Box(
+                                     modifier = Modifier
+-                                        .clip(RoundedCornerShape(14.dp))
+-                                        .background(NuxColors.SurfaceInput, RoundedCornerShape(14.dp))
+-                                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp))
+-                                        .padding(horizontal = 14.dp, vertical = 8.dp)
++                                        .weight(1f)
++                                        .height(48.dp)
++                                        .clip(CircleShape)
++                                        .background(AmberUi.SurfaceRaised, CircleShape)
++                                        .border(1.dp, AmberUi.BorderStrong, CircleShape),
++                                    contentAlignment = Alignment.Center
+                                 ) {
+                                     Text(
+                                         text = dc.userCode,
+-                                        color = NuxColors.PurpleDark,
+-                                        fontSize = 17.sp,
++                                        color = tintElyBy,
++                                        fontSize = 18.sp,
+                                         fontFamily = FontFamily.Monospace,
+                                         fontWeight = FontWeight.Black,
+-                                        letterSpacing = 1.sp
++                                        letterSpacing = 2.sp,
++                                        maxLines = 1
+                                     )
+                                 }
+-                                Spacer(modifier = Modifier.width(10.dp))
+-                                NuxButton(
++                                AmberActionButton(
++                                    text = "Salin",
+                                     onClick = {
+                                         clipboardManager.setText(AnnotatedString(dc.userCode))
+                                         Toast.makeText(context, "Kode disalin", Toast.LENGTH_SHORT).show()
+                                     },
+-                                    backgroundColor = Color.Transparent,
+-                                    cornerRadius = 20.dp,
+-                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 2.dp)
+-                                ) {
+-                                    Icon(
+-                                        imageVector = Icons.Outlined.ContentCopy,
+-                                        contentDescription = null,
+-                                        modifier = Modifier.size(16.dp)
+-                                    )
+-                                    Spacer(modifier = Modifier.width(6.dp))
+-                                    Text("Salin", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+-                                }
++                                    icon = Icons.Outlined.ContentCopy,
++                                    filled = false,
++                                    height = 48.dp
++                                )
+                             }
+ 
+                             Spacer(modifier = Modifier.height(14.dp))
+@@ -1230,84 +1120,41 @@ internal fun AddAccountModal(
+                                 modifier = Modifier.fillMaxWidth(),
+                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
+                             ) {
+-                                NuxButton(
++                                AmberActionButton(
++                                    text = "Buka lagi",
+                                     onClick = {
+                                         ElyByAuthService.openBrowser(context, dc.verificationUrlWithCode)
+                                     },
+-                                    backgroundColor = NuxColors.Yellow,
+-                                    cornerRadius = 20.dp,
++                                    icon = Icons.Outlined.OpenInBrowser,
+                                     modifier = Modifier.weight(1f)
+-                                ) {
+-                                    Text("Buka lagi", fontWeight = FontWeight.Black, fontSize = 13.sp)
+-                                }
+-                                NuxButton(
+-                                    onClick = {
+-                                        ElyByAuthService.cancelLogin()
+-                                    },
+-                                    backgroundColor = Color.Transparent,
+-                                    cornerRadius = 20.dp,
++                                )
++                                AmberActionButton(
++                                    text = "Batal",
++                                    onClick = { ElyByAuthService.cancelLogin() },
++                                    filled = false,
+                                     modifier = Modifier.weight(1f)
+-                                ) {
+-                                    Text("Batal", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+-                                }
++                                )
+                             }
+                         }
+                         else -> {
+                             val isStarting = state is ElyByLoginState.Starting
+                             val errMsg = (state as? ElyByLoginState.Error)?.message
+-
+-                            Text(
+-                                text = "Masuk dengan akun Ely.by",
+-                                color = NuxColors.PurpleDark,
+-                                fontWeight = FontWeight.Bold,
+-                                fontSize = 14.sp
+-                            )
+-                            Spacer(modifier = Modifier.height(3.dp))
+-                            Text(
+-                                text = "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.",
+-                                color = NuxColors.GrayNeutral,
+-                                fontSize = 11.sp,
+-                                lineHeight = 16.sp
+-                            )
+                             if (errMsg != null) {
+-                                Spacer(modifier = Modifier.height(6.dp))
+                                 Text(
+                                     text = errMsg,
+-                                    color = NuxColors.ErrorRed,
+-                                    fontSize = 11.sp,
+-                                    lineHeight = 16.sp
++                                    color = AmberUi.Danger,
++                                    fontSize = 12.sp,
++                                    lineHeight = 17.sp,
++                                    modifier = Modifier.padding(bottom = 12.dp)
+                                 )
+                             }
+-
+-                            Spacer(modifier = Modifier.height(12.dp))
+-
+-                            NuxButton(
+-                                onClick = {
+-                                    ElyByAuthService.startLogin(context)
+-                                },
+-                                backgroundColor = NuxColors.Yellow,
+-                                enabled = !isStarting,
+-                                cornerRadius = 20.dp,
++                            AmberActionButton(
++                                text = if (isStarting) "Menghubungi..." else "Buka browser Ely.by",
++                                onClick = { ElyByAuthService.startLogin(context) },
++                                icon = Icons.Outlined.OpenInBrowser,
++                                loading = isStarting,
+                                 modifier = Modifier.fillMaxWidth()
+-                            ) {
+-                                if (isStarting) {
+-                                    AmberSpinner(
+-                                        modifier = Modifier.size(16.dp),
+-                                        color = NuxColors.GrayNeutral,
+-                                        strokeWidth = 2.dp
+-                                    )
+-                                    Spacer(modifier = Modifier.width(8.dp))
+-                                    Text("Menghubungi...", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+-                                } else {
+-                                    Icon(
+-                                        imageVector = Icons.Outlined.OpenInBrowser,
+-                                        contentDescription = null,
+-                                        modifier = Modifier.size(18.dp)
+-                                    )
+-                                    Spacer(modifier = Modifier.width(8.dp))
+-                                    Text("Buka browser Ely.by", fontWeight = FontWeight.Black, fontSize = 13.sp)
+-                                }
+-                            }
++                            )
+                         }
+                     }
+                 }
+@@ -1315,6 +1162,96 @@ internal fun AddAccountModal(
+         }
+     }
+ 
++    AmberPage(
++        onDismiss = onDismiss,
++        title = "Tambah akun",
++        icon = Icons.Outlined.PersonAdd,
++        subtitle = "Pilih cara masuk ke Minecraft"
++    ) { info ->
++        if (info.narrow) {
++            // HP portrait: tiga pil penyedia sejajar di atas, kartu di bawahnya, semua bisa digulir.
++            Column(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .verticalScroll(rememberScrollState())
++                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
++                verticalArrangement = Arrangement.spacedBy(12.dp)
++            ) {
++                Row(
++                    modifier = Modifier.fillMaxWidth(),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberChoicePill(
++                        text = "Offline",
++                        selected = selectedTab == "offline",
++                        onClick = { selectedTab = "offline" },
++                        modifier = Modifier.weight(1f)
++                    )
++                    AmberChoicePill(
++                        text = "Microsoft",
++                        selected = selectedTab == "microsoft",
++                        onClick = { selectedTab = "microsoft" },
++                        modifier = Modifier.weight(1f)
++                    )
++                    AmberChoicePill(
++                        text = "Ely.by",
++                        selected = selectedTab == "elyby",
++                        onClick = { selectedTab = "elyby" },
++                        modifier = Modifier.weight(1f)
++                    )
++                }
++                providerPanel()
++            }
++        } else {
++            // Layar lebar: pil penyedia di rail kiri, kartu isi di kanan.
++            Row(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(start = 16.dp, end = 16.dp, bottom = 14.dp),
++                horizontalArrangement = Arrangement.spacedBy(14.dp)
++            ) {
++                Column(
++                    modifier = Modifier
++                        .weight(0.85f)
++                        .verticalScroll(rememberScrollState()),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
++                ) {
++                    AmberRailItem(
++                        title = "Offline",
++                        description = "Lokal · tanpa login",
++                        icon = Icons.Outlined.Person,
++                        tint = tintOffline,
++                        selected = selectedTab == "offline",
++                        onClick = { selectedTab = "offline" }
++                    )
++                    AmberRailItem(
++                        title = "Microsoft",
++                        description = "Resmi · akun Mojang",
++                        icon = Icons.Outlined.Language,
++                        tint = tintMicrosoft,
++                        selected = selectedTab == "microsoft",
++                        onClick = { selectedTab = "microsoft" }
++                    )
++                    AmberRailItem(
++                        title = "Ely.by",
++                        description = "Browser · skin & jubah",
++                        icon = Icons.Outlined.Public,
++                        tint = tintElyBy,
++                        selected = selectedTab == "elyby",
++                        onClick = { selectedTab = "elyby" }
++                    )
++                }
++                Column(
++                    modifier = Modifier
++                        .weight(1.15f)
++                        .verticalScroll(rememberScrollState())
++                ) {
++                    providerPanel()
++                }
++            }
++        }
++    }
++
+     if (msDeviceCode != null) {
+         NuxMicrosoftAuthDialog(
+             deviceCode = msDeviceCode!!,
+@@ -1333,62 +1270,6 @@ internal fun AddAccountModal(
+     }
+ }
+ 
+-/**
+- * Kartu pilihan penyedia akun. Terpilih = tint dan tepi warna penyedia.
+- */
+-@Composable
+-private fun ProviderCard(
+-    title: String,
+-    description: String,
+-    isSelected: Boolean,
+-    accentColor: Color,
+-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+-    modifier: Modifier = Modifier,
+-    onClick: () -> Unit
+-) {
+-    val shape = RoundedCornerShape(14.dp)
+-    Column(
+-        modifier = modifier
+-            .clip(shape)
+-            .background(
+-                if (isSelected) accentColor.copy(alpha = 0.14f) else NuxColors.SurfaceInput,
+-                shape
+-            )
+-            .border(
+-                NuxSizes.GlassBorder,
+-                if (isSelected) accentColor else NuxColors.CardBorder,
+-                shape
+-            )
+-            .clickable { onClick() }
+-            .padding(horizontal = 10.dp, vertical = 8.dp)
+-    ) {
+-        Row(verticalAlignment = Alignment.CenterVertically) {
+-            Icon(
+-                imageVector = icon,
+-                contentDescription = null,
+-                tint = if (isSelected) accentColor else NuxColors.GrayNeutral,
+-                modifier = Modifier.size(16.dp)
+-            )
+-            Spacer(modifier = Modifier.width(6.dp))
+-            Text(
+-                text = title,
+-                color = if (isSelected) accentColor else NuxColors.DarkGray,
+-                fontWeight = FontWeight.Black,
+-                fontSize = 13.sp,
+-                maxLines = 1
+-            )
+-        }
+-        Spacer(modifier = Modifier.height(3.dp))
+-        Text(
+-            text = description,
+-            color = NuxColors.GrayNeutral,
+-            fontSize = 11.sp,
+-            lineHeight = 15.sp,
+-            maxLines = 2
+-        )
+-    }
+-}
+-
+ @Composable
+ fun NuxAccountAvatar(
+     account: UserAccount,
+# FIN part=1/1 files=4

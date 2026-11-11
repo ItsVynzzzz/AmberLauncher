@@ -1463,6 +1463,8 @@ fun SettingsScreen(
         NuxImportLayoutDialog(
             buttonCount = pending.buttons.size,
             macroCommands = pending.macroCommands,
+            sourceName = pending.source,
+            skipped = pending.skipped,
             onConfirm = {
                 pendingImport = null
                 scope.launch {

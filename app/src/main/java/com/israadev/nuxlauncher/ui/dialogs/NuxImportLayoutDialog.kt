@@ -21,7 +21,9 @@ fun NuxImportLayoutDialog(
     buttonCount: Int,
     macroCommands: Int,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    sourceName: String = "",
+    skipped: Int = 0
 ) {
     AmberAlert(
         onDismissRequest = onDismiss,
@@ -50,6 +52,20 @@ fun NuxImportLayoutDialog(
             fontSize = 14.sp,
             lineHeight = 21.sp
         )
+        if (sourceName.isNotEmpty()) {
+            val note = if (skipped > 0) {
+                "$skipped entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua)."
+            } else {
+                "Semua tombol berhasil diubah. Periksa posisinya di editor kontrol."
+            }
+            Text(
+                text = "Layout ini berasal dari $sourceName dan diubah ke format Amber. $note",
+                color = Amber.TextDim,
+                fontSize = 14.sp,
+                lineHeight = 21.sp,
+                modifier = Modifier.padding(top = 10.dp)
+            )
+        }
         if (macroCommands > 0) {
             Text(
                 text = "Berkas ini berisi $macroCommands tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.",

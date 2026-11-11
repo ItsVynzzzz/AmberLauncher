@@ -1,0 +1,673 @@
+package com.israadev.nuxlauncher.core.controls
+
+import com.google.gson.JsonObject
+import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+import java.util.Locale
+import java.util.UUID
+import kotlin.math.pow
+import kotlin.math.roundToInt
+
+/**
+ * Mengubah tata letak kontrol dari launcher lain menjadi tombol Amber.
+ *
+ * Format yang dikenali:
+ * - Pojav / Zalith Launcher 1 / Mojo (dan turunan Pojav lain): berkas dengan "mControlDataList".
+ * - Zalith Launcher 2: berkas dengan "layers" dan "editorVersion".
+ *
+ * Yang ikut diubah: posisi, ukuran, kode tombol (termasuk beberapa tombol sekaligus jadi kombinasi),
+ * klik mouse, scroll, tombol keyboard/menu/sembunyikan GUI, joystick, mode toggle, kapan tombol tampil, dan
+ * makro teks chat dari Zalith 2. Yang tidak punya padanan di Amber dilewati dan dihitung: layer yang
+ * tersembunyi dan tombol pengatur layer, mouse virtual, laci (isinya dibentangkan jadi tombol biasa), tombol
+ * scroll kedua (Amber memakai satu tombol untuk naik dan turun), serta warna, bingkai, geser-untuk-tekan,
+ * dan tembus sentuhan.
+ *
+ * Berkas orang lain tidak dipercaya: tidak ada refleksi dan tidak ada kelas yang dimuat dari berkas, setiap
+ * kolom dicek tipenya, angka dibatasi ke rentang yang sama dengan editor, dan ungkapan posisi dihitung oleh
+ * pengurai kecil buatan sendiri (bukan mesin skrip). Murni logika (tanpa Android) supaya mudah diuji.
+ */
+object ForeignLayoutConverter {
+
+    enum class Source(val label: String) {
+        POJAV("Pojav / Zalith / Mojo"),
+        ZALITH2("Zalith 2")
+    }
+
+    class Result(
+        val buttons: List<CustomControlButton>,
+        /** Entri yang dilewati atau digabung karena tidak ada padanannya di Amber. */
+        val skipped: Int,
+        /** Jumlah tombol makro pengetik chat, ditampilkan sebagai peringatan. */
+        val macroCommands: Int
+    )
+
+    private const val MAX_NAME = 32
+    private const val MAX_COMMAND = 256
+    private const val MAX_EXPRESSION = 200
+    private const val MAX_COMBO_KEYS = 32
+    private const val MAX_KEYCODE = 1024
+    private const val MARGIN_DP = 2.0
+    private const val DRAWER_GAP_DP = 2f
+
+    private const val EVENT_KEYBOARD = "launcher.event.switch_ime"
+    private const val EVENT_MENU = "launcher.event.switch_menu"
+    private const val EVENT_SCROLL_PREFIX = "launcher.event.scroll_"
+
+    private val VAR_PATTERN = Regex("[$][{]([a-zA-Z_]+)[}]")
+
+    /** Nama tombol GLFW (dipakai Zalith 2) ke kode angkanya. Tabel statis supaya aman dari R8. */
+    private val GLFW_KEY_BY_NAME: Map<String, Int> = mapOf(
+        "GLFW_KEY_SPACE" to 32, "GLFW_KEY_APOSTROPHE" to 39, "GLFW_KEY_COMMA" to 44, "GLFW_KEY_MINUS" to 45,
+        "GLFW_KEY_PERIOD" to 46, "GLFW_KEY_SLASH" to 47, "GLFW_KEY_0" to 48, "GLFW_KEY_1" to 49,
+        "GLFW_KEY_2" to 50, "GLFW_KEY_3" to 51, "GLFW_KEY_4" to 52, "GLFW_KEY_5" to 53, "GLFW_KEY_6" to 54,
+        "GLFW_KEY_7" to 55, "GLFW_KEY_8" to 56, "GLFW_KEY_9" to 57, "GLFW_KEY_SEMICOLON" to 59,
+        "GLFW_KEY_EQUAL" to 61, "GLFW_KEY_A" to 65, "GLFW_KEY_B" to 66, "GLFW_KEY_C" to 67, "GLFW_KEY_D" to 68,
+        "GLFW_KEY_E" to 69, "GLFW_KEY_F" to 70, "GLFW_KEY_G" to 71, "GLFW_KEY_H" to 72, "GLFW_KEY_I" to 73,
+        "GLFW_KEY_J" to 74, "GLFW_KEY_K" to 75, "GLFW_KEY_L" to 76, "GLFW_KEY_M" to 77, "GLFW_KEY_N" to 78,
+        "GLFW_KEY_O" to 79, "GLFW_KEY_P" to 80, "GLFW_KEY_Q" to 81, "GLFW_KEY_R" to 82, "GLFW_KEY_S" to 83,
+        "GLFW_KEY_T" to 84, "GLFW_KEY_U" to 85, "GLFW_KEY_V" to 86, "GLFW_KEY_W" to 87, "GLFW_KEY_X" to 88,
+        "GLFW_KEY_Y" to 89, "GLFW_KEY_Z" to 90, "GLFW_KEY_LEFT_BRACKET" to 91, "GLFW_KEY_BACKSLASH" to 92,
+        "GLFW_KEY_RIGHT_BRACKET" to 93, "GLFW_KEY_GRAVE_ACCENT" to 96, "GLFW_KEY_WORLD_1" to 161,
+        "GLFW_KEY_WORLD_2" to 162, "GLFW_KEY_ESCAPE" to 256, "GLFW_KEY_ENTER" to 257, "GLFW_KEY_TAB" to 258,
+        "GLFW_KEY_BACKSPACE" to 259, "GLFW_KEY_INSERT" to 260, "GLFW_KEY_DELETE" to 261,
+        "GLFW_KEY_RIGHT" to 262, "GLFW_KEY_LEFT" to 263, "GLFW_KEY_DOWN" to 264, "GLFW_KEY_UP" to 265,
+        "GLFW_KEY_PAGE_UP" to 266, "GLFW_KEY_PAGE_DOWN" to 267, "GLFW_KEY_HOME" to 268, "GLFW_KEY_END" to 269,
+        "GLFW_KEY_CAPS_LOCK" to 280, "GLFW_KEY_SCROLL_LOCK" to 281, "GLFW_KEY_NUM_LOCK" to 282,
+        "GLFW_KEY_PRINT_SCREEN" to 283, "GLFW_KEY_PAUSE" to 284, "GLFW_KEY_F1" to 290, "GLFW_KEY_F2" to 291,
+        "GLFW_KEY_F3" to 292, "GLFW_KEY_F4" to 293, "GLFW_KEY_F5" to 294, "GLFW_KEY_F6" to 295,
+        "GLFW_KEY_F7" to 296, "GLFW_KEY_F8" to 297, "GLFW_KEY_F9" to 298, "GLFW_KEY_F10" to 299,
+        "GLFW_KEY_F11" to 300, "GLFW_KEY_F12" to 301, "GLFW_KEY_KP_0" to 320, "GLFW_KEY_KP_1" to 321,
+        "GLFW_KEY_KP_2" to 322, "GLFW_KEY_KP_3" to 323, "GLFW_KEY_KP_4" to 324, "GLFW_KEY_KP_5" to 325,
+        "GLFW_KEY_KP_6" to 326, "GLFW_KEY_KP_7" to 327, "GLFW_KEY_KP_8" to 328, "GLFW_KEY_KP_9" to 329,
+        "GLFW_KEY_KP_DECIMAL" to 330, "GLFW_KEY_KP_DIVIDE" to 331, "GLFW_KEY_KP_MULTIPLY" to 332,
+        "GLFW_KEY_KP_SUBTRACT" to 333, "GLFW_KEY_KP_ADD" to 334, "GLFW_KEY_KP_ENTER" to 335,
+        "GLFW_KEY_KP_EQUAL" to 336, "GLFW_KEY_LEFT_SHIFT" to 340, "GLFW_KEY_LEFT_CONTROL" to 341,
+        "GLFW_KEY_LEFT_ALT" to 342, "GLFW_KEY_LEFT_SUPER" to 343, "GLFW_KEY_RIGHT_SHIFT" to 344,
+        "GLFW_KEY_RIGHT_CONTROL" to 345, "GLFW_KEY_RIGHT_ALT" to 346, "GLFW_KEY_RIGHT_SUPER" to 347,
+        "GLFW_KEY_MENU" to 348
+    )
+
+    private val KEY_LABEL_BY_CODE: Map<Int, String> by lazy {
+        GLFW_KEY_BY_NAME.entries.associate { it.value to it.key.removePrefix("GLFW_KEY_") }
+    }
+
+    /** Layar acuan dalam dp. Semua posisi dihitung dari sini lalu disimpan sebagai persen layar. */
+    private class Screen(val w: Float, val h: Float)
+
+    private class Acc(private val max: Int) {
+        val buttons = ArrayList<CustomControlButton>()
+        var skipped = 0
+        var macros = 0
+        var scrollAdded = false
+
+        fun add(b: CustomControlButton): Boolean {
+            if (buttons.size >= max) {
+                skipped++
+                return false
+            }
+            buttons.add(b)
+            if (b.isMacro && b.macroType == "COMMAND" && b.macroCommand.isNotBlank()) macros++
+            return true
+        }
+    }
+
+    /** Apa yang dilakukan sebuah tombol, sudah dalam istilah Amber. */
+    private class Action(
+        val keyCode: Int = 0,
+        val comboKeys: List<Int> = emptyList(),
+        val isMouse: Boolean = false,
+        val mouseButton: Int = 0,
+        val isScroll: Boolean = false,
+        val systemAction: String = "",
+        val command: String = ""
+    )
+
+    fun detect(root: JsonObject): Source? {
+        if (root.has("mControlDataList") || root.has("mDrawerDataList") || root.has("mJoystickDataList")) {
+            return Source.POJAV
+        }
+        val layers = root.get("layers")
+        if (layers != null && layers.isJsonArray && root.has("editorVersion")) return Source.ZALITH2
+        return null
+    }
+
+    fun convert(root: JsonObject, source: Source, refWidthDp: Float, refHeightDp: Float, maxButtons: Int): Result {
+        val screen = Screen(
+            w = if (refWidthDp.isFinite() && refWidthDp >= 200f) refWidthDp else 800f,
+            h = if (refHeightDp.isFinite() && refHeightDp >= 100f) refHeightDp else 360f
+        )
+        val acc = Acc(maxButtons)
+        when (source) {
+            Source.POJAV -> convertPojav(root, screen, acc)
+            Source.ZALITH2 -> convertZalith2(root, screen, acc)
+        }
+        return Result(acc.buttons, acc.skipped, acc.macros)
+    }
+
+    // ---- Pojav / Zalith 1 / Mojo ------------------------------------------------------------------
+
+    private fun convertPojav(root: JsonObject, screen: Screen, acc: Acc) {
+        for (o in root.objects("mControlDataList")) pojavButton(o, screen, acc, null)
+        for (o in root.objects("mJoystickDataList")) pojavJoystick(o, screen, acc)
+        for (o in root.objects("mDrawerDataList")) pojavDrawer(o, screen, acc)
+    }
+
+    private fun pojavButton(o: JsonObject, screen: Screen, acc: Acc, at: Pair<Float, Float>?) {
+        val action = pojavAction(pojavKeys(o))
+        if (action == null || (action.isScroll && acc.scrollAdded)) {
+            acc.skipped++
+            return
+        }
+        val w = o.floatOr("width", 50f)
+        val h = o.floatOr("height", 50f)
+        val center = at ?: pojavCenter(o, w, h, screen)
+        val button = build(
+            name = o.strOr("name"),
+            action = action,
+            xPercent = center.first,
+            yPercent = center.second,
+            widthDp = w,
+            heightDp = h,
+            opacity = o.floatOr("opacity", 0.85f),
+            cornerDp = min(w, h) * o.floatOr("cornerRadius", 0f) / 200f,
+            toggle = o.boolOr("isToggle", false),
+            showMode = pojavShowMode(o)
+        )
+        if (acc.add(button) && action.isScroll) acc.scrollAdded = true
+    }
+
+    private fun pojavJoystick(o: JsonObject, screen: Screen, acc: Acc) {
+        val w = o.floatOr("width", 150f)
+        val h = o.floatOr("height", 150f)
+        val center = pojavCenter(o, w, h, screen)
+        val side = min(w, h).roundToInt().coerceIn(ControlLimits.MIN_JOYSTICK_DP, ControlLimits.MAX_JOYSTICK_DP)
+        addJoystick(
+            acc, center.first, center.second, side,
+            o.floatOr("opacity", 0.85f), o.boolOr("forwardLock", false), pojavShowMode(o)
+        )
+    }
+
+    /**
+     * Laci Pojav tidak ada di Amber. Tombol di dalamnya dibentangkan di sebelah posisi laci sesuai arahnya
+     * (kiri, kanan, atas, bawah); untuk laci bebas, tiap tombol memakai posisinya sendiri. Tombol laci itu
+     * sendiri tidak dibuat.
+     */
+    private fun pojavDrawer(d: JsonObject, screen: Screen, acc: Acc) {
+        val props = d.obj("properties") ?: return
+        val subs = d.objects("buttonProperties")
+        val orientation = d.strOr("orientation")
+        val dw = props.floatOr("width", 50f)
+        val dh = props.floatOr("height", 50f)
+        val drawerCenter = pojavCenter(props, dw, dh, screen)
+        val dir = when (orientation) {
+            "LEFT", "UP" -> -1f
+            "RIGHT", "DOWN" -> 1f
+            else -> 0f
+        }
+        val horizontal = orientation == "LEFT" || orientation == "RIGHT"
+        var cursor = 0f
+        var prevHalf = (if (horizontal) dw else dh) / 2f
+        for (sub in subs) {
+            if (dir == 0f) {
+                pojavButton(sub, screen, acc, null)
+                continue
+            }
+            val sw = sub.floatOr("width", 50f)
+            val sh = sub.floatOr("height", 50f)
+            val half = (if (horizontal) sw else sh) / 2f
+            cursor += dir * (prevHalf + DRAWER_GAP_DP + half)
+            prevHalf = half
+            val cx = drawerCenter.first + (if (horizontal) cursor / screen.w * 100f else 0f)
+            val cy = drawerCenter.second + (if (horizontal) 0f else cursor / screen.h * 100f)
+            pojavButton(sub, screen, acc, Pair(cx, cy))
+        }
+    }
+
+    private fun pojavKeys(o: JsonObject): List<Int> {
+        val arr = o.get("keycodes")
+        val out = ArrayList<Int>()
+        if (arr == null || !arr.isJsonArray) return out
+        for (e in arr.asJsonArray) {
+            if (out.size >= 4) break
+            if (!e.isJsonPrimitive || !e.asJsonPrimitive.isNumber) continue
+            val v = e.asDouble
+            if (v.isNaN() || v.isInfinite()) continue
+            out.add(v.roundToInt())
+        }
+        return out
+    }
+
+    /** Kode di bawah 0 adalah tombol khusus Pojav; 0 hanya pengisi; mulai 32 adalah tombol GLFW biasa. */
+    private fun pojavAction(keys: List<Int>): Action? {
+        val real = keys.filter { it in 32..MAX_KEYCODE }
+        val special = keys.firstOrNull { it < 0 }
+        if (real.isEmpty()) {
+            return when (special) {
+                -1 -> Action(systemAction = "KEYBOARD")
+                -2 -> Action(systemAction = "HIDE_GUI")
+                -3 -> Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
+                -4 -> Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT)
+                -6 -> Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE)
+                -7, -8 -> Action(isScroll = true)
+                -9 -> Action(systemAction = "MENU")
+                else -> null // -5 (mouse virtual) dan kode tak dikenal
+            }
+        }
+        return if (real.size == 1) {
+            Action(keyCode = real[0])
+        } else {
+            Action(keyCode = real[0], comboKeys = real.take(MAX_COMBO_KEYS))
+        }
+    }
+
+    private fun pojavShowMode(o: JsonObject): String {
+        val inGame = o.boolOr("displayInGame", true)
+        val inMenu = o.boolOr("displayInMenu", true)
+        return when {
+            inGame && !inMenu -> ControlShowMode.GAME
+            inMenu && !inGame -> ControlShowMode.MENU
+            else -> ControlShowMode.ALWAYS
+        }
+    }
+
+    /** Titik tengah tombol dalam persen layar, dari ungkapan seperti "${margin} * 3 + ${width} * 2". */
+    private fun pojavCenter(o: JsonObject, w: Float, h: Float, screen: Screen): Pair<Float, Float> {
+        val vars = HashMap<String, Double>()
+        vars["top"] = 0.0
+        vars["left"] = 0.0
+        vars["width"] = w.toDouble()
+        vars["height"] = h.toDouble()
+        vars["right"] = (screen.w - w).toDouble()
+        vars["bottom"] = (screen.h - h).toDouble()
+        vars["screen_width"] = screen.w.toDouble()
+        vars["screen_height"] = screen.h.toDouble()
+        vars["margin"] = MARGIN_DP
+        vars["preferred_scale"] = 100.0
+        val left = evalPosition(o.strOr("dynamicX"), vars)
+        val top = evalPosition(o.strOr("dynamicY"), vars)
+        val x = if (left != null) (left + w / 2.0) / screen.w * 100.0 else 50.0
+        val y = if (top != null) (top + h / 2.0) / screen.h * 100.0 else 50.0
+        return Pair(x.toFloat(), y.toFloat())
+    }
+
+    private fun evalPosition(raw: String, vars: Map<String, Double>): Double? {
+        val text = raw.trim()
+        if (text.isEmpty() || text.length > MAX_EXPRESSION) return null
+        var missing = false
+        val replaced = VAR_PATTERN.replace(text) { m ->
+            val v = vars[m.groupValues[1]]
+            if (v == null) {
+                missing = true
+                "0"
+            } else {
+                "(" + String.format(Locale.ROOT, "%.4f", v) + ")"
+            }
+        }
+        if (missing) return null
+        return ExprParser(replaced).parse()
+    }
+
+    /** Pengurai ungkapan aritmetika: angka, + - * / ^, tanda kurung, dan fungsi dp()/px() (sama di ruang dp). */
+    private class ExprParser(private val s: String) {
+        private var i = 0
+
+        fun parse(): Double? {
+            return try {
+                val v = expr()
+                skip()
+                if (i != s.length || v.isNaN() || v.isInfinite()) null else v
+            } catch (_: Exception) {
+                null
+            }
+        }
+
+        private fun skip() {
+            while (i < s.length && s[i].isWhitespace()) i++
+        }
+
+        private fun expr(): Double {
+            var v = term()
+            while (true) {
+                skip()
+                if (i < s.length && (s[i] == '+' || s[i] == '-')) {
+                    val op = s[i++]
+                    val r = term()
+                    v = if (op == '+') v + r else v - r
+                } else {
+                    return v
+                }
+            }
+        }
+
+        private fun term(): Double {
+            var v = unary()
+            while (true) {
+                skip()
+                if (i < s.length && (s[i] == '*' || s[i] == '/')) {
+                    val op = s[i++]
+                    val r = unary()
+                    v = if (op == '*') v * r else v / r
+                } else {
+                    return v
+                }
+            }
+        }
+
+        private fun unary(): Double {
+            skip()
+            if (i < s.length && s[i] == '-') {
+                i++
+                return -unary()
+            }
+            if (i < s.length && s[i] == '+') {
+                i++
+                return unary()
+            }
+            val base = atom()
+            skip()
+            if (i < s.length && s[i] == '^') {
+                i++
+                return base.pow(unary())
+            }
+            return base
+        }
+
+        private fun atom(): Double {
+            skip()
+            if (i >= s.length) throw IllegalArgumentException("akhir ungkapan")
+            val c = s[i]
+            if (c == '(') {
+                i++
+                val v = expr()
+                expect(')')
+                return v
+            }
+            if (c.isDigit() || c == '.') {
+                val start = i
+                while (i < s.length && (s[i].isDigit() || s[i] == '.')) i++
+                return s.substring(start, i).toDouble()
+            }
+            if (c.isLetter()) {
+                val start = i
+                while (i < s.length && s[i].isLetter()) i++
+                val name = s.substring(start, i)
+                skip()
+                expect('(')
+                val arg = expr()
+                expect(')')
+                if (name == "dp" || name == "px") return arg
+                throw IllegalArgumentException("fungsi tak dikenal")
+            }
+            throw IllegalArgumentException("karakter tak dikenal")
+        }
+
+        private fun expect(ch: Char) {
+            skip()
+            if (i >= s.length || s[i] != ch) throw IllegalArgumentException("kurang $ch")
+            i++
+        }
+    }
+
+    // ---- Zalith Launcher 2 ------------------------------------------------------------------------
+
+    private fun convertZalith2(root: JsonObject, screen: Screen, acc: Acc) {
+        for (layer in root.objects("layers")) {
+            val normals = layer.objects("normalButtons")
+            val joysticks = layer.objects("joystickButtons")
+            if (layer.boolOr("hide", false)) {
+                // Layer yang disembunyikan biasanya dibuka lewat tombol lain; Amber tidak punya layer.
+                acc.skipped += normals.size + joysticks.size
+                continue
+            }
+            val layerMode = zalithShowMode(layer.strOr("visibilityType"))
+            for (n in normals) zalithButton(n, layerMode, screen, acc)
+            for (j in joysticks) zalithJoystick(j, layerMode, screen, acc)
+        }
+    }
+
+    private fun zalithButton(o: JsonObject, layerMode: String, screen: Screen, acc: Acc) {
+        val action = zalithAction(o.objects("clickEvents"))
+        if (action == null || (action.isScroll && acc.scrollAdded)) {
+            acc.skipped++
+            return
+        }
+        val size = zalithSize(o.obj("buttonSize"), screen)
+        val center = zalithCenter(o.obj("position"), size.first, size.second, screen)
+        val ownMode = zalithShowMode(o.strOr("visibilityType"))
+        val button = build(
+            name = o.obj("text")?.strOr("default") ?: "",
+            action = action,
+            xPercent = center.first,
+            yPercent = center.second,
+            widthDp = size.first,
+            heightDp = size.second,
+            opacity = 0.85f,
+            cornerDp = 8f,
+            toggle = o.boolOr("isToggleable", false),
+            showMode = if (ownMode == ControlShowMode.ALWAYS) layerMode else ownMode
+        )
+        if (acc.add(button) && action.isScroll) acc.scrollAdded = true
+    }
+
+    private fun zalithJoystick(o: JsonObject, layerMode: String, screen: Screen, acc: Acc) {
+        val sidePx = if (o.strOr("sizeType") == "dp") {
+            o.floatOr("sizeDp", 200f)
+        } else {
+            o.floatOr("sizePercentage", 2500f) / 10000f * screen.h
+        }
+        val side = sidePx.roundToInt().coerceIn(ControlLimits.MIN_JOYSTICK_DP, ControlLimits.MAX_JOYSTICK_DP)
+        val center = zalithCenter(o.obj("position"), side.toFloat(), side.toFloat(), screen)
+        val ownMode = zalithShowMode(o.strOr("visibilityType"))
+        addJoystick(
+            acc, center.first, center.second, side, 0.85f, o.boolOr("canLock", false),
+            if (ownMode == ControlShowMode.ALWAYS) layerMode else ownMode
+        )
+    }
+
+    /** Ukuran dalam dp: mutlak (dp) atau persen layar (100 = 1%) terhadap lebar/tinggi layar. */
+    private fun zalithSize(o: JsonObject?, screen: Screen): Pair<Float, Float> {
+        if (o == null) return Pair(50f, 48f)
+        return when (o.strOr("type")) {
+            "dp" -> Pair(o.floatOr("widthDp", 50f), o.floatOr("heightDp", 48f))
+            "percentage" -> {
+                val wRef = if (o.strOr("widthReference") == "screen_width") screen.w else screen.h
+                val hRef = if (o.strOr("heightReference") == "screen_width") screen.w else screen.h
+                Pair(
+                    o.floatOr("widthPercentage", 1400f) / 10000f * wRef,
+                    o.floatOr("heightPercentage", 1400f) / 10000f * hRef
+                )
+            }
+            else -> Pair(50f, 48f)
+        }
+    }
+
+    /** Posisi Zalith 2 (0..10000) adalah bagian dari ruang sisa layar setelah dikurangi ukuran tombol. */
+    private fun zalithCenter(pos: JsonObject?, w: Float, h: Float, screen: Screen): Pair<Float, Float> {
+        val px = (pos?.numOrNull("x") ?: 5000.0).coerceIn(0.0, 10000.0)
+        val py = (pos?.numOrNull("y") ?: 5000.0).coerceIn(0.0, 10000.0)
+        val left = (screen.w - w) * px / 10000.0
+        val top = (screen.h - h) * py / 10000.0
+        val x = (left + w / 2.0) / screen.w * 100.0
+        val y = (top + h / 2.0) / screen.h * 100.0
+        return Pair(x.toFloat(), y.toFloat())
+    }
+
+    private fun zalithShowMode(v: String): String = when (v) {
+        "in_game" -> ControlShowMode.GAME
+        "in_menu" -> ControlShowMode.MENU
+        else -> ControlShowMode.ALWAYS
+    }
+
+    private fun zalithAction(events: List<JsonObject>): Action? {
+        val keys = ArrayList<Int>()
+        var other: Action? = null
+        for (e in events) {
+            val key = e.strOr("key")
+            when (e.strOr("type")) {
+                "key" -> {
+                    val code = GLFW_KEY_BY_NAME[key]
+                    if (code != null) {
+                        if (keys.size < MAX_COMBO_KEYS && !keys.contains(code)) keys.add(code)
+                    } else if (other == null) {
+                        other = mouseByName(key)
+                    }
+                }
+                "launcher_event" -> if (other == null) other = zalithLauncherEvent(key)
+                "send_text" -> if (other == null && key.isNotBlank()) other = Action(command = key.take(MAX_COMMAND))
+            }
+        }
+        if (other != null) return other
+        return when {
+            keys.isEmpty() -> null
+            keys.size == 1 -> Action(keyCode = keys[0])
+            else -> Action(keyCode = keys[0], comboKeys = keys)
+        }
+    }
+
+    private fun zalithLauncherEvent(key: String): Action? = when {
+        key == EVENT_KEYBOARD -> Action(systemAction = "KEYBOARD")
+        key == EVENT_MENU -> Action(systemAction = "MENU")
+        key.startsWith(EVENT_SCROLL_PREFIX) -> Action(isScroll = true)
+        else -> mouseByName(key)
+    }
+
+    private fun mouseByName(key: String): Action? = when (key) {
+        "GLFW_MOUSE_BUTTON_LEFT", "GLFW_MOUSE_BUTTON_1" ->
+            Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT)
+        "GLFW_MOUSE_BUTTON_RIGHT", "GLFW_MOUSE_BUTTON_2" ->
+            Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT)
+        "GLFW_MOUSE_BUTTON_MIDDLE", "GLFW_MOUSE_BUTTON_3" ->
+            Action(isMouse = true, mouseButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE)
+        else -> null
+    }
+
+    // ---- Pembuat tombol Amber ---------------------------------------------------------------------
+
+    private fun min(a: Float, b: Float): Float = if (a < b) a else b
+
+    private fun newId(): String = "btn_" + UUID.randomUUID().toString().take(8)
+
+    private fun labelFor(action: Action): String = when {
+        action.systemAction == "KEYBOARD" -> "KB"
+        action.systemAction == "MENU" -> "MENU"
+        action.systemAction == "HIDE_GUI" -> "GUI"
+        action.isScroll -> "SCROLL"
+        action.isMouse -> when (action.mouseButton) {
+            LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT -> "RMB"
+            LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE -> "MMB"
+            else -> "LMB"
+        }
+        action.command.isNotEmpty() -> "CMD"
+        else -> KEY_LABEL_BY_CODE[action.keyCode] ?: "BTN"
+    }
+
+    private fun build(
+        name: String,
+        action: Action,
+        xPercent: Float,
+        yPercent: Float,
+        widthDp: Float,
+        heightDp: Float,
+        opacity: Float,
+        cornerDp: Float,
+        toggle: Boolean,
+        showMode: String
+    ): CustomControlButton {
+        val w = widthDp.roundToInt().coerceIn(ControlLimits.MIN_SIZE_DP, ControlLimits.MAX_WIDTH_DP)
+        val h = heightDp.roundToInt().coerceIn(ControlLimits.MIN_SIZE_DP, ControlLimits.MAX_HEIGHT_DP)
+        val isSystem = action.systemAction.isNotEmpty()
+        val isCombo = action.comboKeys.size > 1
+        val isCommand = action.command.isNotEmpty()
+        val shown = name.trim().ifEmpty { labelFor(action) }.take(MAX_NAME)
+        return CustomControlButton(
+            id = newId(),
+            name = shown,
+            keyCode = action.keyCode,
+            isMouseButton = action.isMouse,
+            mouseButton = action.mouseButton,
+            xPercent = xPercent.coerceIn(0f, 100f),
+            yPercent = yPercent.coerceIn(0f, 100f),
+            widthDp = w,
+            heightDp = h,
+            opacity = opacity.coerceIn(ControlLimits.MIN_OPACITY, 1f),
+            cornerRadiusDp = cornerDp.roundToInt().coerceIn(0, min(w.toFloat(), h.toFloat()).toInt() / 2),
+            isToggle = toggle && !isSystem && !action.isScroll,
+            isScroll = action.isScroll,
+            isSystem = isSystem,
+            systemAction = action.systemAction,
+            isMacro = isCombo || isCommand,
+            macroType = if (isCombo) "COMBO" else "COMMAND",
+            macroCommand = action.command,
+            macroComboKey = if (isCombo) action.comboKeys[0] else 0,
+            macroComboKeys = if (isCombo) action.comboKeys else emptyList(),
+            showMode = if (isSystem || !ControlShowMode.isValid(showMode)) ControlShowMode.ALWAYS else showMode
+        )
+    }
+
+    private fun addJoystick(
+        acc: Acc,
+        xPercent: Float,
+        yPercent: Float,
+        sideDp: Int,
+        opacity: Float,
+        autoSprint: Boolean,
+        showMode: String
+    ) {
+        acc.add(
+            CustomControlButton(
+                id = newId(),
+                name = "Joystick",
+                keyCode = 0,
+                xPercent = xPercent.coerceIn(0f, 100f),
+                yPercent = yPercent.coerceIn(0f, 100f),
+                widthDp = sideDp,
+                heightDp = sideDp,
+                opacity = opacity.coerceIn(ControlLimits.MIN_OPACITY, 1f),
+                cornerRadiusDp = sideDp / 2,
+                isJoystick = true,
+                autoSprint = autoSprint,
+                showMode = if (ControlShowMode.isValid(showMode)) showMode else ControlShowMode.ALWAYS
+            )
+        )
+    }
+
+    // ---- Pembaca kolom JSON yang toleran ----------------------------------------------------------
+
+    private fun JsonObject.strOr(key: String, def: String = ""): String {
+        val e = get(key)
+        if (e == null || !e.isJsonPrimitive) return def
+        return e.asString
+    }
+
+    private fun JsonObject.numOrNull(key: String): Double? {
+        val e = get(key)
+        if (e == null || !e.isJsonPrimitive) return null
+        val p = e.asJsonPrimitive
+        if (!p.isNumber) return null
+        val v = p.asDouble
+        return if (v.isNaN() || v.isInfinite()) null else v
+    }
+
+    private fun JsonObject.floatOr(key: String, def: Float): Float = numOrNull(key)?.toFloat() ?: def
+
+    private fun JsonObject.boolOr(key: String, def: Boolean): Boolean {
+        val e = get(key)
+        if (e == null || !e.isJsonPrimitive) return def
+        val p = e.asJsonPrimitive
+        return if (p.isBoolean) p.asBoolean else def
+    }
+
+    private fun JsonObject.obj(key: String): JsonObject? {
+        val e = get(key)
+        return if (e != null && e.isJsonObject) e.asJsonObject else null
+    }
+
+    private fun JsonObject.objects(key: String): List<JsonObject> {
+        val e = get(key)
+        if (e == null || !e.isJsonArray) return emptyList()
+        val out = ArrayList<JsonObject>()
+        for (item in e.asJsonArray) if (item.isJsonObject) out.add(item.asJsonObject)
+        return out
+    }
+}

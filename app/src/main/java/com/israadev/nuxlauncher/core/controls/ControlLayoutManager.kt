@@ -570,7 +570,12 @@ object ControlLayoutManager {
             if (out.size() > ControlLayoutIO.MAX_FILE_BYTES) {
                 return ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.TOO_LARGE)
             }
-            ControlLayoutIO.parse(String(out.toByteArray(), Charsets.UTF_8).removePrefix("﻿"))
+            // Posisi tombol dari launcher lain dihitung terhadap layar perangkat ini (dalam bentuk landscape)
+            val dm = context.resources.displayMetrics
+            val density = if (dm.density > 0f) dm.density else 1f
+            val longDp = maxOf(dm.widthPixels, dm.heightPixels) / density
+            val shortDp = minOf(dm.widthPixels, dm.heightPixels) / density
+            ControlLayoutIO.parse(String(out.toByteArray(), Charsets.UTF_8).removePrefix("﻿"), longDp, shortDp)
         } catch (_: Exception) {
             ControlLayoutIO.ImportResult.Failed(ControlLayoutIO.Reason.NOT_LAYOUT)
         }

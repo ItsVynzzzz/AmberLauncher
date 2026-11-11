@@ -46,11 +46,14 @@ object ControlLayoutIO {
         /**
          * @param skipped jumlah entri yang dilewati (bukan objek, atau melebihi [MAX_BUTTONS]).
          * @param macroCommands jumlah tombol makro pengetik chat/perintah, ditampilkan sebagai peringatan.
+         * @param source nama launcher asal bila berkas diubah dari format lain (Pojav/Zalith/Mojo, Zalith 2);
+         * kosong untuk berkas Amber sendiri.
          */
         class Ok(
             val buttons: List<CustomControlButton>,
             val skipped: Int,
-            val macroCommands: Int
+            val macroCommands: Int,
+            val source: String = ""
         ) : ImportResult()
 
         class Failed(val reason: Reason) : ImportResult()
@@ -107,9 +110,11 @@ object ControlLayoutIO {
 
     /**
      * Membaca isi berkas. Menerima dua bentuk: berkas ekspor (objek dengan "format") dan larik
-     * telanjang seperti berkas cadangan otomatis (controls_layout.json).
+     * telanjang seperti berkas cadangan otomatis (controls_layout.json). Berkas dari Pojav, Zalith, Mojo, dan
+     * Zalith 2 diubah dulu ke tombol Amber ([ForeignLayoutConverter]); [refWidthDp] dan [refHeightDp] adalah
+     * ukuran layar (landscape, dp) yang dipakai untuk menghitung posisi tombolnya.
      */
-    fun parse(json: String): ImportResult {
+    fun parse(json: String, refWidthDp: Float = 800f, refHeightDp: Float = 360f): ImportResult {
         if (json.length > MAX_FILE_BYTES) return ImportResult.Failed(Reason.TOO_LARGE)
 
         val root = try {
@@ -122,6 +127,12 @@ object ControlLayoutIO {
             root.asJsonArray
         } else if (root.isJsonObject) {
             val o = root.asJsonObject
+            val foreign = ForeignLayoutConverter.detect(o)
+            if (foreign != null) {
+                val r = ForeignLayoutConverter.convert(o, foreign, refWidthDp, refHeightDp, MAX_BUTTONS)
+                if (r.buttons.isEmpty()) return ImportResult.Failed(Reason.NO_BUTTONS)
+                return ImportResult.Ok(r.buttons, r.skipped, r.macroCommands, foreign.label)
+            }
             if (o.str("format", "", 32) != FORMAT) return ImportResult.Failed(Reason.NOT_LAYOUT)
             val b = o.get("buttons")
             if (b == null || !b.isJsonArray) return ImportResult.Failed(Reason.NOT_LAYOUT)

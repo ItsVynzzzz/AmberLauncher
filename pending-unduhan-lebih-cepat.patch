@@ -1,0 +1,57 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+index 4ae016f..c872c3a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+@@ -216,4 +216,8 @@ class MinecraftDownloader(
+                         val indexContent = gson.fromJson(indexFile.readText(), AssetIndexContent::class.java)
+-                        val objects = indexContent.objects.entries.toList()
++                        // Berkas terbesar (musik dan suara) diunduh lebih dulu. Kalau berada di ujung antrean, satu berkas
++                        // besar yang lambat menahan seluruh unduhan padahal koneksi lainnya sudah menganggur.
++                        val objects = indexContent.objects.entries.sortedByDescending { it.value.size }
+                         val totalObjects = objects.size
++                        val totalBytes = objects.sumOf { it.value.size.coerceAtLeast(0L) }
++                        val doneBytes = java.util.concurrent.atomic.AtomicLong(0L)
+                         val objectsDir = File(assetsDir, "objects")
+@@ -247,3 +251,7 @@ class MinecraftDownloader(
+                                     val count = downloadedAssets.incrementAndGet()
+-                                    val p = 0.65f + (count.toFloat() / totalObjects) * 0.27f
++                                    val done = doneBytes.addAndGet(entry.value.size.coerceAtLeast(0L))
++                                    // Progres menurut ukuran berkas, bukan jumlahnya: ribuan berkas kecil tidak lagi membuat
++                                    // bar melompat ke 90% lalu berhenti lama di berkas-berkas besar.
++                                    val fraction = if (totalBytes > 0L) done.toFloat() / totalBytes else count.toFloat() / totalObjects
++                                    val p = 0.65f + fraction * 0.27f
+                                     onProgress(p, "Mengunduh aset game ($count/$totalObjects)...")
+@@ -407,4 +415,5 @@ class MinecraftDownloader(
+     /**
+-     * Jumlah koneksi unduh paralel menurut RAM HP. Tiap koneksi memegang buffer dan menghitung SHA-1,
+-     * jadi di HP RAM kecil terlalu banyak koneksi membuat HP lag dan malah memperlambat unduhan.
++     * Jumlah koneksi unduh paralel. Unduhan aset berupa ribuan berkas kecil yang dibatasi latensi, bukan kecepatan,
++     * jadi koneksi yang banyak jauh lebih cepat, dan tiap koneksi hanya memakai buffer kecil. Hanya HP dengan RAM
++     * sangat kecil yang dibatasi.
+      */
+@@ -413,4 +422,3 @@ class MinecraftDownloader(
+         return when {
+-            ramMb < 3000 -> minOf(base, 6)
+-            ramMb < 4500 -> minOf(base, 12)
++            ramMb < 2500 -> minOf(base, 12)
+             else -> base
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+index 004a025..6f2f69a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstallService.kt
+@@ -226,2 +226,10 @@ class ForgeInstallService : Service() {
+         Os.setenv("LD_LIBRARY_PATH", processLd, true)
++        // Installer Forge menjalankan tiap langkahnya (processor) sebagai JVM anak yang mewarisi lingkungan ini. Tanpa
++        // opsi, JVM anak memakai G1 dan kompiler C2: berat dan lambat untuk pekerjaan singkat di CPU HP. Serial GC dan
++        // hanya kompiler C1 (TieredStopAtLevel=1) lebih cepat dan lebih hemat memori untuk pekerjaan sekali jalan seperti ini.
++        Os.setenv(
++            "JAVA_TOOL_OPTIONS",
++            "-XX:+IgnoreUnrecognizedVMOptions -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:-UsePerfData",
++            true
++        )
+ 
+@@ -263,2 +271,3 @@ class ForgeInstallService : Service() {
+             "-XX:+UseSerialGC",
++            "-XX:TieredStopAtLevel=1",
+             "-Xms64M",
+# FIN part=1/1 files=2

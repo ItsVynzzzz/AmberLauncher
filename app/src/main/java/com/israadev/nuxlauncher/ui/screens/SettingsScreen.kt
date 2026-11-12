@@ -180,6 +180,8 @@ fun SettingsScreen(
     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
     var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
+    var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
+    var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
@@ -230,7 +232,9 @@ fun SettingsScreen(
             homeAmbientIntensity = ambientIntensity,
             accentColor = accentId,
             uiStyle = uiStyleId,
-            bgDim = bgDim
+            bgDim = bgDim,
+            snowEnabled = snowOn,
+            snowAmount = snowAmount
         )
         SettingsManager.updateSettings(context, updated)
     }
@@ -1065,6 +1069,32 @@ fun SettingsScreen(
                             )
                         }
                         }
+
+                        SettingsGroup("Efek") {
+                            SettingSwitchRow(
+                                title = "Efek salju",
+                                desc = "Salju turun di Beranda dan layar lain. Bawaan mati.",
+                                checked = snowOn,
+                                onCheckedChange = {
+                                    snowOn = it
+                                    commitSettings()
+                                }
+                            )
+                            if (snowOn) {
+                                SettingDivider()
+                                SettingSliderRow(
+                                    title = "Jumlah salju",
+                                    valueText = "$snowAmount%",
+                                    value = snowAmount.toFloat(),
+                                    valueRange = 10f..100f,
+                                    steps = 8,
+                                    onValueChange = {
+                                        snowAmount = ((it / 10f).roundToInt() * 10).coerceIn(10, 100)
+                                        commitSettings()
+                                    }
+                                )
+                            }
+                        }
                     }
 
                     // ===================== TENTANG =====================
@@ -1125,6 +1155,8 @@ fun SettingsScreen(
                     accentId = reset.accentColor
                     uiStyleId = reset.uiStyle
                     bgDim = reset.bgDim
+                    snowOn = reset.snowEnabled
+                    snowAmount = reset.snowAmount
                     AmberUi.setAccent(reset.accentColor)
                     AmberUi.setStyle(reset.uiStyle)
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()

@@ -138,3 +138,7 @@ Controller dan mouse fisik	Controller and physical mouse
 Lanjutan	Advanced
 Langsung bisa dipakai	Works right away
 Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	No need to turn anything on or set anything up. Plug in a controller (gamepad) and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the stick moves the cursor. A physical mouse and keyboard work right away too. On-screen buttons hide by themselves when a controller or mouse is used. Stick speed follows the camera and cursor sensitivity above. If a controller mod (e.g. Controlify) is detected, the controller is handed straight to the mod.
+Efek	Effects
+Efek salju	Snow effect
+Salju turun di Beranda dan layar lain. Bawaan mati.	Snow falls on Home and other screens. Off by default.
+Jumlah salju	Snow amount

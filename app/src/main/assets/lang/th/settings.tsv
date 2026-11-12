@@ -134,3 +134,7 @@ Controller dan mouse fisik	คอนโทรลเลอร์และเม�
 Lanjutan	ขั้นสูง
 Langsung bisa dipakai	ใช้ได้ทันที
 Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	ไม่ต้องเปิดหรือตั้งค่าอะไร เสียบคอนโทรลเลอร์ (เกมแพด) แล้วเล่นได้เลย: สติ๊กซ้ายเดิน สติ๊กขวามองรอบๆ A กระโดด RT โจมตี LT วาง/ใช้ Y เปิดช่องเก็บของ Start = Esc ในเมนูสติ๊กจะขยับเคอร์เซอร์ เมาส์และคีย์บอร์ดจริงก็ใช้ได้ทันทีเช่นกัน ปุ่มบนหน้าจอจะซ่อนเองเมื่อใช้คอนโทรลเลอร์หรือเมาส์ ความเร็วสติ๊กเป็นไปตามความไวกล้องและเคอร์เซอร์ด้านบน หากตรวจพบ Mod คอนโทรลเลอร์ (เช่น Controlify) คอนโทรลเลอร์จะถูกส่งให้ Mod โดยตรง
+Efek	เอฟเฟกต์
+Efek salju	เอฟเฟกต์หิมะ
+Salju turun di Beranda dan layar lain. Bawaan mati.	หิมะตกบนหน้าหลักและหน้าจออื่น ปิดเป็นค่าเริ่มต้น
+Jumlah salju	ปริมาณหิมะ

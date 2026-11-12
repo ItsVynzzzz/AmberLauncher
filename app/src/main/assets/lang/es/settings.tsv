@@ -138,3 +138,7 @@ Controller dan mouse fisik	Mando y ratón físico
 Lanjutan	Avanzado
 Langsung bisa dipakai	Funciona al instante
 Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	No hace falta activar ni configurar nada. Conecta un mando (gamepad) y juega: stick izquierdo para caminar, stick derecho para mirar, A salta, RT ataca, LT coloca/usa, Y abre el inventario, Start = Esc. En los menús el stick mueve el cursor. El ratón y el teclado físicos también funcionan al instante. Los botones en pantalla se ocultan solos cuando se usa un mando o un ratón. La velocidad del stick sigue la sensibilidad de cámara y cursor de arriba. Si se detecta un mod de mando (p. ej. Controlify), el mando se cede directamente al mod.
+Efek	Efectos
+Efek salju	Efecto de nieve
+Salju turun di Beranda dan layar lain. Bawaan mati.	Cae nieve en Inicio y en otras pantallas. Desactivado por defecto.
+Jumlah salju	Cantidad de nieve

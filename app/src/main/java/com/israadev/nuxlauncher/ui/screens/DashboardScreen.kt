@@ -143,6 +143,8 @@ import com.israadev.nuxlauncher.ui.components.AmbientSampler
 import com.israadev.nuxlauncher.ui.components.AmbientState
 import com.israadev.nuxlauncher.ui.components.HomeInfo
 import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
+import com.israadev.nuxlauncher.ui.components.SnowBackLayer
+import com.israadev.nuxlauncher.ui.components.SnowFrontLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
@@ -442,6 +444,14 @@ fun DashboardScreen() {
                 )
             }
 
+            // Salju di belakang semua UI: lebat di Home, sedikit dan redup di layar lain (seperti di dalam ruangan).
+            if (launcherSettings.snowEnabled) {
+                SnowBackLayer(
+                    amount = launcherSettings.snowAmount,
+                    indoor = currentTab != "home"
+                )
+            }
+
             CompositionLocalProvider(LocalGlassBackdrop provides (if (liquid) blurBackdrop else null)) {
             when (currentTab) {
                 // Home: layar penuh tanpa sidebar dan kartu; navigasinya ada di bar bawah.
@@ -540,6 +550,14 @@ fun DashboardScreen() {
                     }
                 }
             }
+            }
+
+            // Beberapa butir salju di atas UI supaya suasana Natalnya terasa (tidak menghalangi sentuhan).
+            if (launcherSettings.snowEnabled) {
+                SnowFrontLayer(
+                    amount = launcherSettings.snowAmount,
+                    indoor = currentTab != "home"
+                )
             }
         }
 

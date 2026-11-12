@@ -107,6 +107,11 @@ data class LauncherSettings(
     val uiStyle: String = "default",
     val bgDim: Int = 50,
 
+    // Efek salju (suasana Natal): bawaan mati. Di Beranda lebat; di layar lain lebih sedikit dan redup
+    // seperti di dalam ruangan. Bisa dinyalakan di Pengaturan > Tampilan.
+    val snowEnabled: Boolean = false,
+    val snowAmount: Int = 60, // 10 - 100
+
     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
     val perfRev: Int = 0

@@ -1,0 +1,70 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	AmberLauncher 已停止运行
+Minecraft berhenti mendadak	Minecraft 突然停止运行
+Aplikasi tertutup karena kesalahan tak terduga	应用因意外错误而关闭
+Kembali ke launcher	返回启动器
+Penjelasan	说明
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	崩溃并不一定意味着启动器出了问题。模组、手机内存和图形驱动往往才是更常见的原因，所以请先自行排查，再向开发者反馈。
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	启动器因意外错误而突然停止。请把日志发给开发者，以便修复。
+Dugaan penyebab	可能的原因
+Kesalahan di dalam AmberLauncher	AmberLauncher 内部错误
+Memori (RAM) HP habis	手机内存（RAM）耗尽
+Renderer atau driver grafis	渲染器或图形驱动
+Mod, versi Java, atau file game	模组、Java 版本或游戏文件
+Belum bisa dipastikan	暂时无法确定
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	这次是启动器本身停止了，而不是游戏或模组。向开发者反馈有助于修复问题。
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	系统因手机内存不足以支撑游戏、模组或所用的图形设置而终止了游戏。这通常不是启动器的问题。请尝试降低游戏的内存分配（不要超过手机内存的一半）、减少模组并关闭其他应用。
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	游戏在图形部分或手机自带的库中停止了运行。常见原因是渲染器与这部手机不太匹配。请尝试在实例设置中更换渲染器。只有所有渲染器都失败时，问题才可能出在启动器上。
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	游戏运行时出错。最常见的原因是模组与游戏版本或加载器不匹配、模组缺少依赖，或 Java 版本不对。这通常不是启动器的问题。
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	原因只有从日志内容中才能看出。AI 可以帮你解读日志。
+Detail teknis	技术详情
+Kesalahan tak terduga di dalam aplikasi	应用内部出现意外错误
+Status keluar: {~0}	退出状态：{0}
+Cari solusi dengan AI	用 AI 寻找解决办法
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	复制日志及现成的提问，然后粘贴到 AI 聊天中。AI 通常能指出原因和解决方法。请发送日志文本，而不是截图。
+Salin log untuk AI	复制日志给 AI
+Atau buka langsung (log otomatis disalin)	或直接打开（日志会自动复制）
+Lapor ke pengembang	向开发者反馈
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	如果 AI 判断问题出在启动器上，再到 GitHub 反馈。日志会自动复制，粘贴到反馈中即可。
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	请到 GitHub 反馈，以便修复。日志会自动复制，粘贴到反馈中即可。
+Lapor di GitHub	到 GitHub 反馈
+Cara lain membagikan log	分享日志的其他方式
+Bagikan file	分享文件
+Tautan mclo.gs	mclo.gs 链接
+Mengunggah...	正在上传…
+Buka tautan	打开链接
+Log untuk AI disalin. Tempel di kolom chat AI.	已复制给 AI 的日志。请粘贴到 AI 聊天框中。
+Log disalin. Tempel di laporan.	日志已复制。请粘贴到反馈中。
+Tidak bisa membuka tautan.	无法打开链接。
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	你好，我的 Minecraft Java Edition 通过 AmberLauncher 在 Android 手机上运行时崩溃了。请用简单易懂的话解释原因（我是新手），然后一步一步给出修复方法。如果原因是某个模组，请告诉我需要删除或更换哪个模组。
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	你好，AmberLauncher 应用（适用于 Android 的 Minecraft Java Edition 启动器）自己停止运行了。请用简单易懂的话解释原因（我是新手），并给出我可以尝试的建议。如果你认为这是启动器的 Bug，请直接说明。
+Perangkat: {0}	设备：{0}
+Versi Minecraft: {0}	Minecraft 版本：{0}
+Grafis: {0}	图形：{0}
+Jumlah mod: {0}	模组数量：{0}
+Daftar mod: {0}	模组列表：{0}
+Isi log crash:	崩溃日志内容：
+Turunkan RAM ke {0} MB	将内存降至 {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	为手机留出更多空间。之后可以在“设置 > 内存”中重新调高。
+Pakai renderer Otomatis	使用自动渲染器
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	你选的渲染器可能与这部手机不太匹配。“自动”会选择最合适的。
+Coba renderer {0}	尝试 {0} 渲染器
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	当前渲染器在这部手机上似乎有问题。之后可以在“设置 > 图形”中再次更换。
+Matikan shader	关闭光影
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	光影会给 GPU 和内存带来很大负担。之后可以在游戏的视频菜单中重新开启。
+Nonaktifkan mod tersangka	禁用可疑模组
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	日志中提到的模组：{0}。之后可以在“模组”菜单中重新启用。
+Reset Java ke Otomatis	将 Java 重置为自动
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	所选的 Java 版本可能与此游戏不匹配。“自动”会选择合适的版本。
+RAM game diturunkan ke {0} MB.	游戏内存已降至 {0} MB。
+Renderer dikembalikan ke Otomatis.	渲染器已恢复为自动。
+Renderer diganti ke {0}.	渲染器已更换为 {0}。
+Shader dimatikan.	光影已关闭。
+Mod dinonaktifkan: {0}.	已禁用模组：{0}。
+Java dikembalikan ke Otomatis.	Java 已恢复为自动。
+Gagal menerapkan. Coba lewat Pengaturan.	应用失败。请尝试通过“设置”操作。
+Pemulihan cepat	快速恢复
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	点按以尝试最可能有帮助的修复。所有操作都可以撤销。
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	更改已保存。请返回启动器，然后重新启动游戏。
+Sudah diterapkan	已应用
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	游戏在图形部分或手机自带的库中停止了运行。常见原因是渲染器与这部手机不太匹配。请尝试在“设置 > 图形”中更换渲染器。只有所有渲染器都失败时，问题才可能出在启动器上。

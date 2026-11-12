@@ -51,6 +51,7 @@ import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.ui.components.AmberPage
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.amberGlass
 
@@ -101,7 +102,7 @@ fun NuxInstancePickerDialog(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "TAMBAH INSTANCE",
+                    contentDescription = Tr.t("TAMBAH INSTANCE"),
                     tint = AmberUi.Text,
                     modifier = Modifier.size(24.dp)
                 )

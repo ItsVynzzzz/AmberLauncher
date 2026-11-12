@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -278,7 +279,7 @@ fun NuxMicrosoftAuthDialog(
                 )
                 Icon(
                     imageVector = Icons.Outlined.ContentCopy,
-                    contentDescription = "Salin Kode",
+                    contentDescription = Tr.t("Salin Kode"),
                     tint = Color(0xFF0078D4),
                     modifier = Modifier.size(15.dp)
                 )

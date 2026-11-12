@@ -1,0 +1,28 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	LISTO
+SIMPAN	GUARDAR
+KEMBALI	ATRÁS
+AKTIF	ACTIVO
+DIPILIH	SELECCIONADO
+MENGERTI	ENTENDIDO
+Hapus akun	Eliminar cuenta
+Populer	Populares
+Hijau	Verde
+Ungu	Morado
+Navy	Azul marino
+Teal	Verde azulado
+Gagal terhubung ke CurseForge	No se pudo conectar con CurseForge
+Memuat data dari CurseForge...	Cargando datos de CurseForge...
+Gagal memuat dari CurseForge	No se pudo cargar desde CurseForge
+Permukaan game TextureView	Superficie del juego TextureView
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	Actívalo si la imagen del juego aparece girada 90 grados o inclinada aunque el launcher esté en horizontal (caso reportado en Minecraft 26.x con el renderizador Zink). Es un poco más pesado que lo predeterminado. Se aplica la próxima vez que abras el juego.
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	Se omitieron o fusionaron {0} elementos porque Amber no tiene un equivalente (por ejemplo el cajón, el ratón virtual, las capas ocultas y el segundo botón de desplazamiento).
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	Todos los botones se convirtieron correctamente. Revisa su posición en el editor de controles.
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	Esta disposición proviene de {0} y se convirtió al formato de Amber. {1}
+Log game AmberLauncher	Registro del juego de AmberLauncher
+Bagikan log game	Compartir registro del juego
+Log launcher AmberLauncher	Registro del launcher de AmberLauncher
+Bagikan log launcher	Compartir registro del launcher
+Batal dan keluar	Cancelar y salir
+Ubah skin & jubah	Cambiar skin y capa
+Hapus teks	Borrar texto

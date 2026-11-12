@@ -1,0 +1,57 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	Libreng RAM {0} GB
+Renderer {~0}	Renderer {0}
+Otomatis	Auto
+Lokal	Lokal
+Mengunduh {0}...	Dina-download ang {0}...
+Mengekstrak	Ine-extract
+{~0}: {1} ({2} file)	{0}: {1} ({2} file)
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1, Adreno 610, 4 GB RAM, 90 Hz na display
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	📌 Naka-pin ang FPS (nananatiling nakikita kapag nakatago ang GUI)
+\ud83d\udcdc Menampilkan Live Log Minecraft	📜 Ipinapakita ang Minecraft Live Log
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS Normal Mode (sumusunod sa visibility ng GUI)
+Gagal menyiapkan OpenJDK ({0}): {~1}	Nabigong ihanda ang OpenJDK ({0}): {1}
+Forge hanya mendukung Minecraft {0} ke atas	Minecraft {0} pataas lang ang sinusuportahan ng Forge
+Installer Forge gagal	Nabigo ang Forge installer
+version.json di installer Forge tidak terbaca	Hindi mabasa ang version.json sa Forge installer
+Path library Forge tidak aman: {0}	Hindi ligtas ang path ng Forge library: {0}
+dan {0} lainnya	at {0} pa
+Path mappings tidak aman: {0}	Hindi ligtas ang path ng mappings: {0}
+Alamat mappings Mojang kosong	Walang laman ang address ng Mojang mappings
+install_profile.json tidak ada di installer Forge	Walang install_profile.json sa Forge installer
+install_profile.json tidak terbaca	Hindi mabasa ang install_profile.json
+{0} tidak ada di installer Forge	Walang {0} sa Forge installer
+Tidak bisa membuat {0}	Hindi magawa ang {0}
+HTTP {0} dari {1}	HTTP {0} mula sa {1}
+Respons kosong dari {0}	Walang laman na response mula sa {0}
+Unduhan dibatalkan	Kinansela ang download
+Content-Range tidak cocok	Hindi tugma ang Content-Range
+Range ditolak	Tinanggihan ang Range
+Balasan kosong	Walang laman na response
+Unduhan belum lengkap ({0} dari {1} byte)	Hindi kumpleto ang download ({0} sa {1} byte)
+Berkas kosong	Walang laman ang file
+balasan bukan daftar rilis	hindi listahan ng release ang response
+NeoForge hanya mendukung Minecraft {0} ke atas	Minecraft {0} pataas lang ang sinusuportahan ng NeoForge
+Installer NeoForge gagal	Nabigo ang NeoForge installer
+version.json di installer NeoForge tidak terbaca	Hindi mabasa ang version.json sa NeoForge installer
+Path library NeoForge tidak aman: {0}	Hindi ligtas ang path ng NeoForge library: {0}
+install_profile.json tidak ada di installer NeoForge	Walang install_profile.json sa NeoForge installer
+{0} tidak ada di installer NeoForge	Walang {0} sa NeoForge installer
+\u26a1 Optimization	⚡ Optimization
+\u2699\ufe0f Technology	⚙️ Teknolohiya
+\ud83e\ude84 Magic	🪄 Mahika
+\ud83d\uddfa\ufe0f Adventure	🗺️ Pakikipagsapalaran
+\ud83d\udee0\ufe0f Utility	🛠️ Utility
+\ud83c\udfa8 Decoration	🎨 Dekorasyon
+\ud83d\udcdc Quests	📜 Mga Quest
+\u2728 Simplistic	✨ Simple
+\ud83c\udfdb\ufe0f Traditional	🏛️ Tradisyonal
+\ud83c\udf05 Realistic	🌅 Makatotohanan
+\ud83c\udfa8 Stylized	🎨 Stylized
+\ud83d\udd2e Fantasy	🔮 Pantasya
+\ud83c\udf0d Worldgen	🌍 Worldgen
+Buy me a coffee	Buy me a coffee
+LAUNCHER EXCEPTION	LAUNCHER EXCEPTION
+\ud83c\udff0 Medieval	🏰 Medieval
+Resource Pack (.zip)	Resource Pack (.zip)
+MOD LOADER	MOD LOADER

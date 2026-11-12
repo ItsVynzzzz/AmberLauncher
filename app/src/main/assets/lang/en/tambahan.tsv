@@ -1,0 +1,26 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	DONE
+SIMPAN	SAVE
+KEMBALI	BACK
+AKTIF	ACTIVE
+DIPILIH	SELECTED
+MENGERTI	GOT IT
+Hapus akun	Delete account
+Populer	Popular
+Hijau	Green
+Ungu	Purple
+Gagal terhubung ke CurseForge	Could not connect to CurseForge
+Memuat data dari CurseForge...	Loading data from CurseForge...
+Gagal memuat dari CurseForge	Failed to load from CurseForge
+Permukaan game TextureView	TextureView game surface
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	Turn on if the game display is rotated 90 degrees or looks tilted even though the launcher is in landscape (a case reported on Minecraft 26.x with the Zink renderer). Slightly heavier than the default. Applies the next time the game is opened.
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	{0} entries were skipped or merged because Amber has no equivalent for them (for example the drawer, virtual mouse, hidden layers, and the second scroll button).
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	All buttons were converted successfully. Check their positions in the control editor.
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	This layout comes from {0} and was converted to the Amber format. {1}
+Log game AmberLauncher	AmberLauncher game log
+Bagikan log game	Share game log
+Log launcher AmberLauncher	AmberLauncher launcher log
+Bagikan log launcher	Share launcher log
+Batal dan keluar	Cancel and exit
+Ubah skin & jubah	Change skin & cape
+Hapus teks	Clear text

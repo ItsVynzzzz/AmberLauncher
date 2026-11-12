@@ -1,0 +1,136 @@
+# Pengaturan
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM · {1} 个 CPU 核心
+Memori	内存
+Grafis	图形
+Kontrol	控制
+Tampilan	显示
+Memori game (RAM)	游戏内存（RAM）
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	对这部手机来说太大了，游戏和手机都可能变卡。
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Java 内存上限（-Xmx）。越大不一定越快。
+1,5 GB	1.5 GB
+Argumen JVM tambahan	额外的 JVM 参数
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	可选，供高级用户使用。填写错误可能导致游戏无法运行。
+Contoh: -XX:+UseG1GC	示例：-XX:+UseG1GC
+Konfigurasi renderer	渲染器配置
+Optimasi otomatis options.txt	自动优化 options.txt
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	自动关闭云和阴影，以获得更高的 FPS。
+Skala resolusi layar	屏幕分辨率缩放
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	越小 = FPS 越高，画面越模糊。
+Driver Vulkan	Vulkan 驱动
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	选择系统/游戏使用的 Vulkan 驱动实现。
+API grafis	图形 API
+Atur API grafis yang dipakai Minecraft modern 26.2+.	设置现代 Minecraft 26.2+ 使用的图形 API。
+Gunakan driver Vulkan sistem	使用系统 Vulkan 驱动
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	强制使用手机自带的 Vulkan 驱动（而非 Turnip）。会影响 Zink 渲染器。
+V-Sync Zink	Zink 垂直同步
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	通过系统接口为 Kopper Zink 渲染器启用垂直同步。
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	启动器文字的语言。选择“跟随系统”将使用手机的语言。
+Latar Beranda	主页背景
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	照片最省资源，GIF 流畅且负担很小，视频最流畅（高清，最高 60 fps），但更耗电。
+Ganti latar	更换背景
+Gerakkan GIF dan video	让 GIF 和视频动起来
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	关闭后仅显示静态图片。最省电、最省内存。
+Jeda saat Hemat Baterai	省电模式下暂停
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	手机的省电模式开启期间，GIF 和视频会自动暂停。
+Suara video	视频声音
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	默认关闭。其他应用正在播放音频时会自动静音。
+Volume video	视频音量
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	侧边栏和主页卡片边缘的柔和光晕。颜色随 GIF 或视频内容变化。对照片无效。
+Kekuatan ambient	氛围光强度
+Kustomisasi kontrol virtual	自定义虚拟控制
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	更改按键布局、大小、透明度、快捷栏滚动以及 Minecraft 按键映射。
+Buka editor	打开编辑器
+Mode mouse di menu	菜单中的鼠标模式
+Sentuh tombol atau slot menu langsung di mana jari menekan.	手指按在哪里，就直接点击那里的菜单按钮或栏位。
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	滑动手指移动虚拟光标，点按屏幕即可点击。
+Click (langsung)	点击（直接）
+Pukul lewat layar	触摸屏幕攻击
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	点按或按住屏幕空白区域即可攻击。关闭后，拖动视角时不会同时攻击；请改用攻击按键。
+Sensitivitas kamera	视角灵敏度
+Kecepatan memutar pandangan di dalam game.	游戏中转动视角的速度。
+Sensitivitas kursor virtual	虚拟光标灵敏度
+Kecepatan kursor saat berada di menu Minecraft.	在 Minecraft 菜单中的光标速度。
+Ukuran kursor virtual	虚拟光标大小
+Mode mouse fisik (auto-hide)	实体鼠标模式（自动隐藏）
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	连接外接鼠标时自动隐藏虚拟光标。
+Perubahan tersimpan otomatis	更改会自动保存
+Pengaturan di-reset ke default!	设置已重置为默认值！
+Reset default	重置为默认
+PILIH RENDERER GRAFIK	选择图形渲染器
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	让图形后端与你的 Minecraft 版本及设备 GPU 相匹配
+Renderer diubah ke: {0}	渲染器已更改为：{0}
+Konfigurasi {0}	{0} 配置
+Kesesuaian: {0}	兼容性：{0}
+PERINGATAN DRIVER ADRENO	ADRENO 驱动警告
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	启动器检测到你的设备使用的是 Adreno GPU。启用此选项可能导致 Zink 渲染器无法工作或崩溃。确定要启用吗？
+AKTIFKAN	启用
+Mode GC (pembersih memori Java)	GC 模式（Java 内存清理器）
+Kunci layar 60 Hz	锁定屏幕为 60 Hz
+Kualitas rekaman layar	录屏画质
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	越低对手机越轻松。省电 540p，轻量 720p，清晰 1080p。
+Hemat	省电
+Ringan	轻量
+Tajam	清晰
+FPS rekaman	录屏 FPS
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	30 fps 轻得多。60 fps 仅适合性能强的手机。
+Rekam suara mikrofon	录制麦克风声音
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	将麦克风的声音加入录像。游戏声音暂时无法录制。
+Hentikan rekaman saat HP terlalu panas	手机过热时停止录制
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	自动保存录像并停止，避免游戏因发热而变慢。
+Isi rekaman	录制内容
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	仅游戏：屏幕按键不会出现在视频中（仍可触控）。含按键：屏幕按键也会一并录入。也可以在游戏内菜单中更改。
+Hotbar sentuh	触控快捷栏
+Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	点按屏幕底部的快捷栏即可选择栏位，就像 Minecraft 基岩版那样。栏位位置随游戏的 GUI 缩放而变化。
+Geser kamera dari tombol	拖动按键转动视角
+Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	按住攻击、使用或跳跃按键并滑动手指，也会转动视角。关闭后，战斗（PvP）时视角不会漂移。
+Dukungan TouchController	TouchController 支持
+Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	实验性功能。如果已安装并连接 TouchController 模组，游玩时的触摸操作也会传递给该模组。启动器的屏幕按键和虚拟鼠标仍保持启用，因此两者可以同时使用。
+Optimasi HP RAM kecil	小内存手机优化
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	这部手机的内存为 {0} MB，因此可以调整 Java 内存清理器的工作方式。
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial：对处理器负担最轻，GC 停顿稍长。如果游戏经常卡顿，可以试试。
+Bawaan: tanpa flag GC tambahan dari launcher.	默认：启动器不添加额外的 GC 参数。
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	自动：限制内存的 G1，适合大多数手机。请先试这个。
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	下次启动游戏时生效。如需对比，请查看游戏日志中的 [Kinerja] 行。
+Mode Hemat	省电模式
+Untuk HP yang cepat panas atau baterainya cepat habis.	适用于容易发热或耗电很快的手机。
+Nyalakan Mode Hemat	开启省电模式
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	开启系统的持续性能模式和 Zink 垂直同步，并将分辨率缩放上限限制为 80%。
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	下次启动游戏时生效。关闭后会恢复之前的设置。
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	游玩时将 90/120 Hz 屏幕锁定为 60 Hz，画面更平稳，发热也略少。适合游戏很少达到 90 FPS 的情况。FPS HUD 会显示当前的 Hz。
+Cadangan & bagikan layout	备份与分享布局
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	将按键布局保存为 .json 文件，用于备份或分享，也可以载入他人的文件。
+Ekspor	导出
+Layout kontrol disimpan ke berkas	按键布局已保存到文件
+Gagal menyimpan berkas	保存文件失败
+Berkas terlalu besar untuk layout kontrol	文件过大，不能作为按键布局
+Berkas tidak berisi tombol	文件中没有按键
+Berkas ini bukan layout kontrol yang valid	此文件不是有效的按键布局
+Layout kontrol diimpor ({0} tombol)	已导入按键布局（{0} 个按键）
+Log game	游戏日志
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	每次退出 Minecraft 时，该次会话的日志都会自动保存（保留最近 10 份），不含账号令牌。如果出现问题，例如光影无法加载，请把最新的日志发给开发者。
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	还没有日志。请玩一次游戏然后退出；日志会自动保存。
+Log terbaru	最新日志
+Log sebelumnya	上一份日志
+Bagikan	分享
+Hapus semua log	删除所有日志
+Ketuk lagi untuk menghapus	再点按一次即可删除
+Log dihapus.	日志已删除。
+Log launcher	启动器日志
+Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	游戏之外启动器内部发生的事情，例如下载、登录和错误信息。如果问题出现在游戏启动之前，请分享这份日志。
+Menyiapkan log...	正在准备日志…
+Gagal menyiapkan log launcher.	无法准备启动器日志。
+Lokasi: {0}	位置：{0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	可通过“分享”按钮经 WhatsApp、Telegram 或 Google Drive 发送，也可以用文件管理器直接从该文件夹中取出。
+Plugin native library	原生库插件
+Belum ada plugin terpasang	尚未安装任何插件
+Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	安装模组所需的原生库插件 APK（Zalith/FCL 格式），例如 Distant Horizons，然后点按重新扫描。
+Pindai	扫描
+Memindai...	正在扫描…
+Pindai ulang plugin	重新扫描插件
+Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	安装或删除插件后使用。每次启动游戏时也会自动扫描插件。
+Kontrol sentuh	触控操作
+Kamera dan kursor	视角与光标
+Controller dan mouse fisik	手柄与实体鼠标
+Lanjutan	高级
+Langsung bisa dipakai	即插即用
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	无需开启或设置。插上手柄（gamepad）即可游玩：左摇杆移动，右摇杆转动视角，A 跳跃，RT 攻击，LT 放置/使用，Y 打开物品栏，Start = Esc。在菜单中，摇杆用于移动光标。实体鼠标和键盘同样即插即用。使用手柄或鼠标时，屏幕按键会自动隐藏。摇杆速度遵循上方的视角灵敏度和光标灵敏度。如果检测到手柄模组（例如 Controlify），手柄会直接交给该模组处理。

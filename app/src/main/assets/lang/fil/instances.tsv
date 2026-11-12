@@ -1,0 +1,133 @@
+# Tambah/Ubah instance, unduhan, Java
+Semua	Lahat
+Buat Instance Baru	Gumawa ng Bagong Instance
+NAMA INSTANCE	PANGALAN NG INSTANCE
+Memuat loader Fabric...	Nilo-load ang Fabric loader...
+\u26a0\ufe0f Fabric belum tersedia untuk {0}	⚠️ Wala pang Fabric para sa {0}
+SPESIFIKASI TARGET	MGA TARGET NA SPESIPIKASYON
+Memuat Fabric...	Nilo-load ang Fabric...
+Fabric Tidak Tersedia	Hindi Available ang Fabric
+Buat Instance Sekarang	Gawin Na Ngayon ang Instance
+Cari versi ({0})...	Maghanap ng bersyon ({0})...
+DAFTAR VERSI	LISTAHAN NG MGA BERSYON
+{0} versi ditemukan	{0} bersyon ang nahanap
+Memuat manifest Mojang...	Nilo-load ang Mojang manifest...
+Tidak ada versi yang cocok	Walang tumutugmang bersyon
+Nama	Pangalan
+Nama instance	Pangalan ng instance
+Lihat mod	Tingnan ang mga mod
+{0} terpasang	{0} ang naka-install
+Hapus '{0}'?	Burahin ang '{0}'?
+Semua world, mod, dan file instance dihapus permanen.	Permanenteng mabubura ang lahat ng world, mod, at file ng instance.
+Ya, hapus	Oo, burahin
+Nama instance tidak boleh kosong	Hindi maaaring walang laman ang pangalan ng instance
+Instance berhasil diperbarui!	Matagumpay na na-update ang instance!
+Simpan	I-save
+Mengambil metadata versi {0}...	Kinukuha ang metadata ng bersyon {0}...
+Versi {0} tidak ditemukan di manifest Mojang	Hindi nahanap ang bersyon {0} sa Mojang manifest
+Membaca konfigurasi versi...	Binabasa ang configuration ng bersyon...
+Mengunduh client Minecraft ({0} / {1} MB - {2}%)...	Dina-download ang Minecraft client ({0} / {1} MB - {2}%)...
+Mengunduh libraries ({0}/{1})...	Dina-download ang mga library ({0}/{1})...
+Memverifikasi asset index {0}...	Bine-verify ang asset index {0}...
+Mengunduh aset game ({0}/{1})...	Dina-download ang mga game asset ({0}/{1})...
+Menyiapkan Fabric Loader...	Inihahanda ang Fabric Loader...
+Tidak dapat menemukan Fabric loader untuk versi {0}	Walang nahanap na Fabric loader para sa bersyon {0}
+Mengambil profil Fabric ({0})...	Kinukuha ang Fabric profile ({0})...
+Gagal memuat profil Fabric: {~0}	Nabigong i-load ang Fabric profile: {0}
+Mengunduh library Fabric ({0}/{1})...	Dina-download ang mga Fabric library ({0}/{1})...
+Instalasi selesai!	Tapos na ang pag-install!
+Alamat unduhan ditolak karena tidak memakai HTTPS: {0}	Tinanggihan ang download address dahil hindi gumagamit ng HTTPS: {0}
+Isi unduhan tidak cocok dengan sidik jari resmi: {0}	Hindi tugma ang laman ng download sa opisyal na fingerprint: {0}
+Tidak dapat memuat versi Fabric untuk {0}	Hindi ma-load ang mga bersyon ng Fabric para sa {0}
+Gagal memuat profil Fabric untuk {0} ({1})	Nabigong i-load ang Fabric profile para sa {0} ({1})
+Mengekstrak Java Runtime ({0} universal)...	Ine-extract ang Java Runtime ({0} universal)...
+Mengekstrak runtime universal ({0})	Ine-extract ang universal runtime ({0})
+Mengekstrak Java Runtime ({0} bin-{1})...	Ine-extract ang Java Runtime ({0} bin-{1})...
+Mengekstrak native binary ({0} {1})	Ine-extract ang native binary ({0} {1})
+Memverifikasi izin sistem OpenJDK...	Bine-verify ang mga system permission ng OpenJDK...
+Verifikasi OpenJDK {0} tidak lengkap setelah ekstraksi.	Hindi kumpleto ang verification ng OpenJDK {0} pagkatapos ng extraction.
+Ekstraksi OpenJDK {0} selesai!	Tapos na ang extraction ng OpenJDK {0}!
+Membongkar bytecode Java 8: {0} ({1}/{2})...	Ina-unpack ang Java 8 bytecode: {0} ({1}/{2})...
+Profil Fabric ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hindi pa naka-install ang Fabric profile ({0}). Pakipindot ang I-DOWNLOAD button sa instance!
+Lokasi folder disalin ke clipboard:\n{0}	Nakopya sa clipboard ang lokasyon ng folder:\n{0}
+Buka Folder	Buksan ang Folder
+Memuat versi Forge...	Nilo-load ang mga bersyon ng Forge...
+\u26a0\ufe0f Forge belum tersedia untuk {0}	⚠️ Wala pang Forge para sa {0}
+\u26a0\ufe0f Forge hanya untuk Minecraft 1.13 ke atas	⚠️ Para lang sa Minecraft 1.13 pataas ang Forge
+Disarankan	Inirerekomenda
+Terbaru	Pinakabago
+Memuat Forge...	Nilo-load ang Forge...
+Forge Tidak Tersedia	Hindi Available ang Forge
+Profil Forge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hindi pa naka-install ang Forge profile ({0}). Pakipindot ang I-DOWNLOAD button sa instance!
+Mengunduh installer Forge {0}...	Dina-download ang Forge installer {0}...
+Mengunduh library Forge ({0}/{1})...	Dina-download ang mga Forge library ({0}/{1})...
+Menyiapkan Java ({0})...	Inihahanda ang Java ({0})...
+Memasang Forge {0}...	Ini-install ang Forge {0}...
+Memasang Forge {0} ({1}/{2})...	Ini-install ang Forge {0} ({1}/{2})...
+Forge {0} terpasang	Naka-install na ang Forge {0}
+Tidak dapat menemukan Forge untuk versi {0}	Walang nahanap na Forge para sa bersyon {0}
+Tidak ada versi Forge untuk {0}	Walang bersyon ng Forge para sa {0}
+Versi Forge belum dipilih	Wala pang napiling bersyon ng Forge
+Forge hanya mendukung Minecraft 1.13 ke atas	Minecraft 1.13 pataas lang ang sinusuportahan ng Forge
+Installer Forge {0} rusak atau tidak lengkap	Sira o hindi kumpleto ang Forge installer {0}
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Hindi nakilala ang format ng Forge installer na ito (Kailangan ng Amber ang Forge 1.13 pataas)
+Installer Forge untuk Minecraft {0}, bukan {1}	Para sa Minecraft {0} ang Forge installer na ito, hindi para sa {1}
+Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Nabigong i-download ang mga Forge library: {0}. Suriin ang koneksyon at subukan ulit.
+Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Natapos ang Forge installer pero hindi nahanap ang na-patch na Minecraft jar ({0})
+Gagal menyiapkan Java {0}: {1}	Nabigong ihanda ang Java {0}: {1}
+Installer Forge gagal (kode {0}): {1}	Nabigo ang Forge installer (code {0}): {1}
+Installer Forge gagal (kode {0})	Nabigo ang Forge installer (code {0})
+Mojang tidak menyediakan mappings untuk Minecraft {0}	Hindi nagbibigay ang Mojang ng mga mapping para sa Minecraft {0}
+Pemasangan Forge	Pag-install ng Forge
+Memasang Forge	Ini-install ang Forge
+Proses ini hanya berjalan sekali per versi Forge.	Isang beses lang tumatakbo ang prosesong ito sa bawat bersyon ng Forge.
+Forge dipasang sekali saat instance diunduh pertama kali.	Isang beses ini-install ang Forge, kapag unang dina-download ang instance.
+Ruang penyimpanan tidak cukup untuk memasang Forge (tersisa {0} MB, butuh minimal {1} MB)	Kulang ang storage para i-install ang Forge ({0} MB ang natitira, kailangan ng hindi bababa sa {1} MB)
+Memuat versi NeoForge...	Nilo-load ang mga bersyon ng NeoForge...
+\u26a0\ufe0f NeoForge belum tersedia untuk {0}	⚠️ Wala pang NeoForge para sa {0}
+\u26a0\ufe0f NeoForge hanya untuk Minecraft 1.20.2 ke atas	⚠️ Para lang sa Minecraft 1.20.2 pataas ang NeoForge
+Memuat NeoForge...	Nilo-load ang NeoForge...
+NeoForge Tidak Tersedia	Hindi Available ang NeoForge
+Profil NeoForge ({0}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hindi pa naka-install ang NeoForge profile ({0}). Pakipindot ang I-DOWNLOAD button sa instance!
+Mengunduh installer NeoForge {0}...	Dina-download ang NeoForge installer {0}...
+Mengunduh library NeoForge ({0}/{1})...	Dina-download ang mga NeoForge library ({0}/{1})...
+Memasang NeoForge {0}...	Ini-install ang NeoForge {0}...
+Memasang NeoForge {0} ({1}/{2})...	Ini-install ang NeoForge {0} ({1}/{2})...
+NeoForge {0} terpasang	Naka-install na ang NeoForge {0}
+Tidak dapat menemukan NeoForge untuk versi {0}	Walang nahanap na NeoForge para sa bersyon {0}
+Tidak ada versi NeoForge untuk {0}	Walang bersyon ng NeoForge para sa {0}
+Versi NeoForge belum dipilih	Wala pang napiling bersyon ng NeoForge
+NeoForge hanya mendukung Minecraft 1.20.2 ke atas	Minecraft 1.20.2 pataas lang ang sinusuportahan ng NeoForge
+Installer NeoForge {0} rusak atau tidak lengkap	Sira o hindi kumpleto ang NeoForge installer {0}
+Format installer NeoForge ini tidak dikenali (Amber butuh NeoForge 1.20.2 ke atas)	Hindi nakilala ang format ng NeoForge installer na ito (Kailangan ng Amber ang NeoForge 1.20.2 pataas)
+Installer NeoForge untuk Minecraft {0}, bukan {1}	Para sa Minecraft {0} ang NeoForge installer na ito, hindi para sa {1}
+Gagal mengunduh library NeoForge: {0}. Periksa koneksi lalu coba lagi.	Nabigong i-download ang mga NeoForge library: {0}. Suriin ang koneksyon at subukan ulit.
+Installer NeoForge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Natapos ang NeoForge installer pero hindi nahanap ang na-patch na Minecraft jar ({0})
+Installer NeoForge gagal (kode {0}): {1}	Nabigo ang NeoForge installer (code {0}): {1}
+Installer NeoForge gagal (kode {0})	Nabigo ang NeoForge installer (code {0})
+Memasang NeoForge	Ini-install ang NeoForge
+Proses ini hanya berjalan sekali per versi NeoForge.	Isang beses lang tumatakbo ang prosesong ito sa bawat bersyon ng NeoForge.
+NeoForge dipasang sekali saat instance diunduh pertama kali.	Isang beses ini-install ang NeoForge, kapag unang dina-download ang instance.
+Ruang penyimpanan tidak cukup untuk memasang NeoForge (tersisa {0} MB, butuh minimal {1} MB)	Kulang ang storage para i-install ang NeoForge ({0} MB ang natitira, kailangan ng hindi bababa sa {1} MB)
+Buat Instance	Gumawa ng Instance
+Cari versi...	Maghanap ng bersyon...
+Memuat versi Minecraft...	Nilo-load ang mga bersyon ng Minecraft...
+Memuat versi yang didukung {0}...	Nilo-load ang mga bersyong sinusuportahan ng {0}...
+Gagal memuat daftar versi Minecraft	Nabigong i-load ang listahan ng mga bersyon ng Minecraft
+Dirilis {0}	Inilabas noong {0}
+LOADER {0}	{0} LOADER
+Memuat loader {0}...	Nilo-load ang {0} loader...
+Loader {0} belum tersedia untuk Minecraft {1}	Wala pang {0} loader para sa Minecraft {1}
+Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	Awtomatikong pinipili ang pinakabagong bersyon. I-tap ang iba kung kailangan mo ng mas lumang loader.
+INSTANCE ARCHITECT	TAGABUO NG INSTANCE
+Default: {0} {1}	Default: {0} {1}
+MOD LOADER ENGINE	ENGINE NG MOD LOADER
+Auto ({0})	Auto ({0})
+Failed to download {0}: {1}	Nabigong i-download ang {0}: {1}
+Failed to download {0}	Nabigong i-download ang {0}
+Empty body for {0}	Walang laman ang body para sa {0}
+HTTP Error {0} from {1}	HTTP Error {0} mula sa {1}
+HTTP Error {0}	HTTP Error {0}
+Empty response body	Walang laman ang response body
+Folder: {0}	Folder: {0}
+Unable to resolve host "{0}": System DNS and Fallback DoH failed	Hindi ma-resolve ang host na "{0}": nabigo ang System DNS at Fallback DoH

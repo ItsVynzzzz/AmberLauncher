@@ -1,0 +1,68 @@
+# Mesin Rust (Horizon)
+Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	此构建未包含 Rust 引擎。添加方法见 docs/rust-engine.md。
+Mesin Rust butuh Android 9 (API 28) ke atas.	Rust 引擎需要 Android 9（API 28）或更高版本。
+Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	Rust 引擎仅适用于 64 位（arm64）手机。
+RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	此手机的内存对 Rust 引擎来说比较紧张（建议 4 GB 及以上）。游戏可能会自行关闭。
+Mesin Rust gagal dibuka: {0}	无法打开 Rust 引擎：{0}
+MESIN RUST (HORIZON)	RUST 引擎（HORIZON）
+Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	Rust 引擎会取代整个 Java 版 Minecraft 客户端：不使用 Java，也不支持 Fabric、Forge 或 NeoForge 模组。
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	仅支持 Minecraft {0}。引擎会在首次打开时自行下载游戏资源（约 500 MiB）。
+Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	实验性：需要 Android 9 及以上和 64 位手机。
+Tanpa Java	无需 Java
+Jenis berkas ini belum didukung mesin Rust.	Rust 引擎暂不支持此类文件。
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	文件名不适用于 Rust 引擎（过长或含有禁用字符）。
+Mesin Rust hanya menerima berkas .zip di sini.	Rust 引擎此处只接受 .zip 文件。
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	文件超过 256 MB，对 Rust 引擎来说过大。
+Arsip rusak atau tidak bisa dibaca.	压缩包已损坏或无法读取。
+Arsip berisi terlalu banyak berkas.	压缩包内的文件过多。
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	压缩包含有不安全或重复的路径，因此未安装。
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	压缩包解压后过大（超过 512 MB）。
+Metadata resource pack (pack.mcmeta) tidak valid.	资源包元数据（pack.mcmeta）无效。
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	此文件不是资源包：在压缩包顶层未找到 pack.mcmeta。
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	此文件不是光影包：在压缩包顶层未找到 shaders 文件夹。
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	这是 Horizon 原生光影。请在“浏览”界面中从 Horizon 来源安装（.hshader 格式）。
+Tidak ada berkas .zip yang cocok di versi ini.	此版本中没有匹配的 .zip 文件。
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	来源未提供文件校验值，因此无法验证下载。
+Gagal menyimpan berkas ke folder mesin Rust.	无法将文件保存到 Rust 引擎文件夹。
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	尚未生成游戏设置。请先打开一次游戏，进入“设置”并修改任意一个选项，然后再试。
+Gagal menyimpan pilihan ke pengaturan mesin.	无法将所选内容保存到引擎设置。
+Memeriksa {0}...	正在检查 {0}…
+Gagal membuka berkas yang dipilih	无法打开所选文件
+Coba ubah kata kunci	请尝试更换关键词
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Rust 引擎：在“已安装”列表中打开开关即可使用。下次打开游戏时生效。
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Rust 引擎上的光影仍处于测试阶段，可能会加重手机负担。
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	32 位 Rust 引擎仅适用于 ARM（armeabi-v7a）手机。
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	32 位手机上为实验性功能：需要 Android 9 及以上，且可能更慢。
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	Rust 引擎的模组使用 .hmod 格式，而不是 Fabric 或 Forge 的 .jar 文件。
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	模组文件超过 32 MB，对 Rust 引擎来说过大。
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	模组解压后过大（超过 64 MB）。
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	这不是 Horizon 模组：在压缩包顶层未找到 horizon-mod.toml。
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	模组清单（horizon-mod.toml）无效或不受支持。
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	此模组不含代码（mod.wasm），也不是内容模组（registries 能力），因此无法安装。
+Kode mod (mod.wasm) lebih dari 32 MB.	模组代码（mod.wasm）超过 32 MB。
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	已存在 ID 相同的文件夹形式模组。请先删除旧的。
+Gagal menyimpan pilihan mod ke pengaturan mesin.	无法将模组选择保存到引擎设置。
+Mod hanya bisa dihidupkan di APK 64-bit.	模组只能在 64 位 APK 中启用。
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	未找到该模组，或无法读取其清单。
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	按住 Z 键可缩放；可在游戏内的 Options > Mods 中设置
+Peta kecil yang bisa diatur di sudut layar	可在屏幕角落设置的小地图
+Resep dan kegunaan item di samping inventori	在物品栏旁显示物品的配方和用途
+Modul F3 yang bisa diatur untuk layar debug	可为 F3 调试界面配置的模块
+Resep	配方
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	无法读取 Horizon 目录。请稍后再试。
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	Horizon 目录使用了更新的格式。请更新 Amber。
+Tidak ada berkas yang cocok di versi ini.	此版本中没有匹配的文件。
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	目录未提供 SHA-256 校验值，因此无法验证下载。
+Alamat unduhan tidak dikenali, jadi ditolak.	无法识别下载地址，已被拒绝。
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	文件大小与目录中记载的不一致，因此未安装。
+Memuat data dari Horizon...	正在从 Horizon 加载数据…
+Gagal memuat dari Horizon	从 Horizon 加载失败
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	Rust 引擎的模组使用 .hmod 格式（不是 Fabric 或 Forge 的 .jar 文件）。含代码的模组安装后默认处于关闭状态；请在游戏内的 Options > Mods 中查看其权限后再启用。
+Konten	内容
+Berkode	含代码
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	这不是 Horizon 原生光影：压缩包根目录中未找到 horizon-shaders.toml。
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	Horizon 原生光影过大（文件超过 16 MB、内容超过 8 MB，或存在过大的单个文件）。
+Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon 来源：Rust 引擎原生光影（.hshader）。
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth 来源：经典光影，与 Rust 引擎的兼容性仍然有限。
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon 来源：为 Rust 引擎制作或测试过的资源包。
+Coba ubah kata kunci atau pindah ke sumber Modrinth	请尝试更换关键词，或切换到 Modrinth 来源

@@ -1,0 +1,136 @@
+# Pengaturan
+{0} GB RAM \u00b7 {1} inti CPU	{0} GB RAM · {1} CPU core
+Memori	Memory
+Grafis	Graphics
+Kontrol	Controls
+Tampilan	Display
+Memori game (RAM)	Memory ng game (RAM)
+Terlalu besar untuk HP ini, game dan HP bisa jadi lambat.	Masyadong malaki para sa phone na ito; maaaring bumagal ang game at ang phone.
+Batas memori Java (-Xmx). Lebih besar tidak selalu lebih cepat.	Limitasyon ng memory ng Java (-Xmx). Hindi laging mas mabilis ang mas malaki.
+1,5 GB	1.5 GB
+Argumen JVM tambahan	Mga karagdagang JVM argument
+Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.	Opsyonal, para sa mga advanced na user. Maaaring hindi tumakbo ang game kapag mali ang inilagay.
+Contoh: -XX:+UseG1GC	Halimbawa: -XX:+UseG1GC
+Konfigurasi renderer	Mga setting ng renderer
+Optimasi otomatis options.txt	Auto-optimize ng options.txt
+Mematikan awan dan bayangan secara otomatis supaya FPS lebih tinggi.	Awtomatikong ino-off ang mga ulap at anino para mas mataas ang FPS.
+Skala resolusi layar	Scale ng resolution ng screen
+Lebih kecil = FPS lebih tinggi, gambar lebih buram.	Mas maliit = mas mataas na FPS, mas malabong larawan.
+Driver Vulkan	Vulkan driver
+Pilih implementasi driver Vulkan yang dipakai sistem/game.	Piliin ang implementasyon ng Vulkan driver na gagamitin ng system/game.
+API grafis	Graphics API
+Atur API grafis yang dipakai Minecraft modern 26.2+.	Itinatakda ang graphics API na gagamitin ng modernong Minecraft 26.2+.
+Gunakan driver Vulkan sistem	Gamitin ang Vulkan driver ng system
+Paksa pakai driver Vulkan bawaan HP (bukan Turnip). Memengaruhi renderer Zink.	Piliting gamitin ang built-in na Vulkan driver ng phone (hindi Turnip). Nakakaapekto sa Zink renderer.
+V-Sync Zink	Zink V-Sync
+Sinkronisasi vertikal untuk renderer Kopper Zink lewat antarmuka sistem.	Vertical sync para sa Kopper Zink renderer sa pamamagitan ng system interface.
+Bahasa teks di launcher. Ikuti sistem memakai bahasa HP.	Wika ng text sa launcher. Ginagamit ng "Sundan ang system" ang wika ng phone mo.
+Latar Beranda	Background ng Home
+Foto paling ringan, GIF bergerak dengan ringan, video paling halus (HD, bisa 60 fps) tapi memakai baterai lebih banyak.	Pinakamagaan ang mga larawan, magaan ang galaw ng mga GIF, pinakamakinis ang mga video (HD, hanggang 60 fps) pero mas malakas sa baterya.
+Ganti latar	Palitan ang background
+Gerakkan GIF dan video	I-animate ang mga GIF at video
+Matikan untuk menampilkan gambar diam saja. Paling hemat baterai dan RAM.	I-off para larawan lang ang ipakita. Pinakatipid sa baterya at RAM.
+Jeda saat Hemat Baterai	I-pause sa Battery Saver
+GIF dan video berhenti otomatis selama mode Hemat Baterai HP menyala.	Awtomatikong humihinto ang mga GIF at video habang naka-on ang Battery Saver mode ng phone.
+Suara video	Tunog ng video
+Bawaan mati. Otomatis bisu bila aplikasi lain sedang memutar musik.	Naka-off bilang default. Awtomatikong imu-mute kapag may ibang app na nagpe-play ng audio.
+Volume video	Volume ng video
+Cahaya lembut di sidebar dan tepi kartu Beranda. Warnanya mengikuti isi GIF atau video. Tidak berlaku untuk foto.	Malambot na glow sa sidebar at mga gilid ng mga card sa Home. Sumusunod ang kulay nito sa GIF o video. Hindi ito para sa mga larawan.
+Kekuatan ambient	Lakas ng ambient
+Kustomisasi kontrol virtual	I-customize ang mga virtual control
+Ubah tata letak tombol, ukuran, transparansi, scroll hotbar, dan pemetaan tombol Minecraft.	Baguhin ang layout ng button, laki, transparency, pag-scroll ng hotbar, at key mapping ng Minecraft.
+Buka editor	Buksan ang editor
+Mode mouse di menu	Mouse mode sa mga menu
+Sentuh tombol atau slot menu langsung di mana jari menekan.	Direktang pindutin ang button o slot ng menu kung saan mo idinidiin ang daliri.
+Geser jari untuk menggerakkan kursor virtual, ketuk layar untuk klik.	I-slide ang daliri para igalaw ang virtual cursor, i-tap ang screen para mag-click.
+Click (langsung)	Click (direkta)
+Pukul lewat layar	Umatake sa pamamagitan ng pagpindot sa screen
+Ketuk atau tahan di area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul; pakai tombol pukul.	I-tap o pindutin nang matagal ang walang laman na bahagi ng screen para umatake. I-off para hindi sumama ang pag-atake kapag ginagalaw ang camera; gamitin ang attack button.
+Sensitivitas kamera	Sensitivity ng camera
+Kecepatan memutar pandangan di dalam game.	Bilis ng pag-ikot ng tanaw sa loob ng game.
+Sensitivitas kursor virtual	Sensitivity ng virtual cursor
+Kecepatan kursor saat berada di menu Minecraft.	Bilis ng cursor habang nasa mga menu ng Minecraft.
+Ukuran kursor virtual	Laki ng virtual cursor
+Mode mouse fisik (auto-hide)	Physical mouse mode (auto-hide)
+Sembunyikan kursor virtual otomatis jika mouse eksternal tersambung.	Awtomatikong itago ang virtual cursor kapag nakakonekta ang external na mouse.
+Perubahan tersimpan otomatis	Awtomatikong nase-save ang mga pagbabago
+Pengaturan di-reset ke default!	Na-reset sa default ang mga setting!
+Reset default	I-reset sa default
+PILIH RENDERER GRAFIK	PUMILI NG GRAPHICS RENDERER
+Sesuaikan backend grafis dengan Minecraft & GPU perangkat	Itugma ang graphics backend sa bersyon ng Minecraft at sa GPU ng device mo
+Renderer diubah ke: {0}	Pinalitan ang renderer sa: {0}
+Konfigurasi {0}	Mga setting ng {0}
+Kesesuaian: {0}	Compatibility: {0}
+PERINGATAN DRIVER ADRENO	BABALA SA ADRENO DRIVER
+Launcher mendeteksi perangkatmu menggunakan GPU Adreno. Mengaktifkan opsi ini dapat menyebabkan perender Zink tidak berfungsi atau crash. Apakah Anda yakin ingin mengaktifkannya?	Natukoy ng launcher na Adreno GPU ang gamit ng device mo. Maaaring tumigil sa paggana o mag-crash ang Zink renderer kapag in-enable ito. Sigurado ka bang gusto mo itong i-enable?
+AKTIFKAN	I-ENABLE
+Mode GC (pembersih memori Java)	GC mode (tagalinis ng memory ng Java)
+Kunci layar 60 Hz	I-lock ang screen sa 60 Hz
+Kualitas rekaman layar	Kalidad ng screen recording
+Makin kecil makin ringan untuk HP. Hemat 540p, Ringan 720p, Tajam 1080p.	Mas maliit, mas magaan sa phone. Eco 540p, Light 720p, Sharp 1080p.
+Hemat	Eco
+Ringan	Light
+Tajam	Sharp
+FPS rekaman	FPS ng recording
+30 fps jauh lebih ringan. 60 fps hanya untuk HP yang kuat.	Mas magaan ang 30 fps. Ang 60 fps ay para lang sa malalakas na phone.
+Rekam suara mikrofon	I-record ang audio ng mikropono
+Menambahkan suara dari mikrofon ke rekaman. Suara game belum ikut terekam.	Idinaragdag ang audio ng mikropono sa recording. Hindi pa naire-record ang tunog ng game.
+Hentikan rekaman saat HP terlalu panas	Itigil ang recording kapag masyadong uminit ang phone
+Menyimpan rekaman dan berhenti otomatis supaya game tidak ikut melambat karena panas.	Sine-save ang recording at awtomatikong humihinto para hindi bumagal ang game dahil sa init.
+Isi rekaman	Laman ng recording
+Game saja: tombol layar disembunyikan dari video (tetap bisa disentuh). Dengan tombol: tombol layar ikut terekam. Bisa diganti juga dari menu dalam game.	Game lang: nakatago sa video ang mga on-screen button (gumagana pa rin ang pagpindot). Kasama ang mga button: naire-record din ang mga on-screen button. Mapapalitan din ito mula sa menu sa loob ng game.
+Hotbar sentuh	Touch hotbar
+Ketuk hotbar di bagian bawah layar untuk memilih slot, seperti di Minecraft Bedrock. Posisi slot mengikuti GUI scale game.	I-tap ang hotbar sa ibaba ng screen para pumili ng slot, tulad sa Minecraft Bedrock. Sinusunod ng posisyon ng slot ang GUI scale ng game.
+Geser kamera dari tombol	Tumingin sa pamamagitan ng pag-drag sa mga button
+Menahan tombol pukul, pakai, atau lompat lalu menggeser jari ikut memutar kamera. Matikan supaya pandangan tidak bergeser saat bertarung (PvP).	Kapag pinindot nang matagal ang attack, use, o jump button at ini-slide ang daliri, umiikot din ang camera. I-off para hindi lumihis ang tanaw mo habang nakikipaglaban (PvP).
+Dukungan TouchController	Suporta sa TouchController
+Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.	Eksperimental. Kung naka-install at nakakonekta ang TouchController mod, ipinapasa rin sa mod ang mga pagpindot habang naglalaro. Nananatiling aktibo ang mga button at virtual mouse ng launcher, kaya magagamit ang dalawa nang sabay.
+Optimasi HP RAM kecil	Pag-tune para sa phone na maliit ang RAM
+RAM HP ini {0} MB, jadi cara kerja pembersih memori Java bisa disetel.	{0} MB ang RAM ng phone na ito, kaya maaaring i-tune kung paano gumagana ang tagalinis ng memory ng Java.
+Serial: paling ringan untuk prosesor, jeda GC sedikit lebih panjang. Coba bila game sering tersendat.	Serial: pinakamagaan para sa processor, bahagyang mas mahaba ang GC pause. Subukan ito kung madalas mag-stutter ang game.
+Bawaan: tanpa flag GC tambahan dari launcher.	Default: walang karagdagang GC flag mula sa launcher.
+Otomatis: G1 dengan memori terbatas, cocok untuk kebanyakan HP. Coba ini dulu.	Auto: G1 na may limitadong memory, maganda para sa karamihan ng phone. Subukan ito muna.
+Berlaku saat game dijalankan berikutnya. Untuk membandingkan, lihat baris [Kinerja] di log game.	Ipinapatupad sa susunod na pagpapatakbo ng game. Para maghambing, tingnan ang mga linyang [Kinerja] sa game log.
+Mode Hemat	Power Saver Mode
+Untuk HP yang cepat panas atau baterainya cepat habis.	Para sa mga phone na mabilis uminit o mabilis maubusan ng baterya.
+Nyalakan Mode Hemat	I-on ang Power Saver Mode
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal 80%.	Ino-on ang sustained performance mode ng system at ang Zink V-Sync, at nililimitahan sa 80% ang maximum na resolution scale.
+Berlaku saat game dijalankan berikutnya. Dimatikan kembali, setelan sebelumnya dipulihkan.	Ipinapatupad sa susunod na pagpapatakbo ng game. Kapag in-off ulit, ibabalik ang dating mga setting mo.
+Layar 90/120 Hz dikunci 60 Hz saat main supaya gerak lebih rata dan sedikit lebih hemat panas. Cocok bila game jarang mencapai 90 FPS. HUD FPS menampilkan Hz yang aktif.	Nila-lock sa 60 Hz ang 90/120 Hz na screen habang naglalaro para mas makinis ang galaw at bahagyang mas kaunti ang init. Maganda kung bihirang umabot sa 90 FPS ang game. Ipinapakita ng FPS HUD ang aktibong Hz.
+Cadangan & bagikan layout	I-back up at ibahagi ang layout
+Simpan tata letak tombol ke berkas .json untuk dicadangkan atau dibagikan, atau muat dari berkas milik orang lain.	I-save ang layout ng mga button sa .json file para i-back up o ibahagi, o mag-load mula sa file ng iba.
+Ekspor	I-export
+Layout kontrol disimpan ke berkas	Na-save sa file ang layout ng mga control
+Gagal menyimpan berkas	Nabigong i-save ang file
+Berkas terlalu besar untuk layout kontrol	Masyadong malaki ang file para sa layout ng mga control
+Berkas tidak berisi tombol	Walang button sa file
+Berkas ini bukan layout kontrol yang valid	Hindi valid na layout ng mga control ang file na ito
+Layout kontrol diimpor ({0} tombol)	Na-import ang layout ng mga control ({0} button)
+Log game	Mga log ng game
+Setiap keluar dari Minecraft, log sesi itu disimpan otomatis (10 terakhir), tanpa token akun. Bila ada masalah, misalnya shader tidak termuat, bagikan log terbaru ke pengembang.	Sa bawat paglabas mo sa Minecraft, awtomatikong sine-save ang log ng session na iyon (huling 10), walang account token. Kung may mali, halimbawa hindi nag-lo-load ang mga shader, ibahagi ang pinakabagong log sa developer.
+Belum ada log. Mainkan game sekali lalu keluar; log tersimpan otomatis.	Wala pang log. Maglaro nang isang beses at saka lumabas; awtomatikong sine-save ang mga log.
+Log terbaru	Pinakabagong log
+Log sebelumnya	Naunang log
+Bagikan	Ibahagi
+Hapus semua log	Burahin ang lahat ng log
+Ketuk lagi untuk menghapus	I-tap ulit para burahin
+Log dihapus.	Nabura ang mga log.
+Log launcher	Log ng launcher
+Kejadian di dalam launcher di luar game, misalnya unduhan, login, dan pesan galat. Bagikan bila masalahnya muncul sebelum game dimulai.	Mga nangyayari sa loob ng launcher sa labas ng game, tulad ng mga download, sign-in, at mga error message. Ibahagi ito kapag lumabas ang problema bago magsimula ang game.
+Menyiapkan log...	Inihahanda ang log...
+Gagal menyiapkan log launcher.	Hindi naihanda ang log ng launcher.
+Lokasi: {0}	Lokasyon: {0}
+Kirim lewat WhatsApp, Telegram, atau Google Drive dari tombol Bagikan, atau ambil langsung dari folder itu lewat pengelola berkas.	Ipadala ito sa WhatsApp, Telegram, o Google Drive gamit ang Ibahagi button, o kunin mismo sa folder na iyon gamit ang file manager.
+Plugin native library	Mga native library plugin
+Belum ada plugin terpasang	Walang naka-install na plugin
+Pasang APK plugin native library (format Zalith/FCL) yang dibutuhkan mod, misalnya Distant Horizons, lalu ketuk untuk memindai ulang.	I-install ang native library plugin APK (format na Zalith/FCL) na kailangan ng isang mod, halimbawa Distant Horizons, saka i-tap para i-scan ulit.
+Pindai	I-scan
+Memindai...	Nag-i-scan...
+Pindai ulang plugin	I-scan ulit ang mga plugin
+Gunakan setelah memasang atau menghapus plugin. Plugin juga dipindai otomatis tiap game dijalankan.	Gamitin pagkatapos mag-install o mag-alis ng plugin. Awtomatiko ring ini-scan ang mga plugin sa tuwing nagsisimula ang game.
+Kontrol sentuh	Mga touch control
+Kamera dan kursor	Camera at cursor
+Controller dan mouse fisik	Controller at physical mouse
+Lanjutan	Advanced
+Langsung bisa dipakai	Gumagana agad
+Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Hindi kailangang i-on o i-set up. Isaksak ang controller (gamepad) at maglaro: ang kaliwang stick ay lumalakad, ang kanang stick ay tumitingin, A ay talon, RT ay umaatake, LT ay naglalagay/gumagamit, Y ay nagbubukas ng inventory, Start = Esc. Sa mga menu, ginagalaw ng stick ang cursor. Gumagana agad din ang physical mouse at keyboard. Kusang nagtatago ang mga on-screen button kapag gumagamit ng controller o mouse. Sinusunod ng bilis ng stick ang sensitivity ng camera at cursor sa itaas. Kung may matukoy na controller mod (hal. Controlify), direktang ibinibigay sa mod ang controller.

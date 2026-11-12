@@ -1,0 +1,3 @@
+# Pengaturan > Game > Grafis: cache shader MobileGlues
+Cache shader MobileGlues	MobileGlues 着色器缓存
+Menyimpan hasil terjemahan shader di HP, jadi game berikutnya memuat shader lebih cepat dan lebih sedikit patah-patah. Dimatikan = MobileGlues memakai pengaturan bawaannya tanpa cache. Berlaku saat game dijalankan berikutnya.	将转换后的着色器保存在手机上，下次游戏加载着色器会更快，卡顿也更少。关闭 = MobileGlues 使用自身默认设置，不使用缓存。下次启动游戏时生效。

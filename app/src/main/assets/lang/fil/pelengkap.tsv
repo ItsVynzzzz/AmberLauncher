@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	Pointer (Default)
+Penunjuk (Kursor Teks)	Pointer (Text cursor)
+Penunjuk (Tangan)	Pointer (Kamay)
+Penunjuk (Crosshair)	Pointer (Crosshair)
+Penunjuk (Atas/Bawah)	Pointer (Pataas/Pababa)
+Penunjuk (Kiri/Kanan)	Pointer (Kaliwa/Kanan)
+Penunjuk (Pindahkan)	Pointer (Ilipat)
+Penunjuk (Tidak Diizinkan)	Pointer (Hindi pinapayagan)
+Bentuk biasa. Dipakai di semua versi Minecraft.	Karaniwang hugis. Ginagamit sa lahat ng bersyon ng Minecraft.
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+: ginagamit kapag nasa ibabaw ng text field ang cursor.
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+: ginagamit kapag nasa ibabaw ng component na puwedeng i-click ang cursor.
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+: hugis crosshair.
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+: ginagamit sa mga component na nag-i-scroll pataas/pababa.
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+: ginagamit sa mga slider component.
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+: hugis ilipat.
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+: ginagamit sa mga naka-disable na component.
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	Higit sa kalahati ng RAM ng phone: maaaring kusang isara ng Android ang game.
+Penunjuk kursor	Cursor pointer
+Mouse fisik	Physical mouse
+Pakai kursor sistem Android	Gamitin ang system cursor ng Android
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	Naka-off (default): ang mouse ang gumagalaw sa cursor ng launcher sa mga menu ng game, kaya nalalapat ang larawan, laki, at hotspot ng cursor sa itaas. I-on kung mas komportable ang mouse sa built-in na pointer ng Android.
+Kecepatan kursor mouse	Bilis ng cursor ng mouse
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	Multiplier sa ibabaw ng sensitivity ng virtual cursor, para lang sa physical mouse sa mga menu ng game. 100% = walang pagbabago.
+Kecepatan kamera mouse	Bilis ng camera ng mouse
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	Multiplier sa ibabaw ng sensitivity ng camera, para lang sa physical mouse habang naglalaro. 100% = walang pagbabago.
+Gambar tidak bisa dibaca	Hindi mabasa ang larawan
+Ganti gambar	Palitan ang larawan
+Pilih gambar	Pumili ng larawan
+Tutup hotspot	Isara ang hotspot
+Atur hotspot	I-set ang hotspot
+Reset	I-reset
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	Ang hotspot ay ang puntong binibilang bilang dulo ng cursor kapag nag-click (ang pulang tuldok sa preview).
+Ubah kunci API	Palitan ang API key
+Kunci API CurseForge	API key ng CurseForge
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	May naka-save nang key. Maglagay ng bagong key para palitan ito, o burahin ang key na ito.
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	Kailangan ng CurseForge ng API key. I-paste ang key mula sa email ng CurseForge. Sa phone na ito lang sine-save ang key at sa CurseForge lang ipinapadala.
+Tempel kunci di sini	I-paste dito ang key
+Kunci API CurseForge belum diisi.	Hindi pa nailalagay ang API key ng CurseForge.
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	Tinanggihan ang API key ng CurseForge (code {0}). Suriin ang key at ilagay ulit.
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	Nililimitahan ng CurseForge ang mga request. Maghintay sandali at subukan ulit.
+CurseForge API error: kode {0}	CurseForge API error: code {0}
+Respons kosong dari CurseForge	Walang laman na response mula sa CurseForge
+Respons CurseForge tidak dikenali	Hindi nakilala ang response ng CurseForge
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	Ang unang {0} resulta lang ang ipinapakita ng CurseForge. Paliitin ang paghahanap.
+Id CurseForge tidak valid	Hindi valid na CurseForge ID
+Detail CurseForge kosong	Walang laman ang mga detalye ng CurseForge
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	Hindi pinapayagan ng may-akda ang pag-download sa pamamagitan ng launcher. Manu-manong i-download mula sa website ng CurseForge.
+File mod harus berformat .jar	Dapat nasa .jar format ang mod file
+File modpack harus berformat .mrpack atau .zip	Dapat nasa .mrpack o .zip format ang modpack file
+File {0} harus berformat .zip	Dapat nasa .zip format ang file na {0}
+Mencari alamat unduhan mod dari CurseForge...	Hinahanap ang mga download link ng mod mula sa CurseForge...
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Offline at Microsoft account lang ang sinusuportahan ng Rust engine sa ngayon. Pumili ng isa sa tab na Mga Account.
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	Ang pangalan ng offline account para sa Rust engine ay dapat 1 hanggang 16 na karakter na walang espasyo. Gumawa ng bagong offline account sa tab na Mga Account.
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	Hindi pa ganap na naka-sign in ang Microsoft account na ito. Mag-sign in ulit sa tab na Mga Account.
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	Unang pagbukas: dina-download ng engine ang mga asset ng game (mga 500 MiB). Hayaang matapos ito at agad na magsisimula ang game pagkatapos.
+Folder data mesin tidak bisa dibuat	Hindi magawa ang data folder ng engine
+Berkas peluncuran tidak bisa disimpan	Hindi ma-save ang launch file
+Tidak bisa menyimpan {0}	Hindi ma-save ang {0}
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	Itinatago ang navigation bar at status bar habang naglalaro. Naka-off bilang default: sa ilang phone, maaari itong magpa-freeze sa game.
+Tidak ada versi Forge yang didukung	Walang suportadong bersyon ng Forge
+Tidak ada versi NeoForge yang didukung	Walang suportadong bersyon ng NeoForge
+Tidak dapat memuat daftar versi Fabric	Hindi ma-load ang listahan ng mga bersyon ng Fabric
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	{0} MB na lang ang natitirang storage. Magbakante ng hindi bababa sa 500 MB, saka subukang mag-download ulit.
+Unduhan game	Mga download ng game
+Mengunduh Minecraft	Dina-download ang Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	Nagpapatuloy ang download sa background. Huwag piliting isara ang app.
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	Ino-on ang stable-performance mode ng system at ang Zink V-Sync, at nililimitahan sa {0}% ang maximum na resolution scale.

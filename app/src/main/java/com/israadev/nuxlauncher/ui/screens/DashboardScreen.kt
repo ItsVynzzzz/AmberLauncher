@@ -85,6 +85,7 @@ import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -826,7 +827,7 @@ private fun HomeScene(
                     Spacer(modifier = Modifier.width(6.dp))
                     Icon(
                         imageVector = if (accountMenuOpen) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                        contentDescription = "Ganti akun",
+                        contentDescription = Tr.t("Ganti akun"),
                         tint = AmberUi.Text.copy(alpha = 0.8f),
                         modifier = Modifier.size(18.dp)
                     )
@@ -845,7 +846,7 @@ private fun HomeScene(
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Info,
-                        contentDescription = "Tentang & Lisensi",
+                        contentDescription = Tr.t("Tentang & Lisensi"),
                         tint = AmberUi.Text,
                         modifier = Modifier.size(22.dp)
                     )

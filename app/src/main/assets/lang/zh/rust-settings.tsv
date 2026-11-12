@@ -1,0 +1,79 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Rust 引擎
+Performa	性能
+Layar	屏幕
+Permainan	游戏
+Mesin Rust (Horizon)	Rust 引擎（Horizon）
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	取代整个 Java 客户端：无需 JVM，也不支持 Java 模组。
+Tidak tersedia	不可用
+Siap	就绪
+Sumber daya game	游戏资源
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	首次点击“开始游戏”时自动下载，约 500 MiB。
+Belum diunduh	尚未下载
+Versi Minecraft	Minecraft 版本
+Satu-satunya versi yang dikerjakan mesin ini.	此引擎唯一支持的版本。
+Berlaku untuk instance Rust	适用于 Rust 实例
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	此标签页中的选项仅用于 Rust 实例，并在下次点击“开始游戏”时生效。原版、Fabric 和 Forge 实例不受影响。
+Renderer Rust	Rust 渲染器
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	“兼容”在所有手机上最稳妥。“快速 Vulkan”使用 GPU 批处理。OpenGL ES 仍处于实验阶段。
+Vulkan kompatibel	兼容 Vulkan
+Vulkan cepat	快速 Vulkan
+Skala resolusi Rust	Rust 分辨率缩放
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	降低渲染分辨率可让游戏更流畅，但画面会更模糊。
+Laju layar	刷新率
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	这是向 Android 提出的请求，不是游戏的 FPS 上限。屏幕不支持的刷新率可能会被忽略。
+Bawaan sistem	系统默认
+Petunjuk performa	性能提示
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	告知 Android 游戏需要稳定的性能。仅对支持此功能的手机有用。
+Batas pekerja chunk	区块工作线程上限
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	限制生成和组装区块的工作线程数量，而不是应用的所有线程。数值较小可降低 CPU 负载，但加载世界会更慢。
+Tanpa batas	无限制
+Cache RAM	内存缓存
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	已解码的声音（80%）和空的网格缓冲区（20%），以相同质量重新创建。这不是总内存或显存的上限。数值较小可能增加 CPU 工作量。
+Bawaan (80 MiB)	默认（80 MiB）
+Arah layar	屏幕方向
+Arah layar saat bermain. Bawaannya landscape.	游玩时的屏幕方向。默认为横屏。
+Landscape terbalik	反向横屏
+Portrait terbalik	反向竖屏
+Rasio layar	屏幕比例
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	将游戏画面限制为指定比例。“原生”跟随手机屏幕比例。
+Asli	原生
+Layar penuh imersif	沉浸式全屏
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	游玩时隐藏导航栏和状态栏。
+Hindari poni layar	避开屏幕挖孔
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	移动游戏画面，避免被摄像头孔或刘海遮挡。
+Kontrol Amber	Amber 控制
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	屏幕按键的位置、大小和按键都跟随 Amber 控制编辑器，因此只有一套控制。关闭后将使用引擎自带的控制。下次点击“开始游戏”时生效。
+Perangkat input	输入设备
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	“自动”会根据已连接的设备，在触摸屏、键盘和鼠标、手柄之间自动选择。
+Layar sentuh	触摸屏
+Keyboard dan mouse	键盘和鼠标
+Server otomatis	自动加入服务器
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	留空则在自己的世界中游玩。填写后，点击“开始游戏”将直接进入该服务器。
+Contoh: mc.contoh.com:25565	例如：mc.example.com:25565
+Setel ulang pengaturan Rust	重置 Rust 设置
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	将此标签页中的所有选项恢复为引擎默认值。实例和世界不受影响。
+Setel ulang	重置
+Pengaturan Rust dikembalikan ke bawaan.	Rust 设置已恢复为默认值。
+Mode performa	性能模式
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	“普通”使用引擎默认值。“超级省电”会降低渲染距离、粒子、云和阴影。“省电”以垂直同步限制在 60 FPS。“最高 FPS”会取消 FPS 上限并关闭垂直同步。这些模式会在点击“开始游戏”时更改游戏的视频设置。
+Normal	普通
+Super hemat	超级省电
+Hemat baterai	省电
+FPS maksimum	最高 FPS
+Kurangi animasi game	减少游戏动画
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	关闭动态纹理、区块淡入、行走时的镜头晃动和菜单模糊。在配置较低的手机上更流畅。
+Menu garis tiga	三横线菜单
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	游戏画面上的三横线按钮，用于打开引擎的快捷菜单（预设、控制、设置）。其颜色跟随 Amber 强调色。下次点击“开始游戏”时生效。
+Sederhanakan daun (eksperimental)	简化树叶（实验性）
+Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	简化茂密的树叶以减轻负担。树叶外观会改变，且此功能仍处于实验阶段。下次点击“开始游戏”时生效。
+Unggah chunk cepat	快速上传区块
+Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	将区块网格上传到 GPU 的额度提高到每帧 4 MiB，旨在减少移动和加载世界时的卡顿。默认开启。如果游戏反而更卡，请关闭。下次点击“开始游戏”时生效。
+Diagnostik	诊断
+Rekam performa	记录性能
+Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	在游玩时将帧时间和区块构建情况记录到这部手机上的报告中（最长 30 分钟）。报告不含账号、聊天或世界名称。记录会增加少许负担，不需要时请再次关闭。下次点击“开始游戏”时生效。
+Bagikan laporan performa	分享性能报告
+Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	通过你选择的应用发送最近一次记录的报告，例如在反馈游戏卡顿时作为附件。
+Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	还没有性能报告。请开启“记录性能”，玩一会儿，然后重试。
+Landscape	横屏
+Portrait	竖屏

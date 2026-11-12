@@ -27,6 +27,7 @@ import com.israadev.nuxlauncher.core.crash.CrashUtils
 import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -91,7 +92,7 @@ fun GameLogSettingsSection() {
                         preparing = false
                         if (report != null) {
                             reloadTick += 1
-                            CrashUtils.shareLogFile(context, report, "Log launcher AmberLauncher", "Bagikan log launcher")
+                            CrashUtils.shareLogFile(context, report, Tr.t("Log launcher AmberLauncher"), Tr.t("Bagikan log launcher"))
                         } else {
                             Toast.makeText(context, "Gagal menyiapkan log launcher.", Toast.LENGTH_SHORT).show()
                         }
@@ -140,7 +141,7 @@ fun GameLogSettingsSection() {
             Spacer(modifier = Modifier.width(12.dp))
             NuxButton(
                 onClick = {
-                    CrashUtils.shareLogFile(context, file, "Log game AmberLauncher", "Bagikan log game")
+                    CrashUtils.shareLogFile(context, file, Tr.t("Log game AmberLauncher"), Tr.t("Bagikan log game"))
                 },
                 backgroundColor = if (index == 0) AmberUi.Accent else Color.Transparent,
                 cornerRadius = 20.dp,
@@ -172,7 +173,7 @@ fun GameLogSettingsSection() {
             Spacer(modifier = Modifier.width(12.dp))
             NuxButton(
                 onClick = {
-                    CrashUtils.shareLogFile(context, file, "Log launcher AmberLauncher", "Bagikan log launcher")
+                    CrashUtils.shareLogFile(context, file, Tr.t("Log launcher AmberLauncher"), Tr.t("Bagikan log launcher"))
                 },
                 backgroundColor = Color.Transparent,
                 cornerRadius = 20.dp,

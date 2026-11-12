@@ -1,0 +1,92 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	Mga Button
+Atur tombol	I-edit ang mga button
+TAMPILAN	DISPLAY
+Resolusi render	Render resolution
+Hemat 50%	Tipid 50%
+Seimbang 75%	Balanse 75%
+Penuh 100%	Buo 100%
+Pin FPS di layar	I-pin ang FPS sa screen
+Tetap tampil saat tombol layar disembunyikan	Nananatiling nakikita kapag nakatago ang mga on-screen button
+KAMERA DAN KURSOR	CAMERA AT CURSOR
+Kecepatan kamera	Bilis ng camera
+Kecepatan kursor	Bilis ng cursor
+Mode sentuh	Touch mode
+Geser	Slide
+Ketuk	Tap
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	Slide: nagiging trackpad ang screen. Tap: direktang nagiging cursor ang daliri mo.
+Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	Pindutin nang matagal ang attack o jump button at i-slide ang daliri para umikot ang camera. I-off para sa PvP.
+PINTAS	MGA SHORTCUT
+Kamera	Camera
+Jeda	I-pause
+Pemain	Mga Player
+Sembunyi HUD	Itago ang HUD
+Keluar dari game	Lumabas sa game
+Keluar dari game?	Lumabas sa game?
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Ititigil ang Minecraft at babalik ka sa launcher. Maaaring mawala ang mga world na hindi pa na-save.
+sisa RAM	natitirang RAM
+PANAS	INIT
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	I-tap ang gear icon o ang numero ng FPS sa screen para buksan ang menu. Lumabas sa game gamit ang pulang button sa loob ng menu.
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	Normal lang ang mga bug, dahil walang perpekto maliban sa Diyos na Makapangyarihan.
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	I-off ang Vertical Sync (VSync) sa mga setting ng Renderer kung nakakaranas ng stuttering o itim na blangkong screen pagkatapos ng Mojang logo.
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	Kung putol o patayo ang screen ng Minecraft, i-enable ang auto-rotate ng phone mo at hawakan ang screen nang pahalang (Landscape) bago pindutin ang PLAY.
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	Gamitin ang MobileGlues renderer para sa pinakamahusay na tipid sa baterya at compatibility sa shader pack.
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	Kung nag-crash ang Minecraft sa startup sa Mali/Adreno GPU, subukang i-enable ang 'DISABLE_SUBGROUP' sa mga setting ng renderer.
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	I-enable ang OpenGL NoError sa mga setting ng MobileGlues para tumaas ang FPS habang naglalaro.
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	Gamitin ang HIDE GUI button para itago ang mga virtual button sa screen kapag naglalaro gamit ang physical keyboard at mouse.
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	Itakda ang RAM ayon sa specs ng phone: sapat na ang 2GB–3GB para sa Minecraft 1.20+ na walang mabibigat na modpack.
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	Baguhin ang sensitivity ng cursor sa mga setting ng Controls para mas tumpak ang pag-aim at pagtingin sa paligid.
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	Piliin ang Turnip Vulkan driver sa mga Snapdragon device para sa pinakamahusay na graphics performance at stability.
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	Maaari mong ayusin ang posisyon at laki ng mga control button ayon sa gusto mo sa menu ng Button Customization.
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	Gamitin ang Import Addon feature para agad na mag-install ng mga modpack (.mrpack), mod (.jar), at resource pack!
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	I-tap ang ESC button sa screen para buksan ang pause menu o bumalik sa nakaraang menu.
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	Pindutin ang F3 button para makita ang mga coordinate, biome, at FPS performance graph sa loob ng game.
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	I-enable ang Fullscreen mode sa Mga Setting para hindi pansinin ang notch/front camera at lumawak ang tanaw mo.
+Memuat Minecraft {0}	Nilo-load ang Minecraft {0}
+Tutup loading	Isara ang loading
+Menyiapkan mesin Java dan grafis...	Inihahanda ang Java at graphics engine...
+Izin penyimpanan	Pahintulot sa storage
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	Sine-save ng AmberLauncher ang mga world, mod, at setting sa folder na nuxlauncher sa storage ng phone, para madaling i-back up at ilipat.
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Magbubukas ang Android ng settings page. I-on ang all-files access para sa AmberLauncher, saka bumalik dito.
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	Kung pipiliin mo ang Mamaya, magagamit pa rin ang game. Ise-save ang data sa pribadong folder ng app na hindi madaling mabuksan gamit ang file manager.
+Hapus instance?	Burahin ang instance?
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	Permanenteng mabubura ang lahat ng world, mod, savegame, at configuration sa instance na ito at hindi na maibabalik.
+Perender tidak cocok	Hindi compatible na renderer
+Tetap jalankan	Patakbuhin pa rin
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	Hindi opisyal na sinusuportahan ang renderer na ito para sa Minecraft {0}. Maaaring magdulot ng sirang display, nag-freeze na screen, o pag-crash ng game kapag pinilit ito. Magpatuloy?
+Dukungan resmi: {0}	Opisyal na suporta: {0}
+Mengunduh game	Dina-download ang game
+Menyiapkan file game...	Inihahanda ang mga file ng game...
+Rekam layar	I-record ang screen
+Merekam	Nagre-record
+Dijeda	Naka-pause
+Ketuk untuk mulai	I-tap para magsimula
+Merekam layar	Nire-record ang screen
+Ketuk Berhenti untuk menyimpan rekaman.	I-tap ang Itigil para i-save ang recording.
+Berhenti	Itigil
+Merekam {0}x{1} \u00b7 {2} fps	Nagre-record ng {0}x{1} · {2} fps
+Izin merekam layar tidak diberikan	Hindi ibinigay ang pahintulot sa screen recording
+Izin mikrofon ditolak, merekam tanpa suara	Tinanggihan ang pahintulot sa mikropono, magre-record nang walang tunog
+Perekam layar tidak tersedia di HP ini	Hindi available ang screen recorder sa phone na ito
+Perekam layar tidak tersedia di HP ini.	Hindi available ang screen recorder sa phone na ito.
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	Walang hardware video encoder ang phone na ito. Kinansela ang recording para hindi mag-lag ang game.
+Ruang penyimpanan kurang untuk merekam.	Kulang ang storage space para mag-record.
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	Puno na ang storage. Na-save at itinigil ang recording.
+Perekam mengalami kesalahan. Rekaman dihentikan.	Nagkaroon ng error ang recorder. Itinigil ang recording.
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	Itinigil ng system ang screen capture. Na-save ang recording.
+Rekaman terlalu singkat, tidak disimpan.	Masyadong maikli ang recording, hindi na-save.
+Rekaman disimpan di Movies/AmberLauncher	Na-save ang recording sa Movies/AmberLauncher
+Rekaman disimpan: {0}	Na-save ang recording: {0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	Masyadong mainit ang phone. Na-save at itinigil ang recording para manatiling maayos ang game.
+Gagal memulai rekaman: {~0}	Nabigong simulan ang recording: {0}
+Gagal menyiapkan rekaman: {0}	Nabigong ihanda ang recording: {0}
+REKAM	I-RECORD
+Berhenti merekam	Itigil ang recording
+Game saja	Game lang
+Dengan tombol	Kasama ang mga button
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	Napo-pause ang recording habang bukas ang menu at awtomatikong nagpapatuloy kapag isinara ang menu.
+Tombol layar ikut terekam di video.	Kasama sa video ang mga on-screen button.
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	Nakatago sa video ang mga on-screen button (gumagana pa rin ang pagpindot).
+izin tangkap layar tidak valid	hindi valid ang pahintulot sa screen capture
+tidak bisa membuat berkas di Movies	hindi makagawa ng file sa Movies
+tidak bisa membuka berkas rekaman	hindi mabuksan ang recording file

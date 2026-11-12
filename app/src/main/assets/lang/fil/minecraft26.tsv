@@ -1,0 +1,11 @@
+# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
+MINECRAFT 26.X KE ATAS	MINECRAFT 26.X PATAAS
+Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	Gumagamit ng Java 25 at bagong graphics engine ang bersyong ito. Hindi lahat ng phone ay kayang patakbuhin ito, lalo na ang may luma o hindi kumpletong Vulkan driver.
+Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	Kung hindi mabuksan ang game, maaaring ang phone o ang bersyong ito ng game ang sanhi, hindi ang launcher. Subukang magpalit ng renderer sa Mga Setting, o gamitin ang Minecraft 1.21.x.
+Memeriksa dukungan Vulkan HP ini...	Sinusuri ang suporta sa Vulkan ng phone na ito...
+Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	OpenGL ang gamit ng bersyong ito. Ginagamit lang ang Vulkan simula Minecraft 26.2.
+Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	Hindi available ang Vulkan check sa build na ito, kaya hindi makumpirma ang suporta ng phone sa Vulkan.
+Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	Hindi natapos ang Vulkan check. Maaaring may problema ang Vulkan driver ng phone na ito, kaya maaaring pumalya ang Minecraft 26.2 pataas kapag Vulkan ang ginamit.
+HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	Walang magagamit na Vulkan driver ang phone na ito. Hindi magagamit ng Minecraft 26.2 pataas ang Vulkan dito; piliin ang Prefer OpenGL sa mga video setting ng game.
+Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	Natutugunan ng Vulkan ng phone na ito ang mga kinakailangan ng Minecraft 26.2 pataas.
+Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	Hindi natutugunan ng Vulkan ng phone na ito ang mga kinakailangan ng Minecraft 26.2 pataas. Kung Vulkan ang gamit ng game, maaaring hindi ito magsimula; piliin ang Prefer OpenGL sa mga video setting ng game.

@@ -1,0 +1,79 @@
+# Pengaturan > Rust (tab pengaturan mesin Rust)
+Mesin Rust	Rust Engine
+Performa	Performance
+Layar	Screen
+Permainan	Gameplay
+Mesin Rust (Horizon)	Rust Engine (Horizon)
+Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java.	Pamalit sa buong Java client: walang JVM at walang Java mod.
+Tidak tersedia	Hindi available
+Siap	Handa na
+Sumber daya game	Mga resource ng game
+Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.	Awtomatikong dina-download sa unang PLAY, mga 500 MiB.
+Belum diunduh	Hindi pa na-download
+Versi Minecraft	Bersyon ng Minecraft
+Satu-satunya versi yang dikerjakan mesin ini.	Ang tanging bersyong sinusuportahan ng engine na ito.
+Berlaku untuk instance Rust	Para sa mga Rust instance
+Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.	Ang mga pagpipilian sa tab na ito ay para lang sa mga Rust instance at ipapatupad sa susunod na PLAY. Hindi apektado ang mga Vanilla, Fabric, at Forge instance.
+Renderer Rust	Rust renderer
+Kompatibel paling aman untuk semua HP. Vulkan cepat memakai batching GPU. OpenGL ES masih eksperimental.	Ang Compatible ang pinakaligtas sa lahat ng phone. Gumagamit ng GPU batching ang Fast Vulkan. Eksperimental pa ang OpenGL ES.
+Vulkan kompatibel	Compatible na Vulkan
+Vulkan cepat	Mabilis na Vulkan
+Skala resolusi Rust	Rust resolution scale
+Menurunkan resolusi render membuat game lebih ringan, gambar jadi lebih buram.	Mas magaan ang game kapag ibinaba ang render resolution, pero mas malabo ang larawan.
+Laju layar	Refresh rate
+Permintaan ke Android, bukan batas FPS game. Laju yang tidak didukung layar bisa diabaikan.	Kahilingan ito sa Android, hindi FPS cap. Maaaring hindi pansinin ang rate na hindi sinusuportahan ng screen.
+Bawaan sistem	Default ng system
+Petunjuk performa	Mga hint sa performance
+Memberi tahu Android bahwa game butuh performa stabil. Hanya berguna di HP yang mendukungnya.	Sinasabi sa Android na kailangan ng game ng matatag na performance. Kapaki-pakinabang lang sa mga phone na sumusuporta rito.
+Batas pekerja chunk	Limitasyon ng chunk worker
+Batas pekerja yang membuat dan merakit chunk, bukan semua utas aplikasi. Nilai kecil mengurangi beban CPU tetapi memuat dunia lebih lambat.	Nililimitahan ang mga worker na gumagawa at nag-aassemble ng mga chunk, hindi ang lahat ng thread ng app. Pinababawasan ng maliit na halaga ang load sa CPU pero mas mabagal mag-load ng world.
+Tanpa batas	Walang limitasyon
+Cache RAM	RAM cache
+Suara yang sudah didekode (80%) dan buffer mesh kosong (20%), dibuat ulang dengan kualitas sama. Bukan batas total RAM atau VRAM. Nilai kecil bisa menambah kerja CPU.	Mga na-decode na tunog (80%) at walang laman na mesh buffer (20%), ginagawa ulit sa parehong kalidad. Hindi ito limitasyon sa kabuuang RAM o VRAM. Maaaring dumami ang trabaho ng CPU kapag maliit ang halaga.
+Bawaan (80 MiB)	Default (80 MiB)
+Arah layar	Orientation ng screen
+Arah layar saat bermain. Bawaannya landscape.	Orientation ng screen habang naglalaro. Landscape bilang default.
+Landscape terbalik	Reverse landscape
+Portrait terbalik	Reverse portrait
+Rasio layar	Aspect ratio
+Membatasi tampilan game ke rasio tertentu. Asli mengikuti rasio layar HP.	Nililimitahan ang view ng game sa isang itinakdang ratio. Sinusunod ng Native ang screen ratio ng phone.
+Asli	Native
+Layar penuh imersif	Immersive fullscreen
+Menyembunyikan bilah navigasi dan bilah status saat bermain.	Itinatago ang navigation bar at status bar habang naglalaro.
+Hindari poni layar	Iwasan ang display cutout
+Menggeser tampilan game agar tidak tertutup lubang kamera atau poni.	Inililipat ang view ng game para hindi matakpan ng camera hole o notch.
+Kontrol Amber	Mga control ng Amber
+Posisi, ukuran, dan tombol layar mengikuti editor kontrol Amber, jadi hanya ada satu set kontrol. Matikan untuk memakai kontrol bawaan mesin. Berlaku di PLAY berikutnya.	Sinusunod ng mga on-screen button ang control editor ng Amber (posisyon, laki, at mga button), kaya iisang set lang ng control. I-off para gamitin ang sariling control ng engine. Ipapatupad sa susunod na PLAY.
+Perangkat input	Input device
+Otomatis memilih sendiri antara layar sentuh, keyboard dan mouse, atau gamepad sesuai yang terpasang.	Awtomatikong pumipili ang Auto sa pagitan ng touch, keyboard at mouse, o gamepad, depende sa nakakonekta.
+Layar sentuh	Touch screen
+Keyboard dan mouse	Keyboard at mouse
+Server otomatis	Auto-join na server
+Kosongkan untuk bermain di dunia sendiri. Bila diisi, PLAY langsung masuk ke server ini.	Iwanang walang laman para maglaro sa sarili mong world. Kapag may laman, direktang papasok ang PLAY sa server na ito.
+Contoh: mc.contoh.com:25565	Halimbawa: mc.example.com:25565
+Setel ulang pengaturan Rust	I-reset ang mga setting ng Rust
+Mengembalikan semua pilihan di tab ini ke bawaan mesin. Instance dan dunia tidak disentuh.	Ibinabalik ang bawat pagpipilian sa tab na ito sa default ng engine. Hindi ginagalaw ang mga instance at world.
+Setel ulang	I-reset
+Pengaturan Rust dikembalikan ke bawaan.	Naibalik sa default ang mga setting ng Rust.
+Mode performa	Performance mode
+Normal memakai bawaan mesin. Super hemat menurunkan jarak render, partikel, awan, dan bayangan. Hemat baterai membatasi 60 FPS dengan VSync. FPS maksimum melepas batas FPS dan mematikan VSync. Mode ini mengubah pengaturan video game saat PLAY.	Gumagamit ng default ng engine ang Normal. Binababa ng Super saver ang render distance, particle, ulap, at anino. Nililimitahan ng Battery saver sa 60 FPS na may VSync. Inaalis ng Max FPS ang FPS cap at ino-off ang VSync. Binabago ng mga mode na ito ang mga video setting ng game kapag PLAY.
+Normal	Normal
+Super hemat	Super saver
+Hemat baterai	Battery saver
+FPS maksimum	Max FPS
+Kurangi animasi game	Bawasan ang mga animation ng game
+Mematikan tekstur beranimasi, fade chunk, goyangan kamera saat berjalan, dan blur menu. Lebih ringan di HP lemah.	Ino-off ang animated texture, chunk fade, pag-uga ng camera habang naglalakad, at menu blur. Mas magaan sa mahihinang phone.
+Menu garis tiga	Tatlong-linyang menu
+Tombol bergaris tiga di layar game yang membuka menu cepat mesin (preset, kontrol, pengaturan). Warnanya mengikuti aksen Amber. Berlaku di PLAY berikutnya.	Ang tatlong-linyang button sa screen ng game na nagbubukas ng quick menu ng engine (mga preset, control, setting). Sinusunod ng mga kulay nito ang accent ng Amber. Ipapatupad sa susunod na PLAY.
+Sederhanakan daun (eksperimental)	Pasimplehin ang mga dahon (eksperimental)
+Menyederhanakan dedaunan yang rapat agar lebih ringan. Tampilan daun berubah dan fitur ini masih eksperimental. Berlaku di PLAY berikutnya.	Pinapasimple ang makakapal na dahon para mas gumaan. Nagbabago ang hitsura ng mga dahon at eksperimental pa ang feature na ito. Ipapatupad sa susunod na PLAY.
+Unggah chunk cepat	Mabilis na chunk upload
+Menaikkan jatah unggah mesh chunk ke GPU menjadi 4 MiB per frame, dibuat untuk mengurangi tersendat saat bergerak dan memuat dunia. Menyala secara bawaan. Matikan bila game malah terasa patah-patah. Berlaku di PLAY berikutnya.	Itinataas sa 4 MiB kada frame ang budget ng pag-upload ng chunk mesh sa GPU, para mabawasan ang stutter habang gumagalaw at naglo-load ng world. Naka-on bilang default. I-off kung lalo pang pumuputol-putol ang game. Ipapatupad sa susunod na PLAY.
+Diagnostik	Diagnostics
+Rekam performa	I-record ang performance
+Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke laporan di HP ini. Laporan tidak berisi akun, chat, atau nama dunia. Perekaman menambah sedikit beban, jadi matikan lagi bila tidak diperlukan. Berlaku di PLAY berikutnya.	Nire-record ang frame time at pagbuo ng chunk habang naglalaro (hanggang 30 minuto) sa isang report sa phone na ito. Walang account, chat, o pangalan ng world sa report. Nagdaragdag ito ng kaunting load, kaya i-off ulit kapag hindi kailangan. Ipapatupad sa susunod na PLAY.
+Bagikan laporan performa	Ibahagi ang performance report
+Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Ipinapadala ang pinakahuling na-record na report sa app na pipiliin mo, halimbawa para ilakip kapag nag-uulat ng mabagal na game.
+Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Wala pang performance report. I-on ang I-record ang performance, maglaro sandali, saka subukan ulit.
+Landscape	Landscape
+Portrait	Portrait

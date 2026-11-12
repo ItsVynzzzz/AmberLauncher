@@ -1,0 +1,28 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	CONCLUIR
+SIMPAN	SALVAR
+KEMBALI	VOLTAR
+AKTIF	ATIVO
+DIPILIH	SELECIONADO
+MENGERTI	ENTENDI
+Hapus akun	Excluir conta
+Populer	Populares
+Hijau	Verde
+Ungu	Roxo
+Navy	Azul-marinho
+Teal	Azul-petróleo
+Gagal terhubung ke CurseForge	Falha ao conectar ao CurseForge
+Memuat data dari CurseForge...	Carregando dados do CurseForge...
+Gagal memuat dari CurseForge	Falha ao carregar do CurseForge
+Permukaan game TextureView	Superfície do jogo TextureView
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	Ative se a imagem do jogo aparecer girada 90 graus ou inclinada mesmo com o launcher na horizontal (caso relatado no Minecraft 26.x com o renderizador Zink). Um pouco mais pesado que o padrão. Vale na próxima vez que o jogo for aberto.
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	{0} itens foram ignorados ou mesclados porque o Amber não tem equivalente para eles (por exemplo a gaveta, o mouse virtual, as camadas ocultas e o segundo botão de rolagem).
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	Todos os botões foram convertidos com sucesso. Confira as posições deles no editor de controles.
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	Este layout veio de {0} e foi convertido para o formato do Amber. {1}
+Log game AmberLauncher	Log do jogo do AmberLauncher
+Bagikan log game	Compartilhar log do jogo
+Log launcher AmberLauncher	Log do launcher do AmberLauncher
+Bagikan log launcher	Compartilhar log do launcher
+Batal dan keluar	Cancelar e sair
+Ubah skin & jubah	Alterar skin e capa
+Hapus teks	Limpar texto

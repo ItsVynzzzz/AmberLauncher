@@ -1,0 +1,30 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	TAPOS NA
+SIMPAN	I-SAVE
+KEMBALI	BUMALIK
+AKTIF	AKTIBO
+DIPILIH	NAPILI
+MENGERTI	NAIINTINDIHAN KO
+Hapus akun	Burahin ang account
+Populer	Sikat
+Hijau	Berde
+Ungu	Lila
+Gagal terhubung ke CurseForge	Hindi makakonekta sa CurseForge
+Memuat data dari CurseForge...	Nilo-load ang data mula sa CurseForge...
+Gagal memuat dari CurseForge	Nabigong mag-load mula sa CurseForge
+Permukaan game TextureView	TextureView na game surface
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	I-on kung naka-rotate nang 90 degrees ang display ng game o mukhang nakahilig kahit naka-landscape ang launcher (kasong naiulat sa Minecraft 26.x gamit ang Zink renderer). Medyo mas mabigat kaysa sa default. Ipapatupad sa susunod na buksan ang game.
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	{0} na entry ang nilaktawan o pinagsama dahil walang katumbas ang mga ito sa Amber (halimbawa ang drawer, virtual mouse, mga nakatagong layer, at ang pangalawang scroll button).
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	Matagumpay na na-convert ang lahat ng button. Suriin ang mga posisyon nila sa control editor.
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	Galing sa {0} ang layout na ito at na-convert sa format ng Amber. {1}
+Log game AmberLauncher	Game log ng AmberLauncher
+Bagikan log game	Ibahagi ang game log
+Log launcher AmberLauncher	Launcher log ng AmberLauncher
+Bagikan log launcher	Ibahagi ang launcher log
+Batal dan keluar	Kanselahin at lumabas
+Ubah skin & jubah	Palitan ang skin at cape
+Hapus teks	Burahin ang text
+Efek	Mga Effect
+Efek salju	Snow effect
+Jumlah salju	Dami ng snow
+Salju turun di Beranda dan layar lain. Bawaan mati.	Nag-snow sa Home at iba pang screen. Naka-off bilang default.

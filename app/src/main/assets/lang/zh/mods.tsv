@@ -1,0 +1,200 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	模组
+modpacks	整合包
+shaderpacks	光影包
+resourcepacks	资源包
+datapacks	数据包
+format yang didukung	支持的格式
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	已忽略文件“{0}”！{1}仅支持 {2} 格式
+{0} file diabaikan karena format tidak didukung ({~1})!	{0} 个文件因格式不受支持而被忽略（{1}）！
+Membaca arsip modpack...	正在读取整合包压缩包…
+Berhasil mengimpor dan memasang {0} modpack!	已成功导入并安装 {0} 个整合包！
+Gagal mengimpor modpack: {~0}	导入整合包失败：{0}
+Berhasil mengimpor {0} file {~1}!	已成功导入 {0} 个文件（{1}）！
+Gagal mengimpor file: {~0}	导入文件失败：{0}
+Mencari versi...	正在搜索版本…
+Tidak ada versi cocok untuk {0}!	没有适用于 {0} 的兼容版本！
+Mengunduh...	正在下载…
+Modpack {0} berhasil dipasang!	整合包 {0} 安装成功！
+Berhasil memasang {0} beserta {1} dependensi!	已成功安装 {0} 及 {1} 个依赖！
+Berhasil memasang {0}!	{0} 安装成功！
+Memulai pengunduhan...	开始下载…
+Gagal terhubung ke Modrinth	无法连接到 Modrinth
+Pilih atau buat instance di Home untuk mulai memasang mod.	请先在主页选择或创建实例，再开始安装模组。
+Kembali ke Home	返回主页
+Terpasang ({0})	已安装（{0}）
+Jelajah	浏览
+Cari di Modrinth...	在 Modrinth 中搜索…
+Cari di {0} item...	在 {0} 个项目中搜索…
+Tidak ada world	没有世界
+Semua versi	所有版本
+Pilih instance terlebih dahulu!	请先选择实例！
+Impor	导入
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	此实例中还没有世界。请先打开游戏创建一个世界。
+Belum ada {~0} terpasang di instance ini	此实例中还没有已安装的{0}
+Tidak ada item yang cocok	没有匹配的项目
+Jelajahi Modrinth	浏览 Modrinth
+Memuat data dari Modrinth...	正在从 Modrinth 加载数据…
+Gagal memuat dari Modrinth	从 Modrinth 加载失败
+Terjadi kesalahan jaringan	发生网络错误
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	没有符合 Minecraft {0}（{1}）的结果
+Tidak ada hasil ditemukan untuk kata kunci ini	没有找到与此关键词相关的结果
+Coba ubah kata kunci atau nonaktifkan filter versi	请尝试更换关键词，或关闭版本筛选
+Cari di semua versi Minecraft	在所有 Minecraft 版本中搜索
+Sebelumnya	上一页
+Selanjutnya	下一页
+Pilih instance	选择实例
+Pilih world	选择世界
+Hapus modpack?	删除整合包？
+Hapus {~0}?	删除{0}？
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	确定要删除整合包“{0}”吗？该整合包安装的所有模组也会从实例中删除。
+Yakin ingin menghapus "{0}" dari instance ini?	确定要从此实例中删除“{0}”吗？
+Modpack dan semua mod berhasil dihapus!	整合包及其所有模组已删除！
+{0} berhasil dihapus!	{0} 已删除！
+Mengimpor & memasang modpack	正在导入并安装整合包
+Membaca daftar mod dan mengunduh file...	正在读取模组列表并下载文件…
+{0} / {1} file mod	{0} / {1} 个模组文件
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	启动器正在读取模组列表并下载整合包，请稍候。
+Tangkapan layar	截图
+Pratinjau gambar	图片预览
+NONAKTIF	已禁用
+Tidak ada deskripsi	暂无描述
+oleh {0}	作者：{0}
+Unduh...	下载…
+Terpasang	已安装
+Pasang pack	安装此包
+Versi dipilih	已选版本
+Sedang mengunduh dan memasang...	正在下载并安装…
+Sudah terpasang	已安装
+Pasang modpack	安装整合包
+Pasang ke instance	安装到实例
+Versi ({0})	版本（{0}）
+Deskripsi	描述
+Tidak ada ringkasan deskripsi.	暂无简介。
+Tidak ada versi yang didukung	没有受支持的版本
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	此项目没有与 Minecraft {0}（{1}）兼容的发布版本。
+Versi {0} \u00b7 MC {1}	版本 {0} · MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	整合包会直接解压到实例中（overrides、配置和清单）。
+Dependensi wajib ikut terpasang otomatis.	必需的依赖会自动一并安装。
+Mod terpasang	已安装的模组
+Belum ada resource pack	还没有资源包
+Belum ada shader	还没有光影
+Belum ada mod terpasang	还没有安装任何模组
+Pasang lewat menu Mod di sidebar.	请通过侧边栏中的“模组”菜单安装。
+Nonaktif \u00b7 {0}	已禁用 · {0}
+PASANG ADDON EKSTERNAL	安装外部附加内容
+Pemasang Addon	附加内容安装器
+Tipe file: {0} \u00b7 Siap dipasang	文件类型：{0} · 可以安装
+KATEGORI ADDON	附加内容类别
+TARGET INSTANCE MINECRAFT	目标 MINECRAFT 实例
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	⚠️ 尚未创建任何 Minecraft 实例！请先在主页创建实例。
+Memasang addon...	正在安装附加内容…
+Gagal: {~0}	失败：{0}
+Mempersiapkan pemasangan...	正在准备安装…
+\u2713 Berhasil memasang "{0}" ke {1}!	✓ 已将“{0}”安装到 {1}！
+Terjadi kesalahan yang tidak diketahui	发生未知错误
+Gagal memasang: {~0}	安装失败：{0}
+MEMASANG...	正在安装…
+PASANG SEKARANG	立即安装
+{0} mod terpasang	已安装 {0} 个模组
+Menyalin file {0}...	正在复制文件 {0}…
+Gagal membaca file sumber	无法读取源文件
+Membaca daftar modpack...	正在读取整合包列表…
+Gagal mengambil detail project: {~0}	获取项目详情失败：{0}
+Gagal mengambil versi project: {~0}	获取项目版本失败：{0}
+Mengekstrak dan menyiapkan modpack...	正在解压并准备整合包…
+Menyelesaikan dependensi: {0}...	正在解决依赖：{0}…
+Membaca daftar modpack ({0} mod ditemukan)...	正在读取整合包列表（发现 {0} 个模组）…
+Mengunduh mod ({0}/{1}): {2}...	正在下载模组（{0}/{1}）：{2}…
+Mod sudah ada ({0}/{1}): {2}	模组已存在（{0}/{1}）：{2}
+Mengekstrak konfigurasi modpack...	正在解压整合包配置…
+Mengekstrak file arsip modpack...	正在解压整合包压缩文件…
+Selesai! {0} mod berhasil dipasang.	完成！已成功安装 {0} 个模组。
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	已完成，但有提示：已安装 {0} 个模组，{1} 个文件失败或被跳过。如有缺少的模组，请尝试重新安装。
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	此整合包需要 {0}，而 AmberLauncher 目前仅支持 Fabric。
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	此整合包需要 Fabric。请先创建 Fabric 实例，再在该实例中安装整合包。
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	此整合包适用于 Minecraft {0}，而此实例使用的是 {1}。请选择或创建版本相同的实例。
+Alamat unduhan ditolak karena tidak memakai HTTPS	下载地址被拒绝，因为它没有使用 HTTPS
+Gagal mengunduh file: HTTP {0}	下载文件失败：HTTP {0}
+Body stream kosong	响应流为空
+Gagal menyimpan file unduhan	保存下载的文件失败
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	文件 {0} 已损坏或在传输中被篡改（指纹不匹配），因此未安装。
+Isi modpack terlalu besar, pemasangan dibatalkan.	整合包内容过大，已取消安装。
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	此整合包需要 {0}，而 AmberLauncher 目前仅支持 Fabric、Forge 和 NeoForge。
+Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	此整合包需要 Forge。请先创建 Forge 实例，再在该实例中安装整合包。
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	此整合包需要 NeoForge。请先创建 NeoForge 实例，再在该实例中安装整合包。
+Kategori	分类
+Versi	版本
+Urutkan	排序
+Relevansi	相关度
+Unduhan	下载量
+Pengikut	关注数
+Diperbarui	最近更新
+Semua loader	所有加载器
+Pilih kategori	选择分类
+Pilih versi	选择版本
+Pilih loader	选择加载器
+Cari mod...	搜索模组…
+Cari modpack...	搜索整合包…
+Cari shader...	搜索光影…
+Cari resource pack...	搜索资源包…
+Cari datapack...	搜索数据包…
+CurseForge belum tersedia di versi ini	此版本暂不支持 CurseForge
+Optimasi	优化
+Teknologi	科技
+Sihir	魔法
+Petualangan	冒险
+Utilitas	实用
+Dekorasi	装饰
+Perlengkapan	装备
+Makanan	食物
+Penyimpanan	存储
+Pustaka	前置库
+Realistis	写实
+Fantasi	奇幻
+INSTANCE AKTIF	当前实例
+Mod & konten	模组与内容
+Tambah	添加
+Home	主页
+Tentang	关于
+Cari pengaturan...	搜索设置…
+Perekaman layar	录屏
+Latar	背景
+Foto, GIF, atau video	照片、GIF 或视频
+Redupkan latar	背景调暗
+Seberapa gelap latar di layar selain Home.	除主页外其他界面的背景暗度。
+Tema	主题
+Aksen warna	强调色
+Warna tombol dan penanda terpilih di seluruh launcher.	启动器中按钮和选中标记的颜色。
+Gaya tampilan	显示风格
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	默认风格使用 AmberLauncher 自己的主题。液态玻璃会模糊面板和按钮后面的背景。
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	液态玻璃需要 Android 12 或更高版本。这部手机会自动使用默认风格。
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	启动器文字的语言。立即生效，无需重启。
+Pengaturan khusus untuk renderer yang sedang dipakai.	仅针对当前所用渲染器的设置。
+Atur	配置
+Tata letak kontrol	按键布局
+Aplikasi	应用
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	应用信息、GPL-3.0 许可证和致谢。
+Reset ke default	重置为默认
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	所有设置将恢复为默认值。其他更改会自动保存。
+Belum ada akun	还没有账号
+Pilih akun untuk bermain	选择用于游玩的账号
+Akun aktif untuk bermain	当前用于游玩的账号
+Jenis akun	账号类型
+Status login	登录状态
+Tersambung	已连接
+Perlu disegarkan	需要刷新
+Segarkan login	刷新登录
+Menyegarkan...	正在刷新…
+Login berhasil disegarkan	登录已刷新
+Gagal menyegarkan login	刷新登录失败
+Resource	资源
+Shader	光影
+World: {0}	世界：{0}
+Screenshot	截图
+Modrinth API error code: {0}	Modrinth API 错误代码：{0}
+Empty response	空响应
+Game	游戏
+Pasang	安装
+Klasik	经典
+Resource Pack (.zip)	资源包（.zip）

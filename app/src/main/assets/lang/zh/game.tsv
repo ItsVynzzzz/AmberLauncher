@@ -1,0 +1,92 @@
+# Menu in-game, loading, dan dialog kecil
+Tombol	按键
+Atur tombol	设置按键
+TAMPILAN	显示
+Resolusi render	渲染分辨率
+Hemat 50%	省电 50%
+Seimbang 75%	均衡 75%
+Penuh 100%	完整 100%
+Pin FPS di layar	在屏幕上固定 FPS
+Tetap tampil saat tombol layar disembunyikan	隐藏屏幕按键时仍会显示
+KAMERA DAN KURSOR	视角与光标
+Kecepatan kamera	视角速度
+Kecepatan kursor	光标速度
+Mode sentuh	触控模式
+Geser	滑动
+Ketuk	点按
+Geser: layar jadi trackpad. Ketuk: jari langsung jadi kursor.	滑动：屏幕变成触控板。点按：手指直接变成光标。
+Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.	按住攻击或跳跃按键并滑动手指即可转动视角。PvP 时请关闭。
+PINTAS	快捷操作
+Kamera	视角
+Jeda	暂停
+Pemain	玩家
+Sembunyi HUD	隐藏 HUD
+Keluar dari game	退出游戏
+Keluar dari game?	退出游戏？
+Minecraft akan dihentikan dan kamu kembali ke launcher. Dunia yang belum tersimpan bisa hilang.	Minecraft 将被停止，你会回到启动器。尚未保存的世界可能会丢失。
+sisa RAM	剩余内存
+PANAS	过热
+Ketuk ikon gerigi atau angka FPS di layar untuk membuka menu. Keluar dari game lewat tombol merah di dalam menu.	点按屏幕上的齿轮图标或 FPS 数字即可打开菜单。通过菜单中的红色按钮退出游戏。
+Bug itu hal yang biasa, karena tiada yang sepurna melainkan tuhan yang maha kuasa.	出现 Bug 很正常，因为除了全能的神，没有什么是完美的。
+Matikan Vertical Sync (VSync) di pengaturan Renderer jika mengalami stuttering atau layar blank hitam setelah logo Mojang.	如果出现卡顿，或在 Mojang 标志后黑屏，请在渲染器设置中关闭垂直同步（VSync）。
+Jika tampilan layar Minecraft terpotong atau vertikal, aktifkan rotasi otomatis HP dan posisikan layar mendatar (Landscape) sebelum menekan Mainkan.	如果 Minecraft 画面被裁切或变成竖屏，请在点击“开始游戏”之前开启手机的自动旋转，并将屏幕调为横屏。
+Gunakan MobileGlues Renderer untuk efisiensi baterai dan kompatibilitas shaderpack terbaik.	使用 MobileGlues 渲染器可获得最佳的省电效果和光影包兼容性。
+Jika Minecraft crash saat startup pada GPU Mali/Adreno, coba aktifkan 'DISABLE_SUBGROUP' di pengaturan renderer.	如果 Minecraft 在 Mali/Adreno GPU 上启动时崩溃，请尝试在渲染器设置中启用“DISABLE_SUBGROUP”。
+Aktifkan OpenGL NoError di pengaturan MobileGlues untuk meningkatkan FPS saat bermain.	在 MobileGlues 设置中启用 OpenGL NoError 可提升游玩时的 FPS。
+Gunakan tombol HIDE GUI untuk menyembunyikan tombol virtual di layar saat bermain dengan keyboard & mouse fisik.	使用物理键盘和鼠标游玩时，可用“隐藏 GUI”按键隐藏屏幕上的虚拟按键。
+Atur alokasi RAM sesuai spesifikasi HP: 2GB\u20133GB sudah sangat cukup untuk Minecraft versi 1.20+ tanpa modpack berat.	请根据手机配置设置内存分配：对于 1.20+ 版本的 Minecraft（不带大型整合包），2GB–3GB 就已经足够。
+Ubah sensitivitas kursor di Pengaturan Kontrol untuk membidik dan mengarahkan pandangan lebih akurat.	在“控制”设置中调整光标灵敏度，可以更精准地瞄准和环顾四周。
+Pilih Vulkan Driver Turnip di perangkat Snapdragon untuk performa grafis dan stabilitas maksimal.	在骁龙（Snapdragon）设备上选择 Turnip Vulkan 驱动，可获得最佳的图形性能和稳定性。
+Kamu bisa menyesuaikan posisi dan ukuran tombol kontrol sesukamu di menu Kustomisasi Tombol.	你可以在“自定义按键”菜单中随意调整控制按键的位置和大小。
+Gunakan fitur Import Addon untuk memasang Modpack (.mrpack), Mod (.jar), dan Resource Pack secara instan!	使用“导入附加内容”功能，可立即安装整合包（.mrpack）、模组（.jar）和资源包！
+Tekan tombol ESC di layar untuk membuka pause menu atau kembali ke menu sebelumnya.	点按屏幕上的 ESC 按键可打开暂停菜单或返回上一级菜单。
+Tekan tombol F3 untuk melihat informasi koordinat, biome, dan grafik performa FPS di dalam game.	按下 F3 按键可在游戏中查看坐标、生物群系和 FPS 性能图表。
+Aktifkan mode Fullscreen di Pengaturan untuk mengabaikan notch/kamera depan dan memperluas pandangan.	在“设置”中启用全屏模式，可忽略刘海/前置摄像头并扩大视野。
+Memuat Minecraft {0}	正在加载 Minecraft {0}
+Tutup loading	关闭加载
+Menyiapkan mesin Java dan grafis...	正在准备 Java 和图形引擎…
+Izin penyimpanan	存储权限
+AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher 将世界、模组和设置保存在手机存储的 nuxlauncher 文件夹中，方便备份和迁移。
+Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android 将打开设置页面。请为 AmberLauncher 开启“所有文件访问”权限，然后返回这里。
+Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	如果选择“稍后”，游戏仍可使用。数据会保存在应用的私有文件夹中，不方便通过文件管理器打开。
+Hapus instance?	删除实例？
+Semua dunia, mod, savegame, dan konfigurasi di instance ini akan dihapus permanen dan tidak bisa dikembalikan.	此实例中的所有世界、模组、存档和配置都将被永久删除，且无法恢复。
+Perender tidak cocok	渲染器不兼容
+Tetap jalankan	仍然运行
+Perender ini tidak didukung secara resmi untuk Minecraft {0}. Memaksakannya bisa membuat tampilan rusak, layar membeku, atau game crash. Lanjutkan?	此渲染器未获得对 Minecraft {0} 的官方支持。强行使用可能导致画面异常、屏幕卡死或游戏崩溃。是否继续？
+Dukungan resmi: {0}	官方支持：{0}
+Mengunduh game	正在下载游戏
+Menyiapkan file game...	正在准备游戏文件…
+Rekam layar	录屏
+Merekam	录制中
+Dijeda	已暂停
+Ketuk untuk mulai	点按开始
+Merekam layar	正在录屏
+Ketuk Berhenti untuk menyimpan rekaman.	点按“停止”以保存录像。
+Berhenti	停止
+Merekam {0}x{1} \u00b7 {2} fps	正在录制 {0}x{1} · {2} fps
+Izin merekam layar tidak diberikan	未授予录屏权限
+Izin mikrofon ditolak, merekam tanpa suara	麦克风权限被拒绝，将无声录制
+Perekam layar tidak tersedia di HP ini	此手机不支持录屏
+Perekam layar tidak tersedia di HP ini.	此手机不支持录屏。
+HP ini tidak punya encoder video perangkat keras. Rekaman dibatalkan supaya game tidak lag.	此手机没有硬件视频编码器。为避免游戏卡顿，已取消录制。
+Ruang penyimpanan kurang untuk merekam.	存储空间不足，无法录制。
+Ruang penyimpanan penuh. Rekaman disimpan dan dihentikan.	存储空间已满。录像已保存并停止。
+Perekam mengalami kesalahan. Rekaman dihentikan.	录制器出现错误。录制已停止。
+Tangkap layar dihentikan oleh sistem. Rekaman disimpan.	屏幕捕获被系统停止。录像已保存。
+Rekaman terlalu singkat, tidak disimpan.	录像过短，未保存。
+Rekaman disimpan di Movies/AmberLauncher	录像已保存到 Movies/AmberLauncher
+Rekaman disimpan: {0}	录像已保存：{0}
+HP terlalu panas. Rekaman disimpan dan dihentikan agar game tetap lancar.	手机过热。为保持游戏流畅，录像已保存并停止。
+Gagal memulai rekaman: {~0}	开始录制失败：{0}
+Gagal menyiapkan rekaman: {0}	准备录制失败：{0}
+REKAM	录制
+Berhenti merekam	停止录制
+Game saja	仅游戏
+Dengan tombol	含按键
+Rekaman dijeda selama menu terbuka dan lanjut otomatis saat menu ditutup.	菜单打开时录制会暂停，菜单关闭后自动继续。
+Tombol layar ikut terekam di video.	屏幕按键会一并录入视频。
+Tombol layar disembunyikan dari video (tetap bisa disentuh).	屏幕按键不会出现在视频中（仍可触控）。
+izin tangkap layar tidak valid	录屏权限无效
+tidak bisa membuat berkas di Movies	无法在 Movies 中创建文件
+tidak bisa membuka berkas rekaman	无法打开录像文件

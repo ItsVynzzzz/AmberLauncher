@@ -1,0 +1,70 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	✓ 游戏内按键布局已保存！
+Selesai	完成
+Kembali	返回
+Tombol baru ditambahkan di tengah layar!	新按键已添加到屏幕中央！
++ TOMBOL	+ 按键
+Joystick WASD ditambahkan!	WASD 摇杆已添加！
+\u2713 Layout GUI berhasil disimpan!	✓ GUI 布局已保存！
+PENGATURAN TOMBOL	按键设置
+Posisi: {0}% x {1}%	位置：{0}% x {1}%
+Label Teks Tombol:	按键文字标签：
+\ud83d\udd12 Tetap	🔒 固定
+Label tombol...	按键标签…
+Tipe Kontrol:	控制类型：
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	平滑的 8 方向模拟摇杆，用来代替 W、A、S、D 键移动角色。
+Ukuran Joystick (Diameter):	摇杆大小（直径）：
+Transparansi (Opacity):	透明度（Opacity）：
+Lari otomatis:	自动疾跑：
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	推到圆圈边缘即可疾跑。若想用自己的 CTRL 按键疾跑，请关闭此项。
+Tombol / Aksi Input:	按键 / 输入操作：
+Indikator FPS In-Game	游戏内 FPS 指示器
+Toggle Keyboard Layar	切换屏幕键盘
+Sembunyikan/Tampilkan GUI	隐藏/显示 GUI
+Buka Menu (pengaturan dan keluar)	打开菜单（设置与退出）
+Aksi Sistem Launcher	启动器系统操作
+Mouse Kiri (Attack)	鼠标左键（攻击）
+Mouse Kanan (Use)	鼠标右键（使用）
+Mouse Tengah (Pick)	鼠标中键（选取）
+Ubah >	更改 >
+Lebar (Width):	宽度（Width）：
+Tinggi (Height):	高度（Height）：
+Kebulatan Sudut:	圆角程度：
+Mode Toggle:	切换模式：
+Sekali tap untuk kunci	点按一次即锁定
+\u26a1 FITUR MAKRO	⚡ 宏功能
+Jadikan tombol ini sebagai makro otomatis	将此按键设为自动宏
+Pilih Mode Makro:	选择宏模式：
+\u2328 Chat/Perintah	⌨ 聊天/命令
+Ketik otomatis	自动输入
+\ud83d\udd17 Kombinasi	🔗 组合键
+Teks / Perintah yang diketik otomatis:	自动输入的文本 / 命令：
+Misal: /gamemode creative atau /home	例如：/gamemode creative 或 /home
+Template Cepat:	快速模板：
+Urutan Key Kombinasi:	组合键顺序：
+Hapus Semua	全部清除
+Belum ada key kombinasi. Tambahkan key di bawah.	还没有组合键。请在下方添加按键。
+Tambah Key ke Kombinasi	将按键添加到组合
+Tambah Cepat:	快速添加：
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	按下时从上（#1）到下依次执行。
+Interval Auto-Click:	自动连点间隔：
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	按住时，此按键会自动极快地反复按下并松开。
+Tombol dihapus	按键已删除
+HAPUS TOMBOL	删除按键
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	🔒 系统按键无法删除
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	游戏内模式 · 拖动按键以匹配游戏 HUD，然后点按“完成”
+Reset Layout GUI?	重置 GUI 布局？
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	所有按键位置和自定义设置都将恢复为 AmberLauncher 的标准默认布局。
+Layout direset ke standar	布局已重置为默认
+Tampil saat:	显示时机：
+Selalu	始终
+Saat main	游戏中
+Saat menu	菜单中
+Menu = inventori, chat, dan layar lain di dalam game.	菜单 = 游戏内的物品栏、聊天和其他界面。
+Semua tombol	所有按键
+\ud83d\udd79 Virtual Analog Joystick (WASD)	🕹 虚拟模拟摇杆（WASD）
+Mouse Btn {0}	鼠标按键 {0}
+Key Code {0}	键码 {0}
+Multi-Key	多键组合
+\u26a1 Turbo Click	⚡ 连点
+Auto-clicker	自动连点器

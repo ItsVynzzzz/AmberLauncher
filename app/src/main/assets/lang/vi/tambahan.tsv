@@ -1,0 +1,28 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	XONG
+SIMPAN	LƯU
+KEMBALI	QUAY LẠI
+AKTIF	ĐANG DÙNG
+DIPILIH	ĐÃ CHỌN
+MENGERTI	ĐÃ HIỂU
+Hapus akun	Xóa tài khoản
+Populer	Phổ biến
+Hijau	Xanh lá
+Ungu	Tím
+Navy	Xanh navy
+Teal	Xanh mòng két
+Gagal terhubung ke CurseForge	Không thể kết nối tới CurseForge
+Memuat data dari CurseForge...	Đang tải dữ liệu từ CurseForge...
+Gagal memuat dari CurseForge	Không thể tải từ CurseForge
+Permukaan game TextureView	Bề mặt game TextureView
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	Bật nếu hình ảnh game bị xoay 90 độ hoặc trông bị nghiêng dù launcher đang ở chế độ ngang (trường hợp được báo cáo trên Minecraft 26.x với renderer Zink). Nặng hơn mặc định một chút. Áp dụng khi mở lại game.
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	{0} mục đã bị bỏ qua hoặc gộp vì Amber không có mục tương đương (ví dụ ngăn kéo, chuột ảo, lớp ẩn và nút cuộn thứ hai).
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	Tất cả nút đã được chuyển đổi thành công. Hãy kiểm tra vị trí của chúng trong trình chỉnh sửa điều khiển.
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	Bố cục này đến từ {0} và đã được chuyển sang định dạng Amber. {1}
+Log game AmberLauncher	Nhật ký game AmberLauncher
+Bagikan log game	Chia sẻ nhật ký game
+Log launcher AmberLauncher	Nhật ký launcher AmberLauncher
+Bagikan log launcher	Chia sẻ nhật ký launcher
+Batal dan keluar	Hủy và thoát
+Ubah skin & jubah	Đổi skin & áo choàng
+Hapus teks	Xóa văn bản

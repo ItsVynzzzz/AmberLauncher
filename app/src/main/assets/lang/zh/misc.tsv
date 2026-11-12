@@ -1,0 +1,57 @@
+# Sisa teks: Home, kategori mod, pesan galat, toast in-game
+RAM bebas {0} GB	可用内存 {0} GB
+Renderer {~0}	渲染器 {0}
+Otomatis	自动
+Lokal	本地
+Mengunduh {0}...	正在下载 {0}…
+Mengekstrak	正在解压
+{~0}: {1} ({2} file)	{0}：{1}（{2} 个文件）
+Snapdragon 6s 4G Gen 1, Adreno 610, RAM 4 GB, layar 90 Hz	Snapdragon 6s 4G Gen 1，Adreno 610，4 GB 内存，90 Hz 屏幕
+\ud83d\udccc FPS Di-Pin (Tetap tampil saat GUI disembunyikan)	📌 FPS 已固定（隐藏 GUI 时仍显示）
+\ud83d\udcdc Menampilkan Live Log Minecraft	📜 正在显示 Minecraft 实时日志
+FPS Mode Normal (Mengikuti visibilitas GUI)	FPS 普通模式（跟随 GUI 显示状态）
+Gagal menyiapkan OpenJDK ({0}): {~1}	准备 OpenJDK（{0}）失败：{1}
+Forge hanya mendukung Minecraft {0} ke atas	Forge 仅支持 Minecraft {0} 及以上版本
+Installer Forge gagal	Forge 安装程序失败
+version.json di installer Forge tidak terbaca	无法读取 Forge 安装程序中的 version.json
+Path library Forge tidak aman: {0}	Forge 库路径不安全：{0}
+dan {0} lainnya	以及其他 {0} 项
+Path mappings tidak aman: {0}	映射路径不安全：{0}
+Alamat mappings Mojang kosong	Mojang 映射地址为空
+install_profile.json tidak ada di installer Forge	Forge 安装程序中缺少 install_profile.json
+install_profile.json tidak terbaca	无法读取 install_profile.json
+{0} tidak ada di installer Forge	Forge 安装程序中缺少 {0}
+Tidak bisa membuat {0}	无法创建 {0}
+HTTP {0} dari {1}	来自 {1} 的 HTTP {0}
+Respons kosong dari {0}	{0} 返回了空响应
+Unduhan dibatalkan	下载已取消
+Content-Range tidak cocok	Content-Range 不匹配
+Range ditolak	Range 被拒绝
+Balasan kosong	响应为空
+Unduhan belum lengkap ({0} dari {1} byte)	下载不完整（{1} 字节中的 {0} 字节）
+Berkas kosong	文件为空
+balasan bukan daftar rilis	响应不是发行版列表
+NeoForge hanya mendukung Minecraft {0} ke atas	NeoForge 仅支持 Minecraft {0} 及以上版本
+Installer NeoForge gagal	NeoForge 安装程序失败
+version.json di installer NeoForge tidak terbaca	无法读取 NeoForge 安装程序中的 version.json
+Path library NeoForge tidak aman: {0}	NeoForge 库路径不安全：{0}
+install_profile.json tidak ada di installer NeoForge	NeoForge 安装程序中缺少 install_profile.json
+{0} tidak ada di installer NeoForge	NeoForge 安装程序中缺少 {0}
+\u26a1 Optimization	⚡ 优化
+\u2699\ufe0f Technology	⚙️ 科技
+\ud83e\ude84 Magic	🪄 魔法
+\ud83d\uddfa\ufe0f Adventure	🗺️ 冒险
+\ud83d\udee0\ufe0f Utility	🛠️ 实用
+\ud83c\udfa8 Decoration	🎨 装饰
+\ud83d\udcdc Quests	📜 任务
+\u2728 Simplistic	✨ 简约
+\ud83c\udfdb\ufe0f Traditional	🏛️ 传统
+\ud83c\udf05 Realistic	🌅 写实
+\ud83c\udfa8 Stylized	🎨 风格化
+\ud83d\udd2e Fantasy	🔮 奇幻
+\ud83c\udf0d Worldgen	🌍 世界生成
+Buy me a coffee	请我喝杯咖啡
+LAUNCHER EXCEPTION	启动器异常
+\ud83c\udff0 Medieval	🏰 中世纪
+Resource Pack (.zip)	资源包（.zip）
+MOD LOADER	模组加载器

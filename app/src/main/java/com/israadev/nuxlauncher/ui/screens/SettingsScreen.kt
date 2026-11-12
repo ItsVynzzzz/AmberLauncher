@@ -268,7 +268,9 @@ fun SettingsScreen(
         Tr.ES to "Espa\u00f1ol",
         Tr.VI to "Ti\u1ebfng Vi\u1ec7t",
         Tr.PT to "Portugu\u00eas (Brasil)",
-        Tr.TH to "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22"
+        Tr.TH to "\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22",
+        Tr.ZH to "\u7b80\u4f53\u4e2d\u6587",
+        Tr.FIL to "Filipino"
     )
 
     Column(
@@ -1326,7 +1328,7 @@ fun SettingsScreen(
                                                 ) {
                                                     Icon(
                                                         imageVector = Icons.Default.Settings,
-                                                        contentDescription = "Konfigurasi ${rendererItem.displayName}",
+                                                        contentDescription = Tr.t("Konfigurasi ${rendererItem.displayName}"),
                                                         tint = NuxColors.SageGreen,
                                                         modifier = Modifier.size(13.dp)
                                                     )

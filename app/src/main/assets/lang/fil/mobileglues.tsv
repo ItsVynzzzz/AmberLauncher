@@ -1,0 +1,3 @@
+# Pengaturan > Game > Grafis: cache shader MobileGlues
+Cache shader MobileGlues	Shader cache ng MobileGlues
+Menyimpan hasil terjemahan shader di HP, jadi game berikutnya memuat shader lebih cepat dan lebih sedikit patah-patah. Dimatikan = MobileGlues memakai pengaturan bawaannya tanpa cache. Berlaku saat game dijalankan berikutnya.	Sine-save ang mga na-translate na shader sa phone, kaya mas mabilis mag-load ng mga shader ang susunod na game at mas kaunti ang pag-stutter. Naka-off = gagamitin ng MobileGlues ang sarili nitong default na walang cache. Ipapatupad sa susunod na pagsisimula ng game.

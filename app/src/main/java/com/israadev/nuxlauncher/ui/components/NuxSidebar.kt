@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -151,7 +152,7 @@ fun NuxSidebar(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Info,
-                    contentDescription = "Tentang & Lisensi",
+                    contentDescription = Tr.t("Tentang & Lisensi"),
                     tint = Color.White.copy(alpha = 0.6f),
                     modifier = Modifier.size(22.dp)
                 )

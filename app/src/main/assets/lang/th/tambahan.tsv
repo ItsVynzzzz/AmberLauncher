@@ -1,0 +1,28 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	เสร็จสิ้น
+SIMPAN	บันทึก
+KEMBALI	กลับ
+AKTIF	ใช้งานอยู่
+DIPILIH	เลือกแล้ว
+MENGERTI	เข้าใจแล้ว
+Hapus akun	ลบบัญชี
+Populer	ยอดนิยม
+Hijau	เขียว
+Ungu	ม่วง
+Navy	น้ำเงินเข้ม
+Teal	เขียวน้ำทะเล
+Gagal terhubung ke CurseForge	เชื่อมต่อ CurseForge ไม่ได้
+Memuat data dari CurseForge...	กำลังโหลดข้อมูลจาก CurseForge...
+Gagal memuat dari CurseForge	โหลดจาก CurseForge ไม่สำเร็จ
+Permukaan game TextureView	พื้นผิวเกม TextureView
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	เปิดใช้เมื่อภาพเกมหมุน 90 องศาหรือดูเอียง ทั้งที่ตัวเปิดเกมอยู่ในแนวนอน (กรณีที่มีรายงานใน Minecraft 26.x กับ renderer Zink) หนักกว่าค่าเริ่มต้นเล็กน้อย มีผลเมื่อเปิดเกมครั้งถัดไป
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	ข้าม {0} รายการหรือรวมเข้าด้วยกัน เพราะ Amber ไม่มีรายการที่เทียบเท่า (เช่น ลิ้นชัก เมาส์เสมือน เลเยอร์ที่ซ่อนอยู่ และปุ่มเลื่อนที่สอง)
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	แปลงปุ่มทั้งหมดสำเร็จแล้ว ตรวจสอบตำแหน่งของปุ่มในตัวแก้ไขการควบคุม
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	เลย์เอาต์นี้มาจาก {0} และถูกแปลงเป็นรูปแบบของ Amber {1}
+Log game AmberLauncher	ล็อกเกมของ AmberLauncher
+Bagikan log game	แชร์ล็อกเกม
+Log launcher AmberLauncher	ล็อกตัวเปิดเกมของ AmberLauncher
+Bagikan log launcher	แชร์ล็อกตัวเปิดเกม
+Batal dan keluar	ยกเลิกและออก
+Ubah skin & jubah	เปลี่ยนสกินและเคป
+Hapus teks	ล้างข้อความ

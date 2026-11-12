@@ -69,7 +69,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
 - **Crash reports** with optional log upload to mclo.gs.
 - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
-- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), and ภาษาไทย.
+- **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, and Filipino.
 - **Experimental**: TouchController mod support and the Rust engine (Horizon).
 
 **Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.

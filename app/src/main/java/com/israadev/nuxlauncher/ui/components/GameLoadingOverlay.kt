@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 
 private val LOADING_BACKGROUND = Color(0xFF1B1B1B)
 
@@ -78,7 +79,7 @@ fun GameLoadingOverlay(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Close,
-                    contentDescription = "Batal dan keluar",
+                    contentDescription = Tr.t("Batal dan keluar"),
                     tint = Color.White,
                     modifier = Modifier.size(closeSize * 0.5f)
                 )

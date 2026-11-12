@@ -1,0 +1,116 @@
+# Akun, login Microsoft dan Ely.by
+Skin & Jubah akun Ely.by dikelola langsung di https://account.ely.by	Ely.by 账号的皮肤与披风直接在 https://account.ely.by 上管理
+Belum ada akun tersimpan	还没有已保存的账号
+{0} akun tersimpan \u00b7 ketuk untuk berganti	已保存 {0} 个账号 · 点按即可切换
+Profil aktif	当前使用的档案
+Skin & Jubah	皮肤与披风
+Belum ada profil aktif	还没有当前使用的档案
+Pilih atau tambahkan akun untuk mulai bermain.	选择或添加账号即可开始游玩。
+Tambahkan akun Offline, Microsoft, atau Ely.by.	添加离线、Microsoft 或 Ely.by 账号。
+Aktif	使用中
+Gunakan	使用
+Akun {0} berhasil ditambahkan!	账号 {0} 添加成功！
+Hapus akun?	删除账号？
+Hapus profil '{0}' ({1}) dari perangkat ini?	要从此设备删除档案“{0}”（{1}）吗？
+Profil '{0}' dihapus	档案“{0}”已删除
+Akun resmi Microsoft	Microsoft 官方账号
+Akun terverifikasi Ely.by	已验证的 Ely.by 账号
+Akun offline / lokal	离线 / 本地账号
+Pilih cara masuk ke Minecraft	选择登录 Minecraft 的方式
+Lokal \u00b7 tanpa login	本地 · 无需登录
+Resmi \u00b7 akun Mojang	正版 · Mojang 账号
+Browser \u00b7 skin & jubah	浏览器 · 皮肤与披风
+Nama pemain (Steve, Alex...)	玩家名（Steve、Alex…）
+Username tidak boleh kosong	用户名不能为空
+Simpan akun	保存账号
+Masuk dengan akun Microsoft / Xbox	使用 Microsoft / Xbox 账号登录
+Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi.	授权窗口直接在启动器内打开，无需离开应用。
+Gagal memulai otorisasi Microsoft.	无法开始 Microsoft 授权。
+Menghubungi...	正在连接…
+Masuk dengan Microsoft	使用 Microsoft 登录
+Menunggu otorisasi di browser Ely.by...	正在等待在 Ely.by 浏览器中授权…
+Kode disalin	验证码已复制
+Salin	复制
+Buka lagi	再次打开
+Masuk dengan akun Ely.by	使用 Ely.by 账号登录
+Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password.	浏览器会自动打开以确认你的 Ely.by 账号，无需输入密码。
+Buka browser Ely.by	在浏览器中打开 Ely.by
+Menunggu otorisasi akun di halaman web Microsoft...	正在等待在 Microsoft 网页上授权账号…
+Kode '{0}' telah disalin!	验证码“{0}”已复制！
+Token diterima! Memproses autentikasi Minecraft & Xbox...	已收到令牌！正在处理 Minecraft 和 Xbox 验证…
+Gagal memproses autentikasi Minecraft.	处理 Minecraft 验证失败。
+Otorisasi Microsoft gagal.	Microsoft 授权失败。
+LOGIN AKUN MICROSOFT	MICROSOFT 账号登录
+Masuk dan konfirmasi langsung di jendela aman ini	直接在这个安全窗口中登录并确认
+Kode '{0}' disalin!	验证码“{0}”已复制！
+KODE:	验证码：
+Salin Kode	复制验证码
+Buka di Browser Eksternal	在外部浏览器中打开
+Klik 'Lanjutkan' di halaman atas setelah memasukkan kode	输入验证码后，请点击上方页面中的“继续”
+Gagal memulai otorisasi Ely.by.	无法开始 Ely.by 授权。
+Otorisasi Ely.by gagal.	Ely.by 授权失败。
+Terjadi kesalahan saat login Ely.by.	登录 Ely.by 时发生错误。
+Gagal memulai login Ely.by Device Code ({0}): {1}	无法开始 Ely.by 设备码登录（{0}）：{1}
+Login dibatalkan oleh pengguna.	用户已取消登录。
+Menunggu konfirmasi di browser...	正在等待在浏览器中确认…
+Memperlambat polling...	正在降低轮询频率…
+Waktu otorisasi Ely.by habis.	Ely.by 授权已超时。
+Mengambil informasi akun Ely.by...	正在获取 Ely.by 账号信息…
+Gagal mengambil info akun Ely.by ({0})	获取 Ely.by 账号信息失败（{0}）
+Mengambil UUID Minecraft untuk {0}...	正在获取 {0} 的 Minecraft UUID…
+Gagal login ke Ely.by (HTTP {0}): {1}	登录 Ely.by 失败（HTTP {0}）：{1}
+Profil Ely.by tidak ditemukan dalam respon.	响应中未找到 Ely.by 档案。
+Gagal memulai login Microsoft (HTTP {0}): {1}	无法开始 Microsoft 登录（HTTP {0}）：{1}
+Token berhasil diterima! Menghubungkan ke Xbox Live...	已成功收到令牌！正在连接 Xbox Live…
+Menunggu otorisasi di halaman web...	正在等待在网页上授权…
+Memperlambat frekuensi polling...	正在降低轮询频率…
+Kode login kedaluwarsa. Silakan mulai ulang.	登录验证码已过期。请重新开始。
+Kode otorisasi telah digunakan atau kedaluwarsa. Silakan klik Login untuk mendapatkan kode baru.	授权码已被使用或已过期。请点击“登录”获取新的验证码。
+Otorisasi ditolak ({0}): {1}	授权被拒绝（{0}）：{1}
+Koneksi jaringan terputus berulang kali saat polling. Silakan periksa koneksi internet.	等待期间网络连接多次中断。请检查你的网络连接。
+Waktu otorisasi habis (timeout). Silakan coba lagi.	授权超时。请重试。
+Autentikasi dengan Xbox Live...	正在进行 Xbox Live 验证…
+Gagal autentikasi Xbox Live (HTTP {0}): {1}	Xbox Live 验证失败（HTTP {0}）：{1}
+Gagal memperoleh token Xbox Live atau UserHash.	无法获取 Xbox Live 令牌或 UserHash。
+Meminta otorisasi XSTS Minecraft...	正在请求 Minecraft XSTS 授权…
+Akun ini telah dilarang/diblokir dari Xbox Live.	此账号已被 Xbox Live 封禁或屏蔽。
+Akun dibatasi oleh kontrol orang tua (Restricted).	此账号受家长控制限制（Restricted）。
+Akun Microsoft ini belum memiliki profil Xbox. Silakan buat gamertag di xbox.com terlebih dahulu.	此 Microsoft 账号还没有 Xbox 档案。请先在 xbox.com 创建玩家标签（gamertag）。
+Akun belum menyetujui Ketentuan Layanan Xbox Live.	此账号尚未同意 Xbox Live 服务条款。
+Layanan Xbox Live tidak tersedia di negara/wilayah akun Anda.	你账号所在的国家/地区不提供 Xbox Live。
+Akun memerlukan verifikasi bukti usia dewasa (Proof of Age).	此账号需要进行成年年龄验证（Proof of Age）。
+Batas waktu bermain harian Xbox Live telah tercapai.	已达到 Xbox Live 每日游玩时间上限。
+Akun di bawah umur (Child Account). Harus ditautkan ke akun keluarga (Family Safety) oleh orang tua.	这是儿童账号（Child Account）。必须由家长将其加入家庭组（Family Safety）。
+Otorisasi XSTS gagal (HTTP {0}): {1}	XSTS 授权失败（HTTP {0}）：{1}
+Gagal memperoleh token XSTS.	无法获取 XSTS 令牌。
+Menghubungkan ke Mojang Minecraft Services...	正在连接 Mojang Minecraft 服务…
+Gagal login ke layanan Minecraft ({0}): {1}	登录 Minecraft 服务失败（{0}）：{1}
+Layanan Minecraft tidak mengembalikan token akses.	Minecraft 服务未返回访问令牌。
+Mengambil profil pemain Minecraft Java...	正在获取 Minecraft Java 玩家档案…
+Akun Microsoft ini belum memiliki lisensi game Minecraft: Java Edition.	此 Microsoft 账号尚未拥有 Minecraft: Java Edition 的许可。
+Gagal mengambil profil Minecraft ({0}): {1}	获取 Minecraft 档案失败（{0}）：{1}
+Tidak ada refresh token tersimpan.	没有已保存的刷新令牌。
+Gagal memperbarui token Microsoft ({0}): {1}	刷新 Microsoft 令牌失败（{0}）：{1}
+Token pembaruan kosong.	刷新令牌为空。
+Memperbarui sesi Microsoft...	正在刷新 Microsoft 会话…
+Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.	暂时无法刷新 Microsoft 会话。游戏仍会启动，但在线功能可能需要重新登录。
+Tidak bisa terhubung ke server Microsoft. Periksa sambungan internet lalu coba lagi.	无法连接到 Microsoft 服务器。请检查网络连接后重试。
+Gagal memulai login Microsoft (kode {0}). Coba lagi nanti.	无法开始 Microsoft 登录（代码 {0}）。请稍后再试。
+Terlalu banyak percobaan login. Tunggu beberapa menit lalu coba lagi.	登录尝试次数过多。请等待几分钟后重试。
+Gagal autentikasi Xbox Live (kode {0}). Coba lagi nanti.	Xbox Live 验证失败（代码 {0}）。请稍后再试。
+Otorisasi XSTS gagal (kode {0}). Coba lagi nanti.	XSTS 授权失败（代码 {0}）。请稍后再试。
+Server Minecraft sedang bermasalah (kode {0}). Coba lagi beberapa menit lagi.	Minecraft 服务器出现问题（代码 {0}）。请几分钟后再试。
+Layanan Minecraft menolak login (kode {0}). Coba lagi nanti. Bila terus berulang, laporkan ke pengembang launcher.	Minecraft 服务拒绝了登录（代码 {0}）。请稍后再试。如果问题持续出现，请向启动器开发者反馈。
+Akun ini belum punya profil Minecraft Java. Pastikan Minecraft: Java Edition (atau Game Pass PC) sudah dimiliki, lalu buat nama pemain di minecraft.net/profile.	此账号还没有 Minecraft Java 档案。请确认已拥有 Minecraft: Java Edition（或 Game Pass for PC），然后在 minecraft.net/profile 创建玩家名。
+Gagal mengambil profil Minecraft (kode {0}).	无法获取 Minecraft 档案（代码 {0}）。
+Gagal memperbarui sesi Microsoft (kode {0}). Silakan login ulang.	无法刷新 Microsoft 会话（代码 {0}）。请重新登录。
+Kode login tidak dikenali. Silakan mulai ulang.	无法识别登录验证码。请重新开始。
+Login ditolak di halaman Microsoft. Silakan mulai ulang.	Microsoft 页面拒绝了此次登录。请重新开始。
+Mojang menolak aplikasi launcher ini (Invalid app registration, kode 403). Client ID login belum disetujui; hubungi pengembang launcher.	Mojang 拒绝了此启动器应用（Invalid app registration，代码 403）。登录用的 Client ID 尚未获批；请联系启动器开发者。
+Menunggu login di browser...	正在等待在浏览器中登录…
+Selesaikan login di browser, lalu kembali ke sini	请在浏览器中完成登录，然后返回这里
+Tidak ada browser yang bisa dibuka	没有可用来打开的浏览器
+Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	验证码已复制。如果浏览器中的验证码栏仍为空，请粘贴后选择“继续”。
+Buka di browser	在浏览器中打开
+Ely.by OAuth Error: {0}	Ely.by OAuth 错误：{0}
+Microsoft OAuth Error: {0}	Microsoft OAuth 错误：{0}

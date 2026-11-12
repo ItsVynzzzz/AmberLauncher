@@ -1,0 +1,68 @@
+# Wardrobe: skin dan jubah
+Gagal memuat jubah: {0}	加载披风失败：{0}
+Memvalidasi skin...	正在验证皮肤…
+Skin dimuat di preview ({0}) \u2014 Klik Simpan untuk menerapkan	皮肤已载入预览（{0}）— 点击“保存”以应用
+File tidak valid	文件无效
+Memvalidasi cape...	正在验证披风…
+Cape kustom dimuat di preview \u2014 Klik Simpan untuk menerapkan	自定义披风已载入预览 — 点击“保存”以应用
+File cape tidak valid	披风文件无效
+Kustomisasi tampilan skin dan jubah pemain Minecraft	自定义 Minecraft 玩家的皮肤和披风
+3D (DRAG / PUTAR)	3D（拖动 / 旋转）
+Putar Otomatis	自动旋转
+Reset Kamera	重置视角
+Jalan	行走
+Diam	站立
+Lari	奔跑
+Sapa	挥手
+KUSTOM SKIN	自定义皮肤
+JUBAH / CAPE	披风
+Sistem Skin & Jubah Ely.by	Ely.by 皮肤与披风系统
+Akun Ely.by menggunakan server skinsystem terpusat. Untuk mengganti skin atau tipe model lengan, silakan unggah langsung melalui website resmi ely.by agar tersinkronisasi in-game.	Ely.by 账号使用集中式 skinsystem 服务器。如需更换皮肤或手臂模型类型，请直接在 ely.by 官方网站上传，以便在游戏内同步。
+KUNJUNGI ACCOUNT.ELY.BY	访问 ACCOUNT.ELY.BY
+PILIH FILE SKIN (.PNG)	选择皮肤文件（.PNG）
+TIPE MODEL LENGAN:	手臂模型类型：
+Model Klasik dipilih (Preview) \u2014 Klik Simpan	已选择经典模型（预览）— 点击“保存”
+Klasik	经典
+Lengan tebal (4px)	粗手臂（4px）
+Model Slim dipilih (Preview) \u2014 Klik Simpan	已选择纤细模型（预览）— 点击“保存”
+Lengan ramping (3px)	细手臂（3px）
+Skin direset ke default Steve (Preview) \u2014 Klik Simpan	皮肤已重置为默认 Steve（预览）— 点击“保存”
+\u21ba Reset ke Skin Default (Klasik)	↺ 重置为默认皮肤（经典）
+JUBAH RESMI MINECRAFT.NET:	MINECRAFT.NET 官方披风：
+Memuat jubah dari Minecraft.net...	正在从 Minecraft.net 加载披风…
+Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.	你的 Microsoft 账号在 Minecraft.net 上还没有官方披风。
+Jubah dilepas (Preview) \u2014 Klik Simpan	已取下披风（预览）— 点击“保存”
+Tanpa Jubah (Lepas Cape)	无披风（取下披风）
+Jubah {0} dipilih (Preview) \u2014 Klik Simpan	已选择 {0} 披风（预览）— 点击“保存”
+AKTIF DI MOJANG	已在 MOJANG 启用
+Sistem Skin & Cape Ely.by	Ely.by 皮肤与披风系统
+Akun Ely.by menggunakan server skinsystem resmi. Seluruh skin dan jubah dikelola langsung melalui website ely.by dan akan otomatis tampil di dalam game.	Ely.by 账号使用官方 skinsystem 服务器。所有皮肤和披风都直接在 ely.by 网站上管理，并会自动显示在游戏中。
+BUKA WEBSITE ELY.BY	打开 ELY.BY 网站
+PILIH FILE CAPE KUSTOM (.PNG)	选择自定义披风文件（.PNG）
+ATAU PILIH PRESET JUBAH:	或选择披风预设：
+Cape dilepas (Preview) \u2014 Klik Simpan	已取下披风（预览）— 点击“保存”
+Menyinkronkan ke Minecraft.net...	正在同步到 Minecraft.net…
+Gagal memperbarui Minecraft.net: {~0}	更新 Minecraft.net 失败：{0}
+Perubahan berhasil diterapkan ke Minecraft.net!	更改已应用到 Minecraft.net！
+Skin & Cape berhasil disimpan!	皮肤与披风已保存！
+SIMPAN KE MOJANG	保存到 MOJANG
+SIMPAN PERUBAHAN	保存更改
+Jubah Resmi Minecraft	Minecraft 官方披风
+Jubah Aktif Minecraft	Minecraft 当前披风
+Gagal memuat jubah Minecraft.	加载 Minecraft 披风失败。
+Respon profil kosong	个人资料响应为空
+Gagal mengubah jubah.	更换披风失败。
+Gagal mengunggah skin.	上传皮肤失败。
+Gagal membaca file dari penyimpanan.	从存储读取文件失败。
+Format skin tidak valid. Ukuran harus 64x64 atau 64x32 piksel.	皮肤格式无效。尺寸必须为 64x64 或 64x32 像素。
+Format cape tidak valid. Ukuran harus 64x32 atau 128x64 piksel.	披风格式无效。尺寸必须为 64x32 或 128x64 像素。
+Tanpa Cape	无披风
+Reset / Lepas cape	重置 / 取下披风
+Klasik merah resmi Mojang	Mojang 官方经典红
+Creeper emas peringatan 15 tahun	15 周年纪念金色苦力怕
+Jubah biru kehormatan migrasi	迁移荣誉蓝色披风
+Motif sakura edisi 1.20	1.20 版樱花图案
+Edisi emas pencipta	创作者金色版
+Edisi Java & Bedrock bundle	Java 与 Bedrock 捆绑版
+WARDROBE & CUSTOM SKIN	衣橱与自定义皮肤
+{0} Cape	{0} 披风

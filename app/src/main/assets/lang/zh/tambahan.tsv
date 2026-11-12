@@ -1,0 +1,32 @@
+# Teks tambahan (audit 12 Nov 2026): label huruf kapital, subjudul, pesan CurseForge, TextureView, impor layout, judul berbagi log, deskripsi aksesibilitas.
+SELESAI	完成
+SIMPAN	保存
+KEMBALI	返回
+AKTIF	使用中
+DIPILIH	已选择
+MENGERTI	知道了
+Hapus akun	删除账号
+Populer	热门
+Hijau	绿色
+Ungu	紫色
+Navy	藏青色
+Teal	青色
+Gagal terhubung ke CurseForge	无法连接到 CurseForge
+Memuat data dari CurseForge...	正在从 CurseForge 加载数据…
+Gagal memuat dari CurseForge	从 CurseForge 加载失败
+Permukaan game TextureView	TextureView 游戏画面
+Nyalakan bila tampilan game terputar 90 derajat atau terlihat miring padahal launcher landscape (kasus yang dilaporkan di Minecraft 26.x dengan renderer Zink). Sedikit lebih berat dari bawaan. Berlaku saat game dibuka lagi.	如果游戏画面旋转了 90 度，或在启动器为横屏时画面仍然倾斜，请开启此项（在使用 Zink 渲染器的 Minecraft 26.x 上有此类反馈）。比默认方式稍重。下次打开游戏时生效。
+{0} entri dilewati atau digabung karena tidak ada padanannya di Amber (misalnya laci, mouse virtual, layer tersembunyi, dan tombol scroll kedua).	有 {0} 个条目被跳过或合并，因为 Amber 中没有对应的功能（例如抽屉、虚拟鼠标、隐藏图层和第二个滚动按键）。
+Semua tombol berhasil diubah. Periksa posisinya di editor kontrol.	所有按键都已成功转换。请在控制编辑器中检查它们的位置。
+Layout ini berasal dari {0} dan diubah ke format Amber. {~1}	此布局来自 {0}，已转换为 Amber 格式。{1}
+Log game AmberLauncher	AmberLauncher 游戏日志
+Bagikan log game	分享游戏日志
+Log launcher AmberLauncher	AmberLauncher 启动器日志
+Bagikan log launcher	分享启动器日志
+Batal dan keluar	取消并退出
+Ubah skin & jubah	更换皮肤和披风
+Hapus teks	清除文字
+Efek	特效
+Efek salju	雪花特效
+Jumlah salju	雪花数量
+Salju turun di Beranda dan layar lain. Bawaan mati.	主页和其他界面会飘落雪花。默认关闭。

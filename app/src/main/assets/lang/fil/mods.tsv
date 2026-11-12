@@ -1,0 +1,200 @@
+# Layar Mod, Mod terpasang, Impor Addon, dan pesan pemasangan
+mods	mga mod
+modpacks	mga modpack
+shaderpacks	mga shader pack
+resourcepacks	mga resource pack
+datapacks	mga data pack
+format yang didukung	sinusuportahang format
+File "{0}" diabaikan! Format yang didukung untuk {~1} hanya {~2}	Hindi pinansin ang file na "{0}"! Ang tanging sinusuportahang format para sa {1} ay {2}
+{0} file diabaikan karena format tidak didukung ({~1})!	{0} file ang hindi pinansin dahil hindi sinusuportahan ang format ({1})!
+Membaca arsip modpack...	Binabasa ang modpack archive...
+Berhasil mengimpor dan memasang {0} modpack!	Matagumpay na na-import at na-install ang {0} modpack!
+Gagal mengimpor modpack: {~0}	Nabigong i-import ang modpack: {0}
+Berhasil mengimpor {0} file {~1}!	Matagumpay na na-import ang {0} file ({1})!
+Gagal mengimpor file: {~0}	Nabigong i-import ang file: {0}
+Mencari versi...	Naghahanap ng mga bersyon...
+Tidak ada versi cocok untuk {0}!	Walang compatible na bersyon para sa {0}!
+Mengunduh...	Dina-download...
+Modpack {0} berhasil dipasang!	Na-install ang modpack na {0}!
+Berhasil memasang {0} beserta {1} dependensi!	Na-install ang {0} kasama ang {1} dependency!
+Berhasil memasang {0}!	Na-install ang {0}!
+Memulai pengunduhan...	Sinisimulan ang pag-download...
+Gagal terhubung ke Modrinth	Hindi makakonekta sa Modrinth
+Pilih atau buat instance di Home untuk mulai memasang mod.	Pumili o gumawa ng instance sa Home para makapagsimulang mag-install ng mga mod.
+Kembali ke Home	Bumalik sa Home
+Terpasang ({0})	Naka-install ({0})
+Jelajah	Mag-browse
+Cari di Modrinth...	Maghanap sa Modrinth...
+Cari di {0} item...	Maghanap sa {0} item...
+Tidak ada world	Walang world
+Semua versi	Lahat ng bersyon
+Pilih instance terlebih dahulu!	Pumili muna ng instance!
+Impor	I-import
+Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu.	Wala pang world sa instance na ito. Buksan muna ang game para gumawa ng isa.
+Belum ada {~0} terpasang di instance ini	Wala pang naka-install na {0} sa instance na ito
+Tidak ada item yang cocok	Walang tumutugmang item
+Jelajahi Modrinth	Mag-browse sa Modrinth
+Memuat data dari Modrinth...	Nilo-load ang data mula sa Modrinth...
+Gagal memuat dari Modrinth	Nabigong mag-load mula sa Modrinth
+Terjadi kesalahan jaringan	Nagkaroon ng error sa network
+Tidak ada hasil cocok untuk Minecraft {0} ({1})	Walang resultang tumutugma sa Minecraft {0} ({1})
+Tidak ada hasil ditemukan untuk kata kunci ini	Walang nahanap na resulta para sa keyword na ito
+Coba ubah kata kunci atau nonaktifkan filter versi	Subukang palitan ang keyword o i-off ang filter ng bersyon
+Cari di semua versi Minecraft	Maghanap sa lahat ng bersyon ng Minecraft
+Sebelumnya	Nakaraan
+Selanjutnya	Susunod
+Pilih instance	Pumili ng instance
+Pilih world	Pumili ng world
+Hapus modpack?	Burahin ang modpack?
+Hapus {~0}?	Burahin ang {0}?
+Yakin ingin menghapus modpack "{0}"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance.	Sigurado ka bang buburahin ang modpack na "{0}"? Mabubura rin sa instance ang lahat ng mod na na-install mula sa modpack na ito.
+Yakin ingin menghapus "{0}" dari instance ini?	Sigurado ka bang buburahin ang "{0}" sa instance na ito?
+Modpack dan semua mod berhasil dihapus!	Nabura ang modpack at lahat ng mod nito!
+{0} berhasil dihapus!	Nabura ang {0}!
+Mengimpor & memasang modpack	Ini-import at ini-install ang modpack
+Membaca daftar mod dan mengunduh file...	Binabasa ang listahan ng mod at dina-download ang mga file...
+{0} / {1} file mod	{0} / {1} mod file
+Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.	Binabasa ng launcher ang listahan ng mod at dina-download ang modpack. Pakihintay.
+Tangkapan layar	Screenshot
+Pratinjau gambar	Preview ng larawan
+NONAKTIF	NAKA-DISABLE
+Tidak ada deskripsi	Walang paglalarawan
+oleh {0}	ni {0}
+Unduh...	I-download...
+Terpasang	Naka-install
+Pasang pack	I-install ang pack
+Versi dipilih	Napiling bersyon
+Sedang mengunduh dan memasang...	Dina-download at ini-install...
+Sudah terpasang	Naka-install na
+Pasang modpack	I-install ang modpack
+Pasang ke instance	I-install sa instance
+Versi ({0})	Mga Bersyon ({0})
+Deskripsi	Paglalarawan
+Tidak ada ringkasan deskripsi.	Walang buod ng paglalarawan.
+Tidak ada versi yang didukung	Walang suportadong bersyon
+Proyek ini tidak punya rilis yang cocok dengan Minecraft {0} ({1}).	Walang release ang proyektong ito na compatible sa Minecraft {0} ({1}).
+Versi {0} \u00b7 MC {1}	Bersyon {0} · MC {1}
+Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest).	Direktang ine-extract ang modpack sa instance (overrides, configuration, at manifest).
+Dependensi wajib ikut terpasang otomatis.	Awtomatikong ini-install din ang mga kinakailangang dependency.
+Mod terpasang	Mga naka-install na mod
+Belum ada resource pack	Wala pang resource pack
+Belum ada shader	Wala pang shader
+Belum ada mod terpasang	Wala pang naka-install na mod
+Pasang lewat menu Mod di sidebar.	I-install ito sa pamamagitan ng menu na Mod sa sidebar.
+Nonaktif \u00b7 {0}	Naka-disable · {0}
+PASANG ADDON EKSTERNAL	MAG-INSTALL NG EXTERNAL NA ADDON
+Pemasang Addon	Installer ng Addon
+Tipe file: {0} \u00b7 Siap dipasang	Uri ng file: {0} · Handa nang i-install
+KATEGORI ADDON	KATEGORYA NG ADDON
+TARGET INSTANCE MINECRAFT	TARGET NA MINECRAFT INSTANCE
+\u26a0\ufe0f Belum ada instance Minecraft yang dibuat! Buat instance terlebih dahulu di Dashboard.	⚠️ Wala pang nagawang Minecraft instance! Gumawa muna ng instance sa Home.
+Memasang addon...	Ini-install ang addon...
+Gagal: {~0}	Nabigo: {0}
+Mempersiapkan pemasangan...	Inihahanda ang pag-install...
+\u2713 Berhasil memasang "{0}" ke {1}!	✓ Na-install ang "{0}" sa {1}!
+Terjadi kesalahan yang tidak diketahui	Nagkaroon ng hindi kilalang error
+Gagal memasang: {~0}	Nabigong mag-install: {0}
+MEMASANG...	INI-INSTALL...
+PASANG SEKARANG	I-INSTALL NGAYON
+{0} mod terpasang	{0} mod ang naka-install
+Menyalin file {0}...	Kinokopya ang file na {0}...
+Gagal membaca file sumber	Hindi mabasa ang source file
+Membaca daftar modpack...	Binabasa ang listahan ng modpack...
+Gagal mengambil detail project: {~0}	Nabigong kunin ang mga detalye ng project: {0}
+Gagal mengambil versi project: {~0}	Nabigong kunin ang mga bersyon ng project: {0}
+Mengekstrak dan menyiapkan modpack...	Ine-extract at inihahanda ang modpack...
+Menyelesaikan dependensi: {0}...	Nilulutas ang mga dependency: {0}...
+Membaca daftar modpack ({0} mod ditemukan)...	Binabasa ang listahan ng modpack ({0} mod ang nahanap)...
+Mengunduh mod ({0}/{1}): {2}...	Dina-download ang mod ({0}/{1}): {2}...
+Mod sudah ada ({0}/{1}): {2}	Nandito na ang mod ({0}/{1}): {2}
+Mengekstrak konfigurasi modpack...	Ine-extract ang configuration ng modpack...
+Mengekstrak file arsip modpack...	Ine-extract ang mga file ng modpack archive...
+Selesai! {0} mod berhasil dipasang.	Tapos na! {0} mod ang na-install.
+Selesai dengan catatan: {0} mod terpasang, {1} file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang.	Natapos na may mga tala: {0} mod ang na-install, {1} file ang nabigo o nilaktawan. Subukang i-install ulit kung may kulang na mod.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric.	Kailangan ng modpack na ito ang {0}, pero Fabric lang ang kasalukuyang sinusuportahan ng AmberLauncher.
+Modpack ini membutuhkan Fabric. Buat instance Fabric dulu, lalu pasang modpack di instance itu.	Kailangan ng modpack na ito ang Fabric. Gumawa muna ng Fabric instance, saka i-install ang modpack doon.
+Modpack ini untuk Minecraft {0}, sedangkan instance ini memakai {1}. Pilih atau buat instance dengan versi yang sama.	Para sa Minecraft {0} ang modpack na ito, pero {1} ang gamit ng instance na ito. Pumili o gumawa ng instance na may parehong bersyon.
+Alamat unduhan ditolak karena tidak memakai HTTPS	Tinanggihan ang download address dahil hindi ito gumagamit ng HTTPS
+Gagal mengunduh file: HTTP {0}	Nabigong i-download ang file: HTTP {0}
+Body stream kosong	Walang laman ang body stream
+Gagal menyimpan file unduhan	Nabigong i-save ang na-download na file
+Berkas {0} rusak atau berubah di jalan (sidik jari tidak cocok), jadi tidak dipasang.	Sira o nabago sa biyahe ang file na {0} (hindi tugma ang fingerprint), kaya hindi ito na-install.
+Isi modpack terlalu besar, pemasangan dibatalkan.	Masyadong malaki ang laman ng modpack, kinansela ang pag-install.
+Modpack ini membutuhkan {0}, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Kailangan ng modpack na ito ang {0}, pero Fabric, Forge, at NeoForge lang ang kasalukuyang sinusuportahan ng AmberLauncher.
+Modpack ini membutuhkan Forge. Buat instance Forge dulu, lalu pasang modpack di instance itu.	Kailangan ng modpack na ito ang Forge. Gumawa muna ng Forge instance, saka i-install ang modpack doon.
+Modpack ini membutuhkan NeoForge. Buat instance NeoForge dulu, lalu pasang modpack di instance itu.	Kailangan ng modpack na ito ang NeoForge. Gumawa muna ng NeoForge instance, saka i-install ang modpack doon.
+Kategori	Kategorya
+Versi	Bersyon
+Urutkan	I-sort ayon sa
+Relevansi	Kaugnayan
+Unduhan	Mga Download
+Pengikut	Mga Follower
+Diperbarui	Kamakailang na-update
+Semua loader	Lahat ng loader
+Pilih kategori	Pumili ng kategorya
+Pilih versi	Pumili ng bersyon
+Pilih loader	Pumili ng loader
+Cari mod...	Maghanap ng mod...
+Cari modpack...	Maghanap ng modpack...
+Cari shader...	Maghanap ng shader...
+Cari resource pack...	Maghanap ng resource pack...
+Cari datapack...	Maghanap ng datapack...
+CurseForge belum tersedia di versi ini	Hindi pa available ang CurseForge sa bersyong ito
+Optimasi	Optimization
+Teknologi	Teknolohiya
+Sihir	Mahika
+Petualangan	Pakikipagsapalaran
+Utilitas	Utility
+Dekorasi	Dekorasyon
+Perlengkapan	Kagamitan
+Makanan	Pagkain
+Penyimpanan	Storage
+Pustaka	Library
+Realistis	Makatotohanan
+Fantasi	Pantasya
+INSTANCE AKTIF	AKTIBONG INSTANCE
+Mod & konten	Mga Mod at nilalaman
+Tambah	Magdagdag
+Home	Home
+Tentang	Tungkol
+Cari pengaturan...	Maghanap ng setting...
+Perekaman layar	Pag-record ng screen
+Latar	Background
+Foto, GIF, atau video	Larawan, GIF, o video
+Redupkan latar	Padilimin ang background
+Seberapa gelap latar di layar selain Home.	Gaano kadilim ang background sa mga screen na hindi Home.
+Tema	Tema
+Aksen warna	Accent color
+Warna tombol dan penanda terpilih di seluruh launcher.	Kulay ng mga button at napiling marker sa buong launcher.
+Gaya tampilan	Istilo ng display
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Gumagamit ang Default ng sariling tema ng AmberLauncher. Binablur ng Liquid Glass ang background sa likod ng mga panel at button.
+Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Kailangan ng Liquid Glass ang Android 12 pataas. Awtomatikong gagamitin ng phone na ito ang Default.
+Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Wika ng text sa launcher. Agad na ipinapatupad nang hindi nagre-restart.
+Pengaturan khusus untuk renderer yang sedang dipakai.	Mga partikular na setting para sa renderer na ginagamit.
+Atur	I-configure
+Tata letak kontrol	Layout ng mga control
+Aplikasi	App
+Informasi aplikasi, lisensi GPL-3.0, dan kredit.	Impormasyon ng app, lisensya ng GPL-3.0, at mga kredito.
+Reset ke default	I-reset sa default
+Semua pengaturan kembali ke bawaan. Perubahan lain tersimpan otomatis.	Babalik sa default ang lahat ng setting. Awtomatikong nase-save ang iba pang pagbabago.
+Belum ada akun	Wala pang account
+Pilih akun untuk bermain	Pumili ng account para maglaro
+Akun aktif untuk bermain	Aktibong account para sa paglalaro
+Jenis akun	Uri ng account
+Status login	Status ng login
+Tersambung	Nakakonekta
+Perlu disegarkan	Kailangang i-refresh
+Segarkan login	I-refresh ang login
+Menyegarkan...	Nire-refresh...
+Login berhasil disegarkan	Na-refresh ang login
+Gagal menyegarkan login	Nabigong i-refresh ang login
+Resource	Resource
+Shader	Shader
+World: {0}	World: {0}
+Screenshot	Screenshot
+Modrinth API error code: {0}	Modrinth API error code: {0}
+Empty response	Walang laman na response
+Game	Game
+Pasang	I-install
+Klasik	Klasiko
+Resource Pack (.zip)	Resource Pack (.zip)

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.models.UserAccount
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 
 /**
@@ -102,7 +103,7 @@ internal fun HomeAccountMenu(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            contentDescription = "Hapus akun",
+                            contentDescription = Tr.t("Hapus akun"),
                             tint = AmberUi.Danger,
                             modifier = Modifier.size(22.dp)
                         )

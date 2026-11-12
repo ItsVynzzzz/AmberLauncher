@@ -1,0 +1,84 @@
+# Pembaruan aplikasi (pop-up versi baru dari GitHub)
+Pembaruan tersedia	May available na update
+Versi {0} sudah tersedia. Kamu memakai versi {1}.	Available na ang bersyon {0}. Bersyon {1} ang gamit mo.
+Yang baru	Ano'ng bago
+Lewati	Laktawan
+Unduh	I-download
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	Naputol ang download. I-tap ang Subukan ulit; magpapatuloy ang download mula sa tumigil.
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	Kulang ang storage space. Magbakante ng mga {0} MB at subukan ulit.
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	Sira ang na-download na file (hindi tugma sa nasa GitHub). I-tap ang Subukan ulit para i-download ulit.
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	Hindi nahanap ang APK file sa GitHub (code 404). Maaaring nabura na ang release.
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	Tinanggihan ng GitHub ang download (code 403). Subukan ulit mamaya.
+GitHub membalas kode {0} saat mengunduh.	Sumagot ang GitHub ng code {0} habang nagda-download.
+Balasan GitHub kosong.	Walang laman ang sagot ng GitHub.
+Balasan GitHub terlalu besar.	Masyadong malaki ang sagot ng GitHub.
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	May problema ang GitHub (code {0}). Subukan ulit mamaya.
+GitHub membalas kode {0}.	Sumagot ang GitHub ng code {0}.
+Tidak ada koneksi internet.	Walang koneksyon sa internet.
+Koneksi terlalu lambat. Coba lagi.	Masyadong mabagal ang koneksyon. Subukan ulit.
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	Nabigo ang ligtas na koneksyon sa GitHub. Suriin ang petsa at oras ng phone.
+Koneksi internet terputus. Coba lagi.	Naputol ang koneksyon sa internet. Subukan ulit.
+Terjadi kesalahan yang tidak terduga.	Nagkaroon ng hindi inaasahang error.
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	Naabot na ang request limit ng GitHub (kadalasan dahil maraming gumagamit ng parehong network). Subukan ulit sa bandang {0}.
+Unduhan gagal: {0}	Nabigo ang download: {0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	Nawawala ang update file. I-tap ang Subukan ulit para i-download ulit.
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	Tumatakbo pa ang game. Isara muna ito para walang mawalang data, saka subukan ulit.
+Pemasangan gagal: {0}	Nabigo ang pag-install: {0}
+Pemasangan dibatalkan.	Kinansela ang pag-install.
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	Hindi mabasa bilang APK ang update file. I-tap ang Subukan ulit para i-download ulit.
+Berkas ini bukan APK AmberLauncher.	Hindi AmberLauncher APK ang file na ito.
+APK ini tidak lebih baru dari versi yang terpasang.	Hindi mas bago ang APK na ito kaysa sa naka-install na bersyon.
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	Iba ang signature ng APK sa naka-install na app, kaya tatanggihan ng Android ang update na ito.
+Pemasangan diblokir oleh sistem atau Play Protect.	Hinarang ng system o ng Play Protect ang pag-install.
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	Hinarang ng system o ng Play Protect ang pag-install.{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Tinanggihan ng Android ang update na ito: hindi tugma ang signature o bersyon nito sa naka-install na app.
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Tinanggihan ng Android ang update na ito: hindi tugma ang signature o bersyon nito sa naka-install na app.{0}
+APK ini tidak cocok dengan HP kamu.	Hindi compatible ang APK na ito sa phone mo.
+APK ini tidak cocok dengan HP kamu.{0}	Hindi compatible ang APK na ito sa phone mo.{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	Sira o hindi valid ang APK. I-tap ang Subukan ulit para i-download ulit.
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	Sira o hindi valid ang APK. I-tap ang Subukan ulit para i-download ulit.{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	Kulang ang storage space para i-install ang update.
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	Kulang ang storage space para i-install ang update.{0}
+Pemasangan gagal.	Nabigo ang pag-install.
+Pemasangan gagal.{0}	Nabigo ang pag-install.{0}
+Balasan GitHub tidak bisa dibaca.	Hindi mabasa ang sagot ng GitHub.
+Daftar rilis tersimpan tidak bisa dibaca.	Hindi mabasa ang naka-save na listahan ng release.
+Pembaruan	Mga Update
+Versi terpasang	Naka-install na bersyon
+Memeriksa...	Sinusuri...
+Lihat pembaruan	Tingnan ang update
+Buka	Buksan
+Periksa pembaruan	Tingnan kung may update
+Periksa otomatis	Awtomatikong suriin
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	Tumitingin ng bagong bersyon sa GitHub tuwing bubuksan ang launcher (ilang KB lang). Kung mayroon, may lalabas na pop-up para i-download at i-install ito.
+Semua rilis	Lahat ng release
+Daftar versi dan catatan perubahannya di GitHub.	Ang listahan ng mga bersyon at ng kanilang changelog sa GitHub.
+Buka GitHub	Buksan ang GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	Dina-download at ini-install ang mga update mula sa loob ng launcher. Hihingi pa rin ang Android ng isang kumpirmasyon sa pag-install, at dapat munang isara ang game.
+Belum diperiksa. Ketuk Periksa pembaruan.	Hindi pa nasusuri. I-tap ang Tingnan kung may update.
+Memeriksa pembaruan...	Tinitingnan kung may update...
+Sudah versi terbaru. Diperiksa pukul {0}.	Pinakabago na ang bersyon mo. Sinuri noong {0}.
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	Inilabas na ang bersyon {0}, pero hindi pa available ang APK para sa phone na ito ({1}). Subukan ulit mamaya.
+Versi {0} tersedia.	Available ang bersyon {0}.
+Mengunduh versi {0}... {1}%	Dina-download ang bersyon {0}... {1}%
+Versi {0} siap dipasang.	Handa nang i-install ang bersyon {0}.
+Butuh izin memasang aplikasi dari Android.	Kailangan ng Android ng pahintulot mo para mag-install ng mga app.
+Menunggu konfirmasi pemasangan dari Android...	Naghihintay ng kumpirmasyon sa pag-install mula sa Android...
+Ukuran unduhan: {0} MB	Laki ng download: {0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	Gumagamit ka ng mobile data, kakain ng data allowance mo ang download na ito.
+Mengunduh pembaruan	Dina-download ang update
+Sembunyikan	Itago
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	Tumatakbo ang download habang bukas ang launcher. Kung maputol, i-tap ulit ang I-download; magpapatuloy ito mula sa tumigil.
+Siap dipasang	Handa nang i-install
+Pasang	I-install
+Versi {0} sudah diunduh dan diperiksa.	Na-download at nasuri na ang bersyon {0}.
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Hihingi ang Android ng kumpirmasyon sa pag-install. Nagsasara ang launcher habang ini-install; buksan ulit pagkatapos.
+Izin pemasangan diperlukan	Kailangan ng pahintulot sa pag-install
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Kailangan ng Android ng pahintulot mo para mai-install ng AmberLauncher ang sarili nitong mga update.
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	I-on ang "Payagan mula sa source na ito", saka bumalik dito. Awtomatikong magpapatuloy ang pag-install.
+Memasang pembaruan	Ini-install ang update
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	Sundin ang kumpirmasyon mula sa Android. Awtomatikong magsasara ang launcher kapag tapos na ang pag-install.
+Pembaruan gagal	Nabigo ang update
+Coba lagi	Subukan ulit
+Pemasangan gagal. ({~0})	Nabigo ang pag-install. ({0})
+layar konfirmasi tidak bisa dibuka	hindi mabuksan ang confirmation screen

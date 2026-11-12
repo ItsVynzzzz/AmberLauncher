@@ -1,0 +1,11 @@
+# Buat Instance: peringatan Minecraft 26.x ke atas dan pengecekan Vulkan HP
+MINECRAFT 26.X KE ATAS	MINECRAFT 26.X 及以上
+Versi ini memakai Java 25 dan mesin grafis baru. Belum semua HP bisa menjalankannya, terutama yang driver Vulkan-nya lama atau kurang lengkap.	此版本使用 Java 25 和全新的图形引擎。并非所有手机都能运行，尤其是 Vulkan 驱动较旧或不完整的手机。
+Kalau game gagal dibuka, bisa jadi penyebabnya HP atau versi game ini, bukan launchernya. Coba ganti renderer di Pengaturan, atau pakai Minecraft 1.21.x.	如果游戏无法打开，原因可能出在手机或此游戏版本上，而不是启动器。请尝试在“设置”中更换渲染器，或改用 Minecraft 1.21.x。
+Memeriksa dukungan Vulkan HP ini...	正在检查此手机的 Vulkan 支持…
+Versi ini memakai OpenGL. Vulkan baru dipakai mulai Minecraft 26.2.	此版本使用 OpenGL。从 Minecraft 26.2 起才会使用 Vulkan。
+Pengecekan Vulkan tidak tersedia di build ini, jadi dukungan Vulkan HP belum bisa dipastikan.	此构建不提供 Vulkan 检测，因此无法确认手机的 Vulkan 支持情况。
+Pengecekan Vulkan tidak selesai. Driver Vulkan HP ini mungkin bermasalah, jadi Minecraft 26.2 ke atas berisiko gagal bila memakai Vulkan.	Vulkan 检测未完成。此手机的 Vulkan 驱动可能有问题，因此 Minecraft 26.2 及以上版本若使用 Vulkan 可能会失败。
+HP ini tidak punya driver Vulkan yang bisa dipakai. Minecraft 26.2 ke atas tidak bisa memakai Vulkan di sini; pilih Prefer OpenGL di pengaturan video game.	此手机没有可用的 Vulkan 驱动。Minecraft 26.2 及以上版本无法在此使用 Vulkan；请在游戏视频设置中选择“Prefer OpenGL”。
+Vulkan HP ini memenuhi syarat Minecraft 26.2 ke atas.	此手机的 Vulkan 满足 Minecraft 26.2 及以上版本的要求。
+Vulkan HP ini belum memenuhi syarat Minecraft 26.2 ke atas. Bila game memakai Vulkan, bisa gagal dimulai; pilih Prefer OpenGL di pengaturan video game.	此手机的 Vulkan 尚未满足 Minecraft 26.2 及以上版本的要求。如果游戏使用 Vulkan，可能无法启动；请在游戏视频设置中选择“Prefer OpenGL”。

@@ -1,0 +1,70 @@
+# Editor tata letak kontrol
+\u2713 Layout tombol in-game disimpan!	✓ Na-save ang layout ng mga in-game button!
+Selesai	Tapos na
+Kembali	Bumalik
+Tombol baru ditambahkan di tengah layar!	Naidagdag ang bagong button sa gitna ng screen!
++ TOMBOL	+ BUTTON
+Joystick WASD ditambahkan!	Naidagdag ang WASD joystick!
+\u2713 Layout GUI berhasil disimpan!	✓ Matagumpay na na-save ang GUI layout!
+PENGATURAN TOMBOL	MGA SETTING NG BUTTON
+Posisi: {0}% x {1}%	Posisyon: {0}% x {1}%
+Label Teks Tombol:	Text Label ng Button:
+\ud83d\udd12 Tetap	🔒 Naka-fix
+Label tombol...	Label ng button...
+Tipe Kontrol:	Uri ng Control:
+Analog 8-arah halus menggerakkan karakter menggantikan tombol W, A, S, D.	Makinis na 8-direction na analog stick na nagpapagalaw sa character bilang kapalit ng mga key na W, A, S, D.
+Ukuran Joystick (Diameter):	Laki ng Joystick (Diameter):
+Transparansi (Opacity):	Transparency (Opacity):
+Lari otomatis:	Auto sprint:
+Dorong sampai tepi lingkaran untuk berlari. Matikan bila ingin berlari lewat tombol CTRL sendiri.	Itulak hanggang gilid ng bilog para tumakbo. I-off kung gusto mong tumakbo gamit ang sarili mong CTRL button.
+Tombol / Aksi Input:	Button / Input Action:
+Indikator FPS In-Game	FPS Indicator sa Loob ng Game
+Toggle Keyboard Layar	I-toggle ang On-Screen Keyboard
+Sembunyikan/Tampilkan GUI	Itago/Ipakita ang GUI
+Buka Menu (pengaturan dan keluar)	Buksan ang Menu (mga setting at paglabas)
+Aksi Sistem Launcher	System Action ng Launcher
+Mouse Kiri (Attack)	Kaliwang Mouse (Attack)
+Mouse Kanan (Use)	Kanang Mouse (Use)
+Mouse Tengah (Pick)	Gitnang Mouse (Pick)
+Ubah >	Baguhin >
+Lebar (Width):	Lapad (Width):
+Tinggi (Height):	Taas (Height):
+Kebulatan Sudut:	Pagkabilog ng Sulok:
+Mode Toggle:	Toggle Mode:
+Sekali tap untuk kunci	I-tap nang isang beses para i-lock
+\u26a1 FITUR MAKRO	⚡ MACRO FEATURE
+Jadikan tombol ini sebagai makro otomatis	Gawing awtomatikong macro ang button na ito
+Pilih Mode Makro:	Pumili ng Macro Mode:
+\u2328 Chat/Perintah	⌨ Chat/Command
+Ketik otomatis	Auto-type
+\ud83d\udd17 Kombinasi	🔗 Combo
+Teks / Perintah yang diketik otomatis:	Text / command na awtomatikong tina-type:
+Misal: /gamemode creative atau /home	Halimbawa: /gamemode creative o /home
+Template Cepat:	Mabilis na Template:
+Urutan Key Kombinasi:	Pagkakasunod-sunod ng Key Combo:
+Hapus Semua	Burahin Lahat
+Belum ada key kombinasi. Tambahkan key di bawah.	Wala pang combo key. Magdagdag ng key sa ibaba.
+Tambah Key ke Kombinasi	Magdagdag ng Key sa Combo
+Tambah Cepat:	Mabilis na Pagdagdag:
+Dieksekusi berurutan dari atas (#1) ke bawah saat ditekan.	Isinasagawa nang sunod-sunod mula itaas (#1) pababa kapag pinindot.
+Interval Auto-Click:	Interval ng Auto-Click:
+Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.	Awtomatikong pipindutin at bibitawan ng button nang paulit-ulit at napakabilis habang hawak ito.
+Tombol dihapus	Nabura ang button
+HAPUS TOMBOL	BURAHIN ANG BUTTON
+\ud83d\udd12 Tombol sistem tidak dapat dihapus	🔒 Hindi mabubura ang mga system button
+MODE IN-GAME \u00b7 Geser tombol sesuai HUD game lalu klik SELESAI	IN-GAME MODE · I-drag ang mga button para tumugma sa HUD ng game, saka i-tap ang TAPOS NA
+Reset Layout GUI?	I-reset ang GUI Layout?
+Semua posisi tombol dan kustomisasi akan dikembalikan ke tata letak awal standar AmberLauncher.	Ibabalik sa karaniwang default na layout ng AmberLauncher ang lahat ng posisyon ng button at customization.
+Layout direset ke standar	Na-reset sa default ang layout
+Tampil saat:	Ipakita kapag:
+Selalu	Palagi
+Saat main	Habang naglalaro
+Saat menu	Sa mga menu
+Menu = inventori, chat, dan layar lain di dalam game.	Menu = inventory, chat, at iba pang screen sa loob ng game.
+Semua tombol	Lahat ng button
+\ud83d\udd79 Virtual Analog Joystick (WASD)	🕹 Virtual Analog Joystick (WASD)
+Mouse Btn {0}	Mouse Btn {0}
+Key Code {0}	Key Code {0}
+Multi-Key	Multi-Key
+\u26a1 Turbo Click	⚡ Turbo Click
+Auto-clicker	Auto-clicker

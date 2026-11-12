@@ -1,0 +1,183 @@
+# Crash, Error, pemilih tombol, konfigurasi dan daftar renderer
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background sistem.	Nagkaroon ng internal na error ang launcher sa isang UI component o sa background process ng system.
+STATUS PELUNCUR	STATUS NG LAUNCHER
+INFORMASI SESI GAME	IMPORMASYON NG GAME SESSION
+{0} Mod	{0} Mod
+DIAGNOSA KELUAR SISTEM	DIAGNOSIS NG PAGLABAS NG SYSTEM
+SOLUSI & SARAN PEMULIHAN	MGA SOLUSYON AT TIP SA PAGBAWI
+Log berhasil diunggah & tautan disalin!	Na-upload ang log at nakopya ang link!
+Gagal mengunggah: {~0}	Nabigo ang pag-upload: {0}
+MENGUNGGAH LOG...	INAA-UPLOAD ANG LOG...
+BUKA TAUTAN MCLO.GS	BUKSAN ANG LINK NG MCLO.GS
+UNGGAH TAUTAN LOG (MCLO.GS)	I-UPLOAD ANG LINK NG LOG (MCLO.GS)
+BAGIKAN	IBAHAGI
+Log disalin ke clipboard!	Nakopya ang log sa clipboard!
+SALIN	KOPYAHIN
+LOG CRASH	CRASH LOG
+Disalin ke papan klip!	Nakopya sa clipboard!
+Gagal membaca file log: {0}	Hindi nabasa ang log file: {0}
+Tidak ada rincian log yang tersedia.	Walang available na detalye ng log.
+Peluncur mengalami kesalahan internal pada komponen UI atau proses background. Silakan laporkan log stacktrace ini ke pengembang AmberLauncher.	Nagkaroon ng internal na error ang launcher sa isang UI component o background process. Pakiulat ang stack trace log na ito sa developer ng AmberLauncher.
+Peluncur mengalami kesalahan tak terduga (Uncaught Exception).	Nagkaroon ng hindi inaasahang error ang launcher (Uncaught Exception).
+JVM dihentikan karena sinyal fatal {0} ({1}).	Itinigil ang JVM dahil sa fatal signal na {0} ({1}).
+JVM keluar dengan kode {0} ({1}).	Lumabas ang JVM na may code na {0} ({1}).
+PELUNCUR MENGALAMI KESALAHAN	NAKATAGPO NG ERROR ANG LAUNCHER
+GAME MENGALAMI CRASH	NA-CRASH ANG GAME
+Rotasi Layar	Pag-ikot ng Screen
+Tautan berhasil diunggah & disalin!	Na-upload at nakopya ang link!
+Log berhasil disalin ke clipboard!	Matagumpay na nakopya ang log sa clipboard!
+Aplikasi AmberLauncher	AmberLauncher app
+Lokasi Log: {0}	Lokasyon ng Log: {0}
+STATUS PENGHENTIAN PROSES	STATUS NG PAGHINTO NG PROCESS
+CATATAN ANALISIS LOG	MGA TALA SA PAGSUSURI NG LOG
+MENGUNGGAH LOG KE MCLO.GS...	INAA-UPLOAD ANG LOG SA MCLO.GS...
+UNGGAH TAUTAN (MCLO.GS)	I-UPLOAD ANG LINK (MCLO.GS)
+BAGIKAN LOG	IBAHAGI ANG LOG
+SALIN TEKS	KOPYAHIN ANG TEXT
+MULAI ULANG	I-RESTART
+MINECRAFT MENGALAMI CRASH	NA-CRASH ANG MINECRAFT
+JVM keluar dengan kode {0} (Signal: {1}).\nPeriksa file log untuk rincian lebih lanjut.	Lumabas ang JVM na may code na {0} (Signal: {1}).\nTingnan ang log file para sa karagdagang detalye.
+Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native).	Biglang huminto ang game process (posibleng pinatay ng system dahil naubusan ng RAM, o nag-crash ang native driver).
+SIGILL (Instruksi CPU Tidak Didukung)	SIGILL (Hindi Suportadong CPU Instruction)
+SIGBUS (Kesalahan Bus Memori)	SIGBUS (Error sa Memory Bus)
+SIGFPE (Kesalahan Perhitungan Float)	SIGFPE (Error sa Floating-Point Calculation)
+SIGKILL (Dihentikan OS / Kehabisan RAM)	SIGKILL (Pinatay ng OS / Naubusan ng RAM)
+SIGSEGV (Akses Memori Ilegal / Segfault)	SIGSEGV (Ilegal na Memory Access / Segfault)
+SIGTERM (Permintaan Terminasi)	SIGTERM (Kahilingan sa Pagwawakas)
+Selesai Normal (0)	Normal na Natapos (0)
+Kesalahan Inisialisasi Mod / Java Exception (1)	Error sa Initialization ng Mod / Java Exception (1)
+Dihentikan Pengguna (SIGINT 130)	Itinigil ng User (SIGINT 130)
+Kehabisan Memori RAM / OOM (SIGKILL 137)	Naubusan ng RAM / OOM (SIGKILL 137)
+Crash Driver Grafis / Segfault (SIGSEGV 139)	Crash ng Graphics Driver / Segfault (SIGSEGV 139)
+Kegagalan Bootstrap Mesin Virtual (-1)	Bigong Bootstrap ng Virtual Machine (-1)
+Kode Keluar {0}	Exit Code {0}
+Untuk detail penyebabnya, silahkan periksa file log. Jika Anda tidak bisa menyelesaikan masalah sendiri, silakan kirim file log kepada seseorang atau tim yang dapat menganalisisnya. Jangan hanya mengambil screenshot dari layar saat ini, karena screenshot tidak bisa memberikan informasi teknis yang cukup untuk menyelesaikan masalah.	Para sa detalye ng sanhi, pakitingnan ang log file. Kung hindi mo malutas ang problema nang mag-isa, ipadala ang log file sa taong o grupong kayang magsuri nito. Huwag lang mag-screenshot ng kasalukuyang screen, dahil hindi sapat ang screenshot para magbigay ng teknikal na impormasyong kailangan sa paglutas ng problema.
+JVM digugurkan karena sinyal fatal {0} ({1}).	Ipinahinto ang JVM dahil sa fatal signal na {0} ({1}).
+File log tidak ditemukan.	Hindi nahanap ang log file.
+Log Crash AmberLauncher - {0}	AmberLauncher Crash Log - {0}
+Bagikan Log Crash: {0}	Ibahagi ang Crash Log: {0}
+Tidak ada aplikasi untuk membagikan file ini.	Walang app na mapagbabahaginan ng file na ito.
+Gagal membagikan file: {0}	Hindi naibahagi ang file: {0}
+Konten log kosong.	Walang laman ang log.
+Gagal mengunggah log (HTTP {0}): {1}	Hindi na-upload ang log (HTTP {0}): {1}
+Server mclo.gs tidak mengembalikan URL.	Hindi nagbalik ng URL ang mclo.gs server.
+File log tidak ditemukan: {0}	Hindi nahanap ang log file: {0}
+Tombol kedua	Pangalawang key
+Pilih tombol	Pumili ng key
+Ditekan bersamaan dengan tombol utama	Sabay na pinipindot kasama ng pangunahing key
+Ketuk kategori, lalu ketuk tombolnya	I-tap ang kategorya, saka i-tap ang key
+Cari tombol	Maghanap ng key
+Ketik nama tombol, misalnya Shift atau F3	I-type ang pangalan ng key, halimbawa Shift o F3
+Tidak ada yang cocok	Walang tumugma
+Cari tombol (W, Shift, F3, Tab...)	Maghanap ng key (W, Shift, F3, Tab...)
+Gerakan	Paggalaw
+Aksi	Mga Aksyon
+Angka & Hotbar	Mga Numero at Hotbar
+Fungsi (F1-F12)	Function (F1-F12)
+Modifier & Kontrol	Modifier at Control
+Navigasi	Nabigasyon
+Alfabet (A - Z)	Alpabeto (A - Z)
+Simbol	Mga Simbolo
+Umum	Pangkalahatan
+Alfabet	Alpabeto
+Angka	Mga Numero
+Mouse Kiri (Attack/Break)	Kaliwang Mouse (Attack/Break)
+Mouse Kanan (Use/Place)	Kanang Mouse (Use/Place)
+Mouse Tengah (Pick Block)	Gitnang Mouse (Pick Block)
+Mouse Tombol 4	Mouse Button 4
+Mouse Tombol 5	Mouse Button 5
+Scroll Wheel (Slide Naik/Turun)	Scroll Wheel (Slide Pataas/Pababa)
+W (Maju)	W (Pasulong)
+A (Kiri)	A (Kaliwa)
+S (Mundur)	S (Paatras)
+D (Kanan)	D (Kanan)
+SPACE (Lompat)	SPACE (Talon)
+LEFT SHIFT (Sneak/Jongkok)	LEFT SHIFT (Sneak)
+LEFT CTRL (Sprint/Lari)	LEFT CTRL (Sprint)
+T (Buka Chat)	T (Buksan ang Chat)
+/ (Buka Command)	/ (Buksan ang Command)
+ENTER (Kirim/Pilih)	ENTER (Ipadala/Piliin)
+TAB (Daftar Player)	TAB (Listahan ng Player)
+BACKSPACE (Hapus)	BACKSPACE (Burahin)
+F1 (Sembunyikan HUD)	F1 (Itago ang HUD)
+F3 (Debug Layar)	F3 (Debug Screen)
+F5 (Ubah Perspektif)	F5 (Palitan ang Perspective)
+Panah Atas (UP)	Pataas na Arrow (UP)
+Panah Bawah (DOWN)	Pababang Arrow (DOWN)
+Panah Kiri (LEFT)	Kaliwang Arrow (LEFT)
+Panah Kanan (RIGHT)	Kanang Arrow (RIGHT)
+KURUNG BUKA ( [ { )	BUKAS NA BRACKET ( [ { )
+KURUNG TUTUP ( ] } )	SARADONG BRACKET ( ] } )
+Numpad . (Titik)	Numpad . (Tuldok)
+Numpad / (Bagi)	Numpad / (Hati)
+Numpad * (Kali)	Numpad * (Beses)
+Numpad - (Kurang)	Numpad - (Bawas)
+Numpad + (Tambah)	Numpad + (Dagdag)
+Numpad = (Sama Dengan)	Numpad = (Katumbas)
+KONFIGURASI RENDERER	KONFIGURASYON NG RENDERER
+Tidak dapat membuka panel aplikasi	Hindi mabuksan ang app panel
+Buka Panel Aplikasi {0}	Buksan ang {0} App Panel
+Akses pengaturan driver native, benchmark, dan preferensi aplikasi	I-access ang mga setting ng native driver, benchmark, at mga kagustuhan sa app
+Tidak ada environment variable yang dapat dikonfigurasi untuk renderer ini.	Walang environment variable na maaaring i-configure para sa renderer na ito.
+PENGATURAN ENVIRONMENT VARIABLES	MGA SETTING NG ENVIRONMENT VARIABLES
+Pengaturan direset ke default	Na-reset sa default ang mga setting
+RESET DEFAULT	I-RESET SA DEFAULT
+SIMPAN & TUTUP	I-SAVE AT ISARA
+Nilai aktif: 	Aktibong halaga:
+Masukkan nilai (opsional)	Maglagay ng halaga (opsyonal)
+Auto (Rekomendasi)	Auto (Inirerekomenda)
+Otomatis Cerdas	Matalinong Auto
+Otomatis memilih renderer paling optimal & stabil berdasarkan versi Minecraft yang dijalankan.	Awtomatikong pinipili ang pinaka-optimal at pinaka-stable na renderer ayon sa bersyon ng Minecraft na pinapatakbo.
+Semua Versi Minecraft	Lahat ng Bersyon ng Minecraft
+Rekomendasi Utama (Mali & Adreno)	Pangunahing Rekomendasyon (Mali at Adreno)
+Wrapper modern OpenGL ES 3.x langsung di atas driver resmi sistem. Paling stabil dan FPS maksimal untuk GPU Mali & Adreno di MC modern (1.17 \u2013 26.3).	Modernong OpenGL ES 3.x wrapper na direktang tumatakbo sa opisyal na driver ng system. Pinaka-stable na may pinakamataas na FPS para sa mga Mali at Adreno GPU sa modernong MC (1.17 – 26.3).
+Pustaka grafis OpenGL 4.0 MobileGlues untuk Minecraft 1.17 \u2013 1.21.1. Kompatibilitas tinggi dengan berbagai GPU mobile termasuk Mali.	MobileGlues OpenGL 4.0 graphics library para sa Minecraft 1.17 – 1.21.1. Mataas ang compatibility sa maraming mobile GPU, kabilang ang Mali.
+Paling Stabil untuk MC Lama	Pinaka-stable para sa Lumang MC
+Wrapper OpenGL ES 2.0 klasik. Kompatibel untuk Minecraft 1.7.10 \u2013 1.16.5 dan perangkat spek rendah.	Klasikong OpenGL ES 2.0 wrapper. Compatible sa Minecraft 1.7.10 – 1.16.5 at mga low-spec na device.
+Menerjemahkan OpenGL desktop 4.6 ke Vulkan. Mendukung mod shader modern (Iris/Oculus) & mod tingkat lanjut.	Isinasalin ang desktop OpenGL 4.6 sa Vulkan. Sinusuportahan ang mga modernong shader mod (Iris/Oculus) at mga advanced na mod.
+Khusus GPU Adreno	Para lang sa mga Adreno GPU
+Driver Mesa Gallium Freedreno open-source dioptimalkan khusus untuk chipset Snapdragon / GPU Adreno.	Open-source na Mesa Gallium Freedreno driver na na-optimize partikular para sa mga Snapdragon chipset / Adreno GPU.
+Pustaka grafis MobileGL (Vulkan & GLES backend)	MobileGL graphics library (Vulkan at GLES backend)
+Renderer eksternal dari APK: {0} ({1})	External na renderer mula sa APK: {0} ({1})
+Plugin Eksternal	External na Plugin
+Renderer APK: {0} ({1})	APK Renderer: {0} ({1})
+Impor layout kontrol?	I-import ang layout ng mga control?
+Ganti layout	Palitan ang layout
+Layout tombol saat ini akan diganti dengan {0} tombol dari berkas ini.	Papalitan ng {0} button mula sa file na ito ang kasalukuyang layout ng iyong mga button.
+Berkas ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Naglalaman ang file na ito ng {0} macro button na awtomatikong nagta-type ng chat message o command. Suriin muna ang mga ito bago gamitin sa server.
+Utama	Pangunahin
+Navigasi & Numpad	Nabigasyon at Numpad
+Ketuk tombol yang diinginkan	I-tap ang key na gusto mo
+INCIDENT DIAGNOSTICS \u00b7 JVM TERMINATION	DIAGNOSTICS NG INSIDENTE · PAGWAWAKAS NG JVM
+Log: {0}	Log: {0}
+Unknown	Hindi alam
+SIGABRT (Native Assertion / Abort)	SIGABRT (Native Assertion / Abort)
+Native Driver Abort (SIGABRT 134)	Native Driver Abort (SIGABRT 134)
+Mouse	Mouse
+Modifier	Modifier
+None	Wala
+Key {0}	Key {0}
+E (Inventory)	E (Inventory)
+Q (Drop Item)	Q (Drop Item)
+F (Swap Hand)	F (Swap Hand)
+ESCAPE (Pause/Menu)	ESCAPE (Pause/Menu)
+F2 (Screenshot)	F2 (Screenshot)
+F4 (Shader / Spectator)	F4 (Shader / Spectator)
+F8 (Cinematic Camera)	F8 (Cinematic Camera)
+F11 (Fullscreen)	F11 (Fullscreen)
+1 (Slot 1)	1 (Slot 1)
+2 (Slot 2)	2 (Slot 2)
+3 (Slot 3)	3 (Slot 3)
+4 (Slot 4)	4 (Slot 4)
+5 (Slot 5)	5 (Slot 5)
+6 (Slot 6)	6 (Slot 6)
+7 (Slot 7)	7 (Slot 7)
+8 (Slot 8)	8 (Slot 8)
+9 (Slot 9)	9 (Slot 9)
+Close	Isara
+mclo.gs link	mclo.gs link
+Crash Log	Crash Log
+LAUNCHER ERROR	ERROR NG LAUNCHER
+EXIT CODE {0}	EXIT CODE {0}
+TERMINAL LOG / STACK TRACE	TERMINAL LOG / STACK TRACE
+Error: {0}	Error: {0}

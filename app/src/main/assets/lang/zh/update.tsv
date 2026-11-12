@@ -1,0 +1,84 @@
+# Pembaruan aplikasi (pop-up versi baru dari GitHub)
+Pembaruan tersedia	有可用更新
+Versi {0} sudah tersedia. Kamu memakai versi {1}.	版本 {0} 已发布。你当前使用的是版本 {1}。
+Yang baru	更新内容
+Lewati	跳过
+Unduh	下载
+Unduhan terputus. Ketuk Coba lagi; unduhan dilanjutkan dari bagian yang sudah ada.	下载已中断。点按“重试”，下载会从已完成的部分继续。
+Ruang penyimpanan tidak cukup. Kosongkan sekitar {0} MB lalu coba lagi.	存储空间不足。请清理约 {0} MB 后重试。
+Berkas hasil unduhan rusak (tidak cocok dengan yang di GitHub). Ketuk Coba lagi untuk mengunduh ulang.	下载的文件已损坏（与 GitHub 上的不一致）。点按“重试”重新下载。
+Berkas APK tidak ditemukan di GitHub (kode 404). Mungkin rilisnya sudah dihapus.	在 GitHub 上找不到 APK 文件（代码 404）。该发布版本可能已被删除。
+GitHub menolak unduhan (kode 403). Coba lagi nanti.	GitHub 拒绝了下载（代码 403）。请稍后再试。
+GitHub membalas kode {0} saat mengunduh.	下载时 GitHub 返回了代码 {0}。
+Balasan GitHub kosong.	GitHub 的响应为空。
+Balasan GitHub terlalu besar.	GitHub 的响应过大。
+GitHub sedang bermasalah (kode {0}). Coba lagi nanti.	GitHub 出现问题（代码 {0}）。请稍后再试。
+GitHub membalas kode {0}.	GitHub 返回了代码 {0}。
+Tidak ada koneksi internet.	没有网络连接。
+Koneksi terlalu lambat. Coba lagi.	连接过慢。请重试。
+Koneksi aman ke GitHub gagal. Periksa tanggal dan jam HP.	与 GitHub 的安全连接失败。请检查手机的日期和时间。
+Koneksi internet terputus. Coba lagi.	网络连接已断开。请重试。
+Terjadi kesalahan yang tidak terduga.	发生了意外错误。
+Batas permintaan GitHub tercapai (biasanya karena banyak orang memakai jaringan yang sama). Coba lagi sekitar pukul {0}.	已达到 GitHub 的请求上限（通常是因为很多人共用同一网络）。请在大约 {0} 后重试。
+Unduhan gagal: {0}	下载失败：{0}
+Berkas pembaruan hilang. Ketuk Coba lagi untuk mengunduh ulang.	更新文件已丢失。点按“重试”重新下载。
+Game masih berjalan. Tutup game dulu supaya tidak ada data yang hilang, lalu coba lagi.	游戏仍在运行。请先关闭游戏以免丢失数据，然后重试。
+Pemasangan gagal: {0}	安装失败：{0}
+Pemasangan dibatalkan.	安装已取消。
+Berkas pembaruan tidak bisa dibaca sebagai APK. Ketuk Coba lagi untuk mengunduh ulang.	更新文件无法作为 APK 读取。点按“重试”重新下载。
+Berkas ini bukan APK AmberLauncher.	此文件不是 AmberLauncher 的 APK。
+APK ini tidak lebih baru dari versi yang terpasang.	此 APK 并不比已安装的版本更新。
+Tanda tangan APK berbeda dari aplikasi yang terpasang, jadi Android akan menolak pembaruan ini.	此 APK 的签名与已安装的应用不同，因此 Android 会拒绝此次更新。
+Pemasangan diblokir oleh sistem atau Play Protect.	安装被系统或 Play Protect 拦截。
+Pemasangan diblokir oleh sistem atau Play Protect.{0}	安装被系统或 Play Protect 拦截。{0}
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.	Android 拒绝了此次更新：其签名或版本与已安装的应用不匹配。
+Android menolak pembaruan ini: tanda tangan atau versinya tidak cocok dengan aplikasi yang terpasang.{0}	Android 拒绝了此次更新：其签名或版本与已安装的应用不匹配。{0}
+APK ini tidak cocok dengan HP kamu.	此 APK 与你的手机不兼容。
+APK ini tidak cocok dengan HP kamu.{0}	此 APK 与你的手机不兼容。{0}
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.	APK 已损坏或无效。点按“重试”重新下载。
+APK rusak atau tidak valid. Ketuk Coba lagi untuk mengunduh ulang.{0}	APK 已损坏或无效。点按“重试”重新下载。{0}
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.	存储空间不足，无法安装更新。
+Ruang penyimpanan tidak cukup untuk memasang pembaruan.{0}	存储空间不足，无法安装更新。{0}
+Pemasangan gagal.	安装失败。
+Pemasangan gagal.{0}	安装失败。{0}
+Balasan GitHub tidak bisa dibaca.	无法读取 GitHub 的响应。
+Daftar rilis tersimpan tidak bisa dibaca.	无法读取已保存的发布列表。
+Pembaruan	更新
+Versi terpasang	已安装版本
+Memeriksa...	正在检查…
+Lihat pembaruan	查看更新
+Buka	打开
+Periksa pembaruan	检查更新
+Periksa otomatis	自动检查
+Cek versi baru di GitHub setiap launcher dibuka (hanya beberapa KB). Kalau ada, muncul pop-up untuk mengunduh dan memasangnya.	每次打开启动器时在 GitHub 上检查新版本（仅几 KB）。如有新版本，会弹出窗口供你下载并安装。
+Semua rilis	所有发布版本
+Daftar versi dan catatan perubahannya di GitHub.	GitHub 上的版本列表及其更新日志。
+Buka GitHub	打开 GitHub
+Pembaruan diunduh dan dipasang dari dalam launcher. Android tetap meminta satu kali konfirmasi pemasangan, dan game harus ditutup dulu.	更新在启动器内下载并安装。Android 仍会要求你确认一次安装，并且必须先关闭游戏。
+Belum diperiksa. Ketuk Periksa pembaruan.	尚未检查。点按“检查更新”。
+Memeriksa pembaruan...	正在检查更新…
+Sudah versi terbaru. Diperiksa pukul {0}.	已是最新版本。检查时间：{0}。
+Versi {0} sudah terbit, tetapi APK untuk HP ini ({1}) belum tersedia. Coba lagi nanti.	版本 {0} 已发布，但适用于此手机（{1}）的 APK 尚未提供。请稍后再试。
+Versi {0} tersedia.	版本 {0} 可用。
+Mengunduh versi {0}... {1}%	正在下载版本 {0}… {1}%
+Versi {0} siap dipasang.	版本 {0} 已可安装。
+Butuh izin memasang aplikasi dari Android.	需要 Android 授予安装应用的权限。
+Menunggu konfirmasi pemasangan dari Android...	正在等待 Android 的安装确认…
+Ukuran unduhan: {0} MB	下载大小：{0} MB
+Kamu sedang memakai data seluler, unduhan ini memakai kuota.	你正在使用移动数据，此次下载会消耗流量。
+Mengunduh pembaruan	正在下载更新
+Sembunyikan	隐藏
+Unduhan berjalan selama launcher terbuka. Kalau terputus, ketuk Unduh lagi; lanjut dari bagian yang sudah ada.	下载仅在启动器打开时进行。如果中断，请再次点按“下载”，会从已完成的部分继续。
+Siap dipasang	可以安装
+Pasang	安装
+Versi {0} sudah diunduh dan diperiksa.	版本 {0} 已下载并通过检查。
+Android akan meminta konfirmasi pemasangan. Launcher tertutup selama pemasangan; buka lagi setelah selesai.	Android 会要求你确认安装。安装期间启动器会关闭；完成后请重新打开。
+Izin pemasangan diperlukan	需要安装权限
+Android perlu izin agar AmberLauncher bisa memasang pembaruannya sendiri.	Android 需要你授权，AmberLauncher 才能安装自己的更新。
+Nyalakan "Izinkan dari sumber ini", lalu kembali ke sini. Pemasangan dilanjutkan otomatis.	请打开“允许来自此来源”，然后返回这里。安装会自动继续。
+Memasang pembaruan	正在安装更新
+Ikuti konfirmasi dari Android. Launcher tertutup otomatis saat pemasangan selesai.	请按 Android 的提示确认。安装完成后启动器会自动关闭。
+Pembaruan gagal	更新失败
+Coba lagi	重试
+Pemasangan gagal. ({~0})	安装失败。（{0}）
+layar konfirmasi tidak bisa dibuka	无法打开确认界面

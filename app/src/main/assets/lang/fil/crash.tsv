@@ -1,0 +1,70 @@
+# Panel crash: penjelasan sumber crash dan bantuan AI
+AmberLauncher berhenti	Huminto ang AmberLauncher
+Minecraft berhenti mendadak	Biglang huminto ang Minecraft
+Aplikasi tertutup karena kesalahan tak terduga	Nagsara ang app dahil sa hindi inaasahang error
+Kembali ke launcher	Bumalik sa launcher
+Penjelasan	Paliwanag
+Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang.	Hindi laging nangangahulugang sira ang launcher kapag nag-crash. Mas madalas na sanhi ang mga mod, RAM ng phone, at graphics driver, kaya alamin muna bago mag-ulat sa developer.
+Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki.	Biglang huminto ang launcher dahil sa hindi inaasahang error. Ipadala ang log sa developer para maayos ito.
+Dugaan penyebab	Posibleng sanhi
+Kesalahan di dalam AmberLauncher	Error sa loob ng AmberLauncher
+Memori (RAM) HP habis	Naubos ang memory (RAM) ng phone
+Renderer atau driver grafis	Renderer o graphics driver
+Mod, versi Java, atau file game	Mod, bersyon ng Java, o file ng game
+Belum bisa dipastikan	Hindi pa matukoy
+Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat membantu supaya bisa diperbaiki.	Sa pagkakataong ito, ang launcher mismo ang huminto, hindi ang game o isang mod. Malaking tulong ang ulat sa developer para maayos ito.
+Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	Itinigil ng system ang game dahil kulang ang RAM ng phone para sa game, mga mod, o graphics settings na ginagamit. Karaniwang hindi ito sira sa launcher. Subukang bawasan ang RAM allocation ng game (huwag lalampas sa kalahati ng RAM ng phone), bawasan ang mga mod, at isara ang ibang app.
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di pengaturan instance. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	Huminto ang game sa graphics part o sa isang library na built-in sa phone. Karaniwang sanhi ang renderer na hindi bagay sa phone na ito. Subukang palitan ang renderer sa mga setting ng instance. Kapag pumalya ang lahat ng renderer, saka pa lang posibleng nasa launcher ang problema.
+Game mengalami error saat berjalan. Paling sering karena mod yang tidak cocok dengan versi game atau loader, mod yang kekurangan pendukung (dependency), atau versi Java yang tidak sesuai. Biasanya bukan kerusakan launcher.	Nagkaroon ng error ang game habang tumatakbo. Pinakamadalas na sanhi ang mod na hindi tugma sa bersyon ng game o loader, mod na kulang sa dependency, o maling bersyon ng Java. Karaniwang hindi ito sira sa launcher.
+Penyebabnya baru kelihatan dari isi log. AI bisa membantu membacanya untukmu.	Makikita lang ang sanhi sa laman ng log. Matutulungan ka ng AI na basahin ito.
+Detail teknis	Mga teknikal na detalye
+Kesalahan tak terduga di dalam aplikasi	Hindi inaasahang error sa loob ng app
+Status keluar: {~0}	Exit status: {0}
+Cari solusi dengan AI	Maghanap ng solusyon gamit ang AI
+Salin log beserta pertanyaannya, lalu tempel di chat AI. Biasanya AI bisa menunjukkan penyebab dan cara memperbaikinya. Kirim teks log, bukan screenshot.	Kopyahin ang log kasama ang handa nang tanong, saka i-paste sa AI chat. Karaniwang matutukoy ng AI ang sanhi at kung paano ito aayusin. Ipadala ang text ng log, hindi screenshot.
+Salin log untuk AI	Kopyahin ang log para sa AI
+Atau buka langsung (log otomatis disalin)	O buksan nang direkta (awtomatikong kokopyahin ang log)
+Lapor ke pengembang	Mag-ulat sa developer
+Kalau AI menyimpulkan masalahnya ada di launcher, baru laporkan di GitHub. Log disalin otomatis, tinggal tempel di laporan.	Kung napagpasyahan ng AI na nasa launcher ang problema, saka mag-ulat sa GitHub. Awtomatikong kinokopya ang log, i-paste lang sa ulat.
+Laporkan di GitHub supaya bisa diperbaiki. Log disalin otomatis, tinggal tempel di laporan.	Mag-ulat sa GitHub para maayos ito. Awtomatikong kinokopya ang log, i-paste lang sa ulat.
+Lapor di GitHub	Mag-ulat sa GitHub
+Cara lain membagikan log	Iba pang paraan para ibahagi ang log
+Bagikan file	Ibahagi ang file
+Tautan mclo.gs	mclo.gs link
+Mengunggah...	Ina-upload...
+Buka tautan	Buksan ang link
+Log untuk AI disalin. Tempel di kolom chat AI.	Nakopya ang log para sa AI. I-paste ito sa chat box ng AI.
+Log disalin. Tempel di laporan.	Nakopya ang log. I-paste sa ulat.
+Tidak bisa membuka tautan.	Hindi mabuksan ang link.
+Halo, Minecraft Java Edition saya crash di HP Android saat dijalankan lewat AmberLauncher. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula), lalu beri langkah perbaikan satu per satu. Kalau penyebabnya mod, sebutkan mod mana yang perlu dihapus atau diganti.	Hello, nag-crash ang Minecraft Java Edition ko sa Android phone ko kapag pinapatakbo sa pamamagitan ng AmberLauncher. Pakipaliwanag ang sanhi sa simpleng wika (baguhan pa lang ako), saka magbigay ng mga hakbang sa pag-aayos nang paisa-isa. Kung mod ang sanhi, sabihin kung aling mod ang dapat burahin o palitan.
+Halo, aplikasi AmberLauncher (launcher Minecraft Java Edition untuk Android) berhenti sendiri. Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan.	Hello, kusang huminto ang AmberLauncher app (isang Minecraft Java Edition launcher para sa Android). Pakipaliwanag ang sanhi sa simpleng wika (baguhan pa lang ako) at magmungkahi ng mga puwede kong subukan. Kung sa tingin mo ay bug ito sa launcher, pakisabi.
+Perangkat: {0}	Device: {0}
+Versi Minecraft: {0}	Bersyon ng Minecraft: {0}
+Grafis: {0}	Graphics: {0}
+Jumlah mod: {0}	Bilang ng mod: {0}
+Daftar mod: {0}	Listahan ng mod: {0}
+Isi log crash:	Laman ng crash log:
+Turunkan RAM ke {0} MB	Ibaba ang RAM sa {0} MB
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.	Nagbibigay ng mas maluwag na espasyo sa phone. Maaari itong itaas ulit sa Mga Setting > Memory.
+Pakai renderer Otomatis	Gamitin ang Auto na renderer
+Renderer pilihanmu bisa jadi kurang cocok dengan HP ini. Otomatis memilih yang paling sesuai.	Maaaring hindi bagay sa phone na ito ang renderer na pinili mo. Pinipili ng Auto ang pinakaangkop.
+Coba renderer {0}	Subukan ang {0} na renderer
+Renderer sekarang tampaknya bermasalah di HP ini. Bisa diganti lagi di Pengaturan > Grafis.	Mukhang may problema ang kasalukuyang renderer sa phone na ito. Maaari itong palitan ulit sa Mga Setting > Graphics.
+Matikan shader	I-off ang mga shader
+Shader membebani GPU dan memori. Bisa dinyalakan lagi dari menu video game.	Mabigat sa GPU at memory ang mga shader. Maaari itong i-on ulit mula sa video menu ng game.
+Nonaktifkan mod tersangka	I-disable ang mga pinaghihinalaang mod
+Mod yang disebut di log: {0}. Bisa diaktifkan lagi di menu Mod.	Mga mod na binanggit sa log: {0}. Maaari itong i-enable ulit sa menu na Mga Mod.
+Reset Java ke Otomatis	I-reset ang Java sa Auto
+Versi Java yang dipilih mungkin tidak cocok dengan game ini. Otomatis memilih versi yang sesuai.	Maaaring hindi tugma sa game na ito ang napiling bersyon ng Java. Pinipili ng Auto ang angkop na bersyon.
+RAM game diturunkan ke {0} MB.	Ibinaba sa {0} MB ang RAM ng game.
+Renderer dikembalikan ke Otomatis.	Naibalik sa Auto ang renderer.
+Renderer diganti ke {0}.	Pinalitan ang renderer sa {0}.
+Shader dimatikan.	Na-off ang mga shader.
+Mod dinonaktifkan: {0}.	Na-disable ang mga mod: {0}.
+Java dikembalikan ke Otomatis.	Naibalik sa Auto ang Java.
+Gagal menerapkan. Coba lewat Pengaturan.	Hindi naipatupad. Subukan sa pamamagitan ng Mga Setting.
+Pemulihan cepat	Mabilis na pagbawi
+Ketuk untuk mencoba perbaikan yang paling mungkin membantu. Semuanya bisa dibatalkan.	I-tap para subukan ang mga ayos na pinakamalamang na makatulong. Maaaring i-undo ang lahat.
+Perubahan sudah disimpan. Kembali ke launcher lalu jalankan game lagi.	Na-save na ang mga pagbabago. Bumalik sa launcher at patakbuhin ulit ang game.
+Sudah diterapkan	Naipatupad na
+Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, barulah mungkin masalahnya ada di launcher.	Huminto ang game sa graphics part o sa isang library na built-in sa phone. Karaniwang sanhi ang renderer na hindi bagay sa phone na ito. Subukang palitan ang renderer sa Mga Setting > Graphics. Kapag pumalya ang lahat ng renderer, saka pa lang posibleng nasa launcher ang problema.

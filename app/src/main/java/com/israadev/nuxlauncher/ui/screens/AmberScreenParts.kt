@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.AmberGlassKind
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.NuxColors
@@ -53,7 +54,7 @@ internal fun AmberRoundIcon(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = description,
+            contentDescription = Tr.t(description),
             tint = AmberUi.Text,
             modifier = Modifier.size(22.dp)
         )
@@ -223,7 +224,7 @@ internal fun AmberSearchPill(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Close,
-                    contentDescription = "Hapus teks",
+                    contentDescription = Tr.t("Hapus teks"),
                     tint = AmberUi.TextDim,
                     modifier = Modifier.size(18.dp)
                 )

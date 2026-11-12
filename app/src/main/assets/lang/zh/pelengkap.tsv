@@ -1,0 +1,68 @@
+# Kalimat yang sebelumnya belum punya terjemahan (hasil audit 10 Nov 2026)
+Penunjuk (Default)	指针（默认）
+Penunjuk (Kursor Teks)	指针（文本光标）
+Penunjuk (Tangan)	指针（手形）
+Penunjuk (Crosshair)	指针（十字准星）
+Penunjuk (Atas/Bawah)	指针（上/下）
+Penunjuk (Kiri/Kanan)	指针（左/右）
+Penunjuk (Pindahkan)	指针（移动）
+Penunjuk (Tidak Diizinkan)	指针（不允许）
+Bentuk biasa. Dipakai di semua versi Minecraft.	普通形状。适用于所有 Minecraft 版本。
+MC 1.21.9+: dipakai saat kursor di atas kolom teks.	MC 1.21.9+：光标位于文本框上时使用。
+MC 1.21.9+: dipakai saat kursor di atas komponen yang bisa diklik.	MC 1.21.9+：光标位于可点击组件上时使用。
+MC 1.21.9+: bentuk crosshair.	MC 1.21.9+：十字准星形状。
+MC 1.21.9+: dipakai di komponen yang bisa digulir ke atas/bawah.	MC 1.21.9+：用于可上下滚动的组件。
+MC 1.21.9+: dipakai di komponen penggeser (slider).	MC 1.21.9+：用于滑块组件。
+MC 1.21.9+: bentuk pindahkan.	MC 1.21.9+：移动形状。
+MC 1.21.9+: dipakai di komponen yang dinonaktifkan.	MC 1.21.9+：用于已禁用的组件。
+Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.	超过手机内存的一半：Android 可能会自行关闭游戏。
+Penunjuk kursor	指针光标
+Mouse fisik	实体鼠标
+Pakai kursor sistem Android	使用 Android 系统光标
+Mati (bawaan): mouse menggerakkan kursor launcher di menu game, jadi gambar, ukuran, dan hotspot kursor di atas berlaku. Nyalakan bila mouse lebih nyaman dengan penunjuk bawaan Android.	关闭（默认）：鼠标在游戏菜单中控制启动器光标，因此上方的光标图片、大小和热点设置有效。如果觉得用 Android 自带指针时鼠标更顺手，请打开此项。
+Kecepatan kursor mouse	鼠标光标速度
+Pengali di atas sensitivitas kursor virtual, hanya untuk mouse fisik di menu game. 100% = sama.	在虚拟光标灵敏度基础上的倍率，仅用于游戏菜单中的实体鼠标。100% = 不变。
+Kecepatan kamera mouse	鼠标视角速度
+Pengali di atas sensitivitas kamera, hanya untuk mouse fisik saat bermain. 100% = sama.	在视角灵敏度基础上的倍率，仅用于游玩时的实体鼠标。100% = 不变。
+Gambar tidak bisa dibaca	无法读取该图片
+Ganti gambar	更换图片
+Pilih gambar	选择图片
+Tutup hotspot	关闭热点
+Atur hotspot	设置热点
+Reset	重置
+Hotspot adalah titik yang dihitung sebagai ujung kursor saat mengklik (titik merah di pratinjau).	热点（hotspot）是点击时被视为光标尖端的位置（预览中的红点）。
+Ubah kunci API	更改 API 密钥
+Kunci API CurseForge	CurseForge API 密钥
+Kunci sudah tersimpan. Isi kunci baru untuk menggantinya, atau hapus kunci ini.	已保存密钥。输入新密钥即可替换，或删除此密钥。
+CurseForge butuh kunci API. Tempel kunci dari email CurseForge. Kunci hanya disimpan di HP ini dan hanya dikirim ke CurseForge.	CurseForge 需要 API 密钥。请粘贴 CurseForge 邮件中的密钥。密钥只保存在这部手机上，且只会发送给 CurseForge。
+Tempel kunci di sini	在此粘贴密钥
+Kunci API CurseForge belum diisi.	尚未填写 CurseForge API 密钥。
+Kunci API CurseForge ditolak (kode {0}). Periksa kuncinya lalu isi ulang.	CurseForge API 密钥被拒绝（代码 {0}）。请检查密钥后重新填写。
+CurseForge membatasi permintaan. Tunggu sebentar lalu coba lagi.	CurseForge 限制了请求频率。请稍等片刻后重试。
+CurseForge API error: kode {0}	CurseForge API 错误：代码 {0}
+Respons kosong dari CurseForge	CurseForge 返回了空响应
+Respons CurseForge tidak dikenali	无法识别 CurseForge 的响应
+CurseForge hanya menampilkan {0} hasil pertama. Persempit pencarian.	CurseForge 只显示前 {0} 条结果。请缩小搜索范围。
+Id CurseForge tidak valid	无效的 CurseForge ID
+Detail CurseForge kosong	CurseForge 详情为空
+Penulis melarang unduhan lewat launcher. Unduh manual dari situs CurseForge.	作者禁止通过启动器下载。请到 CurseForge 网站手动下载。
+File mod harus berformat .jar	模组文件必须是 .jar 格式
+File modpack harus berformat .mrpack atau .zip	整合包文件必须是 .mrpack 或 .zip 格式
+File {0} harus berformat .zip	{0} 文件必须是 .zip 格式
+Mencari alamat unduhan mod dari CurseForge...	正在从 CurseForge 查找模组下载地址…
+Mesin Rust baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Rust 引擎目前只支持离线账号和 Microsoft 账号。请在“账号”标签页中选择其中一种。
+Nama akun offline untuk mesin Rust harus 1 sampai 16 karakter tanpa spasi. Buat akun offline baru di tab Akun.	Rust 引擎的离线账号名必须是 1 到 16 个字符，且不能包含空格。请在“账号”标签页中新建离线账号。
+Akun Microsoft ini belum login lengkap. Masuk lagi lewat tab Akun.	此 Microsoft 账号尚未完整登录。请在“账号”标签页中重新登录。
+Pertama kali dibuka: mesin mengunduh sumber daya game (sekitar 500 MiB). Biarkan sampai selesai, game langsung dimulai setelahnya.	首次打开：引擎会下载游戏资源（约 500 MiB）。请等待下载完成，之后游戏会立即启动。
+Folder data mesin tidak bisa dibuat	无法创建引擎数据文件夹
+Berkas peluncuran tidak bisa disimpan	无法保存启动文件
+Tidak bisa menyimpan {0}	无法保存 {0}
+Menyembunyikan bilah navigasi dan bilah status saat bermain. Mati secara bawaan: di sebagian HP bisa membuat game macet.	游玩时隐藏导航栏和状态栏。默认关闭：在部分手机上可能导致游戏卡死。
+Tidak ada versi Forge yang didukung	没有受支持的 Forge 版本
+Tidak ada versi NeoForge yang didukung	没有受支持的 NeoForge 版本
+Tidak dapat memuat daftar versi Fabric	无法加载 Fabric 版本列表
+Ruang penyimpanan tinggal {0} MB. Kosongkan minimal 500 MB lalu coba unduh lagi.	存储空间仅剩 {0} MB。请至少清理出 500 MB，然后重新下载。
+Unduhan game	游戏下载
+Mengunduh Minecraft	正在下载 Minecraft
+Unduhan lanjut di latar belakang. Jangan tutup paksa aplikasi.	下载会在后台继续。请不要强行关闭应用。
+Menyalakan mode performa stabil sistem dan V-Sync Zink, serta membatasi skala resolusi maksimal {0}%.	开启系统的持续性能模式和 Zink 垂直同步，并将分辨率缩放上限限制为 {0}%。

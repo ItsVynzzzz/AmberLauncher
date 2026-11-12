@@ -1,0 +1,68 @@
+# Mesin Rust (Horizon)
+Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Hindi kasama ang Rust engine sa build na ito. Paano ito idagdag: docs/rust-engine.md.
+Mesin Rust butuh Android 9 (API 28) ke atas.	Kailangan ng Rust engine ang Android 9 (API 28) pataas.
+Mesin Rust hanya tersedia untuk HP 64-bit (arm64).	Available lang ang Rust engine sa mga 64-bit (arm64) na phone.
+RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri.	Limitado ang RAM ng phone na ito para sa Rust engine (inirerekomenda ang 4 GB pataas). Maaaring kusang magsara ang game.
+Mesin Rust gagal dibuka: {0}	Hindi mabuksan ang Rust engine: {0}
+MESIN RUST (HORIZON)	RUST ENGINE (HORIZON)
+Mesin Rust menggantikan seluruh client Java Minecraft: tanpa Java, tanpa mod Fabric, Forge, atau NeoForge.	Pinapalitan ng Rust engine ang buong Java client ng Minecraft: walang Java, at walang mod na Fabric, Forge, o NeoForge.
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.	Minecraft {0} lang ang sinusuportahan. Ang engine mismo ang nagda-download ng mga resource ng game (mga 500 MiB) sa unang pagbukas.
+Eksperimental: butuh Android 9 ke atas dan HP 64-bit.	Eksperimental: kailangan ng Android 9 pataas at 64-bit na phone.
+Tanpa Java	Walang Java
+Jenis berkas ini belum didukung mesin Rust.	Hindi pa sinusuportahan ng Rust engine ang uri ng file na ito.
+Nama berkas tidak cocok untuk mesin Rust (terlalu panjang atau berisi karakter terlarang).	Hindi angkop ang pangalan ng file para sa Rust engine (masyadong mahaba o may bawal na karakter).
+Mesin Rust hanya menerima berkas .zip di sini.	.zip file lang ang tinatanggap ng Rust engine dito.
+Berkas lebih dari 256 MB, terlalu besar untuk mesin Rust.	Lampas 256 MB ang file, masyadong malaki para sa Rust engine.
+Arsip rusak atau tidak bisa dibaca.	Sira o hindi mabasa ang archive.
+Arsip berisi terlalu banyak berkas.	Masyadong maraming file ang laman ng archive.
+Arsip berisi path berbahaya atau ganda, jadi tidak dipasang.	May mapanganib o dobleng path ang archive, kaya hindi ito na-install.
+Isi arsip terlalu besar setelah dibuka (lebih dari 512 MB).	Masyadong malaki ang laman ng archive kapag na-unpack (lampas 512 MB).
+Metadata resource pack (pack.mcmeta) tidak valid.	Hindi valid ang metadata ng resource pack (pack.mcmeta).
+Berkas ini bukan resource pack: pack.mcmeta tidak ditemukan di dasar arsip.	Hindi resource pack ang file na ito: hindi nahanap ang pack.mcmeta sa pinakaitaas na antas ng archive.
+Berkas ini bukan shader pack: folder shaders tidak ditemukan di dasar arsip.	Hindi shader pack ang file na ito: walang nahanap na shaders folder sa pinakaitaas na antas ng archive.
+Ini shader asli Horizon. Pasang dari sumber Horizon di layar Jelajah (format .hshader).	Ito ay native na Horizon shader. I-install ito mula sa Horizon source sa Browse screen (.hshader format).
+Tidak ada berkas .zip yang cocok di versi ini.	Walang tumutugmang .zip file sa bersyong ito.
+Sumber tidak memberi sidik jari berkas, jadi unduhan tidak bisa diperiksa.	Hindi nagbibigay ng file checksum ang source, kaya hindi ma-verify ang download.
+Gagal menyimpan berkas ke folder mesin Rust.	Nabigong i-save ang file sa folder ng Rust engine.
+Pengaturan game belum dibuat. Buka game sekali, masuk ke Pengaturan dan ubah satu opsi, lalu coba lagi.	Hindi pa nagagawa ang mga setting ng game. Buksan ang game nang isang beses, pumunta sa Settings at baguhin ang isang opsyon, saka subukan ulit.
+Gagal menyimpan pilihan ke pengaturan mesin.	Nabigong i-save ang napili sa mga setting ng engine.
+Memeriksa {0}...	Sinusuri ang {0}...
+Gagal membuka berkas yang dipilih	Hindi mabuksan ang napiling file
+Coba ubah kata kunci	Subukang palitan ang keyword
+Mesin Rust: hidupkan saklar di daftar Terpasang untuk memakainya. Berlaku saat game dibuka lagi.	Rust engine: i-on ang switch sa listahan ng Naka-install para magamit ito. Ipapatupad ito sa susunod na pagbukas ng game.
+Shader di mesin Rust masih tahap uji dan bisa memberatkan HP.	Eksperimental pa ang mga shader sa Rust engine at maaaring mabigat sa phone na ito.
+Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).	Available lang ang 32-bit na Rust engine sa mga ARM phone (armeabi-v7a).
+Eksperimental di HP 32-bit: butuh Android 9 ke atas dan bisa lebih lambat.	Eksperimental sa mga 32-bit na phone: kailangan ng Android 9 pataas at maaaring mas mabagal.
+Mod mesin Rust berformat .hmod, bukan .jar Fabric atau Forge.	.hmod format ang gamit ng mga mod ng Rust engine, hindi ang .jar ng Fabric o Forge.
+Berkas mod lebih dari 32 MB, terlalu besar untuk mesin Rust.	Lampas 32 MB ang mod file, masyadong malaki para sa Rust engine.
+Isi mod terlalu besar setelah dibuka (lebih dari 64 MB).	Masyadong malaki ang mod kapag na-unpack (lampas 64 MB).
+Ini bukan mod Horizon: horizon-mod.toml tidak ada di dasar arsip.	Hindi ito Horizon mod: hindi nahanap ang horizon-mod.toml sa pinakaitaas na antas ng archive.
+Manifest mod (horizon-mod.toml) tidak valid atau tidak didukung.	Hindi valid o hindi suportado ang mod manifest (horizon-mod.toml).
+Mod ini tidak membawa kode (mod.wasm) dan bukan mod konten (kemampuan registries), jadi tidak bisa dipasang.	Walang code (mod.wasm) ang mod na ito at hindi rin ito content mod (registries capability), kaya hindi ito mai-install.
+Kode mod (mod.wasm) lebih dari 32 MB.	Lampas 32 MB ang code ng mod (mod.wasm).
+Sudah ada mod berbentuk folder dengan id yang sama. Hapus yang lama dulu.	May folder mod na na may parehong id. Alisin muna ang luma.
+Gagal menyimpan pilihan mod ke pengaturan mesin.	Nabigong i-save ang napiling mod sa mga setting ng engine.
+Mod hanya bisa dihidupkan di APK 64-bit.	Sa 64-bit APK lang maaaring i-on ang mga mod.
+Mod tidak ditemukan atau manifest-nya tidak bisa dibaca.	Hindi nahanap ang mod o hindi mabasa ang manifest nito.
+Tahan tombol Z untuk zoom; bisa diatur di Options > Mods dalam game	Pindutin nang matagal ang Z key para mag-zoom; maaaring i-configure sa Options > Mods sa loob ng game
+Peta kecil yang bisa diatur di sudut layar	Isang configurable na mapa sa sulok ng screen
+Resep dan kegunaan item di samping inventori	Mga recipe at gamit ng item sa tabi ng inventory
+Modul F3 yang bisa diatur untuk layar debug	Mga configurable na module ng F3 para sa debug screen
+Resep	Mga Recipe
+Katalog Horizon tidak bisa dibaca. Coba lagi nanti.	Hindi mabasa ang Horizon catalog. Pakisubukan ulit mamaya.
+Katalog Horizon memakai format yang lebih baru. Perbarui Amber.	Mas bagong format ang gamit ng Horizon catalog. Pakiupdate ang Amber.
+Tidak ada berkas yang cocok di versi ini.	Walang tumutugmang file sa bersyong ito.
+Katalog tidak memberi sidik jari SHA-256, jadi unduhan tidak bisa diperiksa.	Walang SHA-256 checksum na ibinibigay ang catalog, kaya hindi ma-verify ang download.
+Alamat unduhan tidak dikenali, jadi ditolak.	Hindi nakilala ang download address, kaya tinanggihan.
+Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	Hindi tugma ang laki ng file sa nakasulat sa catalog, kaya hindi ito na-install.
+Memuat data dari Horizon...	Nilo-load ang data mula sa Horizon...
+Gagal memuat dari Horizon	Nabigong mag-load mula sa Horizon
+Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.	.hmod format ang gamit ng mga mod ng Rust engine (hindi ang .jar ng Fabric o Forge). Ini-install nang naka-off ang mga mod na may code; i-on ang mga ito pagkatapos suriin ang mga pahintulot nila sa Options > Mods sa loob ng game.
+Konten	Content
+Berkode	May code
+Ini bukan shader asli Horizon: horizon-shaders.toml tidak ditemukan di dasar arsip.	Hindi ito native na Horizon shader: hindi nahanap ang horizon-shaders.toml sa pinakaitaas na antas ng archive.
+Shader asli Horizon terlalu besar (berkas lebih dari 16 MB, isi lebih dari 8 MB, atau ada berkas yang terlalu besar).	Masyadong malaki ang native na Horizon shader (file na lampas 16 MB, laman na lampas 8 MB, o may isang file na masyadong malaki).
+Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon source: mga native shader ng Rust engine (.hshader).
+Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth source: mga klasikong shader, limitado pa rin ang compatibility sa Rust engine.
+Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon source: mga resource pack na ginawa o sinubukan para sa Rust engine.
+Coba ubah kata kunci atau pindah ke sumber Modrinth	Subukang palitan ang keyword o lumipat sa Modrinth source

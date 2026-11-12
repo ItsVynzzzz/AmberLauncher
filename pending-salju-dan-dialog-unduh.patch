@@ -1,0 +1,630 @@
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index b41e320..08213e1 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -138,3 +138,7 @@ Controller dan mouse fisik	Controller and physical mouse
+ Lanjutan	Advanced
+ Langsung bisa dipakai	Works right away
+ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	No need to turn anything on or set anything up. Plug in a controller (gamepad) and play: left stick walks, right stick looks, A jumps, RT attacks, LT places/uses, Y opens the inventory, Start = Esc. In menus the stick moves the cursor. A physical mouse and keyboard work right away too. On-screen buttons hide by themselves when a controller or mouse is used. Stick speed follows the camera and cursor sensitivity above. If a controller mod (e.g. Controlify) is detected, the controller is handed straight to the mod.
++Efek	Effects
++Efek salju	Snow effect
++Salju turun di Beranda dan layar lain. Bawaan mati.	Snow falls on Home and other screens. Off by default.
++Jumlah salju	Snow amount
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index 4dc99af..db73b21 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -138,3 +138,7 @@ Controller dan mouse fisik	Mando y ratón físico
+ Lanjutan	Avanzado
+ Langsung bisa dipakai	Funciona al instante
+ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	No hace falta activar ni configurar nada. Conecta un mando (gamepad) y juega: stick izquierdo para caminar, stick derecho para mirar, A salta, RT ataca, LT coloca/usa, Y abre el inventario, Start = Esc. En los menús el stick mueve el cursor. El ratón y el teclado físicos también funcionan al instante. Los botones en pantalla se ocultan solos cuando se usa un mando o un ratón. La velocidad del stick sigue la sensibilidad de cámara y cursor de arriba. Si se detecta un mod de mando (p. ej. Controlify), el mando se cede directamente al mod.
++Efek	Efectos
++Efek salju	Efecto de nieve
++Salju turun di Beranda dan layar lain. Bawaan mati.	Cae nieve en Inicio y en otras pantallas. Desactivado por defecto.
++Jumlah salju	Cantidad de nieve
+diff --git a/app/src/main/assets/lang/pt/settings.tsv b/app/src/main/assets/lang/pt/settings.tsv
+index f0a543e..74be15d 100644
+--- a/app/src/main/assets/lang/pt/settings.tsv
++++ b/app/src/main/assets/lang/pt/settings.tsv
+@@ -138,3 +138,7 @@ Controller dan mouse fisik	Controle e mouse f\u00edsicos
+ Lanjutan	Avan\u00e7ado
+ Langsung bisa dipakai	Pronto para usar
+ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	N\u00e3o precisa ativar nem configurar. Conecte um controle (gamepad) e jogue: o anal\u00f3gico esquerdo anda, o direito move a c\u00e2mera, A pula, RT ataca, LT coloca, Y abre o invent\u00e1rio, Start = Esc. Nos menus, o anal\u00f3gico move o cursor. Mouse e teclado f\u00edsicos tamb\u00e9m funcionam na hora. Os bot\u00f5es da tela se escondem sozinhos quando um controle ou mouse \u00e9 usado. A velocidade do anal\u00f3gico segue a sensibilidade da c\u00e2mera e do cursor acima. Se um mod de controle (por exemplo, o Controlify) for detectado, o controle \u00e9 entregue diretamente ao mod.
++Efek	Efeitos
++Efek salju	Efeito de neve
++Salju turun di Beranda dan layar lain. Bawaan mati.	A neve cai no In\u00edcio e em outras telas. Desativado por padr\u00e3o.
++Jumlah salju	Quantidade de neve
+diff --git a/app/src/main/assets/lang/th/settings.tsv b/app/src/main/assets/lang/th/settings.tsv
+index c7cbdee..ab0ece9 100644
+--- a/app/src/main/assets/lang/th/settings.tsv
++++ b/app/src/main/assets/lang/th/settings.tsv
+@@ -134,3 +134,7 @@ Controller dan mouse fisik	คอนโทรลเลอร์และเม
+ Lanjutan	ขั้นสูง
+ Langsung bisa dipakai	ใช้ได้ทันที
+ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	ไม่ต้องเปิดหรือตั้งค่าอะไร เสียบคอนโทรลเลอร์ (เกมแพด) แล้วเล่นได้เลย: สติ๊กซ้ายเดิน สติ๊กขวามองรอบๆ A กระโดด RT โจมตี LT วาง/ใช้ Y เปิดช่องเก็บของ Start = Esc ในเมนูสติ๊กจะขยับเคอร์เซอร์ เมาส์และคีย์บอร์ดจริงก็ใช้ได้ทันทีเช่นกัน ปุ่มบนหน้าจอจะซ่อนเองเมื่อใช้คอนโทรลเลอร์หรือเมาส์ ความเร็วสติ๊กเป็นไปตามความไวกล้องและเคอร์เซอร์ด้านบน หากตรวจพบ Mod คอนโทรลเลอร์ (เช่น Controlify) คอนโทรลเลอร์จะถูกส่งให้ Mod โดยตรง
++Efek	เอฟเฟกต์
++Efek salju	เอฟเฟกต์หิมะ
++Salju turun di Beranda dan layar lain. Bawaan mati.	หิมะตกบนหน้าหลักและหน้าจออื่น ปิดเป็นค่าเริ่มต้น
++Jumlah salju	ปริมาณหิมะ
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index 30de22b..9167eda 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -137,3 +137,7 @@ Controller dan mouse fisik	Tay cầm và chuột vật lý
+ Lanjutan	Nâng cao
+ Langsung bisa dipakai	Dùng được ngay
+ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	Không cần bật hay cài đặt gì. Cắm tay cầm (gamepad) rồi chơi: cần trái để đi, cần phải xoay camera, A nhảy, RT đánh, LT đặt/dùng, Y mở túi đồ, Start = Esc. Trong menu, cần gạt di chuyển con trỏ. Chuột và bàn phím vật lý cũng dùng được ngay. Nút trên màn hình tự ẩn khi dùng tay cầm hoặc chuột. Tốc độ cần gạt theo độ nhạy camera và con trỏ ở trên. Nếu phát hiện mod tay cầm (ví dụ Controlify), tay cầm được giao thẳng cho mod.
++Efek	Hi\u1ec7u \u1ee9ng
++Efek salju	Hi\u1ec7u \u1ee9ng tuy\u1ebft r\u01a1i
++Salju turun di Beranda dan layar lain. Bawaan mati.	Tuy\u1ebft r\u01a1i \u1edf Trang ch\u1ee7 v\u00e0 c\u00e1c m\u00e0n h\u00ecnh kh\u00e1c. M\u1eb7c \u0111\u1ecbnh t\u1eaft.
++Jumlah salju	L\u01b0\u1ee3ng tuy\u1ebft
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index a14bec4..0bd1642 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -107,6 +107,11 @@ data class LauncherSettings(
+     val uiStyle: String = "default",
+     val bgDim: Int = 50,
+ 
++    // Efek salju (suasana Natal): bawaan mati. Di Beranda lebat; di layar lain lebih sedikit dan redup
++    // seperti di dalam ruangan. Bisa dinyalakan di Pengaturan > Tampilan.
++    val snowEnabled: Boolean = false,
++    val snowAmount: Int = 60, // 10 - 100
++
+     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
+     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
+     val perfRev: Int = 0
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/SnowOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/SnowOverlay.kt
+new file mode 100644
+index 0000000..4829900
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/SnowOverlay.kt
+@@ -0,0 +1,198 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.Canvas
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableFloatStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.runtime.withFrameNanos
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.graphics.Color
++import kotlin.math.roundToInt
++import kotlin.math.sin
++import kotlin.random.Random
++
++// =============================================================================
++// EFEK SALJU (suasana Natal)
++//
++// Dua lapisan yang dipasang DashboardScreen:
++//  - SnowBackLayer : di belakang semua UI (di atas latar/wallpaper). Banyak butir halus.
++//  - SnowFrontLayer: di atas UI, hanya beberapa butir kecil supaya suasananya terasa.
++//
++// Di Home salju lebat dan terang. Di layar lain ([indoor] = true) jumlahnya jauh lebih sedikit dan
++// lebih redup, seolah-olah salju hanya terlihat dari balik jendela di dalam ruangan.
++//
++// Hemat tenaga: posisi butir dihitung dari satu nilai waktu (tidak ada objek per butir yang dibuat
++// ulang), digambar hanya di fase draw (tanpa recompose), dan diperbarui ~30 kali per detik.
++// Lapisan tidak menangkap sentuhan, jadi UI di bawahnya tetap bisa disentuh.
++// =============================================================================
++
++private const val FRAME_NS = 33_000_000L // ~30 fps
++
++/** Gaya satu lapisan. Ukuran dan kecepatan dalam dp (dp per detik), butir dekat lebih besar dan cepat. */
++private class SnowStyle(
++    val minRadius: Float,
++    val maxRadius: Float,
++    val minSpeed: Float,
++    val maxSpeed: Float,
++    val minAlpha: Float,
++    val maxAlpha: Float,
++    val color: Color,
++    val halo: Boolean
++)
++
++private val BackHomeStyle = SnowStyle(
++    minRadius = 0.9f, maxRadius = 3.0f,
++    minSpeed = 20f, maxSpeed = 65f,
++    minAlpha = 0.35f, maxAlpha = 0.85f,
++    color = Color.White, halo = true
++)
++
++private val BackIndoorStyle = SnowStyle(
++    minRadius = 0.8f, maxRadius = 2.4f,
++    minSpeed = 16f, maxSpeed = 48f,
++    minAlpha = 0.16f, maxAlpha = 0.42f,
++    color = Color(0xFFD5DEEA), halo = false
++)
++
++private val FrontHomeStyle = SnowStyle(
++    minRadius = 1.6f, maxRadius = 3.4f,
++    minSpeed = 55f, maxSpeed = 95f,
++    minAlpha = 0.55f, maxAlpha = 0.85f,
++    color = Color.White, halo = true
++)
++
++private val FrontIndoorStyle = SnowStyle(
++    minRadius = 1.4f, maxRadius = 2.8f,
++    minSpeed = 45f, maxSpeed = 75f,
++    minAlpha = 0.34f, maxAlpha = 0.6f,
++    color = Color(0xFFE3EAF3), halo = false
++)
++
++/** Posisi awal tiap butir (0..1), kedalaman (0 = jauh, 1 = dekat), dan fase/laju ayunan. */
++private class SnowField(val count: Int, seed: Int, nearOnly: Boolean) {
++    val x0 = FloatArray(count)
++    val y0 = FloatArray(count)
++    val depth = FloatArray(count)
++    val phase = FloatArray(count)
++    val freq = FloatArray(count)
++
++    init {
++        val rnd = Random(seed)
++        for (i in 0 until count) {
++            x0[i] = rnd.nextFloat()
++            y0[i] = rnd.nextFloat()
++            val u = rnd.nextFloat()
++            // Lapisan belakang: kebanyakan butir jauh (kecil), sedikit yang dekat. Lapisan depan: butir dekat.
++            depth[i] = if (nearOnly) 0.5f + 0.5f * u else u * u
++            phase[i] = rnd.nextFloat() * 6.2831855f
++            freq[i] = 0.5f + rnd.nextFloat() * 1.1f
++        }
++    }
++}
++
++@Composable
++private fun SnowCanvas(
++    count: Int,
++    seed: Int,
++    nearOnly: Boolean,
++    style: SnowStyle,
++    modifier: Modifier = Modifier
++) {
++    val field = remember(count, seed, nearOnly) { SnowField(count, seed, nearOnly) }
++    var timeSec by remember { mutableFloatStateOf(0f) }
++
++    // Satu penghitung waktu; berhenti sendiri saat layar tidak tampil.
++    LaunchedEffect(Unit) {
++        var startNs = -1L
++        var lastNs = 0L
++        while (true) {
++            withFrameNanos { now ->
++                if (startNs < 0L) {
++                    startNs = now
++                    lastNs = now - FRAME_NS
++                }
++                if (now - lastNs >= FRAME_NS) {
++                    lastNs = now
++                    timeSec = (now - startNs) / 1_000_000_000f
++                }
++            }
++        }
++    }
++
++    Canvas(modifier = modifier.fillMaxSize()) {
++        val w = size.width
++        val h = size.height
++        if (w <= 0f || h <= 0f) return@Canvas
++        val t = timeSec
++        val d = density
++        for (i in 0 until field.count) {
++            val depth = field.depth[i]
++            val r = (style.minRadius + (style.maxRadius - style.minRadius) * depth) * d
++            val speed = (style.minSpeed + (style.maxSpeed - style.minSpeed) * depth) * d
++            val span = h + r * 4f
++            val y = ((field.y0[i] * span + t * speed) % span) - r * 2f
++            // Ayunan kiri-kanan dan hanyutan angin pelan; butir dekat bergerak lebih jauh.
++            val sway = sin(t * field.freq[i] + field.phase[i]) * (6f + 10f * depth) * d
++            val wind = t * (4f + 10f * depth) * d
++            var x = (field.x0[i] * w + sway + wind) % w
++            if (x < 0f) x += w
++            val alpha = style.minAlpha + (style.maxAlpha - style.minAlpha) * depth
++            val center = Offset(x, y)
++            if (style.halo && depth > 0.5f) {
++                drawCircle(
++                    color = style.color.copy(alpha = alpha * 0.22f),
++                    radius = r * 2.2f,
++                    center = center
++                )
++            }
++            drawCircle(
++                color = style.color.copy(alpha = alpha),
++                radius = r,
++                center = center
++            )
++        }
++    }
++}
++
++/**
++ * Salju di belakang semua UI. [amount] 10..100 (persen). [indoor] = layar selain Home: jumlah
++ * dikurangi banyak dan warnanya lebih redup.
++ */
++@Composable
++fun SnowBackLayer(
++    amount: Int,
++    indoor: Boolean,
++    modifier: Modifier = Modifier
++) {
++    val a = amount.coerceIn(10, 100)
++    SnowCanvas(
++        count = (a * (if (indoor) 0.38f else 1.1f)).roundToInt().coerceAtLeast(4),
++        seed = if (indoor) 12 else 11,
++        nearOnly = false,
++        style = if (indoor) BackIndoorStyle else BackHomeStyle,
++        modifier = modifier
++    )
++}
++
++/** Beberapa butir salju di atas UI. Sedikit dan kecil supaya tidak mengganggu bacaan. */
++@Composable
++fun SnowFrontLayer(
++    amount: Int,
++    indoor: Boolean,
++    modifier: Modifier = Modifier
++) {
++    val a = amount.coerceIn(10, 100)
++    val count = if (indoor) 3 + (a * 0.04f).roundToInt() else 6 + (a * 0.10f).roundToInt()
++    SnowCanvas(
++        count = count,
++        seed = if (indoor) 34 else 33,
++        nearOnly = true,
++        style = if (indoor) FrontIndoorStyle else FrontHomeStyle,
++        modifier = modifier
++    )
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
+index e507e78..d68c801 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxDownloadProgressDialog.kt
+@@ -1,15 +1,22 @@
+ package com.israadev.nuxlauncher.ui.dialogs
+ 
++import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+-import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Row
+-import androidx.compose.foundation.layout.RowScope
++import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
+ import androidx.compose.foundation.shape.CircleShape
+-import com.israadev.nuxlauncher.ui.i18n.Text
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Download
++import androidx.compose.material3.Icon
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+@@ -17,20 +24,28 @@ import androidx.compose.ui.draw.clip
+ import androidx.compose.ui.draw.drawBehind
+ import androidx.compose.ui.geometry.CornerRadius
+ import androidx.compose.ui.geometry.Size
++import androidx.compose.ui.graphics.Brush
++import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.israadev.nuxlauncher.ui.components.AmberAlert
+-import com.israadev.nuxlauncher.ui.components.AmberButton
+-import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
+-import com.israadev.nuxlauncher.ui.theme.Amber
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.components.AmberOverlay
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++
++private val ProgressCardShape = RoundedCornerShape(28.dp)
++private val ProgressCardFill = Color(0xFF18171C)
+ 
+ /**
+- * Dialog proses unduh game. Batang kemajuan digambar langsung tanpa animasi: lebarnya mengikuti
+- * nilai terbaru; tidak ada indikator berputar yang menggambar ulang terus-menerus.
++ * Pop up proses unduh game: kartu kecil di tengah layar dengan ikon unduh beraksen, nama instance,
++ * persentase besar, batang kemajuan, dan keterangan tahap. Warna mengikuti aksen pilihan pengguna.
+  *
+- * [onCancel] bila diisi memunculkan tombol Batal. Dialog tetap tidak bisa ditutup dengan ketukan di
++ * Batang kemajuan digambar langsung tanpa animasi: lebarnya mengikuti nilai terbaru; tidak ada
++ * indikator berputar yang menggambar ulang terus-menerus.
++ *
++ * [onCancel] bila diisi memunculkan tombol Batal. Pop up tetap tidak bisa ditutup dengan ketukan di
+  * luar atau tombol kembali, jadi unduhan tidak terhenti tanpa sengaja.
+  */
+ @Composable
+@@ -44,75 +59,109 @@ fun NuxDownloadProgressDialog(
+     val fraction = progress.coerceIn(0f, 1f)
+     val percent = (fraction * 100f).toInt()
+ 
+-    val cancelActions: (@Composable RowScope.() -> Unit)? = if (onCancel == null) {
+-        null
+-    } else {
+-        {
+-            AmberButton(
+-                text = "Batal",
+-                onClick = onCancel,
+-                modifier = Modifier.weight(1f),
+-                style = AmberButtonStyle.Ghost
+-            )
+-        }
+-    }
+-
+-    AmberAlert(
+-        onDismissRequest = onDismissRequest,
+-        title = "Mengunduh game",
+-        icon = "download",
+-        accent = Amber.Yellow,
+-        actions = cancelActions
++    AmberOverlay(
++        onDismiss = onDismissRequest,
++        dismissOnScrimTap = false,
++        scrimAlpha = 0.7f
+     ) {
+-        Row(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.SpaceBetween,
+-            verticalAlignment = Alignment.CenterVertically
++        Column(
++            modifier = Modifier
++                .align(Alignment.Center)
++                .widthIn(max = 440.dp)
++                .fillMaxWidth(0.88f)
++                .clip(ProgressCardShape)
++                .background(ProgressCardFill, ProgressCardShape)
++                .border(1.dp, AmberUi.BorderStrong, ProgressCardShape)
++                .padding(horizontal = 20.dp, vertical = 18.dp)
+         ) {
+-            Text(
+-                text = instanceName,
+-                color = Amber.Text,
+-                fontSize = 16.sp,
+-                fontWeight = FontWeight.Bold,
+-                maxLines = 1,
+-                overflow = TextOverflow.Ellipsis,
+-                modifier = Modifier.weight(1f)
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Box(
++                    modifier = Modifier
++                        .size(48.dp)
++                        .clip(CircleShape)
++                        .background(AmberUi.Accent, CircleShape)
++                        .border(1.dp, AmberUi.AccentEdge, CircleShape),
++                    contentAlignment = Alignment.Center
++                ) {
++                    Icon(
++                        imageVector = Icons.Outlined.Download,
++                        contentDescription = null,
++                        tint = AmberUi.Text,
++                        modifier = Modifier.size(24.dp)
++                    )
++                }
++                Spacer(modifier = Modifier.width(14.dp))
++                Column(modifier = Modifier.weight(1f)) {
++                    Text(
++                        text = "Mengunduh game",
++                        color = AmberUi.Text,
++                        fontSize = 17.sp,
++                        fontWeight = FontWeight.Black,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                    Text(
++                        text = instanceName,
++                        color = AmberUi.TextDim,
++                        fontSize = 13.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++                Spacer(modifier = Modifier.width(10.dp))
++                Text(
++                    text = "$percent%",
++                    color = AmberUi.AccentSoft,
++                    fontSize = 26.sp,
++                    fontWeight = FontWeight.Black,
++                    maxLines = 1
++                )
++            }
++
++            Box(
++                modifier = Modifier
++                    .padding(top = 18.dp)
++                    .fillMaxWidth()
++                    .height(12.dp)
++                    .clip(CircleShape)
++                    .drawBehind {
++                        drawRect(Color.White.copy(alpha = 0.08f))
++                        if (fraction > 0f) {
++                            // Isian minimal selebar tingginya supaya 1% pun terlihat sebagai pil
++                            val w = (size.width * fraction).coerceAtLeast(size.height)
++                            drawRoundRect(
++                                brush = Brush.horizontalGradient(
++                                    colors = listOf(AmberUi.Accent, AmberUi.AccentSoft),
++                                    startX = 0f,
++                                    endX = w
++                                ),
++                                size = Size(w, size.height),
++                                cornerRadius = CornerRadius(size.height / 2f)
++                            )
++                        }
++                    }
++                    .border(1.dp, AmberUi.Border, CircleShape)
+             )
++
+             Text(
+-                text = "$percent%",
+-                color = Amber.Yellow,
+-                fontSize = 16.sp,
+-                fontWeight = FontWeight.Bold,
+-                modifier = Modifier.padding(start = 12.dp)
++                text = message.ifBlank { "Menyiapkan file game..." },
++                color = AmberUi.TextDim,
++                fontSize = 12.5.sp,
++                lineHeight = 18.sp,
++                maxLines = 2,
++                overflow = TextOverflow.Ellipsis,
++                modifier = Modifier.padding(top = 12.dp)
+             )
++
++            if (onCancel != null) {
++                Spacer(modifier = Modifier.height(16.dp))
++                AmberActionButton(
++                    text = "Batal",
++                    onClick = onCancel,
++                    filled = false,
++                    modifier = Modifier.fillMaxWidth()
++                )
++            }
+         }
+-        Box(
+-            modifier = Modifier
+-                .padding(top = 12.dp)
+-                .fillMaxWidth()
+-                .height(10.dp)
+-                .clip(CircleShape)
+-                .drawBehind {
+-                    drawRect(Amber.Fill)
+-                    val w = size.width * fraction
+-                    if (w > 0f) {
+-                        drawRoundRect(
+-                            color = Amber.Yellow,
+-                            size = Size(w, size.height),
+-                            cornerRadius = CornerRadius(size.height / 2f)
+-                        )
+-                    }
+-                }
+-                .border(1.dp, Amber.Line, CircleShape)
+-        )
+-        Text(
+-            text = message.ifBlank { "Menyiapkan file game..." },
+-            color = Amber.TextDim,
+-            fontSize = 13.sp,
+-            lineHeight = 19.sp,
+-            maxLines = 2,
+-            overflow = TextOverflow.Ellipsis,
+-            modifier = Modifier.padding(top = 12.dp)
+-        )
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 9f5bb62..228a1bd 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -143,6 +143,8 @@ import com.israadev.nuxlauncher.ui.components.AmbientSampler
+ import com.israadev.nuxlauncher.ui.components.AmbientState
+ import com.israadev.nuxlauncher.ui.components.HomeInfo
+ import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
++import com.israadev.nuxlauncher.ui.components.SnowBackLayer
++import com.israadev.nuxlauncher.ui.components.SnowFrontLayer
+ import com.israadev.nuxlauncher.ui.components.NuxButton
+ import com.israadev.nuxlauncher.ui.components.NuxDialog
+ import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
+@@ -442,6 +444,14 @@ fun DashboardScreen() {
+                 )
+             }
+ 
++            // Salju di belakang semua UI: lebat di Home, sedikit dan redup di layar lain (seperti di dalam ruangan).
++            if (launcherSettings.snowEnabled) {
++                SnowBackLayer(
++                    amount = launcherSettings.snowAmount,
++                    indoor = currentTab != "home"
++                )
++            }
++
+             CompositionLocalProvider(LocalGlassBackdrop provides (if (liquid) blurBackdrop else null)) {
+             when (currentTab) {
+                 // Home: layar penuh tanpa sidebar dan kartu; navigasinya ada di bar bawah.
+@@ -541,6 +551,14 @@ fun DashboardScreen() {
+                 }
+             }
+             }
++
++            // Beberapa butir salju di atas UI supaya suasana Natalnya terasa (tidak menghalangi sentuhan).
++            if (launcherSettings.snowEnabled) {
++                SnowFrontLayer(
++                    amount = launcherSettings.snowAmount,
++                    indoor = currentTab != "home"
++                )
++            }
+         }
+ 
+         // Dialog ganti latar belakang
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index db71b47..e457000 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -180,6 +180,8 @@ fun SettingsScreen(
+     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
+     var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
+     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
++    var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
++    var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
+     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
+     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
+     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
+@@ -230,7 +232,9 @@ fun SettingsScreen(
+             homeAmbientIntensity = ambientIntensity,
+             accentColor = accentId,
+             uiStyle = uiStyleId,
+-            bgDim = bgDim
++            bgDim = bgDim,
++            snowEnabled = snowOn,
++            snowAmount = snowAmount
+         )
+         SettingsManager.updateSettings(context, updated)
+     }
+@@ -1065,6 +1069,32 @@ fun SettingsScreen(
+                             )
+                         }
+                         }
++
++                        SettingsGroup("Efek") {
++                            SettingSwitchRow(
++                                title = "Efek salju",
++                                desc = "Salju turun di Beranda dan layar lain. Bawaan mati.",
++                                checked = snowOn,
++                                onCheckedChange = {
++                                    snowOn = it
++                                    commitSettings()
++                                }
++                            )
++                            if (snowOn) {
++                                SettingDivider()
++                                SettingSliderRow(
++                                    title = "Jumlah salju",
++                                    valueText = "$snowAmount%",
++                                    value = snowAmount.toFloat(),
++                                    valueRange = 10f..100f,
++                                    steps = 8,
++                                    onValueChange = {
++                                        snowAmount = ((it / 10f).roundToInt() * 10).coerceIn(10, 100)
++                                        commitSettings()
++                                    }
++                                )
++                            }
++                        }
+                     }
+ 
+                     // ===================== TENTANG =====================
+@@ -1125,6 +1155,8 @@ fun SettingsScreen(
+                     accentId = reset.accentColor
+                     uiStyleId = reset.uiStyle
+                     bgDim = reset.bgDim
++                    snowOn = reset.snowEnabled
++                    snowAmount = reset.snowAmount
+                     AmberUi.setAccent(reset.accentColor)
+                     AmberUi.setStyle(reset.uiStyle)
+                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
+# FIN part=1/1 files=10

@@ -124,3 +124,4 @@ Installer Forge ini tidak memuat jar Forge utama	This Forge installer does not c
 Jar Forge utama rusak atau tidak lengkap	The main Forge jar is corrupted or incomplete
 Unduhan kosong: {0}	Empty download: {0}
 Tidak ada alamat unduhan	No download address
+Minecraft 1.13.2 ke bawah memakai Legacy Fabric. Banyak mod di sana butuh mod Legacy Fabric API.	Minecraft 1.13.2 and older uses Legacy Fabric. Many mods there need the Legacy Fabric API mod.

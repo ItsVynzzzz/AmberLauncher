@@ -34,13 +34,18 @@ object FabricService {
         .build()
 
     /**
-     * Mengambil daftar versi Fabric Loader untuk versi game Minecraft tertentu
+     * Mengambil daftar versi Fabric Loader untuk versi game Minecraft tertentu. Minecraft 1.13.2 ke bawah
+     * dilayani Legacy Fabric (server berbeda, bentuk data sama).
      */
     suspend fun getFabricLoaders(gameVersion: String): Result<List<String>> = withContext(Dispatchers.IO) {
-        val urls = listOf(
-            "$META_URL/$gameVersion",
-            "$MIRROR_META_URL/$gameVersion"
-        )
+        val urls = if (LegacyFabric.appliesTo(gameVersion)) {
+            listOf(LegacyFabric.loadersUrl(gameVersion))
+        } else {
+            listOf(
+                "$META_URL/$gameVersion",
+                "$MIRROR_META_URL/$gameVersion"
+            )
+        }
 
         var lastException: Exception? = null
         for (url in urls) {
@@ -67,8 +72,10 @@ object FabricService {
     }
 
     /**
-     * Daftar versi game Minecraft yang didukung Fabric (rilis dan snapshot). Dipakai layar buat instance
-     * untuk hanya menampilkan versi yang memang punya Fabric. Gagal = layar memakai perkiraan sendiri.
+     * Daftar versi game Minecraft yang didukung Fabric (rilis dan snapshot), ditambah rilis lama (1.7.10 sampai
+     * 1.13.2) dari Legacy Fabric. Dipakai layar buat instance untuk hanya menampilkan versi yang memang punya
+     * Fabric. Gagal = layar memakai perkiraan sendiri. Bila hanya server Legacy Fabric yang tidak terjangkau,
+     * daftar Fabric resmi tetap dipakai dan versi lama sekadar tidak tampil.
      */
     suspend fun getSupportedGameVersions(): Result<Set<String>> = withContext(Dispatchers.IO) {
         var lastException: Exception? = null
@@ -88,7 +95,7 @@ object FabricService {
                     }
                     .toSet()
                 if (versions.isNotEmpty()) {
-                    return@withContext Result.success(versions)
+                    return@withContext Result.success(versions + legacyGameVersions())
                 }
             } catch (e: Exception) {
                 lastException = e
@@ -97,15 +104,30 @@ object FabricService {
         Result.failure<Set<String>>(lastException ?: IOException("Tidak dapat memuat daftar versi Fabric"))
     }
 
+    /** Rilis lama dari Legacy Fabric. Gagal dimuat tidak menggagalkan apa pun: hasilnya cukup kosong. */
+    private fun legacyGameVersions(): Set<String> = try {
+        val quick = client.newBuilder().callTimeout(8, TimeUnit.SECONDS).build()
+        val request = Request.Builder().url(LegacyFabric.gamesUrl()).build()
+        quick.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) emptySet() else LegacyFabric.gameVersionsFrom(response.body?.string().orEmpty())
+        }
+    } catch (e: Exception) {
+        emptySet()
+    }
+
     /**
      * Mengambil profil lengkap Fabric Loader (mainClass, library list, dll.)
      */
     suspend fun getFabricProfile(gameVersion: String, loaderVersion: String): Result<FabricProfile> = withContext(Dispatchers.IO) {
         val safeVersion = gameVersion.replace("∞", "infinite")
-        val urls = listOf(
-            "$META_URL/$safeVersion/$loaderVersion/profile/json",
-            "$MIRROR_META_URL/$safeVersion/$loaderVersion/profile/json"
-        )
+        val urls = if (LegacyFabric.appliesTo(gameVersion)) {
+            listOf(LegacyFabric.profileUrl(safeVersion, loaderVersion))
+        } else {
+            listOf(
+                "$META_URL/$safeVersion/$loaderVersion/profile/json",
+                "$MIRROR_META_URL/$safeVersion/$loaderVersion/profile/json"
+            )
+        }
 
         var lastException: Exception? = null
         for (url in urls) {

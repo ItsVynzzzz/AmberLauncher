@@ -61,6 +61,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.fabric.FabricService
+import com.israadev.nuxlauncher.core.fabric.LegacyFabric
 import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.forge.ForgeService
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
@@ -931,6 +932,15 @@ private fun CiVersionCard(
                         maxLines = 2
                     )
                     else -> {
+                        if (loaderLabel == "Fabric" && LegacyFabric.appliesTo(item.id)) {
+                            Text(
+                                text = "Minecraft 1.13.2 ke bawah memakai Legacy Fabric. Banyak mod di sana butuh mod Legacy Fabric API.",
+                                color = AmberUi.AccentSoft,
+                                fontSize = 12.sp,
+                                lineHeight = 17.sp
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
                         Text(
                             text = "Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.",
                             color = AmberUi.TextDim,

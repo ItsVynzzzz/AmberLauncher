@@ -51,7 +51,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 
 **Game**
 - **Many separate instances**, each with its own version, mods, and settings.
-- **Vanilla, Fabric, Forge (1.7.10+), and NeoForge (1.20.2+)**. Mod and modpack search automatically matches the instance's loader. Forge 1.12.2 and older is still being tested.
+- **Vanilla, Fabric (including Legacy Fabric for Minecraft 1.7.10 to 1.13.2), Forge (1.7.10+), and NeoForge (1.20.2+)**. Mod and modpack search automatically matches the instance's loader. Forge 1.12.2 and older and Legacy Fabric are still being tested.
 - **Bundled Java**: Java 8, 17, 21, and 25, with nothing else to install.
 - **Renderer choices**: Auto (suggested), Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).
 

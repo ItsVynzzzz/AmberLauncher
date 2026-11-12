@@ -136,3 +136,4 @@ Installer Forge ini tidak memuat jar Forge utama	ตัวติดตั้ง 
 Jar Forge utama rusak atau tidak lengkap	ไฟล์ jar หลักของ Forge เสียหายหรือไม่สมบูรณ์
 Unduhan kosong: {0}	ไฟล์ที่ดาวน์โหลดว่างเปล่า: {0}
 Tidak ada alamat unduhan	ไม่มีที่อยู่สำหรับดาวน์โหลด
+Minecraft 1.13.2 ke bawah memakai Legacy Fabric. Banyak mod di sana butuh mod Legacy Fabric API.	Minecraft 1.13.2 และต่ำกว่าใช้ Legacy Fabric Mod จำนวนมากในเวอร์ชันเหล่านั้นต้องใช้ Mod Legacy Fabric API

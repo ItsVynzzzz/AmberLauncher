@@ -51,7 +51,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 
 **Game**
 - **Banyak instance terpisah**, masing-masing dengan versi, mod, dan pengaturan sendiri.
-- **Vanilla, Fabric, Forge (1.7.10+), dan NeoForge (1.20.2+)**. Pencarian mod dan modpack otomatis disesuaikan dengan loader instance. Forge 1.12.2 ke bawah masih tahap uji.
+- **Vanilla, Fabric (termasuk Legacy Fabric untuk Minecraft 1.7.10 sampai 1.13.2), Forge (1.7.10+), dan NeoForge (1.20.2+)**. Pencarian mod dan modpack otomatis disesuaikan dengan loader instance. Forge 1.12.2 ke bawah dan Legacy Fabric masih tahap uji.
 - **Java bawaan**: Java 8, 17, 21, dan 25, tanpa perlu memasang apa pun.
 - **Pilihan renderer**: Auto (disarankan), Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).
 

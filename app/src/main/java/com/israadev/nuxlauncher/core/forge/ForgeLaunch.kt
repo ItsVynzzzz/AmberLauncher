@@ -7,7 +7,8 @@ import java.io.File
 /**
  * Bahan peluncuran Forge yang dihitung dari profil Forge yang terpasang.
  *
- * - [mainClass]: kelas utama Forge (ModLauncher untuk 1.13-1.16, BootstrapLauncher untuk 1.17+).
+ * - [mainClass]: kelas utama Forge (LaunchWrapper untuk 1.12.2 ke bawah, ModLauncher untuk 1.13-1.16,
+ *   BootstrapLauncher untuk 1.17+).
  * - [libraryFiles]: library Forge yang ada di disk, untuk ditaruh di classpath.
  * - [libraryKeys]: "group:artifact" milik Forge; library Mojang dengan kunci sama dilewati (versi Forge menang).
  * - [jvmArgs]: argumen JVM tambahan Forge (module path, --add-opens, -DignoreList, dst.), sebelum `-cp`.
@@ -32,6 +33,12 @@ object ForgeLaunch {
         "-XstartOnFirstThread"
     )
 
+    /**
+     * Argumen game dari profil Forge lama yang diatur Amber sendiri; pasangannya dibuang agar tidak ganda
+     * (Forge 1.12.2 menulis `--versionType Forge`, sedangkan Amber sudah memberi `--versionType`).
+     */
+    private val AMBER_MANAGED_GAME_ARGS = setOf("--versionType")
+
     private val gson = Gson()
 
     /**
@@ -53,6 +60,8 @@ object ForgeLaunch {
             val name = lib.name ?: continue
             // LWJGL milik Amber (versi Android) dipakai; yang di profil Forge tidak boleh ikut
             if (name.contains("org.lwjgl")) continue
+            // Library native diurus Amber (profil Forge lama kadang memuat salinan milik Minecraft)
+            if (lib.natives != null) continue
             ForgeMaven.keyOf(name)?.let { keys.add(it) }
             val path = ForgeMaven.libraryPath(lib) ?: continue
             val file = SafePaths.resolveInside(libDir, path) ?: continue
@@ -154,15 +163,20 @@ object ForgeLaunch {
         return allowed
     }
 
-    /** Profil bergaya lama (`minecraftArguments` berupa satu teks); pasangan berisian ${...} dibuang. */
-    private fun legacyGameArguments(text: String?): List<String> {
+    /**
+     * Profil bergaya lama (`minecraftArguments` berupa satu teks); pasangan berisian ${...} dan pasangan
+     * yang diatur Amber sendiri dibuang, sehingga yang tersisa hanya tambahan Forge (`--tweakClass ...`).
+     */
+    internal fun legacyGameArguments(text: String?): List<String> {
         if (text.isNullOrBlank()) return emptyList()
         val tokens = text.trim().split(Regex("\\s+"))
         val out = ArrayList<String>()
         var i = 0
         while (i < tokens.size) {
             val t = tokens[i]
-            if (t.startsWith("--") && i + 1 < tokens.size && tokens[i + 1].contains("\${")) {
+            if (t.startsWith("--") && i + 1 < tokens.size &&
+                (tokens[i + 1].contains("\${") || t in AMBER_MANAGED_GAME_ARGS)
+            ) {
                 i += 2
                 continue
             }
@@ -170,5 +184,41 @@ object ForgeLaunch {
             i++
         }
         return out
+    }
+
+    // ---------------------------------------------------------------- Forge lama
+
+    /**
+     * Forge 1.12.2 ke bawah menampilkan layar muat sendiri yang memakai kelas LWJGL 2 (`SharedDrawable`)
+     * yang tidak ada di jembatan lwjglx milik Amber, sehingga game crash sebelum menu muncul. Pengaturan
+     * resminya (`config/splash.properties`, kunci `enabled`) dimatikan sebelum game dimulai; layar muat
+     * bawaan Minecraft tetap tampil. Gagal menulis tidak menghentikan peluncuran.
+     */
+    fun disableLegacySplash(gameDir: File) {
+        try {
+            val file = File(File(gameDir, "config"), "splash.properties")
+            val old = if (file.isFile) file.readLines() else emptyList()
+            val updated = withSplashDisabled(old)
+            if (updated != old) {
+                file.parentFile?.mkdirs()
+                file.writeText(updated.joinToString("\n") + "\n")
+            }
+        } catch (_: Exception) {
+        }
+    }
+
+    /** Baris-baris splash.properties dengan `enabled=false`; baris lain dibiarkan apa adanya. */
+    internal fun withSplashDisabled(lines: List<String>): List<String> {
+        val enabledLine = Regex("""^\s*enabled\s*[=:].*$""")
+        var found = false
+        val out = lines.map { line ->
+            if (enabledLine.matches(line)) {
+                found = true
+                "enabled=false"
+            } else {
+                line
+            }
+        }
+        return if (found) out else out + "enabled=false"
     }
 }

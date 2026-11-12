@@ -70,7 +70,7 @@ Tidak ada versi Forge untuk {0}	Walang bersyon ng Forge para sa {0}
 Versi Forge belum dipilih	Wala pang napiling bersyon ng Forge
 Forge hanya mendukung Minecraft 1.13 ke atas	Minecraft 1.13 pataas lang ang sinusuportahan ng Forge
 Installer Forge {0} rusak atau tidak lengkap	Sira o hindi kumpleto ang Forge installer {0}
-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Hindi nakilala ang format ng Forge installer na ito (Kailangan ng Amber ang Forge 1.13 pataas)
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	Hindi nakilala ang format ng Forge installer na ito (Kailangan ng Amber ang Forge 1.7.10 pataas)
 Installer Forge untuk Minecraft {0}, bukan {1}	Para sa Minecraft {0} ang Forge installer na ito, hindi para sa {1}
 Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Nabigong i-download ang mga Forge library: {0}. Suriin ang koneksyon at subukan ulit.
 Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Natapos ang Forge installer pero hindi nahanap ang na-patch na Minecraft jar ({0})
@@ -131,3 +131,8 @@ HTTP Error {0}	HTTP Error {0}
 Empty response body	Walang laman ang response body
 Folder: {0}	Folder: {0}
 Unable to resolve host "{0}": System DNS and Fallback DoH failed	Hindi ma-resolve ang host na "{0}": nabigo ang System DNS at Fallback DoH
+Installer Forge ini tidak dikenali	Hindi nakilala ang Forge installer na ito
+Installer Forge ini tidak memuat jar Forge utama	Walang pangunahing Forge jar sa Forge installer na ito
+Jar Forge utama rusak atau tidak lengkap	Sira o hindi kumpleto ang pangunahing Forge jar
+Unduhan kosong: {0}	Walang laman ang na-download: {0}
+Tidak ada alamat unduhan	Walang address ng download

@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge cho
 Versi Forge belum dipilih	Ch\u01b0a ch\u1ecdn phi\u00ean b\u1ea3n Forge
 Forge hanya mendukung Minecraft 1.13 ke atas	Forge ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft 1.13 tr\u1edf l\u00ean
 Installer Forge {0} rusak atau tidak lengkap	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0} b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng \u0111\u1ea7y \u0111\u1ee7
-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.13 tr\u1edf l\u00ean)
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.7.10 tr\u1edf l\u00ean)
 Installer Forge untuk Minecraft {0}, bukan {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y d\u00e0nh cho Minecraft {0}, kh\u00f4ng ph\u1ea3i {1}
 Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c th\u01b0 vi\u1ec7n Forge: {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i th\u1eed l\u1ea1i.
 Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge \u0111\u00e3 ch\u1ea1y xong nh\u01b0ng kh\u00f4ng t\u00ecm th\u1ea5y jar Minecraft \u0111\u00e3 v\u00e1 ({0})
@@ -131,3 +131,8 @@ LOADER {0}	LOADER {0}
 Memuat loader {0}...	\u0110ang t\u1ea3i loader {0}...
 Loader {0} belum tersedia untuk Minecraft {1}	Loader {0} ch\u01b0a c\u00f3 cho Minecraft {1}
 Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	Phi\u00ean b\u1ea3n m\u1edbi nh\u1ea5t \u0111\u01b0\u1ee3c ch\u1ecdn t\u1ef1 \u0111\u1ed9ng. Ch\u1ea1m v\u00e0o phi\u00ean b\u1ea3n kh\u00e1c n\u1ebfu b\u1ea1n c\u1ea7n loader c\u0169 h\u01a1n.
+Installer Forge ini tidak dikenali	Kh\xf4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c tr\xecnh c\xe0i \u0111\u1eb7t Forge n\xe0y
+Installer Forge ini tidak memuat jar Forge utama	Tr\xecnh c\xe0i \u0111\u1eb7t Forge n\xe0y kh\xf4ng ch\u1ee9a t\u1ec7p jar Forge ch\xednh
+Jar Forge utama rusak atau tidak lengkap	T\u1ec7p jar Forge ch\xednh b\u1ecb h\u1ecfng ho\u1eb7c kh\xf4ng \u0111\u1ea7y \u0111\u1ee7
+Unduhan kosong: {0}	T\u1ec7p t\u1ea3i v\u1ec1 tr\u1ed1ng: {0}
+Tidak ada alamat unduhan	Kh\xf4ng c\xf3 \u0111\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng

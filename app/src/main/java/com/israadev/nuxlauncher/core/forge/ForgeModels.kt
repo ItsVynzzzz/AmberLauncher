@@ -1,15 +1,17 @@
 package com.israadev.nuxlauncher.core.forge
 
 /**
- * Model data Forge dan NeoForge (hanya yang modern: Forge 1.13 ke atas, NeoForge 1.20.2 ke atas).
+ * Model data Forge dan NeoForge (Forge 1.7.10 ke atas, NeoForge 1.20.2 ke atas).
  *
  * Semua field dibuat nullable dengan nilai bawaan karena diisi Gson dari JSON milik installer Forge
  * (Gson tidak memanggil konstruktor, jadi field yang tidak ada di JSON bernilai null).
  */
 
 /**
- * Jenis loader bergaya Forge modern. Forge dan NeoForge memakai format installer yang sama
+ * Jenis loader bergaya Forge. Forge 1.13 ke atas dan NeoForge memakai format installer yang sama
  * (`install_profile.json` + `version.json` + processors), jadi satu mesin pemasangan melayani keduanya.
+ * Forge 1.12.2 ke bawah memakai installer gaya lama (tanpa processors) yang dipasang oleh
+ * [ForgeLegacyInstaller].
  */
 enum class ForgeFlavor(
     /** Nilai `Instance.loader`; sama dengan id loader di Modrinth. */
@@ -18,7 +20,7 @@ enum class ForgeFlavor(
     /** Versi Minecraft terendah yang didukung. */
     val minMcVersion: String
 ) {
-    FORGE("forge", "Forge", "1.13"),
+    FORGE("forge", "Forge", "1.7.10"),
     NEOFORGE("neoforge", "NeoForge", "1.20.2");
 
     /** Nama berkas penanda "terpasang" di versions/<mc>/. */
@@ -71,7 +73,20 @@ data class ForgeInstallProfile(
     val json: String? = null,
     val data: Map<String, ForgeDataEntry>? = null,
     val processors: List<ForgeProcessor>? = null,
-    val libraries: List<ForgeLibrary>? = null
+    val libraries: List<ForgeLibrary>? = null,
+    /** Installer gaya lama (Forge 1.12.2 ke bawah): bagian `install` dan `versionInfo` menggantikan processors. */
+    val install: ForgeLegacyInstall? = null,
+    val versionInfo: ForgeVersionJson? = null
+)
+
+/** Bagian `install` di install_profile.json milik installer Forge gaya lama. */
+data class ForgeLegacyInstall(
+    /** Koordinat Maven jar Forge utama, contoh "net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9". */
+    val path: String? = null,
+    /** Nama jar Forge utama di dalam installer, contoh "forge-1.8.9-11.15.1.2318-1.8.9-universal.jar". */
+    val filePath: String? = null,
+    /** Versi Minecraft yang dituju, contoh "1.8.9". */
+    val minecraft: String? = null
 )
 
 data class ForgeDataEntry(
@@ -91,7 +106,11 @@ data class ForgeLibrary(
     val name: String? = null,
     val downloads: ForgeLibDownloads? = null,
     /** Alamat dasar Maven untuk library bergaya lama yang tidak punya `downloads`. */
-    val url: String? = null
+    val url: String? = null,
+    /** Library berisi native per OS; native diurus Amber sendiri, jadi library seperti ini dilewati. */
+    val natives: Map<String, String>? = null,
+    /** Pada profil gaya lama, `false` berarti library hanya untuk server. */
+    val clientreq: Boolean? = null
 )
 
 data class ForgeLibDownloads(

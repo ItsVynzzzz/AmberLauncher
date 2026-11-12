@@ -51,7 +51,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 
 **Game**
 - **Many separate instances**, each with its own version, mods, and settings.
-- **Vanilla, Fabric, Forge (1.13+), and NeoForge (1.20.2+)**. Mod and modpack search automatically matches the instance's loader.
+- **Vanilla, Fabric, Forge (1.7.10+), and NeoForge (1.20.2+)**. Mod and modpack search automatically matches the instance's loader. Forge 1.12.2 and older is still being tested.
 - **Bundled Java**: Java 8, 17, 21, and 25, with nothing else to install.
 - **Renderer choices**: Auto (suggested), Krypton, MobileGlues, GL4ES, Kopper Zink, and Freedreno (Snapdragon Turnip).
 
@@ -72,7 +72,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, and Filipino.
 - **Experimental**: TouchController mod support and the Rust engine (Horizon).
 
-**Not supported yet:** Forge for Minecraft 1.12.2 and older, NeoForge for 1.20.1 and older, and Quilt.
+**Not supported yet:** Forge for Minecraft 1.6.4 and older, NeoForge for 1.20.1 and older, and Quilt.
 
 ## Help
 

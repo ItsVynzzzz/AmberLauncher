@@ -38,6 +38,9 @@ import java.util.zip.ZipFile
  * Pemasangan hanya terjadi sekali per versi; sesudahnya tidak ada biaya apa pun saat
  * launcher berjalan, dan proses :forge sudah mati.
  *
+ * Forge 1.12.2 ke bawah memakai installer gaya lama yang tidak dijalankan sama sekali; pemasangannya
+ * dikerjakan [ForgeLegacyInstaller] (hanya unduh library dan ambil jar Forge dari installer).
+ *
  * Penanda "terpasang" adalah berkas versions/<mc>/<forge|neoforge>-<versi>.json, ditulis paling akhir.
  */
 object ForgeInstaller {
@@ -158,24 +161,44 @@ object ForgeInstaller {
         )
         installerJar.parentFile?.mkdirs()
         if (!isUsableInstaller(installerJar)) {
-            val url = ForgeService.installerUrl(mcVersion, forgeVersion, flavor)
             installerJar.delete()
-            downloader.downloadFile(
-                url = url,
-                targetFile = installerJar,
-                expectedSha1 = fetchSha1(url),
-                onProgress = { read, total ->
-                    val frac = if (total > 0) (read.toFloat() / total).coerceIn(0f, 1f) else 0f
-                    onProgress(progress(frac * 0.08f), "Mengunduh installer $name $forgeVersion...")
+            // Beberapa alamat hanya untuk Forge lama bercabang; Forge modern dan NeoForge punya satu alamat
+            var failure: Exception? = null
+            for (url in ForgeService.installerUrls(mcVersion, forgeVersion, flavor)) {
+                try {
+                    downloader.downloadFile(
+                        url = url,
+                        targetFile = installerJar,
+                        expectedSha1 = fetchSha1(url),
+                        onProgress = { read, total ->
+                            val frac = if (total > 0) (read.toFloat() / total).coerceIn(0f, 1f) else 0f
+                            onProgress(progress(frac * 0.08f), "Mengunduh installer $name $forgeVersion...")
+                        }
+                    )
+                    if (isUsableInstaller(installerJar)) {
+                        failure = null
+                        break
+                    }
+                    installerJar.delete()
+                    failure = IOException("Installer $name $forgeVersion rusak atau tidak lengkap")
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    installerJar.delete()
+                    failure = e
                 }
-            )
-            if (!isUsableInstaller(installerJar)) {
-                installerJar.delete()
-                throw IOException("Installer $name $forgeVersion rusak atau tidak lengkap")
             }
+            failure?.let { throw it }
         }
 
         val (profile, versionJsonText) = readInstallerMeta(installerJar, name)
+
+        // Forge 1.12.2 ke bawah: tidak ada processors dan installer tidak dijalankan
+        if (flavor == ForgeFlavor.FORGE && ForgeLegacyInstaller.isLegacyProfile(profile)) {
+            installLegacy(downloader, installerJar, profile, versionJsonText, mcVersion, forgeVersion, versionsDir, libDir, onProgress)
+            return
+        }
+
         if (profile.processors == null || profile.json == null && versionJsonText.isBlank()) {
             throw IllegalStateException("Format installer $name ini tidak dikenali (Amber butuh $name ${flavor.minMcVersion} ke atas)")
         }
@@ -253,14 +276,7 @@ object ForgeInstaller {
         }
 
         // 7. Tandai selesai: salin profilnya ke versions/<mc>/<forge|neoforge>-<versi>.json (ditulis paling akhir)
-        val marker = File(File(versionsDir, mcVersion), SafePaths.fileName(flavor.markerName(forgeVersion)))
-        val tmp = File(marker.parentFile, marker.name + ".tmp")
-        tmp.writeText(versionJsonText)
-        if (marker.exists()) marker.delete()
-        if (!tmp.renameTo(marker)) {
-            tmp.copyTo(marker, overwrite = true)
-            tmp.delete()
-        }
+        writeMarker(versionsDir, mcVersion, flavor, forgeVersion, versionJsonText)
 
         // 8. Rapikan: folder versi buatan installer dan installer itu sendiri tidak dipakai lagi
         val installedId = profile.version?.takeIf { it.isNotBlank() }
@@ -270,6 +286,55 @@ object ForgeInstaller {
         }
         installerJar.delete()
         onProgress(P_END, "$name $forgeVersion terpasang")
+    }
+
+    /**
+     * Pemasangan Forge gaya lama: unduh library, ambil jar Forge utama dari installer, lalu tulis penanda.
+     * Tidak ada proses :forge dan tidak butuh Java saat pemasangan.
+     */
+    private suspend fun installLegacy(
+        downloader: MinecraftDownloader,
+        installerJar: File,
+        profile: ForgeInstallProfile,
+        versionInfoText: String,
+        mcVersion: String,
+        forgeVersion: String,
+        versionsDir: File,
+        libDir: File,
+        onProgress: (Float, String) -> Unit
+    ) {
+        val flavor = ForgeFlavor.FORGE
+        val name = flavor.displayName
+        val plan = ForgeLegacyInstaller.plan(profile, mcVersion)
+        ForgeLegacyInstaller.install(
+            installerJar = installerJar,
+            plan = plan,
+            mcVersion = mcVersion,
+            forgeVersion = forgeVersion,
+            libDir = libDir,
+            fetch = { url, target -> downloader.downloadFile(url, target, retries = 2) },
+            formatFailure = { failed ->
+                val shown = failed.take(3).joinToString(", ")
+                val more = if (failed.size > 3) " " + Tr.t("dan ${failed.size - 3} lainnya") else ""
+                "Gagal mengunduh library $name: $shown$more. Periksa koneksi lalu coba lagi."
+            },
+            report = { fraction, message -> onProgress(progress(0.08f + fraction * 0.90f), message) }
+        )
+        writeMarker(versionsDir, mcVersion, flavor, forgeVersion, versionInfoText)
+        installerJar.delete()
+        onProgress(P_END, "$name $forgeVersion terpasang")
+    }
+
+    /** Menulis penanda "terpasang" lewat berkas sementara; ditulis paling akhir. */
+    private fun writeMarker(versionsDir: File, mcVersion: String, flavor: ForgeFlavor, forgeVersion: String, text: String) {
+        val marker = File(File(versionsDir, mcVersion), SafePaths.fileName(flavor.markerName(forgeVersion)))
+        val tmp = File(marker.parentFile, marker.name + ".tmp")
+        tmp.writeText(text)
+        if (marker.exists()) marker.delete()
+        if (!tmp.renameTo(marker)) {
+            tmp.copyTo(marker, overwrite = true)
+            tmp.delete()
+        }
     }
 
     // ---------------------------------------------------------------- unduhan
@@ -412,6 +477,12 @@ object ForgeInstaller {
             val profileText = zip.getInputStream(profileEntry).bufferedReader().use { it.readText() }
             val profile = gson.fromJson(profileText, ForgeInstallProfile::class.java)
                 ?: throw IllegalStateException("install_profile.json tidak terbaca")
+            // Installer gaya lama membawa profil versinya di dalam install_profile.json (bagian "versionInfo")
+            if (ForgeLegacyInstaller.isLegacyProfile(profile)) {
+                val info = JsonParser.parseString(profileText).asJsonObject.get("versionInfo")?.toString()
+                    ?: throw IllegalStateException("versionInfo tidak ada di installer $name")
+                return Pair(profile, info)
+            }
             val jsonName = (profile.json ?: "/version.json").trimStart('/')
             val jsonEntry = zip.getEntry(jsonName)
                 ?: throw IllegalStateException("$jsonName tidak ada di installer $name")

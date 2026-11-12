@@ -51,7 +51,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 
 **Game**
 - **Banyak instance terpisah**, masing-masing dengan versi, mod, dan pengaturan sendiri.
-- **Vanilla, Fabric, Forge (1.13+), dan NeoForge (1.20.2+)**. Pencarian mod dan modpack otomatis disesuaikan dengan loader instance.
+- **Vanilla, Fabric, Forge (1.7.10+), dan NeoForge (1.20.2+)**. Pencarian mod dan modpack otomatis disesuaikan dengan loader instance. Forge 1.12.2 ke bawah masih tahap uji.
 - **Java bawaan**: Java 8, 17, 21, dan 25, tanpa perlu memasang apa pun.
 - **Pilihan renderer**: Auto (disarankan), Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Snapdragon Turnip).
 
@@ -72,7 +72,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, dan Filipino.
 - **Eksperimental**: dukungan mod TouchController dan mesin Rust (Horizon).
 
-**Belum didukung:** Forge untuk Minecraft 1.12.2 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
+**Belum didukung:** Forge untuk Minecraft 1.6.4 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
 
 ## Bantuan
 

@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	No hay versiones de Forge para {0}
 Versi Forge belum dipilih	No se ha elegido una versi\u00f3n de Forge
 Forge hanya mendukung Minecraft 1.13 ke atas	Forge solo es compatible con Minecraft 1.13 o superior
 Installer Forge {0} rusak atau tidak lengkap	El instalador de Forge {0} est\u00e1 da\u00f1ado o incompleto
-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.13 o superior)
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.7.10 o superior)
 Installer Forge untuk Minecraft {0}, bukan {1}	Este instalador de Forge es para Minecraft {0}, no {1}
 Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de Forge: {0}. Revisa tu conexi\u00f3n e int\u00e9ntalo de nuevo.
 Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	El instalador de Forge termin\u00f3 pero no se encontr\u00f3 el jar de Minecraft parcheado ({0})
@@ -131,3 +131,8 @@ LOADER {0}	LOADER {0}
 Memuat loader {0}...	Cargando el loader de {0}...
 Loader {0} belum tersedia untuk Minecraft {1}	El loader de {0} a\u00fan no est\u00e1 disponible para Minecraft {1}
 Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	La versi\u00f3n m\u00e1s reciente se elige autom\u00e1ticamente. Toca otra si necesitas un loader m\u00e1s antiguo.
+Installer Forge ini tidak dikenali	No se reconoce este instalador de Forge
+Installer Forge ini tidak memuat jar Forge utama	Este instalador de Forge no contiene el jar principal de Forge
+Jar Forge utama rusak atau tidak lengkap	El jar principal de Forge est\xe1 da\xf1ado o incompleto
+Unduhan kosong: {0}	Descarga vac\xeda: {0}
+Tidak ada alamat unduhan	No hay direcci\xf3n de descarga

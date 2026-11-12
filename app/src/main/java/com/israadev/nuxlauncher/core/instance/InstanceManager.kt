@@ -312,7 +312,7 @@ object InstanceManager {
         migrateOldStorage(context)
 
         val file = getInstancesFile(context)
-        var loadedList = mutableListOf<Instance>()
+        val loadedList = mutableListOf<Instance>()
         if (file.exists()) {
             try {
                 val json = file.readText()
@@ -328,22 +328,27 @@ object InstanceManager {
 
         // Scan instances directory for isolated instance.json (like Windows version)
         val instancesDir = getInstancesDir(context)
+        val knownIds = loadedList.mapTo(HashSet()) { it.id }
+        val folderInstances = mutableListOf<Pair<String, Instance>>()
         instancesDir.listFiles()?.forEach { instFolder ->
             if (instFolder.isDirectory) {
                 val configFile = File(instFolder, "instance.json")
-                if (configFile.exists() && loadedList.none { it.id == instFolder.name }) {
+                if (configFile.exists() && instFolder.name !in knownIds) {
                     try {
                         val inst = gson.fromJson(configFile.readText(), Instance::class.java)
                         if (inst != null) {
-                            loadedList.add(inst)
+                            folderInstances.add(instFolder.name to inst)
                         }
                     } catch (_: Exception) {}
                 }
             }
         }
 
+        // Id tidak boleh ganda (lihat mergeInstances): dua id sama membuat layar pemilih instance crash
+        val mergedList = mergeInstances(loadedList, folderInstances)
+
         // Check if downloaded client JAR and loader exist for each instance
-        val verifiedList = loadedList.map { inst ->
+        val verifiedList = mergedList.map { inst ->
             inst.copy(isDownloaded = isInstanceDownloaded(context, inst))
         }
 
@@ -413,6 +418,8 @@ object InstanceManager {
         }
 
         val list = _instances.value.toMutableList()
+        // Id yang sama tidak boleh masuk dua kali (mis. init() sempat menemukan foldernya lebih dulu)
+        list.removeAll { it.id == instance.id }
         list.add(0, instance)
         _instances.value = list
         _selectedInstance.value = instance

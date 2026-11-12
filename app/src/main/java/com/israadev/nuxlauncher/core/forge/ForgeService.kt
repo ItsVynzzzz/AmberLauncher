@@ -16,15 +16,18 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Daftar versi Forge/NeoForge dan alamat installer-nya.
  *
- * Hanya yang modern yang didukung: Forge untuk Minecraft 1.13 ke atas dan NeoForge untuk 1.20.2 ke
- * atas. Amber memakai LWJGL 3, sedangkan Forge untuk 1.12.2 ke bawah butuh LWJGL 2. Layanan ini
- * tidak berjalan sendiri: tidak ada permintaan jaringan sampai pengguna memilih Forge/NeoForge di
- * dialog buat instance.
+ * Yang didukung: Forge untuk Minecraft 1.7.10 ke atas dan NeoForge untuk 1.20.2 ke atas. Forge
+ * 1.12.2 ke bawah (installer gaya lama, LaunchWrapper, LWJGL 2 lewat jembatan lwjglx) dipasang oleh
+ * [ForgeLegacyInstaller]. Layanan ini tidak berjalan sendiri: tidak ada permintaan jaringan sampai
+ * pengguna memilih Forge/NeoForge di dialog buat instance.
  */
 object ForgeService {
 
     /** Versi Minecraft terendah yang didukung Forge. */
-    const val MIN_MC_VERSION = "1.13"
+    const val MIN_MC_VERSION = "1.7.10"
+
+    /** Mulai versi ini Forge memakai installer modern (processors); di bawahnya installer gaya lama. */
+    private const val MODERN_FORGE_MC_VERSION = "1.13"
 
     private const val PROMOS_URL = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
     private const val BMCL_LIST_URL = "https://bmclapi2.bangbang93.com/forge/minecraft"
@@ -44,10 +47,13 @@ object ForgeService {
     @Volatile
     private var neoForgeByMc: Map<String, List<String>>? = null
 
+    private data class BmclFile(val category: String? = null)
+
     private data class BmclForge(
         val version: String? = null,
         val mcversion: String? = null,
-        val branch: String? = null
+        val branch: String? = null,
+        val files: List<BmclFile>? = null
     )
 
     /** True bila [mcVersion] adalah rilis resmi yang didukung [flavor] (snapshot tidak didukung). */
@@ -55,6 +61,25 @@ object ForgeService {
         val v = mcVersion.trim()
         if (!releaseRegex.matches(v)) return false
         return !NuxVersionUtils.isLowerVer(v, flavor.minMcVersion)
+    }
+
+    /** True bila [mcVersion] adalah rilis Minecraft yang memakai Forge gaya lama (1.12.2 ke bawah). */
+    fun isLegacyMc(mcVersion: String): Boolean {
+        val v = mcVersion.trim()
+        return releaseRegex.matches(v) && NuxVersionUtils.isLowerVer(v, MODERN_FORGE_MC_VERSION)
+    }
+
+    /**
+     * Semua alamat installer yang layak dicoba, berurutan. Build Forge lama bercabang punya akhiran
+     * cabang di nama artefaknya ("1.8.9-11.15.1.2318-1.8.9"); daftar dari mirror sudah memuatnya, tetapi
+     * daftar promosi resmi tidak, jadi bentuk bersuffix dicoba juga.
+     */
+    fun installerUrls(mcVersion: String, version: String, flavor: ForgeFlavor = ForgeFlavor.FORGE): List<String> {
+        val primary = installerUrl(mcVersion, version, flavor)
+        if (flavor != ForgeFlavor.FORGE || !isLegacyMc(mcVersion) || version.endsWith("-$mcVersion")) {
+            return listOf(primary)
+        }
+        return listOf(primary, installerUrl(mcVersion, "$version-$mcVersion", flavor))
     }
 
     /** Alamat installer resmi; mirror BMCLAPI ditambahkan otomatis oleh pengunduh. */
@@ -133,11 +158,17 @@ object ForgeService {
             Pair(p.await(), l.await())
         }
 
-        val recommended = promos?.get("$mcVersion-recommended")
-        val latest = promos?.get("$mcVersion-latest")
-
+        val legacy = isLegacyMc(mcVersion)
         val versions = LinkedHashSet<String>()
         all.getOrNull()?.let { versions.addAll(it) }
+
+        // Promosi resmi tidak memuat akhiran cabang Forge lama; dicocokkan dengan build dari mirror
+        fun canonical(promo: String): String =
+            if (legacy) versions.firstOrNull { it.substringBefore('-') == promo } ?: promo else promo
+
+        val recommended = promos?.get("$mcVersion-recommended")?.let { canonical(it) }
+        val latest = promos?.get("$mcVersion-latest")?.let { canonical(it) }
+
         // Promosi resmi selalu dimasukkan: dipakai penuh bila mirror gagal
         recommended?.let { versions.add(it) }
         latest?.let { versions.add(it) }
@@ -197,10 +228,19 @@ object ForgeService {
         val body = httpGet("$BMCL_LIST_URL/$mcVersion")
         val type = object : TypeToken<List<BmclForge>>() {}.type
         val items: List<BmclForge> = gson.fromJson(body, type) ?: emptyList()
+        val legacy = isLegacyMc(mcVersion)
         return items
-            .filter { it.branch.isNullOrBlank() } // build bercabang (gaya lama) punya nama artefak berbeda
+            // Forge modern: build bercabang punya nama artefak berbeda dan dilewati. Forge lama: akhiran
+            // cabang ikut ke nama versi ("11.15.1.2318-1.8.9"), supaya "<mc>-<versi>" menjadi nama artefak.
+            .filter { legacy || it.branch.isNullOrBlank() }
             .filter { it.mcversion == null || it.mcversion == mcVersion }
-            .mapNotNull { it.version?.trim()?.takeIf { v -> v.isNotEmpty() } }
+            // Build lama tanpa installer tidak bisa dipasang
+            .filter { !legacy || it.files.isNullOrEmpty() || it.files.any { f -> f.category == "installer" } }
+            .mapNotNull { item ->
+                val version = item.version?.trim()?.takeIf { v -> v.isNotEmpty() } ?: return@mapNotNull null
+                val branch = item.branch?.trim()?.takeIf { legacy && it.isNotEmpty() }
+                if (branch != null) "$version-$branch" else version
+            }
             .distinct()
     }
 

@@ -336,7 +336,7 @@ class MinecraftDownloader(
                 }
             }
 
-            // 6. Pasang Forge (Minecraft 1.13+) atau NeoForge (1.20.2+). Installer resmi dijalankan sekali
+            // 6. Pasang Forge (1.7.10+) atau NeoForge (1.20.2+). Installer Forge modern dijalankan sekali
             // di proses terpisah; sesudahnya tidak ada biaya apa pun saat launcher berjalan.
             val forgeFlavor = com.israadev.nuxlauncher.core.forge.ForgeFlavor.of(instance.loader)
             if (forgeFlavor != null) {

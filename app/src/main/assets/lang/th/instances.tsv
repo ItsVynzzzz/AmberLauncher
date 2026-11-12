@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	ไม่มีเวอร์ชัน Forge �
 Versi Forge belum dipilih	ยังไม่ได้เลือกเวอร์ชัน Forge
 Forge hanya mendukung Minecraft 1.13 ke atas	Forge รองรับเฉพาะ Minecraft 1.13 ขึ้นไป
 Installer Forge {0} rusak atau tidak lengkap	ตัวติดตั้ง Forge {0} เสียหายหรือไม่สมบูรณ์
-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง Forge นี้ (Amber ต้องใช้ Forge 1.13 ขึ้นไป)
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง Forge นี้ (Amber ต้องใช้ Forge 1.7.10 ขึ้นไป)
 Installer Forge untuk Minecraft {0}, bukan {1}	ตัวติดตั้ง Forge นี้สำหรับ Minecraft {0} ไม่ใช่ {1}
 Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี Forge ไม่สำเร็จ: {0} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
 Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	ตัวติดตั้ง Forge ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({0})
@@ -131,3 +131,8 @@ LOADER {0}	{0} LOADER
 Memuat loader {0}...	กำลังโหลด {0} loader...
 Loader {0} belum tersedia untuk Minecraft {1}	ยังไม่มี loader {0} สำหรับ Minecraft {1}
 Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	เลือกเวอร์ชันล่าสุดให้อัตโนมัติ แตะเวอร์ชันอื่นหากต้องการ loader ที่เก่ากว่า
+Installer Forge ini tidak dikenali	ไม่รู้จักตัวติดตั้ง Forge นี้
+Installer Forge ini tidak memuat jar Forge utama	ตัวติดตั้ง Forge นี้ไม่มีไฟล์ jar หลักของ Forge
+Jar Forge utama rusak atau tidak lengkap	ไฟล์ jar หลักของ Forge เสียหายหรือไม่สมบูรณ์
+Unduhan kosong: {0}	ไฟล์ที่ดาวน์โหลดว่างเปล่า: {0}
+Tidak ada alamat unduhan	ไม่มีที่อยู่สำหรับดาวน์โหลด

@@ -9,8 +9,9 @@ internal class ModJarInfo(val name: String?, val version: String?, val descripti
 
 /**
  * Membaca nama, versi, dan deskripsi mod dari jar-nya untuk daftar "Mod terpasang".
- * Mendukung Fabric (`fabric.mod.json`), Forge (`META-INF/mods.toml`), dan NeoForge
- * (`META-INF/neoforge.mods.toml`, formatnya sama dengan mods.toml Forge).
+ * Mendukung Fabric (`fabric.mod.json`), Forge (`META-INF/mods.toml`), NeoForge
+ * (`META-INF/neoforge.mods.toml`, formatnya sama dengan mods.toml Forge), dan Forge lama
+ * (`mcmod.info`, Minecraft 1.12.2 ke bawah).
  */
 internal object ModMetadata {
 
@@ -34,7 +35,42 @@ internal object ModMetadata {
             val toml = zip.getInputStream(entry).bufferedReader().use { it.readText() }
             return parseModsToml(toml) { readManifestVersion(zip) }
         }
+        zip.getEntry("mcmod.info")?.let { entry ->
+            val text = zip.getInputStream(entry).bufferedReader().use { it.readText() }
+            return parseMcmodInfo(text)
+        }
         return null
+    }
+
+    /**
+     * Membaca `mcmod.info` milik mod Forge lama: daftar objek, atau objek dengan `modList`. Yang dipakai mod
+     * pertama. Berkas ini sering tidak rapi (koma berlebih, komentar), jadi pembacanya longgar; teks yang
+     * tak terbaca atau placeholder `${version}` menghasilkan null/diabaikan supaya tidak tampil mentah.
+     */
+    fun parseMcmodInfo(json: String): ModJarInfo? {
+        return try {
+            val root = try {
+                JsonParser.parseString(json)
+            } catch (_: Exception) {
+                // Koma sebelum } atau ] sering ada di mcmod.info buatan tangan; pembaca JSON tidak menerimanya
+                JsonParser.parseString(json.replace(Regex(",\\s*([}\\]])"), "$1"))
+            }
+            val list = when {
+                root.isJsonArray -> root.asJsonArray
+                root.isJsonObject && root.asJsonObject.get("modList")?.isJsonArray == true ->
+                    root.asJsonObject.getAsJsonArray("modList")
+                else -> return null
+            }
+            val mod = list.firstOrNull { it.isJsonObject }?.asJsonObject ?: return null
+            fun field(key: String): String? =
+                text(mod.get(key))?.trim()?.takeIf { it.isNotEmpty() && !it.contains("\${") }
+            val name = field("name") ?: field("modid")
+            val version = field("version")
+            val description = field("description")
+            if (name == null && version == null && description == null) null else ModJarInfo(name, version, description)
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun text(element: JsonElement?): String? =

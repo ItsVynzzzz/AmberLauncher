@@ -178,8 +178,21 @@ object GameLauncher {
             mainClass = forgeLaunch.mainClass
         }
 
-        val runtimeName = if (instance.javaRuntime != "auto") instance.javaRuntime else {
+        // Forge 1.12.2 ke bawah: LaunchWrapper hanya jalan di Java 8, dan layar muat Forge harus dimatikan
+        val legacyForge = forgeLaunch != null && forgeFlavor == com.israadev.nuxlauncher.core.forge.ForgeFlavor.FORGE &&
+            com.israadev.nuxlauncher.core.forge.ForgeService.isLegacyMc(instance.mcVersion)
+        if (legacyForge) {
+            com.israadev.nuxlauncher.core.forge.ForgeLaunch.disableLegacySplash(gameDir)
+        }
+
+        val requestedRuntime = if (instance.javaRuntime != "auto") instance.javaRuntime else {
             com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion, mojangJavaMajor)
+        }
+        val runtimeName = if (legacyForge && requestedRuntime != "jre-8") {
+            LauncherLog.w("Peluncuran", "Forge ${instance.mcVersion} hanya jalan di Java 8; $requestedRuntime diganti jre-8")
+            "jre-8"
+        } else {
+            requestedRuntime
         }
         val runtimeHome = com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRuntimeHome(context, runtimeName)
 

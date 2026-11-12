@@ -70,7 +70,7 @@ Tidak ada versi Forge untuk {0}	没有适用于 {0} 的 Forge 版本
 Versi Forge belum dipilih	尚未选择 Forge 版本
 Forge hanya mendukung Minecraft 1.13 ke atas	Forge 仅支持 Minecraft 1.13 及以上版本
 Installer Forge {0} rusak atau tidak lengkap	Forge 安装程序 {0} 已损坏或不完整
-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	无法识别此 Forge 安装程序的格式（Amber 需要 Forge 1.13 及以上版本）
+Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	无法识别此 Forge 安装程序的格式（Amber 需要 Forge 1.7.10 及以上版本）
 Installer Forge untuk Minecraft {0}, bukan {1}	此 Forge 安装程序适用于 Minecraft {0}，而不是 {1}
 Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	下载 Forge 库失败：{0}。请检查网络连接后重试。
 Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Forge 安装程序已完成，但未找到打过补丁的 Minecraft jar（{0}）
@@ -131,3 +131,8 @@ HTTP Error {0}	HTTP 错误 {0}
 Empty response body	响应体为空
 Folder: {0}	文件夹：{0}
 Unable to resolve host "{0}": System DNS and Fallback DoH failed	无法解析主机“{0}”：系统 DNS 和备用 DoH 均失败
+Installer Forge ini tidak dikenali	无法识别此 Forge 安装程序
+Installer Forge ini tidak memuat jar Forge utama	此 Forge 安装程序不包含 Forge 主 jar
+Jar Forge utama rusak atau tidak lengkap	Forge 主 jar 已损坏或不完整
+Unduhan kosong: {0}	下载内容为空：{0}
+Tidak ada alamat unduhan	没有可用的下载地址

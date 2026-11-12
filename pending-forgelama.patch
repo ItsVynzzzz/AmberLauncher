@@ -1,0 +1,1052 @@
+diff --git a/README.en.md b/README.en.md
+index 690201ef8d9da8f7dbabe8743fff366a770ad26f..61ab42c35062f53736546a938d86187f0855147c 100644
+GIT binary patch
+delta 76
+zcmX@$^WJBJ9S@7So}s~H2cAS-1-Ja7^i%~yJwqcsBZb7g6ovepl++@H%wmP&lFXbO
+gg{0KXymW<<)Z&uVl+6oxrm!)a>6vV{5atjD0IoL}761SM
+
+delta 29
+lcmaFwbHHbV9S@VC@nk2S#LX9ZCbO{^8tEBrP8a471^}NW2_gUh
+
+diff --git a/README.md b/README.md
+index 0e7feb8c863cb992fec98c5178b33bbaeecd3f5a..8b8c39bd5a8ac212d8d8ff2a3705142e15ba3995 100644
+GIT binary patch
+delta 69
+zcmX@*^~r0)OKui(Jwt=Zuenpy6x{NQ(o+=-^$d;lj1;m{6_OIm6EhTY6N@u56iN~^
+Z5(^YcvobgP@r1K6o9UTsUMaLt2mnph7bpM#
+
+delta 29
+lcmez5b;@hQOKv7Z<H>KiQ#M!dgt4(08tEBrz9_U%2mrTG3he*@
+
+diff --git a/app/src/main/assets/lang/en/instances.tsv b/app/src/main/assets/lang/en/instances.tsv
+index a425fbe..c49a30e 100644
+--- a/app/src/main/assets/lang/en/instances.tsv
++++ b/app/src/main/assets/lang/en/instances.tsv
+@@ -70,7 +70,7 @@ Tidak ada versi Forge untuk {0}	No Forge versions for {0}
+ Versi Forge belum dipilih	No Forge version selected
+ Forge hanya mendukung Minecraft 1.13 ke atas	Forge is only supported for Minecraft 1.13 and newer
+ Installer Forge {0} rusak atau tidak lengkap	The Forge installer {0} is corrupted or incomplete
+-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	This Forge installer format is not recognized (Amber needs Forge 1.13 or newer)
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	This Forge installer format is not recognized (Amber needs Forge 1.7.10 or newer)
+ Installer Forge untuk Minecraft {0}, bukan {1}	This Forge installer is for Minecraft {0}, not {1}
+ Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Failed to download Forge libraries: {0}. Check your connection and try again.
+ Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	The Forge installer finished but the patched Minecraft jar was not found ({0})
+@@ -119,3 +119,8 @@ LOADER {0}	{0} LOADER
+ Memuat loader {0}...	Loading {0} loader...
+ Loader {0} belum tersedia untuk Minecraft {1}	{0} loader is not available yet for Minecraft {1}
+ Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	The newest version is picked automatically. Tap another one if you need an older loader.
++Installer Forge ini tidak dikenali	This Forge installer is not recognized
++Installer Forge ini tidak memuat jar Forge utama	This Forge installer does not contain the main Forge jar
++Jar Forge utama rusak atau tidak lengkap	The main Forge jar is corrupted or incomplete
++Unduhan kosong: {0}	Empty download: {0}
++Tidak ada alamat unduhan	No download address
+diff --git a/app/src/main/assets/lang/es/instances.tsv b/app/src/main/assets/lang/es/instances.tsv
+index e334d0b..d093e66 100644
+--- a/app/src/main/assets/lang/es/instances.tsv
++++ b/app/src/main/assets/lang/es/instances.tsv
+@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	No hay versiones de Forge para {0}
+ Versi Forge belum dipilih	No se ha elegido una versi\u00f3n de Forge
+ Forge hanya mendukung Minecraft 1.13 ke atas	Forge solo es compatible con Minecraft 1.13 o superior
+ Installer Forge {0} rusak atau tidak lengkap	El instalador de Forge {0} est\u00e1 da\u00f1ado o incompleto
+-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.13 o superior)
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	No se reconoce el formato de este instalador de Forge (Amber necesita Forge 1.7.10 o superior)
+ Installer Forge untuk Minecraft {0}, bukan {1}	Este instalador de Forge es para Minecraft {0}, no {1}
+ Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de Forge: {0}. Revisa tu conexi\u00f3n e int\u00e9ntalo de nuevo.
+ Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	El instalador de Forge termin\u00f3 pero no se encontr\u00f3 el jar de Minecraft parcheado ({0})
+@@ -131,3 +131,8 @@ LOADER {0}	LOADER {0}
+ Memuat loader {0}...	Cargando el loader de {0}...
+ Loader {0} belum tersedia untuk Minecraft {1}	El loader de {0} a\u00fan no est\u00e1 disponible para Minecraft {1}
+ Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	La versi\u00f3n m\u00e1s reciente se elige autom\u00e1ticamente. Toca otra si necesitas un loader m\u00e1s antiguo.
++Installer Forge ini tidak dikenali	No se reconoce este instalador de Forge
++Installer Forge ini tidak memuat jar Forge utama	Este instalador de Forge no contiene el jar principal de Forge
++Jar Forge utama rusak atau tidak lengkap	El jar principal de Forge est\xe1 da\xf1ado o incompleto
++Unduhan kosong: {0}	Descarga vac\xeda: {0}
++Tidak ada alamat unduhan	No hay direcci\xf3n de descarga
+diff --git a/app/src/main/assets/lang/fil/instances.tsv b/app/src/main/assets/lang/fil/instances.tsv
+index 4709fec..9d852ce 100644
+--- a/app/src/main/assets/lang/fil/instances.tsv
++++ b/app/src/main/assets/lang/fil/instances.tsv
+@@ -70,7 +70,7 @@ Tidak ada versi Forge untuk {0}	Walang bersyon ng Forge para sa {0}
+ Versi Forge belum dipilih	Wala pang napiling bersyon ng Forge
+ Forge hanya mendukung Minecraft 1.13 ke atas	Minecraft 1.13 pataas lang ang sinusuportahan ng Forge
+ Installer Forge {0} rusak atau tidak lengkap	Sira o hindi kumpleto ang Forge installer {0}
+-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Hindi nakilala ang format ng Forge installer na ito (Kailangan ng Amber ang Forge 1.13 pataas)
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	Hindi nakilala ang format ng Forge installer na ito (Kailangan ng Amber ang Forge 1.7.10 pataas)
+ Installer Forge untuk Minecraft {0}, bukan {1}	Para sa Minecraft {0} ang Forge installer na ito, hindi para sa {1}
+ Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Nabigong i-download ang mga Forge library: {0}. Suriin ang koneksyon at subukan ulit.
+ Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Natapos ang Forge installer pero hindi nahanap ang na-patch na Minecraft jar ({0})
+@@ -131,3 +131,8 @@ HTTP Error {0}	HTTP Error {0}
+ Empty response body	Walang laman ang response body
+ Folder: {0}	Folder: {0}
+ Unable to resolve host "{0}": System DNS and Fallback DoH failed	Hindi ma-resolve ang host na "{0}": nabigo ang System DNS at Fallback DoH
++Installer Forge ini tidak dikenali	Hindi nakilala ang Forge installer na ito
++Installer Forge ini tidak memuat jar Forge utama	Walang pangunahing Forge jar sa Forge installer na ito
++Jar Forge utama rusak atau tidak lengkap	Sira o hindi kumpleto ang pangunahing Forge jar
++Unduhan kosong: {0}	Walang laman ang na-download: {0}
++Tidak ada alamat unduhan	Walang address ng download
+diff --git a/app/src/main/assets/lang/pt/instances.tsv b/app/src/main/assets/lang/pt/instances.tsv
+index b7ecf23..c65c6bb 100644
+--- a/app/src/main/assets/lang/pt/instances.tsv
++++ b/app/src/main/assets/lang/pt/instances.tsv
+@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	N\u00e3o h\u00e1 vers\u00e3o do Forge para {0}
+ Versi Forge belum dipilih	Nenhuma vers\u00e3o do Forge selecionada
+ Forge hanya mendukung Minecraft 1.13 ke atas	O Forge s\u00f3 \u00e9 compat\u00edvel com o Minecraft 1.13 ou superior
+ Installer Forge {0} rusak atau tidak lengkap	O instalador do Forge {0} est\u00e1 corrompido ou incompleto
+-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Formato de instalador do Forge n\u00e3o reconhecido (o Amber exige o Forge 1.13 ou superior)
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	Formato de instalador do Forge n\u00e3o reconhecido (o Amber exige o Forge 1.7.10 ou superior)
+ Installer Forge untuk Minecraft {0}, bukan {1}	O instalador do Forge \u00e9 para o Minecraft {0}, n\u00e3o {1}
+ Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do Forge: {0}. Verifique a conex\u00e3o e tente novamente.
+ Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	O instalador do Forge terminou, mas o jar do Minecraft modificado (patched) n\u00e3o foi encontrado ({0})
+@@ -131,3 +131,8 @@ LOADER {0}	LOADER {0}
+ Memuat loader {0}...	Carregando o loader {0}...
+ Loader {0} belum tersedia untuk Minecraft {1}	O loader {0} ainda n\u00e3o est\u00e1 dispon\u00edvel para o Minecraft {1}
+ Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	A vers\u00e3o mais recente \u00e9 escolhida automaticamente. Toque em outra vers\u00e3o se precisar de um loader mais antigo.
++Installer Forge ini tidak dikenali	Instalador do Forge n\xe3o reconhecido
++Installer Forge ini tidak memuat jar Forge utama	Este instalador do Forge n\xe3o cont\xe9m o jar principal do Forge
++Jar Forge utama rusak atau tidak lengkap	O jar principal do Forge est\xe1 corrompido ou incompleto
++Unduhan kosong: {0}	Download vazio: {0}
++Tidak ada alamat unduhan	Nenhum endere\xe7o de download
+diff --git a/app/src/main/assets/lang/th/instances.tsv b/app/src/main/assets/lang/th/instances.tsv
+index 48c09cc1961deae0d3566f41e0812c95dd5fe28e..9c2651a013fbd782fad3642e9753fdb3ce19a4fe 100644
+GIT binary patch
+delta 383
+zcmZ2lIK6CxtsINFo}t0y1-fCA6QtQD&z94N2rx<rZ@w>gOp?)aGMk*@<dwQ|lZE7U
+z47oh>ic1o6a#D*F-13XkQx!7vG8IZPQxdZka#M3l6H64b5@AxMC5gF-llkQhymq!c
+z*s<`z&JGZ{W9tJDcm9JNOCRj)0V{v7V>O7kW8;GzjSqG-J=n4K!H#x_`CMLT#$D8r
+z)+Ry!<h`<vnxT0qr5TBN3fcL^`FZJ93e^U+oXC!Nuwy#dSsjx%YRbg!SPpjSrUyIP
+zAM9*+uwypZr5z7;Yy#`#3IY2zF(pwUF()xMu|%O1Vm!o1ByYk@1^Z{wgB?2`?Ch8v
+N$R#{^lcp3S7XV27zgqwR
+
+delta 27
+jcmbPUwzP1AtsIk~@nlE2?#V&2qLY2}cs9S6+a(DAjARMb
+
+diff --git a/app/src/main/assets/lang/vi/instances.tsv b/app/src/main/assets/lang/vi/instances.tsv
+index a3074b9..6031fca 100644
+--- a/app/src/main/assets/lang/vi/instances.tsv
++++ b/app/src/main/assets/lang/vi/instances.tsv
+@@ -82,7 +82,7 @@ Tidak ada versi Forge untuk {0}	Kh\u00f4ng c\u00f3 phi\u00ean b\u1ea3n Forge cho
+ Versi Forge belum dipilih	Ch\u01b0a ch\u1ecdn phi\u00ean b\u1ea3n Forge
+ Forge hanya mendukung Minecraft 1.13 ke atas	Forge ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft 1.13 tr\u1edf l\u00ean
+ Installer Forge {0} rusak atau tidak lengkap	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge {0} b\u1ecb h\u1ecfng ho\u1eb7c kh\u00f4ng \u0111\u1ea7y \u0111\u1ee7
+-Format installer Forge ini tidak dikenali (Amber butuh Forge 1.13 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.13 tr\u1edf l\u00ean)
++Format installer Forge ini tidak dikenali (Amber butuh Forge 1.7.10 ke atas)	Kh\u00f4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c \u0111\u1ecbnh d\u1ea1ng tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y (Amber c\u1ea7n Forge 1.7.10 tr\u1edf l\u00ean)
+ Installer Forge untuk Minecraft {0}, bukan {1}	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge n\u00e0y d\u00e0nh cho Minecraft {0}, kh\u00f4ng ph\u1ea3i {1}
+ Gagal mengunduh library Forge: {0}. Periksa koneksi lalu coba lagi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c th\u01b0 vi\u1ec7n Forge: {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i th\u1eed l\u1ea1i.
+ Installer Forge selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({0})	Tr\u00ecnh c\u00e0i \u0111\u1eb7t Forge \u0111\u00e3 ch\u1ea1y xong nh\u01b0ng kh\u00f4ng t\u00ecm th\u1ea5y jar Minecraft \u0111\u00e3 v\u00e1 ({0})
+@@ -131,3 +131,8 @@ LOADER {0}	LOADER {0}
+ Memuat loader {0}...	\u0110ang t\u1ea3i loader {0}...
+ Loader {0} belum tersedia untuk Minecraft {1}	Loader {0} ch\u01b0a c\u00f3 cho Minecraft {1}
+ Versi terbaru dipilih otomatis. Ketuk versi lain bila butuh loader yang lebih lama.	Phi\u00ean b\u1ea3n m\u1edbi nh\u1ea5t \u0111\u01b0\u1ee3c ch\u1ecdn t\u1ef1 \u0111\u1ed9ng. Ch\u1ea1m v\u00e0o phi\u00ean b\u1ea3n kh\u00e1c n\u1ebfu b\u1ea1n c\u1ea7n loader c\u0169 h\u01a1n.
++Installer Forge ini tidak dikenali	Kh\xf4ng nh\u1eadn d\u1ea1ng \u0111\u01b0\u1ee3c tr\xecnh c\xe0i \u0111\u1eb7t Forge n\xe0y
++Installer Forge ini tidak memuat jar Forge utama	Tr\xecnh c\xe0i \u0111\u1eb7t Forge n\xe0y kh\xf4ng ch\u1ee9a t\u1ec7p jar Forge ch\xednh
++Jar Forge utama rusak atau tidak lengkap	T\u1ec7p jar Forge ch\xednh b\u1ecb h\u1ecfng ho\u1eb7c kh\xf4ng \u0111\u1ea7y \u0111\u1ee7
++Unduhan kosong: {0}	T\u1ec7p t\u1ea3i v\u1ec1 tr\u1ed1ng: {0}
++Tidak ada alamat unduhan	Kh\xf4ng c\xf3 \u0111\u1ecba ch\u1ec9 t\u1ea3i xu\u1ed1ng
+diff --git a/app/src/main/assets/lang/zh/instances.tsv b/app/src/main/assets/lang/zh/instances.tsv
+index 6e184b28b9dbe443778658c1192ad448c5ec7cce..d1d63a631debc63899a285fa5b8effe28e6bf5d5 100644
+GIT binary patch
+delta 248
+zcmbQ|_04C)8$lLxJwt=Z?*x6pjLo(}4}};#CvO#0ocvu-*^tXKuec;JCnvQ?!7aZi
+zJyjtyFH@l;GbJ%wAvZO*G_gb>D-kADT9TNXIJsU(T>Z(8-lsjSPbaK~YI?F`H%J|q
+z7n<5MK?NPCoWj%Xo1XQ~e>%7SS;sVx{&hXirf%U1%}XiGNX%2n&M(f-OP}n(A>y#>
+z`O01I_sps`sO1U)J0vkBQ6VuWF*mV9p%kK=^Vz0_&*pSK?O*?V%8KW+TAu9aezAA&
+M(>WWS&TZfV0Q>%L7ytkO
+
+delta 27
+jcmez7GtX<o8$l*R<H;WceJ3yB6`I^G!?!tJ=&%p~q^An9
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+index c872c3a..57ddccb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/download/MinecraftDownloader.kt
+@@ -336,7 +336,7 @@ class MinecraftDownloader(
+                 }
+             }
+ 
+-            // 6. Pasang Forge (Minecraft 1.13+) atau NeoForge (1.20.2+). Installer resmi dijalankan sekali
++            // 6. Pasang Forge (1.7.10+) atau NeoForge (1.20.2+). Installer Forge modern dijalankan sekali
+             // di proses terpisah; sesudahnya tidak ada biaya apa pun saat launcher berjalan.
+             val forgeFlavor = com.israadev.nuxlauncher.core.forge.ForgeFlavor.of(instance.loader)
+             if (forgeFlavor != null) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+index 37a799c..977d543 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeInstaller.kt
+@@ -38,6 +38,9 @@ import java.util.zip.ZipFile
+  * Pemasangan hanya terjadi sekali per versi; sesudahnya tidak ada biaya apa pun saat
+  * launcher berjalan, dan proses :forge sudah mati.
+  *
++ * Forge 1.12.2 ke bawah memakai installer gaya lama yang tidak dijalankan sama sekali; pemasangannya
++ * dikerjakan [ForgeLegacyInstaller] (hanya unduh library dan ambil jar Forge dari installer).
++ *
+  * Penanda "terpasang" adalah berkas versions/<mc>/<forge|neoforge>-<versi>.json, ditulis paling akhir.
+  */
+ object ForgeInstaller {
+@@ -158,24 +161,44 @@ object ForgeInstaller {
+         )
+         installerJar.parentFile?.mkdirs()
+         if (!isUsableInstaller(installerJar)) {
+-            val url = ForgeService.installerUrl(mcVersion, forgeVersion, flavor)
+             installerJar.delete()
+-            downloader.downloadFile(
+-                url = url,
+-                targetFile = installerJar,
+-                expectedSha1 = fetchSha1(url),
+-                onProgress = { read, total ->
+-                    val frac = if (total > 0) (read.toFloat() / total).coerceIn(0f, 1f) else 0f
+-                    onProgress(progress(frac * 0.08f), "Mengunduh installer $name $forgeVersion...")
++            // Beberapa alamat hanya untuk Forge lama bercabang; Forge modern dan NeoForge punya satu alamat
++            var failure: Exception? = null
++            for (url in ForgeService.installerUrls(mcVersion, forgeVersion, flavor)) {
++                try {
++                    downloader.downloadFile(
++                        url = url,
++                        targetFile = installerJar,
++                        expectedSha1 = fetchSha1(url),
++                        onProgress = { read, total ->
++                            val frac = if (total > 0) (read.toFloat() / total).coerceIn(0f, 1f) else 0f
++                            onProgress(progress(frac * 0.08f), "Mengunduh installer $name $forgeVersion...")
++                        }
++                    )
++                    if (isUsableInstaller(installerJar)) {
++                        failure = null
++                        break
++                    }
++                    installerJar.delete()
++                    failure = IOException("Installer $name $forgeVersion rusak atau tidak lengkap")
++                } catch (e: CancellationException) {
++                    throw e
++                } catch (e: Exception) {
++                    installerJar.delete()
++                    failure = e
+                 }
+-            )
+-            if (!isUsableInstaller(installerJar)) {
+-                installerJar.delete()
+-                throw IOException("Installer $name $forgeVersion rusak atau tidak lengkap")
+             }
++            failure?.let { throw it }
+         }
+ 
+         val (profile, versionJsonText) = readInstallerMeta(installerJar, name)
++
++        // Forge 1.12.2 ke bawah: tidak ada processors dan installer tidak dijalankan
++        if (flavor == ForgeFlavor.FORGE && ForgeLegacyInstaller.isLegacyProfile(profile)) {
++            installLegacy(downloader, installerJar, profile, versionJsonText, mcVersion, forgeVersion, versionsDir, libDir, onProgress)
++            return
++        }
++
+         if (profile.processors == null || profile.json == null && versionJsonText.isBlank()) {
+             throw IllegalStateException("Format installer $name ini tidak dikenali (Amber butuh $name ${flavor.minMcVersion} ke atas)")
+         }
+@@ -253,14 +276,7 @@ object ForgeInstaller {
+         }
+ 
+         // 7. Tandai selesai: salin profilnya ke versions/<mc>/<forge|neoforge>-<versi>.json (ditulis paling akhir)
+-        val marker = File(File(versionsDir, mcVersion), SafePaths.fileName(flavor.markerName(forgeVersion)))
+-        val tmp = File(marker.parentFile, marker.name + ".tmp")
+-        tmp.writeText(versionJsonText)
+-        if (marker.exists()) marker.delete()
+-        if (!tmp.renameTo(marker)) {
+-            tmp.copyTo(marker, overwrite = true)
+-            tmp.delete()
+-        }
++        writeMarker(versionsDir, mcVersion, flavor, forgeVersion, versionJsonText)
+ 
+         // 8. Rapikan: folder versi buatan installer dan installer itu sendiri tidak dipakai lagi
+         val installedId = profile.version?.takeIf { it.isNotBlank() }
+@@ -272,6 +288,55 @@ object ForgeInstaller {
+         onProgress(P_END, "$name $forgeVersion terpasang")
+     }
+ 
++    /**
++     * Pemasangan Forge gaya lama: unduh library, ambil jar Forge utama dari installer, lalu tulis penanda.
++     * Tidak ada proses :forge dan tidak butuh Java saat pemasangan.
++     */
++    private suspend fun installLegacy(
++        downloader: MinecraftDownloader,
++        installerJar: File,
++        profile: ForgeInstallProfile,
++        versionInfoText: String,
++        mcVersion: String,
++        forgeVersion: String,
++        versionsDir: File,
++        libDir: File,
++        onProgress: (Float, String) -> Unit
++    ) {
++        val flavor = ForgeFlavor.FORGE
++        val name = flavor.displayName
++        val plan = ForgeLegacyInstaller.plan(profile, mcVersion)
++        ForgeLegacyInstaller.install(
++            installerJar = installerJar,
++            plan = plan,
++            mcVersion = mcVersion,
++            forgeVersion = forgeVersion,
++            libDir = libDir,
++            fetch = { url, target -> downloader.downloadFile(url, target, retries = 2) },
++            formatFailure = { failed ->
++                val shown = failed.take(3).joinToString(", ")
++                val more = if (failed.size > 3) " " + Tr.t("dan ${failed.size - 3} lainnya") else ""
++                "Gagal mengunduh library $name: $shown$more. Periksa koneksi lalu coba lagi."
++            },
++            report = { fraction, message -> onProgress(progress(0.08f + fraction * 0.90f), message) }
++        )
++        writeMarker(versionsDir, mcVersion, flavor, forgeVersion, versionInfoText)
++        installerJar.delete()
++        onProgress(P_END, "$name $forgeVersion terpasang")
++    }
++
++    /** Menulis penanda "terpasang" lewat berkas sementara; ditulis paling akhir. */
++    private fun writeMarker(versionsDir: File, mcVersion: String, flavor: ForgeFlavor, forgeVersion: String, text: String) {
++        val marker = File(File(versionsDir, mcVersion), SafePaths.fileName(flavor.markerName(forgeVersion)))
++        val tmp = File(marker.parentFile, marker.name + ".tmp")
++        tmp.writeText(text)
++        if (marker.exists()) marker.delete()
++        if (!tmp.renameTo(marker)) {
++            tmp.copyTo(marker, overwrite = true)
++            tmp.delete()
++        }
++    }
++
+     // ---------------------------------------------------------------- unduhan
+ 
+     private class LibJob(val name: String, val url: String, val target: File, val sha1: String?, val size: Long)
+@@ -412,6 +477,12 @@ object ForgeInstaller {
+             val profileText = zip.getInputStream(profileEntry).bufferedReader().use { it.readText() }
+             val profile = gson.fromJson(profileText, ForgeInstallProfile::class.java)
+                 ?: throw IllegalStateException("install_profile.json tidak terbaca")
++            // Installer gaya lama membawa profil versinya di dalam install_profile.json (bagian "versionInfo")
++            if (ForgeLegacyInstaller.isLegacyProfile(profile)) {
++                val info = JsonParser.parseString(profileText).asJsonObject.get("versionInfo")?.toString()
++                    ?: throw IllegalStateException("versionInfo tidak ada di installer $name")
++                return Pair(profile, info)
++            }
+             val jsonName = (profile.json ?: "/version.json").trimStart('/')
+             val jsonEntry = zip.getEntry(jsonName)
+                 ?: throw IllegalStateException("$jsonName tidak ada di installer $name")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt
+index 8e40698..8d1f356 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLaunch.kt
+@@ -7,7 +7,8 @@ import java.io.File
+ /**
+  * Bahan peluncuran Forge yang dihitung dari profil Forge yang terpasang.
+  *
+- * - [mainClass]: kelas utama Forge (ModLauncher untuk 1.13-1.16, BootstrapLauncher untuk 1.17+).
++ * - [mainClass]: kelas utama Forge (LaunchWrapper untuk 1.12.2 ke bawah, ModLauncher untuk 1.13-1.16,
++ *   BootstrapLauncher untuk 1.17+).
+  * - [libraryFiles]: library Forge yang ada di disk, untuk ditaruh di classpath.
+  * - [libraryKeys]: "group:artifact" milik Forge; library Mojang dengan kunci sama dilewati (versi Forge menang).
+  * - [jvmArgs]: argumen JVM tambahan Forge (module path, --add-opens, -DignoreList, dst.), sebelum `-cp`.
+@@ -32,6 +33,12 @@ object ForgeLaunch {
+         "-XstartOnFirstThread"
+     )
+ 
++    /**
++     * Argumen game dari profil Forge lama yang diatur Amber sendiri; pasangannya dibuang agar tidak ganda
++     * (Forge 1.12.2 menulis `--versionType Forge`, sedangkan Amber sudah memberi `--versionType`).
++     */
++    private val AMBER_MANAGED_GAME_ARGS = setOf("--versionType")
++
+     private val gson = Gson()
+ 
+     /**
+@@ -53,6 +60,8 @@ object ForgeLaunch {
+             val name = lib.name ?: continue
+             // LWJGL milik Amber (versi Android) dipakai; yang di profil Forge tidak boleh ikut
+             if (name.contains("org.lwjgl")) continue
++            // Library native diurus Amber (profil Forge lama kadang memuat salinan milik Minecraft)
++            if (lib.natives != null) continue
+             ForgeMaven.keyOf(name)?.let { keys.add(it) }
+             val path = ForgeMaven.libraryPath(lib) ?: continue
+             val file = SafePaths.resolveInside(libDir, path) ?: continue
+@@ -154,15 +163,20 @@ object ForgeLaunch {
+         return allowed
+     }
+ 
+-    /** Profil bergaya lama (`minecraftArguments` berupa satu teks); pasangan berisian ${...} dibuang. */
+-    private fun legacyGameArguments(text: String?): List<String> {
++    /**
++     * Profil bergaya lama (`minecraftArguments` berupa satu teks); pasangan berisian ${...} dan pasangan
++     * yang diatur Amber sendiri dibuang, sehingga yang tersisa hanya tambahan Forge (`--tweakClass ...`).
++     */
++    internal fun legacyGameArguments(text: String?): List<String> {
+         if (text.isNullOrBlank()) return emptyList()
+         val tokens = text.trim().split(Regex("\\s+"))
+         val out = ArrayList<String>()
+         var i = 0
+         while (i < tokens.size) {
+             val t = tokens[i]
+-            if (t.startsWith("--") && i + 1 < tokens.size && tokens[i + 1].contains("\${")) {
++            if (t.startsWith("--") && i + 1 < tokens.size &&
++                (tokens[i + 1].contains("\${") || t in AMBER_MANAGED_GAME_ARGS)
++            ) {
+                 i += 2
+                 continue
+             }
+@@ -171,4 +185,40 @@ object ForgeLaunch {
+         }
+         return out
+     }
++
++    // ---------------------------------------------------------------- Forge lama
++
++    /**
++     * Forge 1.12.2 ke bawah menampilkan layar muat sendiri yang memakai kelas LWJGL 2 (`SharedDrawable`)
++     * yang tidak ada di jembatan lwjglx milik Amber, sehingga game crash sebelum menu muncul. Pengaturan
++     * resminya (`config/splash.properties`, kunci `enabled`) dimatikan sebelum game dimulai; layar muat
++     * bawaan Minecraft tetap tampil. Gagal menulis tidak menghentikan peluncuran.
++     */
++    fun disableLegacySplash(gameDir: File) {
++        try {
++            val file = File(File(gameDir, "config"), "splash.properties")
++            val old = if (file.isFile) file.readLines() else emptyList()
++            val updated = withSplashDisabled(old)
++            if (updated != old) {
++                file.parentFile?.mkdirs()
++                file.writeText(updated.joinToString("\n") + "\n")
++            }
++        } catch (_: Exception) {
++        }
++    }
++
++    /** Baris-baris splash.properties dengan `enabled=false`; baris lain dibiarkan apa adanya. */
++    internal fun withSplashDisabled(lines: List<String>): List<String> {
++        val enabledLine = Regex("""^\s*enabled\s*[=:].*$""")
++        var found = false
++        val out = lines.map { line ->
++            if (enabledLine.matches(line)) {
++                found = true
++                "enabled=false"
++            } else {
++                line
++            }
++        }
++        return if (found) out else out + "enabled=false"
++    }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLegacyInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLegacyInstaller.kt
+new file mode 100644
+index 0000000..51531ae
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeLegacyInstaller.kt
+@@ -0,0 +1,244 @@
++package com.israadev.nuxlauncher.core.forge
++
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.async
++import kotlinx.coroutines.awaitAll
++import kotlinx.coroutines.coroutineScope
++import kotlinx.coroutines.sync.Semaphore
++import kotlinx.coroutines.sync.withPermit
++import java.io.File
++import java.io.IOException
++import java.util.concurrent.CopyOnWriteArrayList
++import java.util.concurrent.atomic.AtomicInteger
++import java.util.zip.ZipFile
++
++/**
++ * Memasang Forge gaya lama (Minecraft 1.12.2 ke bawah).
++ *
++ * Installer lama tidak punya processors dan tidak perlu dijalankan: `install_profile.json` memuat
++ * `versionInfo` (daftar library, kelas utama LaunchWrapper, dan argumen `--tweakClass`) dan jar Forge
++ * utama dibawa di dalam installer. Pemasangannya hanya dua hal: mengunduh library yang disebut profil,
++ * lalu mengambil jar Forge utama dari installer ke folder libraries. Profil `versionInfo` disimpan
++ * oleh [ForgeInstaller] sebagai penanda "terpasang" dan dibaca [ForgeLaunch] saat game dimulai.
++ *
++ * Tidak memakai Android sama sekali, jadi bisa diuji di JVM biasa; unduhan disuntikkan lewat `fetch`.
++ */
++object ForgeLegacyInstaller {
++
++    /** Jumlah unduhan library paralel; library Forge lama kecil dan jumlahnya sedikit. */
++    private const val THREADS = 6
++
++    private const val MOJANG_LIBRARIES = "https://libraries.minecraft.net/"
++    private const val FORGE_MAVEN = "https://maven.minecraftforge.net/"
++    private const val MAVEN_CENTRAL = "https://repo1.maven.org/maven2/"
++
++    /** Berkas penanda di folder Forge bila jar utamanya ada di folder lain (lihat [install]). */
++    private const val INSTALLED_AS = "installed-as.txt"
++
++    /** Satu library yang harus ada di disk; [urls] dicoba berurutan sampai ada yang berhasil. */
++    class LibraryJob(val name: String, val path: String, val urls: List<String>)
++
++    class Plan(
++        /** Path jar Forge utama relatif terhadap folder libraries. */
++        val mainJarPath: String,
++        /** Nama jar Forge utama di dalam installer; null bila installer tidak menyebutnya. */
++        val mainJarEntry: String?,
++        /** Alamat jar Forge utama bila ternyata tidak ada di dalam installer. */
++        val mainJarUrls: List<String>,
++        val libraries: List<LibraryJob>
++    )
++
++    /** True bila [profile] berasal dari installer gaya lama (tanpa processors, dengan `versionInfo`). */
++    fun isLegacyProfile(profile: ForgeInstallProfile): Boolean =
++        profile.processors == null && profile.install != null && profile.versionInfo != null
++
++    /**
++     * Menyusun rencana pemasangan dari [profile]. Melempar [IllegalStateException] bila installer untuk
++     * versi Minecraft lain atau tidak memuat jar Forge utama.
++     */
++    fun plan(profile: ForgeInstallProfile, mcVersion: String): Plan {
++        val install = profile.install ?: throw IllegalStateException("Installer Forge ini tidak dikenali")
++        val info = profile.versionInfo ?: throw IllegalStateException("Installer Forge ini tidak dikenali")
++
++        val target = install.minecraft?.takeIf { it.isNotBlank() } ?: info.inheritsFrom?.takeIf { it.isNotBlank() }
++        if (target != null && target != mcVersion) {
++            throw IllegalStateException("Installer Forge untuk Minecraft $target, bukan $mcVersion")
++        }
++
++        val libs = info.libraries ?: emptyList()
++        val coordinate = install.path?.takeIf { it.isNotBlank() }
++            ?: libs.firstOrNull { it.name?.startsWith("net.minecraftforge:forge:") == true }?.name
++        val mainPath = ForgeMaven.pathOf(coordinate)
++            ?: throw IllegalStateException("Installer Forge ini tidak memuat jar Forge utama")
++        if (!SafePaths.isSafeRelative(mainPath)) throw IOException("Path library Forge tidak aman: $mainPath")
++
++        val universalPath = ForgeMaven.pathOf("$coordinate:universal")
++        val mainUrls = if (universalPath != null) listOf(FORGE_MAVEN + universalPath) else emptyList()
++
++        return Plan(
++            mainJarPath = mainPath,
++            mainJarEntry = install.filePath?.trim()?.trimStart('/')?.takeIf { it.isNotEmpty() },
++            mainJarUrls = mainUrls,
++            libraries = libraryJobs(libs, mainPath)
++        )
++    }
++
++    /**
++     * Library yang perlu diunduh. Dilewati: LWJGL (milik Amber), library berisi native (diurus Amber),
++     * library khusus server, dan jar Forge utama (dibawa installer).
++     */
++    private fun libraryJobs(libs: List<ForgeLibrary>, mainPath: String): List<LibraryJob> {
++        val jobs = LinkedHashMap<String, LibraryJob>()
++        for (lib in libs) {
++            val name = lib.name?.takeIf { it.isNotBlank() } ?: continue
++            if (name.contains("org.lwjgl")) continue
++            if (lib.natives != null) continue
++            if (lib.clientreq == false) continue
++            val path = ForgeMaven.libraryPath(lib) ?: continue
++            if (path == mainPath || jobs.containsKey(path)) continue
++            if (!SafePaths.isSafeRelative(path)) throw IOException("Path library Forge tidak aman: $path")
++            jobs[path] = LibraryJob(name, path, candidateUrls(lib, path))
++        }
++        return jobs.values.toList()
++    }
++
++    /**
++     * Alamat yang dicoba untuk satu library: alamat dari profil dulu, lalu server library Mojang, Maven
++     * Forge, dan Maven Central. Library Forge lama tersebar di beberapa server dan alamat di profilnya
++     * sering sudah tidak berlaku (http, atau files.minecraftforge.net yang sudah pindah).
++     */
++    internal fun candidateUrls(lib: ForgeLibrary, path: String): List<String> {
++        val urls = LinkedHashSet<String>()
++        ForgeMaven.libraryUrl(lib)?.let { urls.add(normalizeUrl(it)) }
++        urls.add(MOJANG_LIBRARIES + path)
++        urls.add(FORGE_MAVEN + path)
++        urls.add(MAVEN_CENTRAL + path)
++        return urls.toList()
++    }
++
++    private fun normalizeUrl(url: String): String {
++        var u = url.trim()
++        if (u.startsWith("http://")) u = "https://" + u.removePrefix("http://")
++        return u.replace("https://files.minecraftforge.net/maven", "https://maven.minecraftforge.net")
++    }
++
++    /**
++     * Menjalankan [plan]: mengunduh library lalu menaruh jar Forge utama di [libDir]. [fetch] mengunduh
++     * satu alamat ke satu berkas dan melempar bila gagal. [report] menerima kemajuan 0..1 dan pesannya.
++     * [formatFailure] membentuk pesan galat bila ada library yang gagal diunduh.
++     *
++     * Aman diulang: library dan jar yang sudah ada dipakai lagi.
++     */
++    suspend fun install(
++        installerJar: File,
++        plan: Plan,
++        mcVersion: String,
++        forgeVersion: String,
++        libDir: File,
++        fetch: (url: String, target: File) -> Unit,
++        formatFailure: (failed: List<String>) -> String,
++        report: (fraction: Float, message: String) -> Unit
++    ) {
++        downloadLibraries(plan.libraries, libDir, fetch, formatFailure, report)
++
++        report(0.92f, "Memasang Forge $forgeVersion...")
++        val main = SafePaths.resolveInside(libDir, plan.mainJarPath)
++            ?: throw IOException("Path library Forge tidak aman: ${plan.mainJarPath}")
++        if (!isUsableJar(main)) {
++            main.parentFile?.mkdirs()
++            main.delete()
++            val extracted = plan.mainJarEntry != null && extractEntry(installerJar, plan.mainJarEntry, main)
++            if (!extracted) fetchFirst(plan.mainJarUrls, main, fetch)
++            if (!isUsableJar(main)) {
++                main.delete()
++                throw IOException("Jar Forge utama rusak atau tidak lengkap")
++            }
++        }
++
++        // isInstalled() mencari folder libraries/net/minecraftforge/forge/<mc>-<versi>. Bila nama artefak
++        // sebenarnya berbeda dari versi yang dipilih (daftar promosi tidak memuat akhiran cabang), folder
++        // itu tidak ada dan instance akan dianggap belum terpasang selamanya, jadi diberi penanda.
++        SafePaths.resolveInside(libDir, ForgeFlavor.FORGE.libraryDir(mcVersion, forgeVersion))?.let { dir ->
++            if (dir.list().isNullOrEmpty()) {
++                dir.mkdirs()
++                File(dir, INSTALLED_AS).writeText(plan.mainJarPath)
++            }
++        }
++    }
++
++    private suspend fun downloadLibraries(
++        jobs: List<LibraryJob>,
++        libDir: File,
++        fetch: (url: String, target: File) -> Unit,
++        formatFailure: (failed: List<String>) -> String,
++        report: (fraction: Float, message: String) -> Unit
++    ) {
++        if (jobs.isEmpty()) return
++        val failed = CopyOnWriteArrayList<String>()
++        val done = AtomicInteger(0)
++        val gate = Semaphore(THREADS)
++        coroutineScope {
++            jobs.map { job ->
++                async(Dispatchers.IO) {
++                    gate.withPermit {
++                        val target = SafePaths.resolveInside(libDir, job.path)
++                        if (target == null) {
++                            failed.add(job.name)
++                        } else if (!target.exists() || target.length() == 0L) {
++                            try {
++                                target.parentFile?.mkdirs()
++                                fetchFirst(job.urls, target, fetch)
++                            } catch (e: Exception) {
++                                failed.add(job.name)
++                            }
++                        }
++                        val n = done.incrementAndGet()
++                        report(n.toFloat() / jobs.size * 0.9f, "Mengunduh library Forge ($n/${jobs.size})...")
++                    }
++                }
++            }.awaitAll()
++        }
++        if (failed.isNotEmpty()) throw IOException(formatFailure(failed.toList()))
++    }
++
++    /** Mencoba [urls] berurutan; melempar galat terakhir bila semuanya gagal. */
++    internal fun fetchFirst(urls: List<String>, target: File, fetch: (url: String, target: File) -> Unit) {
++        var failure: Exception? = null
++        for (url in urls) {
++            try {
++                fetch(url, target)
++                if (target.exists() && target.length() > 0L) return
++                failure = IOException("Unduhan kosong: $url")
++            } catch (e: Exception) {
++                failure = e
++            }
++        }
++        throw failure ?: IOException("Tidak ada alamat unduhan")
++    }
++
++    /** Menyalin [entryName] dari [zipFile] ke [target] lewat berkas sementara. False bila entri tidak ada. */
++    private fun extractEntry(zipFile: File, entryName: String, target: File): Boolean {
++        ZipFile(zipFile).use { zip ->
++            val entry = zip.getEntry(entryName) ?: return false
++            val tmp = File(target.parentFile, target.name + ".part")
++            zip.getInputStream(entry).use { input -> tmp.outputStream().use { input.copyTo(it) } }
++            if (target.exists()) target.delete()
++            if (!tmp.renameTo(target)) {
++                tmp.copyTo(target, overwrite = true)
++                tmp.delete()
++            }
++            return true
++        }
++    }
++
++    /** Berkas ada, tidak kosong, dan bisa dibuka sebagai jar (zip) yang berisi sesuatu. */
++    private fun isUsableJar(file: File): Boolean {
++        if (!file.isFile || file.length() == 0L) return false
++        return try {
++            ZipFile(file).use { it.entries().hasMoreElements() }
++        } catch (_: Exception) {
++            false
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt
+index d93cae7..d3ce4f0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeModels.kt
+@@ -1,15 +1,17 @@
+ package com.israadev.nuxlauncher.core.forge
+ 
+ /**
+- * Model data Forge dan NeoForge (hanya yang modern: Forge 1.13 ke atas, NeoForge 1.20.2 ke atas).
++ * Model data Forge dan NeoForge (Forge 1.7.10 ke atas, NeoForge 1.20.2 ke atas).
+  *
+  * Semua field dibuat nullable dengan nilai bawaan karena diisi Gson dari JSON milik installer Forge
+  * (Gson tidak memanggil konstruktor, jadi field yang tidak ada di JSON bernilai null).
+  */
+ 
+ /**
+- * Jenis loader bergaya Forge modern. Forge dan NeoForge memakai format installer yang sama
++ * Jenis loader bergaya Forge. Forge 1.13 ke atas dan NeoForge memakai format installer yang sama
+  * (`install_profile.json` + `version.json` + processors), jadi satu mesin pemasangan melayani keduanya.
++ * Forge 1.12.2 ke bawah memakai installer gaya lama (tanpa processors) yang dipasang oleh
++ * [ForgeLegacyInstaller].
+  */
+ enum class ForgeFlavor(
+     /** Nilai `Instance.loader`; sama dengan id loader di Modrinth. */
+@@ -18,7 +20,7 @@ enum class ForgeFlavor(
+     /** Versi Minecraft terendah yang didukung. */
+     val minMcVersion: String
+ ) {
+-    FORGE("forge", "Forge", "1.13"),
++    FORGE("forge", "Forge", "1.7.10"),
+     NEOFORGE("neoforge", "NeoForge", "1.20.2");
+ 
+     /** Nama berkas penanda "terpasang" di versions/<mc>/. */
+@@ -71,7 +73,20 @@ data class ForgeInstallProfile(
+     val json: String? = null,
+     val data: Map<String, ForgeDataEntry>? = null,
+     val processors: List<ForgeProcessor>? = null,
+-    val libraries: List<ForgeLibrary>? = null
++    val libraries: List<ForgeLibrary>? = null,
++    /** Installer gaya lama (Forge 1.12.2 ke bawah): bagian `install` dan `versionInfo` menggantikan processors. */
++    val install: ForgeLegacyInstall? = null,
++    val versionInfo: ForgeVersionJson? = null
++)
++
++/** Bagian `install` di install_profile.json milik installer Forge gaya lama. */
++data class ForgeLegacyInstall(
++    /** Koordinat Maven jar Forge utama, contoh "net.minecraftforge:forge:1.8.9-11.15.1.2318-1.8.9". */
++    val path: String? = null,
++    /** Nama jar Forge utama di dalam installer, contoh "forge-1.8.9-11.15.1.2318-1.8.9-universal.jar". */
++    val filePath: String? = null,
++    /** Versi Minecraft yang dituju, contoh "1.8.9". */
++    val minecraft: String? = null
+ )
+ 
+ data class ForgeDataEntry(
+@@ -91,7 +106,11 @@ data class ForgeLibrary(
+     val name: String? = null,
+     val downloads: ForgeLibDownloads? = null,
+     /** Alamat dasar Maven untuk library bergaya lama yang tidak punya `downloads`. */
+-    val url: String? = null
++    val url: String? = null,
++    /** Library berisi native per OS; native diurus Amber sendiri, jadi library seperti ini dilewati. */
++    val natives: Map<String, String>? = null,
++    /** Pada profil gaya lama, `false` berarti library hanya untuk server. */
++    val clientreq: Boolean? = null
+ )
+ 
+ data class ForgeLibDownloads(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt
+index ad395cc..d0d6142 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/forge/ForgeService.kt
+@@ -16,15 +16,18 @@ import java.util.concurrent.ConcurrentHashMap
+ /**
+  * Daftar versi Forge/NeoForge dan alamat installer-nya.
+  *
+- * Hanya yang modern yang didukung: Forge untuk Minecraft 1.13 ke atas dan NeoForge untuk 1.20.2 ke
+- * atas. Amber memakai LWJGL 3, sedangkan Forge untuk 1.12.2 ke bawah butuh LWJGL 2. Layanan ini
+- * tidak berjalan sendiri: tidak ada permintaan jaringan sampai pengguna memilih Forge/NeoForge di
+- * dialog buat instance.
++ * Yang didukung: Forge untuk Minecraft 1.7.10 ke atas dan NeoForge untuk 1.20.2 ke atas. Forge
++ * 1.12.2 ke bawah (installer gaya lama, LaunchWrapper, LWJGL 2 lewat jembatan lwjglx) dipasang oleh
++ * [ForgeLegacyInstaller]. Layanan ini tidak berjalan sendiri: tidak ada permintaan jaringan sampai
++ * pengguna memilih Forge/NeoForge di dialog buat instance.
+  */
+ object ForgeService {
+ 
+     /** Versi Minecraft terendah yang didukung Forge. */
+-    const val MIN_MC_VERSION = "1.13"
++    const val MIN_MC_VERSION = "1.7.10"
++
++    /** Mulai versi ini Forge memakai installer modern (processors); di bawahnya installer gaya lama. */
++    private const val MODERN_FORGE_MC_VERSION = "1.13"
+ 
+     private const val PROMOS_URL = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
+     private const val BMCL_LIST_URL = "https://bmclapi2.bangbang93.com/forge/minecraft"
+@@ -44,10 +47,13 @@ object ForgeService {
+     @Volatile
+     private var neoForgeByMc: Map<String, List<String>>? = null
+ 
++    private data class BmclFile(val category: String? = null)
++
+     private data class BmclForge(
+         val version: String? = null,
+         val mcversion: String? = null,
+-        val branch: String? = null
++        val branch: String? = null,
++        val files: List<BmclFile>? = null
+     )
+ 
+     /** True bila [mcVersion] adalah rilis resmi yang didukung [flavor] (snapshot tidak didukung). */
+@@ -57,6 +63,25 @@ object ForgeService {
+         return !NuxVersionUtils.isLowerVer(v, flavor.minMcVersion)
+     }
+ 
++    /** True bila [mcVersion] adalah rilis Minecraft yang memakai Forge gaya lama (1.12.2 ke bawah). */
++    fun isLegacyMc(mcVersion: String): Boolean {
++        val v = mcVersion.trim()
++        return releaseRegex.matches(v) && NuxVersionUtils.isLowerVer(v, MODERN_FORGE_MC_VERSION)
++    }
++
++    /**
++     * Semua alamat installer yang layak dicoba, berurutan. Build Forge lama bercabang punya akhiran
++     * cabang di nama artefaknya ("1.8.9-11.15.1.2318-1.8.9"); daftar dari mirror sudah memuatnya, tetapi
++     * daftar promosi resmi tidak, jadi bentuk bersuffix dicoba juga.
++     */
++    fun installerUrls(mcVersion: String, version: String, flavor: ForgeFlavor = ForgeFlavor.FORGE): List<String> {
++        val primary = installerUrl(mcVersion, version, flavor)
++        if (flavor != ForgeFlavor.FORGE || !isLegacyMc(mcVersion) || version.endsWith("-$mcVersion")) {
++            return listOf(primary)
++        }
++        return listOf(primary, installerUrl(mcVersion, "$version-$mcVersion", flavor))
++    }
++
+     /** Alamat installer resmi; mirror BMCLAPI ditambahkan otomatis oleh pengunduh. */
+     fun installerUrl(mcVersion: String, version: String, flavor: ForgeFlavor = ForgeFlavor.FORGE): String =
+         when (flavor) {
+@@ -133,11 +158,17 @@ object ForgeService {
+             Pair(p.await(), l.await())
+         }
+ 
+-        val recommended = promos?.get("$mcVersion-recommended")
+-        val latest = promos?.get("$mcVersion-latest")
+-
++        val legacy = isLegacyMc(mcVersion)
+         val versions = LinkedHashSet<String>()
+         all.getOrNull()?.let { versions.addAll(it) }
++
++        // Promosi resmi tidak memuat akhiran cabang Forge lama; dicocokkan dengan build dari mirror
++        fun canonical(promo: String): String =
++            if (legacy) versions.firstOrNull { it.substringBefore('-') == promo } ?: promo else promo
++
++        val recommended = promos?.get("$mcVersion-recommended")?.let { canonical(it) }
++        val latest = promos?.get("$mcVersion-latest")?.let { canonical(it) }
++
+         // Promosi resmi selalu dimasukkan: dipakai penuh bila mirror gagal
+         recommended?.let { versions.add(it) }
+         latest?.let { versions.add(it) }
+@@ -197,10 +228,19 @@ object ForgeService {
+         val body = httpGet("$BMCL_LIST_URL/$mcVersion")
+         val type = object : TypeToken<List<BmclForge>>() {}.type
+         val items: List<BmclForge> = gson.fromJson(body, type) ?: emptyList()
++        val legacy = isLegacyMc(mcVersion)
+         return items
+-            .filter { it.branch.isNullOrBlank() } // build bercabang (gaya lama) punya nama artefak berbeda
++            // Forge modern: build bercabang punya nama artefak berbeda dan dilewati. Forge lama: akhiran
++            // cabang ikut ke nama versi ("11.15.1.2318-1.8.9"), supaya "<mc>-<versi>" menjadi nama artefak.
++            .filter { legacy || it.branch.isNullOrBlank() }
+             .filter { it.mcversion == null || it.mcversion == mcVersion }
+-            .mapNotNull { it.version?.trim()?.takeIf { v -> v.isNotEmpty() } }
++            // Build lama tanpa installer tidak bisa dipasang
++            .filter { !legacy || it.files.isNullOrEmpty() || it.files.any { f -> f.category == "installer" } }
++            .mapNotNull { item ->
++                val version = item.version?.trim()?.takeIf { v -> v.isNotEmpty() } ?: return@mapNotNull null
++                val branch = item.branch?.trim()?.takeIf { legacy && it.isNotEmpty() }
++                if (branch != null) "$version-$branch" else version
++            }
+             .distinct()
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index a16956b..676d75f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -312,7 +312,7 @@ object InstanceManager {
+         migrateOldStorage(context)
+ 
+         val file = getInstancesFile(context)
+-        var loadedList = mutableListOf<Instance>()
++        val loadedList = mutableListOf<Instance>()
+         if (file.exists()) {
+             try {
+                 val json = file.readText()
+@@ -328,22 +328,27 @@ object InstanceManager {
+ 
+         // Scan instances directory for isolated instance.json (like Windows version)
+         val instancesDir = getInstancesDir(context)
++        val knownIds = loadedList.mapTo(HashSet()) { it.id }
++        val folderInstances = mutableListOf<Pair<String, Instance>>()
+         instancesDir.listFiles()?.forEach { instFolder ->
+             if (instFolder.isDirectory) {
+                 val configFile = File(instFolder, "instance.json")
+-                if (configFile.exists() && loadedList.none { it.id == instFolder.name }) {
++                if (configFile.exists() && instFolder.name !in knownIds) {
+                     try {
+                         val inst = gson.fromJson(configFile.readText(), Instance::class.java)
+                         if (inst != null) {
+-                            loadedList.add(inst)
++                            folderInstances.add(instFolder.name to inst)
+                         }
+                     } catch (_: Exception) {}
+                 }
+             }
+         }
+ 
++        // Id tidak boleh ganda (lihat mergeInstances): dua id sama membuat layar pemilih instance crash
++        val mergedList = mergeInstances(loadedList, folderInstances)
++
+         // Check if downloaded client JAR and loader exist for each instance
+-        val verifiedList = loadedList.map { inst ->
++        val verifiedList = mergedList.map { inst ->
+             inst.copy(isDownloaded = isInstanceDownloaded(context, inst))
+         }
+ 
+@@ -413,6 +418,8 @@ object InstanceManager {
+         }
+ 
+         val list = _instances.value.toMutableList()
++        // Id yang sama tidak boleh masuk dua kali (mis. init() sempat menemukan foldernya lebih dulu)
++        list.removeAll { it.id == instance.id }
+         list.add(0, instance)
+         _instances.value = list
+         _selectedInstance.value = instance
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt
+new file mode 100644
+index 0000000..c0c47d4
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt
+@@ -0,0 +1,27 @@
++package com.israadev.nuxlauncher.core.instance
++
++import com.israadev.nuxlauncher.core.models.Instance
++
++/**
++ * Menggabungkan daftar instance dari `instances.json` dengan `instance.json` yang ditemukan di folder
++ * `instances/`, dengan satu aturan yang tidak boleh dilanggar: id tidak pernah ganda.
++ *
++ * Daftar instance dipakai sebagai kunci item di layar pemilih instance; dua instance dengan id sama
++ * membuat Compose menutup aplikasi ("Key ... was already used"). Id ganda bisa masuk lewat dua jalan:
++ * `instances.json` yang sudah memuat id yang sama dua kali, atau folder instance yang disalin pengguna
++ * (mis. "inst_abc (1)") yang `instance.json`-nya masih membawa id aslinya.
++ *
++ * - [fromIndex]: isi `instances.json`. Bila satu id muncul lagi, yang pertama dipakai.
++ * - [folders]: pasangan (nama folder, instance dari instance.json-nya). Folder yang namanya sudah menjadi
++ *   id instance di [fromIndex] dilewati. Selain itu folder dianggap instance sendiri, dan id-nya disamakan
++ *   dengan nama folder karena data game-nya memang ada di folder itu (getInstanceDir memakai id).
++ */
++internal fun mergeInstances(fromIndex: List<Instance>, folders: List<Pair<String, Instance>>): List<Instance> {
++    val merged = LinkedHashMap<String, Instance>()
++    for (inst in fromIndex) merged.putIfAbsent(inst.id, inst)
++    for ((folderName, inst) in folders) {
++        if (merged.containsKey(folderName)) continue
++        merged[folderName] = if (inst.id == folderName) inst else inst.copy(id = folderName)
++    }
++    return merged.values.toList()
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+index 5523d00..261c949 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+@@ -178,9 +178,22 @@ object GameLauncher {
+             mainClass = forgeLaunch.mainClass
+         }
+ 
+-        val runtimeName = if (instance.javaRuntime != "auto") instance.javaRuntime else {
++        // Forge 1.12.2 ke bawah: LaunchWrapper hanya jalan di Java 8, dan layar muat Forge harus dimatikan
++        val legacyForge = forgeLaunch != null && forgeFlavor == com.israadev.nuxlauncher.core.forge.ForgeFlavor.FORGE &&
++            com.israadev.nuxlauncher.core.forge.ForgeService.isLegacyMc(instance.mcVersion)
++        if (legacyForge) {
++            com.israadev.nuxlauncher.core.forge.ForgeLaunch.disableLegacySplash(gameDir)
++        }
++
++        val requestedRuntime = if (instance.javaRuntime != "auto") instance.javaRuntime else {
+             com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion, mojangJavaMajor)
+         }
++        val runtimeName = if (legacyForge && requestedRuntime != "jre-8") {
++            LauncherLog.w("Peluncuran", "Forge ${instance.mcVersion} hanya jalan di Java 8; $requestedRuntime diganti jre-8")
++            "jre-8"
++        } else {
++            requestedRuntime
++        }
+         val runtimeHome = com.israadev.nuxlauncher.core.runtime.JavaRuntimeManager.getRuntimeHome(context, runtimeName)
+ 
+         // Prepare Android-native LWJGL components
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt
+index d4319e5..6b7d236 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModMetadata.kt
+@@ -9,8 +9,9 @@ internal class ModJarInfo(val name: String?, val version: String?, val descripti
+ 
+ /**
+  * Membaca nama, versi, dan deskripsi mod dari jar-nya untuk daftar "Mod terpasang".
+- * Mendukung Fabric (`fabric.mod.json`), Forge (`META-INF/mods.toml`), dan NeoForge
+- * (`META-INF/neoforge.mods.toml`, formatnya sama dengan mods.toml Forge).
++ * Mendukung Fabric (`fabric.mod.json`), Forge (`META-INF/mods.toml`), NeoForge
++ * (`META-INF/neoforge.mods.toml`, formatnya sama dengan mods.toml Forge), dan Forge lama
++ * (`mcmod.info`, Minecraft 1.12.2 ke bawah).
+  */
+ internal object ModMetadata {
+ 
+@@ -34,9 +35,44 @@ internal object ModMetadata {
+             val toml = zip.getInputStream(entry).bufferedReader().use { it.readText() }
+             return parseModsToml(toml) { readManifestVersion(zip) }
+         }
++        zip.getEntry("mcmod.info")?.let { entry ->
++            val text = zip.getInputStream(entry).bufferedReader().use { it.readText() }
++            return parseMcmodInfo(text)
++        }
+         return null
+     }
+ 
++    /**
++     * Membaca `mcmod.info` milik mod Forge lama: daftar objek, atau objek dengan `modList`. Yang dipakai mod
++     * pertama. Berkas ini sering tidak rapi (koma berlebih, komentar), jadi pembacanya longgar; teks yang
++     * tak terbaca atau placeholder `${version}` menghasilkan null/diabaikan supaya tidak tampil mentah.
++     */
++    fun parseMcmodInfo(json: String): ModJarInfo? {
++        return try {
++            val root = try {
++                JsonParser.parseString(json)
++            } catch (_: Exception) {
++                // Koma sebelum } atau ] sering ada di mcmod.info buatan tangan; pembaca JSON tidak menerimanya
++                JsonParser.parseString(json.replace(Regex(",\\s*([}\\]])"), "$1"))
++            }
++            val list = when {
++                root.isJsonArray -> root.asJsonArray
++                root.isJsonObject && root.asJsonObject.get("modList")?.isJsonArray == true ->
++                    root.asJsonObject.getAsJsonArray("modList")
++                else -> return null
++            }
++            val mod = list.firstOrNull { it.isJsonObject }?.asJsonObject ?: return null
++            fun field(key: String): String? =
++                text(mod.get(key))?.trim()?.takeIf { it.isNotEmpty() && !it.contains("\${") }
++            val name = field("name") ?: field("modid")
++            val version = field("version")
++            val description = field("description")
++            if (name == null && version == null && description == null) null else ModJarInfo(name, version, description)
++        } catch (_: Exception) {
++            null
++        }
++    }
++
+     private fun text(element: JsonElement?): String? =
+         element?.takeIf { it.isJsonPrimitive }?.asString
+ 
+diff --git a/docs/site/en/index.html b/docs/site/en/index.html
+index 1ac65a8d515970fcf83de4cd368b3d27bdabf453..684eefe22908d0535672cce8e1262e8d030f7c69 100644
+GIT binary patch
+delta 27
+jcmX?qjPb%T#tlA(EarNK28;a+d6>=gOg0DE{#6A4jyefa
+
+delta 26
+icmca`jPd+2#tlA(Ooqmb0}Ods42|@RHV51ORRsWssR<nb
+
+diff --git a/docs/site/index.html b/docs/site/index.html
+index 0f3b5a54287e82618ebe0cec29b682afffdd8a92..366994284ee7a55f50ec5141053c6e1e16a7d35b 100644
+GIT binary patch
+delta 28
+kcmX?ggz@wd#tpX&Sj_bd4L08~xXjILrf0Hwv(0o>0I+HcIsgCw
+
+delta 27
+jcmX?ogz?l7#tpX&m<)|K-!r((&0=VzXS8{X&2&`&sb>oX
+
+
+# FIN part=1/1 files=21

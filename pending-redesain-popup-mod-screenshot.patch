@@ -1,0 +1,1455 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModDetailPopup.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModDetailPopup.kt
+new file mode 100644
+index 0000000..2902d61
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModDetailPopup.kt
+@@ -0,0 +1,922 @@
++package com.israadev.nuxlauncher.ui.screens
++
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.gestures.detectTapGestures
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.BoxWithConstraints
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ExperimentalLayoutApi
++import androidx.compose.foundation.layout.FlowRow
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.aspectRatio
++import androidx.compose.foundation.layout.defaultMinSize
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.heightIn
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.lazy.LazyRow
++import androidx.compose.foundation.lazy.items
++import androidx.compose.foundation.pager.HorizontalPager
++import androidx.compose.foundation.pager.rememberPagerState
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Check
++import androidx.compose.material.icons.outlined.ChevronRight
++import androidx.compose.material.icons.outlined.Close
++import androidx.compose.material.icons.outlined.Download
++import androidx.compose.material.icons.outlined.Fullscreen
++import androidx.compose.material3.Icon
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.alpha
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.rotate
++import androidx.compose.ui.graphics.Brush
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.input.pointer.pointerInput
++import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.Dp
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.models.Instance
++import com.israadev.nuxlauncher.core.models.ModrinthGalleryItem
++import com.israadev.nuxlauncher.core.models.ModrinthProject
++import com.israadev.nuxlauncher.core.models.ModrinthSearchHit
++import com.israadev.nuxlauncher.core.models.ModrinthVersion
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.components.AmberChoicePill
++import com.israadev.nuxlauncher.ui.components.AmberOverlay
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
++import com.israadev.nuxlauncher.ui.components.AmberPanel
++import com.israadev.nuxlauncher.ui.components.AmberSpinner
++import com.israadev.nuxlauncher.ui.components.AmberTag
++import com.israadev.nuxlauncher.ui.components.NuxNetworkImage
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.amberGlass
++import kotlinx.coroutines.launch
++import java.text.DecimalFormat
++
++// =============================================================================
++// POP UP DETAIL PROYEK (Modrinth / CurseForge) + PENAMPIL SCREENSHOT
++// =============================================================================
++
++private val PopupShape = RoundedCornerShape(28.dp)
++private val PopupFill = Color(0xFF18171C)
++private val TypePurple = Color(0xFFC084FC)
++private val TypeBlue = Color(0xFF6CB6FF)
++private val TypeAmber = Color(0xFFFFC857)
++
++private fun popupTypeColor(projectType: String): Color = when (projectType) {
++    "mod" -> AmberUi.AccentSoft
++    "modpack" -> TypePurple
++    "resourcepack" -> TypeBlue
++    else -> TypeAmber
++}
++
++private fun popupCompact(number: Long): String = when {
++    number >= 1_000_000 -> DecimalFormat("#,##0.#").format(number / 1_000_000.0) + "M"
++    number >= 1_000 -> DecimalFormat("#,##0.#").format(number / 1_000.0) + "K"
++    else -> number.toString()
++}
++
++/**
++ * Pop up detail proyek: kartu kecil di tengah layar (bukan halaman penuh).
++ *
++ * Layar lebar: kiri kartu identitas (ikon, nama, penulis, jenis, unduhan, versi dipilih) dengan
++ * tombol Pasang yang selalu terlihat di bawahnya; kanan tab Ringkasan / Versi yang digulir.
++ * Layar sempit: kepala di atas, tab, isi yang digulir, lalu tombol Pasang di dasar kartu.
++ * Ketuk area gelap di luar kartu untuk menutup (kecuali saat sedang memasang).
++ */
++@Composable
++internal fun ModDetailDialog(
++    hit: ModrinthSearchHit,
++    project: ModrinthProject?,
++    versions: List<ModrinthVersion>,
++    selectedVersion: ModrinthVersion?,
++    isLoading: Boolean,
++    isInstalling: Boolean,
++    progressText: String,
++    isInstalled: Boolean,
++    tab: String,
++    instance: Instance?,
++    onTab: (String) -> Unit,
++    onPickVersion: (ModrinthVersion) -> Unit,
++    onOpenGallery: (String) -> Unit,
++    onInstall: () -> Unit,
++    onClose: () -> Unit
++) {
++    val bodyScroll = rememberScrollState()
++    LaunchedEffect(tab) { bodyScroll.scrollTo(0) }
++
++    val isModpack = hit.projectType == "modpack"
++    val ctaText = if (isModpack) "Pasang modpack" else "Pasang ke instance"
++
++    AmberOverlay(
++        onDismiss = { if (!isInstalling) onClose() },
++        dismissOnScrimTap = !isInstalling,
++        scrimAlpha = 0.66f
++    ) {
++        BoxWithConstraints(
++            modifier = Modifier
++                .align(Alignment.Center)
++                .widthIn(max = 800.dp)
++                .fillMaxWidth(0.94f)
++                .heightIn(max = 460.dp)
++                .fillMaxHeight(0.94f)
++                .clip(PopupShape)
++                .background(PopupFill, PopupShape)
++                .border(1.dp, AmberUi.BorderStrong, PopupShape)
++                // Ketukan di dalam kartu tidak ikut menutup pop up
++                .pointerInput(Unit) { detectTapGestures { } }
++        ) {
++            if (maxWidth < 520.dp) {
++                // ---------------- SEMPIT: satu kolom ----------------
++                Column(
++                    modifier = Modifier
++                        .fillMaxSize()
++                        .padding(14.dp),
++                    verticalArrangement = Arrangement.spacedBy(10.dp)
++                ) {
++                    Row(verticalAlignment = Alignment.CenterVertically) {
++                        ModIconBox(hit = hit, size = 52.dp, radius = 16.dp)
++                        Spacer(modifier = Modifier.width(12.dp))
++                        Column(modifier = Modifier.weight(1f)) {
++                            Text(
++                                text = hit.title,
++                                color = AmberUi.Text,
++                                fontWeight = FontWeight.Black,
++                                fontSize = 17.sp,
++                                lineHeight = 21.sp,
++                                maxLines = 2,
++                                overflow = TextOverflow.Ellipsis
++                            )
++                            Text(
++                                text = "oleh ${hit.author ?: "Komunitas"}",
++                                color = AmberUi.TextDim,
++                                fontSize = 12.sp,
++                                maxLines = 1,
++                                overflow = TextOverflow.Ellipsis
++                            )
++                        }
++                        Spacer(modifier = Modifier.width(8.dp))
++                        PopupClose(enabled = !isInstalling, onClick = onClose)
++                    }
++                    PopupTabs(
++                        tab = tab,
++                        versionCount = versions.size,
++                        onTab = onTab,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                    Column(
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxWidth()
++                            .verticalScroll(bodyScroll)
++                    ) {
++                        ModPopupBody(
++                            hit = hit,
++                            project = project,
++                            versions = versions,
++                            selectedVersion = selectedVersion,
++                            isLoading = isLoading,
++                            tab = tab,
++                            instance = instance,
++                            onPickVersion = onPickVersion,
++                            onOpenGallery = onOpenGallery
++                        )
++                    }
++                    InstallCta(
++                        text = ctaText,
++                        isInstalling = isInstalling,
++                        progressText = progressText,
++                        isInstalled = isInstalled,
++                        canInstall = versions.isNotEmpty(),
++                        onInstall = onInstall,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                }
++            } else {
++                // ---------------- LEBAR: identitas di kiri, isi di kanan ----------------
++                val leftWidth = (maxWidth * 0.34f).coerceIn(200.dp, 250.dp)
++                Row(
++                    modifier = Modifier
++                        .fillMaxSize()
++                        .padding(14.dp),
++                    horizontalArrangement = Arrangement.spacedBy(14.dp)
++                ) {
++                    Column(
++                        modifier = Modifier
++                            .width(leftWidth)
++                            .fillMaxHeight(),
++                        verticalArrangement = Arrangement.spacedBy(10.dp)
++                    ) {
++                        IdentityCard(
++                            hit = hit,
++                            selectedVersion = selectedVersion.takeIf { !isInstalled },
++                            modifier = Modifier
++                                .weight(1f)
++                                .fillMaxWidth()
++                        )
++                        InstallCta(
++                            text = ctaText,
++                            isInstalling = isInstalling,
++                            progressText = progressText,
++                            isInstalled = isInstalled,
++                            canInstall = versions.isNotEmpty(),
++                            onInstall = onInstall,
++                            modifier = Modifier.fillMaxWidth()
++                        )
++                    }
++                    Column(
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxHeight()
++                    ) {
++                        Row(
++                            modifier = Modifier.fillMaxWidth(),
++                            verticalAlignment = Alignment.CenterVertically
++                        ) {
++                            PopupTabs(
++                                tab = tab,
++                                versionCount = versions.size,
++                                onTab = onTab,
++                                modifier = Modifier.weight(1f)
++                            )
++                            Spacer(modifier = Modifier.width(8.dp))
++                            PopupClose(enabled = !isInstalling, onClick = onClose)
++                        }
++                        Spacer(modifier = Modifier.height(10.dp))
++                        Column(
++                            modifier = Modifier
++                                .weight(1f)
++                                .fillMaxWidth()
++                                .verticalScroll(bodyScroll)
++                        ) {
++                            ModPopupBody(
++                                hit = hit,
++                                project = project,
++                                versions = versions,
++                                selectedVersion = selectedVersion,
++                                isLoading = isLoading,
++                                tab = tab,
++                                instance = instance,
++                                onPickVersion = onPickVersion,
++                                onOpenGallery = onOpenGallery
++                            )
++                        }
++                    }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun ModIconBox(hit: ModrinthSearchHit, size: Dp, radius: Dp) {
++    val shape = RoundedCornerShape(radius)
++    NuxNetworkImage(
++        model = hit.iconUrl,
++        contentDescription = hit.title,
++        modifier = Modifier
++            .size(size)
++            .border(1.dp, AmberUi.BorderStrong, shape),
++        fallbackInitials = hit.title.take(2).uppercase(),
++        shape = shape,
++        maxSidePx = 256
++    )
++}
++
++/** Tab Ringkasan / Versi berbentuk pil. */
++@Composable
++private fun PopupTabs(
++    tab: String,
++    versionCount: Int,
++    onTab: (String) -> Unit,
++    modifier: Modifier = Modifier
++) {
++    Row(
++        modifier = modifier,
++        horizontalArrangement = Arrangement.spacedBy(8.dp)
++    ) {
++        AmberChoicePill(
++            text = "Ringkasan",
++            selected = tab == "overview",
++            onClick = { onTab("overview") }
++        )
++        AmberChoicePill(
++            text = "Versi ($versionCount)",
++            selected = tab == "versions",
++            onClick = { onTab("versions") }
++        )
++    }
++}
++
++@Composable
++private fun PopupClose(enabled: Boolean, onClick: () -> Unit) {
++    Box(
++        modifier = Modifier
++            .size(40.dp)
++            .alpha(if (enabled) 1f else 0.4f)
++            .clip(CircleShape)
++            .amberGlass(CircleShape)
++            .clickable(enabled = enabled) { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Icon(
++            imageVector = Icons.Outlined.Close,
++            contentDescription = "Tutup",
++            tint = AmberUi.Text,
++            modifier = Modifier.size(20.dp)
++        )
++    }
++}
++
++/** Jumlah unduhan: ikon kecil + angka ringkas (menggantikan emoji). */
++@Composable
++private fun DownloadsChip(count: Long) {
++    Row(
++        modifier = Modifier
++            .clip(CircleShape)
++            .background(Color.White.copy(alpha = 0.09f), CircleShape)
++            .padding(horizontal = 9.dp, vertical = 3.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Icon(
++            imageVector = Icons.Outlined.Download,
++            contentDescription = null,
++            tint = AmberUi.TextDim,
++            modifier = Modifier.size(12.dp)
++        )
++        Spacer(modifier = Modifier.width(4.dp))
++        Text(
++            text = popupCompact(count),
++            color = AmberUi.TextDim,
++            fontSize = 11.sp,
++            fontWeight = FontWeight.SemiBold,
++            maxLines = 1
++        )
++    }
++}
++
++/** Kartu identitas di kiri: ikon besar, nama, penulis, jenis, unduhan, dan versi yang dipilih. */
++@OptIn(ExperimentalLayoutApi::class)
++@Composable
++private fun IdentityCard(
++    hit: ModrinthSearchHit,
++    selectedVersion: ModrinthVersion?,
++    modifier: Modifier = Modifier
++) {
++    val shape = RoundedCornerShape(24.dp)
++    Column(
++        modifier = modifier
++            .clip(shape)
++            .background(
++                Brush.verticalGradient(
++                    listOf(
++                        AmberUi.Accent.copy(alpha = 0.36f),
++                        AmberUi.Accent.copy(alpha = 0.07f)
++                    )
++                ),
++                shape
++            )
++            .border(1.dp, AmberUi.AccentEdge.copy(alpha = 0.55f), shape)
++            .verticalScroll(rememberScrollState())
++            .padding(14.dp)
++    ) {
++        ModIconBox(hit = hit, size = 64.dp, radius = 20.dp)
++        Spacer(modifier = Modifier.height(10.dp))
++        Text(
++            text = hit.title,
++            color = AmberUi.Text,
++            fontWeight = FontWeight.Black,
++            fontSize = 19.sp,
++            lineHeight = 23.sp,
++            maxLines = 3,
++            overflow = TextOverflow.Ellipsis
++        )
++        Spacer(modifier = Modifier.height(2.dp))
++        Text(
++            text = "oleh ${hit.author ?: "Komunitas"}",
++            color = AmberUi.TextDim,
++            fontSize = 12.sp,
++            maxLines = 1,
++            overflow = TextOverflow.Ellipsis
++        )
++        Spacer(modifier = Modifier.height(10.dp))
++        FlowRow(
++            horizontalArrangement = Arrangement.spacedBy(6.dp),
++            verticalArrangement = Arrangement.spacedBy(6.dp)
++        ) {
++            AmberTag(hit.projectType.uppercase(), color = popupTypeColor(hit.projectType))
++            DownloadsChip(hit.downloads)
++        }
++        if (selectedVersion != null) {
++            Spacer(modifier = Modifier.height(14.dp))
++            Text(
++                text = "Versi dipilih",
++                color = AmberUi.TextDim,
++                fontSize = 11.sp
++            )
++            Text(
++                text = selectedVersion.name.ifBlank { selectedVersion.versionNumber },
++                color = AmberUi.Text,
++                fontSize = 13.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 2,
++                overflow = TextOverflow.Ellipsis
++            )
++        }
++    }
++}
++
++/** Tombol utama: Pasang / sedang memasang (progres) / sudah terpasang. */
++@Composable
++private fun InstallCta(
++    text: String,
++    isInstalling: Boolean,
++    progressText: String,
++    isInstalled: Boolean,
++    canInstall: Boolean,
++    onInstall: () -> Unit,
++    modifier: Modifier = Modifier
++) {
++    if (isInstalling) {
++        Row(
++            modifier = modifier
++                .defaultMinSize(minHeight = 46.dp)
++                .clip(CircleShape)
++                .background(AmberUi.Accent.copy(alpha = 0.28f), CircleShape)
++                .border(1.dp, AmberUi.AccentEdge, CircleShape)
++                .padding(horizontal = 14.dp, vertical = 6.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            AmberSpinner(
++                modifier = Modifier.size(18.dp),
++                color = AmberUi.AccentSoft,
++                strokeWidth = 2.dp
++            )
++            Spacer(modifier = Modifier.width(10.dp))
++            Text(
++                text = progressText.ifBlank { "Sedang mengunduh dan memasang..." },
++                color = AmberUi.Text,
++                fontWeight = FontWeight.SemiBold,
++                fontSize = 12.sp,
++                lineHeight = 15.sp,
++                maxLines = 2,
++                overflow = TextOverflow.Ellipsis
++            )
++        }
++    } else if (isInstalled) {
++        Row(
++            modifier = modifier
++                .height(46.dp)
++                .clip(CircleShape)
++                .background(AmberUi.AccentSoft.copy(alpha = 0.12f), CircleShape)
++                .border(1.dp, AmberUi.AccentSoft.copy(alpha = 0.5f), CircleShape),
++            horizontalArrangement = Arrangement.Center,
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Icon(
++                imageVector = Icons.Outlined.Check,
++                contentDescription = null,
++                tint = AmberUi.AccentSoft,
++                modifier = Modifier.size(18.dp)
++            )
++            Spacer(modifier = Modifier.width(8.dp))
++            Text(
++                text = "Sudah terpasang",
++                color = AmberUi.AccentSoft,
++                fontWeight = FontWeight.Bold,
++                fontSize = 14.sp,
++                maxLines = 1
++            )
++        }
++    } else {
++        AmberActionButton(
++            text = text,
++            onClick = onInstall,
++            icon = Icons.Outlined.Download,
++            enabled = canInstall,
++            height = 46.dp,
++            modifier = modifier
++        )
++    }
++}
++
++/** Isi tab (tanpa gulir; pemanggil yang menggulir). */
++@Composable
++private fun ModPopupBody(
++    hit: ModrinthSearchHit,
++    project: ModrinthProject?,
++    versions: List<ModrinthVersion>,
++    selectedVersion: ModrinthVersion?,
++    isLoading: Boolean,
++    tab: String,
++    instance: Instance?,
++    onPickVersion: (ModrinthVersion) -> Unit,
++    onOpenGallery: (String) -> Unit
++) {
++    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
++        if (isLoading) {
++            Box(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .height(140.dp),
++                contentAlignment = Alignment.Center
++            ) {
++                AmberSpinner(color = AmberUi.AccentSoft, modifier = Modifier.size(28.dp))
++            }
++        } else if (tab == "overview") {
++            val gallery = project?.gallery ?: emptyList()
++            if (gallery.isNotEmpty()) {
++                Column {
++                    AmberPageLabel("Tangkapan layar")
++                    LazyRow(
++                        modifier = Modifier.fillMaxWidth(),
++                        horizontalArrangement = Arrangement.spacedBy(10.dp)
++                    ) {
++                        items(gallery) { shot ->
++                            ScreenshotThumb(shot = shot, onClick = { onOpenGallery(shot.url) })
++                        }
++                    }
++                }
++            }
++
++            Column {
++                AmberPageLabel("Deskripsi")
++                AmberPanel(padding = 14.dp) {
++                    Text(
++                        text = project?.description ?: hit.description ?: "Tidak ada ringkasan deskripsi.",
++                        color = AmberUi.Text.copy(alpha = 0.9f),
++                        fontSize = 13.sp,
++                        lineHeight = 19.sp
++                    )
++                }
++            }
++
++            val allLoaders = (project?.loaders ?: hit.categories ?: emptyList()).distinct()
++            if (allLoaders.isNotEmpty()) {
++                Row(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .horizontalScroll(rememberScrollState()),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    allLoaders.take(6).forEach { tag -> LoaderChip(tag.uppercase()) }
++                }
++            }
++        } else {
++            if (versions.isEmpty()) {
++                val warnShape = RoundedCornerShape(20.dp)
++                Column(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .clip(warnShape)
++                        .background(AmberUi.Danger.copy(alpha = 0.12f), warnShape)
++                        .border(1.dp, AmberUi.Danger.copy(alpha = 0.45f), warnShape)
++                        .padding(14.dp)
++                ) {
++                    Text(
++                        text = "Tidak ada versi yang didukung",
++                        color = AmberUi.Danger,
++                        fontWeight = FontWeight.Bold,
++                        fontSize = 13.sp
++                    )
++                    Spacer(modifier = Modifier.height(4.dp))
++                    Text(
++                        text = "Proyek ini tidak punya rilis yang cocok dengan Minecraft ${instance?.mcVersion ?: ""} (${(instance?.loader ?: "vanilla").uppercase()}).",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        lineHeight = 17.sp
++                    )
++                }
++            } else {
++                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++                    versions.forEach { ver ->
++                        VersionRow(
++                            ver = ver,
++                            picked = selectedVersion?.id == ver.id,
++                            onClick = { onPickVersion(ver) }
++                        )
++                    }
++                }
++            }
++        }
++
++        Text(
++            text = if (hit.projectType == "modpack") {
++                "Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest)."
++            } else {
++                "Dependensi wajib ikut terpasang otomatis."
++            },
++            color = AmberUi.TextDim,
++            fontSize = 11.sp,
++            lineHeight = 16.sp,
++            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
++        )
++    }
++}
++
++/** Gambar mini screenshot 16:9; ketuk untuk membuka penampil layar penuh. */
++@Composable
++private fun ScreenshotThumb(shot: ModrinthGalleryItem, onClick: () -> Unit) {
++    val shape = RoundedCornerShape(16.dp)
++    Box(
++        modifier = Modifier
++            .height(96.dp)
++            .aspectRatio(16f / 9f)
++            .clip(shape)
++            .border(1.dp, AmberUi.BorderStrong, shape)
++            .clickable { onClick() }
++    ) {
++        NuxNetworkImage(
++            model = shot.url,
++            contentDescription = shot.title ?: "Screenshot",
++            modifier = Modifier.fillMaxSize(),
++            shape = shape,
++            maxSidePx = 480,
++            showSpinner = true
++        )
++        Box(
++            modifier = Modifier
++                .align(Alignment.BottomEnd)
++                .padding(6.dp)
++                .size(22.dp)
++                .clip(CircleShape)
++                .background(Color.Black.copy(alpha = 0.55f), CircleShape),
++            contentAlignment = Alignment.Center
++        ) {
++            Icon(
++                imageVector = Icons.Outlined.Fullscreen,
++                contentDescription = null,
++                tint = AmberUi.Text,
++                modifier = Modifier.size(14.dp)
++            )
++        }
++    }
++}
++
++@Composable
++private fun LoaderChip(text: String) {
++    Box(
++        modifier = Modifier
++            .height(26.dp)
++            .border(1.dp, AmberUi.Border, CircleShape)
++            .padding(horizontal = 12.dp),
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = text,
++            color = AmberUi.TextDim,
++            fontSize = 12.sp,
++            fontWeight = FontWeight.SemiBold,
++            maxLines = 1
++        )
++    }
++}
++
++/** Satu baris versi: lingkaran pilihan, nama, "Versi x · MC y", dan label rilis/beta/alpha. */
++@Composable
++private fun VersionRow(
++    ver: ModrinthVersion,
++    picked: Boolean,
++    onClick: () -> Unit
++) {
++    val rowShape = RoundedCornerShape(20.dp)
++    val verColor = when (ver.versionType) {
++        "release" -> AmberUi.AccentSoft
++        "beta" -> TypeAmber
++        else -> AmberUi.Danger
++    }
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(rowShape)
++            .then(
++                if (picked) {
++                    Modifier
++                        .background(AmberUi.Accent.copy(alpha = 0.5f), rowShape)
++                        .border(1.dp, AmberUi.AccentEdge, rowShape)
++                } else {
++                    Modifier.amberGlass(rowShape)
++                }
++            )
++            .clickable { onClick() }
++            .padding(horizontal = 12.dp, vertical = 10.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Box(
++            modifier = Modifier
++                .size(20.dp)
++                .clip(CircleShape)
++                .background(if (picked) AmberUi.AccentSoft else Color.Transparent, CircleShape)
++                .border(
++                    1.5.dp,
++                    if (picked) AmberUi.AccentSoft else AmberUi.TextDim,
++                    CircleShape
++                ),
++            contentAlignment = Alignment.Center
++        ) {
++            if (picked) {
++                Icon(
++                    imageVector = Icons.Outlined.Check,
++                    contentDescription = null,
++                    tint = PopupFill,
++                    modifier = Modifier.size(13.dp)
++                )
++            }
++        }
++        Spacer(modifier = Modifier.width(12.dp))
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = ver.name.ifBlank { ver.versionNumber },
++                color = AmberUi.Text,
++                fontWeight = FontWeight.Bold,
++                fontSize = 13.sp,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++            Text(
++                text = "Versi ${ver.versionNumber} · MC ${ver.gameVersions.joinToString(", ")}",
++                color = AmberUi.TextDim,
++                fontSize = 11.sp,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++        }
++        Spacer(modifier = Modifier.width(8.dp))
++        AmberTag(ver.versionType.uppercase(), color = verColor)
++    }
++}
++
++// =============================================================================
++// PENAMPIL SCREENSHOT LAYAR PENUH
++// =============================================================================
++
++/**
++ * Penampil screenshot layar penuh. Gambar ditampilkan utuh (tidak dipotong) di seluruh layar dan
++ * bisa digeser ke kiri/kanan antar-screenshot. Kontrol (nomor, tutup, panah) melayang di sudut
++ * supaya tidak mengurangi ukuran gambar.
++ */
++@Composable
++internal fun ModGalleryViewer(
++    gallery: List<ModrinthGalleryItem>,
++    initialUrl: String,
++    onClose: () -> Unit
++) {
++    // Bila daftar sudah tidak ada (pop up detail ditutup), tetap tampilkan gambar yang dibuka
++    val shots = if (gallery.any { it.url == initialUrl }) gallery else listOf(ModrinthGalleryItem(url = initialUrl))
++    val startIndex = shots.indexOfFirst { it.url == initialUrl }.coerceAtLeast(0)
++    val pagerState = rememberPagerState(initialPage = startIndex) { shots.size }
++    val scope = rememberCoroutineScope()
++    val current = pagerState.currentPage
++
++    AmberOverlay(
++        onDismiss = onClose,
++        dismissOnScrimTap = false,
++        scrimAlpha = 0.95f
++    ) {
++        HorizontalPager(
++            state = pagerState,
++            modifier = Modifier.fillMaxSize(),
++            pageSpacing = 12.dp
++        ) { page ->
++            Box(
++                modifier = Modifier
++                    .fillMaxSize()
++                    .padding(8.dp),
++                contentAlignment = Alignment.Center
++            ) {
++                NuxNetworkImage(
++                    model = shots[page].url,
++                    contentDescription = shots[page].title ?: "Pratinjau gambar",
++                    modifier = Modifier.fillMaxSize(),
++                    shape = RoundedCornerShape(14.dp),
++                    contentScale = ContentScale.Fit,
++                    maxSidePx = 1600,
++                    showSpinner = true
++                )
++            }
++        }
++
++        // Atas kiri: nomor screenshot (dan judulnya bila ada)
++        val caption = shots[current].title?.takeIf { it.isNotBlank() }
++        Row(
++            modifier = Modifier
++                .align(Alignment.TopStart)
++                .padding(12.dp)
++                .height(40.dp)
++                .widthIn(max = 280.dp)
++                .clip(CircleShape)
++                .background(Color.Black.copy(alpha = 0.55f), CircleShape)
++                .border(1.dp, AmberUi.Border, CircleShape)
++                .padding(horizontal = 14.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Text(
++                text = "${current + 1} / ${shots.size}",
++                color = AmberUi.Text,
++                fontWeight = FontWeight.Bold,
++                fontSize = 13.sp,
++                maxLines = 1
++            )
++            if (caption != null) {
++                Spacer(modifier = Modifier.width(10.dp))
++                Text(
++                    text = caption,
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++            }
++        }
++
++        // Atas kanan: tutup
++        Box(
++            modifier = Modifier
++                .align(Alignment.TopEnd)
++                .padding(12.dp)
++                .size(40.dp)
++                .clip(CircleShape)
++                .background(Color.Black.copy(alpha = 0.55f), CircleShape)
++                .border(1.dp, AmberUi.Border, CircleShape)
++                .clickable { onClose() },
++            contentAlignment = Alignment.Center
++        ) {
++            Icon(
++                imageVector = Icons.Outlined.Close,
++                contentDescription = "Tutup",
++                tint = AmberUi.Text,
++                modifier = Modifier.size(20.dp)
++            )
++        }
++
++        // Panah kiri/kanan (hanya bila ada lebih dari satu screenshot)
++        if (shots.size > 1) {
++            GalleryArrow(
++                modifier = Modifier
++                    .align(Alignment.CenterStart)
++                    .padding(start = 12.dp),
++                flipped = true,
++                enabled = current > 0,
++                onClick = { scope.launch { pagerState.animateScrollToPage(current - 1) } }
++            )
++            GalleryArrow(
++                modifier = Modifier
++                    .align(Alignment.CenterEnd)
++                    .padding(end = 12.dp),
++                flipped = false,
++                enabled = current < shots.size - 1,
++                onClick = { scope.launch { pagerState.animateScrollToPage(current + 1) } }
++            )
++        }
++    }
++}
++
++@Composable
++private fun GalleryArrow(
++    modifier: Modifier,
++    flipped: Boolean,
++    enabled: Boolean,
++    onClick: () -> Unit
++) {
++    Box(
++        modifier = modifier
++            .size(44.dp)
++            .alpha(if (enabled) 1f else 0.3f)
++            .clip(CircleShape)
++            .background(Color.Black.copy(alpha = 0.55f), CircleShape)
++            .border(1.dp, AmberUi.Border, CircleShape)
++            .clickable(enabled = enabled) { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Icon(
++            imageVector = Icons.Outlined.ChevronRight,
++            contentDescription = null,
++            tint = AmberUi.Text,
++            modifier = Modifier
++                .size(26.dp)
++                .rotate(if (flipped) 180f else 0f)
++        )
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index 2f80514..5bc8cb9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -1288,47 +1288,13 @@ fun ModsScreen(
+         )
+     }
+ 
+-    // --- PRATINJAU GAMBAR ---
++    // --- PENAMPIL SCREENSHOT (layar penuh, gambar tidak dipotong, bisa digeser) ---
+     previewGalleryUrl?.let { url ->
+-        NuxDialog(onDismissRequest = { previewGalleryUrl = null }, compact = true) {
+-            Column(
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .padding(12.dp),
+-                horizontalAlignment = Alignment.CenterHorizontally
+-            ) {
+-                Row(
+-                    modifier = Modifier.fillMaxWidth(),
+-                    horizontalArrangement = Arrangement.SpaceBetween,
+-                    verticalAlignment = Alignment.CenterVertically
+-                ) {
+-                    Text(
+-                        text = "Tangkapan layar",
+-                        fontWeight = FontWeight.Black,
+-                        fontSize = 15.sp,
+-                        color = NuxColors.DarkGray
+-                    )
+-                    ModsIconButton(
+-                        icon = Icons.Outlined.Close,
+-                        description = "Tutup",
+-                        onClick = { previewGalleryUrl = null }
+-                    )
+-                }
+-                Spacer(modifier = Modifier.height(8.dp))
+-                NuxNetworkImage(
+-                    model = url,
+-                    contentDescription = "Pratinjau gambar",
+-                    modifier = Modifier
+-                        .fillMaxWidth()
+-                        .height(220.dp)
+-                        .clip(RoundedCornerShape(14.dp))
+-                        .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp)),
+-                    shape = RoundedCornerShape(14.dp),
+-                    maxSidePx = 1280,
+-                    showSpinner = true
+-                )
+-            }
+-        }
++        ModGalleryViewer(
++            gallery = detailProject?.gallery ?: emptyList(),
++            initialUrl = url,
++            onClose = { previewGalleryUrl = null }
++        )
+     }
+ }
+ 
+@@ -1975,6 +1941,35 @@ private fun ModrinthHitRow(
+                 overflow = TextOverflow.Ellipsis
+             )
+ 
++            // Penulis dan jumlah unduhan
++            Spacer(modifier = Modifier.height(3.dp))
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Text(
++                    text = "oleh ${hit.author ?: "Komunitas"}",
++                    fontSize = 12.sp,
++                    color = AmberUi.TextDim.copy(alpha = 0.8f),
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis,
++                    modifier = Modifier.weight(1f, fill = false)
++                )
++                if (hit.downloads > 0) {
++                    Spacer(modifier = Modifier.width(10.dp))
++                    Icon(
++                        imageVector = Icons.Outlined.Download,
++                        contentDescription = null,
++                        tint = AmberUi.TextDim.copy(alpha = 0.8f),
++                        modifier = Modifier.size(13.dp)
++                    )
++                    Spacer(modifier = Modifier.width(3.dp))
++                    Text(
++                        text = formatCompactNumber(hit.downloads),
++                        fontSize = 12.sp,
++                        color = AmberUi.TextDim.copy(alpha = 0.8f),
++                        maxLines = 1
++                    )
++                }
++            }
++
+             if (tags.isNotEmpty()) {
+                 Spacer(modifier = Modifier.height(6.dp))
+                 Row(
+@@ -2022,431 +2017,6 @@ private fun ModrinthHitRow(
+     }
+ }
+ 
+-/**
+- * Jendela detail dua panel: kiri = identitas proyek + tombol pasang (selalu terlihat),
+- * kanan = tab Ringkasan / Versi yang bisa digulir.
+- */
+-@Composable
+-private fun ModDetailDialog(
+-    hit: ModrinthSearchHit,
+-    project: ModrinthProject?,
+-    versions: List<ModrinthVersion>,
+-    selectedVersion: ModrinthVersion?,
+-    isLoading: Boolean,
+-    isInstalling: Boolean,
+-    progressText: String,
+-    isInstalled: Boolean,
+-    tab: String,
+-    instance: Instance?,
+-    onTab: (String) -> Unit,
+-    onPickVersion: (ModrinthVersion) -> Unit,
+-    onOpenGallery: (String) -> Unit,
+-    onInstall: () -> Unit,
+-    onClose: () -> Unit
+-) {
+-    val typeColor = when (hit.projectType) {
+-        "mod" -> NuxColors.Yellow
+-        "modpack" -> NuxColors.PurpleDark
+-        "resourcepack" -> NuxColors.SkyBlueDark
+-        else -> NuxColors.AmberDark
+-    }
+-
+-    NuxDialog(
+-        onDismissRequest = { if (!isInstalling) onClose() },
+-        modifier = Modifier.fillMaxWidth(0.92f),
+-        fillMaxHeight = true,
+-        compact = true
+-    ) {
+-        Row(
+-            modifier = Modifier
+-                .fillMaxSize()
+-                .padding(12.dp),
+-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+-        ) {
+-            // ---------------- KIRI ----------------
+-            Column(
+-                modifier = Modifier
+-                    .weight(0.36f)
+-                    .fillMaxHeight()
+-            ) {
+-                Column(
+-                    modifier = Modifier
+-                        .weight(1f)
+-                        .fillMaxWidth()
+-                        .verticalScroll(rememberScrollState())
+-                ) {
+-                    NuxNetworkImage(
+-                        model = hit.iconUrl,
+-                        contentDescription = hit.title,
+-                        modifier = Modifier
+-                            .size(56.dp)
+-                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(14.dp)),
+-                        fallbackInitials = hit.title.take(2).uppercase(),
+-                        shape = RoundedCornerShape(14.dp),
+-                        maxSidePx = 192
+-                    )
+-                    Spacer(modifier = Modifier.height(8.dp))
+-                    Text(
+-                        text = hit.title,
+-                        fontWeight = FontWeight.Black,
+-                        fontSize = 17.sp,
+-                        lineHeight = 22.sp,
+-                        color = NuxColors.DarkGray,
+-                        maxLines = 3,
+-                        overflow = TextOverflow.Ellipsis
+-                    )
+-                    Spacer(modifier = Modifier.height(2.dp))
+-                    Text(
+-                        text = "oleh ${hit.author ?: "Komunitas"}",
+-                        fontSize = 11.sp,
+-                        color = NuxColors.GrayNeutral
+-                    )
+-                    Spacer(modifier = Modifier.height(8.dp))
+-                    Row(
+-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+-                        verticalAlignment = Alignment.CenterVertically
+-                    ) {
+-                        NuxBadge(
+-                            text = hit.projectType.uppercase(),
+-                            backgroundColor = typeColor.copy(alpha = 0.16f),
+-                            textColor = typeColor,
+-                            borderColor = typeColor.copy(alpha = 0.4f)
+-                        )
+-                        NuxBadge(
+-                            text = "📥 ${formatCompactNumber(hit.downloads)}",
+-                            backgroundColor = NuxColors.SurfaceElevated,
+-                            textColor = NuxColors.GrayNeutral
+-                        )
+-                    }
+-                    if (selectedVersion != null && !isInstalled) {
+-                        Spacer(modifier = Modifier.height(12.dp))
+-                        Text(
+-                            text = "Versi dipilih",
+-                            fontSize = 11.sp,
+-                            color = NuxColors.GrayNeutral
+-                        )
+-                        Text(
+-                            text = selectedVersion.name.ifBlank { selectedVersion.versionNumber },
+-                            fontSize = 12.sp,
+-                            fontWeight = FontWeight.Bold,
+-                            color = NuxColors.DarkGray,
+-                            maxLines = 2,
+-                            overflow = TextOverflow.Ellipsis
+-                        )
+-                    }
+-                }
+-
+-                Spacer(modifier = Modifier.height(8.dp))
+-
+-                if (isInstalling) {
+-                    Column(
+-                        modifier = Modifier.fillMaxWidth(),
+-                        horizontalAlignment = Alignment.CenterHorizontally
+-                    ) {
+-                        AmberSpinner(
+-                            color = NuxColors.Yellow,
+-                            modifier = Modifier.size(22.dp),
+-                            strokeWidth = 2.dp
+-                        )
+-                        Spacer(modifier = Modifier.height(4.dp))
+-                        Text(
+-                            text = progressText.ifBlank { "Sedang mengunduh dan memasang..." },
+-                            fontWeight = FontWeight.Bold,
+-                            fontSize = 11.sp,
+-                            color = NuxColors.Yellow,
+-                            maxLines = 2,
+-                            overflow = TextOverflow.Ellipsis
+-                        )
+-                    }
+-                } else if (isInstalled) {
+-                    val okShape = RoundedCornerShape(20.dp)
+-                    Row(
+-                        modifier = Modifier
+-                            .fillMaxWidth()
+-                            .height(40.dp)
+-                            .clip(okShape)
+-                            .background(NuxColors.YellowPale, okShape)
+-                            .border(NuxSizes.GlassBorder, NuxColors.Yellow.copy(alpha = 0.45f), okShape),
+-                        horizontalArrangement = Arrangement.Center,
+-                        verticalAlignment = Alignment.CenterVertically
+-                    ) {
+-                        Icon(
+-                            imageVector = Icons.Outlined.Check,
+-                            contentDescription = null,
+-                            tint = NuxColors.Yellow,
+-                            modifier = Modifier.size(16.dp)
+-                        )
+-                        Spacer(modifier = Modifier.width(6.dp))
+-                        Text(
+-                            text = "Sudah terpasang",
+-                            color = NuxColors.Yellow,
+-                            fontWeight = FontWeight.Black,
+-                            fontSize = 13.sp
+-                        )
+-                    }
+-                } else {
+-                    NuxButton(
+-                        onClick = onInstall,
+-                        backgroundColor = NuxColors.Yellow,
+-                        enabled = versions.isNotEmpty(),
+-                        cornerRadius = 20.dp,
+-                        modifier = Modifier.fillMaxWidth()
+-                    ) {
+-                        Icon(
+-                            imageVector = Icons.Outlined.Download,
+-                            contentDescription = null,
+-                            modifier = Modifier.size(16.dp)
+-                        )
+-                        Spacer(modifier = Modifier.width(6.dp))
+-                        Text(
+-                            text = if (hit.projectType == "modpack") "Pasang modpack" else "Pasang ke instance",
+-                            fontWeight = FontWeight.Black,
+-                            fontSize = 13.sp
+-                        )
+-                    }
+-                }
+-            }
+-
+-            // ---------------- KANAN ----------------
+-            Column(
+-                modifier = Modifier
+-                    .weight(0.64f)
+-                    .fillMaxHeight()
+-            ) {
+-                Row(
+-                    modifier = Modifier.fillMaxWidth(),
+-                    verticalAlignment = Alignment.CenterVertically
+-                ) {
+-                    Row(
+-                        modifier = Modifier.weight(1f),
+-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                    ) {
+-                        SettingChip(
+-                            text = "Ringkasan",
+-                            selected = tab == "overview",
+-                            onClick = { onTab("overview") }
+-                        )
+-                        SettingChip(
+-                            text = "Versi (${versions.size})",
+-                            selected = tab == "versions",
+-                            onClick = { onTab("versions") }
+-                        )
+-                    }
+-                    ModsIconButton(
+-                        icon = Icons.Outlined.Close,
+-                        description = "Tutup",
+-                        onClick = onClose,
+-                        enabled = !isInstalling
+-                    )
+-                }
+-
+-                Spacer(modifier = Modifier.height(8.dp))
+-
+-                Column(
+-                    modifier = Modifier
+-                        .weight(1f)
+-                        .fillMaxWidth()
+-                        .verticalScroll(rememberScrollState())
+-                ) {
+-                    if (isLoading) {
+-                        Box(
+-                            modifier = Modifier
+-                                .fillMaxWidth()
+-                                .height(140.dp),
+-                            contentAlignment = Alignment.Center
+-                        ) {
+-                            AmberSpinner(color = NuxColors.Yellow, modifier = Modifier.size(28.dp))
+-                        }
+-                    } else if (tab == "overview") {
+-                        val galleryList = project?.gallery ?: emptyList()
+-                        if (galleryList.isNotEmpty()) {
+-                            Text(
+-                                text = "Tangkapan layar",
+-                                fontWeight = FontWeight.Bold,
+-                                fontSize = 11.sp,
+-                                color = NuxColors.GrayNeutral
+-                            )
+-                            Spacer(modifier = Modifier.height(6.dp))
+-                            LazyRow(
+-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+-                                modifier = Modifier.fillMaxWidth()
+-                            ) {
+-                                items(galleryList) { gal ->
+-                                    Box(
+-                                        modifier = Modifier
+-                                            .width(160.dp)
+-                                            .height(92.dp)
+-                                            .clip(RoundedCornerShape(12.dp))
+-                                            .background(NuxColors.SurfaceWhite)
+-                                            .border(NuxSizes.GlassBorder, NuxColors.CardBorder, RoundedCornerShape(12.dp))
+-                                            .clickable { onOpenGallery(gal.url) }
+-                                    ) {
+-                                        NuxNetworkImage(
+-                                            model = gal.url,
+-                                            contentDescription = gal.title ?: "Screenshot",
+-                                            modifier = Modifier.fillMaxSize(),
+-                                            shape = RoundedCornerShape(12.dp),
+-                                            maxSidePx = 400,
+-                                            showSpinner = true
+-                                        )
+-                                    }
+-                                }
+-                            }
+-                            Spacer(modifier = Modifier.height(10.dp))
+-                        }
+-
+-                        Text(
+-                            text = "Deskripsi",
+-                            fontWeight = FontWeight.Bold,
+-                            fontSize = 11.sp,
+-                            color = NuxColors.GrayNeutral
+-                        )
+-                        Spacer(modifier = Modifier.height(4.dp))
+-                        Text(
+-                            text = project?.description ?: hit.description ?: "Tidak ada ringkasan deskripsi.",
+-                            fontSize = 13.sp,
+-                            color = NuxColors.DarkGray.copy(alpha = 0.88f),
+-                            lineHeight = 18.sp
+-                        )
+-
+-                        Spacer(modifier = Modifier.height(10.dp))
+-
+-                        val allLoaders = (project?.loaders ?: hit.categories ?: emptyList()).distinct()
+-                        if (allLoaders.isNotEmpty()) {
+-                            Row(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .horizontalScroll(rememberScrollState()),
+-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+-                            ) {
+-                                allLoaders.take(6).forEach { tag ->
+-                                    NuxBadge(
+-                                        text = tag.uppercase(),
+-                                        backgroundColor = NuxColors.SurfaceElevated,
+-                                        textColor = NuxColors.GrayNeutral
+-                                    )
+-                                }
+-                            }
+-                        }
+-                    } else {
+-                        if (versions.isEmpty()) {
+-                            val warnShape = RoundedCornerShape(12.dp)
+-                            Column(
+-                                modifier = Modifier
+-                                    .fillMaxWidth()
+-                                    .background(NuxColors.ErrorRed.copy(alpha = 0.12f), warnShape)
+-                                    .border(NuxSizes.GlassBorder, NuxColors.ErrorRed.copy(alpha = 0.4f), warnShape)
+-                                    .padding(12.dp)
+-                            ) {
+-                                Text(
+-                                    text = "Tidak ada versi yang didukung",
+-                                    color = NuxColors.ErrorRed,
+-                                    fontWeight = FontWeight.Bold,
+-                                    fontSize = 13.sp
+-                                )
+-                                Spacer(modifier = Modifier.height(4.dp))
+-                                Text(
+-                                    text = "Proyek ini tidak punya rilis yang cocok dengan Minecraft ${instance?.mcVersion ?: ""} (${(instance?.loader ?: "vanilla").uppercase()}).",
+-                                    color = NuxColors.GrayNeutral,
+-                                    fontSize = 11.sp,
+-                                    lineHeight = 16.sp
+-                                )
+-                            }
+-                        } else {
+-                            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-                                versions.forEach { ver ->
+-                                    val isPicked = selectedVersion?.id == ver.id
+-                                    val rowShape = RoundedCornerShape(14.dp)
+-                                    val verColor = when (ver.versionType) {
+-                                        "release" -> NuxColors.Yellow
+-                                        "beta" -> NuxColors.AmberDark
+-                                        else -> NuxColors.ErrorRed
+-                                    }
+-                                    Row(
+-                                        modifier = Modifier
+-                                            .fillMaxWidth()
+-                                            .clip(rowShape)
+-                                            .background(if (isPicked) NuxColors.YellowPale else NuxColors.SurfaceWhite, rowShape)
+-                                            .border(
+-                                                NuxSizes.GlassBorder,
+-                                                if (isPicked) NuxColors.Yellow.copy(alpha = 0.55f) else NuxColors.CardBorder,
+-                                                rowShape
+-                                            )
+-                                            .clickable { onPickVersion(ver) }
+-                                            .padding(horizontal = 10.dp, vertical = 8.dp),
+-                                        verticalAlignment = Alignment.CenterVertically
+-                                    ) {
+-                                        Box(
+-                                            modifier = Modifier
+-                                                .size(16.dp)
+-                                                .clip(CircleShape)
+-                                                .background(if (isPicked) NuxColors.Yellow else Color.Transparent)
+-                                                .border(
+-                                                    NuxSizes.GlassBorder,
+-                                                    if (isPicked) NuxColors.Yellow else NuxColors.GrayNeutral,
+-                                                    CircleShape
+-                                                ),
+-                                            contentAlignment = Alignment.Center
+-                                        ) {
+-                                            if (isPicked) {
+-                                                Icon(
+-                                                    imageVector = Icons.Outlined.Check,
+-                                                    contentDescription = null,
+-                                                    tint = NuxColors.Ink,
+-                                                    modifier = Modifier.size(11.dp)
+-                                                )
+-                                            }
+-                                        }
+-                                        Spacer(modifier = Modifier.width(10.dp))
+-                                        Column(modifier = Modifier.weight(1f)) {
+-                                            Text(
+-                                                text = ver.name.ifBlank { ver.versionNumber },
+-                                                fontWeight = FontWeight.Bold,
+-                                                fontSize = 13.sp,
+-                                                color = NuxColors.DarkGray,
+-                                                maxLines = 1,
+-                                                overflow = TextOverflow.Ellipsis
+-                                            )
+-                                            Text(
+-                                                text = "Versi ${ver.versionNumber} · MC ${ver.gameVersions.joinToString(", ")}",
+-                                                fontSize = 11.sp,
+-                                                color = NuxColors.GrayNeutral,
+-                                                maxLines = 1,
+-                                                overflow = TextOverflow.Ellipsis
+-                                            )
+-                                        }
+-                                        Spacer(modifier = Modifier.width(8.dp))
+-                                        NuxBadge(
+-                                            text = ver.versionType.uppercase(),
+-                                            backgroundColor = verColor.copy(alpha = 0.16f),
+-                                            textColor = verColor,
+-                                            borderColor = verColor.copy(alpha = 0.4f)
+-                                        )
+-                                    }
+-                                }
+-                            }
+-                        }
+-                    }
+-
+-                    Spacer(modifier = Modifier.height(10.dp))
+-                    Text(
+-                        text = if (hit.projectType == "modpack") {
+-                            "Modpack diekstrak langsung ke instance (overrides, konfigurasi, dan manifest)."
+-                        } else {
+-                            "Dependensi wajib ikut terpasang otomatis."
+-                        },
+-                        fontSize = 11.sp,
+-                        lineHeight = 16.sp,
+-                        color = NuxColors.GrayNeutral
+-                    )
+-                    Spacer(modifier = Modifier.height(8.dp))
+-                }
+-            }
+-        }
+-    }
+-}
+-
+-/** Kolom cari berbentuk pil 38dp dengan ikon kaca pembesar dan tombol hapus teks. */
+ private fun formatBytes(bytes: Long): String {
+     if (bytes <= 0) return "0 B"
+     val units = arrayOf("B", "KB", "MB", "GB")
+# FIN part=1/1 files=2

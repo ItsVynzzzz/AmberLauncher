@@ -1,0 +1,291 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 49922aa..8d6f796 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -2329,6 +2329,13 @@ fun GameScreen(
+                     launcherSettings.copy(buttonLookDrag = on)
+                 )
+             },
++            buttonSlide = launcherSettings.buttonSlide,
++            onButtonSlideChange = { on ->
++                SettingsManager.updateSettings(
++                    context,
++                    launcherSettings.copy(buttonSlide = on)
++                )
++            },
+             isControlVisible = isControlVisible,
+             onToggleControlVisibility = {
+                 isControlVisible = !isControlVisible
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 0bd1642..d04666d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -24,6 +24,10 @@ data class LauncherSettings(
+     // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
+     // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
+     val buttonLookDrag: Boolean = false,
++    // Geser antar tombol: menggeser jari dari satu tombol keyboard ke tombol lain (mis. W ke D) langsung menekan
++    // tombol yang dilewati tanpa mengangkat jari. Bawaan nyala. Nilai ini juga dipakai pengguna lama: tanpa kolom
++    // ini di berkas pengaturan tersimpan, bawaan di sini yang berlaku.
++    val buttonSlide: Boolean = true,
+     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
+     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
+     // dari versi sebelumnya tidak terbawa.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ButtonSlide.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ButtonSlide.kt
+new file mode 100644
+index 0000000..22762b8
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ButtonSlide.kt
+@@ -0,0 +1,78 @@
++package com.israadev.nuxlauncher.ui.control
++
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.geometry.Size
++
++/**
++ * Geser antar tombol. Satu jari yang mulai di tombol W tetap "dimiliki" tombol W walau jarinya sudah keluar
++ * dari kotaknya, jadi tanpa bantuan, menggeser ke D tidak menekan D. Di sini tiap tombol keyboard biasa mendaftar
++ * (posisi dan ukurannya di layar), lalu gesture tombol yang sedang ditahan bertanya "tombol mana di bawah
++ * jariku sekarang?" dan memindahkan tekanan: tombol baru ditekan dulu, baru tombol lama dilepas, supaya
++ * gerakan berpindah-pindah tidak tersendat sesaat.
++ *
++ * Tiap tombol menghitung berapa jari yang menahannya ([Target.holds]). Tombol baru benar-benar ditekan pada
++ * jari pertama dan dilepas pada jari terakhir, jadi dua jari di tombol yang sama atau satu jari yang melintas
++ * di atas tombol yang sedang ditahan jari lain tidak melepaskannya terlalu cepat.
++ *
++ * Hanya dipakai dari thread utama (gesture dan komposisi), jadi tanpa kunci.
++ */
++internal object ButtonSlide {
++
++    class Target(
++        /**
++         * Tombol keyboard biasa yang boleh dilewati jari. Tombol mouse (pukul/pakai) tidak: terlewat satu kali
++         * saat berlari berarti memukul tanpa sengaja.
++         */
++        val slideable: Boolean
++    ) {
++        /** Pojok kiri atas tombol di layar (koordinat akar), diperbarui tiap tata letak. */
++        var origin: Offset = Offset.Zero
++        var size: Size = Size.Zero
++        var holds: Int = 0
++
++        /** Menekan atau melepas tombol di game sekaligus mengubah tampilannya. Diisi oleh tombolnya. */
++        var setDown: (Boolean) -> Unit = {}
++    }
++
++    private val targets = ArrayList<Target>()
++
++    fun register(t: Target) {
++        if (!targets.contains(t)) targets.add(t)
++    }
++
++    /** Tombol hilang dari layar: bila masih tertahan, dilepas di game supaya tidak ada tombol yang menyangkut. */
++    fun unregister(t: Target) {
++        targets.remove(t)
++        if (t.holds > 0) {
++            t.holds = 0
++            t.setDown(false)
++        }
++    }
++
++    fun press(t: Target) {
++        t.holds += 1
++        if (t.holds == 1) t.setDown(true)
++    }
++
++    fun release(t: Target) {
++        if (t.holds <= 0) return
++        t.holds -= 1
++        if (t.holds == 0) t.setDown(false)
++    }
++
++    /**
++     * Tombol yang boleh dilewati dan berada di bawah titik [root] (koordinat akar), selain [except].
++     * [inset] mengecilkan kotak tiap tombol: jari harus masuk sedikit ke dalam tombol baru sebelum berpindah,
++     * jadi jari yang bergetar tepat di garis antara dua tombol yang berdempetan tidak menekan-lepas bergantian.
++     */
++    fun find(root: Offset, inset: Float, except: Target): Target? {
++        for (t in targets) {
++            if (t === except || !t.slideable) continue
++            if (t.size.width <= inset * 2f || t.size.height <= inset * 2f) continue
++            val x = root.x - t.origin.x
++            val y = root.y - t.origin.y
++            if (x >= inset && y >= inset && x <= t.size.width - inset && y <= t.size.height - inset) return t
++        }
++        return null
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index afa16fa..98ac4bc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -27,9 +27,12 @@ import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.graphics.nativeCanvas
+ import androidx.compose.ui.graphics.toArgb
+ import androidx.compose.ui.input.pointer.pointerInput
++import androidx.compose.ui.layout.onGloballyPositioned
++import androidx.compose.ui.layout.positionInRoot
+ import androidx.compose.ui.platform.LocalDensity
+ import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.toSize
+ import com.israadev.nuxlauncher.FpsMode
+ import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+@@ -403,21 +406,54 @@ fun CustomVirtualButton(
+     // Tombol yang boleh memutar kamera bila digeser (hanya bila dinyalakan di Pengaturan, lihat di bawah).
+     val lookDrag = button.isMouseButton || button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
+ 
++    // Geser antar tombol (lihat ButtonSlide): tombol biasa mendaftar dengan posisinya di layar, dan cara
++    // menekan/melepasnya (termasuk tampilan tertekan) dititipkan lewat setDown. Hanya tombol "tahan = aktif".
++    val slideTarget = remember(button.id, button.isMouseButton) {
++        ButtonSlide.Target(slideable = !button.isMouseButton)
++    }
++    val applyDown = rememberUpdatedState<(Boolean) -> Unit> { down ->
++        isPressed = down
++        sendPress(down)
++    }
++    if (simple) {
++        DisposableEffect(slideTarget) {
++            slideTarget.setDown = { down -> applyDown.value(down) }
++            ButtonSlide.register(slideTarget)
++            onDispose { ButtonSlide.unregister(slideTarget) }
++        }
++    }
++
+     val base = modifier
+         .size(width = button.widthDp.dp, height = button.heightDp.dp)
+         .drawBehind { drawControlButton(spec, isPressed || (isSequence && MacroRegistry.isRunning(button.id))) }
++        .then(
++            if (simple && !button.isMouseButton) {
++                Modifier.onGloballyPositioned { c ->
++                    slideTarget.origin = c.positionInRoot()
++                    slideTarget.size = c.size.toSize()
++                }
++            } else {
++                Modifier
++            }
++        )
+ 
+     Box(
+         modifier = if (simple) {
+             base.pointerInput(button.id, button.isMouseButton, button.mouseButton, button.keyCode) {
+                 val slop = 6.dp.toPx()
++                val slideInset = 4.dp.toPx()
+                 awaitEachGesture {
+                     val down = awaitFirstDown(requireUnconsumed = false)
+                     down.consume()
+-                    isPressed = true
+-                    sendPress(true)
++                    ButtonSlide.press(slideTarget)
+                     // Dibaca tiap jari menyentuh tombol, jadi mengubah pengaturan langsung berlaku.
+-                    val canLook = lookDrag && SettingsManager.settings.value.buttonLookDrag
++                    val settings = SettingsManager.settings.value
++                    val canLook = lookDrag && settings.buttonLookDrag
++                    // Tombol yang memutar kamera saat digeser (lompat/pukul bila "Geser kamera dari tombol" nyala)
++                    // tidak ikut berpindah tombol: geserannya sudah punya arti lain.
++                    val canSlide = settings.buttonSlide && slideTarget.slideable && !canLook
++                    // Tombol yang sedang ditekan jari ini; berpindah saat jari masuk ke tombol lain.
++                    var current = slideTarget
+                     var last = down.position
+                     var looking = false
+                     try {
+@@ -428,6 +464,15 @@ fun CustomVirtualButton(
+                                 change.consume()
+                                 break
+                             }
++                            if (canSlide) {
++                                val next = ButtonSlide.find(slideTarget.origin + change.position, slideInset, current)
++                                if (next != null) {
++                                    // Tombol baru ditekan dulu, baru yang lama dilepas, supaya tidak ada jeda.
++                                    ButtonSlide.press(next)
++                                    ButtonSlide.release(current)
++                                    current = next
++                                }
++                            }
+                             val delta = change.position - last
+                             last = change.position
+                             if (canLook) {
+@@ -442,8 +487,7 @@ fun CustomVirtualButton(
+                             change.consume()
+                         }
+                     } finally {
+-                        isPressed = false
+-                        sendPress(false)
++                        ButtonSlide.release(current)
+                     }
+                 }
+             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index ad3370d..b4c7717 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -95,6 +95,8 @@ fun GameMenuSheet(
+     onMouseControlModeChange: (MouseControlMode) -> Unit,
+     buttonLookDrag: Boolean = false,
+     onButtonLookDragChange: (Boolean) -> Unit = {},
++    buttonSlide: Boolean = true,
++    onButtonSlideChange: (Boolean) -> Unit = {},
+     isControlVisible: Boolean,
+     onToggleControlVisibility: () -> Unit,
+     onRequestKeyboard: () -> Unit,
+@@ -358,6 +360,13 @@ fun GameMenuSheet(
+                         checked = buttonLookDrag,
+                         onChange = onButtonLookDragChange
+                     )
++                    Spacer(modifier = Modifier.height(4.dp))
++                    ToggleRow(
++                        title = "Geser antar tombol",
++                        subtitle = "Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.",
++                        checked = buttonSlide,
++                        onChange = onButtonSlideChange
++                    )
+ 
+                     SectionTitle("PINTAS")
+                     val keys = listOf(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 6f20c12..3989802 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -140,6 +140,7 @@ fun SettingsScreen(
+     var touchAttack by remember(currentSettings.touchAttackEnabled) { mutableStateOf(currentSettings.touchAttackEnabled) }
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
++    var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
+@@ -207,6 +208,7 @@ fun SettingsScreen(
+             touchAttackEnabled = touchAttack,
+             hotbarTouchEnabled = hotbarTouch,
+             buttonLookDrag = buttonLookDrag,
++            buttonSlide = buttonSlide,
+             touchControllerEnabled = touchControllerEnabled,
+             mouseSizeDp = mouseSizeDp,
+             physicalMouseSystemPointer = physicalSystemPointer,
+@@ -811,6 +813,16 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
++                        SettingSwitchRow(
++                            title = "Geser antar tombol",
++                            desc = "Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.",
++                            checked = buttonSlide,
++                            onCheckedChange = {
++                                buttonSlide = it
++                                commitSettings()
++                            }
++                        )
++                        SettingDivider()
+                         SettingSwitchRow(
+                             title = "Dukungan TouchController",
+                             desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
+@@ -1155,6 +1167,7 @@ fun SettingsScreen(
+                     touchAttack = reset.touchAttackEnabled
+                     hotbarTouch = reset.hotbarTouchEnabled
+                     buttonLookDrag = reset.buttonLookDrag
++                    buttonSlide = reset.buttonSlide
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     mouseSizeDp = reset.mouseSizeDp
+                     physicalSystemPointer = reset.physicalMouseSystemPointer
+# FIN part=1/1 files=6

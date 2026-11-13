@@ -68,3 +68,47 @@ Key Code {0}	键码 {0}
 Multi-Key	多键组合
 \u26a1 Turbo Click	⚡ 连点
 Auto-clicker	自动连点器
+# Makro urutan aksi
+Variasi Waktu Acak:	随机时间波动：
+Mati	关
+Cara Jalan:	运行方式：
+Sekali	单次
+Tahan	按住
+Nyala/Mati	开/关
+Diulang terus selama tombol ditahan.	按住按键期间持续重复。
+Diulang terus sampai tombol diketuk lagi.	持续重复，直到再次点按按键。
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	每次点按运行一次。运行中再次点按即可停止。
+Ulangi:	重复：
+Jeda Antar Putaran:	每轮之间的间隔：
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	等待和按住时间会随机小幅偏移，使操作不那么机械。
+Langkah Makro:	宏步骤：
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	还没有步骤。请用下方按钮添加，或选择模板。
+Tambah Langkah:	添加步骤：
+Tekan	按下
+Tekan terus	持续按下
+Lepas	松开
+Tunggu	等待
+Gulir	滚动
+Ketik	输入
+Pindah Slot Hotbar:	切换快捷栏格子：
+Templat Cepat (mengganti urutan):	快速模板（会替换当前序列）：
+Perkiraan satu putaran:	每轮约：
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	宏停止时，仍按住的按键会自动松开。
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	注意：部分服务器禁止使用宏，请谨慎使用。
+Klik	点击
+Naik	向上
+Turun	向下
+Lama Tunggu:	等待时长：
+Lama Tahan:	按住时长：
+(kosong)	（空）
+Mouse Kiri	鼠标左键
+Mouse Kanan	鼠标右键
+Mouse Tengah	鼠标中键
+Auto Gali	自动挖掘
+Auto Klik Kanan	自动右键
+Lompat Terus	持续跳跃
+Lari + Lompat	冲刺 + 跳跃
+Makan	进食
+Buang Item x10	丢弃物品 x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac 动作序列
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	一个按键内可包含多个按键、点击、等待和输入。

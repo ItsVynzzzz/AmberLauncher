@@ -68,3 +68,47 @@ Saat main	ขณะเล่น
 Saat menu	ขณะอยู่ในเมนู
 Menu = inventori, chat, dan layar lain di dalam game.	เมนู = ช่องเก็บของ แชท และหน้าจออื่นๆ ในเกม
 Semua tombol	ทุกปุ่ม
+# Makro urutan aksi
+Variasi Waktu Acak:	ความแปรผันเวลาแบบสุ่ม:
+Mati	ปิด
+Cara Jalan:	โหมดการทำงาน:
+Sekali	ครั้งเดียว
+Tahan	กดค้าง
+Nyala/Mati	เปิด/ปิด
+Diulang terus selama tombol ditahan.	ทำซ้ำต่อเนื่องขณะกดปุ่มค้างไว้
+Diulang terus sampai tombol diketuk lagi.	ทำซ้ำต่อเนื่องจนกว่าจะแตะปุ่มอีกครั้ง
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	ทำงานหนึ่งครั้งต่อการแตะ แตะอีกครั้งขณะทำงานเพื่อหยุด
+Ulangi:	ทำซ้ำ:
+Jeda Antar Putaran:	เว้นระยะระหว่างรอบ:
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	เวลารอและกดค้างจะเปลี่ยนแบบสุ่มเล็กน้อย เพื่อให้ดูไม่เป็นหุ่นยนต์เกินไป
+Langkah Makro:	ขั้นตอนมาโคร:
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	ยังไม่มีขั้นตอน เพิ่มด้วยปุ่มด้านล่าง หรือเลือกแม่แบบ
+Tambah Langkah:	เพิ่มขั้นตอน:
+Tekan	กด
+Tekan terus	กดค้างไว้
+Lepas	ปล่อย
+Tunggu	รอ
+Gulir	เลื่อน
+Ketik	พิมพ์
+Pindah Slot Hotbar:	สลับช่องฮอตบาร์:
+Templat Cepat (mengganti urutan):	แม่แบบด่วน (แทนที่ลำดับเดิม):
+Perkiraan satu putaran:	ประมาณต่อรอบ:
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	ปุ่มที่ยังกดค้างอยู่จะถูกปล่อยอัตโนมัติเมื่อมาโครหยุด
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	หมายเหตุ: บางเซิร์ฟเวอร์ห้ามใช้มาโคร โปรดใช้อย่างเหมาะสม
+Klik	คลิก
+Naik	ขึ้น
+Turun	ลง
+Lama Tunggu:	ระยะเวลารอ:
+Lama Tahan:	ระยะเวลากดค้าง:
+(kosong)	(ว่าง)
+Mouse Kiri	เมาส์ซ้าย
+Mouse Kanan	เมาส์ขวา
+Mouse Tengah	เมาส์กลาง
+Auto Gali	ขุดอัตโนมัติ
+Auto Klik Kanan	คลิกขวาอัตโนมัติ
+Lompat Terus	กระโดดต่อเนื่อง
+Lari + Lompat	วิ่ง + กระโดด
+Makan	กิน
+Buang Item x10	ทิ้งไอเท็ม x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac ลำดับการกระทำ
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	หลายปุ่ม คลิก การรอ และการพิมพ์ในปุ่มเดียว

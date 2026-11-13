@@ -68,3 +68,47 @@ Key Code {0}	Key Code {0}
 Multi-Key	Multi-Key
 \u26a1 Turbo Click	⚡ Turbo Click
 Auto-clicker	Auto-clicker
+# Makro urutan aksi
+Variasi Waktu Acak:	Random na Pagbabago ng Oras:
+Mati	Naka-off
+Cara Jalan:	Paraan ng Pagpapatakbo:
+Sekali	Isang beses
+Tahan	Hawakan
+Nyala/Mati	On/Off
+Diulang terus selama tombol ditahan.	Paulit-ulit habang hawak ang button.
+Diulang terus sampai tombol diketuk lagi.	Paulit-ulit hanggang i-tap muli ang button.
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Isang beses tuwing i-tap. I-tap muli habang tumatakbo para ihinto.
+Ulangi:	Ulitin:
+Jeda Antar Putaran:	Pagitan ng Bawat Ikot:
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	Bahagyang random ang oras ng paghihintay at paghawak para hindi masyadong mukhang robot.
+Langkah Makro:	Mga Hakbang ng Macro:
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	Wala pang hakbang. Magdagdag gamit ang mga button sa ibaba, o pumili ng template.
+Tambah Langkah:	Magdagdag ng Hakbang:
+Tekan	Pindutin
+Tekan terus	Panatilihing Pinindot
+Lepas	Bitawan
+Tunggu	Maghintay
+Gulir	Mag-scroll
+Ketik	I-type
+Pindah Slot Hotbar:	Palitan ang Hotbar Slot:
+Templat Cepat (mengganti urutan):	Mabilis na Template (papalitan ang sequence):
+Perkiraan satu putaran:	Tantiya bawat ikot:
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	Awtomatikong binibitawan ang mga key na hawak pa kapag huminto ang macro.
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	Paalala: may mga server na nagbabawal ng macro. Gamitin nang may katuwiran.
+Klik	I-click
+Naik	Pataas
+Turun	Pababa
+Lama Tunggu:	Tagal ng Paghihintay:
+Lama Tahan:	Tagal ng Paghawak:
+(kosong)	(walang laman)
+Mouse Kiri	Kaliwang Mouse
+Mouse Kanan	Kanang Mouse
+Mouse Tengah	Gitnang Mouse
+Auto Gali	Auto Mine
+Auto Klik Kanan	Auto Right-Click
+Lompat Terus	Tuloy-tuloy na Talon
+Lari + Lompat	Takbo + Talon
+Makan	Kumain
+Buang Item x10	Ihulog ang Item x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac Sunod-sunod na Aksyon
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Maraming key, click, paghihintay, at pag-type sa iisang button.

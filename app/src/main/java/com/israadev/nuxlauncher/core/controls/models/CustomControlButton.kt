@@ -37,8 +37,28 @@ data class CustomControlButton(
     val icon: String = "",
     // Kapan tombol tampil: ALWAYS = selalu, GAME = hanya saat main (kursor dikunci game),
     // MENU = hanya saat ada menu/GUI game (inventori, chat, jeda). Layout lama tanpa kolom ini = ALWAYS.
-    val showMode: String = ControlShowMode.ALWAYS
+    val showMode: String = ControlShowMode.ALWAYS,
+    // Makro "Urutan Aksi" (macroType = "SEQUENCE"). Layout lama tanpa kolom-kolom ini memakai nilai bawaan.
+    // Tiap langkah berupa teks pendek, mis. "TAP:87", "WAIT:200", "MHOLD:1:1800" (lihat MacroScript).
+    val macroSteps: List<String> = emptyList(),
+    // Cara jalan: ONCE = sekali tiap ketuk, HOLD = diulang selama ditahan, TOGGLE = diulang sampai diketuk lagi.
+    val macroRunMode: String = MacroRunMode.ONCE,
+    // Berapa kali urutan diulang (hanya mode ONCE).
+    val macroRepeat: Int = 1,
+    // Jeda antar putaran (ms) untuk mode ulang.
+    val macroLoopDelayMs: Int = 0,
+    // Variasi acak waktu jeda/tahan, 0..50 persen (membuat tombol terasa lebih manusiawi). Juga dipakai Turbo.
+    val macroJitterPercent: Int = 0
 )
+
+/** Nilai [CustomControlButton.macroRunMode]. Nilai tak dikenal diperlakukan sebagai ONCE. */
+object MacroRunMode {
+    const val ONCE = "ONCE"
+    const val HOLD = "HOLD"
+    const val TOGGLE = "TOGGLE"
+
+    fun isValid(mode: String): Boolean = mode == ONCE || mode == HOLD || mode == TOGGLE
+}
 
 /** Nilai [CustomControlButton.showMode] dan aturan tampilnya. Nilai tak dikenal diperlakukan sebagai ALWAYS. */
 object ControlShowMode {

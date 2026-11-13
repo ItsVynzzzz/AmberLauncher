@@ -62,3 +62,47 @@ Saat main	In game
 Saat menu	In menus
 Menu = inventori, chat, dan layar lain di dalam game.	Menus = inventory, chat, and other screens inside the game.
 Semua tombol	All buttons
+# Makro urutan aksi
+Variasi Waktu Acak:	Random Timing Variation:
+Mati	Off
+Cara Jalan:	Run Mode:
+Sekali	Once
+Tahan	Hold
+Nyala/Mati	On/Off
+Diulang terus selama tombol ditahan.	Repeats continuously while the button is held.
+Diulang terus sampai tombol diketuk lagi.	Repeats continuously until the button is tapped again.
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Runs once per tap. Tap again while it runs to stop it.
+Ulangi:	Repeat:
+Jeda Antar Putaran:	Delay Between Loops:
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	Wait and hold times are shifted randomly a little so it feels less robotic.
+Langkah Makro:	Macro Steps:
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	No steps yet. Add some with the buttons below, or pick a template.
+Tambah Langkah:	Add Step:
+Tekan	Press
+Tekan terus	Hold Down
+Lepas	Release
+Tunggu	Wait
+Gulir	Scroll
+Ketik	Type
+Pindah Slot Hotbar:	Switch Hotbar Slot:
+Templat Cepat (mengganti urutan):	Quick Templates (replaces the sequence):
+Perkiraan satu putaran:	Estimated per loop:
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	Keys still held are released automatically when the macro stops.
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	Note: some servers ban macros. Use them wisely.
+Klik	Click
+Naik	Up
+Turun	Down
+Lama Tunggu:	Wait Duration:
+Lama Tahan:	Hold Duration:
+(kosong)	(empty)
+Mouse Kiri	Left Mouse
+Mouse Kanan	Right Mouse
+Mouse Tengah	Middle Mouse
+Auto Gali	Auto Mine
+Auto Klik Kanan	Auto Right-Click
+Lompat Terus	Keep Jumping
+Lari + Lompat	Sprint + Jump
+Makan	Eat
+Buang Item x10	Drop Item x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac Action Sequence
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Several keys, clicks, waits, and typing in one button.

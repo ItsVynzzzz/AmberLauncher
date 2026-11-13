@@ -583,7 +583,7 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit, onOpenEditor: () -> Unit = {}
 
     val target = pending
     if (target != null) {
-        val macros = target.buttons.count { it.isMacro && it.macroType == "COMMAND" && it.macroCommand.isNotBlank() }
+        val macros = target.buttons.count { ControlLayoutIO.typesChat(it) }
         // 262..265 = tombol panah (kanan, kiri, bawah, atas): game hanya bergerak bila tombol geraknya diatur ke panah
         val usesArrows = target.buttons.any { !it.isMouseButton && it.keyCode in 262..265 }
         AmberAlert(

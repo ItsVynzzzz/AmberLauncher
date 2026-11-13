@@ -68,3 +68,47 @@ Saat main	En juego
 Saat menu	En men\u00fas
 Menu = inventori, chat, dan layar lain di dalam game.	Men\u00fas = inventario, chat y otras pantallas dentro del juego.
 Semua tombol	Todos los botones
+# Makro urutan aksi
+Variasi Waktu Acak:	Variaci\u00f3n aleatoria de tiempo:
+Mati	Desactivado
+Cara Jalan:	Modo de ejecuci\u00f3n:
+Sekali	Una vez
+Tahan	Mantener
+Nyala/Mati	Act./Desact.
+Diulang terus selama tombol ditahan.	Se repite continuamente mientras se mantiene pulsado el bot\u00f3n.
+Diulang terus sampai tombol diketuk lagi.	Se repite continuamente hasta que se vuelva a tocar el bot\u00f3n.
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Se ejecuta una vez por toque. Toca de nuevo mientras se ejecuta para detenerlo.
+Ulangi:	Repetir:
+Jeda Antar Putaran:	Pausa entre repeticiones:
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	Los tiempos de espera y de mantener var\u00edan un poco al azar para que se sienta menos rob\u00f3tico.
+Langkah Makro:	Pasos del macro:
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	A\u00fan no hay pasos. A\u00f1ade con los botones de abajo o elige una plantilla.
+Tambah Langkah:	A\u00f1adir paso:
+Tekan	Pulsar
+Tekan terus	Mantener pulsado
+Lepas	Soltar
+Tunggu	Esperar
+Gulir	Desplazar
+Ketik	Escribir
+Pindah Slot Hotbar:	Cambiar ranura de la barra r\u00e1pida:
+Templat Cepat (mengganti urutan):	Plantillas r\u00e1pidas (reemplazan la secuencia):
+Perkiraan satu putaran:	Estimado por ciclo:
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	Las teclas que sigan mantenidas se sueltan autom\u00e1ticamente cuando el macro se detiene.
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	Nota: algunos servidores proh\u00edben los macros. \u00dasalos con criterio.
+Klik	Clic
+Naik	Arriba
+Turun	Abajo
+Lama Tunggu:	Duraci\u00f3n de espera:
+Lama Tahan:	Duraci\u00f3n de pulsaci\u00f3n:
+(kosong)	(vac\u00edo)
+Mouse Kiri	Rat\u00f3n izquierdo
+Mouse Kanan	Rat\u00f3n derecho
+Mouse Tengah	Rat\u00f3n central
+Auto Gali	Minar autom\u00e1tico
+Auto Klik Kanan	Clic derecho autom\u00e1tico
+Lompat Terus	Saltar sin parar
+Lari + Lompat	Correr + Saltar
+Makan	Comer
+Buang Item x10	Tirar objeto x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac Secuencia de acciones
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Varias teclas, clics, esperas y escritura en un solo bot\u00f3n.

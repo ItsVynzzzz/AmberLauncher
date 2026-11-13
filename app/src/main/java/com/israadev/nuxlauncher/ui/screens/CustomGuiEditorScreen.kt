@@ -45,6 +45,7 @@ import androidx.compose.ui.window.Dialog
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.controls.ControlLimits
 import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
+import com.israadev.nuxlauncher.core.controls.MacroScript
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.ui.components.NuxBadge
@@ -85,7 +86,7 @@ fun CustomGuiEditorScreen(
     var buttonsList by remember { mutableStateOf(savedButtons.ifEmpty { ControlLayoutManager.getDefaultButtons() }) }
     var selectedButtonId by remember { mutableStateOf<String?>(null) }
     var showKeyPickerForButtonId by remember { mutableStateOf<String?>(null) }
-    var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN" or "COMBO"
+    var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN", "COMBO", atau "STEP_<TAP|HOLD|DOWN|UP>"
     var showResetConfirmDialog by remember { mutableStateOf(false) }
     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
     // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
@@ -895,6 +896,18 @@ fun CustomGuiEditorScreen(
                                         }
                                     }
 
+                                    // Jenis keempat: Urutan Aksi (beberapa key/klik/jeda/ketik dalam satu tombol)
+                                    MacroTypeChip(
+                                        label = "🎬 Urutan Aksi",
+                                        chosen = selectedButton.macroType == "SEQUENCE",
+                                        onClick = {
+                                            buttonsList = buttonsList.map {
+                                                if (it.id == selectedButton.id) it.copy(macroType = "SEQUENCE") else it
+                                            }
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+
                                     // Mode 1: COMMAND
                                     if (selectedButton.macroType == "COMMAND") {
                                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -1130,8 +1143,28 @@ fun CustomGuiEditorScreen(
                                                     inactiveTrackColor = Color(0xFF2E2E2E)
                                                 )
                                             )
+                                            MacroJitterSlider(selectedButton.macroJitterPercent) { percent ->
+                                                buttonsList = buttonsList.map {
+                                                    if (it.id == selectedButton.id) it.copy(macroJitterPercent = percent) else it
+                                                }
+                                            }
                                             Text("Tombol akan menekan & melepas berulang-ulang sangat cepat secara otomatis saat ditekan.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
                                         }
+                                    }
+
+                                    // Mode 4: SEQUENCE (urutan aksi)
+                                    if (selectedButton.macroType == "SEQUENCE") {
+                                        Text("Beberapa key, klik, jeda, dan ketik dalam satu tombol.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
+                                        MacroSequenceEditor(
+                                            button = selectedButton,
+                                            onChange = { updated ->
+                                                buttonsList = buttonsList.map { if (it.id == updated.id) updated else it }
+                                            },
+                                            onPickKey = { kind ->
+                                                keyPickerTargetMode = "STEP_$kind"
+                                                showKeyPickerForButtonId = selectedButton.id
+                                            }
+                                        )
                                     }
                                 }
                             }
@@ -1229,13 +1262,15 @@ fun CustomGuiEditorScreen(
     if (showKeyPickerForButtonId != null) {
         val targetId = showKeyPickerForButtonId!!
         val isComboMode = keyPickerTargetMode == "COMBO"
+        // Langkah makro Urutan Aksi: tombol/klik yang dipilih menjadi satu langkah baru.
+        val isStepMode = keyPickerTargetMode.startsWith("STEP_")
         val targetButton = buttonsList.firstOrNull { it.id == targetId }
 
         NuxKeyPickerDialog(
             comboMode = isComboMode,
             onDismiss = { showKeyPickerForButtonId = null },
             isCurrent = { k ->
-                if (isComboMode || targetButton == null) false
+                if (isComboMode || isStepMode || targetButton == null) false
                 else if (targetButton.isScroll) k.isScroll
                 else if (targetButton.isMouseButton) k.isMouseButton && k.mouseButton == targetButton.mouseButton
                 else !k.isScroll && !k.isMouseButton && k.keyCode == targetButton.keyCode
@@ -1243,7 +1278,12 @@ fun CustomGuiEditorScreen(
             onPick = { keyOpt ->
                 buttonsList = buttonsList.map {
                     if (it.id == targetId) {
-                        if (isComboMode) {
+                        if (isStepMode) {
+                            val token = MacroScript.stepFromPick(keyPickerTargetMode.removePrefix("STEP_"), keyOpt)
+                            if (token != null && it.macroSteps.size < MacroScript.MAX_STEPS) {
+                                it.copy(macroSteps = it.macroSteps + token)
+                            } else it
+                        } else if (isComboMode) {
                             val existing = it.macroComboKeys.ifEmpty {
                                 if (it.macroComboKey != 0) listOf(it.macroComboKey) else emptyList()
                             }

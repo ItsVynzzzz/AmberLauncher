@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+import com.israadev.nuxlauncher.core.controls.models.MacroRunMode
 import java.util.UUID
 import kotlin.math.roundToInt
 
@@ -37,7 +38,7 @@ object ControlLayoutIO {
     private const val MIN_TURBO_MS = 40L
     private const val MAX_TURBO_MS = 1000L
 
-    private val MACRO_TYPES = setOf("COMMAND", "COMBO", "TURBO")
+    private val MACRO_TYPES = setOf("COMMAND", "COMBO", "TURBO", "SEQUENCE")
     private val SYSTEM_ACTIONS = setOf("FPS", "KEYBOARD", "HIDE_GUI", "MENU", "CLOSE")
 
     enum class Reason { TOO_LARGE, NOT_LAYOUT, NO_BUTTONS }
@@ -45,7 +46,8 @@ object ControlLayoutIO {
     sealed class ImportResult {
         /**
          * @param skipped jumlah entri yang dilewati (bukan objek, atau melebihi [MAX_BUTTONS]).
-         * @param macroCommands jumlah tombol makro pengetik chat/perintah, ditampilkan sebagai peringatan.
+         * @param macroCommands jumlah tombol makro pengetik chat/perintah (termasuk urutan aksi yang punya
+         * langkah "ketik"), ditampilkan sebagai peringatan.
          * @param source nama launcher asal bila berkas diubah dari format lain (Pojav/Zalith/Mojo, Zalith 2);
          * kosong untuk berkas Amber sendiri.
          */
@@ -101,6 +103,13 @@ object ControlLayoutIO {
         for (k in b.macroComboKeys) combo.add(k)
         o.add("macroComboKeys", combo)
         o.addProperty("macroTurboIntervalMs", b.macroTurboIntervalMs)
+        val steps = JsonArray()
+        for (t in b.macroSteps) steps.add(t)
+        o.add("macroSteps", steps)
+        o.addProperty("macroRunMode", b.macroRunMode)
+        o.addProperty("macroRepeat", b.macroRepeat)
+        o.addProperty("macroLoopDelayMs", b.macroLoopDelayMs)
+        o.addProperty("macroJitterPercent", b.macroJitterPercent)
         o.addProperty("icon", b.icon)
         o.addProperty("showMode", b.showMode)
         return o
@@ -151,12 +160,19 @@ object ControlLayoutIO {
                 continue
             }
             val b = parseButton(el.asJsonObject, usedIds)
-            if (b.isMacro && b.macroType == "COMMAND" && b.macroCommand.isNotBlank()) macros++
+            if (typesChat(b)) macros++
             out.add(b)
         }
         if (out.isEmpty()) return ImportResult.Failed(Reason.NO_BUTTONS)
         return ImportResult.Ok(out, skipped, macros)
     }
+
+    /** Tombol makro yang mengetik chat/perintah sendiri (makro Chat atau Urutan Aksi dengan langkah ketik). */
+    fun typesChat(b: CustomControlButton): Boolean =
+        b.isMacro && (
+            (b.macroType == "COMMAND" && b.macroCommand.isNotBlank()) ||
+                (b.macroType == "SEQUENCE" && MacroScript.hasTyping(b.macroSteps))
+            )
 
     private fun parseButton(o: JsonObject, usedIds: MutableSet<String>): CustomControlButton {
         val d = CustomControlButton()
@@ -177,6 +193,9 @@ object ControlLayoutIO {
 
         var macroType = o.str("macroType", d.macroType, 16)
         if (macroType !in MACRO_TYPES) macroType = d.macroType
+
+        var runMode = o.str("macroRunMode", d.macroRunMode, 8)
+        if (!MacroRunMode.isValid(runMode)) runMode = MacroRunMode.ONCE
 
         // Mode tampil hanya berlaku untuk tombol biasa. Tombol sistem (menu, FPS, dll.) selalu tampil
         // supaya layout orang lain tidak bisa membuat menu game tidak terjangkau.
@@ -208,7 +227,13 @@ object ControlLayoutIO {
             macroComboKeys = o.intList("macroComboKeys", MAX_COMBO_KEYS),
             macroTurboIntervalMs = o.long("macroTurboIntervalMs", d.macroTurboIntervalMs, MIN_TURBO_MS, MAX_TURBO_MS),
             icon = o.str("icon", d.icon, MAX_ICON),
-            showMode = showMode
+            showMode = showMode,
+            // Langkah makro dari berkas orang lain dirapikan: yang tak dikenal dibuang, angka dibatasi.
+            macroSteps = MacroScript.sanitize(o.strList("macroSteps", MacroScript.MAX_STEPS, MacroScript.MAX_TEXT + 16)),
+            macroRunMode = runMode,
+            macroRepeat = o.int("macroRepeat", d.macroRepeat, 1, MacroScript.MAX_REPEAT),
+            macroLoopDelayMs = o.int("macroLoopDelayMs", d.macroLoopDelayMs, 0, MacroScript.MAX_LOOP_DELAY_MS),
+            macroJitterPercent = o.int("macroJitterPercent", d.macroJitterPercent, 0, MacroScript.MAX_JITTER)
         )
     }
 
@@ -249,6 +274,18 @@ object ControlLayoutIO {
     private fun JsonObject.float(key: String, def: Float, min: Float, max: Float): Float {
         val v = num(key) ?: return def
         return v.toFloat().coerceIn(min, max)
+    }
+
+    private fun JsonObject.strList(key: String, maxItems: Int, maxLen: Int): List<String> {
+        val e = get(key)
+        if (e == null || !e.isJsonArray) return emptyList()
+        val out = ArrayList<String>()
+        for (item in e.asJsonArray) {
+            if (out.size >= maxItems) break
+            if (!item.isJsonPrimitive || !item.asJsonPrimitive.isString) continue
+            out.add(item.asString.take(maxLen))
+        }
+        return out
     }
 
     private fun JsonObject.intList(key: String, maxItems: Int): List<Int> {

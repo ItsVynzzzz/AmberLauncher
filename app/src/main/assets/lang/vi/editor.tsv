@@ -68,3 +68,47 @@ Saat main	Khi ch\u01a1i
 Saat menu	Trong menu
 Menu = inventori, chat, dan layar lain di dalam game.	Menu = t\u00fai \u0111\u1ed3, chat v\u00e0 c\u00e1c m\u00e0n h\u00ecnh kh\u00e1c trong game.
 Semua tombol	T\u1ea5t c\u1ea3 n\u00fat
+# Makro urutan aksi
+Variasi Waktu Acak:	Bi\u1ebfn thi\u00ean th\u1eddi gian ng\u1eabu nhi\u00ean:
+Mati	T\u1eaft
+Cara Jalan:	Ch\u1ebf \u0111\u1ed9 ch\u1ea1y:
+Sekali	M\u1ed9t l\u1ea7n
+Tahan	Gi\u1eef
+Nyala/Mati	B\u1eadt/T\u1eaft
+Diulang terus selama tombol ditahan.	L\u1eb7p li\u00ean t\u1ee5c trong khi gi\u1eef n\u00fat.
+Diulang terus sampai tombol diketuk lagi.	L\u1eb7p li\u00ean t\u1ee5c cho \u0111\u1ebfn khi ch\u1ea1m n\u00fat l\u1ea7n n\u1eefa.
+Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Ch\u1ea1y m\u1ed9t l\u1ea7n m\u1ed7i l\u1ea7n ch\u1ea1m. Ch\u1ea1m l\u1ea1i khi \u0111ang ch\u1ea1y \u0111\u1ec3 d\u1eebng.
+Ulangi:	L\u1eb7p l\u1ea1i:
+Jeda Antar Putaran:	Ngh\u1ec9 gi\u1eefa c\u00e1c v\u00f2ng:
+Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.	Th\u1eddi gian ch\u1edd v\u00e0 gi\u1eef \u0111\u01b0\u1ee3c d\u1ecbch chuy\u1ec3n ng\u1eabu nhi\u00ean m\u1ed9t ch\u00fat \u0111\u1ec3 b\u1edbt c\u1ee9ng nh\u1eafc.
+Langkah Makro:	C\u00e1c b\u01b0\u1edbc macro:
+Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.	Ch\u01b0a c\u00f3 b\u01b0\u1edbc n\u00e0o. Th\u00eam b\u1eb1ng c\u00e1c n\u00fat b\u00ean d\u01b0\u1edbi ho\u1eb7c ch\u1ecdn m\u1eabu.
+Tambah Langkah:	Th\u00eam b\u01b0\u1edbc:
+Tekan	Nh\u1ea5n
+Tekan terus	Nh\u1ea5n gi\u1eef
+Lepas	Th\u1ea3
+Tunggu	Ch\u1edd
+Gulir	Cu\u1ed9n
+Ketik	G\u00f5
+Pindah Slot Hotbar:	\u0110\u1ed5i \u00f4 thanh nhanh:
+Templat Cepat (mengganti urutan):	M\u1eabu nhanh (thay th\u1ebf chu\u1ed7i):
+Perkiraan satu putaran:	\u01af\u1edbc t\u00ednh m\u1ed7i v\u00f2ng:
+Tombol yang masih tertahan otomatis dilepas saat makro berhenti.	C\u00e1c ph\u00edm \u0111ang gi\u1eef s\u1ebd t\u1ef1 \u0111\u1ed9ng \u0111\u01b0\u1ee3c th\u1ea3 khi macro d\u1eebng.
+Catatan: sebagian server melarang makro. Gunakan dengan bijak.	L\u01b0u \u00fd: m\u1ed9t s\u1ed1 m\u00e1y ch\u1ee7 c\u1ea5m macro. H\u00e3y d\u00f9ng m\u1ed9t c\u00e1ch kh\u00f4n ngoan.
+Klik	Nh\u1ea5p
+Naik	L\u00ean
+Turun	Xu\u1ed1ng
+Lama Tunggu:	Th\u1eddi gian ch\u1edd:
+Lama Tahan:	Th\u1eddi gian gi\u1eef:
+(kosong)	(tr\u1ed1ng)
+Mouse Kiri	Chu\u1ed9t tr\u00e1i
+Mouse Kanan	Chu\u1ed9t ph\u1ea3i
+Mouse Tengah	Chu\u1ed9t gi\u1eefa
+Auto Gali	T\u1ef1 \u0111\u1ed9ng \u0111\u00e0o
+Auto Klik Kanan	T\u1ef1 \u0111\u1ed9ng nh\u1ea5p ph\u1ea3i
+Lompat Terus	Nh\u1ea3y li\u00ean t\u1ee5c
+Lari + Lompat	Ch\u1ea1y + Nh\u1ea3y
+Makan	\u0102n
+Buang Item x10	V\u1ee9t v\u1eadt ph\u1ea9m x10
+\ud83c\udfac Urutan Aksi	\ud83c\udfac Chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
+Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Nhi\u1ec1u ph\u00edm, nh\u1ea5p chu\u1ed9t, th\u1eddi gian ch\u1edd v\u00e0 g\u00f5 ch\u1eef trong m\u1ed9t n\u00fat.

@@ -34,6 +34,11 @@ import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
 import com.israadev.nuxlauncher.core.controls.JoystickLogic
+import com.israadev.nuxlauncher.core.controls.MacroIO
+import com.israadev.nuxlauncher.core.controls.MacroRegistry
+import com.israadev.nuxlauncher.core.controls.MacroRunner
+import com.israadev.nuxlauncher.core.controls.MacroScript
+import com.israadev.nuxlauncher.core.controls.models.MacroRunMode
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.movtery.zalithlauncher.bridge.CURSOR_DISABLED
@@ -85,6 +90,10 @@ fun GameControlsLayer(
     inMenu: Boolean = false
 ) {
     val density = LocalDensity.current
+    // Lapisan tombol hilang (game ditutup): hentikan semua makro supaya tidak ada yang jalan sendiri.
+    DisposableEffect(Unit) {
+        onDispose { MacroRegistry.stopAll() }
+    }
     buttons.forEach { btn ->
         key(btn.id) {
             val widthPx = with(density) { btn.widthDp.dp.toPx() }
@@ -138,6 +147,25 @@ fun GameControlsLayer(
  * perintahnya setengah terkirim. Karena itu pengetikan jalan di wadah sendiri, bukan di komposisi tombol.
  */
 private val macroTypingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+/** Menyalurkan langkah makro "Urutan Aksi" ke input game. */
+private object BridgeMacroIO : MacroIO {
+    override fun key(code: Int, down: Boolean) {
+        CallbackBridge.sendKeyPress(code, down)
+    }
+
+    override fun mouse(button: Int, down: Boolean) {
+        CallbackBridge.putMouseEvent(button, down)
+    }
+
+    override fun scroll(direction: Int) {
+        CallbackBridge.sendScroll(0.0, if (direction >= 0) 1.0 else -1.0)
+    }
+
+    override fun char(c: Char) {
+        CallbackBridge.sendChar(c, 0)
+    }
+}
 
 private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
@@ -263,6 +291,9 @@ fun CustomVirtualButton(
     val coroutineScope = rememberCoroutineScope()
     var turboJob by remember { mutableStateOf<Job?>(null) }
     val spec = remember(button) { skinSpecFor(button) }
+    // Makro Urutan Aksi: langkah diurai sekali per perubahan; tombol tampak ditekan selama makronya jalan.
+    val isSequence = button.isMacro && button.macroType == "SEQUENCE"
+    val script = remember(button.macroSteps) { MacroScript.parseAll(button.macroSteps) }
 
     // Nilai terbaru tombol dibaca saat dilepas dari layar, bukan salinan saat pertama disusun.
     val currentButton by rememberUpdatedState(button)
@@ -276,6 +307,11 @@ fun CustomVirtualButton(
             // Kombinasi tombol yang sedang ditahan juga dilepas (mis. tombol hilang karena mode
             // berganti ke menu saat jari masih di atasnya), kalau tidak tombolnya tetap tertahan.
             val b = currentButton
+            // Makro berulang (tahan / nyala-mati) berhenti bila tombolnya hilang dari layar; makro sekali jalan
+            // dibiarkan selesai (mis. mengetik perintah yang membuka chat).
+            if (b.isMacro && b.macroType == "SEQUENCE" && b.macroRunMode != MacroRunMode.ONCE) {
+                MacroRegistry.stop(b.id)
+            }
             val plainToggle = !b.isScroll && (
                 (b.isToggle && !(b.isMacro && b.macroType == "COMMAND")) ||
                     (b.isMacro && b.macroType == "COMBO")
@@ -369,7 +405,7 @@ fun CustomVirtualButton(
 
     val base = modifier
         .size(width = button.widthDp.dp, height = button.heightDp.dp)
-        .drawBehind { drawControlButton(spec, isPressed) }
+        .drawBehind { drawControlButton(spec, isPressed || (isSequence && MacroRegistry.isRunning(button.id))) }
 
     Box(
         modifier = if (simple) {
@@ -412,7 +448,7 @@ fun CustomVirtualButton(
                 }
             }
         } else {
-            base.pointerInput(button.id, button.isToggle, button.isMacro, button.macroType, button.macroCommand, button.macroComboKey, button.macroComboKeys, button.macroTurboIntervalMs) {
+            base.pointerInput(button.id, button.isToggle, button.isMacro, button.macroType, button.macroCommand, button.macroComboKey, button.macroComboKeys, button.macroTurboIntervalMs, button.macroSteps, button.macroRunMode, button.macroRepeat, button.macroLoopDelayMs, button.macroJitterPercent) {
                 detectTapGestures(
                     onPress = {
                         if (button.isMacro) {
@@ -493,6 +529,29 @@ fun CustomVirtualButton(
                                         isPressed = false
                                     }
                                 }
+                                "SEQUENCE" -> {
+                                    val id = button.id
+                                    val mode = button.macroRunMode
+                                    if (MacroRegistry.isRunning(id)) {
+                                        // Ketuk saat makro berjalan = hentikan (tombol dilepas pun melepas semua tombol tertahan).
+                                        MacroRegistry.stop(id)
+                                    } else if (script.isNotEmpty()) {
+                                        val repeat = if (mode == MacroRunMode.ONCE) {
+                                            button.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT)
+                                        } else {
+                                            0 // tanpa batas, berhenti saat dilepas / diketuk lagi
+                                        }
+                                        val loopDelay = button.macroLoopDelayMs.toLong()
+                                        val jitterPct = button.macroJitterPercent
+                                        MacroRegistry.start(id, macroTypingScope) {
+                                            MacroRunner.run(BridgeMacroIO, script, repeat, loopDelay, jitterPct)
+                                        }
+                                        if (mode == MacroRunMode.HOLD) {
+                                            tryAwaitRelease()
+                                            MacroRegistry.stop(id)
+                                        }
+                                    }
+                                }
                                 "TURBO" -> {
                                     val interval = button.macroTurboIntervalMs.coerceAtLeast(30L)
                                     val downTime = (interval / 2).coerceAtLeast(15L)
@@ -504,9 +563,9 @@ fun CustomVirtualButton(
                                             turboJob = coroutineScope.launch {
                                                 while (isActive) {
                                                     sendPress(true)
-                                                    delay(downTime)
+                                                    delay(MacroRunner.jitter(downTime, button.macroJitterPercent))
                                                     sendPress(false)
-                                                    delay(upTime)
+                                                    delay(MacroRunner.jitter(upTime, button.macroJitterPercent))
                                                 }
                                             }
                                         } else {
@@ -519,9 +578,9 @@ fun CustomVirtualButton(
                                         val job = coroutineScope.launch {
                                             while (isActive) {
                                                 sendPress(true)
-                                                delay(downTime)
+                                                delay(MacroRunner.jitter(downTime, button.macroJitterPercent))
                                                 sendPress(false)
-                                                delay(upTime)
+                                                delay(MacroRunner.jitter(upTime, button.macroJitterPercent))
                                             }
                                         }
                                         tryAwaitRelease()

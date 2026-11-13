@@ -1,0 +1,38 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+Cari world di CurseForge...	Search worlds on CurseForge...
+Jelajahi CurseForge	Browse CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	There are no worlds in this instance yet. Download one from CurseForge or import a .zip file.
+Terakhir dimainkan {0} · {1}	Last played {0} · {1}
+Hapus world?	Delete world?
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Are you sure you want to delete the world "{0}"? All builds and progress in it will be lost permanently and cannot be recovered.
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	Could not delete the world. Make sure the game is not running.
+Mengimpor world	Importing world
+Membaca arsip world...	Reading world archive...
+Mengekstrak world...	Extracting world...
+Mengekstrak world... {0}/{1}	Extracting world... {0}/{1}
+{0} / {1} file	{0} / {1} files
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	The launcher is checking and extracting the world. Please wait.
+Mengunduh {0}... {1}%	Downloading {0}... {1}%
+Gagal mengimpor world: {~0}	Failed to import world: {0}
+World "{0}" berhasil diimpor!	World "{0}" imported!
+Berhasil mengimpor {0} world!	Imported {0} world(s)!
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	Imported {0} world(s); {1} file(s) failed to import!
+World {0} berhasil dipasang!	World {0} installed!
+Berhasil memasang {0} world dari {1}!	Installed {0} worlds from {1}!
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	This archive is not a Minecraft Java world (level.dat was not found).
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Bedrock worlds (.mcworld) are not supported. This launcher only installs Minecraft Java worlds.
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	The level.dat file in this archive is corrupted, so the world cannot be installed.
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	The world is too large (4 GB maximum); installation was cancelled.
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	The world archive is too large (2 GB maximum); installation was cancelled.
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	The archive contains too many files; installation was cancelled.
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	The archive contains more than 20 worlds; installation was cancelled.
+Arsip ditolak karena berisi path yang tidak aman.	The archive was rejected because it contains unsafe paths.
+Terlalu banyak world dengan nama yang sama.	There are too many worlds with the same name.
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Storage is full. Free up some space and try again.
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Not enough storage to install this world. Free up about {0} MB and try again.
+World belum didukung untuk instance mesin Rust.	Worlds are not supported for Rust engine instances yet.
+Versi ini tidak punya berkas untuk diunduh.	This version has no file to download.
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	This world is shared in an archive format that is not supported yet. Download it manually, extract it, compress it again as a .zip, and import it.
+Berkas world harus berformat .zip	The world file must be a .zip
+File world harus berformat .zip	The world file must be a .zip
+Gagal membuat folder sementara	Could not create a temporary folder

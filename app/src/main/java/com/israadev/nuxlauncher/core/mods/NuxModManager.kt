@@ -14,7 +14,11 @@ import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.utils.SafePaths
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -116,6 +120,7 @@ object NuxModManager {
             "resourcepacks" -> File(gameDir, "resourcepacks")
             "shaderpacks" -> File(gameDir, "shaderpacks")
             "modpacks" -> File(gameDir, "modpacks")
+            WorldInstaller.ITEM_TYPE -> File(gameDir, "saves")
             else -> File(gameDir, "mods")
         }
         if (!dir.exists()) dir.mkdirs()
@@ -131,6 +136,10 @@ object NuxModManager {
         itemType: String,
         worldName: String? = null
     ): List<InstalledModItem> = withContext(Dispatchers.IO) {
+        // World: tiap folder di saves yang punya level.dat (mesin Rust belum mendukung world)
+        if (itemType == WorldInstaller.ITEM_TYPE) {
+            return@withContext if (HorizonEngine.isEngine(instance.loader)) emptyList() else listWorldItems(context, instance)
+        }
         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
         if (HorizonEngine.isEngine(instance.loader)) {
             return@withContext HorizonContent.installed(HorizonEngine.engineHome(context), itemType)
@@ -226,6 +235,8 @@ object NuxModManager {
         item: InstalledModItem,
         worldName: String? = null
     ): Boolean = withContext(Dispatchers.IO) {
+        // World tidak bisa dinonaktifkan (ganti nama folder akan membuatnya hilang dari daftar game)
+        if (itemType == WorldInstaller.ITEM_TYPE) return@withContext false
         try {
             val targetDir = getTargetDir(context, instance, itemType, worldName)
             val currentFile = File(targetDir, item.originalFilename)
@@ -384,6 +395,11 @@ object NuxModManager {
             // Nama berkas datang dari aplikasi lain: buang bagian folder ("../") sebelum dipakai sebagai path
             fileName = SafePaths.fileName(fileName)
 
+            // World: arsip .zip diekstrak ke saves (dengan pemeriksaan level.dat), bukan disalin mentah
+            if (itemType == WorldInstaller.ITEM_TYPE) {
+                return@withContext importWorldArchive(context, instance, uri, fileName, onProgress)
+            }
+
             // Mesin Rust: diperiksa dengan aturan mesin lalu masuk ke folder mesin
             if (HorizonEngine.isEngine(instance.loader)) {
                 return@withContext importEngineFile(context, uri, itemType, fileName)
@@ -430,6 +446,158 @@ object NuxModManager {
             Result.success(fileName)
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // WORLD: daftar, impor .zip lokal, dan unduhan CurseForge ke folder saves
+    // ---------------------------------------------------------------------------------------------
+
+    private const val MSG_WORLD_NO_ENGINE = "World belum didukung untuk instance mesin Rust."
+
+    /** Total ukuran berkas di dalam [dir] (kedalaman dibatasi supaya tautan simbolik yang berputar tidak membuat macet). */
+    private fun folderSize(dir: File): Long =
+        dir.walkTopDown().maxDepth(12).filter { it.isFile }.sumOf { it.length() }
+
+    /** Semua world di saves instance, yang terakhir dimainkan di atas. Tanggal terakhir dimainkan ada di kolom `version`. */
+    private fun listWorldItems(context: Context, instance: Instance): List<InstalledModItem> {
+        val savesDir = File(InstanceManager.getInstanceGameDir(context, instance), "saves")
+        val dirs = savesDir.listFiles { f -> !f.name.startsWith(".") && WorldInstaller.isWorldDir(f) } ?: return emptyList()
+        val format = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT)
+        return dirs.map { dir ->
+            val played = File(dir, "level.dat").lastModified().takeIf { it > 0L } ?: dir.lastModified()
+            played to InstalledModItem(
+                id = dir.name,
+                filename = dir.name,
+                originalFilename = dir.name,
+                name = dir.name,
+                description = "",
+                version = if (played > 0L) format.format(java.util.Date(played)) else "",
+                category = "World",
+                isEnabled = true,
+                sizeBytes = folderSize(dir),
+                itemType = WorldInstaller.ITEM_TYPE,
+                filePath = dir.absolutePath
+            )
+        }.sortedByDescending { it.first }.map { it.second }
+    }
+
+    /** Mengubah galat penyimpanan penuh dari sistem menjadi pesan yang bisa dipahami pengguna. */
+    private fun friendlyWorldError(e: Exception): Exception {
+        val msg = e.message.orEmpty()
+        return if (e !is WorldImportException && (msg.contains("ENOSPC") || msg.contains("No space left", ignoreCase = true))) {
+            WorldImportException(WorldInstaller.MSG_DISK_FULL)
+        } else {
+            e
+        }
+    }
+
+    /** Impor arsip .zip world dari [uri]: disalin ke folder sementara, diperiksa, lalu diekstrak ke saves. */
+    private suspend fun importWorldArchive(
+        context: Context,
+        instance: Instance,
+        uri: Uri,
+        fileName: String,
+        onProgress: ((statusText: String, current: Int, total: Int) -> Unit)?
+    ): Result<String> {
+        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        if (!fileName.lowercase().endsWith(".zip")) {
+            return Result.failure(IllegalArgumentException("File world harus berformat .zip"))
+        }
+        val gameDir = InstanceManager.getInstanceGameDir(context, instance)
+        val job = currentCoroutineContext()[Job]
+        var tempDir: File? = null
+        return try {
+            tempDir = WorldInstaller.newTempDir(gameDir)
+            val archive = File(tempDir, "world.zip")
+            onProgress?.invoke("Menyalin file $fileName...", 0, 0)
+            val input = context.contentResolver.openInputStream(uri)
+                ?: return Result.failure(Exception("Gagal membaca file sumber"))
+            input.use { WorldInstaller.copyLimited(it, archive, checkCancelled = { job?.ensureActive() }) }
+            onProgress?.invoke("Membaca arsip world...", 0, 0)
+            val names = WorldInstaller.install(
+                zipFile = archive,
+                savesDir = File(gameDir, "saves"),
+                stagingParent = gameDir,
+                fallbackName = WorldInstaller.stemOf(fileName),
+                checkCancelled = { job?.ensureActive() },
+                onProgress = { status, cur, tot -> onProgress?.invoke(status, cur, tot) }
+            )
+            // Satu nama per baris: arsip bisa berisi beberapa world dan layar Mod menghitungnya
+            Result.success(names.joinToString("\n"))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(friendlyWorldError(e))
+        } finally {
+            tempDir?.deleteRecursively()
+        }
+    }
+
+    /** Unduh arsip world dari CurseForge (satu berkas .zip) lalu pasang ke saves. Mengembalikan nama folder yang dibuat. */
+    private suspend fun downloadWorld(
+        context: Context,
+        instance: Instance,
+        version: ModrinthVersion,
+        onProgress: (statusText: String) -> Unit
+    ): Result<List<String>> {
+        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
+            ?: return Result.failure(WorldImportException("Versi ini tidak punya berkas untuk diunduh."))
+        val fileName = SafePaths.fileName(file.filename)
+        val lower = fileName.lowercase()
+        if (!lower.endsWith(".zip")) {
+            val unsupported = lower.endsWith(".rar") || lower.endsWith(".7z")
+            return Result.failure(
+                WorldImportException(
+                    if (unsupported) "World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor."
+                    else "Berkas world harus berformat .zip"
+                )
+            )
+        }
+        if (file.size > WorldInstaller.MAX_ARCHIVE_BYTES) return Result.failure(WorldImportException(WorldInstaller.MSG_ARCHIVE_TOO_BIG))
+
+        val gameDir = InstanceManager.getInstanceGameDir(context, instance)
+        val job = currentCoroutineContext()[Job]
+        var tempDir: File? = null
+        return try {
+            tempDir = WorldInstaller.newTempDir(gameDir)
+            val archive = File(tempDir, "world.zip")
+            onProgress("Mengunduh $fileName...")
+            var lastPercent = -1
+            downloadFile(
+                url = file.url,
+                destFile = archive,
+                maxBytes = WorldInstaller.MAX_ARCHIVE_BYTES,
+                expectedBytes = file.size,
+                onBytes = { read, total ->
+                    job?.ensureActive()
+                    if (total > 0L) {
+                        val percent = (read * 100L / total).toInt().coerceIn(0, 100)
+                        if (percent != lastPercent) {
+                            lastPercent = percent
+                            onProgress("Mengunduh $fileName... $percent%")
+                        }
+                    }
+                }
+            )
+            verifyHashes(archive, file.hashes)
+            onProgress("Membaca arsip world...")
+            val names = WorldInstaller.install(
+                zipFile = archive,
+                savesDir = File(gameDir, "saves"),
+                stagingParent = gameDir,
+                fallbackName = WorldInstaller.stemOf(fileName),
+                checkCancelled = { job?.ensureActive() },
+                onProgress = { _, cur, tot -> if (tot > 0) onProgress("Mengekstrak world... $cur/$tot") }
+            )
+            Result.success(names)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(friendlyWorldError(e))
+        } finally {
+            tempDir?.deleteRecursively()
         }
     }
 
@@ -650,7 +818,11 @@ object NuxModManager {
                 Result.failure(e)
             }
         }
-        if (source == SOURCE_CURSEFORGE && !engineSearch) {
+        if (itemType == WorldInstaller.ITEM_TYPE && engineSearch) {
+            return@withContext Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        }
+        // World hanya ada di CurseForge (Modrinth tidak punya jenis proyek world)
+        if ((source == SOURCE_CURSEFORGE || itemType == WorldInstaller.ITEM_TYPE) && !engineSearch) {
             return@withContext CurseForgeApi.search(
                 queryText = query,
                 itemType = itemType,
@@ -922,6 +1094,9 @@ object NuxModManager {
         worldName: String? = null,
         onProgress: (statusText: String) -> Unit = {}
     ): Result<List<String>> = withContext(Dispatchers.IO) {
+        if (itemType == WorldInstaller.ITEM_TYPE) {
+            return@withContext downloadWorld(context, instance, version, onProgress)
+        }
         if (HorizonEngine.isEngine(instance.loader)) {
             return@withContext downloadForEngine(context, version, itemType, onProgress)
         }
@@ -1378,7 +1553,13 @@ object NuxModManager {
      * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
      * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
      */
-    private fun downloadFile(url: String, destFile: File, maxBytes: Long = Long.MAX_VALUE) {
+    private fun downloadFile(
+        url: String,
+        destFile: File,
+        maxBytes: Long = Long.MAX_VALUE,
+        expectedBytes: Long = 0L,
+        onBytes: ((read: Long, total: Long) -> Unit)? = null
+    ) {
         if (!url.trim().startsWith("https://", ignoreCase = true)) {
             throw java.io.IOException("Alamat unduhan ditolak karena tidak memakai HTTPS")
         }
@@ -1394,6 +1575,7 @@ object NuxModManager {
                     throw Exception("Gagal mengunduh file: HTTP ${response.code}")
                 }
                 val body = response.body ?: throw Exception("Body stream kosong")
+                val promised = if (expectedBytes > 0L) expectedBytes else body.contentLength().coerceAtLeast(0L)
                 body.byteStream().use { input ->
                     FileOutputStream(partFile).use { output ->
                         val buffer = ByteArray(64 * 1024)
@@ -1405,6 +1587,7 @@ object NuxModManager {
                             // Sumber yang mengirim lebih banyak dari yang dijanjikan dihentikan di tengah jalan
                             if (total > maxBytes) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
                             output.write(buffer, 0, read)
+                            onBytes?.invoke(total, promised)
                         }
                     }
                 }

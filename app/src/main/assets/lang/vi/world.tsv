@@ -1,0 +1,42 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+World	Thế giới
+worlds	thế giới
+.zip (World)	.zip (Thế giới)
+World (.zip)	Thế giới (.zip)
+Cari world di CurseForge...	Tìm thế giới trên CurseForge...
+Jelajahi CurseForge	Khám phá CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Instance này chưa có thế giới nào. Hãy tải từ CurseForge hoặc nhập tệp .zip.
+Terakhir dimainkan {0} · {1}	Chơi lần cuối {0} · {1}
+Hapus world?	Xóa thế giới?
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Bạn có chắc muốn xóa thế giới "{0}"? Mọi công trình và tiến trình trong đó sẽ mất vĩnh viễn và không thể khôi phục.
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	Không thể xóa thế giới. Hãy đảm bảo game không đang chạy.
+Mengimpor world	Đang nhập thế giới
+Membaca arsip world...	Đang đọc tệp nén thế giới...
+Mengekstrak world...	Đang giải nén thế giới...
+Mengekstrak world... {0}/{1}	Đang giải nén thế giới... {0}/{1}
+{0} / {1} file	{0} / {1} tệp
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	Launcher đang kiểm tra và giải nén thế giới. Vui lòng đợi.
+Mengunduh {0}... {1}%	Đang tải {0}... {1}%
+Gagal mengimpor world: {~0}	Không thể nhập thế giới: {0}
+World "{0}" berhasil diimpor!	Đã nhập thế giới "{0}"!
+Berhasil mengimpor {0} world!	Đã nhập {0} thế giới!
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	Đã nhập {0} thế giới; {1} tệp nhập thất bại!
+World {0} berhasil dipasang!	Đã cài thế giới {0}!
+Berhasil memasang {0} world dari {1}!	Đã cài {0} thế giới từ {1}!
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Tệp nén này không phải thế giới Minecraft Java (không tìm thấy level.dat).
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Không hỗ trợ thế giới Bedrock (.mcworld). Launcher này chỉ cài thế giới Minecraft Java.
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	Tệp level.dat trong tệp nén này bị hỏng nên không thể cài thế giới.
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	Thế giới quá lớn (tối đa 4 GB), đã hủy cài đặt.
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	Tệp nén thế giới quá lớn (tối đa 2 GB), đã hủy cài đặt.
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	Tệp nén chứa quá nhiều tệp, đã hủy cài đặt.
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	Tệp nén chứa hơn 20 thế giới, đã hủy cài đặt.
+Arsip ditolak karena berisi path yang tidak aman.	Tệp nén bị từ chối vì chứa đường dẫn không an toàn.
+Terlalu banyak world dengan nama yang sama.	Có quá nhiều thế giới trùng tên.
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Bộ nhớ đã đầy. Hãy giải phóng dung lượng rồi thử lại.
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Không đủ bộ nhớ để cài thế giới này. Hãy giải phóng khoảng {0} MB rồi thử lại.
+World belum didukung untuk instance mesin Rust.	Chưa hỗ trợ thế giới cho instance dùng engine Rust.
+Versi ini tidak punya berkas untuk diunduh.	Phiên bản này không có tệp để tải xuống.
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Thế giới này được chia sẻ ở định dạng nén chưa được hỗ trợ. Hãy tải thủ công, giải nén, nén lại thành .zip rồi nhập.
+Berkas world harus berformat .zip	Tệp thế giới phải có định dạng .zip
+File world harus berformat .zip	Tệp thế giới phải có định dạng .zip
+Gagal membuat folder sementara	Không thể tạo thư mục tạm

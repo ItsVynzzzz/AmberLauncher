@@ -1,0 +1,38 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+worlds	mga world
+Cari world di CurseForge...	Maghanap ng world sa CurseForge...
+Jelajahi CurseForge	Mag-browse sa CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Wala pang world sa instance na ito. Mag-download mula sa CurseForge o mag-import ng .zip file.
+Terakhir dimainkan {0} · {1}	Huling nilaro {0} · {1}
+Hapus world?	Burahin ang world?
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Sigurado ka bang buburahin ang world na "{0}"? Permanenteng mawawala ang lahat ng build at progress dito at hindi na ito mababawi.
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	Hindi mabura ang world. Siguraduhing hindi tumatakbo ang game.
+Mengimpor world	Ini-import ang world
+Membaca arsip world...	Binabasa ang world archive...
+Mengekstrak world...	Ine-extract ang world...
+Mengekstrak world... {0}/{1}	Ine-extract ang world... {0}/{1}
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	Sinusuri at ine-extract ng launcher ang world. Pakihintay.
+Mengunduh {0}... {1}%	Dina-download ang {0}... {1}%
+Gagal mengimpor world: {~0}	Nabigong i-import ang world: {0}
+World "{0}" berhasil diimpor!	Na-import ang world na "{0}"!
+Berhasil mengimpor {0} world!	Na-import ang {0} world!
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	Na-import ang {0} world; {1} file ang hindi na-import!
+World {0} berhasil dipasang!	Na-install ang world na {0}!
+Berhasil memasang {0} world dari {1}!	Na-install ang {0} world mula sa {1}!
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Hindi Minecraft Java world ang archive na ito (hindi nakita ang level.dat).
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Hindi suportado ang mga Bedrock world (.mcworld). Mga Minecraft Java world lang ang ini-install ng launcher na ito.
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	Sira ang level.dat file sa archive na ito, kaya hindi ma-install ang world.
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	Masyadong malaki ang world (hanggang 4 GB lang); kinansela ang pag-install.
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	Masyadong malaki ang world archive (hanggang 2 GB lang); kinansela ang pag-install.
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	Masyadong maraming file sa archive; kinansela ang pag-install.
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	May higit sa 20 world ang archive; kinansela ang pag-install.
+Arsip ditolak karena berisi path yang tidak aman.	Tinanggihan ang archive dahil may mga hindi ligtas na path ito.
+Terlalu banyak world dengan nama yang sama.	Masyadong maraming world na magkapareho ang pangalan.
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Puno na ang storage. Magbakante ng espasyo at subukan ulit.
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Kulang ang storage para ma-install ang world na ito. Magbakante ng mga {0} MB at subukan ulit.
+World belum didukung untuk instance mesin Rust.	Hindi pa suportado ang mga world sa mga instance na gumagamit ng Rust engine.
+Versi ini tidak punya berkas untuk diunduh.	Walang file na ma-download sa bersyong ito.
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Ang world na ito ay ibinabahagi sa archive format na hindi pa suportado. I-download ito nang manu-mano, i-extract, i-compress ulit bilang .zip, at i-import.
+Berkas world harus berformat .zip	Dapat .zip ang world file
+File world harus berformat .zip	Dapat .zip ang world file
+Gagal membuat folder sementara	Hindi nakagawa ng pansamantalang folder

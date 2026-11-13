@@ -44,6 +44,7 @@ object CurseForgeMapper {
         "resourcepacks" -> 12
         "shaderpacks" -> 6552
         "datapacks" -> 6945
+        "worlds" -> 17
         else -> 6
     }
 
@@ -53,6 +54,7 @@ object CurseForgeMapper {
         "shaderpacks" -> "shader"
         "datapacks" -> "datapack"
         "modpacks" -> "modpack"
+        "worlds" -> "world"
         else -> "mod"
     }
 

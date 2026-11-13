@@ -48,6 +48,7 @@ import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.mods.CurseForgeApi
 import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.mods.WorldInfo
+import com.israadev.nuxlauncher.core.mods.WorldInstaller
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.components.*
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -87,7 +88,7 @@ private fun isValidExtensionForType(itemType: String, filename: String, rust: Bo
     return when (itemType) {
         "mods" -> if (rust) lower.endsWith(".hmod") else lower.endsWith(".jar")
         "modpacks" -> lower.endsWith(".mrpack") || lower.endsWith(".zip")
-        "shaderpacks", "resourcepacks", "datapacks" -> lower.endsWith(".zip")
+        "shaderpacks", "resourcepacks", "datapacks", "worlds" -> lower.endsWith(".zip")
         else -> false
     }
 }
@@ -99,6 +100,7 @@ private fun getAllowedExtensionLabel(itemType: String, rust: Boolean = false): S
         "shaderpacks" -> ".zip (Shaderpack)"
         "resourcepacks" -> ".zip (Resource Pack)"
         "datapacks" -> ".zip (Datapack)"
+        "worlds" -> ".zip (World)"
         else -> "format yang didukung"
     }
 }
@@ -224,13 +226,17 @@ fun ModsScreen(
     var browseSource by remember { mutableStateOf(NuxModManager.SOURCE_MODRINTH) }
     var showKeyDialog by remember { mutableStateOf(false) }
     var keyProblem by remember { mutableStateOf(false) }
-    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
+    // World hanya ada di CurseForge (Modrinth tidak punya jenis ini), jadi sumbernya dikunci di tab World
+    val worldsTab = activeType == WorldInstaller.ITEM_TYPE
+    val isCurseForge = (browseSource == NuxModManager.SOURCE_CURSEFORGE || worldsTab) && !rustInstance
     // Mesin Rust: mod selalu dari katalog Horizon; shader dan resource pack dari Horizon atau Modrinth (pilihan pengguna)
     var rustSource by remember { mutableStateOf(NuxModManager.SOURCE_HORIZON) }
     val rustMods = rustInstance && activeType == HorizonContent.TYPE_MODS
     val rustHorizon = rustInstance && (rustMods || rustSource == NuxModManager.SOURCE_HORIZON)
     val activeSource = if (rustInstance) {
         if (rustHorizon) NuxModManager.SOURCE_HORIZON else NuxModManager.SOURCE_MODRINTH
+    } else if (worldsTab) {
+        NuxModManager.SOURCE_CURSEFORGE
     } else {
         browseSource
     }
@@ -384,7 +390,59 @@ fun ModsScreen(
                 if (validUris.isEmpty()) return@launch
 
                 // 2. Import file yang valid
-                if (activeType == "modpacks") {
+                if (activeType == WorldInstaller.ITEM_TYPE) {
+                    isImportingModpack = true
+                    var importedWorlds = 0
+                    var failedFiles = 0
+                    var lastWorld = ""
+                    var lastError: String? = null
+
+                    for ((uri, fileName) in validUris) {
+                        modpackImportName = fileName
+                        modpackImportStatus = "Menyalin file $fileName..."
+                        modpackImportCurrent = 0
+                        modpackImportTotal = 0
+
+                        val importRes = NuxModManager.importLocalFile(
+                            context = context,
+                            instance = inst,
+                            itemType = activeType,
+                            uri = uri,
+                            onProgress = { statusText, cur, tot ->
+                                modpackImportStatus = statusText
+                                modpackImportCurrent = cur
+                                modpackImportTotal = tot
+                            }
+                        )
+
+                        if (importRes.isSuccess) {
+                            // Nama world yang dibuat dipisah baris baru (satu arsip bisa berisi beberapa world)
+                            val names = importRes.getOrNull().orEmpty().split("\n").filter { it.isNotBlank() }
+                            importedWorlds += names.size
+                            lastWorld = names.lastOrNull().orEmpty()
+                        } else {
+                            failedFiles++
+                            lastError = importRes.exceptionOrNull()?.message
+                        }
+                    }
+
+                    isImportingModpack = false
+                    reloadInstalled()
+
+                    if (importedWorlds > 0 && failedFiles > 0) {
+                        Toast.makeText(
+                            context,
+                            "Berhasil mengimpor $importedWorlds world, $failedFiles file gagal diimpor!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else if (importedWorlds == 1 && lastWorld.isNotBlank()) {
+                        Toast.makeText(context, "World \"$lastWorld\" berhasil diimpor!", Toast.LENGTH_SHORT).show()
+                    } else if (importedWorlds > 0) {
+                        Toast.makeText(context, "Berhasil mengimpor $importedWorlds world!", Toast.LENGTH_SHORT).show()
+                    } else if (lastError != null) {
+                        Toast.makeText(context, "Gagal mengimpor world: $lastError", Toast.LENGTH_LONG).show()
+                    }
+                } else if (activeType == "modpacks") {
                     isImportingModpack = true
                     var successCount = 0
                     var lastError: String? = null
@@ -543,7 +601,11 @@ fun ModsScreen(
             if (downRes.isSuccess) {
                 val downloaded = downRes.getOrNull() ?: emptyList()
                 val depCount = (downloaded.size - 1).coerceAtLeast(0)
-                val msg = if (activeType == "modpacks") {
+                val msg = if (activeType == WorldInstaller.ITEM_TYPE) {
+                    // Untuk world, daftar hasil berisi nama folder world yang dibuat (bukan dependensi)
+                    if (downloaded.size > 1) "Berhasil memasang ${downloaded.size} world dari ${hit.title}!"
+                    else "World ${hit.title} berhasil dipasang!"
+                } else if (activeType == "modpacks") {
                     "Modpack ${hit.title} berhasil dipasang!"
                 } else if (depCount > 0) {
                     "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
@@ -584,7 +646,10 @@ fun ModsScreen(
             if (res.isSuccess) {
                 val files = res.getOrNull() ?: emptyList()
                 val depCount = (files.size - 1).coerceAtLeast(0)
-                val msg = if (activeType == "modpacks") {
+                val msg = if (activeType == WorldInstaller.ITEM_TYPE) {
+                    if (files.size > 1) "Berhasil memasang ${files.size} world dari ${hit.title}!"
+                    else "World ${hit.title} berhasil dipasang!"
+                } else if (activeType == "modpacks") {
                     "Modpack ${hit.title} berhasil dipasang!"
                 } else if (depCount > 0) {
                     "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
@@ -624,7 +689,7 @@ fun ModsScreen(
                 onSettings = onOpenSettings
             )
             if (mainMode == "browse") {
-                if (!rustInstance) ModsSourcePill(
+                if (!rustInstance && !worldsTab) ModsSourcePill(
                     selectedSource = browseSource,
                     onSelect = { src ->
                         if (src != browseSource) {
@@ -639,7 +704,7 @@ fun ModsScreen(
                             }
                         }
                     }
-                ) else if (!rustMods) {
+                ) else if (rustInstance && !rustMods) {
                     // Shader dan resource pack mesin Rust: katalog Horizon atau Modrinth (mod hanya dari Horizon)
                     RustSourcePill(
                         selectedSource = rustSource,
@@ -810,10 +875,12 @@ fun ModsScreen(
                             icon = Icons.Outlined.FolderOpen,
                             title = if (activeType == "datapacks" && worlds.isEmpty())
                                 "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
+                            else if (installedSearch.isBlank() && worldsTab)
+                                "Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip."
                             else if (installedSearch.isBlank())
                                 "Belum ada ${activeType} terpasang di instance ini"
                             else "Tidak ada item yang cocok",
-                            actionLabel = "Jelajahi Modrinth",
+                            actionLabel = if (worldsTab) "Jelajahi CurseForge" else "Jelajahi Modrinth",
                             onAction = { onOpenBrowse(activeType) }
                         )
                     } else {
@@ -830,7 +897,16 @@ fun ModsScreen(
                                 InstalledItemRow(
                                     item = item,
                                     deletable = !rustModItem || HorizonMods.removable(item),
-                                    subtitle = if (rustModItem && !HorizonMods.removable(item)) item.description else null,
+                                    subtitle = if (worldsTab) {
+                                        // World: tanggal terakhir dimainkan (disimpan di kolom versi) dan ukuran folder
+                                        if (item.version.isBlank()) formatBytes(item.sizeBytes)
+                                        else "Terakhir dimainkan ${item.version} · ${formatBytes(item.sizeBytes)}"
+                                    } else if (rustModItem && !HorizonMods.removable(item)) {
+                                        item.description
+                                    } else {
+                                        null
+                                    },
+                                    showToggle = !worldsTab,
                                     onToggle = {
                                         scope.launch {
                                             if (rustInstance) {
@@ -1054,7 +1130,7 @@ fun ModsScreen(
                 showKeyDialog = false
                 keyProblem = false
                 if (CurseForgeApi.isConfigured()) {
-                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE) {
+                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE && !worldsTab) {
                         // Berganti sumber memicu pencarian otomatis (LaunchedEffect di atas)
                         browseSource = NuxModManager.SOURCE_CURSEFORGE
                         selectedCategory = "Semua"
@@ -1102,7 +1178,7 @@ fun ModsScreen(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = if (activeType == "modpacks") "Hapus modpack?" else "Hapus ${item.category}?",
+                    text = if (activeType == "modpacks") "Hapus modpack?" else if (activeType == WorldInstaller.ITEM_TYPE) "Hapus world?" else "Hapus ${item.category}?",
                     fontWeight = FontWeight.Black,
                     fontSize = 16.sp,
                     color = NuxColors.DarkGray
@@ -1111,6 +1187,8 @@ fun ModsScreen(
                 Text(
                     text = if (activeType == "modpacks") {
                         "Yakin ingin menghapus modpack \"${item.name}\"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance."
+                    } else if (activeType == WorldInstaller.ITEM_TYPE) {
+                        "Yakin ingin menghapus world \"${item.name}\"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan."
                     } else {
                         "Yakin ingin menghapus \"${item.name}\" dari instance ini?"
                     },
@@ -1137,11 +1215,13 @@ fun ModsScreen(
                             if (selectedInstance != null) {
                                 scope.launch {
                                     val targetWorld = if (activeType == "datapacks") selectedWorld else null
-                                    NuxModManager.deleteItem(context, selectedInstance!!, activeType, item, targetWorld)
+                                    val deleted = NuxModManager.deleteItem(context, selectedInstance!!, activeType, item, targetWorld)
                                     itemToDelete = null
                                     reloadInstalled()
                                     val toastMsg = if (activeType == "modpacks") {
                                         "Modpack dan semua mod berhasil dihapus!"
+                                    } else if (activeType == WorldInstaller.ITEM_TYPE && !deleted) {
+                                        "Gagal menghapus world. Pastikan game sedang tidak berjalan."
                                     } else {
                                         "${item.name} berhasil dihapus!"
                                     }
@@ -1163,6 +1243,7 @@ fun ModsScreen(
 
     // --- PROGRES IMPOR MODPACK ---
     if (isImportingModpack) {
+        val importingWorld = activeType == WorldInstaller.ITEM_TYPE
         NuxDialog(
             onDismissRequest = { /* Tidak bisa ditutup saat sedang mengunduh */ },
             modifier = Modifier
@@ -1194,7 +1275,7 @@ fun ModsScreen(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Mengimpor & memasang modpack",
+                    text = if (importingWorld) "Mengimpor world" else "Mengimpor & memasang modpack",
                     fontWeight = FontWeight.Black,
                     fontSize = 15.5.sp,
                     color = NuxColors.DarkGray
@@ -1215,7 +1296,13 @@ fun ModsScreen(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = if (modpackImportStatus.isNotBlank()) modpackImportStatus else "Membaca daftar mod dan mengunduh file...",
+                    text = if (modpackImportStatus.isNotBlank()) {
+                        modpackImportStatus
+                    } else if (importingWorld) {
+                        "Membaca arsip world..."
+                    } else {
+                        "Membaca daftar mod dan mengunduh file..."
+                    },
                     fontSize = 12.sp,
                     color = NuxColors.GrayNeutral,
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -1239,7 +1326,7 @@ fun ModsScreen(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "$modpackImportCurrent / $modpackImportTotal file mod",
+                        text = if (importingWorld) "$modpackImportCurrent / $modpackImportTotal file" else "$modpackImportCurrent / $modpackImportTotal file mod",
                         fontSize = 11.sp,
                         color = NuxColors.GrayNeutral
                     )
@@ -1257,7 +1344,11 @@ fun ModsScreen(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.",
+                    text = if (importingWorld) {
+                        "Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu."
+                    } else {
+                        "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu."
+                    },
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
                     color = NuxColors.GrayNeutral.copy(alpha = 0.75f),
@@ -1348,7 +1439,8 @@ private val MODS_TYPE_ITEMS = listOf(
     Triple("mods", "Mod", Icons.Outlined.ViewInAr),
     Triple("shaderpacks", "Shader", Icons.Outlined.LightMode),
     Triple("resourcepacks", "Resource Pack", Icons.Outlined.Image),
-    Triple("datapacks", "Datapack", Icons.Outlined.Public)
+    Triple("datapacks", "Datapack", Icons.Outlined.Public),
+    Triple("worlds", "World", Icons.Outlined.Landscape)
 )
 
 private val MODS_SORT_OPTIONS = listOf(
@@ -1374,6 +1466,7 @@ private fun modsTypeShortLabel(type: String): String = when (type) {
     "shaderpacks" -> "Shader"
     "resourcepacks" -> "Resource"
     "datapacks" -> "Datapack"
+    "worlds" -> "World"
     else -> "Mod"
 }
 
@@ -1382,6 +1475,7 @@ private fun modsSearchPlaceholder(type: String): String = when (type) {
     "shaderpacks" -> "Cari shader..."
     "resourcepacks" -> "Cari resource pack..."
     "datapacks" -> "Cari datapack..."
+    "worlds" -> "Cari world di CurseForge..."
     else -> "Cari mod..."
 }
 
@@ -1802,7 +1896,8 @@ private fun InstalledItemRow(
     onToggle: () -> Unit,
     onDelete: () -> Unit,
     deletable: Boolean = true,
-    subtitle: String? = null
+    subtitle: String? = null,
+    showToggle: Boolean = true
 ) {
     val shape = RoundedCornerShape(24.dp)
     Row(
@@ -1853,17 +1948,20 @@ private fun InstalledItemRow(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Switch(
-            checked = item.isEnabled,
-            onCheckedChange = { onToggle() },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = AmberUi.Accent,
-                checkedBorderColor = AmberUi.AccentEdge,
-                uncheckedThumbColor = AmberUi.TextDim,
-                uncheckedTrackColor = NuxColors.SurfaceElevated
+        // World tidak punya saklar aktif/nonaktif (cukup dihapus bila tidak dipakai)
+        if (showToggle) {
+            Switch(
+                checked = item.isEnabled,
+                onCheckedChange = { onToggle() },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = AmberUi.Accent,
+                    checkedBorderColor = AmberUi.AccentEdge,
+                    uncheckedThumbColor = AmberUi.TextDim,
+                    uncheckedTrackColor = NuxColors.SurfaceElevated
+                )
             )
-        )
+        }
 
         if (deletable) {
             ModsIconButton(

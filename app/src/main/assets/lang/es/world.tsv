@@ -1,0 +1,42 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+World	Mundo
+worlds	mundos
+.zip (World)	.zip (Mundo)
+World (.zip)	Mundo (.zip)
+Cari world di CurseForge...	Buscar mundos en CurseForge...
+Jelajahi CurseForge	Explorar CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Aún no hay mundos en esta instancia. Descarga uno de CurseForge o importa un archivo .zip.
+Terakhir dimainkan {0} · {1}	Última partida {0} · {1}
+Hapus world?	¿Eliminar el mundo?
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	¿Seguro que quieres eliminar el mundo "{0}"? Todas las construcciones y el progreso se perderán de forma permanente y no se podrán recuperar.
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	No se pudo eliminar el mundo. Asegúrate de que el juego no esté en ejecución.
+Mengimpor world	Importando el mundo
+Membaca arsip world...	Leyendo el archivo del mundo...
+Mengekstrak world...	Extrayendo el mundo...
+Mengekstrak world... {0}/{1}	Extrayendo el mundo... {0}/{1}
+{0} / {1} file	{0} / {1} archivos
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	El launcher está comprobando y extrayendo el mundo. Espera un momento.
+Mengunduh {0}... {1}%	Descargando {0}... {1}%
+Gagal mengimpor world: {~0}	No se pudo importar el mundo: {0}
+World "{0}" berhasil diimpor!	¡Mundo "{0}" importado!
+Berhasil mengimpor {0} world!	¡{0} mundo(s) importado(s)!
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	¡{0} mundo(s) importado(s); {1} archivo(s) no se pudieron importar!
+World {0} berhasil dipasang!	¡Mundo {0} instalado!
+Berhasil memasang {0} world dari {1}!	¡{0} mundos instalados desde {1}!
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Este archivo no es un mundo de Minecraft Java (no se encontró level.dat).
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Los mundos de Bedrock (.mcworld) no son compatibles. Este launcher solo instala mundos de Minecraft Java.
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	El archivo level.dat de este archivo está dañado, por lo que no se puede instalar el mundo.
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	El mundo es demasiado grande (máximo 4 GB); se canceló la instalación.
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	El archivo del mundo es demasiado grande (máximo 2 GB); se canceló la instalación.
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	El archivo contiene demasiados archivos; se canceló la instalación.
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	El archivo contiene más de 20 mundos; se canceló la instalación.
+Arsip ditolak karena berisi path yang tidak aman.	Se rechazó el archivo porque contiene rutas no seguras.
+Terlalu banyak world dengan nama yang sama.	Hay demasiados mundos con el mismo nombre.
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	El almacenamiento está lleno. Libera espacio e inténtalo de nuevo.
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	No hay suficiente almacenamiento para instalar este mundo. Libera unos {0} MB e inténtalo de nuevo.
+World belum didukung untuk instance mesin Rust.	Los mundos aún no son compatibles con las instancias del motor Rust.
+Versi ini tidak punya berkas untuk diunduh.	Esta versión no tiene ningún archivo para descargar.
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Este mundo se comparte en un formato de archivo que aún no es compatible. Descárgalo manualmente, extráelo, vuelve a comprimirlo como .zip e impórtalo.
+Berkas world harus berformat .zip	El archivo del mundo debe ser un .zip
+File world harus berformat .zip	El archivo del mundo debe ser un .zip
+Gagal membuat folder sementara	No se pudo crear una carpeta temporal

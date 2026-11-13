@@ -47,7 +47,8 @@ private val ADDON_TYPES = listOf(
     AddonTypeOption("mods", "Mod (.jar)", "🧩"),
     AddonTypeOption("modpacks", "Modpack (.mrpack / .zip)", "📦"),
     AddonTypeOption("resourcepacks", "Resource Pack (.zip)", "🎨"),
-    AddonTypeOption("shaderpacks", "Shaderpack (.zip)", "✨")
+    AddonTypeOption("shaderpacks", "Shaderpack (.zip)", "✨"),
+    AddonTypeOption("worlds", "World (.zip)", "🌍")
 )
 
 @Composable
@@ -206,6 +207,7 @@ fun NuxAddonImportDialog(
                                         "modpacks" -> "📦"
                                         "resourcepacks" -> "🎨"
                                         "shaderpacks" -> "✨"
+                                        "worlds" -> "🌍"
                                         else -> "📄"
                                     }
                                     Text(text = icon, fontSize = 20.sp)

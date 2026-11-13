@@ -99,7 +99,8 @@ object ModIconLoader {
 
     private fun extractIconBytes(file: File, itemType: String): ByteArray? {
         if (file.isDirectory) {
-            val packPng = File(file, "pack.png")
+            // Folder world menyimpan ikonnya di icon.png; datapack di pack.png
+            val packPng = File(file, if (itemType == "worlds") "icon.png" else "pack.png")
             return if (packPng.isFile && packPng.length() < MAX_BYTES) packPng.readBytes() else null
         }
         if (!file.isFile) return null

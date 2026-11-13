@@ -108,6 +108,8 @@ object NuxAddonImportManager {
                     var hasCurseforgeManifest = false
                     var hasModsFolder = false
                     var hasJar = false
+                    var hasLevelDat = false
+                    var hasRegion = false
                     var count = 0
 
                     while (entry != null && count < 60) {
@@ -120,12 +122,16 @@ object NuxAddonImportManager {
                         if (name.endsWith("manifest.json")) hasCurseforgeManifest = true
                         if (name.startsWith("mods/") || name.contains("/mods/")) hasModsFolder = true
                         if (name.endsWith(".jar")) hasJar = true
+                        // World Java: level.dat di akar atau di dalam satu-dua folder pembungkus, atau folder region (.mca)
+                        if ((name == "level.dat" || name.endsWith("/level.dat")) && name.count { it == '/' } <= 3) hasLevelDat = true
+                        if (name.endsWith(".mca") && (name.startsWith("region/") || name.contains("/region/"))) hasRegion = true
                         zis.closeEntry()
                         entry = zis.nextEntry
                     }
 
                     return when {
                         hasModpackIndex || hasCurseforgeManifest -> "modpacks"
+                        hasLevelDat || hasRegion -> "worlds"
                         hasShaders -> "shaderpacks"
                         hasPackMcmeta && hasAssets -> "resourcepacks"
                         hasModsFolder || hasJar -> "modpacks"

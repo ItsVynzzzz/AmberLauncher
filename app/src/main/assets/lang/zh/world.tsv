@@ -1,0 +1,42 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+World	世界
+worlds	世界
+.zip (World)	.zip（世界）
+World (.zip)	世界 (.zip)
+Cari world di CurseForge...	在 CurseForge 搜索世界…
+Jelajahi CurseForge	浏览 CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	此实例中还没有世界。请从 CurseForge 下载，或导入 .zip 文件。
+Terakhir dimainkan {0} · {1}	上次游玩 {0} · {1}
+Hapus world?	删除世界？
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	确定要删除世界“{0}”吗？其中所有建筑和进度将永久丢失，且无法恢复。
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	无法删除世界。请确认游戏没有在运行。
+Mengimpor world	正在导入世界
+Membaca arsip world...	正在读取世界压缩包…
+Mengekstrak world...	正在解压世界…
+Mengekstrak world... {0}/{1}	正在解压世界… {0}/{1}
+{0} / {1} file	{0} / {1} 个文件
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	启动器正在检查并解压世界，请稍候。
+Mengunduh {0}... {1}%	正在下载 {0}… {1}%
+Gagal mengimpor world: {~0}	导入世界失败：{0}
+World "{0}" berhasil diimpor!	世界“{0}”导入成功！
+Berhasil mengimpor {0} world!	已成功导入 {0} 个世界！
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	已导入 {0} 个世界，{1} 个文件导入失败！
+World {0} berhasil dipasang!	世界 {0} 安装成功！
+Berhasil memasang {0} world dari {1}!	已从 {1} 安装 {0} 个世界！
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	此压缩包不是 Minecraft Java 版世界（未找到 level.dat）。
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	不支持基岩版世界（.mcworld）。此启动器只能安装 Minecraft Java 版世界。
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	此压缩包中的 level.dat 文件已损坏，无法安装该世界。
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	世界过大（最大 4 GB），已取消安装。
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	世界压缩包过大（最大 2 GB），已取消安装。
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	压缩包中的文件过多，已取消安装。
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	压缩包中包含超过 20 个世界，已取消安装。
+Arsip ditolak karena berisi path yang tidak aman.	压缩包包含不安全的路径，已被拒绝。
+Terlalu banyak world dengan nama yang sama.	同名的世界过多。
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	存储空间已满。请清理空间后重试。
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	存储空间不足，无法安装此世界。请清理约 {0} MB 后重试。
+World belum didukung untuk instance mesin Rust.	Rust 引擎实例暂不支持世界。
+Versi ini tidak punya berkas untuk diunduh.	此版本没有可下载的文件。
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	此世界使用了暂不支持的压缩格式。请手动下载并解压，重新压缩为 .zip 后再导入。
+Berkas world harus berformat .zip	世界文件必须是 .zip 格式
+File world harus berformat .zip	世界文件必须是 .zip 格式
+Gagal membuat folder sementara	无法创建临时文件夹

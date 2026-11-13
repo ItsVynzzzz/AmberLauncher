@@ -1,0 +1,42 @@
+# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
+World	โลก
+worlds	โลก
+.zip (World)	.zip (โลก)
+World (.zip)	โลก (.zip)
+Cari world di CurseForge...	ค้นหาโลกบน CurseForge...
+Jelajahi CurseForge	เรียกดู CurseForge
+Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	ยังไม่มีโลกใน instance นี้ ดาวน์โหลดจาก CurseForge หรือนำเข้าไฟล์ .zip
+Terakhir dimainkan {0} · {1}	เล่นล่าสุด {0} · {1}
+Hapus world?	ลบโลก?
+Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	แน่ใจหรือไม่ว่าต้องการลบโลก "{0}"? สิ่งก่อสร้างและความคืบหน้าทั้งหมดในนั้นจะหายถาวรและกู้คืนไม่ได้
+Gagal menghapus world. Pastikan game sedang tidak berjalan.	ลบโลกไม่สำเร็จ ตรวจสอบว่าเกมไม่ได้กำลังทำงานอยู่
+Mengimpor world	กำลังนำเข้าโลก
+Membaca arsip world...	กำลังอ่านไฟล์บีบอัดของโลก...
+Mengekstrak world...	กำลังแตกไฟล์โลก...
+Mengekstrak world... {0}/{1}	กำลังแตกไฟล์โลก... {0}/{1}
+{0} / {1} file	{0} / {1} ไฟล์
+Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	ตัวเปิดเกมกำลังตรวจสอบและแตกไฟล์โลก โปรดรอสักครู่
+Mengunduh {0}... {1}%	กำลังดาวน์โหลด {0}... {1}%
+Gagal mengimpor world: {~0}	นำเข้าโลกไม่สำเร็จ: {0}
+World "{0}" berhasil diimpor!	นำเข้าโลก "{0}" สำเร็จ!
+Berhasil mengimpor {0} world!	นำเข้า {0} โลกสำเร็จ!
+Berhasil mengimpor {0} world, {1} file gagal diimpor!	นำเข้า {0} โลกสำเร็จ แต่นำเข้าไฟล์ไม่สำเร็จ {1} ไฟล์!
+World {0} berhasil dipasang!	ติดตั้งโลก {0} สำเร็จ!
+Berhasil memasang {0} world dari {1}!	ติดตั้ง {0} โลกจาก {1} สำเร็จ!
+Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	ไฟล์บีบอัดนี้ไม่ใช่โลกของ Minecraft Java (ไม่พบ level.dat)
+World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	ไม่รองรับโลก Bedrock (.mcworld) ตัวเปิดเกมนี้ติดตั้งได้เฉพาะโลกของ Minecraft Java
+File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	ไฟล์ level.dat ในไฟล์บีบอัดนี้เสียหาย จึงติดตั้งโลกไม่ได้
+Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	โลกมีขนาดใหญ่เกินไป (สูงสุด 4 GB) ยกเลิกการติดตั้งแล้ว
+Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	ไฟล์บีบอัดของโลกมีขนาดใหญ่เกินไป (สูงสุด 2 GB) ยกเลิกการติดตั้งแล้ว
+Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	ไฟล์บีบอัดมีไฟล์มากเกินไป ยกเลิกการติดตั้งแล้ว
+Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	ไฟล์บีบอัดมีโลกมากกว่า 20 โลก ยกเลิกการติดตั้งแล้ว
+Arsip ditolak karena berisi path yang tidak aman.	ปฏิเสธไฟล์บีบอัดเพราะมีพาธที่ไม่ปลอดภัย
+Terlalu banyak world dengan nama yang sama.	มีโลกชื่อเดียวกันมากเกินไป
+Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	พื้นที่เก็บข้อมูลเต็ม โปรดเคลียร์พื้นที่แล้วลองอีกครั้ง
+Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งโลกนี้ โปรดเคลียร์ประมาณ {0} MB แล้วลองอีกครั้ง
+World belum didukung untuk instance mesin Rust.	ยังไม่รองรับโลกสำหรับ instance ที่ใช้เอนจิน Rust
+Versi ini tidak punya berkas untuk diunduh.	เวอร์ชันนี้ไม่มีไฟล์ให้ดาวน์โหลด
+World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	โลกนี้แชร์ในรูปแบบไฟล์บีบอัดที่ยังไม่รองรับ ดาวน์โหลดด้วยตัวเอง แตกไฟล์ บีบอัดใหม่เป็น .zip แล้วนำเข้า
+Berkas world harus berformat .zip	ไฟล์โลกต้องเป็น .zip
+File world harus berformat .zip	ไฟล์โลกต้องเป็น .zip
+Gagal membuat folder sementara	สร้างโฟลเดอร์ชั่วคราวไม่สำเร็จ

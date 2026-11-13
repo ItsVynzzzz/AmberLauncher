@@ -29,6 +29,7 @@ object ControlPresetManager {
 
     private const val PREVIOUS_FILE = "previous.json"
     private const val OFFERED_FILE = "builtins.txt"
+    private const val EDITING_FILE = "editing.txt"
     private val ID_PATTERN = Regex("^p_[a-z0-9]{6,24}$")
 
     class Preset(val id: String, val name: String, val buttonCount: Int, val savedAt: Long)
@@ -128,11 +129,92 @@ object ControlPresetManager {
 
     fun delete(dir: File, id: String): Boolean {
         if (!ID_PATTERN.matches(id)) return false
+        if (readEditingRaw(dir) == id) clearEditing(dir)
         return try {
             File(dir, "$id.json").delete()
         } catch (_: Exception) {
             false
         }
+    }
+
+    // ---- Menimpa, menggandakan, dan mengedit ----------------------------------------------------------
+
+    /** Mengganti isi preset [id] dengan layout [json]; nama preset tetap. */
+    fun overwrite(dir: File, id: String, json: String, nowMs: Long = System.currentTimeMillis()): Boolean {
+        if (!ID_PATTERN.matches(id)) return false
+        val f = File(dir, "$id.json")
+        val old = readRoot(f) ?: return false
+        val name = cleanName(old.stringOrEmpty("presetName"))
+        if (name.isEmpty()) return false
+        val r = ControlLayoutIO.parse(json)
+        if (r !is ControlLayoutIO.ImportResult.Ok) return false
+        return try {
+            val root = JsonParser.parseString(ControlLayoutIO.toJson(r.buttons)).asJsonObject
+            root.addProperty("presetName", name)
+            root.addProperty("savedAt", nowMs)
+            val text = root.toString()
+            if (text.length > ControlLayoutIO.MAX_FILE_BYTES) return false
+            AtomicFiles.writeText(f, text)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /** Menggandakan preset [id] dengan nama "(salinan)", "(salinan 2)", dan seterusnya yang belum dipakai. */
+    fun duplicate(dir: File, id: String, nowMs: Long = System.currentTimeMillis()): SaveResult {
+        if (!ID_PATTERN.matches(id)) return SaveResult.Invalid
+        val buttons = read(dir, id) ?: return SaveResult.Invalid
+        val all = list(dir)
+        val source = all.firstOrNull { it.id == id } ?: return SaveResult.Invalid
+        if (all.size >= MAX_PRESETS) return SaveResult.TooMany
+        val taken = all.map { it.name.lowercase() }.toSet()
+        var suffix = " (salinan)"
+        var candidate = source.name.take(MAX_NAME - suffix.length).trim() + suffix
+        var n = 2
+        while (candidate.lowercase() in taken) {
+            if (n > 99) return SaveResult.Failed
+            suffix = " (salinan $n)"
+            candidate = source.name.take(MAX_NAME - suffix.length).trim() + suffix
+            n++
+        }
+        return saveButtons(dir, candidate, buttons, nowMs)
+    }
+
+    /** Mencatat preset yang sedang diedit di editor, supaya perubahannya bisa disimpan balik dengan satu ketukan. */
+    fun setEditing(dir: File, id: String): Boolean {
+        if (!ID_PATTERN.matches(id)) return false
+        return try {
+            if (!dir.isDirectory && !dir.mkdirs()) return false
+            AtomicFiles.writeText(File(dir, EDITING_FILE), id)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /** Id preset yang sedang diedit, atau null bila tidak ada atau presetnya sudah hilang. */
+    fun editingId(dir: File): String? {
+        val id = readEditingRaw(dir) ?: return null
+        return if (File(dir, "$id.json").isFile) id else null
+    }
+
+    fun clearEditing(dir: File) {
+        try {
+            File(dir, EDITING_FILE).delete()
+        } catch (_: Exception) {
+        }
+    }
+
+    private fun readEditingRaw(dir: File): String? {
+        val f = File(dir, EDITING_FILE)
+        if (!f.isFile || f.length() > 64L) return null
+        val id = try {
+            f.readText(Charsets.UTF_8).trim()
+        } catch (_: Exception) {
+            return null
+        }
+        return if (ID_PATTERN.matches(id)) id else null
     }
 
     // ---- Preset bawaan ------------------------------------------------------------------------------

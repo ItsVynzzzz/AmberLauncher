@@ -60,3 +60,16 @@ Pulihkan preset bawaan	Restaurar predefinições integradas
 Standar (joystick)	Padrão (joystick)
 WASD tanpa analog	WASD sem joystick
 Panah tanpa analog	Setas sem joystick
+# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
+Opsi	Opções
+Edit	Editar
+Duplikat	Duplicar
+Simpan layout ke sini	Salvar o layout atual aqui
+Dipakai	Em uso
+Sedang dipakai	Em uso agora
+Simpan perubahan	Salvar alterações
+Mengedit preset "{0}"	Editando a predefinição "{0}"
+Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Ao terminar de editar, abra as Predefinições de novo e escolha Salvar alterações.
+Preset diperbarui	Predefinição atualizada
+Gagal memperbarui preset	Falha ao atualizar a predefinição
+Preset diduplikat	Predefinição duplicada

@@ -64,3 +64,16 @@ Pulihkan preset bawaan	恢复内置预设
 Standar (joystick)	标准（摇杆）
 WASD tanpa analog	WASD（无摇杆）
 Panah tanpa analog	方向键（无摇杆）
+# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
+Opsi	选项
+Edit	编辑
+Duplikat	复制
+Simpan layout ke sini	将当前布局保存到此预设
+Dipakai	使用中
+Sedang dipakai	当前使用中
+Simpan perubahan	保存更改
+Mengedit preset "{0}"	正在编辑预设“{0}”
+Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	编辑完成后，请再次打开预设并选择“保存更改”。
+Preset diperbarui	预设已更新
+Gagal memperbarui preset	更新预设失败
+Preset diduplikat	预设已复制

@@ -60,3 +60,16 @@ Pulihkan preset bawaan	Khôi phục mẫu có sẵn
 Standar (joystick)	Tiêu chuẩn (joystick)
 WASD tanpa analog	WASD không dùng joystick
 Panah tanpa analog	Phím mũi tên không dùng joystick
+# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
+Opsi	Tùy chọn
+Edit	Sửa
+Duplikat	Nhân bản
+Simpan layout ke sini	Lưu bố cục hiện tại vào đây
+Dipakai	Đang dùng
+Sedang dipakai	Đang được dùng
+Simpan perubahan	Lưu thay đổi
+Mengedit preset "{0}"	Đang chỉnh sửa mẫu "{0}"
+Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Khi chỉnh xong, hãy mở lại Mẫu và chọn Lưu thay đổi.
+Preset diperbarui	Đã cập nhật mẫu
+Gagal memperbarui preset	Không cập nhật được mẫu
+Preset diduplikat	Đã nhân bản mẫu

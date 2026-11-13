@@ -60,3 +60,16 @@ Pulihkan preset bawaan	คืนค่าพรีเซ็ตที่มาพ
 Standar (joystick)	มาตรฐาน (จอยสติ๊ก)
 WASD tanpa analog	WASD แบบไม่ใช้จอยสติ๊ก
 Panah tanpa analog	ปุ่มลูกศรแบบไม่ใช้จอยสติ๊ก
+# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
+Opsi	ตัวเลือก
+Edit	แก้ไข
+Duplikat	ทำสำเนา
+Simpan layout ke sini	บันทึกเลย์เอาต์ปัจจุบันลงที่นี่
+Dipakai	กำลังใช้
+Sedang dipakai	กำลังใช้งานอยู่
+Simpan perubahan	บันทึกการเปลี่ยนแปลง
+Mengedit preset "{0}"	กำลังแก้ไขพรีเซ็ต "{0}"
+Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	เมื่อแก้ไขเสร็จ ให้เปิดพรีเซ็ตอีกครั้งแล้วเลือกบันทึกการเปลี่ยนแปลง
+Preset diperbarui	อัปเดตพรีเซ็ตแล้ว
+Gagal memperbarui preset	อัปเดตพรีเซ็ตไม่สำเร็จ
+Preset diduplikat	ทำสำเนาพรีเซ็ตแล้ว

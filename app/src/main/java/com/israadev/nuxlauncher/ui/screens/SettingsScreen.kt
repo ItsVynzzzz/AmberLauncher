@@ -1533,7 +1533,10 @@ fun SettingsScreen(
     }
 
     if (showControlPresets) {
-        NuxControlPresetsDialog(onDismiss = { showControlPresets = false })
+        NuxControlPresetsDialog(
+            onDismiss = { showControlPresets = false },
+            onOpenEditor = onOpenGuiEditor
+        )
     }
 
     if (showAboutDialog) {

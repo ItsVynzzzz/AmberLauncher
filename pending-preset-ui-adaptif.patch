@@ -1,0 +1,1088 @@
+diff --git a/app/src/main/assets/lang/en/tambahan.tsv b/app/src/main/assets/lang/en/tambahan.tsv
+index 5912c2d..101381e 100644
+--- a/app/src/main/assets/lang/en/tambahan.tsv
++++ b/app/src/main/assets/lang/en/tambahan.tsv
+@@ -60 +60,14 @@ WASD tanpa analog	WASD without joystick
+ Panah tanpa analog	Arrow keys without joystick
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	Options
++Edit	Edit
++Duplikat	Duplicate
++Simpan layout ke sini	Save current layout here
++Dipakai	In use
++Sedang dipakai	Currently in use
++Simpan perubahan	Save changes
++Mengedit preset "{0}"	Editing preset "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	When you finish editing, open Presets again and choose Save changes.
++Preset diperbarui	Preset updated
++Gagal memperbarui preset	Failed to update the preset
++Preset diduplikat	Preset duplicated
+diff --git a/app/src/main/assets/lang/es/tambahan.tsv b/app/src/main/assets/lang/es/tambahan.tsv
+index 0540033..bbb04c2 100644
+--- a/app/src/main/assets/lang/es/tambahan.tsv
++++ b/app/src/main/assets/lang/es/tambahan.tsv
+@@ -62 +62,14 @@ WASD tanpa analog	WASD sin joystick
+ Panah tanpa analog	Flechas sin joystick
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	Opciones
++Edit	Editar
++Duplikat	Duplicar
++Simpan layout ke sini	Guardar aquí el diseño actual
++Dipakai	En uso
++Sedang dipakai	En uso ahora
++Simpan perubahan	Guardar cambios
++Mengedit preset "{0}"	Editando el preset "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Cuando termines de editar, abre Presets de nuevo y elige Guardar cambios.
++Preset diperbarui	Preset actualizado
++Gagal memperbarui preset	No se pudo actualizar el preset
++Preset diduplikat	Preset duplicado
+diff --git a/app/src/main/assets/lang/fil/tambahan.tsv b/app/src/main/assets/lang/fil/tambahan.tsv
+index 85b75f0..d6c3c34 100644
+--- a/app/src/main/assets/lang/fil/tambahan.tsv
++++ b/app/src/main/assets/lang/fil/tambahan.tsv
+@@ -64 +64,14 @@ WASD tanpa analog	WASD na walang joystick
+ Panah tanpa analog	Mga arrow key na walang joystick
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	Mga opsyon
++Edit	I-edit
++Duplikat	I-duplicate
++Simpan layout ke sini	I-save dito ang kasalukuyang layout
++Dipakai	Ginagamit
++Sedang dipakai	Kasalukuyang ginagamit
++Simpan perubahan	I-save ang mga pagbabago
++Mengedit preset "{0}"	Ine-edit ang preset na "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Kapag tapos ka nang mag-edit, buksan muli ang Mga preset at piliin ang I-save ang mga pagbabago.
++Preset diperbarui	Na-update ang preset
++Gagal memperbarui preset	Hindi na-update ang preset
++Preset diduplikat	Na-duplicate ang preset
+diff --git a/app/src/main/assets/lang/pt/tambahan.tsv b/app/src/main/assets/lang/pt/tambahan.tsv
+index c3eb6d9..754e0af 100644
+--- a/app/src/main/assets/lang/pt/tambahan.tsv
++++ b/app/src/main/assets/lang/pt/tambahan.tsv
+@@ -62 +62,14 @@ WASD tanpa analog	WASD sem joystick
+ Panah tanpa analog	Setas sem joystick
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	Opções
++Edit	Editar
++Duplikat	Duplicar
++Simpan layout ke sini	Salvar o layout atual aqui
++Dipakai	Em uso
++Sedang dipakai	Em uso agora
++Simpan perubahan	Salvar alterações
++Mengedit preset "{0}"	Editando a predefinição "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Ao terminar de editar, abra as Predefinições de novo e escolha Salvar alterações.
++Preset diperbarui	Predefinição atualizada
++Gagal memperbarui preset	Falha ao atualizar a predefinição
++Preset diduplikat	Predefinição duplicada
+diff --git a/app/src/main/assets/lang/th/tambahan.tsv b/app/src/main/assets/lang/th/tambahan.tsv
+index 698214f..27df321 100644
+--- a/app/src/main/assets/lang/th/tambahan.tsv
++++ b/app/src/main/assets/lang/th/tambahan.tsv
+@@ -62 +62,14 @@ WASD tanpa analog	WASD แบบไม่ใช้จอยสติ๊ก
+ Panah tanpa analog	ปุ่มลูกศรแบบไม่ใช้จอยสติ๊ก
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	ตัวเลือก
++Edit	แก้ไข
++Duplikat	ทำสำเนา
++Simpan layout ke sini	บันทึกเลย์เอาต์ปัจจุบันลงที่นี่
++Dipakai	กำลังใช้
++Sedang dipakai	กำลังใช้งานอยู่
++Simpan perubahan	บันทึกการเปลี่ยนแปลง
++Mengedit preset "{0}"	กำลังแก้ไขพรีเซ็ต "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	เมื่อแก้ไขเสร็จ ให้เปิดพรีเซ็ตอีกครั้งแล้วเลือกบันทึกการเปลี่ยนแปลง
++Preset diperbarui	อัปเดตพรีเซ็ตแล้ว
++Gagal memperbarui preset	อัปเดตพรีเซ็ตไม่สำเร็จ
++Preset diduplikat	ทำสำเนาพรีเซ็ตแล้ว
+diff --git a/app/src/main/assets/lang/vi/tambahan.tsv b/app/src/main/assets/lang/vi/tambahan.tsv
+index a760e22..d8a041b 100644
+--- a/app/src/main/assets/lang/vi/tambahan.tsv
++++ b/app/src/main/assets/lang/vi/tambahan.tsv
+@@ -62 +62,14 @@ WASD tanpa analog	WASD không dùng joystick
+ Panah tanpa analog	Phím mũi tên không dùng joystick
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	Tùy chọn
++Edit	Sửa
++Duplikat	Nhân bản
++Simpan layout ke sini	Lưu bố cục hiện tại vào đây
++Dipakai	Đang dùng
++Sedang dipakai	Đang được dùng
++Simpan perubahan	Lưu thay đổi
++Mengedit preset "{0}"	Đang chỉnh sửa mẫu "{0}"
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	Khi chỉnh xong, hãy mở lại Mẫu và chọn Lưu thay đổi.
++Preset diperbarui	Đã cập nhật mẫu
++Gagal memperbarui preset	Không cập nhật được mẫu
++Preset diduplikat	Đã nhân bản mẫu
+diff --git a/app/src/main/assets/lang/zh/tambahan.tsv b/app/src/main/assets/lang/zh/tambahan.tsv
+index 86ed5e9..7d78b64 100644
+--- a/app/src/main/assets/lang/zh/tambahan.tsv
++++ b/app/src/main/assets/lang/zh/tambahan.tsv
+@@ -66 +66,14 @@ WASD tanpa analog	WASD（无摇杆）
+ Panah tanpa analog	方向键（无摇杆）
++# Dialog preset kontrol: edit, duplikat, ekspor (13 Nov 2026)
++Opsi	选项
++Edit	编辑
++Duplikat	复制
++Simpan layout ke sini	将当前布局保存到此预设
++Dipakai	使用中
++Sedang dipakai	当前使用中
++Simpan perubahan	保存更改
++Mengedit preset "{0}"	正在编辑预设“{0}”
++Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.	编辑完成后，请再次打开预设并选择“保存更改”。
++Preset diperbarui	预设已更新
++Gagal memperbarui preset	更新预设失败
++Preset diduplikat	预设已复制
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt
+index ad3c3b6..c64295d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt
+@@ -31,2 +31,3 @@ object ControlPresetManager {
+     private const val OFFERED_FILE = "builtins.txt"
++    private const val EDITING_FILE = "editing.txt"
+     private val ID_PATTERN = Regex("^p_[a-z0-9]{6,24}$")
+@@ -130,2 +131,3 @@ object ControlPresetManager {
+         if (!ID_PATTERN.matches(id)) return false
++        if (readEditingRaw(dir) == id) clearEditing(dir)
+         return try {
+@@ -137,2 +139,82 @@ object ControlPresetManager {
+ 
++    // ---- Menimpa, menggandakan, dan mengedit ----------------------------------------------------------
++
++    /** Mengganti isi preset [id] dengan layout [json]; nama preset tetap. */
++    fun overwrite(dir: File, id: String, json: String, nowMs: Long = System.currentTimeMillis()): Boolean {
++        if (!ID_PATTERN.matches(id)) return false
++        val f = File(dir, "$id.json")
++        val old = readRoot(f) ?: return false
++        val name = cleanName(old.stringOrEmpty("presetName"))
++        if (name.isEmpty()) return false
++        val r = ControlLayoutIO.parse(json)
++        if (r !is ControlLayoutIO.ImportResult.Ok) return false
++        return try {
++            val root = JsonParser.parseString(ControlLayoutIO.toJson(r.buttons)).asJsonObject
++            root.addProperty("presetName", name)
++            root.addProperty("savedAt", nowMs)
++            val text = root.toString()
++            if (text.length > ControlLayoutIO.MAX_FILE_BYTES) return false
++            AtomicFiles.writeText(f, text)
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    /** Menggandakan preset [id] dengan nama "(salinan)", "(salinan 2)", dan seterusnya yang belum dipakai. */
++    fun duplicate(dir: File, id: String, nowMs: Long = System.currentTimeMillis()): SaveResult {
++        if (!ID_PATTERN.matches(id)) return SaveResult.Invalid
++        val buttons = read(dir, id) ?: return SaveResult.Invalid
++        val all = list(dir)
++        val source = all.firstOrNull { it.id == id } ?: return SaveResult.Invalid
++        if (all.size >= MAX_PRESETS) return SaveResult.TooMany
++        val taken = all.map { it.name.lowercase() }.toSet()
++        var suffix = " (salinan)"
++        var candidate = source.name.take(MAX_NAME - suffix.length).trim() + suffix
++        var n = 2
++        while (candidate.lowercase() in taken) {
++            if (n > 99) return SaveResult.Failed
++            suffix = " (salinan $n)"
++            candidate = source.name.take(MAX_NAME - suffix.length).trim() + suffix
++            n++
++        }
++        return saveButtons(dir, candidate, buttons, nowMs)
++    }
++
++    /** Mencatat preset yang sedang diedit di editor, supaya perubahannya bisa disimpan balik dengan satu ketukan. */
++    fun setEditing(dir: File, id: String): Boolean {
++        if (!ID_PATTERN.matches(id)) return false
++        return try {
++            if (!dir.isDirectory && !dir.mkdirs()) return false
++            AtomicFiles.writeText(File(dir, EDITING_FILE), id)
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    /** Id preset yang sedang diedit, atau null bila tidak ada atau presetnya sudah hilang. */
++    fun editingId(dir: File): String? {
++        val id = readEditingRaw(dir) ?: return null
++        return if (File(dir, "$id.json").isFile) id else null
++    }
++
++    fun clearEditing(dir: File) {
++        try {
++            File(dir, EDITING_FILE).delete()
++        } catch (_: Exception) {
++        }
++    }
++
++    private fun readEditingRaw(dir: File): String? {
++        val f = File(dir, EDITING_FILE)
++        if (!f.isFile || f.length() > 64L) return null
++        val id = try {
++            f.readText(Charsets.UTF_8).trim()
++        } catch (_: Exception) {
++            return null
++        }
++        return if (ID_PATTERN.matches(id)) id else null
++    }
++
+     // ---- Preset bawaan ------------------------------------------------------------------------------
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt
+index 5ed0db1..c4ff753 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt
+@@ -9,4 +9,9 @@ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.BoxWithConstraints
+ import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ExperimentalLayoutApi
++import androidx.compose.foundation.layout.FlowRow
+ import androidx.compose.foundation.layout.Row
+@@ -17,2 +22,5 @@ import androidx.compose.foundation.layout.heightIn
+ import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
+ import androidx.compose.foundation.rememberScrollState
+@@ -28,3 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
+ import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.platform.LocalConfiguration
+ import androidx.compose.ui.platform.LocalContext
+@@ -41,2 +52,4 @@ import com.israadev.nuxlauncher.ui.components.AmberButton
+ import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.AmberIcon
++import com.israadev.nuxlauncher.ui.components.NuxDialog
+ import com.israadev.nuxlauncher.ui.components.NuxTextField
+@@ -54,2 +67,13 @@ private class PendingApply(val preset: ControlPresetManager.Preset, val buttons:
+ 
++/** Keadaan folder preset yang dibaca sekali per muat ulang. */
++private class DialogData(
++    val presets: List<ControlPresetManager.Preset>,
++    val hasPrevious: Boolean,
++    val missingBuiltins: Int,
++    /** Preset yang isinya sama persis dengan layout yang sedang dipakai, bila ada. */
++    val activeId: String?,
++    /** Preset yang sedang diedit di editor, bila ada. */
++    val editingId: String?
++)
++
+ /**
+@@ -58,6 +82,12 @@ private class PendingApply(val preset: ControlPresetManager.Preset, val buttons:
+  * Memasang preset menyimpan dulu layout yang diganti, jadi bisa dikembalikan lewat tombol "Kembalikan layout
+- * sebelumnya". Semua pekerjaan berkas dikerjakan di thread IO.
++ * sebelumnya". Aksi lain per preset (edit, ubah nama, gandakan, timpa dengan layout saat ini, ekspor, hapus) ada di
++ * bawah tombol "Opsi". "Edit" memasang preset lalu membuka editor; perubahannya disimpan balik lewat kartu
++ * "Mengedit preset" yang muncul saat dialog dibuka lagi.
++ *
++ * Tata letak mengikuti ruang layar yang tersedia: tinggi dialog dibatasi sehingga bagian atas (judul, nama, tombol
++ * simpan) tetap terlihat dan hanya daftar yang bisa digulir, dan di layar landscape yang pendek keterangan
++ * disembunyikan. Semua pekerjaan berkas dikerjakan di thread IO.
+  */
+ @Composable
+-fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
++fun NuxControlPresetsDialog(onDismiss: () -> Unit, onOpenEditor: () -> Unit = {}) {
+     val context = LocalContext.current
+@@ -69,6 +99,11 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+     var missingBuiltins by remember { mutableIntStateOf(0) }
++    var activeId by remember { mutableStateOf<String?>(null) }
++    var editingId by remember { mutableStateOf<String?>(null) }
+     var name by remember { mutableStateOf("") }
+     var renamingId by remember { mutableStateOf<String?>(null) }
++    var expandedId by remember { mutableStateOf<String?>(null) }
+     var confirmDeleteId by remember { mutableStateOf<String?>(null) }
++    var confirmOverwriteId by remember { mutableStateOf<String?>(null) }
+     var pending by remember { mutableStateOf<PendingApply?>(null) }
++    var exportId by remember { mutableStateOf<String?>(null) }
+     var busy by remember { mutableStateOf(false) }
+@@ -81,14 +116,8 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+         scope.launch {
+-            val loaded = withContext(Dispatchers.IO) {
+-                // Preset bawaan disalin sekali; yang sudah dihapus pengguna tidak muncul lagi
+-                ControlPresetManager.ensureBuiltins(dir, ControlLayoutManager.getDefaultButtons())
+-                Triple(
+-                    ControlPresetManager.list(dir),
+-                    ControlPresetManager.hasPrevious(dir),
+-                    ControlPresetManager.missingBuiltins(dir)
+-                )
+-            }
+-            presets = loaded.first
+-            hasPrevious = loaded.second
+-            missingBuiltins = loaded.third
++            val data = withContext(Dispatchers.IO) { loadDialogData(context, dir) }
++            presets = data.presets
++            hasPrevious = data.hasPrevious
++            missingBuiltins = data.missingBuiltins
++            activeId = data.activeId
++            editingId = data.editingId
+         }
+@@ -112,2 +141,15 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+ 
++    val exportLauncher = rememberLauncherForActivityResult(
++        ActivityResultContracts.CreateDocument("application/json")
++    ) { uri: Uri? ->
++        val id = exportId
++        exportId = null
++        if (uri != null && id != null) {
++            scope.launch {
++                val ok = withContext(Dispatchers.IO) { writePresetTo(context, dir, id, uri) }
++                toast(if (ok) "Layout kontrol disimpan ke berkas" else "Gagal menyimpan berkas")
++            }
++        }
++    }
++
+     fun saveCurrent() {
+@@ -158,2 +200,3 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+             confirmDeleteId = null
++            expandedId = null
+             if (renamingId == id) {
+@@ -167,2 +210,57 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+ 
++    fun duplicatePreset(id: String) {
++        scope.launch {
++            val result = withContext(Dispatchers.IO) { ControlPresetManager.duplicate(dir, id) }
++            toast(if (result is ControlPresetManager.SaveResult.Saved) "Preset diduplikat" else saveMessage(result))
++            reload()
++        }
++    }
++
++    fun overwritePreset(id: String, finishEdit: Boolean) {
++        scope.launch {
++            busy = true
++            val ok = withContext(Dispatchers.IO) {
++                val saved = ControlPresetManager.overwrite(dir, id, ControlLayoutManager.exportJson(context))
++                if (saved && finishEdit) ControlPresetManager.clearEditing(dir)
++                saved
++            }
++            busy = false
++            confirmOverwriteId = null
++            toast(if (ok) "Preset diperbarui" else "Gagal memperbarui preset")
++            reload()
++        }
++    }
++
++    fun finishEditing() {
++        scope.launch {
++            withContext(Dispatchers.IO) { ControlPresetManager.clearEditing(dir) }
++            reload()
++        }
++    }
++
++    fun startEdit(preset: ControlPresetManager.Preset) {
++        scope.launch {
++            busy = true
++            val ok = withContext(Dispatchers.IO) {
++                val buttons = ControlPresetManager.read(dir, preset.id) ?: return@withContext false
++                ControlPresetManager.savePrevious(dir, ControlLayoutManager.exportJson(context))
++                ControlLayoutManager.importLayout(context, buttons)
++                ControlPresetManager.setEditing(dir, preset.id)
++            }
++            busy = false
++            if (ok) {
++                Toast.makeText(
++                    context,
++                    "Setelah selesai mengedit, buka Preset lagi lalu pilih Simpan perubahan.",
++                    Toast.LENGTH_LONG
++                ).show()
++                onDismiss()
++                onOpenEditor()
++            } else {
++                toast("Preset tidak bisa dibaca")
++                reload()
++            }
++        }
++    }
++
+     fun restoreBuiltins() {
+@@ -183,2 +281,3 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+                 ControlLayoutManager.importLayout(context, previous)
++                ControlPresetManager.clearEditing(dir)
+                 true
+@@ -190,73 +289,16 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+ 
+-    AmberAlert(
++    NuxDialog(
+         onDismissRequest = onDismiss,
+-        title = "Preset kontrol",
+-        icon = "gear",
+-        accent = Amber.Yellow,
+-        actions = {
+-            AmberButton(
+-                text = "Tutup",
+-                onClick = onDismiss,
+-                modifier = Modifier.weight(1f),
+-                style = AmberButtonStyle.Ghost
+-            )
+-        }
++        modifier = Modifier.widthIn(max = 560.dp),
++        compact = true
+     ) {
+-        Text(
+-            text = "Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.",
+-            color = Amber.TextDim,
+-            fontSize = 13.sp,
+-            lineHeight = 19.sp
+-        )
+-        Spacer(modifier = Modifier.height(12.dp))
+-        NuxTextField(
+-            value = name,
+-            onValueChange = { name = it.take(ControlPresetManager.MAX_NAME) },
+-            placeholder = Tr.t("Nama preset")
+-        )
+-        Spacer(modifier = Modifier.height(10.dp))
+-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-            AmberButton(
+-                text = if (renamingId != null) "Simpan nama" else "Simpan layout saat ini",
+-                onClick = {
+-                    val id = renamingId
+-                    if (id != null) doRename(id) else saveCurrent()
+-                },
+-                modifier = Modifier.weight(1f),
+-                style = AmberButtonStyle.Primary,
+-                enabled = !busy,
+-                height = 40.dp
+-            )
+-            if (renamingId != null) {
+-                AmberButton(
+-                    text = "Batal",
+-                    onClick = {
+-                        renamingId = null
+-                        name = ""
+-                    },
+-                    modifier = Modifier.weight(0.6f),
+-                    style = AmberButtonStyle.Ghost,
+-                    height = 40.dp
+-                )
+-            } else {
+-                AmberButton(
+-                    text = "Impor berkas",
+-                    onClick = { importLauncher.launch(arrayOf("*/*")) },
+-                    modifier = Modifier.weight(0.8f),
+-                    style = AmberButtonStyle.Ghost,
+-                    icon = "download",
+-                    enabled = !busy,
+-                    height = 40.dp
+-                )
+-            }
+-        }
+-        Spacer(modifier = Modifier.height(14.dp))
+-        if (presets.isEmpty()) {
+-            Text(
+-                text = "Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.",
+-                color = Amber.TextDim,
+-                fontSize = 13.sp,
+-                lineHeight = 19.sp
+-            )
+-        } else {
++        BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
++            // Tinggi yang benar-benar tersedia di dalam dialog; cadangan bila induknya tak terbatas
++            val fallbackHeight = (LocalConfiguration.current.screenHeightDp * 0.9f).dp
++            val availableHeight = if (maxHeight.value.isFinite()) maxHeight else fallbackHeight
++            val wide = maxWidth >= 480.dp
++            val shortScreen = availableHeight < 420.dp
++            val pad = if (shortScreen) 14.dp else 20.dp
++            val editingPreset = presets.firstOrNull { it.id == editingId }
++
+             Column(
+@@ -264,25 +306,274 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+                     .fillMaxWidth()
+-                    .heightIn(max = 240.dp)
+-                    .verticalScroll(rememberScrollState()),
+-                verticalArrangement = Arrangement.spacedBy(8.dp)
++                    .heightIn(max = availableHeight)
++                    .padding(pad)
+             ) {
+-                for (preset in presets) {
+-                    PresetRow(
+-                        preset = preset,
+-                        confirmingDelete = confirmDeleteId == preset.id,
+-                        enabled = !busy,
+-                        onApply = { askApply(preset) },
+-                        onRename = {
+-                            renamingId = preset.id
+-                            name = preset.name
+-                            confirmDeleteId = null
+-                        },
+-                        onDelete = {
+-                            if (confirmDeleteId == preset.id) {
+-                                deletePreset(preset.id)
+-                            } else {
+-                                confirmDeleteId = preset.id
+-                            }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Box(
++                        modifier = Modifier
++                            .size(if (shortScreen) 32.dp else 40.dp)
++                            .clip(RoundedCornerShape(12.dp))
++                            .background(Amber.Yellow.copy(alpha = 0.16f)),
++                        contentAlignment = Alignment.Center
++                    ) {
++                        AmberIcon("gear", if (shortScreen) 18.dp else 22.dp, Amber.Yellow)
++                    }
++                    Spacer(modifier = Modifier.width(12.dp))
++                    Text(
++                        text = "Preset kontrol",
++                        color = Amber.Text,
++                        fontSize = if (shortScreen) 17.sp else 19.sp,
++                        fontWeight = FontWeight.Bold,
++                        modifier = Modifier.weight(1f)
++                    )
++                    Box(
++                        modifier = Modifier
++                            .size(40.dp)
++                            .clip(RoundedCornerShape(12.dp))
++                            .clickable { onDismiss() },
++                        contentAlignment = Alignment.Center
++                    ) {
++                        AmberIcon("close", 20.dp, Amber.Text)
++                    }
++                }
++                Spacer(modifier = Modifier.height(if (shortScreen) 8.dp else 12.dp))
++
++                if (!shortScreen) {
++                    Text(
++                        text = "Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.",
++                        color = Amber.TextDim,
++                        fontSize = 13.sp,
++                        lineHeight = 19.sp
++                    )
++                    Spacer(modifier = Modifier.height(12.dp))
++                }
++
++                if (editingPreset != null) {
++                    val bannerShape = RoundedCornerShape(12.dp)
++                    Column(
++                        modifier = Modifier
++                            .fillMaxWidth()
++                            .background(Amber.Yellow.copy(alpha = 0.10f), bannerShape)
++                            .border(1.dp, Amber.Yellow.copy(alpha = 0.5f), bannerShape)
++                            .padding(12.dp)
++                    ) {
++                        Text(
++                            text = "Mengedit preset \"${editingPreset.name}\"",
++                            color = Amber.Text,
++                            fontSize = 13.sp,
++                            fontWeight = FontWeight.Bold,
++                            maxLines = 1,
++                            overflow = TextOverflow.Ellipsis
++                        )
++                        Spacer(modifier = Modifier.height(8.dp))
++                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                            AmberButton(
++                                text = "Simpan perubahan",
++                                onClick = { overwritePreset(editingPreset.id, true) },
++                                modifier = Modifier.weight(1.3f),
++                                style = AmberButtonStyle.Primary,
++                                enabled = !busy,
++                                height = 36.dp
++                            )
++                            AmberButton(
++                                text = "Selesai",
++                                onClick = { finishEditing() },
++                                modifier = Modifier.weight(0.7f),
++                                style = AmberButtonStyle.Ghost,
++                                height = 36.dp
++                            )
++                        }
++                    }
++                    Spacer(modifier = Modifier.height(10.dp))
++                }
++
++                val renaming = renamingId != null
++                val onPrimary: () -> Unit = {
++                    val id = renamingId
++                    if (id != null) doRename(id) else saveCurrent()
++                }
++                val onCancelRename: () -> Unit = {
++                    renamingId = null
++                    name = ""
++                }
++                if (wide) {
++                    // Satu baris: nama, simpan, impor
++                    Row(
++                        verticalAlignment = Alignment.CenterVertically,
++                        horizontalArrangement = Arrangement.spacedBy(8.dp)
++                    ) {
++                        NuxTextField(
++                            value = name,
++                            onValueChange = { name = it.take(ControlPresetManager.MAX_NAME) },
++                            placeholder = Tr.t("Nama preset"),
++                            modifier = Modifier.weight(1f)
++                        )
++                        AmberButton(
++                            text = if (renaming) "Simpan nama" else "Simpan",
++                            onClick = onPrimary,
++                            style = AmberButtonStyle.Primary,
++                            enabled = !busy,
++                            height = 42.dp
++                        )
++                        if (renaming) {
++                            AmberButton(
++                                text = "Batal",
++                                onClick = onCancelRename,
++                                style = AmberButtonStyle.Ghost,
++                                height = 42.dp
++                            )
++                        } else {
++                            AmberButton(
++                                text = "Impor",
++                                onClick = { importLauncher.launch(arrayOf("*/*")) },
++                                style = AmberButtonStyle.Ghost,
++                                icon = "download",
++                                enabled = !busy,
++                                height = 42.dp
++                            )
+                         }
++                    }
++                } else {
++                    // Layar sempit: nama di atas, tombol di bawahnya
++                    NuxTextField(
++                        value = name,
++                        onValueChange = { name = it.take(ControlPresetManager.MAX_NAME) },
++                        placeholder = Tr.t("Nama preset")
+                     )
++                    Spacer(modifier = Modifier.height(8.dp))
++                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                        AmberButton(
++                            text = if (renaming) "Simpan nama" else "Simpan layout saat ini",
++                            onClick = onPrimary,
++                            modifier = Modifier.weight(1f),
++                            style = AmberButtonStyle.Primary,
++                            enabled = !busy,
++                            height = 40.dp
++                        )
++                        if (renaming) {
++                            AmberButton(
++                                text = "Batal",
++                                onClick = onCancelRename,
++                                modifier = Modifier.weight(0.6f),
++                                style = AmberButtonStyle.Ghost,
++                                height = 40.dp
++                            )
++                        } else {
++                            AmberButton(
++                                text = "Impor berkas",
++                                onClick = { importLauncher.launch(arrayOf("*/*")) },
++                                modifier = Modifier.weight(0.8f),
++                                style = AmberButtonStyle.Ghost,
++                                icon = "download",
++                                enabled = !busy,
++                                height = 40.dp
++                            )
++                        }
++                    }
++                }
++                Spacer(modifier = Modifier.height(if (shortScreen) 8.dp else 12.dp))
++
++                // Hanya bagian ini yang bergulir; sisanya tetap terlihat
++                Column(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .weight(1f, fill = false)
++                        .verticalScroll(rememberScrollState()),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    if (presets.isEmpty()) {
++                        Text(
++                            text = "Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.",
++                            color = Amber.TextDim,
++                            fontSize = 13.sp,
++                            lineHeight = 19.sp
++                        )
++                    }
++                    for (preset in presets) {
++                        PresetRow(
++                            preset = preset,
++                            active = activeId == preset.id,
++                            expanded = expandedId == preset.id,
++                            enabled = !busy,
++                            confirmingDelete = confirmDeleteId == preset.id,
++                            confirmingOverwrite = confirmOverwriteId == preset.id,
++                            onApply = { askApply(preset) },
++                            onToggle = {
++                                expandedId = if (expandedId == preset.id) null else preset.id
++                                confirmDeleteId = null
++                                confirmOverwriteId = null
++                            },
++                            onEdit = { startEdit(preset) },
++                            onRename = {
++                                renamingId = preset.id
++                                name = preset.name
++                                confirmDeleteId = null
++                                confirmOverwriteId = null
++                            },
++                            onDuplicate = { duplicatePreset(preset.id) },
++                            onOverwrite = {
++                                if (confirmOverwriteId == preset.id) {
++                                    overwritePreset(preset.id, false)
++                                } else {
++                                    confirmOverwriteId = preset.id
++                                    confirmDeleteId = null
++                                }
++                            },
++                            onExport = {
++                                exportId = preset.id
++                                exportLauncher.launch("amber-preset-" + safeFileName(preset.name) + ".json")
++                            },
++                            onDelete = {
++                                if (confirmDeleteId == preset.id) {
++                                    deletePreset(preset.id)
++                                } else {
++                                    confirmDeleteId = preset.id
++                                    confirmOverwriteId = null
++                                }
++                            }
++                        )
++                    }
++                    if (wide && missingBuiltins > 0 && hasPrevious) {
++                        Row(
++                            modifier = Modifier.fillMaxWidth(),
++                            horizontalArrangement = Arrangement.spacedBy(8.dp)
++                        ) {
++                            AmberButton(
++                                text = "Pulihkan preset bawaan",
++                                onClick = { restoreBuiltins() },
++                                modifier = Modifier.weight(1f),
++                                style = AmberButtonStyle.Ghost,
++                                enabled = !busy,
++                                height = 40.dp
++                            )
++                            AmberButton(
++                                text = "Kembalikan layout sebelumnya",
++                                onClick = { restorePrevious() },
++                                modifier = Modifier.weight(1f),
++                                style = AmberButtonStyle.Ghost,
++                                enabled = !busy,
++                                height = 40.dp
++                            )
++                        }
++                    } else {
++                        if (missingBuiltins > 0) {
++                            AmberButton(
++                                text = "Pulihkan preset bawaan",
++                                onClick = { restoreBuiltins() },
++                                modifier = Modifier.fillMaxWidth(),
++                                style = AmberButtonStyle.Ghost,
++                                enabled = !busy,
++                                height = 40.dp
++                            )
++                        }
++                        if (hasPrevious) {
++                            AmberButton(
++                                text = "Kembalikan layout sebelumnya",
++                                onClick = { restorePrevious() },
++                                modifier = Modifier.fillMaxWidth(),
++                                style = AmberButtonStyle.Ghost,
++                                enabled = !busy,
++                                height = 40.dp
++                            )
++                        }
++                    }
+                 }
+@@ -290,24 +581,2 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+         }
+-        if (missingBuiltins > 0) {
+-            Spacer(modifier = Modifier.height(12.dp))
+-            AmberButton(
+-                text = "Pulihkan preset bawaan",
+-                onClick = { restoreBuiltins() },
+-                modifier = Modifier.fillMaxWidth(),
+-                style = AmberButtonStyle.Ghost,
+-                enabled = !busy,
+-                height = 40.dp
+-            )
+-        }
+-        if (hasPrevious) {
+-            Spacer(modifier = Modifier.height(12.dp))
+-            AmberButton(
+-                text = "Kembalikan layout sebelumnya",
+-                onClick = { restorePrevious() },
+-                modifier = Modifier.fillMaxWidth(),
+-                style = AmberButtonStyle.Ghost,
+-                enabled = !busy,
+-                height = 40.dp
+-            )
+-        }
+     }
+@@ -340,2 +609,3 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+                                 ControlLayoutManager.importLayout(context, target.buttons)
++                                ControlPresetManager.clearEditing(dir)
+                             }
+@@ -352,25 +622,32 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+         ) {
+-            Text(
+-                text = "Layout tombol saat ini akan diganti dengan preset \"${target.preset.name}\" (${target.buttons.size} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.",
+-                color = Amber.TextDim,
+-                fontSize = 14.sp,
+-                lineHeight = 21.sp
+-            )
+-            if (usesArrows) {
+-                Text(
+-                    text = "Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.",
+-                    color = Amber.TextDim,
+-                    fontSize = 14.sp,
+-                    lineHeight = 21.sp,
+-                    modifier = Modifier.padding(top = 10.dp)
+-                )
+-            }
+-            if (macros > 0) {
++            // Teks bisa panjang di layar pendek: dibatasi tingginya dan bisa digulir supaya tombol tetap terlihat
++            Column(
++                modifier = Modifier
++                    .heightIn(max = 160.dp)
++                    .verticalScroll(rememberScrollState())
++            ) {
+                 Text(
+-                    text = "Preset ini berisi $macros tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.",
++                    text = "Layout tombol saat ini akan diganti dengan preset \"${target.preset.name}\" (${target.buttons.size} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.",
+                     color = Amber.TextDim,
+                     fontSize = 14.sp,
+-                    lineHeight = 21.sp,
+-                    modifier = Modifier.padding(top = 10.dp)
++                    lineHeight = 21.sp
+                 )
++                if (usesArrows) {
++                    Text(
++                        text = "Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.",
++                        color = Amber.TextDim,
++                        fontSize = 14.sp,
++                        lineHeight = 21.sp,
++                        modifier = Modifier.padding(top = 10.dp)
++                    )
++                }
++                if (macros > 0) {
++                    Text(
++                        text = "Preset ini berisi $macros tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.",
++                        color = Amber.TextDim,
++                        fontSize = 14.sp,
++                        lineHeight = 21.sp,
++                        modifier = Modifier.padding(top = 10.dp)
++                    )
++                }
+             }
+@@ -380,2 +657,3 @@ fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
+ 
++@OptIn(ExperimentalLayoutApi::class)
+ @Composable
+@@ -383,6 +661,14 @@ private fun PresetRow(
+     preset: ControlPresetManager.Preset,
+-    confirmingDelete: Boolean,
++    active: Boolean,
++    expanded: Boolean,
+     enabled: Boolean,
++    confirmingDelete: Boolean,
++    confirmingOverwrite: Boolean,
+     onApply: () -> Unit,
++    onToggle: () -> Unit,
++    onEdit: () -> Unit,
+     onRename: () -> Unit,
++    onDuplicate: () -> Unit,
++    onOverwrite: () -> Unit,
++    onExport: () -> Unit,
+     onDelete: () -> Unit
+@@ -394,44 +680,54 @@ private fun PresetRow(
+             .background(Amber.Fill, shape)
+-            .border(1.dp, Amber.Line, shape)
++            .border(1.dp, if (active) Amber.Yellow.copy(alpha = 0.6f) else Amber.Line, shape)
+             .padding(12.dp)
+     ) {
+-        Text(
+-            text = preset.name,
+-            color = Amber.Text,
+-            fontSize = 14.sp,
+-            fontWeight = FontWeight.Bold,
+-            maxLines = 1,
+-            overflow = TextOverflow.Ellipsis
+-        )
+-        Text(
+-            text = "Berisi ${preset.buttonCount} tombol",
+-            color = Amber.TextFaint,
+-            fontSize = 12.sp,
+-            modifier = Modifier.padding(top = 2.dp)
+-        )
+-        Spacer(modifier = Modifier.height(8.dp))
+-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            Column(
++                modifier = Modifier
++                    .weight(1f)
++                    .clickable { onToggle() }
++            ) {
++                Text(
++                    text = preset.name,
++                    color = Amber.Text,
++                    fontSize = 14.sp,
++                    fontWeight = FontWeight.Bold,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis
++                )
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text(
++                        text = "Berisi ${preset.buttonCount} tombol",
++                        color = Amber.TextFaint,
++                        fontSize = 12.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis,
++                        modifier = Modifier.weight(1f, fill = false)
++                    )
++                    if (active) {
++                        Spacer(modifier = Modifier.width(8.dp))
++                        Text(
++                            text = "Sedang dipakai",
++                            color = Amber.Yellow,
++                            fontSize = 11.sp,
++                            fontWeight = FontWeight.Bold,
++                            maxLines = 1
++                        )
++                    }
++                }
++            }
++            Spacer(modifier = Modifier.width(8.dp))
+             AmberButton(
+-                text = "Pakai",
++                text = if (active) "Dipakai" else "Pakai",
+                 onClick = onApply,
+-                modifier = Modifier.weight(1f),
+-                style = AmberButtonStyle.Primary,
+-                enabled = enabled,
++                style = if (active) AmberButtonStyle.Ghost else AmberButtonStyle.Primary,
++                enabled = enabled && !active,
+                 height = 36.dp
+             )
++            Spacer(modifier = Modifier.width(6.dp))
+             AmberButton(
+-                text = "Ubah nama",
+-                onClick = onRename,
+-                modifier = Modifier.weight(1.2f),
++                text = "Opsi",
++                onClick = onToggle,
+                 style = AmberButtonStyle.Ghost,
+-                enabled = enabled,
+-                height = 36.dp
+-            )
+-            AmberButton(
+-                text = if (confirmingDelete) "Yakin?" else "Hapus",
+-                onClick = onDelete,
+-                modifier = Modifier.weight(1f),
+-                style = if (confirmingDelete) AmberButtonStyle.Danger else AmberButtonStyle.Ghost,
+-                icon = "trash",
+-                enabled = enabled,
++                icon = "gear",
+                 height = 36.dp
+@@ -439,2 +735,56 @@ private fun PresetRow(
+         }
++        if (expanded) {
++            Spacer(modifier = Modifier.height(8.dp))
++            // Tombol turun ke baris berikutnya sendiri bila tidak muat, jadi aman di lebar layar berapa pun
++            FlowRow(
++                horizontalArrangement = Arrangement.spacedBy(6.dp),
++                verticalArrangement = Arrangement.spacedBy(6.dp)
++            ) {
++                AmberButton(
++                    text = "Edit",
++                    onClick = onEdit,
++                    style = AmberButtonStyle.Ghost,
++                    enabled = enabled,
++                    height = 36.dp
++                )
++                AmberButton(
++                    text = "Ubah nama",
++                    onClick = onRename,
++                    style = AmberButtonStyle.Ghost,
++                    enabled = enabled,
++                    height = 36.dp
++                )
++                AmberButton(
++                    text = "Duplikat",
++                    onClick = onDuplicate,
++                    style = AmberButtonStyle.Ghost,
++                    icon = "copy",
++                    enabled = enabled,
++                    height = 36.dp
++                )
++                AmberButton(
++                    text = if (confirmingOverwrite) "Yakin?" else "Simpan layout ke sini",
++                    onClick = onOverwrite,
++                    style = if (confirmingOverwrite) AmberButtonStyle.Danger else AmberButtonStyle.Ghost,
++                    enabled = enabled,
++                    height = 36.dp
++                )
++                AmberButton(
++                    text = "Ekspor",
++                    onClick = onExport,
++                    style = AmberButtonStyle.Ghost,
++                    icon = "share",
++                    enabled = enabled,
++                    height = 36.dp
++                )
++                AmberButton(
++                    text = if (confirmingDelete) "Yakin?" else "Hapus",
++                    onClick = onDelete,
++                    style = if (confirmingDelete) AmberButtonStyle.Danger else AmberButtonStyle.Ghost,
++                    icon = "trash",
++                    enabled = enabled,
++                    height = 36.dp
++                )
++            }
++        }
+     }
+@@ -442,2 +792,18 @@ private fun PresetRow(
+ 
++/** Membaca folder preset dan menentukan preset mana yang sama dengan layout yang sedang dipakai. */
++private fun loadDialogData(context: Context, dir: File): DialogData {
++    // Preset bawaan disalin sekali; yang sudah dihapus pengguna tidak muncul lagi
++    ControlPresetManager.ensureBuiltins(dir, ControlLayoutManager.getDefaultButtons())
++    val list = ControlPresetManager.list(dir)
++    val current = (ControlLayoutIO.parse(ControlLayoutManager.exportJson(context)) as? ControlLayoutIO.ImportResult.Ok)?.buttons
++    val activeId = if (current == null) null else list.firstOrNull { ControlPresetManager.read(dir, it.id) == current }?.id
++    return DialogData(
++        presets = list,
++        hasPrevious = ControlPresetManager.hasPrevious(dir),
++        missingBuiltins = ControlPresetManager.missingBuiltins(dir),
++        activeId = activeId,
++        editingId = ControlPresetManager.editingId(dir)
++    )
++}
++
+ private fun saveMessage(r: ControlPresetManager.SaveResult): String = when (r) {
+@@ -464,2 +830,23 @@ private fun importAsPreset(context: Context, dir: File, uri: Uri): String {
+ 
++/** Menulis isi preset [id] ke berkas pilihan pengguna dalam format ekspor Amber yang bersih. */
++private fun writePresetTo(context: Context, dir: File, id: String, uri: Uri): Boolean {
++    val buttons = ControlPresetManager.read(dir, id) ?: return false
++    return try {
++        context.contentResolver.openOutputStream(uri, "wt")?.use { out ->
++            out.write(ControlLayoutIO.toJson(buttons).toByteArray(Charsets.UTF_8))
++            true
++        } ?: false
++    } catch (_: Exception) {
++        false
++    }
++}
++
++/** Nama preset yang aman jadi nama berkas: huruf, angka, strip, dan garis bawah saja. */
++private fun safeFileName(name: String): String {
++    val cleaned = name.map { if (it.isLetterOrDigit() || it == '-' || it == '_') it else '-' }
++        .joinToString("")
++        .trim('-')
++    return cleaned.ifEmpty { "layout" }.take(40)
++}
++
+ /** Nama berkas tanpa ekstensi, dipakai sebagai nama preset hasil impor. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 7132546..6f20c12 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -1535,3 +1535,6 @@ fun SettingsScreen(
+     if (showControlPresets) {
+-        NuxControlPresetsDialog(onDismiss = { showControlPresets = false })
++        NuxControlPresetsDialog(
++            onDismiss = { showControlPresets = false },
++            onOpenEditor = onOpenGuiEditor
++        )
+     }
+# FIN part=1/1 files=10

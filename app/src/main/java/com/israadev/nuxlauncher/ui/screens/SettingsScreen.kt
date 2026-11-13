@@ -67,6 +67,7 @@ import com.israadev.nuxlauncher.ui.components.*
 import com.israadev.nuxlauncher.ui.dialogs.NuxRendererV2ConfigDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
+import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.Dispatchers
@@ -88,6 +89,7 @@ fun SettingsScreen(
     val currentSettings by SettingsManager.settings.collectAsState()
 
     var showAboutDialog by remember { mutableStateOf(false) }
+    var showControlPresets by remember { mutableStateOf(false) }
 
     // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
     // dikerjakan di thread IO; layar hanya menyimpan hasil pemeriksaan sampai pengguna menyetujui.
@@ -751,6 +753,24 @@ fun SettingsScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
                                         text = "Impor",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Black
+                                    )
+                                }
+                                NuxButton(
+                                    onClick = { showControlPresets = true },
+                                    backgroundColor = Color.Transparent,
+                                    cornerRadius = 20.dp,
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Bookmarks,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Preset",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Black
                                     )
@@ -1510,6 +1530,10 @@ fun SettingsScreen(
             },
             onDismiss = { pendingImport = null }
         )
+    }
+
+    if (showControlPresets) {
+        NuxControlPresetsDialog(onDismiss = { showControlPresets = false })
     }
 
     if (showAboutDialog) {

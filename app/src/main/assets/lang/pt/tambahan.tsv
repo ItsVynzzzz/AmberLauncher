@@ -26,3 +26,37 @@ Bagikan log launcher	Compartilhar log do launcher
 Batal dan keluar	Cancelar e sair
 Ubah skin & jubah	Alterar skin e capa
 Hapus teks	Limpar texto
+# Preset kontrol dan preset bawaan (13 Nov 2026)
+Preset	Predefinições
+Preset kontrol	Predefinições de controles
+Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Salve vários layouts de controles e troque quando quiser com um toque. O layout em uso é salvo automaticamente antes de ser substituído.
+Nama preset	Nome da predefinição
+Simpan layout saat ini	Salvar o layout atual
+Simpan nama	Salvar nome
+Impor berkas	Importar arquivo
+Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	Ainda não há predefinições. Salve o layout atual ou importe um arquivo do Amber, Pojav, Zalith ou Mojo.
+Berisi {0} tombol	Contém {0} botões
+Pakai	Usar
+Ubah nama	Renomear
+Yakin?	Tem certeza?
+Kembalikan layout sebelumnya	Restaurar o layout anterior
+Pakai preset ini?	Usar esta predefinição?
+Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	O layout de botões atual será substituído pela predefinição "{0}" ({1} botões). O layout atual é salvo antes para que você possa restaurá-lo.
+Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Esta predefinição contém {0} botões de macro que digitam mensagens ou comandos automaticamente. Verifique antes de usar em um servidor.
+Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	Esta predefinição usa as setas do teclado. Defina as teclas de movimento nas opções de Controles do Minecraft como as setas para o personagem se mover.
+Preset disimpan	Predefinição salva
+Preset dipakai	Predefinição aplicada
+Preset dihapus	Predefinição excluída
+Nama preset diubah	Predefinição renomeada
+Gagal mengubah nama preset	Falha ao renomear a predefinição
+Layout sebelumnya dikembalikan	Layout anterior restaurado
+Gagal menyimpan preset	Falha ao salvar a predefinição
+Nama preset tidak boleh kosong	O nome da predefinição não pode ficar vazio
+Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Predefinições demais. Exclua uma primeiro (máximo de {0}).
+Preset tidak bisa dibaca	Não foi possível ler a predefinição
+Layout tidak bisa disimpan sebagai preset	Este layout não pode ser salvo como predefinição
+Preset bawaan dipulihkan	Predefinições integradas restauradas
+Pulihkan preset bawaan	Restaurar predefinições integradas
+Standar (joystick)	Padrão (joystick)
+WASD tanpa analog	WASD sem joystick
+Panah tanpa analog	Setas sem joystick

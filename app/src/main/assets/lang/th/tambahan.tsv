@@ -26,3 +26,37 @@ Bagikan log launcher	แชร์ล็อกตัวเปิดเกม
 Batal dan keluar	ยกเลิกและออก
 Ubah skin & jubah	เปลี่ยนสกินและเคป
 Hapus teks	ล้างข้อความ
+# Preset kontrol dan preset bawaan (13 Nov 2026)
+Preset	พรีเซ็ต
+Preset kontrol	พรีเซ็ตปุ่มควบคุม
+Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	บันทึกเลย์เอาต์ปุ่มควบคุมได้หลายแบบ แล้วสลับได้ทุกเมื่อด้วยการแตะครั้งเดียว เลย์เอาต์ที่ใช้อยู่จะถูกบันทึกอัตโนมัติก่อนถูกแทนที่
+Nama preset	ชื่อพรีเซ็ต
+Simpan layout saat ini	บันทึกเลย์เอาต์ปัจจุบัน
+Simpan nama	บันทึกชื่อ
+Impor berkas	นำเข้าไฟล์
+Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	ยังไม่มีพรีเซ็ต บันทึกเลย์เอาต์ปัจจุบัน หรือนำเข้าไฟล์จาก Amber, Pojav, Zalith หรือ Mojo
+Berisi {0} tombol	มี {0} ปุ่ม
+Pakai	ใช้
+Ubah nama	เปลี่ยนชื่อ
+Yakin?	แน่ใจไหม?
+Kembalikan layout sebelumnya	คืนค่าเลย์เอาต์ก่อนหน้า
+Pakai preset ini?	ใช้พรีเซ็ตนี้ไหม
+Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	เลย์เอาต์ปุ่มปัจจุบันจะถูกแทนที่ด้วยพรีเซ็ต "{0}" ({1} ปุ่ม) ระบบจะบันทึกเลย์เอาต์ปัจจุบันไว้ก่อนเพื่อให้คืนค่าได้
+Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	พรีเซ็ตนี้มีปุ่มมาโคร {0} ปุ่มที่พิมพ์แชตหรือคำสั่งอัตโนมัติ ตรวจสอบก่อนใช้บนเซิร์ฟเวอร์
+Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	พรีเซ็ตนี้ใช้ปุ่มลูกศร ตั้งปุ่มเดินในตัวเลือกการควบคุมของ Minecraft เป็นปุ่มลูกศรเพื่อให้ตัวละครเคลื่อนที่ได้
+Preset disimpan	บันทึกพรีเซ็ตแล้ว
+Preset dipakai	ใช้พรีเซ็ตแล้ว
+Preset dihapus	ลบพรีเซ็ตแล้ว
+Nama preset diubah	เปลี่ยนชื่อพรีเซ็ตแล้ว
+Gagal mengubah nama preset	เปลี่ยนชื่อพรีเซ็ตไม่สำเร็จ
+Layout sebelumnya dikembalikan	คืนค่าเลย์เอาต์ก่อนหน้าแล้ว
+Gagal menyimpan preset	บันทึกพรีเซ็ตไม่สำเร็จ
+Nama preset tidak boleh kosong	ชื่อพรีเซ็ตต้องไม่ว่าง
+Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	มีพรีเซ็ตมากเกินไป โปรดลบอันหนึ่งก่อน (สูงสุด {0})
+Preset tidak bisa dibaca	อ่านพรีเซ็ตไม่ได้
+Layout tidak bisa disimpan sebagai preset	ไม่สามารถบันทึกเลย์เอาต์นี้เป็นพรีเซ็ตได้
+Preset bawaan dipulihkan	คืนค่าพรีเซ็ตที่มาพร้อมแอปแล้ว
+Pulihkan preset bawaan	คืนค่าพรีเซ็ตที่มาพร้อมแอป
+Standar (joystick)	มาตรฐาน (จอยสติ๊ก)
+WASD tanpa analog	WASD แบบไม่ใช้จอยสติ๊ก
+Panah tanpa analog	ปุ่มลูกศรแบบไม่ใช้จอยสติ๊ก

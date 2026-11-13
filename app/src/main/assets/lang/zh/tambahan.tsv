@@ -30,3 +30,37 @@ Efek	特效
 Efek salju	雪花特效
 Jumlah salju	雪花数量
 Salju turun di Beranda dan layar lain. Bawaan mati.	主页和其他界面会飘落雪花。默认关闭。
+# Preset kontrol dan preset bawaan (13 Nov 2026)
+Preset	预设
+Preset kontrol	控制预设
+Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	可以保存多套控制布局，并随时一键切换。替换之前，当前使用的布局会自动保存。
+Nama preset	预设名称
+Simpan layout saat ini	保存当前布局
+Simpan nama	保存名称
+Impor berkas	导入文件
+Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	还没有预设。请保存当前布局，或导入来自 Amber、Pojav、Zalith 或 Mojo 的文件。
+Berisi {0} tombol	包含 {0} 个按钮
+Pakai	使用
+Ubah nama	重命名
+Yakin?	确定吗？
+Kembalikan layout sebelumnya	恢复之前的布局
+Pakai preset ini?	使用此预设？
+Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	当前的按钮布局将被预设“{0}”（{1} 个按钮）替换。会先保存当前布局，以便恢复。
+Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	此预设包含 {0} 个会自动发送聊天消息或命令的宏按钮。在服务器上使用前请先检查。
+Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	此预设使用方向键。请在 Minecraft 的控制选项中把移动按键设为方向键，角色才能移动。
+Preset disimpan	预设已保存
+Preset dipakai	已应用预设
+Preset dihapus	预设已删除
+Nama preset diubah	预设已重命名
+Gagal mengubah nama preset	重命名预设失败
+Layout sebelumnya dikembalikan	已恢复之前的布局
+Gagal menyimpan preset	保存预设失败
+Nama preset tidak boleh kosong	预设名称不能为空
+Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	预设太多了。请先删除一个（最多 {0} 个）。
+Preset tidak bisa dibaca	无法读取预设
+Layout tidak bisa disimpan sebagai preset	此布局无法保存为预设
+Preset bawaan dipulihkan	已恢复内置预设
+Pulihkan preset bawaan	恢复内置预设
+Standar (joystick)	标准（摇杆）
+WASD tanpa analog	WASD（无摇杆）
+Panah tanpa analog	方向键（无摇杆）

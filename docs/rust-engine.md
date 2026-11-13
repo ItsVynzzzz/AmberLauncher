@@ -39,11 +39,11 @@ Workflow lama **Bangun mesin Rust (Horizon)** (`docs/workflows/build-horizon-eng
 | Upload patch yang hanya mengubah dokumen (`README.md`, `docs/`, `*.md`, `LICENSE`, ...) | Patch diterapkan dan disimpan ke repo. **Tanpa build, tanpa APK, tanpa Release.** |
 | Edit `.md`, `docs/`, `.github/` langsung di GitHub | Run bahkan tidak dimulai. |
 | Run workflow manual, *rilis* **tidak** dicentang | Build uji, seperti baris pertama. |
-| Run workflow manual, *rilis* **dicentang** | Rilis bernomor baru (`v0.1.0-beta.N`) dengan APK 64-bit dan 32-bit. Hanya ini yang membuat pengguna aplikasi ditawari pembaruan. |
+| Run workflow manual, *rilis* **dicentang** | Rilis bernomor baru (`vX.Y.Z`, mis. `v1.0.1`) dengan APK 64-bit dan 32-bit. Hanya ini yang membuat pengguna aplikasi ditawari pembaruan. Pilihan *jenis* menentukan kenaikannya: `patch` (1.0.0 jadi 1.0.1), `minor` (jadi 1.1.0), `major` (jadi 2.0.0). Rilis pertama memakai isi berkas `VERSION`. |
 
 Pilihan *mesin* pada Run workflow: `otomatis` (bawaan: bangun hanya bila belum ada), `ulang` (paksa bangun ulang), `lewati` (jangan bangun mesin di run ini).
 
-Build uji mengambil nomor turunan dari rilis terakhir, misalnya `0.1.0-beta.56.uji.130`. Menurut aturan urutan versi di aplikasi, itu lebih baru daripada rilis 56 (tidak pernah dianggap pembaruan) dan lebih lama daripada rilis 57 (rilis berikutnya tetap ditawarkan). Untuk memasang build uji di HP, unduh APK-nya dari halaman Release `uji`.
+Build uji diberi nama versi rilis berikutnya plus akhiran `-uji.<nomor run>`, misalnya `1.0.1-uji.130`. Menurut aturan urutan versi di aplikasi, itu lebih baru daripada rilis 1.0.0 (tidak pernah dianggap pembaruan) dan lebih lama daripada rilis 1.0.1 (rilis berikutnya tetap ditawarkan). Untuk memasang build uji di HP, unduh APK-nya dari halaman Release `uji`. Upload patch tidak menaikkan nomor rilis; hanya run manual dengan *rilis* dicentang yang menaikkannya.
 
 Jangan mengunggah patch baru saat sebuah build masih berjalan: run lama dibatalkan oleh yang baru (itulah yang menjaga patch tidak diterapkan dua kali), dan pembangunan mesin yang terpotong harus mulai dari awal.
 

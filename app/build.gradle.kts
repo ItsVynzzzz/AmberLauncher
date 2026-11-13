@@ -10,12 +10,13 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-// Dasar nama versi dari berkas VERSION di akar repo. Ubah isinya (mis. 0.2.0-beta atau 1.0.0) untuk
-// naik ke seri versi berikutnya; nomor build di belakangnya otomatis mulai dari 1 lagi.
+// Dasar nama versi dari berkas VERSION di akar repo: tiga angka, mis. 1.0.0. Rilis pertama memakai isinya;
+// rilis berikutnya dinaikkan otomatis oleh workflow (patch/minor/major), jadi berkas ini hanya diubah
+// bila ingin melompat ke versi tertentu.
 fun baseVersionName(): String =
     rootProject.file("VERSION").takeIf { it.isFile }
         ?.readText()?.trim()?.takeIf { it.isNotEmpty() }
-        ?: "0.1.0-beta"
+        ?: "1.0.0"
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -66,11 +67,11 @@ android {
         // Actions lewat nomor run, jadi JANGAN direset walau nama versi dimulai ulang: Android menolak
         // memasang APK dengan versionCode lebih kecil dari yang sudah terpasang. Build lokal tetap 10.
         versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.let { 100 + it } ?: 10
-        // Nama versi yang dilihat pengguna: dasarnya dari berkas VERSION di akar repo (mis. 0.1.0-beta).
-        // GitHub Actions menambahkan nomor build di belakangnya lewat AMBER_VERSION_NAME (0.1.0-beta.7);
-        // build lokal diberi akhiran ".dev" supaya tidak pernah dianggap pembaruan.
+        // Nama versi yang dilihat pengguna. GitHub Actions menentukannya lewat AMBER_VERSION_NAME (mis. 1.0.1
+        // untuk rilis, 1.0.1-uji.130 untuk build uji). Build lokal memakai isi berkas VERSION dengan akhiran
+        // "+dev" (mis. 1.0.0+dev): sama dengan versi dasarnya, jadi hanya rilis yang lebih baru yang ditawarkan.
         versionName = System.getenv("AMBER_VERSION_NAME")?.trim()?.takeIf { it.isNotEmpty() }
-            ?: "${baseVersionName()}.dev"
+            ?: "${baseVersionName()}+dev"
 
 
         // Kunci API CurseForge untuk unduhan di layar Mod. Tidak disimpan di repo: diambil dari variabel

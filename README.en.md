@@ -24,7 +24,7 @@ AmberLauncher is a launcher for playing Minecraft Java Edition on Android. The f
 - **Automatic starting values**: game RAM, resolution scale, and render distance follow the device's RAM, and all of them can be changed.
 - **Mods and content**: Vanilla, Fabric, Forge, and NeoForge, with mods from Modrinth and CurseForge.
 
-It uses a translucent dark theme with an amber accent. It is still in beta; bug reports and feedback are welcome.
+It uses a translucent dark theme with an amber accent. Bug reports and feedback are welcome.
 
 ## Download
 

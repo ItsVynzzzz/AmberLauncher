@@ -1,0 +1,1164 @@
+diff --git a/app/src/main/assets/lang/en/tambahan.tsv b/app/src/main/assets/lang/en/tambahan.tsv
+index 18b623c..5912c2d 100644
+--- a/app/src/main/assets/lang/en/tambahan.tsv
++++ b/app/src/main/assets/lang/en/tambahan.tsv
+@@ -26 +26,35 @@ Ubah skin & jubah	Change skin & cape
+ Hapus teks	Clear text
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	Presets
++Preset kontrol	Control presets
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Save several control layouts and switch between them anytime with one tap. The layout in use is saved automatically before it is replaced.
++Nama preset	Preset name
++Simpan layout saat ini	Save current layout
++Simpan nama	Save name
++Impor berkas	Import file
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	No presets yet. Save the current layout, or import a file from Amber, Pojav, Zalith, or Mojo.
++Berisi {0} tombol	Contains {0} buttons
++Pakai	Use
++Ubah nama	Rename
++Yakin?	Sure?
++Kembalikan layout sebelumnya	Restore previous layout
++Pakai preset ini?	Use this preset?
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	The current button layout will be replaced with the preset "{0}" ({1} buttons). The current layout is saved first so you can restore it.
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	This preset contains {0} macro buttons that type chat messages or commands automatically. Check it before using it on a server.
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	This preset uses the arrow keys. Set the movement keys in Minecraft's Controls options to the arrow keys so your character moves.
++Preset disimpan	Preset saved
++Preset dipakai	Preset applied
++Preset dihapus	Preset deleted
++Nama preset diubah	Preset renamed
++Gagal mengubah nama preset	Failed to rename the preset
++Layout sebelumnya dikembalikan	Previous layout restored
++Gagal menyimpan preset	Failed to save the preset
++Nama preset tidak boleh kosong	The preset name can't be empty
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Too many presets. Delete one first (maximum {0}).
++Preset tidak bisa dibaca	Couldn't read the preset
++Layout tidak bisa disimpan sebagai preset	This layout can't be saved as a preset
++Preset bawaan dipulihkan	Built-in presets restored
++Pulihkan preset bawaan	Restore built-in presets
++Standar (joystick)	Standard (joystick)
++WASD tanpa analog	WASD without joystick
++Panah tanpa analog	Arrow keys without joystick
+diff --git a/app/src/main/assets/lang/es/tambahan.tsv b/app/src/main/assets/lang/es/tambahan.tsv
+index 04137fa..0540033 100644
+--- a/app/src/main/assets/lang/es/tambahan.tsv
++++ b/app/src/main/assets/lang/es/tambahan.tsv
+@@ -28 +28,35 @@ Ubah skin & jubah	Cambiar skin y capa
+ Hapus teks	Borrar texto
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	Presets
++Preset kontrol	Presets de controles
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Guarda varios diseños de controles y cámbialos cuando quieras con un toque. El diseño actual se guarda automáticamente antes de reemplazarlo.
++Nama preset	Nombre del preset
++Simpan layout saat ini	Guardar el diseño actual
++Simpan nama	Guardar nombre
++Impor berkas	Importar archivo
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	Aún no hay presets. Guarda el diseño actual o importa un archivo de Amber, Pojav, Zalith o Mojo.
++Berisi {0} tombol	Contiene {0} botones
++Pakai	Usar
++Ubah nama	Renombrar
++Yakin?	¿Seguro?
++Kembalikan layout sebelumnya	Restaurar el diseño anterior
++Pakai preset ini?	¿Usar este preset?
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	El diseño de botones actual se reemplazará por el preset "{0}" ({1} botones). El diseño actual se guarda antes para que puedas restaurarlo.
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Este preset contiene {0} botones de macro que escriben mensajes o comandos automáticamente. Revísalo antes de usarlo en un servidor.
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	Este preset usa las teclas de flecha. Configura las teclas de movimiento en las opciones de Controles de Minecraft con las flechas para que el personaje se mueva.
++Preset disimpan	Preset guardado
++Preset dipakai	Preset aplicado
++Preset dihapus	Preset eliminado
++Nama preset diubah	Preset renombrado
++Gagal mengubah nama preset	No se pudo renombrar el preset
++Layout sebelumnya dikembalikan	Diseño anterior restaurado
++Gagal menyimpan preset	No se pudo guardar el preset
++Nama preset tidak boleh kosong	El nombre del preset no puede estar vacío
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Demasiados presets. Elimina uno primero (máximo {0}).
++Preset tidak bisa dibaca	No se pudo leer el preset
++Layout tidak bisa disimpan sebagai preset	Este diseño no se puede guardar como preset
++Preset bawaan dipulihkan	Presets integrados restaurados
++Pulihkan preset bawaan	Restaurar presets integrados
++Standar (joystick)	Estándar (joystick)
++WASD tanpa analog	WASD sin joystick
++Panah tanpa analog	Flechas sin joystick
+diff --git a/app/src/main/assets/lang/fil/tambahan.tsv b/app/src/main/assets/lang/fil/tambahan.tsv
+index 8286741..85b75f0 100644
+--- a/app/src/main/assets/lang/fil/tambahan.tsv
++++ b/app/src/main/assets/lang/fil/tambahan.tsv
+@@ -30 +30,35 @@ Jumlah salju	Dami ng snow
+ Salju turun di Beranda dan layar lain. Bawaan mati.	Nag-snow sa Home at iba pang screen. Naka-off bilang default.
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	Mga preset
++Preset kontrol	Mga preset ng kontrol
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Mag-save ng ilang layout ng kontrol at magpalit anumang oras sa isang tap. Awtomatikong nase-save ang layout na ginagamit bago ito palitan.
++Nama preset	Pangalan ng preset
++Simpan layout saat ini	I-save ang kasalukuyang layout
++Simpan nama	I-save ang pangalan
++Impor berkas	Mag-import ng file
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	Wala pang preset. I-save ang kasalukuyang layout, o mag-import ng file mula sa Amber, Pojav, Zalith, o Mojo.
++Berisi {0} tombol	May {0} button
++Pakai	Gamitin
++Ubah nama	Palitan ang pangalan
++Yakin?	Sigurado?
++Kembalikan layout sebelumnya	Ibalik ang nakaraang layout
++Pakai preset ini?	Gamitin ang preset na ito?
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	Papalitan ng preset na "{0}" ({1} button) ang kasalukuyang layout ng mga button. Sine-save muna ang kasalukuyang layout para maibalik mo ito.
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	May {0} macro button ang preset na ito na awtomatikong nagta-type ng chat o command. Suriin muna bago gamitin sa server.
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	Gumagamit ang preset na ito ng mga arrow key. Itakda ang mga movement key sa mga opsyon ng Controls ng Minecraft sa mga arrow key para gumalaw ang karakter.
++Preset disimpan	Na-save ang preset
++Preset dipakai	Nagamit na ang preset
++Preset dihapus	Natanggal ang preset
++Nama preset diubah	Napalitan ang pangalan ng preset
++Gagal mengubah nama preset	Hindi napalitan ang pangalan ng preset
++Layout sebelumnya dikembalikan	Naibalik ang nakaraang layout
++Gagal menyimpan preset	Hindi na-save ang preset
++Nama preset tidak boleh kosong	Hindi puwedeng walang laman ang pangalan ng preset
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Napakarami nang preset. Magtanggal muna ng isa (maximum na {0}).
++Preset tidak bisa dibaca	Hindi mabasa ang preset
++Layout tidak bisa disimpan sebagai preset	Hindi mase-save bilang preset ang layout na ito
++Preset bawaan dipulihkan	Naibalik ang mga built-in na preset
++Pulihkan preset bawaan	Ibalik ang mga built-in na preset
++Standar (joystick)	Standard (joystick)
++WASD tanpa analog	WASD na walang joystick
++Panah tanpa analog	Mga arrow key na walang joystick
+diff --git a/app/src/main/assets/lang/pt/tambahan.tsv b/app/src/main/assets/lang/pt/tambahan.tsv
+index 7a0739f..c3eb6d9 100644
+--- a/app/src/main/assets/lang/pt/tambahan.tsv
++++ b/app/src/main/assets/lang/pt/tambahan.tsv
+@@ -28 +28,35 @@ Ubah skin & jubah	Alterar skin e capa
+ Hapus teks	Limpar texto
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	Predefinições
++Preset kontrol	Predefinições de controles
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Salve vários layouts de controles e troque quando quiser com um toque. O layout em uso é salvo automaticamente antes de ser substituído.
++Nama preset	Nome da predefinição
++Simpan layout saat ini	Salvar o layout atual
++Simpan nama	Salvar nome
++Impor berkas	Importar arquivo
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	Ainda não há predefinições. Salve o layout atual ou importe um arquivo do Amber, Pojav, Zalith ou Mojo.
++Berisi {0} tombol	Contém {0} botões
++Pakai	Usar
++Ubah nama	Renomear
++Yakin?	Tem certeza?
++Kembalikan layout sebelumnya	Restaurar o layout anterior
++Pakai preset ini?	Usar esta predefinição?
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	O layout de botões atual será substituído pela predefinição "{0}" ({1} botões). O layout atual é salvo antes para que você possa restaurá-lo.
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Esta predefinição contém {0} botões de macro que digitam mensagens ou comandos automaticamente. Verifique antes de usar em um servidor.
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	Esta predefinição usa as setas do teclado. Defina as teclas de movimento nas opções de Controles do Minecraft como as setas para o personagem se mover.
++Preset disimpan	Predefinição salva
++Preset dipakai	Predefinição aplicada
++Preset dihapus	Predefinição excluída
++Nama preset diubah	Predefinição renomeada
++Gagal mengubah nama preset	Falha ao renomear a predefinição
++Layout sebelumnya dikembalikan	Layout anterior restaurado
++Gagal menyimpan preset	Falha ao salvar a predefinição
++Nama preset tidak boleh kosong	O nome da predefinição não pode ficar vazio
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Predefinições demais. Exclua uma primeiro (máximo de {0}).
++Preset tidak bisa dibaca	Não foi possível ler a predefinição
++Layout tidak bisa disimpan sebagai preset	Este layout não pode ser salvo como predefinição
++Preset bawaan dipulihkan	Predefinições integradas restauradas
++Pulihkan preset bawaan	Restaurar predefinições integradas
++Standar (joystick)	Padrão (joystick)
++WASD tanpa analog	WASD sem joystick
++Panah tanpa analog	Setas sem joystick
+diff --git a/app/src/main/assets/lang/th/tambahan.tsv b/app/src/main/assets/lang/th/tambahan.tsv
+index 9fdb4f8..698214f 100644
+--- a/app/src/main/assets/lang/th/tambahan.tsv
++++ b/app/src/main/assets/lang/th/tambahan.tsv
+@@ -28 +28,35 @@ Ubah skin & jubah	เปลี่ยนสกินและเคป
+ Hapus teks	ล้างข้อความ
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	พรีเซ็ต
++Preset kontrol	พรีเซ็ตปุ่มควบคุม
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	บันทึกเลย์เอาต์ปุ่มควบคุมได้หลายแบบ แล้วสลับได้ทุกเมื่อด้วยการแตะครั้งเดียว เลย์เอาต์ที่ใช้อยู่จะถูกบันทึกอัตโนมัติก่อนถูกแทนที่
++Nama preset	ชื่อพรีเซ็ต
++Simpan layout saat ini	บันทึกเลย์เอาต์ปัจจุบัน
++Simpan nama	บันทึกชื่อ
++Impor berkas	นำเข้าไฟล์
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	ยังไม่มีพรีเซ็ต บันทึกเลย์เอาต์ปัจจุบัน หรือนำเข้าไฟล์จาก Amber, Pojav, Zalith หรือ Mojo
++Berisi {0} tombol	มี {0} ปุ่ม
++Pakai	ใช้
++Ubah nama	เปลี่ยนชื่อ
++Yakin?	แน่ใจไหม?
++Kembalikan layout sebelumnya	คืนค่าเลย์เอาต์ก่อนหน้า
++Pakai preset ini?	ใช้พรีเซ็ตนี้ไหม
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	เลย์เอาต์ปุ่มปัจจุบันจะถูกแทนที่ด้วยพรีเซ็ต "{0}" ({1} ปุ่ม) ระบบจะบันทึกเลย์เอาต์ปัจจุบันไว้ก่อนเพื่อให้คืนค่าได้
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	พรีเซ็ตนี้มีปุ่มมาโคร {0} ปุ่มที่พิมพ์แชตหรือคำสั่งอัตโนมัติ ตรวจสอบก่อนใช้บนเซิร์ฟเวอร์
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	พรีเซ็ตนี้ใช้ปุ่มลูกศร ตั้งปุ่มเดินในตัวเลือกการควบคุมของ Minecraft เป็นปุ่มลูกศรเพื่อให้ตัวละครเคลื่อนที่ได้
++Preset disimpan	บันทึกพรีเซ็ตแล้ว
++Preset dipakai	ใช้พรีเซ็ตแล้ว
++Preset dihapus	ลบพรีเซ็ตแล้ว
++Nama preset diubah	เปลี่ยนชื่อพรีเซ็ตแล้ว
++Gagal mengubah nama preset	เปลี่ยนชื่อพรีเซ็ตไม่สำเร็จ
++Layout sebelumnya dikembalikan	คืนค่าเลย์เอาต์ก่อนหน้าแล้ว
++Gagal menyimpan preset	บันทึกพรีเซ็ตไม่สำเร็จ
++Nama preset tidak boleh kosong	ชื่อพรีเซ็ตต้องไม่ว่าง
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	มีพรีเซ็ตมากเกินไป โปรดลบอันหนึ่งก่อน (สูงสุด {0})
++Preset tidak bisa dibaca	อ่านพรีเซ็ตไม่ได้
++Layout tidak bisa disimpan sebagai preset	ไม่สามารถบันทึกเลย์เอาต์นี้เป็นพรีเซ็ตได้
++Preset bawaan dipulihkan	คืนค่าพรีเซ็ตที่มาพร้อมแอปแล้ว
++Pulihkan preset bawaan	คืนค่าพรีเซ็ตที่มาพร้อมแอป
++Standar (joystick)	มาตรฐาน (จอยสติ๊ก)
++WASD tanpa analog	WASD แบบไม่ใช้จอยสติ๊ก
++Panah tanpa analog	ปุ่มลูกศรแบบไม่ใช้จอยสติ๊ก
+diff --git a/app/src/main/assets/lang/vi/tambahan.tsv b/app/src/main/assets/lang/vi/tambahan.tsv
+index 1483c14..a760e22 100644
+--- a/app/src/main/assets/lang/vi/tambahan.tsv
++++ b/app/src/main/assets/lang/vi/tambahan.tsv
+@@ -28 +28,35 @@ Ubah skin & jubah	Đổi skin & áo choàng
+ Hapus teks	Xóa văn bản
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	Mẫu
++Preset kontrol	Mẫu điều khiển
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	Lưu nhiều bố cục điều khiển và chuyển đổi bất cứ lúc nào chỉ bằng một lần chạm. Bố cục đang dùng được tự động lưu trước khi bị thay thế.
++Nama preset	Tên mẫu
++Simpan layout saat ini	Lưu bố cục hiện tại
++Simpan nama	Lưu tên
++Impor berkas	Nhập tệp
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	Chưa có mẫu nào. Hãy lưu bố cục hiện tại hoặc nhập tệp từ Amber, Pojav, Zalith hoặc Mojo.
++Berisi {0} tombol	Gồm {0} nút
++Pakai	Dùng
++Ubah nama	Đổi tên
++Yakin?	Chắc chắn?
++Kembalikan layout sebelumnya	Khôi phục bố cục trước đó
++Pakai preset ini?	Dùng mẫu này?
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	Bố cục nút hiện tại sẽ được thay bằng mẫu "{0}" ({1} nút). Bố cục hiện tại được lưu trước để bạn có thể khôi phục.
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	Mẫu này có {0} nút macro tự động gõ tin nhắn hoặc lệnh. Hãy kiểm tra trước khi dùng trên máy chủ.
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	Mẫu này dùng các phím mũi tên. Hãy đặt phím di chuyển trong tùy chọn Điều khiển của Minecraft thành phím mũi tên để nhân vật di chuyển.
++Preset disimpan	Đã lưu mẫu
++Preset dipakai	Đã áp dụng mẫu
++Preset dihapus	Đã xóa mẫu
++Nama preset diubah	Đã đổi tên mẫu
++Gagal mengubah nama preset	Không đổi được tên mẫu
++Layout sebelumnya dikembalikan	Đã khôi phục bố cục trước đó
++Gagal menyimpan preset	Không lưu được mẫu
++Nama preset tidak boleh kosong	Tên mẫu không được để trống
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	Quá nhiều mẫu. Hãy xóa bớt một mẫu trước (tối đa {0}).
++Preset tidak bisa dibaca	Không đọc được mẫu
++Layout tidak bisa disimpan sebagai preset	Không thể lưu bố cục này thành mẫu
++Preset bawaan dipulihkan	Đã khôi phục các mẫu có sẵn
++Pulihkan preset bawaan	Khôi phục mẫu có sẵn
++Standar (joystick)	Tiêu chuẩn (joystick)
++WASD tanpa analog	WASD không dùng joystick
++Panah tanpa analog	Phím mũi tên không dùng joystick
+diff --git a/app/src/main/assets/lang/zh/tambahan.tsv b/app/src/main/assets/lang/zh/tambahan.tsv
+index 32aee79..86ed5e9 100644
+--- a/app/src/main/assets/lang/zh/tambahan.tsv
++++ b/app/src/main/assets/lang/zh/tambahan.tsv
+@@ -32 +32,35 @@ Jumlah salju	雪花数量
+ Salju turun di Beranda dan layar lain. Bawaan mati.	主页和其他界面会飘落雪花。默认关闭。
++# Preset kontrol dan preset bawaan (13 Nov 2026)
++Preset	预设
++Preset kontrol	控制预设
++Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.	可以保存多套控制布局，并随时一键切换。替换之前，当前使用的布局会自动保存。
++Nama preset	预设名称
++Simpan layout saat ini	保存当前布局
++Simpan nama	保存名称
++Impor berkas	导入文件
++Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.	还没有预设。请保存当前布局，或导入来自 Amber、Pojav、Zalith 或 Mojo 的文件。
++Berisi {0} tombol	包含 {0} 个按钮
++Pakai	使用
++Ubah nama	重命名
++Yakin?	确定吗？
++Kembalikan layout sebelumnya	恢复之前的布局
++Pakai preset ini?	使用此预设？
++Layout tombol saat ini akan diganti dengan preset "{0}" ({1} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.	当前的按钮布局将被预设“{0}”（{1} 个按钮）替换。会先保存当前布局，以便恢复。
++Preset ini berisi {0} tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.	此预设包含 {0} 个会自动发送聊天消息或命令的宏按钮。在服务器上使用前请先检查。
++Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.	此预设使用方向键。请在 Minecraft 的控制选项中把移动按键设为方向键，角色才能移动。
++Preset disimpan	预设已保存
++Preset dipakai	已应用预设
++Preset dihapus	预设已删除
++Nama preset diubah	预设已重命名
++Gagal mengubah nama preset	重命名预设失败
++Layout sebelumnya dikembalikan	已恢复之前的布局
++Gagal menyimpan preset	保存预设失败
++Nama preset tidak boleh kosong	预设名称不能为空
++Terlalu banyak preset. Hapus salah satu dulu (maksimal {0}).	预设太多了。请先删除一个（最多 {0} 个）。
++Preset tidak bisa dibaca	无法读取预设
++Layout tidak bisa disimpan sebagai preset	此布局无法保存为预设
++Preset bawaan dipulihkan	已恢复内置预设
++Pulihkan preset bawaan	恢复内置预设
++Standar (joystick)	标准（摇杆）
++WASD tanpa analog	WASD（无摇杆）
++Panah tanpa analog	方向键（无摇杆）
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetBuiltins.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetBuiltins.kt
+new file mode 100644
+index 0000000..78fe46a
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetBuiltins.kt
+@@ -0,0 +1,93 @@
++package com.israadev.nuxlauncher.core.controls
++
++import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
++
++/**
++ * Preset bawaan Amber. Dibuat dari layout bawaan ([defaults]) supaya tombol sistemnya (FPS, keyboard, menu) dan
++ * tombol aksinya tetap sama; yang berbeda hanya cara bergerak:
++ * - Standar: layout bawaan apa adanya (joystick).
++ * - WASD tanpa analog: joystick diganti empat tombol W, A, S, D, ditambah tombol lari (Ctrl).
++ * - Panah tanpa analog: sama, tetapi memakai tombol panah (untuk pemain yang mengatur gerak game ke tombol panah).
++ *
++ * Preset bawaan hanya disalin sekali ke daftar preset ([ControlPresetManager.ensureBuiltins]) sebagai preset biasa,
++ * jadi bisa diubah namanya, dan dihapus kalau mengganggu. Murni logika (tanpa Android) supaya mudah diuji.
++ */
++object ControlPresetBuiltins {
++    const val ID_STANDARD = "p_bawaanstandar"
++    const val ID_WASD = "p_bawaanwasd"
++    const val ID_ARROWS = "p_bawaanpanah"
++
++    val IDS: List<String> = listOf(ID_STANDARD, ID_WASD, ID_ARROWS)
++
++    /**
++     * @param order dipakai sebagai waktu simpan: angka kecil supaya preset bawaan selalu berada di bawah preset
++     * buatan pengguna (daftar diurutkan dari waktu simpan terbaru), dengan urutan tetap di antara mereka.
++     */
++    class Builtin(val id: String, val name: String, val order: Long, val buttons: List<CustomControlButton>)
++
++    fun all(defaults: List<CustomControlButton>): List<Builtin> = listOf(
++        Builtin(ID_STANDARD, "Standar (joystick)", 3, defaults),
++        Builtin(
++            ID_WASD, "WASD tanpa analog", 2,
++            withoutAnalog(
++                defaults,
++                labels = listOf("W", "A", "S", "D"),
++                keys = listOf(
++                    LwjglGlfwKeycode.GLFW_KEY_W, LwjglGlfwKeycode.GLFW_KEY_A,
++                    LwjglGlfwKeycode.GLFW_KEY_S, LwjglGlfwKeycode.GLFW_KEY_D
++                )
++            )
++        ),
++        Builtin(
++            ID_ARROWS, "Panah tanpa analog", 1,
++            withoutAnalog(
++                defaults,
++                labels = listOf("\u2191", "\u2190", "\u2193", "\u2192"),
++                keys = listOf(
++                    LwjglGlfwKeycode.GLFW_KEY_UP, LwjglGlfwKeycode.GLFW_KEY_LEFT,
++                    LwjglGlfwKeycode.GLFW_KEY_DOWN, LwjglGlfwKeycode.GLFW_KEY_RIGHT
++                )
++            )
++        )
++    )
++
++    /** [labels] dan [keys] berurutan: atas, kiri, bawah, kanan. */
++    private fun withoutAnalog(
++        defaults: List<CustomControlButton>,
++        labels: List<String>,
++        keys: List<Int>
++    ): List<CustomControlButton> {
++        // Papan arah di tempat joystick bawaan. Posisi dalam persen layar sedangkan ukuran tombol tetap dalam dp, jadi
++        // jaraknya diatur supaya tombol tidak bertumpuk pada layar landscape mulai sekitar 640 x 300 dp.
++        val centerX = 13.2f
++        val centerY = 72f
++        val stepX = 8.3f
++        val stepY = 16.5f
++        val positions = listOf(
++            Pair(centerX, centerY - stepY),
++            Pair(centerX - stepX, centerY),
++            Pair(centerX, centerY + stepY),
++            Pair(centerX + stepX, centerY)
++        )
++        val ids = listOf("dpad_up", "dpad_left", "dpad_down", "dpad_right")
++        val pad = ArrayList<CustomControlButton>()
++        for (i in 0 until 4) {
++            pad.add(
++                CustomControlButton(
++                    id = ids[i], name = labels[i], keyCode = keys[i],
++                    xPercent = positions[i].first, yPercent = positions[i].second,
++                    widthDp = 46, heightDp = 46, opacity = 0.9f, cornerRadiusDp = 14,
++                    showMode = ControlShowMode.GAME
++                )
++            )
++        }
++        val sprint = CustomControlButton(
++            id = "key_sprint", name = "SPRINT", keyCode = LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL, isToggle = true,
++            xPercent = 31f, yPercent = 62f, widthDp = 52, heightDp = 52, opacity = 0.9f, cornerRadiusDp = 26,
++            showMode = ControlShowMode.GAME
++        )
++        return defaults.filter { !it.isJoystick } + pad + sprint
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt
+new file mode 100644
+index 0000000..ad3c3b6
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/ControlPresetManager.kt
+@@ -0,0 +1,253 @@
++package com.israadev.nuxlauncher.core.controls
++
++import android.content.Context
++import com.google.gson.JsonObject
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import com.israadev.nuxlauncher.core.utils.AtomicFiles
++import java.io.File
++import java.util.UUID
++
++/**
++ * Preset layout kontrol: banyak layout bernama yang disimpan di HP dan bisa dipasang kapan saja.
++ *
++ * Satu preset = satu berkas JSON di folder control_presets, dalam format ekspor Amber ([ControlLayoutIO]) ditambah
++ * nama dan waktu simpan. Isinya selalu lewat [ControlLayoutIO] sebelum disimpan dan sesudah dibaca, jadi preset
++ * dari berkas orang lain (termasuk hasil ubahan dari Pojav, Zalith, Mojo) dibersihkan dan dibatasi seperti impor
++ * biasa. Nama berkas dibuat sendiri dari id acak yang divalidasi, bukan dari nama preset, jadi tidak ada celah
++ * menembus folder. Satu berkas khusus (previous.json) menyimpan layout sebelum preset terakhir dipakai, supaya
++ * penggantian bisa dibatalkan. Preset bawaan ([ControlPresetBuiltins]) disalin sekali sebagai preset biasa; daftar
++ * yang sudah pernah disalin dicatat di builtins.txt, jadi yang dihapus pengguna tidak muncul lagi sampai
++ * dipulihkan lewat [restoreBuiltins].
++ *
++ * Fungsi utama menerima folder ([File]) alih-alih Context supaya mudah diuji. Semua fungsi membaca atau menulis
++ * berkas: panggil dari thread latar.
++ */
++object ControlPresetManager {
++    const val MAX_PRESETS = 40
++    const val MAX_NAME = 32
++
++    private const val PREVIOUS_FILE = "previous.json"
++    private const val OFFERED_FILE = "builtins.txt"
++    private val ID_PATTERN = Regex("^p_[a-z0-9]{6,24}$")
++
++    class Preset(val id: String, val name: String, val buttonCount: Int, val savedAt: Long)
++
++    sealed class SaveResult {
++        class Saved(val preset: Preset) : SaveResult()
++        object EmptyName : SaveResult()
++        object TooMany : SaveResult()
++        object Invalid : SaveResult()
++        object Failed : SaveResult()
++    }
++
++    fun dir(context: Context): File = File(context.filesDir, "control_presets")
++
++    /** Nama yang aman ditampilkan: tanpa karakter kontrol, dipangkas, dan dibatasi [MAX_NAME]. */
++    fun cleanName(raw: String): String = raw.filter { !it.isISOControl() }.trim().take(MAX_NAME).trim()
++
++    /** Daftar preset, yang terbaru di atas. Berkas rusak atau bernama tidak dikenal dilewati. */
++    fun list(dir: File): List<Preset> {
++        val files = dir.listFiles() ?: return emptyList()
++        val out = ArrayList<Preset>()
++        for (f in files) {
++            if (!f.isFile || !f.name.endsWith(".json")) continue
++            val id = f.name.removeSuffix(".json")
++            if (!ID_PATTERN.matches(id)) continue
++            val root = readRoot(f) ?: continue
++            val name = cleanName(root.stringOrEmpty("presetName"))
++            val buttons = root.get("buttons")
++            val count = if (buttons != null && buttons.isJsonArray) buttons.asJsonArray.size() else 0
++            if (name.isEmpty() || count == 0) continue
++            val savedAt = root.get("savedAt")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }?.asLong
++                ?: f.lastModified()
++            out.add(Preset(id, name, count, savedAt))
++        }
++        out.sortByDescending { it.savedAt }
++        return out
++    }
++
++    /**
++     * Menyimpan [buttons] sebagai preset bernama [name]. Nama yang sama (huruf besar/kecil diabaikan) menimpa
++     * preset lama, supaya menyimpan ulang tidak menumpuk salinan.
++     */
++    fun saveButtons(
++        dir: File,
++        name: String,
++        buttons: List<CustomControlButton>,
++        nowMs: Long = System.currentTimeMillis()
++    ): SaveResult {
++        val clean = cleanName(name)
++        if (clean.isEmpty()) return SaveResult.EmptyName
++        if (buttons.isEmpty()) return SaveResult.Invalid
++        return try {
++            if (!dir.isDirectory && !dir.mkdirs()) return SaveResult.Failed
++            val existing = list(dir)
++            val same = existing.firstOrNull { it.name.equals(clean, ignoreCase = true) }
++            if (same == null && existing.size >= MAX_PRESETS) return SaveResult.TooMany
++            val id = same?.id ?: newId(nowMs)
++            val root = JsonParser.parseString(ControlLayoutIO.toJson(buttons)).asJsonObject
++            root.addProperty("presetName", clean)
++            root.addProperty("savedAt", nowMs)
++            val text = root.toString()
++            if (text.length > ControlLayoutIO.MAX_FILE_BYTES) return SaveResult.Invalid
++            AtomicFiles.writeText(File(dir, "$id.json"), text)
++            SaveResult.Saved(Preset(id, clean, buttons.size, nowMs))
++        } catch (_: Exception) {
++            SaveResult.Failed
++        }
++    }
++
++    /** Seperti [saveButtons] tetapi dari teks JSON layout (misalnya hasil [ControlLayoutManager.exportJson]). */
++    fun saveJson(dir: File, name: String, json: String, nowMs: Long = System.currentTimeMillis()): SaveResult {
++        val r = ControlLayoutIO.parse(json)
++        if (r !is ControlLayoutIO.ImportResult.Ok) return SaveResult.Invalid
++        return saveButtons(dir, name, r.buttons, nowMs)
++    }
++
++    /** Tombol milik preset [id], atau null bila id tidak sah atau berkasnya hilang/rusak. */
++    fun read(dir: File, id: String): List<CustomControlButton>? {
++        if (!ID_PATTERN.matches(id)) return null
++        return readButtons(File(dir, "$id.json"))
++    }
++
++    fun rename(dir: File, id: String, newName: String): Boolean {
++        if (!ID_PATTERN.matches(id)) return false
++        val clean = cleanName(newName)
++        if (clean.isEmpty()) return false
++        val f = File(dir, "$id.json")
++        val root = readRoot(f) ?: return false
++        root.addProperty("presetName", clean)
++        return try {
++            AtomicFiles.writeText(f, root.toString())
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    fun delete(dir: File, id: String): Boolean {
++        if (!ID_PATTERN.matches(id)) return false
++        return try {
++            File(dir, "$id.json").delete()
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    // ---- Preset bawaan ------------------------------------------------------------------------------
++
++    /** Menyalin preset bawaan yang belum pernah ditawarkan. Dipanggil tiap dialog dibuka; murah bila tidak ada yang baru. */
++    fun ensureBuiltins(dir: File, defaults: List<CustomControlButton>): Int {
++        val offered = readOffered(dir)
++        val fresh = ControlPresetBuiltins.all(defaults).filter { it.id !in offered }
++        if (fresh.isEmpty()) return 0
++        return try {
++            if (!dir.isDirectory && !dir.mkdirs()) return 0
++            val done = fresh.filter { writeBuiltin(dir, it) }
++            if (done.isNotEmpty()) writeOffered(dir, offered + done.map { it.id })
++            done.size
++        } catch (_: Exception) {
++            0
++        }
++    }
++
++    /** Memulihkan preset bawaan yang sudah dihapus. Yang masih ada (mungkin sudah diubah namanya) dibiarkan. */
++    fun restoreBuiltins(dir: File, defaults: List<CustomControlButton>): Int {
++        return try {
++            if (!dir.isDirectory && !dir.mkdirs()) return 0
++            val offered = readOffered(dir)
++            val restored = ControlPresetBuiltins.all(defaults).filter { !File(dir, "${it.id}.json").isFile }
++                .filter { writeBuiltin(dir, it) }
++            if (restored.isNotEmpty()) writeOffered(dir, offered + restored.map { it.id })
++            restored.size
++        } catch (_: Exception) {
++            0
++        }
++    }
++
++    /** Jumlah preset bawaan yang tidak ada di daftar (sudah dihapus pengguna). */
++    fun missingBuiltins(dir: File): Int = ControlPresetBuiltins.IDS.count { !File(dir, "$it.json").isFile }
++
++    private fun writeBuiltin(dir: File, b: ControlPresetBuiltins.Builtin): Boolean {
++        return try {
++            val root = JsonParser.parseString(ControlLayoutIO.toJson(b.buttons)).asJsonObject
++            root.addProperty("presetName", b.name)
++            root.addProperty("savedAt", b.order)
++            AtomicFiles.writeText(File(dir, "${b.id}.json"), root.toString())
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    private fun readOffered(dir: File): Set<String> {
++        val f = File(dir, OFFERED_FILE)
++        if (!f.isFile || f.length() > 4096L) return emptySet()
++        return try {
++            f.readLines(Charsets.UTF_8).map { it.trim() }.filter { ID_PATTERN.matches(it) }.toSet()
++        } catch (_: Exception) {
++            emptySet()
++        }
++    }
++
++    private fun writeOffered(dir: File, ids: Set<String>) {
++        AtomicFiles.writeText(File(dir, OFFERED_FILE), ids.sorted().joinToString("\n"))
++    }
++
++    // ---- Layout sebelum preset dipakai --------------------------------------------------------------
++
++    /** Menyimpan [json] (layout yang akan diganti) ke slot "sebelumnya". Slot ini tidak dihitung ke [MAX_PRESETS]. */
++    fun savePrevious(dir: File, json: String): Boolean {
++        val r = ControlLayoutIO.parse(json)
++        if (r !is ControlLayoutIO.ImportResult.Ok) return false
++        return try {
++            if (!dir.isDirectory && !dir.mkdirs()) return false
++            val root = JsonParser.parseString(ControlLayoutIO.toJson(r.buttons)).asJsonObject
++            root.addProperty("savedAt", System.currentTimeMillis())
++            AtomicFiles.writeText(File(dir, PREVIOUS_FILE), root.toString())
++            true
++        } catch (_: Exception) {
++            false
++        }
++    }
++
++    fun hasPrevious(dir: File): Boolean = File(dir, PREVIOUS_FILE).isFile
++
++    fun readPrevious(dir: File): List<CustomControlButton>? = readButtons(File(dir, PREVIOUS_FILE))
++
++    // ---- Internal -----------------------------------------------------------------------------------
++
++    private fun newId(nowMs: Long): String =
++        "p_" + java.lang.Long.toString(nowMs, 36) + UUID.randomUUID().toString().replace("-", "").take(4)
++
++    private fun readText(f: File): String? {
++        if (!f.isFile || f.length() > ControlLayoutIO.MAX_FILE_BYTES + 4096L) return null
++        return try {
++            f.readText(Charsets.UTF_8)
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    private fun readRoot(f: File): JsonObject? {
++        val text = readText(f) ?: return null
++        return try {
++            val e = JsonParser.parseString(text)
++            if (e.isJsonObject) e.asJsonObject else null
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    private fun readButtons(f: File): List<CustomControlButton>? {
++        val text = readText(f) ?: return null
++        val r = ControlLayoutIO.parse(text)
++        return if (r is ControlLayoutIO.ImportResult.Ok) r.buttons else null
++    }
++
++    private fun JsonObject.stringOrEmpty(key: String): String {
++        val e = get(key)
++        return if (e != null && e.isJsonPrimitive) e.asString else ""
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt
+new file mode 100644
+index 0000000..5ed0db1
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxControlPresetsDialog.kt
+@@ -0,0 +1,479 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import android.content.Context
++import android.net.Uri
++import android.provider.OpenableColumns
++import androidx.activity.compose.rememberLauncherForActivityResult
++import androidx.activity.result.contract.ActivityResultContracts
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.heightIn
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
++import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
++import com.israadev.nuxlauncher.core.controls.ControlPresetManager
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import com.israadev.nuxlauncher.ui.components.AmberAlert
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.NuxTextField
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.i18n.Tr
++import com.israadev.nuxlauncher.ui.theme.Amber
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import java.io.File
++
++/** Preset yang sedang menunggu persetujuan untuk dipakai, lengkap dengan tombolnya yang sudah dibaca. */
++private class PendingApply(val preset: ControlPresetManager.Preset, val buttons: List<CustomControlButton>)
++
++/**
++ * Preset layout kontrol: simpan layout yang sedang dipakai dengan nama, impor berkas (Amber, Pojav, Zalith, Mojo,
++ * Zalith 2) sebagai preset tanpa mengganti layout sekarang, lalu pasang preset mana pun dengan satu ketukan.
++ * Memasang preset menyimpan dulu layout yang diganti, jadi bisa dikembalikan lewat tombol "Kembalikan layout
++ * sebelumnya". Semua pekerjaan berkas dikerjakan di thread IO.
++ */
++@Composable
++fun NuxControlPresetsDialog(onDismiss: () -> Unit) {
++    val context = LocalContext.current
++    val scope = rememberCoroutineScope()
++    val dir = remember { ControlPresetManager.dir(context) }
++
++    var presets by remember { mutableStateOf<List<ControlPresetManager.Preset>>(emptyList()) }
++    var hasPrevious by remember { mutableStateOf(false) }
++    var missingBuiltins by remember { mutableIntStateOf(0) }
++    var name by remember { mutableStateOf("") }
++    var renamingId by remember { mutableStateOf<String?>(null) }
++    var confirmDeleteId by remember { mutableStateOf<String?>(null) }
++    var pending by remember { mutableStateOf<PendingApply?>(null) }
++    var busy by remember { mutableStateOf(false) }
++
++    fun toast(message: String) {
++        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
++    }
++
++    fun reload() {
++        scope.launch {
++            val loaded = withContext(Dispatchers.IO) {
++                // Preset bawaan disalin sekali; yang sudah dihapus pengguna tidak muncul lagi
++                ControlPresetManager.ensureBuiltins(dir, ControlLayoutManager.getDefaultButtons())
++                Triple(
++                    ControlPresetManager.list(dir),
++                    ControlPresetManager.hasPrevious(dir),
++                    ControlPresetManager.missingBuiltins(dir)
++                )
++            }
++            presets = loaded.first
++            hasPrevious = loaded.second
++            missingBuiltins = loaded.third
++        }
++    }
++
++    LaunchedEffect(Unit) { reload() }
++
++    val importLauncher = rememberLauncherForActivityResult(
++        ActivityResultContracts.OpenDocument()
++    ) { uri: Uri? ->
++        if (uri != null) {
++            scope.launch {
++                busy = true
++                val message = withContext(Dispatchers.IO) { importAsPreset(context, dir, uri) }
++                busy = false
++                toast(message)
++                reload()
++            }
++        }
++    }
++
++    fun saveCurrent() {
++        val clean = ControlPresetManager.cleanName(name)
++        if (clean.isEmpty()) {
++            toast("Nama preset tidak boleh kosong")
++            return
++        }
++        scope.launch {
++            busy = true
++            val result = withContext(Dispatchers.IO) {
++                ControlPresetManager.saveJson(dir, clean, ControlLayoutManager.exportJson(context))
++            }
++            busy = false
++            if (result is ControlPresetManager.SaveResult.Saved) name = ""
++            toast(saveMessage(result))
++            reload()
++        }
++    }
++
++    fun doRename(id: String) {
++        scope.launch {
++            val ok = withContext(Dispatchers.IO) { ControlPresetManager.rename(dir, id, name) }
++            toast(if (ok) "Nama preset diubah" else "Gagal mengubah nama preset")
++            if (ok) {
++                renamingId = null
++                name = ""
++            }
++            reload()
++        }
++    }
++
++    fun askApply(preset: ControlPresetManager.Preset) {
++        scope.launch {
++            val buttons = withContext(Dispatchers.IO) { ControlPresetManager.read(dir, preset.id) }
++            if (buttons == null) {
++                toast("Preset tidak bisa dibaca")
++                reload()
++            } else {
++                pending = PendingApply(preset, buttons)
++            }
++        }
++    }
++
++    fun deletePreset(id: String) {
++        scope.launch {
++            withContext(Dispatchers.IO) { ControlPresetManager.delete(dir, id) }
++            confirmDeleteId = null
++            if (renamingId == id) {
++                renamingId = null
++                name = ""
++            }
++            toast("Preset dihapus")
++            reload()
++        }
++    }
++
++    fun restoreBuiltins() {
++        scope.launch {
++            val restored = withContext(Dispatchers.IO) {
++                ControlPresetManager.restoreBuiltins(dir, ControlLayoutManager.getDefaultButtons())
++            }
++            if (restored > 0) toast("Preset bawaan dipulihkan")
++            reload()
++        }
++    }
++
++    fun restorePrevious() {
++        scope.launch {
++            val ok = withContext(Dispatchers.IO) {
++                val previous = ControlPresetManager.readPrevious(dir) ?: return@withContext false
++                ControlPresetManager.savePrevious(dir, ControlLayoutManager.exportJson(context))
++                ControlLayoutManager.importLayout(context, previous)
++                true
++            }
++            toast(if (ok) "Layout sebelumnya dikembalikan" else "Preset tidak bisa dibaca")
++            reload()
++        }
++    }
++
++    AmberAlert(
++        onDismissRequest = onDismiss,
++        title = "Preset kontrol",
++        icon = "gear",
++        accent = Amber.Yellow,
++        actions = {
++            AmberButton(
++                text = "Tutup",
++                onClick = onDismiss,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Ghost
++            )
++        }
++    ) {
++        Text(
++            text = "Simpan beberapa layout kontrol, lalu ganti kapan saja dengan satu ketukan. Layout yang sedang dipakai disimpan otomatis sebelum diganti.",
++            color = Amber.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 19.sp
++        )
++        Spacer(modifier = Modifier.height(12.dp))
++        NuxTextField(
++            value = name,
++            onValueChange = { name = it.take(ControlPresetManager.MAX_NAME) },
++            placeholder = Tr.t("Nama preset")
++        )
++        Spacer(modifier = Modifier.height(10.dp))
++        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++            AmberButton(
++                text = if (renamingId != null) "Simpan nama" else "Simpan layout saat ini",
++                onClick = {
++                    val id = renamingId
++                    if (id != null) doRename(id) else saveCurrent()
++                },
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary,
++                enabled = !busy,
++                height = 40.dp
++            )
++            if (renamingId != null) {
++                AmberButton(
++                    text = "Batal",
++                    onClick = {
++                        renamingId = null
++                        name = ""
++                    },
++                    modifier = Modifier.weight(0.6f),
++                    style = AmberButtonStyle.Ghost,
++                    height = 40.dp
++                )
++            } else {
++                AmberButton(
++                    text = "Impor berkas",
++                    onClick = { importLauncher.launch(arrayOf("*/*")) },
++                    modifier = Modifier.weight(0.8f),
++                    style = AmberButtonStyle.Ghost,
++                    icon = "download",
++                    enabled = !busy,
++                    height = 40.dp
++                )
++            }
++        }
++        Spacer(modifier = Modifier.height(14.dp))
++        if (presets.isEmpty()) {
++            Text(
++                text = "Belum ada preset. Simpan layout saat ini, atau impor berkas dari Amber, Pojav, Zalith, atau Mojo.",
++                color = Amber.TextDim,
++                fontSize = 13.sp,
++                lineHeight = 19.sp
++            )
++        } else {
++            Column(
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .heightIn(max = 240.dp)
++                    .verticalScroll(rememberScrollState()),
++                verticalArrangement = Arrangement.spacedBy(8.dp)
++            ) {
++                for (preset in presets) {
++                    PresetRow(
++                        preset = preset,
++                        confirmingDelete = confirmDeleteId == preset.id,
++                        enabled = !busy,
++                        onApply = { askApply(preset) },
++                        onRename = {
++                            renamingId = preset.id
++                            name = preset.name
++                            confirmDeleteId = null
++                        },
++                        onDelete = {
++                            if (confirmDeleteId == preset.id) {
++                                deletePreset(preset.id)
++                            } else {
++                                confirmDeleteId = preset.id
++                            }
++                        }
++                    )
++                }
++            }
++        }
++        if (missingBuiltins > 0) {
++            Spacer(modifier = Modifier.height(12.dp))
++            AmberButton(
++                text = "Pulihkan preset bawaan",
++                onClick = { restoreBuiltins() },
++                modifier = Modifier.fillMaxWidth(),
++                style = AmberButtonStyle.Ghost,
++                enabled = !busy,
++                height = 40.dp
++            )
++        }
++        if (hasPrevious) {
++            Spacer(modifier = Modifier.height(12.dp))
++            AmberButton(
++                text = "Kembalikan layout sebelumnya",
++                onClick = { restorePrevious() },
++                modifier = Modifier.fillMaxWidth(),
++                style = AmberButtonStyle.Ghost,
++                enabled = !busy,
++                height = 40.dp
++            )
++        }
++    }
++
++    val target = pending
++    if (target != null) {
++        val macros = target.buttons.count { it.isMacro && it.macroType == "COMMAND" && it.macroCommand.isNotBlank() }
++        // 262..265 = tombol panah (kanan, kiri, bawah, atas): game hanya bergerak bila tombol geraknya diatur ke panah
++        val usesArrows = target.buttons.any { !it.isMouseButton && it.keyCode in 262..265 }
++        AmberAlert(
++            onDismissRequest = { pending = null },
++            title = "Pakai preset ini?",
++            icon = "warning",
++            accent = Amber.Yellow,
++            actions = {
++                AmberButton(
++                    text = "Batal",
++                    onClick = { pending = null },
++                    modifier = Modifier.weight(1f),
++                    style = AmberButtonStyle.Ghost
++                )
++                AmberButton(
++                    text = "Ganti layout",
++                    onClick = {
++                        pending = null
++                        scope.launch {
++                            busy = true
++                            withContext(Dispatchers.IO) {
++                                ControlPresetManager.savePrevious(dir, ControlLayoutManager.exportJson(context))
++                                ControlLayoutManager.importLayout(context, target.buttons)
++                            }
++                            busy = false
++                            toast("Preset dipakai")
++                            onDismiss()
++                        }
++                    },
++                    modifier = Modifier.weight(1f),
++                    style = AmberButtonStyle.Primary,
++                    icon = "download"
++                )
++            }
++        ) {
++            Text(
++                text = "Layout tombol saat ini akan diganti dengan preset \"${target.preset.name}\" (${target.buttons.size} tombol). Layout saat ini disimpan dulu supaya bisa dikembalikan.",
++                color = Amber.TextDim,
++                fontSize = 14.sp,
++                lineHeight = 21.sp
++            )
++            if (usesArrows) {
++                Text(
++                    text = "Preset ini memakai tombol panah. Atur tombol gerak di opsi Kontrol Minecraft ke tombol panah supaya karakter bergerak.",
++                    color = Amber.TextDim,
++                    fontSize = 14.sp,
++                    lineHeight = 21.sp,
++                    modifier = Modifier.padding(top = 10.dp)
++                )
++            }
++            if (macros > 0) {
++                Text(
++                    text = "Preset ini berisi $macros tombol makro yang mengetik chat atau perintah otomatis. Periksa dulu sebelum dipakai di server.",
++                    color = Amber.TextDim,
++                    fontSize = 14.sp,
++                    lineHeight = 21.sp,
++                    modifier = Modifier.padding(top = 10.dp)
++                )
++            }
++        }
++    }
++}
++
++@Composable
++private fun PresetRow(
++    preset: ControlPresetManager.Preset,
++    confirmingDelete: Boolean,
++    enabled: Boolean,
++    onApply: () -> Unit,
++    onRename: () -> Unit,
++    onDelete: () -> Unit
++) {
++    val shape = RoundedCornerShape(12.dp)
++    Column(
++        modifier = Modifier
++            .fillMaxWidth()
++            .background(Amber.Fill, shape)
++            .border(1.dp, Amber.Line, shape)
++            .padding(12.dp)
++    ) {
++        Text(
++            text = preset.name,
++            color = Amber.Text,
++            fontSize = 14.sp,
++            fontWeight = FontWeight.Bold,
++            maxLines = 1,
++            overflow = TextOverflow.Ellipsis
++        )
++        Text(
++            text = "Berisi ${preset.buttonCount} tombol",
++            color = Amber.TextFaint,
++            fontSize = 12.sp,
++            modifier = Modifier.padding(top = 2.dp)
++        )
++        Spacer(modifier = Modifier.height(8.dp))
++        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++            AmberButton(
++                text = "Pakai",
++                onClick = onApply,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary,
++                enabled = enabled,
++                height = 36.dp
++            )
++            AmberButton(
++                text = "Ubah nama",
++                onClick = onRename,
++                modifier = Modifier.weight(1.2f),
++                style = AmberButtonStyle.Ghost,
++                enabled = enabled,
++                height = 36.dp
++            )
++            AmberButton(
++                text = if (confirmingDelete) "Yakin?" else "Hapus",
++                onClick = onDelete,
++                modifier = Modifier.weight(1f),
++                style = if (confirmingDelete) AmberButtonStyle.Danger else AmberButtonStyle.Ghost,
++                icon = "trash",
++                enabled = enabled,
++                height = 36.dp
++            )
++        }
++    }
++}
++
++private fun saveMessage(r: ControlPresetManager.SaveResult): String = when (r) {
++    is ControlPresetManager.SaveResult.Saved -> "Preset disimpan"
++    ControlPresetManager.SaveResult.EmptyName -> "Nama preset tidak boleh kosong"
++    ControlPresetManager.SaveResult.TooMany ->
++        "Terlalu banyak preset. Hapus salah satu dulu (maksimal ${ControlPresetManager.MAX_PRESETS})."
++    ControlPresetManager.SaveResult.Invalid -> "Layout tidak bisa disimpan sebagai preset"
++    ControlPresetManager.SaveResult.Failed -> "Gagal menyimpan preset"
++}
++
++/** Membaca berkas pilihan pengguna (format Amber, Pojav, Zalith, Mojo, atau Zalith 2) lalu menyimpannya sebagai preset. */
++private fun importAsPreset(context: Context, dir: File, uri: Uri): String {
++    return when (val r = ControlLayoutManager.readImport(context, uri)) {
++        is ControlLayoutIO.ImportResult.Failed -> when (r.reason) {
++            ControlLayoutIO.Reason.TOO_LARGE -> "Berkas terlalu besar untuk layout kontrol"
++            ControlLayoutIO.Reason.NO_BUTTONS -> "Berkas tidak berisi tombol"
++            ControlLayoutIO.Reason.NOT_LAYOUT -> "Berkas ini bukan layout kontrol yang valid"
++        }
++        is ControlLayoutIO.ImportResult.Ok ->
++            saveMessage(ControlPresetManager.saveButtons(dir, displayName(context, uri), r.buttons))
++    }
++}
++
++/** Nama berkas tanpa ekstensi, dipakai sebagai nama preset hasil impor. */
++private fun displayName(context: Context, uri: Uri): String {
++    var raw = ""
++    try {
++        context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
++            if (c.moveToFirst()) {
++                val index = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
++                if (index >= 0) raw = c.getString(index) ?: ""
++            }
++        }
++    } catch (_: Exception) {
++    }
++    val base = raw.substringBeforeLast('.')
++    return base.ifBlank { "Impor" }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 54bba9f..7132546 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -69,2 +69,3 @@ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
++import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+@@ -90,2 +91,3 @@ fun SettingsScreen(
+     var showAboutDialog by remember { mutableStateOf(false) }
++    var showControlPresets by remember { mutableStateOf(false) }
+ 
+@@ -757,2 +759,20 @@ fun SettingsScreen(
+                                 }
++                                NuxButton(
++                                    onClick = { showControlPresets = true },
++                                    backgroundColor = Color.Transparent,
++                                    cornerRadius = 20.dp,
++                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 2.dp)
++                                ) {
++                                    Icon(
++                                        imageVector = Icons.Outlined.Bookmarks,
++                                        contentDescription = null,
++                                        modifier = Modifier.size(18.dp)
++                                    )
++                                    Spacer(modifier = Modifier.width(8.dp))
++                                    Text(
++                                        text = "Preset",
++                                        fontSize = 12.sp,
++                                        fontWeight = FontWeight.Black
++                                    )
++                                }
+                             }
+@@ -1514,2 +1534,6 @@ fun SettingsScreen(
+ 
++    if (showControlPresets) {
++        NuxControlPresetsDialog(onDismiss = { showControlPresets = false })
++    }
++
+     if (showAboutDialog) {
+# FIN part=1/1 files=11

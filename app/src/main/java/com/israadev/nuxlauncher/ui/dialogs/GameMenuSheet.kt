@@ -95,6 +95,8 @@ fun GameMenuSheet(
     onMouseControlModeChange: (MouseControlMode) -> Unit,
     buttonLookDrag: Boolean = false,
     onButtonLookDragChange: (Boolean) -> Unit = {},
+    buttonSlide: Boolean = true,
+    onButtonSlideChange: (Boolean) -> Unit = {},
     isControlVisible: Boolean,
     onToggleControlVisibility: () -> Unit,
     onRequestKeyboard: () -> Unit,
@@ -357,6 +359,13 @@ fun GameMenuSheet(
                         subtitle = "Tahan tombol pukul atau lompat lalu geser jari untuk memutar kamera. Matikan untuk PvP.",
                         checked = buttonLookDrag,
                         onChange = onButtonLookDragChange
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    ToggleRow(
+                        title = "Geser antar tombol",
+                        subtitle = "Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.",
+                        checked = buttonSlide,
+                        onChange = onButtonSlideChange
                     )
 
                     SectionTitle("PINTAS")

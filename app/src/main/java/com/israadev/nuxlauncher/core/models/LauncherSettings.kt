@@ -24,6 +24,10 @@ data class LauncherSettings(
     // Menggeser jari dari tombol serang/pakai/lompat ikut memutar kamera. Bawaan mati: jari yang
     // sedikit bergeser saat menahan tombol (PvP) tidak boleh menggeser pandangan.
     val buttonLookDrag: Boolean = false,
+    // Geser antar tombol: menggeser jari dari satu tombol keyboard ke tombol lain (mis. W ke D) langsung menekan
+    // tombol yang dilewati tanpa mengangkat jari. Bawaan nyala. Nilai ini juga dipakai pengguna lama: tanpa kolom
+    // ini di berkas pengaturan tersimpan, bawaan di sini yang berlaku.
+    val buttonSlide: Boolean = true,
     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
     // dari versi sebelumnya tidak terbawa.

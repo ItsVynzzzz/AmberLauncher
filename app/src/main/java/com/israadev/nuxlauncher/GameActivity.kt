@@ -2329,6 +2329,13 @@ fun GameScreen(
                     launcherSettings.copy(buttonLookDrag = on)
                 )
             },
+            buttonSlide = launcherSettings.buttonSlide,
+            onButtonSlideChange = { on ->
+                SettingsManager.updateSettings(
+                    context,
+                    launcherSettings.copy(buttonSlide = on)
+                )
+            },
             isControlVisible = isControlVisible,
             onToggleControlVisibility = {
                 isControlVisible = !isControlVisible

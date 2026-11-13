@@ -27,9 +27,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
@@ -403,21 +406,54 @@ fun CustomVirtualButton(
     // Tombol yang boleh memutar kamera bila digeser (hanya bila dinyalakan di Pengaturan, lihat di bawah).
     val lookDrag = button.isMouseButton || button.keyCode == LwjglGlfwKeycode.GLFW_KEY_SPACE
 
+    // Geser antar tombol (lihat ButtonSlide): tombol biasa mendaftar dengan posisinya di layar, dan cara
+    // menekan/melepasnya (termasuk tampilan tertekan) dititipkan lewat setDown. Hanya tombol "tahan = aktif".
+    val slideTarget = remember(button.id, button.isMouseButton) {
+        ButtonSlide.Target(slideable = !button.isMouseButton)
+    }
+    val applyDown = rememberUpdatedState<(Boolean) -> Unit> { down ->
+        isPressed = down
+        sendPress(down)
+    }
+    if (simple) {
+        DisposableEffect(slideTarget) {
+            slideTarget.setDown = { down -> applyDown.value(down) }
+            ButtonSlide.register(slideTarget)
+            onDispose { ButtonSlide.unregister(slideTarget) }
+        }
+    }
+
     val base = modifier
         .size(width = button.widthDp.dp, height = button.heightDp.dp)
         .drawBehind { drawControlButton(spec, isPressed || (isSequence && MacroRegistry.isRunning(button.id))) }
+        .then(
+            if (simple && !button.isMouseButton) {
+                Modifier.onGloballyPositioned { c ->
+                    slideTarget.origin = c.positionInRoot()
+                    slideTarget.size = c.size.toSize()
+                }
+            } else {
+                Modifier
+            }
+        )
 
     Box(
         modifier = if (simple) {
             base.pointerInput(button.id, button.isMouseButton, button.mouseButton, button.keyCode) {
                 val slop = 6.dp.toPx()
+                val slideInset = 4.dp.toPx()
                 awaitEachGesture {
                     val down = awaitFirstDown(requireUnconsumed = false)
                     down.consume()
-                    isPressed = true
-                    sendPress(true)
+                    ButtonSlide.press(slideTarget)
                     // Dibaca tiap jari menyentuh tombol, jadi mengubah pengaturan langsung berlaku.
-                    val canLook = lookDrag && SettingsManager.settings.value.buttonLookDrag
+                    val settings = SettingsManager.settings.value
+                    val canLook = lookDrag && settings.buttonLookDrag
+                    // Tombol yang memutar kamera saat digeser (lompat/pukul bila "Geser kamera dari tombol" nyala)
+                    // tidak ikut berpindah tombol: geserannya sudah punya arti lain.
+                    val canSlide = settings.buttonSlide && slideTarget.slideable && !canLook
+                    // Tombol yang sedang ditekan jari ini; berpindah saat jari masuk ke tombol lain.
+                    var current = slideTarget
                     var last = down.position
                     var looking = false
                     try {
@@ -427,6 +463,15 @@ fun CustomVirtualButton(
                             if (!change.pressed) {
                                 change.consume()
                                 break
+                            }
+                            if (canSlide) {
+                                val next = ButtonSlide.find(slideTarget.origin + change.position, slideInset, current)
+                                if (next != null) {
+                                    // Tombol baru ditekan dulu, baru yang lama dilepas, supaya tidak ada jeda.
+                                    ButtonSlide.press(next)
+                                    ButtonSlide.release(current)
+                                    current = next
+                                }
                             }
                             val delta = change.position - last
                             last = change.position
@@ -442,8 +487,7 @@ fun CustomVirtualButton(
                             change.consume()
                         }
                     } finally {
-                        isPressed = false
-                        sendPress(false)
+                        ButtonSlide.release(current)
                     }
                 }
             }

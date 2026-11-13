@@ -1,0 +1,1328 @@
+diff --git a/app/src/main/assets/lang/en/world.tsv b/app/src/main/assets/lang/en/world.tsv
+new file mode 100644
+index 0000000..8a1a510
+--- /dev/null
++++ b/app/src/main/assets/lang/en/world.tsv
+@@ -0,0 +1,38 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++Cari world di CurseForge...	Search worlds on CurseForge...
++Jelajahi CurseForge	Browse CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	There are no worlds in this instance yet. Download one from CurseForge or import a .zip file.
++Terakhir dimainkan {0} · {1}	Last played {0} · {1}
++Hapus world?	Delete world?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Are you sure you want to delete the world "{0}"? All builds and progress in it will be lost permanently and cannot be recovered.
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	Could not delete the world. Make sure the game is not running.
++Mengimpor world	Importing world
++Membaca arsip world...	Reading world archive...
++Mengekstrak world...	Extracting world...
++Mengekstrak world... {0}/{1}	Extracting world... {0}/{1}
++{0} / {1} file	{0} / {1} files
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	The launcher is checking and extracting the world. Please wait.
++Mengunduh {0}... {1}%	Downloading {0}... {1}%
++Gagal mengimpor world: {~0}	Failed to import world: {0}
++World "{0}" berhasil diimpor!	World "{0}" imported!
++Berhasil mengimpor {0} world!	Imported {0} world(s)!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	Imported {0} world(s); {1} file(s) failed to import!
++World {0} berhasil dipasang!	World {0} installed!
++Berhasil memasang {0} world dari {1}!	Installed {0} worlds from {1}!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	This archive is not a Minecraft Java world (level.dat was not found).
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Bedrock worlds (.mcworld) are not supported. This launcher only installs Minecraft Java worlds.
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	The level.dat file in this archive is corrupted, so the world cannot be installed.
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	The world is too large (4 GB maximum); installation was cancelled.
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	The world archive is too large (2 GB maximum); installation was cancelled.
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	The archive contains too many files; installation was cancelled.
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	The archive contains more than 20 worlds; installation was cancelled.
++Arsip ditolak karena berisi path yang tidak aman.	The archive was rejected because it contains unsafe paths.
++Terlalu banyak world dengan nama yang sama.	There are too many worlds with the same name.
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Storage is full. Free up some space and try again.
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Not enough storage to install this world. Free up about {0} MB and try again.
++World belum didukung untuk instance mesin Rust.	Worlds are not supported for Rust engine instances yet.
++Versi ini tidak punya berkas untuk diunduh.	This version has no file to download.
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	This world is shared in an archive format that is not supported yet. Download it manually, extract it, compress it again as a .zip, and import it.
++Berkas world harus berformat .zip	The world file must be a .zip
++File world harus berformat .zip	The world file must be a .zip
++Gagal membuat folder sementara	Could not create a temporary folder
+diff --git a/app/src/main/assets/lang/es/world.tsv b/app/src/main/assets/lang/es/world.tsv
+new file mode 100644
+index 0000000..6d64c62
+--- /dev/null
++++ b/app/src/main/assets/lang/es/world.tsv
+@@ -0,0 +1,42 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++World	Mundo
++worlds	mundos
++.zip (World)	.zip (Mundo)
++World (.zip)	Mundo (.zip)
++Cari world di CurseForge...	Buscar mundos en CurseForge...
++Jelajahi CurseForge	Explorar CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Aún no hay mundos en esta instancia. Descarga uno de CurseForge o importa un archivo .zip.
++Terakhir dimainkan {0} · {1}	Última partida {0} · {1}
++Hapus world?	¿Eliminar el mundo?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	¿Seguro que quieres eliminar el mundo "{0}"? Todas las construcciones y el progreso se perderán de forma permanente y no se podrán recuperar.
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	No se pudo eliminar el mundo. Asegúrate de que el juego no esté en ejecución.
++Mengimpor world	Importando el mundo
++Membaca arsip world...	Leyendo el archivo del mundo...
++Mengekstrak world...	Extrayendo el mundo...
++Mengekstrak world... {0}/{1}	Extrayendo el mundo... {0}/{1}
++{0} / {1} file	{0} / {1} archivos
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	El launcher está comprobando y extrayendo el mundo. Espera un momento.
++Mengunduh {0}... {1}%	Descargando {0}... {1}%
++Gagal mengimpor world: {~0}	No se pudo importar el mundo: {0}
++World "{0}" berhasil diimpor!	¡Mundo "{0}" importado!
++Berhasil mengimpor {0} world!	¡{0} mundo(s) importado(s)!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	¡{0} mundo(s) importado(s); {1} archivo(s) no se pudieron importar!
++World {0} berhasil dipasang!	¡Mundo {0} instalado!
++Berhasil memasang {0} world dari {1}!	¡{0} mundos instalados desde {1}!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Este archivo no es un mundo de Minecraft Java (no se encontró level.dat).
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Los mundos de Bedrock (.mcworld) no son compatibles. Este launcher solo instala mundos de Minecraft Java.
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	El archivo level.dat de este archivo está dañado, por lo que no se puede instalar el mundo.
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	El mundo es demasiado grande (máximo 4 GB); se canceló la instalación.
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	El archivo del mundo es demasiado grande (máximo 2 GB); se canceló la instalación.
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	El archivo contiene demasiados archivos; se canceló la instalación.
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	El archivo contiene más de 20 mundos; se canceló la instalación.
++Arsip ditolak karena berisi path yang tidak aman.	Se rechazó el archivo porque contiene rutas no seguras.
++Terlalu banyak world dengan nama yang sama.	Hay demasiados mundos con el mismo nombre.
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	El almacenamiento está lleno. Libera espacio e inténtalo de nuevo.
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	No hay suficiente almacenamiento para instalar este mundo. Libera unos {0} MB e inténtalo de nuevo.
++World belum didukung untuk instance mesin Rust.	Los mundos aún no son compatibles con las instancias del motor Rust.
++Versi ini tidak punya berkas untuk diunduh.	Esta versión no tiene ningún archivo para descargar.
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Este mundo se comparte en un formato de archivo que aún no es compatible. Descárgalo manualmente, extráelo, vuelve a comprimirlo como .zip e impórtalo.
++Berkas world harus berformat .zip	El archivo del mundo debe ser un .zip
++File world harus berformat .zip	El archivo del mundo debe ser un .zip
++Gagal membuat folder sementara	No se pudo crear una carpeta temporal
+diff --git a/app/src/main/assets/lang/fil/world.tsv b/app/src/main/assets/lang/fil/world.tsv
+new file mode 100644
+index 0000000..7b0e12b
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/world.tsv
+@@ -0,0 +1,38 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++worlds	mga world
++Cari world di CurseForge...	Maghanap ng world sa CurseForge...
++Jelajahi CurseForge	Mag-browse sa CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Wala pang world sa instance na ito. Mag-download mula sa CurseForge o mag-import ng .zip file.
++Terakhir dimainkan {0} · {1}	Huling nilaro {0} · {1}
++Hapus world?	Burahin ang world?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Sigurado ka bang buburahin ang world na "{0}"? Permanenteng mawawala ang lahat ng build at progress dito at hindi na ito mababawi.
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	Hindi mabura ang world. Siguraduhing hindi tumatakbo ang game.
++Mengimpor world	Ini-import ang world
++Membaca arsip world...	Binabasa ang world archive...
++Mengekstrak world...	Ine-extract ang world...
++Mengekstrak world... {0}/{1}	Ine-extract ang world... {0}/{1}
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	Sinusuri at ine-extract ng launcher ang world. Pakihintay.
++Mengunduh {0}... {1}%	Dina-download ang {0}... {1}%
++Gagal mengimpor world: {~0}	Nabigong i-import ang world: {0}
++World "{0}" berhasil diimpor!	Na-import ang world na "{0}"!
++Berhasil mengimpor {0} world!	Na-import ang {0} world!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	Na-import ang {0} world; {1} file ang hindi na-import!
++World {0} berhasil dipasang!	Na-install ang world na {0}!
++Berhasil memasang {0} world dari {1}!	Na-install ang {0} world mula sa {1}!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Hindi Minecraft Java world ang archive na ito (hindi nakita ang level.dat).
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Hindi suportado ang mga Bedrock world (.mcworld). Mga Minecraft Java world lang ang ini-install ng launcher na ito.
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	Sira ang level.dat file sa archive na ito, kaya hindi ma-install ang world.
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	Masyadong malaki ang world (hanggang 4 GB lang); kinansela ang pag-install.
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	Masyadong malaki ang world archive (hanggang 2 GB lang); kinansela ang pag-install.
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	Masyadong maraming file sa archive; kinansela ang pag-install.
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	May higit sa 20 world ang archive; kinansela ang pag-install.
++Arsip ditolak karena berisi path yang tidak aman.	Tinanggihan ang archive dahil may mga hindi ligtas na path ito.
++Terlalu banyak world dengan nama yang sama.	Masyadong maraming world na magkapareho ang pangalan.
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Puno na ang storage. Magbakante ng espasyo at subukan ulit.
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Kulang ang storage para ma-install ang world na ito. Magbakante ng mga {0} MB at subukan ulit.
++World belum didukung untuk instance mesin Rust.	Hindi pa suportado ang mga world sa mga instance na gumagamit ng Rust engine.
++Versi ini tidak punya berkas untuk diunduh.	Walang file na ma-download sa bersyong ito.
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Ang world na ito ay ibinabahagi sa archive format na hindi pa suportado. I-download ito nang manu-mano, i-extract, i-compress ulit bilang .zip, at i-import.
++Berkas world harus berformat .zip	Dapat .zip ang world file
++File world harus berformat .zip	Dapat .zip ang world file
++Gagal membuat folder sementara	Hindi nakagawa ng pansamantalang folder
+diff --git a/app/src/main/assets/lang/pt/world.tsv b/app/src/main/assets/lang/pt/world.tsv
+new file mode 100644
+index 0000000..49602a8
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/world.tsv
+@@ -0,0 +1,42 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++World	Mundo
++worlds	mundos
++.zip (World)	.zip (Mundo)
++World (.zip)	Mundo (.zip)
++Cari world di CurseForge...	Buscar mundos no CurseForge...
++Jelajahi CurseForge	Explorar o CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Ainda não há mundos nesta instância. Baixe um do CurseForge ou importe um arquivo .zip.
++Terakhir dimainkan {0} · {1}	Última vez jogado {0} · {1}
++Hapus world?	Excluir o mundo?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Tem certeza de que deseja excluir o mundo "{0}"? Todas as construções e o progresso serão perdidos permanentemente e não poderão ser recuperados.
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	Não foi possível excluir o mundo. Verifique se o jogo não está em execução.
++Mengimpor world	Importando o mundo
++Membaca arsip world...	Lendo o arquivo do mundo...
++Mengekstrak world...	Extraindo o mundo...
++Mengekstrak world... {0}/{1}	Extraindo o mundo... {0}/{1}
++{0} / {1} file	{0} / {1} arquivos
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	O launcher está verificando e extraindo o mundo. Aguarde.
++Mengunduh {0}... {1}%	Baixando {0}... {1}%
++Gagal mengimpor world: {~0}	Falha ao importar o mundo: {0}
++World "{0}" berhasil diimpor!	Mundo "{0}" importado com sucesso!
++Berhasil mengimpor {0} world!	{0} mundo(s) importado(s) com sucesso!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	{0} mundo(s) importado(s); {1} arquivo(s) não puderam ser importados!
++World {0} berhasil dipasang!	Mundo {0} instalado com sucesso!
++Berhasil memasang {0} world dari {1}!	{0} mundos instalados a partir de {1}!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Este arquivo não é um mundo do Minecraft Java (level.dat não encontrado).
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Mundos do Bedrock (.mcworld) não são compatíveis. Este launcher só instala mundos do Minecraft Java.
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	O arquivo level.dat deste arquivo está corrompido, então o mundo não pode ser instalado.
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	O mundo é grande demais (máximo de 4 GB); a instalação foi cancelada.
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	O arquivo do mundo é grande demais (máximo de 2 GB); a instalação foi cancelada.
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	O arquivo contém arquivos demais; a instalação foi cancelada.
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	O arquivo contém mais de 20 mundos; a instalação foi cancelada.
++Arsip ditolak karena berisi path yang tidak aman.	O arquivo foi recusado porque contém caminhos inseguros.
++Terlalu banyak world dengan nama yang sama.	Há mundos demais com o mesmo nome.
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	O armazenamento está cheio. Libere espaço e tente novamente.
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Não há armazenamento suficiente para instalar este mundo. Libere cerca de {0} MB e tente novamente.
++World belum didukung untuk instance mesin Rust.	Os mundos ainda não são compatíveis com instâncias do motor Rust.
++Versi ini tidak punya berkas untuk diunduh.	Esta versão não tem nenhum arquivo para baixar.
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Este mundo é compartilhado em um formato de arquivo ainda não compatível. Baixe manualmente, extraia, compacte novamente como .zip e importe.
++Berkas world harus berformat .zip	O arquivo do mundo deve ser um .zip
++File world harus berformat .zip	O arquivo do mundo deve ser um .zip
++Gagal membuat folder sementara	Falha ao criar uma pasta temporária
+diff --git a/app/src/main/assets/lang/th/world.tsv b/app/src/main/assets/lang/th/world.tsv
+new file mode 100644
+index 0000000..1d0a559
+--- /dev/null
++++ b/app/src/main/assets/lang/th/world.tsv
+@@ -0,0 +1,42 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++World	โลก
++worlds	โลก
++.zip (World)	.zip (โลก)
++World (.zip)	โลก (.zip)
++Cari world di CurseForge...	ค้นหาโลกบน CurseForge...
++Jelajahi CurseForge	เรียกดู CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	ยังไม่มีโลกใน instance นี้ ดาวน์โหลดจาก CurseForge หรือนำเข้าไฟล์ .zip
++Terakhir dimainkan {0} · {1}	เล่นล่าสุด {0} · {1}
++Hapus world?	ลบโลก?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	แน่ใจหรือไม่ว่าต้องการลบโลก "{0}"? สิ่งก่อสร้างและความคืบหน้าทั้งหมดในนั้นจะหายถาวรและกู้คืนไม่ได้
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	ลบโลกไม่สำเร็จ ตรวจสอบว่าเกมไม่ได้กำลังทำงานอยู่
++Mengimpor world	กำลังนำเข้าโลก
++Membaca arsip world...	กำลังอ่านไฟล์บีบอัดของโลก...
++Mengekstrak world...	กำลังแตกไฟล์โลก...
++Mengekstrak world... {0}/{1}	กำลังแตกไฟล์โลก... {0}/{1}
++{0} / {1} file	{0} / {1} ไฟล์
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	ตัวเปิดเกมกำลังตรวจสอบและแตกไฟล์โลก โปรดรอสักครู่
++Mengunduh {0}... {1}%	กำลังดาวน์โหลด {0}... {1}%
++Gagal mengimpor world: {~0}	นำเข้าโลกไม่สำเร็จ: {0}
++World "{0}" berhasil diimpor!	นำเข้าโลก "{0}" สำเร็จ!
++Berhasil mengimpor {0} world!	นำเข้า {0} โลกสำเร็จ!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	นำเข้า {0} โลกสำเร็จ แต่นำเข้าไฟล์ไม่สำเร็จ {1} ไฟล์!
++World {0} berhasil dipasang!	ติดตั้งโลก {0} สำเร็จ!
++Berhasil memasang {0} world dari {1}!	ติดตั้ง {0} โลกจาก {1} สำเร็จ!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	ไฟล์บีบอัดนี้ไม่ใช่โลกของ Minecraft Java (ไม่พบ level.dat)
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	ไม่รองรับโลก Bedrock (.mcworld) ตัวเปิดเกมนี้ติดตั้งได้เฉพาะโลกของ Minecraft Java
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	ไฟล์ level.dat ในไฟล์บีบอัดนี้เสียหาย จึงติดตั้งโลกไม่ได้
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	โลกมีขนาดใหญ่เกินไป (สูงสุด 4 GB) ยกเลิกการติดตั้งแล้ว
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	ไฟล์บีบอัดของโลกมีขนาดใหญ่เกินไป (สูงสุด 2 GB) ยกเลิกการติดตั้งแล้ว
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	ไฟล์บีบอัดมีไฟล์มากเกินไป ยกเลิกการติดตั้งแล้ว
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	ไฟล์บีบอัดมีโลกมากกว่า 20 โลก ยกเลิกการติดตั้งแล้ว
++Arsip ditolak karena berisi path yang tidak aman.	ปฏิเสธไฟล์บีบอัดเพราะมีพาธที่ไม่ปลอดภัย
++Terlalu banyak world dengan nama yang sama.	มีโลกชื่อเดียวกันมากเกินไป
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	พื้นที่เก็บข้อมูลเต็ม โปรดเคลียร์พื้นที่แล้วลองอีกครั้ง
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้งโลกนี้ โปรดเคลียร์ประมาณ {0} MB แล้วลองอีกครั้ง
++World belum didukung untuk instance mesin Rust.	ยังไม่รองรับโลกสำหรับ instance ที่ใช้เอนจิน Rust
++Versi ini tidak punya berkas untuk diunduh.	เวอร์ชันนี้ไม่มีไฟล์ให้ดาวน์โหลด
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	โลกนี้แชร์ในรูปแบบไฟล์บีบอัดที่ยังไม่รองรับ ดาวน์โหลดด้วยตัวเอง แตกไฟล์ บีบอัดใหม่เป็น .zip แล้วนำเข้า
++Berkas world harus berformat .zip	ไฟล์โลกต้องเป็น .zip
++File world harus berformat .zip	ไฟล์โลกต้องเป็น .zip
++Gagal membuat folder sementara	สร้างโฟลเดอร์ชั่วคราวไม่สำเร็จ
+diff --git a/app/src/main/assets/lang/vi/world.tsv b/app/src/main/assets/lang/vi/world.tsv
+new file mode 100644
+index 0000000..d9dda29
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/world.tsv
+@@ -0,0 +1,42 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++World	Thế giới
++worlds	thế giới
++.zip (World)	.zip (Thế giới)
++World (.zip)	Thế giới (.zip)
++Cari world di CurseForge...	Tìm thế giới trên CurseForge...
++Jelajahi CurseForge	Khám phá CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	Instance này chưa có thế giới nào. Hãy tải từ CurseForge hoặc nhập tệp .zip.
++Terakhir dimainkan {0} · {1}	Chơi lần cuối {0} · {1}
++Hapus world?	Xóa thế giới?
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	Bạn có chắc muốn xóa thế giới "{0}"? Mọi công trình và tiến trình trong đó sẽ mất vĩnh viễn và không thể khôi phục.
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	Không thể xóa thế giới. Hãy đảm bảo game không đang chạy.
++Mengimpor world	Đang nhập thế giới
++Membaca arsip world...	Đang đọc tệp nén thế giới...
++Mengekstrak world...	Đang giải nén thế giới...
++Mengekstrak world... {0}/{1}	Đang giải nén thế giới... {0}/{1}
++{0} / {1} file	{0} / {1} tệp
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	Launcher đang kiểm tra và giải nén thế giới. Vui lòng đợi.
++Mengunduh {0}... {1}%	Đang tải {0}... {1}%
++Gagal mengimpor world: {~0}	Không thể nhập thế giới: {0}
++World "{0}" berhasil diimpor!	Đã nhập thế giới "{0}"!
++Berhasil mengimpor {0} world!	Đã nhập {0} thế giới!
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	Đã nhập {0} thế giới; {1} tệp nhập thất bại!
++World {0} berhasil dipasang!	Đã cài thế giới {0}!
++Berhasil memasang {0} world dari {1}!	Đã cài {0} thế giới từ {1}!
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	Tệp nén này không phải thế giới Minecraft Java (không tìm thấy level.dat).
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	Không hỗ trợ thế giới Bedrock (.mcworld). Launcher này chỉ cài thế giới Minecraft Java.
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	Tệp level.dat trong tệp nén này bị hỏng nên không thể cài thế giới.
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	Thế giới quá lớn (tối đa 4 GB), đã hủy cài đặt.
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	Tệp nén thế giới quá lớn (tối đa 2 GB), đã hủy cài đặt.
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	Tệp nén chứa quá nhiều tệp, đã hủy cài đặt.
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	Tệp nén chứa hơn 20 thế giới, đã hủy cài đặt.
++Arsip ditolak karena berisi path yang tidak aman.	Tệp nén bị từ chối vì chứa đường dẫn không an toàn.
++Terlalu banyak world dengan nama yang sama.	Có quá nhiều thế giới trùng tên.
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	Bộ nhớ đã đầy. Hãy giải phóng dung lượng rồi thử lại.
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	Không đủ bộ nhớ để cài thế giới này. Hãy giải phóng khoảng {0} MB rồi thử lại.
++World belum didukung untuk instance mesin Rust.	Chưa hỗ trợ thế giới cho instance dùng engine Rust.
++Versi ini tidak punya berkas untuk diunduh.	Phiên bản này không có tệp để tải xuống.
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	Thế giới này được chia sẻ ở định dạng nén chưa được hỗ trợ. Hãy tải thủ công, giải nén, nén lại thành .zip rồi nhập.
++Berkas world harus berformat .zip	Tệp thế giới phải có định dạng .zip
++File world harus berformat .zip	Tệp thế giới phải có định dạng .zip
++Gagal membuat folder sementara	Không thể tạo thư mục tạm
+diff --git a/app/src/main/assets/lang/zh/world.tsv b/app/src/main/assets/lang/zh/world.tsv
+new file mode 100644
+index 0000000..b6ebf07
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/world.tsv
+@@ -0,0 +1,42 @@
++# World: tab World di layar Mod (unduh CurseForge, impor .zip), daftar world terpasang, dan pesan galatnya.
++World	世界
++worlds	世界
++.zip (World)	.zip（世界）
++World (.zip)	世界 (.zip)
++Cari world di CurseForge...	在 CurseForge 搜索世界…
++Jelajahi CurseForge	浏览 CurseForge
++Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip.	此实例中还没有世界。请从 CurseForge 下载，或导入 .zip 文件。
++Terakhir dimainkan {0} · {1}	上次游玩 {0} · {1}
++Hapus world?	删除世界？
++Yakin ingin menghapus world "{0}"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan.	确定要删除世界“{0}”吗？其中所有建筑和进度将永久丢失，且无法恢复。
++Gagal menghapus world. Pastikan game sedang tidak berjalan.	无法删除世界。请确认游戏没有在运行。
++Mengimpor world	正在导入世界
++Membaca arsip world...	正在读取世界压缩包…
++Mengekstrak world...	正在解压世界…
++Mengekstrak world... {0}/{1}	正在解压世界… {0}/{1}
++{0} / {1} file	{0} / {1} 个文件
++Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu.	启动器正在检查并解压世界，请稍候。
++Mengunduh {0}... {1}%	正在下载 {0}… {1}%
++Gagal mengimpor world: {~0}	导入世界失败：{0}
++World "{0}" berhasil diimpor!	世界“{0}”导入成功！
++Berhasil mengimpor {0} world!	已成功导入 {0} 个世界！
++Berhasil mengimpor {0} world, {1} file gagal diimpor!	已导入 {0} 个世界，{1} 个文件导入失败！
++World {0} berhasil dipasang!	世界 {0} 安装成功！
++Berhasil memasang {0} world dari {1}!	已从 {1} 安装 {0} 个世界！
++Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan).	此压缩包不是 Minecraft Java 版世界（未找到 level.dat）。
++World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java.	不支持基岩版世界（.mcworld）。此启动器只能安装 Minecraft Java 版世界。
++File level.dat di arsip ini rusak, jadi world tidak bisa dipasang.	此压缩包中的 level.dat 文件已损坏，无法安装该世界。
++Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan.	世界过大（最大 4 GB），已取消安装。
++Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan.	世界压缩包过大（最大 2 GB），已取消安装。
++Arsip berisi terlalu banyak berkas, pemasangan dibatalkan.	压缩包中的文件过多，已取消安装。
++Arsip berisi lebih dari 20 world, pemasangan dibatalkan.	压缩包中包含超过 20 个世界，已取消安装。
++Arsip ditolak karena berisi path yang tidak aman.	压缩包包含不安全的路径，已被拒绝。
++Terlalu banyak world dengan nama yang sama.	同名的世界过多。
++Penyimpanan penuh. Kosongkan ruang lalu coba lagi.	存储空间已满。请清理空间后重试。
++Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar {0} MB lalu coba lagi.	存储空间不足，无法安装此世界。请清理约 {0} MB 后重试。
++World belum didukung untuk instance mesin Rust.	Rust 引擎实例暂不支持世界。
++Versi ini tidak punya berkas untuk diunduh.	此版本没有可下载的文件。
++World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor.	此世界使用了暂不支持的压缩格式。请手动下载并解压，重新压缩为 .zip 后再导入。
++Berkas world harus berformat .zip	世界文件必须是 .zip 格式
++File world harus berformat .zip	世界文件必须是 .zip 格式
++Gagal membuat folder sementara	无法创建临时文件夹
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+index 6f85225..2ff4216 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+@@ -44,6 +44,7 @@ object CurseForgeMapper {
+         "resourcepacks" -> 12
+         "shaderpacks" -> 6552
+         "datapacks" -> 6945
++        "worlds" -> 17
+         else -> 6
+     }
+ 
+@@ -53,6 +54,7 @@ object CurseForgeMapper {
+         "shaderpacks" -> "shader"
+         "datapacks" -> "datapack"
+         "modpacks" -> "modpack"
++        "worlds" -> "world"
+         else -> "mod"
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModIconLoader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModIconLoader.kt
+index 8c35b80..392105b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModIconLoader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModIconLoader.kt
+@@ -99,7 +99,8 @@ object ModIconLoader {
+ 
+     private fun extractIconBytes(file: File, itemType: String): ByteArray? {
+         if (file.isDirectory) {
+-            val packPng = File(file, "pack.png")
++            // Folder world menyimpan ikonnya di icon.png; datapack di pack.png
++            val packPng = File(file, if (itemType == "worlds") "icon.png" else "pack.png")
+             return if (packPng.isFile && packPng.length() < MAX_BYTES) packPng.readBytes() else null
+         }
+         if (!file.isFile) return null
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
+index a81261c..f3afe02 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxAddonImportManager.kt
+@@ -108,6 +108,8 @@ object NuxAddonImportManager {
+                     var hasCurseforgeManifest = false
+                     var hasModsFolder = false
+                     var hasJar = false
++                    var hasLevelDat = false
++                    var hasRegion = false
+                     var count = 0
+ 
+                     while (entry != null && count < 60) {
+@@ -120,12 +122,16 @@ object NuxAddonImportManager {
+                         if (name.endsWith("manifest.json")) hasCurseforgeManifest = true
+                         if (name.startsWith("mods/") || name.contains("/mods/")) hasModsFolder = true
+                         if (name.endsWith(".jar")) hasJar = true
++                        // World Java: level.dat di akar atau di dalam satu-dua folder pembungkus, atau folder region (.mca)
++                        if ((name == "level.dat" || name.endsWith("/level.dat")) && name.count { it == '/' } <= 3) hasLevelDat = true
++                        if (name.endsWith(".mca") && (name.startsWith("region/") || name.contains("/region/"))) hasRegion = true
+                         zis.closeEntry()
+                         entry = zis.nextEntry
+                     }
+ 
+                     return when {
+                         hasModpackIndex || hasCurseforgeManifest -> "modpacks"
++                        hasLevelDat || hasRegion -> "worlds"
+                         hasShaders -> "shaderpacks"
+                         hasPackMcmeta && hasAssets -> "resourcepacks"
+                         hasModsFolder || hasJar -> "modpacks"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index b149d0a..a939916 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -14,7 +14,11 @@ import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.*
+ import com.israadev.nuxlauncher.core.utils.SafePaths
++import kotlinx.coroutines.CancellationException
+ import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.Job
++import kotlinx.coroutines.currentCoroutineContext
++import kotlinx.coroutines.ensureActive
+ import kotlinx.coroutines.withContext
+ import okhttp3.OkHttpClient
+ import okhttp3.Request
+@@ -116,6 +120,7 @@ object NuxModManager {
+             "resourcepacks" -> File(gameDir, "resourcepacks")
+             "shaderpacks" -> File(gameDir, "shaderpacks")
+             "modpacks" -> File(gameDir, "modpacks")
++            WorldInstaller.ITEM_TYPE -> File(gameDir, "saves")
+             else -> File(gameDir, "mods")
+         }
+         if (!dir.exists()) dir.mkdirs()
+@@ -131,6 +136,10 @@ object NuxModManager {
+         itemType: String,
+         worldName: String? = null
+     ): List<InstalledModItem> = withContext(Dispatchers.IO) {
++        // World: tiap folder di saves yang punya level.dat (mesin Rust belum mendukung world)
++        if (itemType == WorldInstaller.ITEM_TYPE) {
++            return@withContext if (HorizonEngine.isEngine(instance.loader)) emptyList() else listWorldItems(context, instance)
++        }
+         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
+         if (HorizonEngine.isEngine(instance.loader)) {
+             return@withContext HorizonContent.installed(HorizonEngine.engineHome(context), itemType)
+@@ -226,6 +235,8 @@ object NuxModManager {
+         item: InstalledModItem,
+         worldName: String? = null
+     ): Boolean = withContext(Dispatchers.IO) {
++        // World tidak bisa dinonaktifkan (ganti nama folder akan membuatnya hilang dari daftar game)
++        if (itemType == WorldInstaller.ITEM_TYPE) return@withContext false
+         try {
+             val targetDir = getTargetDir(context, instance, itemType, worldName)
+             val currentFile = File(targetDir, item.originalFilename)
+@@ -384,6 +395,11 @@ object NuxModManager {
+             // Nama berkas datang dari aplikasi lain: buang bagian folder ("../") sebelum dipakai sebagai path
+             fileName = SafePaths.fileName(fileName)
+ 
++            // World: arsip .zip diekstrak ke saves (dengan pemeriksaan level.dat), bukan disalin mentah
++            if (itemType == WorldInstaller.ITEM_TYPE) {
++                return@withContext importWorldArchive(context, instance, uri, fileName, onProgress)
++            }
++
+             // Mesin Rust: diperiksa dengan aturan mesin lalu masuk ke folder mesin
+             if (HorizonEngine.isEngine(instance.loader)) {
+                 return@withContext importEngineFile(context, uri, itemType, fileName)
+@@ -433,6 +449,158 @@ object NuxModManager {
+         }
+     }
+ 
++    // ---------------------------------------------------------------------------------------------
++    // WORLD: daftar, impor .zip lokal, dan unduhan CurseForge ke folder saves
++    // ---------------------------------------------------------------------------------------------
++
++    private const val MSG_WORLD_NO_ENGINE = "World belum didukung untuk instance mesin Rust."
++
++    /** Total ukuran berkas di dalam [dir] (kedalaman dibatasi supaya tautan simbolik yang berputar tidak membuat macet). */
++    private fun folderSize(dir: File): Long =
++        dir.walkTopDown().maxDepth(12).filter { it.isFile }.sumOf { it.length() }
++
++    /** Semua world di saves instance, yang terakhir dimainkan di atas. Tanggal terakhir dimainkan ada di kolom `version`. */
++    private fun listWorldItems(context: Context, instance: Instance): List<InstalledModItem> {
++        val savesDir = File(InstanceManager.getInstanceGameDir(context, instance), "saves")
++        val dirs = savesDir.listFiles { f -> !f.name.startsWith(".") && WorldInstaller.isWorldDir(f) } ?: return emptyList()
++        val format = java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT)
++        return dirs.map { dir ->
++            val played = File(dir, "level.dat").lastModified().takeIf { it > 0L } ?: dir.lastModified()
++            played to InstalledModItem(
++                id = dir.name,
++                filename = dir.name,
++                originalFilename = dir.name,
++                name = dir.name,
++                description = "",
++                version = if (played > 0L) format.format(java.util.Date(played)) else "",
++                category = "World",
++                isEnabled = true,
++                sizeBytes = folderSize(dir),
++                itemType = WorldInstaller.ITEM_TYPE,
++                filePath = dir.absolutePath
++            )
++        }.sortedByDescending { it.first }.map { it.second }
++    }
++
++    /** Mengubah galat penyimpanan penuh dari sistem menjadi pesan yang bisa dipahami pengguna. */
++    private fun friendlyWorldError(e: Exception): Exception {
++        val msg = e.message.orEmpty()
++        return if (e !is WorldImportException && (msg.contains("ENOSPC") || msg.contains("No space left", ignoreCase = true))) {
++            WorldImportException(WorldInstaller.MSG_DISK_FULL)
++        } else {
++            e
++        }
++    }
++
++    /** Impor arsip .zip world dari [uri]: disalin ke folder sementara, diperiksa, lalu diekstrak ke saves. */
++    private suspend fun importWorldArchive(
++        context: Context,
++        instance: Instance,
++        uri: Uri,
++        fileName: String,
++        onProgress: ((statusText: String, current: Int, total: Int) -> Unit)?
++    ): Result<String> {
++        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
++        if (!fileName.lowercase().endsWith(".zip")) {
++            return Result.failure(IllegalArgumentException("File world harus berformat .zip"))
++        }
++        val gameDir = InstanceManager.getInstanceGameDir(context, instance)
++        val job = currentCoroutineContext()[Job]
++        var tempDir: File? = null
++        return try {
++            tempDir = WorldInstaller.newTempDir(gameDir)
++            val archive = File(tempDir, "world.zip")
++            onProgress?.invoke("Menyalin file $fileName...", 0, 0)
++            val input = context.contentResolver.openInputStream(uri)
++                ?: return Result.failure(Exception("Gagal membaca file sumber"))
++            input.use { WorldInstaller.copyLimited(it, archive, checkCancelled = { job?.ensureActive() }) }
++            onProgress?.invoke("Membaca arsip world...", 0, 0)
++            val names = WorldInstaller.install(
++                zipFile = archive,
++                savesDir = File(gameDir, "saves"),
++                stagingParent = gameDir,
++                fallbackName = WorldInstaller.stemOf(fileName),
++                checkCancelled = { job?.ensureActive() },
++                onProgress = { status, cur, tot -> onProgress?.invoke(status, cur, tot) }
++            )
++            // Satu nama per baris: arsip bisa berisi beberapa world dan layar Mod menghitungnya
++            Result.success(names.joinToString("\n"))
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            Result.failure(friendlyWorldError(e))
++        } finally {
++            tempDir?.deleteRecursively()
++        }
++    }
++
++    /** Unduh arsip world dari CurseForge (satu berkas .zip) lalu pasang ke saves. Mengembalikan nama folder yang dibuat. */
++    private suspend fun downloadWorld(
++        context: Context,
++        instance: Instance,
++        version: ModrinthVersion,
++        onProgress: (statusText: String) -> Unit
++    ): Result<List<String>> {
++        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
++        val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
++            ?: return Result.failure(WorldImportException("Versi ini tidak punya berkas untuk diunduh."))
++        val fileName = SafePaths.fileName(file.filename)
++        val lower = fileName.lowercase()
++        if (!lower.endsWith(".zip")) {
++            val unsupported = lower.endsWith(".rar") || lower.endsWith(".7z")
++            return Result.failure(
++                WorldImportException(
++                    if (unsupported) "World ini dibagikan dalam format arsip yang belum didukung. Unduh manual, ekstrak, lalu kompres ulang sebagai .zip dan impor."
++                    else "Berkas world harus berformat .zip"
++                )
++            )
++        }
++        if (file.size > WorldInstaller.MAX_ARCHIVE_BYTES) return Result.failure(WorldImportException(WorldInstaller.MSG_ARCHIVE_TOO_BIG))
++
++        val gameDir = InstanceManager.getInstanceGameDir(context, instance)
++        val job = currentCoroutineContext()[Job]
++        var tempDir: File? = null
++        return try {
++            tempDir = WorldInstaller.newTempDir(gameDir)
++            val archive = File(tempDir, "world.zip")
++            onProgress("Mengunduh $fileName...")
++            var lastPercent = -1
++            downloadFile(
++                url = file.url,
++                destFile = archive,
++                maxBytes = WorldInstaller.MAX_ARCHIVE_BYTES,
++                expectedBytes = file.size,
++                onBytes = { read, total ->
++                    job?.ensureActive()
++                    if (total > 0L) {
++                        val percent = (read * 100L / total).toInt().coerceIn(0, 100)
++                        if (percent != lastPercent) {
++                            lastPercent = percent
++                            onProgress("Mengunduh $fileName... $percent%")
++                        }
++                    }
++                }
++            )
++            verifyHashes(archive, file.hashes)
++            onProgress("Membaca arsip world...")
++            val names = WorldInstaller.install(
++                zipFile = archive,
++                savesDir = File(gameDir, "saves"),
++                stagingParent = gameDir,
++                fallbackName = WorldInstaller.stemOf(fileName),
++                checkCancelled = { job?.ensureActive() },
++                onProgress = { _, cur, tot -> if (tot > 0) onProgress("Mengekstrak world... $cur/$tot") }
++            )
++            Result.success(names)
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            Result.failure(friendlyWorldError(e))
++        } finally {
++            tempDir?.deleteRecursively()
++        }
++    }
++
+     // ---------------------------------------------------------------------------------------------
+     // MESIN RUST (Horizon): hanya Shader dan Resource Pack, langsung ke folder dan pengaturan mesin
+     // ---------------------------------------------------------------------------------------------
+@@ -650,7 +818,11 @@ object NuxModManager {
+                 Result.failure(e)
+             }
+         }
+-        if (source == SOURCE_CURSEFORGE && !engineSearch) {
++        if (itemType == WorldInstaller.ITEM_TYPE && engineSearch) {
++            return@withContext Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
++        }
++        // World hanya ada di CurseForge (Modrinth tidak punya jenis proyek world)
++        if ((source == SOURCE_CURSEFORGE || itemType == WorldInstaller.ITEM_TYPE) && !engineSearch) {
+             return@withContext CurseForgeApi.search(
+                 queryText = query,
+                 itemType = itemType,
+@@ -922,6 +1094,9 @@ object NuxModManager {
+         worldName: String? = null,
+         onProgress: (statusText: String) -> Unit = {}
+     ): Result<List<String>> = withContext(Dispatchers.IO) {
++        if (itemType == WorldInstaller.ITEM_TYPE) {
++            return@withContext downloadWorld(context, instance, version, onProgress)
++        }
+         if (HorizonEngine.isEngine(instance.loader)) {
+             return@withContext downloadForEngine(context, version, itemType, onProgress)
+         }
+@@ -1378,7 +1553,13 @@ object NuxModManager {
+      * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
+      * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
+      */
+-    private fun downloadFile(url: String, destFile: File, maxBytes: Long = Long.MAX_VALUE) {
++    private fun downloadFile(
++        url: String,
++        destFile: File,
++        maxBytes: Long = Long.MAX_VALUE,
++        expectedBytes: Long = 0L,
++        onBytes: ((read: Long, total: Long) -> Unit)? = null
++    ) {
+         if (!url.trim().startsWith("https://", ignoreCase = true)) {
+             throw java.io.IOException("Alamat unduhan ditolak karena tidak memakai HTTPS")
+         }
+@@ -1394,6 +1575,7 @@ object NuxModManager {
+                     throw Exception("Gagal mengunduh file: HTTP ${response.code}")
+                 }
+                 val body = response.body ?: throw Exception("Body stream kosong")
++                val promised = if (expectedBytes > 0L) expectedBytes else body.contentLength().coerceAtLeast(0L)
+                 body.byteStream().use { input ->
+                     FileOutputStream(partFile).use { output ->
+                         val buffer = ByteArray(64 * 1024)
+@@ -1405,6 +1587,7 @@ object NuxModManager {
+                             // Sumber yang mengirim lebih banyak dari yang dijanjikan dihentikan di tengah jalan
+                             if (total > maxBytes) throw java.io.IOException(HorizonRegistry.MSG_SIZE)
+                             output.write(buffer, 0, read)
++                            onBytes?.invoke(total, promised)
+                         }
+                     }
+                 }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/WorldInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/WorldInstaller.kt
+new file mode 100644
+index 0000000..4806859
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/WorldInstaller.kt
+@@ -0,0 +1,291 @@
++package com.israadev.nuxlauncher.core.mods
++
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import java.io.File
++import java.io.FileOutputStream
++import java.io.IOException
++import java.io.InputStream
++import java.util.UUID
++import java.util.zip.ZipFile
++
++/** Galat yang pesannya aman ditampilkan ke pengguna: arsip bukan world Java, rusak, terlalu besar, atau tidak aman. */
++class WorldImportException(message: String) : IOException(message)
++
++/**
++ * Memasang world (folder di dalam `saves`) dari arsip .zip. Dipakai oleh impor file lokal dan unduhan CurseForge.
++ *
++ * Murni berkas dan zip (tanpa Android), jadi bisa diuji di JVM. Aturannya:
++ * - Hanya world Minecraft Java: ada `level.dat` berformat gzip. World Bedrock (.mcworld) ditolak dengan pesan jelas.
++ * - `level.dat` boleh di akar arsip atau di dalam folder (sampai 3 tingkat); arsip berisi beberapa world juga bisa.
++ * - Diekstrak dulu ke folder sementara satu folder dengan `saves`, baru dipindah dengan satu `rename`. Bila gagal di
++ *   tengah jalan (penyimpanan penuh, dibatalkan, arsip rusak), `saves` tidak tersentuh.
++ * - World yang sudah ada tidak pernah ditimpa: nama yang bentrok mendapat akhiran " (2)", " (3)", dan seterusnya.
++ * - Tahan zip-slip (path "../", absolut) dan arsip "bom" (batas total byte dan jumlah berkas), serta diperiksa dulu
++ *   apakah ruang penyimpanan cukup. Isi disalin per blok 64 KB, tidak pernah dimuat utuh ke RAM.
++ */
++object WorldInstaller {
++    const val ITEM_TYPE = "worlds"
++
++    /** Batas total isi yang boleh diekstrak dari satu arsip world. */
++    const val MAX_EXTRACT_BYTES = 4L * 1024L * 1024L * 1024L
++
++    /** Batas ukuran arsip world yang disalin atau diunduh. */
++    const val MAX_ARCHIVE_BYTES = 2L * 1024L * 1024L * 1024L
++
++    private const val MAX_ENTRIES = 300_000
++    private const val MAX_ROOT_DEPTH = 3
++    private const val MAX_WORLDS = 20
++    private const val FREE_SPACE_MARGIN = 64L * 1024L * 1024L
++    private const val STAGING_PREFIX = ".amber-world-"
++    private const val STALE_AFTER_MS = 60L * 60L * 1000L
++    private const val DEFAULT_NAME = "World"
++    private val JUNK_NAMES = setOf(".ds_store", "thumbs.db", "desktop.ini", "session.lock")
++
++    const val MSG_NOT_A_WORLD = "Arsip ini bukan world Minecraft Java (level.dat tidak ditemukan)."
++    const val MSG_BEDROCK = "World Bedrock (.mcworld) tidak didukung. Launcher ini hanya memasang world Minecraft Java."
++    const val MSG_BAD_LEVEL = "File level.dat di arsip ini rusak, jadi world tidak bisa dipasang."
++    const val MSG_TOO_BIG = "Isi world terlalu besar (maksimal 4 GB), pemasangan dibatalkan."
++    const val MSG_ARCHIVE_TOO_BIG = "Arsip world terlalu besar (maksimal 2 GB), pemasangan dibatalkan."
++    const val MSG_TOO_MANY_FILES = "Arsip berisi terlalu banyak berkas, pemasangan dibatalkan."
++    const val MSG_TOO_MANY_WORLDS = "Arsip berisi lebih dari 20 world, pemasangan dibatalkan."
++    const val MSG_UNSAFE = "Arsip ditolak karena berisi path yang tidak aman."
++    const val MSG_SAME_NAME = "Terlalu banyak world dengan nama yang sama."
++    const val MSG_DISK_FULL = "Penyimpanan penuh. Kosongkan ruang lalu coba lagi."
++
++    /** Satu world di dalam arsip. [prefix] = folder world di arsip ("" bila level.dat ada di akar, selain itu berakhir "/"). */
++    data class Found(val prefix: String, val name: String)
++
++    /** Pesan "penyimpanan tidak cukup" dengan angka MB yang perlu dikosongkan (dibulatkan ke atas). */
++    fun noSpaceMessage(neededBytes: Long): String {
++        val mb = (neededBytes + 1024L * 1024L - 1L) / (1024L * 1024L)
++        return "Penyimpanan tidak cukup untuk memasang world ini. Kosongkan sekitar $mb MB lalu coba lagi."
++    }
++
++    /** Nama folder world yang aman dari teks bebas: tanpa folder, karakter kontrol, dan karakter terlarang; maksimal 64 huruf. */
++    fun cleanName(raw: String?): String {
++        val s = (raw ?: "").replace('\\', '/').substringAfterLast('/')
++            .filter { it >= ' ' && it != '\u007f' && it !in "<>:\"|?*" }
++            .replace(Regex("\\s+"), " ")
++            .trim()
++            .trim('.')
++            .trim()
++        return if (s.isEmpty()) DEFAULT_NAME else s.take(64).trim()
++    }
++
++    /** Nama dasar dari nama berkas arsip: "Skyblock v1.2.zip" menjadi "Skyblock v1.2". */
++    fun stemOf(fileName: String?): String = cleanName(File(cleanName(fileName)).nameWithoutExtension)
++
++    /** Folder baru di [parent] yang belum ada: "Nama", lalu "Nama (2)", "Nama (3)", dan seterusnya. */
++    fun uniqueDir(parent: File, base: String): File {
++        var candidate = File(parent, base)
++        var n = 2
++        while (candidate.exists()) {
++            if (n > 999) throw WorldImportException(MSG_SAME_NAME)
++            candidate = File(parent, "$base ($n)")
++            n++
++        }
++        return candidate
++    }
++
++    /** True bila [dir] berupa folder world Java yang dikenali game (punya level.dat). */
++    fun isWorldDir(dir: File): Boolean = dir.isDirectory && File(dir, "level.dat").isFile
++
++    private fun normalize(name: String): String = name.replace('\\', '/')
++
++    private fun isJunk(rel: String): Boolean {
++        if (rel.startsWith("__MACOSX/")) return true
++        return rel.trimEnd('/').substringAfterLast('/').lowercase() in JUNK_NAMES
++    }
++
++    private fun hasGzipMagic(zip: ZipFile, entryName: String): Boolean {
++        val entry = zip.getEntry(entryName) ?: return false
++        return zip.getInputStream(entry).use { input ->
++            input.read() == 0x1f && input.read() == 0x8b
++        }
++    }
++
++    /**
++     * Mencari semua world Java di dalam [zip]. Melempar [WorldImportException] (pesan siap tampil) bila tidak ada
++     * satu pun world yang bisa dipasang.
++     */
++    fun findWorlds(zip: ZipFile, fallbackName: String): List<Found> {
++        val levelEntries = LinkedHashMap<String, String>() // prefix -> nama asli entri level.dat
++        val bedrock = HashSet<String>()
++        var count = 0
++        val entries = zip.entries()
++        while (entries.hasMoreElements()) {
++            val entry = entries.nextElement()
++            if (++count > MAX_ENTRIES) throw WorldImportException(MSG_TOO_MANY_FILES)
++            if (entry.isDirectory) continue
++            val name = normalize(entry.name)
++            if (name.startsWith("__MACOSX/")) continue
++            val slash = name.lastIndexOf('/')
++            val base = name.substring(slash + 1)
++            val prefix = name.substring(0, slash + 1)
++            when {
++                base == "level.dat" && prefix.count { it == '/' } <= MAX_ROOT_DEPTH -> levelEntries[prefix] = entry.name
++                base == "levelname.txt" -> bedrock.add(prefix)
++                name == "db/CURRENT" || name.endsWith("/db/CURRENT") -> bedrock.add(name.removeSuffix("db/CURRENT"))
++            }
++        }
++
++        val all = levelEntries.keys
++        // level.dat di akar berarti seluruh arsip adalah satu world; selain itu buang yang bersarang di world lain
++        val roots = if ("" in all) {
++            listOf("")
++        } else {
++            all.filter { p -> all.none { o -> o != p && p.startsWith(o) } }
++        }
++        val javaRoots = roots.filter { it !in bedrock }
++        if (javaRoots.isEmpty()) {
++            throw WorldImportException(if (roots.isEmpty() && bedrock.isEmpty()) MSG_NOT_A_WORLD else MSG_BEDROCK)
++        }
++        val valid = javaRoots.filter { hasGzipMagic(zip, levelEntries.getValue(it)) }
++        if (valid.isEmpty()) throw WorldImportException(MSG_BAD_LEVEL)
++        if (valid.size > MAX_WORLDS) throw WorldImportException(MSG_TOO_MANY_WORLDS)
++
++        return valid.map { p ->
++            val raw = p.trimEnd('/').substringAfterLast('/').ifBlank { fallbackName }
++            Found(p, cleanName(raw))
++        }
++    }
++
++    /** World pemilik entri bernama [name]; prefix terpanjang menang. Null bila entri bukan bagian dari world mana pun. */
++    private fun ownerOf(worlds: List<Found>, name: String): Found? =
++        worlds.filter { it.prefix.isEmpty() || name.startsWith(it.prefix) }.maxByOrNull { it.prefix.length }
++
++    /**
++     * Memasang semua world di [zipFile] ke [savesDir] dan mengembalikan nama folder yang dibuat.
++     * [stagingParent] harus satu volume dengan [savesDir] (biasanya folder game) supaya pemindahan akhir cukup satu rename.
++     * [fallbackName] dipakai bila world ada di akar arsip dan tidak punya nama folder sendiri.
++     */
++    fun install(
++        zipFile: File,
++        savesDir: File,
++        stagingParent: File,
++        fallbackName: String,
++        maxBytes: Long = MAX_EXTRACT_BYTES,
++        checkCancelled: () -> Unit = {},
++        onProgress: (status: String, current: Int, total: Int) -> Unit = { _, _, _ -> }
++    ): List<String> {
++        cleanupStale(stagingParent)
++        ZipFile(zipFile).use { zip ->
++            val worlds = findWorlds(zip, fallbackName)
++
++            // Putaran 1: hitung berkas dan ukuran yang akan diekstrak, lalu pastikan muat sebelum menulis apa pun
++            var declared = 0L
++            var fileCount = 0
++            val scan = zip.entries()
++            while (scan.hasMoreElements()) {
++                checkCancelled()
++                val e = scan.nextElement()
++                if (e.isDirectory) continue
++                if (ownerOf(worlds, normalize(e.name)) == null) continue
++                fileCount++
++                if (e.size > 0) declared += e.size
++                if (declared > maxBytes) throw WorldImportException(MSG_TOO_BIG)
++            }
++            val free = stagingParent.usableSpace
++            if (free > 0 && free < declared + FREE_SPACE_MARGIN) {
++                throw WorldImportException(noSpaceMessage(declared + FREE_SPACE_MARGIN - free))
++            }
++
++            // Putaran 2: ekstrak ke folder sementara
++            val stagingRoot = File(stagingParent, STAGING_PREFIX + UUID.randomUUID().toString().take(8))
++            try {
++                if (!stagingRoot.mkdirs()) throw IOException("Gagal membuat folder sementara")
++                val stages = worlds.indices.map { File(stagingRoot, "w$it").also { dir -> dir.mkdirs() } }
++                var done = 0
++                var used = 0L
++                val buffer = ByteArray(64 * 1024)
++                val extract = zip.entries()
++                while (extract.hasMoreElements()) {
++                    checkCancelled()
++                    val e = extract.nextElement()
++                    val name = normalize(e.name)
++                    val owner = ownerOf(worlds, name) ?: continue
++                    val rel = name.substring(owner.prefix.length)
++                    if (rel.isEmpty() || isJunk(rel)) continue
++                    val stage = stages[worlds.indexOf(owner)]
++                    val dest = SafePaths.resolveInside(stage, rel) ?: throw WorldImportException(MSG_UNSAFE)
++                    if (e.isDirectory) {
++                        dest.mkdirs()
++                        continue
++                    }
++                    dest.parentFile?.mkdirs()
++                    zip.getInputStream(e).use { input ->
++                        FileOutputStream(dest).use { output ->
++                            while (true) {
++                                val read = input.read(buffer)
++                                if (read < 0) break
++                                used += read
++                                if (used > maxBytes) throw WorldImportException(MSG_TOO_BIG)
++                                output.write(buffer, 0, read)
++                            }
++                        }
++                    }
++                    done++
++                    if (done % 40 == 0 || done == fileCount) onProgress("Mengekstrak world...", done, fileCount)
++                }
++                if (stages.any { !File(it, "level.dat").isFile }) throw WorldImportException(MSG_NOT_A_WORLD)
++
++                // Putaran 3: pindahkan ke saves (cepat, satu rename per world)
++                savesDir.mkdirs()
++                val installed = ArrayList<String>()
++                for ((i, w) in worlds.withIndex()) {
++                    val target = uniqueDir(savesDir, w.name)
++                    if (!stages[i].renameTo(target)) {
++                        stages[i].copyRecursively(target, overwrite = false)
++                        stages[i].deleteRecursively()
++                    }
++                    installed.add(target.name)
++                }
++                return installed
++            } finally {
++                stagingRoot.deleteRecursively()
++            }
++        }
++    }
++
++    /** Menyalin [input] ke [dest] per blok. Melempar [WorldImportException] bila lebih besar dari [maxBytes]; berkas yang gagal dihapus. */
++    fun copyLimited(
++        input: InputStream,
++        dest: File,
++        maxBytes: Long = MAX_ARCHIVE_BYTES,
++        checkCancelled: () -> Unit = {}
++    ) {
++        try {
++            FileOutputStream(dest).use { output ->
++                val buffer = ByteArray(64 * 1024)
++                var total = 0L
++                while (true) {
++                    checkCancelled()
++                    val read = input.read(buffer)
++                    if (read < 0) break
++                    total += read
++                    if (total > maxBytes) throw WorldImportException(MSG_ARCHIVE_TOO_BIG)
++                    output.write(buffer, 0, read)
++                }
++            }
++        } catch (e: Throwable) {
++            dest.delete()
++            throw e
++        }
++    }
++
++    /** Folder sementara baru (satu volume dengan [parent]) untuk menampung arsip yang diunduh atau disalin. */
++    fun newTempDir(parent: File): File {
++        cleanupStale(parent)
++        val dir = File(parent, STAGING_PREFIX + "dl-" + UUID.randomUUID().toString().take(8))
++        if (!dir.mkdirs()) throw IOException("Gagal membuat folder sementara")
++        return dir
++    }
++
++    /** Hapus sisa folder sementara yang tertinggal lebih dari satu jam (mis. aplikasi ditutup paksa saat mengekstrak). */
++    fun cleanupStale(parent: File) {
++        val now = System.currentTimeMillis()
++        parent.listFiles { f -> f.isDirectory && f.name.startsWith(STAGING_PREFIX) }?.forEach {
++            if (now - it.lastModified() > STALE_AFTER_MS) it.deleteRecursively()
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddonImportDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddonImportDialog.kt
+index 7b5f0bc..c29fcaf 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddonImportDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAddonImportDialog.kt
+@@ -47,7 +47,8 @@ private val ADDON_TYPES = listOf(
+     AddonTypeOption("mods", "Mod (.jar)", "🧩"),
+     AddonTypeOption("modpacks", "Modpack (.mrpack / .zip)", "📦"),
+     AddonTypeOption("resourcepacks", "Resource Pack (.zip)", "🎨"),
+-    AddonTypeOption("shaderpacks", "Shaderpack (.zip)", "✨")
++    AddonTypeOption("shaderpacks", "Shaderpack (.zip)", "✨"),
++    AddonTypeOption("worlds", "World (.zip)", "🌍")
+ )
+ 
+ @Composable
+@@ -206,6 +207,7 @@ fun NuxAddonImportDialog(
+                                         "modpacks" -> "📦"
+                                         "resourcepacks" -> "🎨"
+                                         "shaderpacks" -> "✨"
++                                        "worlds" -> "🌍"
+                                         else -> "📄"
+                                     }
+                                     Text(text = icon, fontSize = 20.sp)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index 5bc8cb9..12545e4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -48,6 +48,7 @@ import com.israadev.nuxlauncher.core.models.*
+ import com.israadev.nuxlauncher.core.mods.CurseForgeApi
+ import com.israadev.nuxlauncher.core.mods.NuxModManager
+ import com.israadev.nuxlauncher.core.mods.WorldInfo
++import com.israadev.nuxlauncher.core.mods.WorldInstaller
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.components.*
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+@@ -87,7 +88,7 @@ private fun isValidExtensionForType(itemType: String, filename: String, rust: Bo
+     return when (itemType) {
+         "mods" -> if (rust) lower.endsWith(".hmod") else lower.endsWith(".jar")
+         "modpacks" -> lower.endsWith(".mrpack") || lower.endsWith(".zip")
+-        "shaderpacks", "resourcepacks", "datapacks" -> lower.endsWith(".zip")
++        "shaderpacks", "resourcepacks", "datapacks", "worlds" -> lower.endsWith(".zip")
+         else -> false
+     }
+ }
+@@ -99,6 +100,7 @@ private fun getAllowedExtensionLabel(itemType: String, rust: Boolean = false): S
+         "shaderpacks" -> ".zip (Shaderpack)"
+         "resourcepacks" -> ".zip (Resource Pack)"
+         "datapacks" -> ".zip (Datapack)"
++        "worlds" -> ".zip (World)"
+         else -> "format yang didukung"
+     }
+ }
+@@ -224,13 +226,17 @@ fun ModsScreen(
+     var browseSource by remember { mutableStateOf(NuxModManager.SOURCE_MODRINTH) }
+     var showKeyDialog by remember { mutableStateOf(false) }
+     var keyProblem by remember { mutableStateOf(false) }
+-    val isCurseForge = browseSource == NuxModManager.SOURCE_CURSEFORGE && !rustInstance
++    // World hanya ada di CurseForge (Modrinth tidak punya jenis ini), jadi sumbernya dikunci di tab World
++    val worldsTab = activeType == WorldInstaller.ITEM_TYPE
++    val isCurseForge = (browseSource == NuxModManager.SOURCE_CURSEFORGE || worldsTab) && !rustInstance
+     // Mesin Rust: mod selalu dari katalog Horizon; shader dan resource pack dari Horizon atau Modrinth (pilihan pengguna)
+     var rustSource by remember { mutableStateOf(NuxModManager.SOURCE_HORIZON) }
+     val rustMods = rustInstance && activeType == HorizonContent.TYPE_MODS
+     val rustHorizon = rustInstance && (rustMods || rustSource == NuxModManager.SOURCE_HORIZON)
+     val activeSource = if (rustInstance) {
+         if (rustHorizon) NuxModManager.SOURCE_HORIZON else NuxModManager.SOURCE_MODRINTH
++    } else if (worldsTab) {
++        NuxModManager.SOURCE_CURSEFORGE
+     } else {
+         browseSource
+     }
+@@ -384,7 +390,59 @@ fun ModsScreen(
+                 if (validUris.isEmpty()) return@launch
+ 
+                 // 2. Import file yang valid
+-                if (activeType == "modpacks") {
++                if (activeType == WorldInstaller.ITEM_TYPE) {
++                    isImportingModpack = true
++                    var importedWorlds = 0
++                    var failedFiles = 0
++                    var lastWorld = ""
++                    var lastError: String? = null
++
++                    for ((uri, fileName) in validUris) {
++                        modpackImportName = fileName
++                        modpackImportStatus = "Menyalin file $fileName..."
++                        modpackImportCurrent = 0
++                        modpackImportTotal = 0
++
++                        val importRes = NuxModManager.importLocalFile(
++                            context = context,
++                            instance = inst,
++                            itemType = activeType,
++                            uri = uri,
++                            onProgress = { statusText, cur, tot ->
++                                modpackImportStatus = statusText
++                                modpackImportCurrent = cur
++                                modpackImportTotal = tot
++                            }
++                        )
++
++                        if (importRes.isSuccess) {
++                            // Nama world yang dibuat dipisah baris baru (satu arsip bisa berisi beberapa world)
++                            val names = importRes.getOrNull().orEmpty().split("\n").filter { it.isNotBlank() }
++                            importedWorlds += names.size
++                            lastWorld = names.lastOrNull().orEmpty()
++                        } else {
++                            failedFiles++
++                            lastError = importRes.exceptionOrNull()?.message
++                        }
++                    }
++
++                    isImportingModpack = false
++                    reloadInstalled()
++
++                    if (importedWorlds > 0 && failedFiles > 0) {
++                        Toast.makeText(
++                            context,
++                            "Berhasil mengimpor $importedWorlds world, $failedFiles file gagal diimpor!",
++                            Toast.LENGTH_LONG
++                        ).show()
++                    } else if (importedWorlds == 1 && lastWorld.isNotBlank()) {
++                        Toast.makeText(context, "World \"$lastWorld\" berhasil diimpor!", Toast.LENGTH_SHORT).show()
++                    } else if (importedWorlds > 0) {
++                        Toast.makeText(context, "Berhasil mengimpor $importedWorlds world!", Toast.LENGTH_SHORT).show()
++                    } else if (lastError != null) {
++                        Toast.makeText(context, "Gagal mengimpor world: $lastError", Toast.LENGTH_LONG).show()
++                    }
++                } else if (activeType == "modpacks") {
+                     isImportingModpack = true
+                     var successCount = 0
+                     var lastError: String? = null
+@@ -543,7 +601,11 @@ fun ModsScreen(
+             if (downRes.isSuccess) {
+                 val downloaded = downRes.getOrNull() ?: emptyList()
+                 val depCount = (downloaded.size - 1).coerceAtLeast(0)
+-                val msg = if (activeType == "modpacks") {
++                val msg = if (activeType == WorldInstaller.ITEM_TYPE) {
++                    // Untuk world, daftar hasil berisi nama folder world yang dibuat (bukan dependensi)
++                    if (downloaded.size > 1) "Berhasil memasang ${downloaded.size} world dari ${hit.title}!"
++                    else "World ${hit.title} berhasil dipasang!"
++                } else if (activeType == "modpacks") {
+                     "Modpack ${hit.title} berhasil dipasang!"
+                 } else if (depCount > 0) {
+                     "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
+@@ -584,7 +646,10 @@ fun ModsScreen(
+             if (res.isSuccess) {
+                 val files = res.getOrNull() ?: emptyList()
+                 val depCount = (files.size - 1).coerceAtLeast(0)
+-                val msg = if (activeType == "modpacks") {
++                val msg = if (activeType == WorldInstaller.ITEM_TYPE) {
++                    if (files.size > 1) "Berhasil memasang ${files.size} world dari ${hit.title}!"
++                    else "World ${hit.title} berhasil dipasang!"
++                } else if (activeType == "modpacks") {
+                     "Modpack ${hit.title} berhasil dipasang!"
+                 } else if (depCount > 0) {
+                     "Berhasil memasang ${hit.title} beserta $depCount dependensi!"
+@@ -624,7 +689,7 @@ fun ModsScreen(
+                 onSettings = onOpenSettings
+             )
+             if (mainMode == "browse") {
+-                if (!rustInstance) ModsSourcePill(
++                if (!rustInstance && !worldsTab) ModsSourcePill(
+                     selectedSource = browseSource,
+                     onSelect = { src ->
+                         if (src != browseSource) {
+@@ -639,7 +704,7 @@ fun ModsScreen(
+                             }
+                         }
+                     }
+-                ) else if (!rustMods) {
++                ) else if (rustInstance && !rustMods) {
+                     // Shader dan resource pack mesin Rust: katalog Horizon atau Modrinth (mod hanya dari Horizon)
+                     RustSourcePill(
+                         selectedSource = rustSource,
+@@ -810,10 +875,12 @@ fun ModsScreen(
+                             icon = Icons.Outlined.FolderOpen,
+                             title = if (activeType == "datapacks" && worlds.isEmpty())
+                                 "Belum ada world di instance ini. Buka game untuk membuat world terlebih dahulu."
++                            else if (installedSearch.isBlank() && worldsTab)
++                                "Belum ada world di instance ini. Unduh dari CurseForge atau impor file .zip."
+                             else if (installedSearch.isBlank())
+                                 "Belum ada ${activeType} terpasang di instance ini"
+                             else "Tidak ada item yang cocok",
+-                            actionLabel = "Jelajahi Modrinth",
++                            actionLabel = if (worldsTab) "Jelajahi CurseForge" else "Jelajahi Modrinth",
+                             onAction = { onOpenBrowse(activeType) }
+                         )
+                     } else {
+@@ -830,7 +897,16 @@ fun ModsScreen(
+                                 InstalledItemRow(
+                                     item = item,
+                                     deletable = !rustModItem || HorizonMods.removable(item),
+-                                    subtitle = if (rustModItem && !HorizonMods.removable(item)) item.description else null,
++                                    subtitle = if (worldsTab) {
++                                        // World: tanggal terakhir dimainkan (disimpan di kolom versi) dan ukuran folder
++                                        if (item.version.isBlank()) formatBytes(item.sizeBytes)
++                                        else "Terakhir dimainkan ${item.version} · ${formatBytes(item.sizeBytes)}"
++                                    } else if (rustModItem && !HorizonMods.removable(item)) {
++                                        item.description
++                                    } else {
++                                        null
++                                    },
++                                    showToggle = !worldsTab,
+                                     onToggle = {
+                                         scope.launch {
+                                             if (rustInstance) {
+@@ -1054,7 +1130,7 @@ fun ModsScreen(
+                 showKeyDialog = false
+                 keyProblem = false
+                 if (CurseForgeApi.isConfigured()) {
+-                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE) {
++                    if (browseSource != NuxModManager.SOURCE_CURSEFORGE && !worldsTab) {
+                         // Berganti sumber memicu pencarian otomatis (LaunchedEffect di atas)
+                         browseSource = NuxModManager.SOURCE_CURSEFORGE
+                         selectedCategory = "Semua"
+@@ -1102,7 +1178,7 @@ fun ModsScreen(
+                 }
+                 Spacer(modifier = Modifier.height(10.dp))
+                 Text(
+-                    text = if (activeType == "modpacks") "Hapus modpack?" else "Hapus ${item.category}?",
++                    text = if (activeType == "modpacks") "Hapus modpack?" else if (activeType == WorldInstaller.ITEM_TYPE) "Hapus world?" else "Hapus ${item.category}?",
+                     fontWeight = FontWeight.Black,
+                     fontSize = 16.sp,
+                     color = NuxColors.DarkGray
+@@ -1111,6 +1187,8 @@ fun ModsScreen(
+                 Text(
+                     text = if (activeType == "modpacks") {
+                         "Yakin ingin menghapus modpack \"${item.name}\"? Semua mod yang terpasang dari modpack ini juga akan dihapus dari instance."
++                    } else if (activeType == WorldInstaller.ITEM_TYPE) {
++                        "Yakin ingin menghapus world \"${item.name}\"? Semua bangunan dan progres di dalamnya hilang permanen dan tidak bisa dikembalikan."
+                     } else {
+                         "Yakin ingin menghapus \"${item.name}\" dari instance ini?"
+                     },
+@@ -1137,11 +1215,13 @@ fun ModsScreen(
+                             if (selectedInstance != null) {
+                                 scope.launch {
+                                     val targetWorld = if (activeType == "datapacks") selectedWorld else null
+-                                    NuxModManager.deleteItem(context, selectedInstance!!, activeType, item, targetWorld)
++                                    val deleted = NuxModManager.deleteItem(context, selectedInstance!!, activeType, item, targetWorld)
+                                     itemToDelete = null
+                                     reloadInstalled()
+                                     val toastMsg = if (activeType == "modpacks") {
+                                         "Modpack dan semua mod berhasil dihapus!"
++                                    } else if (activeType == WorldInstaller.ITEM_TYPE && !deleted) {
++                                        "Gagal menghapus world. Pastikan game sedang tidak berjalan."
+                                     } else {
+                                         "${item.name} berhasil dihapus!"
+                                     }
+@@ -1163,6 +1243,7 @@ fun ModsScreen(
+ 
+     // --- PROGRES IMPOR MODPACK ---
+     if (isImportingModpack) {
++        val importingWorld = activeType == WorldInstaller.ITEM_TYPE
+         NuxDialog(
+             onDismissRequest = { /* Tidak bisa ditutup saat sedang mengunduh */ },
+             modifier = Modifier
+@@ -1194,7 +1275,7 @@ fun ModsScreen(
+                 Spacer(modifier = Modifier.height(10.dp))
+ 
+                 Text(
+-                    text = "Mengimpor & memasang modpack",
++                    text = if (importingWorld) "Mengimpor world" else "Mengimpor & memasang modpack",
+                     fontWeight = FontWeight.Black,
+                     fontSize = 15.5.sp,
+                     color = NuxColors.DarkGray
+@@ -1215,7 +1296,13 @@ fun ModsScreen(
+                 Spacer(modifier = Modifier.height(10.dp))
+ 
+                 Text(
+-                    text = if (modpackImportStatus.isNotBlank()) modpackImportStatus else "Membaca daftar mod dan mengunduh file...",
++                    text = if (modpackImportStatus.isNotBlank()) {
++                        modpackImportStatus
++                    } else if (importingWorld) {
++                        "Membaca arsip world..."
++                    } else {
++                        "Membaca daftar mod dan mengunduh file..."
++                    },
+                     fontSize = 12.sp,
+                     color = NuxColors.GrayNeutral,
+                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+@@ -1239,7 +1326,7 @@ fun ModsScreen(
+                     )
+                     Spacer(modifier = Modifier.height(6.dp))
+                     Text(
+-                        text = "$modpackImportCurrent / $modpackImportTotal file mod",
++                        text = if (importingWorld) "$modpackImportCurrent / $modpackImportTotal file" else "$modpackImportCurrent / $modpackImportTotal file mod",
+                         fontSize = 11.sp,
+                         color = NuxColors.GrayNeutral
+                     )
+@@ -1257,7 +1344,11 @@ fun ModsScreen(
+                 Spacer(modifier = Modifier.height(10.dp))
+ 
+                 Text(
+-                    text = "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu.",
++                    text = if (importingWorld) {
++                        "Launcher sedang memeriksa dan mengekstrak world. Mohon tunggu."
++                    } else {
++                        "Launcher sedang membaca daftar mod dan mengunduh modpack. Mohon tunggu."
++                    },
+                     fontSize = 11.sp,
+                     lineHeight = 16.sp,
+                     color = NuxColors.GrayNeutral.copy(alpha = 0.75f),
+@@ -1348,7 +1439,8 @@ private val MODS_TYPE_ITEMS = listOf(
+     Triple("mods", "Mod", Icons.Outlined.ViewInAr),
+     Triple("shaderpacks", "Shader", Icons.Outlined.LightMode),
+     Triple("resourcepacks", "Resource Pack", Icons.Outlined.Image),
+-    Triple("datapacks", "Datapack", Icons.Outlined.Public)
++    Triple("datapacks", "Datapack", Icons.Outlined.Public),
++    Triple("worlds", "World", Icons.Outlined.Landscape)
+ )
+ 
+ private val MODS_SORT_OPTIONS = listOf(
+@@ -1374,6 +1466,7 @@ private fun modsTypeShortLabel(type: String): String = when (type) {
+     "shaderpacks" -> "Shader"
+     "resourcepacks" -> "Resource"
+     "datapacks" -> "Datapack"
++    "worlds" -> "World"
+     else -> "Mod"
+ }
+ 
+@@ -1382,6 +1475,7 @@ private fun modsSearchPlaceholder(type: String): String = when (type) {
+     "shaderpacks" -> "Cari shader..."
+     "resourcepacks" -> "Cari resource pack..."
+     "datapacks" -> "Cari datapack..."
++    "worlds" -> "Cari world di CurseForge..."
+     else -> "Cari mod..."
+ }
+ 
+@@ -1802,7 +1896,8 @@ private fun InstalledItemRow(
+     onToggle: () -> Unit,
+     onDelete: () -> Unit,
+     deletable: Boolean = true,
+-    subtitle: String? = null
++    subtitle: String? = null,
++    showToggle: Boolean = true
+ ) {
+     val shape = RoundedCornerShape(24.dp)
+     Row(
+@@ -1853,17 +1948,20 @@ private fun InstalledItemRow(
+ 
+         Spacer(modifier = Modifier.width(8.dp))
+ 
+-        Switch(
+-            checked = item.isEnabled,
+-            onCheckedChange = { onToggle() },
+-            colors = SwitchDefaults.colors(
+-                checkedThumbColor = Color.White,
+-                checkedTrackColor = AmberUi.Accent,
+-                checkedBorderColor = AmberUi.AccentEdge,
+-                uncheckedThumbColor = AmberUi.TextDim,
+-                uncheckedTrackColor = NuxColors.SurfaceElevated
++        // World tidak punya saklar aktif/nonaktif (cukup dihapus bila tidak dipakai)
++        if (showToggle) {
++            Switch(
++                checked = item.isEnabled,
++                onCheckedChange = { onToggle() },
++                colors = SwitchDefaults.colors(
++                    checkedThumbColor = Color.White,
++                    checkedTrackColor = AmberUi.Accent,
++                    checkedBorderColor = AmberUi.AccentEdge,
++                    uncheckedThumbColor = AmberUi.TextDim,
++                    uncheckedTrackColor = NuxColors.SurfaceElevated
++                )
+             )
+-        )
++        }
+ 
+         if (deletable) {
+             ModsIconButton(
+# FIN part=1/1 files=14

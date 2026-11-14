@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	C\u00e0i \u0111\u1eb7t t\u1eeb modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Ch\u1ecdn m\u1ed9t t\u1ec7p modpack, game, loader v\u00e0 to\u00e0n b\u1ed9 mod s\u1ebd \u0111\u01b0\u1ee3c c\u00e0i \u0111\u1eb7t c\u00f9ng l\u00fac. Kh\u00f4ng c\u1ea7n t\u1ea1o instance tr\u1ed1ng tr\u01b0\u1edbc.
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	\u0110\u1ecbnh d\u1ea1ng h\u1ed7 tr\u1ee3: .mrpack (Modrinth) v\u00e0 .zip (CurseForge).
+Pilih file modpack	Ch\u1ecdn t\u1ec7p modpack
+Membaca modpack...	\u0110ang \u0111\u1ecdc modpack...
+Ganti file	\u0110\u1ed5i t\u1ec7p
+Pilih modpack	Ch\u1ecdn modpack
+Tanpa loader (Vanilla)	Kh\u00f4ng c\u00f3 loader (Vanilla)
+Memeriksa versi {0}...	\u0110ang ki\u1ec3m tra phi\u00ean b\u1ea3n {0}...
+Gagal memuat versi {0}. Periksa koneksi internet.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c c\u00e1c phi\u00ean b\u1ea3n {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i internet.
+{0} berkas di dalam modpack	{0} t\u1ec7p trong modpack
+Versi modpack: {0}	Phi\u00ean b\u1ea3n modpack: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	Nh\u1ea5n Install \u0111\u1ec3 c\u00e0i game, loader v\u00e0 to\u00e0n b\u1ed9 mod.
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	Phi\u00ean b\u1ea3n loader c\u1ee7a modpack ({0}) kh\u00f4ng c\u00f3 s\u1eb5n, s\u1ebd d\u00f9ng phi\u00ean b\u1ea3n {1}.
+Gagal membuka berkas modpack.	Kh\u00f4ng m\u1edf \u0111\u01b0\u1ee3c t\u1ec7p modpack.
+Berkas ini terlalu besar untuk sebuah modpack.	T\u1ec7p n\u00e0y qu\u00e1 l\u1edbn \u0111\u1ec3 l\u00e0 m\u1ed9t modpack.
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i modpack \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n. H\u00e3y d\u00f9ng t\u1ec7p .mrpack (Modrinth) ho\u1eb7c t\u1ec7p .zip modpack c\u1ee7a CurseForge.
+Modpack ini tidak menyebut versi Minecraft-nya.	Modpack n\u00e0y kh\u00f4ng n\u00eau phi\u00ean b\u1ea3n Minecraft.
+Modpack ini tidak menyebut versi loader-nya.	Modpack n\u00e0y kh\u00f4ng n\u00eau phi\u00ean b\u1ea3n loader.
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Modpack n\u00e0y c\u1ea7n {0} cho Minecraft {1}, m\u00e0 AmberLauncher ch\u01b0a h\u1ed7 tr\u1ee3.
+Instance {0} dibuat. Mengunduh game dan modpack...	\u0110\u00e3 t\u1ea1o instance {0}. \u0110ang t\u1ea3i game v\u00e0 modpack...
+Menyimpan modpack...	\u0110ang l\u01b0u modpack...
+Memasang modpack...	\u0110ang c\u00e0i \u0111\u1eb7t modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c modpack: {0}. \u0110\u00e3 h\u1ee7y instance.
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	\u0110\u00e3 c\u00e0i game, nh\u01b0ng modpack th\u1ea5t b\u1ea1i: {0}. Nh\u1ea5n T\u1ea2I XU\u1ed0NG \u0111\u1ec3 th\u1eed l\u1ea1i.
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c {0} t\u1ec7p c\u1ee7a modpack. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i nh\u1ea5n T\u1ea2I XU\u1ed0NG \u0111\u1ec3 ho\u00e0n t\u1ea5t.
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	C\u00e0i \u0111\u1eb7t xong! \u0110\u00e3 c\u00e0i modpack. Nh\u1ea5n CH\u01a0I \u0111\u1ec3 b\u1eaft \u0111\u1ea7u.

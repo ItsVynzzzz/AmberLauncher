@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	Install from a modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Choose a modpack file and the game, loader, and all its mods are installed in one go. No need to create an empty instance first.
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Supported formats: .mrpack (Modrinth) and .zip (CurseForge).
+Pilih file modpack	Choose modpack file
+Membaca modpack...	Reading modpack...
+Ganti file	Change file
+Pilih modpack	Choose modpack
+Tanpa loader (Vanilla)	No loader (Vanilla)
+Memeriksa versi {0}...	Checking {0} versions...
+Gagal memuat versi {0}. Periksa koneksi internet.	Could not load {0} versions. Check your internet connection.
+{0} berkas di dalam modpack	{0} files in the modpack
+Versi modpack: {0}	Modpack version: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	Press Install to set up the game, loader, and all its mods.
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	The modpack's loader version ({0}) is not available, so version {1} is used.
+Gagal membuka berkas modpack.	Could not open the modpack file.
+Berkas ini terlalu besar untuk sebuah modpack.	This file is too large to be a modpack.
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	This file is not a recognized modpack. Use a .mrpack file (Modrinth) or a CurseForge modpack .zip.
+Modpack ini tidak menyebut versi Minecraft-nya.	This modpack does not specify its Minecraft version.
+Modpack ini tidak menyebut versi loader-nya.	This modpack does not specify its loader version.
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	This modpack requires {0} for Minecraft {1}, which AmberLauncher does not support yet.
+Instance {0} dibuat. Mengunduh game dan modpack...	Instance {0} created. Downloading the game and modpack...
+Menyimpan modpack...	Saving modpack...
+Memasang modpack...	Installing modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	Could not save the modpack: {0}. The instance was canceled.
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	The game is installed, but the modpack failed: {0}. Press DOWNLOAD to try again.
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	{0} modpack files failed to download. Check your connection, then press DOWNLOAD to complete.
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Installation complete! The modpack is installed. Press PLAY to start playing.

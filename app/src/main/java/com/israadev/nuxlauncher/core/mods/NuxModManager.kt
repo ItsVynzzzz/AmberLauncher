@@ -35,6 +35,13 @@ data class WorldInfo(
     val iconFile: File? = null
 )
 
+/**
+ * Hasil memasang satu modpack. [failed] = berkas yang gagal diunduh dan masih layak dicoba lagi;
+ * [skipped] = berkas yang dilewati dan akan tetap dilewati bila diulang (path tidak aman, unduhan
+ * ditutup penulisnya). [installedMods] = jumlah mod yang terpasang.
+ */
+class ModpackReport(val failed: Int, val skipped: Int, val installedMods: Int)
+
 /** Modpack tidak cocok dengan instance atau loader yang didukung; pesannya aman ditampilkan ke pengguna. */
 private class ModpackIncompatibleException(message: String) : Exception(message)
 
@@ -444,6 +451,30 @@ object NuxModManager {
             }
 
             Result.success(fileName)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Memasang isi modpack ke [instance] dari berkas [staged] yang disiapkan layar Buat Instance
+     * (lihat ModpackStaging). Berkasnya disalin ke folder modpack instance, jadi modpack ini tampil dan
+     * bisa diatur di layar Mod persis seperti modpack yang dipasang dari sana; setelah itu seluruh isinya
+     * dipasang dengan pemasang modpack yang sama. Aman dipanggil ulang: mod yang sudah ada dilewati.
+     * Dibatalkan lewat pembatalan coroutine.
+     */
+    suspend fun installStagedModpack(
+        context: Context,
+        instance: Instance,
+        staged: File,
+        onProgress: (statusText: String, current: Int, total: Int) -> Unit = { _, _, _ -> }
+    ): Result<ModpackReport> = withContext(Dispatchers.IO) {
+        try {
+            val dest = File(getTargetDir(context, instance, "modpacks"), SafePaths.fileName(staged.name))
+            if (dest.canonicalPath != staged.canonicalPath) staged.copyTo(dest, overwrite = true)
+            Result.success(processMrpackFile(instance, dest, context, onProgress))
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -1203,7 +1234,7 @@ object NuxModManager {
         mrpackFile: File,
         context: Context,
         onProgress: (statusText: String, current: Int, total: Int) -> Unit = { _, _, _ -> }
-    ) = withContext(Dispatchers.IO) {
+    ): ModpackReport = withContext(Dispatchers.IO) {
         try {
             val gameDir = InstanceManager.getInstanceGameDir(context, instance)
             val cleanFilename = mrpackFile.name.removeSuffix(".disabled")
@@ -1281,6 +1312,8 @@ object NuxModManager {
                     onProgress("Membaca daftar modpack ($totalFiles mod ditemukan)...", 0, totalFiles)
                     var currentIdx = 0
                     for (entry in filesToDownload) {
+                        // Tombol Batal di dialog unduhan berlaku juga di tengah modpack
+                        ensureActive()
                         currentIdx++
                         val targetFile = resolveModpackFile(gameDir, entry.relPath)
                         if (targetFile == null) {
@@ -1310,6 +1343,7 @@ object NuxModManager {
                     val clientOverridesPrefix = "${prefix}client-overrides/"
                     val entries = zip.entries()
                     while (entries.hasMoreElements()) {
+                        ensureActive()
                         val entry = entries.nextElement()
                         val name = entry.name
                         val rel = when {
@@ -1347,6 +1381,7 @@ object NuxModManager {
                     var currentIdx = 0
                     var blockedFiles = 0
                     for (packFile in wanted) {
+                        ensureActive()
                         currentIdx++
                         val info = resolved[packFile.fileId]
                         val dlUrl = info?.url
@@ -1389,6 +1424,7 @@ object NuxModManager {
                     val overridesPrefix = cfPack.overrides + "/"
                     val overrideEntries = zip.entries()
                     while (overrideEntries.hasMoreElements()) {
+                        ensureActive()
                         val entry = overrideEntries.nextElement()
                         val name = entry.name
                         if (!name.startsWith(overridesPrefix)) continue
@@ -1455,7 +1491,10 @@ object NuxModManager {
                 "Selesai dengan catatan: $installedModCount mod terpasang, $problemCount file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang."
             }
             onProgress(doneMessage + packNote, installedRelativeFiles.size, installedRelativeFiles.size)
+            ModpackReport(failedFiles, skippedFiles, installedModCount)
         } catch (e: Exception) {
+            // Dibatalkan pengguna: bukan galat, teruskan apa adanya
+            if (e is CancellationException) throw e
             LauncherLog.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
             if (e is ModpackIncompatibleException || e is CurseForgeApi.KeyException) {
                 // Modpack ditolak (atau kunci CurseForge bermasalah): buang arsipnya supaya tidak tampil

@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	Instalar de um modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Escolha um arquivo de modpack e o jogo, o loader e todos os mods ser\u00e3o instalados de uma vez. N\u00e3o \u00e9 preciso criar uma inst\u00e2ncia vazia antes.
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Formatos compat\u00edveis: .mrpack (Modrinth) e .zip (CurseForge).
+Pilih file modpack	Escolher arquivo de modpack
+Membaca modpack...	Lendo modpack...
+Ganti file	Trocar arquivo
+Pilih modpack	Escolher modpack
+Tanpa loader (Vanilla)	Sem loader (Vanilla)
+Memeriksa versi {0}...	Verificando vers\u00f5es do {0}...
+Gagal memuat versi {0}. Periksa koneksi internet.	N\u00e3o foi poss\u00edvel carregar as vers\u00f5es do {0}. Verifique sua conex\u00e3o com a internet.
+{0} berkas di dalam modpack	{0} arquivos no modpack
+Versi modpack: {0}	Vers\u00e3o do modpack: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	Toque em Install para instalar o jogo, o loader e todos os mods.
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	A vers\u00e3o do loader do modpack ({0}) n\u00e3o est\u00e1 dispon\u00edvel; ser\u00e1 usada a vers\u00e3o {1}.
+Gagal membuka berkas modpack.	N\u00e3o foi poss\u00edvel abrir o arquivo do modpack.
+Berkas ini terlalu besar untuk sebuah modpack.	Este arquivo \u00e9 grande demais para ser um modpack.
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Este arquivo n\u00e3o \u00e9 um modpack reconhecido. Use um arquivo .mrpack (Modrinth) ou um .zip de modpack do CurseForge.
+Modpack ini tidak menyebut versi Minecraft-nya.	Este modpack n\u00e3o informa a vers\u00e3o do Minecraft.
+Modpack ini tidak menyebut versi loader-nya.	Este modpack n\u00e3o informa a vers\u00e3o do loader.
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Este modpack exige {0} para o Minecraft {1}, que o AmberLauncher ainda n\u00e3o suporta.
+Instance {0} dibuat. Mengunduh game dan modpack...	Inst\u00e2ncia {0} criada. Baixando o jogo e o modpack...
+Menyimpan modpack...	Salvando modpack...
+Memasang modpack...	Instalando modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	N\u00e3o foi poss\u00edvel salvar o modpack: {0}. A inst\u00e2ncia foi cancelada.
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	O jogo foi instalado, mas o modpack falhou: {0}. Toque em BAIXAR para tentar de novo.
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	{0} arquivos do modpack n\u00e3o puderam ser baixados. Verifique a conex\u00e3o e toque em BAIXAR para completar.
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Instala\u00e7\u00e3o conclu\u00edda! O modpack foi instalado. Toque em JOGAR para come\u00e7ar.

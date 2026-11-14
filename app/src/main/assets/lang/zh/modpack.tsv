@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	从整合包安装
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	选择一个整合包文件，游戏、加载器和其中所有模组会一次性装好，无需先创建空白实例。
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	支持的格式：.mrpack（Modrinth）和 .zip（CurseForge）。
+Pilih file modpack	选择整合包文件
+Membaca modpack...	正在读取整合包…
+Ganti file	更换文件
+Pilih modpack	选择整合包
+Tanpa loader (Vanilla)	无加载器（原版）
+Memeriksa versi {0}...	正在检查 {0} 版本…
+Gagal memuat versi {0}. Periksa koneksi internet.	无法加载 {0} 版本。请检查网络连接。
+{0} berkas di dalam modpack	整合包内共 {0} 个文件
+Versi modpack: {0}	整合包版本：{0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	点按“Install”即可安装游戏、加载器和全部模组。
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	整合包要求的加载器版本（{0}）不可用，将改用 {1} 版本。
+Gagal membuka berkas modpack.	无法打开整合包文件。
+Berkas ini terlalu besar untuk sebuah modpack.	此文件太大，不像是整合包。
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	此文件不是可识别的整合包。请使用 .mrpack 文件（Modrinth）或 CurseForge 整合包 .zip。
+Modpack ini tidak menyebut versi Minecraft-nya.	此整合包没有标明 Minecraft 版本。
+Modpack ini tidak menyebut versi loader-nya.	此整合包没有标明加载器版本。
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	此整合包需要用于 Minecraft {1} 的 {0}，AmberLauncher 暂不支持。
+Instance {0} dibuat. Mengunduh game dan modpack...	实例 {0} 已创建。正在下载游戏和整合包…
+Menyimpan modpack...	正在保存整合包…
+Memasang modpack...	正在安装整合包…
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	无法保存整合包：{0}。已取消创建实例。
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	游戏已安装，但整合包安装失败：{0}。点按“下载”重试。
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	有 {0} 个整合包文件下载失败。请检查网络后点按“下载”补全。
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	安装完成！整合包已安装。点按“开始游戏”即可开始游玩。

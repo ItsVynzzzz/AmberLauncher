@@ -57,6 +57,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 
 **Mods and content**
 - **Modrinth and CurseForge** right inside the app: mods, modpacks, resource packs, shaders, and datapacks, including their dependencies. Manual file installation works too.
+- **Create an instance straight from a modpack**: on the Create Instance screen pick Modpack, then choose a `.mrpack` (Modrinth) or `.zip` (CurseForge) file. The game, loader, and all mods are installed in one go, with no need to create an empty instance first. Quilt modpacks are not supported yet.
 
 **Controls**
 - **Touch control editor**: adjust the position, size, and buttons on screen however you like.

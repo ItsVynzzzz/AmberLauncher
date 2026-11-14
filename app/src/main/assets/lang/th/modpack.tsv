@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	ติดตั้งจาก modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	เลือกไฟล์ modpack แล้วเกม loader และม็อดทั้งหมดจะถูกติดตั้งพร้อมกันในครั้งเดียว ไม่ต้องสร้าง instance เปล่าก่อน
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	รูปแบบที่รองรับ: .mrpack (Modrinth) และ .zip (CurseForge)
+Pilih file modpack	เลือกไฟล์ modpack
+Membaca modpack...	กำลังอ่าน modpack...
+Ganti file	เปลี่ยนไฟล์
+Pilih modpack	เลือก modpack
+Tanpa loader (Vanilla)	ไม่มี loader (Vanilla)
+Memeriksa versi {0}...	กำลังตรวจสอบเวอร์ชัน {0}...
+Gagal memuat versi {0}. Periksa koneksi internet.	โหลดเวอร์ชัน {0} ไม่สำเร็จ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+{0} berkas di dalam modpack	ไฟล์ใน modpack {0} ไฟล์
+Versi modpack: {0}	เวอร์ชัน modpack: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	กด Install เพื่อติดตั้งเกม loader และม็อดทั้งหมด
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	ไม่มี loader เวอร์ชันที่ modpack ต้องการ ({0}) จึงใช้เวอร์ชัน {1} แทน
+Gagal membuka berkas modpack.	เปิดไฟล์ modpack ไม่สำเร็จ
+Berkas ini terlalu besar untuk sebuah modpack.	ไฟล์นี้ใหญ่เกินกว่าจะเป็น modpack
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	ไฟล์นี้ไม่ใช่ modpack ที่รู้จัก ใช้ไฟล์ .mrpack (Modrinth) หรือไฟล์ .zip modpack ของ CurseForge
+Modpack ini tidak menyebut versi Minecraft-nya.	modpack นี้ไม่ได้ระบุเวอร์ชัน Minecraft
+Modpack ini tidak menyebut versi loader-nya.	modpack นี้ไม่ได้ระบุเวอร์ชัน loader
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	modpack นี้ต้องใช้ {0} สำหรับ Minecraft {1} ซึ่ง AmberLauncher ยังไม่รองรับ
+Instance {0} dibuat. Mengunduh game dan modpack...	สร้าง instance {0} แล้ว กำลังดาวน์โหลดเกมและ modpack...
+Menyimpan modpack...	กำลังบันทึก modpack...
+Memasang modpack...	กำลังติดตั้ง modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	บันทึก modpack ไม่สำเร็จ: {0} ยกเลิก instance แล้ว
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	ติดตั้งเกมแล้ว แต่ modpack ล้มเหลว: {0} กดดาวน์โหลดเพื่อลองใหม่
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	ดาวน์โหลดไฟล์ modpack ไม่สำเร็จ {0} ไฟล์ ตรวจสอบการเชื่อมต่อแล้วกดดาวน์โหลดเพื่อให้ครบ
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	ติดตั้งเสร็จแล้ว! ติดตั้ง modpack แล้ว กดเล่นเพื่อเริ่มเกม

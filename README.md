@@ -57,6 +57,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 
 **Mod dan konten**
 - **Modrinth dan CurseForge** langsung dari aplikasi: mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensinya. Pemasangan file manual juga bisa.
+- **Buat instance langsung dari modpack**: di layar Buat Instance pilih Modpack, lalu pilih file `.mrpack` (Modrinth) atau `.zip` (CurseForge). Game, loader, dan semua mod terpasang sekaligus, tanpa perlu membuat instance kosong dulu. Modpack Quilt belum didukung.
 
 **Kontrol**
 - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar sesukamu.

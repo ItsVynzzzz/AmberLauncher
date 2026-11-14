@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	I-install mula sa modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Pumili ng modpack file at sabay-sabay na ma-i-install ang game, loader, at lahat ng mod nito. Hindi na kailangang gumawa muna ng walang laman na instance.
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Mga sinusuportahang format: .mrpack (Modrinth) at .zip (CurseForge).
+Pilih file modpack	Pumili ng modpack file
+Membaca modpack...	Binabasa ang modpack...
+Ganti file	Palitan ang file
+Pilih modpack	Pumili ng modpack
+Tanpa loader (Vanilla)	Walang loader (Vanilla)
+Memeriksa versi {0}...	Sinusuri ang mga bersyon ng {0}...
+Gagal memuat versi {0}. Periksa koneksi internet.	Hindi ma-load ang mga bersyon ng {0}. Suriin ang iyong koneksyon sa internet.
+{0} berkas di dalam modpack	{0} file sa modpack
+Versi modpack: {0}	Bersyon ng modpack: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	Pindutin ang Install para ma-install ang game, loader, at lahat ng mod nito.
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	Hindi available ang bersyon ng loader ng modpack ({0}), kaya bersyon {1} ang gagamitin.
+Gagal membuka berkas modpack.	Hindi mabuksan ang modpack file.
+Berkas ini terlalu besar untuk sebuah modpack.	Masyadong malaki ang file na ito para maging modpack.
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Hindi kinikilalang modpack ang file na ito. Gumamit ng .mrpack file (Modrinth) o .zip modpack ng CurseForge.
+Modpack ini tidak menyebut versi Minecraft-nya.	Hindi tinukoy ng modpack na ito ang bersyon ng Minecraft nito.
+Modpack ini tidak menyebut versi loader-nya.	Hindi tinukoy ng modpack na ito ang bersyon ng loader nito.
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Kailangan ng modpack na ito ang {0} para sa Minecraft {1}, na hindi pa sinusuportahan ng AmberLauncher.
+Instance {0} dibuat. Mengunduh game dan modpack...	Nagawa ang instance na {0}. Dina-download ang game at modpack...
+Menyimpan modpack...	Sine-save ang modpack...
+Memasang modpack...	Ini-install ang modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	Hindi na-save ang modpack: {0}. Kinansela ang instance.
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	Na-install ang game, pero nabigo ang modpack: {0}. Pindutin ang I-DOWNLOAD para subukan ulit.
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	Hindi na-download ang {0} file ng modpack. Suriin ang koneksyon, saka pindutin ang I-DOWNLOAD para makumpleto.
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Tapos na ang pag-install! Na-install na ang modpack. Pindutin ang PLAY para maglaro.

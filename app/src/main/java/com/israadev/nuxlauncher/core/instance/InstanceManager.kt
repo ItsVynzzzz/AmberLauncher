@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.israadev.nuxlauncher.core.crash.LauncherLog
+import com.israadev.nuxlauncher.core.modpack.ModpackStaging
 import com.israadev.nuxlauncher.core.models.Instance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -370,6 +371,8 @@ object InstanceManager {
     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
         // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
         if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
+        // Instance dari modpack yang isinya belum selesai dipasang belum siap main: UNDUH melanjutkannya
+        if (ModpackStaging.hasPending(getInstanceDir(context, inst))) return false
         val versionsDir = getVersionsDir(context)
         val vDir = File(versionsDir, inst.mcVersion)
         val jarFile = File(vDir, "${inst.mcVersion}.jar")

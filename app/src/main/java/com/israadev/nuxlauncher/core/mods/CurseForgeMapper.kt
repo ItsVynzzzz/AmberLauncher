@@ -349,6 +349,8 @@ object CurseForgeMapper {
         val minecraftVersion: String,
         /** Loader utama modpack ("forge", "fabric", "neoforge", "quilt"), atau null bila tidak disebut. */
         val loader: String?,
+        /** Versi loader utama ("47.2.0" dari "forge-47.2.0"), atau kosong bila tidak disebut. */
+        val loaderVersion: String,
         /** Nama folder isi tambahan (biasanya "overrides"). */
         val overrides: String,
         val files: List<PackFile>
@@ -364,7 +366,10 @@ object CurseForgeMapper {
 
         val loaders = mc.objects("modLoaders")
         val primary = loaders.firstOrNull { it.bool("primary") == true } ?: loaders.firstOrNull()
-        val loader = primary?.str("id")?.substringBefore('-')?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
+        val loaderId = primary?.str("id").orEmpty()
+        val loader = loaderId.substringBefore('-').trim().lowercase().takeIf { it.isNotEmpty() }
+        // "forge-47.2.0": versi loader ada setelah tanda hubung pertama
+        val loaderVersion = if (loaderId.contains('-')) loaderId.substringAfter('-').trim() else ""
 
         val files = ArrayList<PackFile>()
         for (item in filesElement.asJsonArray) {
@@ -380,6 +385,7 @@ object CurseForgeMapper {
             version = root.str("version").orEmpty(),
             minecraftVersion = mc.str("version").orEmpty(),
             loader = loader,
+            loaderVersion = loaderVersion,
             overrides = root.str("overrides")?.trim()?.trim('/')?.takeIf { it.isNotEmpty() } ?: "overrides",
             files = files
         )

@@ -1,0 +1,28 @@
+# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
+Pasang dari modpack	Instalar desde un modpack
+Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Elige un archivo de modpack y el juego, el loader y todos sus mods se instalan de una vez. No hace falta crear antes una instancia vac\u00eda.
+Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Formatos compatibles: .mrpack (Modrinth) y .zip (CurseForge).
+Pilih file modpack	Elegir archivo de modpack
+Membaca modpack...	Leyendo modpack...
+Ganti file	Cambiar archivo
+Pilih modpack	Elegir modpack
+Tanpa loader (Vanilla)	Sin loader (Vanilla)
+Memeriksa versi {0}...	Comprobando versiones de {0}...
+Gagal memuat versi {0}. Periksa koneksi internet.	No se pudieron cargar las versiones de {0}. Revisa tu conexi\u00f3n a internet.
+{0} berkas di dalam modpack	{0} archivos en el modpack
+Versi modpack: {0}	Versi\u00f3n del modpack: {0}
+Tekan Install untuk memasang game, loader, dan semua mod-nya.	Toca Install para instalar el juego, el loader y todos sus mods.
+Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	La versi\u00f3n del loader del modpack ({0}) no est\u00e1 disponible; se usa la versi\u00f3n {1}.
+Gagal membuka berkas modpack.	No se pudo abrir el archivo del modpack.
+Berkas ini terlalu besar untuk sebuah modpack.	Este archivo es demasiado grande para ser un modpack.
+Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Este archivo no es un modpack reconocido. Usa un archivo .mrpack (Modrinth) o un .zip de modpack de CurseForge.
+Modpack ini tidak menyebut versi Minecraft-nya.	Este modpack no indica su versi\u00f3n de Minecraft.
+Modpack ini tidak menyebut versi loader-nya.	Este modpack no indica la versi\u00f3n de su loader.
+Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Este modpack requiere {0} para Minecraft {1}, que AmberLauncher a\u00fan no admite.
+Instance {0} dibuat. Mengunduh game dan modpack...	Instancia {0} creada. Descargando el juego y el modpack...
+Menyimpan modpack...	Guardando modpack...
+Memasang modpack...	Instalando modpack...
+Gagal menyimpan modpack: {0}. Instance dibatalkan.	No se pudo guardar el modpack: {0}. Se cancel\u00f3 la instancia.
+Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	El juego est\u00e1 instalado, pero el modpack fall\u00f3: {0}. Toca DESCARGAR para reintentar.
+{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	No se pudieron descargar {0} archivos del modpack. Revisa tu conexi\u00f3n y toca DESCARGAR para completar.
+Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	\u00a1Instalaci\u00f3n completada! El modpack est\u00e1 instalado. Toca JUGAR para empezar.

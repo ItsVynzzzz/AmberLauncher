@@ -106,3 +106,72 @@ Makan	Eat
 Buang Item x10	Drop Item x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac Action Sequence
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Several keys, clicks, waits, and typing in one button.
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	Maximum {0} actions
+Contoh dipakai	Example applied
+Pembuat Makro	Macro Builder
+Susun aksi, lalu pilih kapan makro dijalankan	Arrange the actions, then choose when the macro runs
+Cara Jalan	How It Runs
+Contoh	Examples
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	No actions yet. Start from an example or add your own.
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} actions \u00b7 about {1} seconds per loop
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Repeats {0} times per tap. Tap again while it runs to stop it.
+Susun aksi	Arrange Actions
+Aksi dijalankan berurutan dari atas ke bawah.	Actions run in order, from top to bottom.
+Yakin hapus?	Delete all?
+Tambah aksi baru	Add a new action
+Tekan / Klik	Press / Click
+Tombol keyboard atau klik mouse	A keyboard key or a mouse click
+Tekan dan tahan beberapa detik	Press and hold for a few seconds
+Jeda sebelum aksi berikutnya	A pause before the next action
+Pindah Slot	Switch Slot
+Ganti item yang dipegang	Change the item you hold
+Ketik Chat	Type Chat
+Kirim pesan atau perintah	Send a message or command
+Tahan Terus	Keep Holding
+Tahan sampai dilepas atau makro berhenti	Hold until released or the macro stops
+Lepas tombol yang sedang ditahan	Release a key that is being held
+Geser Slot	Shift Slot
+Ke slot sebelum atau sesudahnya	To the previous or next slot
+Lainnya	More
+Tutup aksi lanjutan	Hide advanced actions
+Aksi lanjutan	Advanced actions
+Pilih nomor slot hotbar yang dituju	Choose the hotbar slot number to switch to
+Belum ada aksi	No actions yet
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Add actions with the boxes below, or get started quickly with a ready-made example.
+Lihat contoh siap pakai	See ready-made examples
+Pindah slot hotbar	Switch hotbar slot
+Slot sebelumnya	Previous slot
+Slot berikutnya	Next slot
+Ketik di chat	Type in chat
+Aksi tidak dikenal	Unknown action
+Berapa lama menunggu?	How long to wait?
+Berapa lama ditahan?	How long to hold?
+detik	seconds
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Start with / for a command, or leave it out for a normal chat message.
+Kapan makro berjalan?	When does the macro run?
+Pilih cara tombol ini dipakai.	Choose how this button is used.
+Sekali Jalan	Run Once
+Selama Ditahan	While Held
+Nyala / Mati	On / Off
+Diulang berapa kali?	How many repeats?
+Berapa kali urutan dijalankan setiap ketukan.	How many times the sequence runs per tap.
+kali	times
+Jeda antar putaran	Pause between loops
+Waktu istirahat sebelum urutan diulang lagi.	Rest time before the sequence repeats again.
+Tanpa jeda	No pause
+Pengaturan lanjutan	Advanced settings
+Waktu acak	Random timing
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Shifts wait and hold times slightly at random so it feels more natural.
+Contoh siap pakai	Ready-made examples
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Tap an example to use it, then change it however you like.
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Holds left click continuously to mine or attack.
+Klik kanan berulang, cocok untuk membangun atau memancing.	Repeated right-clicks, good for building or fishing.
+Melompat terus-menerus tanpa berhenti.	Jumps nonstop.
+Berlari sambil melompat terus (bunny hop).	Sprints while jumping nonstop (bunny hop).
+Menahan klik kanan 1,8 detik untuk makan atau minum.	Holds right click for 1.8 seconds to eat or drink.
+Membuang item 10 kali berturut-turut.	Drops an item 10 times in a row.
+Mengganti urutan yang sekarang. Lanjutkan?	This replaces the current sequence. Continue?
+Ya, ganti	Yes, replace
+Buat Urutan Aksi	Create Action Sequence
+Atur Urutan Aksi	Edit Action Sequence

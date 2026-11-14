@@ -87,6 +87,8 @@ fun CustomGuiEditorScreen(
     var selectedButtonId by remember { mutableStateOf<String?>(null) }
     var showKeyPickerForButtonId by remember { mutableStateOf<String?>(null) }
     var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN", "COMBO", atau "STEP_<TAP|HOLD|DOWN|UP>"
+    // Tombol yang sedang disusun makro "Urutan Aksi"-nya di layar Pembuat Makro (null = tertutup).
+    var showMacroBuilderForId by remember { mutableStateOf<String?>(null) }
     var showResetConfirmDialog by remember { mutableStateOf(false) }
     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
     // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
@@ -904,6 +906,10 @@ fun CustomGuiEditorScreen(
                                             buttonsList = buttonsList.map {
                                                 if (it.id == selectedButton.id) it.copy(macroType = "SEQUENCE") else it
                                             }
+                                            // Belum ada aksi: langsung buka Pembuat Makro supaya tidak bingung mulai dari mana.
+                                            if (selectedButton.macroSteps.isEmpty()) {
+                                                showMacroBuilderForId = selectedButton.id
+                                            }
                                         },
                                         modifier = Modifier.fillMaxWidth()
                                     )
@@ -1155,15 +1161,9 @@ fun CustomGuiEditorScreen(
                                     // Mode 4: SEQUENCE (urutan aksi)
                                     if (selectedButton.macroType == "SEQUENCE") {
                                         Text("Beberapa key, klik, jeda, dan ketik dalam satu tombol.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
-                                        MacroSequenceEditor(
+                                        MacroSequenceSummary(
                                             button = selectedButton,
-                                            onChange = { updated ->
-                                                buttonsList = buttonsList.map { if (it.id == updated.id) updated else it }
-                                            },
-                                            onPickKey = { kind ->
-                                                keyPickerTargetMode = "STEP_$kind"
-                                                showKeyPickerForButtonId = selectedButton.id
-                                            }
+                                            onOpen = { showMacroBuilderForId = selectedButton.id }
                                         )
                                     }
                                 }
@@ -1256,6 +1256,23 @@ fun CustomGuiEditorScreen(
                 fontSize = 13.sp
             )
         }
+    }
+
+    // Pembuat Makro (layar penuh untuk menyusun "Urutan Aksi"). Dipasang sebelum pemilih tombol di bawah
+    // supaya pemilih tombol (jendela yang dibuat belakangan) tampil di atasnya.
+    val macroBuilderButton = showMacroBuilderForId?.let { id -> buttonsList.firstOrNull { it.id == id } }
+    if (macroBuilderButton != null) {
+        MacroBuilderDialog(
+            button = macroBuilderButton,
+            onChange = { updated ->
+                buttonsList = buttonsList.map { if (it.id == updated.id) updated else it }
+            },
+            onPickKey = { kind ->
+                keyPickerTargetMode = "STEP_$kind"
+                showKeyPickerForButtonId = macroBuilderButton.id
+            },
+            onDismiss = { showMacroBuilderForId = null }
+        )
     }
 
     // Keycode Picker Dialog (pilih kategori lalu ketuk tombol)

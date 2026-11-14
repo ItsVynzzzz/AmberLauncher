@@ -112,3 +112,72 @@ Makan	进食
 Buang Item x10	丢弃物品 x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac 动作序列
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	一个按键内可包含多个按键、点击、等待和输入。
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	最多 {0} 个动作
+Contoh dipakai	已套用示例
+Pembuat Makro	宏编辑器
+Susun aksi, lalu pilih kapan makro dijalankan	排好动作顺序，再选择宏何时运行
+Cara Jalan	运行方式
+Contoh	示例
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	还没有动作。可以从示例开始，或自己添加。
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} 个动作 · 每轮约 {1} 秒
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	每次点按重复 {0} 次。运行中再次点按即可停止。
+Susun aksi	排列动作
+Aksi dijalankan berurutan dari atas ke bawah.	动作按从上到下的顺序执行。
+Yakin hapus?	确定清空？
+Tambah aksi baru	添加新动作
+Tekan / Klik	按键 / 点击
+Tombol keyboard atau klik mouse	键盘按键或鼠标点击
+Tekan dan tahan beberapa detik	按住几秒钟
+Jeda sebelum aksi berikutnya	在下一个动作前暂停
+Pindah Slot	切换格子
+Ganti item yang dipegang	更换手持物品
+Ketik Chat	输入聊天
+Kirim pesan atau perintah	发送消息或命令
+Tahan Terus	持续按住
+Tahan sampai dilepas atau makro berhenti	一直按住，直到松开或宏停止
+Lepas tombol yang sedang ditahan	松开正在按住的按键
+Geser Slot	移动格子
+Ke slot sebelum atau sesudahnya	切换到上一格或下一格
+Lainnya	更多
+Tutup aksi lanjutan	收起高级动作
+Aksi lanjutan	高级动作
+Pilih nomor slot hotbar yang dituju	选择要切换到的快捷栏格子编号
+Belum ada aksi	还没有动作
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	用下方的方块添加动作，或从现成示例快速开始。
+Lihat contoh siap pakai	查看现成示例
+Pindah slot hotbar	切换快捷栏格子
+Slot sebelumnya	上一格
+Slot berikutnya	下一格
+Ketik di chat	在聊天中输入
+Aksi tidak dikenal	未知动作
+Berapa lama menunggu?	等待多久？
+Berapa lama ditahan?	按住多久？
+detik	秒
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	以 / 开头表示命令，不加 / 则是普通聊天消息。
+Kapan makro berjalan?	宏何时运行？
+Pilih cara tombol ini dipakai.	选择这个按键的使用方式。
+Sekali Jalan	运行一次
+Selama Ditahan	按住期间
+Nyala / Mati	开 / 关
+Diulang berapa kali?	重复几次？
+Berapa kali urutan dijalankan setiap ketukan.	每次点按时序列运行的次数。
+kali	次
+Jeda antar putaran	每轮之间的间隔
+Waktu istirahat sebelum urutan diulang lagi.	序列再次重复前的休息时间。
+Tanpa jeda	无间隔
+Pengaturan lanjutan	高级设置
+Waktu acak	随机时间
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	随机小幅偏移等待和按住时间，使操作更自然。
+Contoh siap pakai	现成示例
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	点按示例即可使用，然后随意修改。
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	持续按住鼠标左键来挖掘或攻击。
+Klik kanan berulang, cocok untuk membangun atau memancing.	重复点击鼠标右键，适合建造或钓鱼。
+Melompat terus-menerus tanpa berhenti.	不停地跳跃。
+Berlari sambil melompat terus (bunny hop).	边冲刺边不停跳跃（兔子跳）。
+Menahan klik kanan 1,8 detik untuk makan atau minum.	按住鼠标右键 1.8 秒来进食或饮水。
+Membuang item 10 kali berturut-turut.	连续丢弃物品 10 次。
+Mengganti urutan yang sekarang. Lanjutkan?	这会替换当前序列。要继续吗？
+Ya, ganti	是，替换
+Buat Urutan Aksi	创建动作序列
+Atur Urutan Aksi	编辑动作序列

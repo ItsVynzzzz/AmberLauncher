@@ -112,3 +112,72 @@ Makan	กิน
 Buang Item x10	ทิ้งไอเท็ม x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac ลำดับการกระทำ
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	หลายปุ่ม คลิก การรอ และการพิมพ์ในปุ่มเดียว
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	สูงสุด {0} การกระทำ
+Contoh dipakai	ใช้ตัวอย่างแล้ว
+Pembuat Makro	ตัวสร้างมาโคร
+Susun aksi, lalu pilih kapan makro dijalankan	จัดลำดับการกระทำ แล้วเลือกว่ามาโครจะทำงานเมื่อใด
+Cara Jalan	วิธีทำงาน
+Contoh	ตัวอย่าง
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	ยังไม่มีการกระทำ เริ่มจากตัวอย่างหรือเพิ่มเอง
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} การกระทำ · ประมาณ {1} วินาทีต่อรอบ
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	ทำซ้ำ {0} ครั้งต่อการแตะ แตะอีกครั้งขณะทำงานเพื่อหยุด
+Susun aksi	จัดลำดับการกระทำ
+Aksi dijalankan berurutan dari atas ke bawah.	การกระทำจะทำงานตามลำดับจากบนลงล่าง
+Yakin hapus?	ลบทั้งหมด?
+Tambah aksi baru	เพิ่มการกระทำใหม่
+Tekan / Klik	กด / คลิก
+Tombol keyboard atau klik mouse	ปุ่มคีย์บอร์ดหรือคลิกเมาส์
+Tekan dan tahan beberapa detik	กดค้างไว้สองสามวินาที
+Jeda sebelum aksi berikutnya	หยุดรอก่อนการกระทำถัดไป
+Pindah Slot	สลับช่อง
+Ganti item yang dipegang	เปลี่ยนไอเท็มที่ถืออยู่
+Ketik Chat	พิมพ์แชท
+Kirim pesan atau perintah	ส่งข้อความหรือคำสั่ง
+Tahan Terus	กดค้างต่อเนื่อง
+Tahan sampai dilepas atau makro berhenti	กดค้างจนกว่าจะปล่อยหรือมาโครหยุด
+Lepas tombol yang sedang ditahan	ปล่อยปุ่มที่กดค้างอยู่
+Geser Slot	เลื่อนช่อง
+Ke slot sebelum atau sesudahnya	ไปยังช่องก่อนหน้าหรือถัดไป
+Lainnya	เพิ่มเติม
+Tutup aksi lanjutan	ซ่อนการกระทำขั้นสูง
+Aksi lanjutan	การกระทำขั้นสูง
+Pilih nomor slot hotbar yang dituju	เลือกหมายเลขช่องฮอตบาร์ที่ต้องการ
+Belum ada aksi	ยังไม่มีการกระทำ
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	เพิ่มการกระทำด้วยกล่องด้านล่าง หรือเริ่มอย่างรวดเร็วจากตัวอย่างสำเร็จรูป
+Lihat contoh siap pakai	ดูตัวอย่างสำเร็จรูป
+Pindah slot hotbar	สลับช่องฮอตบาร์
+Slot sebelumnya	ช่องก่อนหน้า
+Slot berikutnya	ช่องถัดไป
+Ketik di chat	พิมพ์ในแชท
+Aksi tidak dikenal	การกระทำที่ไม่รู้จัก
+Berapa lama menunggu?	จะรอนานเท่าไร?
+Berapa lama ditahan?	จะกดค้างนานเท่าไร?
+detik	วินาที
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	ขึ้นต้นด้วย / สำหรับคำสั่ง ถ้าไม่มี / จะเป็นข้อความแชททั่วไป
+Kapan makro berjalan?	มาโครทำงานเมื่อใด?
+Pilih cara tombol ini dipakai.	เลือกวิธีใช้ปุ่มนี้
+Sekali Jalan	ทำงานครั้งเดียว
+Selama Ditahan	ขณะกดค้าง
+Nyala / Mati	เปิด / ปิด
+Diulang berapa kali?	ทำซ้ำกี่ครั้ง?
+Berapa kali urutan dijalankan setiap ketukan.	จำนวนครั้งที่ลำดับทำงานต่อการแตะ
+kali	ครั้ง
+Jeda antar putaran	เว้นระยะระหว่างรอบ
+Waktu istirahat sebelum urutan diulang lagi.	เวลาพักก่อนที่ลำดับจะทำซ้ำอีกครั้ง
+Tanpa jeda	ไม่หยุดพัก
+Pengaturan lanjutan	การตั้งค่าขั้นสูง
+Waktu acak	เวลาแบบสุ่ม
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	เลื่อนเวลารอและกดค้างแบบสุ่มเล็กน้อยเพื่อให้ดูเป็นธรรมชาติขึ้น
+Contoh siap pakai	ตัวอย่างสำเร็จรูป
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	แตะตัวอย่างเพื่อใช้ แล้วปรับแก้ได้ตามต้องการ
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	กดคลิกซ้ายค้างไว้ตลอดเพื่อขุดหรือโจมตี
+Klik kanan berulang, cocok untuk membangun atau memancing.	คลิกขวาซ้ำ ๆ เหมาะกับการสร้างหรือตกปลา
+Melompat terus-menerus tanpa berhenti.	กระโดดต่อเนื่องไม่หยุด
+Berlari sambil melompat terus (bunny hop).	วิ่งพร้อมกระโดดต่อเนื่อง (bunny hop)
+Menahan klik kanan 1,8 detik untuk makan atau minum.	กดคลิกขวาค้าง 1.8 วินาทีเพื่อกินหรือดื่ม
+Membuang item 10 kali berturut-turut.	ทิ้งไอเท็ม 10 ครั้งติดต่อกัน
+Mengganti urutan yang sekarang. Lanjutkan?	จะแทนที่ลำดับปัจจุบัน ดำเนินการต่อไหม?
+Ya, ganti	ใช่ แทนที่
+Buat Urutan Aksi	สร้างลำดับการกระทำ
+Atur Urutan Aksi	แก้ไขลำดับการกระทำ

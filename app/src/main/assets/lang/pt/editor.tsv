@@ -112,3 +112,72 @@ Makan	Comer
 Buang Item x10	Largar item x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac Sequ\u00eancia de a\u00e7\u00f5es
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	V\u00e1rias teclas, cliques, esperas e digita\u00e7\u00e3o em um \u00fanico bot\u00e3o.
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	M\u00e1ximo de {0} a\u00e7\u00f5es
+Contoh dipakai	Exemplo aplicado
+Pembuat Makro	Criador de macros
+Susun aksi, lalu pilih kapan makro dijalankan	Organize as a\u00e7\u00f5es e escolha quando a macro \u00e9 executada
+Cara Jalan	Como executa
+Contoh	Exemplos
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Ainda n\u00e3o h\u00e1 a\u00e7\u00f5es. Comece por um exemplo ou adicione as suas.
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} a\u00e7\u00f5es \u00b7 cerca de {1} segundos por ciclo
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Repete {0} vezes por toque. Toque novamente durante a execu\u00e7\u00e3o para parar.
+Susun aksi	Organizar a\u00e7\u00f5es
+Aksi dijalankan berurutan dari atas ke bawah.	As a\u00e7\u00f5es s\u00e3o executadas em ordem, de cima para baixo.
+Yakin hapus?	Apagar tudo?
+Tambah aksi baru	Adicionar nova a\u00e7\u00e3o
+Tekan / Klik	Pressionar / Clicar
+Tombol keyboard atau klik mouse	Uma tecla ou um clique do mouse
+Tekan dan tahan beberapa detik	Segure por alguns segundos
+Jeda sebelum aksi berikutnya	Uma pausa antes da pr\u00f3xima a\u00e7\u00e3o
+Pindah Slot	Trocar slot
+Ganti item yang dipegang	Troque o item na m\u00e3o
+Ketik Chat	Digitar chat
+Kirim pesan atau perintah	Envie uma mensagem ou comando
+Tahan Terus	Continuar segurando
+Tahan sampai dilepas atau makro berhenti	Segure at\u00e9 soltar ou at\u00e9 a macro parar
+Lepas tombol yang sedang ditahan	Solte uma tecla que est\u00e1 sendo segurada
+Geser Slot	Mover slot
+Ke slot sebelum atau sesudahnya	Para o slot anterior ou seguinte
+Lainnya	Mais
+Tutup aksi lanjutan	Ocultar a\u00e7\u00f5es avan\u00e7adas
+Aksi lanjutan	A\u00e7\u00f5es avan\u00e7adas
+Pilih nomor slot hotbar yang dituju	Escolha o n\u00famero do slot da hotbar
+Belum ada aksi	Ainda n\u00e3o h\u00e1 a\u00e7\u00f5es
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Adicione a\u00e7\u00f5es pelas caixas abaixo ou comece r\u00e1pido com um exemplo pronto.
+Lihat contoh siap pakai	Ver exemplos prontos
+Pindah slot hotbar	Trocar slot da hotbar
+Slot sebelumnya	Slot anterior
+Slot berikutnya	Pr\u00f3ximo slot
+Ketik di chat	Digitar no chat
+Aksi tidak dikenal	A\u00e7\u00e3o desconhecida
+Berapa lama menunggu?	Quanto tempo esperar?
+Berapa lama ditahan?	Quanto tempo segurar?
+detik	segundos
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Comece com / para um comando; sem / \u00e9 uma mensagem de chat normal.
+Kapan makro berjalan?	Quando a macro executa?
+Pilih cara tombol ini dipakai.	Escolha como este bot\u00e3o \u00e9 usado.
+Sekali Jalan	Executar uma vez
+Selama Ditahan	Enquanto segura
+Nyala / Mati	Ligar / Desligar
+Diulang berapa kali?	Quantas repeti\u00e7\u00f5es?
+Berapa kali urutan dijalankan setiap ketukan.	Quantas vezes a sequ\u00eancia \u00e9 executada por toque.
+kali	vezes
+Jeda antar putaran	Pausa entre repeti\u00e7\u00f5es
+Waktu istirahat sebelum urutan diulang lagi.	Tempo de descanso antes de repetir a sequ\u00eancia.
+Tanpa jeda	Sem pausa
+Pengaturan lanjutan	Configura\u00e7\u00f5es avan\u00e7adas
+Waktu acak	Tempo aleat\u00f3rio
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Varia um pouco aleatoriamente os tempos de espera e de press\u00e3o para parecer mais natural.
+Contoh siap pakai	Exemplos prontos
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Toque em um exemplo para us\u00e1-lo e altere como quiser.
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Mant\u00e9m o clique esquerdo para minerar ou atacar.
+Klik kanan berulang, cocok untuk membangun atau memancing.	Cliques direitos repetidos, bons para construir ou pescar.
+Melompat terus-menerus tanpa berhenti.	Pula sem parar.
+Berlari sambil melompat terus (bunny hop).	Corre enquanto pula sem parar (bunny hop).
+Menahan klik kanan 1,8 detik untuk makan atau minum.	Mant\u00e9m o clique direito por 1,8 segundo para comer ou beber.
+Membuang item 10 kali berturut-turut.	Larga um item 10 vezes seguidas.
+Mengganti urutan yang sekarang. Lanjutkan?	Isto substitui a sequ\u00eancia atual. Continuar?
+Ya, ganti	Sim, substituir
+Buat Urutan Aksi	Criar sequ\u00eancia de a\u00e7\u00f5es
+Atur Urutan Aksi	Editar sequ\u00eancia de a\u00e7\u00f5es

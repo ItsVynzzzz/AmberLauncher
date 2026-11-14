@@ -112,3 +112,72 @@ Makan	Kumain
 Buang Item x10	Ihulog ang Item x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac Sunod-sunod na Aksyon
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Maraming key, click, paghihintay, at pag-type sa iisang button.
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	Hanggang {0} aksyon lang
+Contoh dipakai	Nagamit na ang halimbawa
+Pembuat Makro	Gumagawa ng Macro
+Susun aksi, lalu pilih kapan makro dijalankan	Ayusin ang mga aksyon, saka piliin kung kailan tatakbo ang macro
+Cara Jalan	Paano Tatakbo
+Contoh	Mga Halimbawa
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Wala pang aksyon. Magsimula sa halimbawa o magdagdag ng sarili mo.
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} aksyon · mga {1} segundo bawat ikot
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Inuulit nang {0} beses bawat tap. I-tap muli habang tumatakbo para ihinto.
+Susun aksi	Ayusin ang mga Aksyon
+Aksi dijalankan berurutan dari atas ke bawah.	Sunod-sunod na tatakbo ang mga aksyon, mula itaas pababa.
+Yakin hapus?	Burahin lahat?
+Tambah aksi baru	Magdagdag ng bagong aksyon
+Tekan / Klik	Pindutin / I-click
+Tombol keyboard atau klik mouse	Key ng keyboard o click ng mouse
+Tekan dan tahan beberapa detik	Pindutin at hawakan nang ilang segundo
+Jeda sebelum aksi berikutnya	Pahinga bago ang susunod na aksyon
+Pindah Slot	Palitan ang Slot
+Ganti item yang dipegang	Palitan ang hawak na item
+Ketik Chat	Mag-type sa Chat
+Kirim pesan atau perintah	Magpadala ng mensahe o command
+Tahan Terus	Patuloy na Hawakan
+Tahan sampai dilepas atau makro berhenti	Hawakan hanggang bitawan o huminto ang macro
+Lepas tombol yang sedang ditahan	Bitawan ang key na hawak
+Geser Slot	Ilipat ang Slot
+Ke slot sebelum atau sesudahnya	Sa nakaraan o susunod na slot
+Lainnya	Iba pa
+Tutup aksi lanjutan	Itago ang advanced na aksyon
+Aksi lanjutan	Advanced na aksyon
+Pilih nomor slot hotbar yang dituju	Piliin ang numero ng hotbar slot
+Belum ada aksi	Wala pang aksyon
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Magdagdag ng aksyon gamit ang mga kahon sa ibaba, o magsimula agad sa handang halimbawa.
+Lihat contoh siap pakai	Tingnan ang mga handang halimbawa
+Pindah slot hotbar	Palitan ang hotbar slot
+Slot sebelumnya	Nakaraang slot
+Slot berikutnya	Susunod na slot
+Ketik di chat	Mag-type sa chat
+Aksi tidak dikenal	Hindi kilalang aksyon
+Berapa lama menunggu?	Gaano katagal maghihintay?
+Berapa lama ditahan?	Gaano katagal hahawakan?
+detik	segundo
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Simulan sa / para sa command, o walang / para sa karaniwang mensahe sa chat.
+Kapan makro berjalan?	Kailan tatakbo ang macro?
+Pilih cara tombol ini dipakai.	Piliin kung paano gagamitin ang button na ito.
+Sekali Jalan	Isang Takbo
+Selama Ditahan	Habang Hawak
+Nyala / Mati	On / Off
+Diulang berapa kali?	Ilang beses uulitin?
+Berapa kali urutan dijalankan setiap ketukan.	Ilang beses tatakbo ang sequence bawat tap.
+kali	beses
+Jeda antar putaran	Pahinga sa pagitan ng ikot
+Waktu istirahat sebelum urutan diulang lagi.	Oras ng pahinga bago ulitin ang sequence.
+Tanpa jeda	Walang pahinga
+Pengaturan lanjutan	Advanced na setting
+Waktu acak	Random na oras
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Bahagyang binabago nang random ang oras ng paghihintay at paghawak para mas natural.
+Contoh siap pakai	Mga handang halimbawa
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	I-tap ang halimbawa para gamitin, saka baguhin ayon sa gusto mo.
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Patuloy na hinahawakan ang kaliwang click para maghukay o umatake.
+Klik kanan berulang, cocok untuk membangun atau memancing.	Paulit-ulit na kanang click, bagay sa pagtatayo o pangingisda.
+Melompat terus-menerus tanpa berhenti.	Tuloy-tuloy na tumatalon.
+Berlari sambil melompat terus (bunny hop).	Tumatakbo habang tuloy-tuloy na tumatalon (bunny hop).
+Menahan klik kanan 1,8 detik untuk makan atau minum.	Hinahawakan ang kanang click nang 1.8 segundo para kumain o uminom.
+Membuang item 10 kali berturut-turut.	Ihuhulog ang item nang 10 beses nang sunod-sunod.
+Mengganti urutan yang sekarang. Lanjutkan?	Papalitan nito ang kasalukuyang sequence. Magpatuloy?
+Ya, ganti	Oo, palitan
+Buat Urutan Aksi	Gumawa ng Sunod-sunod na Aksyon
+Atur Urutan Aksi	I-edit ang Sunod-sunod na Aksyon

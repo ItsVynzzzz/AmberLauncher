@@ -112,3 +112,72 @@ Makan	\u0102n
 Buang Item x10	V\u1ee9t v\u1eadt ph\u1ea9m x10
 \ud83c\udfac Urutan Aksi	\ud83c\udfac Chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
 Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Nhi\u1ec1u ph\u00edm, nh\u1ea5p chu\u1ed9t, th\u1eddi gian ch\u1edd v\u00e0 g\u00f5 ch\u1eef trong m\u1ed9t n\u00fat.
+# Pembuat Makro (layar menyusun urutan aksi)
+Maksimal {0} aksi	T\u1ed1i \u0111a {0} h\u00e0nh \u0111\u1ed9ng
+Contoh dipakai	\u0110\u00e3 \u00e1p d\u1ee5ng v\u00ed d\u1ee5
+Pembuat Makro	Tr\u00ecnh t\u1ea1o macro
+Susun aksi, lalu pilih kapan makro dijalankan	S\u1eafp x\u1ebfp c\u00e1c h\u00e0nh \u0111\u1ed9ng, r\u1ed3i ch\u1ecdn khi n\u00e0o macro ch\u1ea1y
+Cara Jalan	C\u00e1ch ch\u1ea1y
+Contoh	V\u00ed d\u1ee5
+Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Ch\u01b0a c\u00f3 h\u00e0nh \u0111\u1ed9ng n\u00e0o. B\u1eaft \u0111\u1ea7u t\u1eeb m\u1ed9t v\u00ed d\u1ee5 ho\u1eb7c t\u1ef1 th\u00eam h\u00e0nh \u0111\u1ed9ng.
+{0} aksi \u00b7 sekitar {1} detik per putaran	{0} h\u00e0nh \u0111\u1ed9ng \u00b7 kho\u1ea3ng {1} gi\u00e2y m\u1ed7i v\u00f2ng
+Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	L\u1eb7p l\u1ea1i {0} l\u1ea7n m\u1ed7i l\u1ea7n ch\u1ea1m. Ch\u1ea1m l\u1ea1i khi \u0111ang ch\u1ea1y \u0111\u1ec3 d\u1eebng.
+Susun aksi	S\u1eafp x\u1ebfp h\u00e0nh \u0111\u1ed9ng
+Aksi dijalankan berurutan dari atas ke bawah.	C\u00e1c h\u00e0nh \u0111\u1ed9ng ch\u1ea1y l\u1ea7n l\u01b0\u1ee3t t\u1eeb tr\u00ean xu\u1ed1ng d\u01b0\u1edbi.
+Yakin hapus?	X\u00f3a h\u1ebft?
+Tambah aksi baru	Th\u00eam h\u00e0nh \u0111\u1ed9ng m\u1edbi
+Tekan / Klik	Nh\u1ea5n / Nh\u1ea5p
+Tombol keyboard atau klik mouse	Ph\u00edm b\u00e0n ph\u00edm ho\u1eb7c nh\u1ea5p chu\u1ed9t
+Tekan dan tahan beberapa detik	Nh\u1ea5n gi\u1eef v\u00e0i gi\u00e2y
+Jeda sebelum aksi berikutnya	T\u1ea1m d\u1eebng tr\u01b0\u1edbc h\u00e0nh \u0111\u1ed9ng ti\u1ebfp theo
+Pindah Slot	\u0110\u1ed5i \u00f4
+Ganti item yang dipegang	\u0110\u1ed5i v\u1eadt ph\u1ea9m \u0111ang c\u1ea7m
+Ketik Chat	G\u00f5 chat
+Kirim pesan atau perintah	G\u1eedi tin nh\u1eafn ho\u1eb7c l\u1ec7nh
+Tahan Terus	Gi\u1eef li\u00ean t\u1ee5c
+Tahan sampai dilepas atau makro berhenti	Gi\u1eef cho \u0111\u1ebfn khi th\u1ea3 ho\u1eb7c macro d\u1eebng
+Lepas tombol yang sedang ditahan	Th\u1ea3 ph\u00edm \u0111ang gi\u1eef
+Geser Slot	D\u1ecbch \u00f4
+Ke slot sebelum atau sesudahnya	T\u1edbi \u00f4 tr\u01b0\u1edbc ho\u1eb7c \u00f4 sau
+Lainnya	Kh\u00e1c
+Tutup aksi lanjutan	\u1ea8n h\u00e0nh \u0111\u1ed9ng n\u00e2ng cao
+Aksi lanjutan	H\u00e0nh \u0111\u1ed9ng n\u00e2ng cao
+Pilih nomor slot hotbar yang dituju	Ch\u1ecdn s\u1ed1 \u00f4 thanh nhanh mu\u1ed1n chuy\u1ec3n t\u1edbi
+Belum ada aksi	Ch\u01b0a c\u00f3 h\u00e0nh \u0111\u1ed9ng n\u00e0o
+Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Th\u00eam h\u00e0nh \u0111\u1ed9ng b\u1eb1ng c\u00e1c \u00f4 b\u00ean d\u01b0\u1edbi, ho\u1eb7c b\u1eaft \u0111\u1ea7u nhanh v\u1edbi m\u1ed9t v\u00ed d\u1ee5 c\u00f3 s\u1eb5n.
+Lihat contoh siap pakai	Xem v\u00ed d\u1ee5 c\u00f3 s\u1eb5n
+Pindah slot hotbar	\u0110\u1ed5i \u00f4 thanh nhanh
+Slot sebelumnya	\u00d4 tr\u01b0\u1edbc
+Slot berikutnya	\u00d4 ti\u1ebfp theo
+Ketik di chat	G\u00f5 trong chat
+Aksi tidak dikenal	H\u00e0nh \u0111\u1ed9ng kh\u00f4ng x\u00e1c \u0111\u1ecbnh
+Berapa lama menunggu?	Ch\u1edd bao l\u00e2u?
+Berapa lama ditahan?	Gi\u1eef bao l\u00e2u?
+detik	gi\u00e2y
+Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	B\u1eaft \u0111\u1ea7u b\u1eb1ng / cho l\u1ec7nh, kh\u00f4ng c\u00f3 / l\u00e0 tin nh\u1eafn chat th\u01b0\u1eddng.
+Kapan makro berjalan?	Khi n\u00e0o macro ch\u1ea1y?
+Pilih cara tombol ini dipakai.	Ch\u1ecdn c\u00e1ch d\u00f9ng n\u00fat n\u00e0y.
+Sekali Jalan	Ch\u1ea1y m\u1ed9t l\u1ea7n
+Selama Ditahan	Khi \u0111ang gi\u1eef
+Nyala / Mati	B\u1eadt / T\u1eaft
+Diulang berapa kali?	L\u1eb7p l\u1ea1i bao nhi\u00eau l\u1ea7n?
+Berapa kali urutan dijalankan setiap ketukan.	S\u1ed1 l\u1ea7n chu\u1ed7i ch\u1ea1y m\u1ed7i l\u1ea7n ch\u1ea1m.
+kali	l\u1ea7n
+Jeda antar putaran	Ngh\u1ec9 gi\u1eefa c\u00e1c v\u00f2ng
+Waktu istirahat sebelum urutan diulang lagi.	Th\u1eddi gian ngh\u1ec9 tr\u01b0\u1edbc khi chu\u1ed7i l\u1eb7p l\u1ea1i.
+Tanpa jeda	Kh\u00f4ng ngh\u1ec9
+Pengaturan lanjutan	C\u00e0i \u0111\u1eb7t n\u00e2ng cao
+Waktu acak	Th\u1eddi gian ng\u1eabu nhi\u00ean
+Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	D\u1ecbch th\u1eddi gian ch\u1edd v\u00e0 gi\u1eef ng\u1eabu nhi\u00ean m\u1ed9t ch\u00fat \u0111\u1ec3 t\u1ef1 nhi\u00ean h\u01a1n.
+Contoh siap pakai	V\u00ed d\u1ee5 c\u00f3 s\u1eb5n
+Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Ch\u1ea1m v\u00e0o v\u00ed d\u1ee5 \u0111\u1ec3 d\u00f9ng, r\u1ed3i t\u00f9y \u00fd ch\u1ec9nh s\u1eeda.
+Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Gi\u1eef nh\u1ea5p chu\u1ed9t tr\u00e1i li\u00ean t\u1ee5c \u0111\u1ec3 \u0111\u00e0o ho\u1eb7c t\u1ea5n c\u00f4ng.
+Klik kanan berulang, cocok untuk membangun atau memancing.	Nh\u1ea5p chu\u1ed9t ph\u1ea3i li\u00ean t\u1ee5c, h\u1ee3p \u0111\u1ec3 x\u00e2y d\u1ef1ng ho\u1eb7c c\u00e2u c\u00e1.
+Melompat terus-menerus tanpa berhenti.	Nh\u1ea3y li\u00ean t\u1ee5c kh\u00f4ng ng\u1eebng.
+Berlari sambil melompat terus (bunny hop).	Ch\u1ea1y trong khi nh\u1ea3y li\u00ean t\u1ee5c (bunny hop).
+Menahan klik kanan 1,8 detik untuk makan atau minum.	Gi\u1eef nh\u1ea5p chu\u1ed9t ph\u1ea3i 1,8 gi\u00e2y \u0111\u1ec3 \u0103n ho\u1eb7c u\u1ed1ng.
+Membuang item 10 kali berturut-turut.	V\u1ee9t v\u1eadt ph\u1ea9m 10 l\u1ea7n li\u00ean ti\u1ebfp.
+Mengganti urutan yang sekarang. Lanjutkan?	Thao t\u00e1c n\u00e0y thay th\u1ebf chu\u1ed7i hi\u1ec7n t\u1ea1i. Ti\u1ebfp t\u1ee5c?
+Ya, ganti	C\u00f3, thay th\u1ebf
+Buat Urutan Aksi	T\u1ea1o chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
+Atur Urutan Aksi	Ch\u1ec9nh chu\u1ed7i h\u00e0nh \u0111\u1ed9ng

@@ -36,13 +36,18 @@ sealed class MacroStep {
     data class Type(val text: String) : MacroStep()
 }
 
-/** Templat siap pakai di editor. [title] juga kunci terjemahan. */
+/**
+ * Contoh siap pakai di editor. [title] dan [description] juga kunci terjemahan; [emoji] hanya hiasan
+ * di kartu contoh.
+ */
 class MacroTemplate(
     val title: String,
     val steps: List<String>,
     val runMode: String,
     val repeat: Int = 1,
-    val loopDelayMs: Int = 0
+    val loopDelayMs: Int = 0,
+    val description: String = "",
+    val emoji: String = ""
 )
 
 /**
@@ -217,29 +222,53 @@ object MacroScript {
 
     /** Templat siap pakai. Tombol yang ditahan oleh langkah DOWN/MDOWN dilepas otomatis saat makro berhenti. */
     val TEMPLATES: List<MacroTemplate> = listOf(
-        MacroTemplate("Auto Gali", listOf("MDOWN:0", "WAIT:1000"), MacroRunMode.TOGGLE),
-        MacroTemplate("Auto Klik Kanan", listOf("CLICK:1", "WAIT:150"), MacroRunMode.TOGGLE),
         MacroTemplate(
-            "Lompat Terus",
-            listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:450"),
-            MacroRunMode.TOGGLE
+            title = "Auto Gali",
+            steps = listOf("MDOWN:0", "WAIT:1000"),
+            runMode = MacroRunMode.TOGGLE,
+            description = "Menahan klik kiri terus-menerus untuk menggali atau menyerang.",
+            emoji = "\u26cf\ufe0f"
         ),
         MacroTemplate(
-            "Lari + Lompat",
-            listOf(
+            title = "Auto Klik Kanan",
+            steps = listOf("CLICK:1", "WAIT:150"),
+            runMode = MacroRunMode.TOGGLE,
+            description = "Klik kanan berulang, cocok untuk membangun atau memancing.",
+            emoji = "\ud83d\uddb1\ufe0f"
+        ),
+        MacroTemplate(
+            title = "Lompat Terus",
+            steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:450"),
+            runMode = MacroRunMode.TOGGLE,
+            description = "Melompat terus-menerus tanpa berhenti.",
+            emoji = "\ud83e\udd98"
+        ),
+        MacroTemplate(
+            title = "Lari + Lompat",
+            steps = listOf(
                 "DOWN:${LwjglGlfwKeycode.GLFW_KEY_W}",
                 "DOWN:${LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL}",
                 "TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}",
                 "WAIT:350"
             ),
-            MacroRunMode.TOGGLE
+            runMode = MacroRunMode.TOGGLE,
+            description = "Berlari sambil melompat terus (bunny hop).",
+            emoji = "\ud83c\udfc3"
         ),
-        MacroTemplate("Makan", listOf("MHOLD:1:1800"), MacroRunMode.ONCE),
         MacroTemplate(
-            "Buang Item x10",
-            listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_Q}", "WAIT:80"),
-            MacroRunMode.ONCE,
-            repeat = 10
+            title = "Makan",
+            steps = listOf("MHOLD:1:1800"),
+            runMode = MacroRunMode.ONCE,
+            description = "Menahan klik kanan 1,8 detik untuk makan atau minum.",
+            emoji = "\ud83c\udf56"
+        ),
+        MacroTemplate(
+            title = "Buang Item x10",
+            steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_Q}", "WAIT:80"),
+            runMode = MacroRunMode.ONCE,
+            repeat = 10,
+            description = "Membuang item 10 kali berturut-turut.",
+            emoji = "\ud83d\uddd1\ufe0f"
         )
     )
 

@@ -1,0 +1,1267 @@
+diff --git a/app/src/main/assets/lang/en/update-mod.tsv b/app/src/main/assets/lang/en/update-mod.tsv
+new file mode 100644
+index 0000000..2730b38
+--- /dev/null
++++ b/app/src/main/assets/lang/en/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	Checking for mod updates...
++Memperbarui {0}/{1}: {2}	Updating {0}/{1}: {2}
++{0} mod punya versi baru	New version available for {0} mod(s)
++Semua mod sudah terbaru	All mods are up to date
++Pembaruan otomatis aktif	Automatic updates are on
++Cek versi baru semua mod lewat Modrinth	Check all mods for new versions via Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	{0} mod(s) skipped (new dependency needed or conflict), update manually
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} mod(s) are not on Modrinth and cannot be checked
++Perbarui semua ({0})	Update all ({0})
++ADA UPDATE	UPDATE
++{0} mod berhasil diperbarui	{0} mod(s) updated successfully
++{0} mod diperbarui, {1} gagal	{0} mod(s) updated, {1} failed
++Pembaruan dibatalkan	Update cancelled
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Could not reach Modrinth. Check your internet connection and try again.
++Gagal memeriksa pembaruan: {~0}	Failed to check for updates: {0}
++galat tidak diketahui	unknown error
++Modrinth menjawab HTTP {0}	Modrinth responded with HTTP {0}
++Jawaban Modrinth kosong	Modrinth returned an empty response
++Instance ini tidak memakai daftar mod biasa	This instance does not use the regular mod list
++Versi Minecraft instance tidak diketahui	The instance Minecraft version is unknown
+diff --git a/app/src/main/assets/lang/es/update-mod.tsv b/app/src/main/assets/lang/es/update-mod.tsv
+new file mode 100644
+index 0000000..25c0497
+--- /dev/null
++++ b/app/src/main/assets/lang/es/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	Buscando actualizaciones de mods...
++Memperbarui {0}/{1}: {2}	Actualizando {0}/{1}: {2}
++{0} mod punya versi baru	Hay una versión nueva para {0} mod(s)
++Semua mod sudah terbaru	Todos los mods están actualizados
++Pembaruan otomatis aktif	Las actualizaciones automáticas están activadas
++Cek versi baru semua mod lewat Modrinth	Buscar versiones nuevas de todos los mods mediante Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	{0} mod(s) omitido(s) (requieren una dependencia nueva o hay conflicto), actualízalos manualmente
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} mod(s) no están en Modrinth y no se pueden comprobar
++Perbarui semua ({0})	Actualizar todo ({0})
++ADA UPDATE	ACTUALIZAR
++{0} mod berhasil diperbarui	{0} mod(s) actualizado(s) correctamente
++{0} mod diperbarui, {1} gagal	{0} mod(s) actualizado(s), {1} con error
++Pembaruan dibatalkan	Actualización cancelada
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	No se pudo conectar con Modrinth. Revisa tu conexión a internet e inténtalo de nuevo.
++Gagal memeriksa pembaruan: {~0}	No se pudo buscar actualizaciones: {0}
++galat tidak diketahui	error desconocido
++Modrinth menjawab HTTP {0}	Modrinth respondió con HTTP {0}
++Jawaban Modrinth kosong	Modrinth devolvió una respuesta vacía
++Instance ini tidak memakai daftar mod biasa	Esta instancia no usa la lista de mods normal
++Versi Minecraft instance tidak diketahui	Se desconoce la versión de Minecraft de la instancia
+diff --git a/app/src/main/assets/lang/fil/update-mod.tsv b/app/src/main/assets/lang/fil/update-mod.tsv
+new file mode 100644
+index 0000000..8aaff5d
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	Sinusuri ang mga update ng mod...
++Memperbarui {0}/{1}: {2}	Ina-update {0}/{1}: {2}
++{0} mod punya versi baru	May bagong bersyon para sa {0} mod
++Semua mod sudah terbaru	Updated na ang lahat ng mod
++Pembaruan otomatis aktif	Naka-on ang awtomatikong pag-update
++Cek versi baru semua mod lewat Modrinth	Tingnan ang bagong bersyon ng lahat ng mod sa pamamagitan ng Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	Nilaktawan ang {0} mod (kailangan ng bagong dependency o may conflict), i-update nang manu-mano
++{0} mod tidak ada di Modrinth, tidak bisa dicek	Wala sa Modrinth ang {0} mod kaya hindi masusuri
++Perbarui semua ({0})	I-update lahat ({0})
++ADA UPDATE	MAY UPDATE
++{0} mod berhasil diperbarui	Matagumpay na na-update ang {0} mod
++{0} mod diperbarui, {1} gagal	Na-update ang {0} mod, {1} ang nabigo
++Pembaruan dibatalkan	Kinansela ang pag-update
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Hindi makakonekta sa Modrinth. Tingnan ang internet at subukan ulit.
++Gagal memeriksa pembaruan: {~0}	Nabigong suriin ang mga update: {0}
++galat tidak diketahui	hindi kilalang error
++Modrinth menjawab HTTP {0}	Sumagot ang Modrinth ng HTTP {0}
++Jawaban Modrinth kosong	Walang laman ang sagot ng Modrinth
++Instance ini tidak memakai daftar mod biasa	Hindi gumagamit ng karaniwang listahan ng mod ang instance na ito
++Versi Minecraft instance tidak diketahui	Hindi alam ang bersyon ng Minecraft ng instance
+diff --git a/app/src/main/assets/lang/pt/update-mod.tsv b/app/src/main/assets/lang/pt/update-mod.tsv
+new file mode 100644
+index 0000000..a719a6f
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	Verificando atualizações dos mods...
++Memperbarui {0}/{1}: {2}	Atualizando {0}/{1}: {2}
++{0} mod punya versi baru	Há uma nova versão para {0} mod(s)
++Semua mod sudah terbaru	Todos os mods estão atualizados
++Pembaruan otomatis aktif	As atualizações automáticas estão ativadas
++Cek versi baru semua mod lewat Modrinth	Verificar novas versões de todos os mods pelo Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	{0} mod(s) ignorado(s) (exigem uma dependência nova ou há conflito), atualize manualmente
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} mod(s) não estão no Modrinth e não podem ser verificados
++Perbarui semua ({0})	Atualizar tudo ({0})
++ADA UPDATE	ATUALIZAR
++{0} mod berhasil diperbarui	{0} mod(s) atualizado(s) com sucesso
++{0} mod diperbarui, {1} gagal	{0} mod(s) atualizado(s), {1} com falha
++Pembaruan dibatalkan	Atualização cancelada
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Não foi possível conectar ao Modrinth. Verifique a internet e tente novamente.
++Gagal memeriksa pembaruan: {~0}	Falha ao verificar atualizações: {0}
++galat tidak diketahui	erro desconhecido
++Modrinth menjawab HTTP {0}	O Modrinth respondeu com HTTP {0}
++Jawaban Modrinth kosong	O Modrinth retornou uma resposta vazia
++Instance ini tidak memakai daftar mod biasa	Esta instância não usa a lista de mods normal
++Versi Minecraft instance tidak diketahui	A versão do Minecraft da instância é desconhecida
+diff --git a/app/src/main/assets/lang/th/update-mod.tsv b/app/src/main/assets/lang/th/update-mod.tsv
+new file mode 100644
+index 0000000..e84869b
+--- /dev/null
++++ b/app/src/main/assets/lang/th/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	กำลังตรวจสอบการอัปเดต Mod...
++Memperbarui {0}/{1}: {2}	กำลังอัปเดต {0}/{1}: {2}
++{0} mod punya versi baru	มีเวอร์ชันใหม่สำหรับ {0} Mod
++Semua mod sudah terbaru	Mod ทั้งหมดเป็นเวอร์ชันล่าสุดแล้ว
++Pembaruan otomatis aktif	เปิดการอัปเดตอัตโนมัติอยู่
++Cek versi baru semua mod lewat Modrinth	ตรวจสอบเวอร์ชันใหม่ของ Mod ทั้งหมดผ่าน Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	ข้าม {0} Mod (ต้องใช้ส่วนที่ต้องพึ่งพาใหม่หรือขัดแย้งกัน) โปรดอัปเดตด้วยตัวเอง
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} Mod ไม่อยู่บน Modrinth จึงตรวจสอบไม่ได้
++Perbarui semua ({0})	อัปเดตทั้งหมด ({0})
++ADA UPDATE	มีอัปเดต
++{0} mod berhasil diperbarui	อัปเดต {0} Mod สำเร็จ
++{0} mod diperbarui, {1} gagal	อัปเดต {0} Mod แล้ว ล้มเหลว {1}
++Pembaruan dibatalkan	ยกเลิกการอัปเดตแล้ว
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	เชื่อมต่อ Modrinth ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง
++Gagal memeriksa pembaruan: {~0}	ตรวจสอบการอัปเดตไม่สำเร็จ: {0}
++galat tidak diketahui	ข้อผิดพลาดที่ไม่ทราบสาเหตุ
++Modrinth menjawab HTTP {0}	Modrinth ตอบกลับด้วย HTTP {0}
++Jawaban Modrinth kosong	Modrinth ตอบกลับมาว่างเปล่า
++Instance ini tidak memakai daftar mod biasa	instance นี้ไม่ได้ใช้รายการ Mod แบบปกติ
++Versi Minecraft instance tidak diketahui	ไม่ทราบเวอร์ชัน Minecraft ของ instance
+diff --git a/app/src/main/assets/lang/vi/update-mod.tsv b/app/src/main/assets/lang/vi/update-mod.tsv
+new file mode 100644
+index 0000000..bda7bc2
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	Đang kiểm tra bản cập nhật mod...
++Memperbarui {0}/{1}: {2}	Đang cập nhật {0}/{1}: {2}
++{0} mod punya versi baru	Có phiên bản mới cho {0} mod
++Semua mod sudah terbaru	Tất cả mod đã là bản mới nhất
++Pembaruan otomatis aktif	Đã bật cập nhật tự động
++Cek versi baru semua mod lewat Modrinth	Kiểm tra phiên bản mới của mọi mod qua Modrinth
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	Đã bỏ qua {0} mod (cần phần phụ thuộc mới hoặc xung đột), hãy cập nhật thủ công
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} mod không có trên Modrinth nên không thể kiểm tra
++Perbarui semua ({0})	Cập nhật tất cả ({0})
++ADA UPDATE	CÓ BẢN MỚI
++{0} mod berhasil diperbarui	Đã cập nhật {0} mod thành công
++{0} mod diperbarui, {1} gagal	Đã cập nhật {0} mod, {1} thất bại
++Pembaruan dibatalkan	Đã hủy cập nhật
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Không thể kết nối với Modrinth. Hãy kiểm tra internet rồi thử lại.
++Gagal memeriksa pembaruan: {~0}	Không thể kiểm tra cập nhật: {0}
++galat tidak diketahui	lỗi không xác định
++Modrinth menjawab HTTP {0}	Modrinth trả về HTTP {0}
++Jawaban Modrinth kosong	Modrinth trả về phản hồi trống
++Instance ini tidak memakai daftar mod biasa	Instance này không dùng danh sách mod thông thường
++Versi Minecraft instance tidak diketahui	Không rõ phiên bản Minecraft của instance
+diff --git a/app/src/main/assets/lang/zh/update-mod.tsv b/app/src/main/assets/lang/zh/update-mod.tsv
+new file mode 100644
+index 0000000..2c3b136
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/update-mod.tsv
+@@ -0,0 +1,21 @@
++# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
++Memeriksa pembaruan mod...	正在检查模组更新…
++Memperbarui {0}/{1}: {2}	正在更新 {0}/{1}：{2}
++{0} mod punya versi baru	{0} 个模组有新版本
++Semua mod sudah terbaru	所有模组均已是最新版本
++Pembaruan otomatis aktif	自动更新已开启
++Cek versi baru semua mod lewat Modrinth	通过 Modrinth 检查所有模组的新版本
++{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	已跳过 {0} 个模组（需要新的依赖或存在冲突），请手动更新
++{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} 个模组不在 Modrinth 上，无法检查
++Perbarui semua ({0})	全部更新（{0}）
++ADA UPDATE	有更新
++{0} mod berhasil diperbarui	已成功更新 {0} 个模组
++{0} mod diperbarui, {1} gagal	已更新 {0} 个模组，{1} 个失败
++Pembaruan dibatalkan	更新已取消
++Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	无法连接到 Modrinth。请检查网络后重试。
++Gagal memeriksa pembaruan: {~0}	检查更新失败：{0}
++galat tidak diketahui	未知错误
++Modrinth menjawab HTTP {0}	Modrinth 返回 HTTP {0}
++Jawaban Modrinth kosong	Modrinth 返回了空响应
++Instance ini tidak memakai daftar mod biasa	此实例不使用常规模组列表
++Versi Minecraft instance tidak diketahui	未知实例的 Minecraft 版本
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 67c59bb..39b4868 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -104,6 +104,10 @@ data class LauncherSettings(
+     // Kunci API CurseForge milik pengguna (diisi dari layar Mod). Kosong = pakai kunci bawaan build bila ada.
+     val curseForgeApiKey: String = "",
+ 
++    // Perbarui mod otomatis saat Manajemen Mod (tab Mod) dibuka, paling sering sekali per 6 jam per instance.
++    // Bawaan mati: mod yang berubah sendiri bisa memutus dunia atau modpack yang sedang dimainkan.
++    val autoUpdateMods: Boolean = false,
++
+     // Pembaruan aplikasi
+     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
+index 2ea50c4..457c022 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/ModrinthModels.kt
+@@ -65,7 +65,9 @@ data class ModrinthVersion(
+     val loaders: List<String> = emptyList(),
+     @SerializedName("version_type") val versionType: String = "release", // release, beta, alpha
+     val files: List<ModrinthVersionFile> = emptyList(),
+-    val dependencies: List<ModrinthDependency>? = null
++    val dependencies: List<ModrinthDependency>? = null,
++    /** Waktu terbit (ISO 8601). Dipakai untuk memastikan pembaruan tidak malah menurunkan versi. */
++    @SerializedName("date_published") val datePublished: String = ""
+ )
+ 
+ /**
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdatePlanner.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdatePlanner.kt
+new file mode 100644
+index 0000000..01f2065
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdatePlanner.kt
+@@ -0,0 +1,174 @@
++package com.israadev.nuxlauncher.core.mods
++
++import com.google.gson.Gson
++import com.google.gson.JsonArray
++import com.google.gson.JsonObject
++import com.google.gson.reflect.TypeToken
++import com.israadev.nuxlauncher.core.models.ModrinthVersion
++import com.israadev.nuxlauncher.core.models.ModrinthVersionFile
++import java.time.Instant
++
++/** Alasan sebuah pembaruan mod sengaja tidak dipasang otomatis. */
++enum class ModUpdateSkipReason {
++    /** Versi baru tidak punya berkas .jar yang bisa dipakai atau tidak punya sidik jari untuk diverifikasi. */
++    NO_FILE,
++
++    /** Versi baru mewajibkan mod lain yang belum terpasang (dipasang manual lewat halaman mod). */
++    NEW_DEPENDENCY,
++
++    /** Versi baru menyatakan tidak cocok dengan mod lain yang sudah terpasang. */
++    INCOMPATIBLE
++}
++
++/** Hasil keputusan untuk satu mod terpasang. */
++internal sealed class ModUpdateDecision {
++    /** Berkas tidak dikenal Modrinth (dari CurseForge, buatan sendiri, atau sudah dimodifikasi). */
++    object Unknown : ModUpdateDecision()
++
++    object UpToDate : ModUpdateDecision()
++
++    class Update(val version: ModrinthVersion, val file: ModrinthVersionFile) : ModUpdateDecision()
++
++    class Skip(val reason: ModUpdateSkipReason) : ModUpdateDecision()
++}
++
++/**
++ * Bagian murni (tanpa Android dan tanpa jaringan) dari pemeriksaan pembaruan mod: menyusun isi permintaan
++ * ke Modrinth, membaca jawabannya, dan memutuskan apakah sebuah mod perlu dan aman diperbarui.
++ */
++internal object ModUpdatePlanner {
++
++    /** Jumlah sidik jari maksimal per permintaan, supaya badan permintaan tetap kecil. */
++    const val MAX_HASHES_PER_REQUEST = 100
++
++    /** Jarak minimal antar pemeriksaan otomatis untuk satu instance. */
++    const val AUTO_CHECK_GAP_MS = 6L * 60L * 60L * 1000L
++
++    private val gson = Gson()
++    private val versionMapType = object : TypeToken<Map<String, ModrinthVersion?>>() {}.type
++
++    fun isModJarName(name: String): Boolean =
++        name.endsWith(".jar", ignoreCase = true) || name.endsWith(".jar.disabled", ignoreCase = true)
++
++    fun cleanName(name: String): String = name.removeSuffix(".disabled")
++
++    /** Isi POST /version_files: cari versi mod berdasarkan sidik jari berkasnya. */
++    fun versionsRequestBody(hashes: List<String>): String {
++        val body = JsonObject()
++        body.add("hashes", stringArray(hashes))
++        body.addProperty("algorithm", "sha1")
++        return body.toString()
++    }
++
++    /** Isi POST /version_files/update: versi terbaru yang cocok dengan loader dan versi Minecraft instance. */
++    fun updateRequestBody(hashes: List<String>, loader: String, mcVersion: String): String {
++        val body = JsonObject()
++        body.add("hashes", stringArray(hashes))
++        body.addProperty("algorithm", "sha1")
++        body.add("loaders", stringArray(listOf(loader)))
++        body.add("game_versions", stringArray(listOf(mcVersion)))
++        return body.toString()
++    }
++
++    private fun stringArray(items: List<String>): JsonArray {
++        val array = JsonArray()
++        for (item in items) array.add(item)
++        return array
++    }
++
++    /** Membaca jawaban Modrinth (peta sidik jari -> versi). Kunci disamakan menjadi huruf kecil. */
++    fun parseVersionMap(json: String): Map<String, ModrinthVersion> {
++        val parsed: Map<String, ModrinthVersion?> = gson.fromJson(json, versionMapType) ?: return emptyMap()
++        val result = HashMap<String, ModrinthVersion>(parsed.size)
++        for ((hash, version) in parsed) {
++            // Lewati nilai yang bukan objek versi utuh
++            if (version == null || version.id.isBlank()) continue
++            result[hash.lowercase()] = version
++        }
++        return result
++    }
++
++    /** True bila sudah waktunya memeriksa lagi. Jam yang mundur dianggap sudah waktunya. */
++    fun isCheckDue(lastCheckMs: Long, nowMs: Long, gapMs: Long = AUTO_CHECK_GAP_MS): Boolean =
++        lastCheckMs <= 0L || nowMs < lastCheckMs || nowMs - lastCheckMs >= gapMs
++
++    private fun stabilityRank(type: String): Int = when (type.lowercase()) {
++        "release" -> 0
++        "beta" -> 1
++        else -> 2
++    }
++
++    private fun parseInstant(text: String): Instant? {
++        if (text.isBlank()) return null
++        return try {
++            Instant.parse(text.trim())
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    /** True bila [latest] terbukti tidak lebih baru dari [current] (cegah pembaruan yang malah menurunkan versi). */
++    private fun notNewer(latest: ModrinthVersion, current: ModrinthVersion): Boolean {
++        val a = parseInstant(latest.datePublished) ?: return false
++        val b = parseInstant(current.datePublished) ?: return false
++        return !a.isAfter(b)
++    }
++
++    /** Berkas .jar utama dari sebuah versi, atau null bila tidak ada. */
++    fun pickJar(version: ModrinthVersion): ModrinthVersionFile? {
++        val jars = version.files.filter { it.filename.endsWith(".jar", ignoreCase = true) }
++        return jars.firstOrNull { it.primary } ?: jars.firstOrNull()
++    }
++
++    private fun hasVerifiableHash(file: ModrinthVersionFile): Boolean {
++        val hashes = file.hashes ?: return false
++        return listOf("sha256", "sha512", "sha1").any { !hashes[it].isNullOrBlank() }
++    }
++
++    private fun projectsOf(version: ModrinthVersion, type: String): Set<String> =
++        version.dependencies.orEmpty()
++            .filter { it.dependencyType.equals(type, ignoreCase = true) && !it.projectId.isNullOrBlank() }
++            .mapNotNull { it.projectId }
++            .toSet()
++
++    /**
++     * Memutuskan nasib satu mod.
++     *
++     * @param sha1 sidik jari berkas yang terpasang
++     * @param current versi yang cocok dengan sidik jari itu di Modrinth (null = tidak dikenal)
++     * @param latest versi terbaru yang cocok dengan loader dan versi Minecraft instance (null = tidak ada)
++     * @param installedProjects id proyek Modrinth dari semua mod terpasang yang dikenal
++     */
++    fun decide(
++        sha1: String,
++        current: ModrinthVersion?,
++        latest: ModrinthVersion?,
++        installedProjects: Set<String>
++    ): ModUpdateDecision {
++        if (current == null) return ModUpdateDecision.Unknown
++        if (latest == null) return ModUpdateDecision.UpToDate
++        if (latest.id == current.id) return ModUpdateDecision.UpToDate
++        if (latest.files.any { it.hashes?.get("sha1").equals(sha1, ignoreCase = true) }) {
++            return ModUpdateDecision.UpToDate
++        }
++        // Jangan menurunkan versi, dan jangan menukar rilis stabil dengan beta/alpha
++        if (notNewer(latest, current)) return ModUpdateDecision.UpToDate
++        if (stabilityRank(latest.versionType) > stabilityRank(current.versionType)) return ModUpdateDecision.UpToDate
++
++        val file = pickJar(latest) ?: return ModUpdateDecision.Skip(ModUpdateSkipReason.NO_FILE)
++        if (!hasVerifiableHash(file) || !file.url.trim().startsWith("https://", ignoreCase = true)) {
++            return ModUpdateDecision.Skip(ModUpdateSkipReason.NO_FILE)
++        }
++
++        // Dependensi wajib yang baru muncul dan belum terpasang: jangan ditebak, biarkan pengguna memutuskan
++        val newRequired = projectsOf(latest, "required") - projectsOf(current, "required")
++        if (newRequired.any { it !in installedProjects }) {
++            return ModUpdateDecision.Skip(ModUpdateSkipReason.NEW_DEPENDENCY)
++        }
++        val newIncompatible = projectsOf(latest, "incompatible") - projectsOf(current, "incompatible")
++        if (newIncompatible.any { it in installedProjects && it != latest.projectId }) {
++            return ModUpdateDecision.Skip(ModUpdateSkipReason.INCOMPATIBLE)
++        }
++        return ModUpdateDecision.Update(latest, file)
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdater.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdater.kt
+new file mode 100644
+index 0000000..a049ae0
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/ModUpdater.kt
+@@ -0,0 +1,370 @@
++package com.israadev.nuxlauncher.core.mods
++
++import android.content.Context
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.horizon.HorizonEngine
++import com.israadev.nuxlauncher.core.instance.InstanceManager
++import com.israadev.nuxlauncher.core.models.Instance
++import com.israadev.nuxlauncher.core.models.ModrinthVersion
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.Job
++import kotlinx.coroutines.NonCancellable
++import kotlinx.coroutines.currentCoroutineContext
++import kotlinx.coroutines.ensureActive
++import kotlinx.coroutines.withContext
++import okhttp3.MediaType.Companion.toMediaType
++import okhttp3.Request
++import okhttp3.RequestBody.Companion.toRequestBody
++import java.io.File
++import java.io.IOException
++import java.security.MessageDigest
++import java.util.concurrent.ConcurrentHashMap
++import java.util.zip.ZipFile
++
++/** Satu mod terpasang yang punya versi lebih baru di Modrinth. */
++data class ModUpdate(
++    /** Nama berkas di disk sekarang (berakhiran .disabled bila modnya dinonaktifkan). */
++    val fileName: String,
++    val name: String,
++    val fromVersion: String,
++    val toVersion: String,
++    /** Nama berkas versi baru (sudah dibersihkan, selalu berakhiran .jar). */
++    val newFileName: String,
++    val newUrl: String,
++    val newSize: Long,
++    val newHashes: Map<String, String>,
++    /** sha1 berkas yang sekarang terpasang; dicek lagi sebelum diganti. */
++    val oldSha1: String,
++    val enabled: Boolean
++)
++
++/** Mod yang punya versi baru tetapi sengaja tidak dipasang otomatis. */
++data class ModUpdateSkip(val name: String, val reason: ModUpdateSkipReason)
++
++data class ModUpdateCheck(
++    val updates: List<ModUpdate>,
++    /** Jumlah mod (berkas .jar berbeda) yang diperiksa. */
++    val total: Int,
++    val upToDate: Int,
++    /** Mod yang tidak dikenal Modrinth (CurseForge, buatan sendiri, atau sudah dimodifikasi). */
++    val unknown: Int,
++    val skipped: List<ModUpdateSkip>,
++    val checkedAt: Long
++)
++
++data class ModUpdateApplyResult(val updated: List<ModUpdate>, val failed: List<ModUpdate>)
++
++/**
++ * Memeriksa dan memasang pembaruan untuk semua mod di sebuah instance sekaligus.
++ *
++ * Cara kerja: sidik jari sha1 tiap jar dikirim ke Modrinth (dua permintaan untuk seluruh mod, bukan satu per mod).
++ * Hanya mod yang dikenal Modrinth yang bisa diperiksa; mod dari CurseForge atau buatan sendiri dilewati.
++ * Pembaruan diunduh ke berkas sementara, diverifikasi sidik jarinya, baru kemudian menggantikan berkas lama,
++ * jadi unduhan yang gagal atau dibatalkan tidak pernah merusak mod yang sudah ada.
++ */
++object ModUpdater {
++    private const val TAG = "ModUpdater"
++    private const val PREFS = "amber_mod_update"
++    private const val MAX_MOD_BYTES = 512L * 1024L * 1024L
++    private val JSON_TYPE = "application/json; charset=utf-8".toMediaType()
++
++    private class CachedHash(val size: Long, val modified: Long, val sha1: String)
++
++    /** sha1 per berkas, dikunci dengan ukuran + waktu ubah, supaya pemeriksaan berikutnya tidak membaca ulang semua jar. */
++    private val hashCache = ConcurrentHashMap<String, CachedHash>()
++
++    private class LocalMod(val file: File, val sha1: String)
++
++    /** Daftar mod tidak berlaku untuk instance dengan mesin Rust. */
++    fun isSupported(instance: Instance?): Boolean =
++        instance != null && !HorizonEngine.isEngine(instance.loader)
++
++    /** True bila pemeriksaan otomatis untuk [instanceId] sudah waktunya dijalankan lagi. */
++    fun isAutoCheckDue(context: Context, instanceId: String): Boolean {
++        val last = try {
++            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getLong("last_$instanceId", 0L)
++        } catch (_: Exception) {
++            0L
++        }
++        return ModUpdatePlanner.isCheckDue(last, System.currentTimeMillis())
++    }
++
++    private fun markChecked(context: Context, instanceId: String) {
++        try {
++            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
++                .edit().putLong("last_$instanceId", System.currentTimeMillis()).apply()
++        } catch (_: Exception) {
++            // Hanya untuk membatasi frekuensi pemeriksaan otomatis; gagal menyimpan tidak berbahaya
++        }
++    }
++
++    /**
++     * Memeriksa semua mod di folder mods instance. Mengembalikan kegagalan (mis. tanpa internet) alih-alih
++     * melempar galat; pembatalan coroutine tetap diteruskan.
++     */
++    suspend fun check(context: Context, instance: Instance): Result<ModUpdateCheck> = withContext(Dispatchers.IO) {
++        try {
++            if (!isSupported(instance)) throw IOException("Instance ini tidak memakai daftar mod biasa")
++            val mcVersion = instance.mcVersion.trim()
++            if (mcVersion.isEmpty()) throw IOException("Versi Minecraft instance tidak diketahui")
++            val loader = NuxModManager.effectiveLoader(instance)
++            val job = currentCoroutineContext()[Job]
++
++            val modsDir = File(InstanceManager.getInstanceGameDir(context, instance), "mods")
++            val files = modsDir.listFiles { f -> f.isFile && ModUpdatePlanner.isModJarName(f.name) }
++                ?.sortedBy { it.name.lowercase() }
++                ?: emptyList()
++            val now = System.currentTimeMillis()
++            if (files.isEmpty()) {
++                markChecked(context, instance.id)
++                return@withContext Result.success(ModUpdateCheck(emptyList(), 0, 0, 0, emptyList(), now))
++            }
++
++            val local = ArrayList<LocalMod>(files.size)
++            for (file in files) {
++                job?.ensureActive()
++                local.add(LocalMod(file, sha1Of(file)))
++            }
++            val hashes = local.map { it.sha1 }.distinct()
++
++            // 1) Versi yang sekarang terpasang (dipakai mengenali proyek dan mencegah penurunan versi)
++            val currentByHash = HashMap<String, ModrinthVersion>()
++            for (chunk in hashes.chunked(ModUpdatePlanner.MAX_HASHES_PER_REQUEST)) {
++                job?.ensureActive()
++                val body = ModUpdatePlanner.versionsRequestBody(chunk)
++                currentByHash.putAll(ModUpdatePlanner.parseVersionMap(postJson("/version_files", body)))
++            }
++
++            // 2) Versi terbaru yang cocok dengan loader dan versi Minecraft instance, hanya untuk mod yang dikenal
++            val known = hashes.filter { it in currentByHash }
++            val latestByHash = HashMap<String, ModrinthVersion>()
++            for (chunk in known.chunked(ModUpdatePlanner.MAX_HASHES_PER_REQUEST)) {
++                job?.ensureActive()
++                val body = ModUpdatePlanner.updateRequestBody(chunk, loader, mcVersion)
++                latestByHash.putAll(ModUpdatePlanner.parseVersionMap(postJson("/version_files/update", body)))
++            }
++
++            val installedProjects = currentByHash.values.map { it.projectId }.filter { it.isNotBlank() }.toSet()
++            val updates = ArrayList<ModUpdate>()
++            val skipped = ArrayList<ModUpdateSkip>()
++            val seen = HashSet<String>()
++            var upToDate = 0
++            var unknown = 0
++            for (mod in local) {
++                // Dua berkas yang isinya sama dihitung sekali
++                if (!seen.add(mod.sha1)) continue
++                val current = currentByHash[mod.sha1]
++                when (val decision = ModUpdatePlanner.decide(mod.sha1, current, latestByHash[mod.sha1], installedProjects)) {
++                    is ModUpdateDecision.Unknown -> unknown++
++                    is ModUpdateDecision.UpToDate -> upToDate++
++                    is ModUpdateDecision.Skip -> skipped.add(ModUpdateSkip(displayName(mod.file), decision.reason))
++                    is ModUpdateDecision.Update -> {
++                        val newFileName = SafePaths.fileName(decision.file.filename)
++                        if (!newFileName.endsWith(".jar", ignoreCase = true)) {
++                            skipped.add(ModUpdateSkip(displayName(mod.file), ModUpdateSkipReason.NO_FILE))
++                        } else {
++                            updates.add(
++                                ModUpdate(
++                                    fileName = mod.file.name,
++                                    name = displayName(mod.file),
++                                    fromVersion = current?.versionNumber.orEmpty(),
++                                    toVersion = decision.version.versionNumber,
++                                    newFileName = newFileName,
++                                    newUrl = decision.file.url,
++                                    newSize = decision.file.size,
++                                    newHashes = decision.file.hashes.orEmpty(),
++                                    oldSha1 = mod.sha1,
++                                    enabled = !mod.file.name.endsWith(".disabled", ignoreCase = true)
++                                )
++                            )
++                        }
++                    }
++                }
++            }
++            markChecked(context, instance.id)
++            Result.success(ModUpdateCheck(updates, seen.size, upToDate, unknown, skipped, now))
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            LauncherLog.w(TAG, "Pemeriksaan pembaruan mod gagal: ${e.message}", e)
++            Result.failure(e)
++        }
++    }
++
++    /**
++     * Memasang [updates] satu per satu. Satu mod yang gagal tidak menghentikan yang lain. Bila dibatalkan,
++     * mod yang sudah selesai tetap terpasang dan berkas sementara dibersihkan.
++     */
++    suspend fun apply(
++        context: Context,
++        instance: Instance,
++        updates: List<ModUpdate>,
++        onProgress: (done: Int, total: Int, name: String) -> Unit = { _, _, _ -> }
++    ): ModUpdateApplyResult = withContext(Dispatchers.IO) {
++        val gameDir = InstanceManager.getInstanceGameDir(context, instance)
++        val modsDir = File(gameDir, "mods")
++        val job = currentCoroutineContext()[Job]
++        val updated = ArrayList<ModUpdate>()
++        val failed = ArrayList<ModUpdate>()
++        val renames = LinkedHashMap<String, String>()
++        try {
++            for ((index, update) in updates.withIndex()) {
++                job?.ensureActive()
++                onProgress(index, updates.size, update.name)
++                try {
++                    replaceOne(job, modsDir, update)
++                    updated.add(update)
++                    renames["mods/" + ModUpdatePlanner.cleanName(update.fileName)] = "mods/" + update.newFileName
++                } catch (e: CancellationException) {
++                    throw e
++                } catch (e: Exception) {
++                    failed.add(update)
++                    LauncherLog.w(TAG, "Gagal memperbarui ${update.name}: ${e.message}", e)
++                }
++            }
++            onProgress(updates.size, updates.size, "")
++        } finally {
++            // Modpack mencatat berkasnya; tanpa ini, menghapus modpack akan meninggalkan jar baru dan mencari jar lama
++            if (renames.isNotEmpty()) {
++                withContext(NonCancellable) { retargetManifests(gameDir, renames) }
++            }
++        }
++        ModUpdateApplyResult(updated, failed)
++    }
++
++    /** Mengunduh versi baru ke berkas sementara, memverifikasinya, lalu menukarnya dengan berkas lama. */
++    private fun replaceOne(job: Job?, modsDir: File, u: ModUpdate) {
++        val oldFile = File(modsDir, u.fileName)
++        if (!oldFile.isFile) throw IOException("Berkas lama tidak ditemukan")
++        if (!sha1Of(oldFile).equals(u.oldSha1, ignoreCase = true)) {
++            throw IOException("Berkas ${u.fileName} berubah sejak diperiksa")
++        }
++        val newName = u.newFileName
++        if (newName != SafePaths.fileName(newName) || !newName.endsWith(".jar", ignoreCase = true)) {
++            throw IOException("Nama berkas baru tidak valid")
++        }
++        if (u.newHashes.isEmpty()) throw IOException("Berkas baru tanpa sidik jari tidak dipasang")
++
++        // Nama tujuan tidak boleh sudah dipakai berkas lain, baik dalam bentuk aktif maupun nonaktif
++        val finalFile = File(modsDir, if (u.enabled) newName else "$newName.disabled")
++        for (candidate in listOf(File(modsDir, newName), File(modsDir, "$newName.disabled"))) {
++            if (candidate.exists() && candidate.name != oldFile.name) {
++                throw IOException("Berkas $newName sudah ada")
++            }
++        }
++
++        val tmp = File(modsDir, "$newName.upd.part")
++        try {
++            NuxModManager.downloadFile(
++                url = u.newUrl,
++                destFile = tmp,
++                maxBytes = if (u.newSize > 0L) u.newSize + 1024L * 1024L else MAX_MOD_BYTES,
++                expectedBytes = u.newSize,
++                onBytes = { _, _ -> job?.ensureActive() }
++            )
++            NuxModManager.verifyHashes(tmp, u.newHashes)
++            // Memastikan jar utuh sebelum menggantikan yang lama
++            ZipFile(tmp).close()
++            job?.ensureActive()
++            commit(oldFile, finalFile, tmp)
++        } finally {
++            tmp.delete()
++        }
++        hashCache.remove(oldFile.absolutePath)
++    }
++
++    /** Menukar berkas lama dengan [tmp] tanpa pernah meninggalkan mod hilang bila salah satu langkah gagal. */
++    private fun commit(oldFile: File, finalFile: File, tmp: File) {
++        if (oldFile.name == finalFile.name) {
++            // Nama sama, isi berbeda: simpan yang lama dulu sebagai cadangan
++            val backup = File(oldFile.parentFile, oldFile.name + ".bak.part")
++            backup.delete()
++            if (!oldFile.renameTo(backup)) throw IOException("Gagal menyiapkan penggantian berkas")
++            if (!tmp.renameTo(finalFile)) {
++                backup.renameTo(oldFile)
++                throw IOException("Gagal menyimpan berkas baru")
++            }
++            backup.delete()
++        } else {
++            if (!tmp.renameTo(finalFile)) throw IOException("Gagal menyimpan berkas baru")
++            if (!oldFile.delete()) {
++                // Jangan biarkan dua versi mod yang sama berdampingan
++                finalFile.delete()
++                throw IOException("Gagal menghapus berkas lama")
++            }
++        }
++    }
++
++    /** Mengarahkan catatan modpack dari nama jar lama ke nama jar baru. */
++    private fun retargetManifests(gameDir: File, renames: Map<String, String>) {
++        try {
++            val metaDir = File(gameDir, "modpacks/.metadata")
++            val manifests = metaDir.listFiles { f -> f.isFile && f.name.endsWith(".json") } ?: return
++            for (metaFile in manifests) {
++                val manifest = NuxModManager.loadModpackManifest(gameDir, metaFile.name.removeSuffix(".json")) ?: continue
++                var changed = false
++                val files = manifest.installedFiles.map { path ->
++                    val target = renames[path.replace('\\', '/')]
++                    if (target != null) {
++                        changed = true
++                        target
++                    } else {
++                        path
++                    }
++                }
++                if (changed) NuxModManager.saveModpackManifest(gameDir, manifest.copy(installedFiles = files.distinct()))
++            }
++        } catch (e: Exception) {
++            LauncherLog.w(TAG, "Gagal memperbarui catatan modpack: ${e.message}", e)
++        }
++    }
++
++    private fun postJson(path: String, body: String): String {
++        val request = Request.Builder()
++            .url(NuxModManager.MODRINTH_API_BASE + path)
++            .header("User-Agent", NuxModManager.USER_AGENT)
++            .post(body.toRequestBody(JSON_TYPE))
++            .build()
++        return NuxModManager.httpClient.newCall(request).execute().use { response ->
++            if (response.code == 404) {
++                // Tidak ada satu pun sidik jari yang dikenal: sama artinya dengan jawaban kosong
++                "{}"
++            } else {
++                if (!response.isSuccessful) throw IOException("Modrinth menjawab HTTP ${response.code}")
++                response.body?.string() ?: throw IOException("Jawaban Modrinth kosong")
++            }
++        }
++    }
++
++    private fun sha1Of(file: File): String {
++        val key = file.absolutePath
++        val size = file.length()
++        val modified = file.lastModified()
++        hashCache[key]?.let { if (it.size == size && it.modified == modified) return it.sha1 }
++        val digest = MessageDigest.getInstance("SHA-1")
++        file.inputStream().use { input ->
++            val buffer = ByteArray(64 * 1024)
++            while (true) {
++                val read = input.read(buffer)
++                if (read < 0) break
++                digest.update(buffer, 0, read)
++            }
++        }
++        val hex = digest.digest().joinToString("") { "%02x".format(it) }
++        hashCache[key] = CachedHash(size, modified, hex)
++        return hex
++    }
++
++    /** Nama mod dari metadata jar, atau nama berkas tanpa ekstensi. */
++    private fun displayName(file: File): String {
++        val clean = ModUpdatePlanner.cleanName(file.name)
++        val stem = if (clean.endsWith(".jar", ignoreCase = true)) clean.dropLast(4) else clean
++        return try {
++            ZipFile(file).use { zip -> ModMetadata.read(zip)?.name?.takeIf { it.isNotBlank() } } ?: stem
++        } catch (_: Exception) {
++            stem
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index ff40d21..84efa6d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -69,7 +69,7 @@ object NuxModManager {
+ 
+     /** Batas total isi yang boleh diekstrak dari satu modpack (cegah arsip "bom" yang memenuhi penyimpanan). */
+     private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
+-    private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
++    internal const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
+ 
+     /** Sumber unduhan di layar Mod. Horizon hanya untuk instance mesin Rust (mod, shader asli, resource pack). */
+     const val SOURCE_MODRINTH = "modrinth"
+@@ -1592,7 +1592,7 @@ object NuxModManager {
+      * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
+      * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
+      */
+-    private fun downloadFile(
++    internal fun downloadFile(
+         url: String,
+         destFile: File,
+         maxBytes: Long = Long.MAX_VALUE,
+@@ -1645,7 +1645,7 @@ object NuxModManager {
+      * Mencocokkan sidik jari (sha256 dari katalog Horizon, atau sha512, atau sha1 bila tidak ada) berkas dengan yang diumumkan sumbernya.
+      * Bila tidak cocok, berkas dihapus dan dilempar IOException. Tanpa sidik jari, tidak ada yang diperiksa.
+      */
+-    private fun verifyHashes(file: File, hashes: Map<String, String>?) {
++    internal fun verifyHashes(file: File, hashes: Map<String, String>?) {
+         val map = hashes ?: return
+         val sha256 = map["sha256"]?.trim().orEmpty()
+         val sha512 = map["sha512"]?.trim().orEmpty()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt
+new file mode 100644
+index 0000000..44ef03f
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt
+@@ -0,0 +1,345 @@
++package com.israadev.nuxlauncher.ui.screens
++
++import android.content.Context
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Check
++import androidx.compose.material.icons.outlined.Download
++import androidx.compose.material.icons.outlined.WarningAmber
++import androidx.compose.material3.Icon
++import androidx.compose.material3.Switch
++import androidx.compose.material3.SwitchDefaults
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.Stable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.scale
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.models.Instance
++import com.israadev.nuxlauncher.core.mods.ModUpdate
++import com.israadev.nuxlauncher.core.mods.ModUpdateCheck
++import com.israadev.nuxlauncher.core.mods.ModUpdater
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.NuxColors
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Job
++import kotlinx.coroutines.launch
++
++enum class ModUpdatePhase { IDLE, CHECKING, APPLYING }
++
++/**
++ * Keadaan tombol "Perbarui semua mod" di Manajemen Mod. Semua pekerjaan berat (hash, jaringan, unduhan)
++ * berjalan di [ModUpdater] pada utas IO; kelas ini hanya memegang keadaan yang tampil di layar.
++ */
++@Stable
++class ModUpdateState {
++    var phase by mutableStateOf(ModUpdatePhase.IDLE)
++        private set
++
++    /** Hasil pemeriksaan terakhir yang masih berlaku; null = belum diperiksa atau sudah usang. */
++    var check by mutableStateOf<ModUpdateCheck?>(null)
++        private set
++
++    /** Pesan hasil terakhir (sudah dalam bahasa Indonesia, diterjemahkan oleh Text di layar). */
++    var note by mutableStateOf<String?>(null)
++        private set
++    var isError by mutableStateOf(false)
++        private set
++    var done by mutableIntStateOf(0)
++        private set
++    var total by mutableIntStateOf(0)
++        private set
++    var current by mutableStateOf("")
++        private set
++
++    private var job: Job? = null
++
++    val busy: Boolean get() = phase != ModUpdatePhase.IDLE
++    val pendingCount: Int get() = check?.updates?.size ?: 0
++
++    /** Nama berkas (di disk) dari mod yang punya pembaruan, untuk lencana di daftar. */
++    fun updateFor(fileName: String): ModUpdate? = check?.updates?.firstOrNull { it.fileName == fileName }
++
++    /**
++     * Memeriksa pembaruan. Bila [applyAfterCheck], pembaruan yang ditemukan langsung dipasang (mode otomatis).
++     * [onChanged] dipanggil setelah folder mods berubah supaya daftar dimuat ulang.
++     */
++    fun startCheck(context: Context, instance: Instance, scope: CoroutineScope, applyAfterCheck: Boolean, onChanged: () -> Unit) {
++        if (busy) return
++        val appContext = context.applicationContext
++        phase = ModUpdatePhase.CHECKING
++        note = null
++        isError = false
++        job = scope.launch {
++            try {
++                val result = ModUpdater.check(appContext, instance)
++                val found = result.getOrNull()
++                if (found == null) {
++                    check = null
++                    isError = true
++                    note = failureText(result.exceptionOrNull())
++                } else {
++                    check = found
++                    if (applyAfterCheck && found.updates.isNotEmpty()) applyInternal(appContext, instance, found, onChanged)
++                }
++            } catch (e: CancellationException) {
++                check = null
++                note = "Pembaruan dibatalkan"
++                throw e
++            } finally {
++                phase = ModUpdatePhase.IDLE
++            }
++        }
++    }
++
++    /** Memasang semua pembaruan dari pemeriksaan terakhir. */
++    fun startApply(context: Context, instance: Instance, scope: CoroutineScope, onChanged: () -> Unit) {
++        val found = check ?: return
++        if (busy || found.updates.isEmpty()) return
++        val appContext = context.applicationContext
++        // Diatur sebelum coroutine mulai, supaya ketukan kedua yang datang cepat tidak memulai pekerjaan ganda
++        phase = ModUpdatePhase.APPLYING
++        job = scope.launch {
++            try {
++                applyInternal(appContext, instance, found, onChanged)
++            } finally {
++                phase = ModUpdatePhase.IDLE
++            }
++        }
++    }
++
++    private suspend fun applyInternal(context: Context, instance: Instance, found: ModUpdateCheck, onChanged: () -> Unit) {
++        phase = ModUpdatePhase.APPLYING
++        done = 0
++        total = found.updates.size
++        current = ""
++        note = null
++        isError = false
++        try {
++            val result = ModUpdater.apply(context, instance, found.updates) { d, t, name ->
++                done = d
++                total = t
++                current = name
++            }
++            // Yang gagal tetap tercatat supaya bisa dicoba lagi tanpa memeriksa ulang
++            check = found.copy(updates = result.failed)
++            note = if (result.failed.isEmpty()) "${result.updated.size} mod berhasil diperbarui"
++            else "${result.updated.size} mod diperbarui, ${result.failed.size} gagal"
++            isError = result.failed.isNotEmpty()
++            onChanged()
++        } catch (e: CancellationException) {
++            // Mod yang sempat selesai tetap terpasang, jadi hasil pemeriksaan lama tidak berlaku lagi
++            check = null
++            note = "Pembaruan dibatalkan"
++            onChanged()
++            throw e
++        }
++    }
++
++    fun cancel() {
++        job?.cancel()
++    }
++
++    /** Menganggap hasil pemeriksaan usang bila ada berkas yang berubah di luar pembaruan (diaktif/dinonaktifkan, dihapus). */
++    fun reconcile(existingFileNames: Set<String>) {
++        if (phase != ModUpdatePhase.IDLE) return
++        val c = check ?: return
++        if (c.updates.any { it.fileName !in existingFileNames }) {
++            check = null
++            note = null
++            isError = false
++        }
++    }
++
++    private fun failureText(error: Throwable?): String {
++        val offline = error is java.net.UnknownHostException ||
++            error is java.net.ConnectException ||
++            error is java.net.SocketTimeoutException
++        return if (offline) "Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi."
++        else "Gagal memeriksa pembaruan: ${error?.message ?: "galat tidak diketahui"}"
++    }
++}
++
++/**
++ * Bar di atas daftar mod terpasang: periksa pembaruan, perbarui semua sekaligus, dan sakelar mode otomatis.
++ */
++@Composable
++internal fun ModUpdateBar(
++    state: ModUpdateState,
++    autoEnabled: Boolean,
++    onCheck: () -> Unit,
++    onApplyAll: () -> Unit,
++    onCancel: () -> Unit,
++    onAutoChange: (Boolean) -> Unit,
++    modifier: Modifier = Modifier
++) {
++    val shape = RoundedCornerShape(18.dp)
++    val phase = state.phase
++    val check = state.check
++    val pending = state.pendingCount
++
++    val title: String = when {
++        phase == ModUpdatePhase.CHECKING -> "Memeriksa pembaruan mod..."
++        phase == ModUpdatePhase.APPLYING ->
++            "Memperbarui ${minOf(state.done + 1, state.total)}/${state.total}: ${state.current}"
++        state.note != null -> state.note.orEmpty()
++        check != null && pending > 0 -> "$pending mod punya versi baru"
++        check != null -> "Semua mod sudah terbaru"
++        autoEnabled -> "Pembaruan otomatis aktif"
++        else -> "Cek versi baru semua mod lewat Modrinth"
++    }
++    val detail: String? = if (phase == ModUpdatePhase.IDLE && check != null) {
++        when {
++            check.skipped.isNotEmpty() ->
++                "${check.skipped.size} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual"
++            check.unknown > 0 -> "${check.unknown} mod tidak ada di Modrinth, tidak bisa dicek"
++            else -> null
++        }
++    } else {
++        null
++    }
++    val icon = when {
++        state.isError && phase == ModUpdatePhase.IDLE -> Icons.Outlined.WarningAmber
++        phase == ModUpdatePhase.IDLE && check != null && pending == 0 -> Icons.Outlined.Check
++        else -> Icons.Outlined.Download
++    }
++
++    Row(
++        modifier = modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .background(AmberUi.SurfaceRaised, shape)
++            .border(1.dp, AmberUi.Border, shape)
++            .padding(start = 14.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
++        horizontalArrangement = Arrangement.spacedBy(10.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Icon(
++            imageVector = icon,
++            contentDescription = null,
++            tint = if (state.isError && phase == ModUpdatePhase.IDLE) AmberUi.Danger else AmberUi.AccentSoft,
++            modifier = Modifier.size(20.dp)
++        )
++
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = title,
++                color = AmberUi.Text,
++                fontSize = 13.sp,
++                fontWeight = FontWeight.SemiBold,
++                maxLines = 2,
++                overflow = TextOverflow.Ellipsis
++            )
++            if (detail != null) {
++                Text(
++                    text = detail,
++                    color = AmberUi.TextDim,
++                    fontSize = 11.sp,
++                    maxLines = 2,
++                    overflow = TextOverflow.Ellipsis
++                )
++            }
++            if (phase == ModUpdatePhase.APPLYING && state.total > 0) {
++                Spacer(modifier = Modifier.height(5.dp))
++                val fraction = (state.done.toFloat() / state.total.toFloat()).coerceIn(0f, 1f)
++                Box(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .height(3.dp)
++                        .clip(CircleShape)
++                        .background(AmberUi.Border)
++                ) {
++                    Box(
++                        modifier = Modifier
++                            .fillMaxWidth(fraction)
++                            .fillMaxHeight()
++                            .background(AmberUi.Accent)
++                    )
++                }
++            }
++        }
++
++        // Sakelar mode otomatis
++        Row(
++            modifier = Modifier
++                .clip(CircleShape)
++                .clickable { onAutoChange(!autoEnabled) }
++                .padding(start = 6.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Text(
++                text = "Otomatis",
++                color = AmberUi.TextDim,
++                fontSize = 12.sp,
++                maxLines = 1
++            )
++            Spacer(modifier = Modifier.width(2.dp))
++            Switch(
++                checked = autoEnabled,
++                onCheckedChange = { onAutoChange(it) },
++                modifier = Modifier.scale(0.78f),
++                colors = SwitchDefaults.colors(
++                    checkedThumbColor = Color.White,
++                    checkedTrackColor = AmberUi.Accent,
++                    checkedBorderColor = AmberUi.AccentEdge,
++                    uncheckedThumbColor = AmberUi.TextDim,
++                    uncheckedTrackColor = NuxColors.SurfaceElevated
++                )
++            )
++        }
++
++        when {
++            phase == ModUpdatePhase.APPLYING -> AmberActionButton(
++                text = "Batal",
++                onClick = onCancel,
++                filled = false,
++                height = 38.dp
++            )
++            phase == ModUpdatePhase.CHECKING -> AmberActionButton(
++                text = "Memeriksa...",
++                onClick = {},
++                loading = true,
++                filled = false,
++                height = 38.dp
++            )
++            pending > 0 -> AmberActionButton(
++                text = "Perbarui semua ($pending)",
++                onClick = onApplyAll,
++                height = 38.dp
++            )
++            else -> AmberActionButton(
++                text = "Periksa pembaruan",
++                onClick = onCheck,
++                filled = false,
++                height = 38.dp
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index 12545e4..eca0a0f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -46,6 +46,7 @@ import com.israadev.nuxlauncher.core.horizon.HorizonMods
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.*
+ import com.israadev.nuxlauncher.core.mods.CurseForgeApi
++import com.israadev.nuxlauncher.core.mods.ModUpdater
+ import com.israadev.nuxlauncher.core.mods.NuxModManager
+ import com.israadev.nuxlauncher.core.mods.WorldInfo
+ import com.israadev.nuxlauncher.core.mods.WorldInstaller
+@@ -213,6 +214,11 @@ fun ModsScreen(
+     var installedSearch by remember { mutableStateOf("") }
+     var itemToDelete by remember { mutableStateOf<InstalledModItem?>(null) }
+ 
++    // Perbarui semua mod (hanya tab Mod di Manajemen Mod, bukan mesin Rust)
++    val modUpdate = remember(selectedInstance?.id) { ModUpdateState() }
++    val autoUpdateMods = SettingsManager.settings.collectAsState().value.autoUpdateMods
++    val modUpdateVisible = mainMode == "installed" && activeType == "mods" && !rustInstance && selectedInstance != null
++
+     // Browse Modrinth state
+     var browseQuery by remember { mutableStateOf("") }
+     var selectedCategory by remember { mutableStateOf("Semua") }
+@@ -337,6 +343,19 @@ fun ModsScreen(
+         }
+     }
+ 
++    // Hasil pemeriksaan pembaruan jadi usang bila berkas mod berubah di luar pembaruan (diaktifkan/dinonaktifkan, dihapus)
++    LaunchedEffect(installedItems, isInstalledLoading) {
++        if (!isInstalledLoading) modUpdate.reconcile(installedItems.map { it.originalFilename }.toSet())
++    }
++
++    // Mode otomatis: periksa dan pasang pembaruan saat tab Mod di Manajemen Mod dibuka, paling sering sekali per 6 jam
++    LaunchedEffect(selectedInstance?.id, modUpdateVisible, autoUpdateMods) {
++        val inst = selectedInstance
++        if (autoUpdateMods && modUpdateVisible && inst != null && !modUpdate.busy && ModUpdater.isAutoCheckDue(context, inst.id)) {
++            modUpdate.startCheck(context, inst, scope, applyAfterCheck = true, onChanged = { reloadInstalled() })
++        }
++    }
++
+     // Debounce search query
+     var searchJob by remember { mutableStateOf<Job?>(null) }
+     fun onQueryChanged(newQuery: String) {
+@@ -860,6 +879,23 @@ fun ModsScreen(
+                 // DAFTAR
+                 // =====================================================================
+                 if (mainMode == "installed") {
++                    if (modUpdateVisible) {
++                        ModUpdateBar(
++                            state = modUpdate,
++                            autoEnabled = autoUpdateMods,
++                            onCheck = {
++                                modUpdate.startCheck(context, currentInst, scope, applyAfterCheck = false, onChanged = { reloadInstalled() })
++                            },
++                            onApplyAll = {
++                                modUpdate.startApply(context, currentInst, scope, onChanged = { reloadInstalled() })
++                            },
++                            onCancel = { modUpdate.cancel() },
++                            onAutoChange = { on ->
++                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(autoUpdateMods = on))
++                            },
++                            modifier = Modifier.padding(bottom = 10.dp)
++                        )
++                    }
+                     val filteredInstalled = remember(installedItems, installedSearch) {
+                         if (installedSearch.isBlank()) installedItems
+                         else installedItems.filter {
+@@ -907,6 +943,11 @@ fun ModsScreen(
+                                         null
+                                     },
+                                     showToggle = !worldsTab,
++                                    updateText = if (modUpdateVisible) {
++                                        modUpdate.updateFor(item.originalFilename)?.let { "${it.fromVersion} → ${it.toVersion}" }
++                                    } else {
++                                        null
++                                    },
+                                     onToggle = {
+                                         scope.launch {
+                                             if (rustInstance) {
+@@ -1897,7 +1938,8 @@ private fun InstalledItemRow(
+     onDelete: () -> Unit,
+     deletable: Boolean = true,
+     subtitle: String? = null,
+-    showToggle: Boolean = true
++    showToggle: Boolean = true,
++    updateText: String? = null
+ ) {
+     val shape = RoundedCornerShape(24.dp)
+     Row(
+@@ -1936,9 +1978,17 @@ private fun InstalledItemRow(
+                         textColor = NuxColors.GrayNeutral
+                     )
+                 }
++                if (updateText != null) {
++                    Spacer(modifier = Modifier.width(8.dp))
++                    NuxBadge(
++                        text = "ADA UPDATE",
++                        backgroundColor = AmberUi.Accent.copy(alpha = 0.28f),
++                        textColor = AmberUi.AccentSoft
++                    )
++                }
+             }
+             Text(
+-                text = subtitle ?: "${item.filename} · ${formatBytes(item.sizeBytes)}",
++                text = subtitle ?: updateText ?: "${item.filename} · ${formatBytes(item.sizeBytes)}",
+                 fontSize = 12.sp,
+                 color = AmberUi.TextDim,
+                 maxLines = 1,
+# FIN part=1/1 files=14

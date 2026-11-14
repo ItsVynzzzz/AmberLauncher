@@ -1,0 +1,358 @@
+diff --git a/app/src/main/assets/lang/en/tambahan.tsv b/app/src/main/assets/lang/en/tambahan.tsv
+index 101381e..ad4c993 100644
+--- a/app/src/main/assets/lang/en/tambahan.tsv
++++ b/app/src/main/assets/lang/en/tambahan.tsv
+@@ -73 +73,6 @@ Gagal memperbarui preset	Failed to update the preset
+ Preset diduplikat	Preset duplicated
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	In-game display
++Tampilkan FPS dan RAM	Show FPS and RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS and RAM usage in the corner of the game screen. Tap the numbers in the game to open the menu and turn it off.
++Angka FPS dan pemakaian RAM di sudut layar game	FPS and RAM usage in the corner of the game screen
+diff --git a/app/src/main/assets/lang/es/tambahan.tsv b/app/src/main/assets/lang/es/tambahan.tsv
+index bbb04c2..bc6e6ba 100644
+--- a/app/src/main/assets/lang/es/tambahan.tsv
++++ b/app/src/main/assets/lang/es/tambahan.tsv
+@@ -75 +75,6 @@ Gagal memperbarui preset	No se pudo actualizar el preset
+ Preset diduplikat	Preset duplicado
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	Pantalla en el juego
++Tampilkan FPS dan RAM	Mostrar FPS y RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS y uso de RAM en la esquina de la pantalla del juego. Toca los números en el juego para abrir el menú y desactivarlo.
++Angka FPS dan pemakaian RAM di sudut layar game	FPS y uso de RAM en la esquina de la pantalla del juego
+diff --git a/app/src/main/assets/lang/fil/tambahan.tsv b/app/src/main/assets/lang/fil/tambahan.tsv
+index d6c3c34..1dbe0cc 100644
+--- a/app/src/main/assets/lang/fil/tambahan.tsv
++++ b/app/src/main/assets/lang/fil/tambahan.tsv
+@@ -77 +77,6 @@ Gagal memperbarui preset	Hindi na-update ang preset
+ Preset diduplikat	Na-duplicate ang preset
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	Display sa laro
++Tampilkan FPS dan RAM	Ipakita ang FPS at RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS at paggamit ng RAM sa sulok ng screen ng laro. I-tap ang mga numero sa laro para buksan ang menu at i-off ito.
++Angka FPS dan pemakaian RAM di sudut layar game	FPS at paggamit ng RAM sa sulok ng screen ng laro
+diff --git a/app/src/main/assets/lang/pt/tambahan.tsv b/app/src/main/assets/lang/pt/tambahan.tsv
+index 754e0af..3387521 100644
+--- a/app/src/main/assets/lang/pt/tambahan.tsv
++++ b/app/src/main/assets/lang/pt/tambahan.tsv
+@@ -75 +75,6 @@ Gagal memperbarui preset	Falha ao atualizar a predefinição
+ Preset diduplikat	Predefinição duplicada
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	Exibição no jogo
++Tampilkan FPS dan RAM	Mostrar FPS e RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS e uso de RAM no canto da tela do jogo. Toque nos números dentro do jogo para abrir o menu e desligar.
++Angka FPS dan pemakaian RAM di sudut layar game	FPS e uso de RAM no canto da tela do jogo
+diff --git a/app/src/main/assets/lang/th/tambahan.tsv b/app/src/main/assets/lang/th/tambahan.tsv
+index 27df321..d6a9405 100644
+--- a/app/src/main/assets/lang/th/tambahan.tsv
++++ b/app/src/main/assets/lang/th/tambahan.tsv
+@@ -75 +75,6 @@ Gagal memperbarui preset	อัปเดตพรีเซ็ตไม่สำ
+ Preset diduplikat	ทำสำเนาพรีเซ็ตแล้ว
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	การแสดงผลในเกม
++Tampilkan FPS dan RAM	แสดง FPS และ RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	แสดง FPS และการใช้ RAM ที่มุมหน้าจอเกม แตะตัวเลขในเกมเพื่อเปิดเมนูและปิดการแสดงผลได้
++Angka FPS dan pemakaian RAM di sudut layar game	แสดง FPS และการใช้ RAM ที่มุมหน้าจอเกม
+diff --git a/app/src/main/assets/lang/vi/tambahan.tsv b/app/src/main/assets/lang/vi/tambahan.tsv
+index d8a041b..e68d40f 100644
+--- a/app/src/main/assets/lang/vi/tambahan.tsv
++++ b/app/src/main/assets/lang/vi/tambahan.tsv
+@@ -75 +75,6 @@ Gagal memperbarui preset	Không cập nhật được mẫu
+ Preset diduplikat	Đã nhân bản mẫu
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	Hiển thị trong game
++Tampilkan FPS dan RAM	Hiện FPS và RAM
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS và mức dùng RAM ở góc màn hình game. Chạm vào các con số trong game để mở menu và tắt đi.
++Angka FPS dan pemakaian RAM di sudut layar game	FPS và mức dùng RAM ở góc màn hình game
+diff --git a/app/src/main/assets/lang/zh/tambahan.tsv b/app/src/main/assets/lang/zh/tambahan.tsv
+index 7d78b64..2b87c11 100644
+--- a/app/src/main/assets/lang/zh/tambahan.tsv
++++ b/app/src/main/assets/lang/zh/tambahan.tsv
+@@ -79 +79,6 @@ Gagal memperbarui preset	更新预设失败
+ Preset diduplikat	预设已复制
++# Tampilan FPS dan RAM di game (14 Nov 2026)
++Tampilan di game	游戏内显示
++Tampilkan FPS dan RAM	显示 FPS 和内存
++Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	在游戏画面角落显示 FPS 和内存占用。在游戏中点按数字即可打开菜单并关闭。
++Angka FPS dan pemakaian RAM di sudut layar game	在游戏画面角落显示 FPS 和内存占用
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 8d6f796..6f39d78 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -1826,48 +1826,24 @@ private fun KeyEvent.isDpadArrow(): Boolean = when (keyCode) {
+ /**
+- * Info kondisi HP yang ditampilkan di samping angka FPS supaya penyebab FPS rendah terbaca
+- * langsung di layar: "sisa RAM xxxMB" (memori kosong HP; kalau tinggal sedikit sistem mulai
+- * menukar memori / menutup aplikasi) dan "PANAS" (prosesor diperlambat karena HP panas).
+- * Pasangan hasil: (teks, peringatan?). Teks kosong = info tidak tersedia.
++ * Teks RAM untuk tampilan FPS di layar: "RAM 2.1/3.6 GB" (memori HP yang terpakai dari total). Pasangan hasil:
++ * (teks, peringatan?). Peringatan = memori kosong HP tinggal sedikit, saat sistem mulai menukar memori atau menutup
++ * aplikasi (penyebab umum FPS jatuh di HP RAM kecil). Teks kosong = info tidak tersedia.
+  */
+-private fun buildPerfHint(context: Context): Pair<String, Boolean> {
+-    var text = ""
+-    var warn = false
+-    try {
++private fun buildRamReadout(context: Context): Pair<String, Boolean> {
++    return try {
+         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+-        if (am != null) {
++        if (am == null) {
++            Pair("", false)
++        } else {
+             val mi = android.app.ActivityManager.MemoryInfo()
+             am.getMemoryInfo(mi)
++            val gb = 1024.0 * 1024.0 * 1024.0
++            val totalGb = mi.totalMem / gb
++            val usedGb = (mi.totalMem - mi.availMem) / gb
+             val availMb = (mi.availMem / (1024L * 1024L)).toInt()
+-            // Dibulatkan per 50 MB supaya angka tidak berubah-ubah terus
+-            text = "sisa RAM ${(availMb / 50) * 50}MB"
+-            if (mi.lowMemory || availMb < 450) warn = true
+-        }
+-    } catch (_: Throwable) {
+-    }
+-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+-        try {
+-            val pm = context.getSystemService(Context.POWER_SERVICE) as? android.os.PowerManager
+-            if (pm != null && pm.currentThermalStatus >= android.os.PowerManager.THERMAL_STATUS_MODERATE) {
+-                text = if (text.isEmpty()) "PANAS" else "$text · PANAS"
+-                warn = true
+-            }
+-        } catch (_: Throwable) {
+-        }
+-    }
+-    // Hz layar yang benar-benar aktif: hanya bila "Kunci layar 60 Hz" menyala (selain itu tidak ditampilkan).
+-    // Dipakai untuk memastikan kunci berlaku; kalau tertulis 90Hz berarti sistem menolaknya.
+-    try {
+-        val hz = DeviceProfiles.refreshRateLabel(context, SettingsManager.settings.value.lockRefresh60)
+-        if (hz.isNotEmpty()) {
+-            text = if (text.isEmpty()) hz else "$text · $hz"
++            val text = String.format(java.util.Locale.ROOT, "RAM %.1f/%.1f GB", usedGb, totalGb)
++            Pair(text, mi.lowMemory || availMb < 450)
+         }
+     } catch (_: Throwable) {
++        Pair("", false)
+     }
+-    return Pair(localizeHint(text), warn)
+-}
+-
+-/** Menerjemahkan kata di teks kondisi HP bila bahasa bukan Indonesia (HUD digambar langsung, bukan lewat Text). */
+-private fun localizeHint(text: String): String {
+-    if (text.isEmpty() || Tr.effective == Tr.ID) return text
+-    return text.replace("sisa RAM", Tr.t("sisa RAM")).replace("PANAS", Tr.t("PANAS"))
+ }
+@@ -1965,10 +1941,15 @@ fun GameScreen(
+         while (isActive) {
+-            try {
+-                currentFps = CallbackBridge.getCurrentFps()
+-            } catch (_: Throwable) {
++            // Tampilan FPS dan RAM dimatikan di Pengaturan atau menu: tidak ada yang membaca angkanya (kecuali menu atau
++            // panel log yang sedang terbuka), jadi pembacaan dan penggambarannya dilewati sama sekali.
++            val hudShown = SettingsManager.settings.value.showFpsHud && wantPerfHint
++            if (hudShown || showInGameSettingsDialog || isConsoleVisible) {
++                try {
++                    currentFps = CallbackBridge.getCurrentFps()
++                } catch (_: Throwable) {
++                }
+             }
+-            if (tick % 3 == 0 && wantPerfHint) {
+-                // Panggilan ke sistem (memori, suhu) dikerjakan di luar thread utama.
++            if ((tick % 3 == 0 || perfText.isEmpty()) && hudShown) {
++                // Panggilan ke sistem (memori) dikerjakan di luar thread utama.
+                 val hint = withContext(Dispatchers.Default) {
+-                    try { buildPerfHint(context) } catch (_: Throwable) { Pair("", false) }
++                    try { buildRamReadout(context) } catch (_: Throwable) { Pair("", false) }
+                 }
+@@ -2259,2 +2240,3 @@ fun GameScreen(
+                     perfWarn = { perfWarn },
++                    fpsHudEnabled = launcherSettings.showFpsHud,
+                     onFpsClick = { showInGameSettingsDialog = true },
+@@ -2299,2 +2281,6 @@ fun GameScreen(
+             },
++            showFpsHud = launcherSettings.showFpsHud,
++            onShowFpsHudChange = { on ->
++                SettingsManager.updateSettings(context, launcherSettings.copy(showFpsHud = on))
++            },
+             onOpenConsoleLog = {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index d04666d..67c59bb 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -77,2 +77,4 @@ data class LauncherSettings(
+     val forceTextureView: Boolean = false,
++    // Tampilan angka FPS dan RAM di layar game. Dimatikan di sini atau lewat menu dalam game (ketuk angkanya).
++    val showFpsHud: Boolean = true,
+     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index 98ac4bc..bd62c4f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -92,3 +92,5 @@ fun GameControlsLayer(
+     // Game sedang menampilkan kursor (menu/GUI). Dibaca dari status kursor game, bukan dari layar.
+-    inMenu: Boolean = false
++    inMenu: Boolean = false,
++    // Tampilan FPS dan RAM dimatikan pemain (Pengaturan atau menu dalam game).
++    fpsHudEnabled: Boolean = true
+ ) {
+@@ -99,4 +101,16 @@ fun GameControlsLayer(
+     }
+-    buttons.forEach { btn ->
+-        key(btn.id) {
++    buttons.forEach { source ->
++        key(source.id) {
++            // Tampilan FPS dan RAM lebih lebar dari tombol FPS lama; ukurannya diperlebar di sini saja,
++            // tata letak yang tersimpan tidak berubah.
++            val btn = remember(source) {
++                if (source.isSystem && source.systemAction == "FPS") {
++                    source.copy(
++                        widthDp = maxOf(source.widthDp, FPS_HUD_MIN_WIDTH_DP),
++                        heightDp = maxOf(source.heightDp, FPS_HUD_MIN_HEIGHT_DP)
++                    )
++                } else {
++                    source
++                }
++            }
+             val widthPx = with(density) { btn.widthDp.dp.toPx() }
+@@ -120,3 +134,3 @@ fun GameControlsLayer(
+                         }
+-                        if (show) {
++                        if (show && fpsHudEnabled) {
+                             FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
+@@ -177,8 +191,14 @@ private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+ 
++/** Ukuran minimum area tampilan FPS dan RAM (dp); tombol FPS lama berukuran 84 x 26. */
++private const val FPS_HUD_MIN_WIDTH_DP = 156
++private const val FPS_HUD_MIN_HEIGHT_DP = 26
++
+ /**
+- * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
+- * kuning, merah muda). Info RAM, panas, atau beban UI hanya muncul bila perlu. Ketuk membuka menu.
++ * Tampilan FPS dan RAM: satu pil gelap tipis berisi "58 FPS  RAM 2.1/3.6 GB", hanya dua informasi itu. Warna angka FPS
++ * mengikuti kondisi (putih, kuning, merah muda) dan RAM jadi kuning bila memori HP tinggal sedikit. Ketuk membuka menu,
++ * tempat tampilan ini bisa dimatikan (bisa juga lewat Pengaturan).
+  *
+- * Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang teks ini, tanpa
+- * menyusun ulang atau mengukur ulang tata letak.
++ * Seluruhnya satu gambar kanvas tanpa lapisan tambahan: satu isian bulat dan tiga potong teks, tanpa bayangan teks
++ * (pilnya yang memberi kontras). Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang
++ * pil ini, tanpa menyusun ulang atau mengukur ulang tata letak.
+  */
+@@ -198,3 +218,3 @@ private fun FpsText(
+             .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
+-            .drawBehind { drawFpsReadout(fps(), pinned, if (perfWarn()) perfText() else "") }
++            .drawBehind { drawFpsReadout(fps(), pinned, perfText(), perfWarn()) }
+             .pointerInput(Unit) { detectTapGestures { click() } }
+@@ -203,7 +223,5 @@ private fun FpsText(
+ 
+-private fun drawFpsPiece(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color, shadowPx: Float) {
++private fun drawHudText(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color) {
+     fpsPaint.textSize = size
+     fpsPaint.letterSpacing = spacing
+-    fpsPaint.color = Color.Black.copy(alpha = color.alpha * 0.55f).toArgb()
+-    cv.drawText(s, x, y + shadowPx, fpsPaint)
+     fpsPaint.color = color.toArgb()
+@@ -212,6 +230,6 @@ private fun drawFpsPiece(cv: android.graphics.Canvas, s: String, x: Float, y: Fl
+ 
+-private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String) {
++private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, ram: String, ramWarn: Boolean) {
+     val tint = when {
+         value <= 0 -> Color.White.copy(alpha = 0.45f)
+-        value >= 50 -> Color.White.copy(alpha = 0.86f)
++        value >= 50 -> Color.White.copy(alpha = 0.92f)
+         value >= 25 -> ControlSkin.YellowSoft
+@@ -219,7 +237,10 @@ private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String)
+     }
+-    val numSize = 14.dp.toPx()
++    val numSize = 13.dp.toPx()
+     val labSize = 8.dp.toPx()
++    val ramSize = 9.dp.toPx()
+     val gap = 3.dp.toPx()
+-    val shadow = 1.dp.toPx()
++    val sep = 9.dp.toPx()
++    val padX = 9.dp.toPx()
+     val num = if (value > 0) value.toString() else "--"
++    val hasRam = ram.isNotEmpty()
+ 
+@@ -231,16 +252,34 @@ private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String)
+     val labW = fpsPaint.measureText("FPS")
+-    val x0 = (size.width - (numW + gap + labW)) / 2f
+-    val base = size.height / 2f + numSize * 0.36f
++    var ramW = 0f
++    if (hasRam) {
++        fpsPaint.textSize = ramSize
++        fpsPaint.letterSpacing = 0f
++        ramW = fpsPaint.measureText(ram)
++    }
++
++    val contentW = numW + gap + labW + (if (hasRam) sep + ramW else 0f)
++    val pillW = (contentW + padX * 2f).coerceAtMost(size.width)
++    val pillH = minOf(size.height, 22.dp.toPx())
++    val left = (size.width - pillW) / 2f
++    val top = (size.height - pillH) / 2f
++    drawRoundRect(
++        color = Color.Black.copy(alpha = 0.34f),
++        topLeft = Offset(left, top),
++        size = androidx.compose.ui.geometry.Size(pillW, pillH),
++        cornerRadius = androidx.compose.ui.geometry.CornerRadius(pillH / 2f)
++    )
+ 
++    val x0 = left + (pillW - contentW) / 2f
++    val base = top + pillH / 2f + numSize * 0.36f
+     drawIntoCanvas { c ->
+         val cv = c.nativeCanvas
+-        drawFpsPiece(cv, num, x0, base, numSize, 0f, tint, shadow)
+-        drawFpsPiece(
++        drawHudText(cv, num, x0, base, numSize, 0f, tint)
++        drawHudText(
+             cv, "FPS", x0 + numW + gap, base, labSize, 0.1f,
+-            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f), shadow
++            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.55f)
+         )
+-        if (extra.isNotEmpty()) {
+-            drawFpsPiece(
+-                cv, extra, x0 + numW + gap + labW + 6.dp.toPx(), base, labSize, 0f,
+-                ControlSkin.Yellow.copy(alpha = 0.85f), shadow
++        if (hasRam) {
++            drawHudText(
++                cv, ram, x0 + numW + gap + labW + sep, base, ramSize, 0f,
++                if (ramWarn) ControlSkin.Yellow else Color.White.copy(alpha = 0.62f)
+             )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index b4c7717..5ca1ebe 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -88,2 +88,4 @@ fun GameMenuSheet(
+     onFpsModeChange: (FpsMode) -> Unit,
++    showFpsHud: Boolean = true,
++    onShowFpsHudChange: (Boolean) -> Unit = {},
+     onOpenConsoleLog: () -> Unit,
+@@ -308,2 +310,9 @@ fun GameMenuSheet(
+                     Spacer(modifier = Modifier.height(12.dp))
++                    ToggleRow(
++                        title = "Tampilkan FPS dan RAM",
++                        subtitle = "Angka FPS dan pemakaian RAM di sudut layar game",
++                        checked = showFpsHud,
++                        onChange = onShowFpsHudChange
++                    )
++                    Spacer(modifier = Modifier.height(10.dp))
+                     ToggleRow(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 3989802..7bb7dd2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -784,2 +784,13 @@ fun SettingsScreen(
+ 
++                        SettingsGroup("Tampilan di game") {
++                        SettingSwitchRow(
++                            title = "Tampilkan FPS dan RAM",
++                            desc = "Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.",
++                            checked = currentSettings.showFpsHud,
++                            onCheckedChange = { on ->
++                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(showFpsHud = on))
++                            }
++                        )
++                        }
++
+                         SettingsGroup("Kontrol sentuh") {
+# FIN part=1/1 files=12

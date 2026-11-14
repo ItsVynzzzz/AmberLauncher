@@ -1,0 +1,21 @@
+# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
+Memeriksa pembaruan mod...	Đang kiểm tra bản cập nhật mod...
+Memperbarui {0}/{1}: {2}	Đang cập nhật {0}/{1}: {2}
+{0} mod punya versi baru	Có phiên bản mới cho {0} mod
+Semua mod sudah terbaru	Tất cả mod đã là bản mới nhất
+Pembaruan otomatis aktif	Đã bật cập nhật tự động
+Cek versi baru semua mod lewat Modrinth	Kiểm tra phiên bản mới của mọi mod qua Modrinth
+{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	Đã bỏ qua {0} mod (cần phần phụ thuộc mới hoặc xung đột), hãy cập nhật thủ công
+{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} mod không có trên Modrinth nên không thể kiểm tra
+Perbarui semua ({0})	Cập nhật tất cả ({0})
+ADA UPDATE	CÓ BẢN MỚI
+{0} mod berhasil diperbarui	Đã cập nhật {0} mod thành công
+{0} mod diperbarui, {1} gagal	Đã cập nhật {0} mod, {1} thất bại
+Pembaruan dibatalkan	Đã hủy cập nhật
+Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Không thể kết nối với Modrinth. Hãy kiểm tra internet rồi thử lại.
+Gagal memeriksa pembaruan: {~0}	Không thể kiểm tra cập nhật: {0}
+galat tidak diketahui	lỗi không xác định
+Modrinth menjawab HTTP {0}	Modrinth trả về HTTP {0}
+Jawaban Modrinth kosong	Modrinth trả về phản hồi trống
+Instance ini tidak memakai daftar mod biasa	Instance này không dùng danh sách mod thông thường
+Versi Minecraft instance tidak diketahui	Không rõ phiên bản Minecraft của instance

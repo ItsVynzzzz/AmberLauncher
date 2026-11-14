@@ -65,7 +65,9 @@ data class ModrinthVersion(
     val loaders: List<String> = emptyList(),
     @SerializedName("version_type") val versionType: String = "release", // release, beta, alpha
     val files: List<ModrinthVersionFile> = emptyList(),
-    val dependencies: List<ModrinthDependency>? = null
+    val dependencies: List<ModrinthDependency>? = null,
+    /** Waktu terbit (ISO 8601). Dipakai untuk memastikan pembaruan tidak malah menurunkan versi. */
+    @SerializedName("date_published") val datePublished: String = ""
 )
 
 /**

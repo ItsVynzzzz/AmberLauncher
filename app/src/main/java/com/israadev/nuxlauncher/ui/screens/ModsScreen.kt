@@ -46,6 +46,7 @@ import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.mods.CurseForgeApi
+import com.israadev.nuxlauncher.core.mods.ModUpdater
 import com.israadev.nuxlauncher.core.mods.NuxModManager
 import com.israadev.nuxlauncher.core.mods.WorldInfo
 import com.israadev.nuxlauncher.core.mods.WorldInstaller
@@ -213,6 +214,11 @@ fun ModsScreen(
     var installedSearch by remember { mutableStateOf("") }
     var itemToDelete by remember { mutableStateOf<InstalledModItem?>(null) }
 
+    // Perbarui semua mod (hanya tab Mod di Manajemen Mod, bukan mesin Rust)
+    val modUpdate = remember(selectedInstance?.id) { ModUpdateState() }
+    val autoUpdateMods = SettingsManager.settings.collectAsState().value.autoUpdateMods
+    val modUpdateVisible = mainMode == "installed" && activeType == "mods" && !rustInstance && selectedInstance != null
+
     // Browse Modrinth state
     var browseQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Semua") }
@@ -334,6 +340,19 @@ fun ModsScreen(
             if (mainMode == "browse") {
                 performSearch(1)
             }
+        }
+    }
+
+    // Hasil pemeriksaan pembaruan jadi usang bila berkas mod berubah di luar pembaruan (diaktifkan/dinonaktifkan, dihapus)
+    LaunchedEffect(installedItems, isInstalledLoading) {
+        if (!isInstalledLoading) modUpdate.reconcile(installedItems.map { it.originalFilename }.toSet())
+    }
+
+    // Mode otomatis: periksa dan pasang pembaruan saat tab Mod di Manajemen Mod dibuka, paling sering sekali per 6 jam
+    LaunchedEffect(selectedInstance?.id, modUpdateVisible, autoUpdateMods) {
+        val inst = selectedInstance
+        if (autoUpdateMods && modUpdateVisible && inst != null && !modUpdate.busy && ModUpdater.isAutoCheckDue(context, inst.id)) {
+            modUpdate.startCheck(context, inst, scope, applyAfterCheck = true, onChanged = { reloadInstalled() })
         }
     }
 
@@ -860,6 +879,23 @@ fun ModsScreen(
                 // DAFTAR
                 // =====================================================================
                 if (mainMode == "installed") {
+                    if (modUpdateVisible) {
+                        ModUpdateBar(
+                            state = modUpdate,
+                            autoEnabled = autoUpdateMods,
+                            onCheck = {
+                                modUpdate.startCheck(context, currentInst, scope, applyAfterCheck = false, onChanged = { reloadInstalled() })
+                            },
+                            onApplyAll = {
+                                modUpdate.startApply(context, currentInst, scope, onChanged = { reloadInstalled() })
+                            },
+                            onCancel = { modUpdate.cancel() },
+                            onAutoChange = { on ->
+                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(autoUpdateMods = on))
+                            },
+                            modifier = Modifier.padding(bottom = 10.dp)
+                        )
+                    }
                     val filteredInstalled = remember(installedItems, installedSearch) {
                         if (installedSearch.isBlank()) installedItems
                         else installedItems.filter {
@@ -907,6 +943,11 @@ fun ModsScreen(
                                         null
                                     },
                                     showToggle = !worldsTab,
+                                    updateText = if (modUpdateVisible) {
+                                        modUpdate.updateFor(item.originalFilename)?.let { "${it.fromVersion} → ${it.toVersion}" }
+                                    } else {
+                                        null
+                                    },
                                     onToggle = {
                                         scope.launch {
                                             if (rustInstance) {
@@ -1897,7 +1938,8 @@ private fun InstalledItemRow(
     onDelete: () -> Unit,
     deletable: Boolean = true,
     subtitle: String? = null,
-    showToggle: Boolean = true
+    showToggle: Boolean = true,
+    updateText: String? = null
 ) {
     val shape = RoundedCornerShape(24.dp)
     Row(
@@ -1936,9 +1978,17 @@ private fun InstalledItemRow(
                         textColor = NuxColors.GrayNeutral
                     )
                 }
+                if (updateText != null) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    NuxBadge(
+                        text = "ADA UPDATE",
+                        backgroundColor = AmberUi.Accent.copy(alpha = 0.28f),
+                        textColor = AmberUi.AccentSoft
+                    )
+                }
             }
             Text(
-                text = subtitle ?: "${item.filename} · ${formatBytes(item.sizeBytes)}",
+                text = subtitle ?: updateText ?: "${item.filename} · ${formatBytes(item.sizeBytes)}",
                 fontSize = 12.sp,
                 color = AmberUi.TextDim,
                 maxLines = 1,

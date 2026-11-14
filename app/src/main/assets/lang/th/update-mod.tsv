@@ -1,0 +1,21 @@
+# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
+Memeriksa pembaruan mod...	กำลังตรวจสอบการอัปเดต Mod...
+Memperbarui {0}/{1}: {2}	กำลังอัปเดต {0}/{1}: {2}
+{0} mod punya versi baru	มีเวอร์ชันใหม่สำหรับ {0} Mod
+Semua mod sudah terbaru	Mod ทั้งหมดเป็นเวอร์ชันล่าสุดแล้ว
+Pembaruan otomatis aktif	เปิดการอัปเดตอัตโนมัติอยู่
+Cek versi baru semua mod lewat Modrinth	ตรวจสอบเวอร์ชันใหม่ของ Mod ทั้งหมดผ่าน Modrinth
+{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	ข้าม {0} Mod (ต้องใช้ส่วนที่ต้องพึ่งพาใหม่หรือขัดแย้งกัน) โปรดอัปเดตด้วยตัวเอง
+{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} Mod ไม่อยู่บน Modrinth จึงตรวจสอบไม่ได้
+Perbarui semua ({0})	อัปเดตทั้งหมด ({0})
+ADA UPDATE	มีอัปเดต
+{0} mod berhasil diperbarui	อัปเดต {0} Mod สำเร็จ
+{0} mod diperbarui, {1} gagal	อัปเดต {0} Mod แล้ว ล้มเหลว {1}
+Pembaruan dibatalkan	ยกเลิกการอัปเดตแล้ว
+Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	เชื่อมต่อ Modrinth ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง
+Gagal memeriksa pembaruan: {~0}	ตรวจสอบการอัปเดตไม่สำเร็จ: {0}
+galat tidak diketahui	ข้อผิดพลาดที่ไม่ทราบสาเหตุ
+Modrinth menjawab HTTP {0}	Modrinth ตอบกลับด้วย HTTP {0}
+Jawaban Modrinth kosong	Modrinth ตอบกลับมาว่างเปล่า
+Instance ini tidak memakai daftar mod biasa	instance นี้ไม่ได้ใช้รายการ Mod แบบปกติ
+Versi Minecraft instance tidak diketahui	ไม่ทราบเวอร์ชัน Minecraft ของ instance

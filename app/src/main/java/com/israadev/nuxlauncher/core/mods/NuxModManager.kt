@@ -69,7 +69,7 @@ object NuxModManager {
 
     /** Batas total isi yang boleh diekstrak dari satu modpack (cegah arsip "bom" yang memenuhi penyimpanan). */
     private const val MAX_MODPACK_EXTRACT_BYTES = 1_500L * 1024L * 1024L
-    private const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
+    internal const val MODRINTH_API_BASE = "https://api.modrinth.com/v2"
 
     /** Sumber unduhan di layar Mod. Horizon hanya untuk instance mesin Rust (mod, shader asli, resource pack). */
     const val SOURCE_MODRINTH = "modrinth"
@@ -1592,7 +1592,7 @@ object NuxModManager {
      * Mengunduh [url] ke [destFile]. Hanya HTTPS. Unduhan ditulis ke berkas sementara (.part) dulu dan
      * baru dipindah setelah selesai, jadi unduhan yang terputus tidak tertinggal sebagai berkas rusak.
      */
-    private fun downloadFile(
+    internal fun downloadFile(
         url: String,
         destFile: File,
         maxBytes: Long = Long.MAX_VALUE,
@@ -1645,7 +1645,7 @@ object NuxModManager {
      * Mencocokkan sidik jari (sha256 dari katalog Horizon, atau sha512, atau sha1 bila tidak ada) berkas dengan yang diumumkan sumbernya.
      * Bila tidak cocok, berkas dihapus dan dilempar IOException. Tanpa sidik jari, tidak ada yang diperiksa.
      */
-    private fun verifyHashes(file: File, hashes: Map<String, String>?) {
+    internal fun verifyHashes(file: File, hashes: Map<String, String>?) {
         val map = hashes ?: return
         val sha256 = map["sha256"]?.trim().orEmpty()
         val sha512 = map["sha512"]?.trim().orEmpty()

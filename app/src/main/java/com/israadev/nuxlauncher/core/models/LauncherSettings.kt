@@ -104,6 +104,10 @@ data class LauncherSettings(
     // Kunci API CurseForge milik pengguna (diisi dari layar Mod). Kosong = pakai kunci bawaan build bila ada.
     val curseForgeApiKey: String = "",
 
+    // Perbarui mod otomatis saat Manajemen Mod (tab Mod) dibuka, paling sering sekali per 6 jam per instance.
+    // Bawaan mati: mod yang berubah sendiri bisa memutus dunia atau modpack yang sedang dimainkan.
+    val autoUpdateMods: Boolean = false,
+
     // Pembaruan aplikasi
     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
 

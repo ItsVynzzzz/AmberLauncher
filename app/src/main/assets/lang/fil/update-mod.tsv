@@ -1,0 +1,21 @@
+# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
+Memeriksa pembaruan mod...	Sinusuri ang mga update ng mod...
+Memperbarui {0}/{1}: {2}	Ina-update {0}/{1}: {2}
+{0} mod punya versi baru	May bagong bersyon para sa {0} mod
+Semua mod sudah terbaru	Updated na ang lahat ng mod
+Pembaruan otomatis aktif	Naka-on ang awtomatikong pag-update
+Cek versi baru semua mod lewat Modrinth	Tingnan ang bagong bersyon ng lahat ng mod sa pamamagitan ng Modrinth
+{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	Nilaktawan ang {0} mod (kailangan ng bagong dependency o may conflict), i-update nang manu-mano
+{0} mod tidak ada di Modrinth, tidak bisa dicek	Wala sa Modrinth ang {0} mod kaya hindi masusuri
+Perbarui semua ({0})	I-update lahat ({0})
+ADA UPDATE	MAY UPDATE
+{0} mod berhasil diperbarui	Matagumpay na na-update ang {0} mod
+{0} mod diperbarui, {1} gagal	Na-update ang {0} mod, {1} ang nabigo
+Pembaruan dibatalkan	Kinansela ang pag-update
+Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	Hindi makakonekta sa Modrinth. Tingnan ang internet at subukan ulit.
+Gagal memeriksa pembaruan: {~0}	Nabigong suriin ang mga update: {0}
+galat tidak diketahui	hindi kilalang error
+Modrinth menjawab HTTP {0}	Sumagot ang Modrinth ng HTTP {0}
+Jawaban Modrinth kosong	Walang laman ang sagot ng Modrinth
+Instance ini tidak memakai daftar mod biasa	Hindi gumagamit ng karaniwang listahan ng mod ang instance na ito
+Versi Minecraft instance tidak diketahui	Hindi alam ang bersyon ng Minecraft ng instance

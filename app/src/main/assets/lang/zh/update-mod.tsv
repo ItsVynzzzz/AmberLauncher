@@ -1,0 +1,21 @@
+# Perbarui semua mod: bar di Manajemen Mod (periksa pembaruan, perbarui semua, mode otomatis) dan pesan galatnya.
+Memeriksa pembaruan mod...	正在检查模组更新…
+Memperbarui {0}/{1}: {2}	正在更新 {0}/{1}：{2}
+{0} mod punya versi baru	{0} 个模组有新版本
+Semua mod sudah terbaru	所有模组均已是最新版本
+Pembaruan otomatis aktif	自动更新已开启
+Cek versi baru semua mod lewat Modrinth	通过 Modrinth 检查所有模组的新版本
+{0} mod dilewati (butuh dependensi baru atau bentrok), perbarui manual	已跳过 {0} 个模组（需要新的依赖或存在冲突），请手动更新
+{0} mod tidak ada di Modrinth, tidak bisa dicek	{0} 个模组不在 Modrinth 上，无法检查
+Perbarui semua ({0})	全部更新（{0}）
+ADA UPDATE	有更新
+{0} mod berhasil diperbarui	已成功更新 {0} 个模组
+{0} mod diperbarui, {1} gagal	已更新 {0} 个模组，{1} 个失败
+Pembaruan dibatalkan	更新已取消
+Tidak ada koneksi ke Modrinth. Periksa internet lalu coba lagi.	无法连接到 Modrinth。请检查网络后重试。
+Gagal memeriksa pembaruan: {~0}	检查更新失败：{0}
+galat tidak diketahui	未知错误
+Modrinth menjawab HTTP {0}	Modrinth 返回 HTTP {0}
+Jawaban Modrinth kosong	Modrinth 返回了空响应
+Instance ini tidak memakai daftar mod biasa	此实例不使用常规模组列表
+Versi Minecraft instance tidak diketahui	未知实例的 Minecraft 版本

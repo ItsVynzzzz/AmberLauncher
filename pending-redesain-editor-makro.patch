@@ -1,0 +1,2523 @@
+diff --git a/app/src/main/assets/lang/en/editor.tsv b/app/src/main/assets/lang/en/editor.tsv
+index 1d7ff4c..79c9813 100644
+--- a/app/src/main/assets/lang/en/editor.tsv
++++ b/app/src/main/assets/lang/en/editor.tsv
+@@ -106,3 +106,72 @@ Makan	Eat
+ Buang Item x10	Drop Item x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac Action Sequence
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Several keys, clicks, waits, and typing in one button.
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	Maximum {0} actions
++Contoh dipakai	Example applied
++Pembuat Makro	Macro Builder
++Susun aksi, lalu pilih kapan makro dijalankan	Arrange the actions, then choose when the macro runs
++Cara Jalan	How It Runs
++Contoh	Examples
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	No actions yet. Start from an example or add your own.
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} actions \u00b7 about {1} seconds per loop
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Repeats {0} times per tap. Tap again while it runs to stop it.
++Susun aksi	Arrange Actions
++Aksi dijalankan berurutan dari atas ke bawah.	Actions run in order, from top to bottom.
++Yakin hapus?	Delete all?
++Tambah aksi baru	Add a new action
++Tekan / Klik	Press / Click
++Tombol keyboard atau klik mouse	A keyboard key or a mouse click
++Tekan dan tahan beberapa detik	Press and hold for a few seconds
++Jeda sebelum aksi berikutnya	A pause before the next action
++Pindah Slot	Switch Slot
++Ganti item yang dipegang	Change the item you hold
++Ketik Chat	Type Chat
++Kirim pesan atau perintah	Send a message or command
++Tahan Terus	Keep Holding
++Tahan sampai dilepas atau makro berhenti	Hold until released or the macro stops
++Lepas tombol yang sedang ditahan	Release a key that is being held
++Geser Slot	Shift Slot
++Ke slot sebelum atau sesudahnya	To the previous or next slot
++Lainnya	More
++Tutup aksi lanjutan	Hide advanced actions
++Aksi lanjutan	Advanced actions
++Pilih nomor slot hotbar yang dituju	Choose the hotbar slot number to switch to
++Belum ada aksi	No actions yet
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Add actions with the boxes below, or get started quickly with a ready-made example.
++Lihat contoh siap pakai	See ready-made examples
++Pindah slot hotbar	Switch hotbar slot
++Slot sebelumnya	Previous slot
++Slot berikutnya	Next slot
++Ketik di chat	Type in chat
++Aksi tidak dikenal	Unknown action
++Berapa lama menunggu?	How long to wait?
++Berapa lama ditahan?	How long to hold?
++detik	seconds
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Start with / for a command, or leave it out for a normal chat message.
++Kapan makro berjalan?	When does the macro run?
++Pilih cara tombol ini dipakai.	Choose how this button is used.
++Sekali Jalan	Run Once
++Selama Ditahan	While Held
++Nyala / Mati	On / Off
++Diulang berapa kali?	How many repeats?
++Berapa kali urutan dijalankan setiap ketukan.	How many times the sequence runs per tap.
++kali	times
++Jeda antar putaran	Pause between loops
++Waktu istirahat sebelum urutan diulang lagi.	Rest time before the sequence repeats again.
++Tanpa jeda	No pause
++Pengaturan lanjutan	Advanced settings
++Waktu acak	Random timing
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Shifts wait and hold times slightly at random so it feels more natural.
++Contoh siap pakai	Ready-made examples
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Tap an example to use it, then change it however you like.
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Holds left click continuously to mine or attack.
++Klik kanan berulang, cocok untuk membangun atau memancing.	Repeated right-clicks, good for building or fishing.
++Melompat terus-menerus tanpa berhenti.	Jumps nonstop.
++Berlari sambil melompat terus (bunny hop).	Sprints while jumping nonstop (bunny hop).
++Menahan klik kanan 1,8 detik untuk makan atau minum.	Holds right click for 1.8 seconds to eat or drink.
++Membuang item 10 kali berturut-turut.	Drops an item 10 times in a row.
++Mengganti urutan yang sekarang. Lanjutkan?	This replaces the current sequence. Continue?
++Ya, ganti	Yes, replace
++Buat Urutan Aksi	Create Action Sequence
++Atur Urutan Aksi	Edit Action Sequence
+diff --git a/app/src/main/assets/lang/es/editor.tsv b/app/src/main/assets/lang/es/editor.tsv
+index d79c93a..21a6401 100644
+--- a/app/src/main/assets/lang/es/editor.tsv
++++ b/app/src/main/assets/lang/es/editor.tsv
+@@ -112,3 +112,72 @@ Makan	Comer
+ Buang Item x10	Tirar objeto x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac Secuencia de acciones
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Varias teclas, clics, esperas y escritura en un solo bot\u00f3n.
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	M\u00e1ximo {0} acciones
++Contoh dipakai	Ejemplo aplicado
++Pembuat Makro	Creador de macros
++Susun aksi, lalu pilih kapan makro dijalankan	Ordena las acciones y elige cu\u00e1ndo se ejecuta el macro
++Cara Jalan	C\u00f3mo se ejecuta
++Contoh	Ejemplos
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	A\u00fan no hay acciones. Empieza con un ejemplo o a\u00f1ade las tuyas.
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} acciones \u00b7 unos {1} segundos por ciclo
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Se repite {0} veces por toque. Toca de nuevo mientras se ejecuta para detenerlo.
++Susun aksi	Ordenar acciones
++Aksi dijalankan berurutan dari atas ke bawah.	Las acciones se ejecutan en orden, de arriba abajo.
++Yakin hapus?	\u00bfBorrar todo?
++Tambah aksi baru	A\u00f1adir acci\u00f3n nueva
++Tekan / Klik	Pulsar / Clic
++Tombol keyboard atau klik mouse	Una tecla o un clic de rat\u00f3n
++Tekan dan tahan beberapa detik	Mant\u00e9n pulsado unos segundos
++Jeda sebelum aksi berikutnya	Una pausa antes de la siguiente acci\u00f3n
++Pindah Slot	Cambiar ranura
++Ganti item yang dipegang	Cambia el objeto que sostienes
++Ketik Chat	Escribir chat
++Kirim pesan atau perintah	Env\u00eda un mensaje o comando
++Tahan Terus	Mantener pulsado
++Tahan sampai dilepas atau makro berhenti	Mant\u00e9n hasta soltar o hasta que el macro se detenga
++Lepas tombol yang sedang ditahan	Suelta una tecla que se mantiene pulsada
++Geser Slot	Mover ranura
++Ke slot sebelum atau sesudahnya	A la ranura anterior o siguiente
++Lainnya	M\u00e1s
++Tutup aksi lanjutan	Ocultar acciones avanzadas
++Aksi lanjutan	Acciones avanzadas
++Pilih nomor slot hotbar yang dituju	Elige el n\u00famero de ranura de la barra r\u00e1pida
++Belum ada aksi	A\u00fan no hay acciones
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	A\u00f1ade acciones con los cuadros de abajo o empieza r\u00e1pido con un ejemplo listo para usar.
++Lihat contoh siap pakai	Ver ejemplos listos para usar
++Pindah slot hotbar	Cambiar ranura de la barra r\u00e1pida
++Slot sebelumnya	Ranura anterior
++Slot berikutnya	Ranura siguiente
++Ketik di chat	Escribir en el chat
++Aksi tidak dikenal	Acci\u00f3n desconocida
++Berapa lama menunggu?	\u00bfCu\u00e1nto tiempo esperar?
++Berapa lama ditahan?	\u00bfCu\u00e1nto tiempo mantener?
++detik	segundos
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Empieza con / para un comando; sin / es un mensaje normal de chat.
++Kapan makro berjalan?	\u00bfCu\u00e1ndo se ejecuta el macro?
++Pilih cara tombol ini dipakai.	Elige c\u00f3mo se usa este bot\u00f3n.
++Sekali Jalan	Ejecutar una vez
++Selama Ditahan	Mientras se mantiene
++Nyala / Mati	Activar / Desactivar
++Diulang berapa kali?	\u00bfCu\u00e1ntas repeticiones?
++Berapa kali urutan dijalankan setiap ketukan.	Cu\u00e1ntas veces se ejecuta la secuencia por toque.
++kali	veces
++Jeda antar putaran	Pausa entre repeticiones
++Waktu istirahat sebelum urutan diulang lagi.	Tiempo de descanso antes de repetir la secuencia.
++Tanpa jeda	Sin pausa
++Pengaturan lanjutan	Ajustes avanzados
++Waktu acak	Tiempo aleatorio
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Var\u00eda un poco al azar los tiempos de espera y de pulsaci\u00f3n para que resulte m\u00e1s natural.
++Contoh siap pakai	Ejemplos listos para usar
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Toca un ejemplo para usarlo y c\u00e1mbialo como quieras.
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Mantiene el clic izquierdo para minar o atacar.
++Klik kanan berulang, cocok untuk membangun atau memancing.	Clics derechos repetidos, ideales para construir o pescar.
++Melompat terus-menerus tanpa berhenti.	Salta sin parar.
++Berlari sambil melompat terus (bunny hop).	Corre mientras salta sin parar (bunny hop).
++Menahan klik kanan 1,8 detik untuk makan atau minum.	Mantiene el clic derecho 1,8 segundos para comer o beber.
++Membuang item 10 kali berturut-turut.	Tira un objeto 10 veces seguidas.
++Mengganti urutan yang sekarang. Lanjutkan?	Esto reemplaza la secuencia actual. \u00bfContinuar?
++Ya, ganti	S\u00ed, reemplazar
++Buat Urutan Aksi	Crear secuencia de acciones
++Atur Urutan Aksi	Editar secuencia de acciones
+diff --git a/app/src/main/assets/lang/fil/editor.tsv b/app/src/main/assets/lang/fil/editor.tsv
+index 5ef7478..ea01309 100644
+--- a/app/src/main/assets/lang/fil/editor.tsv
++++ b/app/src/main/assets/lang/fil/editor.tsv
+@@ -112,3 +112,72 @@ Makan	Kumain
+ Buang Item x10	Ihulog ang Item x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac Sunod-sunod na Aksyon
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Maraming key, click, paghihintay, at pag-type sa iisang button.
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	Hanggang {0} aksyon lang
++Contoh dipakai	Nagamit na ang halimbawa
++Pembuat Makro	Gumagawa ng Macro
++Susun aksi, lalu pilih kapan makro dijalankan	Ayusin ang mga aksyon, saka piliin kung kailan tatakbo ang macro
++Cara Jalan	Paano Tatakbo
++Contoh	Mga Halimbawa
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Wala pang aksyon. Magsimula sa halimbawa o magdagdag ng sarili mo.
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} aksyon · mga {1} segundo bawat ikot
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Inuulit nang {0} beses bawat tap. I-tap muli habang tumatakbo para ihinto.
++Susun aksi	Ayusin ang mga Aksyon
++Aksi dijalankan berurutan dari atas ke bawah.	Sunod-sunod na tatakbo ang mga aksyon, mula itaas pababa.
++Yakin hapus?	Burahin lahat?
++Tambah aksi baru	Magdagdag ng bagong aksyon
++Tekan / Klik	Pindutin / I-click
++Tombol keyboard atau klik mouse	Key ng keyboard o click ng mouse
++Tekan dan tahan beberapa detik	Pindutin at hawakan nang ilang segundo
++Jeda sebelum aksi berikutnya	Pahinga bago ang susunod na aksyon
++Pindah Slot	Palitan ang Slot
++Ganti item yang dipegang	Palitan ang hawak na item
++Ketik Chat	Mag-type sa Chat
++Kirim pesan atau perintah	Magpadala ng mensahe o command
++Tahan Terus	Patuloy na Hawakan
++Tahan sampai dilepas atau makro berhenti	Hawakan hanggang bitawan o huminto ang macro
++Lepas tombol yang sedang ditahan	Bitawan ang key na hawak
++Geser Slot	Ilipat ang Slot
++Ke slot sebelum atau sesudahnya	Sa nakaraan o susunod na slot
++Lainnya	Iba pa
++Tutup aksi lanjutan	Itago ang advanced na aksyon
++Aksi lanjutan	Advanced na aksyon
++Pilih nomor slot hotbar yang dituju	Piliin ang numero ng hotbar slot
++Belum ada aksi	Wala pang aksyon
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Magdagdag ng aksyon gamit ang mga kahon sa ibaba, o magsimula agad sa handang halimbawa.
++Lihat contoh siap pakai	Tingnan ang mga handang halimbawa
++Pindah slot hotbar	Palitan ang hotbar slot
++Slot sebelumnya	Nakaraang slot
++Slot berikutnya	Susunod na slot
++Ketik di chat	Mag-type sa chat
++Aksi tidak dikenal	Hindi kilalang aksyon
++Berapa lama menunggu?	Gaano katagal maghihintay?
++Berapa lama ditahan?	Gaano katagal hahawakan?
++detik	segundo
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Simulan sa / para sa command, o walang / para sa karaniwang mensahe sa chat.
++Kapan makro berjalan?	Kailan tatakbo ang macro?
++Pilih cara tombol ini dipakai.	Piliin kung paano gagamitin ang button na ito.
++Sekali Jalan	Isang Takbo
++Selama Ditahan	Habang Hawak
++Nyala / Mati	On / Off
++Diulang berapa kali?	Ilang beses uulitin?
++Berapa kali urutan dijalankan setiap ketukan.	Ilang beses tatakbo ang sequence bawat tap.
++kali	beses
++Jeda antar putaran	Pahinga sa pagitan ng ikot
++Waktu istirahat sebelum urutan diulang lagi.	Oras ng pahinga bago ulitin ang sequence.
++Tanpa jeda	Walang pahinga
++Pengaturan lanjutan	Advanced na setting
++Waktu acak	Random na oras
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Bahagyang binabago nang random ang oras ng paghihintay at paghawak para mas natural.
++Contoh siap pakai	Mga handang halimbawa
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	I-tap ang halimbawa para gamitin, saka baguhin ayon sa gusto mo.
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Patuloy na hinahawakan ang kaliwang click para maghukay o umatake.
++Klik kanan berulang, cocok untuk membangun atau memancing.	Paulit-ulit na kanang click, bagay sa pagtatayo o pangingisda.
++Melompat terus-menerus tanpa berhenti.	Tuloy-tuloy na tumatalon.
++Berlari sambil melompat terus (bunny hop).	Tumatakbo habang tuloy-tuloy na tumatalon (bunny hop).
++Menahan klik kanan 1,8 detik untuk makan atau minum.	Hinahawakan ang kanang click nang 1.8 segundo para kumain o uminom.
++Membuang item 10 kali berturut-turut.	Ihuhulog ang item nang 10 beses nang sunod-sunod.
++Mengganti urutan yang sekarang. Lanjutkan?	Papalitan nito ang kasalukuyang sequence. Magpatuloy?
++Ya, ganti	Oo, palitan
++Buat Urutan Aksi	Gumawa ng Sunod-sunod na Aksyon
++Atur Urutan Aksi	I-edit ang Sunod-sunod na Aksyon
+diff --git a/app/src/main/assets/lang/pt/editor.tsv b/app/src/main/assets/lang/pt/editor.tsv
+index 28b1a39..087af8d 100644
+--- a/app/src/main/assets/lang/pt/editor.tsv
++++ b/app/src/main/assets/lang/pt/editor.tsv
+@@ -112,3 +112,72 @@ Makan	Comer
+ Buang Item x10	Largar item x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac Sequ\u00eancia de a\u00e7\u00f5es
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	V\u00e1rias teclas, cliques, esperas e digita\u00e7\u00e3o em um \u00fanico bot\u00e3o.
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	M\u00e1ximo de {0} a\u00e7\u00f5es
++Contoh dipakai	Exemplo aplicado
++Pembuat Makro	Criador de macros
++Susun aksi, lalu pilih kapan makro dijalankan	Organize as a\u00e7\u00f5es e escolha quando a macro \u00e9 executada
++Cara Jalan	Como executa
++Contoh	Exemplos
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Ainda n\u00e3o h\u00e1 a\u00e7\u00f5es. Comece por um exemplo ou adicione as suas.
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} a\u00e7\u00f5es \u00b7 cerca de {1} segundos por ciclo
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	Repete {0} vezes por toque. Toque novamente durante a execu\u00e7\u00e3o para parar.
++Susun aksi	Organizar a\u00e7\u00f5es
++Aksi dijalankan berurutan dari atas ke bawah.	As a\u00e7\u00f5es s\u00e3o executadas em ordem, de cima para baixo.
++Yakin hapus?	Apagar tudo?
++Tambah aksi baru	Adicionar nova a\u00e7\u00e3o
++Tekan / Klik	Pressionar / Clicar
++Tombol keyboard atau klik mouse	Uma tecla ou um clique do mouse
++Tekan dan tahan beberapa detik	Segure por alguns segundos
++Jeda sebelum aksi berikutnya	Uma pausa antes da pr\u00f3xima a\u00e7\u00e3o
++Pindah Slot	Trocar slot
++Ganti item yang dipegang	Troque o item na m\u00e3o
++Ketik Chat	Digitar chat
++Kirim pesan atau perintah	Envie uma mensagem ou comando
++Tahan Terus	Continuar segurando
++Tahan sampai dilepas atau makro berhenti	Segure at\u00e9 soltar ou at\u00e9 a macro parar
++Lepas tombol yang sedang ditahan	Solte uma tecla que est\u00e1 sendo segurada
++Geser Slot	Mover slot
++Ke slot sebelum atau sesudahnya	Para o slot anterior ou seguinte
++Lainnya	Mais
++Tutup aksi lanjutan	Ocultar a\u00e7\u00f5es avan\u00e7adas
++Aksi lanjutan	A\u00e7\u00f5es avan\u00e7adas
++Pilih nomor slot hotbar yang dituju	Escolha o n\u00famero do slot da hotbar
++Belum ada aksi	Ainda n\u00e3o h\u00e1 a\u00e7\u00f5es
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Adicione a\u00e7\u00f5es pelas caixas abaixo ou comece r\u00e1pido com um exemplo pronto.
++Lihat contoh siap pakai	Ver exemplos prontos
++Pindah slot hotbar	Trocar slot da hotbar
++Slot sebelumnya	Slot anterior
++Slot berikutnya	Pr\u00f3ximo slot
++Ketik di chat	Digitar no chat
++Aksi tidak dikenal	A\u00e7\u00e3o desconhecida
++Berapa lama menunggu?	Quanto tempo esperar?
++Berapa lama ditahan?	Quanto tempo segurar?
++detik	segundos
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	Comece com / para um comando; sem / \u00e9 uma mensagem de chat normal.
++Kapan makro berjalan?	Quando a macro executa?
++Pilih cara tombol ini dipakai.	Escolha como este bot\u00e3o \u00e9 usado.
++Sekali Jalan	Executar uma vez
++Selama Ditahan	Enquanto segura
++Nyala / Mati	Ligar / Desligar
++Diulang berapa kali?	Quantas repeti\u00e7\u00f5es?
++Berapa kali urutan dijalankan setiap ketukan.	Quantas vezes a sequ\u00eancia \u00e9 executada por toque.
++kali	vezes
++Jeda antar putaran	Pausa entre repeti\u00e7\u00f5es
++Waktu istirahat sebelum urutan diulang lagi.	Tempo de descanso antes de repetir a sequ\u00eancia.
++Tanpa jeda	Sem pausa
++Pengaturan lanjutan	Configura\u00e7\u00f5es avan\u00e7adas
++Waktu acak	Tempo aleat\u00f3rio
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	Varia um pouco aleatoriamente os tempos de espera e de press\u00e3o para parecer mais natural.
++Contoh siap pakai	Exemplos prontos
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Toque em um exemplo para us\u00e1-lo e altere como quiser.
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Mant\u00e9m o clique esquerdo para minerar ou atacar.
++Klik kanan berulang, cocok untuk membangun atau memancing.	Cliques direitos repetidos, bons para construir ou pescar.
++Melompat terus-menerus tanpa berhenti.	Pula sem parar.
++Berlari sambil melompat terus (bunny hop).	Corre enquanto pula sem parar (bunny hop).
++Menahan klik kanan 1,8 detik untuk makan atau minum.	Mant\u00e9m o clique direito por 1,8 segundo para comer ou beber.
++Membuang item 10 kali berturut-turut.	Larga um item 10 vezes seguidas.
++Mengganti urutan yang sekarang. Lanjutkan?	Isto substitui a sequ\u00eancia atual. Continuar?
++Ya, ganti	Sim, substituir
++Buat Urutan Aksi	Criar sequ\u00eancia de a\u00e7\u00f5es
++Atur Urutan Aksi	Editar sequ\u00eancia de a\u00e7\u00f5es
+diff --git a/app/src/main/assets/lang/th/editor.tsv b/app/src/main/assets/lang/th/editor.tsv
+index eeb8d1f..69ffd46 100644
+--- a/app/src/main/assets/lang/th/editor.tsv
++++ b/app/src/main/assets/lang/th/editor.tsv
+@@ -112,3 +112,72 @@ Makan	กิน
+ Buang Item x10	ทิ้งไอเท็ม x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac ลำดับการกระทำ
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	หลายปุ่ม คลิก การรอ และการพิมพ์ในปุ่มเดียว
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	สูงสุด {0} การกระทำ
++Contoh dipakai	ใช้ตัวอย่างแล้ว
++Pembuat Makro	ตัวสร้างมาโคร
++Susun aksi, lalu pilih kapan makro dijalankan	จัดลำดับการกระทำ แล้วเลือกว่ามาโครจะทำงานเมื่อใด
++Cara Jalan	วิธีทำงาน
++Contoh	ตัวอย่าง
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	ยังไม่มีการกระทำ เริ่มจากตัวอย่างหรือเพิ่มเอง
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} การกระทำ · ประมาณ {1} วินาทีต่อรอบ
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	ทำซ้ำ {0} ครั้งต่อการแตะ แตะอีกครั้งขณะทำงานเพื่อหยุด
++Susun aksi	จัดลำดับการกระทำ
++Aksi dijalankan berurutan dari atas ke bawah.	การกระทำจะทำงานตามลำดับจากบนลงล่าง
++Yakin hapus?	ลบทั้งหมด?
++Tambah aksi baru	เพิ่มการกระทำใหม่
++Tekan / Klik	กด / คลิก
++Tombol keyboard atau klik mouse	ปุ่มคีย์บอร์ดหรือคลิกเมาส์
++Tekan dan tahan beberapa detik	กดค้างไว้สองสามวินาที
++Jeda sebelum aksi berikutnya	หยุดรอก่อนการกระทำถัดไป
++Pindah Slot	สลับช่อง
++Ganti item yang dipegang	เปลี่ยนไอเท็มที่ถืออยู่
++Ketik Chat	พิมพ์แชท
++Kirim pesan atau perintah	ส่งข้อความหรือคำสั่ง
++Tahan Terus	กดค้างต่อเนื่อง
++Tahan sampai dilepas atau makro berhenti	กดค้างจนกว่าจะปล่อยหรือมาโครหยุด
++Lepas tombol yang sedang ditahan	ปล่อยปุ่มที่กดค้างอยู่
++Geser Slot	เลื่อนช่อง
++Ke slot sebelum atau sesudahnya	ไปยังช่องก่อนหน้าหรือถัดไป
++Lainnya	เพิ่มเติม
++Tutup aksi lanjutan	ซ่อนการกระทำขั้นสูง
++Aksi lanjutan	การกระทำขั้นสูง
++Pilih nomor slot hotbar yang dituju	เลือกหมายเลขช่องฮอตบาร์ที่ต้องการ
++Belum ada aksi	ยังไม่มีการกระทำ
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	เพิ่มการกระทำด้วยกล่องด้านล่าง หรือเริ่มอย่างรวดเร็วจากตัวอย่างสำเร็จรูป
++Lihat contoh siap pakai	ดูตัวอย่างสำเร็จรูป
++Pindah slot hotbar	สลับช่องฮอตบาร์
++Slot sebelumnya	ช่องก่อนหน้า
++Slot berikutnya	ช่องถัดไป
++Ketik di chat	พิมพ์ในแชท
++Aksi tidak dikenal	การกระทำที่ไม่รู้จัก
++Berapa lama menunggu?	จะรอนานเท่าไร?
++Berapa lama ditahan?	จะกดค้างนานเท่าไร?
++detik	วินาที
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	ขึ้นต้นด้วย / สำหรับคำสั่ง ถ้าไม่มี / จะเป็นข้อความแชททั่วไป
++Kapan makro berjalan?	มาโครทำงานเมื่อใด?
++Pilih cara tombol ini dipakai.	เลือกวิธีใช้ปุ่มนี้
++Sekali Jalan	ทำงานครั้งเดียว
++Selama Ditahan	ขณะกดค้าง
++Nyala / Mati	เปิด / ปิด
++Diulang berapa kali?	ทำซ้ำกี่ครั้ง?
++Berapa kali urutan dijalankan setiap ketukan.	จำนวนครั้งที่ลำดับทำงานต่อการแตะ
++kali	ครั้ง
++Jeda antar putaran	เว้นระยะระหว่างรอบ
++Waktu istirahat sebelum urutan diulang lagi.	เวลาพักก่อนที่ลำดับจะทำซ้ำอีกครั้ง
++Tanpa jeda	ไม่หยุดพัก
++Pengaturan lanjutan	การตั้งค่าขั้นสูง
++Waktu acak	เวลาแบบสุ่ม
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	เลื่อนเวลารอและกดค้างแบบสุ่มเล็กน้อยเพื่อให้ดูเป็นธรรมชาติขึ้น
++Contoh siap pakai	ตัวอย่างสำเร็จรูป
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	แตะตัวอย่างเพื่อใช้ แล้วปรับแก้ได้ตามต้องการ
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	กดคลิกซ้ายค้างไว้ตลอดเพื่อขุดหรือโจมตี
++Klik kanan berulang, cocok untuk membangun atau memancing.	คลิกขวาซ้ำ ๆ เหมาะกับการสร้างหรือตกปลา
++Melompat terus-menerus tanpa berhenti.	กระโดดต่อเนื่องไม่หยุด
++Berlari sambil melompat terus (bunny hop).	วิ่งพร้อมกระโดดต่อเนื่อง (bunny hop)
++Menahan klik kanan 1,8 detik untuk makan atau minum.	กดคลิกขวาค้าง 1.8 วินาทีเพื่อกินหรือดื่ม
++Membuang item 10 kali berturut-turut.	ทิ้งไอเท็ม 10 ครั้งติดต่อกัน
++Mengganti urutan yang sekarang. Lanjutkan?	จะแทนที่ลำดับปัจจุบัน ดำเนินการต่อไหม?
++Ya, ganti	ใช่ แทนที่
++Buat Urutan Aksi	สร้างลำดับการกระทำ
++Atur Urutan Aksi	แก้ไขลำดับการกระทำ
+diff --git a/app/src/main/assets/lang/vi/editor.tsv b/app/src/main/assets/lang/vi/editor.tsv
+index dbabefc..f408ddb 100644
+--- a/app/src/main/assets/lang/vi/editor.tsv
++++ b/app/src/main/assets/lang/vi/editor.tsv
+@@ -112,3 +112,72 @@ Makan	\u0102n
+ Buang Item x10	V\u1ee9t v\u1eadt ph\u1ea9m x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac Chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	Nhi\u1ec1u ph\u00edm, nh\u1ea5p chu\u1ed9t, th\u1eddi gian ch\u1edd v\u00e0 g\u00f5 ch\u1eef trong m\u1ed9t n\u00fat.
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	T\u1ed1i \u0111a {0} h\u00e0nh \u0111\u1ed9ng
++Contoh dipakai	\u0110\u00e3 \u00e1p d\u1ee5ng v\u00ed d\u1ee5
++Pembuat Makro	Tr\u00ecnh t\u1ea1o macro
++Susun aksi, lalu pilih kapan makro dijalankan	S\u1eafp x\u1ebfp c\u00e1c h\u00e0nh \u0111\u1ed9ng, r\u1ed3i ch\u1ecdn khi n\u00e0o macro ch\u1ea1y
++Cara Jalan	C\u00e1ch ch\u1ea1y
++Contoh	V\u00ed d\u1ee5
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	Ch\u01b0a c\u00f3 h\u00e0nh \u0111\u1ed9ng n\u00e0o. B\u1eaft \u0111\u1ea7u t\u1eeb m\u1ed9t v\u00ed d\u1ee5 ho\u1eb7c t\u1ef1 th\u00eam h\u00e0nh \u0111\u1ed9ng.
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} h\u00e0nh \u0111\u1ed9ng \u00b7 kho\u1ea3ng {1} gi\u00e2y m\u1ed7i v\u00f2ng
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	L\u1eb7p l\u1ea1i {0} l\u1ea7n m\u1ed7i l\u1ea7n ch\u1ea1m. Ch\u1ea1m l\u1ea1i khi \u0111ang ch\u1ea1y \u0111\u1ec3 d\u1eebng.
++Susun aksi	S\u1eafp x\u1ebfp h\u00e0nh \u0111\u1ed9ng
++Aksi dijalankan berurutan dari atas ke bawah.	C\u00e1c h\u00e0nh \u0111\u1ed9ng ch\u1ea1y l\u1ea7n l\u01b0\u1ee3t t\u1eeb tr\u00ean xu\u1ed1ng d\u01b0\u1edbi.
++Yakin hapus?	X\u00f3a h\u1ebft?
++Tambah aksi baru	Th\u00eam h\u00e0nh \u0111\u1ed9ng m\u1edbi
++Tekan / Klik	Nh\u1ea5n / Nh\u1ea5p
++Tombol keyboard atau klik mouse	Ph\u00edm b\u00e0n ph\u00edm ho\u1eb7c nh\u1ea5p chu\u1ed9t
++Tekan dan tahan beberapa detik	Nh\u1ea5n gi\u1eef v\u00e0i gi\u00e2y
++Jeda sebelum aksi berikutnya	T\u1ea1m d\u1eebng tr\u01b0\u1edbc h\u00e0nh \u0111\u1ed9ng ti\u1ebfp theo
++Pindah Slot	\u0110\u1ed5i \u00f4
++Ganti item yang dipegang	\u0110\u1ed5i v\u1eadt ph\u1ea9m \u0111ang c\u1ea7m
++Ketik Chat	G\u00f5 chat
++Kirim pesan atau perintah	G\u1eedi tin nh\u1eafn ho\u1eb7c l\u1ec7nh
++Tahan Terus	Gi\u1eef li\u00ean t\u1ee5c
++Tahan sampai dilepas atau makro berhenti	Gi\u1eef cho \u0111\u1ebfn khi th\u1ea3 ho\u1eb7c macro d\u1eebng
++Lepas tombol yang sedang ditahan	Th\u1ea3 ph\u00edm \u0111ang gi\u1eef
++Geser Slot	D\u1ecbch \u00f4
++Ke slot sebelum atau sesudahnya	T\u1edbi \u00f4 tr\u01b0\u1edbc ho\u1eb7c \u00f4 sau
++Lainnya	Kh\u00e1c
++Tutup aksi lanjutan	\u1ea8n h\u00e0nh \u0111\u1ed9ng n\u00e2ng cao
++Aksi lanjutan	H\u00e0nh \u0111\u1ed9ng n\u00e2ng cao
++Pilih nomor slot hotbar yang dituju	Ch\u1ecdn s\u1ed1 \u00f4 thanh nhanh mu\u1ed1n chuy\u1ec3n t\u1edbi
++Belum ada aksi	Ch\u01b0a c\u00f3 h\u00e0nh \u0111\u1ed9ng n\u00e0o
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	Th\u00eam h\u00e0nh \u0111\u1ed9ng b\u1eb1ng c\u00e1c \u00f4 b\u00ean d\u01b0\u1edbi, ho\u1eb7c b\u1eaft \u0111\u1ea7u nhanh v\u1edbi m\u1ed9t v\u00ed d\u1ee5 c\u00f3 s\u1eb5n.
++Lihat contoh siap pakai	Xem v\u00ed d\u1ee5 c\u00f3 s\u1eb5n
++Pindah slot hotbar	\u0110\u1ed5i \u00f4 thanh nhanh
++Slot sebelumnya	\u00d4 tr\u01b0\u1edbc
++Slot berikutnya	\u00d4 ti\u1ebfp theo
++Ketik di chat	G\u00f5 trong chat
++Aksi tidak dikenal	H\u00e0nh \u0111\u1ed9ng kh\u00f4ng x\u00e1c \u0111\u1ecbnh
++Berapa lama menunggu?	Ch\u1edd bao l\u00e2u?
++Berapa lama ditahan?	Gi\u1eef bao l\u00e2u?
++detik	gi\u00e2y
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	B\u1eaft \u0111\u1ea7u b\u1eb1ng / cho l\u1ec7nh, kh\u00f4ng c\u00f3 / l\u00e0 tin nh\u1eafn chat th\u01b0\u1eddng.
++Kapan makro berjalan?	Khi n\u00e0o macro ch\u1ea1y?
++Pilih cara tombol ini dipakai.	Ch\u1ecdn c\u00e1ch d\u00f9ng n\u00fat n\u00e0y.
++Sekali Jalan	Ch\u1ea1y m\u1ed9t l\u1ea7n
++Selama Ditahan	Khi \u0111ang gi\u1eef
++Nyala / Mati	B\u1eadt / T\u1eaft
++Diulang berapa kali?	L\u1eb7p l\u1ea1i bao nhi\u00eau l\u1ea7n?
++Berapa kali urutan dijalankan setiap ketukan.	S\u1ed1 l\u1ea7n chu\u1ed7i ch\u1ea1y m\u1ed7i l\u1ea7n ch\u1ea1m.
++kali	l\u1ea7n
++Jeda antar putaran	Ngh\u1ec9 gi\u1eefa c\u00e1c v\u00f2ng
++Waktu istirahat sebelum urutan diulang lagi.	Th\u1eddi gian ngh\u1ec9 tr\u01b0\u1edbc khi chu\u1ed7i l\u1eb7p l\u1ea1i.
++Tanpa jeda	Kh\u00f4ng ngh\u1ec9
++Pengaturan lanjutan	C\u00e0i \u0111\u1eb7t n\u00e2ng cao
++Waktu acak	Th\u1eddi gian ng\u1eabu nhi\u00ean
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	D\u1ecbch th\u1eddi gian ch\u1edd v\u00e0 gi\u1eef ng\u1eabu nhi\u00ean m\u1ed9t ch\u00fat \u0111\u1ec3 t\u1ef1 nhi\u00ean h\u01a1n.
++Contoh siap pakai	V\u00ed d\u1ee5 c\u00f3 s\u1eb5n
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	Ch\u1ea1m v\u00e0o v\u00ed d\u1ee5 \u0111\u1ec3 d\u00f9ng, r\u1ed3i t\u00f9y \u00fd ch\u1ec9nh s\u1eeda.
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	Gi\u1eef nh\u1ea5p chu\u1ed9t tr\u00e1i li\u00ean t\u1ee5c \u0111\u1ec3 \u0111\u00e0o ho\u1eb7c t\u1ea5n c\u00f4ng.
++Klik kanan berulang, cocok untuk membangun atau memancing.	Nh\u1ea5p chu\u1ed9t ph\u1ea3i li\u00ean t\u1ee5c, h\u1ee3p \u0111\u1ec3 x\u00e2y d\u1ef1ng ho\u1eb7c c\u00e2u c\u00e1.
++Melompat terus-menerus tanpa berhenti.	Nh\u1ea3y li\u00ean t\u1ee5c kh\u00f4ng ng\u1eebng.
++Berlari sambil melompat terus (bunny hop).	Ch\u1ea1y trong khi nh\u1ea3y li\u00ean t\u1ee5c (bunny hop).
++Menahan klik kanan 1,8 detik untuk makan atau minum.	Gi\u1eef nh\u1ea5p chu\u1ed9t ph\u1ea3i 1,8 gi\u00e2y \u0111\u1ec3 \u0103n ho\u1eb7c u\u1ed1ng.
++Membuang item 10 kali berturut-turut.	V\u1ee9t v\u1eadt ph\u1ea9m 10 l\u1ea7n li\u00ean ti\u1ebfp.
++Mengganti urutan yang sekarang. Lanjutkan?	Thao t\u00e1c n\u00e0y thay th\u1ebf chu\u1ed7i hi\u1ec7n t\u1ea1i. Ti\u1ebfp t\u1ee5c?
++Ya, ganti	C\u00f3, thay th\u1ebf
++Buat Urutan Aksi	T\u1ea1o chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
++Atur Urutan Aksi	Ch\u1ec9nh chu\u1ed7i h\u00e0nh \u0111\u1ed9ng
+diff --git a/app/src/main/assets/lang/zh/editor.tsv b/app/src/main/assets/lang/zh/editor.tsv
+index 6cf724c..59f7fae 100644
+--- a/app/src/main/assets/lang/zh/editor.tsv
++++ b/app/src/main/assets/lang/zh/editor.tsv
+@@ -112,3 +112,72 @@ Makan	进食
+ Buang Item x10	丢弃物品 x10
+ \ud83c\udfac Urutan Aksi	\ud83c\udfac 动作序列
+ Beberapa key, klik, jeda, dan ketik dalam satu tombol.	一个按键内可包含多个按键、点击、等待和输入。
++# Pembuat Makro (layar menyusun urutan aksi)
++Maksimal {0} aksi	最多 {0} 个动作
++Contoh dipakai	已套用示例
++Pembuat Makro	宏编辑器
++Susun aksi, lalu pilih kapan makro dijalankan	排好动作顺序，再选择宏何时运行
++Cara Jalan	运行方式
++Contoh	示例
++Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri.	还没有动作。可以从示例开始，或自己添加。
++{0} aksi \u00b7 sekitar {1} detik per putaran	{0} 个动作 · 每轮约 {1} 秒
++Diulang {0} kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.	每次点按重复 {0} 次。运行中再次点按即可停止。
++Susun aksi	排列动作
++Aksi dijalankan berurutan dari atas ke bawah.	动作按从上到下的顺序执行。
++Yakin hapus?	确定清空？
++Tambah aksi baru	添加新动作
++Tekan / Klik	按键 / 点击
++Tombol keyboard atau klik mouse	键盘按键或鼠标点击
++Tekan dan tahan beberapa detik	按住几秒钟
++Jeda sebelum aksi berikutnya	在下一个动作前暂停
++Pindah Slot	切换格子
++Ganti item yang dipegang	更换手持物品
++Ketik Chat	输入聊天
++Kirim pesan atau perintah	发送消息或命令
++Tahan Terus	持续按住
++Tahan sampai dilepas atau makro berhenti	一直按住，直到松开或宏停止
++Lepas tombol yang sedang ditahan	松开正在按住的按键
++Geser Slot	移动格子
++Ke slot sebelum atau sesudahnya	切换到上一格或下一格
++Lainnya	更多
++Tutup aksi lanjutan	收起高级动作
++Aksi lanjutan	高级动作
++Pilih nomor slot hotbar yang dituju	选择要切换到的快捷栏格子编号
++Belum ada aksi	还没有动作
++Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.	用下方的方块添加动作，或从现成示例快速开始。
++Lihat contoh siap pakai	查看现成示例
++Pindah slot hotbar	切换快捷栏格子
++Slot sebelumnya	上一格
++Slot berikutnya	下一格
++Ketik di chat	在聊天中输入
++Aksi tidak dikenal	未知动作
++Berapa lama menunggu?	等待多久？
++Berapa lama ditahan?	按住多久？
++detik	秒
++Diawali / untuk perintah, tanpa / untuk pesan chat biasa.	以 / 开头表示命令，不加 / 则是普通聊天消息。
++Kapan makro berjalan?	宏何时运行？
++Pilih cara tombol ini dipakai.	选择这个按键的使用方式。
++Sekali Jalan	运行一次
++Selama Ditahan	按住期间
++Nyala / Mati	开 / 关
++Diulang berapa kali?	重复几次？
++Berapa kali urutan dijalankan setiap ketukan.	每次点按时序列运行的次数。
++kali	次
++Jeda antar putaran	每轮之间的间隔
++Waktu istirahat sebelum urutan diulang lagi.	序列再次重复前的休息时间。
++Tanpa jeda	无间隔
++Pengaturan lanjutan	高级设置
++Waktu acak	随机时间
++Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami.	随机小幅偏移等待和按住时间，使操作更自然。
++Contoh siap pakai	现成示例
++Ketuk contoh untuk memakainya, lalu ubah sesukamu.	点按示例即可使用，然后随意修改。
++Menahan klik kiri terus-menerus untuk menggali atau menyerang.	持续按住鼠标左键来挖掘或攻击。
++Klik kanan berulang, cocok untuk membangun atau memancing.	重复点击鼠标右键，适合建造或钓鱼。
++Melompat terus-menerus tanpa berhenti.	不停地跳跃。
++Berlari sambil melompat terus (bunny hop).	边冲刺边不停跳跃（兔子跳）。
++Menahan klik kanan 1,8 detik untuk makan atau minum.	按住鼠标右键 1.8 秒来进食或饮水。
++Membuang item 10 kali berturut-turut.	连续丢弃物品 10 次。
++Mengganti urutan yang sekarang. Lanjutkan?	这会替换当前序列。要继续吗？
++Ya, ganti	是，替换
++Buat Urutan Aksi	创建动作序列
++Atur Urutan Aksi	编辑动作序列
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/MacroScript.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/MacroScript.kt
+index 6ef6551..b534454 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/MacroScript.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/MacroScript.kt
+@@ -36,13 +36,18 @@ sealed class MacroStep {
+     data class Type(val text: String) : MacroStep()
+ }
+ 
+-/** Templat siap pakai di editor. [title] juga kunci terjemahan. */
++/**
++ * Contoh siap pakai di editor. [title] dan [description] juga kunci terjemahan; [emoji] hanya hiasan
++ * di kartu contoh.
++ */
+ class MacroTemplate(
+     val title: String,
+     val steps: List<String>,
+     val runMode: String,
+     val repeat: Int = 1,
+-    val loopDelayMs: Int = 0
++    val loopDelayMs: Int = 0,
++    val description: String = "",
++    val emoji: String = ""
+ )
+ 
+ /**
+@@ -217,29 +222,53 @@ object MacroScript {
+ 
+     /** Templat siap pakai. Tombol yang ditahan oleh langkah DOWN/MDOWN dilepas otomatis saat makro berhenti. */
+     val TEMPLATES: List<MacroTemplate> = listOf(
+-        MacroTemplate("Auto Gali", listOf("MDOWN:0", "WAIT:1000"), MacroRunMode.TOGGLE),
+-        MacroTemplate("Auto Klik Kanan", listOf("CLICK:1", "WAIT:150"), MacroRunMode.TOGGLE),
+         MacroTemplate(
+-            "Lompat Terus",
+-            listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:450"),
+-            MacroRunMode.TOGGLE
++            title = "Auto Gali",
++            steps = listOf("MDOWN:0", "WAIT:1000"),
++            runMode = MacroRunMode.TOGGLE,
++            description = "Menahan klik kiri terus-menerus untuk menggali atau menyerang.",
++            emoji = "\u26cf\ufe0f"
++        ),
++        MacroTemplate(
++            title = "Auto Klik Kanan",
++            steps = listOf("CLICK:1", "WAIT:150"),
++            runMode = MacroRunMode.TOGGLE,
++            description = "Klik kanan berulang, cocok untuk membangun atau memancing.",
++            emoji = "\ud83d\uddb1\ufe0f"
+         ),
+         MacroTemplate(
+-            "Lari + Lompat",
+-            listOf(
++            title = "Lompat Terus",
++            steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:450"),
++            runMode = MacroRunMode.TOGGLE,
++            description = "Melompat terus-menerus tanpa berhenti.",
++            emoji = "\ud83e\udd98"
++        ),
++        MacroTemplate(
++            title = "Lari + Lompat",
++            steps = listOf(
+                 "DOWN:${LwjglGlfwKeycode.GLFW_KEY_W}",
+                 "DOWN:${LwjglGlfwKeycode.GLFW_KEY_LEFT_CONTROL}",
+                 "TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}",
+                 "WAIT:350"
+             ),
+-            MacroRunMode.TOGGLE
++            runMode = MacroRunMode.TOGGLE,
++            description = "Berlari sambil melompat terus (bunny hop).",
++            emoji = "\ud83c\udfc3"
++        ),
++        MacroTemplate(
++            title = "Makan",
++            steps = listOf("MHOLD:1:1800"),
++            runMode = MacroRunMode.ONCE,
++            description = "Menahan klik kanan 1,8 detik untuk makan atau minum.",
++            emoji = "\ud83c\udf56"
+         ),
+-        MacroTemplate("Makan", listOf("MHOLD:1:1800"), MacroRunMode.ONCE),
+         MacroTemplate(
+-            "Buang Item x10",
+-            listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_Q}", "WAIT:80"),
+-            MacroRunMode.ONCE,
+-            repeat = 10
++            title = "Buang Item x10",
++            steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_Q}", "WAIT:80"),
++            runMode = MacroRunMode.ONCE,
++            repeat = 10,
++            description = "Membuang item 10 kali berturut-turut.",
++            emoji = "\ud83d\uddd1\ufe0f"
+         )
+     )
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index a47dd62..fdc50d0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -87,6 +87,8 @@ fun CustomGuiEditorScreen(
+     var selectedButtonId by remember { mutableStateOf<String?>(null) }
+     var showKeyPickerForButtonId by remember { mutableStateOf<String?>(null) }
+     var keyPickerTargetMode by remember { mutableStateOf("MAIN") } // "MAIN", "COMBO", atau "STEP_<TAP|HOLD|DOWN|UP>"
++    // Tombol yang sedang disusun makro "Urutan Aksi"-nya di layar Pembuat Makro (null = tertutup).
++    var showMacroBuilderForId by remember { mutableStateOf<String?>(null) }
+     var showResetConfirmDialog by remember { mutableStateOf(false) }
+     var manualFlipSide by remember { mutableStateOf<Boolean?>(null) }
+     // Tampilan editor: VIEW_ALL, GAME, atau MENU (sama dengan nilai ControlShowMode).
+@@ -904,6 +906,10 @@ fun CustomGuiEditorScreen(
+                                             buttonsList = buttonsList.map {
+                                                 if (it.id == selectedButton.id) it.copy(macroType = "SEQUENCE") else it
+                                             }
++                                            // Belum ada aksi: langsung buka Pembuat Makro supaya tidak bingung mulai dari mana.
++                                            if (selectedButton.macroSteps.isEmpty()) {
++                                                showMacroBuilderForId = selectedButton.id
++                                            }
+                                         },
+                                         modifier = Modifier.fillMaxWidth()
+                                     )
+@@ -1155,15 +1161,9 @@ fun CustomGuiEditorScreen(
+                                     // Mode 4: SEQUENCE (urutan aksi)
+                                     if (selectedButton.macroType == "SEQUENCE") {
+                                         Text("Beberapa key, klik, jeda, dan ketik dalam satu tombol.", fontSize = 8.sp, color = Color(0xFFE9E4CC))
+-                                        MacroSequenceEditor(
++                                        MacroSequenceSummary(
+                                             button = selectedButton,
+-                                            onChange = { updated ->
+-                                                buttonsList = buttonsList.map { if (it.id == updated.id) updated else it }
+-                                            },
+-                                            onPickKey = { kind ->
+-                                                keyPickerTargetMode = "STEP_$kind"
+-                                                showKeyPickerForButtonId = selectedButton.id
+-                                            }
++                                            onOpen = { showMacroBuilderForId = selectedButton.id }
+                                         )
+                                     }
+                                 }
+@@ -1258,6 +1258,23 @@ fun CustomGuiEditorScreen(
+         }
+     }
+ 
++    // Pembuat Makro (layar penuh untuk menyusun "Urutan Aksi"). Dipasang sebelum pemilih tombol di bawah
++    // supaya pemilih tombol (jendela yang dibuat belakangan) tampil di atasnya.
++    val macroBuilderButton = showMacroBuilderForId?.let { id -> buttonsList.firstOrNull { it.id == id } }
++    if (macroBuilderButton != null) {
++        MacroBuilderDialog(
++            button = macroBuilderButton,
++            onChange = { updated ->
++                buttonsList = buttonsList.map { if (it.id == updated.id) updated else it }
++            },
++            onPickKey = { kind ->
++                keyPickerTargetMode = "STEP_$kind"
++                showKeyPickerForButtonId = macroBuilderButton.id
++            },
++            onDismiss = { showMacroBuilderForId = null }
++        )
++    }
++
+     // Keycode Picker Dialog (pilih kategori lalu ketuk tombol)
+     if (showKeyPickerForButtonId != null) {
+         val targetId = showKeyPickerForButtonId!!
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt
+new file mode 100644
+index 0000000..101cabc
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt
+@@ -0,0 +1,1250 @@
++package com.israadev.nuxlauncher.ui.screens
++
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ColumnScope
++import androidx.compose.foundation.layout.ExperimentalLayoutApi
++import androidx.compose.foundation.layout.FlowRow
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.filled.KeyboardArrowDown
++import androidx.compose.material.icons.filled.KeyboardArrowUp
++import androidx.compose.material.icons.outlined.Check
++import androidx.compose.material.icons.outlined.Delete
++import androidx.compose.material.icons.outlined.Tune
++import androidx.compose.material3.Icon
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.runtime.withFrameNanos
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.alpha
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.rotate
++import androidx.compose.ui.graphics.vector.ImageVector
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.controls.KeycodeCatalog
++import com.israadev.nuxlauncher.core.controls.MacroScript
++import com.israadev.nuxlauncher.core.controls.MacroStep
++import com.israadev.nuxlauncher.core.controls.MacroTemplate
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import com.israadev.nuxlauncher.core.controls.models.MacroRunMode
++import com.israadev.nuxlauncher.ui.components.AmberActionButton
++import com.israadev.nuxlauncher.ui.components.AmberChoicePill
++import com.israadev.nuxlauncher.ui.components.AmberField
++import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
++import com.israadev.nuxlauncher.ui.components.AmberPanel
++import com.israadev.nuxlauncher.ui.components.AmberTag
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.amberGlass
++import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
++
++// Tangga nilai untuk tombol - dan +: tiap ketukan loncat ke nilai "bulat" berikutnya (milidetik).
++private val WAIT_LADDER = listOf(
++    10, 20, 50, 100, 150, 200, 250, 300, 400, 500, 600, 750,
++    1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000, 7500, 10000
++)
++private val HOLD_LADDER = listOf(
++    20, 50, 100, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 7500, 10000, 15000, 20000, 30000
++)
++private val LOOP_LADDER = listOf(0, 50, 100, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 10000)
++
++// Pilihan cepat di bawah tombol - dan +.
++private val WAIT_PRESETS = listOf(100, 200, 500, 1000, 2000)
++private val HOLD_PRESETS = listOf(200, 500, 1000, 2000, 5000)
++private val LOOP_PRESETS = listOf(0, 100, 300, 500, 1000, 2000)
++private val REPEAT_PRESETS = listOf(1, 2, 3, 5, 10, 20)
++
++private const val JITTER_STEP = 5
++
++private fun mbNext(ladder: List<Int>, v: Int): Int = ladder.firstOrNull { it > v } ?: ladder.last()
++
++private fun mbPrev(ladder: List<Int>, v: Int): Int = ladder.lastOrNull { it < v } ?: ladder.first()
++
++/** Satu kotak "tambah aksi". */
++private class MbTile(
++    val emoji: String,
++    val title: String,
++    val hint: String,
++    val onClick: () -> Unit
++)
++
++/** Teks pendek untuk satu aksi di daftar: (jenis aksi, tombol/rincian). Keduanya kunci terjemahan. */
++private fun mbDescribe(step: MacroStep): Pair<String, String> = when (step) {
++    is MacroStep.Tap -> "Tekan" to KeycodeCatalog.getKeyName(step.key)
++    is MacroStep.KeyDown -> "Tahan Terus" to KeycodeCatalog.getKeyName(step.key)
++    is MacroStep.KeyUp -> "Lepas" to KeycodeCatalog.getKeyName(step.key)
++    is MacroStep.KeyHold -> "Tahan" to KeycodeCatalog.getKeyName(step.key)
++    is MacroStep.Click -> "Klik" to MacroScript.mouseName(step.button)
++    is MacroStep.MouseDown -> "Tahan Terus" to MacroScript.mouseName(step.button)
++    is MacroStep.MouseUp -> "Lepas" to MacroScript.mouseName(step.button)
++    is MacroStep.MouseHold -> "Tahan" to MacroScript.mouseName(step.button)
++    is MacroStep.Scroll -> "Pindah slot hotbar" to (if (step.direction > 0) "Slot sebelumnya" else "Slot berikutnya")
++    is MacroStep.Wait -> "Tunggu" to "${macroSeconds(step.ms)}s"
++    is MacroStep.Type -> "Ketik di chat" to step.text.ifBlank { "(kosong)" }
++}
++
++private fun mbModeTitle(mode: String): String = when (mode) {
++    MacroRunMode.HOLD -> "Selama Ditahan"
++    MacroRunMode.TOGGLE -> "Nyala / Mati"
++    else -> "Sekali Jalan"
++}
++
++/**
++ * Layar penuh untuk menyusun makro "Urutan Aksi" dengan bahasa sehari-hari: 1) tambah aksi,
++ * 2) pilih cara jalan, atau mulai dari contoh siap pakai. Semua perubahan langsung dikirim lewat
++ * [onChange] (tidak ada tombol simpan); "Selesai" hanya menutup layar.
++ *
++ * [onPickKey] membuka pemilih tombol untuk aksi berjenis TAP / HOLD / DOWN / UP; hasil pilihannya
++ * dimasukkan oleh pemanggil lewat [MacroScript.stepFromPick].
++ */
++@Composable
++fun MacroBuilderDialog(
++    button: CustomControlButton,
++    onChange: (CustomControlButton) -> Unit,
++    onPickKey: (String) -> Unit,
++    onDismiss: () -> Unit
++) {
++    val context = LocalContext.current
++    val tokens = button.macroSteps
++    val parsed = remember(tokens) { tokens.map { MacroScript.parse(it) } }
++    val estimateMs = remember(tokens) { MacroScript.estimateMs(parsed.filterNotNull()) }
++    val mode = if (MacroRunMode.isValid(button.macroRunMode)) button.macroRunMode else MacroRunMode.ONCE
++    val repeat = button.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT)
++
++    var tab by remember { mutableIntStateOf(0) }
++    val stepsScroll = rememberScrollState()
++    val sideScroll = rememberScrollState()
++    var prevCount by remember { mutableIntStateOf(tokens.size) }
++
++    // Aksi baru selalu masuk di bawah daftar: gulir ke bawah supaya langsung kelihatan.
++    LaunchedEffect(tokens.size) {
++        if (tokens.size > prevCount) {
++            withFrameNanos { }
++            stepsScroll.animateScrollTo(stepsScroll.maxValue)
++        }
++        prevCount = tokens.size
++    }
++
++    fun showLimit() {
++        Toast.makeText(context, "Maksimal ${MacroScript.MAX_STEPS} aksi", Toast.LENGTH_SHORT).show()
++    }
++
++    fun setTokens(list: List<String>) {
++        onChange(button.copy(macroSteps = list))
++    }
++
++    fun addToken(token: String) {
++        if (tokens.size >= MacroScript.MAX_STEPS) showLimit() else setTokens(tokens + token)
++    }
++
++    fun pick(kind: String) {
++        if (tokens.size >= MacroScript.MAX_STEPS) showLimit() else onPickKey(kind)
++    }
++
++    AmberPage(
++        onDismiss = onDismiss,
++        title = "Pembuat Makro",
++        icon = Icons.Outlined.Tune,
++        subtitle = "Susun aksi, lalu pilih kapan makro dijalankan",
++        actions = { _ ->
++            AmberActionButton(
++                text = "Selesai",
++                onClick = onDismiss,
++                icon = Icons.Outlined.Check,
++                height = 40.dp
++            )
++        }
++    ) { info ->
++        val narrow = info.narrow
++
++        fun applyTemplate(t: MacroTemplate) {
++            onChange(
++                button.copy(
++                    macroType = "SEQUENCE",
++                    macroSteps = t.steps,
++                    macroRunMode = t.runMode,
++                    macroRepeat = t.repeat,
++                    macroLoopDelayMs = t.loopDelayMs
++                )
++            )
++            Toast.makeText(context, "Contoh dipakai", Toast.LENGTH_SHORT).show()
++            if (narrow) tab = 0
++        }
++
++        Column(modifier = Modifier.fillMaxSize()) {
++            MbSummary(
++                count = tokens.size,
++                estimateMs = estimateMs,
++                mode = mode,
++                repeat = repeat,
++                modifier = Modifier
++                    .padding(horizontal = 16.dp)
++                    .padding(bottom = 10.dp)
++            )
++
++            if (narrow) {
++                Row(
++                    modifier = Modifier
++                        .fillMaxWidth()
++                        .padding(horizontal = 16.dp),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    listOf("Aksi", "Cara Jalan", "Contoh").forEachIndexed { index, label ->
++                        AmberChoicePill(
++                            text = label,
++                            selected = tab == index,
++                            onClick = { tab = index },
++                            modifier = Modifier.weight(1f)
++                        )
++                    }
++                }
++                Column(
++                    modifier = Modifier
++                        .weight(1f)
++                        .fillMaxWidth()
++                        .verticalScroll(stepsScroll)
++                        .padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 24.dp),
++                    verticalArrangement = Arrangement.spacedBy(14.dp)
++                ) {
++                    when (tab) {
++                        0 -> MbStepsSection(
++                            tokens = tokens,
++                            parsed = parsed,
++                            columns = 2,
++                            onSetTokens = { setTokens(it) },
++                            onAdd = { addToken(it) },
++                            onPick = { pick(it) },
++                            onShowExamples = { tab = 2 }
++                        )
++
++                        1 -> MbRunSection(button = button, onChange = onChange)
++                        else -> MbExamplesSection(
++                            hasSteps = tokens.isNotEmpty(),
++                            onApply = { applyTemplate(it) }
++                        )
++                    }
++                }
++            } else {
++                Row(
++                    modifier = Modifier
++                        .weight(1f)
++                        .fillMaxWidth()
++                        .padding(start = 16.dp, end = 16.dp),
++                    horizontalArrangement = Arrangement.spacedBy(16.dp)
++                ) {
++                    Column(
++                        modifier = Modifier
++                            .weight(1.2f)
++                            .fillMaxHeight()
++                            .verticalScroll(stepsScroll)
++                            .padding(bottom = 24.dp),
++                        verticalArrangement = Arrangement.spacedBy(14.dp)
++                    ) {
++                        MbStepsSection(
++                            tokens = tokens,
++                            parsed = parsed,
++                            columns = 3,
++                            onSetTokens = { setTokens(it) },
++                            onAdd = { addToken(it) },
++                            onPick = { pick(it) },
++                            onShowExamples = null
++                        )
++                    }
++                    Column(
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxHeight()
++                            .verticalScroll(sideScroll)
++                            .padding(bottom = 24.dp),
++                        verticalArrangement = Arrangement.spacedBy(14.dp)
++                    ) {
++                        MbRunSection(button = button, onChange = onChange)
++                        MbExamplesSection(
++                            hasSteps = tokens.isNotEmpty(),
++                            onApply = { applyTemplate(it) }
++                        )
++                    }
++                }
++            }
++        }
++    }
++}
++
++// =============================================================================
++// Ringkasan
++// =============================================================================
++
++/** Satu kartu ringkas: berapa aksi, kira-kira berapa lama, dan kapan makro berjalan. */
++@Composable
++private fun MbSummary(
++    count: Int,
++    estimateMs: Long,
++    mode: String,
++    repeat: Int,
++    modifier: Modifier = Modifier
++) {
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .amberGlass(shape)
++            .padding(horizontal = 16.dp, vertical = 12.dp),
++        verticalArrangement = Arrangement.spacedBy(2.dp)
++    ) {
++        Text(
++            text = if (count == 0) {
++                "Belum ada aksi. Mulai dari contoh atau tambah aksi sendiri."
++            } else {
++                "$count aksi · sekitar ${macroSeconds(estimateMs.toInt())} detik per putaran"
++            },
++            color = AmberUi.Text,
++            fontSize = 14.sp,
++            fontWeight = FontWeight.SemiBold
++        )
++        Text(
++            text = macroRunSentence(mode, repeat),
++            color = AmberUi.TextDim,
++            fontSize = 12.sp
++        )
++    }
++}
++
++// =============================================================================
++// Bagian 1: daftar aksi + kotak tambah aksi
++// =============================================================================
++
++@Composable
++private fun MbSectionTitle(
++    number: String?,
++    title: String,
++    hint: String,
++    modifier: Modifier = Modifier
++) {
++    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
++        if (number != null) {
++            Box(
++                modifier = Modifier
++                    .size(28.dp)
++                    .background(AmberUi.Accent, CircleShape)
++                    .border(1.dp, AmberUi.AccentEdge, CircleShape),
++                contentAlignment = Alignment.Center
++            ) {
++                Text(
++                    text = number,
++                    color = AmberUi.Text,
++                    fontSize = 14.sp,
++                    fontWeight = FontWeight.Bold
++                )
++            }
++            Spacer(modifier = Modifier.width(10.dp))
++        }
++        Column {
++            Text(
++                text = title,
++                color = AmberUi.Text,
++                fontSize = 17.sp,
++                fontWeight = FontWeight.Bold
++            )
++            Text(text = hint, color = AmberUi.TextDim, fontSize = 12.sp)
++        }
++    }
++}
++
++@Composable
++private fun MbStepsSection(
++    tokens: List<String>,
++    parsed: List<MacroStep?>,
++    columns: Int,
++    onSetTokens: (List<String>) -> Unit,
++    onAdd: (String) -> Unit,
++    onPick: (String) -> Unit,
++    onShowExamples: (() -> Unit)?
++) {
++    var showMore by remember { mutableStateOf(false) }
++    var showSlots by remember { mutableStateOf(false) }
++    var confirmClear by remember { mutableStateOf(false) }
++
++    Row(
++        modifier = Modifier.fillMaxWidth(),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        MbSectionTitle(
++            number = "1",
++            title = "Susun aksi",
++            hint = "Aksi dijalankan berurutan dari atas ke bawah.",
++            modifier = Modifier.weight(1f)
++        )
++        if (tokens.isNotEmpty()) {
++            if (confirmClear) {
++                Text(
++                    text = "Batal",
++                    color = AmberUi.TextDim,
++                    fontSize = 13.sp,
++                    fontWeight = FontWeight.SemiBold,
++                    modifier = Modifier
++                        .clip(CircleShape)
++                        .clickable { confirmClear = false }
++                        .padding(horizontal = 8.dp, vertical = 8.dp)
++                )
++                Text(
++                    text = "Yakin hapus?",
++                    color = AmberUi.Danger,
++                    fontSize = 13.sp,
++                    fontWeight = FontWeight.Bold,
++                    modifier = Modifier
++                        .clip(CircleShape)
++                        .clickable {
++                            confirmClear = false
++                            onSetTokens(emptyList())
++                        }
++                        .padding(horizontal = 8.dp, vertical = 8.dp)
++                )
++            } else {
++                Text(
++                    text = "Hapus Semua",
++                    color = AmberUi.Danger,
++                    fontSize = 13.sp,
++                    fontWeight = FontWeight.SemiBold,
++                    modifier = Modifier
++                        .clip(CircleShape)
++                        .clickable { confirmClear = true }
++                        .padding(horizontal = 8.dp, vertical = 8.dp)
++                )
++            }
++        }
++    }
++
++    if (tokens.isEmpty()) {
++        MbEmptyState(onShowExamples = onShowExamples)
++    } else {
++        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++            tokens.forEachIndexed { index, token ->
++                MbStepCard(
++                    index = index,
++                    count = tokens.size,
++                    token = token,
++                    step = parsed.getOrNull(index),
++                    onMove = { delta ->
++                        val target = index + delta
++                        if (target in tokens.indices) {
++                            val moved = tokens.toMutableList()
++                            val item = moved.removeAt(index)
++                            moved.add(target, item)
++                            onSetTokens(moved)
++                        }
++                    },
++                    onDelete = {
++                        val rest = tokens.toMutableList()
++                        rest.removeAt(index)
++                        onSetTokens(rest)
++                    },
++                    onChangeStep = { newStep ->
++                        val edited = tokens.toMutableList()
++                        edited[index] = MacroScript.toToken(newStep)
++                        onSetTokens(edited)
++                    }
++                )
++            }
++        }
++    }
++
++    // ---- Tambah aksi ----
++    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
++        AmberPageLabel("Tambah aksi baru")
++
++        val primary = listOf(
++            MbTile("👆", "Tekan / Klik", "Tombol keyboard atau klik mouse") { onPick("TAP") },
++            MbTile("✋", "Tahan", "Tekan dan tahan beberapa detik") { onPick("HOLD") },
++            MbTile("⏱️", "Tunggu", "Jeda sebelum aksi berikutnya") {
++                onAdd("WAIT:${MacroScript.DEFAULT_WAIT_MS}")
++            },
++            MbTile("🎒", "Pindah Slot", "Ganti item yang dipegang") { showSlots = !showSlots },
++            MbTile("💬", "Ketik Chat", "Kirim pesan atau perintah") { onAdd("TYPE:") }
++        )
++        val more = listOf(
++            MbTile("📌", "Tahan Terus", "Tahan sampai dilepas atau makro berhenti") { onPick("DOWN") },
++            MbTile("🔓", "Lepas", "Lepas tombol yang sedang ditahan") { onPick("UP") },
++            MbTile("🔄", "Geser Slot", "Ke slot sebelum atau sesudahnya") { onAdd("SCROLL:1") }
++        )
++        val toggle = MbTile(
++            "⋯",
++            if (showMore) "Sembunyikan" else "Lainnya",
++            if (showMore) "Tutup aksi lanjutan" else "Aksi lanjutan"
++        ) { showMore = !showMore }
++        val tiles = primary + (if (showMore) more else emptyList()) + toggle
++
++        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++            tiles.chunked(columns).forEach { rowTiles ->
++                Row(
++                    modifier = Modifier.fillMaxWidth(),
++                    horizontalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    rowTiles.forEach { tile -> MbTileCard(tile, Modifier.weight(1f)) }
++                    repeat(columns - rowTiles.size) { Spacer(modifier = Modifier.weight(1f)) }
++                }
++            }
++        }
++    }
++
++    if (showSlots) {
++        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
++            Text(
++                text = "Pilih nomor slot hotbar yang dituju",
++                color = AmberUi.TextDim,
++                fontSize = 12.sp
++            )
++            Row(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(6.dp)
++            ) {
++                for (slot in 1..9) {
++                    MbSlotPill(slot.toString(), Modifier.weight(1f)) {
++                        onAdd("TAP:${LwjglGlfwKeycode.GLFW_KEY_1 + slot - 1}")
++                    }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun MbEmptyState(onShowExamples: (() -> Unit)?) {
++    AmberPanel(padding = 16.dp) {
++        Text(
++            text = "Belum ada aksi",
++            color = AmberUi.Text,
++            fontSize = 15.sp,
++            fontWeight = FontWeight.Bold
++        )
++        Spacer(modifier = Modifier.height(4.dp))
++        Text(
++            text = "Tambahkan aksi lewat kotak di bawah, atau mulai cepat dari contoh siap pakai.",
++            color = AmberUi.TextDim,
++            fontSize = 13.sp
++        )
++        if (onShowExamples != null) {
++            Spacer(modifier = Modifier.height(12.dp))
++            AmberActionButton(
++                text = "Lihat contoh siap pakai",
++                onClick = onShowExamples,
++                filled = false,
++                height = 40.dp
++            )
++        }
++    }
++}
++
++@Composable
++private fun MbTileCard(tile: MbTile, modifier: Modifier = Modifier) {
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = modifier
++            .height(104.dp)
++            .clip(shape)
++            .amberGlass(shape)
++            .clickable { tile.onClick() }
++            .padding(horizontal = 8.dp, vertical = 8.dp),
++        horizontalAlignment = Alignment.CenterHorizontally,
++        verticalArrangement = Arrangement.Center
++    ) {
++        Text(text = tile.emoji, fontSize = 24.sp)
++        Spacer(modifier = Modifier.height(4.dp))
++        Text(
++            text = tile.title,
++            color = AmberUi.Text,
++            fontSize = 13.sp,
++            fontWeight = FontWeight.SemiBold,
++            textAlign = TextAlign.Center,
++            maxLines = 1
++        )
++        Text(
++            text = tile.hint,
++            color = AmberUi.TextDim,
++            fontSize = 11.sp,
++            textAlign = TextAlign.Center,
++            maxLines = 2,
++            overflow = TextOverflow.Ellipsis
++        )
++    }
++}
++
++@Composable
++private fun MbSlotPill(text: String, modifier: Modifier, onClick: () -> Unit) {
++    Box(
++        modifier = modifier
++            .height(40.dp)
++            .clip(CircleShape)
++            .amberGlass(CircleShape)
++            .clickable { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = text,
++            color = AmberUi.Text,
++            fontSize = 15.sp,
++            fontWeight = FontWeight.SemiBold,
++            maxLines = 1
++        )
++    }
++}
++
++/** Satu aksi: nomor, jenis + tombol, panah urut, hapus; di bawahnya pengaturan langsung (lama, teks). */
++@Composable
++private fun MbStepCard(
++    index: Int,
++    count: Int,
++    token: String,
++    step: MacroStep?,
++    onMove: (Int) -> Unit,
++    onDelete: () -> Unit,
++    onChangeStep: (MacroStep) -> Unit
++) {
++    val shape = RoundedCornerShape(18.dp)
++    Column(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .background(AmberUi.SurfaceRaised, shape)
++            .border(1.dp, AmberUi.Border, shape)
++            .padding(start = 12.dp, end = 6.dp, top = 8.dp, bottom = 10.dp),
++        verticalArrangement = Arrangement.spacedBy(8.dp)
++    ) {
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            Box(
++                modifier = Modifier
++                    .size(28.dp)
++                    .background(AmberUi.Accent.copy(alpha = 0.28f), CircleShape),
++                contentAlignment = Alignment.Center
++            ) {
++                Text(
++                    text = "${index + 1}",
++                    color = AmberUi.Text,
++                    fontSize = 13.sp,
++                    fontWeight = FontWeight.Bold
++                )
++            }
++            Spacer(modifier = Modifier.width(10.dp))
++            if (step != null) {
++                val (caption, detail) = mbDescribe(step)
++                Column(modifier = Modifier.weight(1f)) {
++                    Text(
++                        text = caption,
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        maxLines = 1
++                    )
++                    Text(
++                        text = detail,
++                        color = AmberUi.Text,
++                        fontSize = 15.sp,
++                        fontWeight = FontWeight.SemiBold,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++            } else {
++                Column(modifier = Modifier.weight(1f)) {
++                    Text(
++                        text = "Aksi tidak dikenal",
++                        color = AmberUi.Danger,
++                        fontSize = 12.sp,
++                        maxLines = 1
++                    )
++                    Text(
++                        text = token,
++                        color = AmberUi.TextDim,
++                        fontSize = 13.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++            }
++            MbIconButton(Icons.Filled.KeyboardArrowUp, "Naik", enabled = index > 0) { onMove(-1) }
++            MbIconButton(Icons.Filled.KeyboardArrowDown, "Turun", enabled = index < count - 1) { onMove(1) }
++            MbIconButton(Icons.Outlined.Delete, "Hapus", danger = true) { onDelete() }
++        }
++        if (step != null && mbHasEditor(step)) {
++            Box(modifier = Modifier.padding(end = 6.dp)) {
++                MbStepEditor(step = step, onChangeStep = onChangeStep)
++            }
++        }
++    }
++}
++
++@Composable
++private fun MbIconButton(
++    icon: ImageVector,
++    description: String,
++    enabled: Boolean = true,
++    danger: Boolean = false,
++    onClick: () -> Unit
++) {
++    Box(
++        modifier = Modifier
++            .size(36.dp)
++            .clip(CircleShape)
++            .clickable(enabled = enabled) { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Icon(
++            imageVector = icon,
++            contentDescription = description,
++            tint = when {
++                danger -> AmberUi.Danger
++                enabled -> AmberUi.Text
++                else -> AmberUi.Border
++            },
++            modifier = Modifier.size(20.dp)
++        )
++    }
++}
++
++/** Aksi yang punya pengaturan langsung (lama, arah, teks). */
++private fun mbHasEditor(step: MacroStep): Boolean =
++    step is MacroStep.Wait || step is MacroStep.KeyHold || step is MacroStep.MouseHold ||
++        step is MacroStep.Scroll || step is MacroStep.Type
++
++/** Pengaturan langsung di bawah satu aksi. Aksi sederhana (tekan, klik, lepas) tidak punya. */
++@Composable
++private fun MbStepEditor(step: MacroStep, onChangeStep: (MacroStep) -> Unit) {
++    when (step) {
++        is MacroStep.Wait -> MbTimeEditor(
++            label = "Berapa lama menunggu?",
++            ms = step.ms,
++            ladder = WAIT_LADDER,
++            presets = WAIT_PRESETS
++        ) { onChangeStep(MacroStep.Wait(it)) }
++
++        is MacroStep.KeyHold -> MbTimeEditor(
++            label = "Berapa lama ditahan?",
++            ms = step.ms,
++            ladder = HOLD_LADDER,
++            presets = HOLD_PRESETS
++        ) { onChangeStep(step.copy(ms = it)) }
++
++        is MacroStep.MouseHold -> MbTimeEditor(
++            label = "Berapa lama ditahan?",
++            ms = step.ms,
++            ladder = HOLD_LADDER,
++            presets = HOLD_PRESETS
++        ) { onChangeStep(step.copy(ms = it)) }
++
++        is MacroStep.Scroll -> Row(
++            modifier = Modifier.fillMaxWidth(),
++            horizontalArrangement = Arrangement.spacedBy(8.dp)
++        ) {
++            AmberChoicePill(
++                text = "Slot sebelumnya",
++                selected = step.direction > 0,
++                onClick = { onChangeStep(MacroStep.Scroll(1)) },
++                modifier = Modifier.weight(1f)
++            )
++            AmberChoicePill(
++                text = "Slot berikutnya",
++                selected = step.direction < 0,
++                onClick = { onChangeStep(MacroStep.Scroll(-1)) },
++                modifier = Modifier.weight(1f)
++            )
++        }
++
++        is MacroStep.Type -> Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
++            AmberField(
++                value = step.text,
++                onValueChange = { v ->
++                    onChangeStep(MacroStep.Type(v.filter { c -> c >= ' ' }.take(MacroScript.MAX_TEXT)))
++                },
++                placeholder = "Misal: /gamemode creative atau /home"
++            )
++            Text(
++                text = "Diawali / untuk perintah, tanpa / untuk pesan chat biasa.",
++                color = AmberUi.TextDim,
++                fontSize = 12.sp
++            )
++        }
++
++        else -> Unit
++    }
++}
++
++@OptIn(ExperimentalLayoutApi::class)
++@Composable
++private fun MbTimeEditor(
++    label: String,
++    ms: Int,
++    ladder: List<Int>,
++    presets: List<Int>,
++    onChange: (Int) -> Unit
++) {
++    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++        Text(text = label, color = AmberUi.TextDim, fontSize = 12.sp)
++        MbStepper(
++            valueText = macroSeconds(ms),
++            unit = "detik",
++            canDown = ms > ladder.first(),
++            canUp = ms < ladder.last(),
++            onDown = { onChange(mbPrev(ladder, ms)) },
++            onUp = { onChange(mbNext(ladder, ms)) }
++        )
++        FlowRow(
++            modifier = Modifier.fillMaxWidth(),
++            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
++            verticalArrangement = Arrangement.spacedBy(6.dp)
++        ) {
++            presets.forEach { p ->
++                AmberChoicePill(
++                    text = "${macroSeconds(p)}s",
++                    selected = ms == p,
++                    onClick = { onChange(p) }
++                )
++            }
++        }
++    }
++}
++
++/** Tombol - [angka] + besar yang mudah diketuk. */
++@Composable
++private fun MbStepper(
++    valueText: String,
++    unit: String?,
++    canDown: Boolean,
++    canUp: Boolean,
++    onDown: () -> Unit,
++    onUp: () -> Unit
++) {
++    Row(
++        modifier = Modifier.fillMaxWidth(),
++        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        MbStepButton("−", canDown, onDown)
++        Column(
++            modifier = Modifier.widthIn(min = 96.dp),
++            horizontalAlignment = Alignment.CenterHorizontally
++        ) {
++            Text(
++                text = valueText,
++                color = AmberUi.Text,
++                fontSize = 22.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 1
++            )
++            if (unit != null) {
++                Text(text = unit, color = AmberUi.TextDim, fontSize = 12.sp, maxLines = 1)
++            }
++        }
++        MbStepButton("+", canUp, onUp)
++    }
++}
++
++@Composable
++private fun MbStepButton(label: String, enabled: Boolean, onClick: () -> Unit) {
++    Box(
++        modifier = Modifier
++            .alpha(if (enabled) 1f else 0.35f)
++            .size(44.dp)
++            .clip(CircleShape)
++            .amberGlass(CircleShape)
++            .clickable(enabled = enabled) { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = label,
++            color = AmberUi.Text,
++            fontSize = 22.sp,
++            fontWeight = FontWeight.Bold
++        )
++    }
++}
++
++// =============================================================================
++// Bagian 2: cara jalan
++// =============================================================================
++
++@OptIn(ExperimentalLayoutApi::class)
++@Composable
++private fun MbRunSection(
++    button: CustomControlButton,
++    onChange: (CustomControlButton) -> Unit
++) {
++    val mode = if (MacroRunMode.isValid(button.macroRunMode)) button.macroRunMode else MacroRunMode.ONCE
++    val repeat = button.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT)
++    val loopDelay = button.macroLoopDelayMs.coerceIn(0, MacroScript.MAX_LOOP_DELAY_MS)
++    val jitter = button.macroJitterPercent.coerceIn(0, MacroScript.MAX_JITTER)
++    var advanced by remember { mutableStateOf(jitter > 0) }
++
++    MbSectionTitle(
++        number = "2",
++        title = "Kapan makro berjalan?",
++        hint = "Pilih cara tombol ini dipakai."
++    )
++
++    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++        MbRunCard(
++            emoji = "▶️",
++            title = mbModeTitle(MacroRunMode.ONCE),
++            description = "Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan.",
++            selected = mode == MacroRunMode.ONCE,
++            onClick = { onChange(button.copy(macroRunMode = MacroRunMode.ONCE)) }
++        )
++        MbRunCard(
++            emoji = "👇",
++            title = mbModeTitle(MacroRunMode.HOLD),
++            description = "Diulang terus selama tombol ditahan.",
++            selected = mode == MacroRunMode.HOLD,
++            onClick = { onChange(button.copy(macroRunMode = MacroRunMode.HOLD)) }
++        )
++        MbRunCard(
++            emoji = "🔁",
++            title = mbModeTitle(MacroRunMode.TOGGLE),
++            description = "Diulang terus sampai tombol diketuk lagi.",
++            selected = mode == MacroRunMode.TOGGLE,
++            onClick = { onChange(button.copy(macroRunMode = MacroRunMode.TOGGLE)) }
++        )
++    }
++
++    if (mode == MacroRunMode.ONCE) {
++        MbSettingCard(
++            title = "Diulang berapa kali?",
++            hint = "Berapa kali urutan dijalankan setiap ketukan."
++        ) {
++            MbStepper(
++                valueText = repeat.toString(),
++                unit = "kali",
++                canDown = repeat > 1,
++                canUp = repeat < MacroScript.MAX_REPEAT,
++                onDown = { onChange(button.copy(macroRepeat = repeat - 1)) },
++                onUp = { onChange(button.copy(macroRepeat = repeat + 1)) }
++            )
++            Spacer(modifier = Modifier.height(8.dp))
++            FlowRow(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
++                verticalArrangement = Arrangement.spacedBy(6.dp)
++            ) {
++                REPEAT_PRESETS.forEach { p ->
++                    AmberChoicePill(
++                        text = "${p}x",
++                        selected = repeat == p,
++                        onClick = { onChange(button.copy(macroRepeat = p)) }
++                    )
++                }
++            }
++        }
++    }
++
++    if (mode != MacroRunMode.ONCE || repeat > 1) {
++        MbSettingCard(
++            title = "Jeda antar putaran",
++            hint = "Waktu istirahat sebelum urutan diulang lagi."
++        ) {
++            MbStepper(
++                valueText = if (loopDelay == 0) "Tanpa jeda" else macroSeconds(loopDelay),
++                unit = if (loopDelay == 0) null else "detik",
++                canDown = loopDelay > LOOP_LADDER.first(),
++                canUp = loopDelay < LOOP_LADDER.last(),
++                onDown = { onChange(button.copy(macroLoopDelayMs = mbPrev(LOOP_LADDER, loopDelay))) },
++                onUp = { onChange(button.copy(macroLoopDelayMs = mbNext(LOOP_LADDER, loopDelay))) }
++            )
++            Spacer(modifier = Modifier.height(8.dp))
++            FlowRow(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
++                verticalArrangement = Arrangement.spacedBy(6.dp)
++            ) {
++                LOOP_PRESETS.forEach { p ->
++                    AmberChoicePill(
++                        text = "${macroSeconds(p)}s",
++                        selected = loopDelay == p,
++                        onClick = { onChange(button.copy(macroLoopDelayMs = p)) }
++                    )
++                }
++            }
++        }
++    }
++
++    // ---- Lanjutan (tersembunyi supaya layar tidak ramai) ----
++    MbAdvancedHeader(open = advanced) { advanced = !advanced }
++    if (advanced) {
++        MbSettingCard(
++            title = "Waktu acak",
++            hint = "Geser waktu tunggu dan tahan sedikit secara acak supaya terasa lebih alami."
++        ) {
++            MbStepper(
++                valueText = if (jitter == 0) "Mati" else "±$jitter%",
++                unit = null,
++                canDown = jitter > 0,
++                canUp = jitter < MacroScript.MAX_JITTER,
++                onDown = {
++                    onChange(button.copy(macroJitterPercent = (jitter - JITTER_STEP).coerceAtLeast(0)))
++                },
++                onUp = {
++                    onChange(
++                        button.copy(
++                            macroJitterPercent = (jitter + JITTER_STEP).coerceAtMost(MacroScript.MAX_JITTER)
++                        )
++                    )
++                }
++            )
++        }
++    }
++
++    Column(
++        modifier = Modifier.padding(horizontal = 4.dp),
++        verticalArrangement = Arrangement.spacedBy(4.dp)
++    ) {
++        Text(
++            text = "Tombol yang masih tertahan otomatis dilepas saat makro berhenti.",
++            color = AmberUi.TextDim,
++            fontSize = 12.sp
++        )
++        Text(
++            text = "Catatan: sebagian server melarang makro. Gunakan dengan bijak.",
++            color = AmberUi.TextDim,
++            fontSize = 12.sp
++        )
++    }
++}
++
++@Composable
++private fun MbRunCard(
++    emoji: String,
++    title: String,
++    description: String,
++    selected: Boolean,
++    onClick: () -> Unit
++) {
++    val shape = RoundedCornerShape(20.dp)
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .then(
++                if (selected) {
++                    Modifier
++                        .background(AmberUi.Accent.copy(alpha = 0.22f), shape)
++                        .border(1.5.dp, AmberUi.AccentEdge, shape)
++                } else {
++                    Modifier
++                        .background(AmberUi.SurfaceRaised, shape)
++                        .border(1.dp, AmberUi.Border, shape)
++                }
++            )
++            .clickable { onClick() }
++            .padding(14.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Text(text = emoji, fontSize = 24.sp)
++        Spacer(modifier = Modifier.width(12.dp))
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = title,
++                color = AmberUi.Text,
++                fontSize = 15.sp,
++                fontWeight = FontWeight.Bold
++            )
++            Text(text = description, color = AmberUi.TextDim, fontSize = 12.sp)
++        }
++        Spacer(modifier = Modifier.width(10.dp))
++        Box(
++            modifier = Modifier
++                .size(22.dp)
++                .border(2.dp, if (selected) AmberUi.AccentEdge else AmberUi.BorderStrong, CircleShape),
++            contentAlignment = Alignment.Center
++        ) {
++            if (selected) {
++                Box(
++                    modifier = Modifier
++                        .size(12.dp)
++                        .background(AmberUi.AccentEdge, CircleShape)
++                )
++            }
++        }
++    }
++}
++
++@Composable
++private fun MbSettingCard(
++    title: String,
++    hint: String,
++    content: @Composable ColumnScope.() -> Unit
++) {
++    AmberPanel(padding = 14.dp) {
++        Text(
++            text = title,
++            color = AmberUi.Text,
++            fontSize = 15.sp,
++            fontWeight = FontWeight.Bold
++        )
++        Text(text = hint, color = AmberUi.TextDim, fontSize = 12.sp)
++        Spacer(modifier = Modifier.height(10.dp))
++        content()
++    }
++}
++
++@Composable
++private fun MbAdvancedHeader(open: Boolean, onClick: () -> Unit) {
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(RoundedCornerShape(16.dp))
++            .clickable { onClick() }
++            .padding(horizontal = 6.dp, vertical = 8.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Text(
++            text = "Pengaturan lanjutan",
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            fontWeight = FontWeight.SemiBold,
++            modifier = Modifier.weight(1f)
++        )
++        Icon(
++            imageVector = Icons.Filled.KeyboardArrowDown,
++            contentDescription = null,
++            tint = AmberUi.TextDim,
++            modifier = Modifier
++                .size(22.dp)
++                .rotate(if (open) 180f else 0f)
++        )
++    }
++}
++
++// =============================================================================
++// Contoh siap pakai
++// =============================================================================
++
++@Composable
++private fun MbExamplesSection(hasSteps: Boolean, onApply: (MacroTemplate) -> Unit) {
++    var pending by remember { mutableIntStateOf(-1) }
++
++    MbSectionTitle(
++        number = null,
++        title = "Contoh siap pakai",
++        hint = "Ketuk contoh untuk memakainya, lalu ubah sesukamu."
++    )
++    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
++        MacroScript.TEMPLATES.forEachIndexed { index, template ->
++            MbExampleCard(
++                template = template,
++                confirming = pending == index,
++                onClick = {
++                    if (hasSteps) {
++                        pending = index
++                    } else {
++                        onApply(template)
++                    }
++                },
++                onConfirm = {
++                    pending = -1
++                    onApply(template)
++                },
++                onCancel = { pending = -1 }
++            )
++        }
++    }
++}
++
++@Composable
++private fun MbExampleCard(
++    template: MacroTemplate,
++    confirming: Boolean,
++    onClick: () -> Unit,
++    onConfirm: () -> Unit,
++    onCancel: () -> Unit
++) {
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .amberGlass(shape)
++            .clickable { onClick() }
++            .padding(14.dp),
++        verticalArrangement = Arrangement.spacedBy(10.dp)
++    ) {
++        Row(verticalAlignment = Alignment.CenterVertically) {
++            Box(
++                modifier = Modifier
++                    .size(44.dp)
++                    .background(AmberUi.SurfaceRaised, CircleShape)
++                    .border(1.dp, AmberUi.Border, CircleShape),
++                contentAlignment = Alignment.Center
++            ) {
++                Text(text = template.emoji, fontSize = 22.sp)
++            }
++            Spacer(modifier = Modifier.width(12.dp))
++            Column(
++                modifier = Modifier.weight(1f),
++                verticalArrangement = Arrangement.spacedBy(3.dp)
++            ) {
++                Text(
++                    text = template.title,
++                    color = AmberUi.Text,
++                    fontSize = 15.sp,
++                    fontWeight = FontWeight.Bold
++                )
++                if (template.description.isNotEmpty()) {
++                    Text(text = template.description, color = AmberUi.TextDim, fontSize = 12.sp)
++                }
++                AmberTag(text = mbModeTitle(template.runMode))
++            }
++        }
++        if (confirming) {
++            Text(
++                text = "Mengganti urutan yang sekarang. Lanjutkan?",
++                color = AmberUi.Text,
++                fontSize = 13.sp
++            )
++            Row(
++                modifier = Modifier.fillMaxWidth(),
++                horizontalArrangement = Arrangement.spacedBy(8.dp)
++            ) {
++                AmberActionButton(
++                    text = "Ya, ganti",
++                    onClick = onConfirm,
++                    modifier = Modifier.weight(1f),
++                    height = 40.dp
++                )
++                AmberActionButton(
++                    text = "Batal",
++                    onClick = onCancel,
++                    modifier = Modifier.weight(1f),
++                    filled = false,
++                    height = 40.dp
++                )
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroSequenceEditor.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroSequenceEditor.kt
+index dbb9b77..8609b44 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroSequenceEditor.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroSequenceEditor.kt
+@@ -6,39 +6,24 @@ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.Arrangement
+ import androidx.compose.foundation.layout.Box
+ import androidx.compose.foundation.layout.Column
+-import androidx.compose.foundation.layout.ExperimentalLayoutApi
+-import androidx.compose.foundation.layout.FlowRow
+ import androidx.compose.foundation.layout.Row
+-import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.padding
+-import androidx.compose.foundation.layout.size
+-import androidx.compose.foundation.layout.width
+-import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+-import androidx.compose.foundation.text.BasicTextField
+ import androidx.compose.material3.Slider
+ import androidx.compose.material3.SliderDefaults
+ import androidx.compose.runtime.Composable
+-import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.mutableIntStateOf
+ import androidx.compose.runtime.remember
+-import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
+-import androidx.compose.ui.graphics.SolidColor
+-import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+-import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.controls.MacroScript
+-import com.israadev.nuxlauncher.core.controls.MacroStep
+ import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+ import com.israadev.nuxlauncher.core.controls.models.MacroRunMode
+ import com.israadev.nuxlauncher.ui.i18n.Text
+-import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
+ import java.util.Locale
+ import kotlin.math.roundToInt
+ 
+@@ -48,8 +33,6 @@ private val GoldSoft = Color(0xFFFFE566)
+ private val Cream = Color(0xFFE9E4CC)
+ private val PanelDark = Color(0xFF121212)
+ private val LineDark = Color(0xFF313131)
+-private val ChipDark = Color(0xFF1D1D1D)
+-private val Danger = Color(0xFFFF8A80)
+ 
+ /** Pilihan jenis makro (kotak kecil terisi kuning bila dipilih). */
+ @Composable
+@@ -90,457 +73,88 @@ internal fun MacroJitterSlider(percent: Int, onChange: (Int) -> Unit) {
+     ) { onChange(it.roundToInt().coerceIn(0, MacroScript.MAX_JITTER)) }
+ }
+ 
++/** Waktu dalam detik untuk tampilan: 1, 0.5, 0.05 (angka bulat tanpa desimal, selain itu 1-2 desimal). */
++internal fun macroSeconds(ms: Int): String = when {
++    ms % 1000 == 0 -> (ms / 1000).toString()
++    ms % 100 == 0 -> String.format(Locale.US, "%.1f", ms / 1000.0)
++    else -> String.format(Locale.US, "%.2f", ms / 1000.0)
++}
++
++/** Kalimat sehari-hari tentang kapan makro berjalan. Dipakai kartu ringkas dan Pembuat Makro. */
++internal fun macroRunSentence(mode: String, repeat: Int): String = when (mode) {
++    MacroRunMode.HOLD -> "Diulang terus selama tombol ditahan."
++    MacroRunMode.TOGGLE -> "Diulang terus sampai tombol diketuk lagi."
++    else -> if (repeat > 1) {
++        "Diulang $repeat kali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan."
++    } else {
++        "Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan."
++    }
++}
++
+ /**
+- * Editor makro "Urutan Aksi": cara jalan, daftar langkah (key, klik, tahan, gulir, jeda, ketik), dan
+- * templat siap pakai. Perubahan dikirim lewat [onChange] sebagai tombol baru. [onPickKey] membuka
+- * pemilih tombol untuk langkah berjenis TAP / HOLD / DOWN / UP; hasil pilihannya dimasukkan oleh
+- * pemanggil lewat [MacroScript.stepFromPick].
++ * Kartu ringkas "Urutan Aksi" di panel editor tombol: berapa aksi, kira-kira berapa lama, kapan
++ * berjalan, dan satu tombol besar yang membuka [MacroBuilderDialog] (tempat menyusun aksinya).
+  */
+-@OptIn(ExperimentalLayoutApi::class)
+ @Composable
+-fun MacroSequenceEditor(
++fun MacroSequenceSummary(
+     button: CustomControlButton,
+-    onChange: (CustomControlButton) -> Unit,
+-    onPickKey: (String) -> Unit
++    onOpen: () -> Unit
+ ) {
+     val tokens = button.macroSteps
+-    var expanded by remember(button.id) { mutableIntStateOf(-1) }
+-    val parsed = remember(tokens) { tokens.map { MacroScript.parse(it) } }
+-    val estimateMs = remember(tokens) { MacroScript.estimateMs(parsed.filterNotNull()) }
++    val estimateMs = remember(tokens) { MacroScript.estimateMs(MacroScript.parseAll(tokens)) }
+     val mode = if (MacroRunMode.isValid(button.macroRunMode)) button.macroRunMode else MacroRunMode.ONCE
+-
+-    fun setTokens(list: List<String>) {
+-        onChange(button.copy(macroSteps = list))
+-    }
+-
+-    fun addToken(token: String) {
+-        if (tokens.size < MacroScript.MAX_STEPS) setTokens(tokens + token)
+-    }
++    val repeat = button.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT)
++    val shape = RoundedCornerShape(6.dp)
+ 
+     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+-        // ---- Cara jalan ----
+-        Text("Cara Jalan:", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White)
+-        Row(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+-        ) {
+-            listOf(
+-                MacroRunMode.ONCE to "Sekali",
+-                MacroRunMode.HOLD to "Tahan",
+-                MacroRunMode.TOGGLE to "Nyala/Mati"
+-            ).forEach { (key, label) ->
+-                MacroTypeChip(
+-                    label = label,
+-                    chosen = mode == key,
+-                    onClick = { onChange(button.copy(macroRunMode = key)) },
+-                    modifier = Modifier.weight(1f)
+-                )
+-            }
+-        }
+-        Text(
+-            text = when (mode) {
+-                MacroRunMode.HOLD -> "Diulang terus selama tombol ditahan."
+-                MacroRunMode.TOGGLE -> "Diulang terus sampai tombol diketuk lagi."
+-                else -> "Jalan sekali setiap ketuk. Ketuk lagi saat berjalan untuk menghentikan."
+-            },
+-            fontSize = 8.sp,
+-            color = Cream
+-        )
+-
+-        val repeat = button.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT)
+-        if (mode == MacroRunMode.ONCE) {
+-            MacroSlider(
+-                label = "Ulangi:",
+-                valueText = "${repeat}x",
+-                value = repeat.toFloat(),
+-                range = 1f..MacroScript.MAX_REPEAT.toFloat()
+-            ) { onChange(button.copy(macroRepeat = it.roundToInt().coerceIn(1, MacroScript.MAX_REPEAT))) }
+-        }
+-        if (mode != MacroRunMode.ONCE || repeat > 1) {
+-            val loopDelay = button.macroLoopDelayMs.coerceIn(0, MacroScript.MAX_LOOP_DELAY_MS)
+-            MacroSlider(
+-                label = "Jeda Antar Putaran:",
+-                valueText = "$loopDelay ms",
+-                value = loopDelay.toFloat(),
+-                range = 0f..2000f
+-            ) { onChange(button.copy(macroLoopDelayMs = (it / 50f).roundToInt() * 50)) }
+-        }
+-        MacroJitterSlider(button.macroJitterPercent) { onChange(button.copy(macroJitterPercent = it)) }
+-        Text(
+-            text = "Waktu tunggu dan tahan digeser acak sedikit supaya tidak terlalu kaku.",
+-            fontSize = 8.sp,
+-            color = Cream
+-        )
+-
+-        // ---- Daftar langkah ----
+-        Row(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.SpaceBetween,
+-            verticalAlignment = Alignment.CenterVertically
+-        ) {
+-            Row(verticalAlignment = Alignment.CenterVertically) {
+-                Text("Langkah Makro:", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White)
+-                Spacer(modifier = Modifier.width(6.dp))
+-                Text("${tokens.size}/${MacroScript.MAX_STEPS}", fontSize = 8.sp, fontWeight = FontWeight.Black, color = GoldSoft)
+-            }
+-            if (tokens.isNotEmpty()) {
+-                Text(
+-                    text = "Hapus Semua",
+-                    fontSize = 8.sp,
+-                    color = Danger,
+-                    fontWeight = FontWeight.Bold,
+-                    modifier = Modifier.clickable {
+-                        expanded = -1
+-                        setTokens(emptyList())
+-                    }
+-                )
+-            }
+-        }
+-
+-        if (tokens.isEmpty()) {
+-            Box(
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .background(PanelDark, RoundedCornerShape(6.dp))
+-                    .border(1.dp, Color(0xFF2E2E2E), RoundedCornerShape(6.dp))
+-                    .padding(vertical = 10.dp, horizontal = 12.dp),
+-                contentAlignment = Alignment.Center
+-            ) {
+-                Text(
+-                    text = "Belum ada langkah. Tambahkan lewat tombol di bawah, atau pilih templat.",
+-                    color = GoldSoft,
+-                    fontSize = 9.sp
+-                )
+-            }
+-        } else {
+-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+-                tokens.forEachIndexed { index, token ->
+-                    MacroStepRow(
+-                        index = index,
+-                        count = tokens.size,
+-                        token = token,
+-                        step = parsed[index],
+-                        expanded = expanded == index,
+-                        onToggle = { expanded = if (expanded == index) -1 else index },
+-                        onMove = { delta ->
+-                            val target = index + delta
+-                            if (target in tokens.indices) {
+-                                val moved = tokens.toMutableList()
+-                                val item = moved.removeAt(index)
+-                                moved.add(target, item)
+-                                expanded = -1
+-                                setTokens(moved)
+-                            }
+-                        },
+-                        onDelete = {
+-                            val rest = tokens.toMutableList()
+-                            rest.removeAt(index)
+-                            expanded = -1
+-                            setTokens(rest)
+-                        },
+-                        onChangeStep = { newStep ->
+-                            val edited = tokens.toMutableList()
+-                            edited[index] = MacroScript.toToken(newStep)
+-                            setTokens(edited)
+-                        }
+-                    )
+-                }
+-            }
+-        }
+-
+-        // ---- Tambah langkah ----
+-        Text("Tambah Langkah:", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White)
+-        FlowRow(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+-            verticalArrangement = Arrangement.spacedBy(4.dp)
+-        ) {
+-            MacroAddChip("Tekan") { onPickKey("TAP") }
+-            MacroAddChip("Tahan") { onPickKey("HOLD") }
+-            MacroAddChip("Tekan terus") { onPickKey("DOWN") }
+-            MacroAddChip("Lepas") { onPickKey("UP") }
+-            MacroAddChip("Tunggu") { addToken("WAIT:${MacroScript.DEFAULT_WAIT_MS}") }
+-            MacroAddChip("Gulir") { addToken("SCROLL:1") }
+-            MacroAddChip("Ketik") {
+-                if (tokens.size < MacroScript.MAX_STEPS) {
+-                    expanded = tokens.size
+-                    addToken("TYPE:")
+-                }
+-            }
+-        }
+-
+-        Text("Pindah Slot Hotbar:", fontSize = 8.sp, color = Cream)
+-        FlowRow(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+-            verticalArrangement = Arrangement.spacedBy(4.dp)
+-        ) {
+-            for (slot in 1..9) {
+-                MacroAddChip(label = slot.toString(), plus = false) {
+-                    addToken("TAP:${LwjglGlfwKeycode.GLFW_KEY_1 + slot - 1}")
+-                }
+-            }
+-        }
+-
+-        // ---- Templat ----
+-        Text("Templat Cepat (mengganti urutan):", fontSize = 8.sp, color = Cream)
+-        FlowRow(
+-            modifier = Modifier.fillMaxWidth(),
+-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+-            verticalArrangement = Arrangement.spacedBy(4.dp)
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .background(PanelDark, shape)
++                .border(1.dp, LineDark, shape)
++                .padding(horizontal = 10.dp, vertical = 8.dp),
++            verticalArrangement = Arrangement.spacedBy(3.dp)
+         ) {
+-            MacroScript.TEMPLATES.forEach { template ->
+-                MacroAddChip(label = template.title, plus = false) {
+-                    expanded = -1
+-                    onChange(
+-                        button.copy(
+-                            macroType = "SEQUENCE",
+-                            macroSteps = template.steps,
+-                            macroRunMode = template.runMode,
+-                            macroRepeat = template.repeat,
+-                            macroLoopDelayMs = template.loopDelayMs
+-                        )
+-                    )
+-                }
+-            }
+-        }
+-
+-        // ---- Ringkasan & catatan ----
+-        Row(verticalAlignment = Alignment.CenterVertically) {
+-            Text("Perkiraan satu putaran:", fontSize = 8.sp, color = Cream)
+-            Spacer(modifier = Modifier.width(4.dp))
+             Text(
+-                text = String.format(Locale.US, "%.1f s", estimateMs / 1000f),
+-                fontSize = 8.sp,
++                text = if (tokens.isEmpty()) {
++                    "Belum ada aksi"
++                } else {
++                    "${tokens.size} aksi \u00b7 sekitar ${macroSeconds(estimateMs.toInt())} detik per putaran"
++                },
++                fontSize = 10.sp,
+                 fontWeight = FontWeight.Black,
+                 color = GoldSoft
+             )
++            Text(
++                text = macroRunSentence(mode, repeat),
++                fontSize = 8.sp,
++                color = Cream
++            )
+         }
+-        Text(
+-            text = "Tombol yang masih tertahan otomatis dilepas saat makro berhenti.",
+-            fontSize = 8.sp,
+-            color = Cream
+-        )
+-        Text(
+-            text = "Catatan: sebagian server melarang makro. Gunakan dengan bijak.",
+-            fontSize = 8.sp,
+-            color = Cream
+-        )
+-    }
+-}
+-
+-/** Satu baris langkah: nomor, jenis + rincian, panah urut, hapus. Ketuk baris untuk mengatur lamanya/teksnya. */
+-@Composable
+-private fun MacroStepRow(
+-    index: Int,
+-    count: Int,
+-    token: String,
+-    step: MacroStep?,
+-    expanded: Boolean,
+-    onToggle: () -> Unit,
+-    onMove: (Int) -> Unit,
+-    onDelete: () -> Unit,
+-    onChangeStep: (MacroStep) -> Unit
+-) {
+-    val shape = RoundedCornerShape(6.dp)
+-    val editable = step is MacroStep.Wait || step is MacroStep.KeyHold || step is MacroStep.MouseHold ||
+-        step is MacroStep.Type || step is MacroStep.Scroll
+-
+-    Column(
+-        modifier = Modifier
+-            .fillMaxWidth()
+-            .background(PanelDark, shape)
+-            .border(1.dp, if (expanded) Gold else LineDark, shape)
+-    ) {
+-        Row(
++        Box(
+             modifier = Modifier
+                 .fillMaxWidth()
+-                .clickable(enabled = editable) { onToggle() }
+-                .padding(horizontal = 8.dp, vertical = 6.dp),
+-            verticalAlignment = Alignment.CenterVertically
++                .background(Gold, RoundedCornerShape(8.dp))
++                .clickable { onOpen() }
++                .padding(vertical = 11.dp),
++            contentAlignment = Alignment.Center
+         ) {
+-            Box(
+-                modifier = Modifier
+-                    .background(Color(0x33FFD60A), RoundedCornerShape(4.dp))
+-                    .padding(horizontal = 5.dp, vertical = 2.dp)
+-            ) {
+-                Text("#${index + 1}", fontSize = 8.sp, fontWeight = FontWeight.Black, color = GoldSoft)
+-            }
+-            Spacer(modifier = Modifier.width(6.dp))
+-            if (step != null) {
+-                val (verb, detail) = MacroScript.label(step)
+-                Column(modifier = Modifier.weight(1f)) {
+-                    Text(verb, fontSize = 8.sp, fontWeight = FontWeight.Bold, color = GoldSoft, maxLines = 1)
+-                    Text(
+-                        text = detail,
+-                        fontSize = 10.sp,
+-                        fontWeight = FontWeight.Bold,
+-                        color = Color.White,
+-                        maxLines = 1,
+-                        overflow = TextOverflow.Ellipsis
+-                    )
+-                }
+-            } else {
+-                Text(
+-                    text = token,
+-                    fontSize = 9.sp,
+-                    color = Danger,
+-                    maxLines = 1,
+-                    overflow = TextOverflow.Ellipsis,
+-                    modifier = Modifier.weight(1f)
+-                )
+-            }
+-            if (editable) {
+-                Text(if (expanded) "▾" else "✎", fontSize = 11.sp, color = GoldSoft)
+-                Spacer(modifier = Modifier.width(6.dp))
+-            }
+-            MacroMiniButton("▲", enabled = index > 0) { onMove(-1) }
+-            Spacer(modifier = Modifier.width(4.dp))
+-            MacroMiniButton("▼", enabled = index < count - 1) { onMove(1) }
+-            Spacer(modifier = Modifier.width(4.dp))
+-            MacroMiniButton("✕", danger = true) { onDelete() }
+-        }
+-
+-        if (expanded && step != null) {
+-            Column(
+-                modifier = Modifier
+-                    .fillMaxWidth()
+-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+-                verticalArrangement = Arrangement.spacedBy(4.dp)
+-            ) {
+-                when (step) {
+-                    is MacroStep.Wait -> MacroSlider(
+-                        label = "Lama Tunggu:",
+-                        valueText = "${step.ms} ms",
+-                        value = step.ms.toFloat(),
+-                        range = MacroScript.MIN_WAIT_MS.toFloat()..5000f
+-                    ) { onChangeStep(MacroStep.Wait(snapMs(it))) }
+-
+-                    is MacroStep.KeyHold -> MacroSlider(
+-                        label = "Lama Tahan:",
+-                        valueText = "${step.ms} ms",
+-                        value = step.ms.toFloat(),
+-                        range = MacroScript.MIN_HOLD_MS.toFloat()..5000f
+-                    ) { onChangeStep(step.copy(ms = snapMs(it))) }
+-
+-                    is MacroStep.MouseHold -> MacroSlider(
+-                        label = "Lama Tahan:",
+-                        valueText = "${step.ms} ms",
+-                        value = step.ms.toFloat(),
+-                        range = MacroScript.MIN_HOLD_MS.toFloat()..5000f
+-                    ) { onChangeStep(step.copy(ms = snapMs(it))) }
+-
+-                    is MacroStep.Scroll -> Row(
+-                        modifier = Modifier.fillMaxWidth(),
+-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+-                    ) {
+-                        MacroTypeChip(
+-                            label = "Naik",
+-                            chosen = step.direction > 0,
+-                            onClick = { onChangeStep(MacroStep.Scroll(1)) },
+-                            modifier = Modifier.weight(1f)
+-                        )
+-                        MacroTypeChip(
+-                            label = "Turun",
+-                            chosen = step.direction < 0,
+-                            onClick = { onChangeStep(MacroStep.Scroll(-1)) },
+-                            modifier = Modifier.weight(1f)
+-                        )
+-                    }
+-
+-                    is MacroStep.Type -> {
+-                        Text(
+-                            "Teks / Perintah yang diketik otomatis:",
+-                            fontSize = 9.sp,
+-                            fontWeight = FontWeight.Bold,
+-                            color = Color.White
+-                        )
+-                        BasicTextField(
+-                            value = step.text,
+-                            onValueChange = { v ->
+-                                onChangeStep(MacroStep.Type(v.filter { c -> c >= ' ' }.take(MacroScript.MAX_TEXT)))
+-                            },
+-                            singleLine = true,
+-                            textStyle = TextStyle(color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
+-                            cursorBrush = SolidColor(GoldSoft),
+-                            modifier = Modifier
+-                                .fillMaxWidth()
+-                                .background(Color(0xFF0C0C0C), RoundedCornerShape(6.dp))
+-                                .border(1.dp, LineDark, RoundedCornerShape(6.dp))
+-                                .padding(horizontal = 10.dp, vertical = 8.dp),
+-                            decorationBox = { innerTextField ->
+-                                if (step.text.isEmpty()) {
+-                                    Text(
+-                                        text = "Misal: /gamemode creative atau /home",
+-                                        color = Color(0xFF8C8774),
+-                                        fontSize = 10.sp
+-                                    )
+-                                }
+-                                innerTextField()
+-                            }
+-                        )
+-                    }
+-
+-                    else -> Unit
+-                }
+-            }
++            Text(
++                text = if (tokens.isEmpty()) "Buat Urutan Aksi" else "Atur Urutan Aksi",
++                fontSize = 11.sp,
++                fontWeight = FontWeight.Black,
++                color = Color(0xFF111111),
++                maxLines = 1
++            )
+         }
+-    }
+-}
+-
+-/** Waktu tersnap: kelipatan 10 ms di bawah 500 ms, kelipatan 50 ms di atasnya. */
+-private fun snapMs(v: Float): Int {
+-    val unit = if (v < 500f) 10 else 50
+-    return (v / unit).roundToInt() * unit
+-}
+-
+-@Composable
+-private fun MacroMiniButton(
+-    label: String,
+-    enabled: Boolean = true,
+-    danger: Boolean = false,
+-    onClick: () -> Unit
+-) {
+-    Box(
+-        modifier = Modifier
+-            .size(22.dp)
+-            .background(if (danger) Color(0xFF3B1E22) else Color(0xFF202020), CircleShape)
+-            .clickable(enabled = enabled) { onClick() },
+-        contentAlignment = Alignment.Center
+-    ) {
+         Text(
+-            text = label,
+-            fontSize = 9.sp,
+-            fontWeight = FontWeight.Black,
+-            color = when {
+-                danger -> Danger
+-                enabled -> Color.White
+-                else -> Color(0xFF555555)
+-            }
++            text = "Catatan: sebagian server melarang makro. Gunakan dengan bijak.",
++            fontSize = 8.sp,
++            color = Cream
+         )
+     }
+ }
+ 
+-/** Kotak kecil untuk menambah langkah / memilih templat. [plus] menambah tanda + di depan teks. */
+-@Composable
+-private fun MacroAddChip(label: String, plus: Boolean = true, onClick: () -> Unit) {
+-    val shape = RoundedCornerShape(4.dp)
+-    Row(
+-        modifier = Modifier
+-            .background(ChipDark, shape)
+-            .border(0.5.dp, Color(0xFF2E2E2E), shape)
+-            .clickable { onClick() }
+-            .padding(horizontal = 7.dp, vertical = 4.dp),
+-        verticalAlignment = Alignment.CenterVertically
+-    ) {
+-        if (plus) {
+-            Text("+", fontSize = 9.sp, color = GoldSoft, fontWeight = FontWeight.Black)
+-            Spacer(modifier = Modifier.width(3.dp))
+-        }
+-        Text(label, fontSize = 8.sp, color = GoldSoft, fontWeight = FontWeight.Bold, maxLines = 1)
+-    }
+-}
+-
+ @Composable
+ private fun MacroSlider(
+     label: String,
+# FIN part=1/1 files=11

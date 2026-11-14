@@ -1,0 +1,689 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+index b65367b..634e5d5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+@@ -1,5 +1,10 @@
+ package com.israadev.nuxlauncher.ui.screens
+ 
++import android.content.Context
++import android.net.Uri
++import android.provider.OpenableColumns
++import androidx.activity.compose.rememberLauncherForActivityResult
++import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
+ import androidx.compose.foundation.clickable
+@@ -35,6 +40,7 @@ import androidx.compose.material.icons.outlined.Check
+ import androidx.compose.material.icons.outlined.ChevronRight
+ import androidx.compose.material.icons.outlined.Download
+ import androidx.compose.material.icons.outlined.Extension
++import androidx.compose.material.icons.outlined.Folder
+ import androidx.compose.material.icons.outlined.KeyboardArrowDown
+ import androidx.compose.material.icons.outlined.Layers
+ import androidx.compose.material.icons.outlined.Memory
+@@ -42,6 +48,7 @@ import androidx.compose.material.icons.outlined.Public
+ import androidx.compose.material.icons.outlined.ViewInAr
+ import androidx.compose.material3.Icon
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.runtime.LaunchedEffect
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+@@ -68,6 +75,9 @@ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.manifest.MojangManifestService
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.VersionItem
++import com.israadev.nuxlauncher.core.modpack.ModpackReader
++import com.israadev.nuxlauncher.core.modpack.ModpackStaging
++import com.israadev.nuxlauncher.core.utils.SafePaths
+ import com.israadev.nuxlauncher.core.vulkan.McVulkan
+ import com.israadev.nuxlauncher.core.vulkan.VerdictLevel
+ import com.israadev.nuxlauncher.core.vulkan.VulkanCheck
+@@ -76,9 +86,13 @@ import com.israadev.nuxlauncher.core.vulkan.VulkanState
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+ import com.israadev.nuxlauncher.ui.theme.amberGlass
++import java.io.File
++import java.io.IOException
+ import java.util.UUID
+ import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ 
+ /** Filter jenis versi Minecraft di layar Buat Instance. */
+ enum class VersionCategory(val label: String) {
+@@ -92,12 +106,16 @@ enum class VersionCategory(val label: String) {
+ /** Satu loader di rel kiri. */
+ private class CiLoader(val id: String, val label: String, val icon: ImageVector)
+ 
++/** Id entri "Modpack" di rel kiri: bukan loader, tapi cara lain membuat instance (dari berkas modpack). */
++private const val CI_MODPACK = "modpack"
++
+ private val CI_LOADERS = listOf(
+     CiLoader("fabric", "Fabric", Icons.Outlined.Layers),
+     CiLoader("forge", "Forge", Icons.Outlined.Extension),
+     CiLoader("neoforge", "NeoForge", Icons.Outlined.Memory),
+     CiLoader(HorizonEngine.LOADER_ID, HorizonEngine.DISPLAY_NAME, Icons.Outlined.ViewInAr),
+-    CiLoader("vanilla", "Vanilla", Icons.Outlined.Public)
++    CiLoader("vanilla", "Vanilla", Icons.Outlined.Public),
++    CiLoader(CI_MODPACK, "Modpack", Icons.Outlined.Folder)
+ )
+ 
+ /**
+@@ -129,6 +147,8 @@ private val CI_SNAPSHOT_COLOR = Color(0xFFF2B84B)
+ fun CreateInstanceScreen(
+     onNavigateBack: () -> Unit,
+     onInstanceCreated: (Instance) -> Unit,
++    /** Instance dari modpack: instance baru, berkas modpack sementara (di cache), dan nama arsipnya. */
++    onModpackImport: (Instance, File, String) -> Unit,
+     modifier: Modifier = Modifier
+ ) {
+     val context = LocalContext.current
+@@ -156,6 +176,99 @@ fun CreateInstanceScreen(
+     var loaderVersion by remember { mutableStateOf("") }
+     var loaderLoadedKey by remember { mutableStateOf("") }
+ 
++    // Mode "Modpack": berkas yang dipilih disalin ke cache, dibaca, lalu instance dibuat dari isinya.
++    var pack by remember { mutableStateOf<ModpackReader.Info?>(null) }
++    var packName by remember { mutableStateOf("") }
++    var packReading by remember { mutableStateOf(false) }
++    var packError by remember { mutableStateOf<String?>(null) }
++    var packLoaderVersion by remember { mutableStateOf("") }
++    var packLoaderNote by remember { mutableStateOf("") }
++    var packLoaderLoading by remember { mutableStateOf(false) }
++    var packLoaderFailed by remember { mutableStateOf(false) }
++    var packReloadTick by remember { mutableStateOf(0) }
++    val packHolder = remember { CiPackHolder() }
++
++    // Keluar dari layar tanpa memasang: buang salinan sementaranya (setelah Install, Home yang memegangnya).
++    DisposableEffect(Unit) {
++        onDispose {
++            if (!packHolder.handedOff) packHolder.file?.delete()
++        }
++    }
++
++    val packPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
++        if (uri != null && !packReading) {
++            scope.launch {
++                packReading = true
++                packError = null
++                pack = null
++                val previous = packHolder.file
++                packHolder.file = null
++                val result = withContext(Dispatchers.IO) {
++                    try {
++                        Result.success(ciReadPickedPack(context, uri, previous))
++                    } catch (e: CancellationException) {
++                        throw e
++                    } catch (e: Exception) {
++                        Result.failure<CiPickedPack>(e)
++                    }
++                }
++                packReading = false
++                val picked = result.getOrNull()
++                if (picked != null) {
++                    packHolder.file = picked.file
++                    packName = picked.displayName
++                    pack = picked.info
++                } else {
++                    val problem = result.exceptionOrNull()
++                    packError = if (problem is ModpackReader.ReadException) {
++                        problem.message
++                    } else {
++                        "Gagal membuka berkas modpack."
++                    }
++                }
++            }
++        }
++    }
++
++    // Versi loader untuk modpack: pakai versi yang diminta modpack bila server menyediakannya; kalau tidak,
++    // versi bawaan (terbaru/disarankan) dan pengguna diberi tahu.
++    LaunchedEffect(pack, packReloadTick) {
++        packLoaderVersion = ""
++        packLoaderNote = ""
++        packLoaderFailed = false
++        packLoaderLoading = false
++        val info = pack ?: return@LaunchedEffect
++        if (info.loader == "vanilla") return@LaunchedEffect
++        packLoaderLoading = true
++        val available: List<String>
++        val fallback: String
++        if (info.loader == "fabric") {
++            available = FabricService.getFabricLoaders(info.minecraft).getOrNull() ?: emptyList()
++            fallback = available.firstOrNull() ?: ""
++        } else {
++            val packFlavor = ForgeFlavor.of(info.loader)
++            val builds = if (packFlavor != null) {
++                ForgeService.getBuilds(info.minecraft, packFlavor).getOrNull() ?: emptyList()
++            } else {
++                emptyList()
++            }
++            available = builds.map { it.version }
++            fallback = ForgeService.pickDefault(builds)?.version ?: ""
++        }
++        packLoaderLoading = false
++        if (available.isEmpty() || fallback.isEmpty()) {
++            packLoaderFailed = true
++            return@LaunchedEffect
++        }
++        val match = ModpackReader.matchLoaderVersion(info.loaderVersion, available, info.minecraft)
++        if (match != null) {
++            packLoaderVersion = match
++        } else {
++            packLoaderVersion = fallback
++            packLoaderNote = "Versi loader dari modpack (${info.loaderVersion}) tidak tersedia, dipakai versi $fallback."
++        }
++    }
++
+     LaunchedEffect(reloadTick) {
+         isLoadingVersions = true
+         manifestError = false
+@@ -215,8 +328,9 @@ fun CreateInstanceScreen(
+ 
+     val isVanilla = selectedLoader == "vanilla"
+     val isEngine = selectedLoader == HorizonEngine.LOADER_ID
+-    // Vanilla dan mesin Rust tidak punya versi loader untuk dipilih.
+-    val noLoaderVersions = isVanilla || isEngine
++    val isModpack = selectedLoader == CI_MODPACK
++    // Vanilla, mesin Rust, dan modpack tidak punya versi loader untuk dipilih di daftar versi.
++    val noLoaderVersions = isVanilla || isEngine || isModpack
+     val loaderInfo = CI_LOADERS.firstOrNull { it.id == selectedLoader } ?: CI_LOADERS.first()
+     val flavor = ForgeFlavor.of(selectedLoader)
+ 
+@@ -265,7 +379,7 @@ fun CreateInstanceScreen(
+     val hasYearVersions = remember(shownVersions) { shownVersions.any { McVulkan.isYearVersion(it.id) } }
+ 
+     val supportedPending = !noLoaderVersions && supportedKey != selectedLoader
+-    val listLoading = !isEngine && (isLoadingVersions || supportedPending)
++    val listLoading = !isEngine && !isModpack && (isLoadingVersions || supportedPending)
+ 
+     val currentKey = if (selectedVersion != null) "$selectedLoader:$selectedVersion" else ""
+     val loaderPending = !noLoaderVersions && selectedVersion != null && loaderLoadedKey != currentKey
+@@ -274,9 +388,38 @@ fun CreateInstanceScreen(
+     // Mesin Rust: build ini harus membawa mesinnya dan HP-nya harus mampu. Alasan bila tidak, tampil di CiEngineNotice.
+     val engineStatus = remember(isEngine) { if (isEngine) HorizonEngine.availability(context) else null }
+     val engineBlocked = engineStatus is HorizonEngine.Availability.Unavailable
+-    val canInstall = chosenMc != null && !engineBlocked &&
+-        (noLoaderVersions || (!loaderPending && loaderVersion.isNotBlank()))
+-    val defaultName = if (chosenMc != null) "$chosenMc ${loaderInfo.label}" else ""
++    val packInfo = pack
++    val packLoaderLabel = packInfo?.let { p -> CI_LOADERS.firstOrNull { it.id == p.loader }?.label ?: p.loader }.orEmpty()
++    val packReady = packInfo != null && !packLoaderLoading && !packLoaderFailed &&
++        (packInfo.loader == "vanilla" || packLoaderVersion.isNotBlank())
++    val canInstall = if (isModpack) {
++        packReady
++    } else {
++        chosenMc != null && !engineBlocked &&
++            (noLoaderVersions || (!loaderPending && loaderVersion.isNotBlank()))
++    }
++    val defaultName = when {
++        isModpack -> packInfo?.title?.take(48).orEmpty()
++        chosenMc != null -> "$chosenMc ${loaderInfo.label}"
++        else -> ""
++    }
++    // Ringkasan di panel atas: judul dan keterangan kecil di bawahnya
++    val hasChoice = if (isModpack) packInfo != null else chosenMc != null
++    val summaryTitle = when {
++        isModpack -> packInfo?.title ?: "Pilih modpack"
++        chosenMc != null -> "$chosenMc ${loaderInfo.label}"
++        else -> "Pilih versi"
++    }
++    val summarySub = when {
++        isModpack && packInfo != null ->
++            if (packInfo.loader == "vanilla" || packLoaderVersion.isBlank()) {
++                "${packInfo.minecraft} - $packLoaderLabel"
++            } else {
++                "${packInfo.minecraft} - $packLoaderLabel $packLoaderVersion"
++            }
++        !noLoaderVersions && chosenMc != null && loaderVersion.isNotBlank() -> "${loaderInfo.label} $loaderVersion"
++        else -> ""
++    }
+ 
+     Column(
+         modifier = modifier
+@@ -309,16 +452,16 @@ fun CreateInstanceScreen(
+                     verticalArrangement = Arrangement.Center
+                 ) {
+                     Text(
+-                        text = if (chosenMc != null) "$chosenMc ${loaderInfo.label}" else "Pilih versi",
+-                        color = if (chosenMc != null) AmberUi.Text else AmberUi.TextDim,
++                        text = summaryTitle,
++                        color = if (hasChoice) AmberUi.Text else AmberUi.TextDim,
+                         fontSize = 16.sp,
+                         fontWeight = FontWeight.Bold,
+                         maxLines = 1,
+                         overflow = TextOverflow.Ellipsis
+                     )
+-                    if (chosenMc != null && !noLoaderVersions && loaderVersion.isNotBlank()) {
++                    if (summarySub.isNotEmpty()) {
+                         Text(
+-                            text = "${loaderInfo.label} $loaderVersion",
++                            text = summarySub,
+                             color = AmberUi.AccentSoft,
+                             fontSize = 11.sp,
+                             maxLines = 1,
+@@ -366,7 +509,27 @@ fun CreateInstanceScreen(
+                     enabled = canInstall,
+                     onClick = {
+                         val mc = selectedVersion
+-                        if (mc != null) {
++                        val readPack = pack
++                        val packFile = packHolder.file
++                        if (isModpack) {
++                            if (readPack != null && packFile != null && !packHolder.handedOff) {
++                                // Dari sini berkasnya dipegang Home; layar ini tidak boleh menghapusnya lagi
++                                packHolder.handedOff = true
++                                onModpackImport(
++                                    Instance(
++                                        id = "inst_${UUID.randomUUID()}",
++                                        name = instanceName.trim().ifBlank { defaultName },
++                                        mcVersion = readPack.minecraft,
++                                        loader = readPack.loader,
++                                        loaderVersion = if (readPack.loader == "vanilla") "" else packLoaderVersion,
++                                        icon = if (readPack.loader == "fabric") "fabric" else "crafting_table",
++                                        isDownloaded = false
++                                    ),
++                                    packFile,
++                                    ModpackStaging.archiveName(packName, readPack.source)
++                                )
++                            }
++                        } else if (mc != null) {
+                             val label = loaderInfo.label
+                             onInstanceCreated(
+                                 Instance(
+@@ -431,8 +594,9 @@ fun CreateInstanceScreen(
+                     .weight(1f)
+                     .fillMaxHeight()
+             ) {
+-                // Jenis versi + pencarian. Mesin Rust hanya punya satu versi, jadi keduanya tidak perlu.
+-                if (!isEngine) {
++                // Jenis versi + pencarian. Mesin Rust hanya punya satu versi dan modpack tidak memakai daftar
++                // versi, jadi keduanya tidak perlu.
++                if (!isEngine && !isModpack) {
+                     Row(
+                         modifier = Modifier
+                             .fillMaxWidth()
+@@ -465,6 +629,19 @@ fun CreateInstanceScreen(
+                 }
+ 
+                 when {
++                    isModpack -> CiModpackPane(
++                        info = packInfo,
++                        fileName = packName,
++                        reading = packReading,
++                        error = packError,
++                        loaderLabel = packLoaderLabel,
++                        loaderVersion = packLoaderVersion,
++                        loaderLoading = packLoaderLoading,
++                        loaderFailed = packLoaderFailed,
++                        loaderNote = packLoaderNote,
++                        onPick = { packPicker.launch(arrayOf("*/*")) },
++                        onRetryLoader = { packReloadTick += 1 }
++                    )
+                     listLoading -> CiNote(
+                         text = if (isLoadingVersions) "Memuat versi Minecraft..." else "Memuat versi yang didukung ${loaderInfo.label}..."
+                     )
+@@ -1009,3 +1186,233 @@ private fun CiLoaderRow(choice: CiChoice, picked: Boolean, onClick: () -> Unit)
+         }
+     }
+ }
++
++// -------------------------------------------------------------------- Modpack
++
++/** Berkas modpack sementara milik layar ini. [handedOff] = sudah diserahkan ke Home, jangan dihapus lagi. */
++private class CiPackHolder {
++    var file: File? = null
++    var handedOff = false
++}
++
++/** Modpack yang sudah disalin ke cache dan dibaca isinya. */
++private class CiPickedPack(val file: File, val displayName: String, val info: ModpackReader.Info)
++
++/** Batas ukuran berkas yang mau disalin; yang lebih besar jelas bukan modpack. */
++private const val CI_MAX_PACK_BYTES = 1024L * 1024L * 1024L
++
++/** Nama berkas dari penyedia berkas Android; cadangan: bagian akhir alamatnya. */
++private fun ciPickedName(context: Context, uri: Uri): String {
++    var name: String? = null
++    if (uri.scheme == "content") {
++        try {
++            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
++                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
++                if (index != -1 && cursor.moveToFirst()) name = cursor.getString(index)
++            }
++        } catch (_: Exception) {
++        }
++    }
++    if (name.isNullOrBlank()) name = uri.lastPathSegment?.substringAfterLast('/')
++    return name?.takeIf { it.isNotBlank() } ?: "modpack"
++}
++
++/**
++ * Menyalin berkas pilihan ke cache lalu membaca isinya. [previous] (pilihan sebelumnya) dibuang lebih dulu.
++ * Melempar [ModpackReader.ReadException] (pesannya aman ditampilkan) bila bukan modpack yang bisa dipasang,
++ * atau galat berkas biasa bila penyalinan gagal.
++ */
++private fun ciReadPickedPack(context: Context, uri: Uri, previous: File?): CiPickedPack {
++    previous?.delete()
++    val dir = File(context.cacheDir, "modpack-import")
++    dir.deleteRecursively()
++    if (!dir.mkdirs() && !dir.isDirectory) throw IOException("Gagal menyiapkan folder sementara")
++
++    val displayName = ciPickedName(context, uri)
++    val file = File(dir, SafePaths.fileName(displayName))
++    try {
++        val input = context.contentResolver.openInputStream(uri) ?: throw IOException("Gagal membaca berkas")
++        input.use { source ->
++            file.outputStream().use { out ->
++                val buffer = ByteArray(64 * 1024)
++                var total = 0L
++                while (true) {
++                    val read = source.read(buffer)
++                    if (read < 0) break
++                    total += read
++                    if (total > CI_MAX_PACK_BYTES) {
++                        throw ModpackReader.ReadException("Berkas ini terlalu besar untuk sebuah modpack.")
++                    }
++                    out.write(buffer, 0, read)
++                }
++            }
++        }
++        return CiPickedPack(file, displayName, ModpackReader.read(file))
++    } catch (e: Exception) {
++        file.delete()
++        throw e
++    }
++}
++
++/**
++ * Isi mode "Modpack": belum ada berkas = penjelasan dan tombol pilih berkas; sudah ada = ringkasan modpack
++ * (nama, versi Minecraft, loader, jumlah berkas). Install ada di panel atas, seperti loader lain.
++ */
++@Composable
++private fun ColumnScope.CiModpackPane(
++    info: ModpackReader.Info?,
++    fileName: String,
++    reading: Boolean,
++    error: String?,
++    loaderLabel: String,
++    loaderVersion: String,
++    loaderLoading: Boolean,
++    loaderFailed: Boolean,
++    loaderNote: String,
++    onPick: () -> Unit,
++    onRetryLoader: () -> Unit
++) {
++    val shape = RoundedCornerShape(20.dp)
++    Column(
++        modifier = Modifier
++            .weight(1f)
++            .fillMaxWidth()
++            .verticalScroll(rememberScrollState())
++            .padding(bottom = 12.dp)
++    ) {
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .clip(shape)
++                .amberGlass(shape)
++                .padding(horizontal = 16.dp, vertical = 14.dp),
++            verticalArrangement = Arrangement.spacedBy(8.dp)
++        ) {
++            if (info == null) {
++                Text(
++                    text = "Pasang dari modpack",
++                    color = AmberUi.Text,
++                    fontSize = 16.sp,
++                    fontWeight = FontWeight.Bold
++                )
++                Text(
++                    text = "Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. " +
++                        "Tidak perlu membuat instance kosong dulu.",
++                    color = AmberUi.Text,
++                    fontSize = 13.sp,
++                    lineHeight = 18.sp
++                )
++                Text(
++                    text = "Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp
++                )
++                if (error != null) {
++                    Text(
++                        text = error,
++                        color = AmberUi.Danger,
++                        fontSize = 13.sp,
++                        fontWeight = FontWeight.SemiBold,
++                        lineHeight = 18.sp
++                    )
++                }
++                Spacer(modifier = Modifier.height(2.dp))
++                AmberPillButton(
++                    text = if (reading) "Membaca modpack..." else "Pilih file modpack",
++                    icon = Icons.Outlined.Folder,
++                    enabled = !reading,
++                    onClick = onPick
++                )
++            } else {
++                Text(
++                    text = info.title,
++                    color = AmberUi.Text,
++                    fontSize = 17.sp,
++                    fontWeight = FontWeight.Bold,
++                    maxLines = 2,
++                    overflow = TextOverflow.Ellipsis
++                )
++                if (fileName.isNotBlank()) {
++                    Text(
++                        text = fileName,
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++                Text(
++                    text = "Minecraft ${info.minecraft}",
++                    color = AmberUi.Text,
++                    fontSize = 14.sp,
++                    fontWeight = FontWeight.SemiBold
++                )
++                when {
++                    info.loader == "vanilla" -> Text(
++                        text = "Tanpa loader (Vanilla)",
++                        color = AmberUi.Text,
++                        fontSize = 14.sp
++                    )
++                    loaderLoading -> Text(
++                        text = "Memeriksa versi $loaderLabel...",
++                        color = AmberUi.TextDim,
++                        fontSize = 14.sp
++                    )
++                    loaderFailed -> {
++                        Text(
++                            text = "Gagal memuat versi $loaderLabel. Periksa koneksi internet.",
++                            color = AmberUi.Danger,
++                            fontSize = 13.sp,
++                            fontWeight = FontWeight.SemiBold,
++                            lineHeight = 18.sp
++                        )
++                        AmberPillButton(text = "Coba lagi", filled = false, onClick = onRetryLoader)
++                    }
++                    else -> Text(
++                        text = "$loaderLabel $loaderVersion",
++                        color = AmberUi.AccentSoft,
++                        fontSize = 14.sp,
++                        fontWeight = FontWeight.SemiBold
++                    )
++                }
++                if (loaderNote.isNotEmpty()) {
++                    Text(
++                        text = loaderNote,
++                        color = CI_SNAPSHOT_COLOR,
++                        fontSize = 12.sp,
++                        lineHeight = 17.sp
++                    )
++                }
++                Text(
++                    text = "${info.fileCount} berkas di dalam modpack",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp
++                )
++                if (info.version.isNotBlank()) {
++                    Text(
++                        text = "Versi modpack: ${info.version}",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        maxLines = 1,
++                        overflow = TextOverflow.Ellipsis
++                    )
++                }
++                Text(
++                    text = "Tekan Install untuk memasang game, loader, dan semua mod-nya.",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp
++                )
++                Spacer(modifier = Modifier.height(2.dp))
++                AmberPillButton(
++                    text = if (reading) "Membaca modpack..." else "Ganti file",
++                    icon = Icons.Outlined.Folder,
++                    filled = false,
++                    enabled = !reading,
++                    onClick = onPick
++                )
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index c51676b..c641768 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -132,7 +132,9 @@ import com.israadev.nuxlauncher.core.download.MinecraftDownloader
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.launch.GameLauncher
++import com.israadev.nuxlauncher.core.modpack.ModpackStaging
+ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
++import com.israadev.nuxlauncher.core.mods.NuxModManager
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.UserAccount
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
+@@ -283,7 +285,12 @@ fun DashboardScreen() {
+     // Pasang instance: siapkan Java, lalu unduh client, library, dan aset game. Dipakai tombol UNDUH
+     // dan dipanggil otomatis begitu instance baru dibuat, supaya mod tidak lagi ditaruh sebelum
+     // instance terpasang. Dialog unduhan memblokir layar sampai selesai atau dibatalkan.
+-    fun installInstance(inst: Instance) {
++    //
++    // Instance dari modpack (layar Buat Instance): [packFile] adalah modpack yang baru dipilih. Berkasnya
++    // disimpan dulu di folder instance sebagai penanda "isi modpack belum terpasang"; setelah game dan loader
++    // terpasang, isinya dipasang, lalu penanda dihapus. Bila terputus atau dibatalkan, tombol UNDUH melanjutkan
++    // dari penanda itu dengan [packFile] kosong.
++    fun installInstance(inst: Instance, packFile: File? = null, packName: String = "") {
+         if (isDownloading) return
+         val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
+         isDownloading = true
+@@ -293,6 +300,27 @@ fun DashboardScreen() {
+ 
+         com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
+         downloadJob = scope.launch {
++            if (packFile != null) {
++                dl.message = "Menyimpan modpack..."
++                val saved = withContext(Dispatchers.IO) {
++                    runCatching { ModpackStaging.stage(InstanceManager.getInstanceDir(context, inst), packFile, packName) }
++                }
++                if (!isActive) return@launch
++                if (saved.isFailure) {
++                    // Tanpa penanda modpack-nya akan hilang diam-diam: batalkan instance ini seluruhnya
++                    InstanceManager.deleteInstance(context, inst.id)
++                    isDownloading = false
++                    downloadJob = null
++                    Toast.makeText(
++                        context,
++                        "Gagal menyimpan modpack: ${saved.exceptionOrNull()?.localizedMessage}. Instance dibatalkan.",
++                        Toast.LENGTH_LONG
++                    ).show()
++                    return@launch
++                }
++                dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
++            }
++
+             JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
+                 dl.progress = p
+                 dl.message = msg
+@@ -306,12 +334,47 @@ fun DashboardScreen() {
+             }
+             if (!isActive) return@launch
+ 
++            // Game dan loader sudah terpasang; bila ada modpack yang menunggu, pasang isinya sekarang
++            val instDir = InstanceManager.getInstanceDir(context, inst)
++            val waiting = if (res.isSuccess) ModpackStaging.pending(instDir) else null
++            val packRes = if (waiting != null) {
++                dl.progress = 0f
++                dl.message = "Memasang modpack..."
++                NuxModManager.installStagedModpack(context, inst, waiting) { text, cur, total ->
++                    dl.message = text
++                    if (total > 0) dl.progress = (cur.toFloat() / total).coerceIn(0f, 1f)
++                }
++            } else {
++                null
++            }
++            if (!isActive) return@launch
++
++            val packReport = packRes?.getOrNull()
++            // Penanda dihapus hanya bila semuanya terpasang; kalau tidak, UNDUH mengulang dan melengkapi
++            if (packReport != null && packReport.failed == 0) ModpackStaging.clear(instDir)
++
+             isDownloading = false
+             downloadJob = null
+-            if (res.isSuccess) {
+-                Toast.makeText(context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT).show()
+-            } else {
+-                Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG).show()
++            when {
++                !res.isSuccess -> Toast.makeText(
++                    context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
++                ).show()
++                packRes == null -> Toast.makeText(
++                    context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT
++                ).show()
++                packRes.isFailure -> Toast.makeText(
++                    context,
++                    "Game terpasang, tapi modpack gagal: ${packRes.exceptionOrNull()?.localizedMessage}. Tekan UNDUH untuk mencoba lagi.",
++                    Toast.LENGTH_LONG
++                ).show()
++                packReport != null && packReport.failed > 0 -> Toast.makeText(
++                    context,
++                    "${packReport.failed} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.",
++                    Toast.LENGTH_LONG
++                ).show()
++                else -> Toast.makeText(
++                    context, "Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.", Toast.LENGTH_LONG
++                ).show()
+             }
+         }.also { job ->
+             // Selesai, gagal, atau dibatalkan: penjaga proses tidak diperlukan lagi
+@@ -531,6 +594,16 @@ fun DashboardScreen() {
+                                         installInstance(newInst)
+                                     }
+                                 },
++                                onModpackImport = { newInst, packFile, archiveName ->
++                                    InstanceManager.createInstance(context, newInst)
++                                    currentTab = "home"
++                                    Toast.makeText(
++                                        context,
++                                        "Instance ${newInst.name} dibuat. Mengunduh game dan modpack...",
++                                        Toast.LENGTH_SHORT
++                                    ).show()
++                                    installInstance(newInst, packFile, archiveName)
++                                },
+                                 modifier = Modifier.fillMaxSize()
+                             )
+                             "accounts" -> AccountsScreen(
+
+
+# FIN part=2/2 files=2

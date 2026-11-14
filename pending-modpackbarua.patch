@@ -1,0 +1,741 @@
+diff --git a/README.en.md b/README.en.md
+index 6b19361..043d141 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -57,6 +57,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
+ 
+ **Mods and content**
+ - **Modrinth and CurseForge** right inside the app: mods, modpacks, resource packs, shaders, and datapacks, including their dependencies. Manual file installation works too.
++- **Create an instance straight from a modpack**: on the Create Instance screen pick Modpack, then choose a `.mrpack` (Modrinth) or `.zip` (CurseForge) file. The game, loader, and all mods are installed in one go, with no need to create an empty instance first. Quilt modpacks are not supported yet.
+ 
+ **Controls**
+ - **Touch control editor**: adjust the position, size, and buttons on screen however you like.
+diff --git a/README.md b/README.md
+index ee24de7..0c11363 100644
+--- a/README.md
++++ b/README.md
+@@ -57,6 +57,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan >
+ 
+ **Mod dan konten**
+ - **Modrinth dan CurseForge** langsung dari aplikasi: mod, modpack, resource pack, shader, dan datapack, lengkap dengan dependensinya. Pemasangan file manual juga bisa.
++- **Buat instance langsung dari modpack**: di layar Buat Instance pilih Modpack, lalu pilih file `.mrpack` (Modrinth) atau `.zip` (CurseForge). Game, loader, dan semua mod terpasang sekaligus, tanpa perlu membuat instance kosong dulu. Modpack Quilt belum didukung.
+ 
+ **Kontrol**
+ - **Editor kontrol sentuh**: atur posisi, ukuran, dan tombol layar sesukamu.
+diff --git a/app/src/main/assets/lang/en/modpack.tsv b/app/src/main/assets/lang/en/modpack.tsv
+new file mode 100644
+index 0000000..5cd2862
+--- /dev/null
++++ b/app/src/main/assets/lang/en/modpack.tsv
+@@ -0,0 +1,28 @@
++# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
++Pasang dari modpack	Install from a modpack
++Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Choose a modpack file and the game, loader, and all its mods are installed in one go. No need to create an empty instance first.
++Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Supported formats: .mrpack (Modrinth) and .zip (CurseForge).
++Pilih file modpack	Choose modpack file
++Membaca modpack...	Reading modpack...
++Ganti file	Change file
++Pilih modpack	Choose modpack
++Tanpa loader (Vanilla)	No loader (Vanilla)
++Memeriksa versi {0}...	Checking {0} versions...
++Gagal memuat versi {0}. Periksa koneksi internet.	Could not load {0} versions. Check your internet connection.
++{0} berkas di dalam modpack	{0} files in the modpack
++Versi modpack: {0}	Modpack version: {0}
++Tekan Install untuk memasang game, loader, dan semua mod-nya.	Press Install to set up the game, loader, and all its mods.
++Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	The modpack's loader version ({0}) is not available, so version {1} is used.
++Gagal membuka berkas modpack.	Could not open the modpack file.
++Berkas ini terlalu besar untuk sebuah modpack.	This file is too large to be a modpack.
++Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	This file is not a recognized modpack. Use a .mrpack file (Modrinth) or a CurseForge modpack .zip.
++Modpack ini tidak menyebut versi Minecraft-nya.	This modpack does not specify its Minecraft version.
++Modpack ini tidak menyebut versi loader-nya.	This modpack does not specify its loader version.
++Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	This modpack requires {0} for Minecraft {1}, which AmberLauncher does not support yet.
++Instance {0} dibuat. Mengunduh game dan modpack...	Instance {0} created. Downloading the game and modpack...
++Menyimpan modpack...	Saving modpack...
++Memasang modpack...	Installing modpack...
++Gagal menyimpan modpack: {0}. Instance dibatalkan.	Could not save the modpack: {0}. The instance was canceled.
++Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	The game is installed, but the modpack failed: {0}. Press DOWNLOAD to try again.
++{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	{0} modpack files failed to download. Check your connection, then press DOWNLOAD to complete.
++Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Installation complete! The modpack is installed. Press PLAY to start playing.
+diff --git a/app/src/main/assets/lang/es/modpack.tsv b/app/src/main/assets/lang/es/modpack.tsv
+new file mode 100644
+index 0000000..6d2b98d
+--- /dev/null
++++ b/app/src/main/assets/lang/es/modpack.tsv
+@@ -0,0 +1,28 @@
++# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
++Pasang dari modpack	Instalar desde un modpack
++Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Elige un archivo de modpack y el juego, el loader y todos sus mods se instalan de una vez. No hace falta crear antes una instancia vac\u00eda.
++Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Formatos compatibles: .mrpack (Modrinth) y .zip (CurseForge).
++Pilih file modpack	Elegir archivo de modpack
++Membaca modpack...	Leyendo modpack...
++Ganti file	Cambiar archivo
++Pilih modpack	Elegir modpack
++Tanpa loader (Vanilla)	Sin loader (Vanilla)
++Memeriksa versi {0}...	Comprobando versiones de {0}...
++Gagal memuat versi {0}. Periksa koneksi internet.	No se pudieron cargar las versiones de {0}. Revisa tu conexi\u00f3n a internet.
++{0} berkas di dalam modpack	{0} archivos en el modpack
++Versi modpack: {0}	Versi\u00f3n del modpack: {0}
++Tekan Install untuk memasang game, loader, dan semua mod-nya.	Toca Install para instalar el juego, el loader y todos sus mods.
++Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	La versi\u00f3n del loader del modpack ({0}) no est\u00e1 disponible; se usa la versi\u00f3n {1}.
++Gagal membuka berkas modpack.	No se pudo abrir el archivo del modpack.
++Berkas ini terlalu besar untuk sebuah modpack.	Este archivo es demasiado grande para ser un modpack.
++Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Este archivo no es un modpack reconocido. Usa un archivo .mrpack (Modrinth) o un .zip de modpack de CurseForge.
++Modpack ini tidak menyebut versi Minecraft-nya.	Este modpack no indica su versi\u00f3n de Minecraft.
++Modpack ini tidak menyebut versi loader-nya.	Este modpack no indica la versi\u00f3n de su loader.
++Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Este modpack requiere {0} para Minecraft {1}, que AmberLauncher a\u00fan no admite.
++Instance {0} dibuat. Mengunduh game dan modpack...	Instancia {0} creada. Descargando el juego y el modpack...
++Menyimpan modpack...	Guardando modpack...
++Memasang modpack...	Instalando modpack...
++Gagal menyimpan modpack: {0}. Instance dibatalkan.	No se pudo guardar el modpack: {0}. Se cancel\u00f3 la instancia.
++Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	El juego est\u00e1 instalado, pero el modpack fall\u00f3: {0}. Toca DESCARGAR para reintentar.
++{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	No se pudieron descargar {0} archivos del modpack. Revisa tu conexi\u00f3n y toca DESCARGAR para completar.
++Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	\u00a1Instalaci\u00f3n completada! El modpack est\u00e1 instalado. Toca JUGAR para empezar.
+diff --git a/app/src/main/assets/lang/fil/modpack.tsv b/app/src/main/assets/lang/fil/modpack.tsv
+new file mode 100644
+index 0000000..0d75547
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/modpack.tsv
+@@ -0,0 +1,28 @@
++# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
++Pasang dari modpack	I-install mula sa modpack
++Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Pumili ng modpack file at sabay-sabay na ma-i-install ang game, loader, at lahat ng mod nito. Hindi na kailangang gumawa muna ng walang laman na instance.
++Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Mga sinusuportahang format: .mrpack (Modrinth) at .zip (CurseForge).
++Pilih file modpack	Pumili ng modpack file
++Membaca modpack...	Binabasa ang modpack...
++Ganti file	Palitan ang file
++Pilih modpack	Pumili ng modpack
++Tanpa loader (Vanilla)	Walang loader (Vanilla)
++Memeriksa versi {0}...	Sinusuri ang mga bersyon ng {0}...
++Gagal memuat versi {0}. Periksa koneksi internet.	Hindi ma-load ang mga bersyon ng {0}. Suriin ang iyong koneksyon sa internet.
++{0} berkas di dalam modpack	{0} file sa modpack
++Versi modpack: {0}	Bersyon ng modpack: {0}
++Tekan Install untuk memasang game, loader, dan semua mod-nya.	Pindutin ang Install para ma-install ang game, loader, at lahat ng mod nito.
++Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	Hindi available ang bersyon ng loader ng modpack ({0}), kaya bersyon {1} ang gagamitin.
++Gagal membuka berkas modpack.	Hindi mabuksan ang modpack file.
++Berkas ini terlalu besar untuk sebuah modpack.	Masyadong malaki ang file na ito para maging modpack.
++Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Hindi kinikilalang modpack ang file na ito. Gumamit ng .mrpack file (Modrinth) o .zip modpack ng CurseForge.
++Modpack ini tidak menyebut versi Minecraft-nya.	Hindi tinukoy ng modpack na ito ang bersyon ng Minecraft nito.
++Modpack ini tidak menyebut versi loader-nya.	Hindi tinukoy ng modpack na ito ang bersyon ng loader nito.
++Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Kailangan ng modpack na ito ang {0} para sa Minecraft {1}, na hindi pa sinusuportahan ng AmberLauncher.
++Instance {0} dibuat. Mengunduh game dan modpack...	Nagawa ang instance na {0}. Dina-download ang game at modpack...
++Menyimpan modpack...	Sine-save ang modpack...
++Memasang modpack...	Ini-install ang modpack...
++Gagal menyimpan modpack: {0}. Instance dibatalkan.	Hindi na-save ang modpack: {0}. Kinansela ang instance.
++Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	Na-install ang game, pero nabigo ang modpack: {0}. Pindutin ang I-DOWNLOAD para subukan ulit.
++{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	Hindi na-download ang {0} file ng modpack. Suriin ang koneksyon, saka pindutin ang I-DOWNLOAD para makumpleto.
++Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Tapos na ang pag-install! Na-install na ang modpack. Pindutin ang PLAY para maglaro.
+diff --git a/app/src/main/assets/lang/pt/modpack.tsv b/app/src/main/assets/lang/pt/modpack.tsv
+new file mode 100644
+index 0000000..a674684
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/modpack.tsv
+@@ -0,0 +1,28 @@
++# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
++Pasang dari modpack	Instalar de um modpack
++Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Escolha um arquivo de modpack e o jogo, o loader e todos os mods ser\u00e3o instalados de uma vez. N\u00e3o \u00e9 preciso criar uma inst\u00e2ncia vazia antes.
++Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	Formatos compat\u00edveis: .mrpack (Modrinth) e .zip (CurseForge).
++Pilih file modpack	Escolher arquivo de modpack
++Membaca modpack...	Lendo modpack...
++Ganti file	Trocar arquivo
++Pilih modpack	Escolher modpack
++Tanpa loader (Vanilla)	Sem loader (Vanilla)
++Memeriksa versi {0}...	Verificando vers\u00f5es do {0}...
++Gagal memuat versi {0}. Periksa koneksi internet.	N\u00e3o foi poss\u00edvel carregar as vers\u00f5es do {0}. Verifique sua conex\u00e3o com a internet.
++{0} berkas di dalam modpack	{0} arquivos no modpack
++Versi modpack: {0}	Vers\u00e3o do modpack: {0}
++Tekan Install untuk memasang game, loader, dan semua mod-nya.	Toque em Install para instalar o jogo, o loader e todos os mods.
++Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	A vers\u00e3o do loader do modpack ({0}) n\u00e3o est\u00e1 dispon\u00edvel; ser\u00e1 usada a vers\u00e3o {1}.
++Gagal membuka berkas modpack.	N\u00e3o foi poss\u00edvel abrir o arquivo do modpack.
++Berkas ini terlalu besar untuk sebuah modpack.	Este arquivo \u00e9 grande demais para ser um modpack.
++Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	Este arquivo n\u00e3o \u00e9 um modpack reconhecido. Use um arquivo .mrpack (Modrinth) ou um .zip de modpack do CurseForge.
++Modpack ini tidak menyebut versi Minecraft-nya.	Este modpack n\u00e3o informa a vers\u00e3o do Minecraft.
++Modpack ini tidak menyebut versi loader-nya.	Este modpack n\u00e3o informa a vers\u00e3o do loader.
++Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Este modpack exige {0} para o Minecraft {1}, que o AmberLauncher ainda n\u00e3o suporta.
++Instance {0} dibuat. Mengunduh game dan modpack...	Inst\u00e2ncia {0} criada. Baixando o jogo e o modpack...
++Menyimpan modpack...	Salvando modpack...
++Memasang modpack...	Instalando modpack...
++Gagal menyimpan modpack: {0}. Instance dibatalkan.	N\u00e3o foi poss\u00edvel salvar o modpack: {0}. A inst\u00e2ncia foi cancelada.
++Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	O jogo foi instalado, mas o modpack falhou: {0}. Toque em BAIXAR para tentar de novo.
++{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	{0} arquivos do modpack n\u00e3o puderam ser baixados. Verifique a conex\u00e3o e toque em BAIXAR para completar.
++Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	Instala\u00e7\u00e3o conclu\u00edda! O modpack foi instalado. Toque em JOGAR para come\u00e7ar.
+diff --git a/app/src/main/assets/lang/th/modpack.tsv b/app/src/main/assets/lang/th/modpack.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..a935d7be5a8caf4301b088eb5ea8dcb50067ab31
+GIT binary patch
+literal 3972
+zcmb_fU27Xh6n*yoiV1zOL0z2Jyd^Dh3Q_Tc6X@fWb|MYCI}-a*aE&2K43<;(O|Fp*
+zDT*-$7lY&4&g{RLpHl9fncbDOc1l|?M(oVq&vVZ``we@RL&k(mGmu@*B9Of_mpv9h
+zB3L{KhR_Y!as-=@n5#e7t1B!3$%Z_J6l4#i+yoW~_F@ooZ=Iga*;vx*K&xx5CiLU8
+zF7~wA)oQHOl~yC?%3Bwa=(9H>;_gw4MG)nz2QhE4XaE6ETI4(BaSnLvTl8H<p7CU8
+z{HHvGNc8g5XB#4bkPUef<t*lLXD;b*kPa~AJj(qgUA)!mRI4vqU1&AZ#g0~g;FDtC
+zMZ|P5q9=P=ozeY~Rx=x$J5-li&2+I#W+qx4>MH3!@dzJ|>DupF73iwDLLap{p=w>w
+zTO+iirn-2K|J4qjmX<O0iB>mSebVZTQSdWejL|ekdqFincNVX-+O2v|Zy!@)wk!1J
+zg;rDV`5=iQW1E0=5<wp3viF4fabob%9t4SyS>J%d|3wVh@^^WX^5=u3$5;F%in7q^
+zm`Zn~@$V1=MOP;-Fv>(7H5#@xSC@<C8$k0<+UT`;+<`7Z2-EO=jB}*bUj%^9RI3Y$
+z@Jg$x>%Q;%-WteE5K4_Bs+!H_6LqITjg8LE(%rz^b8iFW5FCb<UxO4;1S?Cm7S6P~
+zS-5~n@I-_uu%CI73bwVn-I&M$)%lDtcTNRAqK2Q*?-O0@YxTik%i8ePpa&6-3r<UA
+zovmAk;Xv{*6->yCCz5A4JnuB3`xIe_V7$kA9hv7?aJ+j$(=ui>2PgFISeLP4W3K4Z
+zTMG1x1LusuJ*G4+h+?K>?yyP>Uzw8i18-|}n{{{+LW*=1Km@Vtfho2fb~9k^2uosu
+zw#VLUs<!Rw6FfJqZOXWQ%iG`~NJFDh#B!PCA=cPX)>l~00(4ToPN{uFwz3syB3VrT
+z-!YWU(y;CvpR?ty)$J9Q5wB)ENqHck#R4&e5QIa^<88#m4l&`F=&M99Mb%KOk{4Xn
+z2oDu`Sr}OV1m|0vROG`Ccn`B}u*<d{V+TiMe_CO?lZW5{Vf$p4z_Hy|wOMvI9>TBp
+z%%Dq1frX*v)!`{5w$~}|<j{APY<(Q)kkW4`i}y50zhPf(|E}qDL_5b2G_4OjJtlCM
+zXsw5U`AO%^5qQWYM8aq5)GXSz4O|Wx<c4i+VOYiK_r~p-ZTnGgW1a8|YU!8=XT;p?
+zy}4pHghWL-vD>-c7}_~5Os(G0@bA_F_S#m=P+thPF_)XXlRIu}3(30)yva~c_)C?s
+zvL|J3JH&5$M5&jw%+$TOE6sjA0yAg-uX|&2&Nm65Ebk*Qkk<?cm2u*vv<y-@Jj&y8
+z;j^c4hbJ!~m)$;3nkrP68EzmAbsCz--C&peyg#PZuUg#_i|x+)VI*c~8<!10BSy<u
+zYo3#(<Sh^=@O;+hvX{#s?-Q?*Xmle^yZ#;_WVpVPcx*uxOlTLK(N@`CSbE5{m0YPj
+zdTlN@MLewLv2jx$S%ru5a$D2JC_LJ3QB+nJHA}+|sNFBA?@lbV!~9a;V-X>PC<KWv
+z?hEQ6CM1ideIpu=Q)1LnU2;}c_SPWgm3nWn42IPwNDsA$4bg1SS3iFL>P5LfWp~iQ
+zkAR-QXd5cvSk!ff#JgDt2YQaCPU&n$FBmOz<}w+PyneX*^=*7=VQSeNrFdO{IEta<
+zSRe?ii~5RINJg?@KIw?dUI;@<`GKG+En0f4jnabtx+``5gCMK5mu6@}^}C`4Jw?fR
+zS1;CzXKIFRGT%6M#v@1tOL@do5RaH6_41?7x9C`Z`Sd3Xjt);^5QO6UaAAmmK1XXI
+lKQfu${b;Qfu|lum2qSt=iN=fyttUhpS6$Poffq7`_cw+OjJW^+
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/vi/modpack.tsv b/app/src/main/assets/lang/vi/modpack.tsv
+new file mode 100644
+index 0000000..4f5fe39
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/modpack.tsv
+@@ -0,0 +1,28 @@
++# Buat instance langsung dari modpack (layar Buat Instance) dan pemasangannya di Home
++Pasang dari modpack	C\u00e0i \u0111\u1eb7t t\u1eeb modpack
++Pilih file modpack, lalu game, loader, dan semua mod-nya langsung terpasang sekaligus. Tidak perlu membuat instance kosong dulu.	Ch\u1ecdn m\u1ed9t t\u1ec7p modpack, game, loader v\u00e0 to\u00e0n b\u1ed9 mod s\u1ebd \u0111\u01b0\u1ee3c c\u00e0i \u0111\u1eb7t c\u00f9ng l\u00fac. Kh\u00f4ng c\u1ea7n t\u1ea1o instance tr\u1ed1ng tr\u01b0\u1edbc.
++Format yang didukung: .mrpack (Modrinth) dan .zip (CurseForge).	\u0110\u1ecbnh d\u1ea1ng h\u1ed7 tr\u1ee3: .mrpack (Modrinth) v\u00e0 .zip (CurseForge).
++Pilih file modpack	Ch\u1ecdn t\u1ec7p modpack
++Membaca modpack...	\u0110ang \u0111\u1ecdc modpack...
++Ganti file	\u0110\u1ed5i t\u1ec7p
++Pilih modpack	Ch\u1ecdn modpack
++Tanpa loader (Vanilla)	Kh\u00f4ng c\u00f3 loader (Vanilla)
++Memeriksa versi {0}...	\u0110ang ki\u1ec3m tra phi\u00ean b\u1ea3n {0}...
++Gagal memuat versi {0}. Periksa koneksi internet.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c c\u00e1c phi\u00ean b\u1ea3n {0}. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i internet.
++{0} berkas di dalam modpack	{0} t\u1ec7p trong modpack
++Versi modpack: {0}	Phi\u00ean b\u1ea3n modpack: {0}
++Tekan Install untuk memasang game, loader, dan semua mod-nya.	Nh\u1ea5n Install \u0111\u1ec3 c\u00e0i game, loader v\u00e0 to\u00e0n b\u1ed9 mod.
++Versi loader dari modpack ({0}) tidak tersedia, dipakai versi {1}.	Phi\u00ean b\u1ea3n loader c\u1ee7a modpack ({0}) kh\u00f4ng c\u00f3 s\u1eb5n, s\u1ebd d\u00f9ng phi\u00ean b\u1ea3n {1}.
++Gagal membuka berkas modpack.	Kh\u00f4ng m\u1edf \u0111\u01b0\u1ee3c t\u1ec7p modpack.
++Berkas ini terlalu besar untuk sebuah modpack.	T\u1ec7p n\u00e0y qu\u00e1 l\u1edbn \u0111\u1ec3 l\u00e0 m\u1ed9t modpack.
++Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge.	T\u1ec7p n\u00e0y kh\u00f4ng ph\u1ea3i modpack \u0111\u01b0\u1ee3c nh\u1eadn di\u1ec7n. H\u00e3y d\u00f9ng t\u1ec7p .mrpack (Modrinth) ho\u1eb7c t\u1ec7p .zip modpack c\u1ee7a CurseForge.
++Modpack ini tidak menyebut versi Minecraft-nya.	Modpack n\u00e0y kh\u00f4ng n\u00eau phi\u00ean b\u1ea3n Minecraft.
++Modpack ini tidak menyebut versi loader-nya.	Modpack n\u00e0y kh\u00f4ng n\u00eau phi\u00ean b\u1ea3n loader.
++Modpack ini membutuhkan {0} untuk Minecraft {1}, yang belum didukung AmberLauncher.	Modpack n\u00e0y c\u1ea7n {0} cho Minecraft {1}, m\u00e0 AmberLauncher ch\u01b0a h\u1ed7 tr\u1ee3.
++Instance {0} dibuat. Mengunduh game dan modpack...	\u0110\u00e3 t\u1ea1o instance {0}. \u0110ang t\u1ea3i game v\u00e0 modpack...
++Menyimpan modpack...	\u0110ang l\u01b0u modpack...
++Memasang modpack...	\u0110ang c\u00e0i \u0111\u1eb7t modpack...
++Gagal menyimpan modpack: {0}. Instance dibatalkan.	Kh\u00f4ng l\u01b0u \u0111\u01b0\u1ee3c modpack: {0}. \u0110\u00e3 h\u1ee7y instance.
++Game terpasang, tapi modpack gagal: {0}. Tekan UNDUH untuk mencoba lagi.	\u0110\u00e3 c\u00e0i game, nh\u01b0ng modpack th\u1ea5t b\u1ea1i: {0}. Nh\u1ea5n T\u1ea2I XU\u1ed0NG \u0111\u1ec3 th\u1eed l\u1ea1i.
++{0} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.	Kh\u00f4ng t\u1ea3i \u0111\u01b0\u1ee3c {0} t\u1ec7p c\u1ee7a modpack. H\u00e3y ki\u1ec3m tra k\u1ebft n\u1ed1i r\u1ed3i nh\u1ea5n T\u1ea2I XU\u1ed0NG \u0111\u1ec3 ho\u00e0n t\u1ea5t.
++Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.	C\u00e0i \u0111\u1eb7t xong! \u0110\u00e3 c\u00e0i modpack. Nh\u1ea5n CH\u01a0I \u0111\u1ec3 b\u1eaft \u0111\u1ea7u.
+diff --git a/app/src/main/assets/lang/zh/modpack.tsv b/app/src/main/assets/lang/zh/modpack.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..1cde08cda8980a57f1aaaabd04761220df64d498
+GIT binary patch
+literal 2695
+zcma)8TW=Fb6n?gU#Z-Msq;wTtd4pC!B~s-9koq{z4$f$I$JSmdrBS4fiNl&WF{L2{
+zV<2e~FqGhO5g4*A|0UU(-8}7IsAgs_w$t0|?#wyg`Of*iGhc&?4zvL#mJP`q0y-pR
+z%OPc;LK6d{qE_LY1}1d408M%H`{d{(P$2<TWIzj&G9+XH0u_TR6$2G##kY|dh2Us|
+z-G5K-dbC-muN%=`y*P_?JP&SS9i^G3fDUyBl%av9fL?(rGN(iy3mFdNr@rBNGL$wl
+zt1_2`G^pdUV=3SoR-p!}$kZKRAfq%=pjNReygWyDl)|aoU~4aez8mykX5iS??cnG`
+z>^E7z&%D-&yG-xwM1ui+*roTHwEiLJAF_taIt|v{4Ubj=za8{l_G*{8&!fFMJs9x2
+z4|YyFF0Fgidqj^uhc7;d4+r%1li<&_6Sr2pR51-`g9XT;VAataQa%q9!<2N-R8$ia
+zdtP#^{EVw$;#<eG(4~r5Mw3c`ZT47mIc%@69iRHG*l#CyW8X_J$9{v}Yl_>k@8#EH
+zzri7#B|o8KjELe4GD>hxkk8R6ic(;Qd$iMydPlUil^s8JpA|1dVq?+K0(<nHt^X#;
+zOp+zzG@hq;4U#HM+6^XdK!SB0P8QgMos9X|_vpscu;ImigCjyF)+`8qLZ*em;`CCE
+zitV}V=>h)+!iL8>uOzNA)cG**S;#Me*(8ouAxN_@z{Ex-LAJt^vv>Dp{-IzeZY}D4
+zlsUq|FX2%q`tpQr9B@W?$`Ud)XmKH^P=`iVa>f!}t<(A&5s?p_n6=^!QAR?~dHyrM
+zAd86o_TuzX@fy+~krLE(;1Ju<cvVsY|DhVC5Y|4iX5-lH2o3A{vHO^=zoV_5)Z;(Q
+zd-wEKS57)FQbLu|91%E}Se#y(1hx>LjZ6!v7)}8dSD^-RO8U7aB`+;{w#?qt!uCqm
+z=CoLEae68C8$o}awtC@aH};$Kk5#t$DctOW#dB$EIiSmFYfFv>Q~nbw(>Aikuhe(5
+z9!S>t<%_aim|zZBcuxsg&`hYcP|1PwL(vZR<z2e}lI}l`{U%3vtHri^S@5y292H3;
+zq=MHFfjU;ete{31;NNH;+R%~WPklHSG1p*%CFrlS?H+CQqTVX?e&?o;`mCJRVDN?0
+zmS&I@j2Z>=wuXX(EPzPQE1F3*fnZ9s*g#|fm7G*gGnk+`6W+ABK}&Qg3ifuFo8``J
+zw!M*`OVs(lg3EFH_sC;2G#*zh0^6DA-QYr%+R0G!p_-EIDIwi4GFJu{j1n@hLWj)F
+zBXhK{(~cWGTMjq7!RO(^#C*0_c$(O6j@$>VUE}={_RS%t+f-muG2c}Rm_elM5Y?F%
+zk{0_f9cV=<$Soo+(2sBBemQY#(vyS!S~M6)CDVJ&tOwi#XAoJyMl~PD+%$tPkLls|
+z*y+SphEmHMiCd)Y9ro9;1j5Rc?8(3jgf`SQNK$2vC6+dK;?{U&tu6K;*`N95ybKML
+zul*@t!)pFcDRVDKl1i(*{=;|IuVh9^<|-xrdMIP1kZ|<ztt^LYd9a!lB|p;rH_`ip
+z3{>WylI3If@#*dLsCS<?a>)EswF)#q#iEsGca3lxTNwH%N*$512CE!nry=@$_IV-^
+zNPK5^61}@|7HhP7K<nLX=yYgdU?Ck@5Pt<yeP<6UB_VM3>V+Q@{z}L+ASQeQ`SXpw
+iZZhv~>@Vk}rDUGCIakzo>GL(ocD``ZkKx7(j_5Cof<?pt
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index 676d75f..1302f96 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -4,6 +4,7 @@ import android.content.Context
+ import com.google.gson.Gson
+ import com.google.gson.reflect.TypeToken
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.modpack.ModpackStaging
+ import com.israadev.nuxlauncher.core.models.Instance
+ import kotlinx.coroutines.flow.MutableStateFlow
+ import kotlinx.coroutines.flow.StateFlow
+@@ -370,6 +371,8 @@ object InstanceManager {
+     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
+         // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
+         if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
++        // Instance dari modpack yang isinya belum selesai dipasang belum siap main: UNDUH melanjutkannya
++        if (ModpackStaging.hasPending(getInstanceDir(context, inst))) return false
+         val versionsDir = getVersionsDir(context)
+         val vDir = File(versionsDir, inst.mcVersion)
+         val jarFile = File(vDir, "${inst.mcVersion}.jar")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackReader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackReader.kt
+new file mode 100644
+index 0000000..6089343
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackReader.kt
+@@ -0,0 +1,199 @@
++package com.israadev.nuxlauncher.core.modpack
++
++import com.google.gson.JsonElement
++import com.google.gson.JsonObject
++import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.core.forge.ForgeFlavor
++import com.israadev.nuxlauncher.core.forge.ForgeService
++import com.israadev.nuxlauncher.core.mods.CurseForgeMapper
++import java.io.ByteArrayOutputStream
++import java.io.File
++import java.util.zip.ZipFile
++
++/**
++ * Membaca satu berkas modpack (.mrpack Modrinth atau .zip CurseForge) untuk mengetahui instance apa yang
++ * dibutuhkannya: versi Minecraft, loader, dan versi loader. Dipakai layar Buat Instance supaya instance
++ * bisa dibuat langsung dari modpack, tanpa pengguna membuat instance kosong dulu.
++ *
++ * Hanya membaca daftar isi arsip (tidak mengunduh dan tidak mengekstrak apa pun), tanpa Android, jadi
++ * bisa diuji di JVM biasa. Pemasangan isinya tetap dikerjakan pemasang modpack yang sudah ada.
++ */
++object ModpackReader {
++
++    enum class Source { MODRINTH, CURSEFORGE }
++
++    /** Isi penting sebuah modpack. [loader] salah satu "fabric", "forge", "neoforge", atau "vanilla". */
++    class Info(
++        val title: String,
++        val version: String,
++        val minecraft: String,
++        val loader: String,
++        val loaderVersion: String,
++        /** Jumlah berkas yang terdaftar di modpack (mod, resource pack, dan sebagainya). */
++        val fileCount: Int,
++        val source: Source
++    )
++
++    /** Modpack tidak bisa dipakai; pesannya aman ditampilkan ke pengguna. */
++    class ReadException(message: String) : Exception(message)
++
++    /** Batas ukuran berkas daftar modpack yang dibaca ke memori (daftar aslinya hanya puluhan KB). */
++    private const val MAX_INDEX_BYTES = 16 * 1024 * 1024
++
++    private const val MSG_NOT_PACK =
++        "Berkas ini bukan modpack yang dikenali. Pakai file .mrpack (Modrinth) atau .zip modpack CurseForge."
++    private const val MSG_QUILT =
++        "Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge."
++    private const val MSG_NO_MC = "Modpack ini tidak menyebut versi Minecraft-nya."
++    private const val MSG_NO_LOADER_VERSION = "Modpack ini tidak menyebut versi loader-nya."
++
++    /** Membaca [file]. Melempar [ReadException] bila bukan modpack yang bisa dipasang AmberLauncher. */
++    fun read(file: File): Info {
++        val zip = try {
++            ZipFile(file)
++        } catch (e: Exception) {
++            throw ReadException(MSG_NOT_PACK)
++        }
++        zip.use {
++            val indexEntry = zip.getEntry("modrinth.index.json")
++                ?: zip.entries().asSequence().firstOrNull { it.name.endsWith("modrinth.index.json") }
++            if (indexEntry != null) {
++                val root = parseObject(zip, indexEntry) ?: throw ReadException(MSG_NOT_PACK)
++                return fromModrinth(root, file)
++            }
++            val manifestEntry = zip.getEntry("manifest.json")
++            if (manifestEntry != null) {
++                val root = parseObject(zip, manifestEntry)
++                val pack = root?.let { CurseForgeMapper.parseManifest(it) }
++                if (pack != null) return fromCurseForge(pack, file)
++            }
++        }
++        throw ReadException(MSG_NOT_PACK)
++    }
++
++    private fun fromModrinth(root: JsonObject, file: File): Info {
++        val deps = root.get("dependencies")?.takeIf { it.isJsonObject }?.asJsonObject
++        val minecraft = deps?.text("minecraft").orEmpty()
++        if (minecraft.isEmpty()) throw ReadException(MSG_NO_MC)
++
++        // Satu modpack hanya punya satu loader; bila ada beberapa, urutannya sama dengan pemasang modpack
++        // (Fabric lebih dulu), supaya instance yang dibuat pasti lolos pemeriksaan pemasangnya.
++        val loader: String
++        val loaderVersion: String
++        when {
++            deps != null && deps.has("fabric-loader") -> { loader = "fabric"; loaderVersion = deps.text("fabric-loader").orEmpty() }
++            deps != null && deps.has("neoforge") -> { loader = "neoforge"; loaderVersion = deps.text("neoforge").orEmpty() }
++            deps != null && deps.has("forge") -> { loader = "forge"; loaderVersion = deps.text("forge").orEmpty() }
++            deps != null && deps.has("quilt-loader") -> throw ReadException(MSG_QUILT)
++            else -> { loader = "vanilla"; loaderVersion = "" }
++        }
++
++        val files = root.get("files")?.takeIf { it.isJsonArray }?.asJsonArray?.size() ?: 0
++        return checked(
++            Info(
++                title = root.text("name").orEmpty().ifEmpty { file.nameWithoutExtension },
++                version = root.text("versionId").orEmpty(),
++                minecraft = minecraft,
++                loader = loader,
++                loaderVersion = loaderVersion,
++                fileCount = files,
++                source = Source.MODRINTH
++            )
++        )
++    }
++
++    private fun fromCurseForge(pack: CurseForgeMapper.PackManifest, file: File): Info {
++        val minecraft = pack.minecraftVersion.trim()
++        if (minecraft.isEmpty()) throw ReadException(MSG_NO_MC)
++        val loader = when (val id = pack.loader) {
++            null -> "vanilla"
++            "fabric", "forge", "neoforge" -> id
++            "quilt" -> throw ReadException(MSG_QUILT)
++            else -> throw ReadException(
++                "Modpack ini membutuhkan ${id.replaceFirstChar { it.uppercase() }}, " +
++                    "sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge."
++            )
++        }
++        return checked(
++            Info(
++                title = pack.name.trim().ifEmpty { file.nameWithoutExtension },
++                version = pack.version.trim(),
++                minecraft = minecraft,
++                loader = loader,
++                loaderVersion = if (loader == "vanilla") "" else pack.loaderVersion.trim(),
++                fileCount = pack.files.size,
++                source = Source.CURSEFORGE
++            )
++        )
++    }
++
++    /**
++     * Memilih versi loader dari [available] (yang ditawarkan server untuk versi Minecraft itu) yang sesuai
++     * dengan [wanted] dari modpack untuk Minecraft [mcVersion]. Cocok persis lebih dulu, lalu cocok setelah
++     * imbuhan versi Minecraft dibuang ("1.7.10-10.13.4.1614-1.7.10" dengan "10.13.4.1614"). Null bila tidak
++     * ada yang cocok; pemanggil lalu memakai versi bawaan dan memberi tahu pengguna.
++     */
++    fun matchLoaderVersion(wanted: String, available: List<String>, mcVersion: String): String? {
++        val w = wanted.trim()
++        if (w.isEmpty()) return null
++        available.firstOrNull { it.equals(w, ignoreCase = true) }?.let { return it }
++        val mc = mcVersion.trim()
++        // Buang imbuhan versi Minecraft di depan/belakang, lalu bandingkan intinya saja
++        fun core(v: String): String {
++            var s = v.trim()
++            if (mc.isNotEmpty()) {
++                if (s.startsWith("$mc-", ignoreCase = true)) s = s.substring(mc.length + 1)
++                if (s.endsWith("-$mc", ignoreCase = true)) s = s.substring(0, s.length - mc.length - 1)
++            }
++            return s
++        }
++        val wantedCore = core(w)
++        if (wantedCore.isEmpty()) return null
++        return available.firstOrNull { core(it).equals(wantedCore, ignoreCase = true) }
++    }
++
++    /** Pemeriksaan terakhir yang sama untuk kedua format: loader harus punya versi dan bisa dipasang Amber. */
++    private fun checked(info: Info): Info {
++        if (info.loader != "vanilla" && info.loaderVersion.isEmpty()) throw ReadException(MSG_NO_LOADER_VERSION)
++        val flavor = ForgeFlavor.of(info.loader)
++        if (flavor != null && !ForgeService.isMcSupported(info.minecraft, flavor)) {
++            throw ReadException(
++                "Modpack ini membutuhkan ${flavor.displayName} untuk Minecraft ${info.minecraft}, " +
++                    "yang belum didukung AmberLauncher."
++            )
++        }
++        return info
++    }
++
++    private fun parseObject(zip: ZipFile, entry: java.util.zip.ZipEntry): JsonObject? {
++        return try {
++            val bytes = readLimited(zip, entry)
++            val root = JsonParser.parseString(String(bytes, Charsets.UTF_8))
++            if (root.isJsonObject) root.asJsonObject else null
++        } catch (e: Exception) {
++            null
++        }
++    }
++
++    /** Membaca satu entri zip ke memori, berhenti dengan galat bila lebih besar dari [MAX_INDEX_BYTES]. */
++    private fun readLimited(zip: ZipFile, entry: java.util.zip.ZipEntry): ByteArray {
++        val out = ByteArrayOutputStream()
++        zip.getInputStream(entry).use { input ->
++            val buffer = ByteArray(16 * 1024)
++            while (true) {
++                val read = input.read(buffer)
++                if (read < 0) break
++                if (out.size() + read > MAX_INDEX_BYTES) throw java.io.IOException("Daftar modpack terlalu besar")
++                out.write(buffer, 0, read)
++            }
++        }
++        return out.toByteArray()
++    }
++
++    /** Nilai teks properti [key] bila ada dan berupa nilai biasa; selain itu null. */
++    private fun JsonObject.text(key: String): String? {
++        val element: JsonElement = get(key) ?: return null
++        if (!element.isJsonPrimitive) return null
++        return element.asString.trim().takeIf { it.isNotEmpty() }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackStaging.kt b/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackStaging.kt
+new file mode 100644
+index 0000000..e2ed39c
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/modpack/ModpackStaging.kt
+@@ -0,0 +1,83 @@
++package com.israadev.nuxlauncher.core.modpack
++
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import java.io.File
++
++/**
++ * Tempat menunggu satu berkas modpack milik sebuah instance yang baru dibuat dari modpack.
++ *
++ * Instance dari modpack dipasang dua tahap: game dan loader dulu, baru isi modpack. Selama berkas di sini
++ * belum dihapus, instance dianggap belum selesai dipasang, jadi tombol UNDUH di Home melanjutkan dari
++ * tempat terakhir (unduhan terputus, dibatalkan, atau aplikasi ditutup) dan PLAY tidak membuka game yang
++ * modnya belum lengkap. Berkas dihapus hanya setelah seluruh isi modpack terpasang.
++ *
++ * Folder penampung ada di folder instance, di luar folder game, jadi tidak terlihat oleh Minecraft.
++ * Tidak memakai Android sama sekali, jadi bisa diuji di JVM biasa.
++ */
++object ModpackStaging {
++
++    /** Nama folder penampung di dalam folder instance. */
++    const val DIR_NAME = "pending-modpack"
++
++    private const val PART_SUFFIX = ".part"
++
++    private fun dir(instanceDir: File): File = File(instanceDir, DIR_NAME)
++
++    /**
++     * Nama berkas modpack yang aman dan berakhiran .mrpack atau .zip (daftar Mod hanya mengenali dua
++     * akhiran itu). Nama dari aplikasi lain dibersihkan dari bagian folder; akhiran yang hilang atau
++     * salah diganti menurut isi modpack-nya.
++     */
++    fun archiveName(displayName: String?, source: ModpackReader.Source): String {
++        val base = SafePaths.fileName(displayName)
++        val lower = base.lowercase()
++        return if (lower.endsWith(".mrpack") || lower.endsWith(".zip")) {
++            base
++        } else {
++            base + if (source == ModpackReader.Source.MODRINTH) ".mrpack" else ".zip"
++        }
++    }
++
++    /**
++     * Berkas modpack yang menunggu dipasang di [instanceDir], atau null bila tidak ada. Berkas sementara
++     * (.part) dari penyalinan yang terputus tidak dihitung.
++     */
++    fun pending(instanceDir: File): File? {
++        val files = dir(instanceDir).listFiles { f -> f.isFile && !f.name.endsWith(PART_SUFFIX) }
++        return files?.minByOrNull { it.name }
++    }
++
++    fun hasPending(instanceDir: File): Boolean = pending(instanceDir) != null
++
++    /**
++     * Menaruh salinan [source] di penampung milik [instanceDir] dengan nama [fileName], menggantikan isi
++     * penampung sebelumnya. [source] dihapus setelah berhasil disalin. Disalin ke berkas .part dulu lalu
++     * diganti namanya, jadi berkas yang terlihat di penampung selalu utuh walau aplikasi mati di tengah jalan.
++     */
++    fun stage(instanceDir: File, source: File, fileName: String): File {
++        val target = dir(instanceDir)
++        clear(instanceDir)
++        if (!target.mkdirs() && !target.isDirectory) {
++            throw java.io.IOException("Gagal menyiapkan folder modpack")
++        }
++        val safeName = SafePaths.fileName(fileName)
++        val dest = File(target, safeName)
++        val part = File(target, safeName + PART_SUFFIX)
++        try {
++            source.copyTo(part, overwrite = true)
++            if (!part.renameTo(dest)) throw java.io.IOException("Gagal menyimpan berkas modpack")
++        } catch (e: Exception) {
++            part.delete()
++            dest.delete()
++            throw e
++        }
++        source.delete()
++        return dest
++    }
++
++    /** Menghapus penampung beserta isinya. Aman dipanggil bila penampung tidak ada. */
++    fun clear(instanceDir: File) {
++        val target = dir(instanceDir)
++        if (target.exists()) target.deleteRecursively()
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+index 2ff4216..043dd1c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/CurseForgeMapper.kt
+@@ -349,6 +349,8 @@ object CurseForgeMapper {
+         val minecraftVersion: String,
+         /** Loader utama modpack ("forge", "fabric", "neoforge", "quilt"), atau null bila tidak disebut. */
+         val loader: String?,
++        /** Versi loader utama ("47.2.0" dari "forge-47.2.0"), atau kosong bila tidak disebut. */
++        val loaderVersion: String,
+         /** Nama folder isi tambahan (biasanya "overrides"). */
+         val overrides: String,
+         val files: List<PackFile>
+@@ -364,7 +366,10 @@ object CurseForgeMapper {
+ 
+         val loaders = mc.objects("modLoaders")
+         val primary = loaders.firstOrNull { it.bool("primary") == true } ?: loaders.firstOrNull()
+-        val loader = primary?.str("id")?.substringBefore('-')?.trim()?.lowercase()?.takeIf { it.isNotEmpty() }
++        val loaderId = primary?.str("id").orEmpty()
++        val loader = loaderId.substringBefore('-').trim().lowercase().takeIf { it.isNotEmpty() }
++        // "forge-47.2.0": versi loader ada setelah tanda hubung pertama
++        val loaderVersion = if (loaderId.contains('-')) loaderId.substringAfter('-').trim() else ""
+ 
+         val files = ArrayList<PackFile>()
+         for (item in filesElement.asJsonArray) {
+@@ -380,6 +385,7 @@ object CurseForgeMapper {
+             version = root.str("version").orEmpty(),
+             minecraftVersion = mc.str("version").orEmpty(),
+             loader = loader,
++            loaderVersion = loaderVersion,
+             overrides = root.str("overrides")?.trim()?.trim('/')?.takeIf { it.isNotEmpty() } ?: "overrides",
+             files = files
+         )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index a939916..ff40d21 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -35,6 +35,13 @@ data class WorldInfo(
+     val iconFile: File? = null
+ )
+ 
++/**
++ * Hasil memasang satu modpack. [failed] = berkas yang gagal diunduh dan masih layak dicoba lagi;
++ * [skipped] = berkas yang dilewati dan akan tetap dilewati bila diulang (path tidak aman, unduhan
++ * ditutup penulisnya). [installedMods] = jumlah mod yang terpasang.
++ */
++class ModpackReport(val failed: Int, val skipped: Int, val installedMods: Int)
++
+ /** Modpack tidak cocok dengan instance atau loader yang didukung; pesannya aman ditampilkan ke pengguna. */
+ private class ModpackIncompatibleException(message: String) : Exception(message)
+ 
+@@ -449,6 +456,30 @@ object NuxModManager {
+         }
+     }
+ 
++    /**
++     * Memasang isi modpack ke [instance] dari berkas [staged] yang disiapkan layar Buat Instance
++     * (lihat ModpackStaging). Berkasnya disalin ke folder modpack instance, jadi modpack ini tampil dan
++     * bisa diatur di layar Mod persis seperti modpack yang dipasang dari sana; setelah itu seluruh isinya
++     * dipasang dengan pemasang modpack yang sama. Aman dipanggil ulang: mod yang sudah ada dilewati.
++     * Dibatalkan lewat pembatalan coroutine.
++     */
++    suspend fun installStagedModpack(
++        context: Context,
++        instance: Instance,
++        staged: File,
++        onProgress: (statusText: String, current: Int, total: Int) -> Unit = { _, _, _ -> }
++    ): Result<ModpackReport> = withContext(Dispatchers.IO) {
++        try {
++            val dest = File(getTargetDir(context, instance, "modpacks"), SafePaths.fileName(staged.name))
++            if (dest.canonicalPath != staged.canonicalPath) staged.copyTo(dest, overwrite = true)
++            Result.success(processMrpackFile(instance, dest, context, onProgress))
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            Result.failure(e)
++        }
++    }
++
+     // ---------------------------------------------------------------------------------------------
+     // WORLD: daftar, impor .zip lokal, dan unduhan CurseForge ke folder saves
+     // ---------------------------------------------------------------------------------------------
+@@ -1203,7 +1234,7 @@ object NuxModManager {
+         mrpackFile: File,
+         context: Context,
+         onProgress: (statusText: String, current: Int, total: Int) -> Unit = { _, _, _ -> }
+-    ) = withContext(Dispatchers.IO) {
++    ): ModpackReport = withContext(Dispatchers.IO) {
+         try {
+             val gameDir = InstanceManager.getInstanceGameDir(context, instance)
+             val cleanFilename = mrpackFile.name.removeSuffix(".disabled")
+@@ -1281,6 +1312,8 @@ object NuxModManager {
+                     onProgress("Membaca daftar modpack ($totalFiles mod ditemukan)...", 0, totalFiles)
+                     var currentIdx = 0
+                     for (entry in filesToDownload) {
++                        // Tombol Batal di dialog unduhan berlaku juga di tengah modpack
++                        ensureActive()
+                         currentIdx++
+                         val targetFile = resolveModpackFile(gameDir, entry.relPath)
+                         if (targetFile == null) {
+@@ -1310,6 +1343,7 @@ object NuxModManager {
+                     val clientOverridesPrefix = "${prefix}client-overrides/"
+                     val entries = zip.entries()
+                     while (entries.hasMoreElements()) {
++                        ensureActive()
+                         val entry = entries.nextElement()
+                         val name = entry.name
+                         val rel = when {
+@@ -1347,6 +1381,7 @@ object NuxModManager {
+                     var currentIdx = 0
+                     var blockedFiles = 0
+                     for (packFile in wanted) {
++                        ensureActive()
+                         currentIdx++
+                         val info = resolved[packFile.fileId]
+                         val dlUrl = info?.url
+@@ -1389,6 +1424,7 @@ object NuxModManager {
+                     val overridesPrefix = cfPack.overrides + "/"
+                     val overrideEntries = zip.entries()
+                     while (overrideEntries.hasMoreElements()) {
++                        ensureActive()
+                         val entry = overrideEntries.nextElement()
+                         val name = entry.name
+                         if (!name.startsWith(overridesPrefix)) continue
+@@ -1455,7 +1491,10 @@ object NuxModManager {
+                 "Selesai dengan catatan: $installedModCount mod terpasang, $problemCount file gagal atau dilewati. Coba pasang ulang bila ada mod yang kurang."
+             }
+             onProgress(doneMessage + packNote, installedRelativeFiles.size, installedRelativeFiles.size)
++            ModpackReport(failedFiles, skippedFiles, installedModCount)
+         } catch (e: Exception) {
++            // Dibatalkan pengguna: bukan galat, teruskan apa adanya
++            if (e is CancellationException) throw e
+             LauncherLog.e("NuxModManager", "Error processing mrpack: ${e.message}", e)
+             if (e is ModpackIncompatibleException || e is CurseForgeApi.KeyException) {
+                 // Modpack ditolak (atau kunci CurseForge bermasalah): buang arsipnya supaya tidak tampil
+diff --git a/docs/site/en/index.html b/docs/site/en/index.html
+index eaefbe3dfe219c139ec1beaf9ce408b63ad1e192..01383cc2c05b7d4935731d35fc61a19a15f7bc87 100644
+GIT binary patch
+delta 180
+zcmXwzF$%&!5Jm9<p5Zrk600;4(gXxgA>(Eem+a0gv$3)9H1>jb5HI5$BvH%HgZKXX
+zxwyR+_gr2ZV;UJG@RCOo$LLHW2vOTaZrE0vV~r{&k~(=efKWu62-MJ=E%Q#TXA~Eo
+w(D}en!FXc))ce0TJ7bnLNZOhA6nQl-3Sr7+kn#6N2;9O8R2aQJ4&}1=06a865dZ)H
+
+delta 14
+WcmZ2_g7NJ!#tp@$o3+h;=>h;Y4F<LV
+
+diff --git a/docs/site/index.html b/docs/site/index.html
+index e6770e2626bcedd6b16cb417c90b0fa196469ab4..cad8f9eb26a0b11984d024686a8476ee1f67aa71 100644
+GIT binary patch
+delta 146
+zcmWm7yA8rH6a`SFqGE?T00~Vh6r}(Oi7_tm!&q?~%bx-oO6XYxi4_og(6InLN_~p+
+zeHFKN@%YvESvkKzF&GS^^6dImv)s36qNi)UvF3<_v4Uy{lY)sE)!BG#a)`1WgBB<Q
+p%M%0EnF%`=6I~|@Xbu8JhbTklG$2XvjC2}NdRn7%e17U{`3GHfHQ)dM
+
+delta 14
+WcmeA;#`xk0<A$#$o2Qx<>jD5cF$VJh
+
+
+
+# FIN part=1/2 files=16

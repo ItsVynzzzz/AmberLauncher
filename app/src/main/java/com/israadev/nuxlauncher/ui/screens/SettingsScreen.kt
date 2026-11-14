@@ -782,6 +782,17 @@ fun SettingsScreen(
 
                         }
 
+                        SettingsGroup("Tampilan di game") {
+                        SettingSwitchRow(
+                            title = "Tampilkan FPS dan RAM",
+                            desc = "Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.",
+                            checked = currentSettings.showFpsHud,
+                            onCheckedChange = { on ->
+                                SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(showFpsHud = on))
+                            }
+                        )
+                        }
+
                         SettingsGroup("Kontrol sentuh") {
                         SettingSwitchRow(
                             title = "Pukul lewat layar",

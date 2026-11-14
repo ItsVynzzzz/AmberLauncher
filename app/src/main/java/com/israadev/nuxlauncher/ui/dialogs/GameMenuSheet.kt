@@ -86,6 +86,8 @@ fun GameMenuSheet(
     onResolutionChange: (Int) -> Unit,
     fpsMode: FpsMode,
     onFpsModeChange: (FpsMode) -> Unit,
+    showFpsHud: Boolean = true,
+    onShowFpsHudChange: (Boolean) -> Unit = {},
     onOpenConsoleLog: () -> Unit,
     cursorSensitivity: Int,
     onCursorSensitivityChange: (Int) -> Unit,
@@ -306,6 +308,13 @@ fun GameMenuSheet(
                         onSelect = { index -> onResolutionChange(intArrayOf(50, 75, 100)[index]) }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
+                    ToggleRow(
+                        title = "Tampilkan FPS dan RAM",
+                        subtitle = "Angka FPS dan pemakaian RAM di sudut layar game",
+                        checked = showFpsHud,
+                        onChange = onShowFpsHudChange
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
                     ToggleRow(
                         title = "Pin FPS di layar",
                         subtitle = "Tetap tampil saat tombol layar disembunyikan",

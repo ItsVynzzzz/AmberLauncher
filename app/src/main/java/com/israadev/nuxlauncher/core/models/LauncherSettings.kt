@@ -75,6 +75,8 @@ data class LauncherSettings(
     // Permukaan game selalu TextureView (bukan SurfaceView). Perbaikan bila tampilan game terputar 90 derajat
     // di HP yang layar alaminya portrait; TextureView sedikit lebih berat (bawaan mati).
     val forceTextureView: Boolean = false,
+    // Tampilan angka FPS dan RAM di layar game. Dimatikan di sini atau lewat menu dalam game (ketuk angkanya).
+    val showFpsHud: Boolean = true,
     // HP RAM kecil: "auto" (bawaan launcher), "serial", atau "default"
     // (tanpa flag GC tambahan dari launcher).
     val generalGcMode: String = "auto",

@@ -90,15 +90,29 @@ fun GameControlsLayer(
     onToggleControls: () -> Unit,
     onOpenMenu: () -> Unit,
     // Game sedang menampilkan kursor (menu/GUI). Dibaca dari status kursor game, bukan dari layar.
-    inMenu: Boolean = false
+    inMenu: Boolean = false,
+    // Tampilan FPS dan RAM dimatikan pemain (Pengaturan atau menu dalam game).
+    fpsHudEnabled: Boolean = true
 ) {
     val density = LocalDensity.current
     // Lapisan tombol hilang (game ditutup): hentikan semua makro supaya tidak ada yang jalan sendiri.
     DisposableEffect(Unit) {
         onDispose { MacroRegistry.stopAll() }
     }
-    buttons.forEach { btn ->
-        key(btn.id) {
+    buttons.forEach { source ->
+        key(source.id) {
+            // Tampilan FPS dan RAM lebih lebar dari tombol FPS lama; ukurannya diperlebar di sini saja,
+            // tata letak yang tersimpan tidak berubah.
+            val btn = remember(source) {
+                if (source.isSystem && source.systemAction == "FPS") {
+                    source.copy(
+                        widthDp = maxOf(source.widthDp, FPS_HUD_MIN_WIDTH_DP),
+                        heightDp = maxOf(source.heightDp, FPS_HUD_MIN_HEIGHT_DP)
+                    )
+                } else {
+                    source
+                }
+            }
             val widthPx = with(density) { btn.widthDp.dp.toPx() }
             val heightPx = with(density) { btn.heightDp.dp.toPx() }
             val left = (screenWidth * (btn.xPercent / 100f) - widthPx / 2f)
@@ -118,7 +132,7 @@ fun GameControlsLayer(
                             FpsMode.PINNED -> !consoleVisible
                             FpsMode.SHOW_LOG -> false
                         }
-                        if (show) {
+                        if (show && fpsHudEnabled) {
                             FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
                         }
                     }
@@ -175,12 +189,18 @@ private val fpsPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     fontFeatureSettings = "tnum"
 }
 
+/** Ukuran minimum area tampilan FPS dan RAM (dp); tombol FPS lama berukuran 84 x 26. */
+private const val FPS_HUD_MIN_WIDTH_DP = 156
+private const val FPS_HUD_MIN_HEIGHT_DP = 26
+
 /**
- * Angka FPS minimalis: teks saja tanpa kotak atau garis. Warnanya mengikuti kondisi (putih,
- * kuning, merah muda). Info RAM, panas, atau beban UI hanya muncul bila perlu. Ketuk membuka menu.
+ * Tampilan FPS dan RAM: satu pil gelap tipis berisi "58 FPS  RAM 2.1/3.6 GB", hanya dua informasi itu. Warna angka FPS
+ * mengikuti kondisi (putih, kuning, merah muda) dan RAM jadi kuning bila memori HP tinggal sedikit. Ketuk membuka menu,
+ * tempat tampilan ini bisa dimatikan (bisa juga lewat Pengaturan).
  *
- * Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang teks ini, tanpa
- * menyusun ulang atau mengukur ulang tata letak.
+ * Seluruhnya satu gambar kanvas tanpa lapisan tambahan: satu isian bulat dan tiga potong teks, tanpa bayangan teks
+ * (pilnya yang memberi kontras). Semua nilai dibaca di dalam fase gambar saja: angka baru hanya menggambar ulang
+ * pil ini, tanpa menyusun ulang atau mengukur ulang tata letak.
  */
 @Composable
 private fun FpsText(
@@ -196,32 +216,33 @@ private fun FpsText(
     Box(
         modifier = modifier
             .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
-            .drawBehind { drawFpsReadout(fps(), pinned, if (perfWarn()) perfText() else "") }
+            .drawBehind { drawFpsReadout(fps(), pinned, perfText(), perfWarn()) }
             .pointerInput(Unit) { detectTapGestures { click() } }
     )
 }
 
-private fun drawFpsPiece(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color, shadowPx: Float) {
+private fun drawHudText(cv: android.graphics.Canvas, s: String, x: Float, y: Float, size: Float, spacing: Float, color: Color) {
     fpsPaint.textSize = size
     fpsPaint.letterSpacing = spacing
-    fpsPaint.color = Color.Black.copy(alpha = color.alpha * 0.55f).toArgb()
-    cv.drawText(s, x, y + shadowPx, fpsPaint)
     fpsPaint.color = color.toArgb()
     cv.drawText(s, x, y, fpsPaint)
 }
 
-private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String) {
+private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, ram: String, ramWarn: Boolean) {
     val tint = when {
         value <= 0 -> Color.White.copy(alpha = 0.45f)
-        value >= 50 -> Color.White.copy(alpha = 0.86f)
+        value >= 50 -> Color.White.copy(alpha = 0.92f)
         value >= 25 -> ControlSkin.YellowSoft
         else -> Color(0xFFFFA399)
     }
-    val numSize = 14.dp.toPx()
+    val numSize = 13.dp.toPx()
     val labSize = 8.dp.toPx()
+    val ramSize = 9.dp.toPx()
     val gap = 3.dp.toPx()
-    val shadow = 1.dp.toPx()
+    val sep = 9.dp.toPx()
+    val padX = 9.dp.toPx()
     val num = if (value > 0) value.toString() else "--"
+    val hasRam = ram.isNotEmpty()
 
     fpsPaint.textSize = numSize
     fpsPaint.letterSpacing = 0f
@@ -229,20 +250,38 @@ private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, extra: String)
     fpsPaint.textSize = labSize
     fpsPaint.letterSpacing = 0.1f
     val labW = fpsPaint.measureText("FPS")
-    val x0 = (size.width - (numW + gap + labW)) / 2f
-    val base = size.height / 2f + numSize * 0.36f
+    var ramW = 0f
+    if (hasRam) {
+        fpsPaint.textSize = ramSize
+        fpsPaint.letterSpacing = 0f
+        ramW = fpsPaint.measureText(ram)
+    }
 
+    val contentW = numW + gap + labW + (if (hasRam) sep + ramW else 0f)
+    val pillW = (contentW + padX * 2f).coerceAtMost(size.width)
+    val pillH = minOf(size.height, 22.dp.toPx())
+    val left = (size.width - pillW) / 2f
+    val top = (size.height - pillH) / 2f
+    drawRoundRect(
+        color = Color.Black.copy(alpha = 0.34f),
+        topLeft = Offset(left, top),
+        size = androidx.compose.ui.geometry.Size(pillW, pillH),
+        cornerRadius = androidx.compose.ui.geometry.CornerRadius(pillH / 2f)
+    )
+
+    val x0 = left + (pillW - contentW) / 2f
+    val base = top + pillH / 2f + numSize * 0.36f
     drawIntoCanvas { c ->
         val cv = c.nativeCanvas
-        drawFpsPiece(cv, num, x0, base, numSize, 0f, tint, shadow)
-        drawFpsPiece(
+        drawHudText(cv, num, x0, base, numSize, 0f, tint)
+        drawHudText(
             cv, "FPS", x0 + numW + gap, base, labSize, 0.1f,
-            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.50f), shadow
+            if (pinned) ControlSkin.Yellow else Color.White.copy(alpha = 0.55f)
         )
-        if (extra.isNotEmpty()) {
-            drawFpsPiece(
-                cv, extra, x0 + numW + gap + labW + 6.dp.toPx(), base, labSize, 0f,
-                ControlSkin.Yellow.copy(alpha = 0.85f), shadow
+        if (hasRam) {
+            drawHudText(
+                cv, ram, x0 + numW + gap + labW + sep, base, ramSize, 0f,
+                if (ramWarn) ControlSkin.Yellow else Color.White.copy(alpha = 0.62f)
             )
         }
     }

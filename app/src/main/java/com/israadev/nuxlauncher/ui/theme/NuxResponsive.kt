@@ -22,7 +22,9 @@ import kotlin.math.min
  * Automatically scales UI dimensions, typography, cards, paddings, and touch targets
  * based on device screen DPI, display density, and physical landscape screen height/width.
  * 
- * Target baseline: 392dp landscape height (Standard Android phone in landscape mode).
+ * Target baseline: 390dp landscape height and 740dp landscape width. The UI is scaled so the layout always fits
+ * inside BOTH (fit, not height only): phones with a limited width (16:9, nearly square foldable screens, 4:3
+ * tablets) are no longer drawn too big and cut off at the sides.
  * Safely clamps scaling factors to prevent UI overflows on compact/high-DPI screens
  * while expanding gracefully on large displays, foldables, and tablets.
  */
@@ -54,15 +56,17 @@ fun NuxResponsiveTheme(
     val screenHeightDp = configuration.screenHeightDp.dp
     val screenWidthDp = configuration.screenWidthDp.dp
 
-    // Calculate baseline ratio from standard 390dp landscape height
-    val heightRatio = screenHeightDp.value / 390f
+    // Skala muat dalam tinggi dan lebar rancangan. Lebar rancangan 740 dp: Home butuh sekitar 650 dp untuk bar navigasi
+    // dan tombol utama, ditambah tepi layar dan area lubang kamera. Memakai tinggi saja membuat HP berlayar lebar-terbatas
+    // terlalu besar dan terpotong di samping.
+    val heightRatio = min(screenHeightDp.value / 390f, screenWidthDp.value / 740f)
     
     // Determine device form-factor
     val isTablet = screenHeightDp >= 520.dp || configuration.smallestScreenWidthDp >= 600
     val isCompact = screenHeightDp < 350.dp
 
-    // Smooth clamped scaling factor: 0.78f (ultra compact / high display zoom) .. 1.30f (tablets)
-    val scaleFactor = min(max(heightRatio, 0.78f), if (isTablet) 1.28f else 1.15f)
+    // Smooth clamped scaling factor: 0.66f (ultra compact / high display zoom) .. 1.28f (tablets)
+    val scaleFactor = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
 
     // Clamp system fontScale to a safe range [0.85f .. 1.15f] so extreme OS font accessibility
     // settings do not shatter compact gaming launcher layouts while preserving readability

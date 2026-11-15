@@ -1,0 +1,915 @@
+diff --git a/.gitignore b/.gitignore
+index 7ad1b27..53af13f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -32,3 +32,6 @@ app/build/
+ # Kotlin / OS specific
+ .kotlin/
+ Thumbs.db
++
++# SDK Discord (berlisensi, tidak boleh dibagikan ulang): diunduh workflow dari repo privat saat build
++/app/libs/discord_partner_sdk.aar
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index b8adb8d..89687ac 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -55,6 +55,12 @@ if (isOfficialRepoBuild && !hasReleaseKey) {
+ // sebelumnya: hanya arm64-v8a, tanpa build native.
+ val buildArm32 = System.getenv("AMBER_ABI") == "arm32"
+ 
++// Discord Rich Presence (opsional). SDK resmi Discord berlisensi dan TIDAK boleh ada di repo publik. Workflow
++// mengunduhnya ke app/libs/discord_partner_sdk.aar dari repo privat (lihat docs/discord-rpc.md). Fitur ini hanya
++// ikut terbangun bila berkas itu ada; tanpanya app terbangun seperti biasa. AMBER_DISCORD=0 mematikannya paksa
++// (dipakai workflow untuk membangun ulang tanpa SDK bila build dengan SDK gagal).
++val hasDiscordSdk = file("libs/discord_partner_sdk.aar").exists() && System.getenv("AMBER_DISCORD") != "0"
++
+ android {
+     namespace = "com.israadev.nuxlauncher"
+     compileSdk = 37
+@@ -80,6 +86,8 @@ android {
+         val curseForgeApiKey = (System.getenv("CURSEFORGE_API_KEY") ?: localProperties.getProperty("curseforge.api.key") ?: "")
+             .filter { !it.isWhitespace() && it != '"' && it != '\\' }
+         buildConfigField("String", "CURSEFORGE_API_KEY", "\"" + curseForgeApiKey + "\"")
++        // true bila SDK Discord ikut terbangun; layar Pengaturan dan GameActivity memeriksanya.
++        buildConfigField("boolean", "HAS_DISCORD_SDK", hasDiscordSdk.toString())
+ 
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables {
+@@ -103,6 +111,17 @@ android {
+         }
+     }
+ 
++    if (!buildArm32 && hasDiscordSdk) {
++        // Build 64-bit tidak punya build native lain; CMake ini hanya untuk jembatan Discord. NDK 27 sama dengan
++        // yang dipakai pembuat SDK (header SDK memakai C++20). Build 32-bit memakai ndk-build (lihat build-arm32.sh).
++        ndkVersion = "27.2.12479018"
++        externalNativeBuild {
++            cmake {
++                path = file("src/main/cpp/CMakeLists.txt")
++            }
++        }
++    }
++
+     signingConfigs {
+         if (hasReleaseKey) {
+             create("amberRelease") {
+@@ -142,8 +161,9 @@ android {
+     buildFeatures {
+         compose = true
+         buildConfig = true
+-        // Dibutuhkan Android.mk untuk menautkan bytehook; hanya aktif di build 32-bit.
+-        prefab = buildArm32
++        // Dibutuhkan Android.mk untuk menautkan bytehook (build 32-bit) dan oleh jembatan Discord (header dan
++        // library SDK datang sebagai paket prefab dari AAR-nya).
++        prefab = buildArm32 || hasDiscordSdk
+     }
+ 
+     packaging {
+@@ -288,6 +308,8 @@ dependencies {
+     implementation(libs.commons.compress)
+     implementation(libs.xz)
+     implementation(libs.bytehook)
++    // SDK Discord (opsional, hanya ada di build dengan SDK_TOKEN). Membawa kelas Java, library native, dan paket prefab.
++    if (hasDiscordSdk) implementation(files("libs/discord_partner_sdk.aar"))
+     // Klien proxy resmi mod TouchController (LGPL-3.0). Dipanggil lewat refleksi, lihat TouchControllerBridge.
+     implementation(libs.proxy.client.android)
+     implementation("androidx.webkit:webkit:1.12.1")
+diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro
+index b458910..ef1c191 100644
+--- a/app/proguard-rules.pro
++++ b/app/proguard-rules.pro
+@@ -32,3 +32,8 @@
+ -keepclasseswithmembernames,includedescriptorclasses class * {
+     native <methods>;
+ }
++
++# Discord Rich Presence (opsional): pustaka native memanggil kelas ini lewat nama JNI, dan SDK dimuat lewat refleksi
++# (aturan untuk com.discord.** dibawa sendiri oleh AAR SDK-nya).
++-keep class com.israadev.nuxlauncher.discord.NativeDiscord { *; }
++-dontwarn com.discord.**
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 127cbc4..f0f8459 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -26,6 +26,10 @@
+     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+     <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION" />
+ 
++    <!-- SDK Discord (opsional) menambahkan izin Bluetooth untuk fitur suaranya, yang tidak dipakai di sini. -->
++    <uses-permission android:name="android.permission.BLUETOOTH" tools:node="remove" />
++    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:node="remove" />
++
+     <application
+         android:name=".NuxApplication"
+         android:allowBackup="false"
+diff --git a/app/src/main/cpp/CMakeLists.txt b/app/src/main/cpp/CMakeLists.txt
+new file mode 100644
+index 0000000..9e6b457
+--- /dev/null
++++ b/app/src/main/cpp/CMakeLists.txt
+@@ -0,0 +1,13 @@
++# Jembatan JNI ke Discord Social SDK untuk build 64-bit (hanya dibangun bila app/libs/discord_partner_sdk.aar
++# ada; lihat app/build.gradle.kts). Build 32-bit memakai amber_discord.mk lewat ndk-build.
++cmake_minimum_required(VERSION 3.18)
++project(amber_discord LANGUAGES CXX)
++
++set(CMAKE_CXX_STANDARD 20)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
++# Paket "prefab" ini datang dari discord_partner_sdk.aar (header + libdiscord_partner_sdk.so).
++find_package(discord_partner_sdk REQUIRED CONFIG)
++
++add_library(amber_discord SHARED discord_bridge.cpp)
++target_link_libraries(amber_discord PRIVATE discord_partner_sdk::discord_partner_sdk log)
+diff --git a/app/src/main/cpp/amber_discord.mk b/app/src/main/cpp/amber_discord.mk
+new file mode 100644
+index 0000000..fd15b01
+--- /dev/null
++++ b/app/src/main/cpp/amber_discord.mk
+@@ -0,0 +1,16 @@
++# Jembatan JNI ke Discord Social SDK untuk build 32-bit (ndk-build). scripts/build-arm32.sh menyalin berkas ini
++# ke jni/amber_discord/Android.mk dan menambahkan satu baris "include" ke jni/Android.mk, HANYA bila SDK
++# ada di app/libs. Sumbernya sama dengan build 64-bit (cpp/discord_bridge.cpp).
++LOCAL_PATH := $(call my-dir)
++
++include $(CLEAR_VARS)
++LOCAL_MODULE := amber_discord
++LOCAL_SRC_FILES := ../../cpp/discord_bridge.cpp
++LOCAL_CPPFLAGS += -std=c++20
++LOCAL_CPP_FEATURES := exceptions rtti
++LOCAL_LDLIBS := -llog
++LOCAL_SHARED_LIBRARIES := discord_partner_sdk
++include $(BUILD_SHARED_LIBRARY)
++
++# Paket prefab dari discord_partner_sdk.aar (header dan libdiscord_partner_sdk.so).
++$(call import-module,prefab/discord_partner_sdk)
+diff --git a/app/src/main/cpp/discord_bridge.cpp b/app/src/main/cpp/discord_bridge.cpp
+new file mode 100644
+index 0000000..910269b
+--- /dev/null
++++ b/app/src/main/cpp/discord_bridge.cpp
+@@ -0,0 +1,185 @@
++// Jembatan JNI antara Kotlin (discord/DiscordPresence.kt) dan Discord Social SDK.
++//
++// Hanya memakai jalur Rich Presence TANPA login: Client tidak pernah memanggil Connect, jadi
++// presence dikirim lewat aplikasi Discord yang terpasang di HP ini. Tidak ada token atau password.
++//
++// Aturan pemakaian: SEMUA fungsi di sini dipanggil dari satu thread yang sama (HandlerThread di Kotlin),
++// termasuk nativeTick yang menjalankan callback SDK.
++
++#define DISCORDPP_IMPLEMENTATION  // hanya di SATU file
++#include "discordpp.h"
++
++#include <android/log.h>
++#include <jni.h>
++
++#include <memory>
++#include <mutex>
++#include <string>
++
++namespace {
++
++constexpr const char* kTag = "AmberDiscord";
++// Nama yang tampil sesudah "Playing" di profil Discord. Tanpa login, SDK tidak bisa mencarinya sendiri.
++constexpr const char* kActivityName = "AmberLauncher";
++constexpr size_t kMaxLogBytes = 8 * 1024;
++
++std::shared_ptr<discordpp::Client> g_client;
++
++// Hasil terakhir dan log SDK ditulis dari callback (bisa dari thread SDK), jadi dikunci.
++std::mutex g_mutex;
++std::string g_result;  // kosong = belum ada hasil baru
++std::string g_log;
++
++void AppendLog(const std::string& line) {
++    std::lock_guard<std::mutex> lock(g_mutex);
++    if (g_log.size() + line.size() + 1 > kMaxLogBytes) return;
++    g_log += line;
++    g_log += '\n';
++}
++
++void SetResult(const std::string& text) {
++    std::lock_guard<std::mutex> lock(g_mutex);
++    g_result = text;
++}
++
++std::string TakeString(std::string& source) {
++    std::lock_guard<std::mutex> lock(g_mutex);
++    std::string out;
++    out.swap(source);
++    return out;
++}
++
++std::string BytesToString(JNIEnv* env, jbyteArray array) {
++    if (array == nullptr) return std::string();
++    const jsize length = env->GetArrayLength(array);
++    std::string out(static_cast<size_t>(length), '\0');
++    if (length > 0) {
++        env->GetByteArrayRegion(array, 0, length, reinterpret_cast<jbyte*>(out.data()));
++    }
++    return out;
++}
++
++jbyteArray StringToBytes(JNIEnv* env, const std::string& text) {
++    const jsize length = static_cast<jsize>(text.size());
++    jbyteArray array = env->NewByteArray(length);
++    if (array != nullptr && length > 0) {
++        env->SetByteArrayRegion(array, 0, length, reinterpret_cast<const jbyte*>(text.data()));
++    }
++    return array;
++}
++
++const char* SeverityName(discordpp::LoggingSeverity severity) {
++    switch (severity) {
++        case discordpp::LoggingSeverity::Verbose: return "V";
++        case discordpp::LoggingSeverity::Info: return "I";
++        case discordpp::LoggingSeverity::Warning: return "W";
++        case discordpp::LoggingSeverity::Error: return "E";
++        default: return "?";
++    }
++}
++
++}  // namespace
++
++extern "C" {
++
++JNIEXPORT jboolean JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeInit(JNIEnv*, jobject, jlong appId) {
++    try {
++        if (g_client) return JNI_TRUE;
++        auto client = std::make_shared<discordpp::Client>();
++        // Hanya peringatan dan galat yang dicatat: log Info SDK ramai dan tidak berguna bagi pemain.
++        client->AddLogCallback(
++            [](std::string message, discordpp::LoggingSeverity severity) {
++                __android_log_print(ANDROID_LOG_INFO, kTag, "[%s] %s", SeverityName(severity), message.c_str());
++                AppendLog(std::string("[") + SeverityName(severity) + "] " + message);
++            },
++            discordpp::LoggingSeverity::Warning);
++        client->SetApplicationId(static_cast<uint64_t>(appId));
++        g_client = std::move(client);
++        return JNI_TRUE;
++    } catch (const std::exception& e) {
++        SetResult(std::string("init gagal: ") + e.what());
++    } catch (...) {
++        SetResult("init gagal: galat tidak dikenal");
++    }
++    return JNI_FALSE;
++}
++
++// details/state: teks UTF-8 (kosong = tidak diisi). startMs <= 0 = tanpa penghitung waktu.
++JNIEXPORT jboolean JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeUpdate(JNIEnv* env, jobject, jbyteArray details,
++                                                                 jbyteArray state, jlong startMs) {
++    if (!g_client) return JNI_FALSE;
++    try {
++        const std::string detailsText = BytesToString(env, details);
++        const std::string stateText = BytesToString(env, state);
++
++        discordpp::Activity activity;
++        activity.SetType(discordpp::ActivityTypes::Playing);
++        activity.SetName(kActivityName);
++        if (!detailsText.empty()) activity.SetDetails(detailsText);
++        if (!stateText.empty()) activity.SetState(stateText);
++
++        if (startMs > 0) {
++            discordpp::ActivityTimestamps timestamps;
++            timestamps.SetStart(static_cast<uint64_t>(startMs));
++            activity.SetTimestamps(timestamps);
++        }
++
++        g_client->UpdateRichPresence(std::move(activity), [](discordpp::ClientResult result) {
++            if (result.Successful()) {
++                SetResult("ok");
++            } else {
++                SetResult("gagal: " + result.Error());
++            }
++        });
++        return JNI_TRUE;
++    } catch (const std::exception& e) {
++        SetResult(std::string("update gagal: ") + e.what());
++    } catch (...) {
++        SetResult("update gagal: galat tidak dikenal");
++    }
++    return JNI_FALSE;
++}
++
++JNIEXPORT void JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeClear(JNIEnv*, jobject) {
++    try {
++        if (g_client) g_client->ClearRichPresence();
++    } catch (...) {
++    }
++}
++
++// Menjalankan callback SDK. Dipanggil berkala dari thread yang sama.
++JNIEXPORT void JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeTick(JNIEnv*, jobject) {
++    try {
++        discordpp::RunCallbacks();
++    } catch (...) {
++    }
++}
++
++JNIEXPORT void JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeShutdown(JNIEnv*, jobject) {
++    try {
++        if (g_client) {
++            g_client->ClearRichPresence();
++            discordpp::RunCallbacks();
++            g_client.reset();
++        }
++    } catch (...) {
++        g_client.reset();
++    }
++}
++
++JNIEXPORT jbyteArray JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeTakeResult(JNIEnv* env, jobject) {
++    return StringToBytes(env, TakeString(g_result));
++}
++
++JNIEXPORT jbyteArray JNICALL
++Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeTakeLog(JNIEnv* env, jobject) {
++    return StringToBytes(env, TakeString(g_log));
++}
++
++}  // extern "C"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 6f39d78..00f1a7c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -4,6 +4,7 @@ import android.content.Context
+ import com.israadev.nuxlauncher.core.crash.CrashManager
+ import com.israadev.nuxlauncher.core.crash.GameLogArchive
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
++import com.israadev.nuxlauncher.discord.DiscordPresence
+ import com.israadev.nuxlauncher.ui.activities.ErrorActivity
+ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
+ import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
+@@ -369,6 +370,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+ 
+     private fun terminateGameProcess() {
+         archiveGameLogOnce()
++        // Hapus presence Discord dulu (menunggu paling lama 0,8 detik); proses ini dimatikan paksa di bawah.
++        try { DiscordPresence.stopBlocking() } catch (_: Throwable) {}
+         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
+         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
+         try {
+@@ -386,6 +389,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         super.onDestroy()
+         MouseDiag.sink = null
+         archiveGameLogOnce()
++        // Hapus presence Discord dulu (menunggu paling lama 0,8 detik); proses ini dimatikan paksa di bawah.
++        try { DiscordPresence.stopBlocking() } catch (_: Throwable) {}
+         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
+         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
+         try {
+@@ -582,6 +587,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         extraGameArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_GAME_ARGS) ?: emptyList()
+         useTextureView = shouldUseTextureView()
+ 
++        // Discord Rich Presence (opsional): hanya pada build yang membawa SDK dan bila pemain menyalakannya.
++        // Tanpa aplikasi Discord di HP ini, attach() langsung menyerah dan tidak ada yang berjalan.
++        if (BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled) {
++            DiscordPresence.attach(this)
++            DiscordPresence.update(DiscordPresence.gamePresence(mcVersion, loader, System.currentTimeMillis()))
++        }
++
+         // Setup real-time native LoggerBridge
+         setupLogger()
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 39b4868..b9bd7af 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -28,6 +28,9 @@ data class LauncherSettings(
+     // tombol yang dilewati tanpa mengangkat jari. Bawaan nyala. Nilai ini juga dipakai pengguna lama: tanpa kolom
+     // ini di berkas pengaturan tersimpan, bawaan di sini yang berlaku.
+     val buttonSlide: Boolean = true,
++    // Discord Rich Presence ("Bermain AmberLauncher" di profil Discord). Bawaan MATI: pemain memilih sendiri.
++    // Hanya berarti pada build yang membawa SDK Discord (BuildConfig.HAS_DISCORD_SDK).
++    val discordRpcEnabled: Boolean = false,
+     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
+     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
+     // dari versi sebelumnya tidak terbawa.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt
+new file mode 100644
+index 0000000..1aa3151
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt
+@@ -0,0 +1,284 @@
++package com.israadev.nuxlauncher.discord
++
++import android.app.Activity
++import android.content.pm.PackageManager
++import android.os.Handler
++import android.os.HandlerThread
++import android.os.Looper
++import android.os.Process
++import android.os.SystemClock
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import java.util.concurrent.CountDownLatch
++import java.util.concurrent.TimeUnit
++
++/**
++ * Pintu ke kode C++ (cpp/discord_bridge.cpp). Hanya dipanggil dari thread kerja milik [DiscordPresence].
++ * Semua teks dikirim sebagai byte UTF-8 supaya emoji dan huruf non-Latin aman.
++ */
++object NativeDiscord {
++    external fun nativeInit(appId: Long): Boolean
++    external fun nativeUpdate(details: ByteArray, state: ByteArray, startMs: Long): Boolean
++    external fun nativeClear()
++    external fun nativeTick()
++    external fun nativeShutdown()
++    external fun nativeTakeResult(): ByteArray
++    external fun nativeTakeLog(): ByteArray
++}
++
++/** Isi Rich Presence yang ditampilkan di profil Discord. [startMs] <= 0 berarti tanpa penghitung waktu. */
++data class PresenceInfo(val details: String, val state: String, val startMs: Long)
++
++/**
++ * Discord Rich Presence lewat Discord Social SDK resmi, TANPA login: presence dikirim ke aplikasi Discord
++ * yang terpasang di HP ini. Tidak ada token atau password akun Discord yang dipakai.
++ *
++ * Dirancang ringan untuk HP lemah:
++ *  - SDK-nya opsional. Tanpa app/libs/discord_partner_sdk.aar saat build, [supported] tetap false dan semua
++ *    fungsi di sini tidak melakukan apa-apa.
++ *  - Tanpa aplikasi Discord di HP, tidak ada thread dan tidak ada library yang dimuat.
++ *  - Satu thread kerja berprioritas latar belakang. Waktu bermain dihitung oleh Discord sendiri dari
++ *    [PresenceInfo.startMs], jadi tidak ada pembaruan berkala.
++ *  - Callback SDK dijalankan tiap [TICK_FAST_MS] hanya sampai presence pertama berhasil, sesudahnya cukup
++ *    tiap [TICK_SLOW_MS]. Bila presence tak kunjung berhasil dalam [GIVE_UP_MS] (mis. Discord belum login),
++ *    semuanya dihentikan dan thread ditutup.
++ *  - Sesudah [stopBlocking] atau menyerah, thread kerja ditutup dan klien SDK dilepas.
++ *
++ * Semua panggilan ke SDK dikerjakan satu thread (HandlerThread) karena SDK mengharapkan callback-nya
++ * dijalankan dari thread yang sama.
++ */
++object DiscordPresence {
++    /** Application ID aplikasi "AmberLauncher" di Discord Developer Portal (bukan rahasia). */
++    const val APP_ID = 1571290310213107794L
++
++    private const val TAG = "Discord"
++    private const val DISCORD_PACKAGE = "com.discord"
++    private const val TICK_FAST_MS = 500L
++    private const val TICK_SLOW_MS = 5_000L
++    private const val GIVE_UP_MS = 60_000L
++
++    /** Discord membatasi seberapa sering presence boleh diganti; pembaruan yang lebih rapat ditunda. */
++    private const val MIN_GAP_MS = 15_000L
++
++    /** true kalau SDK Discord ikut terpasang di build ini dan aplikasi Discord ada di HP ini. */
++    @Volatile
++    var supported = false
++        private set
++
++    private var libLoaded = false
++
++    @Volatile
++    private var handler: Handler? = null
++
++    // --- keadaan di bawah ini hanya disentuh dari thread kerja
++    private var initialized = false
++    private var wanted: PresenceInfo? = null
++    private var dirty = false
++    private var lastSentAt = 0L
++    private var firstSentAt = 0L
++    private var settled = false
++    private var lastResult = ""
++
++    private val tickTask = Runnable { tick() }
++    private val flushTask = Runnable { flush() }
++
++    /**
++     * Dipanggil dari activity yang menjalankan game. SDK perlu Activity untuk mengenali aplikasi ini, dan kelas
++     * pembukanya (DiscordSocialSdkInit) harus dimuat SEBELUM jembatan kita supaya library SDK dimuat lewat
++     * System.loadLibrary dan menjalankan JNI_OnLoad-nya. Dipanggil lewat refleksi supaya kode ini tetap
++     * bisa dikompilasi walau SDK tidak ada.
++     */
++    fun attach(activity: Activity) {
++        try {
++            if (!isDiscordInstalled(activity)) {
++                supported = false
++                return
++            }
++            val init = Class.forName("com.discord.socialsdk.DiscordSocialSdkInit")
++            init.getMethod("setEngineActivity", Activity::class.java).invoke(null, activity)
++            supported = true
++        } catch (e: ClassNotFoundException) {
++            supported = false // build tanpa SDK Discord: wajar, tidak perlu dicatat
++        } catch (e: Throwable) {
++            supported = false
++            LauncherLog.w(TAG, "SDK Discord tidak bisa disiapkan: ${e.message}", e)
++        }
++    }
++
++    /** Menampilkan [info] di profil Discord. null = hapus presence. */
++    fun update(info: PresenceInfo?) {
++        if (!supported) return
++        ensureHandler().post {
++            wanted = info
++            dirty = true
++            flush()
++        }
++    }
++
++    /**
++     * Menghapus presence, melepas klien SDK, dan menutup thread kerja. Menunggu sampai [timeoutMs] supaya
++     * selesai sebelum proses game dimatikan; bila tidak pernah dipakai langsung kembali.
++     */
++    fun stopBlocking(timeoutMs: Long = 800L) {
++        val h = handler ?: return
++        val done = CountDownLatch(1)
++        val posted = h.post {
++            try {
++                shutdown()
++            } finally {
++                done.countDown()
++            }
++        }
++        if (!posted) return
++        try {
++            done.await(timeoutMs, TimeUnit.MILLISECONDS)
++        } catch (_: InterruptedException) {
++            Thread.currentThread().interrupt()
++        }
++    }
++
++    /** Teks presence untuk game yang sedang berjalan. Nama instance dan akun pemain sengaja tidak ikut. */
++    fun gamePresence(mcVersion: String, loader: String, startMs: Long): PresenceInfo {
++        val version = mcVersion.trim().takeIf { it.isNotEmpty() && !it.equals("Unknown", ignoreCase = true) }
++        val details = if (version != null) "Minecraft $version" else "Minecraft"
++        val state = when (loader.trim().lowercase()) {
++            "", "vanilla" -> "Vanilla"
++            "fabric" -> "Fabric"
++            "forge" -> "Forge"
++            "neoforge", "neo_forge", "neo-forge" -> "NeoForge"
++            "quilt" -> "Quilt"
++            else -> loader.trim().replaceFirstChar { it.uppercase() }
++        }
++        return PresenceInfo(details, state, startMs)
++    }
++
++    private fun isDiscordInstalled(activity: Activity): Boolean = try {
++        @Suppress("DEPRECATION")
++        activity.packageManager.getPackageInfo(DISCORD_PACKAGE, 0)
++        true
++    } catch (_: PackageManager.NameNotFoundException) {
++        false
++    } catch (_: Throwable) {
++        true // tidak bisa dipastikan: biarkan SDK yang mencoba
++    }
++
++    @Synchronized
++    private fun ensureHandler(): Handler {
++        handler?.let { return it }
++        val thread = HandlerThread("amber-discord", Process.THREAD_PRIORITY_BACKGROUND)
++        thread.start()
++        val h = Handler(thread.looper)
++        handler = h
++        return h
++    }
++
++    // ------------------------------------------------------------ di thread kerja
++
++    private fun flush() {
++        val h = handler ?: return
++        if (!dirty) return
++        val info = wanted
++        val now = SystemClock.elapsedRealtime()
++        if (info != null && lastSentAt != 0L && now - lastSentAt < MIN_GAP_MS) {
++            h.removeCallbacks(flushTask)
++            h.postDelayed(flushTask, MIN_GAP_MS - (now - lastSentAt))
++            return
++        }
++        dirty = false
++        try {
++            if (info == null) {
++                if (initialized) NativeDiscord.nativeClear()
++            } else {
++                if (!libLoaded) {
++                    System.loadLibrary("amber_discord")
++                    libLoaded = true
++                }
++                if (!initialized) {
++                    initialized = NativeDiscord.nativeInit(APP_ID)
++                    if (!initialized) {
++                        drain()
++                        giveUp("klien SDK gagal dibuat")
++                        return
++                    }
++                    firstSentAt = now
++                    h.removeCallbacks(tickTask)
++                    h.postDelayed(tickTask, TICK_FAST_MS)
++                }
++                NativeDiscord.nativeUpdate(
++                    fit(info.details).toByteArray(Charsets.UTF_8),
++                    fit(info.state).toByteArray(Charsets.UTF_8),
++                    info.startMs
++                )
++            }
++            lastSentAt = now
++        } catch (e: Throwable) {
++            LauncherLog.w(TAG, "Discord RPC dihentikan: ${e.message}", e)
++            giveUp("galat: ${e.javaClass.simpleName}")
++        }
++    }
++
++    private fun tick() {
++        val h = handler ?: return
++        if (!initialized) return
++        try {
++            NativeDiscord.nativeTick()
++            drain()
++            if (lastResult == "ok") settled = true
++            if (!settled && SystemClock.elapsedRealtime() - firstSentAt > GIVE_UP_MS) {
++                giveUp("presence tidak berhasil dalam ${GIVE_UP_MS / 1000} detik (Discord belum login?)")
++                return
++            }
++        } catch (e: Throwable) {
++            LauncherLog.w(TAG, "Discord RPC dihentikan: ${e.message}", e)
++            giveUp("galat: ${e.javaClass.simpleName}")
++            return
++        }
++        h.postDelayed(tickTask, if (settled) TICK_SLOW_MS else TICK_FAST_MS)
++    }
++
++    private fun giveUp(reason: String) {
++        LauncherLog.i(TAG, "Discord RPC berhenti: $reason")
++        shutdown()
++    }
++
++    private fun shutdown() {
++        handler?.removeCallbacksAndMessages(null)
++        try {
++            if (initialized) {
++                NativeDiscord.nativeShutdown()
++                drain()
++            }
++        } catch (e: Throwable) {
++            LauncherLog.w(TAG, "Discord RPC gagal ditutup rapi: ${e.message}", e)
++        }
++        initialized = false
++        wanted = null
++        dirty = false
++        lastSentAt = 0L
++        firstSentAt = 0L
++        settled = false
++        lastResult = ""
++        synchronized(this) { handler = null }
++        Looper.myLooper()?.quitSafely()
++    }
++
++    /** Memindahkan hasil terakhir dan log SDK ke log launcher (hanya yang baru atau berubah). */
++    private fun drain() {
++        val result = String(NativeDiscord.nativeTakeResult(), Charsets.UTF_8)
++        if (result.isNotEmpty() && result != lastResult) {
++            lastResult = result
++            LauncherLog.i(TAG, "Presence: $result")
++        }
++        val log = String(NativeDiscord.nativeTakeLog(), Charsets.UTF_8)
++        if (log.isNotBlank()) {
++            for (line in log.lineSequence()) if (line.isNotBlank()) LauncherLog.w(TAG, line)
++        }
++    }
++
++    /** Discord menerima teks 2 sampai 128 karakter. */
++    private fun fit(text: String): String {
++        var t = text.replace('\n', ' ').trim()
++        if (t.length > 100) t = t.take(100)
++        if (t.isNotEmpty() && Character.isHighSurrogate(t.last())) t = t.dropLast(1)
++        return if (t.length < 2) "Minecraft" else t
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 7bb7dd2..bbc903a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -55,6 +55,7 @@ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+ import com.israadev.nuxlauncher.core.device.DeviceProfiles
++import com.israadev.nuxlauncher.BuildConfig
+ import com.israadev.nuxlauncher.core.models.LauncherSettings
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
+@@ -141,6 +142,7 @@ fun SettingsScreen(
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
+     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
++    var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
+@@ -209,6 +211,7 @@ fun SettingsScreen(
+             hotbarTouchEnabled = hotbarTouch,
+             buttonLookDrag = buttonLookDrag,
+             buttonSlide = buttonSlide,
++            discordRpcEnabled = discordRpc,
+             touchControllerEnabled = touchControllerEnabled,
+             mouseSizeDp = mouseSizeDp,
+             physicalMouseSystemPointer = physicalSystemPointer,
+@@ -793,6 +796,21 @@ fun SettingsScreen(
+                         )
+                         }
+ 
++                        // Hanya ada di build yang membawa SDK Discord (dibangun dari workflow resmi dengan SDK_TOKEN).
++                        if (BuildConfig.HAS_DISCORD_SDK) {
++                            SettingsGroup("Discord") {
++                                SettingSwitchRow(
++                                    title = "Discord Rich Presence",
++                                    desc = "Menampilkan AmberLauncher beserta versi Minecraft dan loader di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.",
++                                    checked = discordRpc,
++                                    onCheckedChange = {
++                                        discordRpc = it
++                                        commitSettings()
++                                    }
++                                )
++                            }
++                        }
++
+                         SettingsGroup("Kontrol sentuh") {
+                         SettingSwitchRow(
+                             title = "Pukul lewat layar",
+@@ -1179,6 +1197,7 @@ fun SettingsScreen(
+                     hotbarTouch = reset.hotbarTouchEnabled
+                     buttonLookDrag = reset.buttonLookDrag
+                     buttonSlide = reset.buttonSlide
++                    discordRpc = reset.discordRpcEnabled
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     mouseSizeDp = reset.mouseSizeDp
+                     physicalSystemPointer = reset.physicalMouseSystemPointer
+diff --git a/docs/discord-rpc.md b/docs/discord-rpc.md
+new file mode 100644
+index 0000000..b70df0c
+--- /dev/null
++++ b/docs/discord-rpc.md
+@@ -0,0 +1,36 @@
++# Discord Rich Presence
++
++Opsional dan **mati bawaan**: pemain menyalakannya di **Pengaturan > Discord**. Saat game berjalan, profil Discord
++menampilkan "Bermain AmberLauncher" beserta versi Minecraft, loader, dan waktu bermain. Nama instance dan akun
++pemain tidak ikut dikirim.
++
++## Cara kerja
++
++- Memakai Discord Social SDK resmi lewat jalur Rich Presence **tanpa login**: presence dikirim ke aplikasi Discord yang
++  terpasang di HP yang sama. Tidak ada token atau kata sandi akun Discord yang dipakai atau disimpan.
++- Kode: `discord/DiscordPresence.kt` (satu thread kerja berprioritas latar belakang), jembatan JNI
++  `cpp/discord_bridge.cpp`, dan `cpp/CMakeLists.txt` (64-bit) atau `cpp/amber_discord.mk` (32-bit, ndk-build).
++- Hemat: tanpa aplikasi Discord di HP, tidak ada thread dan tidak ada library yang dimuat. Waktu bermain dihitung
++  Discord sendiri, jadi tidak ada pembaruan berkala. Callback SDK berjalan tiap 0,5 detik sampai presence pertama
++  berhasil, lalu tiap 5 detik. Bila tak berhasil dalam 60 detik (mis. Discord belum login), semuanya dihentikan.
++- Application ID (bukan rahasia) ada di `DiscordPresence.APP_ID`.
++
++## SDK tidak ada di repo
++
++Lisensi SDK mengizinkan menyertakannya di dalam aplikasi, tetapi tidak mengizinkan membagikan ulang SDK itu sendiri,
++jadi `discord_partner_sdk.aar` **tidak boleh** dimasukkan ke repo publik (sudah ada di `.gitignore`).
++
++Workflow `build-apk.yml` mengunduhnya saat build:
++
++1. Taruh `discord_partner_sdk.aar` di akar repo privat `<pemilik>/amber-private-libs`.
++2. Buat token GitHub fine-grained dengan akses hanya ke repo itu dan izin **Contents: read-only**.
++3. Simpan token sebagai Secrets `SDK_TOKEN` di repo ini.
++
++Tanpa `SDK_TOKEN`, atau bila unduhan gagal, APK dibangun tanpa fitur Discord (barisnya di Pengaturan juga tidak
++tampil). Bila build dengan SDK gagal, workflow dan `scripts/build-arm32.sh` otomatis membangun ulang tanpa SDK supaya
++APK tetap terbit; kesalahan pertamanya ada di ringkasan run (64-bit) atau log langkah 32-bit.
++
++## Ketentuan yang perlu diingat
++
++Social SDK Terms Discord antara lain melarang mendukung pengguna di bawah 13 tahun untuk fitur integrasinya, dan memberi
++Discord hak meninjau implementasi. Tulisan di Pengaturan sudah menyebut batas usia itu.
+diff --git a/docs/workflows/build-apk.yml b/docs/workflows/build-apk.yml
+index 90ae5a1..e02acaa 100644
+--- a/docs/workflows/build-apk.yml
++++ b/docs/workflows/build-apk.yml
+@@ -608,6 +608,37 @@ jobs:
+           } >> "$GITHUB_ENV"
+           echo "Versi build ini: ${VERSION_NAME} (rilis=${RILIS}, sebelumnya: ${PREV_TAG:-belum ada})"
+ 
++      # SDK Discord (untuk Rich Presence) berlisensi dan tidak boleh ada di repo publik. Bila Secrets SDK_TOKEN diisi,
++      # SDK diunduh dari repo privat <pemilik>/amber-private-libs (berkas discord_partner_sdk.aar di akar repo itu)
++      # ke app/libs, dan APK dibangun dengan fitur Discord RPC. Tanpa token, atau bila unduhan gagal, APK dibangun
++      # seperti biasa tanpa fitur itu. Berkasnya ada di .gitignore dan tidak pernah di-commit atau diunggah.
++      # Token hanya perlu izin baca (Contents: read-only) ke repo itu. Lihat docs/discord-rpc.md.
++      - name: Ambil SDK Discord (opsional)
++        env:
++          SDK_TOKEN: ${{ secrets.SDK_TOKEN }}
++        run: |
++          set +x
++          AAR=app/libs/discord_partner_sdk.aar
++          if [ -z "${SDK_TOKEN:-}" ]; then
++            echo "SDK_TOKEN belum diisi: APK dibangun tanpa fitur Discord RPC."
++            exit 0
++          fi
++          mkdir -p app/libs
++          URL="https://api.github.com/repos/${GITHUB_REPOSITORY_OWNER}/amber-private-libs/contents/discord_partner_sdk.aar"
++          if curl -fsSL --retry 3 --retry-delay 2 \
++               -H "Authorization: Bearer ${SDK_TOKEN}" \
++               -H "Accept: application/vnd.github.raw+json" \
++               -H "X-GitHub-Api-Version: 2022-11-28" \
++               -o "$AAR" "$URL" && unzip -tq "$AAR" > /dev/null 2>&1; then
++            echo "SDK Discord terunduh ($(du -h "$AAR" | cut -f1))."
++            # Jembatan Discord 64-bit dibangun dengan NDK 27 (lihat app/build.gradle.kts); pasang lebih dulu.
++            SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
++            yes | "$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" > /dev/null || true
++          else
++            rm -f "$AAR"
++            echo "::warning title=SDK Discord tidak terunduh::Periksa Secrets SDK_TOKEN (masa berlaku dan akses ke repo amber-private-libs) dan berkas discord_partner_sdk.aar di repo itu. APK dibangun tanpa fitur Discord RPC."
++          fi
++
+       - name: Pasang Gradle dan cache
+         uses: gradle/actions/setup-gradle@v4
+ 
+@@ -621,7 +652,27 @@ jobs:
+         run: |
+           set -o pipefail
+           chmod +x gradlew
+-          ./gradlew assembleRelease --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
++          # Fitur Discord RPC bersifat opsional dan tidak boleh menggagalkan APK: bila build dengan SDK Discord
++          # gagal, dibangun ulang tanpa SDK (AMBER_DISCORD=0) dan kesalahan pertamanya ditulis di ringkasan run.
++          if ! ./gradlew assembleRelease --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"; then
++            if [ -f app/libs/discord_partner_sdk.aar ]; then
++              mv "$RUNNER_TEMP/gradle.log" "$RUNNER_TEMP/gradle-dengan-sdk.log"
++              {
++                echo "### Discord RPC dinonaktifkan di APK ini"
++                echo
++                echo "Build dengan SDK Discord gagal, jadi APK dibangun ulang tanpa SDK. Kesalahan pertama:"
++                echo
++                echo '```'
++                grep -E '^e: |: error: |^\* What went wrong:' -A2 "$RUNNER_TEMP/gradle-dengan-sdk.log" | sed -E 's#file://##; s#/home/runner/work/[^/]+/[^/]+/##' | head -n 25 || true
++                echo '```'
++              } >> "$GITHUB_STEP_SUMMARY"
++              echo "::warning title=Discord RPC dinonaktifkan::Build dengan SDK Discord gagal; membangun ulang tanpa SDK. Lihat ringkasan run."
++              rm -rf app/build app/.cxx
++              AMBER_DISCORD=0 ./gradlew assembleRelease --stacktrace 2>&1 | tee "$RUNNER_TEMP/gradle.log"
++            else
++              exit 1
++            fi
++          fi
+ 
+       - name: Siapkan file APK
+         run: |
+diff --git a/scripts/build-arm32.sh b/scripts/build-arm32.sh
+index a520d17..455527a 100755
+--- a/scripts/build-arm32.sh
++++ b/scripts/build-arm32.sh
+@@ -76,6 +76,17 @@ APP="$WORK/app/src/main"
+ rm -rf "$APP/jni"
+ cp -r "$UPMAIN/jni" "$APP/jni"
+ 
++# Discord Rich Presence (opsional): jembatan C++-nya ikut dibangun hanya bila SDK ada di app/libs. SDK tidak
++# disimpan di repo (lisensinya melarang); workflow mengunduhnya sebelum skrip ini jalan. Lihat docs/discord-rpc.md.
++DISCORD32=0
++if [ -f "$WORK/app/libs/discord_partner_sdk.aar" ] && [ -f "$APP/cpp/amber_discord.mk" ]; then
++  mkdir -p "$APP/jni/amber_discord"
++  cp "$APP/cpp/amber_discord.mk" "$APP/jni/amber_discord/Android.mk"
++  printf '\ninclude $(HERE_PATH)/amber_discord/Android.mk\n' >> "$APP/jni/Android.mk"
++  DISCORD32=1
++fi
++echo "Discord RPC di APK 32-bit: $DISCORD32"
++
+ # Buang bagian 64-bit dari salinan (tidak ikut APK 32-bit)
+ rm -rf "$APP/jniLibs/arm64-v8a"
+ rm -f "$APP"/assets/runtimes/*/bin-arm64.tar.xz
+@@ -138,7 +149,20 @@ STAGE="5/6 Gradle + NDK (cari baris diawali 'e:' atau 'ndk-build' di log)"
+ echo "== 5/6 Bangun APK (Gradle + NDK) =="
+ chmod +x gradlew
+ export AMBER_VERSION_NAME="$VERSION_NAME"
+-AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
++if [ "$DISCORD32" = 1 ]; then
++  # Fitur Discord bersifat opsional dan tidak boleh menggagalkan APK 32-bit: bila build dengan SDK gagal,
++  # dibangun ulang tanpa SDK (jembatan dilepas dari Android.mk dan AMBER_DISCORD=0).
++  if ! AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace; then
++    echo "::warning title=Discord RPC dinonaktifkan di APK 32-bit::Build dengan SDK Discord gagal; membangun ulang tanpa SDK. Kesalahan pertama ada di log langkah ini (cari 'ndk-build' atau baris diawali 'e:')."
++    DISCORD32=0
++    export AMBER_DISCORD=0
++    sed -i '/amber_discord/d' "$APP/jni/Android.mk"
++    rm -rf "$WORK/app/build" "$WORK/app/.cxx"
++    AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
++  fi
++else
++  AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
++fi
+ 
+ APK="$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)"
+ test -n "$APK"
+@@ -167,6 +191,14 @@ if [ "$ENGINE32" = 1 ]; then
+   fi
+ fi
+ 
++if [ "$DISCORD32" = 1 ]; then
++  if grep -q "lib/armeabi-v7a/libamber_discord.so" <<< "$APK_LIST" && grep -q "lib/armeabi-v7a/libdiscord_partner_sdk.so" <<< "$APK_LIST"; then
++    echo "Discord RPC (jembatan dan SDK) ikut di APK 32-bit."
++  else
++    echo "::warning title=Discord RPC tidak ikut APK 32-bit::Jembatan atau library SDK tidak ada di APK, jadi fitur tidak berfungsi di APK ini."
++  fi
++fi
++
+ mkdir -p "$OUT"
+ cp "$APK" "$OUT/$APK_NAME"
+ ls -lh "$OUT/$APK_NAME"
+# FIN part=1/1 files=14

@@ -5,6 +5,7 @@ import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.crash.LauncherLog
@@ -12,6 +13,7 @@ import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.i18n.Toast
+import dev.horizon.android.HorizonActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -262,6 +264,12 @@ object HorizonEngine {
             context.startActivity(
                 Intent()
                     .setClassName(context.packageName, ACTIVITY_CLASS)
+                    // Discord Rich Presence: pilihan pemain dititipkan ke proses :horizon lewat Intent.
+                    .putExtra(
+                        HorizonActivity.EXTRA_DISCORD_RPC,
+                        BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled
+                    )
+                    .putExtra(HorizonActivity.EXTRA_MC_VERSION, SUPPORTED_MC_VERSION)
                     // REORDER_TO_FRONT: bila mesin masih berjalan di latar, kembali ke sana, bukan membuka yang kedua.
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT),
                 // Tanpa animasi peralihan: layar mesin muncul seketika begitu siap.

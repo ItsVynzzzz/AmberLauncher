@@ -146,6 +146,7 @@ object DiscordPresence {
             "forge" -> "Forge"
             "neoforge", "neo_forge", "neo-forge" -> "NeoForge"
             "quilt" -> "Quilt"
+            "horizon" -> "Horizon (Rust)"
             else -> loader.trim().replaceFirstChar { it.uppercase() }
         }
         return PresenceInfo(details, state, startMs)

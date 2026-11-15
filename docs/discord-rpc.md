@@ -15,6 +15,14 @@ pemain tidak ikut dikirim.
   berhasil, lalu tiap 5 detik. Bila tak berhasil dalam 60 detik (mis. Discord belum login), semuanya dihentikan.
 - Application ID (bukan rahasia) ada di `DiscordPresence.APP_ID`.
 
+## Java dan mesin Rust
+
+- **Loader Java**: `GameActivity` (proses `:game`) menyalakan presence saat game dibuka dan menghapusnya saat berhenti.
+- **Mesin Rust (Horizon)**: `dev/horizon/android/HorizonActivity.java` (proses `:horizon`) melakukan hal yang sama.
+  Karena proses itu tidak membaca pengaturan launcher, pilihan pemain dititipkan lewat Intent (`EXTRA_DISCORD_RPC`)
+  oleh `HorizonEngine.start`. Mesin memanggil `process::exit` saat selesai, jadi `onDestroy` tidak selalu sempat
+  jalan; Discord sendiri menghapus presence begitu prosesnya mati.
+
 ## SDK tidak ada di repo
 
 Lisensi SDK mengizinkan menyertakannya di dalam aplikasi, tetapi tidak mengizinkan membagikan ulang SDK itu sendiri,

@@ -1,0 +1,139 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index c641768..b31562d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -35,2 +35,3 @@ import androidx.compose.material.icons.outlined.VisibilityOff
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.LocalNuxScale
+ import androidx.compose.animation.slideInVertically
+@@ -54,2 +55,3 @@ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.BoxWithConstraints
+ import androidx.compose.foundation.layout.Box
+@@ -806,4 +808,9 @@ private fun HomeScene(
+     val config = LocalConfiguration.current
+-    val compact = config.screenWidthDp < 640
+-    val nameSize = if (config.screenHeightDp < 380) 40.sp else 54.sp
++    // Ambang dihitung dari ukuran rancangan (ukuran layar dibagi skala UI), bukan dp mentah. Skala UI sudah menyamakan
++    // tinggi rancangan di semua HP, jadi judul dan tata letak punya proporsi yang sama di HP 360 dp maupun 392 dp.
++    val uiScale = LocalNuxScale.current.scaleFactor
++    val designWidthDp = config.screenWidthDp / uiScale
++    val designHeightDp = config.screenHeightDp / uiScale
++    val compact = designWidthDp < 760f
++    val nameSize = if (designHeightDp < 372f) 40.sp else 48.sp
+     val textShadow = remember { Shadow(NuxColors.Ink.copy(alpha = 0.40f), Offset(0f, 2f), 12f) }
+@@ -1080,10 +1087,19 @@ private fun HomeScene(
+ 
+-                // Bar navigasi + tombol utama
+-                Row(
++                // Bar navigasi + tombol utama. Ukuran keduanya tetap: bar pil pendek di kiri, tombol utama di kanan, dan
++                // ruang kosong di antaranya (bukan bar yang melebar mengisi sisa ruang). Hanya bila ruangnya benar-benar
++                // kurang, keduanya mengecil bersama dengan perbandingan yang sama, paling kecil 70%.
++                BoxWithConstraints(
+                     modifier = Modifier
+                         .padding(top = 16.dp)
+-                        .fillMaxWidth(),
+-                    verticalAlignment = Alignment.CenterVertically
++                        .fillMaxWidth()
+                 ) {
+-                    Box(modifier = Modifier.weight(1f)) {
++                    val ideal = (HOME_NAV_ITEM_DP * 4 + HOME_NAV_CHROME_DP + HOME_MAIN_BUTTON_DP).toFloat()
++                    val fit = ((maxWidth.value - HOME_MIN_GAP_DP) / ideal).coerceIn(0.7f, 1f)
++                    val navItemWidth = (HOME_NAV_ITEM_DP * fit).dp
++                    val mainWidth = (HOME_MAIN_BUTTON_DP * fit).dp
++                    Row(
++                        modifier = Modifier.fillMaxWidth(),
++                        horizontalArrangement = Arrangement.SpaceBetween,
++                        verticalAlignment = Alignment.CenterVertically
++                    ) {
+                         HomeNavBar(
+@@ -1091,22 +1107,19 @@ private fun HomeScene(
+                             onSelect = onNavigate,
+-                            modifier = Modifier
+-                                .fillMaxWidth()
+-                                .widthIn(max = 430.dp)
+-                        )
+-                    }
+-                    Spacer(modifier = Modifier.width(14.dp))
+-                    if (instance != null) {
+-                        HomeMainButton(
+-                            text = if (isReady) "PLAY" else "UNDUH",
+-                            icon = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
+-                            onClick = onPlay,
+-                            modifier = Modifier.width(if (compact) 160.dp else 224.dp)
+-                        )
+-                    } else {
+-                        HomeMainButton(
+-                            text = "TAMBAH",
+-                            icon = Icons.Default.Add,
+-                            onClick = onCreateInstance,
+-                            modifier = Modifier.width(if (compact) 160.dp else 224.dp)
++                            itemWidth = navItemWidth
+                         )
++                        if (instance != null) {
++                            HomeMainButton(
++                                text = if (isReady) "PLAY" else "UNDUH",
++                                icon = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
++                                onClick = onPlay,
++                                modifier = Modifier.width(mainWidth)
++                            )
++                        } else {
++                            HomeMainButton(
++                                text = "TAMBAH",
++                                icon = Icons.Default.Add,
++                                onClick = onCreateInstance,
++                                modifier = Modifier.width(mainWidth)
++                            )
++                        }
+                     }
+@@ -1207,3 +1220,12 @@ private val HOME_NAV_ITEMS = listOf(
+ 
+-/** Bar navigasi berbentuk pil di kiri bawah: Home, Mod, Akun, Pengaturan (ikon di atas label). */
++// Ukuran tetap baris bawah Home (dp pada skala UI). Bar = 4 item + jarak dan isi pil; tombol utama di kanannya.
++private const val HOME_NAV_ITEM_DP = 100
++private const val HOME_NAV_CHROME_DP = 16
++private const val HOME_MAIN_BUTTON_DP = 216
++private const val HOME_MIN_GAP_DP = 16f
++
++/**
++ * Bar navigasi berbentuk pil di kiri bawah: Home, Mod, Akun, Pengaturan (ikon di atas label). Lebarnya mengikuti isi
++ * ([itemWidth] per item), tidak melebar mengikuti ruang yang ada.
++ */
+ @Composable
+@@ -1212,2 +1234,3 @@ private fun HomeNavBar(
+     onSelect: (String) -> Unit,
++    itemWidth: Dp,
+     modifier: Modifier = Modifier
+@@ -1226,3 +1249,3 @@ private fun HomeNavBar(
+                 modifier = Modifier
+-                    .weight(1f)
++                    .width(itemWidth)
+                     .fillMaxHeight()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
+index b3e112a..b6e2c38 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
+@@ -24,3 +24,5 @@ import kotlin.math.min
+  * 
+- * Target baseline: 392dp landscape height (Standard Android phone in landscape mode).
++ * Target baseline: 390dp landscape height and 740dp landscape width. The UI is scaled so the layout always fits
++ * inside BOTH (fit, not height only): phones with a limited width (16:9, nearly square foldable screens, 4:3
++ * tablets) are no longer drawn too big and cut off at the sides.
+  * Safely clamps scaling factors to prevent UI overflows on compact/high-DPI screens
+@@ -56,4 +58,6 @@ fun NuxResponsiveTheme(
+ 
+-    // Calculate baseline ratio from standard 390dp landscape height
+-    val heightRatio = screenHeightDp.value / 390f
++    // Skala muat dalam tinggi dan lebar rancangan. Lebar rancangan 740 dp: Home butuh sekitar 650 dp untuk bar navigasi
++    // dan tombol utama, ditambah tepi layar dan area lubang kamera. Memakai tinggi saja membuat HP berlayar lebar-terbatas
++    // terlalu besar dan terpotong di samping.
++    val heightRatio = min(screenHeightDp.value / 390f, screenWidthDp.value / 740f)
+     
+@@ -63,4 +67,4 @@ fun NuxResponsiveTheme(
+ 
+-    // Smooth clamped scaling factor: 0.78f (ultra compact / high display zoom) .. 1.30f (tablets)
+-    val scaleFactor = min(max(heightRatio, 0.78f), if (isTablet) 1.28f else 1.15f)
++    // Smooth clamped scaling factor: 0.66f (ultra compact / high display zoom) .. 1.28f (tablets)
++    val scaleFactor = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
+ 
+# FIN part=1/1 files=2

@@ -76,6 +76,17 @@ APP="$WORK/app/src/main"
 rm -rf "$APP/jni"
 cp -r "$UPMAIN/jni" "$APP/jni"
 
+# Discord Rich Presence (opsional): jembatan C++-nya ikut dibangun hanya bila SDK ada di app/libs. SDK tidak
+# disimpan di repo (lisensinya melarang); workflow mengunduhnya sebelum skrip ini jalan. Lihat docs/discord-rpc.md.
+DISCORD32=0
+if [ -f "$WORK/app/libs/discord_partner_sdk.aar" ] && [ -f "$APP/cpp/amber_discord.mk" ]; then
+  mkdir -p "$APP/jni/amber_discord"
+  cp "$APP/cpp/amber_discord.mk" "$APP/jni/amber_discord/Android.mk"
+  printf '\ninclude $(HERE_PATH)/amber_discord/Android.mk\n' >> "$APP/jni/Android.mk"
+  DISCORD32=1
+fi
+echo "Discord RPC di APK 32-bit: $DISCORD32"
+
 # Buang bagian 64-bit dari salinan (tidak ikut APK 32-bit)
 rm -rf "$APP/jniLibs/arm64-v8a"
 rm -f "$APP"/assets/runtimes/*/bin-arm64.tar.xz
@@ -138,7 +149,20 @@ STAGE="5/6 Gradle + NDK (cari baris diawali 'e:' atau 'ndk-build' di log)"
 echo "== 5/6 Bangun APK (Gradle + NDK) =="
 chmod +x gradlew
 export AMBER_VERSION_NAME="$VERSION_NAME"
-AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
+if [ "$DISCORD32" = 1 ]; then
+  # Fitur Discord bersifat opsional dan tidak boleh menggagalkan APK 32-bit: bila build dengan SDK gagal,
+  # dibangun ulang tanpa SDK (jembatan dilepas dari Android.mk dan AMBER_DISCORD=0).
+  if ! AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace; then
+    echo "::warning title=Discord RPC dinonaktifkan di APK 32-bit::Build dengan SDK Discord gagal; membangun ulang tanpa SDK. Kesalahan pertama ada di log langkah ini (cari 'ndk-build' atau baris diawali 'e:')."
+    DISCORD32=0
+    export AMBER_DISCORD=0
+    sed -i '/amber_discord/d' "$APP/jni/Android.mk"
+    rm -rf "$WORK/app/build" "$WORK/app/.cxx"
+    AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
+  fi
+else
+  AMBER_ABI=arm32 ./gradlew assembleRelease --stacktrace
+fi
 
 APK="$(find app/build/outputs/apk/release -name '*.apk' | head -n 1)"
 test -n "$APK"
@@ -164,6 +188,14 @@ if [ "$ENGINE32" = 1 ]; then
     echo "Mesin Rust (Horizon) 32-bit ikut di APK."
   else
     echo "::warning title=Mesin Rust 32-bit tidak ikut APK::Pustakanya terpasang di pohon kerja tetapi tidak ada di APK 32-bit."
+  fi
+fi
+
+if [ "$DISCORD32" = 1 ]; then
+  if grep -q "lib/armeabi-v7a/libamber_discord.so" <<< "$APK_LIST" && grep -q "lib/armeabi-v7a/libdiscord_partner_sdk.so" <<< "$APK_LIST"; then
+    echo "Discord RPC (jembatan dan SDK) ikut di APK 32-bit."
+  else
+    echo "::warning title=Discord RPC tidak ikut APK 32-bit::Jembatan atau library SDK tidak ada di APK, jadi fitur tidak berfungsi di APK ini."
   fi
 fi
 

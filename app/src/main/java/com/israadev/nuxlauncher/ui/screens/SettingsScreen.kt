@@ -55,6 +55,7 @@ import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
+import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.models.LauncherSettings
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager
@@ -141,6 +142,7 @@ fun SettingsScreen(
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
+    var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
@@ -209,6 +211,7 @@ fun SettingsScreen(
             hotbarTouchEnabled = hotbarTouch,
             buttonLookDrag = buttonLookDrag,
             buttonSlide = buttonSlide,
+            discordRpcEnabled = discordRpc,
             touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
             physicalMouseSystemPointer = physicalSystemPointer,
@@ -793,6 +796,21 @@ fun SettingsScreen(
                         )
                         }
 
+                        // Hanya ada di build yang membawa SDK Discord (dibangun dari workflow resmi dengan SDK_TOKEN).
+                        if (BuildConfig.HAS_DISCORD_SDK) {
+                            SettingsGroup("Discord") {
+                                SettingSwitchRow(
+                                    title = "Discord Rich Presence",
+                                    desc = "Menampilkan AmberLauncher beserta versi Minecraft dan loader di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.",
+                                    checked = discordRpc,
+                                    onCheckedChange = {
+                                        discordRpc = it
+                                        commitSettings()
+                                    }
+                                )
+                            }
+                        }
+
                         SettingsGroup("Kontrol sentuh") {
                         SettingSwitchRow(
                             title = "Pukul lewat layar",
@@ -1179,6 +1197,7 @@ fun SettingsScreen(
                     hotbarTouch = reset.hotbarTouchEnabled
                     buttonLookDrag = reset.buttonLookDrag
                     buttonSlide = reset.buttonSlide
+                    discordRpc = reset.discordRpcEnabled
                     touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalSystemPointer = reset.physicalMouseSystemPointer

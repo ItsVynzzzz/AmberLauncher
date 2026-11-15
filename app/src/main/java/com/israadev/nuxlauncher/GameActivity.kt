@@ -4,6 +4,7 @@ import android.content.Context
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+import com.israadev.nuxlauncher.discord.DiscordPresence
 import com.israadev.nuxlauncher.ui.activities.ErrorActivity
 import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
 import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
@@ -369,6 +370,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
     private fun terminateGameProcess() {
         archiveGameLogOnce()
+        // Hapus presence Discord dulu (menunggu paling lama 0,8 detik); proses ini dimatikan paksa di bawah.
+        try { DiscordPresence.stopBlocking() } catch (_: Throwable) {}
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
@@ -386,6 +389,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         super.onDestroy()
         MouseDiag.sink = null
         archiveGameLogOnce()
+        // Hapus presence Discord dulu (menunggu paling lama 0,8 detik); proses ini dimatikan paksa di bawah.
+        try { DiscordPresence.stopBlocking() } catch (_: Throwable) {}
         // Selesaikan berkas rekaman dulu; proses ini dimatikan paksa di bawah.
         try { ScreenRecorder.stopBlocking() } catch (_: Throwable) {}
         try {
@@ -581,6 +586,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         extraJvmArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_JVM_ARGS) ?: emptyList()
         extraGameArgs = intent.getStringArrayListExtra(EXTRA_EXTRA_GAME_ARGS) ?: emptyList()
         useTextureView = shouldUseTextureView()
+
+        // Discord Rich Presence (opsional): hanya pada build yang membawa SDK dan bila pemain menyalakannya.
+        // Tanpa aplikasi Discord di HP ini, attach() langsung menyerah dan tidak ada yang berjalan.
+        if (BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled) {
+            DiscordPresence.attach(this)
+            DiscordPresence.update(DiscordPresence.gamePresence(mcVersion, loader, System.currentTimeMillis()))
+        }
 
         // Setup real-time native LoggerBridge
         setupLogger()

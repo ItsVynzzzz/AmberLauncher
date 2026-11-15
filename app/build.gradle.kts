@@ -55,6 +55,12 @@ if (isOfficialRepoBuild && !hasReleaseKey) {
 // sebelumnya: hanya arm64-v8a, tanpa build native.
 val buildArm32 = System.getenv("AMBER_ABI") == "arm32"
 
+// Discord Rich Presence (opsional). SDK resmi Discord berlisensi dan TIDAK boleh ada di repo publik. Workflow
+// mengunduhnya ke app/libs/discord_partner_sdk.aar dari repo privat (lihat docs/discord-rpc.md). Fitur ini hanya
+// ikut terbangun bila berkas itu ada; tanpanya app terbangun seperti biasa. AMBER_DISCORD=0 mematikannya paksa
+// (dipakai workflow untuk membangun ulang tanpa SDK bila build dengan SDK gagal).
+val hasDiscordSdk = file("libs/discord_partner_sdk.aar").exists() && System.getenv("AMBER_DISCORD") != "0"
+
 android {
     namespace = "com.israadev.nuxlauncher"
     compileSdk = 37
@@ -80,6 +86,8 @@ android {
         val curseForgeApiKey = (System.getenv("CURSEFORGE_API_KEY") ?: localProperties.getProperty("curseforge.api.key") ?: "")
             .filter { !it.isWhitespace() && it != '"' && it != '\\' }
         buildConfigField("String", "CURSEFORGE_API_KEY", "\"" + curseForgeApiKey + "\"")
+        // true bila SDK Discord ikut terbangun; layar Pengaturan dan GameActivity memeriksanya.
+        buildConfigField("boolean", "HAS_DISCORD_SDK", hasDiscordSdk.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -99,6 +107,17 @@ android {
         externalNativeBuild {
             ndkBuild {
                 path = file("src/main/jni/Android.mk")
+            }
+        }
+    }
+
+    if (!buildArm32 && hasDiscordSdk) {
+        // Build 64-bit tidak punya build native lain; CMake ini hanya untuk jembatan Discord. NDK 27 sama dengan
+        // yang dipakai pembuat SDK (header SDK memakai C++20). Build 32-bit memakai ndk-build (lihat build-arm32.sh).
+        ndkVersion = "27.2.12479018"
+        externalNativeBuild {
+            cmake {
+                path = file("src/main/cpp/CMakeLists.txt")
             }
         }
     }
@@ -142,8 +161,9 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-        // Dibutuhkan Android.mk untuk menautkan bytehook; hanya aktif di build 32-bit.
-        prefab = buildArm32
+        // Dibutuhkan Android.mk untuk menautkan bytehook (build 32-bit) dan oleh jembatan Discord (header dan
+        // library SDK datang sebagai paket prefab dari AAR-nya).
+        prefab = buildArm32 || hasDiscordSdk
     }
 
     packaging {
@@ -288,6 +308,8 @@ dependencies {
     implementation(libs.commons.compress)
     implementation(libs.xz)
     implementation(libs.bytehook)
+    // SDK Discord (opsional, hanya ada di build dengan SDK_TOKEN). Membawa kelas Java, library native, dan paket prefab.
+    if (hasDiscordSdk) implementation(files("libs/discord_partner_sdk.aar"))
     // Klien proxy resmi mod TouchController (LGPL-3.0). Dipanggil lewat refleksi, lihat TouchControllerBridge.
     implementation(libs.proxy.client.android)
     implementation("androidx.webkit:webkit:1.12.1")

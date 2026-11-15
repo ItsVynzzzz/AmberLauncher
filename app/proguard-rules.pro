@@ -32,3 +32,8 @@
 -keepclasseswithmembernames,includedescriptorclasses class * {
     native <methods>;
 }
+
+# Discord Rich Presence (opsional): pustaka native memanggil kelas ini lewat nama JNI, dan SDK dimuat lewat refleksi
+# (aturan untuk com.discord.** dibawa sendiri oleh AAR SDK-nya).
+-keep class com.israadev.nuxlauncher.discord.NativeDiscord { *; }
+-dontwarn com.discord.**

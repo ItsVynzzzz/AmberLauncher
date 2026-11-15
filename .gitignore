@@ -32,3 +32,6 @@ app/build/
 # Kotlin / OS specific
 .kotlin/
 Thumbs.db
+
+# SDK Discord (berlisensi, tidak boleh dibagikan ulang): diunduh workflow dari repo privat saat build
+/app/libs/discord_partner_sdk.aar

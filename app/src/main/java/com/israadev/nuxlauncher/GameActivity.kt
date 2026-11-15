@@ -113,6 +113,7 @@ import com.israadev.nuxlauncher.ui.components.NuxCard
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.perf.GamePerfMonitor
+import com.israadev.nuxlauncher.core.runtime.JnaNatives
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.LauncherMouse
 import com.israadev.nuxlauncher.ui.control.MenuMouse
@@ -1197,6 +1198,10 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 if (targetRenderer.isPlugin && !targetRenderer.pluginNativePath.isNullOrBlank()) {
                     gameLdPaths.add(targetRenderer.pluginNativePath!!)
                 }
+                // Folder pustaka Android untuk mod (mis. Yes Steve Model). Mod mengetahuinya lewat env
+                // MOD_ANDROID_RUNTIME (sama seperti ZalithLauncher 2); folder ini kosong sampai mod mengisinya.
+                val modRuntimeDir = getDir("runtime_mod", MODE_PRIVATE)
+                gameLdPaths.add(modRuntimeDir.absolutePath)
                 gameLdPaths.add(nativeLibDir)
                 // Plugin native library: dipakai System.loadLibrary mod (java.library.path) dan dlopen via nama.
                 gameLdPaths.addAll(nativePlan.libPaths)
@@ -1384,6 +1389,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 Os.setenv("AWTSTUB_WIDTH", "$targetWidth", true)
                 Os.setenv("AWTSTUB_HEIGHT", "$targetHeight", true)
                 Os.setenv("ALSOFT_DRIVERS", "opensl", true)
+                Os.setenv("MOD_ANDROID_RUNTIME", modRuntimeDir.absolutePath, true)
 
                 // Mod TouchController: socket harus sudah dikenal lewat env sebelum JVM berjalan.
                 // Tanpa modnya, tidak ada yang dibuat sama sekali (tanpa thread, socket, atau penelusuran).
@@ -1598,7 +1604,17 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 jvmArgs.add("-Dorg.lwjgl.spvc.libname=$spirvLibPath")
                 jvmArgs.add("-Dorg.lwjgl.spvc.defaultname=spirv-cross-c-shared")
                 jvmArgs.add("-Dorg.lwjgl.system.allocator=system")
-                jvmArgs.add("-Djna.boot.library.path=$nativeLibDir")
+                // JNA bawaan Minecraft <= 1.20.4 menolak libjnidispatch bawaan aplikasi (native 7.x): pakai yang cocok lebih dulu.
+                val jnaDir = JnaNatives.prepare(
+                    root = File(filesDir, "components/jna"),
+                    classpath = classpath,
+                    extraArgs = extraJvmArgs,
+                    is64Bit = android.os.Process.is64Bit(),
+                    assetVersion = { assets.open("runtimes/jna/version").bufferedReader().use { it.readText().trim() } },
+                    openZip = { assets.open("runtimes/jna/jna-arm64.zip") }
+                )
+                if (jnaDir != null) LoggerBridge.append("\u25B7 [JNA] Memakai libjnidispatch untuk JNA ${jnaDir.name}")
+                jvmArgs.add("-Djna.boot.library.path=" + (jnaDir?.let { it.absolutePath + File.pathSeparator } ?: "") + nativeLibDir)
                 jvmArgs.add("-Dglfwstub.windowWidth=$targetWidth")
                 jvmArgs.add("-Dglfwstub.windowHeight=$targetHeight")
                 jvmArgs.add("-Dglfwstub.initEgl=false")

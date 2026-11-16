@@ -103,17 +103,29 @@ Cara kerjanya: saat PLAY, `core/horizon/RustTouchLayout.kt` menerjemahkan tata l
 - **Tampilan.** Warna meniru kulit Amber: isi kaca hitam, tepi putih tipis, sudut membulat sesuai editor, kuning saat ditekan atau aktif. Joystick memakai lingkaran hitam dengan cincin putih dan tombol bulat. Tidak ada ikon: tombol memakai label teks (nama tombol di editor, paling banyak 9 huruf).
 - **Posisi dan ukuran.** Titik tengah, lebar, tinggi, dan transparansi tiap tombol mengikuti editor Amber. Ukuran dalam dp diubah ke pecahan tinggi layar, jadi tombol tampak sama di HP yang berbeda.
 - **Tombol yang ikut.** Tombol keyboard dan mouse (paling banyak 32), kombinasi 2 sampai 3 tombol (jadi tombol kunci), tombol tahan/toggle, dan joystick (lari otomatis mengikuti pilihan Amber). Hotbar geser menjadi dua tombol **UP** dan **DN** (gulir). Sembunyikan GUI menjadi F1, dan menu atau tutup menjadi ESC, bila belum ada tombol lain yang sudah mengirim tombol yang sama.
-- **Yang dilewati.** Tombol FPS, keyboard layar, dan makro perintah tidak punya padanan di mesin.
+- **Makro.** Makro perintah, turbo, dan urutan aksi ikut: tombolnya di `horizon-touch.json` hanya berisi `amber.macro:<id>`, sedangkan langkahnya ditulis `core/horizon/RustMacros.kt` ke `amber-macros.json` di folder yang sama. Pemutarnya ada di mesin (`amber3/0004-amber-macro.diff`, berkas baru `touch/amber_macro.rs`) dan memakai aturan yang sama dengan pemutar makro Amber: jeda 10 ms antar langkah, jeda minimal 30 ms antar putaran, jitter, ulang, mode sekali/tahan/kunci, dan semua tombol yang tertahan dilepas saat makro berhenti. Perintah dan teks dikirim langsung ke obrolan mesin, tanpa membuka layar obrolan. Makro hanya berjalan saat dunia sedang dimainkan: membuka menu, menjeda, keluar ke judul, atau meninggalkan jendela menghentikannya. Tombolnya tampil menyala selama makro berjalan. Mesin yang dibangun tanpa `0004` mengabaikan tombol makro. Kombo tombol tetap tombol biasa (sampai 3 tombol).
+- **Yang dilewati.** Tombol FPS dan keyboard layar tidak punya padanan di mesin.
 - **Tombol bawaan mesin** disembunyikan semua, kecuali joystick gerak: tata letak Amber-lah satu-satunya yang tampil. Tombol bawaan Amber sudah memuat serang, pakai, lompat, jongkok, dan seterusnya, jadi game tetap bisa dimainkan. Bila tata letak Amber tidak punya joystick dan tombol sama sekali, berkas mesin tidak disentuh.
 - **Geser lihat.** Bila "Geser kamera dari tombol" (`buttonLookDrag`) hidup, tombol serang, pakai, dan lompat meneruskan gerakan jari ke kamera, seperti di Amber.
 - Hanya kunci yang diperlukan yang ditulis (`control_style`, `mode`, `layouts`, `button_visibility`, `joystick_style`, `custom_buttons`, dan beberapa pengaturan tata letak); sisanya dibiarkan. Hasilnya sudah diuji terhadap definisi berkas dari kode mesin 0.7.8 (bisa dibaca, tidak ada tombol yang dibuang, dan tersimpan ulang tanpa perubahan).
 - Berkas asli disalin ke `horizon-touch.amber-backup.json` sebelum Amber menyentuhnya, dan dipulihkan pada PLAY berikutnya setelah saklar dimatikan. Tanpa berkas asli, mesin kembali ke bawaannya.
-- Perubahan tata letak di editor Amber berlaku pada PLAY berikutnya. Tidak ada perubahan pada mesin, jadi tidak perlu membangun ulang mesin.
+- Perubahan tata letak dan makro di editor Amber berlaku pada PLAY berikutnya (berkas makro dibaca ulang tiap ada perubahan), jadi tidak perlu membangun ulang mesin.
 - Menu pop-up milik mesin (Horizon) tidak diubah; hanya tombol layar yang mengikuti Amber.
 
 ### Mengganti versi mesin
 
 Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), lalu upload perubahannya sebagai patch seperti biasa: run yang sama membangun mesin barunya. Mengedit isi `.diff` juga cukup begitu (hash isinya ikut di tanda Release). Perlu folder patch baru? Buat `third_party/horizon-patches/<nama baru>/` dan ganti `patch_set=`. Bila mesinnya gagal dibangun, build APK tetap lolos tanpa mesin dan memberi peringatan.
+
+### Menjaga mesin tetap bisa diperbarui
+
+Perubahan Amber pada mesin dibuat supaya gampang dipindahkan ke versi mesin yang lebih baru:
+
+- Kode baru milik Amber ditaruh di **berkas baru** (`android/amber.rs`, `touch/amber_macro.rs`), bukan disisipkan ke berkas Horizon. Berkas Horizon hanya diberi kait pendek, beberapa baris yang memanggil berkas Amber.
+- Data dari launcher ke mesin lewat berkas JSON di folder data mesin (`amber-launch.json`, `horizon-touch.json`, `amber-macros.json`); tidak ada antarmuka lain yang harus dijaga.
+- Logika yang bisa diuji tanpa perangkat (misalnya pemutar makro) ada di crate yang bisa dikompilasi di komputer biasa, dengan tesnya sendiri.
+- Satu patch per topik di `third_party/horizon-patches/<patch_set>/`, bernomor berurutan.
+
+Keadaan sumber (diperiksa 16 November 2026): cabang `android` repo Starling hanya maju dua commit dari 0.7.8 (keduanya README). Proyek sumber sudah menggabungkan port Android ke cabang utamanya (tag `v0.8.0`, 10 November 2026) dengan susunan berkas yang berbeda (misalnya `android_controls/custom.rs` dan `android_control_ui.rs`, tanpa `android/launcher.rs`), jadi `amber3` tidak bisa langsung diterapkan di sana: berkas Amber yang baru bisa dipakai ulang, kait dan patch yang menyentuh berkas Horizon perlu ditulis ulang. Sampai itu dikerjakan, mesin tetap dipatok di 0.7.8.
 
 ### Build di komputer sendiri
 
@@ -171,7 +183,8 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
 | `core/horizon/RustSettings.kt` | Membaca dan menulis `android-launcher.json` (pengaturan tab Rust) tanpa menyentuh kunci lain |
 | `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
 | `core/horizon/RustTouchLayout.kt` | Menerjemahkan tata letak dan kulit kontrol Amber ke gaya GoyControl di `horizon-touch.json` mesin saat PLAY (saklar Kontrol Amber) |
-| `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
+| `core/horizon/RustMacros.kt` | Menerjemahkan makro Amber (perintah, turbo, urutan aksi) ke `amber-macros.json` untuk pemutar makro di mesin |
+| `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher, pemutar makro) |
 | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
 | `core/horizon/HorizonContent.kt` | Shader dan Resource Pack untuk instance Rust: memasang, memilih, dan menghapus langsung di folder dan berkas pengaturan mesin (lihat bagian di bawah) |
 | `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |

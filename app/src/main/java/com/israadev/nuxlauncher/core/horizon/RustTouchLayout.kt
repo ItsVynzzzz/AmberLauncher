@@ -29,7 +29,9 @@ import kotlin.math.sqrt
  *   membulat, kaca gelap, garis putih tipis, dan warna kuning saat ditekan seperti tombol Amber. Pilihan tombol
  *   tahan/kunci (toggle), kombinasi tombol, dan kapan tampil (main/menu/selalu) ikut dibawa.
  * - Widget gulir hotbar menjadi dua tombol (naik/turun). Tombol sistem HIDE GUI menjadi F1 dan MENU menjadi ESC
- *   (mesin tidak punya menu Amber); FPS, keyboard, dan makro perintah/turbo tidak punya padanan dan dilewati.
+ *   (mesin tidak punya menu Amber); FPS dan keyboard layar tidak punya padanan dan dilewati.
+ * - Makro (perintah, turbo, urutan aksi) dijalankan pemutar makro Amber di mesin: tombolnya berisi `amber.macro:<id>`
+ *   dan langkahnya ditulis ke `amber-macros.json` (lihat [RustMacros]). Kombo tombol tetap tombol biasa.
  * - Geser dari tombol serang/pakai/lompat hanya ikut memutar kamera bila pilihan itu menyala di Pengaturan Amber.
  *
  * Hanya kunci yang diperlukan yang ditulis; kunci lain di berkas itu (sensitivitas, giroskop, dan seterusnya)
@@ -90,10 +92,18 @@ object RustTouchLayout {
         val toggle: Boolean,
         val passthrough: Boolean,
         val inGame: Boolean,
-        val inMenu: Boolean
+        val inMenu: Boolean,
+        /** Makro yang dijalankan tombol ini (id tombol = nama makro di `amber-macros.json`), bila ada. */
+        val macroId: String = "",
+        val macro: RustMacros.Def? = null
     )
 
-    private class Plan(val joy: Joy?, val buttons: List<Btn>, val scale: Float)
+    private class Plan(val joy: Joy?, val buttons: List<Btn>, val scale: Float) {
+        /** Makro semua tombol yang jadi dibuat, untuk `amber-macros.json`. */
+        val macros: Map<String, RustMacros.Def> = LinkedHashMap<String, RustMacros.Def>().also { all ->
+            for (b in buttons) b.macro?.let { all[b.macroId] = it }
+        }
+    }
 
     /**
      * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. Tidak pernah
@@ -117,6 +127,7 @@ object RustTouchLayout {
         val touch = File(dir, TOUCH_FILE)
         val backup = File(dir, BACKUP_FILE)
         if (!enabled) {
+            File(dir, RustMacros.FILE).delete()
             restore(touch, backup)
             return
         }
@@ -135,10 +146,23 @@ object RustTouchLayout {
             writeAtomic(backup, if (touch.isFile) touch.readText() else "{}")
         }
 
+        writeMacros(dir, plan.macros)
         val json = build(readObject(touch) ?: JSONObject(), plan)
         val text = json.toString(2)
         if (touch.isFile && touch.readText() == text) return
         writeAtomic(touch, text)
+    }
+
+    /** Langkah makro untuk pemutar makro di mesin; tanpa makro, berkasnya dihapus. Ditulis hanya bila isinya berubah. */
+    private fun writeMacros(dir: File, macros: Map<String, RustMacros.Def>) {
+        val file = File(dir, RustMacros.FILE)
+        if (macros.isEmpty()) {
+            if (file.isFile) file.delete()
+            return
+        }
+        val text = RustMacros.toJson(macros)
+        if (file.isFile && file.readText() == text) return
+        writeAtomic(file, text)
     }
 
     /** Mengembalikan berkas mesin seperti sebelum Amber menerapkan tata letaknya (bila pernah). */
@@ -203,7 +227,10 @@ object RustTouchLayout {
 
     /** Tombol Amber biasa (keyboard, mouse, kombinasi, atau sistem yang punya padanan) sebagai tombol mesin. */
     private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean): Btn? {
-        val keys = keysOf(b)
+        // Perintah, turbo, dan urutan aksi dijalankan pemutar makro mesin; tombolnya hanya memicu makro itu.
+        val macro = if (b.isMacro && b.macroType != "COMBO") RustMacros.defOf(b, { keyToken(it) }, { tokenOf(it) }) else null
+        if (b.isMacro && b.macroType != "COMBO" && macro == null) return null
+        val keys = if (macro != null) listOf(RustMacros.tokenFor(b.id)) else keysOf(b)
         if (keys.isEmpty()) return null
         return Btn(
             label = labelOf(b),
@@ -212,10 +239,12 @@ object RustTouchLayout {
             opacity = b.opacity.coerceIn(0.15f, 1f),
             primary = !b.isSystem && b.heightDp >= 56,
             cornerDp = b.cornerRadiusDp.toFloat(),
-            toggle = b.isToggle || (b.isMacro && b.macroType == "COMBO"),
+            toggle = macro == null && (b.isToggle || (b.isMacro && b.macroType == "COMBO")),
             passthrough = lookDrag && !b.isSystem && !b.isMacro && (b.isMouseButton || b.keyCode == Key.GLFW_KEY_SPACE),
             inGame = b.showMode != ControlShowMode.MENU,
-            inMenu = b.showMode != ControlShowMode.GAME
+            inMenu = b.showMode != ControlShowMode.GAME,
+            macroId = if (macro != null) b.id else "",
+            macro = macro
         )
     }
 

@@ -1,0 +1,1120 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustMacros.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustMacros.kt
+new file mode 100644
+index 0000000..8a7e127
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustMacros.kt
+@@ -0,0 +1,164 @@
++package com.israadev.nuxlauncher.core.horizon
++
++import com.israadev.nuxlauncher.core.controls.MacroScript
++import com.israadev.nuxlauncher.core.controls.MacroStep
++import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
++import com.israadev.nuxlauncher.core.controls.models.MacroRunMode
++import org.json.JSONArray
++import org.json.JSONObject
++
++/**
++ * Makro Amber (perintah, turbo, urutan aksi) untuk mesin Rust.
++ *
++ * Mesin tidak mengenal makro. Amber menambahkan pemutar kecil di sisi mesin (`touch/amber_macro.rs` pada patch
++ * mesin) yang membaca `amber-macros.json`, berkas di folder yang sama dengan `horizon-touch.json`. Di sini tiap
++ * makro diterjemahkan ke langkah-langkah bertoken mesin: tombolnya di `horizon-touch.json` cukup berisi
++ * `amber.macro:<id>`, sedangkan isinya ada di berkas ini. Aturan jalannya sama dengan [com.israadev.nuxlauncher.core.controls.MacroRunner]:
++ * jeda antar langkah, jeda minimal antar putaran, jitter, dan semua tombol yang tertahan dilepas saat makro berhenti.
++ *
++ * Murni logika, selain pembuatan JSON-nya, supaya mudah diuji.
++ */
++internal object RustMacros {
++    const val FILE = "amber-macros.json"
++    const val TOKEN_PREFIX = "amber.macro:"
++
++    /** Satu langkah dalam bentuk yang dibaca mesin. */
++    class Step(
++        val op: String,
++        val key: String? = null,
++        val ms: Long? = null,
++        val text: String? = null,
++        val up: Boolean? = null
++    )
++
++    class Def(
++        val mode: String,
++        val repeat: Int,
++        val loopDelayMs: Long,
++        val jitter: Int,
++        val gapMs: Long,
++        val minLoopMs: Long,
++        val steps: List<Step>
++    )
++
++    /** Token tombol di `horizon-touch.json` untuk makro dengan [id] tombol ini. */
++    fun tokenFor(id: String): String = TOKEN_PREFIX + id
++
++    /**
++     * Terjemahan makro tombol [b] (perintah, turbo, atau urutan aksi), atau null bila bukan makro jenis itu atau
++     * tidak ada langkah yang bisa dijalankan mesin. Kombo tombol tidak lewat sini: itu tombol biasa dengan
++     * sampai tiga token.
++     *
++     * [keyToken] = kode tombol GLFW ke token keyboard mesin; [buttonToken] = token tombol utama [b].
++     */
++    fun defOf(b: CustomControlButton, keyToken: (Int) -> String?, buttonToken: (CustomControlButton) -> String?): Def? {
++        if (!b.isMacro) return null
++        return when (b.macroType) {
++            "COMMAND" -> {
++                val text = b.macroCommand.trim().take(MacroScript.MAX_TEXT)
++                if (text.isEmpty()) null
++                else Def(MODE_ONCE, 1, 0L, 0, GAP_MS, MIN_LOOP_MS, listOf(Step("type", text = text)))
++            }
++
++            "TURBO" -> {
++                val token = buttonToken(b) ?: return null
++                // Sama dengan turbo di launcher: setengah putaran tekan, sisanya lepas, tanpa jeda tambahan.
++                val interval = b.macroTurboIntervalMs.coerceAtLeast(30L)
++                val down = (interval / 2).coerceAtLeast(15L)
++                val up = (interval - down).coerceAtLeast(15L)
++                Def(
++                    mode = if (b.isToggle) MODE_TOGGLE else MODE_HOLD,
++                    repeat = 0,
++                    loopDelayMs = 0L,
++                    jitter = b.macroJitterPercent.coerceIn(0, MacroScript.MAX_JITTER),
++                    gapMs = 0L,
++                    minLoopMs = 0L,
++                    steps = listOf(Step("hold", key = token, ms = down), Step("wait", ms = up))
++                )
++            }
++
++            "SEQUENCE" -> {
++                val steps = ArrayList<Step>()
++                for (step in MacroScript.parseAll(b.macroSteps)) stepOf(step, keyToken)?.let { steps.add(it) }
++                if (steps.isEmpty()) return null
++                val once = b.macroRunMode == MacroRunMode.ONCE || !MacroRunMode.isValid(b.macroRunMode)
++                Def(
++                    mode = when (b.macroRunMode) {
++                        MacroRunMode.HOLD -> MODE_HOLD
++                        MacroRunMode.TOGGLE -> MODE_TOGGLE
++                        else -> MODE_ONCE
++                    },
++                    repeat = if (once) b.macroRepeat.coerceIn(1, MacroScript.MAX_REPEAT) else 0,
++                    loopDelayMs = b.macroLoopDelayMs.toLong().coerceIn(0L, MacroScript.MAX_LOOP_DELAY_MS.toLong()),
++                    jitter = b.macroJitterPercent.coerceIn(0, MacroScript.MAX_JITTER),
++                    gapMs = GAP_MS,
++                    minLoopMs = MIN_LOOP_MS,
++                    steps = steps
++                )
++            }
++
++            else -> null
++        }
++    }
++
++    /** Satu langkah makro Amber ke langkah mesin; null bila mesin tidak punya tombol itu (langkahnya dilewati). */
++    private fun stepOf(step: MacroStep, keyToken: (Int) -> String?): Step? = when (step) {
++        is MacroStep.Tap -> keyToken(step.key)?.let { Step("tap", key = it) }
++        is MacroStep.KeyDown -> keyToken(step.key)?.let { Step("down", key = it) }
++        is MacroStep.KeyUp -> keyToken(step.key)?.let { Step("up", key = it) }
++        is MacroStep.KeyHold -> keyToken(step.key)?.let { Step("hold", key = it, ms = step.ms.toLong()) }
++        is MacroStep.Click -> mouseToken(step.button)?.let { Step("tap", key = it) }
++        is MacroStep.MouseDown -> mouseToken(step.button)?.let { Step("down", key = it) }
++        is MacroStep.MouseUp -> mouseToken(step.button)?.let { Step("up", key = it) }
++        is MacroStep.MouseHold -> mouseToken(step.button)?.let { Step("hold", key = it, ms = step.ms.toLong()) }
++        is MacroStep.Scroll -> Step("scroll", up = step.direction > 0)
++        is MacroStep.Wait -> Step("wait", ms = step.ms.toLong())
++        is MacroStep.Type -> if (step.text.isBlank()) null else Step("type", text = step.text)
++    }
++
++    /** Nomor tombol mouse GLFW (0 kiri, 1 kanan, 2 tengah, 3 dan 4 samping) ke token mouse mesin. */
++    fun mouseToken(button: Int): String? = when (button) {
++        0 -> "key.mouse.left"
++        1 -> "key.mouse.right"
++        2 -> "key.mouse.middle"
++        3 -> "key.mouse.4"
++        4 -> "key.mouse.5"
++        else -> null
++    }
++
++    /** Isi `amber-macros.json`. Urutan kunci mengikuti [macros] supaya isinya stabil dan mudah dibandingkan. */
++    fun toJson(macros: Map<String, Def>): String {
++        val all = JSONObject()
++        for ((id, def) in macros) {
++            val steps = JSONArray()
++            for (s in def.steps) {
++                val o = JSONObject().put("op", s.op)
++                s.key?.let { o.put("key", it) }
++                s.ms?.let { o.put("ms", it) }
++                s.text?.let { o.put("text", it) }
++                s.up?.let { o.put("up", it) }
++                steps.put(o)
++            }
++            all.put(
++                id,
++                JSONObject()
++                    .put("mode", def.mode)
++                    .put("repeat", def.repeat)
++                    .put("loop_delay_ms", def.loopDelayMs)
++                    .put("jitter", def.jitter)
++                    .put("gap_ms", def.gapMs)
++                    .put("min_loop_ms", def.minLoopMs)
++                    .put("steps", steps)
++            )
++        }
++        return JSONObject().put("version", 1).put("macros", all).toString(2)
++    }
++
++    private const val MODE_ONCE = "once"
++    private const val MODE_HOLD = "hold"
++    private const val MODE_TOGGLE = "toggle"
++
++    // Sama dengan MacroRunner.STEP_GAP_MS dan MIN_LOOP_MS.
++    private const val GAP_MS = 10L
++    private const val MIN_LOOP_MS = 30L
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+index d463bb3..84b9139 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+@@ -29,7 +29,9 @@ import kotlin.math.sqrt
+  *   membulat, kaca gelap, garis putih tipis, dan warna kuning saat ditekan seperti tombol Amber. Pilihan tombol
+  *   tahan/kunci (toggle), kombinasi tombol, dan kapan tampil (main/menu/selalu) ikut dibawa.
+  * - Widget gulir hotbar menjadi dua tombol (naik/turun). Tombol sistem HIDE GUI menjadi F1 dan MENU menjadi ESC
+- *   (mesin tidak punya menu Amber); FPS, keyboard, dan makro perintah/turbo tidak punya padanan dan dilewati.
++ *   (mesin tidak punya menu Amber); FPS dan keyboard layar tidak punya padanan dan dilewati.
++ * - Makro (perintah, turbo, urutan aksi) dijalankan pemutar makro Amber di mesin: tombolnya berisi `amber.macro:<id>`
++ *   dan langkahnya ditulis ke `amber-macros.json` (lihat [RustMacros]). Kombo tombol tetap tombol biasa.
+  * - Geser dari tombol serang/pakai/lompat hanya ikut memutar kamera bila pilihan itu menyala di Pengaturan Amber.
+  *
+  * Hanya kunci yang diperlukan yang ditulis; kunci lain di berkas itu (sensitivitas, giroskop, dan seterusnya)
+@@ -90,10 +92,18 @@ object RustTouchLayout {
+         val toggle: Boolean,
+         val passthrough: Boolean,
+         val inGame: Boolean,
+-        val inMenu: Boolean
++        val inMenu: Boolean,
++        /** Makro yang dijalankan tombol ini (id tombol = nama makro di `amber-macros.json`), bila ada. */
++        val macroId: String = "",
++        val macro: RustMacros.Def? = null
+     )
+ 
+-    private class Plan(val joy: Joy?, val buttons: List<Btn>, val scale: Float)
++    private class Plan(val joy: Joy?, val buttons: List<Btn>, val scale: Float) {
++        /** Makro semua tombol yang jadi dibuat, untuk `amber-macros.json`. */
++        val macros: Map<String, RustMacros.Def> = LinkedHashMap<String, RustMacros.Def>().also { all ->
++            for (b in buttons) b.macro?.let { all[b.macroId] = it }
++        }
++    }
+ 
+     /**
+      * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. Tidak pernah
+@@ -117,6 +127,7 @@ object RustTouchLayout {
+         val touch = File(dir, TOUCH_FILE)
+         val backup = File(dir, BACKUP_FILE)
+         if (!enabled) {
++            File(dir, RustMacros.FILE).delete()
+             restore(touch, backup)
+             return
+         }
+@@ -135,12 +146,25 @@ object RustTouchLayout {
+             writeAtomic(backup, if (touch.isFile) touch.readText() else "{}")
+         }
+ 
++        writeMacros(dir, plan.macros)
+         val json = build(readObject(touch) ?: JSONObject(), plan)
+         val text = json.toString(2)
+         if (touch.isFile && touch.readText() == text) return
+         writeAtomic(touch, text)
+     }
+ 
++    /** Langkah makro untuk pemutar makro di mesin; tanpa makro, berkasnya dihapus. Ditulis hanya bila isinya berubah. */
++    private fun writeMacros(dir: File, macros: Map<String, RustMacros.Def>) {
++        val file = File(dir, RustMacros.FILE)
++        if (macros.isEmpty()) {
++            if (file.isFile) file.delete()
++            return
++        }
++        val text = RustMacros.toJson(macros)
++        if (file.isFile && file.readText() == text) return
++        writeAtomic(file, text)
++    }
++
+     /** Mengembalikan berkas mesin seperti sebelum Amber menerapkan tata letaknya (bila pernah). */
+     private fun restore(touch: File, backup: File) {
+         if (!backup.isFile) return
+@@ -203,7 +227,10 @@ object RustTouchLayout {
+ 
+     /** Tombol Amber biasa (keyboard, mouse, kombinasi, atau sistem yang punya padanan) sebagai tombol mesin. */
+     private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean): Btn? {
+-        val keys = keysOf(b)
++        // Perintah, turbo, dan urutan aksi dijalankan pemutar makro mesin; tombolnya hanya memicu makro itu.
++        val macro = if (b.isMacro && b.macroType != "COMBO") RustMacros.defOf(b, { keyToken(it) }, { tokenOf(it) }) else null
++        if (b.isMacro && b.macroType != "COMBO" && macro == null) return null
++        val keys = if (macro != null) listOf(RustMacros.tokenFor(b.id)) else keysOf(b)
+         if (keys.isEmpty()) return null
+         return Btn(
+             label = labelOf(b),
+@@ -212,10 +239,12 @@ object RustTouchLayout {
+             opacity = b.opacity.coerceIn(0.15f, 1f),
+             primary = !b.isSystem && b.heightDp >= 56,
+             cornerDp = b.cornerRadiusDp.toFloat(),
+-            toggle = b.isToggle || (b.isMacro && b.macroType == "COMBO"),
++            toggle = macro == null && (b.isToggle || (b.isMacro && b.macroType == "COMBO")),
+             passthrough = lookDrag && !b.isSystem && !b.isMacro && (b.isMouseButton || b.keyCode == Key.GLFW_KEY_SPACE),
+             inGame = b.showMode != ControlShowMode.MENU,
+-            inMenu = b.showMode != ControlShowMode.GAME
++            inMenu = b.showMode != ControlShowMode.GAME,
++            macroId = if (macro != null) b.id else "",
++            macro = macro
+         )
+     }
+ 
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 509c698..589fe32 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -103,18 +103,30 @@ Cara kerjanya: saat PLAY, `core/horizon/RustTouchLayout.kt` menerjemahkan tata l
+ - **Tampilan.** Warna meniru kulit Amber: isi kaca hitam, tepi putih tipis, sudut membulat sesuai editor, kuning saat ditekan atau aktif. Joystick memakai lingkaran hitam dengan cincin putih dan tombol bulat. Tidak ada ikon: tombol memakai label teks (nama tombol di editor, paling banyak 9 huruf).
+ - **Posisi dan ukuran.** Titik tengah, lebar, tinggi, dan transparansi tiap tombol mengikuti editor Amber. Ukuran dalam dp diubah ke pecahan tinggi layar, jadi tombol tampak sama di HP yang berbeda.
+ - **Tombol yang ikut.** Tombol keyboard dan mouse (paling banyak 32), kombinasi 2 sampai 3 tombol (jadi tombol kunci), tombol tahan/toggle, dan joystick (lari otomatis mengikuti pilihan Amber). Hotbar geser menjadi dua tombol **UP** dan **DN** (gulir). Sembunyikan GUI menjadi F1, dan menu atau tutup menjadi ESC, bila belum ada tombol lain yang sudah mengirim tombol yang sama.
+-- **Yang dilewati.** Tombol FPS, keyboard layar, dan makro perintah tidak punya padanan di mesin.
++- **Makro.** Makro perintah, turbo, dan urutan aksi ikut: tombolnya di `horizon-touch.json` hanya berisi `amber.macro:<id>`, sedangkan langkahnya ditulis `core/horizon/RustMacros.kt` ke `amber-macros.json` di folder yang sama. Pemutarnya ada di mesin (`amber3/0004-amber-macro.diff`, berkas baru `touch/amber_macro.rs`) dan memakai aturan yang sama dengan pemutar makro Amber: jeda 10 ms antar langkah, jeda minimal 30 ms antar putaran, jitter, ulang, mode sekali/tahan/kunci, dan semua tombol yang tertahan dilepas saat makro berhenti. Perintah dan teks dikirim langsung ke obrolan mesin, tanpa membuka layar obrolan. Makro hanya berjalan saat dunia sedang dimainkan: membuka menu, menjeda, keluar ke judul, atau meninggalkan jendela menghentikannya. Tombolnya tampil menyala selama makro berjalan. Mesin yang dibangun tanpa `0004` mengabaikan tombol makro. Kombo tombol tetap tombol biasa (sampai 3 tombol).
++- **Yang dilewati.** Tombol FPS dan keyboard layar tidak punya padanan di mesin.
+ - **Tombol bawaan mesin** disembunyikan semua, kecuali joystick gerak: tata letak Amber-lah satu-satunya yang tampil. Tombol bawaan Amber sudah memuat serang, pakai, lompat, jongkok, dan seterusnya, jadi game tetap bisa dimainkan. Bila tata letak Amber tidak punya joystick dan tombol sama sekali, berkas mesin tidak disentuh.
+ - **Geser lihat.** Bila "Geser kamera dari tombol" (`buttonLookDrag`) hidup, tombol serang, pakai, dan lompat meneruskan gerakan jari ke kamera, seperti di Amber.
+ - Hanya kunci yang diperlukan yang ditulis (`control_style`, `mode`, `layouts`, `button_visibility`, `joystick_style`, `custom_buttons`, dan beberapa pengaturan tata letak); sisanya dibiarkan. Hasilnya sudah diuji terhadap definisi berkas dari kode mesin 0.7.8 (bisa dibaca, tidak ada tombol yang dibuang, dan tersimpan ulang tanpa perubahan).
+ - Berkas asli disalin ke `horizon-touch.amber-backup.json` sebelum Amber menyentuhnya, dan dipulihkan pada PLAY berikutnya setelah saklar dimatikan. Tanpa berkas asli, mesin kembali ke bawaannya.
+-- Perubahan tata letak di editor Amber berlaku pada PLAY berikutnya. Tidak ada perubahan pada mesin, jadi tidak perlu membangun ulang mesin.
++- Perubahan tata letak dan makro di editor Amber berlaku pada PLAY berikutnya (berkas makro dibaca ulang tiap ada perubahan), jadi tidak perlu membangun ulang mesin.
+ - Menu pop-up milik mesin (Horizon) tidak diubah; hanya tombol layar yang mengikuti Amber.
+ 
+ ### Mengganti versi mesin
+ 
+ Ubah `commit=` di `horizon-engine.properties` (commit baru dari `source_repo`, setelah diperiksa; periksa juga bahwa `third_party/horizon-patches/<patch_set>/*.diff` masih cocok), lalu upload perubahannya sebagai patch seperti biasa: run yang sama membangun mesin barunya. Mengedit isi `.diff` juga cukup begitu (hash isinya ikut di tanda Release). Perlu folder patch baru? Buat `third_party/horizon-patches/<nama baru>/` dan ganti `patch_set=`. Bila mesinnya gagal dibangun, build APK tetap lolos tanpa mesin dan memberi peringatan.
+ 
++### Menjaga mesin tetap bisa diperbarui
++
++Perubahan Amber pada mesin dibuat supaya gampang dipindahkan ke versi mesin yang lebih baru:
++
++- Kode baru milik Amber ditaruh di **berkas baru** (`android/amber.rs`, `touch/amber_macro.rs`), bukan disisipkan ke berkas Horizon. Berkas Horizon hanya diberi kait pendek, beberapa baris yang memanggil berkas Amber.
++- Data dari launcher ke mesin lewat berkas JSON di folder data mesin (`amber-launch.json`, `horizon-touch.json`, `amber-macros.json`); tidak ada antarmuka lain yang harus dijaga.
++- Logika yang bisa diuji tanpa perangkat (misalnya pemutar makro) ada di crate yang bisa dikompilasi di komputer biasa, dengan tesnya sendiri.
++- Satu patch per topik di `third_party/horizon-patches/<patch_set>/`, bernomor berurutan.
++
++Keadaan sumber (diperiksa 16 November 2026): cabang `android` repo Starling hanya maju dua commit dari 0.7.8 (keduanya README). Proyek sumber sudah menggabungkan port Android ke cabang utamanya (tag `v0.8.0`, 10 November 2026) dengan susunan berkas yang berbeda (misalnya `android_controls/custom.rs` dan `android_control_ui.rs`, tanpa `android/launcher.rs`), jadi `amber3` tidak bisa langsung diterapkan di sana: berkas Amber yang baru bisa dipakai ulang, kait dan patch yang menyentuh berkas Horizon perlu ditulis ulang. Sampai itu dikerjakan, mesin tetap dipatok di 0.7.8.
++
+ ### Build di komputer sendiri
+ 
+ ```bash
+@@ -171,7 +183,8 @@ Pustaka native yang dikemas ke APK berjalan **dengan hak yang sama dengan launch
+ | `core/horizon/RustSettings.kt` | Membaca dan menulis `android-launcher.json` (pengaturan tab Rust) tanpa menyentuh kunci lain |
+ | `ui/components/RustSettingsSection.kt` | Isi tab Rust di Pengaturan, memakai komponen `Setting*` yang sama dengan tab lain |
+ | `core/horizon/RustTouchLayout.kt` | Menerjemahkan tata letak dan kulit kontrol Amber ke gaya GoyControl di `horizon-touch.json` mesin saat PLAY (saklar Kontrol Amber) |
+-| `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher) |
++| `core/horizon/RustMacros.kt` | Menerjemahkan makro Amber (perintah, turbo, urutan aksi) ke `amber-macros.json` untuk pemutar makro di mesin |
++| `third_party/horizon-patches/` | Perubahan Amber pada sumber mesin (membaca `amber-launch.json`, langsung main, kembali ke launcher, pemutar makro) |
+ | `InstanceManager.kt` | Instance Rust selalu dianggap sudah diunduh |
+ | `core/horizon/HorizonContent.kt` | Shader dan Resource Pack untuk instance Rust: memasang, memilih, dan menghapus langsung di folder dan berkas pengaturan mesin (lihat bagian di bawah) |
+ | `horizon-engine.properties` | Patokan: sumber, commit, perubahan Amber (`patch_set`), profil, NDK, repo Release |
+diff --git a/third_party/horizon-patches/amber3/0004-amber-macro.diff b/third_party/horizon-patches/amber3/0004-amber-macro.diff
+new file mode 100644
+index 0000000..c809da0
+--- /dev/null
++++ b/third_party/horizon-patches/amber3/0004-amber-macro.diff
+@@ -0,0 +1,799 @@
++diff --git a/crates/horizon-client-render/src/touch.rs b/crates/horizon-client-render/src/touch.rs
++index 2a8839bb2..a0573428f 100644
++--- a/crates/horizon-client-render/src/touch.rs
+++++ b/crates/horizon-client-render/src/touch.rs
++@@ -28,6 +28,7 @@ pub fn set_current_hud_opacity_scale(scale: f32) {
++     LAST_HUD_OPACITY_BITS.store(clamped.to_bits(), Ordering::Relaxed);
++ }
++ 
+++pub mod amber_macro;
++ pub mod custom;
++ pub mod editor;
++ pub use custom::CustomButton;
++@@ -200,6 +201,8 @@ pub struct TouchControls {
++     pub goy_rendered_by_ui: bool,
++     pub inventory_shift: bool,
++     pub editor: Option<editor::Editor>,
+++    /// AmberLauncher macro buttons (touch/amber_macro.rs).
+++    pub macros: amber_macro::Macros,
++     fingers: BTreeMap<u64, (Role, [f32; 2])>,
++     passthrough_fingers: BTreeSet<u64>,
++     custom_fingers: BTreeMap<u64, String>,
++@@ -247,6 +250,7 @@ impl Default for TouchControls {
++             in_inventory: false,
++             goy_rendered_by_ui: false,
++             editor: None,
+++            macros: amber_macro::Macros::default(),
++             fingers: BTreeMap::new(),
++             passthrough_fingers: BTreeSet::new(),
++             custom_fingers: BTreeMap::new(),
++diff --git a/crates/horizon-client-render/src/touch/amber_macro.rs b/crates/horizon-client-render/src/touch/amber_macro.rs
++new file mode 100644
++index 000000000..d8cd3ca65
++--- /dev/null
+++++ b/crates/horizon-client-render/src/touch/amber_macro.rs
++@@ -0,0 +1,640 @@
+++//! AmberLauncher macros: touch buttons that play a saved sequence of key, mouse and chat steps.
+++//!
+++//! The launcher writes `amber-macros.json` next to `horizon-touch.json` and gives each macro button the key
+++//! token `amber.macro:<id>`. Everything Amber-specific lives in this file, so updating the engine to a newer
+++//! Horizon Android never has to merge it; upstream files only carry the few lines that connect it
+++//! (`touch.rs`, `touch/custom.rs`, `touch_ui.rs`, `game/android_input.rs`).
+++//!
+++//! This module is plain state and time: it never touches the game. `press` and `tick` return `Action`s and
+++//! the game (`android_input.rs`) carries them out, so the whole thing is tested without a device.
+++use serde::Deserialize;
+++use std::collections::HashMap;
+++use std::sync::Arc;
+++use std::time::{Duration, Instant};
+++
+++pub const TOKEN_PREFIX: &str = "amber.macro:";
+++pub const FILE: &str = "amber-macros.json";
+++
+++const MAX_STEPS: usize = 64;
+++const MAX_ROUNDS: u32 = 99;
+++const MAX_MS: u64 = 30_000;
+++const MAX_JITTER: u32 = 50;
+++/// How long a Tap presses for.
+++const TAP_MS: u64 = 35;
+++
+++/// The macro id in a button token, or `None` for any other token.
+++pub fn token_id(token: &str) -> Option<&str> {
+++    token.strip_prefix(TOKEN_PREFIX).filter(|id| !id.is_empty())
+++}
+++
+++#[derive(Clone, Copy, Debug, Default, Deserialize, PartialEq, Eq)]
+++#[serde(rename_all = "snake_case")]
+++pub enum Mode {
+++    /// One run per press (repeated `repeat` times); another press while it runs stops it.
+++    #[default]
+++    Once,
+++    /// Runs until the finger lifts.
+++    Hold,
+++    /// Runs until the button is pressed again.
+++    Toggle,
+++}
+++
+++#[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+++#[serde(tag = "op", rename_all = "snake_case")]
+++pub enum Step {
+++    /// Press and release (a key, a mouse button or an `action:` token).
+++    Tap {
+++        key: String,
+++    },
+++    Down {
+++        key: String,
+++    },
+++    Up {
+++        key: String,
+++    },
+++    /// Press, keep it down for `ms`, release.
+++    Hold {
+++        key: String,
+++        ms: u64,
+++    },
+++    Wait {
+++        ms: u64,
+++    },
+++    /// Chat or, when it starts with `/`, a command.
+++    Type {
+++        text: String,
+++    },
+++    Scroll {
+++        up: bool,
+++    },
+++}
+++
+++#[derive(Clone, Debug, Deserialize, PartialEq, Eq)]
+++pub struct Def {
+++    #[serde(default)]
+++    pub mode: Mode,
+++    /// Rounds in `Once` mode (at least 1); the other modes loop until stopped.
+++    #[serde(default)]
+++    pub repeat: u32,
+++    #[serde(default)]
+++    pub loop_delay_ms: u64,
+++    /// Random spread on every wait and hold, in percent (0..=50).
+++    #[serde(default)]
+++    pub jitter: u32,
+++    /// Pause after each step.
+++    #[serde(default = "default_gap")]
+++    pub gap_ms: u64,
+++    /// Shortest pause between two rounds.
+++    #[serde(default = "default_min_loop")]
+++    pub min_loop_ms: u64,
+++    #[serde(default)]
+++    pub steps: Vec<Step>,
+++}
+++
+++fn default_gap() -> u64 {
+++    10
+++}
+++
+++fn default_min_loop() -> u64 {
+++    30
+++}
+++
+++#[derive(Deserialize)]
+++struct FileData {
+++    #[serde(default)]
+++    macros: HashMap<String, Def>,
+++}
+++
+++/// What the game has to do for a macro.
+++#[derive(Clone, Debug, PartialEq, Eq)]
+++pub enum Action {
+++    Down(String),
+++    Up(String),
+++    /// A mouse wheel notch (`mouse.scroll.up` / `mouse.scroll.down`).
+++    Scroll(String),
+++    Say(String),
+++}
+++
+++enum Phase {
+++    /// Play `steps[step]` at `wake`.
+++    Exec,
+++    /// Let go of this token at `wake`.
+++    Release(String),
+++    /// Move on to the next step (or round) at `wake`.
+++    Gap,
+++}
+++
+++struct Run {
+++    id: String,
+++    def: Arc<Def>,
+++    round: u32,
+++    step: usize,
+++    phase: Phase,
+++    wake: Instant,
+++    held: Vec<String>,
+++}
+++
+++#[derive(Default)]
+++pub struct Macros {
+++    defs: HashMap<String, Arc<Def>>,
+++    runs: Vec<Run>,
+++    seed: u32,
+++    /// Modification time of the file `defs` came from; `None` when there was no file.
+++    pub stamp: Option<std::time::SystemTime>,
+++}
+++
+++impl Macros {
+++    /// Replaces the definitions with the ones in `text` (the file's contents; empty or broken text clears them).
+++    /// Steps with a token the engine does not know are dropped, and nothing here may press another macro.
+++    pub fn load(&mut self, text: &str) {
+++        self.defs.clear();
+++        let Ok(data) = serde_json::from_str::<FileData>(text) else {
+++            return;
+++        };
+++        for (id, mut def) in data.macros {
+++            def.steps.retain(valid_step);
+++            def.steps.truncate(MAX_STEPS);
+++            for step in &mut def.steps {
+++                match step {
+++                    Step::Wait { ms } | Step::Hold { ms, .. } => *ms = (*ms).min(MAX_MS),
+++                    _ => {}
+++                }
+++            }
+++            def.repeat = def.repeat.min(MAX_ROUNDS);
+++            def.jitter = def.jitter.min(MAX_JITTER);
+++            def.loop_delay_ms = def.loop_delay_ms.min(MAX_MS);
+++            def.gap_ms = def.gap_ms.min(MAX_MS);
+++            def.min_loop_ms = def.min_loop_ms.min(MAX_MS);
+++            if !def.steps.is_empty() && !id.is_empty() {
+++                self.defs.insert(id, Arc::new(def));
+++            }
+++        }
+++    }
+++
+++    pub fn has_defs(&self) -> bool {
+++        !self.defs.is_empty()
+++    }
+++
+++    pub fn is_idle(&self) -> bool {
+++        self.runs.is_empty()
+++    }
+++
+++    pub fn running(&self, id: &str) -> bool {
+++        self.runs.iter().any(|run| run.id == id)
+++    }
+++
+++    /// True while the macro behind this button token plays (the button is drawn pressed).
+++    pub fn running_token(&self, token: &str) -> bool {
+++        !self.runs.is_empty() && token_id(token).is_some_and(|id| self.running(id))
+++    }
+++
+++    /// A press (`down`) or release of a macro button.
+++    pub fn press(&mut self, id: &str, down: bool, now: Instant, out: &mut Vec<Action>) {
+++        let Some(def) = self.defs.get(id).cloned() else {
+++            return;
+++        };
+++        if down {
+++            if self.running(id) {
+++                // Pressing again while it plays stops it.
+++                self.stop(id, out);
+++            } else {
+++                self.runs.push(Run {
+++                    id: id.to_owned(),
+++                    def,
+++                    round: 0,
+++                    step: 0,
+++                    phase: Phase::Exec,
+++                    wake: now,
+++                    held: Vec::new(),
+++                });
+++            }
+++        } else if def.mode == Mode::Hold {
+++            self.stop(id, out);
+++        }
+++    }
+++
+++    pub fn stop(&mut self, id: &str, out: &mut Vec<Action>) {
+++        let mut i = 0;
+++        while i < self.runs.len() {
+++            if self.runs[i].id == id {
+++                let run = self.runs.remove(i);
+++                release_all(run, out);
+++            } else {
+++                i += 1;
+++            }
+++        }
+++    }
+++
+++    pub fn stop_all(&mut self, out: &mut Vec<Action>) {
+++        for run in std::mem::take(&mut self.runs) {
+++            release_all(run, out);
+++        }
+++    }
+++
+++    /// Moves every running macro forward to `now`. `live` is false while no world is being played (a menu, the
+++    /// pause screen, the title screen, another app): then every macro stops and lets go of what it holds.
+++    pub fn tick(&mut self, now: Instant, live: bool, out: &mut Vec<Action>) {
+++        if self.runs.is_empty() {
+++            return;
+++        }
+++        if !live {
+++            self.stop_all(out);
+++            return;
+++        }
+++        let mut seed = self.seed;
+++        if seed == 0 {
+++            seed = 0x9E37_79B9 ^ (now.elapsed().subsec_nanos() | 1);
+++        }
+++        let mut runs = std::mem::take(&mut self.runs);
+++        runs.retain_mut(|run| {
+++            // A bound, so a macro made only of zero-length steps cannot spin forever inside one frame.
+++            for _ in 0..64 {
+++                if run.wake > now {
+++                    return true;
+++                }
+++                if !advance(run, now, &mut seed, out) {
+++                    release_all_ref(run, out);
+++                    return false;
+++                }
+++            }
+++            true
+++        });
+++        self.seed = seed;
+++        self.runs = runs;
+++    }
+++}
+++
+++fn valid_step(step: &Step) -> bool {
+++    let ok = |key: &str| {
+++        !key.starts_with("amber.")
+++            && key != "key.keyboard.unknown"
+++            && !matches!(key, "mouse.virtual.toggle" | "mouse.look")
+++            && !key.starts_with("mouse.scroll")
+++            && super::CustomButton::valid_token(key)
+++    };
+++    match step {
+++        Step::Tap { key } | Step::Down { key } | Step::Up { key } | Step::Hold { key, .. } => {
+++            ok(key)
+++        }
+++        Step::Type { text } => !text.trim().is_empty(),
+++        Step::Wait { .. } | Step::Scroll { .. } => true,
+++    }
+++}
+++
+++/// Plays one transition of `run`; false when the macro has finished.
+++fn advance(run: &mut Run, now: Instant, seed: &mut u32, out: &mut Vec<Action>) -> bool {
+++    let jitter = run.def.jitter;
+++    match std::mem::replace(&mut run.phase, Phase::Gap) {
+++        Phase::Release(key) => {
+++            out.push(Action::Up(key.clone()));
+++            run.held.retain(|held| *held != key);
+++            run.wake = now;
+++            true
+++        }
+++        Phase::Gap => {
+++            run.step += 1;
+++            let mut wait = jittered(run.def.gap_ms.max(1), jitter, seed);
+++            if run.step >= run.def.steps.len() {
+++                run.step = 0;
+++                run.round += 1;
+++                if run.def.mode == Mode::Once && run.round >= run.def.repeat.max(1) {
+++                    return false;
+++                }
+++                let pause = run.def.loop_delay_ms.max(run.def.min_loop_ms);
+++                wait += jittered(pause, jitter, seed);
+++            }
+++            run.phase = Phase::Exec;
+++            run.wake = now + Duration::from_millis(wait);
+++            true
+++        }
+++        Phase::Exec => {
+++            let Some(step) = run.def.steps.get(run.step).cloned() else {
+++                return false;
+++            };
+++            run.wake = now;
+++            match step {
+++                Step::Tap { key } => press_for(run, key, TAP_MS, now, seed, out),
+++                Step::Hold { key, ms } => press_for(run, key, ms, now, seed, out),
+++                Step::Down { key } => {
+++                    if !run.held.contains(&key) {
+++                        run.held.push(key.clone());
+++                        out.push(Action::Down(key));
+++                    }
+++                }
+++                Step::Up { key } => {
+++                    run.held.retain(|held| *held != key);
+++                    out.push(Action::Up(key));
+++                }
+++                Step::Wait { ms } => {
+++                    run.wake = now + Duration::from_millis(jittered(ms, jitter, seed));
+++                }
+++                Step::Type { text } => out.push(Action::Say(text)),
+++                Step::Scroll { up } => out.push(Action::Scroll(
+++                    if up {
+++                        "mouse.scroll.up"
+++                    } else {
+++                        "mouse.scroll.down"
+++                    }
+++                    .into(),
+++                )),
+++            }
+++            true
+++        }
+++    }
+++}
+++
+++fn press_for(
+++    run: &mut Run,
+++    key: String,
+++    ms: u64,
+++    now: Instant,
+++    seed: &mut u32,
+++    out: &mut Vec<Action>,
+++) {
+++    if !run.held.contains(&key) {
+++        run.held.push(key.clone());
+++    }
+++    out.push(Action::Down(key.clone()));
+++    run.phase = Phase::Release(key);
+++    run.wake = now + Duration::from_millis(jittered(ms, run.def.jitter, seed));
+++}
+++
+++/// Everything the macro still holds is let go (a key may never be left stuck down).
+++fn release_all(mut run: Run, out: &mut Vec<Action>) {
+++    release_all_ref(&mut run, out);
+++}
+++
+++fn release_all_ref(run: &mut Run, out: &mut Vec<Action>) {
+++    for key in run.held.drain(..) {
+++        out.push(Action::Up(key));
+++    }
+++}
+++
+++/// `ms` plus or minus up to `percent` percent at random; never below 1 ms.
+++fn jittered(ms: u64, percent: u32, seed: &mut u32) -> u64 {
+++    if percent == 0 || ms <= 1 {
+++        return ms;
+++    }
+++    // xorshift32: plenty for human-looking timing.
+++    let mut x = *seed;
+++    x ^= x << 13;
+++    x ^= x >> 17;
+++    x ^= x << 5;
+++    *seed = x;
+++    let unit = f64::from(x) / f64::from(u32::MAX) * 2.0 - 1.0;
+++    let spread = f64::from(percent.min(MAX_JITTER)) / 100.0;
+++    ((ms as f64 * (1.0 + unit * spread)) as u64).max(1)
+++}
+++
+++#[cfg(test)]
+++mod tests {
+++    use super::*;
+++
+++    fn ms(n: u64) -> Duration {
+++        Duration::from_millis(n)
+++    }
+++
+++    fn macros(json: &str) -> Macros {
+++        let mut m = Macros::default();
+++        m.load(json);
+++        m
+++    }
+++
+++    /// Steps a macro in 5 ms slices for `total` ms and gathers what it asked for, with the time of each.
+++    fn play(m: &mut Macros, start: Instant, from: u64, total: u64) -> Vec<(u64, Action)> {
+++        let mut got = Vec::new();
+++        let mut t = from;
+++        while t <= total {
+++            let mut out = Vec::new();
+++            m.tick(start + ms(t), true, &mut out);
+++            got.extend(out.into_iter().map(|a| (t, a)));
+++            t += 5;
+++        }
+++        got
+++    }
+++
+++    fn down(s: &str) -> Action {
+++        Action::Down(s.into())
+++    }
+++
+++    fn up(s: &str) -> Action {
+++        Action::Up(s.into())
+++    }
+++
+++    #[test]
+++    fn token_ids() {
+++        assert_eq!(token_id("amber.macro:abc"), Some("abc"));
+++        assert_eq!(token_id("amber.macro:"), None);
+++        assert_eq!(token_id("key.keyboard.a"), None);
+++        assert!(super::super::CustomButton::valid_token("amber.macro:abc"));
+++    }
+++
+++    #[test]
+++    fn load_drops_bad_steps_and_clamps() {
+++        let m = macros(
+++            r#"{"macros":{"a":{"steps":[
+++                {"op":"tap","key":"key.keyboard.space"},
+++                {"op":"tap","key":"nonsense"},
+++                {"op":"tap","key":"amber.macro:b"},
+++                {"op":"tap","key":"mouse.scroll.up"},
+++                {"op":"wait","ms":99999999},
+++                {"op":"type","text":"   "},
+++                {"op":"type","text":"/home"},
+++                {"op":"scroll","up":true}
+++              ],"repeat":500,"jitter":90},
+++              "empty":{"steps":[]},
+++              "bad":{"steps":[{"op":"tap","key":"x"}]}}}"#,
+++        );
+++        assert!(m.defs.contains_key("a"));
+++        assert!(!m.defs.contains_key("empty"));
+++        assert!(!m.defs.contains_key("bad"));
+++        let def = &m.defs["a"];
+++        assert_eq!(def.steps.len(), 4);
+++        assert_eq!(def.steps[1], Step::Wait { ms: MAX_MS });
+++        assert_eq!(def.repeat, MAX_ROUNDS);
+++        assert_eq!(def.jitter, MAX_JITTER);
+++        let mut empty = Macros::default();
+++        empty.load("not json");
+++        assert!(!empty.has_defs());
+++    }
+++
+++    #[test]
+++    fn tap_then_wait_once() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"once","repeat":1,"steps":[
+++                {"op":"tap","key":"key.keyboard.space"},
+++                {"op":"wait","ms":100}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        m.press("a", false, t0, &mut out);
+++        assert!(out.is_empty());
+++        assert!(m.running("a"));
+++        let got = play(&mut m, t0, 0, 400);
+++        assert_eq!(got.len(), 2, "{got:?}");
+++        assert_eq!(got[0], (0, down("key.keyboard.space")));
+++        assert_eq!(got[1].1, up("key.keyboard.space"));
+++        assert!((35..=45).contains(&got[1].0), "{got:?}");
+++        assert!(m.is_idle());
+++    }
+++
+++    #[test]
+++    fn repeat_counts_rounds() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"once","repeat":3,"steps":[
+++                {"op":"tap","key":"key.keyboard.q"}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let got = play(&mut m, t0, 0, 1000);
+++        let downs = got
+++            .iter()
+++            .filter(|(_, a)| *a == down("key.keyboard.q"))
+++            .count();
+++        let ups = got
+++            .iter()
+++            .filter(|(_, a)| *a == up("key.keyboard.q"))
+++            .count();
+++        assert_eq!((downs, ups), (3, 3), "{got:?}");
+++        assert!(m.is_idle());
+++    }
+++
+++    #[test]
+++    fn hold_mode_stops_on_release_and_lets_go() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"hold","steps":[
+++                {"op":"down","key":"key.mouse.left"},
+++                {"op":"wait","ms":1000}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let got = play(&mut m, t0, 0, 300);
+++        assert_eq!(got, vec![(0, down("key.mouse.left"))]);
+++        let mut out = Vec::new();
+++        m.press("a", false, t0 + ms(300), &mut out);
+++        assert_eq!(out, vec![up("key.mouse.left")]);
+++        assert!(m.is_idle());
+++    }
+++
+++    #[test]
+++    fn toggle_press_again_stops_and_down_is_not_repeated() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"toggle","steps":[
+++                {"op":"down","key":"key.keyboard.w"},
+++                {"op":"wait","ms":50}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        // Releasing the finger does nothing in toggle mode.
+++        m.press("a", false, t0, &mut out);
+++        assert!(out.is_empty());
+++        let got = play(&mut m, t0, 0, 600);
+++        // Several rounds, but the key went down only once.
+++        assert_eq!(got, vec![(0, down("key.keyboard.w"))], "{got:?}");
+++        assert!(m.running_token("amber.macro:a"));
+++        m.press("a", true, t0 + ms(600), &mut out);
+++        assert_eq!(out, vec![up("key.keyboard.w")]);
+++        assert!(!m.running_token("amber.macro:a"));
+++    }
+++
+++    #[test]
+++    fn leaving_the_game_stops_and_releases() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"toggle","steps":[
+++                {"op":"down","key":"key.keyboard.left.shift"},
+++                {"op":"hold","key":"key.mouse.right","ms":500}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let _ = play(&mut m, t0, 0, 100);
+++        let mut out = Vec::new();
+++        m.tick(t0 + ms(110), false, &mut out);
+++        assert!(m.is_idle());
+++        out.sort_by_key(|a| format!("{a:?}"));
+++        assert_eq!(
+++            out,
+++            vec![up("key.keyboard.left.shift"), up("key.mouse.right")]
+++        );
+++    }
+++
+++    #[test]
+++    fn say_and_scroll_come_out_in_order() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"steps":[
+++                {"op":"type","text":"/home base"},
+++                {"op":"scroll","up":false},
+++                {"op":"scroll","up":true}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let got: Vec<Action> = play(&mut m, t0, 0, 500)
+++            .into_iter()
+++            .map(|(_, a)| a)
+++            .collect();
+++        assert_eq!(
+++            got,
+++            vec![
+++                Action::Say("/home base".into()),
+++                Action::Scroll("mouse.scroll.down".into()),
+++                Action::Scroll("mouse.scroll.up".into()),
+++            ]
+++        );
+++    }
+++
+++    #[test]
+++    fn turbo_style_cycle_is_exact_without_gaps() {
+++        // The launcher's Turbo: hold 50 ms, wait 50 ms, no extra gaps or minimum loop pause.
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"hold","gap_ms":0,"min_loop_ms":0,"steps":[
+++                {"op":"hold","key":"key.mouse.left","ms":50},
+++                {"op":"wait","ms":50}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let got = play(&mut m, t0, 0, 450);
+++        let downs: Vec<u64> = got
+++            .iter()
+++            .filter(|(_, a)| *a == down("key.mouse.left"))
+++            .map(|(t, _)| *t)
+++            .collect();
+++        // One click per ~100 ms (1 ms of slack per cycle from the 5 ms slicing).
+++        assert!(downs.len() >= 4 && downs.len() <= 5, "{downs:?}");
+++        for pair in downs.windows(2) {
+++            assert!((95..=110).contains(&(pair[1] - pair[0])), "{downs:?}");
+++        }
+++    }
+++
+++    #[test]
+++    fn jitter_stays_inside_its_bounds() {
+++        let mut seed = 12345;
+++        for _ in 0..1000 {
+++            let v = jittered(200, 25, &mut seed);
+++            assert!((150..=250).contains(&v), "{v}");
+++        }
+++        assert_eq!(jittered(200, 0, &mut seed), 200);
+++        assert_eq!(jittered(1, 50, &mut seed), 1);
+++    }
+++
+++    #[test]
+++    fn zero_length_steps_cannot_spin() {
+++        let mut m = macros(
+++            r#"{"macros":{"a":{"mode":"toggle","gap_ms":0,"min_loop_ms":0,"steps":[
+++                {"op":"scroll","up":true}]}}}"#,
+++        );
+++        let t0 = Instant::now();
+++        let mut out = Vec::new();
+++        m.press("a", true, t0, &mut out);
+++        let mut out = Vec::new();
+++        m.tick(t0, true, &mut out);
+++        // Bounded work per tick, and the macro is still alive.
+++        assert!(out.len() <= 64);
+++        assert!(m.running("a"));
+++    }
+++}
++diff --git a/crates/horizon-client-render/src/touch/custom.rs b/crates/horizon-client-render/src/touch/custom.rs
++index 554187fce..13594b75c 100644
++--- a/crates/horizon-client-render/src/touch/custom.rs
+++++ b/crates/horizon-client-render/src/touch/custom.rs
++@@ -41,6 +41,7 @@ impl CustomButton {
++             || token
++                 .strip_prefix("action:")
++                 .is_some_and(|name| crate::keybinds::MAPPINGS.iter().any(|m| m.0 == name))
+++            || super::amber_macro::token_id(token).is_some()
++     }
++     pub fn is_keyboard_binding(token: &str) -> bool {
++         !token.is_empty()
++@@ -124,6 +125,9 @@ impl CustomButton {
++ }
++ 
++ pub fn friendly_token_name(token: &str) -> String {
+++    if super::amber_macro::token_id(token).is_some() {
+++        return "Macro".into();
+++    }
++     match token {
++         "" | "key.keyboard.unknown" => "Unassigned".into(),
++         "key.mouse.left" => "LMB (Attack)".into(),
++@@ -499,7 +503,8 @@ impl TouchControls {
++             let [nx, ny, nw, nh] = p.rect(self.aspect());
++             let rect = [nx * b.width, ny * b.height, nw * b.width, nh * b.height];
++             let held = self.custom_fingers.values().any(|key| *key == button.key);
++-            let toggled = self.latched_custom.contains(&button.key);
+++            let toggled =
+++                self.latched_custom.contains(&button.key) || self.macros.running_token(&button.key);
++             let pressed = held || toggled;
++             let base_opacity = if self.editor.is_some() {
++                 p.opacity.max(0.25)
++diff --git a/crates/horizon-client/src/game/android_input.rs b/crates/horizon-client/src/game/android_input.rs
++index a6aa6336d..468b7e7fd 100644
++--- a/crates/horizon-client/src/game/android_input.rs
+++++ b/crates/horizon-client/src/game/android_input.rs
++@@ -175,6 +175,63 @@ impl Game<'_> {
++         for (name, down) in self.pad.touch.key_events() {
++             self.android_custom_token_edge(&name, down);
++         }
+++        self.android_macro_tick();
+++    }
+++
+++    /// AmberLauncher macro buttons (touch/amber_macro.rs): the launcher's definitions are read from
+++    /// `amber-macros.json` (next to `horizon-touch.json`) again whenever the file changed.
+++    fn android_macro_reload(&mut self) {
+++        let path = std::path::Path::new(horizon_client::touch::amber_macro::FILE);
+++        let stamp = std::fs::metadata(path).and_then(|m| m.modified()).ok();
+++        let macros = &mut self.pad.touch.macros;
+++        if macros.stamp == stamp && (stamp.is_some() || !macros.has_defs()) {
+++            return;
+++        }
+++        macros.stamp = stamp;
+++        macros.load(&std::fs::read_to_string(path).unwrap_or_default());
+++    }
+++
+++    fn android_macro_press(&mut self, id: &str, down: bool) {
+++        if down {
+++            self.android_macro_reload();
+++        }
+++        let mut out = Vec::new();
+++        self.pad
+++            .touch
+++            .macros
+++            .press(id, down, Instant::now(), &mut out);
+++        self.android_macro_apply(out);
+++    }
+++
+++    /// Runs macros forward; they only play while a world is being played with the window in front.
+++    fn android_macro_tick(&mut self) {
+++        if self.pad.touch.macros.is_idle() {
+++            return;
+++        }
+++        let live = self.title.is_none()
+++            && self.screen == Screen::Playing
+++            && !self.pause
+++            && !self.pad_in_menu()
+++            && self.focused;
+++        let mut out = Vec::new();
+++        self.pad.touch.macros.tick(Instant::now(), live, &mut out);
+++        self.android_macro_apply(out);
+++    }
+++
+++    fn android_macro_apply(&mut self, actions: Vec<horizon_client::touch::amber_macro::Action>) {
+++        use horizon_client::touch::amber_macro::Action;
+++        for action in actions {
+++            match action {
+++                Action::Down(token) => self.android_custom_token_edge(&token, true),
+++                Action::Up(token) => self.android_custom_token_edge(&token, false),
+++                Action::Scroll(token) => self.android_custom_token_tap(&token),
+++                Action::Say(text) => {
+++                    if self.title.is_none() && self.screen == Screen::Playing && !self.pause {
+++                        self.handle_chat_input(&text);
+++                    }
+++                }
+++            }
+++        }
++     }
++ 
++     pub(super) fn android_custom_token_edge(&mut self, token: &str, down: bool) {
++@@ -242,6 +299,10 @@ impl Game<'_> {
++                 return;
++             }
++         }
+++        if let Some(id) = horizon_client::touch::amber_macro::token_id(name) {
+++            self.android_macro_press(id, down);
+++            return;
+++        }
++         if let Some(mapping) = name.strip_prefix("action:") {
++             if mapping == "key.sneak" || mapping == "key.sprint" {
++                 let slot = usize::from(mapping == "key.sprint");
++diff --git a/crates/horizon-client/src/touch_ui.rs b/crates/horizon-client/src/touch_ui.rs
++index 2a2625ed0..7e2e53174 100644
++--- a/crates/horizon-client/src/touch_ui.rs
+++++ b/crates/horizon-client/src/touch_ui.rs
++@@ -1480,7 +1480,7 @@ pub fn draw_goy_hud(
++             tok == custom.key
++                 || (!custom.second_key.is_empty() && tok == custom.second_key)
++                 || (!custom.third_key.is_empty() && tok == custom.third_key)
++-        });
+++        }) || tc.macros.running_token(&custom.key);
++         let is_vmouse_on = custom.key == "mouse.virtual.toggle" && virtual_mouse;
++         let held = is_active_token && !p.toggleable;
++         let toggled = (is_active_token && p.toggleable) || is_vmouse_on;
+# FIN part=1/1 files=4

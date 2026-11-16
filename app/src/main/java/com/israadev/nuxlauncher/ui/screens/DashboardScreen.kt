@@ -530,6 +530,7 @@ fun DashboardScreen() {
                         instance = selectedInstance,
                         isReady = isInstanceReady,
                         account = currentAccount,
+                        showSkin = launcherSettings.homeSkinPreview,
                         rendererLabel = rendererLabel,
                         onOpenAbout = { showAboutDialog = true },
                         onPickInstance = { showInstancePicker = true },
@@ -787,12 +788,15 @@ fun DashboardScreen() {
  * Di kiri bawah nama instance aktif beserta info versi, lalu bar navigasi (Home, Mod, Akun,
  * Pengaturan) dan tombol PLAY di kanan bawah. Semua tombol berkaca hitam tembus pandang seperti
  * layar Pengaturan. Tanpa animasi masuk, supaya ringan di HP kelas bawah.
+ * Bila [showSkin] menyala, figur skin akun aktif berdiri diam di kanan, di atas tombol PLAY. Figurnya hanya
+ * diputar jari (geser kiri-kanan), tidak pernah berputar sendiri, dan digambar di kanvas biasa tanpa WebView.
  */
 @Composable
 private fun HomeScene(
     instance: Instance?,
     isReady: Boolean,
     account: UserAccount?,
+    showSkin: Boolean,
     rendererLabel: String,
     onOpenAbout: () -> Unit,
     onPickInstance: () -> Unit,
@@ -813,6 +817,7 @@ private fun HomeScene(
     val designHeightDp = config.screenHeightDp / uiScale
     val compact = designWidthDp < 760f
     val nameSize = if (designHeightDp < 372f) 40.sp else 48.sp
+    val skinShown = showSkin && account != null
     val textShadow = remember { Shadow(NuxColors.Ink.copy(alpha = 0.40f), Offset(0f, 2f), 12f) }
 
     // Menu akun cepat di bawah pil pemain: ganti, hapus, dan tambah akun tanpa membuka tab Akun
@@ -842,6 +847,27 @@ private fun HomeScene(
                     )
                 )
         )
+
+        // Figur skin: di kolom yang sama dengan tombol PLAY (lebarnya mengikuti tombol itu), mengisi ruang dari bawah
+        // tombol (i) sampai tepat di atas PLAY. Digambar di belakang kolom UI, jadi tidak menghalangi ketukan.
+        if (skinShown && account != null) {
+            val rowWidthDp = designWidthDp - startInset.value - endInset.value - 32f
+            val skinFit = ((rowWidthDp - HOME_MIN_GAP_DP) /
+                (HOME_NAV_ITEM_DP * 4 + HOME_NAV_CHROME_DP + HOME_MAIN_BUTTON_DP).toFloat()).coerceIn(0.7f, 1f)
+            AccountSkinPreview(
+                account = account,
+                forHome = true,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = endInset + 16.dp,
+                        top = 16.dp + 43.dp + 8.dp,
+                        bottom = 16.dp + HOME_MAIN_BUTTON_HEIGHT_DP.dp + 10.dp
+                    )
+                    .fillMaxHeight()
+                    .width((HOME_MAIN_BUTTON_DP * skinFit).dp)
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -963,7 +989,8 @@ private fun HomeScene(
                     Row(
                         modifier = Modifier
                             .padding(top = 4.dp)
-                            .fillMaxWidth(if (compact) 1f else 0.7f),
+                            // Dengan figur skin di kanan, nama panjang tidak boleh menjalar ke bawah figur itu
+                            .fillMaxWidth(if (!compact) 0.7f else if (skinShown) 0.64f else 1f),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -1222,6 +1249,7 @@ private val HOME_NAV_ITEMS = listOf(
 private const val HOME_NAV_ITEM_DP = 100
 private const val HOME_NAV_CHROME_DP = 16
 private const val HOME_MAIN_BUTTON_DP = 216
+private const val HOME_MAIN_BUTTON_HEIGHT_DP = 64
 private const val HOME_MIN_GAP_DP = 16f
 
 /**

@@ -125,6 +125,10 @@ data class LauncherSettings(
     val snowEnabled: Boolean = false,
     val snowAmount: Int = 60, // 10 - 100
 
+    // Pratinjau skin akun aktif di Home (figur diam di kanan atas tombol PLAY, geser untuk memutar).
+    // Digambar di kanvas tanpa animasi, tapi bisa dimatikan untuk HP yang sangat lemah.
+    val homeSkinPreview: Boolean = true,
+
     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
     val perfRev: Int = 0

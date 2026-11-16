@@ -547,6 +547,13 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
         MouseDiag.devices()
         SettingsManager.init(this)
+        // GameActivity jalan di proses :game, terpisah dari MainActivity: warna aksen dan gaya pilihan pemain
+        // harus diterapkan di sini juga, kalau tidak sidebar dan layar loading selalu memakai aksen bawaan.
+        SettingsManager.settings.value.let {
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
+        }
         ControlLayoutManager.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && SettingsManager.settings.value.sustainedPerformanceMode) {
             window.setSustainedPerformanceMode(true)
@@ -627,6 +634,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
                 GameScreen(
                     instanceName = instanceName,
                     mcVersion = mcVersion,
+                    loaderLabel = com.israadev.nuxlauncher.core.forge.ForgeFlavor.label(loader),
                     username = username,
                     mainClass = mainClass,
                     runtimeName = runtimeName,
@@ -1880,6 +1888,7 @@ private fun buildRamReadout(context: Context): Pair<String, Boolean> {
 fun GameScreen(
     instanceName: String,
     mcVersion: String,
+    loaderLabel: String,
     username: String,
     mainClass: String,
     runtimeName: String,
@@ -2179,6 +2188,8 @@ fun GameScreen(
         GameLoadingOverlay(
             visible = showLoadingOverlay,
             instanceName = instanceName,
+            mcVersion = mcVersion,
+            loaderLabel = loaderLabel,
             // Daftar log hanya dibaca saat layar loading tampil; selebihnya layar tidak ikut
             // digambar ulang setiap ada log baru.
             latestLog = if (showLoadingOverlay) (liveLogs.lastOrNull() ?: "") else "",

@@ -522,9 +522,10 @@ private fun AccountInfoRow(
  * aktifnya di server Mojang, yaitu yang juga muncul di dalam game; akun lain memakai jubah lokalnya.
  */
 @Composable
-private fun AccountSkinPreview(
+internal fun AccountSkinPreview(
     account: UserAccount,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    forHome: Boolean = false
 ) {
     val context = LocalContext.current
     val skinState = produceState<ImageBitmap?>(
@@ -535,7 +536,7 @@ private fun AccountSkinPreview(
         account.safeAccountType
     ) {
         value = withContext(Dispatchers.IO) {
-            runCatching {
+            val loaded = runCatching {
                 val updated = SkinUtils.ensureSkinAndCapeCached(context, account)
                 val local = SkinUtils.resolveSkinFile(context, updated)
                 val bmp = if (local != null) {
@@ -550,6 +551,12 @@ private fun AccountSkinPreview(
                 } else null
                 bmp?.asImageBitmap()
             }.getOrNull()
+            // Di Home skin yang tidak ada (belum diunduh / tanpa jaringan) diganti Steve bawaan, supaya figurnya tetap tampil
+            loaded ?: if (forHome) {
+                runCatching {
+                    context.assets.open("steve.png").use { BitmapFactory.decodeStream(it) }?.asImageBitmap()
+                }.getOrNull()
+            } else null
         }
     }
     val skin = skinState.value
@@ -579,10 +586,16 @@ private fun AccountSkinPreview(
     }
     val cape = capeState.value
 
-    // Sudut putar: dibaca hanya saat menggambar, jadi menggeser tidak memicu komposisi ulang
+    // Sudut putar: dibaca hanya saat menggambar, jadi menggeser tidak memicu komposisi ulang.
+    // Figur mulai agak miring (0.5 rad), supaya terlihat bervolume, dan diam di sana sampai digeser.
     var angle by remember(account.id) { mutableFloatStateOf(0.5f) }
 
     if (skin == null) {
+        if (forHome) {
+            // Home: kosong sebentar selama berkas dibaca (kepala kecil lalu berganti figur terasa berkedip)
+            Box(modifier = modifier)
+            return
+        }
         // Belum ada berkas skin: tampilkan kepala saja
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             NuxAccountAvatar(

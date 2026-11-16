@@ -187,6 +187,7 @@ fun SettingsScreen(
     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
     var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
+    var homeSkinOn by remember(currentSettings.homeSkinPreview) { mutableStateOf(currentSettings.homeSkinPreview) }
     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
@@ -241,7 +242,8 @@ fun SettingsScreen(
             uiStyle = uiStyleId,
             bgDim = bgDim,
             snowEnabled = snowOn,
-            snowAmount = snowAmount
+            snowAmount = snowAmount,
+            homeSkinPreview = homeSkinOn
         )
         SettingsManager.updateSettings(context, updated)
     }
@@ -1135,6 +1137,16 @@ fun SettingsScreen(
 
                         SettingsGroup("Efek") {
                             SettingSwitchRow(
+                                title = "Pratinjau skin di Home",
+                                desc = "Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.",
+                                checked = homeSkinOn,
+                                onCheckedChange = {
+                                    homeSkinOn = it
+                                    commitSettings()
+                                }
+                            )
+                            SettingDivider()
+                            SettingSwitchRow(
                                 title = "Efek salju",
                                 desc = "Salju turun di Beranda dan layar lain. Bawaan mati.",
                                 checked = snowOn,
@@ -1222,6 +1234,7 @@ fun SettingsScreen(
                     bgDim = reset.bgDim
                     snowOn = reset.snowEnabled
                     snowAmount = reset.snowAmount
+                    homeSkinOn = reset.homeSkinPreview
                     AmberUi.setAccent(reset.accentColor)
                     AmberUi.setStyle(reset.uiStyle)
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()

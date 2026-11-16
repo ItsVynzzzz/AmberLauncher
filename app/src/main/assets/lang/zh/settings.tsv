@@ -134,3 +134,6 @@ Controller dan mouse fisik	手柄与实体鼠标
 Lanjutan	高级
 Langsung bisa dipakai	即插即用
 Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick kiri jalan, stick kanan kamera, A lompat, RT pukul, LT pasang, Y inventaris, Start = Esc. Di menu stick menggerakkan kursor. Mouse dan keyboard fisik juga langsung bisa dipakai. Tombol layar tersembunyi sendiri saat controller atau mouse dipakai. Kecepatan stick mengikuti sensitivitas kamera dan kursor di atas. Bila mod controller (mis. Controlify) terdeteksi, controller langsung diserahkan ke mod.	无需开启或设置。插上手柄（gamepad）即可游玩：左摇杆移动，右摇杆转动视角，A 跳跃，RT 攻击，LT 放置/使用，Y 打开物品栏，Start = Esc。在菜单中，摇杆用于移动光标。实体鼠标和键盘同样即插即用。使用手柄或鼠标时，屏幕按键会自动隐藏。摇杆速度遵循上方的视角灵敏度和光标灵敏度。如果检测到手柄模组（例如 Controlify），手柄会直接交给该模组处理。
+# Pratinjau skin Home dan layar loading
+Pratinjau skin di Home	主页皮肤预览
+Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	在主页右侧显示静止的皮肤角色，左右滑动可旋转。如果手机卡顿，请关闭。

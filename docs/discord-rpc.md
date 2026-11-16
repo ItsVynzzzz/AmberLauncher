@@ -1,6 +1,6 @@
 # Discord Rich Presence
 
-Opsional dan **mati bawaan**: pemain menyalakannya di **Pengaturan > Discord**. Saat game berjalan, profil Discord
+Opsional dan **mati bawaan**: pemain menyalakannya di **Pengaturan > Tampilan > Discord**. Saat game berjalan, profil Discord
 menampilkan "Bermain AmberLauncher" beserta versi Minecraft, loader, dan waktu bermain. Nama instance dan akun
 pemain tidak ikut dikirim.
 
@@ -22,6 +22,19 @@ pemain tidak ikut dikirim.
   Karena proses itu tidak membaca pengaturan launcher, pilihan pemain dititipkan lewat Intent (`EXTRA_DISCORD_RPC`)
   oleh `HorizonEngine.start`. Mesin memanggil `process::exit` saat selesai, jadi `onDestroy` tidak selalu sempat
   jalan; Discord sendiri menghapus presence begitu prosesnya mati.
+
+## Presence di launcher
+
+Toggle terpisah "Perlihatkan aktivitas di launcher" (mati bawaan) menampilkan "Menyiapkan game" selama MainActivity di
+depan (`discord/DiscordLauncherPresence.kt`, proses utama). Saat layar launcher ditinggalkan (`onPause`, mis. game
+dibuka), presence dihapus dan klien SDK dilepas dengan segera, supaya tidak bentrok dengan presence game. Bila proses
+`:game` atau `:horizon` masih hidup di latar, presence launcher dilewati.
+
+## Melacak presence yang tidak muncul
+
+Tiap langkah (SDK siap, klien dibuat, presence diminta, hasil dari Discord, alasan dilewati) dicatat di log launcher
+dengan tag "Discord" (Pengaturan > Tentang > Log game > bagikan). Baris ditulis oleh proses yang bersangkutan
+(`main`, `game`, `horizon`), jadi terlihat di proses mana presence berhenti.
 
 ## SDK tidak ada di repo
 

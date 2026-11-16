@@ -7,6 +7,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
+import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -91,13 +92,16 @@ object DiscordPresence {
         try {
             if (!isDiscordInstalled(activity)) {
                 supported = false
+                LauncherLog.i(TAG, "Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai")
                 return
             }
             val init = Class.forName("com.discord.socialsdk.DiscordSocialSdkInit")
             init.getMethod("setEngineActivity", Activity::class.java).invoke(null, activity)
             supported = true
+            LauncherLog.i(TAG, "SDK Discord siap (${activity.javaClass.simpleName})")
         } catch (e: ClassNotFoundException) {
-            supported = false // build tanpa SDK Discord: wajar, tidak perlu dicatat
+            supported = false
+            LauncherLog.i(TAG, "SDK Discord tidak ikut di build ini")
         } catch (e: Throwable) {
             supported = false
             LauncherLog.w(TAG, "SDK Discord tidak bisa disiapkan: ${e.message}", e)
@@ -106,11 +110,44 @@ object DiscordPresence {
 
     /** Menampilkan [info] di profil Discord. null = hapus presence. */
     fun update(info: PresenceInfo?) {
-        if (!supported) return
+        if (!supported) {
+            LauncherLog.i(TAG, "Presence dilewati: SDK atau aplikasi Discord tidak tersedia")
+            return
+        }
+        if (info != null) LauncherLog.i(TAG, "Presence diminta: ${info.details} / ${info.state}")
         ensureHandler().post {
             wanted = info
             dirty = true
             flush()
+        }
+    }
+
+    /**
+     * Seperti [stopBlocking] tetapi langsung kembali (tanpa menunggu). Dipakai launcher saat layarnya ditinggalkan
+     * (mis. game dibuka), supaya peralihan layar tidak tertahan.
+     */
+    fun stop() {
+        val h = handler ?: return
+        h.post { shutdown() }
+    }
+
+    /**
+     * Dipanggil HorizonActivity (proses :horizon, mesin Rust). [requested] datang dari Intent yang disusun
+     * launcher: true bila pemain menyalakan Discord Rich Presence. Semua alasan melewati presence dicatat
+     * di log launcher supaya mudah dilacak bila presence tidak muncul.
+     */
+    fun onEngineStart(activity: Activity, requested: Boolean, mcVersion: String) {
+        if (!BuildConfig.HAS_DISCORD_SDK) return
+        try {
+            if (!requested) {
+                LauncherLog.i(TAG, "Mesin Rust: presence tidak diminta launcher (toggle mati)")
+                return
+            }
+            LauncherLog.i(TAG, "Mesin Rust: menyalakan presence")
+            attach(activity)
+            update(gamePresence(mcVersion, "horizon", System.currentTimeMillis()))
+        } catch (e: Throwable) {
+            LauncherLog.w(TAG, "Mesin Rust: presence gagal dinyalakan: ${e.message}", e)
         }
     }
 
@@ -200,15 +237,17 @@ object DiscordPresence {
                         giveUp("klien SDK gagal dibuat")
                         return
                     }
+                    LauncherLog.i(TAG, "Klien SDK dibuat")
                     firstSentAt = now
                     h.removeCallbacks(tickTask)
                     h.postDelayed(tickTask, TICK_FAST_MS)
                 }
-                NativeDiscord.nativeUpdate(
+                val sent = NativeDiscord.nativeUpdate(
                     fit(info.details).toByteArray(Charsets.UTF_8),
                     fit(info.state).toByteArray(Charsets.UTF_8),
                     info.startMs
                 )
+                if (!sent) LauncherLog.w(TAG, "Presence tidak terkirim ke SDK")
             }
             lastSentAt = now
         } catch (e: Throwable) {

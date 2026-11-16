@@ -143,6 +143,7 @@ fun SettingsScreen(
     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
+    var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
@@ -213,6 +214,7 @@ fun SettingsScreen(
             buttonLookDrag = buttonLookDrag,
             buttonSlide = buttonSlide,
             discordRpcEnabled = discordRpc,
+            discordRpcLauncherEnabled = discordRpcLauncher,
             touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
             physicalMouseSystemPointer = physicalSystemPointer,
@@ -798,21 +800,6 @@ fun SettingsScreen(
                         )
                         }
 
-                        // Hanya ada di build yang membawa SDK Discord (dibangun dari workflow resmi dengan SDK_TOKEN).
-                        if (BuildConfig.HAS_DISCORD_SDK) {
-                            SettingsGroup("Discord") {
-                                SettingSwitchRow(
-                                    title = "Discord Rich Presence",
-                                    desc = "Menampilkan AmberLauncher beserta versi Minecraft dan loader di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.",
-                                    checked = discordRpc,
-                                    onCheckedChange = {
-                                        discordRpc = it
-                                        commitSettings()
-                                    }
-                                )
-                            }
-                        }
-
                         SettingsGroup("Kontrol sentuh") {
                         SettingSwitchRow(
                             title = "Pukul lewat layar",
@@ -1170,6 +1157,31 @@ fun SettingsScreen(
                                 )
                             }
                         }
+
+                        // Hanya ada di build yang membawa SDK Discord (dibangun dari workflow resmi dengan SDK_TOKEN).
+                        if (BuildConfig.HAS_DISCORD_SDK) {
+                            SettingsGroup("Discord") {
+                                SettingSwitchRow(
+                                    title = "Discord Rich Presence saat bermain",
+                                    desc = "Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.",
+                                    checked = discordRpc,
+                                    onCheckedChange = {
+                                        discordRpc = it
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
+                                SettingSwitchRow(
+                                    title = "Perlihatkan aktivitas di launcher",
+                                    desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
+                                    checked = discordRpcLauncher,
+                                    onCheckedChange = {
+                                        discordRpcLauncher = it
+                                        commitSettings()
+                                    }
+                                )
+                            }
+                        }
                     }
 
                     // ===================== TENTANG =====================
@@ -1210,6 +1222,7 @@ fun SettingsScreen(
                     buttonLookDrag = reset.buttonLookDrag
                     buttonSlide = reset.buttonSlide
                     discordRpc = reset.discordRpcEnabled
+                    discordRpcLauncher = reset.discordRpcLauncherEnabled
                     touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalSystemPointer = reset.physicalMouseSystemPointer

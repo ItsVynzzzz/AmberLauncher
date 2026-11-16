@@ -30,6 +30,7 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
 import com.israadev.nuxlauncher.core.update.UpdateManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
 import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
@@ -154,6 +155,14 @@ class MainActivity : ComponentActivity() {
         }
         // Auto-update: tiap aplikasi tampil di depan, cek versi baru (murah: ETag + daftar tersimpan)
         UpdateManager.onForeground(appCtx)
+        // Discord Rich Presence di launcher (opsional; langsung kembali bila mati atau build tanpa SDK)
+        DiscordLauncherPresence.onResume(this)
+    }
+
+    override fun onPause() {
+        // Layar ditinggalkan (mis. game dibuka): hapus presence launcher sebelum presence game muncul
+        DiscordLauncherPresence.onPause()
+        super.onPause()
     }
 
     override fun onStop() {

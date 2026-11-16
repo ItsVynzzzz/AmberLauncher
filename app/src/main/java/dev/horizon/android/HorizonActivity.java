@@ -33,6 +33,13 @@ public final class HorizonActivity extends NativeActivity {
         startDiscordPresence();
     }
 
+    // REORDER_TO_FRONT: bila mesin masih berjalan di latar, membukanya lagi datang lewat sini, bukan onCreate.
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        startDiscordPresence();
+    }
+
     @Override protected void onDestroy() {
         try {
             if (BuildConfig.HAS_DISCORD_SDK) DiscordPresence.INSTANCE.stopBlocking(800L);
@@ -50,11 +57,9 @@ public final class HorizonActivity extends NativeActivity {
         try {
             if (!BuildConfig.HAS_DISCORD_SDK) return;
             Intent intent = getIntent();
-            if (intent == null || !intent.getBooleanExtra(EXTRA_DISCORD_RPC, false)) return;
-            String version = intent.getStringExtra(EXTRA_MC_VERSION);
-            DiscordPresence rpc = DiscordPresence.INSTANCE;
-            rpc.attach(this);
-            rpc.update(rpc.gamePresence(version == null ? "" : version, "horizon", System.currentTimeMillis()));
+            boolean requested = intent != null && intent.getBooleanExtra(EXTRA_DISCORD_RPC, false);
+            String version = intent == null ? null : intent.getStringExtra(EXTRA_MC_VERSION);
+            DiscordPresence.INSTANCE.onEngineStart(this, requested, version == null ? "" : version);
         } catch (Throwable ignored) {
             // Gagal menyalakan presence tidak boleh mengganggu mesin.
         }

@@ -137,3 +137,9 @@ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick 
 # Pratinjau skin Home dan layar loading
 Pratinjau skin di Home	Preview ng skin sa Home
 Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	Isang nakatayong skin figure sa kanan ng Home. I-swipe pakaliwa o pakanan para paikutin. I-off kung bumabagal ang phone.
+# Ukuran UI dan ukuran skin di Home
+Ukuran	Laki
+Ukuran UI	Laki ng UI
+Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Palakihin o paliitin ang buong interface ng launcher (mga menu, button, at text). Ang default ay 100%. Sa makitid na screen, kusang bumababa ang pinakamataas na limitasyon para hindi maputol ang mga button.
+Ukuran skin di Home	Laki ng skin sa Home
+Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Laki ng skin figure sa Home lang, hiwalay sa laki ng UI. Ang default ay 100%.

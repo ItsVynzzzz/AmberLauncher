@@ -527,7 +527,9 @@ private fun AccountInfoRow(
 internal fun AccountSkinPreview(
     account: UserAccount,
     modifier: Modifier = Modifier,
-    forHome: Boolean = false
+    forHome: Boolean = false,
+    // Pengali ukuran figur (1 = muat pas di ruangnya). Kaki tetap di tempat; figur tumbuh ke atas dan samping.
+    scale: Float = 1f
 ) {
     val context = LocalContext.current
     val skinState = produceState<ImageBitmap?>(
@@ -615,7 +617,7 @@ internal fun AccountSkinPreview(
                     detectHorizontalDragGestures { _, dragX -> angle += dragX * 0.012f }
                 }
         ) {
-            drawSkin3D(skin, cape, slim, angle)
+            drawSkin3D(skin, cape, slim, angle, scale)
         }
     }
 }
@@ -654,14 +656,16 @@ private fun skinShade(facing: Float): ColorFilter {
  * badannya, seperti di game, jadi punya ketebalan dan tidak terlihat seperti tempelan rata. Tiap sisi juga
  * diberi bayangan halus menurut seberapa miring ia terhadap kamera, supaya badan terasa bervolume.
  */
-private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float) {
+private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float, scale: Float = 1f) {
     val legacy = img.height < 64
     val armW = if (slim) 3 else 4
     // Ruang tambahan untuk lapisan luar yang menggembung (topi 0,5 di atas kepala) dan lengan yang berputar
-    val unit = minOf(size.width / 17.2f, size.height / 33.2f)
-    if (unit <= 0f) return
+    val fitUnit = minOf(size.width / 17.2f, size.height / 33.2f)
+    if (fitUnit <= 0f) return
+    val unit = fitUnit * scale.coerceIn(0.2f, 3f)
     val ox = size.width / 2f
-    val oy = (size.height - 32f * unit) / 2f
+    // Garis tanah ditentukan ukuran yang muat pas; pada skala 1 hasilnya sama persis dengan sebelumnya
+    val oy = (size.height - 32f * fitUnit) / 2f + 32f * fitUnit - 32f * unit
     val cosA = cos(angle)
     val sinA = sin(angle)
     val frontShade = skinShade(abs(cosA))

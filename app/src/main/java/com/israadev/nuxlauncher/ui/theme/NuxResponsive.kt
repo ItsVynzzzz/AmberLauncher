@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.israadev.nuxlauncher.core.settings.SettingsManager
 import kotlin.math.max
 import kotlin.math.min
 
@@ -43,6 +45,18 @@ data class NuxScaleMetrics(
 val LocalNuxScale = staticCompositionLocalOf { NuxScaleMetrics() }
 
 /**
+ * Mengalikan skala dasar dengan pilihan pemain ([percent], 70 - 130). Mengecilkan selalu diizinkan.
+ * Memperbesar dibatasi lebar layar: Home butuh lebar rancangan sekitar 640 dp untuk bar navigasi dan
+ * tombol utama, jadi di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.
+ */
+internal fun applyUserUiScale(base: Float, percent: Int, screenWidthDp: Float): Float {
+    if (percent == 100) return base
+    val wanted = base * percent / 100f
+    if (wanted <= base) return max(wanted, 0.5f)
+    return min(wanted, max(base, screenWidthDp / 640f))
+}
+
+/**
  * Root Responsive Provider that calculates DPI-aware metrics and applies
  * clamped accessibility font scaling to avoid container clipping.
  */
@@ -66,7 +80,11 @@ fun NuxResponsiveTheme(
     val isCompact = screenHeightDp < 350.dp
 
     // Smooth clamped scaling factor: 0.66f (ultra compact / high display zoom) .. 1.28f (tablets)
-    val scaleFactor = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
+    val baseScale = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
+
+    // Penyesuaian ukuran UI dari Pengaturan (100% = tepat skala di atas, tidak mengubah apa pun)
+    val userPercent = SettingsManager.settings.collectAsState().value.uiScalePercent.coerceIn(70, 130)
+    val scaleFactor = applyUserUiScale(baseScale, userPercent, screenWidthDp.value)
 
     // Clamp system fontScale to a safe range [0.85f .. 1.15f] so extreme OS font accessibility
     // settings do not shatter compact gaming launcher layouts while preserving readability

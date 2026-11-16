@@ -531,6 +531,7 @@ fun DashboardScreen() {
                         isReady = isInstanceReady,
                         account = currentAccount,
                         showSkin = launcherSettings.homeSkinPreview,
+                        skinScale = launcherSettings.homeSkinScalePercent.coerceIn(50, 130) / 100f,
                         rendererLabel = rendererLabel,
                         onOpenAbout = { showAboutDialog = true },
                         onPickInstance = { showInstancePicker = true },
@@ -797,6 +798,7 @@ private fun HomeScene(
     isReady: Boolean,
     account: UserAccount?,
     showSkin: Boolean,
+    skinScale: Float,
     rendererLabel: String,
     onOpenAbout: () -> Unit,
     onPickInstance: () -> Unit,
@@ -857,6 +859,7 @@ private fun HomeScene(
             AccountSkinPreview(
                 account = account,
                 forHome = true,
+                scale = skinScale,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(

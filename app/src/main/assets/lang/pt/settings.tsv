@@ -145,3 +145,9 @@ Jumlah salju	Quantidade de neve
 # Pratinjau skin Home dan layar loading
 Pratinjau skin di Home	Pr\u00e9-visualiza\u00e7\u00e3o da skin na Home
 Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	Uma figura parada da skin \u00e0 direita da Home. Deslize para a esquerda e a direita para gir\u00e1-la. Desative se o celular ficar lento.
+# Ukuran UI dan ukuran skin di Home
+Ukuran	Tamanho
+Ukuran UI	Tamanho da interface
+Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Aumenta ou diminui toda a interface do launcher (menus, bot\u00f5es e texto). O padr\u00e3o \u00e9 100%. Em telas estreitas o limite m\u00e1ximo diminui sozinho para que os bot\u00f5es n\u00e3o fiquem cortados.
+Ukuran skin di Home	Tamanho da skin na Home
+Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Tamanho da figura da skin somente na Home, separado do tamanho da interface. O padr\u00e3o \u00e9 100%.

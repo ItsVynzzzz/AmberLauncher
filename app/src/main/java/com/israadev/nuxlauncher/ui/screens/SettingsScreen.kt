@@ -189,6 +189,10 @@ fun SettingsScreen(
     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
     var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
     var homeSkinOn by remember(currentSettings.homeSkinPreview) { mutableStateOf(currentSettings.homeSkinPreview) }
+    // Dua ukuran terpisah. Nilai sementara selama menggeser; baru disimpan saat jari diangkat, supaya
+    // seluruh layar tidak berubah ukuran di bawah jari yang sedang menggeser penggeser UI.
+    var uiScalePct by remember(currentSettings.uiScalePercent) { mutableIntStateOf(currentSettings.uiScalePercent.coerceIn(70, 130)) }
+    var homeSkinScale by remember(currentSettings.homeSkinScalePercent) { mutableIntStateOf(currentSettings.homeSkinScalePercent.coerceIn(50, 130)) }
     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
@@ -245,7 +249,9 @@ fun SettingsScreen(
             bgDim = bgDim,
             snowEnabled = snowOn,
             snowAmount = snowAmount,
-            homeSkinPreview = homeSkinOn
+            homeSkinPreview = homeSkinOn,
+            uiScalePercent = uiScalePct,
+            homeSkinScalePercent = homeSkinScale
         )
         SettingsManager.updateSettings(context, updated)
     }
@@ -1061,6 +1067,19 @@ fun SettingsScreen(
                             )
                         }
 
+                        SettingsGroup("Ukuran") {
+                            SettingSliderRow(
+                                title = "Ukuran UI",
+                                desc = "Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.",
+                                valueText = "$uiScalePct%",
+                                value = uiScalePct.toFloat(),
+                                valueRange = 70f..130f,
+                                steps = 11,
+                                onValueChange = { uiScalePct = ((it / 5f).roundToInt() * 5).coerceIn(70, 130) },
+                                onValueChangeFinished = { commitSettings() }
+                            )
+                        }
+
                         SettingsGroup("Latar") {
                             SettingBackgroundRow(onChange = onChangeBackground)
                             SettingDivider()
@@ -1132,6 +1151,19 @@ fun SettingsScreen(
                                     commitSettings()
                                 }
                             )
+                            if (homeSkinOn) {
+                                SettingDivider()
+                                SettingSliderRow(
+                                    title = "Ukuran skin di Home",
+                                    desc = "Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.",
+                                    valueText = "$homeSkinScale%",
+                                    value = homeSkinScale.toFloat(),
+                                    valueRange = 50f..130f,
+                                    steps = 15,
+                                    onValueChange = { homeSkinScale = ((it / 5f).roundToInt() * 5).coerceIn(50, 130) },
+                                    onValueChangeFinished = { commitSettings() }
+                                )
+                            }
                             SettingDivider()
                             SettingSwitchRow(
                                 title = "Efek salju",
@@ -1248,6 +1280,8 @@ fun SettingsScreen(
                     snowOn = reset.snowEnabled
                     snowAmount = reset.snowAmount
                     homeSkinOn = reset.homeSkinPreview
+                    uiScalePct = reset.uiScalePercent
+                    homeSkinScale = reset.homeSkinScalePercent
                     AmberUi.setAccent(reset.accentColor)
                     AmberUi.setStyle(reset.uiStyle)
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()

@@ -131,6 +131,11 @@ data class LauncherSettings(
     // Digambar di kanvas tanpa animasi, tapi bisa dimatikan untuk HP yang sangat lemah.
     val homeSkinPreview: Boolean = true,
 
+    // Penyesuaian ukuran, dua pengaturan terpisah. 100 = ukuran bawaan (tidak mengubah apa pun).
+    // uiScalePercent: seluruh UI launcher (70 - 130). homeSkinScalePercent: hanya figur skin di Home (50 - 130).
+    val uiScalePercent: Int = 100,
+    val homeSkinScalePercent: Int = 100,
+
     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
     val perfRev: Int = 0

@@ -137,3 +137,9 @@ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick 
 # Pratinjau skin Home dan layar loading
 Pratinjau skin di Home	主页皮肤预览
 Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	在主页右侧显示静止的皮肤角色，左右滑动可旋转。如果手机卡顿，请关闭。
+# Ukuran UI dan ukuran skin di Home
+Ukuran	大小
+Ukuran UI	界面大小
+Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	放大或缩小整个启动器界面（菜单、按钮和文字）。默认为 100%。在窄屏幕上，上限会自动降低，以免按钮被截断。
+Ukuran skin di Home	主页皮肤大小
+Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	仅调整主页上皮肤角色的大小，与界面大小相互独立。默认为 100%。

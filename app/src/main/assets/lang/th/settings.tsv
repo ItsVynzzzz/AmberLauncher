@@ -141,3 +141,9 @@ Jumlah salju	ปริมาณหิมะ
 # Pratinjau skin Home dan layar loading
 Pratinjau skin di Home	ตัวอย่างสกินในหน้า Home
 Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	ตัวละครสกินยืนนิ่งอยู่ด้านขวาของหน้า Home ปัดซ้าย-ขวาเพื่อหมุน ปิดไว้หากเครื่องรู้สึกช้า
+# Ukuran UI dan ukuran skin di Home
+Ukuran	ขนาด
+Ukuran UI	ขนาด UI
+Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	ขยายหรือย่อทั้งหน้าจอของแลนเชอร์ (เมนู ปุ่ม และข้อความ) ค่าเริ่มต้นคือ 100% บนหน้าจอแคบ ขีดจำกัดสูงสุดจะลดลงเองเพื่อไม่ให้ปุ่มถูกตัด
+Ukuran skin di Home	ขนาดสกินในหน้า Home
+Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	ขนาดตัวละครสกินเฉพาะในหน้า Home แยกจากขนาด UI ค่าเริ่มต้นคือ 100%

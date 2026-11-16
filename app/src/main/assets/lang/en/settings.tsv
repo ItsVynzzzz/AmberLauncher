@@ -145,3 +145,9 @@ Jumlah salju	Snow amount
 # Pratinjau skin Home dan layar loading
 Pratinjau skin di Home	Skin preview on Home
 Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	A still skin figure on the right of Home. Swipe left and right to turn it. Turn it off if your phone feels slow.
+# Ukuran UI dan ukuran skin di Home
+Ukuran	Size
+Ukuran UI	UI size
+Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Make the whole launcher interface (menus, buttons and text) bigger or smaller. Default is 100%. On narrow screens the upper limit lowers itself so buttons don't get cut off.
+Ukuran skin di Home	Skin size on Home
+Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Size of the skin figure on Home only, separate from UI size. Default is 100%.

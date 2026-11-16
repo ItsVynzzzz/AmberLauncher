@@ -1,0 +1,315 @@
+diff --git a/app/src/main/assets/lang/en/settings.tsv b/app/src/main/assets/lang/en/settings.tsv
+index f7d495c..2f343ea 100644
+--- a/app/src/main/assets/lang/en/settings.tsv
++++ b/app/src/main/assets/lang/en/settings.tsv
+@@ -145,3 +145,9 @@ Jumlah salju	Snow amount
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	Skin preview on Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	A still skin figure on the right of Home. Swipe left and right to turn it. Turn it off if your phone feels slow.
++# Ukuran UI dan ukuran skin di Home
++Ukuran	Size
++Ukuran UI	UI size
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Make the whole launcher interface (menus, buttons and text) bigger or smaller. Default is 100%. On narrow screens the upper limit lowers itself so buttons don't get cut off.
++Ukuran skin di Home	Skin size on Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Size of the skin figure on Home only, separate from UI size. Default is 100%.
+diff --git a/app/src/main/assets/lang/es/settings.tsv b/app/src/main/assets/lang/es/settings.tsv
+index 26e177b..3a2b1f3 100644
+--- a/app/src/main/assets/lang/es/settings.tsv
++++ b/app/src/main/assets/lang/es/settings.tsv
+@@ -145,3 +145,9 @@ Jumlah salju	Cantidad de nieve
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	Vista previa del skin en Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	Una figura quieta del skin a la derecha de Home. Desliza a izquierda y derecha para girarla. Desact\u00edvala si tu m\u00f3vil va lento.
++# Ukuran UI dan ukuran skin di Home
++Ukuran	Tama\u00f1o
++Ukuran UI	Tama\u00f1o de la interfaz
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Agranda o reduce toda la interfaz del launcher (men\u00fas, botones y texto). El valor por defecto es 100%. En pantallas estrechas el l\u00edmite superior baja solo para que los botones no se corten.
++Ukuran skin di Home	Tama\u00f1o del skin en Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Tama\u00f1o de la figura del skin solo en Home, independiente del tama\u00f1o de la interfaz. El valor por defecto es 100%.
+diff --git a/app/src/main/assets/lang/fil/settings.tsv b/app/src/main/assets/lang/fil/settings.tsv
+index 61d7679..e1020e1 100644
+--- a/app/src/main/assets/lang/fil/settings.tsv
++++ b/app/src/main/assets/lang/fil/settings.tsv
+@@ -137,3 +137,9 @@ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	Preview ng skin sa Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	Isang nakatayong skin figure sa kanan ng Home. I-swipe pakaliwa o pakanan para paikutin. I-off kung bumabagal ang phone.
++# Ukuran UI dan ukuran skin di Home
++Ukuran	Laki
++Ukuran UI	Laki ng UI
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Palakihin o paliitin ang buong interface ng launcher (mga menu, button, at text). Ang default ay 100%. Sa makitid na screen, kusang bumababa ang pinakamataas na limitasyon para hindi maputol ang mga button.
++Ukuran skin di Home	Laki ng skin sa Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Laki ng skin figure sa Home lang, hiwalay sa laki ng UI. Ang default ay 100%.
+diff --git a/app/src/main/assets/lang/pt/settings.tsv b/app/src/main/assets/lang/pt/settings.tsv
+index 32dfc2d..11e6131 100644
+--- a/app/src/main/assets/lang/pt/settings.tsv
++++ b/app/src/main/assets/lang/pt/settings.tsv
+@@ -145,3 +145,9 @@ Jumlah salju	Quantidade de neve
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	Pr\u00e9-visualiza\u00e7\u00e3o da skin na Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	Uma figura parada da skin \u00e0 direita da Home. Deslize para a esquerda e a direita para gir\u00e1-la. Desative se o celular ficar lento.
++# Ukuran UI dan ukuran skin di Home
++Ukuran	Tamanho
++Ukuran UI	Tamanho da interface
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Aumenta ou diminui toda a interface do launcher (menus, bot\u00f5es e texto). O padr\u00e3o \u00e9 100%. Em telas estreitas o limite m\u00e1ximo diminui sozinho para que os bot\u00f5es n\u00e3o fiquem cortados.
++Ukuran skin di Home	Tamanho da skin na Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	Tamanho da figura da skin somente na Home, separado do tamanho da interface. O padr\u00e3o \u00e9 100%.
+diff --git a/app/src/main/assets/lang/th/settings.tsv b/app/src/main/assets/lang/th/settings.tsv
+index 5530d8d..7a559d8 100644
+--- a/app/src/main/assets/lang/th/settings.tsv
++++ b/app/src/main/assets/lang/th/settings.tsv
+@@ -141,3 +141,9 @@ Jumlah salju	ปริมาณหิมะ
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	ตัวอย่างสกินในหน้า Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	ตัวละครสกินยืนนิ่งอยู่ด้านขวาของหน้า Home ปัดซ้าย-ขวาเพื่อหมุน ปิดไว้หากเครื่องรู้สึกช้า
++# Ukuran UI dan ukuran skin di Home
++Ukuran	ขนาด
++Ukuran UI	ขนาด UI
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	ขยายหรือย่อทั้งหน้าจอของแลนเชอร์ (เมนู ปุ่ม และข้อความ) ค่าเริ่มต้นคือ 100% บนหน้าจอแคบ ขีดจำกัดสูงสุดจะลดลงเองเพื่อไม่ให้ปุ่มถูกตัด
++Ukuran skin di Home	ขนาดสกินในหน้า Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	ขนาดตัวละครสกินเฉพาะในหน้า Home แยกจากขนาด UI ค่าเริ่มต้นคือ 100%
+diff --git a/app/src/main/assets/lang/vi/settings.tsv b/app/src/main/assets/lang/vi/settings.tsv
+index bda88db..bfa6086 100644
+--- a/app/src/main/assets/lang/vi/settings.tsv
++++ b/app/src/main/assets/lang/vi/settings.tsv
+@@ -144,3 +144,9 @@ Jumlah salju	L\u01b0\u1ee3ng tuy\u1ebft
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	Xem tr\u01b0\u1edbc skin \u1edf Home
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	H\u00ecnh skin \u0111\u1ee9ng y\u00ean \u1edf b\u00ean ph\u1ea3i Home. Vu\u1ed1t tr\u00e1i ph\u1ea3i \u0111\u1ec3 xoay. H\u00e3y t\u1eaft n\u1ebfu \u0111i\u1ec7n tho\u1ea1i b\u1ecb ch\u1eadm.
++# Ukuran UI dan ukuran skin di Home
++Ukuran	K\u00edch th\u01b0\u1edbc
++Ukuran UI	K\u00edch th\u01b0\u1edbc giao di\u1ec7n
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	Ph\u00f3ng to ho\u1eb7c thu nh\u1ecf to\u00e0n b\u1ed9 giao di\u1ec7n launcher (menu, n\u00fat v\u00e0 ch\u1eef). M\u1eb7c \u0111\u1ecbnh l\u00e0 100%. Tr\u00ean m\u00e0n h\u00ecnh h\u1eb9p, m\u1ee9c t\u1ed1i \u0111a t\u1ef1 gi\u1ea3m \u0111\u1ec3 c\u00e1c n\u00fat kh\u00f4ng b\u1ecb c\u1eaft.
++Ukuran skin di Home	K\u00edch th\u01b0\u1edbc skin \u1edf Home
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	K\u00edch th\u01b0\u1edbc h\u00ecnh skin ch\u1ec9 \u1edf Home, t\u00e1ch bi\u1ec7t v\u1edbi k\u00edch th\u01b0\u1edbc giao di\u1ec7n. M\u1eb7c \u0111\u1ecbnh l\u00e0 100%.
+diff --git a/app/src/main/assets/lang/zh/settings.tsv b/app/src/main/assets/lang/zh/settings.tsv
+index d6623c9..30ca437 100644
+--- a/app/src/main/assets/lang/zh/settings.tsv
++++ b/app/src/main/assets/lang/zh/settings.tsv
+@@ -137,3 +137,9 @@ Tidak perlu dinyalakan atau diatur. Colok controller (gamepad) lalu main: stick
+ # Pratinjau skin Home dan layar loading
+ Pratinjau skin di Home	主页皮肤预览
+ Figur skin diam di kanan Home. Geser kiri-kanan untuk memutarnya. Matikan bila HP terasa berat.	在主页右侧显示静止的皮肤角色，左右滑动可旋转。如果手机卡顿，请关闭。
++# Ukuran UI dan ukuran skin di Home
++Ukuran	大小
++Ukuran UI	界面大小
++Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.	放大或缩小整个启动器界面（菜单、按钮和文字）。默认为 100%。在窄屏幕上，上限会自动降低，以免按钮被截断。
++Ukuran skin di Home	主页皮肤大小
++Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.	仅调整主页上皮肤角色的大小，与界面大小相互独立。默认为 100%。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 90bd037..245ed28 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -129,6 +129,11 @@ data class LauncherSettings(
+     // Digambar di kanvas tanpa animasi, tapi bisa dimatikan untuk HP yang sangat lemah.
+     val homeSkinPreview: Boolean = true,
+ 
++    // Penyesuaian ukuran, dua pengaturan terpisah. 100 = ukuran bawaan (tidak mengubah apa pun).
++    // uiScalePercent: seluruh UI launcher (70 - 130). homeSkinScalePercent: hanya figur skin di Home (50 - 130).
++    val uiScalePercent: Int = 100,
++    val homeSkinScalePercent: Int = 100,
++
+     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
+     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
+     val perfRev: Int = 0
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index f50bfd8..fde93f7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -527,7 +527,9 @@ private fun AccountInfoRow(
+ internal fun AccountSkinPreview(
+     account: UserAccount,
+     modifier: Modifier = Modifier,
+-    forHome: Boolean = false
++    forHome: Boolean = false,
++    // Pengali ukuran figur (1 = muat pas di ruangnya). Kaki tetap di tempat; figur tumbuh ke atas dan samping.
++    scale: Float = 1f
+ ) {
+     val context = LocalContext.current
+     val skinState = produceState<ImageBitmap?>(
+@@ -615,7 +617,7 @@ internal fun AccountSkinPreview(
+                     detectHorizontalDragGestures { _, dragX -> angle += dragX * 0.012f }
+                 }
+         ) {
+-            drawSkin3D(skin, cape, slim, angle)
++            drawSkin3D(skin, cape, slim, angle, scale)
+         }
+     }
+ }
+@@ -654,14 +656,16 @@ private fun skinShade(facing: Float): ColorFilter {
+  * badannya, seperti di game, jadi punya ketebalan dan tidak terlihat seperti tempelan rata. Tiap sisi juga
+  * diberi bayangan halus menurut seberapa miring ia terhadap kamera, supaya badan terasa bervolume.
+  */
+-private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float) {
++private fun DrawScope.drawSkin3D(img: ImageBitmap, cape: ImageBitmap?, slim: Boolean, angle: Float, scale: Float = 1f) {
+     val legacy = img.height < 64
+     val armW = if (slim) 3 else 4
+     // Ruang tambahan untuk lapisan luar yang menggembung (topi 0,5 di atas kepala) dan lengan yang berputar
+-    val unit = minOf(size.width / 17.2f, size.height / 33.2f)
+-    if (unit <= 0f) return
++    val fitUnit = minOf(size.width / 17.2f, size.height / 33.2f)
++    if (fitUnit <= 0f) return
++    val unit = fitUnit * scale.coerceIn(0.2f, 3f)
+     val ox = size.width / 2f
+-    val oy = (size.height - 32f * unit) / 2f
++    // Garis tanah ditentukan ukuran yang muat pas; pada skala 1 hasilnya sama persis dengan sebelumnya
++    val oy = (size.height - 32f * fitUnit) / 2f + 32f * fitUnit - 32f * unit
+     val cosA = cos(angle)
+     val sinA = sin(angle)
+     val frontShade = skinShade(abs(cosA))
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index a9e909c..3e441d7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -531,6 +531,7 @@ fun DashboardScreen() {
+                         isReady = isInstanceReady,
+                         account = currentAccount,
+                         showSkin = launcherSettings.homeSkinPreview,
++                        skinScale = launcherSettings.homeSkinScalePercent.coerceIn(50, 130) / 100f,
+                         rendererLabel = rendererLabel,
+                         onOpenAbout = { showAboutDialog = true },
+                         onPickInstance = { showInstancePicker = true },
+@@ -797,6 +798,7 @@ private fun HomeScene(
+     isReady: Boolean,
+     account: UserAccount?,
+     showSkin: Boolean,
++    skinScale: Float,
+     rendererLabel: String,
+     onOpenAbout: () -> Unit,
+     onPickInstance: () -> Unit,
+@@ -857,6 +859,7 @@ private fun HomeScene(
+             AccountSkinPreview(
+                 account = account,
+                 forHome = true,
++                scale = skinScale,
+                 modifier = Modifier
+                     .align(Alignment.BottomEnd)
+                     .padding(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index fc9c0da..a968976 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -188,6 +188,10 @@ fun SettingsScreen(
+     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
+     var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
+     var homeSkinOn by remember(currentSettings.homeSkinPreview) { mutableStateOf(currentSettings.homeSkinPreview) }
++    // Dua ukuran terpisah. Nilai sementara selama menggeser; baru disimpan saat jari diangkat, supaya
++    // seluruh layar tidak berubah ukuran di bawah jari yang sedang menggeser penggeser UI.
++    var uiScalePct by remember(currentSettings.uiScalePercent) { mutableIntStateOf(currentSettings.uiScalePercent.coerceIn(70, 130)) }
++    var homeSkinScale by remember(currentSettings.homeSkinScalePercent) { mutableIntStateOf(currentSettings.homeSkinScalePercent.coerceIn(50, 130)) }
+     var bgPauseOnPowerSave by remember(currentSettings.homeBgPauseOnPowerSave) { mutableStateOf(currentSettings.homeBgPauseOnPowerSave) }
+     var bgSound by remember(currentSettings.homeBgSound) { mutableStateOf(currentSettings.homeBgSound) }
+     var bgVolume by remember(currentSettings.homeBgVolume) { mutableIntStateOf(currentSettings.homeBgVolume) }
+@@ -243,7 +247,9 @@ fun SettingsScreen(
+             bgDim = bgDim,
+             snowEnabled = snowOn,
+             snowAmount = snowAmount,
+-            homeSkinPreview = homeSkinOn
++            homeSkinPreview = homeSkinOn,
++            uiScalePercent = uiScalePct,
++            homeSkinScalePercent = homeSkinScale
+         )
+         SettingsManager.updateSettings(context, updated)
+     }
+@@ -1074,6 +1080,19 @@ fun SettingsScreen(
+                             )
+                         }
+ 
++                        SettingsGroup("Ukuran") {
++                            SettingSliderRow(
++                                title = "Ukuran UI",
++                                desc = "Perbesar atau perkecil seluruh tampilan launcher (menu, tombol, dan teks). Bawaan 100%. Di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.",
++                                valueText = "$uiScalePct%",
++                                value = uiScalePct.toFloat(),
++                                valueRange = 70f..130f,
++                                steps = 11,
++                                onValueChange = { uiScalePct = ((it / 5f).roundToInt() * 5).coerceIn(70, 130) },
++                                onValueChangeFinished = { commitSettings() }
++                            )
++                        }
++
+                         SettingsGroup("Latar") {
+                             SettingBackgroundRow(onChange = onChangeBackground)
+                             SettingDivider()
+@@ -1145,6 +1164,19 @@ fun SettingsScreen(
+                                     commitSettings()
+                                 }
+                             )
++                            if (homeSkinOn) {
++                                SettingDivider()
++                                SettingSliderRow(
++                                    title = "Ukuran skin di Home",
++                                    desc = "Besar figur skin di Home saja, terpisah dari Ukuran UI. Bawaan 100%.",
++                                    valueText = "$homeSkinScale%",
++                                    value = homeSkinScale.toFloat(),
++                                    valueRange = 50f..130f,
++                                    steps = 15,
++                                    onValueChange = { homeSkinScale = ((it / 5f).roundToInt() * 5).coerceIn(50, 130) },
++                                    onValueChangeFinished = { commitSettings() }
++                                )
++                            }
+                             SettingDivider()
+                             SettingSwitchRow(
+                                 title = "Efek salju",
+@@ -1235,6 +1267,8 @@ fun SettingsScreen(
+                     snowOn = reset.snowEnabled
+                     snowAmount = reset.snowAmount
+                     homeSkinOn = reset.homeSkinPreview
++                    uiScalePct = reset.uiScalePercent
++                    homeSkinScale = reset.homeSkinScalePercent
+                     AmberUi.setAccent(reset.accentColor)
+                     AmberUi.setStyle(reset.uiStyle)
+                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
+index b6e2c38..04840fc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/NuxResponsive.kt
+@@ -4,6 +4,7 @@ import android.content.res.Configuration
+ import androidx.compose.material3.LocalContentColor
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.CompositionLocalProvider
++import androidx.compose.runtime.collectAsState
+ import androidx.compose.runtime.compositionLocalOf
+ import androidx.compose.runtime.staticCompositionLocalOf
+ import androidx.compose.ui.platform.LocalConfiguration
+@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.TextUnit
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import kotlin.math.max
+ import kotlin.math.min
+ 
+@@ -42,6 +44,18 @@ data class NuxScaleMetrics(
+ 
+ val LocalNuxScale = staticCompositionLocalOf { NuxScaleMetrics() }
+ 
++/**
++ * Mengalikan skala dasar dengan pilihan pemain ([percent], 70 - 130). Mengecilkan selalu diizinkan.
++ * Memperbesar dibatasi lebar layar: Home butuh lebar rancangan sekitar 640 dp untuk bar navigasi dan
++ * tombol utama, jadi di layar sempit batas atasnya turun sendiri supaya tombol tidak terpotong.
++ */
++internal fun applyUserUiScale(base: Float, percent: Int, screenWidthDp: Float): Float {
++    if (percent == 100) return base
++    val wanted = base * percent / 100f
++    if (wanted <= base) return max(wanted, 0.5f)
++    return min(wanted, max(base, screenWidthDp / 640f))
++}
++
+ /**
+  * Root Responsive Provider that calculates DPI-aware metrics and applies
+  * clamped accessibility font scaling to avoid container clipping.
+@@ -66,7 +80,11 @@ fun NuxResponsiveTheme(
+     val isCompact = screenHeightDp < 350.dp
+ 
+     // Smooth clamped scaling factor: 0.66f (ultra compact / high display zoom) .. 1.28f (tablets)
+-    val scaleFactor = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
++    val baseScale = min(max(heightRatio, 0.66f), if (isTablet) 1.28f else 1.15f)
++
++    // Penyesuaian ukuran UI dari Pengaturan (100% = tepat skala di atas, tidak mengubah apa pun)
++    val userPercent = SettingsManager.settings.collectAsState().value.uiScalePercent.coerceIn(70, 130)
++    val scaleFactor = applyUserUiScale(baseScale, userPercent, screenWidthDp.value)
+ 
+     // Clamp system fontScale to a safe range [0.85f .. 1.15f] so extreme OS font accessibility
+     // settings do not shatter compact gaming launcher layouts while preserving readability
+# FIN part=1/1 files=12

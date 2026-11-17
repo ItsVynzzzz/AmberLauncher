@@ -1,0 +1,260 @@
+diff --git a/docs/site/app.js b/docs/site/app.js
+index c7586fd..5700893 100644
+--- a/docs/site/app.js
++++ b/docs/site/app.js
+@@ -14,14 +14,14 @@
+     released: function (d) { return 'Released ' + d + '.'; },
+     none: 'No downloadable release was found yet. The button opens the GitHub Releases page.',
+     fail: 'Could not load the latest version. The button opens the GitHub Releases page instead.',
+-    copy: 'Copy', copied: 'Copied', locale: 'en-GB'
++    copy: 'Copy', copied: 'Copied', locale: 'en-GB', dls: 'downloads'
+   } : {
+     main: 'Unduh APK 64-bit',
+     sub: function (v, mb) { return 'Versi ' + v + (mb ? ' (' + mb + ' MB)' : ''); },
+     released: function (d) { return 'Dirilis ' + d + '.'; },
+     none: 'Belum ada rilis yang bisa diunduh. Tombol membuka halaman Releases di GitHub.',
+     fail: 'Info versi terbaru tidak bisa dimuat. Tombol membuka halaman Releases di GitHub.',
+-    copy: 'Salin', copied: 'Tersalin', locale: 'id-ID'
++    copy: 'Salin', copied: 'Tersalin', locale: 'id-ID', dls: 'unduhan'
+   };
+ 
+   function $(id) { return document.getElementById(id); }
+@@ -29,7 +29,7 @@
+ 
+   /* ---------- Rilis terbaru ---------- */
+ 
+-  var CACHE_KEY = 'amber-release-v1';
++  var CACHE_KEY = 'amber-release-v2';
+   var CACHE_MS = 15 * 60 * 1000;
+ 
+   function readCache() {
+@@ -92,6 +92,7 @@
+     var when = '';
+     try { when = new Date(rel.date).toLocaleDateString(TXT.locale, { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { /* abaikan */ }
+     setStatus(when ? TXT.released(when) : '', false);
++    showStats(rel);
+   }
+ 
+   function loadRelease() {
+@@ -99,11 +100,12 @@
+     var cached = readCache();
+     if (cached) { show(cached); return; }
+     if (!window.fetch) { setStatus(TXT.fail, true); return; }
+-    window.fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=12', { headers: { Accept: 'application/vnd.github+json' } })
++    window.fetch('https://api.github.com/repos/' + REPO + '/releases?per_page=100', { headers: { Accept: 'application/vnd.github+json' } })
+       .then(function (res) { if (!res.ok) throw new Error('http ' + res.status); return res.json(); })
+       .then(function (list) {
+         var rel = pick(list);
+         if (!rel) { resetMain(); setStatus(TXT.none, true); return; }
++        rel.stats = tally(list);
+         writeCache(rel);
+         show(rel);
+       })
+@@ -116,6 +118,76 @@
+     if (l2) l2.textContent = 'github.com/' + REPO;
+   }
+ 
++  /* ---------- Statistik unduhan (jumlah unduhan aset tiap rilis bernomor, dari GitHub) ---------- */
++
++  function tally(list) {
++    var total = 0, items = [];
++    for (var i = 0; i < list.length; i++) {
++      var r = list[i];
++      if (r.draft || !/^v\d/.test(r.tag_name || '')) continue;
++      var n = 0, a = r.assets || [];
++      for (var j = 0; j < a.length; j++) n += a[j].download_count || 0;
++      total += n;
++      if (items.length < 6) items.push({ tag: r.tag_name, url: r.html_url, date: r.published_at || r.created_at, n: n });
++    }
++    return { total: total, items: items };
++  }
++
++  function fmt(n) { try { return Number(n).toLocaleString(TXT.locale); } catch (e) { return String(n); } }
++
++  function countUp(el, to) {
++    if (!el) return;
++    var still = !window.requestAnimationFrame || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
++    if (still) { el.textContent = fmt(to); return; }
++    var t0 = null;
++    function step(t) {
++      if (t0 === null) t0 = t;
++      var p = Math.min(1, (t - t0) / 900);
++      el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - p, 3))));
++      if (p < 1) window.requestAnimationFrame(step);
++    }
++    window.requestAnimationFrame(step);
++  }
++
++  function showStats(rel) {
++    var s = rel.stats;
++    if (!s) return;
++    countUp($('st-total'), s.total);
++    var v = $('st-ver'); if (v) v.textContent = 'v' + rel.version;
++    var b = $('hero-badge'); if (b) b.textContent = 'v' + rel.version + ' \u00b7 ' + fmt(s.total) + ' ' + TXT.dls;
++    var ol = $('rel-list');
++    if (!ol || !s.items.length) return;
++    ol.innerHTML = '';
++    s.items.forEach(function (it) {
++      var li = document.createElement('li'), a = document.createElement('a'), d = document.createElement('span'), c = document.createElement('span');
++      a.href = it.url; a.textContent = it.tag;
++      d.className = 'd';
++      try { d.textContent = new Date(it.date).toLocaleDateString(TXT.locale, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { /* abaikan */ }
++      c.className = 'c'; c.textContent = fmt(it.n) + ' ' + TXT.dls;
++      li.appendChild(a); li.appendChild(d); li.appendChild(c);
++      ol.appendChild(li);
++    });
++    ol.hidden = false;
++  }
++
++  function loadStars() {
++    var el = $('st-stars');
++    if (!el || !window.fetch) return;
++    window.fetch('https://api.github.com/repos/' + REPO, { headers: { Accept: 'application/vnd.github+json' } })
++      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
++      .then(function (d) { if (d && typeof d.stargazers_count === 'number') el.textContent = fmt(d.stargazers_count); })
++      .catch(function () { /* angka tetap "-" */ });
++  }
++
++  // Bagian muncul pelan saat digulir ke layar. Kelasnya baru dipasang oleh skrip ini, jadi tanpa JS semuanya tetap terlihat.
++  function setupReveal() {
++    if (!window.IntersectionObserver) return;
++    var io = new IntersectionObserver(function (es) {
++      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
++    }, { rootMargin: '0px 0px -8% 0px' });
++    all('.sec .head, .tile, .apk, .qa li, .statgrid .panel, .rels, .verify, .creds .panel, .steps li').forEach(function (el) { el.classList.add('rv'); io.observe(el); });
++  }
++
+   /* ---------- Salin sidik jari ---------- */
+ 
+   function setupCopy() {
+@@ -285,4 +357,6 @@
+   setupCopy();
+   setupRig();
+   setupShots();
++  loadStars();
++  setupReveal();
+ })();
+diff --git a/docs/site/en/index.html b/docs/site/en/index.html
+index 01383cc..ac28a71 100644
+--- a/docs/site/en/index.html
++++ b/docs/site/en/index.html
+@@ -38,6 +38,7 @@
+   <section class="hero">
+     <div class="wrap">
+       <img class="logo" src="../assets/icon-192.png" width="88" height="88" alt="">
++      <a class="badge" href="#statistik"><i></i><span id="hero-badge">Free and open source</span></a>
+       <h1>Minecraft Java on Android</h1>
+       <p class="lead">AmberLauncher is a Minecraft Java Edition launcher for Android. Create an instance, add mods from Modrinth or CurseForge, and play.</p>
+       <div class="cta" id="unduh">
+@@ -74,6 +75,22 @@
+     </div>
+   </section>
+ 
++  <div class="marquee" aria-hidden="true"><div class="track"><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span></div></div>
++
++  <section class="sec" id="statistik">
++    <div class="wrap">
++      <div class="head"><h2>Downloads</h2><p class="intro">Counted live from GitHub Releases.</p></div>
++      <div class="statgrid">
++        <div class="panel big"><span class="k">Total downloads</span><b class="n" id="st-total">-</b></div>
++        <div class="panel"><span class="k">Latest version</span><b class="n" id="st-ver">-</b></div>
++        <div class="panel"><span class="k">GitHub stars</span><b class="n" id="st-stars">-</b></div>
++        <div class="panel"><span class="k">Languages</span><b class="n">6</b></div>
++      </div>
++      <h3 class="rel-h">Updates</h3>
++      <ol class="rels panel" id="rel-list" hidden></ol>
++    </div>
++  </section>
++
+   <section class="sec" id="tampilan" hidden>
+     <div class="wrap">
+       <div class="head"><h2>Screens</h2><p class="intro">A few screens from AmberLauncher.</p></div>
+diff --git a/docs/site/index.html b/docs/site/index.html
+index cad8f9e..8f40dab 100644
+--- a/docs/site/index.html
++++ b/docs/site/index.html
+@@ -38,6 +38,7 @@
+   <section class="hero">
+     <div class="wrap">
+       <img class="logo" src="assets/icon-192.png" width="88" height="88" alt="">
++      <a class="badge" href="#statistik"><i></i><span id="hero-badge">Gratis dan open source</span></a>
+       <h1>Minecraft Java di Android</h1>
+       <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Buat instance, pasang mod dari Modrinth atau CurseForge, lalu main.</p>
+       <div class="cta" id="unduh">
+@@ -74,6 +75,22 @@
+     </div>
+   </section>
+ 
++  <div class="marquee" aria-hidden="true"><div class="track"><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span></div></div>
++
++  <section class="sec" id="statistik">
++    <div class="wrap">
++      <div class="head"><h2>Unduhan</h2><p class="intro">Angka diambil langsung dari GitHub Releases.</p></div>
++      <div class="statgrid">
++        <div class="panel big"><span class="k">Total unduhan</span><b class="n" id="st-total">-</b></div>
++        <div class="panel"><span class="k">Versi terbaru</span><b class="n" id="st-ver">-</b></div>
++        <div class="panel"><span class="k">Bintang GitHub</span><b class="n" id="st-stars">-</b></div>
++        <div class="panel"><span class="k">Bahasa</span><b class="n">6</b></div>
++      </div>
++      <h3 class="rel-h">Pembaruan</h3>
++      <ol class="rels panel" id="rel-list" hidden></ol>
++    </div>
++  </section>
++
+   <section class="sec" id="tampilan" hidden>
+     <div class="wrap">
+       <div class="head"><h2>Tampilan</h2><p class="intro">Beberapa layar di AmberLauncher.</p></div>
+diff --git a/docs/site/style.css b/docs/site/style.css
+index a25f1d3..5f0fe83 100644
+--- a/docs/site/style.css
++++ b/docs/site/style.css
+@@ -238,3 +238,48 @@ a:hover { text-decoration-color: var(--amber); }
+ @media (prefers-reduced-motion: reduce) {
+   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+ }
++
++/* ===== Lapisan modern: cahaya amber, kaca buram, kartu bercahaya, angka unduhan ===== */
++.top { background: rgba(14, 13, 11, 0.72); -webkit-backdrop-filter: saturate(160%) blur(14px); backdrop-filter: saturate(160%) blur(14px); }
++.panel { background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)); transition: border-color 0.2s, box-shadow 0.25s, transform 0.25s; }
++.tile:hover, .apk:hover, .statgrid .panel:hover { border-color: rgba(255, 214, 10, 0.45); box-shadow: 0 18px 50px -26px rgba(255, 214, 10, 0.4); transform: translateY(-2px); }
++
++.hero { position: relative; overflow: hidden; isolation: isolate; }
++.hero::before { content: ""; position: absolute; z-index: -1; left: 50%; top: -160px; width: min(1100px, 140%); height: 560px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255, 214, 10, 0.2), transparent 72%); }
++.hero::after { content: ""; position: absolute; z-index: -1; inset: 0; opacity: 0.4; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 0, #000 20%, transparent 75%); }
++.hero .logo { box-shadow: 0 0 0 1px var(--line-strong), 0 18px 60px -12px rgba(255, 214, 10, 0.5); }
++.hero h1 { background: linear-gradient(180deg, #fff 35%, #aaa594); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
++.badge { display: inline-flex; align-items: center; gap: 9px; margin: 0 auto 20px; padding: 7px 16px; border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(255, 255, 255, 0.05); font-size: 0.92rem; font-weight: 700; color: var(--dim); text-decoration: none; }
++.badge:hover { color: var(--text); border-color: rgba(255, 214, 10, 0.6); }
++.badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 0 0 rgba(255, 214, 10, 0.6); animation: ping 2.2s ease-out infinite; }
++@keyframes ping { to { box-shadow: 0 0 0 9px rgba(255, 214, 10, 0); } }
++.hero .logo + .badge { display: flex; width: max-content; max-width: 100%; }
++.btn-dl { box-shadow: 0 12px 44px -12px rgba(255, 214, 10, 0.65); transition: transform 0.2s, background 0.2s; }
++.btn-dl:hover { transform: translateY(-2px); }
++
++main { counter-reset: sec; }
++.sec .head h2::before { counter-increment: sec; content: "0" counter(sec); display: block; margin-bottom: 10px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.16em; color: var(--amber); }
++
++.marquee { overflow: hidden; padding: 16px 0; border-top: 1px solid var(--line); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
++.marquee .track { display: flex; width: max-content; animation: mq 46s linear infinite; }
++.marquee span { margin-right: 12px; padding: 7px 18px; border: 1px solid var(--line); border-radius: 999px; background: var(--fill); color: var(--dim); font-weight: 600; white-space: nowrap; }
++@keyframes mq { to { transform: translateX(-50%); } }
++
++.statgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
++.statgrid .panel { display: flex; flex-direction: column; gap: 8px; padding: 22px; }
++.statgrid .big { grid-column: 1 / -1; }
++.statgrid .k { color: var(--faint); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
++.statgrid .n { font-size: clamp(2rem, 7vw, 3rem); line-height: 1; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
++.statgrid .big .n { font-size: clamp(3.2rem, 12vw, 5.6rem); color: var(--amber); }
++@media (min-width: 800px) { .statgrid { grid-template-columns: 2fr 1fr 1fr 1fr; } .statgrid .big { grid-column: auto; } }
++.rel-h { margin: 40px 0 14px; font-size: 1.25rem; font-weight: 800; }
++.rels { list-style: none; margin: 0; padding: 4px 0; }
++.rels li { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; padding: 14px 22px; border-top: 1px solid var(--line); }
++.rels li:first-child { border-top: 0; }
++.rels a { font-weight: 800; text-decoration: none; }
++.rels a:hover { color: var(--amber); }
++.rels .d { color: var(--faint); font-size: 0.92rem; }
++.rels .c { margin-left: auto; color: var(--amber); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
++
++.rv { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
++.rv.in { opacity: 1; transform: none; }
+# FIN part=1/1 files=4

@@ -12,6 +12,7 @@
 #include <android/log.h>
 #include <jni.h>
 
+#include <atomic>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -29,6 +30,9 @@ std::shared_ptr<discordpp::Client> g_client;
 std::mutex g_mutex;
 std::string g_result;  // kosong = belum ada hasil baru
 std::string g_log;
+
+// true bila SDK mencatat bahwa koneksi ke aplikasi Discord terputus (dibaca dan dikosongkan oleh Kotlin).
+std::atomic<bool> g_dropped{false};
 
 void AppendLog(const std::string& line) {
     std::lock_guard<std::mutex> lock(g_mutex);
@@ -91,6 +95,7 @@ Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeInit(JNIEnv*, jobject,
         client->AddLogCallback(
             [](std::string message, discordpp::LoggingSeverity severity) {
                 __android_log_print(ANDROID_LOG_INFO, kTag, "[%s] %s", SeverityName(severity), message.c_str());
+                if (message.find("connection closed") != std::string::npos) g_dropped.store(true);
                 AppendLog(std::string("[") + SeverityName(severity) + "] " + message);
             },
             discordpp::LoggingSeverity::Warning);
@@ -175,6 +180,11 @@ Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeShutdown(JNIEnv*, jobj
 JNIEXPORT jbyteArray JNICALL
 Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeTakeResult(JNIEnv* env, jobject) {
     return StringToBytes(env, TakeString(g_result));
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeTakeDropped(JNIEnv*, jobject) {
+    return g_dropped.exchange(false) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jbyteArray JNICALL

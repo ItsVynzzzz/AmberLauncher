@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
-import android.os.Looper
 import android.os.Process
 import android.os.SystemClock
 import com.israadev.nuxlauncher.BuildConfig
@@ -24,25 +23,55 @@ object NativeDiscord {
     external fun nativeShutdown()
     external fun nativeTakeResult(): ByteArray
     external fun nativeTakeLog(): ByteArray
+    external fun nativeTakeDropped(): Boolean
 }
 
-/** Isi Rich Presence yang ditampilkan di profil Discord. [startMs] <= 0 berarti tanpa penghitung waktu. */
-data class PresenceInfo(val details: String, val state: String, val startMs: Long)
+/** Penghubung [PresenceEngine] ke kode native; library jembatan baru dimuat saat pertama dibutuhkan. */
+private object NativeBackend : PresenceBackend {
+    private var loaded = false
+
+    override fun init(appId: Long): Boolean {
+        if (!loaded) {
+            System.loadLibrary("amber_discord")
+            loaded = true
+        }
+        return NativeDiscord.nativeInit(appId)
+    }
+
+    override fun update(details: String, state: String, startMs: Long): Boolean =
+        NativeDiscord.nativeUpdate(details.toByteArray(Charsets.UTF_8), state.toByteArray(Charsets.UTF_8), startMs)
+
+    override fun clear() = NativeDiscord.nativeClear()
+    override fun tick() = NativeDiscord.nativeTick()
+    override fun shutdown() = NativeDiscord.nativeShutdown()
+    override fun takeResult(): String = String(NativeDiscord.nativeTakeResult(), Charsets.UTF_8)
+    override fun takeLog(): String = String(NativeDiscord.nativeTakeLog(), Charsets.UTF_8)
+    override fun takeDropped(): Boolean = NativeDiscord.nativeTakeDropped()
+}
+
+private class HandlerScheduler(private val handler: Handler) : PresenceScheduler {
+    override fun now(): Long = SystemClock.elapsedRealtime()
+    override fun postDelayed(task: Runnable, delayMs: Long) {
+        handler.postDelayed(task, delayMs)
+    }
+
+    override fun cancel(task: Runnable) = handler.removeCallbacks(task)
+    override fun cancelAll() = handler.removeCallbacksAndMessages(null)
+}
 
 /**
  * Discord Rich Presence lewat Discord Social SDK resmi, TANPA login: presence dikirim ke aplikasi Discord
  * yang terpasang di HP ini. Tidak ada token atau password akun Discord yang dipakai.
  *
- * Dirancang ringan untuk HP lemah:
- *  - SDK-nya opsional. Tanpa app/libs/discord_partner_sdk.aar saat build, [supported] tetap false dan semua
- *    fungsi di sini tidak melakukan apa-apa.
+ * Logika menjaga presence tetap tampil (mengirim ulang, jeda hemat, pemulihan saat koneksi putus) ada di
+ * [PresenceEngine]; di sini hanya bagian Android: SDK opsional, satu thread kerja berprioritas latar belakang,
+ * dan penutupan rapi.
+ *
+ * Hemat untuk HP lemah:
+ *  - Tanpa app/libs/discord_partner_sdk.aar saat build, [supported] tetap false dan semua fungsi di sini
+ *    tidak melakukan apa-apa.
  *  - Tanpa aplikasi Discord di HP, tidak ada thread dan tidak ada library yang dimuat.
- *  - Satu thread kerja berprioritas latar belakang. Waktu bermain dihitung oleh Discord sendiri dari
- *    [PresenceInfo.startMs], jadi tidak ada pembaruan berkala.
- *  - Callback SDK dijalankan tiap [TICK_FAST_MS] hanya sampai presence pertama berhasil, sesudahnya cukup
- *    tiap [TICK_SLOW_MS]. Bila presence tak kunjung berhasil dalam [GIVE_UP_MS] (mis. Discord belum login),
- *    semuanya dihentikan dan thread ditutup.
- *  - Sesudah [stopBlocking] atau menyerah, thread kerja ditutup dan klien SDK dilepas.
+ *  - Setelah [stopBlocking], [stop], atau bila presence berhenti dengan sendirinya, thread kerja ditutup.
  *
  * Semua panggilan ke SDK dikerjakan satu thread (HandlerThread) karena SDK mengharapkan callback-nya
  * dijalankan dari thread yang sama.
@@ -53,34 +82,16 @@ object DiscordPresence {
 
     private const val TAG = "Discord"
     private const val DISCORD_PACKAGE = "com.discord"
-    private const val TICK_FAST_MS = 500L
-    private const val TICK_SLOW_MS = 5_000L
-    private const val GIVE_UP_MS = 60_000L
-
-    /** Discord membatasi seberapa sering presence boleh diganti; pembaruan yang lebih rapat ditunda. */
-    private const val MIN_GAP_MS = 15_000L
 
     /** true kalau SDK Discord ikut terpasang di build ini dan aplikasi Discord ada di HP ini. */
     @Volatile
     var supported = false
         private set
 
-    private var libLoaded = false
+    private class Worker(val thread: HandlerThread, val handler: Handler, val engine: PresenceEngine)
 
     @Volatile
-    private var handler: Handler? = null
-
-    // --- keadaan di bawah ini hanya disentuh dari thread kerja
-    private var initialized = false
-    private var wanted: PresenceInfo? = null
-    private var dirty = false
-    private var lastSentAt = 0L
-    private var firstSentAt = 0L
-    private var settled = false
-    private var lastResult = ""
-
-    private val tickTask = Runnable { tick() }
-    private val flushTask = Runnable { flush() }
+    private var worker: Worker? = null
 
     /**
      * Dipanggil dari activity yang menjalankan game. SDK perlu Activity untuk mengenali aplikasi ini, dan kelas
@@ -115,11 +126,8 @@ object DiscordPresence {
             return
         }
         if (info != null) LauncherLog.i(TAG, "Presence diminta: ${info.details} / ${info.state}")
-        ensureHandler().post {
-            wanted = info
-            dirty = true
-            flush()
-        }
+        val w = ensureWorker()
+        w.handler.post { w.engine.update(info) }
     }
 
     /**
@@ -127,8 +135,30 @@ object DiscordPresence {
      * (mis. game dibuka), supaya peralihan layar tidak tertahan.
      */
     fun stop() {
-        val h = handler ?: return
-        h.post { shutdown() }
+        val w = worker ?: return
+        w.handler.post { w.engine.stop() }
+    }
+
+    /**
+     * Menghapus presence, melepas klien SDK, dan menutup thread kerja. Menunggu sampai [timeoutMs] supaya
+     * selesai sebelum proses game dimatikan; bila tidak pernah dipakai langsung kembali.
+     */
+    fun stopBlocking(timeoutMs: Long = 800L) {
+        val w = worker ?: return
+        val done = CountDownLatch(1)
+        val posted = w.handler.post {
+            try {
+                w.engine.stop()
+            } finally {
+                done.countDown()
+            }
+        }
+        if (!posted) return
+        try {
+            done.await(timeoutMs, TimeUnit.MILLISECONDS)
+        } catch (_: InterruptedException) {
+            Thread.currentThread().interrupt()
+        }
     }
 
     /**
@@ -148,28 +178,6 @@ object DiscordPresence {
             update(gamePresence(mcVersion, "horizon", System.currentTimeMillis()))
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Mesin Rust: presence gagal dinyalakan: ${e.message}", e)
-        }
-    }
-
-    /**
-     * Menghapus presence, melepas klien SDK, dan menutup thread kerja. Menunggu sampai [timeoutMs] supaya
-     * selesai sebelum proses game dimatikan; bila tidak pernah dipakai langsung kembali.
-     */
-    fun stopBlocking(timeoutMs: Long = 800L) {
-        val h = handler ?: return
-        val done = CountDownLatch(1)
-        val posted = h.post {
-            try {
-                shutdown()
-            } finally {
-                done.countDown()
-            }
-        }
-        if (!posted) return
-        try {
-            done.await(timeoutMs, TimeUnit.MILLISECONDS)
-        } catch (_: InterruptedException) {
-            Thread.currentThread().interrupt()
         }
     }
 
@@ -200,125 +208,29 @@ object DiscordPresence {
     }
 
     @Synchronized
-    private fun ensureHandler(): Handler {
-        handler?.let { return it }
+    private fun ensureWorker(): Worker {
+        worker?.let { return it }
         val thread = HandlerThread("amber-discord", Process.THREAD_PRIORITY_BACKGROUND)
         thread.start()
-        val h = Handler(thread.looper)
-        handler = h
-        return h
+        val handler = Handler(thread.looper)
+        val engine = PresenceEngine(
+            backend = NativeBackend,
+            scheduler = HandlerScheduler(handler),
+            appId = APP_ID,
+            log = { LauncherLog.i(TAG, it) },
+            warn = { message, error -> LauncherLog.w(TAG, message, error) },
+            onFinished = { finishWorker(thread) }
+        )
+        val w = Worker(thread, handler, engine)
+        worker = w
+        return w
     }
 
-    // ------------------------------------------------------------ di thread kerja
-
-    private fun flush() {
-        val h = handler ?: return
-        if (!dirty) return
-        val info = wanted
-        val now = SystemClock.elapsedRealtime()
-        if (info != null && lastSentAt != 0L && now - lastSentAt < MIN_GAP_MS) {
-            h.removeCallbacks(flushTask)
-            h.postDelayed(flushTask, MIN_GAP_MS - (now - lastSentAt))
-            return
+    /** Dipanggil dari thread kerja saat engine berhenti total: lepaskan referensi dan tutup thread-nya. */
+    private fun finishWorker(thread: HandlerThread) {
+        synchronized(this) {
+            if (worker?.thread === thread) worker = null
         }
-        dirty = false
-        try {
-            if (info == null) {
-                if (initialized) NativeDiscord.nativeClear()
-            } else {
-                if (!libLoaded) {
-                    System.loadLibrary("amber_discord")
-                    libLoaded = true
-                }
-                if (!initialized) {
-                    initialized = NativeDiscord.nativeInit(APP_ID)
-                    if (!initialized) {
-                        drain()
-                        giveUp("klien SDK gagal dibuat")
-                        return
-                    }
-                    LauncherLog.i(TAG, "Klien SDK dibuat")
-                    firstSentAt = now
-                    h.removeCallbacks(tickTask)
-                    h.postDelayed(tickTask, TICK_FAST_MS)
-                }
-                val sent = NativeDiscord.nativeUpdate(
-                    fit(info.details).toByteArray(Charsets.UTF_8),
-                    fit(info.state).toByteArray(Charsets.UTF_8),
-                    info.startMs
-                )
-                if (!sent) LauncherLog.w(TAG, "Presence tidak terkirim ke SDK")
-            }
-            lastSentAt = now
-        } catch (e: Throwable) {
-            LauncherLog.w(TAG, "Discord RPC dihentikan: ${e.message}", e)
-            giveUp("galat: ${e.javaClass.simpleName}")
-        }
-    }
-
-    private fun tick() {
-        val h = handler ?: return
-        if (!initialized) return
-        try {
-            NativeDiscord.nativeTick()
-            drain()
-            if (lastResult == "ok") settled = true
-            if (!settled && SystemClock.elapsedRealtime() - firstSentAt > GIVE_UP_MS) {
-                giveUp("presence tidak berhasil dalam ${GIVE_UP_MS / 1000} detik (Discord belum login?)")
-                return
-            }
-        } catch (e: Throwable) {
-            LauncherLog.w(TAG, "Discord RPC dihentikan: ${e.message}", e)
-            giveUp("galat: ${e.javaClass.simpleName}")
-            return
-        }
-        h.postDelayed(tickTask, if (settled) TICK_SLOW_MS else TICK_FAST_MS)
-    }
-
-    private fun giveUp(reason: String) {
-        LauncherLog.i(TAG, "Discord RPC berhenti: $reason")
-        shutdown()
-    }
-
-    private fun shutdown() {
-        handler?.removeCallbacksAndMessages(null)
-        try {
-            if (initialized) {
-                NativeDiscord.nativeShutdown()
-                drain()
-            }
-        } catch (e: Throwable) {
-            LauncherLog.w(TAG, "Discord RPC gagal ditutup rapi: ${e.message}", e)
-        }
-        initialized = false
-        wanted = null
-        dirty = false
-        lastSentAt = 0L
-        firstSentAt = 0L
-        settled = false
-        lastResult = ""
-        synchronized(this) { handler = null }
-        Looper.myLooper()?.quitSafely()
-    }
-
-    /** Memindahkan hasil terakhir dan log SDK ke log launcher (hanya yang baru atau berubah). */
-    private fun drain() {
-        val result = String(NativeDiscord.nativeTakeResult(), Charsets.UTF_8)
-        if (result.isNotEmpty() && result != lastResult) {
-            lastResult = result
-            LauncherLog.i(TAG, "Presence: $result")
-        }
-        val log = String(NativeDiscord.nativeTakeLog(), Charsets.UTF_8)
-        if (log.isNotBlank()) {
-            for (line in log.lineSequence()) if (line.isNotBlank()) LauncherLog.w(TAG, line)
-        }
-    }
-
-    /** Discord menerima teks 2 sampai 128 karakter. */
-    private fun fit(text: String): String {
-        var t = text.replace('\n', ' ').trim()
-        if (t.length > 100) t = t.take(100)
-        if (t.isNotEmpty() && Character.isHighSurrogate(t.last())) t = t.dropLast(1)
-        return if (t.length < 2) "Minecraft" else t
+        thread.looper.quitSafely()
     }
 }

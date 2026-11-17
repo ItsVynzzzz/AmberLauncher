@@ -11,8 +11,14 @@ pemain tidak ikut dikirim.
 - Kode: `discord/DiscordPresence.kt` (satu thread kerja berprioritas latar belakang), jembatan JNI
   `cpp/discord_bridge.cpp`, dan `cpp/CMakeLists.txt` (64-bit) atau `cpp/amber_discord.mk` (32-bit, ndk-build).
 - Hemat: tanpa aplikasi Discord di HP, tidak ada thread dan tidak ada library yang dimuat. Waktu bermain dihitung
-  Discord sendiri, jadi tidak ada pembaruan berkala. Callback SDK berjalan tiap 0,5 detik sampai presence pertama
-  berhasil, lalu tiap 5 detik. Bila tak berhasil dalam 60 detik (mis. Discord belum login), semuanya dihentikan.
+  Discord sendiri dari waktu mulai, jadi tidak ada pembaruan untuk itu.
+- Bertahan lama (`discord/DiscordPresenceEngine.kt`, diuji dengan waktu virtual): koneksi ke aplikasi Discord sering gagal
+  saat game baru dibuka dan bisa putus di tengah sesi, dan presence yang hanya dikirim sekali ikut hilang. Karena itu
+  presence dikirim ulang tiap 15 detik sampai Discord menjawab ok, dikirim ulang segera bila SDK melaporkan koneksi putus,
+  dan dikirim ulang tiap 5 menit sebagai jaring pengaman. Callback SDK berjalan tiap 1 detik.
+- Hemat saat Discord tidak ada: bila tak tersambung dalam 3 menit, klien SDK dilepas sama sekali (tanpa thread SDK
+  dan tanpa percobaan sambung) lalu dicoba lagi 10 menit kemudian, jadi Discord yang mati tidak dibangunkan terus-menerus
+  saat game butuh memori. Presence tetap menyusul begitu Discord siap.
 - Application ID (bukan rahasia) ada di `DiscordPresence.APP_ID`.
 
 ## Java dan mesin Rust

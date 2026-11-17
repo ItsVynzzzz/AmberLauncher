@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -41,7 +42,7 @@ object UpdateManager {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-    private val downloadClient = OkHttpClient.Builder()
+    private val downloadClient = HttpClients.base.newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .build()

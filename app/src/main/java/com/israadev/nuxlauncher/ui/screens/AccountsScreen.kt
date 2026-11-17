@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import kotlin.math.roundToInt
 import okhttp3.Request
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import com.israadev.nuxlauncher.ui.theme.amberGlass
@@ -547,7 +548,7 @@ internal fun AccountSkinPreview(
                     BitmapFactory.decodeFile(local.absolutePath)
                 } else if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
                     val req = Request.Builder().url("https://mc-heads.net/skin/${account.uuid}").build()
-                    OkHttpClient().newCall(req).execute().use { resp ->
+                    HttpClients.base.newCall(req).execute().use { resp ->
                         if (resp.isSuccessful) {
                             resp.body?.bytes()?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
                         } else null

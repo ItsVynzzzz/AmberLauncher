@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -51,7 +52,7 @@ object MicrosoftWardrobeService {
     private const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
     private const val MOJANG_SESSION_URL = "https://sessionserver.mojang.com"
 
-    private val httpClient = OkHttpClient.Builder()
+    private val httpClient = HttpClients.base.newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
         .build()

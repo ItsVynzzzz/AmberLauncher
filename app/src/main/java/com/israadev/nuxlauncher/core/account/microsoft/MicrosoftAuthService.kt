@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
@@ -33,7 +34,7 @@ object MicrosoftAuthService {
     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
 
     private val gson = Gson()
-    private val httpClient = OkHttpClient.Builder()
+    private val httpClient = HttpClients.base.newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)

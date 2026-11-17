@@ -280,5 +280,9 @@ class MainActivity : ComponentActivity() {
                 suggestedType = resolvedType
             )
         )
+        // Sudah ditangani. Bila Activity dibuat ulang (mode gelap, keyboard dicolok, ganti ukuran font), Android memberi
+        // intent yang sama; tanpa ini dialog impor yang sudah ditutup atau selesai muncul lagi.
+        intent.data = null
+        intent.removeExtra(Intent.EXTRA_STREAM)
     }
 }

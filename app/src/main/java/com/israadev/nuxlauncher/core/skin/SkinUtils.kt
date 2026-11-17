@@ -24,6 +24,7 @@ import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.models.UserAccount
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import okhttp3.Request
 import java.util.concurrent.TimeUnit
 
@@ -179,7 +180,7 @@ object SkinUtils {
         // C. If Microsoft account, fetch head from mc-heads.net
         if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
             runCatching {
-                val client = OkHttpClient()
+                val client = HttpClients.base
                 val req = Request.Builder().url("https://mc-heads.net/avatar/${account.uuid}/$targetSize").build()
                 client.newCall(req).execute().use { resp ->
                     if (resp.isSuccessful) {
@@ -206,7 +207,7 @@ object SkinUtils {
     private const val MAX_TEXTURE_BYTES = 2_000_000
 
     // Pengalihan (redirect) diikuti manual di downloadTexture supaya alamat http:// bisa dinaikkan ke https://.
-    private val textureClient = OkHttpClient.Builder()
+    private val textureClient = HttpClients.base.newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .followRedirects(false)

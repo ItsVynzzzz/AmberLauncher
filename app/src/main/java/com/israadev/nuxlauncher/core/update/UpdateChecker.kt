@@ -6,6 +6,7 @@ import com.israadev.nuxlauncher.AppLinks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import java.util.concurrent.TimeUnit
 
 /**
@@ -24,7 +25,7 @@ object UpdateChecker {
 
     private const val PER_PAGE = 10
 
-    private val client = OkHttpClient.Builder()
+    private val client = HttpClients.base.newBuilder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
         .callTimeout(30, TimeUnit.SECONDS)

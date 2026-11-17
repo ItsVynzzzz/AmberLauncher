@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
+import com.israadev.nuxlauncher.core.network.HttpClients
 import okhttp3.Request
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -14,7 +15,7 @@ object MCLogsUploader {
     private const val MAX_LOG_SIZE_BYTES = 2 * 1024 * 1024 // 2 MB limit for mclo.gs
 
     private val client by lazy {
-        OkHttpClient.Builder()
+        HttpClients.base.newBuilder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)

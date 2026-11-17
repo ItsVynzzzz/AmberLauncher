@@ -1,0 +1,1726 @@
+diff --git a/docs/site/index.html b/docs/site/index.html
+index dc38f0a..07c9335 100644
+--- a/docs/site/index.html
++++ b/docs/site/index.html
+@@ -1,185 +1,1549 @@
+-<!doctype html>
+-<html lang="id">
++<!DOCTYPE html>
++<html lang="en">
+ <head>
+-<meta charset="utf-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1">
+-<title>AmberLauncher: launcher Minecraft Java Edition untuk Android</title>
+-<meta name="description" content="Launcher Minecraft Java Edition untuk Android. Mendukung Vanilla, Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
+-<meta name="theme-color" content="#0e0d0b">
+-<link rel="canonical" href="https://itsvynzzzz.github.io/AmberLauncher/">
+-<link rel="alternate" hreflang="id" href="https://itsvynzzzz.github.io/AmberLauncher/">
+-<link rel="alternate" hreflang="en" href="https://itsvynzzzz.github.io/AmberLauncher/en/">
+-<link rel="icon" type="image/png" href="assets/icon-192.png">
+-<link rel="apple-touch-icon" href="assets/icon-192.png">
+-<link rel="preload" href="assets/gabarito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+-<meta property="og:type" content="website">
+-<meta property="og:title" content="AmberLauncher: launcher Minecraft Java Edition untuk Android">
+-<meta property="og:description" content="Launcher Minecraft Java Edition untuk Android. Mendukung Vanilla, Fabric, Forge, NeoForge, serta mod dari Modrinth dan CurseForge.">
+-<meta property="og:url" content="https://itsvynzzzz.github.io/AmberLauncher/">
+-<meta property="og:image" content="https://itsvynzzzz.github.io/AmberLauncher/assets/icon-192.png">
+-<meta name="twitter:card" content="summary">
+-<link rel="stylesheet" href="style.css?v=4">
++  <meta charset="UTF-8" />
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <meta name="theme-color" content="#07070a" />
++  <meta name="description" content="AmberLauncher — a lightweight Minecraft: Java Edition launcher for Android with Modrinth & CurseForge built in, Fabric, Forge and NeoForge support." />
++  <meta property="og:title" content="AmberLauncher — Minecraft Java on Android" />
++  <meta property="og:description" content="Lightweight dark-glass launcher with Modrinth & CurseForge built in. Free and open source (GPL-3.0)." />
++  <meta property="og:type" content="website" />
++  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L20.5 7V17L12 22L3.5 17V7Z' fill='%23f59e0b'/%3E%3C/svg%3E" />
++  <title>Amber Launcher — Minecraft Java on Android</title>
++
++  <link rel="preconnect" href="https://fonts.googleapis.com" />
++  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
++  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
++
++  <style>
++    :root {
++      --bg: #07070a;
++      --surface: rgba(20, 20, 26, 0.72);
++      --surface-elevated: rgba(28, 28, 36, 0.85);
++      --border: rgba(255, 255, 255, 0.08);
++      --border-amber: rgba(245, 158, 11, 0.42);
++      --text: #fafafa;
++      --text-muted: #a1a1aa;
++      --text-subtle: #71717a;
++      --amber: #f59e0b;
++      --amber-light: #fbbf24;
++      --orange: #ea580c;
++      --indigo: #6366f1;
++      --grad-amber: linear-gradient(135deg, #fde047 0%, #f59e0b 50%, #ea580c 100%);
++      --grad-surface: linear-gradient(160deg, rgba(32, 30, 38, 0.85) 0%, rgba(14, 14, 18, 0.92) 100%);
++      --radius-xl: 24px;
++      --radius-lg: 20px;
++      --radius-md: 14px;
++      --radius-pill: 9999px;
++    }
++
++    * {
++      box-sizing: border-box;
++      margin: 0;
++      padding: 0;
++      -webkit-tap-highlight-color: transparent;
++    }
++
++    body {
++      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
++      background-color: var(--bg);
++      color: var(--text);
++      line-height: 1.6;
++      overflow-x: hidden;
++      -webkit-font-smoothing: antialiased;
++    }
++
++    /* Multi-color Mesh Gradient Backdrop */
++    .ambient-mesh {
++      position: fixed;
++      inset: 0;
++      pointer-events: none;
++      z-index: -1;
++      background:
++        radial-gradient(ellipse 75% 45% at 50% -10%, rgba(245, 158, 11, 0.22), transparent 65%),
++        radial-gradient(ellipse 55% 40% at 85% 15%, rgba(99, 102, 241, 0.14), transparent 60%),
++        radial-gradient(ellipse 50% 40% at 15% 25%, rgba(234, 88, 12, 0.12), transparent 60%);
++    }
++
++    .container {
++      width: 100%;
++      max-width: 980px;
++      margin: 0 auto;
++      padding: 0 20px;
++    }
++
++    /* Sticky Glass Navbar */
++    header {
++      position: sticky;
++      top: 0;
++      z-index: 50;
++      background: rgba(7, 7, 10, 0.76);
++      backdrop-filter: blur(18px);
++      -webkit-backdrop-filter: blur(18px);
++      border-bottom: 1px solid var(--border);
++    }
++
++    .nav-inner {
++      height: 64px;
++      display: flex;
++      align-items: center;
++      justify-content: space-between;
++      gap: 12px;
++    }
++
++    .brand {
++      display: flex;
++      align-items: center;
++      gap: 10px;
++      text-decoration: none;
++      color: var(--text);
++      font-weight: 800;
++      font-size: 1.05rem;
++      letter-spacing: -0.02em;
++    }
++
++    .brand-icon {
++      width: 36px;
++      height: 36px;
++      border-radius: 11px;
++      background: linear-gradient(145deg, #1e1b24, #09090b);
++      border: 1px solid var(--border-amber);
++      display: grid;
++      place-items: center;
++      box-shadow: 0 0 24px rgba(245, 158, 11, 0.22);
++    }
++
++    .nav-actions {
++      display: flex;
++      align-items: center;
++      gap: 8px;
++    }
++
++    .lang-btn {
++      height: 36px;
++      padding: 0 12px;
++      border-radius: var(--radius-pill);
++      border: 1px solid var(--border);
++      background: var(--surface);
++      color: var(--text-muted);
++      font-size: 0.8rem;
++      font-weight: 600;
++      cursor: pointer;
++      transition: all 0.2s ease;
++    }
++
++    .lang-btn:hover {
++      color: var(--text);
++      border-color: rgba(255, 255, 255, 0.22);
++    }
++
++    .nav-cta {
++      height: 36px;
++      padding: 0 16px;
++      border-radius: var(--radius-pill);
++      background: var(--grad-amber);
++      color: #09090b;
++      font-size: 0.85rem;
++      font-weight: 800;
++      text-decoration: none;
++      display: inline-flex;
++      align-items: center;
++      gap: 6px;
++      box-shadow: 0 4px 18px rgba(245, 158, 11, 0.28);
++      transition: transform 0.15s ease, filter 0.2s ease;
++    }
++
++    .nav-cta:hover {
++      filter: brightness(1.08);
++      transform: translateY(-1px);
++    }
++
++    /* Hero Section */
++    .hero {
++      padding: 52px 0 36px;
++      text-align: center;
++    }
++
++    .badge {
++      display: inline-flex;
++      align-items: center;
++      gap: 8px;
++      padding: 6px 14px;
++      border-radius: var(--radius-pill);
++      background: linear-gradient(135deg, rgba(245, 158, 11, 0.14), rgba(99, 102, 241, 0.12));
++      border: 1px solid rgba(245, 158, 11, 0.3);
++      color: #fde68a;
++      font-size: 0.8rem;
++      font-weight: 600;
++      margin-bottom: 20px;
++    }
++
++    .badge-dot {
++      width: 7px;
++      height: 7px;
++      border-radius: 50%;
++      background: var(--amber-light);
++      box-shadow: 0 0 10px var(--amber);
++    }
++
++    h1 {
++      font-size: clamp(2.05rem, 6vw, 3.35rem);
++      font-weight: 800;
++      line-height: 1.13;
++      letter-spacing: -0.035em;
++      max-width: 740px;
++      margin: 0 auto 16px;
++    }
++
++    h1 span {
++      background: var(--grad-amber);
++      -webkit-background-clip: text;
++      -webkit-text-fill-color: transparent;
++    }
++
++    .hero-sub {
++      color: var(--text-muted);
++      font-size: clamp(0.98rem, 2.5vw, 1.12rem);
++      max-width: 570px;
++      margin: 0 auto 28px;
++    }
++
++    .hero-buttons {
++      display: flex;
++      flex-direction: column;
++      gap: 12px;
++      max-width: 420px;
++      margin: 0 auto 44px;
++    }
++
++    @media (min-width: 540px) {
++      .hero-buttons {
++        flex-direction: row;
++        justify-content: center;
++      }
++    }
++
++    .btn-primary,
++    .btn-secondary {
++      min-height: 50px;
++      padding: 0 24px;
++      border-radius: var(--radius-pill);
++      font-size: 0.95rem;
++      font-weight: 800;
++      text-decoration: none;
++      display: inline-flex;
++      align-items: center;
++      justify-content: center;
++      gap: 8px;
++      transition: all 0.2s ease;
++      flex: 1;
++      cursor: pointer;
++    }
++
++    .btn-primary {
++      background: var(--grad-amber);
++      color: #09090b;
++      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.28);
++    }
++
++    .btn-primary:hover {
++      transform: translateY(-2px);
++      filter: brightness(1.06);
++      box-shadow: 0 14px 36px rgba(245, 158, 11, 0.38);
++    }
++
++    .btn-secondary {
++      background: var(--surface);
++      color: var(--text);
++      border: 1px solid var(--border);
++      backdrop-filter: blur(12px);
++    }
++
++    .btn-secondary:hover {
++      background: var(--surface-elevated);
++      border-color: rgba(255, 255, 255, 0.2);
++    }
++
++    /* Screenshot Showcase (Replaces Play Button Mockup) */
++    .showcase-card {
++      max-width: 780px;
++      margin: 0 auto;
++      border-radius: var(--radius-xl);
++      padding: 16px;
++      background:
++        linear-gradient(165deg, rgba(24, 24, 32, 0.92), rgba(11, 11, 15, 0.96)) padding-box,
++        linear-gradient(135deg, rgba(245, 158, 11, 0.42), rgba(99, 102, 241, 0.25), rgba(255, 255, 255, 0.08)) border-box;
++      border: 1px solid transparent;
++      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.72);
++      text-align: left;
++    }
++
++    .showcase-tabs {
++      display: flex;
++      gap: 8px;
++      overflow-x: auto;
++      padding-bottom: 14px;
++      scrollbar-width: none;
++    }
++
++    .showcase-tabs::-webkit-scrollbar {
++      display: none;
++    }
++
++    .tab-pill {
++      padding: 7px 14px;
++      border-radius: var(--radius-pill);
++      border: 1px solid var(--border);
++      background: rgba(255, 255, 255, 0.03);
++      color: var(--text-muted);
++      font-size: 0.82rem;
++      font-weight: 600;
++      white-space: nowrap;
++      cursor: pointer;
++      transition: all 0.2s ease;
++    }
++
++    .tab-pill.active {
++      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(234, 88, 12, 0.18));
++      border-color: rgba(245, 158, 11, 0.5);
++      color: #fde68a;
++    }
++
++    .screen-viewport {
++      position: relative;
++      width: 100%;
++      aspect-ratio: 20 / 9;
++      border-radius: 22px;
++      overflow: hidden;
++      background: #08080b;
++      touch-action: pan-y;
++    }
++
++    .screen-slide {
++      display: none;
++      width: 100%;
++      height: 100%;
++    }
++
++    .screen-slide.active {
++      display: block;
++      animation: fadeIn 0.25s ease;
++    }
++
++    @keyframes fadeIn {
++      from { opacity: 0.4; transform: scale(0.99); }
++      to { opacity: 1; transform: scale(1); }
++    }
++
++    .screen-slide img {
++      position: absolute;
++      inset: 0;
++      z-index: 1;
++      width: 100%;
++      height: 100%;
++      object-fit: contain;
++      opacity: 0;
++      transition: opacity 0.35s ease;
++      user-select: none;
++    }
++
++    /* Clean Placeholder if image hasn't been uploaded to repo yet */
++    .screen-placeholder {
++      width: 100%;
++      height: 100%;
++      padding: 24px;
++      display: flex;
++      flex-direction: column;
++      align-items: center;
++      justify-content: center;
++      text-align: center;
++      background:
++        radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.14), transparent 50%),
++        radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.16), transparent 50%);
++      gap: 8px;
++    }
++
++    .screen-placeholder strong {
++      font-size: 0.98rem;
++      color: var(--text);
++    }
++
++    .screen-placeholder code {
++      font-size: 0.78rem;
++      padding: 4px 10px;
++      border-radius: 8px;
++      background: rgba(255, 255, 255, 0.06);
++      border: 1px solid var(--border);
++      color: var(--amber-light);
++    }
++
++    .showcase-caption {
++      margin-top: 12px;
++      display: flex;
++      align-items: center;
++      justify-content: space-between;
++      gap: 10px;
++      font-size: 0.82rem;
++      color: var(--text-muted);
++    }
++
++    /* Section Headings */
++    section {
++      padding: 44px 0;
++    }
++
++    .section-head {
++      margin-bottom: 24px;
++    }
++
++    .section-eyebrow {
++      font-size: 0.78rem;
++      font-weight: 700;
++      text-transform: uppercase;
++      letter-spacing: 0.08em;
++      background: var(--grad-amber);
++      -webkit-background-clip: text;
++      -webkit-text-fill-color: transparent;
++      margin-bottom: 6px;
++      display: inline-block;
++    }
++
++    h2 {
++      font-size: clamp(1.5rem, 4vw, 2rem);
++      font-weight: 800;
++      letter-spacing: -0.025em;
++    }
++
++    /* Direct APK Download Section (Matches Uploaded Reference UI) */
++    #download {
++      scroll-margin-top: 76px;
++    }
++
++    .download-wrap {
++      max-width: 680px;
++      margin: 0 auto;
++    }
++
++    .download-header {
++      margin-bottom: 22px;
++    }
++
++    .download-header h2 {
++      font-size: clamp(1.75rem, 5vw, 2.25rem);
++      margin-bottom: 6px;
++    }
++
++    .download-header p {
++      color: var(--text-muted);
++      font-size: 0.98rem;
++    }
++
++    .release-meta-pill {
++      display: inline-flex;
++      align-items: center;
++      gap: 8px;
++      margin-top: 12px;
++      padding: 5px 12px;
++      border-radius: var(--radius-pill);
++      background: rgba(255, 255, 255, 0.04);
++      border: 1px solid var(--border);
++      font-size: 0.78rem;
++      color: var(--text-muted);
++    }
++
++    .apk-cards {
++      display: flex;
++      flex-direction: column;
++      gap: 16px;
++    }
++
++    .apk-card {
++      border-radius: var(--radius-xl);
++      padding: 24px;
++      background: var(--grad-surface);
++      border: 1px solid var(--border);
++      transition: transform 0.2s ease, border-color 0.2s ease;
++    }
++
++    .apk-card.suggested {
++      background:
++        linear-gradient(160deg, rgba(34, 28, 20, 0.88) 0%, rgba(16, 16, 20, 0.95) 100%) padding-box,
++        linear-gradient(135deg, rgba(251, 191, 36, 0.55), rgba(234, 88, 12, 0.35), rgba(255, 255, 255, 0.08)) border-box;
++      border: 1px solid transparent;
++      box-shadow: 0 18px 44px rgba(245, 158, 11, 0.1);
++    }
++
++    .apk-tag {
++      font-size: 0.82rem;
++      font-weight: 700;
++      color: var(--amber-light);
++      margin-bottom: 6px;
++      display: block;
++    }
++
++    .apk-card h3 {
++      font-size: 1.32rem;
++      font-weight: 800;
++      letter-spacing: -0.02em;
++      margin-bottom: 8px;
++    }
++
++    .apk-card p {
++      color: var(--text-muted);
++      font-size: 0.92rem;
++      line-height: 1.55;
++      margin-bottom: 20px;
++    }
++
++    .apk-btn-64 {
++      width: 100%;
++      min-height: 52px;
++      border: none;
++      border-radius: var(--radius-pill);
++      background: linear-gradient(135deg, #ffffff 0%, #fef3c7 100%);
++      color: #09090b;
++      font-family: inherit;
++      font-size: 0.98rem;
++      font-weight: 800;
++      cursor: pointer;
++      display: inline-flex;
++      align-items: center;
++      justify-content: center;
++      gap: 8px;
++      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.12);
++      transition: transform 0.15s ease, box-shadow 0.2s ease;
++    }
++
++    .apk-btn-64:hover {
++      transform: translateY(-1px);
++      box-shadow: 0 12px 28px rgba(251, 191, 36, 0.22);
++    }
++
++    .apk-btn-32 {
++      width: 100%;
++      min-height: 52px;
++      border-radius: var(--radius-pill);
++      background: rgba(255, 255, 255, 0.02);
++      border: 1px solid rgba(255, 255, 255, 0.18);
++      color: var(--text);
++      font-family: inherit;
++      font-size: 0.98rem;
++      font-weight: 700;
++      cursor: pointer;
++      display: inline-flex;
++      align-items: center;
++      justify-content: center;
++      gap: 8px;
++      transition: all 0.2s ease;
++    }
++
++    .apk-btn-32:hover:not(:disabled) {
++      background: rgba(255, 255, 255, 0.07);
++      border-color: rgba(255, 255, 255, 0.32);
++    }
++
++    .apk-btn-32:disabled {
++      opacity: 0.45;
++      cursor: not-allowed;
++    }
++
++    .apk-size-badge {
++      font-size: 0.8rem;
++      font-weight: 600;
++      opacity: 0.72;
++    }
++
++    .download-status {
++      margin-top: 14px;
++      text-align: center;
++      font-size: 0.83rem;
++      color: var(--text-muted);
++      min-height: 22px;
++    }
++
++    .download-status a {
++      color: var(--amber-light);
++      text-decoration: underline;
++    }
++
++    /* 3-Step Quick Start */
++    .steps-grid {
++      display: grid;
++      grid-template-columns: 1fr;
++      gap: 14px;
++    }
++
++    @media (min-width: 720px) {
++      .steps-grid {
++        grid-template-columns: repeat(3, 1fr);
++      }
++    }
++
++    .step-card {
++      background: var(--grad-surface);
++      border: 1px solid var(--border);
++      border-radius: var(--radius-lg);
++      padding: 20px;
++      display: flex;
++      flex-direction: column;
++      gap: 8px;
++    }
++
++    .step-num {
++      width: 30px;
++      height: 30px;
++      border-radius: 9px;
++      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(234, 88, 12, 0.16));
++      border: 1px solid rgba(245, 158, 11, 0.35);
++      color: var(--amber-light);
++      font-size: 0.84rem;
++      font-weight: 800;
++      display: grid;
++      place-items: center;
++    }
++
++    .step-card h3 {
++      font-size: 1.02rem;
++      font-weight: 700;
++    }
++
++    .step-card p {
++      font-size: 0.9rem;
++      color: var(--text-muted);
++    }
++
++    /* Features Grid */
++    .features-grid {
++      display: grid;
++      grid-template-columns: 1fr;
++      gap: 14px;
++    }
++
++    @media (min-width: 640px) {
++      .features-grid {
++        grid-template-columns: repeat(2, 1fr);
++      }
++    }
++
++    @media (min-width: 900px) {
++      .features-grid {
++        grid-template-columns: repeat(3, 1fr);
++      }
++    }
++
++    .feature-card {
++      background: var(--grad-surface);
++      border: 1px solid var(--border);
++      border-radius: var(--radius-lg);
++      padding: 22px;
++      transition: border-color 0.2s ease, transform 0.2s ease;
++    }
++
++    .feature-card:hover {
++      border-color: var(--border-amber);
++      transform: translateY(-2px);
++    }
++
++    .feature-icon {
++      width: 42px;
++      height: 42px;
++      border-radius: 12px;
++      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(99, 102, 241, 0.12));
++      border: 1px solid rgba(245, 158, 11, 0.22);
++      color: var(--amber-light);
++      display: grid;
++      place-items: center;
++      margin-bottom: 14px;
++    }
++
++    .feature-card h3 {
++      font-size: 1.02rem;
++      font-weight: 700;
++      margin-bottom: 6px;
++    }
++
++    .feature-card p {
++      font-size: 0.88rem;
++      color: var(--text-muted);
++      line-height: 1.55;
++    }
++
++    /* FAQ Accordion */
++    .faq-list {
++      display: flex;
++      flex-direction: column;
++      gap: 10px;
++    }
++
++    details {
++      background: var(--grad-surface);
++      border: 1px solid var(--border);
++      border-radius: var(--radius-md);
++      padding: 16px 18px;
++      transition: border-color 0.2s ease;
++    }
++
++    details[open] {
++      border-color: var(--border-amber);
++    }
++
++    summary {
++      list-style: none;
++      cursor: pointer;
++      font-weight: 600;
++      font-size: 0.96rem;
++      display: flex;
++      align-items: center;
++      justify-content: space-between;
++      gap: 12px;
++      min-height: 28px;
++    }
++
++    summary::-webkit-details-marker {
++      display: none;
++    }
++
++    summary::after {
++      content: '+';
++      font-size: 1.25rem;
++      color: var(--amber);
++      font-weight: 500;
++      transition: transform 0.2s ease;
++    }
++
++    details[open] summary::after {
++      transform: rotate(45deg);
++    }
++
++    details p {
++      margin-top: 10px;
++      font-size: 0.9rem;
++      color: var(--text-muted);
++      padding-top: 10px;
++      border-top: 1px solid var(--border);
++    }
++
++    /* Bottom CTA & Community */
++    .cta-box {
++      background:
++        linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(99, 102, 241, 0.1), rgba(20, 20, 26, 0.94)) padding-box,
++        linear-gradient(135deg, rgba(245, 158, 11, 0.45), rgba(99, 102, 241, 0.3)) border-box;
++      border: 1px solid transparent;
++      border-radius: var(--radius-xl);
++      padding: 32px 24px;
++      text-align: center;
++    }
++
++    .cta-box h2 {
++      margin-bottom: 8px;
++    }
++
++    .cta-box p {
++      color: var(--text-muted);
++      max-width: 480px;
++      margin: 0 auto 22px;
++      font-size: 0.94rem;
++    }
++
++    .support-links {
++      display: flex;
++      flex-wrap: wrap;
++      justify-content: center;
++      gap: 10px;
++      margin-top: 18px;
++    }
++
++    .chip-link {
++      padding: 8px 14px;
++      border-radius: var(--radius-pill);
++      background: rgba(255, 255, 255, 0.05);
++      border: 1px solid var(--border);
++      color: var(--text-muted);
++      font-size: 0.82rem;
++      font-weight: 600;
++      text-decoration: none;
++      transition: all 0.2s ease;
++    }
++
++    .chip-link:hover {
++      color: var(--text);
++      border-color: var(--border-amber);
++    }
++
++    /* Footer */
++    footer {
++      border-top: 1px solid var(--border);
++      padding: 28px 0 40px;
++      margin-top: 24px;
++      text-align: center;
++      color: var(--text-subtle);
++      font-size: 0.82rem;
++    }
++
++    footer p + p {
++      margin-top: 6px;
++    }
++
++    /* ---- Polish: accessibility, device frame, gallery, credits ---- */
++    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
++    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
++    section[id] { scroll-margin-top: 76px; }
++    :focus-visible { outline: 2px solid var(--amber-light); outline-offset: 3px; }
++    .lang-btn b { color: var(--amber-light); }
++    .download-req { margin-top: 8px; font-size: 0.84rem; color: var(--text-subtle); }
++    .section-sub { margin-top: 8px; max-width: 660px; color: var(--text-muted); font-size: 0.94rem; }
++
++    .device {
++      position: relative;
++      padding: 9px;
++      border-radius: 30px;
++      background: linear-gradient(145deg, #36333f, #0b0b0f 62%);
++      border: 1px solid rgba(255, 255, 255, 0.16);
++      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(245, 158, 11, 0.1);
++    }
++    .screen-slide { position: relative; }
++    .screen-slide.loaded img { opacity: 1; }
++    .screen-slide.loaded .screen-placeholder { display: none; }
++    .screen-placeholder svg { color: var(--amber-light); opacity: 0.8; margin-bottom: 4px; }
++    .screen-placeholder span { font-size: 0.84rem; color: var(--text-muted); }
++    .shot-nav {
++      position: absolute;
++      top: 50%;
++      width: 40px;
++      height: 40px;
++      margin-top: -20px;
++      z-index: 3;
++      border-radius: 50%;
++      border: 1px solid rgba(255, 255, 255, 0.18);
++      background: rgba(10, 10, 14, 0.6);
++      backdrop-filter: blur(10px);
++      -webkit-backdrop-filter: blur(10px);
++      color: #fff;
++      font-size: 1.5rem;
++      line-height: 1;
++      cursor: pointer;
++      opacity: 0.85;
++      transition: opacity 0.2s ease, border-color 0.2s ease;
++    }
++    .shot-nav:hover { opacity: 1; border-color: var(--border-amber); }
++    .shot-nav.prev { left: 22px; }
++    .shot-nav.next { right: 22px; }
++    .counter { color: var(--amber-light); font-weight: 700; white-space: nowrap; }
++    @media (max-width: 480px) { .device { padding: 6px; border-radius: 22px; } .screen-viewport { border-radius: 16px; } .shot-nav { width: 34px; height: 34px; margin-top: -17px; font-size: 1.25rem; } .shot-nav.prev { left: 12px; } .shot-nav.next { right: 12px; } }
++
++    .credit-h { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); margin: 24px 0 10px; }
++    .credit-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
++    @media (min-width: 640px) { .credit-grid { grid-template-columns: repeat(2, 1fr); } }
++    .credit-item {
++      display: flex; align-items: center; justify-content: space-between; gap: 12px;
++      padding: 13px 16px; border-radius: var(--radius-md);
++      background: var(--grad-surface); border: 1px solid var(--border);
++      color: inherit; text-decoration: none; transition: border-color 0.2s ease, transform 0.2s ease;
++    }
++    .credit-item:hover { border-color: var(--border-amber); transform: translateY(-1px); }
++    .credit-item b { display: block; font-size: 0.92rem; font-weight: 700; }
++    .credit-item small { color: var(--text-muted); font-size: 0.78rem; }
++    .lic {
++      flex-shrink: 0; padding: 3px 9px; border-radius: var(--radius-pill);
++      font-size: 0.7rem; font-weight: 700; color: #fde68a;
++      background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3);
++    }
++    .thanks { justify-content: flex-start; margin-top: 0; }
++    .notice {
++      margin-top: 24px; padding: 16px 18px; border-radius: var(--radius-md);
++      background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.22);
++      color: var(--text-muted); font-size: 0.84rem; line-height: 1.65;
++    }
++    .notice strong { color: #fde68a; }
++    footer .support-links { margin: 12px 0 14px; }
++  </style>
+ </head>
+ <body>
+-<a class="skip" href="#isi">Lewati ke isi</a>
+-
+-<header class="top">
+-  <div class="wrap">
+-    <a class="brand" href="https://itsvynzzzz.github.io/AmberLauncher/"><img src="assets/icon-192.png" width="34" height="34" alt="">AmberLauncher</a>
+-    <nav class="nav" aria-label="Menu"><a href="#unduh">Unduh</a><a href="#mulai">Cara mulai</a><a href="#fitur">Fitur</a><a href="#bantuan">Bantuan</a><a href="#kredit">Kredit</a></nav>
+-    <div class="end">
+-      <a class="pill" href="en/" hreflang="en" lang="en">English</a>
+-      <a class="pill" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub <span class="stars" id="nav-stars"></span></a>
+-    </div>
+-  </div>
+-</header>
+-
+-<main id="isi">
+-  <section class="hero">
+-    <div class="wrap hero-grid">
+-      <div>
+-        <a class="badge" href="#statistik"><i></i><span id="hero-badge">Gratis dan open source</span></a>
+-        <h1>Minecraft Java,<br><em>langsung di Android.</em></h1>
+-        <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Buat instance, pasang mod dari Modrinth atau CurseForge, lalu main.</p>
+-        <div class="cta" id="unduh">
+-        <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
+-          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+-          <span class="t"><span class="l1">Unduh dari GitHub</span><span class="l2">Mencari versi terbaru…</span></span>
++  <div class="ambient-mesh" aria-hidden="true"></div>
++
++  <!-- Minimalist Sticky Header -->
++  <header>
++    <div class="container nav-inner">
++      <a href="#" class="brand">
++        <span class="brand-icon" aria-hidden="true">
++          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
++            <path d="M12 2L20.5 7V17L12 22L3.5 17V7L12 2Z" stroke="#FBBF24" stroke-width="2.2" stroke-linejoin="round"/>
++            <path d="M12 7L16.5 14.5H7.5L12 7Z" fill="#F59E0B"/>
++          </svg>
++        </span>
++        <span>Amber Launcher</span>
++      </a>
++
++      <div class="nav-actions">
++        <button id="langToggle" class="lang-btn" type="button" aria-label="Switch Language">ID / EN</button>
++        <a href="#download" class="nav-cta" data-i18n="nav_download">
++          Download
+         </a>
+-        <a class="pill big" data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>HP lama (32-bit)</a>
+-        <a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a>
+       </div>
+-        <p class="status" id="dl-status" role="status"></p>
+-        <p class="note">Butuh Android 8.0 ke atas dan RAM 3 GB ke atas. <a href="#keaslian">Cek keaslian APK.</a></p>
++    </div>
++  </header>
++
++  <main class="container">
++    <!-- Hero -->
++    <section class="hero">
++      <div class="badge">
++        <span class="badge-dot"></span>
++        <span data-i18n="hero_badge">Open source • GPL-3.0 • Android 8.0+</span>
+       </div>
+-      <div class="stage" id="stage">
+-        <figure class="shot"><div class="frame"><img src="assets/shots/home.webp" width="1280" height="575" alt="Layar Home AmberLauncher" decoding="async"></div><figcaption>Layar Home AmberLauncher.</figcaption></figure>
++
++      <h1 data-i18n="hero_title">
++        Play Minecraft Java on Android, <span>Effortlessly.</span>
++      </h1>
++
++      <p class="hero-sub" data-i18n="hero_sub">A lightweight launcher with a dark amber-glass interface, Modrinth & CurseForge built in, and starting settings that adapt to your phone’s RAM.</p>
++
++      <div class="hero-buttons">
++        <a href="#download" class="btn-primary">
++          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
++            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
++            <polyline points="7 10 12 15 17 10"/>
++            <line x1="12" y1="15" x2="12" y2="3"/>
++          </svg>
++          <span data-i18n="btn_download">Download APK</span>
++        </a>
++        <a href="https://github.com/ItsVynzzzz/AmberLauncher" target="_blank" rel="noopener" class="btn-secondary">
++          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
++            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
++          </svg>
++          <span>GitHub</span>
++        </a>
+       </div>
+-    </div>
+-  </section>
+ 
+-  <div class="marquee" aria-hidden="true"><div class="track"><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span><span>Vanilla</span><span>Fabric</span><span>Forge</span><span>NeoForge</span><span>Modrinth</span><span>CurseForge</span><span>Java 8</span><span>Java 17</span><span>Java 21</span><span>Java 25</span><span>MobileGlues</span><span>GL4ES</span><span>Zink</span><span>Turnip</span><span>Controlify</span><span>Ely.by</span></div></div>
++      <!-- Interactive App Screenshot Gallery -->
++      <div class="showcase-card" aria-label="Amber Launcher screenshots">
++        <div class="showcase-tabs" role="tablist">
++          <button class="tab-pill active" type="button" data-slide="0" data-i18n="tab_home">Home Screen</button>
++          <button class="tab-pill" type="button" data-slide="1" data-i18n="tab_mods">Mod & Shader Browser</button>
++          <button class="tab-pill" type="button" data-slide="2" data-i18n="tab_controls">Controls & Settings</button>
++        </div>
+ 
+-  <section class="sec" id="tampilan">
+-    <div class="wrap">
+-      <div class="head"><h2>Tampilan</h2><p class="intro">Beberapa layar dari AmberLauncher.</p></div>
+-      <div class="shots">
+-        <figure class="shot"><div class="frame"><img src="assets/shots/glass.webp" width="1280" height="575" alt="Layar Home dengan gaya Liquid Glass" decoding="async"></div><figcaption>Gaya Liquid Glass: panel jadi kaca buram di atas wallpaper kamu (Pengaturan > Tampilan, Android 12 ke atas).</figcaption></figure>
+-        <figure class="shot"><div class="frame"><img src="assets/shots/mods.webp" width="1280" height="575" alt="Layar Mods dengan pencarian Modrinth dan CurseForge" decoding="async"></div><figcaption>Mods: cari dan pasang dari Modrinth dan CurseForge, lengkap dengan dependensinya.</figcaption></figure>
++        <div class="device">
++          <div class="screen-viewport" id="viewport" tabindex="0" aria-live="polite"></div>
++          <button type="button" class="shot-nav prev" id="prevShot" aria-label="Previous screenshot">&#8249;</button>
++          <button type="button" class="shot-nav next" id="nextShot" aria-label="Next screenshot">&#8250;</button>
++        </div>
++
++        <div class="showcase-caption">
++          <span id="slideCaption" data-i18n="cap_home">Minimal dark-glass home screen: pick an instance, download, and press PLAY.</span>
++          <span class="counter" id="slideCounter">1 / 3</span>
++        </div>
+       </div>
+-    </div>
+-  </section>
+-
+-  <section class="sec" id="statistik">
+-    <div class="wrap">
+-      <div class="head"><h2>Unduhan</h2><p class="intro">Angka diambil langsung dari GitHub Releases.</p></div>
+-      <div class="dlgrid">
+-        <div class="panel total"><span class="k">Total unduhan</span><b class="n" id="st-total">-</b><div class="mini"><span><b id="st-ver">-</b> terbaru</span><span><b id="st-stars">-</b> bintang</span><span><b>6</b> bahasa</span></div></div>
+-        <ol class="rels panel" id="rel-list" hidden></ol>
++    </section>
++
++    <!-- Direct APK Download Section (No need to open GitHub) -->
++    <section id="download">
++      <div class="download-wrap">
++        <div class="download-header">
++          <div class="section-eyebrow" data-i18n="dl_eyebrow">Direct Download</div>
++          <h2 data-i18n="dl_title">Choose an APK</h2>
++          <p data-i18n="dl_sub">If unsure, take the 64-bit one.</p>
++          <p class="download-req" data-i18n="dl_req">Android 8.0+ · 3 GB RAM or more recommended · a few GB of free storage</p>
++          <div class="release-meta-pill" id="releaseInfo">
++            <span data-i18n="dl_fetching">Fetching latest build from GitHub...</span>
++          </div>
++        </div>
++
++        <div class="apk-cards">
++          <!-- 64-bit Suggested Card -->
++          <div class="apk-card suggested">
++            <span class="apk-tag" data-i18n="dl_suggested">Suggested</span>
++            <h3>64-bit (arm64-v8a)</h3>
++            <p data-i18n="dl_64_desc">Almost every phone made in the last several years.</p>
++            <button type="button" id="btnDownload64" class="apk-btn-64">
++              <span data-i18n="dl_64_btn">Download 64-bit</span>
++              <span class="apk-size-badge" id="size64"></span>
++            </button>
++          </div>
++
++          <!-- 32-bit Old Phones Card -->
++          <div class="apk-card">
++            <span class="apk-tag" data-i18n="dl_old">Old phones only</span>
++            <h3>32-bit (armeabi-v7a)</h3>
++            <p data-i18n="dl_32_desc">For old phones with a 32-bit CPU. Game RAM is capped at about 1.2 GB and some renderers are unavailable. Not present in every release.</p>
++            <button type="button" id="btnDownload32" class="apk-btn-32">
++              <span data-i18n="dl_32_btn">Download 32-bit</span>
++              <span class="apk-size-badge" id="size32"></span>
++            </button>
++          </div>
++        </div>
++
++        <div class="download-status" id="downloadStatus"></div>
+       </div>
+-    </div>
+-  </section>
++    </section>
+ 
+-  <section class="sec" id="mulai">
+-    <div class="wrap">
+-      <div class="head"><h2>Cara mulai</h2><p class="intro">Dari pemasangan sampai masuk ke dunia.</p></div>
+-      <ol class="steps"><li><b>Buka AmberLauncher.</b> Di Android 11 ke atas, izinkan akses penyimpanan agar data tersimpan di folder <code>nuxlauncher</code>. Boleh dilewati; data lalu disimpan di folder privat aplikasi.</li><li><b>Tambahkan akun</b> di menu <b>Akun</b>: Microsoft untuk bermain online, atau offline untuk bermain sendiri.</li><li><b>Buat instance</b> lewat <b>Buat Instance</b>: pilih versi Minecraft, lalu Vanilla, Fabric, Forge, atau NeoForge.</li><li>Di <b>Home</b>, tekan <b>UNDUH</b> dan tunggu selesai (butuh internet), lalu tekan <b>PLAY</b>.</li><li>Pasang mod, resource pack, dan shader lewat menu <b>Mod</b>.</li></ol>
+-    </div>
+-  </section>
+-
+-  <section class="sec" id="fitur">
+-    <div class="wrap">
+-      <div class="head"><h2>Fitur</h2><p class="intro">AmberLauncher adalah fork dari Zalith (lewat NUX Launcher), jadi sebagian besar kerja kerasnya milik mereka. Ini cuma beberapa hal kecil yang ditambahkan di atasnya, dan mungkin belum ada di launcher lain.</p></div>
+-      <div class="bento">
+-        <div class="tile panel t-look"><h3>Tampilan</h3><ul><li><b>Dua gaya:</b> tema gelap bawaan, atau Liquid Glass, tempat panel jadi kaca buram di atas wallpaper (Pengaturan &gt; Tampilan, Android 12 ke atas).</li><li><b>Wallpaper sendiri:</b> gambar, GIF, atau video, lengkap dengan peredup, warna aksen, dan cahaya latar yang mengikuti gambarnya.</li><li><b>6 bahasa:</b> Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), dan ภาษาไทย.</li></ul></div>
+-        <div class="tile panel t-acc"><h3>Akun</h3><ul><li><b>Microsoft, Ely.by, dan offline</b> dalam satu daftar, dengan pratinjau skin dan jubah.</li><li><b>Jalan juga di mesin Rust (Horizon):</b> masuk dengan akun Microsoft, Ely.by, atau offline di sana juga.</li></ul></div>
+-        <div class="tile panel t-ctrl"><h3>Kontrol</h3><ul><li><b>Impor layout dari launcher lain:</b> berkas dari Zalith, Zalith 2, Pojav, dan Mojo diubah otomatis ke format AmberLauncher. Layout juga bisa disimpan sebagai preset.</li><li><b>Macro:</b> ketik chat atau perintah otomatis, kombinasi tombol, dan klik turbo di tombol apa saja.</li><li><b>Editor kontrol sentuh:</b> atur posisi, ukuran, transparansi, dan tombol. Ada hotbar ala Bedrock dan auto-sprint joystick yang bisa dimatikan.</li><li><b>Controller (gamepad)</b> didukung, termasuk mod seperti Controlify.</li></ul></div>
+-        <div class="tile panel t-game"><h3>Game</h3><ul><li><b>Instance terpisah</b> dengan Vanilla, Fabric, Forge, dan NeoForge, plus Java 8, 17, 21, dan 25 bawaan.</li><li><b>Pilihan renderer:</b> Auto, Krypton, MobileGlues, GL4ES, Kopper Zink, dan Freedreno (Turnip).</li><li><b>Mesin Rust (Horizon), masih eksperimental:</b> jalan tanpa Java di versi yang didukung.</li></ul></div>
+-        <div class="tile panel t-mods"><h3>Mod dan konten</h3><ul><li><b>Modrinth dan CurseForge</b> langsung di aplikasi: mod, modpack, resource pack, shader, dan datapack beserta dependensinya.</li><li><b>Buat instance dari modpack</b> (.mrpack atau .zip CurseForge) sekali jalan. Pasang manual dari berkas juga bisa.</li></ul></div>
+-        <div class="tile panel t-more"><h3>Lainnya</h3><ul><li><b>Rekam layar</b> bawaan: pilih Game saja atau Dengan tombol.</li><li><b>Laporan crash</b> dengan opsi unggah log ke mclo.gs.</li><li><b>Pembaruan dari dalam aplikasi,</b> APK 32-bit atau 64-bit dipilih otomatis.</li><li><b>Dukungan mod TouchController</b> (eksperimental).</li></ul></div>
++    <!-- 3-Step Quick Start -->
++    <section>
++      <div class="section-head">
++        <div class="section-eyebrow" data-i18n="steps_eyebrow">Simple Setup</div>
++        <h2 data-i18n="steps_title">Ready to play in 3 steps</h2>
+       </div>
+-      <p class="muted">Belum didukung: Forge untuk Minecraft 1.6.4 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.</p>
+-    </div>
+-  </section>
+-
+-  <section class="sec" id="apk">
+-    <div class="wrap">
+-      <div class="head"><h2>Pilih APK</h2><p class="intro">Kalau ragu, ambil yang 64-bit.</p></div>
+-      <div class="apks">
+-        <div class="apk main panel">
+-          <div><span class="tag">Disarankan</span><h3>64-bit (arm64-v8a)</h3><p>Hampir semua HP keluaran beberapa tahun terakhir.</p></div>
+-          <a class="pill big solid" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 64-bit</a>
++
++      <div class="steps-grid">
++        <div class="step-card">
++          <div class="step-num">1</div>
++          <h3 data-i18n="step1_title">Install & Sign In</h3>
++          <p data-i18n="step1_desc">Download the 64-bit APK above, open the launcher and add a Microsoft, Ely.by or offline account.</p>
++        </div>
++
++        <div class="step-card">
++          <div class="step-num">2</div>
++          <h3 data-i18n="step2_title">Create an instance</h3>
++          <p data-i18n="step2_desc">Pick a Minecraft version and Vanilla, Fabric, Forge or NeoForge, or start straight from a modpack.</p>
+         </div>
+-        <div class="apk panel">
+-          <div><span class="tag">Hanya HP lama</span><h3>32-bit (armeabi-v7a)</h3><p>Untuk HP lama berCPU 32-bit. RAM game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia. Tidak selalu ada di setiap rilis.</p></div>
+-          <a class="pill big" data-dl="32" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 32-bit</a>
++
++        <div class="step-card">
++          <div class="step-num">3</div>
++          <h3 data-i18n="step3_title">Add mods & press PLAY</h3>
++          <p data-i18n="step3_desc">Tap Download once, install mods from Modrinth or CurseForge in the Mod tab, then hit PLAY.</p>
+         </div>
+       </div>
+-      <p class="muted">Saat memasang pertama kali, Android bisa meminta izin memasang aplikasi dari browser atau pengelola berkasmu. Setelah itu, pembaruan bisa dipasang dari dalam launcher (Pengaturan &gt; Pembaruan).</p>
+-    </div>
+-  </section>
+-
+-  <section class="sec" id="keaslian">
+-    <div class="wrap">
+-      <div class="head"><h2>Pastikan APK asli</h2><p class="intro">Untuk yang mengunduh dari tempat lain.</p></div>
+-      <div class="verify panel">
+-        <p>Semua APK resmi ditandatangani dengan kunci yang sama. Cocokkan sidik jari sertifikat APK dengan yang di bawah sebelum memasang.</p>
+-        <span class="label">Sidik jari sertifikat (SHA-256)</span>
+-        <div class="hash"><span class="mono" id="fp">B2:29:4B:4E:2B:5E:65:0C:7C:43:B2:30:1F:35:9B:2C:17:83:C4:0C:82:DF:10:D8:F5:69:D0:56:A1:7B:5E:3F</span><button class="pill" type="button" data-copy="fp">Salin</button></div>
+-        <span class="label">Cara memeriksa (alat apksigner dari Android SDK)</span>
+-        <div class="cmd mono">apksigner verify --print-certs AmberLauncher-&lt;version&gt;-64bit-arm64-v8a.apk</div>
+-        <p class="muted">ID aplikasi: <span class="mono">com.itsvynzzzz.amberlauncher</span><br>Cara melapor celah keamanan ada di <a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/SECURITY.md">SECURITY.md</a>.</p>
++    </section>
++
++    <!-- Core Features -->
++    <section>
++      <div class="section-head">
++        <div class="section-eyebrow" data-i18n="feat_eyebrow">Why Amber Launcher</div>
++        <h2 data-i18n="feat_title">Everything you need, zero bloat</h2>
+       </div>
+-    </div>
+-  </section>
+ 
+-  <section class="sec" id="bantuan">
+-    <div class="wrap">
+-      <div class="head"><h2>Bantuan</h2><p class="intro">Masalah yang sering muncul.</p></div>
+-      <ul class="qa"><li class="panel"><b>Game tertutup sendiri atau crash.</b> <span>Beri RAM game tidak lebih dari sekitar setengah RAM HP, tutup aplikasi lain, atau turunkan rasio resolusi di Pengaturan. Laporan crash bisa dilihat dari dalam aplikasi.</span></li><li class="panel"><b>FPS rendah.</b> <span>Kecilkan jarak pandang, turunkan rasio resolusi, atau coba renderer lain di Pengaturan.</span></li><li class="panel"><b>Mod tidak jalan.</b> <span>Pastikan loader dan versi Minecraft instance sama dengan yang dibutuhkan mod.</span></li><li class="panel"><b>Menemukan bug?</b> <span>Buka <a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issue</a> dan sertakan versi AmberLauncher, model HP dan versi Android, langkah yang menimbulkan masalah, serta log. Log yang dibagikan dari launcher sudah dibersihkan dari token dan kata sandi.</span></li></ul>
+-    </div>
+-  </section>
++      <div class="features-grid">
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f1_title">Smart starting settings</h3>
++          <p data-i18n="f1_desc">Game RAM, resolution scale and render distance start matched to your device’s RAM, and everything stays adjustable.</p>
++        </article>
+ 
+-  <section class="sec" id="privasi">
+-    <div class="wrap">
+-      <div class="head"><h2>Privasi dan keamanan</h2><p class="intro">Yang dilakukan launcher dengan akunmu.</p></div>
+-      <ul class="qa three"><li class="panel"><b>Kata sandi Microsoft tidak pernah disimpan.</b> <span>Login memakai jendela OAuth resmi Microsoft.</span></li><li class="panel"><b>Aset dan pustaka Minecraft</b> <span>diunduh langsung dari server resmi Mojang dan dicocokkan dengan sidik jari (SHA-1) resminya.</span></li><li class="panel"><b>Semua sambungan internet</b> <span>memakai HTTPS.</span></li></ul>
+-    </div>
+-  </section>
+-
+-  <section class="sec" id="kredit">
+-    <div class="wrap">
+-      <div class="head"><h2>Kredit dan terima kasih</h2><p class="intro">AmberLauncher dibangun di atas kerja banyak proyek lain.</p></div>
+-      <div class="creds">
+-        <div class="panel tbl">
+-          <h3>Dasar proyek</h3>
+-          <table><thead><tr><th>Proyek</th><th>Pembuat</th><th>Lisensi</th></tr></thead><tbody><tr><td><a href="https://github.com/IsraaDeveloper/nuxlabs">NUX Launcher</a> (sumber fork)</td><td>IsraaDeveloper</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/ZalithLauncher/ZalithLauncher2">Zalith Launcher 2</a></td><td>MovTery dan kontributor</td><td>GPL-3.0</td></tr><tr><td><a href="https://github.com/PojavLauncherTeam/PojavLauncher">PojavLauncher</a></td><td>artdeell, khanhtran, dan tim</td><td>LGPL-3.0</td></tr><tr><td><a href="https://github.com/FCL-Team/FoldCraftLauncher">Fold Craft Launcher</a></td><td>Tim FCL</td><td>GPL-3.0</td></tr></tbody></table>
+-        </div>
+-        <div class="panel tbl">
+-          <h3>Komponen yang dipakai</h3>
+-          <table><thead><tr><th>Proyek</th><th>Pembuat</th><th>Lisensi</th></tr></thead><tbody><tr><td><a href="https://github.com/horizon-rust/horizon">Horizon</a> dan <a href="https://github.com/starling-client/starling">port Android-nya</a></td><td>Ludovic Marie, Vasysik, dan kontributor</td><td>MIT</td></tr><tr><td><a href="https://github.com/MobileGlues/MobileGlues">MobileGlues</a></td><td>Tim MobileGlues</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/ptitSeb/gl4es">GL4ES</a></td><td>ptitSeb</td><td>MIT</td></tr><tr><td><a href="https://github.com/LWJGL/lwjgl3">LWJGL</a></td><td>Tim LWJGL</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/libsdl-org/SDL">SDL3 dan sdl2-compat</a></td><td>Sam Lantinga dan kontributor</td><td>Zlib</td></tr><tr><td><a href="https://mesa3d.org/">Mesa 3D</a> (Zink, Turnip, VirGL)</td><td>Para kontributor Mesa</td><td>MIT</td></tr><tr><td><a href="https://angleproject.org/">ANGLE</a></td><td>Para penulis proyek ANGLE</td><td>BSD-3-Clause</td></tr><tr><td><a href="https://github.com/bytedance/bhook">ByteHook</a></td><td>ByteDance</td><td>MIT</td></tr><tr><td><a href="https://github.com/yushijinhun/authlib-injector">authlib-injector</a></td><td>Yushijinhun</td><td>AGPL-3.0</td></tr><tr><td><a href="https://github.com/TouchController/TouchController">TouchController</a> (klien proxy)</td><td>fifth_light</td><td>LGPL-3.0</td></tr><tr><td><a href="https://developer.android.com/jetpack/compose">Jetpack Compose dan Material 3</a></td><td>Android Open Source Project</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/square/okhttp">OkHttp dan Okio</a></td><td>Square</td><td>Apache-2.0</td></tr><tr><td><a href="https://github.com/Rosemoe/sora-editor">sora-editor</a></td><td>Rosemoe</td><td>LGPL-2.1</td></tr><tr><td><a href="https://github.com/bs-community/skinview3d">skinview3d</a></td><td>Kent Rasmussen dan kontributor</td><td>MIT</td></tr><tr><td><a href="https://github.com/naipefoundry/gabarito">Gabarito</a> (font situs ini)</td><td>The Gabarito Project Authors</td><td>OFL-1.1</td></tr></tbody></table>
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f2_title">Touch control editor</h3>
++          <p data-i18n="f2_desc">Place, resize and rebind on-screen buttons, plus a Bedrock-style touch hotbar you can switch off in Settings > Controls.</p>
++        </article>
++
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <rect x="2" y="6" width="20" height="12" rx="4"/>
++              <line x1="6" y1="12" x2="10" y2="12"/>
++              <line x1="8" y1="10" x2="8" y2="14"/>
++              <circle cx="15" cy="11" r="1"/>
++              <circle cx="17" cy="13" r="1"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f3_title">Gamepad support</h3>
++          <p data-i18n="f3_desc">Controller (gamepad) support, including mods like Controlify.</p>
++        </article>
++
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <circle cx="12" cy="12" r="10"/>
++              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
++              <line x1="9" y1="9" x2="9.01" y2="9"/>
++              <line x1="15" y1="9" x2="15.01" y2="9"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f4_title">Optional Discord status</h3>
++          <p data-i18n="f4_desc">Rich Presence is off by default. Enable it in Settings > Display > Discord to show your Minecraft version, loader and play time. Instance and account names are never sent.</p>
++        </article>
++
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f5_title">Modrinth & CurseForge built in</h3>
++          <p data-i18n="f5_desc">Install mods, modpacks, resource packs, shaders and datapacks with their dependencies, or create an instance straight from a .mrpack or .zip modpack.</p>
++        </article>
++
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
++              <circle cx="12" cy="12" r="10"/>
++              <line x1="2" y1="12" x2="22" y2="12"/>
++              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
++            </svg>
++          </div>
++          <h3 data-i18n="f6_title">8 interface languages</h3>
++          <p data-i18n="f6_desc">Indonesia, English, Español, Tiếng Việt, Português (Brasil), ไทย, 简体中文 and Filipino.</p>
++        </article>
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
++          </div>
++          <h3 data-i18n="f7_title">Loaders & Java included</h3>
++          <p data-i18n="f7_desc">Vanilla, Fabric, Forge and NeoForge, with Java 8, 17, 21 and 25 bundled. Pick a renderer such as Auto, MobileGlues, GL4ES or Zink.</p>
++        </article>
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
++          </div>
++          <h3 data-i18n="f8_title">Microsoft, Ely.by & offline</h3>
++          <p data-i18n="f8_desc">Sign in with a Microsoft or Ely.by account, or play solo offline. Microsoft passwords are never stored.</p>
++        </article>
++        <article class="feature-card">
++          <div class="feature-icon">
++            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.5 15a9 9 0 1 1-2.1-9.4L23 10"/></svg>
++          </div>
++          <h3 data-i18n="f9_title">Updates & crash reports</h3>
++          <p data-i18n="f9_desc">Update inside the app with the right 32-bit or 64-bit APK picked for you, and share cleaned crash logs to mclo.gs.</p>
++        </article>
++      </div>
++    </section>
++
++    <!-- FAQ -->
++    <section>
++      <div class="section-head">
++        <div class="section-eyebrow">FAQ</div>
++        <h2 data-i18n="faq_title">Common Questions</h2>
++      </div>
++
++      <div class="faq-list">
++        <details>
++          <summary data-i18n="q1">Which loaders and versions are supported?</summary>
++          <p data-i18n="a1">Vanilla, Fabric (including Legacy Fabric for 1.7.10–1.13.2), Forge (1.7.10+) and NeoForge (1.20.2+). Forge 1.12.2 and below and Legacy Fabric are still in testing. Quilt is not supported yet.</p>
++        </details>
++
++        <details>
++          <summary data-i18n="q2">Is the Discord status safe to use?</summary>
++          <p data-i18n="a2">It’s optional and off by default. It uses Discord’s official Social SDK to send Rich Presence to the Discord app on the same phone, with no Discord login, token or password involved. Turn it on in Settings > Display > Discord.</p>
++        </details>
++
++        <details>
++          <summary data-i18n="q3">Should I pick 64-bit or 32-bit APK?</summary>
++          <p data-i18n="a3">Choose 64-bit (arm64-v8a) for almost every phone made in recent years. Use 32-bit (armeabi-v7a) only on old 32-bit phones: game RAM is capped at about 1.2 GB and some renderers are unavailable.</p>
++        </details>
++        <details>
++          <summary data-i18n="q4">Do I need to own Minecraft?</summary>
++          <p data-i18n="a4">AmberLauncher doesn’t include or distribute the game. You need a legitimate Java Edition account to play online; offline accounts are for solo play.</p>
++        </details>
++      </div>
++    </section>
++
++    <!-- Credits -->
++    <section id="credits">
++      <div class="section-head">
++        <div class="section-eyebrow" data-i18n="cr_eyebrow">Credits</div>
++        <h2 data-i18n="cr_title">Built on the work of others</h2>
++        <p class="section-sub" data-i18n="cr_desc">AmberLauncher is an independent fork of NUX Launcher, which is based on Zalith Launcher 2 and PojavLauncher. Original code stays with its authors, and the whole project is released under GPL-3.0.</p>
++      </div>
++      <h3 class="credit-h" data-i18n="cr_base">Project foundation</h3>
++      <div class="credit-grid" id="creditBase"></div>
++      <h3 class="credit-h" data-i18n="cr_libs">Components & libraries</h3>
++      <div class="credit-grid" id="creditLibs"></div>
++      <h3 class="credit-h" data-i18n="cr_thanks">Special thanks</h3>
++      <div class="support-links thanks" id="creditThanks"></div>
++      <p class="notice" data-i18n="cr_notice"><strong>Unofficial Modified Version.</strong> The names “ZalithLauncher” and “ZL” are not used, per the additional terms of Zalith Launcher 2 (GPL-3.0 §7). Copyright © 2026 ItsVynzzzz for changes and new code. Minecraft is a trademark of Mojang AB / Microsoft Corporation; AmberLauncher does not include or distribute the game.</p>
++    </section>
++
++    <!-- Bottom CTA & Community -->
++    <section>
++      <div class="cta-box">
++        <h2 data-i18n="cta_title">Ready to try Amber Launcher?</h2>
++        <p data-i18n="cta_desc">Grab the APK directly above, inspect the source code, or support ongoing development.</p>
++        <div class="hero-buttons" style="margin-bottom: 0;">
++          <a href="#download" class="btn-primary" data-i18n="btn_download">
++            Download APK
++          </a>
+         </div>
+-        <div class="panel thanks">
+-          <h3>Terima kasih</h3>
+-          <ul><li><a href="https://modrinth.com">Modrinth</a> dan <a href="https://www.curseforge.com/minecraft">CurseForge</a> atas katalog mod yang terbuka lewat API.</li><li><a href="https://ely.by">Ely.by</a> atas sistem skin dan autentikasinya, serta <a href="https://mclo.gs">mclo.gs</a> atas layanan berbagi log.</li><li>Mojang Studios dan Microsoft atas Minecraft dan layanan loginnya.</li><li>Tim <a href="https://fabricmc.net">Fabric</a>, <a href="https://minecraftforge.net">Forge</a>, <a href="https://neoforged.net">NeoForge</a>, dan <a href="https://quiltmc.org">Quilt</a> atas mod loader yang didukung.</li><li>Pembuat mod <a href="https://github.com/isXander/Controlify">Controlify</a> dan TouchController, yang membuat bermain dengan controller dan layar sentuh lebih nyaman.</li><li>Semua penguji dan pelapor bug yang membantu memperbaiki launcher ini.</li></ul>
++
++        <div class="support-links">
++          <a href="https://github.com/ItsVynzzzz/AmberLauncher" target="_blank" rel="noopener" class="chip-link">GitHub Repo</a>
++          <a href="https://ko-fi.com/itsvynzz" target="_blank" rel="noopener" class="chip-link">Support on Ko-fi</a>
++          <a href="https://sociabuzz.com/amberlauncher/tribe" target="_blank" rel="noopener" class="chip-link">Dukung via SociaBuzz</a>
+         </div>
+       </div>
++    </section>
++  </main>
++
++  <footer>
++    <div class="container">
++      <p>© 2026 ItsVynzzzz · AmberLauncher · GPL-3.0</p>
++      <div class="support-links">
++        <a href="https://github.com/ItsVynzzzz/AmberLauncher" target="_blank" rel="noopener" class="chip-link">GitHub</a>
++        <a href="https://github.com/ItsVynzzzz/AmberLauncher/releases" target="_blank" rel="noopener" class="chip-link">Releases</a>
++        <a href="#credits" class="chip-link" data-i18n="foot_credits">Credits</a>
++        <a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/LICENSE" target="_blank" rel="noopener" class="chip-link">License</a>
++        <a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/SECURITY.md" target="_blank" rel="noopener" class="chip-link">Security</a>
++      </div>
++      <p data-i18n="footer_disc">Not an official Minecraft product. Not approved by or associated with Mojang, Microsoft, or the upstream projects credited above.</p>
+     </div>
+-  </section>
+-  <section class="end-cta">
+-    <div class="wrap"><h2>Mulai main di HP kamu.</h2><p>Gratis, open source, dan hemat RAM.</p><div class="row"><a class="pill big solid" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 64-bit</a><a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a></div></div>
+-  </section>
+-</main>
+-
+-<footer class="foot">
+-  <div class="wrap">
+-    <div class="links"><a href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Rilis</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/issues">Issue</a><a href="https://github.com/ItsVynzzzz/AmberLauncher/blob/main/LICENSE">Lisensi GPL v3</a></div>
+-    <p>AmberLauncher adalah proyek independen dan tidak berafiliasi dengan Mojang Studios, Microsoft, maupun proyek pihak ketiga yang disebut di atas. Minecraft adalah merek dagang Mojang AB / Microsoft Corporation. AmberLauncher tidak menyertakan atau membagikan salinan game; untuk bermain online, kamu perlu akun Minecraft Java Edition yang sah.</p>
+-    <p>AmberLauncher dirilis di bawah GNU General Public License v3.0. Copyright © 2026 ItsVynzzzz untuk perubahan dan kode baru; kode dari proyek hulu tetap milik pembuatnya masing-masing. AmberLauncher adalah turunan (fork) dari NUX Launcher, yang berbasis Zalith Launcher 2 dan PojavLauncher. Sesuai ketentuan tambahan Zalith Launcher 2, nama “ZalithLauncher” atau “ZL” tidak dipakai, dan keterangan Unofficial Modified Version serta pemberitahuan hak cipta tetap ditampilkan di aplikasi.</p>
+-    <p>Font situs ini: Gabarito, lisensi SIL Open Font License 1.1 (<a href="assets/OFL-Gabarito.txt">teks lisensi</a>).</p>
+-  </div>
+-</footer>
+-
+-<script src="app.js?v=4" defer></script>
++  </footer>
++
++  <script>
++    const REPO = 'ItsVynzzzz/AmberLauncher';
++    const RELEASES_PAGE = `https://github.com/${REPO}/releases`;
++
++    const translations = {
++      en: {
++        nav_download: "Download",
++        hero_badge: "Open source • GPL-3.0 • Android 8.0+",
++        hero_title: 'Play Minecraft Java on Android, <span>Effortlessly.</span>',
++        hero_sub: "A lightweight launcher with a dark amber-glass interface, Modrinth & CurseForge built in, and starting settings that adapt to your phone’s RAM.",
++        btn_download: "Download APK",
++        tab_home: "Home Screen",
++        tab_mods: "Mod & Shader Browser",
++        tab_controls: "Controls & Settings",
++        ph_home_title: "Home screen",
++        ph_mods_title: "Mod & shader browser",
++        ph_ctrl_title: "Controls & settings",
++        ph_hint: "Screenshot coming soon",
++        cap_home: "Minimal dark-glass home screen: pick an instance, download, and press PLAY.",
++        cap_mods: "Search and install mods, modpacks, resource packs, shaders and datapacks from Modrinth or CurseForge.",
++        cap_controls: "Edit touch controls, set up a gamepad, and tune renderer, RAM and display settings.",
++        dl_eyebrow: "Direct Download",
++        dl_title: "Choose an APK",
++        dl_sub: "If unsure, take the 64-bit one.",
++        dl_fetching: "Fetching latest build from GitHub...",
++        dl_suggested: "Suggested",
++        dl_64_desc: "Almost every phone made in the last several years.",
++        dl_64_btn: "Download 64-bit",
++        dl_old: "Old phones only",
++        dl_32_desc: "For old phones with a 32-bit CPU. Game RAM is capped at about 1.2 GB and some renderers are unavailable. Not present in every release.",
++        dl_32_btn: "Download 32-bit",
++        dl_not_in_release: "Not in this release",
++        steps_eyebrow: "Simple Setup",
++        steps_title: "Ready to play in 3 steps",
++        step1_title: "Install & Sign In",
++        step1_desc: "Download the 64-bit APK above, open the launcher and add a Microsoft, Ely.by or offline account.",
++        step2_title: "Create an instance",
++        step2_desc: "Pick a Minecraft version and Vanilla, Fabric, Forge or NeoForge, or start straight from a modpack.",
++        step3_title: "Add mods & press PLAY",
++        step3_desc: "Tap Download once, install mods from Modrinth or CurseForge in the Mod tab, then hit PLAY.",
++        feat_eyebrow: "Why Amber Launcher",
++        feat_title: "Everything you need, zero bloat",
++        f1_title: "Smart starting settings",
++        f1_desc: "Game RAM, resolution scale and render distance start matched to your device’s RAM, and everything stays adjustable.",
++        f2_title: "Touch control editor",
++        f2_desc: "Place, resize and rebind on-screen buttons, plus a Bedrock-style touch hotbar you can switch off in Settings > Controls.",
++        f3_title: "Gamepad support",
++        f3_desc: "Controller (gamepad) support, including mods like Controlify.",
++        f4_title: "Optional Discord status",
++        f4_desc: "Rich Presence is off by default. Enable it in Settings > Display > Discord to show your Minecraft version, loader and play time. Instance and account names are never sent.",
++        f5_title: "Modrinth & CurseForge built in",
++        f5_desc: "Install mods, modpacks, resource packs, shaders and datapacks with their dependencies, or create an instance straight from a .mrpack or .zip modpack.",
++        f6_title: "8 interface languages",
++        f6_desc: "Indonesia, English, Español, Tiếng Việt, Português (Brasil), ไทย, 简体中文 and Filipino.",
++        faq_title: "Common Questions",
++        q1: "Which loaders and versions are supported?",
++        a1: "Vanilla, Fabric (including Legacy Fabric for 1.7.10–1.13.2), Forge (1.7.10+) and NeoForge (1.20.2+). Forge 1.12.2 and below and Legacy Fabric are still in testing. Quilt is not supported yet.",
++        q2: "Is the Discord status safe to use?",
++        a2: "It’s optional and off by default. It uses Discord’s official Social SDK to send Rich Presence to the Discord app on the same phone, with no Discord login, token or password involved. Turn it on in Settings > Display > Discord.",
++        q3: "Should I pick 64-bit or 32-bit APK?",
++        a3: "Choose 64-bit (arm64-v8a) for almost every phone made in recent years. Use 32-bit (armeabi-v7a) only on old 32-bit phones: game RAM is capped at about 1.2 GB and some renderers are unavailable.",
++        cta_title: "Ready to try Amber Launcher?",
++        cta_desc: "Grab the APK directly above, inspect the source code, or support ongoing development.",
++        dl_req: "Android 8.0+ · 3 GB RAM or more recommended · a few GB of free storage",
++        dl_latest: "Latest",
++        q4: "Do I need to own Minecraft?",
++        a4: "AmberLauncher doesn’t include or distribute the game. You need a legitimate Java Edition account to play online; offline accounts are for solo play.",
++        cr_eyebrow: "Credits",
++        cr_title: "Built on the work of others",
++        cr_desc: "AmberLauncher is an independent fork of NUX Launcher, which is based on Zalith Launcher 2 and PojavLauncher. Original code stays with its authors, and the whole project is released under GPL-3.0.",
++        cr_base: "Project foundation",
++        cr_libs: "Components & libraries",
++        cr_thanks: "Special thanks",
++        cr_notice: "<strong>Unofficial Modified Version.</strong> The names “ZalithLauncher” and “ZL” are not used, per the additional terms of Zalith Launcher 2 (GPL-3.0 §7). Copyright © 2026 ItsVynzzzz for changes and new code. Minecraft is a trademark of Mojang AB / Microsoft Corporation; AmberLauncher does not include or distribute the game.",
++        foot_credits: "Credits",
++        f7_title: "Loaders & Java included",
++        f7_desc: "Vanilla, Fabric, Forge and NeoForge, with Java 8, 17, 21 and 25 bundled. Pick a renderer such as Auto, MobileGlues, GL4ES or Zink.",
++        f8_title: "Microsoft, Ely.by & offline",
++        f8_desc: "Sign in with a Microsoft or Ely.by account, or play solo offline. Microsoft passwords are never stored.",
++        f9_title: "Updates & crash reports",
++        f9_desc: "Update inside the app with the right 32-bit or 64-bit APK picked for you, and share cleaned crash logs to mclo.gs.",
++        footer_disc: "Not an official Minecraft product. Not approved by or associated with Mojang, Microsoft, or the upstream projects credited above."
++      },
++      id: {
++        nav_download: "Unduh",
++        hero_badge: "Open source • GPL-3.0 • Android 8.0+",
++        hero_title: 'Main Minecraft Java di Android, <span>Lebih Mudah.</span>',
++        hero_sub: "Launcher ringan dengan tampilan kaca gelap beraksen amber, Modrinth & CurseForge bawaan, dan setelan awal yang menyesuaikan RAM HP-mu.",
++        btn_download: "Unduh APK",
++        tab_home: "Tampilan Home",
++        tab_mods: "Browser Mod & Shader",
++        tab_controls: "Kontrol & Pengaturan",
++        ph_home_title: "Tampilan Home",
++        ph_mods_title: "Browser mod & shader",
++        ph_ctrl_title: "Kontrol & pengaturan",
++        ph_hint: "Tangkapan layar segera hadir",
++        cap_home: "Beranda kaca gelap yang minimalis: pilih instance, unduh, lalu tekan PLAY.",
++        cap_mods: "Cari dan pasang mod, modpack, resource pack, shader, dan datapack dari Modrinth atau CurseForge.",
++        cap_controls: "Atur kontrol sentuh, siapkan gamepad, dan sesuaikan renderer, RAM, serta tampilan.",
++        dl_eyebrow: "Unduh Langsung",
++        dl_title: "Pilih Versi APK",
++        dl_sub: "Jika ragu, pilih yang 64-bit.",
++        dl_fetching: "Mengambil versi terbaru dari GitHub...",
++        dl_suggested: "Disarankan",
++        dl_64_desc: "Cocok untuk hampir semua HP Android keluaran beberapa tahun terakhir.",
++        dl_64_btn: "Download 64-bit",
++        dl_old: "Khusus HP lama",
++        dl_32_desc: "Untuk HP lama dengan CPU 32-bit. RAM game dibatasi sekitar 1.2 GB dan beberapa renderer tidak tersedia. Tidak selalu ada di setiap rilis.",
++        dl_32_btn: "Download 32-bit",
++        dl_not_in_release: "Tidak tersedia di rilis ini",
++        steps_eyebrow: "Cara Pakai",
++        steps_title: "Siap main dalam 3 langkah",
++        step1_title: "Install & Login",
++        step1_desc: "Unduh APK 64-bit di atas, buka launcher, lalu tambahkan akun Microsoft, Ely.by, atau offline.",
++        step2_title: "Buat instance",
++        step2_desc: "Pilih versi Minecraft dan Vanilla, Fabric, Forge, atau NeoForge, atau mulai langsung dari modpack.",
++        step3_title: "Pasang mod & tekan PLAY",
++        step3_desc: "Tekan Unduh sekali, pasang mod dari Modrinth atau CurseForge lewat menu Mod, lalu tekan PLAY.",
++        feat_eyebrow: "Keunggulan Utama",
++        feat_title: "Semua fitur penting, tanpa berat",
++        f1_title: "Setelan awal pintar",
++        f1_desc: "RAM game, skala resolusi, dan jarak pandang awal menyesuaikan RAM perangkat, dan semuanya tetap bisa diubah.",
++        f2_title: "Editor kontrol sentuh",
++        f2_desc: "Atur posisi, ukuran, dan tombol layar, lengkap dengan hotbar sentuh gaya Bedrock yang bisa dimatikan di Pengaturan > Kontrol.",
++        f3_title: "Dukungan gamepad",
++        f3_desc: "Controller (gamepad) didukung, termasuk mod seperti Controlify.",
++        f4_title: "Status Discord opsional",
++        f4_desc: "Rich Presence mati bawaan. Nyalakan di Pengaturan > Tampilan > Discord untuk menampilkan versi Minecraft, loader, dan waktu bermain. Nama instance dan akun tidak ikut dikirim.",
++        f5_title: "Modrinth & CurseForge bawaan",
++        f5_desc: "Pasang mod, modpack, resource pack, shader, dan datapack beserta dependensinya, atau buat instance langsung dari modpack .mrpack atau .zip.",
++        f6_title: "8 bahasa antarmuka",
++        f6_desc: "Indonesia, English, Español, Tiếng Việt, Português (Brasil), ไทย, 简体中文, dan Filipino.",
++        faq_title: "Pertanyaan Umum",
++        q1: "Loader dan versi apa saja yang didukung?",
++        a1: "Vanilla, Fabric (termasuk Legacy Fabric untuk 1.7.10–1.13.2), Forge (1.7.10+), dan NeoForge (1.20.2+). Forge 1.12.2 ke bawah dan Legacy Fabric masih tahap uji. Quilt belum didukung.",
++        q2: "Apakah status Discord-nya aman?",
++        a2: "Opsional dan mati bawaan. Fitur ini memakai Discord Social SDK resmi untuk mengirim Rich Presence ke aplikasi Discord di HP yang sama, tanpa login, token, atau kata sandi Discord. Nyalakan di Pengaturan > Tampilan > Discord.",
++        q3: "Sebaiknya pilih APK 64-bit atau 32-bit?",
++        a3: "Pilih 64-bit (arm64-v8a) untuk hampir semua HP keluaran beberapa tahun terakhir. Pakai 32-bit (armeabi-v7a) hanya di HP lama berCPU 32-bit: RAM game dibatasi sekitar 1,2 GB dan sebagian renderer tidak tersedia.",
++        cta_title: "Siap coba Amber Launcher?",
++        cta_desc: "Unduh APK langsung di atas, lihat kode sumbernya, atau dukung pengembangan launcher ini.",
++        dl_req: "Android 8.0+ · disarankan RAM 3 GB ke atas · ruang kosong beberapa GB",
++        dl_latest: "Terbaru",
++        q4: "Apakah harus punya Minecraft?",
++        a4: "AmberLauncher tidak menyertakan atau membagikan game-nya. Kamu perlu akun Minecraft Java Edition yang sah untuk bermain online; akun offline hanya untuk bermain sendiri.",
++        cr_eyebrow: "Kredit",
++        cr_title: "Dibangun di atas karya banyak orang",
++        cr_desc: "AmberLauncher adalah fork independen dari NUX Launcher, yang berbasis Zalith Launcher 2 dan PojavLauncher. Kode asli tetap milik para pembuatnya, dan seluruh proyek dirilis di bawah GPL-3.0.",
++        cr_base: "Dasar proyek",
++        cr_libs: "Komponen & pustaka",
++        cr_thanks: "Terima kasih",
++        cr_notice: "<strong>Unofficial Modified Version.</strong> Nama “ZalithLauncher” dan “ZL” tidak dipakai, sesuai ketentuan tambahan Zalith Launcher 2 (GPL-3.0 pasal 7). Hak cipta © 2026 ItsVynzzzz untuk perubahan dan kode baru. Minecraft adalah merek dagang Mojang AB / Microsoft Corporation; AmberLauncher tidak menyertakan atau membagikan game-nya.",
++        foot_credits: "Kredit",
++        f7_title: "Loader & Java bawaan",
++        f7_desc: "Vanilla, Fabric, Forge, dan NeoForge, dengan Java 8, 17, 21, dan 25 sudah dibawa. Pilih renderer seperti Auto, MobileGlues, GL4ES, atau Zink.",
++        f8_title: "Microsoft, Ely.by & offline",
++        f8_desc: "Masuk dengan akun Microsoft atau Ely.by, atau main sendiri secara offline. Kata sandi Microsoft tidak pernah disimpan.",
++        f9_title: "Pembaruan & laporan crash",
++        f9_desc: "Perbarui dari dalam aplikasi dengan APK 32-bit atau 64-bit yang dipilih otomatis, dan bagikan log crash yang sudah dibersihkan ke mclo.gs.",
++        footer_disc: "Bukan produk resmi Minecraft. Tidak disetujui atau berafiliasi dengan Mojang, Microsoft, maupun proyek hulu yang dikreditkan di atas."
++      }
++    };
++
++    let currentLang = 'en';
++    let currentSlide = 0;
++    const captionKeys = ['cap_home', 'cap_mods', 'cap_controls'];
++
++    // Screenshot gallery: tabs, arrows, swipe and keyboard. Missing images fall back to a tidy placeholder.
++    const SHOTS = [
++      { src: 'screenshots/home.jpg', ph: 'ph_home_title' },
++      { src: 'screenshots/mods.jpg', ph: 'ph_mods_title' },
++      { src: 'screenshots/controls.jpg', ph: 'ph_ctrl_title' }
++    ];
++    const ICON = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>';
++    const viewport = document.getElementById('viewport');
++    const tabButtons = document.querySelectorAll('.tab-pill');
++    const slideCaption = document.getElementById('slideCaption');
++    const slideCounter = document.getElementById('slideCounter');
++
++    SHOTS.forEach((s, i) => {
++      const slide = document.createElement('div');
++      slide.className = 'screen-slide' + (i === 0 ? ' active' : '');
++      slide.innerHTML = `<div class="screen-placeholder">${ICON}<strong data-i18n="${s.ph}"></strong><span data-i18n="ph_hint"></span></div>`;
++      const img = new Image();
++      img.alt = tabButtons[i] ? tabButtons[i].textContent.trim() : '';
++      img.decoding = 'async';
++      img.draggable = false;
++      img.onload = () => slide.classList.add('loaded');
++      img.src = s.src;
++      slide.prepend(img);
++      viewport.appendChild(slide);
++    });
++
++    function goTo(i) {
++      currentSlide = (i + SHOTS.length) % SHOTS.length;
++      tabButtons.forEach((b, n) => {
++        b.classList.toggle('active', n === currentSlide);
++        b.setAttribute('aria-selected', String(n === currentSlide));
++      });
++      viewport.querySelectorAll('.screen-slide').forEach((s, n) => s.classList.toggle('active', n === currentSlide));
++      slideCaption.setAttribute('data-i18n', captionKeys[currentSlide]);
++      slideCaption.textContent = translations[currentLang][captionKeys[currentSlide]];
++      slideCounter.textContent = `${currentSlide + 1} / ${SHOTS.length}`;
++    }
++
++    tabButtons.forEach((b) => b.addEventListener('click', () => goTo(Number(b.dataset.slide))));
++    document.getElementById('prevShot').addEventListener('click', () => goTo(currentSlide - 1));
++    document.getElementById('nextShot').addEventListener('click', () => goTo(currentSlide + 1));
++
++    let swipeX = null;
++    viewport.addEventListener('pointerdown', (e) => { swipeX = e.clientX; });
++    viewport.addEventListener('pointerup', (e) => {
++      if (swipeX !== null && Math.abs(e.clientX - swipeX) > 40) goTo(currentSlide + (e.clientX < swipeX ? 1 : -1));
++      swipeX = null;
++    });
++    viewport.addEventListener('pointercancel', () => { swipeX = null; });
++    document.querySelector('.showcase-card').addEventListener('keydown', (e) => {
++      if (e.key === 'ArrowRight') goTo(currentSlide + 1);
++      if (e.key === 'ArrowLeft') goTo(currentSlide - 1);
++    });
++
++    // Direct GitHub APK Asset Resolver (No need to open GitHub website)
++    let apk64Asset = null;
++    let apk32Asset = null;
++
++    const releaseInfoEl = document.getElementById('releaseInfo');
++    const btn64 = document.getElementById('btnDownload64');
++    const btn32 = document.getElementById('btnDownload32');
++    const size64El = document.getElementById('size64');
++    const size32El = document.getElementById('size32');
++    const statusEl = document.getElementById('downloadStatus');
++
++    function formatMB(bytes) {
++      if (!bytes) return '';
++      return `• ${(bytes / (1024 * 1024)).toFixed(1)} MB`;
++    }
++
++    function triggerDirectDownload(asset) {
++      if (!asset || !asset.browser_download_url) {
++        statusEl.innerHTML = currentLang === 'id'
++          ? `Membuka halaman rilis GitHub... <a href="${RELEASES_PAGE}" target="_blank" rel="noopener">Klik di sini jika tidak otomatis</a>`
++          : `Opening GitHub releases... <a href="${RELEASES_PAGE}" target="_blank" rel="noopener">Click here if blocked</a>`;
++        window.open(RELEASES_PAGE, '_blank', 'noopener');
++        return;
++      }
++
++      statusEl.innerHTML = currentLang === 'id'
++        ? `Mengunduh <strong>${asset.name}</strong>... Jika tidak mulai otomatis, <a href="${asset.browser_download_url}">klik di sini</a>.`
++        : `Downloading <strong>${asset.name}</strong>... If it doesn't start, <a href="${asset.browser_download_url}">click here</a>.`;
++
++      const a = document.createElement('a');
++      a.href = asset.browser_download_url;
++      a.setAttribute('download', asset.name);
++      document.body.appendChild(a);
++      a.click();
++      a.remove();
++    }
++
++    async function loadLatestApkAssets() {
++      try {
++        const res = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=10`);
++        if (!res.ok) throw new Error('GitHub API error');
++        const releases = await res.json();
++
++        // Skip drafts and the rolling "uji" test build (not a real release); prefer stable releases.
++        const hasApk = (r) => !r.draft && r.tag_name !== 'uji' && Array.isArray(r.assets) && r.assets.some((a) => /\.apk$/i.test(a.name));
++        const validRelease = releases.find((r) => hasApk(r) && !r.prerelease) || releases.find(hasApk);
++
++        if (!validRelease) throw new Error('No APK found');
++
++        const apks = validRelease.assets.filter((a) => a.name.toLowerCase().endsWith('.apk'));
++        const is32 = (a) => /32bit|armeabi|v7a/i.test(a.name);
++        apk32Asset = apks.find(is32) || null;
++        apk64Asset = apks.find((a) => !is32(a) && /64bit|arm64|v8a/i.test(a.name)) || apks.find((a) => !is32(a)) || null;
++
++        const dateStr = new Date(validRelease.published_at).toLocaleDateString(currentLang === 'id' ? 'id-ID' : 'en-US', {
++          year: 'numeric',
++          month: 'short',
++          day: 'numeric'
++        });
++
++        releaseInfoEl.innerHTML = `<span>● ${translations[currentLang].dl_latest}: <strong>${validRelease.tag_name}</strong> (${dateStr})</span>`;
++
++        if (apk64Asset) {
++          size64El.textContent = formatMB(apk64Asset.size);
++        }
++
++        if (apk32Asset) {
++          size32El.textContent = formatMB(apk32Asset.size);
++        } else {
++          btn32.disabled = true;
++          size32El.textContent = `• ${translations[currentLang].dl_not_in_release}`;
++        }
++      } catch (err) {
++        releaseInfoEl.innerHTML = `<span>Direct APK • GitHub Releases</span>`;
++      }
++    }
++
++    btn64.addEventListener('click', () => triggerDirectDownload(apk64Asset));
++    btn32.addEventListener('click', () => triggerDirectDownload(apk32Asset));
++
++    // Credits (data mirrors the README credits tables)
++    const CREDIT_BASE = [
++      ['NUX Launcher', 'https://github.com/IsraaDeveloper/nuxlabs', 'IsraaDeveloper', 'GPL-3.0'],
++      ['Zalith Launcher 2', 'https://github.com/ZalithLauncher/ZalithLauncher2', 'MovTery & contributors', 'GPL-3.0'],
++      ['PojavLauncher', 'https://github.com/PojavLauncherTeam/PojavLauncher', 'artdeell, khanhtran & team', 'LGPL-3.0'],
++      ['Fold Craft Launcher', 'https://github.com/FCL-Team/FoldCraftLauncher', 'FCL Team', 'GPL-3.0']
++    ];
++    const CREDIT_LIBS = [
++      ['Horizon', 'https://github.com/horizon-rust/horizon', 'Ludovic Marie, Vasysik & contributors', 'MIT'],
++      ['MobileGlues', 'https://github.com/MobileGlues/MobileGlues', 'MobileGlues Team', 'LGPL-2.1'],
++      ['GL4ES', 'https://github.com/ptitSeb/gl4es', 'ptitSeb', 'MIT'],
++      ['LWJGL', 'https://github.com/LWJGL/lwjgl3', 'LWJGL Team', 'BSD-3-Clause'],
++      ['SDL3 & sdl2-compat', 'https://github.com/libsdl-org/SDL', 'Sam Lantinga & contributors', 'Zlib'],
++      ['Mesa 3D', 'https://mesa3d.org/', 'Mesa contributors', 'MIT'],
++      ['ANGLE', 'https://angleproject.org/', 'ANGLE authors', 'BSD-3-Clause'],
++      ['ByteHook', 'https://github.com/bytedance/bhook', 'ByteDance', 'MIT'],
++      ['authlib-injector', 'https://github.com/yushijinhun/authlib-injector', 'Yushijinhun', 'AGPL-3.0'],
++      ['TouchController', 'https://github.com/TouchController/TouchController', 'fifth_light', 'LGPL-3.0'],
++      ['Jetpack Compose & Material 3', 'https://developer.android.com/jetpack/compose', 'Android Open Source Project', 'Apache-2.0'],
++      ['OkHttp & Okio', 'https://github.com/square/okhttp', 'Square', 'Apache-2.0'],
++      ['sora-editor', 'https://github.com/Rosemoe/sora-editor', 'Rosemoe', 'LGPL-2.1'],
++      ['skinview3d', 'https://github.com/bs-community/skinview3d', 'Kent Rasmussen & contributors', 'MIT']
++    ];
++    const THANKS = [
++      ['Modrinth', 'https://modrinth.com'], ['CurseForge', 'https://www.curseforge.com/minecraft'],
++      ['Ely.by', 'https://ely.by'], ['mclo.gs', 'https://mclo.gs'],
++      ['Fabric', 'https://fabricmc.net'], ['Forge', 'https://minecraftforge.net'],
++      ['NeoForge', 'https://neoforged.net'], ['Quilt', 'https://quiltmc.org'],
++      ['Controlify', 'https://github.com/isXander/Controlify']
++    ];
++    const esc = (s) => s.replace(/&/g, '&amp;');
++    const fillCredits = (id, rows) => {
++      document.getElementById(id).innerHTML = rows.map(([n, u, by, lic]) =>
++        `<a class="credit-item" href="${u}" target="_blank" rel="noopener"><span><b>${esc(n)}</b><small>${esc(by)}</small></span><span class="lic">${lic}</span></a>`).join('');
++    };
++    fillCredits('creditBase', CREDIT_BASE);
++    fillCredits('creditLibs', CREDIT_LIBS);
++    document.getElementById('creditThanks').innerHTML = THANKS.map(([n, u]) =>
++      `<a class="chip-link" href="${u}" target="_blank" rel="noopener">${n}</a>`).join('');
++
++    // Language: Indonesian browsers start in ID, the choice is remembered
++    const langBtn = document.getElementById('langToggle');
++    function applyLang(lang) {
++      currentLang = lang;
++      document.documentElement.lang = lang;
++      document.querySelectorAll('[data-i18n]').forEach((el) => {
++        const v = translations[lang][el.getAttribute('data-i18n')];
++        if (v) el.innerHTML = v;
++      });
++      langBtn.innerHTML = lang === 'id' ? '<b>ID</b> / EN' : 'ID / <b>EN</b>';
++      if (!apk32Asset && btn32.disabled) size32El.textContent = `• ${translations[lang].dl_not_in_release}`;
++      try { localStorage.setItem('amber-lang', lang); } catch (e) {}
++    }
++    langBtn.addEventListener('click', () => applyLang(currentLang === 'en' ? 'id' : 'en'));
++
++    let savedLang = null;
++    try { savedLang = localStorage.getItem('amber-lang'); } catch (e) {}
++    applyLang(savedLang === 'id' || savedLang === 'en' ? savedLang : (navigator.language || '').toLowerCase().startsWith('id') ? 'id' : 'en');
++
++    loadLatestApkAssets();
++  </script>
+ </body>
+ </html>
+diff --git a/docs/site/screenshots/README.txt b/docs/site/screenshots/README.txt
+new file mode 100644
+index 0000000..133f7d8
+--- /dev/null
++++ b/docs/site/screenshots/README.txt
+@@ -0,0 +1,5 @@
++Taruh tangkapan layar launcher di folder ini (landscape, rasio sekitar 20:9, mis. 1600x720, JPG di bawah 300 KB):
++  home.jpg      -> tab "Home Screen"
++  mods.jpg      -> tab "Mod & Shader Browser"
++  controls.jpg  -> tab "Controls & Settings"
++Selama file belum ada, situs menampilkan placeholder "segera hadir".
+# FIN part=1/1 files=2

@@ -152,7 +152,18 @@ class MinecraftDownloader(
 
             // 3. Download Libraries (paralel, sampai 20 thread; lebih sedikit di HP RAM kecil)
             val libraries = detail.libraries ?: emptyList()
-            val allowedLibs = libraries.filter { isLibraryAllowed(it) }
+            // org.lwjgl milik Mojang (versi desktop) tidak dipakai: GameLauncher dan Forge melewatinya dan memakai LWJGL
+            // Amber untuk Android, jadi tidak perlu diunduh (sama dengan cabang Fabric di bawah).
+            val (lwjglLibs, allowedLibs) = libraries
+                .filter { isLibraryAllowed(it) }
+                .partition { (it.name ?: "").contains("org.lwjgl") }
+            if (lwjglLibs.isNotEmpty()) {
+                val skippedBytes = lwjglLibs.sumOf { it.downloads?.artifact?.size ?: 0L }
+                LauncherLog.event(
+                    "Unduhan",
+                    "${lwjglLibs.size} library LWJGL Mojang dilewati (${skippedBytes / 1024} KiB), Amber memakai LWJGL sendiri"
+                )
+            }
             val libDir = InstanceManager.getLibrariesDir(context)
             if (!libDir.exists()) libDir.mkdirs()
 

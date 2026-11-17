@@ -47,7 +47,7 @@ private const val IMAGE_DEFAULT_MAX_SIDE_PX = 512
  * Cache memori berbasis UKURAN BYTE (bukan jumlah gambar): 50 gambar besar tidak lagi bisa
  * menghabiskan puluhan MB RAM. Batas = 1/12 heap aplikasi, antara 8 dan 32 MB.
  */
-private val imageCache: LruCache<String, ImageBitmap> by lazy {
+private val imageCacheHolder: Lazy<LruCache<String, ImageBitmap>> = lazy {
     val maxBytes = (Runtime.getRuntime().maxMemory() / 12L)
         .coerceIn(8L * 1024L * 1024L, 32L * 1024L * 1024L)
         .toInt()
@@ -57,6 +57,19 @@ private val imageCache: LruCache<String, ImageBitmap> by lazy {
             return if (bytes > Int.MAX_VALUE.toLong()) Int.MAX_VALUE else bytes.toInt()
         }
     }
+}
+private val imageCache: LruCache<String, ImageBitmap> get() = imageCacheHolder.value
+
+/**
+ * Melepas cache gambar di memori saat Android meminta ([level] = tingkat onTrimMemory): tingkat 15 (kritis) ke atas,
+ * termasuk 20 (layar launcher tidak terlihat, mis. saat game berjalan), mengosongkannya; tingkat 10 mengurangi
+ * separuh. Gambar yang sedang tampil tetap dipegang layarnya sendiri, dan yang dibutuhkan lagi dibaca dari cache
+ * disk. Tidak membuat cache baru bila belum pernah dipakai (mis. di proses game).
+ */
+fun trimImageMemory(level: Int) {
+    if (level < 10 || !imageCacheHolder.isInitialized()) return
+    val cache = imageCacheHolder.value
+    if (level >= 15) cache.evictAll() else cache.trimToSize(cache.maxSize() / 2)
 }
 
 private val imageClientLock = Any()

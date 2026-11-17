@@ -87,9 +87,25 @@ class NuxApplication : Application() {
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        // 10 = RAM mulai sempit, 15 = kritis, 40 ke atas = proses ini berada di latar dan bisa dimatikan Android.
-        if (level == 10 || level == 15 || level >= 40) {
+        // 10 = RAM mulai sempit, 15 = kritis, 20 = layar launcher tidak terlihat (mis. game berjalan di proses lain),
+        // 40 ke atas = proses ini berada di latar dan bisa dimatikan Android.
+        if (level == 10 || level == 15 || level == 20 || level >= 40) {
             LauncherLog.event("Memori", "Android meminta aplikasi melepas memori (tingkat $level)")
         }
+        // Cache gambar launcher (sampai 32 MB) tidak perlu tertahan selagi game butuh RAM. Hanya di proses launcher:
+        // proses game, Forge, dan mesin tidak memakai cache itu, jadi kelasnya tidak perlu dimuat di sana.
+        if (isLauncherProcess()) {
+            try {
+                com.israadev.nuxlauncher.ui.components.trimImageMemory(level)
+            } catch (_: Throwable) {
+            }
+        }
+    }
+
+    /** True di proses utama (layar launcher). Di bawah Android 9 nama proses tidak tersedia: dianggap benar (aman, hanya tak berefek di proses lain). */
+    private fun isLauncherProcess(): Boolean = try {
+        android.os.Build.VERSION.SDK_INT < 28 || Application.getProcessName() == packageName
+    } catch (_: Throwable) {
+        true
     }
 }

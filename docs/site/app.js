@@ -157,14 +157,17 @@
     var b = $('hero-badge'); if (b) b.textContent = 'v' + rel.version + ' \u00b7 ' + fmt(s.total) + ' ' + TXT.dls;
     var ol = $('rel-list');
     if (!ol || !s.items.length) return;
+    var max = 1;
+    s.items.forEach(function (it) { if (it.n > max) max = it.n; });
     ol.innerHTML = '';
     s.items.forEach(function (it) {
-      var li = document.createElement('li'), a = document.createElement('a'), d = document.createElement('span'), c = document.createElement('span');
+      var li = document.createElement('li'), a = document.createElement('a'), d = document.createElement('span'), c = document.createElement('span'), bar = document.createElement('i');
       a.href = it.url; a.textContent = it.tag;
       d.className = 'd';
       try { d.textContent = new Date(it.date).toLocaleDateString(TXT.locale, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { /* abaikan */ }
       c.className = 'c'; c.textContent = fmt(it.n) + ' ' + TXT.dls;
-      li.appendChild(a); li.appendChild(d); li.appendChild(c);
+      bar.style.width = Math.max(2, Math.round(it.n / max * 100)) + '%';
+      li.appendChild(a); li.appendChild(d); li.appendChild(c); li.appendChild(bar);
       ol.appendChild(li);
     });
     ol.hidden = false;
@@ -175,7 +178,7 @@
     if (!el || !window.fetch) return;
     window.fetch('https://api.github.com/repos/' + REPO, { headers: { Accept: 'application/vnd.github+json' } })
       .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-      .then(function (d) { if (d && typeof d.stargazers_count === 'number') el.textContent = fmt(d.stargazers_count); })
+      .then(function (d) { if (d && typeof d.stargazers_count === 'number') { el.textContent = fmt(d.stargazers_count); var nv = $('nav-stars'); if (nv) nv.textContent = '\u2605 ' + fmt(d.stargazers_count); } })
       .catch(function () { /* angka tetap "-" */ });
   }
 
@@ -185,7 +188,7 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
-    all('.sec .head, .tile, .apk, .qa li, .statgrid .panel, .rels, .verify, .creds .panel, .steps li').forEach(function (el) { el.classList.add('rv'); io.observe(el); });
+    all('.sec .head, .tile, .apk, .qa li, .total, .rels, .verify, .creds .panel, .steps li, .end-cta .wrap').forEach(function (el) { el.classList.add('rv'); io.observe(el); });
   }
 
   /* ---------- Salin sidik jari ---------- */

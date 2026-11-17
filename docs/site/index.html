@@ -18,7 +18,7 @@
 <meta property="og:url" content="https://itsvynzzzz.github.io/AmberLauncher/">
 <meta property="og:image" content="https://itsvynzzzz.github.io/AmberLauncher/assets/icon-192.png">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body data-shots="assets/shots/" data-shot-home="Layar Home AmberLauncher.">
 <a class="skip" href="#isi">Lewati ke isi</a>
@@ -29,19 +29,19 @@
     <nav class="nav" aria-label="Menu"><a href="#unduh">Unduh</a><a href="#mulai">Cara mulai</a><a href="#fitur">Fitur</a><a href="#bantuan">Bantuan</a><a href="#kredit">Kredit</a></nav>
     <div class="end">
       <a class="pill" href="en/" hreflang="en" lang="en">English</a>
-      <a class="pill" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub</a>
+      <a class="pill" href="https://github.com/ItsVynzzzz/AmberLauncher">GitHub <span class="stars" id="nav-stars"></span></a>
     </div>
   </div>
 </header>
 
 <main id="isi">
   <section class="hero">
-    <div class="wrap">
-      <img class="logo" src="assets/icon-192.png" width="88" height="88" alt="">
-      <a class="badge" href="#statistik"><i></i><span id="hero-badge">Gratis dan open source</span></a>
-      <h1>Minecraft Java di Android</h1>
-      <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Buat instance, pasang mod dari Modrinth atau CurseForge, lalu main.</p>
-      <div class="cta" id="unduh">
+    <div class="wrap hero-grid">
+      <div>
+        <a class="badge" href="#statistik"><i></i><span id="hero-badge">Gratis dan open source</span></a>
+        <h1>Minecraft Java,<br><em>langsung di Android.</em></h1>
+        <p class="lead">AmberLauncher adalah launcher Minecraft Java Edition untuk Android. Buat instance, pasang mod dari Modrinth atau CurseForge, lalu main.</p>
+        <div class="cta" id="unduh">
         <a class="btn-dl" id="dl-main" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">
           <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
           <span class="t"><span class="l1">Unduh dari GitHub</span><span class="l2">Mencari versi terbaru…</span></span>
@@ -49,9 +49,9 @@
         <a class="pill big" data-dl="32" data-hide-missing href="https://github.com/ItsVynzzzz/AmberLauncher/releases" hidden>HP lama (32-bit)</a>
         <a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a>
       </div>
-      <p class="status" id="dl-status" role="status"></p>
-      <p class="note">Butuh Android 8.0 ke atas dan RAM 3 GB ke atas. <a href="#keaslian">Cek keaslian APK.</a></p>
-
+        <p class="status" id="dl-status" role="status"></p>
+        <p class="note">Butuh Android 8.0 ke atas dan RAM 3 GB ke atas. <a href="#keaslian">Cek keaslian APK.</a></p>
+      </div>
       <div class="stage" id="stage">
         <figure class="rig hint" id="rig">
           <div class="frame"><svg id="scene" viewBox="0 0 324 144" role="img" aria-label="Contoh tata letak kontrol layar AmberLauncher" focusable="false">
@@ -80,14 +80,10 @@
   <section class="sec" id="statistik">
     <div class="wrap">
       <div class="head"><h2>Unduhan</h2><p class="intro">Angka diambil langsung dari GitHub Releases.</p></div>
-      <div class="statgrid">
-        <div class="panel big"><span class="k">Total unduhan</span><b class="n" id="st-total">-</b></div>
-        <div class="panel"><span class="k">Versi terbaru</span><b class="n" id="st-ver">-</b></div>
-        <div class="panel"><span class="k">Bintang GitHub</span><b class="n" id="st-stars">-</b></div>
-        <div class="panel"><span class="k">Bahasa</span><b class="n">6</b></div>
+      <div class="dlgrid">
+        <div class="panel total"><span class="k">Total unduhan</span><b class="n" id="st-total">-</b><div class="mini"><span><b id="st-ver">-</b> terbaru</span><span><b id="st-stars">-</b> bintang</span><span><b>6</b> bahasa</span></div></div>
+        <ol class="rels panel" id="rel-list" hidden></ol>
       </div>
-      <h3 class="rel-h">Pembaruan</h3>
-      <ol class="rels panel" id="rel-list" hidden></ol>
     </div>
   </section>
 
@@ -181,6 +177,9 @@
       </div>
     </div>
   </section>
+  <section class="end-cta">
+    <div class="wrap"><h2>Mulai main di HP kamu.</h2><p>Gratis, open source, dan hemat RAM.</p><div class="row"><a class="pill big solid" data-dl="64" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Unduh 64-bit</a><a class="pill big" href="https://github.com/ItsVynzzzz/AmberLauncher/releases">Semua rilis</a></div></div>
+  </section>
 </main>
 
 <footer class="foot">
@@ -192,6 +191,6 @@
   </div>
 </footer>
 
-<script src="app.js" defer></script>
+<script src="app.js?v=3" defer></script>
 </body>
 </html>

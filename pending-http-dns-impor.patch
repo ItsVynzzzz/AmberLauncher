@@ -1,0 +1,281 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 0734e59..4582456 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -280,5 +280,9 @@ class MainActivity : ComponentActivity() {
+                 suggestedType = resolvedType
+             )
+         )
++        // Sudah ditangani. Bila Activity dibuat ulang (mode gelap, keyboard dicolok, ganti ukuran font), Android memberi
++        // intent yang sama; tanpa ini dialog impor yang sudah ditutup atau selesai muncul lagi.
++        intent.data = null
++        intent.removeExtra(Intent.EXTRA_STREAM)
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
+index d8c49c4..bb2d25e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
+@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
+ import okhttp3.FormBody
+ import okhttp3.MediaType.Companion.toMediaType
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import okhttp3.RequestBody.Companion.toRequestBody
+ import java.util.UUID
+@@ -70,7 +71,7 @@ object ElyByAuthService {
+     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+ 
+     private val gson = Gson()
+-    private val httpClient = OkHttpClient.Builder()
++    private val httpClient = HttpClients.base.newBuilder()
+         .connectTimeout(20, TimeUnit.SECONDS)
+         .readTimeout(30, TimeUnit.SECONDS)
+         .build()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
+index 245774e..26d9756 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
+@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
+ import okhttp3.FormBody
+ import okhttp3.MediaType.Companion.toMediaType
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import okhttp3.RequestBody.Companion.toRequestBody
+ import java.io.IOException
+@@ -33,7 +34,7 @@ object MicrosoftAuthService {
+     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+ 
+     private val gson = Gson()
+-    private val httpClient = OkHttpClient.Builder()
++    private val httpClient = HttpClients.base.newBuilder()
+         .connectTimeout(20, TimeUnit.SECONDS)
+         .readTimeout(30, TimeUnit.SECONDS)
+         .retryOnConnectionFailure(true)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
+index 3d1c4b8..fff094c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/MCLogsUploader.kt
+@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ import okhttp3.FormBody
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import java.io.File
+ import java.util.concurrent.TimeUnit
+@@ -14,7 +15,7 @@ object MCLogsUploader {
+     private const val MAX_LOG_SIZE_BYTES = 2 * 1024 * 1024 // 2 MB limit for mclo.gs
+ 
+     private val client by lazy {
+-        OkHttpClient.Builder()
++        HttpClients.base.newBuilder()
+             .connectTimeout(15, TimeUnit.SECONDS)
+             .readTimeout(20, TimeUnit.SECONDS)
+             .writeTimeout(20, TimeUnit.SECONDS)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/manifest/MojangManifestService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/manifest/MojangManifestService.kt
+index 2aef7a2..e223552 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/manifest/MojangManifestService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/manifest/MojangManifestService.kt
+@@ -6,6 +6,7 @@ import com.israadev.nuxlauncher.core.models.VersionManifest
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import java.io.IOException
+ import java.util.concurrent.TimeUnit
+@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit
+ object MojangManifestService {
+     private const val MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+     private val gson = Gson()
+-    private val client = OkHttpClient.Builder()
++    private val client = HttpClients.base.newBuilder()
+         .connectTimeout(15, TimeUnit.SECONDS)
+         .readTimeout(20, TimeUnit.SECONDS)
+         .build()
+@@ -27,15 +28,17 @@ object MojangManifestService {
+ 
+         try {
+             val request = Request.Builder().url(MANIFEST_URL).build()
+-            val response = client.newCall(request).execute()
+-            if (!response.isSuccessful) {
+-                return@withContext Result.failure(IOException("HTTP Error ${response.code}"))
++            // use: respons selalu ditutup, juga saat HTTP gagal (koneksinya kembali ke kolam)
++            client.newCall(request).execute().use { response ->
++                if (!response.isSuccessful) {
++                    return@withContext Result.failure(IOException("HTTP Error ${response.code}"))
++                }
++
++                val json = response.body?.string() ?: return@withContext Result.failure(IOException("Empty response body"))
++                val manifest = gson.fromJson(json, VersionManifest::class.java)
++                cachedManifest = manifest
++                Result.success(manifest)
+             }
+-
+-            val json = response.body?.string() ?: return@withContext Result.failure(IOException("Empty response body"))
+-            val manifest = gson.fromJson(json, VersionManifest::class.java)
+-            cachedManifest = manifest
+-            Result.success(manifest)
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+@@ -44,14 +47,15 @@ object MojangManifestService {
+     suspend fun getVersionDetail(url: String): Result<VersionDetail> = withContext(Dispatchers.IO) {
+         try {
+             val request = Request.Builder().url(url).build()
+-            val response = client.newCall(request).execute()
+-            if (!response.isSuccessful) {
+-                return@withContext Result.failure(IOException("HTTP Error ${response.code}"))
++            client.newCall(request).execute().use { response ->
++                if (!response.isSuccessful) {
++                    return@withContext Result.failure(IOException("HTTP Error ${response.code}"))
++                }
++
++                val json = response.body?.string() ?: return@withContext Result.failure(IOException("Empty response body"))
++                val detail = gson.fromJson(json, VersionDetail::class.java)
++                Result.success(detail)
+             }
+-
+-            val json = response.body?.string() ?: return@withContext Result.failure(IOException("Empty response body"))
+-            val detail = gson.fromJson(json, VersionDetail::class.java)
+-            Result.success(detail)
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/network/HttpClients.kt b/app/src/main/java/com/israadev/nuxlauncher/core/network/HttpClients.kt
+new file mode 100644
+index 0000000..416efe6
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/network/HttpClients.kt
+@@ -0,0 +1,13 @@
++package com.israadev.nuxlauncher.core.network
++
++import okhttp3.OkHttpClient
++
++/**
++ * Klien HTTP dasar launcher. Semua pemanggil yang butuh batas waktu sendiri memakai `HttpClients.base.newBuilder()`:
++ * klien turunan berbagi ConnectionPool dan Dispatcher dengan klien dasar ini, jadi tidak ada kumpulan koneksi dan
++ * thread baru untuk tiap layanan. DNS-nya [NuxDns]: DNS sistem lebih dulu, DNS-over-HTTPS hanya bila DNS sistem gagal
++ * (mis. DNS operator memblokir alamat Mojang atau Microsoft).
++ */
++object HttpClients {
++    val base: OkHttpClient by lazy { OkHttpClient.Builder().dns(NuxDns).build() }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
+index fcf3b7f..fdf8ddc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/MicrosoftWardrobeService.kt
+@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
+ import okhttp3.MediaType.Companion.toMediaType
+ import okhttp3.MultipartBody
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import okhttp3.RequestBody.Companion.toRequestBody
+ import java.io.File
+@@ -51,7 +52,7 @@ object MicrosoftWardrobeService {
+     private const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
+     private const val MOJANG_SESSION_URL = "https://sessionserver.mojang.com"
+ 
+-    private val httpClient = OkHttpClient.Builder()
++    private val httpClient = HttpClients.base.newBuilder()
+         .connectTimeout(15, TimeUnit.SECONDS)
+         .readTimeout(20, TimeUnit.SECONDS)
+         .build()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+index 2fa2b70..5ff75b8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/skin/SkinUtils.kt
+@@ -24,6 +24,7 @@ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.models.UserAccount
+ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import java.util.concurrent.TimeUnit
+ 
+@@ -179,7 +180,7 @@ object SkinUtils {
+         // C. If Microsoft account, fetch head from mc-heads.net
+         if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
+             runCatching {
+-                val client = OkHttpClient()
++                val client = HttpClients.base
+                 val req = Request.Builder().url("https://mc-heads.net/avatar/${account.uuid}/$targetSize").build()
+                 client.newCall(req).execute().use { resp ->
+                     if (resp.isSuccessful) {
+@@ -206,7 +207,7 @@ object SkinUtils {
+     private const val MAX_TEXTURE_BYTES = 2_000_000
+ 
+     // Pengalihan (redirect) diikuti manual di downloadTexture supaya alamat http:// bisa dinaikkan ke https://.
+-    private val textureClient = OkHttpClient.Builder()
++    private val textureClient = HttpClients.base.newBuilder()
+         .connectTimeout(15, TimeUnit.SECONDS)
+         .readTimeout(15, TimeUnit.SECONDS)
+         .followRedirects(false)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt
+index 29d2a58..545eb24 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateChecker.kt
+@@ -6,6 +6,7 @@ import com.israadev.nuxlauncher.AppLinks
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import java.util.concurrent.TimeUnit
+ 
+ /**
+@@ -24,7 +25,7 @@ object UpdateChecker {
+ 
+     private const val PER_PAGE = 10
+ 
+-    private val client = OkHttpClient.Builder()
++    private val client = HttpClients.base.newBuilder()
+         .connectTimeout(10, TimeUnit.SECONDS)
+         .readTimeout(15, TimeUnit.SECONDS)
+         .callTimeout(30, TimeUnit.SECONDS)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
+index d6e2f8d..f7fed59 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
+@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.update
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import java.io.File
+ import java.util.concurrent.TimeUnit
+ 
+@@ -41,7 +42,7 @@ object UpdateManager {
+ 
+     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+ 
+-    private val downloadClient = OkHttpClient.Builder()
++    private val downloadClient = HttpClients.base.newBuilder()
+         .connectTimeout(15, TimeUnit.SECONDS)
+         .readTimeout(30, TimeUnit.SECONDS)
+         .build()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index fde93f7..42dc0c3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+ import kotlin.math.roundToInt
+ import okhttp3.Request
+ import okhttp3.OkHttpClient
++import com.israadev.nuxlauncher.core.network.HttpClients
+ import kotlinx.coroutines.withContext
+ import kotlinx.coroutines.Dispatchers
+ import com.israadev.nuxlauncher.ui.theme.amberGlass
+@@ -547,7 +548,7 @@ internal fun AccountSkinPreview(
+                     BitmapFactory.decodeFile(local.absolutePath)
+                 } else if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
+                     val req = Request.Builder().url("https://mc-heads.net/skin/${account.uuid}").build()
+-                    OkHttpClient().newCall(req).execute().use { resp ->
++                    HttpClients.base.newCall(req).execute().use { resp ->
+                         if (resp.isSuccessful) {
+                             resp.body?.bytes()?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
+                         } else null
+# FIN part=1/1 files=11

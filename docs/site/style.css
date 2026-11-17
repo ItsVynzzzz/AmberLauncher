@@ -41,10 +41,10 @@ img,svg{max-width:100%}a{color:var(--text);text-decoration-color:var(--line-stro
 @media(min-width:700px){.btn-dl{flex:0 0 auto;min-width:300px}.cta .pill.big{flex:0 0 auto}}
 .hero .status{margin:14px 0 0;min-height:1.5em;font-size:.95rem;color:var(--dim)}.hero .status.err{color:#ffa399}.hero .note{margin:2px 0 0;max-width:36em;font-size:.93rem;color:var(--faint)}.hero .note a{color:var(--dim)}
 /* Jendela demo kontrol */
-.stage{min-width:0}.rig,.shot{margin:0}.frame{border:1px solid var(--line-strong);border-radius:22px;padding:8px;background:#000;box-shadow:0 50px 120px -50px rgba(255,214,10,.3)}
-.frame::before{content:"\25CF  \25CF  \25CF    amberlauncher \00b7 controls";display:block;padding:6px 8px 10px;font:600 .72rem var(--mono);letter-spacing:.04em;color:var(--faint);white-space:pre}
-.frame svg,.frame img{display:block;width:100%;height:auto;border-radius:14px}.rig svg{user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
-.rig figcaption,.shot figcaption,.shots figcaption{margin:14px 6px 0;font-size:.9rem;color:var(--faint)}
+.stage{min-width:0}.shot{margin:0}.frame{border:1px solid var(--line-strong);border-radius:22px;padding:8px;background:#000;box-shadow:0 50px 120px -50px rgba(255,214,10,.3)}
+.frame::before{content:"\25CF  \25CF  \25CF    amberlauncher";display:block;padding:6px 8px 10px;font:600 .72rem var(--mono);letter-spacing:.04em;color:var(--faint);white-space:pre}
+.frame svg,.frame img{display:block;width:100%;height:auto;border-radius:14px}
+.shot figcaption,.shots figcaption{margin:14px 6px 0;font-size:.9rem;color:var(--faint)}
 /* Pita teknologi */
 .marquee{overflow:hidden;padding:18px 0;border-top:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
 .marquee .track{display:flex;width:max-content;animation:mq 52s linear infinite}.marquee span{flex:none;margin-right:12px;padding:8px 20px;border:1px solid var(--line);border-radius:999px;background:var(--fill);color:var(--dim);font:600 .92rem var(--mono);white-space:nowrap}@keyframes mq{to{transform:translateX(-50%)}}
@@ -67,38 +67,10 @@ main{counter-reset:sec}.sec{padding:72px 0;border-top:1px solid var(--line)}
 .end-cta h2{margin:0 auto 14px;max-width:12em;font-size:clamp(2.2rem,7vw,4rem);line-height:1.02;font-weight:800;letter-spacing:-.04em;text-wrap:balance}.end-cta p{margin:0 auto 30px;max-width:30em;color:var(--dim)}.end-cta .row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 /* Muncul pelan */
 .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}.rv.in{opacity:1;transform:none}
-/* Demo kontrol */
-#scene text { font-family: var(--font); }
-#scene .joy { touch-action: none; cursor: grab; }
-#scene .joy .base { fill: rgba(255, 255, 255, 0.06); stroke: rgba(255, 255, 255, 0.45); stroke-width: 1.2; }
-#scene .joy .ring { fill: none; stroke: rgba(255, 255, 255, 0.18); stroke-width: 1; }
-#scene .joy .knob { fill: var(--amber); stroke: rgba(17, 17, 17, 0.55); stroke-width: 1.2; }
-#scene .pad { cursor: pointer; }
-#scene .pad .c { fill: rgba(17, 17, 17, 0.55); stroke: rgba(255, 255, 255, 0.6); stroke-width: 1.2; }
-#scene .pad .t { fill: var(--text); font-weight: 800; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-#scene .pad.on .c { fill: var(--amber); stroke: var(--amber); }
-#scene .pad.on .t { fill: var(--ink); }
-#scene .slot { cursor: pointer; }
-#scene .slot .hit { fill: transparent; }
-#scene .slot .box { fill: rgba(0, 0, 0, 0.5); stroke: rgba(255, 255, 255, 0.4); stroke-width: 1; }
-#scene .slot.sel .box { stroke: var(--amber); stroke-width: 1.6; fill: rgba(255, 214, 10, 0.16); }
-#scene .slot .it { pointer-events: none; }
-.rig .thumb.back, .rig .par.back { transition: transform 0.22s ease-out; }
-@keyframes nudge-thumb { 0%, 100% { transform: translate(0, 0); } 35% { transform: translate(15px, -3px); } 70% { transform: translate(-8px, 2px); } }
-@keyframes nudge-far { 0%, 100% { transform: translate(0, 0); } 35% { transform: translate(-4.5px, 0); } 70% { transform: translate(2.4px, 0); } }
-@keyframes nudge-near { 0%, 100% { transform: translate(0, 0); } 35% { transform: translate(-10.5px, 0); } 70% { transform: translate(5.6px, 0); } }
-.rig.hint .thumb { animation: nudge-thumb 2.4s ease-in-out 0.9s 1; }
-.rig.hint .far { animation: nudge-far 2.4s ease-in-out 0.9s 1; }
-.rig.hint .near { animation: nudge-near 2.4s ease-in-out 0.9s 1; }
-@keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(7px); } }
-@keyframes swing { 0%, 100% { transform: translate(0, 0); } 30% { transform: translate(-2px, 1px); } 60% { transform: translate(2px, -1px); } }
-#world.hop { animation: hop 0.45s ease-out; }
-#world.swing { animation: swing 0.18s linear; }
 
 /* Tampilan (hanya muncul bila ada screenshot) */
 .shots { display: grid; gap: 28px; }
 .shots figure { margin: 0; }
-@media (min-width: 800px) { .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); } .shots figure:first-child:last-child { grid-column: 1 / -1; } }
 
 /* Langkah berurutan */
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; max-width: 46em; }
@@ -176,3 +148,5 @@ main{counter-reset:sec}.sec{padding:72px 0;border-top:1px solid var(--line)}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+.shots{display:grid;gap:34px}.shots .shot{min-width:0}@media(min-width:960px){.shots{gap:44px}}
+@media(min-width:900px){.t-look,.t-ctrl,.t-more{grid-column:span 7}.t-acc,.t-game,.t-mods{grid-column:span 5}}

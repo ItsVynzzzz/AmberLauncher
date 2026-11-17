@@ -82,3 +82,17 @@ Tampilan di game	游戏内显示
 Tampilkan FPS dan RAM	显示 FPS 和内存
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	在游戏画面角落显示 FPS 和内存占用。在游戏中点按数字即可打开菜单并关闭。
 Angka FPS dan pemakaian RAM di sudut layar game	在游戏画面角落显示 FPS 和内存占用
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	主页特效
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	在主页和其他界面飘落或漂浮的粒子：雪花、樱花、落叶、雨滴等。默认关闭。
+Jenis efek	特效类型
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	选择与壁纸相配的特效。樱花和落叶适合风景，萤火虫和星光适合深色壁纸，雨滴和气泡适合清凉的氛围。
+Jumlah efek	特效数量
+Salju	雪花
+Sakura	樱花
+Daun musim gugur	秋叶
+Hujan	雨滴
+Kunang-kunang	萤火虫
+Kilau bintang	星光闪烁
+Bara api	火星
+Gelembung	气泡

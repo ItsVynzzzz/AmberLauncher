@@ -187,6 +187,7 @@ fun SettingsScreen(
     var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
+    var homeEffect by remember(currentSettings.homeEffect) { mutableStateOf(normalizeHomeEffect(currentSettings.homeEffect)) }
     var snowAmount by remember(currentSettings.snowAmount) { mutableIntStateOf(currentSettings.snowAmount.coerceIn(10, 100)) }
     var homeSkinOn by remember(currentSettings.homeSkinPreview) { mutableStateOf(currentSettings.homeSkinPreview) }
     // Dua ukuran terpisah. Nilai sementara selama menggeser; baru disimpan saat jari diangkat, supaya
@@ -248,6 +249,7 @@ fun SettingsScreen(
             uiStyle = uiStyleId,
             bgDim = bgDim,
             snowEnabled = snowOn,
+            homeEffect = homeEffect,
             snowAmount = snowAmount,
             homeSkinPreview = homeSkinOn,
             uiScalePercent = uiScalePct,
@@ -1166,8 +1168,8 @@ fun SettingsScreen(
                             }
                             SettingDivider()
                             SettingSwitchRow(
-                                title = "Efek salju",
-                                desc = "Salju turun di Beranda dan layar lain. Bawaan mati.",
+                                title = "Efek di beranda",
+                                desc = "Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.",
                                 checked = snowOn,
                                 onCheckedChange = {
                                     snowOn = it
@@ -1176,8 +1178,19 @@ fun SettingsScreen(
                             )
                             if (snowOn) {
                                 SettingDivider()
+                                SettingChoiceRow(
+                                    title = "Jenis efek",
+                                    desc = "Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.",
+                                    options = HomeEffectChoices,
+                                    selected = homeEffect,
+                                    onSelect = {
+                                        homeEffect = it
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
                                 SettingSliderRow(
-                                    title = "Jumlah salju",
+                                    title = "Jumlah efek",
                                     valueText = "$snowAmount%",
                                     value = snowAmount.toFloat(),
                                     valueRange = 10f..100f,
@@ -1278,6 +1291,7 @@ fun SettingsScreen(
                     uiStyleId = reset.uiStyle
                     bgDim = reset.bgDim
                     snowOn = reset.snowEnabled
+                    homeEffect = normalizeHomeEffect(reset.homeEffect)
                     snowAmount = reset.snowAmount
                     homeSkinOn = reset.homeSkinPreview
                     uiScalePct = reset.uiScalePercent

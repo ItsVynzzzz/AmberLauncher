@@ -78,3 +78,17 @@ Tampilan di game	Pantalla en el juego
 Tampilkan FPS dan RAM	Mostrar FPS y RAM
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS y uso de RAM en la esquina de la pantalla del juego. Toca los números en el juego para abrir el menú y desactivarlo.
 Angka FPS dan pemakaian RAM di sudut layar game	FPS y uso de RAM en la esquina de la pantalla del juego
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	Efecto en la pantalla de inicio
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	Partículas que caen o flotan en la pantalla de inicio y otras pantallas: nieve, sakura, hojas, lluvia y más. Desactivado por defecto.
+Jenis efek	Tipo de efecto
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	Elige el que combine con tu fondo. Sakura y hojas van bien con paisajes, luciérnagas y destellos con fondos oscuros, lluvia y burbujas con un ambiente fresco.
+Jumlah efek	Cantidad de efectos
+Salju	Nieve
+Sakura	Sakura
+Daun musim gugur	Hojas de otoño
+Hujan	Lluvia
+Kunang-kunang	Luciérnagas
+Kilau bintang	Destellos estelares
+Bara api	Brasas
+Gelembung	Burbujas

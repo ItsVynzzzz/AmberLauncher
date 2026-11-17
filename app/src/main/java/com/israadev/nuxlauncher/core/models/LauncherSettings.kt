@@ -125,7 +125,9 @@ data class LauncherSettings(
     // Efek salju (suasana Natal): bawaan mati. Di Beranda lebat; di layar lain lebih sedikit dan redup
     // seperti di dalam ruangan. Bisa dinyalakan di Pengaturan > Tampilan.
     val snowEnabled: Boolean = false,
-    val snowAmount: Int = 60, // 10 - 100
+    val snowAmount: Int = 60, // 10 - 100 (jumlah untuk semua efek beranda, bukan hanya salju)
+    // Jenis efek beranda: snow, sakura, leaves, rain, fireflies, sparkle, embers, bubbles. snowEnabled = saklar utamanya.
+    val homeEffect: String = "snow",
 
     // Pratinjau skin akun aktif di Home (figur diam di kanan atas tombol PLAY, geser untuk memutar).
     // Digambar di kanvas tanpa animasi, tapi bisa dimatikan untuk HP yang sangat lemah.

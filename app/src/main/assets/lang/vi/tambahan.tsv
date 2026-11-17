@@ -78,3 +78,17 @@ Tampilan di game	Hiển thị trong game
 Tampilkan FPS dan RAM	Hiện FPS và RAM
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS và mức dùng RAM ở góc màn hình game. Chạm vào các con số trong game để mở menu và tắt đi.
 Angka FPS dan pemakaian RAM di sudut layar game	FPS và mức dùng RAM ở góc màn hình game
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	Hiệu ứng ở màn hình chính
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	Các hạt rơi hoặc bay lơ lửng ở màn hình chính và các màn hình khác: tuyết, hoa anh đào, lá, mưa và nhiều hơn nữa. Mặc định tắt.
+Jenis efek	Loại hiệu ứng
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	Chọn hiệu ứng hợp với hình nền. Hoa anh đào và lá hợp với phong cảnh, đom đóm và ánh lấp lánh hợp với hình nền tối, mưa và bong bóng hợp với không khí mát mẻ.
+Jumlah efek	Số lượng hiệu ứng
+Salju	Tuyết
+Sakura	Hoa anh đào
+Daun musim gugur	Lá mùa thu
+Hujan	Mưa
+Kunang-kunang	Đom đóm
+Kilau bintang	Ánh sao lấp lánh
+Bara api	Than hồng
+Gelembung	Bong bóng

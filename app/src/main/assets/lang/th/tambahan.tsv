@@ -78,3 +78,17 @@ Tampilan di game	การแสดงผลในเกม
 Tampilkan FPS dan RAM	แสดง FPS และ RAM
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	แสดง FPS และการใช้ RAM ที่มุมหน้าจอเกม แตะตัวเลขในเกมเพื่อเปิดเมนูและปิดการแสดงผลได้
 Angka FPS dan pemakaian RAM di sudut layar game	แสดง FPS และการใช้ RAM ที่มุมหน้าจอเกม
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	เอฟเฟกต์หน้าหลัก
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	อนุภาคที่ตกหรือลอยในหน้าหลักและหน้าจออื่น ๆ เช่น หิมะ ซากุระ ใบไม้ ฝน และอื่น ๆ ปิดไว้เป็นค่าเริ่มต้น
+Jenis efek	ประเภทเอฟเฟกต์
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	เลือกให้เข้ากับวอลเปเปอร์ ซากุระและใบไม้เหมาะกับวิวทิวทัศน์ หิ่งห้อยและประกายดาวเหมาะกับวอลเปเปอร์สีเข้ม ฝนและฟองอากาศเหมาะกับบรรยากาศเย็นสบาย
+Jumlah efek	จำนวนเอฟเฟกต์
+Salju	หิมะ
+Sakura	ซากุระ
+Daun musim gugur	ใบไม้ร่วง
+Hujan	ฝน
+Kunang-kunang	หิ่งห้อย
+Kilau bintang	ประกายดาว
+Bara api	ถ่านไฟ
+Gelembung	ฟองอากาศ

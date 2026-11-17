@@ -80,3 +80,17 @@ Tampilan di game	Display sa laro
 Tampilkan FPS dan RAM	Ipakita ang FPS at RAM
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS at paggamit ng RAM sa sulok ng screen ng laro. I-tap ang mga numero sa laro para buksan ang menu at i-off ito.
 Angka FPS dan pemakaian RAM di sudut layar game	FPS at paggamit ng RAM sa sulok ng screen ng laro
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	Epekto sa home
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	Mga particle na bumabagsak o lumulutang sa Home at iba pang screen: niyebe, sakura, dahon, ulan, at iba pa. Naka-off bilang default.
+Jenis efek	Uri ng epekto
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	Pumili ng bagay sa wallpaper mo. Bagay ang sakura at dahon sa tanawin, ang alitaptap at kislap sa madilim na wallpaper, at ang ulan at bula sa malamig na mood.
+Jumlah efek	Dami ng epekto
+Salju	Niyebe
+Sakura	Sakura
+Daun musim gugur	Mga dahon ng taglagas
+Hujan	Ulan
+Kunang-kunang	Mga alitaptap
+Kilau bintang	Kislap ng bituin
+Bara api	Mga baga
+Gelembung	Mga bula

@@ -76,3 +76,17 @@ Tampilan di game	In-game display
 Tampilkan FPS dan RAM	Show FPS and RAM
 Angka FPS dan pemakaian RAM di sudut layar game. Ketuk angkanya di dalam game untuk membuka menu dan mematikannya.	FPS and RAM usage in the corner of the game screen. Tap the numbers in the game to open the menu and turn it off.
 Angka FPS dan pemakaian RAM di sudut layar game	FPS and RAM usage in the corner of the game screen
+# Efek beranda: sakura, daun, hujan, dan lainnya (16 Nov 2026)
+Efek di beranda	Home screen effect
+Partikel yang turun atau melayang di Beranda dan layar lain: salju, sakura, daun, hujan, dan lainnya. Bawaan mati.	Particles that fall or float on the Home screen and other screens: snow, sakura, leaves, rain, and more. Off by default.
+Jenis efek	Effect type
+Pilih yang cocok dengan wallpaper-mu. Sakura dan daun cocok untuk pemandangan, kunang-kunang dan kilau bintang untuk wallpaper gelap, hujan dan gelembung untuk suasana sejuk.	Pick one that suits your wallpaper. Sakura and leaves suit scenery, fireflies and sparkles suit dark wallpapers, rain and bubbles suit a cool mood.
+Jumlah efek	Effect amount
+Salju	Snow
+Sakura	Sakura
+Daun musim gugur	Autumn leaves
+Hujan	Rain
+Kunang-kunang	Fireflies
+Kilau bintang	Starlight sparkle
+Bara api	Embers
+Gelembung	Bubbles

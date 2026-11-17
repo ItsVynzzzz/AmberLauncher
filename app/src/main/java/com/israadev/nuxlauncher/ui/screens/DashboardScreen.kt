@@ -148,8 +148,8 @@ import com.israadev.nuxlauncher.ui.components.AmbientSampler
 import com.israadev.nuxlauncher.ui.components.AmbientState
 import com.israadev.nuxlauncher.ui.components.HomeInfo
 import com.israadev.nuxlauncher.ui.components.HomeVideoLayer
-import com.israadev.nuxlauncher.ui.components.SnowBackLayer
-import com.israadev.nuxlauncher.ui.components.SnowFrontLayer
+import com.israadev.nuxlauncher.ui.components.HomeEffectBackLayer
+import com.israadev.nuxlauncher.ui.components.HomeEffectFrontLayer
 import com.israadev.nuxlauncher.ui.components.NuxButton
 import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
@@ -510,9 +510,11 @@ fun DashboardScreen() {
                 )
             }
 
-            // Salju di belakang semua UI: lebat di Home, sedikit dan redup di layar lain (seperti di dalam ruangan).
+            // Efek pilihan (salju, sakura, daun, dan lainnya) di belakang semua UI: banyak di Home, sedikit dan redup di
+            // layar lain (seperti di dalam ruangan).
             if (launcherSettings.snowEnabled) {
-                SnowBackLayer(
+                HomeEffectBackLayer(
+                    effect = launcherSettings.homeEffect,
                     amount = launcherSettings.snowAmount,
                     indoor = currentTab != "home"
                 )
@@ -630,9 +632,10 @@ fun DashboardScreen() {
             }
             }
 
-            // Beberapa butir salju di atas UI supaya suasana Natalnya terasa (tidak menghalangi sentuhan).
+            // Beberapa partikel efek di atas UI supaya suasananya terasa (tidak menghalangi sentuhan).
             if (launcherSettings.snowEnabled) {
-                SnowFrontLayer(
+                HomeEffectFrontLayer(
+                    effect = launcherSettings.homeEffect,
                     amount = launcherSettings.snowAmount,
                     indoor = currentTab != "home"
                 )

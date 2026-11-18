@@ -30,10 +30,12 @@ import com.israadev.nuxlauncher.core.update.UpdateChecker
 import com.israadev.nuxlauncher.core.update.UpdateFailure
 import com.israadev.nuxlauncher.core.update.UpdateManager
 import com.israadev.nuxlauncher.core.update.UpdateState
+import com.israadev.nuxlauncher.core.update.WhatsNew
 import com.israadev.nuxlauncher.ui.components.AmberAlert
 import com.israadev.nuxlauncher.ui.components.AmberButton
 import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
 import com.israadev.nuxlauncher.ui.components.AmberInfoBox
+import com.israadev.nuxlauncher.ui.components.WhatsNewList
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.Amber
 import java.util.Locale
@@ -69,6 +71,8 @@ private fun AvailableDialog(info: AppUpdate) {
     val context = LocalContext.current
     val current = remember { UpdateChecker.currentVersionName(context) }
     val notes = remember(info) { ReleaseParser.readableNotes(info.notes) }
+    // Rilis baru membawa catatan semua bahasa (blok tersembunyi); rilis lama hanya teks Inggris di atas
+    val whatsNew = remember(info) { WhatsNew.fromReleaseBody(info.notes) }
     val metered = remember { isMetered(context) }
 
     AmberAlert(
@@ -120,7 +124,7 @@ private fun AvailableDialog(info: AppUpdate) {
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-        if (notes.isNotBlank()) {
+        if (whatsNew != null || notes.isNotBlank()) {
             AmberInfoBox(modifier = Modifier.padding(top = 12.dp)) {
                 Text(
                     text = "Yang baru",
@@ -134,12 +138,16 @@ private fun AvailableDialog(info: AppUpdate) {
                         .heightIn(max = 160.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Text(
-                        text = notes,
-                        color = Amber.TextDim,
-                        fontSize = 13.sp,
-                        lineHeight = 19.sp
-                    )
+                    if (whatsNew != null) {
+                        WhatsNewList(notes = whatsNew)
+                    } else {
+                        Text(
+                            text = notes,
+                            color = Amber.TextDim,
+                            fontSize = 13.sp,
+                            lineHeight = 19.sp
+                        )
+                    }
                 }
             }
         }

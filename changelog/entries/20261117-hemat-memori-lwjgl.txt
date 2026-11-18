@@ -1,0 +1,24 @@
+[id]
+~ Unduhan Minecraft tidak lagi mengunduh library LWJGL Mojang yang tidak dipakai, jadi lebih hemat data dan penyimpanan.
+~ Launcher melepas cache gambar saat game berjalan atau RAM sempit, sehingga lebih lega untuk game.
+[en]
+~ Minecraft downloads no longer fetch the unused Mojang LWJGL libraries, saving data and storage.
+~ The launcher frees its image cache while a game runs or memory is low, leaving more RAM for the game.
+[es]
+~ Las descargas de Minecraft ya no bajan las bibliotecas LWJGL de Mojang que no se usan, así que ahorran datos y almacenamiento.
+~ El launcher libera su caché de imágenes mientras se juega o cuando hay poca memoria, dejando más RAM al juego.
+[fil]
+~ Hindi na dina-download ang hindi ginagamit na LWJGL library ng Mojang, kaya mas tipid sa data at storage.
+~ Binibitawan ng launcher ang image cache habang tumatakbo ang laro o kapos ang memory, kaya mas maraming RAM ang laro.
+[pt]
+~ Os downloads do Minecraft não baixam mais as bibliotecas LWJGL da Mojang que não são usadas, economizando dados e armazenamento.
+~ O launcher libera o cache de imagens enquanto o jogo roda ou quando a memória está baixa, deixando mais RAM para o jogo.
+[th]
+~ การดาวน์โหลด Minecraft ไม่ดึงไลบรารี LWJGL ของ Mojang ที่ไม่ได้ใช้อีกต่อไป ช่วยประหยัดเน็ตและพื้นที่เก็บข้อมูล
+~ ตัวเปิดเกมคืนแคชรูปภาพขณะเล่นเกมหรือเมื่อแรมเหลือน้อย ทำให้เกมมีแรมมากขึ้น
+[vi]
+~ Quá trình tải Minecraft không còn tải các thư viện LWJGL của Mojang không dùng đến, tiết kiệm dữ liệu và dung lượng.
+~ Launcher giải phóng bộ nhớ đệm hình ảnh khi đang chơi hoặc khi RAM thấp, nhường thêm RAM cho game.
+[zh]
+~ 下载 Minecraft 时不再下载用不到的 Mojang LWJGL 库，节省流量和存储空间。
+~ 游戏运行或内存不足时，启动器会释放图片缓存，为游戏留出更多内存。

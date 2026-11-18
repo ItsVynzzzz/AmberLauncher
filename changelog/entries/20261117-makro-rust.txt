@@ -1,0 +1,16 @@
+[id]
++ Makro (perintah, turbo, urutan aksi) kini juga berjalan di mesin Rust.
+[en]
++ Macros (command, turbo, action sequence) now also work on the Rust engine.
+[es]
++ Las macros (comando, turbo, secuencia de acciones) ahora también funcionan en el motor Rust.
+[fil]
++ Gumagana na rin sa Rust engine ang mga macro (command, turbo, sequence ng aksyon).
+[pt]
++ As macros (comando, turbo, sequência de ações) agora também funcionam no motor Rust.
+[th]
++ แมโคร (คำสั่ง เทอร์โบ ลำดับการกระทำ) ตอนนี้ใช้ได้กับเอนจิน Rust ด้วยแล้ว
+[vi]
++ Macro (lệnh, turbo, chuỗi thao tác) giờ cũng chạy được trên engine Rust.
+[zh]
++ 宏（命令、连发、动作序列）现在也可在 Rust 引擎上使用。

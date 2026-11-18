@@ -9,7 +9,7 @@ import java.util.Locale
  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
  *
- * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
+ * Bahasa bawaan adalah [SYSTEM] ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
  * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], [PT], [TH], [ZH], atau [FIL]. Pada pilihan [SYSTEM], HP
  * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, Portugis (Brasil), Thai, Mandarin
  * (semua varian memakai aksara sederhana), atau Filipino (kode "fil" maupun "tl") memakai bahasa itu, dan bahasa lain
@@ -27,7 +27,7 @@ object Tr {
     const val FIL = "fil"
 
     /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
-    const val DEFAULT_CHOICE = EN
+    const val DEFAULT_CHOICE = SYSTEM
 
     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
     private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT, TH, ZH, FIL)

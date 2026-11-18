@@ -15,6 +15,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
 import com.israadev.nuxlauncher.core.update.UpdateManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
 import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
+import com.israadev.nuxlauncher.ui.dialogs.AmberWhatsNewPrompt
 import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
 import com.israadev.nuxlauncher.ui.screens.DashboardScreen
 import com.israadev.nuxlauncher.ui.theme.NuxColors
@@ -124,6 +126,9 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                             AmberUpdatePrompt(enabled = introDone)
+                            // Catatan "Yang baru" setelah pembaruan, menunggu dialog lain selesai dan tidak menumpuk di atas pop-up pembaruan
+                            val updateOpen by com.israadev.nuxlauncher.core.update.UpdateManager.promptOpen.collectAsState()
+                            AmberWhatsNewPrompt(enabled = introDone && !updateOpen)
                         }
                         }
                     }

@@ -1,0 +1,24 @@
+[id]
+! Dialog impor "Buka dengan" tidak muncul lagi setelah layar dibuat ulang (mis. ganti mode gelap).
+~ Daftar versi Mojang, login Microsoft dan Ely.by, pembaruan, dan unggah log kini punya DNS cadangan bila DNS operator bermasalah, dan berbagi koneksi sehingga lebih ringan.
+[en]
+! The "Open with" import dialog no longer reappears after the screen is recreated (for example after switching dark mode).
+~ The Mojang version list, Microsoft and Ely.by sign-in, updates, and log upload now have a backup DNS for when your provider's DNS fails, and share connections to stay lighter.
+[es]
+! El diálogo de importar de «Abrir con» ya no reaparece al recrearse la pantalla (por ejemplo, al cambiar el modo oscuro).
+~ La lista de versiones de Mojang, el inicio de sesión de Microsoft y Ely.by, las actualizaciones y la subida de registros ahora tienen un DNS de respaldo cuando falla el de tu operador, y comparten conexiones para ser más ligeros.
+[fil]
+! Hindi na lumalabas muli ang import dialog ng "Buksan gamit ang" kapag nire-create ulit ang screen (hal. kapag nagpalit ng dark mode).
+~ May backup DNS na ang listahan ng bersyon ng Mojang, pag-sign in sa Microsoft at Ely.by, mga update, at pag-upload ng log kapag pumalya ang DNS ng provider mo, at nagbabahagi ng koneksyon para mas magaan.
+[pt]
+! O diálogo de importação de "Abrir com" não reaparece mais quando a tela é recriada (por exemplo, ao alternar o modo escuro).
+~ A lista de versões da Mojang, o login da Microsoft e do Ely.by, as atualizações e o envio de logs agora têm um DNS de reserva para quando o DNS da operadora falha, e compartilham conexões para ficar mais leves.
+[th]
+! กล่องนำเข้า "เปิดด้วย" จะไม่โผล่ซ้ำอีกเมื่อหน้าจอถูกสร้างใหม่ (เช่น ตอนสลับโหมดมืด)
+~ รายการเวอร์ชันของ Mojang การเข้าสู่ระบบ Microsoft และ Ely.by การอัปเดต และการอัปโหลดล็อก มี DNS สำรองเมื่อ DNS ของผู้ให้บริการมีปัญหา และใช้การเชื่อมต่อร่วมกันเพื่อให้เบาขึ้น
+[vi]
+! Hộp thoại nhập "Mở bằng" không còn hiện lại khi màn hình được tạo lại (ví dụ khi đổi chế độ tối).
+~ Danh sách phiên bản Mojang, đăng nhập Microsoft và Ely.by, cập nhật và tải log lên giờ có DNS dự phòng khi DNS của nhà mạng gặp sự cố, và dùng chung kết nối để nhẹ hơn.
+[zh]
+! 屏幕重建后（例如切换深色模式），“打开方式”的导入对话框不再重复弹出。
+~ Mojang 版本列表、Microsoft 和 Ely.by 登录、更新以及日志上传现在有备用 DNS（运营商 DNS 出问题时使用），并共享连接，更轻量。

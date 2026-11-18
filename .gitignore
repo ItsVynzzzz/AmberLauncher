@@ -35,3 +35,6 @@ Thumbs.db
 
 # SDK Discord (berlisensi, tidak boleh dibagikan ulang): diunduh workflow dari repo privat saat build
 /app/libs/discord_partner_sdk.aar
+
+# Catatan "Yang baru" dibuat saat build oleh scripts/release-notes.py, tidak disimpan di repo
+/app/src/main/assets/whatsnew.json

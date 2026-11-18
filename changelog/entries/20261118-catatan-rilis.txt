@@ -1,0 +1,24 @@
+[id]
++ Halaman "Yang baru" (di Tentang dan setelah pembaruan) yang mengikuti catatan rilis dan bahasa launcher.
+~ Bahasa bawaan sekarang "Ikuti sistem", bukan Inggris.
+[en]
++ A "What's new" page (in About and after an update) that follows the release notes and your launcher language.
+~ The default language is now "Follow system" instead of English.
+[es]
++ Una página «Novedades» (en Acerca de y tras una actualización) que sigue las notas de la versión y el idioma del launcher.
+~ El idioma predeterminado ahora es «Seguir el sistema» en lugar de inglés.
+[fil]
++ May pahinang "Ano'ng bago" (sa About at pagkatapos ng update) na sumusunod sa release notes at wika ng launcher.
+~ Ang default na wika ay "Sundin ang system" na, hindi na English.
+[pt]
++ Uma página "Novidades" (em Sobre e após uma atualização) que segue as notas da versão e o idioma do launcher.
+~ O idioma padrão agora é "Seguir o sistema" em vez de inglês.
+[th]
++ หน้า "มีอะไรใหม่" (ใน เกี่ยวกับ และหลังอัปเดต) ที่ตรงกับบันทึกการอัปเดตและภาษาของตัวเปิดเกม
+~ ภาษาเริ่มต้นเปลี่ยนเป็น "ตามระบบ" แทนภาษาอังกฤษ
+[vi]
++ Trang "Có gì mới" (trong Giới thiệu và sau khi cập nhật) theo ghi chú phát hành và ngôn ngữ của launcher.
+~ Ngôn ngữ mặc định giờ là "Theo hệ thống" thay vì tiếng Anh.
+[zh]
++ 新增“新功能”页面（在“关于”中以及更新后），内容随发布说明和启动器语言显示。
+~ 默认语言改为“跟随系统”，不再是英语。

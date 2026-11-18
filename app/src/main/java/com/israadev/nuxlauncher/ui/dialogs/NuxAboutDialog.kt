@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.AppLinks
+import com.israadev.nuxlauncher.core.update.WhatsNewStore
 import com.israadev.nuxlauncher.ui.components.AmberActionButton
 import com.israadev.nuxlauncher.ui.components.AmberChoicePill
 import com.israadev.nuxlauncher.ui.components.AmberPage
@@ -54,6 +56,7 @@ import com.israadev.nuxlauncher.ui.components.AmberPageLabel
 import com.israadev.nuxlauncher.ui.components.AmberPanel
 import com.israadev.nuxlauncher.ui.components.AmberRailItem
 import com.israadev.nuxlauncher.ui.components.AmberTag
+import com.israadev.nuxlauncher.ui.components.WhatsNewList
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.screens.AmberPillButton
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -249,8 +252,8 @@ fun NuxAboutDialog(
     val onOpen: (String) -> Unit = remember(context) { { url: String -> openLink(context, url) } }
     val donateUrl = AppLinks.DONATE_URL.trim()
     val onDonate: (() -> Unit)? = if (donateUrl.isNotEmpty()) ({ onOpen(donateUrl) }) else null
-    val tabs = remember { listOf("Ringkasan", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
-    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.Extension, Icons.Outlined.Description)
+    val tabs = remember { listOf("Ringkasan", "Yang baru", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
+    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.NewReleases, Icons.Outlined.Extension, Icons.Outlined.Description)
 
     AmberPage(
         onDismiss = onDismissRequest,
@@ -362,7 +365,8 @@ private fun AboutContent(
         ) {
             when (tab) {
                 0 -> OverviewTab(onOpen, columns)
-                1 -> LibrariesTab(onOpen, columns)
+                1 -> WhatsNewTab()
+                2 -> LibrariesTab(onOpen, columns)
                 else -> LicenseTab(onOpen)
             }
         }
@@ -391,6 +395,29 @@ private fun OverviewTab(onOpen: (String) -> Unit, columns: Int) {
         body = "Bukan produk resmi Minecraft. Tidak disetujui oleh atau terkait dengan Mojang Studios atau Microsoft. Minecraft adalah merek dagang milik Mojang AB / Microsoft Corporation. Seluruh aset game diunduh langsung dari server distribusi resmi Mojang.",
         highlight = false
     )
+}
+
+@Composable
+private fun WhatsNewTab() {
+    val context = LocalContext.current
+    val notes = remember(context) { WhatsNewStore.bundled(context) }
+    AboutTitle(
+        title = "Yang baru",
+        subtitle = if (notes != null && notes.version.isNotBlank()) "Perubahan di versi ${notes.version}." else "Catatan perubahan versi ini."
+    )
+    AmberPanel {
+        if (notes != null) {
+            // Isi panel ini ikut tergulir bersama halaman Tentang, jadi daftar yang panjang tidak terpotong
+            WhatsNewList(notes = notes, textColor = AmberUi.TextDim, headingColor = AmberUi.AccentSoft)
+        } else {
+            Text(
+                text = "Belum ada catatan perubahan untuk versi ini.",
+                color = AmberUi.TextDim,
+                fontSize = 13.sp,
+                lineHeight = 20.sp
+            )
+        }
+    }
 }
 
 @Composable

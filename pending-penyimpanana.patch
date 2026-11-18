@@ -1,0 +1,964 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+index b15e284..83ed6e7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+@@ -76,7 +76,7 @@ object GameLogArchive {
+ 
+     private val metaLock = Any()
+ 
+-    /** Folder tempat log disimpan (terlihat di pengelola berkas: nuxlauncher/logs). */
++    /** Folder tempat log disimpan (di folder data AmberLauncher: logs). */
+     fun logsDir(context: Context): File = File(InstanceManager.getNuxDir(context), "logs")
+ 
+     /** Log yang tersimpan, yang terbaru di depan. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index 1302f96..a73d0d1 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -5,6 +5,7 @@ import com.google.gson.Gson
+ import com.google.gson.reflect.TypeToken
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
+ import com.israadev.nuxlauncher.core.modpack.ModpackStaging
++import com.israadev.nuxlauncher.core.storage.DataLocation
+ import com.israadev.nuxlauncher.core.models.Instance
+ import kotlinx.coroutines.flow.MutableStateFlow
+ import kotlinx.coroutines.flow.StateFlow
+@@ -20,33 +21,11 @@ object InstanceManager {
+     private val _selectedInstance = MutableStateFlow<Instance?>(null)
+     val selectedInstance: StateFlow<Instance?> = _selectedInstance.asStateFlow()
+ 
+-    fun getNuxDir(context: Context): File {
+-        // 1. Primary user-visible storage: /storage/emulated/0/nuxlauncher
+-        try {
+-            val extStorage = android.os.Environment.getExternalStorageDirectory()
+-            val nuxPublicDir = File(extStorage, "nuxlauncher")
+-            if (!nuxPublicDir.exists()) {
+-                nuxPublicDir.mkdirs()
+-            }
+-            if (nuxPublicDir.exists() && nuxPublicDir.canWrite()) {
+-                return nuxPublicDir
+-            }
+-        } catch (_: Exception) {}
+-
+-        // 2. Secondary fallback: /storage/emulated/0/Android/data/com.israadev.nuxlauncher/files/nuxlauncher
+-        val appExt = context.getExternalFilesDir(null)
+-        if (appExt != null) {
+-            val appExtDir = File(appExt, "nuxlauncher")
+-            if (appExtDir.exists() || appExtDir.mkdirs()) {
+-                return appExtDir
+-            }
+-        }
+-
+-        // 3. Fallback: internal app storage
+-        val internalDir = File(context.filesDir, "nuxlauncher")
+-        if (!internalDir.exists()) internalDir.mkdirs()
+-        return internalDir
+-    }
++    /**
++     * Folder data launcher. Aturan pemilihannya (folder baru milik AmberLauncher di Android/data, atau
++     * folder nuxlauncher lama bagi pengguna lama yang belum memindahkan datanya) ada di [DataLocation].
++     */
++    fun getNuxDir(context: Context): File = DataLocation.root(context)
+ 
+     fun getAssetsDir(context: Context): File {
+         val dir = File(getNuxDir(context), "assets")
+@@ -309,6 +288,14 @@ object InstanceManager {
+     }
+ 
+     fun init(context: Context) {
++        // Selama data dipindahkan ke folder baru, pemuatan ulang menunggu pemindahnya sendiri (DataLocation.lock)
++        synchronized(DataLocation.lock) {
++            if (DataLocation.migrating) return
++            initLocked(context)
++        }
++    }
++
++    private fun initLocked(context: Context) {
+         appContext = context.applicationContext
+         migrateOldStorage(context)
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocation.kt b/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocation.kt
+new file mode 100644
+index 0000000..59ce246
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocation.kt
+@@ -0,0 +1,151 @@
++package com.israadev.nuxlauncher.core.storage
++
++import android.content.Context
++import android.os.Environment
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import java.io.File
++
++/**
++ * Folder data launcher (instance, versi, library, aset, log): satu-satunya tempat yang menentukannya.
++ * Aturan pemilihannya ada di [DataLocationLogic]; di sini hanya folder kandidat dari Android, penunjuk
++ * di penyimpanan internal, dan penyimpanan hasil di memori.
++ *
++ * Folder baru: Android/data/<id aplikasi>/files/amberlauncher (tanpa izin apa pun, dihapus Android bersama
++ * aplikasi). Pengguna lama tetap di folder nuxlauncher sampai memindahkannya lewat [StorageMigrationRunner].
++ *
++ * Hasilnya disimpan per proses (proses utama, :game, :forge membacanya sendiri dari berkas penunjuk yang sama).
++ */
++object DataLocation {
++
++    private const val POINTER_FILE = "data_location.txt"
++    private const val CLEANUP_FILE = "data_cleanup.txt"
++
++    const val MODE_NEW = DataLocationLogic.MODE_NEW
++    const val MODE_LEGACY = DataLocationLogic.MODE_LEGACY
++
++    /** Dipegang [com.israadev.nuxlauncher.core.instance.InstanceManager.init] selama membaca; pemindahan menunggunya. */
++    val lock = Any()
++
++    /** True selama pemindahan berjalan: pemuatan ulang otomatis daftar instance dilewati. */
++    @Volatile
++    var migrating: Boolean = false
++
++    @Volatile
++    private var cached: DataLocationLogic.Decision? = null
++
++    private fun candidates(context: Context): DataLocationLogic.Candidates {
++        val ext = try {
++            context.getExternalFilesDir(null)
++        } catch (_: Throwable) {
++            null
++        }
++        val pub = try {
++            File(Environment.getExternalStorageDirectory(), DataLocationLogic.LEGACY_DIR_NAME)
++        } catch (_: Throwable) {
++            null
++        }
++        return DataLocationLogic.Candidates(
++            newDir = File(ext ?: context.filesDir, DataLocationLogic.NEW_DIR_NAME),
++            legacyPublic = pub,
++            legacyAppExternal = ext?.let { File(it, DataLocationLogic.LEGACY_DIR_NAME) },
++            legacyInternal = File(context.filesDir, DataLocationLogic.LEGACY_DIR_NAME)
++        )
++    }
++
++    private fun pointerFile(context: Context) = File(context.filesDir, POINTER_FILE)
++
++    private fun decision(context: Context): DataLocationLogic.Decision {
++        val fast = cached
++        if (fast != null) return fast
++        return synchronized(this) {
++            val again = cached
++            if (again != null) {
++                again
++            } else {
++                val app = context.applicationContext ?: context
++                val d = DataLocationLogic.decide(
++                    DataLocationLogic.readPointer(pointerFile(app)),
++                    candidates(app)
++                )
++                if (d.mode == MODE_NEW) d.root.mkdirs()
++                if (d.persist && !DataLocationLogic.writePointer(pointerFile(app), d.mode)) {
++                    LauncherLog.w("DataLocation", "Penunjuk lokasi data gagal ditulis")
++                }
++                cached = d
++                d
++            }
++        }
++    }
++
++    /** Folder data yang dipakai sekarang. */
++    fun root(context: Context): File = decision(context).root
++
++    /** [MODE_NEW] atau [MODE_LEGACY]. */
++    fun mode(context: Context): String = decision(context).mode
++
++    fun isLegacy(context: Context): Boolean = mode(context) == MODE_LEGACY
++
++    /** Folder tujuan pemindahan: folder baru milik AmberLauncher. */
++    fun newDir(context: Context): File = candidates(context.applicationContext ?: context).newDir
++
++    /** Folder lama yang masih berisi data dan bisa dipindahkan, atau null. Membaca isi folder: jangan di thread utama. */
++    fun legacySource(context: Context): File? =
++        if (isLegacy(context)) DataLocationLogic.legacySource(candidates(context.applicationContext ?: context)) else null
++
++    /** Membuang hasil yang tersimpan supaya dihitung ulang (mis. izin penyimpanan baru berubah). */
++    fun invalidate() {
++        cached = null
++    }
++
++    /**
++     * Dipanggil mesin pemindah tepat setelah data baru berada di tempatnya: mencatat sisa data lama yang harus
++     * dibersihkan (bila proses mati sebelum selesai menghapusnya) lalu mengganti penunjuk ke folder baru.
++     */
++    fun commitMigration(context: Context, source: File): Boolean {
++        val app = context.applicationContext ?: context
++        val cleanup = File(app.filesDir, CLEANUP_FILE)
++        try {
++            cleanup.writeText(source.absolutePath)
++        } catch (_: Throwable) {
++        }
++        val ok = DataLocationLogic.writePointer(pointerFile(app), MODE_NEW)
++        if (ok) invalidate() else cleanup.delete()
++        return ok
++    }
++
++    /** Pemindahan selesai. Bila semua data lama sudah terhapus, catatan pembersihan tidak diperlukan lagi. */
++    fun finishMigration(context: Context, leftover: Boolean) {
++        if (!leftover) {
++            try {
++                File((context.applicationContext ?: context).filesDir, CLEANUP_FILE).delete()
++            } catch (_: Throwable) {
++            }
++        }
++    }
++
++    /**
++     * Menyelesaikan penghapusan data lama yang terputus (proses dimatikan di tengah pemindahan). Hanya menghapus
++     * folder lama yang dikenal, hanya setelah folder baru terbukti lengkap (ada penanda), dan hanya yang tercatat
++     * saat pemindahan. Panggil di thread latar.
++     */
++    fun cleanupPending(context: Context) {
++        try {
++            if (migrating) return
++            val app = context.applicationContext ?: context
++            val file = File(app.filesDir, CLEANUP_FILE)
++            if (!file.isFile) return
++            val old = File(file.readText().trim())
++            val c = candidates(app)
++            val allowed = old.path.isNotEmpty() &&
++                mode(app) == MODE_NEW &&
++                File(c.newDir, StorageMigration.MARKER).isFile &&
++                DataLocationLogic.isKnownLegacy(old, c)
++            if (!allowed) {
++                file.delete()
++                return
++            }
++            if (!old.exists() || StorageMigration.deleteTree(old)) file.delete()
++        } catch (_: Throwable) {
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocationLogic.kt b/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocationLogic.kt
+new file mode 100644
+index 0000000..0a25671
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/storage/DataLocationLogic.kt
+@@ -0,0 +1,132 @@
++package com.israadev.nuxlauncher.core.storage
++
++import java.io.File
++
++/**
++ * Aturan memilih folder data launcher. Tanpa Android, jadi bisa diuji di JVM biasa; [DataLocation]
++ * hanya menyuplai folder-folder kandidat dan menyimpan hasilnya.
++ *
++ * Ada dua mode, disimpan di satu berkas penunjuk kecil di penyimpanan internal aplikasi:
++ *  - [MODE_NEW]: folder milik AmberLauncher sendiri di Android/data (tanpa izin akses semua file).
++ *  - [MODE_LEGACY]: lokasi lama (folder nuxlauncher di penyimpanan utama, atau cadangannya), dipakai
++ *    pengguna lama sampai mereka memindahkan datanya.
++ *
++ * Pengguna baru langsung memakai [MODE_NEW]. Pengguna lama (ada data di lokasi lama) tetap [MODE_LEGACY]
++ * sampai pemindahan berhasil, jadi pembaruan aplikasi tidak pernah membuat datanya "hilang".
++ */
++object DataLocationLogic {
++
++    const val NEW_DIR_NAME = "amberlauncher"
++    const val LEGACY_DIR_NAME = "nuxlauncher"
++    const val MODE_NEW = "new"
++    const val MODE_LEGACY = "legacy"
++
++    /** Folder-folder yang dikenal. Kandidat lama boleh null bila penyimpanannya tidak tersedia. */
++    class Candidates(
++        val newDir: File,
++        val legacyPublic: File?,
++        val legacyAppExternal: File?,
++        val legacyInternal: File
++    ) {
++        /** Urutan sama dengan pencarian lama: penyimpanan utama, folder aplikasi di luar, lalu internal. */
++        val legacyList: List<File> get() = listOfNotNull(legacyPublic, legacyAppExternal, legacyInternal)
++    }
++
++    class Decision(val mode: String, val root: File, val persist: Boolean)
++
++    /** True bila [dir] berisi data launcher sungguhan (bukan folder kosong atau hanya log). */
++    fun hasData(dir: File): Boolean {
++        try {
++            if (File(dir, "instances.json").length() > 0L) return true
++            for (name in DATA_FOLDERS) {
++                if (!File(dir, name).list().isNullOrEmpty()) return true
++            }
++        } catch (_: Throwable) {
++        }
++        return false
++    }
++
++    private val DATA_FOLDERS = listOf("instances", "versions", "libraries", "assets")
++
++    fun readPointer(file: File): String? =
++        try {
++            file.readText().trim().takeIf { it == MODE_NEW || it == MODE_LEGACY }
++        } catch (_: Throwable) {
++            null
++        }
++
++    /** Menulis penunjuk lewat berkas sementara lalu rename, supaya tidak pernah setengah tertulis. */
++    fun writePointer(file: File, mode: String): Boolean =
++        try {
++            val tmp = File(file.parentFile, file.name + ".tmp")
++            tmp.writeText(mode)
++            if (!tmp.renameTo(file)) {
++                file.writeText(mode)
++                tmp.delete()
++            }
++            readPointer(file) == mode
++        } catch (_: Throwable) {
++            false
++        }
++
++    /**
++     * Memutuskan folder data dari penunjuk yang tersimpan ([pointerMode], null bila belum ada atau tidak
++     * dikenali) dan keadaan folder-folder kandidat. [Decision.persist] true berarti penunjuk perlu ditulis.
++     */
++    fun decide(pointerMode: String?, c: Candidates): Decision {
++        when (pointerMode) {
++            MODE_NEW -> return Decision(MODE_NEW, c.newDir, persist = false)
++            MODE_LEGACY -> {
++                // Pemulihan: pemindahan sudah selesai tetapi proses dimatikan sebelum penunjuk sempat diganti
++                val finished = File(c.newDir, StorageMigration.MARKER).isFile ||
++                    (hasData(c.newDir) && c.legacyList.none { hasData(it) })
++                return if (finished) {
++                    Decision(MODE_NEW, c.newDir, persist = true)
++                } else {
++                    Decision(MODE_LEGACY, legacyRoot(c), persist = false)
++                }
++            }
++        }
++        return if (c.legacyList.any { hasData(it) }) {
++            Decision(MODE_LEGACY, legacyRoot(c), persist = true)
++        } else {
++            Decision(MODE_NEW, c.newDir, persist = true)
++        }
++    }
++
++    /**
++     * Folder lama yang dipakai: kandidat pertama yang berisi data. Bila tidak ada yang berisi, memakai aturan
++     * lama (penyimpanan utama bila bisa ditulis, lalu folder aplikasi di luar, lalu internal).
++     */
++    fun legacyRoot(c: Candidates): File {
++        c.legacyList.firstOrNull { hasData(it) }?.let { return it }
++        c.legacyPublic?.let { dir ->
++            try {
++                if ((dir.exists() || dir.mkdirs()) && dir.canWrite()) return dir
++            } catch (_: Throwable) {
++            }
++        }
++        c.legacyAppExternal?.let { dir ->
++            try {
++                if (dir.exists() || dir.mkdirs()) return dir
++            } catch (_: Throwable) {
++            }
++        }
++        c.legacyInternal.mkdirs()
++        return c.legacyInternal
++    }
++
++    /**
++     * Folder lama yang masih berisi data dan bisa dipindahkan, atau null. Hanya bermakna di [MODE_LEGACY].
++     */
++    fun legacySource(c: Candidates): File? = c.legacyList.firstOrNull { hasData(it) }
++
++    /** True bila [path] adalah salah satu folder lama yang dikenal (dipakai sebelum menghapus sisa data lama). */
++    fun isKnownLegacy(path: File, c: Candidates): Boolean =
++        try {
++            val canon = path.absoluteFile.canonicalFile
++            c.legacyList.any { it.absoluteFile.canonicalFile == canon }
++        } catch (_: Throwable) {
++            false
++        }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigration.kt b/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigration.kt
+new file mode 100644
+index 0000000..1fd9754
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigration.kt
+@@ -0,0 +1,332 @@
++package com.israadev.nuxlauncher.core.storage
++
++import java.io.File
++import java.nio.file.Files
++
++/**
++ * Memindahkan seluruh folder data launcher ke lokasi baru tanpa risiko kehilangan data.
++ *
++ * Tanpa Android, jadi bisa diuji di JVM biasa. Aturan keselamatannya:
++ *  1. Data lama tidak disentuh sampai salinan baru lengkap dan terperiksa.
++ *  2. Coba rename satu folder dulu (instan dan atomik bila masih satu penyimpanan). Bila ditolak sistem,
++ *     data disalin ke `<tujuan>.migrating`, diperiksa, lalu diganti namanya menjadi tujuan.
++ *  3. Pembatalan dan kegagalan sebelum langkah terakhir hanya membuang folder sementara.
++ *  4. [Hooks.commit] (mengganti penunjuk lokasi) dipanggil sesudah data baru siap; baru setelah itu data
++ *     lama dihapus. Bila commit gagal, perubahan dikembalikan dan data lama tetap utuh.
++ *
++ * Tidak pernah melempar galat: semuanya dikembalikan sebagai [Result].
++ */
++object StorageMigration {
++
++    /** Berkas penanda di dalam folder tujuan: isinya hasil pemindahan yang lengkap. */
++    const val MARKER = ".amber-migrated"
++
++    /** Akhiran folder sementara tempat salinan dibuat sebelum diganti namanya. */
++    const val TEMP_SUFFIX = ".migrating"
++
++    /** Cadangan ruang kosong di atas ukuran data. */
++    const val SPACE_MARGIN_BYTES = 64L * 1024 * 1024
++
++    private const val BUFFER_SIZE = 256 * 1024
++    private const val PROGRESS_INTERVAL_NS = 150_000_000L
++    private const val CANCEL_CHECK_EVERY = 256
++
++    enum class Phase { PREPARING, COPYING, VERIFYING, FINISHING, CLEANING }
++
++    class Progress(val phase: Phase, val doneBytes: Long, val totalBytes: Long)
++
++    enum class Reason { SOURCE_MISSING, SAME_OR_NESTED, TARGET_NOT_EMPTY, NOT_ENOUGH_SPACE, IO, VERIFY }
++
++    sealed class Result {
++        /** [moved] true bila cukup rename; [leftover] true bila sebagian data lama belum terhapus. */
++        class Success(val moved: Boolean, val bytes: Long, val leftover: Boolean) : Result()
++        object Cancelled : Result()
++        class Failed(
++            val reason: Reason,
++            val detail: String = "",
++            val neededBytes: Long = 0L,
++            val availableBytes: Long = 0L
++        ) : Result()
++    }
++
++    /**
++     * [isCancelled] dibaca terus selama menyalin. [onProgress] dipanggil paling sering tiap ~150 ms.
++     * [freeSpace] mengembalikan sisa ruang di folder induk tujuan. [commit] dipanggil tepat setelah data
++     * baru berada di tempatnya dan sebelum data lama dihapus; false berarti batalkan seluruhnya.
++     */
++    class Hooks(
++        val isCancelled: () -> Boolean = { false },
++        val onProgress: (Progress) -> Unit = {},
++        val freeSpace: (File) -> Long = { it.usableSpace },
++        val commit: () -> Boolean = { true },
++        /** False melewati jalur cepat rename dan langsung menyalin (dipakai pengujian). */
++        val tryRename: Boolean = true
++    )
++
++    private class Entry(val rel: String, val isDir: Boolean, val size: Long)
++
++    private class Plan(val entries: List<Entry>, val totalBytes: Long)
++
++    fun run(source: File, target: File, hooks: Hooks): Result {
++        var temp: File? = null
++        try {
++            if (hooks.isCancelled()) return Result.Cancelled
++            if (!source.isDirectory) return Result.Failed(Reason.SOURCE_MISSING)
++
++            val src = source.absoluteFile.canonicalFile
++            val dst = target.absoluteFile.canonicalFile
++            if (src == dst || isInside(dst, src) || isInside(src, dst)) {
++                return Result.Failed(Reason.SAME_OR_NESTED)
++            }
++            val parent = dst.parentFile ?: return Result.Failed(Reason.IO, "tanpa folder induk")
++            if (!parent.isDirectory && !parent.mkdirs()) return Result.Failed(Reason.IO, "folder induk")
++
++            if (dst.exists()) {
++                // Folder kosong boleh diganti; yang berisi data tidak boleh ditimpa
++                if (!dst.isDirectory || !dst.list().isNullOrEmpty()) return Result.Failed(Reason.TARGET_NOT_EMPTY)
++                if (!dst.delete()) return Result.Failed(Reason.IO, "folder tujuan kosong tidak bisa dihapus")
++            }
++            val tmp = File(parent, dst.name + TEMP_SUFFIX)
++            temp = tmp
++            if (tmp.exists() || isSymlink(tmp)) deleteTree(tmp)
++
++            hooks.onProgress(Progress(Phase.PREPARING, 0L, 0L))
++
++            // Jalur cepat: satu rename. Sistem menolaknya bila beda penyimpanan atau izin; lanjut menyalin.
++            if (hooks.tryRename && src.renameTo(dst)) {
++                writeMarker(dst, src)
++                if (!commitSafely(hooks)) {
++                    val back = dst.renameTo(src)
++                    return Result.Failed(Reason.IO, if (back) "commit gagal" else "commit gagal, data ada di tujuan")
++                }
++                return Result.Success(moved = true, bytes = 0L, leftover = false)
++            }
++
++            val plan = scan(src, hooks) ?: return Result.Cancelled
++            val needed = plan.totalBytes + SPACE_MARGIN_BYTES
++            val free = hooks.freeSpace(parent)
++            if (free < needed) {
++                return Result.Failed(Reason.NOT_ENOUGH_SPACE, neededBytes = needed, availableBytes = free)
++            }
++
++            if (!tmp.mkdirs()) return Result.Failed(Reason.IO, "folder sementara")
++            val copied = copyAll(src, tmp, plan, hooks)
++            if (copied < 0L) {
++                deleteTree(tmp)
++                return Result.Cancelled
++            }
++
++            hooks.onProgress(Progress(Phase.VERIFYING, copied, plan.totalBytes))
++            if (!verify(tmp, plan, copied)) {
++                deleteTree(tmp)
++                return Result.Failed(Reason.VERIFY)
++            }
++            writeMarker(tmp, src)
++
++            // Langkah terakhir yang bisa dibatalkan: sesudah ini data baru dipakai
++            if (hooks.isCancelled()) {
++                deleteTree(tmp)
++                return Result.Cancelled
++            }
++            hooks.onProgress(Progress(Phase.FINISHING, copied, plan.totalBytes))
++            if (!tmp.renameTo(dst)) {
++                deleteTree(tmp)
++                return Result.Failed(Reason.IO, "mengganti nama folder sementara")
++            }
++            if (!commitSafely(hooks)) {
++                deleteTree(dst)
++                return Result.Failed(Reason.IO, "commit gagal")
++            }
++
++            // Data baru sudah dipakai: apa pun yang terjadi di sini bukan lagi kegagalan pemindahan
++            val removed = try {
++                hooks.onProgress(Progress(Phase.CLEANING, copied, plan.totalBytes))
++                deleteTree(src)
++            } catch (_: Throwable) {
++                false
++            }
++            return Result.Success(moved = false, bytes = copied, leftover = !removed)
++        } catch (e: Throwable) {
++            temp?.let { runCatching { deleteTree(it) } }
++            return Result.Failed(Reason.IO, e.javaClass.simpleName + ": " + (e.message ?: ""))
++        }
++    }
++
++    /** Ukuran yang mudah dibaca, misalnya "3.2 GB" (selalu titik desimal, apa pun bahasa HP). */
++    fun formatSize(bytes: Long): String {
++        val b = if (bytes < 0L) 0L else bytes
++        return when {
++            b >= 1024L * 1024L * 1024L -> String.format(java.util.Locale.US, "%.1f GB", b / 1073741824.0)
++            b >= 1024L * 1024L -> String.format(java.util.Locale.US, "%.1f MB", b / 1048576.0)
++            b >= 1024L -> (b / 1024L).toString() + " KB"
++            else -> "$b B"
++        }
++    }
++
++    private fun commitSafely(hooks: Hooks): Boolean =
++        try {
++            hooks.commit()
++        } catch (_: Throwable) {
++            false
++        }
++
++    /** Ukuran total berkas di [dir] (tanpa mengikuti symlink). Null bila dibatalkan lewat [isCancelled]. */
++    fun measure(dir: File, isCancelled: () -> Boolean = { false }): Long? {
++        var total = 0L
++        var seen = 0
++        val stack = ArrayList<File>()
++        stack.add(dir)
++        while (stack.isNotEmpty()) {
++            val d = stack.removeAt(stack.size - 1)
++            val kids = d.listFiles() ?: continue
++            for (k in kids) {
++                if (++seen % CANCEL_CHECK_EVERY == 0 && isCancelled()) return null
++                if (isSymlink(k)) continue
++                if (k.isDirectory) stack.add(k) else if (k.isFile) total += k.length()
++            }
++        }
++        return total
++    }
++
++    private fun scan(root: File, hooks: Hooks): Plan? {
++        val entries = ArrayList<Entry>()
++        var total = 0L
++        var seen = 0
++        val stack = ArrayList<File>()
++        stack.add(root)
++        val prefix = root.path.length + 1
++        while (stack.isNotEmpty()) {
++            val d = stack.removeAt(stack.size - 1)
++            val kids = d.listFiles() ?: continue
++            for (k in kids) {
++                if (++seen % CANCEL_CHECK_EVERY == 0 && hooks.isCancelled()) return null
++                if (isSymlink(k)) continue
++                val rel = k.path.substring(prefix)
++                if (k.isDirectory) {
++                    entries.add(Entry(rel, true, 0L))
++                    stack.add(k)
++                } else if (k.isFile) {
++                    val size = k.length()
++                    entries.add(Entry(rel, false, size))
++                    total += size
++                }
++            }
++        }
++        // Folder dulu (urut dangkal ke dalam), supaya setiap berkas pasti punya folder induk
++        entries.sortBy { if (it.isDir) 0 else 1 }
++        return Plan(entries, total)
++    }
++
++    /** Menyalin semua isi. Mengembalikan jumlah byte tersalin, atau -1 bila dibatalkan. */
++    private fun copyAll(src: File, dst: File, plan: Plan, hooks: Hooks): Long {
++        val buf = ByteArray(BUFFER_SIZE)
++        var done = 0L
++        var lastReport = System.nanoTime()
++        hooks.onProgress(Progress(Phase.COPYING, 0L, plan.totalBytes))
++        var count = 0
++        for (e in plan.entries) {
++            if (++count % CANCEL_CHECK_EVERY == 0 && hooks.isCancelled()) return -1L
++            val out = File(dst, e.rel)
++            if (e.isDir) {
++                if (!out.isDirectory && !out.mkdirs()) throw java.io.IOException("folder: ${e.rel}")
++                continue
++            }
++            val from = File(src, e.rel)
++            var written = 0L
++            from.inputStream().use { input ->
++                out.outputStream().use { output ->
++                    while (true) {
++                        if (hooks.isCancelled()) return -1L
++                        val n = input.read(buf)
++                        if (n < 0) break
++                        output.write(buf, 0, n)
++                        written += n
++                        done += n
++                        val now = System.nanoTime()
++                        if (now - lastReport >= PROGRESS_INTERVAL_NS) {
++                            lastReport = now
++                            hooks.onProgress(Progress(Phase.COPYING, done, plan.totalBytes))
++                        }
++                    }
++                }
++            }
++            if (out.length() != written) throw java.io.IOException("ukuran berbeda: ${e.rel}")
++            // Tanggal ubah dipertahankan bila sistem mengizinkan; tidak penting bila ditolak
++            runCatching { out.setLastModified(from.lastModified()) }
++        }
++        hooks.onProgress(Progress(Phase.COPYING, done, plan.totalBytes))
++        return done
++    }
++
++    /** Memastikan salinan punya jumlah berkas, folder, dan total ukuran yang sama dengan rencana. */
++    private fun verify(copy: File, plan: Plan, copiedBytes: Long): Boolean {
++        var files = 0
++        var dirs = 0
++        var bytes = 0L
++        val stack = ArrayList<File>()
++        stack.add(copy)
++        while (stack.isNotEmpty()) {
++            val d = stack.removeAt(stack.size - 1)
++            val kids = d.listFiles() ?: return false
++            for (k in kids) {
++                if (k.isDirectory) {
++                    dirs++
++                    stack.add(k)
++                } else if (k.isFile) {
++                    files++
++                    bytes += k.length()
++                }
++            }
++        }
++        val wantFiles = plan.entries.count { !it.isDir }
++        val wantDirs = plan.entries.count { it.isDir }
++        return files == wantFiles && dirs == wantDirs && bytes == copiedBytes
++    }
++
++    private fun writeMarker(dir: File, from: File) {
++        try {
++            File(dir, MARKER).writeText("from=" + from.path + "\n")
++        } catch (_: Throwable) {
++        }
++    }
++
++    private fun isInside(child: File, parent: File): Boolean =
++        child.path.startsWith(parent.path + File.separator)
++
++    private fun isSymlink(f: File): Boolean =
++        try {
++            Files.isSymbolicLink(f.toPath())
++        } catch (_: Throwable) {
++            false
++        }
++
++    /**
++     * Menghapus [root] beserta isinya tanpa mengikuti symlink (hanya tautannya yang dihapus).
++     * True bila [root] sudah tidak ada di akhir.
++     */
++    fun deleteTree(root: File): Boolean {
++        if (!root.exists() && !isSymlink(root)) return true
++        if (isSymlink(root) || !root.isDirectory) return root.delete()
++        var ok = true
++        val dirs = ArrayList<File>()
++        val stack = ArrayList<File>()
++        stack.add(root)
++        while (stack.isNotEmpty()) {
++            val d = stack.removeAt(stack.size - 1)
++            dirs.add(d)
++            val kids = d.listFiles() ?: continue
++            for (k in kids) {
++                if (isSymlink(k) || !k.isDirectory) {
++                    if (!k.delete()) ok = false
++                } else {
++                    stack.add(k)
++                }
++            }
++        }
++        // Folder yang ditemukan lebih dulu adalah induk; hapus dari yang terdalam
++        for (i in dirs.indices.reversed()) {
++            if (!dirs[i].delete()) ok = false
++        }
++        return ok && !root.exists()
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigrationRunner.kt b/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigrationRunner.kt
+new file mode 100644
+index 0000000..e6c61b0
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/storage/StorageMigrationRunner.kt
+@@ -0,0 +1,243 @@
++package com.israadev.nuxlauncher.core.storage
++
++import android.app.ActivityManager
++import android.content.Context
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.instance.InstanceManager
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.Job
++import kotlinx.coroutines.SupervisorJob
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asStateFlow
++import kotlinx.coroutines.launch
++import java.io.File
++import java.util.concurrent.atomic.AtomicBoolean
++
++/**
++ * Menjalankan pemindahan data ke Android/data dan menyimpan keadaannya untuk dialog
++ * (lihat ui/dialogs/AmberStorageMigration.kt). Pekerjaannya berjalan di lingkup aplikasi, jadi layar
++ * diputar atau Activity dibuat ulang tidak menghentikannya. Mesinnya sendiri ada di [StorageMigration].
++ */
++object StorageMigrationRunner {
++
++    enum class FailKind { GAME_RUNNING, NO_SOURCE, TARGET_NOT_EMPTY, NOT_ENOUGH_SPACE, ERROR }
++
++    sealed interface UiState {
++        object Idle : UiState
++
++        /** Memeriksa lokasi data; belum ada yang ditampilkan. */
++        object Checking : UiState
++
++        /** Penjelasan untung-rugi. [sizeBytes] dan [freeBytes] null selama masih dihitung. */
++        class Offer(
++            val source: File,
++            val target: File,
++            val sizeBytes: Long?,
++            val freeBytes: Long?
++        ) : UiState
++
++        class Running(
++            val phase: StorageMigration.Phase,
++            val doneBytes: Long,
++            val totalBytes: Long
++        ) : UiState
++
++        class Done(val moved: Boolean, val leftover: Boolean, val path: String) : UiState
++
++        object Cancelled : UiState
++
++        class Failed(val kind: FailKind, val neededBytes: Long, val availableBytes: Long) : UiState
++    }
++
++    private const val PREFS_NAME = "amber_launcher_prefs"
++    private const val KEY_OFFER_DECLINED = "storage_migration_declined"
++
++    private val _state = MutableStateFlow<UiState>(UiState.Idle)
++    val state: StateFlow<UiState> = _state.asStateFlow()
++
++    /** Naik setelah pemindahan berhasil; akar UI memakainya untuk membangun ulang layar dengan folder baru. */
++    private val _epoch = MutableStateFlow(0)
++    val epoch: StateFlow<Int> = _epoch.asStateFlow()
++
++    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
++    private var job: Job? = null
++    private val cancelFlag = AtomicBoolean(false)
++
++    /** True bila tawaran otomatis belum pernah ditolak. */
++    fun offerWasDeclined(context: Context): Boolean = try {
++        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++            .getBoolean(KEY_OFFER_DECLINED, false)
++    } catch (_: Throwable) {
++        false
++    }
++
++    private fun rememberDeclined(context: Context) {
++        try {
++            context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++                .edit().putBoolean(KEY_OFFER_DECLINED, true).apply()
++        } catch (_: Throwable) {
++        }
++    }
++
++    /**
++     * Menampilkan penjelasan pemindahan. Tidak melakukan apa-apa bila ada dialog pemindahan lain yang
++     * sedang tampil atau data sudah di folder baru. Aman dipanggil dari thread mana pun.
++     */
++    fun offer(context: Context) {
++        val app = context.applicationContext
++        synchronized(this) {
++            if (_state.value != UiState.Idle) return
++            _state.value = UiState.Checking
++        }
++        job = scope.launch {
++            try {
++                if (!DataLocation.isLegacy(app)) {
++                    _state.value = UiState.Idle
++                    return@launch
++                }
++                if (isGameProcessAlive(app)) {
++                    _state.value = UiState.Failed(FailKind.GAME_RUNNING, 0L, 0L)
++                    return@launch
++                }
++                val source = DataLocation.legacySource(app)
++                if (source == null) {
++                    _state.value = UiState.Failed(FailKind.NO_SOURCE, 0L, 0L)
++                    return@launch
++                }
++                val target = DataLocation.newDir(app)
++                _state.value = UiState.Offer(source, target, null, null)
++                val size = StorageMigration.measure(source) { _state.value !is UiState.Offer }
++                val free = try {
++                    (target.parentFile ?: target).usableSpace
++                } catch (_: Throwable) {
++                    null
++                }
++                val current = _state.value
++                if (size != null && current is UiState.Offer && current.source == source) {
++                    // Hanya bila tampilannya belum berubah (mis. pengguna sudah menekan Pindahkan)
++                    _state.compareAndSet(current, UiState.Offer(source, target, size, free))
++                }
++            } catch (e: Throwable) {
++                LauncherLog.w("StorageMigration", "Gagal menyiapkan tawaran: ${e.message}")
++                _state.value = UiState.Failed(FailKind.ERROR, 0L, 0L)
++            }
++        }
++    }
++
++    /** Tombol Tetap di penjelasan: data tetap di folder lama, dan tawaran otomatis tidak muncul lagi. */
++    fun decline(context: Context) {
++        rememberDeclined(context)
++        job?.cancel()
++        synchronized(this) {
++            if (_state.value is UiState.Offer || _state.value == UiState.Checking) _state.value = UiState.Idle
++        }
++    }
++
++    /** Menutup dialog hasil (selesai, dibatalkan, gagal). */
++    fun dismiss() {
++        if (_state.value is UiState.Running) return
++        _state.value = UiState.Idle
++    }
++
++    /** Tombol Batal saat pemindahan berjalan. Berlaku sampai data baru dipakai; sesudahnya diabaikan mesin. */
++    fun cancel() {
++        cancelFlag.set(true)
++    }
++
++    /** Tombol Pindahkan di penjelasan. */
++    fun start(context: Context) {
++        val app = context.applicationContext
++        val offer: UiState.Offer = synchronized(this) {
++            val s = _state.value
++            if (s !is UiState.Offer) return
++            _state.value = UiState.Running(StorageMigration.Phase.PREPARING, 0L, 0L)
++            s
++        }
++        cancelFlag.set(false)
++        job?.cancel()
++        job = scope.launch {
++            try {
++                if (isGameProcessAlive(app)) {
++                    _state.value = UiState.Failed(FailKind.GAME_RUNNING, 0L, 0L)
++                    return@launch
++                }
++                // Menunggu pemuatan daftar instance yang sedang berjalan, lalu menahan yang berikutnya
++                synchronized(DataLocation.lock) { DataLocation.migrating = true }
++                val result = try {
++                    StorageMigration.run(
++                        offer.source,
++                        offer.target,
++                        StorageMigration.Hooks(
++                            isCancelled = { cancelFlag.get() },
++                            onProgress = { p ->
++                                _state.value = UiState.Running(p.phase, p.doneBytes, p.totalBytes)
++                            },
++                            commit = { DataLocation.commitMigration(app, offer.source) }
++                        )
++                    )
++                } finally {
++                    DataLocation.migrating = false
++                }
++                finish(app, result)
++            } catch (e: Throwable) {
++                LauncherLog.w("StorageMigration", "Galat tak terduga: ${e.message}")
++                _state.value = UiState.Failed(FailKind.ERROR, 0L, 0L)
++            }
++        }
++    }
++
++    private fun finish(app: Context, result: StorageMigration.Result) {
++        when (result) {
++            is StorageMigration.Result.Success -> {
++                DataLocation.finishMigration(app, result.leftover)
++                LauncherLog.i(
++                    "StorageMigration",
++                    "Selesai: moved=${result.moved} bytes=${result.bytes} leftover=${result.leftover}"
++                )
++                try {
++                    InstanceManager.init(app)
++                } catch (e: Throwable) {
++                    LauncherLog.w("StorageMigration", "Muat ulang instance gagal: ${e.message}")
++                }
++                _epoch.value = _epoch.value + 1
++                _state.value = UiState.Done(
++                    moved = result.moved,
++                    leftover = result.leftover,
++                    path = DataLocation.root(app).absolutePath
++                )
++            }
++            is StorageMigration.Result.Cancelled -> {
++                LauncherLog.i("StorageMigration", "Dibatalkan pengguna")
++                // Pengguna sudah berubah pikiran: tawaran otomatis tidak muncul lagi (tetap bisa dari Pengaturan)
++                rememberDeclined(app)
++                _state.value = UiState.Cancelled
++            }
++            is StorageMigration.Result.Failed -> {
++                LauncherLog.w("StorageMigration", "Gagal: ${result.reason} ${result.detail}")
++                val kind = when (result.reason) {
++                    StorageMigration.Reason.SOURCE_MISSING -> FailKind.NO_SOURCE
++                    StorageMigration.Reason.TARGET_NOT_EMPTY -> FailKind.TARGET_NOT_EMPTY
++                    StorageMigration.Reason.NOT_ENOUGH_SPACE -> FailKind.NOT_ENOUGH_SPACE
++                    else -> FailKind.ERROR
++                }
++                _state.value = UiState.Failed(kind, result.neededBytes, result.availableBytes)
++            }
++        }
++    }
++
++    /** Proses game, Forge, atau mesin Rust masih hidup: data sedang dipakai, jangan dipindahkan. */
++    private fun isGameProcessAlive(context: Context): Boolean = try {
++        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
++        am.runningAppProcesses?.any {
++            it.processName.endsWith(":game") || it.processName.endsWith(":horizon") || it.processName.endsWith(":forge")
++        } == true
++    } catch (_: Throwable) {
++        false
++    }
++
++    /** True bila tawaran otomatis perlu ditampilkan: data masih di lokasi lama, dan belum pernah ditolak. */
++    fun shouldAutoOffer(context: Context): Boolean =
++        !offerWasDeclined(context) && DataLocation.legacySource(context) != null
++}
+
+
+# FIN part=1/3 files=6

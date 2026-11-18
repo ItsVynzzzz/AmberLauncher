@@ -608,6 +608,20 @@ jobs:
           } >> "$GITHUB_ENV"
           echo "Versi build ini: ${VERSION_NAME} (rilis=${RILIS}, sebelumnya: ${PREV_TAG:-belum ada})"
 
+      # Catatan perubahan dari changelog/entries (satu berkas dibawa tiap patch), yang ditambahkan sejak rilis
+      # sebelumnya. Hasilnya dua: app/src/main/assets/whatsnew.json untuk "Yang baru" di dalam APK (dibuat sebelum
+      # build supaya ikut terkemas, tidak di-commit) dan isi Release GitHub ($RUNNER_TEMP/whatsnew.md). Tanpa
+      # catatan, atau bila skrip gagal, Release memakai judul commit seperti sebelumnya. Lihat changelog/README.md.
+      - name: Siapkan catatan perubahan
+        run: |
+          rm -f "$RUNNER_TEMP/whatsnew.md" app/src/main/assets/whatsnew.json
+          if [ -f scripts/release-notes.py ]; then
+            python3 scripts/release-notes.py --version "$VERSION_NAME" --since "$PREV_TAG" \
+              --asset app/src/main/assets/whatsnew.json --markdown "$RUNNER_TEMP/whatsnew.md" \
+              --repo-url "https://github.com/${GITHUB_REPOSITORY}" \
+              || echo "Tidak ada catatan baru dari changelog (kode $?), Release memakai judul commit."
+          fi
+
       # SDK Discord (untuk Rich Presence) berlisensi dan tidak boleh ada di repo publik. Bila Secrets SDK_TOKEN diisi,
       # SDK diunduh dari repo privat <pemilik>/amber-private-libs (berkas discord_partner_sdk.aar di akar repo itu)
       # ke app/libs, dan APK dibangun dengan fitur Discord RPC. Tanpa token, atau bila unduhan gagal, APK dibangun
@@ -774,7 +788,9 @@ jobs:
           {
             echo "## What's new in ${VERSION_NAME}"
             echo
-            if [ -n "$LOG" ]; then
+            if [ -s "$RUNNER_TEMP/whatsnew.md" ]; then
+              cat "$RUNNER_TEMP/whatsnew.md"
+            elif [ -n "$LOG" ]; then
               printf '%s\n' "$LOG" | sed 's/^/- /'
             else
               echo "- Fixes and small improvements."

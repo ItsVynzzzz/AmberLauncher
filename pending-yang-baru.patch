@@ -1,0 +1,935 @@
+diff --git a/.gitignore b/.gitignore
+index 53af13f..f03848c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -35,3 +35,6 @@ Thumbs.db
+ 
+ # SDK Discord (berlisensi, tidak boleh dibagikan ulang): diunduh workflow dari repo privat saat build
+ /app/libs/discord_partner_sdk.aar
++
++# Catatan "Yang baru" dibuat saat build oleh scripts/release-notes.py, tidak disimpan di repo
++/app/src/main/assets/whatsnew.json
+diff --git a/app/src/main/assets/lang/en/whatsnew.tsv b/app/src/main/assets/lang/en/whatsnew.tsv
+new file mode 100644
+index 0000000..8ea2fe2
+--- /dev/null
++++ b/app/src/main/assets/lang/en/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	New features
++Peningkatan	Improvements
++Perbaikan	Fixes
++Perubahan di versi {0}.	Changes in version {0}.
++Catatan perubahan versi ini.	Release notes for this version.
++Belum ada catatan perubahan untuk versi ini.	There are no release notes for this version yet.
+diff --git a/app/src/main/assets/lang/es/whatsnew.tsv b/app/src/main/assets/lang/es/whatsnew.tsv
+new file mode 100644
+index 0000000..100518c
+--- /dev/null
++++ b/app/src/main/assets/lang/es/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	Novedades
++Peningkatan	Mejoras
++Perbaikan	Correcciones
++Perubahan di versi {0}.	Cambios en la versión {0}.
++Catatan perubahan versi ini.	Notas de esta versión.
++Belum ada catatan perubahan untuk versi ini.	Aún no hay notas para esta versión.
+diff --git a/app/src/main/assets/lang/fil/whatsnew.tsv b/app/src/main/assets/lang/fil/whatsnew.tsv
+new file mode 100644
+index 0000000..d8dbcfd
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	Mga bagong feature
++Peningkatan	Mga pagpapabuti
++Perbaikan	Mga ayos
++Perubahan di versi {0}.	Mga pagbabago sa bersyon {0}.
++Catatan perubahan versi ini.	Mga tala ng bersyon na ito.
++Belum ada catatan perubahan untuk versi ini.	Wala pang tala para sa bersyon na ito.
+diff --git a/app/src/main/assets/lang/pt/whatsnew.tsv b/app/src/main/assets/lang/pt/whatsnew.tsv
+new file mode 100644
+index 0000000..cda03aa
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	Novos recursos
++Peningkatan	Melhorias
++Perbaikan	Correções
++Perubahan di versi {0}.	Mudanças na versão {0}.
++Catatan perubahan versi ini.	Notas desta versão.
++Belum ada catatan perubahan untuk versi ini.	Ainda não há notas para esta versão.
+diff --git a/app/src/main/assets/lang/th/whatsnew.tsv b/app/src/main/assets/lang/th/whatsnew.tsv
+new file mode 100644
+index 0000000..576f113
+--- /dev/null
++++ b/app/src/main/assets/lang/th/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	ฟีเจอร์ใหม่
++Peningkatan	การปรับปรุง
++Perbaikan	การแก้ไข
++Perubahan di versi {0}.	การเปลี่ยนแปลงในเวอร์ชัน {0}
++Catatan perubahan versi ini.	บันทึกการเปลี่ยนแปลงของเวอร์ชันนี้
++Belum ada catatan perubahan untuk versi ini.	ยังไม่มีบันทึกการเปลี่ยนแปลงสำหรับเวอร์ชันนี้
+diff --git a/app/src/main/assets/lang/vi/whatsnew.tsv b/app/src/main/assets/lang/vi/whatsnew.tsv
+new file mode 100644
+index 0000000..15aadb4
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	Tính năng mới
++Peningkatan	Cải tiến
++Perbaikan	Sửa lỗi
++Perubahan di versi {0}.	Thay đổi trong phiên bản {0}.
++Catatan perubahan versi ini.	Ghi chú của phiên bản này.
++Belum ada catatan perubahan untuk versi ini.	Chưa có ghi chú cho phiên bản này.
+diff --git a/app/src/main/assets/lang/zh/whatsnew.tsv b/app/src/main/assets/lang/zh/whatsnew.tsv
+new file mode 100644
+index 0000000..d253431
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/whatsnew.tsv
+@@ -0,0 +1,7 @@
++# Halaman "Yang baru" (Tentang, dialog setelah pembaruan)
++Fitur baru	新功能
++Peningkatan	改进
++Perbaikan	修复
++Perubahan di versi {0}.	版本 {0} 的变更。
++Catatan perubahan versi ini.	此版本的更新说明。
++Belum ada catatan perubahan untuk versi ini.	此版本暂无更新说明。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 4582456..63002c0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -15,6 +15,7 @@ import androidx.activity.compose.setContent
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.material3.MaterialTheme
+ import androidx.compose.material3.Surface
++import androidx.compose.runtime.collectAsState
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+@@ -34,6 +35,7 @@ import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
+ import com.israadev.nuxlauncher.core.update.UpdateManager
+ import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
+ import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
++import com.israadev.nuxlauncher.ui.dialogs.AmberWhatsNewPrompt
+ import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
+ import com.israadev.nuxlauncher.ui.screens.DashboardScreen
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+@@ -124,6 +126,9 @@ class MainActivity : ComponentActivity() {
+                                 }
+                             )
+                             AmberUpdatePrompt(enabled = introDone)
++                            // Catatan "Yang baru" setelah pembaruan, menunggu dialog lain selesai dan tidak menumpuk di atas pop-up pembaruan
++                            val updateOpen by com.israadev.nuxlauncher.core.update.UpdateManager.promptOpen.collectAsState()
++                            AmberWhatsNewPrompt(enabled = introDone && !updateOpen)
+                         }
+                         }
+                     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNew.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNew.kt
+new file mode 100644
+index 0000000..46d2b47
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNew.kt
+@@ -0,0 +1,62 @@
++package com.israadev.nuxlauncher.core.update
++
++import com.google.gson.JsonParser
++
++/**
++ * Catatan "Yang baru": butir-butir perubahan per bahasa. Tanpa ketergantungan Android, jadi bisa diuji di JVM.
++ *
++ * Datanya dibuat oleh scripts/release-notes.py dari berkas .txt di changelog/entries dan sampai ke aplikasi lewat dua jalan:
++ *  - berkas assets/whatsnew.json di dalam APK (catatan versi yang terpasang, dibaca layar Tentang dan dialog
++ *    setelah pembaruan);
++ *  - blok tersembunyi `<!-- amber-whatsnew:v1 ... -->` di isi Release GitHub (catatan versi baru, dibaca pop-up pembaruan).
++ * Keduanya berisi JSON yang sama: {"v":1,"version":"1.2.4","lang":{"id":[["new","teks"],...],"en":[...],...}}.
++ */
++object WhatsNew {
++    const val ASSET = "whatsnew.json"
++
++    enum class Kind { NEW, IMPROVED, FIXED }
++
++    class Item(val kind: Kind, val text: String)
++
++    class Notes(val version: String, private val byLang: Map<String, List<Item>>) {
++        /** Butir untuk [lang] (kode bahasa launcher); bahasa yang tak ada jatuh ke Inggris, lalu Indonesia. */
++        fun forLanguage(lang: String): List<Item> =
++            byLang[lang]?.takeIf { it.isNotEmpty() } ?: byLang["en"] ?: byLang["id"] ?: emptyList()
++
++        fun isEmpty(): Boolean = byLang.values.all { it.isEmpty() }
++    }
++
++    // Awalan "https://" pada blok membuat aplikasi lama menyaringnya dari pop-up pembaruan (lihat ReleaseParser).
++    private val BLOCK = Regex("<!--\\s*amber-whatsnew:v1\\s+\\S+\\s+(\\{.*?\\})\\s*-->", RegexOption.DOT_MATCHES_ALL)
++
++    /** Mengurai JSON catatan; null bila bentuknya tidak dikenal atau kosong. */
++    fun fromJson(json: String): Notes? {
++        return try {
++            val root = JsonParser.parseString(json).asJsonObject
++            if (root.get("v")?.asInt != 1) return null
++            val map = HashMap<String, List<Item>>()
++            for ((lang, list) in root.getAsJsonObject("lang").entrySet()) {
++                val items = ArrayList<Item>()
++                for (e in list.asJsonArray) {
++                    val pair = e.asJsonArray
++                    val text = pair[1].asString.trim()
++                    if (text.isNotEmpty()) items += Item(kindOf(pair[0].asString), text)
++                }
++                map[lang] = items
++            }
++            Notes(root.get("version")?.asString.orEmpty(), map).takeUnless { it.isEmpty() }
++        } catch (_: Exception) {
++            null
++        }
++    }
++
++    /** Mengambil catatan dari isi Release GitHub; null bila Release tidak membawa blok catatan (rilis lama). */
++    fun fromReleaseBody(body: String): Notes? =
++        BLOCK.find(body)?.groupValues?.get(1)?.let { fromJson(it) }
++
++    private fun kindOf(code: String): Kind = when (code) {
++        "new" -> Kind.NEW
++        "fix" -> Kind.FIXED
++        else -> Kind.IMPROVED
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNewStore.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNewStore.kt
+new file mode 100644
+index 0000000..44b339d
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/WhatsNewStore.kt
+@@ -0,0 +1,80 @@
++package com.israadev.nuxlauncher.core.update
++
++import android.content.Context
++
++/**
++ * Catatan "Yang baru" untuk versi yang terpasang: dibaca dari assets/whatsnew.json (dibuat saat build oleh
++ * scripts/release-notes.py) dan ingatan versi mana yang sudah ditampilkan otomatis.
++ *
++ * Build tanpa berkas itu (mis. dibangun di komputer sendiri) tidak punya catatan: layar Tentang menampilkan
++ * keterangan kosong dan dialog setelah pembaruan tidak muncul.
++ */
++object WhatsNewStore {
++    private const val PREFS_NAME = "amber_launcher_prefs"
++    private const val KEY_SEEN = "whatsnew_seen_version"
++
++    @Volatile
++    private var loaded = false
++
++    @Volatile
++    private var cached: WhatsNew.Notes? = null
++
++    /** Catatan versi yang terpasang, atau null bila build ini tidak membawanya. Dibaca sekali lalu disimpan. */
++    fun bundled(context: Context): WhatsNew.Notes? {
++        if (loaded) return cached
++        synchronized(this) {
++            if (!loaded) {
++                cached = try {
++                    context.applicationContext.assets.open(WhatsNew.ASSET).bufferedReader(Charsets.UTF_8).use {
++                        WhatsNew.fromJson(it.readText())
++                    }
++                } catch (_: Throwable) {
++                    null
++                }
++                loaded = true
++            }
++        }
++        return cached
++    }
++
++    /**
++     * Catatan yang perlu muncul otomatis sekali setelah pembaruan, atau null. Tidak muncul pada pemasangan baru
++     * (belum ada yang "baru" bagi pengguna) dan tidak pada build uji (nama versinya memuat "-uji"), yang terbit
++     * tiap kali ada patch. Berat sedikit (membaca berkas), jadi panggil dari thread latar.
++     */
++    fun pendingAutoShow(context: Context): WhatsNew.Notes? {
++        val notes = bundled(context) ?: return null
++        val current = UpdateChecker.currentVersionName(context)
++        if (current.isEmpty() || current.contains("-uji")) return null
++        val seen = prefs(context)?.getString(KEY_SEEN, null)
++        if (seen == current) return null
++        if (seen == null && isFreshInstall(context)) {
++            markSeen(context)
++            return null
++        }
++        return notes
++    }
++
++    /** Menandai versi yang sedang terpasang sudah dilihat penggunanya. */
++    fun markSeen(context: Context) {
++        val current = UpdateChecker.currentVersionName(context)
++        if (current.isEmpty()) return
++        try {
++            prefs(context)?.edit()?.putString(KEY_SEEN, current)?.apply()
++        } catch (_: Throwable) {
++        }
++    }
++
++    private fun prefs(context: Context) = try {
++        context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
++    } catch (_: Throwable) {
++        null
++    }
++
++    private fun isFreshInstall(context: Context): Boolean = try {
++        val info = context.packageManager.getPackageInfo(context.packageName, 0)
++        info.firstInstallTime == info.lastUpdateTime
++    } catch (_: Throwable) {
++        false
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/WhatsNewList.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/WhatsNewList.kt
+new file mode 100644
+index 0000000..17899f0
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/WhatsNewList.kt
+@@ -0,0 +1,68 @@
++package com.israadev.nuxlauncher.ui.components
++
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
++import androidx.compose.material3.Text as RawText
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.TextUnit
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.update.WhatsNew
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Tr
++import com.israadev.nuxlauncher.ui.theme.Amber
++
++/**
++ * Daftar butir "Yang baru" dalam bahasa launcher, dikelompokkan: fitur baru, peningkatan, perbaikan.
++ * Tinggi daftar mengikuti isinya; pemanggil yang membatasi tinggi (dialog) membungkusnya dengan gulir.
++ */
++@Composable
++fun WhatsNewList(
++    notes: WhatsNew.Notes,
++    modifier: Modifier = Modifier,
++    textColor: Color = Amber.TextDim,
++    headingColor: Color = Amber.Yellow,
++    fontSize: TextUnit = 13.sp
++) {
++    // Dibaca saat digambar: bahasa yang diganti membuat seluruh layar digambar ulang (lihat AmberLanguageHost).
++    val items = notes.forLanguage(Tr.effective)
++    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
++        for (kind in WhatsNew.Kind.entries) {
++            val group = items.filter { it.kind == kind }
++            if (group.isEmpty()) continue
++            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
++                Text(
++                    text = when (kind) {
++                        WhatsNew.Kind.NEW -> "Fitur baru"
++                        WhatsNew.Kind.IMPROVED -> "Peningkatan"
++                        WhatsNew.Kind.FIXED -> "Perbaikan"
++                    },
++                    color = headingColor,
++                    fontSize = 12.sp,
++                    fontWeight = FontWeight.Bold
++                )
++                for (item in group) {
++                    Row {
++                        RawText(text = "•", color = textColor, fontSize = fontSize)
++                        Spacer(modifier = Modifier.width(8.dp))
++                        // Teks butir sudah dalam bahasa pilihan: dipakai apa adanya, tanpa kamus terjemahan.
++                        RawText(
++                            text = item.text,
++                            color = textColor,
++                            fontSize = fontSize,
++                            lineHeight = fontSize * 1.45f,
++                            modifier = Modifier.weight(1f).padding(bottom = 1.dp)
++                        )
++                    }
++                }
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt
+index 9102622..ef283ba 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberUpdatePrompt.kt
+@@ -30,10 +30,12 @@ import com.israadev.nuxlauncher.core.update.UpdateChecker
+ import com.israadev.nuxlauncher.core.update.UpdateFailure
+ import com.israadev.nuxlauncher.core.update.UpdateManager
+ import com.israadev.nuxlauncher.core.update.UpdateState
++import com.israadev.nuxlauncher.core.update.WhatsNew
+ import com.israadev.nuxlauncher.ui.components.AmberAlert
+ import com.israadev.nuxlauncher.ui.components.AmberButton
+ import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
+ import com.israadev.nuxlauncher.ui.components.AmberInfoBox
++import com.israadev.nuxlauncher.ui.components.WhatsNewList
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.theme.Amber
+ import java.util.Locale
+@@ -69,6 +71,8 @@ private fun AvailableDialog(info: AppUpdate) {
+     val context = LocalContext.current
+     val current = remember { UpdateChecker.currentVersionName(context) }
+     val notes = remember(info) { ReleaseParser.readableNotes(info.notes) }
++    // Rilis baru membawa catatan semua bahasa (blok tersembunyi); rilis lama hanya teks Inggris di atas
++    val whatsNew = remember(info) { WhatsNew.fromReleaseBody(info.notes) }
+     val metered = remember { isMetered(context) }
+ 
+     AmberAlert(
+@@ -120,7 +124,7 @@ private fun AvailableDialog(info: AppUpdate) {
+                 modifier = Modifier.padding(top = 4.dp)
+             )
+         }
+-        if (notes.isNotBlank()) {
++        if (whatsNew != null || notes.isNotBlank()) {
+             AmberInfoBox(modifier = Modifier.padding(top = 12.dp)) {
+                 Text(
+                     text = "Yang baru",
+@@ -134,12 +138,16 @@ private fun AvailableDialog(info: AppUpdate) {
+                         .heightIn(max = 160.dp)
+                         .verticalScroll(rememberScrollState())
+                 ) {
+-                    Text(
+-                        text = notes,
+-                        color = Amber.TextDim,
+-                        fontSize = 13.sp,
+-                        lineHeight = 19.sp
+-                    )
++                    if (whatsNew != null) {
++                        WhatsNewList(notes = whatsNew)
++                    } else {
++                        Text(
++                            text = notes,
++                            color = Amber.TextDim,
++                            fontSize = 13.sp,
++                            lineHeight = 19.sp
++                        )
++                    }
+                 }
+             }
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberWhatsNewPrompt.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberWhatsNewPrompt.kt
+new file mode 100644
+index 0000000..e9b8e4b
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberWhatsNewPrompt.kt
+@@ -0,0 +1,88 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.heightIn
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalConfiguration
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.update.WhatsNew
++import com.israadev.nuxlauncher.core.update.WhatsNewStore
++import com.israadev.nuxlauncher.ui.components.AmberAlert
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.WhatsNewList
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.Amber
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++
++/**
++ * Dialog "Yang baru" yang muncul sekali setelah launcher diperbarui (lihat [WhatsNewStore.pendingAutoShow]).
++ * Isinya dalam bahasa launcher dan bisa digulir, jadi tidak terpotong di layar pendek. Dibuka dari Tentang
++ * lewat tab "Yang baru", bukan lewat dialog ini.
++ *
++ * [enabled] false menahan dialog, mis. selagi dialog lain (izin penyimpanan, pembaruan) sedang tampil.
++ */
++@Composable
++fun AmberWhatsNewPrompt(enabled: Boolean) {
++    val context = LocalContext.current
++    var notes by remember { mutableStateOf<WhatsNew.Notes?>(null) }
++    var checked by remember { mutableStateOf(false) }
++
++    LaunchedEffect(enabled) {
++        if (enabled && !checked) {
++            checked = true
++            notes = withContext(Dispatchers.IO) { WhatsNewStore.pendingAutoShow(context) }
++        }
++    }
++
++    val shown = notes ?: return
++    val close = {
++        WhatsNewStore.markSeen(context)
++        notes = null
++    }
++    // Sisakan ruang untuk judul dan tombol; tidak kurang dari 120dp dan tidak lebih dari 360dp
++    val maxListHeight = (LocalConfiguration.current.screenHeightDp - 220).coerceIn(120, 360).dp
++
++    AmberAlert(
++        onDismissRequest = close,
++        title = "Yang baru",
++        icon = "chat",
++        accent = Amber.Yellow,
++        actions = {
++            AmberButton(
++                text = "Tutup",
++                onClick = close,
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary
++            )
++        }
++    ) {
++        if (shown.version.isNotBlank()) {
++            Text(
++                text = "Versi ${shown.version}",
++                color = Amber.Text,
++                fontSize = 14.sp
++            )
++        }
++        Column(
++            modifier = Modifier
++                .padding(top = 10.dp)
++                .heightIn(max = maxListHeight)
++                .verticalScroll(rememberScrollState())
++        ) {
++            WhatsNewList(notes = shown)
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index 53a1818..feac81b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.Description
+ import androidx.compose.material.icons.outlined.Extension
+ import androidx.compose.material.icons.outlined.Favorite
+ import androidx.compose.material.icons.outlined.Info
++import androidx.compose.material.icons.outlined.NewReleases
+ import androidx.compose.material.icons.outlined.OpenInBrowser
+ import androidx.compose.material3.Icon
+ import androidx.compose.runtime.Composable
+@@ -47,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.AppLinks
++import com.israadev.nuxlauncher.core.update.WhatsNewStore
+ import com.israadev.nuxlauncher.ui.components.AmberActionButton
+ import com.israadev.nuxlauncher.ui.components.AmberChoicePill
+ import com.israadev.nuxlauncher.ui.components.AmberPage
+@@ -54,6 +56,7 @@ import com.israadev.nuxlauncher.ui.components.AmberPageLabel
+ import com.israadev.nuxlauncher.ui.components.AmberPanel
+ import com.israadev.nuxlauncher.ui.components.AmberRailItem
+ import com.israadev.nuxlauncher.ui.components.AmberTag
++import com.israadev.nuxlauncher.ui.components.WhatsNewList
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.screens.AmberPillButton
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+@@ -249,8 +252,8 @@ fun NuxAboutDialog(
+     val onOpen: (String) -> Unit = remember(context) { { url: String -> openLink(context, url) } }
+     val donateUrl = AppLinks.DONATE_URL.trim()
+     val onDonate: (() -> Unit)? = if (donateUrl.isNotEmpty()) ({ onOpen(donateUrl) }) else null
+-    val tabs = remember { listOf("Ringkasan", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
+-    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.Extension, Icons.Outlined.Description)
++    val tabs = remember { listOf("Ringkasan", "Yang baru", "Pustaka (${LIBRARIES.size})", "GPL-3.0") }
++    val tabIcons = listOf(Icons.Outlined.Info, Icons.Outlined.NewReleases, Icons.Outlined.Extension, Icons.Outlined.Description)
+ 
+     AmberPage(
+         onDismiss = onDismissRequest,
+@@ -362,7 +365,8 @@ private fun AboutContent(
+         ) {
+             when (tab) {
+                 0 -> OverviewTab(onOpen, columns)
+-                1 -> LibrariesTab(onOpen, columns)
++                1 -> WhatsNewTab()
++                2 -> LibrariesTab(onOpen, columns)
+                 else -> LicenseTab(onOpen)
+             }
+         }
+@@ -393,6 +397,29 @@ private fun OverviewTab(onOpen: (String) -> Unit, columns: Int) {
+     )
+ }
+ 
++@Composable
++private fun WhatsNewTab() {
++    val context = LocalContext.current
++    val notes = remember(context) { WhatsNewStore.bundled(context) }
++    AboutTitle(
++        title = "Yang baru",
++        subtitle = if (notes != null && notes.version.isNotBlank()) "Perubahan di versi ${notes.version}." else "Catatan perubahan versi ini."
++    )
++    AmberPanel {
++        if (notes != null) {
++            // Isi panel ini ikut tergulir bersama halaman Tentang, jadi daftar yang panjang tidak terpotong
++            WhatsNewList(notes = notes, textColor = AmberUi.TextDim, headingColor = AmberUi.AccentSoft)
++        } else {
++            Text(
++                text = "Belum ada catatan perubahan untuk versi ini.",
++                color = AmberUi.TextDim,
++                fontSize = 13.sp,
++                lineHeight = 20.sp
++            )
++        }
++    }
++}
++
+ @Composable
+ private fun LibrariesTab(onOpen: (String) -> Unit, columns: Int) {
+     AboutTitle(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+index 4b76903..adf2428 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/i18n/Tr.kt
+@@ -9,7 +9,7 @@ import java.util.Locale
+  * kamus berkas .tsv di folder assets/lang/<kode>/ (lihat [Translator]). Bahasa Indonesia tidak memuat apa pun
+  * dan [t] langsung mengembalikan teksnya, jadi tidak ada beban tambahan untuk pengguna Indonesia.
+  *
+- * Bahasa bawaan adalah Inggris ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
++ * Bahasa bawaan adalah [SYSTEM] ([DEFAULT_CHOICE]) sampai pengguna memilih lain. Pilihan pengguna:
+  * [SYSTEM] (ikuti bahasa HP), [ID], [EN], [ES], [VI], [PT], [TH], [ZH], atau [FIL]. Pada pilihan [SYSTEM], HP
+  * berbahasa Indonesia memakai Indonesia, HP berbahasa Spanyol, Vietnam, Portugis (Brasil), Thai, Mandarin
+  * (semua varian memakai aksara sederhana), atau Filipino (kode "fil" maupun "tl") memakai bahasa itu, dan bahasa lain
+@@ -27,7 +27,7 @@ object Tr {
+     const val FIL = "fil"
+ 
+     /** Bahasa bawaan: dipakai sampai pengguna memilih sendiri di Pengaturan > Tampilan. */
+-    const val DEFAULT_CHOICE = EN
++    const val DEFAULT_CHOICE = SYSTEM
+ 
+     /** Bahasa yang punya kamus di assets/lang/<kode>/ (selain Indonesia, bahasa asli teksnya). */
+     private val DICTIONARY_LANGS = setOf(EN, ES, VI, PT, TH, ZH, FIL)
+diff --git a/changelog/README.md b/changelog/README.md
+new file mode 100644
+index 0000000..fd0ee19
+--- /dev/null
++++ b/changelog/README.md
+@@ -0,0 +1,31 @@
++# Catatan perubahan
++
++Tiap patch membawa satu berkas catatan di `changelog/entries/`, jadi saat rilis tidak ada yang perlu ditulis lagi.
++Saat build, `scripts/release-notes.py` mengumpulkan semua catatan yang ditambahkan sejak rilis sebelumnya, lalu:
++
++- menulisnya ke isi Release GitHub (butir bahasa Inggris, plus blok tersembunyi berisi semua bahasa), dan
++- membundelnya ke APK (`assets/whatsnew.json`) untuk halaman dan dialog "Yang baru" di aplikasi.
++
++Langkahnya ada di `docs/workflows/build-apk.yml` (salin ke `.github/workflows/build-apk.yml`, satu langkah manual karena patch tidak boleh mengubah `.github/workflows`). Tanpa langkah itu Release tetap dibuat dari judul commit seperti dulu.
++
++Aplikasi menampilkannya dalam bahasa launcher. Bahasa yang belum ditulis memakai Inggris, lalu Indonesia.
++
++## Format
++
++Nama berkas: `<tanggal>-<topik>.txt`, misalnya `20261118-catatan-rilis.txt`. Huruf, angka, titik, minus, dan garis bawah saja.
++
++```
++[id]
+++ Fitur baru ditulis dengan awalan plus.
++~ Peningkatan memakai tilde.
++! Perbaikan memakai tanda seru.
++[en]
+++ New feature.
++~ Improvement.
++! Fix.
++```
++
++- Satu baris satu butir, kalimat pendek yang dipahami pengguna (bukan nama berkas atau istilah kode).
++- Bagian bahasa: `[id] [en] [es] [fil] [pt] [th] [vi] [zh]`. Minimal `[id]` dan `[en]`.
++- Baris kosong dan baris berawalan `#` diabaikan.
++- Patch yang hanya mengubah dokumen tidak perlu catatan.
+diff --git a/changelog/entries/20261117-hemat-memori-lwjgl.txt b/changelog/entries/20261117-hemat-memori-lwjgl.txt
+new file mode 100644
+index 0000000..b8ba549
+--- /dev/null
++++ b/changelog/entries/20261117-hemat-memori-lwjgl.txt
+@@ -0,0 +1,24 @@
++[id]
++~ Unduhan Minecraft tidak lagi mengunduh library LWJGL Mojang yang tidak dipakai, jadi lebih hemat data dan penyimpanan.
++~ Launcher melepas cache gambar saat game berjalan atau RAM sempit, sehingga lebih lega untuk game.
++[en]
++~ Minecraft downloads no longer fetch the unused Mojang LWJGL libraries, saving data and storage.
++~ The launcher frees its image cache while a game runs or memory is low, leaving more RAM for the game.
++[es]
++~ Las descargas de Minecraft ya no bajan las bibliotecas LWJGL de Mojang que no se usan, así que ahorran datos y almacenamiento.
++~ El launcher libera su caché de imágenes mientras se juega o cuando hay poca memoria, dejando más RAM al juego.
++[fil]
++~ Hindi na dina-download ang hindi ginagamit na LWJGL library ng Mojang, kaya mas tipid sa data at storage.
++~ Binibitawan ng launcher ang image cache habang tumatakbo ang laro o kapos ang memory, kaya mas maraming RAM ang laro.
++[pt]
++~ Os downloads do Minecraft não baixam mais as bibliotecas LWJGL da Mojang que não são usadas, economizando dados e armazenamento.
++~ O launcher libera o cache de imagens enquanto o jogo roda ou quando a memória está baixa, deixando mais RAM para o jogo.
++[th]
++~ การดาวน์โหลด Minecraft ไม่ดึงไลบรารี LWJGL ของ Mojang ที่ไม่ได้ใช้อีกต่อไป ช่วยประหยัดเน็ตและพื้นที่เก็บข้อมูล
++~ ตัวเปิดเกมคืนแคชรูปภาพขณะเล่นเกมหรือเมื่อแรมเหลือน้อย ทำให้เกมมีแรมมากขึ้น
++[vi]
++~ Quá trình tải Minecraft không còn tải các thư viện LWJGL của Mojang không dùng đến, tiết kiệm dữ liệu và dung lượng.
++~ Launcher giải phóng bộ nhớ đệm hình ảnh khi đang chơi hoặc khi RAM thấp, nhường thêm RAM cho game.
++[zh]
++~ 下载 Minecraft 时不再下载用不到的 Mojang LWJGL 库，节省流量和存储空间。
++~ 游戏运行或内存不足时，启动器会释放图片缓存，为游戏留出更多内存。
+diff --git a/changelog/entries/20261117-http-dns-impor.txt b/changelog/entries/20261117-http-dns-impor.txt
+new file mode 100644
+index 0000000..12b3964
+--- /dev/null
++++ b/changelog/entries/20261117-http-dns-impor.txt
+@@ -0,0 +1,24 @@
++[id]
++! Dialog impor "Buka dengan" tidak muncul lagi setelah layar dibuat ulang (mis. ganti mode gelap).
++~ Daftar versi Mojang, login Microsoft dan Ely.by, pembaruan, dan unggah log kini punya DNS cadangan bila DNS operator bermasalah, dan berbagi koneksi sehingga lebih ringan.
++[en]
++! The "Open with" import dialog no longer reappears after the screen is recreated (for example after switching dark mode).
++~ The Mojang version list, Microsoft and Ely.by sign-in, updates, and log upload now have a backup DNS for when your provider's DNS fails, and share connections to stay lighter.
++[es]
++! El diálogo de importar de «Abrir con» ya no reaparece al recrearse la pantalla (por ejemplo, al cambiar el modo oscuro).
++~ La lista de versiones de Mojang, el inicio de sesión de Microsoft y Ely.by, las actualizaciones y la subida de registros ahora tienen un DNS de respaldo cuando falla el de tu operador, y comparten conexiones para ser más ligeros.
++[fil]
++! Hindi na lumalabas muli ang import dialog ng "Buksan gamit ang" kapag nire-create ulit ang screen (hal. kapag nagpalit ng dark mode).
++~ May backup DNS na ang listahan ng bersyon ng Mojang, pag-sign in sa Microsoft at Ely.by, mga update, at pag-upload ng log kapag pumalya ang DNS ng provider mo, at nagbabahagi ng koneksyon para mas magaan.
++[pt]
++! O diálogo de importação de "Abrir com" não reaparece mais quando a tela é recriada (por exemplo, ao alternar o modo escuro).
++~ A lista de versões da Mojang, o login da Microsoft e do Ely.by, as atualizações e o envio de logs agora têm um DNS de reserva para quando o DNS da operadora falha, e compartilham conexões para ficar mais leves.
++[th]
++! กล่องนำเข้า "เปิดด้วย" จะไม่โผล่ซ้ำอีกเมื่อหน้าจอถูกสร้างใหม่ (เช่น ตอนสลับโหมดมืด)
++~ รายการเวอร์ชันของ Mojang การเข้าสู่ระบบ Microsoft และ Ely.by การอัปเดต และการอัปโหลดล็อก มี DNS สำรองเมื่อ DNS ของผู้ให้บริการมีปัญหา และใช้การเชื่อมต่อร่วมกันเพื่อให้เบาขึ้น
++[vi]
++! Hộp thoại nhập "Mở bằng" không còn hiện lại khi màn hình được tạo lại (ví dụ khi đổi chế độ tối).
++~ Danh sách phiên bản Mojang, đăng nhập Microsoft và Ely.by, cập nhật và tải log lên giờ có DNS dự phòng khi DNS của nhà mạng gặp sự cố, và dùng chung kết nối để nhẹ hơn.
++[zh]
++! 屏幕重建后（例如切换深色模式），“打开方式”的导入对话框不再重复弹出。
++~ Mojang 版本列表、Microsoft 和 Ely.by 登录、更新以及日志上传现在有备用 DNS（运营商 DNS 出问题时使用），并共享连接，更轻量。
+diff --git a/changelog/entries/20261117-makro-rust.txt b/changelog/entries/20261117-makro-rust.txt
+new file mode 100644
+index 0000000..c4362e0
+--- /dev/null
++++ b/changelog/entries/20261117-makro-rust.txt
+@@ -0,0 +1,16 @@
++[id]
+++ Makro (perintah, turbo, urutan aksi) kini juga berjalan di mesin Rust.
++[en]
+++ Macros (command, turbo, action sequence) now also work on the Rust engine.
++[es]
+++ Las macros (comando, turbo, secuencia de acciones) ahora también funcionan en el motor Rust.
++[fil]
+++ Gumagana na rin sa Rust engine ang mga macro (command, turbo, sequence ng aksyon).
++[pt]
+++ As macros (comando, turbo, sequência de ações) agora também funcionam no motor Rust.
++[th]
+++ แมโคร (คำสั่ง เทอร์โบ ลำดับการกระทำ) ตอนนี้ใช้ได้กับเอนจิน Rust ด้วยแล้ว
++[vi]
+++ Macro (lệnh, turbo, chuỗi thao tác) giờ cũng chạy được trên engine Rust.
++[zh]
+++ 宏（命令、连发、动作序列）现在也可在 Rust 引擎上使用。
+diff --git a/changelog/entries/20261118-catatan-rilis.txt b/changelog/entries/20261118-catatan-rilis.txt
+new file mode 100644
+index 0000000..280c93a
+--- /dev/null
++++ b/changelog/entries/20261118-catatan-rilis.txt
+@@ -0,0 +1,24 @@
++[id]
+++ Halaman "Yang baru" (di Tentang dan setelah pembaruan) yang mengikuti catatan rilis dan bahasa launcher.
++~ Bahasa bawaan sekarang "Ikuti sistem", bukan Inggris.
++[en]
+++ A "What's new" page (in About and after an update) that follows the release notes and your launcher language.
++~ The default language is now "Follow system" instead of English.
++[es]
+++ Una página «Novedades» (en Acerca de y tras una actualización) que sigue las notas de la versión y el idioma del launcher.
++~ El idioma predeterminado ahora es «Seguir el sistema» en lugar de inglés.
++[fil]
+++ May pahinang "Ano'ng bago" (sa About at pagkatapos ng update) na sumusunod sa release notes at wika ng launcher.
++~ Ang default na wika ay "Sundin ang system" na, hindi na English.
++[pt]
+++ Uma página "Novidades" (em Sobre e após uma atualização) que segue as notas da versão e o idioma do launcher.
++~ O idioma padrão agora é "Seguir o sistema" em vez de inglês.
++[th]
+++ หน้า "มีอะไรใหม่" (ใน เกี่ยวกับ และหลังอัปเดต) ที่ตรงกับบันทึกการอัปเดตและภาษาของตัวเปิดเกม
++~ ภาษาเริ่มต้นเปลี่ยนเป็น "ตามระบบ" แทนภาษาอังกฤษ
++[vi]
+++ Trang "Có gì mới" (trong Giới thiệu và sau khi cập nhật) theo ghi chú phát hành và ngôn ngữ của launcher.
++~ Ngôn ngữ mặc định giờ là "Theo hệ thống" thay vì tiếng Anh.
++[zh]
+++ 新增“新功能”页面（在“关于”中以及更新后），内容随发布说明和启动器语言显示。
++~ 默认语言改为“跟随系统”，不再是英语。
+diff --git a/docs/workflows/build-apk.yml b/docs/workflows/build-apk.yml
+index e02acaa..5674381 100644
+--- a/docs/workflows/build-apk.yml
++++ b/docs/workflows/build-apk.yml
+@@ -608,6 +608,20 @@ jobs:
+           } >> "$GITHUB_ENV"
+           echo "Versi build ini: ${VERSION_NAME} (rilis=${RILIS}, sebelumnya: ${PREV_TAG:-belum ada})"
+ 
++      # Catatan perubahan dari changelog/entries (satu berkas dibawa tiap patch), yang ditambahkan sejak rilis
++      # sebelumnya. Hasilnya dua: app/src/main/assets/whatsnew.json untuk "Yang baru" di dalam APK (dibuat sebelum
++      # build supaya ikut terkemas, tidak di-commit) dan isi Release GitHub ($RUNNER_TEMP/whatsnew.md). Tanpa
++      # catatan, atau bila skrip gagal, Release memakai judul commit seperti sebelumnya. Lihat changelog/README.md.
++      - name: Siapkan catatan perubahan
++        run: |
++          rm -f "$RUNNER_TEMP/whatsnew.md" app/src/main/assets/whatsnew.json
++          if [ -f scripts/release-notes.py ]; then
++            python3 scripts/release-notes.py --version "$VERSION_NAME" --since "$PREV_TAG" \
++              --asset app/src/main/assets/whatsnew.json --markdown "$RUNNER_TEMP/whatsnew.md" \
++              --repo-url "https://github.com/${GITHUB_REPOSITORY}" \
++              || echo "Tidak ada catatan baru dari changelog (kode $?), Release memakai judul commit."
++          fi
++
+       # SDK Discord (untuk Rich Presence) berlisensi dan tidak boleh ada di repo publik. Bila Secrets SDK_TOKEN diisi,
+       # SDK diunduh dari repo privat <pemilik>/amber-private-libs (berkas discord_partner_sdk.aar di akar repo itu)
+       # ke app/libs, dan APK dibangun dengan fitur Discord RPC. Tanpa token, atau bila unduhan gagal, APK dibangun
+@@ -774,7 +788,9 @@ jobs:
+           {
+             echo "## What's new in ${VERSION_NAME}"
+             echo
+-            if [ -n "$LOG" ]; then
++            if [ -s "$RUNNER_TEMP/whatsnew.md" ]; then
++              cat "$RUNNER_TEMP/whatsnew.md"
++            elif [ -n "$LOG" ]; then
+               printf '%s\n' "$LOG" | sed 's/^/- /'
+             else
+               echo "- Fixes and small improvements."
+diff --git a/scripts/release-notes.py b/scripts/release-notes.py
+new file mode 100755
+index 0000000..9b49cf2
+--- /dev/null
++++ b/scripts/release-notes.py
+@@ -0,0 +1,130 @@
++#!/usr/bin/env python3
++"""Membuat catatan rilis dari changelog/entries/*.txt.
++
++Tiap patch membawa satu berkas catatan di changelog/entries/ (format di changelog/README.md). Skrip ini
++dipanggil workflow saat build dan membuat dua hal dari catatan yang ditambahkan sejak rilis sebelumnya:
++
++  --asset     JSON untuk dibundel ke APK (app/src/main/assets/whatsnew.json), dibaca layar "Yang baru"
++  --markdown  isi catatan untuk halaman Release GitHub (butir bahasa Inggris, plus blok tersembunyi
++              berisi semua bahasa yang dibaca aplikasi untuk pop-up pembaruan)
++
++Hanya pustaka standar Python. Bila tidak ada catatan, tidak ada berkas yang ditulis dan kode keluarnya 3,
++supaya workflow bisa memakai cara lama (judul commit).
++"""
++import argparse
++import json
++import os
++import re
++import subprocess
++import sys
++
++LANGS = ["id", "en", "es", "fil", "pt", "th", "vi", "zh"]
++KINDS = {"+": "new", "~": "improve", "!": "fix"}
++KIND_TITLE_EN = {"new": "New", "improve": "Improved", "fix": "Fixed"}
++SECTION = re.compile(r"^\[([a-z]{2,3})\]\s*$")
++EMPTY = 3
++
++
++def parse_entry(text):
++    """Satu berkas -> {bahasa: [(jenis, teks), ...]}. Baris kosong dan berawalan # diabaikan."""
++    out = {}
++    lang = None
++    for raw in text.splitlines():
++        line = raw.strip()
++        if not line or line.startswith("#"):
++            continue
++        m = SECTION.match(line)
++        if m:
++            lang = m.group(1)
++            out.setdefault(lang, [])
++            continue
++        if lang is None or line[0] not in KINDS:
++            continue
++        body = line[1:].strip()
++        if body:
++            out[lang].append((KINDS[line[0]], body))
++    return out
++
++
++def entry_files(directory, since):
++    """Berkas catatan yang belum ada pada tag [since] (semuanya bila since kosong atau tag tidak ditemukan)."""
++    names = sorted(n for n in os.listdir(directory) if n.endswith(".txt")) if os.path.isdir(directory) else []
++    if not since:
++        return names
++    r = subprocess.run(["git", "ls-tree", "-r", "--name-only", since, "--", directory],
++                       capture_output=True, text=True)
++    if r.returncode != 0:
++        return names
++    old = {os.path.basename(p) for p in r.stdout.splitlines()}
++    return [n for n in names if n not in old]
++
++
++def collect(directory, since):
++    """{bahasa: [(jenis, teks)]}. Bahasa yang belum diterjemahkan pada suatu catatan memakai Inggris, lalu Indonesia."""
++    merged = {lang: [] for lang in LANGS}
++    for name in entry_files(directory, since):
++        with open(os.path.join(directory, name), encoding="utf-8") as f:
++            entry = parse_entry(f.read())
++        for lang in LANGS:
++            items = entry.get(lang) or entry.get("en") or entry.get("id") or []
++            merged[lang].extend(items)
++    return merged
++
++
++def safe_json(obj):
++    """JSON satu baris, ASCII saja, aman di dalam komentar HTML (tanpa '--', '<', '>')."""
++    s = json.dumps(obj, ensure_ascii=True, separators=(",", ":"))
++    return s.replace("-", "\\u002d").replace("<", "\\u003c").replace(">", "\\u003e")
++
++
++def payload(version, merged):
++    return {"v": 1, "version": version,
++            "lang": {lang: [[k, t] for k, t in items] for lang, items in merged.items()}}
++
++
++def markdown(version, merged, repo_url):
++    lines = []
++    for kind in ("new", "improve", "fix"):
++        items = [t for k, t in merged["en"] if k == kind]
++        if items:
++            lines += ["### " + KIND_TITLE_EN[kind], ""] + ["- " + t for t in items] + [""]
++    # Awalan "https://" membuat aplikasi lama menyaring baris ini dari pop-up pembaruan mereka.
++    lines.append("<!-- amber-whatsnew:v1 %s %s -->" % (repo_url, safe_json(payload(version, merged))))
++    return "\n".join(lines) + "\n"
++
++
++def write_atomic(path, text):
++    directory = os.path.dirname(path)
++    if directory:
++        os.makedirs(directory, exist_ok=True)
++    tmp = path + ".tmp"
++    with open(tmp, "w", encoding="utf-8", newline="\n") as f:
++        f.write(text)
++    os.replace(tmp, path)
++
++
++def main(argv=None):
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    ap.add_argument("--version", required=True)
++    ap.add_argument("--since", default="", help="tag rilis sebelumnya; kosong = semua catatan")
++    ap.add_argument("--entries", default="changelog/entries")
++    ap.add_argument("--asset", help="tulis JSON untuk APK ke berkas ini")
++    ap.add_argument("--markdown", help="tulis isi catatan Release GitHub ke berkas ini")
++    ap.add_argument("--repo-url", default="https://github.com")
++    args = ap.parse_args(argv)
++
++    merged = collect(args.entries, args.since)
++    if not any(merged.values()):
++        print("Tidak ada catatan baru di %s sejak %s." % (args.entries, args.since or "awal"), file=sys.stderr)
++        return EMPTY
++    data = payload(args.version, merged)
++    if args.asset:
++        write_atomic(args.asset, json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
++    if args.markdown:
++        write_atomic(args.markdown, markdown(args.version, merged, args.repo_url))
++    print("Catatan: %d butir (id), sejak %s." % (len(merged["id"]), args.since or "awal"), file=sys.stderr)
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+# FIN part=1/1 files=23

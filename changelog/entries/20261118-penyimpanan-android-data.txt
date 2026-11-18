@@ -1,0 +1,32 @@
+[id]
++ Data game kini disimpan di folder AmberLauncher sendiri (Android/data), tanpa izin akses semua file.
++ Pengguna lama bisa memindahkan datanya ke folder baru dari Pengaturan > Penyimpanan data, dengan penjelasan untung-rugi, dan bisa memilih tetap di folder lama.
+~ Cadangan tata letak kontrol tetap berjalan tanpa izin penyimpanan.
+[en]
++ Game data is now stored in AmberLauncher's own folder (Android/data), with no all-files permission needed.
++ Existing users can move their data to the new folder from Settings > Data storage, with the pros and cons explained, and the option to keep the old folder.
+~ Control layout backups keep working without storage permission.
+[es]
++ Los datos del juego ahora se guardan en la carpeta propia de AmberLauncher (Android/data), sin necesitar el permiso de acceso a todos los archivos.
++ Los usuarios actuales pueden mover sus datos a la nueva carpeta desde Ajustes > Almacenamiento de datos, con las ventajas y desventajas explicadas y la opción de mantener la carpeta antigua.
+~ Las copias de seguridad del diseño de controles siguen funcionando sin permiso de almacenamiento.
+[fil]
++ Naka-save na ngayon ang data ng laro sa sariling folder ng AmberLauncher (Android/data), at hindi na kailangan ang pahintulot na ma-access ang lahat ng file.
++ Maaaring ilipat ng mga kasalukuyang user ang kanilang data sa bagong folder mula sa Mga Setting > Storage ng data, may paliwanag sa mga benepisyo at disbentahe, at puwedeng manatili sa lumang folder.
+~ Gumagana pa rin ang backup ng layout ng controls kahit walang pahintulot sa storage.
+[pt]
++ Os dados do jogo agora ficam na pasta própria do AmberLauncher (Android/data), sem precisar da permissão de acesso a todos os arquivos.
++ Usuários atuais podem mover seus dados para a nova pasta em Configurações > Armazenamento de dados, com vantagens e desvantagens explicadas e a opção de manter a pasta antiga.
+~ O backup do layout dos controles continua funcionando sem permissão de armazenamento.
+[th]
++ ข้อมูลเกมตอนนี้เก็บไว้ในโฟลเดอร์ของ AmberLauncher เอง (Android/data) โดยไม่ต้องใช้สิทธิ์เข้าถึงไฟล์ทั้งหมด
++ ผู้ใช้เดิมย้ายข้อมูลไปยังโฟลเดอร์ใหม่ได้ที่ การตั้งค่า > ที่เก็บข้อมูล พร้อมคำอธิบายข้อดีข้อเสีย และเลือกคงไว้ที่โฟลเดอร์เดิมได้
+~ การสำรองเลย์เอาต์ปุ่มควบคุมยังทำงานได้โดยไม่ต้องมีสิทธิ์ที่เก็บข้อมูล
+[vi]
++ Dữ liệu game giờ được lưu trong thư mục riêng của AmberLauncher (Android/data), không cần quyền truy cập tất cả tệp.
++ Người dùng cũ có thể chuyển dữ liệu sang thư mục mới trong Cài đặt > Lưu trữ dữ liệu, có giải thích ưu nhược điểm và có thể chọn giữ nguyên ở thư mục cũ.
+~ Bản sao lưu bố cục điều khiển vẫn hoạt động mà không cần quyền lưu trữ.
+[zh]
++ 游戏数据现在保存在 AmberLauncher 自己的文件夹（Android/data）中，无需“所有文件访问”权限。
++ 老用户可在“设置 > 数据存储”中将数据移动到新文件夹，并会先说明优缺点，也可以选择保留在旧文件夹。
+~ 控制布局备份在没有存储权限时也能正常工作。

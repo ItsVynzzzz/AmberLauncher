@@ -6,6 +6,7 @@
 <paths>
     <cache-path name="shared_logs" path="shared_logs/" />
     <files-path name="internal_game_data" path="nuxlauncher/" />
+    <files-path name="internal_amber_data" path="amberlauncher/" />
     <external-files-path name="external_files" path="." />
     <external-path name="shared_game_data" path="nuxlauncher/" />
 </paths>

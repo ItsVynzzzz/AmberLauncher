@@ -1,0 +1,47 @@
+# Penyimpanan data: pemindahan ke Android/data
+Pindahkan data game	Mover los datos del juego
+Dunia, mod, instance, dan file game akan dipindahkan dari folder lama ke folder milik AmberLauncher sendiri di Android/data. Semuanya dipindahkan utuh, tidak perlu mengunduh ulang.	Los mundos, mods, instancias y archivos del juego se mover\u00e1n de la carpeta antigua a la carpeta propia de AmberLauncher en Android/data. Todo se mueve completo, no hace falta volver a descargar nada.
+Keuntungan	Ventajas
+Android 11 ke atas: membaca dan menulis file biasanya lebih cepat, karena Android/data tidak melewati lapisan FUSE seperti penyimpanan utama.	Android 11 o superior: leer y escribir archivos suele ser m\u00e1s r\u00e1pido, porque Android/data no pasa por la capa FUSE que usa el almacenamiento principal.
+Tidak perlu izin akses semua file.	No necesita el permiso de acceso a todos los archivos.
+Lebih aman: di Android 11 ke atas, aplikasi lain tidak bisa membaca atau mengubah datamu.	M\u00e1s seguro: en Android 11 o superior, otras aplicaciones no pueden leer ni modificar tus datos.
+Folder rapi dengan nama AmberLauncher, tidak lagi berserakan di penyimpanan utama.	Una carpeta ordenada con el nombre de AmberLauncher, que ya no queda suelta en el almacenamiento principal.
+Sesuai aturan penyimpanan Android terbaru, tidak ikut bermasalah bila Android memperketat akses.	Cumple las reglas de almacenamiento m\u00e1s recientes de Android, as\u00ed que no se ve afectado si Android restringe m\u00e1s el acceso.
+Kekurangan	Desventajas
+Data ikut terhapus bila AmberLauncher dihapus atau penyimpanannya dikosongkan. Cadangkan dunia yang penting dulu.	Los datos se borran junto con AmberLauncher si lo desinstalas o borras su almacenamiento. Haz antes una copia de seguridad de los mundos importantes.
+Folder sulit dibuka lewat pengelola file: Android 11 ke atas membatasi Android/data, dan di Android 13 ke atas hampir tidak bisa.	La carpeta es dif\u00edcil de abrir con administradores de archivos: Android 11 o superior restringe Android/data y en Android 13 o superior casi no se puede.
+Bila Android tidak bisa memindahkan langsung, data disalin dulu sehingga butuh ruang kosong sebesar data, dan bisa memakan beberapa menit.	Si Android no puede moverlo directamente, los datos se copian primero, lo que requiere espacio libre igual al tama\u00f1o de los datos y puede tardar unos minutos.
+Yang terasa biasanya waktu memuat dunia, mod, dan aset, bukan FPS saat bermain. Besarnya beda di tiap HP.	Lo que se nota suele ser el tiempo de carga de mundos, mods y recursos, no los FPS al jugar. La diferencia var\u00eda seg\u00fan el tel\u00e9fono.
+Menghitung ukuran data...	Calculando el tama\u00f1o de los datos...
+Ukuran data: {0}. Ruang kosong: {1}.	Tama\u00f1o de los datos: {0}. Espacio libre: {1}.
+Tujuan: {0}	Destino: {0}
+Pindahkan	Mover
+Tetap	Mantener
+Memindahkan data	Moviendo datos
+Menyiapkan...	Preparando...
+Menyalin data...	Copiando datos...
+Memeriksa hasil salinan...	Comprobando la copia...
+Menyelesaikan...	Finalizando...
+Membersihkan data lama...	Limpiando los datos antiguos...
+{0}% \u00b7 {1} dari {2}	{0}% \u00b7 {1} de {2}
+Jangan tutup AmberLauncher sampai selesai. Kalau terputus, data lama tetap utuh.	No cierres AmberLauncher hasta que termine. Si se interrumpe, tus datos antiguos quedan intactos.
+Pemindahan selesai	Movimiento completado
+Data sekarang disimpan di folder AmberLauncher sendiri. Instance, dunia, dan modmu langsung bisa dipakai.	Tus datos ahora est\u00e1n en la carpeta propia de AmberLauncher. Tus instancias, mundos y mods ya se pueden usar.
+Sebagian file lama belum bisa dihapus dan akan dibersihkan otomatis nanti.	Algunos archivos antiguos a\u00fan no se pudieron borrar y se limpiar\u00e1n autom\u00e1ticamente m\u00e1s tarde.
+Pemindahan dibatalkan	Movimiento cancelado
+Data lama tetap utuh. Kamu bisa memindahkannya lagi kapan saja dari Pengaturan, bagian Penyimpanan data.	Tus datos antiguos siguen intactos. Puedes volver a moverlos cuando quieras desde Ajustes, en la secci\u00f3n Almacenamiento de datos.
+Pemindahan gagal	Error al mover
+Game masih berjalan. Tutup game sepenuhnya, lalu coba lagi.	El juego sigue en ejecuci\u00f3n. Ci\u00e9rralo por completo e int\u00e9ntalo de nuevo.
+Data lama tidak ditemukan atau tidak bisa dibaca. Pastikan izin akses semua file untuk AmberLauncher masih menyala.	No se encontraron los datos antiguos o no se pueden leer. Comprueba que el permiso de acceso a todos los archivos de AmberLauncher siga activado.
+Folder tujuan sudah berisi data lain, jadi tidak ada yang diubah.	La carpeta de destino ya contiene otros datos, as\u00ed que no se cambi\u00f3 nada.
+Ruang kosong tidak cukup. Dibutuhkan sekitar {0}, tersedia {1}.	No hay espacio libre suficiente. Se necesitan unos {0}; hay {1} disponibles.
+Terjadi kesalahan saat memindahkan data.	Ocurri\u00f3 un error al mover los datos.
+Data lama tidak diubah.	Tus datos antiguos no se modificaron.
+Penyimpanan data	Almacenamiento de datos
+Lokasi data	Ubicaci\u00f3n de los datos
+Dunia, mod, dan file game disimpan di:\n{0}	Los mundos, mods y archivos del juego se guardan en:\n{0}
+Pindahkan ke Android/data	Mover a Android/data
+Pindahkan data ke folder AmberLauncher sendiri tanpa izin akses semua file. Untung-ruginya dijelaskan dulu sebelum dimulai, dan bisa dibatalkan.	Mueve tus datos a la carpeta propia de AmberLauncher sin el permiso de acceso a todos los archivos. Antes de empezar se explican las ventajas y desventajas, y puedes cancelar.
+Penyimpanan aplikasi	Almacenamiento de la app
+Data disimpan di folder AmberLauncher sendiri (Android/data). Data ikut terhapus bila aplikasi dihapus, jadi cadangkan dunia yang penting.	Los datos se guardan en la carpeta propia de AmberLauncher (Android/data). Se borran junto con la app, as\u00ed que haz copia de seguridad de los mundos importantes.
+Data AmberLauncher kamu masih di folder lama pada penyimpanan HP, dan membacanya butuh izin akses ke semua file. Kamu juga bisa memindahkannya ke folder AmberLauncher sendiri, tanpa izin, lewat Pengaturan, bagian Penyimpanan data.	Tus datos de AmberLauncher siguen en la carpeta antigua del almacenamiento del tel\u00e9fono, y leerlos requiere el permiso de acceso a todos los archivos. Tambi\u00e9n puedes moverlos a la carpeta propia de AmberLauncher, sin ning\u00fan permiso, desde Ajustes, en la secci\u00f3n Almacenamiento de datos.

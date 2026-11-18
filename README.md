@@ -41,7 +41,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 
 ## Cara mulai
 
-1. **Buka AmberLauncher.** Di Android 11 ke atas, izinkan akses penyimpanan agar data tersimpan di folder `nuxlauncher` (boleh dilewati; data lalu disimpan di folder privat aplikasi).
+1. **Buka AmberLauncher.** Tidak ada izin penyimpanan yang diminta. Data game (dunia, mod, instance) disimpan di folder AmberLauncher sendiri: `Android/data/com.itsvynzzzz.amberlauncher/files/amberlauncher`. Pengguna lama yang datanya masih di folder lama ditawari memindahkannya (bisa dibatalkan, dan tersedia juga di **Pengaturan > Penyimpanan data**).
 2. **Tambahkan akun** di menu **Akun**: Microsoft untuk bermain online, atau offline untuk bermain sendiri.
 3. **Buat instance** lewat **Buat Instance**: pilih versi Minecraft, lalu Vanilla, Fabric, Forge, atau NeoForge.
 4. Di **Home**, tekan **UNDUH** dan tunggu selesai (butuh internet), lalu tekan **PLAY**.

@@ -1,0 +1,47 @@
+# Penyimpanan data: pemindahan ke Android/data
+Pindahkan data game	Ilipat ang data ng laro
+Dunia, mod, instance, dan file game akan dipindahkan dari folder lama ke folder milik AmberLauncher sendiri di Android/data. Semuanya dipindahkan utuh, tidak perlu mengunduh ulang.	Ililipat ang mga mundo, mod, instance, at file ng laro mula sa lumang folder papunta sa sariling folder ng AmberLauncher sa Android/data. Buo itong ililipat, kaya hindi na kailangang mag-download ulit.
+Keuntungan	Mga benepisyo
+Android 11 ke atas: membaca dan menulis file biasanya lebih cepat, karena Android/data tidak melewati lapisan FUSE seperti penyimpanan utama.	Android 11 pataas: kadalasang mas mabilis ang pagbasa at pagsulat ng file, dahil hindi dumadaan ang Android/data sa FUSE layer na ginagamit ng pangunahing storage.
+Tidak perlu izin akses semua file.	Hindi na kailangan ang pahintulot na ma-access ang lahat ng file.
+Lebih aman: di Android 11 ke atas, aplikasi lain tidak bisa membaca atau mengubah datamu.	Mas ligtas: sa Android 11 pataas, hindi mababasa o mababago ng ibang app ang iyong data.
+Folder rapi dengan nama AmberLauncher, tidak lagi berserakan di penyimpanan utama.	Maayos na folder na may pangalang AmberLauncher, hindi na nakakalat sa pangunahing storage.
+Sesuai aturan penyimpanan Android terbaru, tidak ikut bermasalah bila Android memperketat akses.	Sumusunod sa pinakabagong patakaran ng Android sa storage, kaya hindi maaapektuhan kung higpitan pa ng Android ang access.
+Kekurangan	Mga disbentahe
+Data ikut terhapus bila AmberLauncher dihapus atau penyimpanannya dikosongkan. Cadangkan dunia yang penting dulu.	Made-delete ang data kasama ng AmberLauncher kapag in-uninstall ito o nilinis ang storage nito. I-back up muna ang mahahalagang mundo.
+Folder sulit dibuka lewat pengelola file: Android 11 ke atas membatasi Android/data, dan di Android 13 ke atas hampir tidak bisa.	Mahirap buksan ang folder gamit ang mga file manager: nililimitahan ng Android 11 pataas ang Android/data, at halos imposible na ito sa Android 13 pataas.
+Bila Android tidak bisa memindahkan langsung, data disalin dulu sehingga butuh ruang kosong sebesar data, dan bisa memakan beberapa menit.	Kung hindi direktang mailipat ng Android, kokopyahin muna ang data, kaya kailangan ng libreng espasyo na kasinlaki ng data at maaaring abutin ng ilang minuto.
+Yang terasa biasanya waktu memuat dunia, mod, dan aset, bukan FPS saat bermain. Besarnya beda di tiap HP.	Ang kadalasang mararamdaman ay ang oras ng pag-load ng mga mundo, mod, at asset, hindi ang FPS habang naglalaro. Iba-iba ang laki ng pagkakaiba sa bawat telepono.
+Menghitung ukuran data...	Kinukuwenta ang laki ng data...
+Ukuran data: {0}. Ruang kosong: {1}.	Laki ng data: {0}. Libreng espasyo: {1}.
+Tujuan: {0}	Destinasyon: {0}
+Pindahkan	Ilipat
+Tetap	Panatilihin
+Memindahkan data	Inililipat ang data
+Menyiapkan...	Inihahanda...
+Menyalin data...	Kinokopya ang data...
+Memeriksa hasil salinan...	Sinusuri ang kopya...
+Menyelesaikan...	Tinatapos...
+Membersihkan data lama...	Nililinis ang lumang data...
+{0}% \u00b7 {1} dari {2}	{0}% \u00b7 {1} sa {2}
+Jangan tutup AmberLauncher sampai selesai. Kalau terputus, data lama tetap utuh.	Huwag isara ang AmberLauncher hanggang matapos. Kapag naputol, buo pa rin ang lumang data.
+Pemindahan selesai	Tapos na ang paglilipat
+Data sekarang disimpan di folder AmberLauncher sendiri. Instance, dunia, dan modmu langsung bisa dipakai.	Nasa sariling folder na ng AmberLauncher ang iyong data. Magagamit mo na agad ang iyong mga instance, mundo, at mod.
+Sebagian file lama belum bisa dihapus dan akan dibersihkan otomatis nanti.	May ilang lumang file na hindi pa mabura at awtomatikong lilinisin mamaya.
+Pemindahan dibatalkan	Nakansela ang paglilipat
+Data lama tetap utuh. Kamu bisa memindahkannya lagi kapan saja dari Pengaturan, bagian Penyimpanan data.	Buo pa rin ang lumang data. Maaari mo itong ilipat ulit anumang oras sa Mga Setting, sa bahaging Storage ng data.
+Pemindahan gagal	Nabigo ang paglilipat
+Game masih berjalan. Tutup game sepenuhnya, lalu coba lagi.	Tumatakbo pa ang laro. Isara ito nang tuluyan, pagkatapos subukan ulit.
+Data lama tidak ditemukan atau tidak bisa dibaca. Pastikan izin akses semua file untuk AmberLauncher masih menyala.	Hindi nahanap o hindi mabasa ang lumang data. Tiyaking nakabukas pa rin ang pahintulot na ma-access ang lahat ng file para sa AmberLauncher.
+Folder tujuan sudah berisi data lain, jadi tidak ada yang diubah.	May ibang data na sa destination folder, kaya walang binago.
+Ruang kosong tidak cukup. Dibutuhkan sekitar {0}, tersedia {1}.	Kulang ang libreng espasyo. Kailangan ng humigit-kumulang {0}, may {1} na magagamit.
+Terjadi kesalahan saat memindahkan data.	May naganap na error habang inililipat ang data.
+Data lama tidak diubah.	Walang binago sa lumang data.
+Penyimpanan data	Storage ng data
+Lokasi data	Lokasyon ng data
+Dunia, mod, dan file game disimpan di:\n{0}	Naka-save ang mga mundo, mod, at file ng laro sa:\n{0}
+Pindahkan ke Android/data	Ilipat sa Android/data
+Pindahkan data ke folder AmberLauncher sendiri tanpa izin akses semua file. Untung-ruginya dijelaskan dulu sebelum dimulai, dan bisa dibatalkan.	Ilipat ang iyong data sa sariling folder ng AmberLauncher nang walang pahintulot na ma-access ang lahat ng file. Ipapaliwanag muna ang mga benepisyo at disbentahe bago magsimula, at maaari kang magkansela.
+Penyimpanan aplikasi	Storage ng app
+Data disimpan di folder AmberLauncher sendiri (Android/data). Data ikut terhapus bila aplikasi dihapus, jadi cadangkan dunia yang penting.	Naka-save ang data sa sariling folder ng AmberLauncher (Android/data). Made-delete ito kasama ng app, kaya i-back up ang mahahalagang mundo.
+Data AmberLauncher kamu masih di folder lama pada penyimpanan HP, dan membacanya butuh izin akses ke semua file. Kamu juga bisa memindahkannya ke folder AmberLauncher sendiri, tanpa izin, lewat Pengaturan, bagian Penyimpanan data.	Nasa lumang folder pa rin sa storage ng telepono ang iyong data ng AmberLauncher, at kailangan ng pahintulot na ma-access ang lahat ng file para mabasa ito. Maaari mo rin itong ilipat sa sariling folder ng AmberLauncher, nang walang anumang pahintulot, sa Mga Setting, sa bahaging Storage ng data.

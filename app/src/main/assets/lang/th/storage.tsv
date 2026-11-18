@@ -1,0 +1,47 @@
+# Penyimpanan data: pemindahan ke Android/data
+Pindahkan data game	ย้ายข้อมูลเกม
+Dunia, mod, instance, dan file game akan dipindahkan dari folder lama ke folder milik AmberLauncher sendiri di Android/data. Semuanya dipindahkan utuh, tidak perlu mengunduh ulang.	โลก ม็อด instance และไฟล์เกมจะถูกย้ายจากโฟลเดอร์เดิมไปยังโฟลเดอร์ของ AmberLauncher เองใน Android/data ทุกอย่างถูกย้ายครบถ้วน ไม่ต้องดาวน์โหลดใหม่
+Keuntungan	ข้อดี
+Android 11 ke atas: membaca dan menulis file biasanya lebih cepat, karena Android/data tidak melewati lapisan FUSE seperti penyimpanan utama.	Android 11 ขึ้นไป: การอ่านและเขียนไฟล์มักเร็วขึ้น เพราะ Android/data ไม่ผ่านชั้น FUSE เหมือนที่เก็บข้อมูลหลัก
+Tidak perlu izin akses semua file.	ไม่ต้องใช้สิทธิ์เข้าถึงไฟล์ทั้งหมด
+Lebih aman: di Android 11 ke atas, aplikasi lain tidak bisa membaca atau mengubah datamu.	ปลอดภัยกว่า: บน Android 11 ขึ้นไป แอปอื่นไม่สามารถอ่านหรือแก้ไขข้อมูลของคุณได้
+Folder rapi dengan nama AmberLauncher, tidak lagi berserakan di penyimpanan utama.	โฟลเดอร์เป็นระเบียบใช้ชื่อ AmberLauncher ไม่กระจัดกระจายในที่เก็บข้อมูลหลักอีกต่อไป
+Sesuai aturan penyimpanan Android terbaru, tidak ikut bermasalah bila Android memperketat akses.	เป็นไปตามกฎการจัดเก็บข้อมูลล่าสุดของ Android จึงไม่ได้รับผลกระทบหาก Android เข้มงวดการเข้าถึงมากขึ้น
+Kekurangan	ข้อเสีย
+Data ikut terhapus bila AmberLauncher dihapus atau penyimpanannya dikosongkan. Cadangkan dunia yang penting dulu.	ข้อมูลจะถูกลบไปพร้อมกับ AmberLauncher หากถอนการติดตั้งหรือล้างพื้นที่เก็บข้อมูลของแอป ควรสำรองโลกที่สำคัญไว้ก่อน
+Folder sulit dibuka lewat pengelola file: Android 11 ke atas membatasi Android/data, dan di Android 13 ke atas hampir tidak bisa.	เปิดโฟลเดอร์ผ่านแอปจัดการไฟล์ได้ยาก: Android 11 ขึ้นไปจำกัดการเข้าถึง Android/data และบน Android 13 ขึ้นไปแทบเปิดไม่ได้เลย
+Bila Android tidak bisa memindahkan langsung, data disalin dulu sehingga butuh ruang kosong sebesar data, dan bisa memakan beberapa menit.	หาก Android ย้ายโดยตรงไม่ได้ ระบบจะคัดลอกข้อมูลก่อน ซึ่งต้องมีพื้นที่ว่างเท่าขนาดข้อมูลและอาจใช้เวลาหลายนาที
+Yang terasa biasanya waktu memuat dunia, mod, dan aset, bukan FPS saat bermain. Besarnya beda di tiap HP.	สิ่งที่สัมผัสได้มักเป็นเวลาโหลดโลก ม็อด และแอสเซ็ต ไม่ใช่ FPS ตอนเล่น ความต่างขึ้นอยู่กับแต่ละเครื่อง
+Menghitung ukuran data...	กำลังคำนวณขนาดข้อมูล...
+Ukuran data: {0}. Ruang kosong: {1}.	ขนาดข้อมูล: {0} พื้นที่ว่าง: {1}
+Tujuan: {0}	ปลายทาง: {0}
+Pindahkan	ย้าย
+Tetap	คงไว้
+Memindahkan data	กำลังย้ายข้อมูล
+Menyiapkan...	กำลังเตรียม...
+Menyalin data...	กำลังคัดลอกข้อมูล...
+Memeriksa hasil salinan...	กำลังตรวจสอบสำเนา...
+Menyelesaikan...	กำลังเสร็จสิ้น...
+Membersihkan data lama...	กำลังล้างข้อมูลเก่า...
+{0}% \u00b7 {1} dari {2}	{0}% \u00b7 {1} จาก {2}
+Jangan tutup AmberLauncher sampai selesai. Kalau terputus, data lama tetap utuh.	อย่าปิด AmberLauncher จนกว่าจะเสร็จ หากถูกขัดจังหวะ ข้อมูลเดิมจะยังอยู่ครบ
+Pemindahan selesai	ย้ายเสร็จแล้ว
+Data sekarang disimpan di folder AmberLauncher sendiri. Instance, dunia, dan modmu langsung bisa dipakai.	ตอนนี้ข้อมูลของคุณเก็บอยู่ในโฟลเดอร์ของ AmberLauncher เอง instance โลก และม็อดของคุณพร้อมใช้งานทันที
+Sebagian file lama belum bisa dihapus dan akan dibersihkan otomatis nanti.	ไฟล์เก่าบางส่วนยังลบไม่ได้ และจะถูกล้างให้อัตโนมัติในภายหลัง
+Pemindahan dibatalkan	ยกเลิกการย้ายแล้ว
+Data lama tetap utuh. Kamu bisa memindahkannya lagi kapan saja dari Pengaturan, bagian Penyimpanan data.	ข้อมูลเดิมยังอยู่ครบ คุณย้ายอีกครั้งได้ทุกเมื่อที่การตั้งค่า ในส่วนที่เก็บข้อมูล
+Pemindahan gagal	ย้ายไม่สำเร็จ
+Game masih berjalan. Tutup game sepenuhnya, lalu coba lagi.	เกมยังทำงานอยู่ ปิดเกมให้สมบูรณ์แล้วลองอีกครั้ง
+Data lama tidak ditemukan atau tidak bisa dibaca. Pastikan izin akses semua file untuk AmberLauncher masih menyala.	ไม่พบข้อมูลเดิมหรืออ่านไม่ได้ ตรวจสอบว่าสิทธิ์เข้าถึงไฟล์ทั้งหมดของ AmberLauncher ยังเปิดอยู่
+Folder tujuan sudah berisi data lain, jadi tidak ada yang diubah.	โฟลเดอร์ปลายทางมีข้อมูลอื่นอยู่แล้ว จึงไม่มีอะไรเปลี่ยนแปลง
+Ruang kosong tidak cukup. Dibutuhkan sekitar {0}, tersedia {1}.	พื้นที่ว่างไม่เพียงพอ ต้องใช้ประมาณ {0} แต่มีอยู่ {1}
+Terjadi kesalahan saat memindahkan data.	เกิดข้อผิดพลาดขณะย้ายข้อมูล
+Data lama tidak diubah.	ข้อมูลเดิมไม่ถูกเปลี่ยนแปลง
+Penyimpanan data	ที่เก็บข้อมูล
+Lokasi data	ตำแหน่งข้อมูล
+Dunia, mod, dan file game disimpan di:\n{0}	โลก ม็อด และไฟล์เกมถูกเก็บไว้ที่:\n{0}
+Pindahkan ke Android/data	ย้ายไปที่ Android/data
+Pindahkan data ke folder AmberLauncher sendiri tanpa izin akses semua file. Untung-ruginya dijelaskan dulu sebelum dimulai, dan bisa dibatalkan.	ย้ายข้อมูลไปยังโฟลเดอร์ของ AmberLauncher เองโดยไม่ต้องใช้สิทธิ์เข้าถึงไฟล์ทั้งหมด จะอธิบายข้อดีข้อเสียก่อนเริ่ม และยกเลิกได้
+Penyimpanan aplikasi	ที่เก็บข้อมูลของแอป
+Data disimpan di folder AmberLauncher sendiri (Android/data). Data ikut terhapus bila aplikasi dihapus, jadi cadangkan dunia yang penting.	ข้อมูลถูกเก็บไว้ในโฟลเดอร์ของ AmberLauncher เอง (Android/data) และจะถูกลบไปพร้อมกับแอป จึงควรสำรองโลกที่สำคัญไว้
+Data AmberLauncher kamu masih di folder lama pada penyimpanan HP, dan membacanya butuh izin akses ke semua file. Kamu juga bisa memindahkannya ke folder AmberLauncher sendiri, tanpa izin, lewat Pengaturan, bagian Penyimpanan data.	ข้อมูล AmberLauncher ของคุณยังอยู่ในโฟลเดอร์เดิมบนที่เก็บข้อมูลของโทรศัพท์ และการอ่านต้องใช้สิทธิ์เข้าถึงไฟล์ทั้งหมด คุณยังย้ายไปยังโฟลเดอร์ของ AmberLauncher เองได้โดยไม่ต้องใช้สิทธิ์ใด ๆ ที่การตั้งค่า ในส่วนที่เก็บข้อมูล

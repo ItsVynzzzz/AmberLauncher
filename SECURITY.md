@@ -26,5 +26,5 @@ Gunakan tab **Security** di repo ini, lalu pilih **Report a vulnerability** agar
 ## Batasan yang perlu diketahui
 
 - Mod, modpack, dan shader dari pihak ketiga adalah kode yang dijalankan bersama game. Pasang hanya dari sumber yang dipercaya.
-- Data game disimpan di folder `nuxlauncher` pada penyimpanan bersama. Aplikasi lain yang punya izin akses semua berkas di HP bisa membacanya. Data akun tetap di folder privat aplikasi.
+- Data game disimpan di folder AmberLauncher sendiri di Android/data, tanpa izin penyimpanan; di Android 11 ke atas aplikasi lain tidak bisa membacanya. Pengguna lama yang belum memindahkan datanya dari folder lama di penyimpanan bersama masih bisa dibaca aplikasi lain yang punya izin akses semua berkas. Data akun tetap di folder privat aplikasi.
 - Token akun disimpan di folder privat aplikasi tanpa enkripsi tambahan. Perlindungannya adalah isolasi aplikasi bawaan Android.

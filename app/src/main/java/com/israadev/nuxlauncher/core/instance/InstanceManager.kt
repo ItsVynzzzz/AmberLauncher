@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.modpack.ModpackStaging
+import com.israadev.nuxlauncher.core.storage.DataLocation
 import com.israadev.nuxlauncher.core.models.Instance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,33 +21,11 @@ object InstanceManager {
     private val _selectedInstance = MutableStateFlow<Instance?>(null)
     val selectedInstance: StateFlow<Instance?> = _selectedInstance.asStateFlow()
 
-    fun getNuxDir(context: Context): File {
-        // 1. Primary user-visible storage: /storage/emulated/0/nuxlauncher
-        try {
-            val extStorage = android.os.Environment.getExternalStorageDirectory()
-            val nuxPublicDir = File(extStorage, "nuxlauncher")
-            if (!nuxPublicDir.exists()) {
-                nuxPublicDir.mkdirs()
-            }
-            if (nuxPublicDir.exists() && nuxPublicDir.canWrite()) {
-                return nuxPublicDir
-            }
-        } catch (_: Exception) {}
-
-        // 2. Secondary fallback: /storage/emulated/0/Android/data/com.israadev.nuxlauncher/files/nuxlauncher
-        val appExt = context.getExternalFilesDir(null)
-        if (appExt != null) {
-            val appExtDir = File(appExt, "nuxlauncher")
-            if (appExtDir.exists() || appExtDir.mkdirs()) {
-                return appExtDir
-            }
-        }
-
-        // 3. Fallback: internal app storage
-        val internalDir = File(context.filesDir, "nuxlauncher")
-        if (!internalDir.exists()) internalDir.mkdirs()
-        return internalDir
-    }
+    /**
+     * Folder data launcher. Aturan pemilihannya (folder baru milik AmberLauncher di Android/data, atau
+     * folder nuxlauncher lama bagi pengguna lama yang belum memindahkan datanya) ada di [DataLocation].
+     */
+    fun getNuxDir(context: Context): File = DataLocation.root(context)
 
     fun getAssetsDir(context: Context): File {
         val dir = File(getNuxDir(context), "assets")
@@ -309,6 +288,14 @@ object InstanceManager {
     }
 
     fun init(context: Context) {
+        // Selama data dipindahkan ke folder baru, pemuatan ulang menunggu pemindahnya sendiri (DataLocation.lock)
+        synchronized(DataLocation.lock) {
+            if (DataLocation.migrating) return
+            initLocked(context)
+        }
+    }
+
+    private fun initLocked(context: Context) {
         appContext = context.applicationContext
         migrateOldStorage(context)
 

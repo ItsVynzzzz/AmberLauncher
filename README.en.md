@@ -41,7 +41,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 
 ## Getting started
 
-1. **Open AmberLauncher.** On Android 11 and newer, allow storage access so data is kept in the `nuxlauncher` folder (you can skip it; data then stays in the app's private folder).
+1. **Open AmberLauncher.** No storage permission is requested. Game data (worlds, mods, instances) is kept in AmberLauncher's own folder: `Android/data/com.itsvynzzzz.amberlauncher/files/amberlauncher`. Existing users whose data is still in the old folder are offered a move (it can be cancelled, and it is also available under **Settings > Data storage**).
 2. **Add an account** under **Accounts**: Microsoft to play online, or offline to play on your own.
 3. **Create an instance** with **Create Instance**: choose a Minecraft version, then Vanilla, Fabric, Forge, or NeoForge.
 4. On **Home**, press **DOWNLOAD** and wait for it to finish (internet required), then press **PLAY**.

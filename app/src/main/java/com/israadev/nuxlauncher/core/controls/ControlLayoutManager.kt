@@ -26,6 +26,7 @@ object ControlLayoutManager {
     }
 
     fun init(context: Context) {
+        rememberMediaDir(context)
         val file = getLayoutFile(context)
         if (file.exists()) {
             try {
@@ -74,9 +75,13 @@ object ControlLayoutManager {
     }
 
     // ---- Cadangan otomatis ------------------------------------------------------------
-    // Disimpan di luar Android/data supaya tetap ada walau aplikasi dihapus.
+    // Disimpan di luar Android/data supaya tetap ada walau aplikasi dihapus. Ditulis ke dua tempat:
+    // Documents/LauncherBackup (butuh izin akses semua file) dan Android/media/<id aplikasi>/LauncherBackup
+    // (tanpa izin apa pun, tidak ikut terhapus bersama aplikasi). Yang kedua menjaga cadangan tetap jalan
+    // bagi pengguna yang tidak memberi izin penyimpanan.
     // Ditulis hanya saat pengguna menyimpan layout (jarang, berkas kecil) dan di thread latar.
     private const val BACKUP_DIR = "Documents/LauncherBackup"
+    private const val MEDIA_BACKUP_DIR = "LauncherBackup"
     private const val BACKUP_FILE = "controls_layout.json"
     private const val BACKUP_PREV_FILE = "controls_layout.prev.json"
 
@@ -84,46 +89,75 @@ object ControlLayoutManager {
         Thread(r, "controls-backup").apply { isDaemon = true; priority = Thread.MIN_PRIORITY }
     }
 
-    private fun backupDir(): File =
-        File(Environment.getExternalStorageDirectory(), BACKUP_DIR)
+    @Volatile
+    private var mediaBackupDir: File? = null
+
+    @Suppress("DEPRECATION")
+    private fun rememberMediaDir(context: Context) {
+        if (mediaBackupDir != null) return
+        mediaBackupDir = try {
+            context.externalMediaDirs.firstOrNull { it != null }?.let { File(it, MEDIA_BACKUP_DIR) }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private fun backupDirs(): List<File> =
+        listOfNotNull(File(Environment.getExternalStorageDirectory(), BACKUP_DIR), mediaBackupDir)
 
     private fun backupAsync(json: String) {
         backupExecutor.execute {
-            try {
-                val dir = backupDir()
-                if (!dir.exists() && !dir.mkdirs()) return@execute
-                val target = File(dir, BACKUP_FILE)
-                // Lewati kalau isinya sudah sama (tidak perlu menulis ulang).
-                if (target.isFile && target.readText() == json) return@execute
-                val tmp = File(dir, "$BACKUP_FILE.tmp")
-                tmp.writeText(json)
-                if (target.exists()) {
-                    // Simpan 1 versi sebelumnya sebagai cadangan kedua.
-                    val prev = File(dir, BACKUP_PREV_FILE)
-                    prev.delete()
-                    target.renameTo(prev)
+            for (dir in backupDirs()) {
+                try {
+                    writeBackup(dir, json)
+                } catch (_: Throwable) {
+                    // Cadangan bersifat opsional: gagal (mis. tanpa izin penyimpanan) tidak mengganggu.
                 }
-                if (!tmp.renameTo(target)) {
-                    target.writeText(json)
-                    tmp.delete()
-                }
-            } catch (_: Throwable) {
-                // Cadangan bersifat opsional: gagal (mis. tanpa izin penyimpanan) tidak mengganggu.
             }
         }
     }
 
-    private fun readBackup(): List<CustomControlButton>? {
-        for (name in listOf(BACKUP_FILE, BACKUP_PREV_FILE)) {
-            try {
-                val f = File(backupDir(), name)
-                if (f.isFile && f.length() > 2) {
-                    val list = parseButtons(f.readText())
-                    if (!list.isNullOrEmpty()) return list
-                }
-            } catch (_: Throwable) {}
+    private fun writeBackup(dir: File, json: String) {
+        if (!dir.exists() && !dir.mkdirs()) return
+        val target = File(dir, BACKUP_FILE)
+        // Lewati kalau isinya sudah sama (tidak perlu menulis ulang).
+        if (target.isFile && target.readText() == json) return
+        val tmp = File(dir, "$BACKUP_FILE.tmp")
+        tmp.writeText(json)
+        if (target.exists()) {
+            // Simpan 1 versi sebelumnya sebagai cadangan kedua.
+            val prev = File(dir, BACKUP_PREV_FILE)
+            prev.delete()
+            target.renameTo(prev)
         }
-        return null
+        if (!tmp.renameTo(target)) {
+            target.writeText(json)
+            tmp.delete()
+        }
+    }
+
+    /** Cadangan terbaru dari kedua tempat; berkas "prev" hanya dipakai bila berkas utama di folder itu rusak. */
+    private fun readBackup(): List<CustomControlButton>? {
+        var best: List<CustomControlButton>? = null
+        var bestTime = -1L
+        for (dir in backupDirs()) {
+            for (name in listOf(BACKUP_FILE, BACKUP_PREV_FILE)) {
+                try {
+                    val f = File(dir, name)
+                    if (f.isFile && f.length() > 2) {
+                        val list = parseButtons(f.readText())
+                        if (!list.isNullOrEmpty()) {
+                            if (f.lastModified() > bestTime) {
+                                best = list
+                                bestTime = f.lastModified()
+                            }
+                            break
+                        }
+                    }
+                } catch (_: Throwable) {}
+            }
+        }
+        return best
     }
 
     /**
@@ -624,6 +658,7 @@ object ControlLayoutManager {
 
     private fun save(context: Context, list: List<CustomControlButton>) {
         try {
+            rememberMediaDir(context)
             val file = getLayoutFile(context)
             val json = gson.toJson(list)
             file.writeText(json)

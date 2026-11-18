@@ -15,8 +15,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,15 +33,21 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.core.storage.DataLocation
+import com.israadev.nuxlauncher.core.storage.StorageMigrationRunner
 import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
 import com.israadev.nuxlauncher.core.update.UpdateManager
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
+import com.israadev.nuxlauncher.ui.dialogs.AmberStorageMigration
 import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
 import com.israadev.nuxlauncher.ui.dialogs.AmberWhatsNewPrompt
 import com.israadev.nuxlauncher.ui.i18n.AmberLanguageHost
 import com.israadev.nuxlauncher.ui.screens.DashboardScreen
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxResponsiveTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
@@ -69,11 +77,15 @@ class MainActivity : ComponentActivity() {
         hideSystemBars()
         // Controller: A pilih, B kembali, stick/D-pad pindah sorotan, LB/RB ganti tab.
         navUninstall = com.israadev.nuxlauncher.core.controls.GamepadNav.install(window, allowBumper = true)
-        checkAndRequestStoragePermissions()
+        // Folder data baru (Android/data) tidak butuh izin penyimpanan. Izinnya hanya diminta bila data masih di
+        // lokasi lama (folder nuxlauncher di penyimpanan utama), yang memang butuh izin akses semua file.
+        val legacyStorage = DataLocation.isLegacy(this)
+        if (legacyStorage) checkAndRequestStoragePermissions()
         storageWasGranted = storageAccessGranted()
 
         // Android 11 ke atas: jelaskan dulu alasan izinnya, cukup satu kali (tidak menagih tiap dibuka).
-        val showStorageIntro = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+        val showStorageIntro = legacyStorage &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
             !Environment.isExternalStorageManager() &&
             !getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(KEY_STORAGE_INTRO_DONE, false)
 
@@ -96,6 +108,10 @@ class MainActivity : ComponentActivity() {
             try {
                 com.israadev.nuxlauncher.core.renderer.NuxRendererPluginManager.scanPlugins(appCtx)
             } catch (_: Throwable) {}
+            // Pemindahan data yang terputus sebelum sempat menghapus folder lama: selesaikan di latar
+            try {
+                DataLocation.cleanupPending(appCtx)
+            } catch (_: Throwable) {}
             try {
                 com.israadev.nuxlauncher.core.crash.CrashManager.checkAndNotify(appCtx)
             } catch (_: Throwable) {}
@@ -112,7 +128,11 @@ class MainActivity : ComponentActivity() {
                         ) {
                             // Pop-up pembaruan menunggu sampai dialog izin penyimpanan selesai (pembukaan pertama)
                             var introDone by remember { mutableStateOf(!showStorageIntro) }
-                            DashboardScreen()
+                            // Setelah data dipindahkan, layar dibangun ulang supaya tidak memegang jalur folder lama
+                            val dataEpoch by StorageMigrationRunner.epoch.collectAsState()
+                            key(dataEpoch) {
+                                DashboardScreen()
+                            }
                             AmberStorageIntro(
                                 initiallyVisible = showStorageIntro,
                                 onOpenSettings = {
@@ -125,10 +145,27 @@ class MainActivity : ComponentActivity() {
                                     markStorageIntroDone()
                                 }
                             )
-                            AmberUpdatePrompt(enabled = introDone)
+                            // Pengguna lama ditawari memindahkan data ke Android/data, sesudah dialog izin selesai
+                            LaunchedEffect(introDone) {
+                                if (introDone) {
+                                    val offerIt = withContext(Dispatchers.IO) {
+                                        try {
+                                            StorageMigrationRunner.shouldAutoOffer(appCtx)
+                                        } catch (_: Throwable) {
+                                            false
+                                        }
+                                    }
+                                    if (offerIt) StorageMigrationRunner.offer(appCtx)
+                                }
+                            }
+                            AmberStorageMigration()
+                            val migrationIdle by remember {
+                                StorageMigrationRunner.state.map { it is StorageMigrationRunner.UiState.Idle }
+                            }.collectAsState(initial = true)
+                            AmberUpdatePrompt(enabled = introDone && migrationIdle)
                             // Catatan "Yang baru" setelah pembaruan, menunggu dialog lain selesai dan tidak menumpuk di atas pop-up pembaruan
                             val updateOpen by com.israadev.nuxlauncher.core.update.UpdateManager.promptOpen.collectAsState()
-                            AmberWhatsNewPrompt(enabled = introDone && !updateOpen)
+                            AmberWhatsNewPrompt(enabled = introDone && migrationIdle && !updateOpen)
                         }
                         }
                     }
@@ -147,6 +184,7 @@ class MainActivity : ComponentActivity() {
         if (granted != storageWasGranted) {
             storageWasGranted = granted
             bgExecutor.execute {
+                DataLocation.invalidate()
                 try { InstanceManager.init(appCtx) } catch (_: Throwable) {}
                 // Izin baru diberikan: coba pulihkan layout kontrol dari cadangan (jika ada)
                 try { com.israadev.nuxlauncher.core.controls.ControlLayoutManager.init(appCtx) } catch (_: Throwable) {}

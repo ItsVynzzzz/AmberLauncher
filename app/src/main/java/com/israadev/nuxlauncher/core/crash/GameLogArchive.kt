@@ -76,7 +76,7 @@ object GameLogArchive {
 
     private val metaLock = Any()
 
-    /** Folder tempat log disimpan (terlihat di pengelola berkas: nuxlauncher/logs). */
+    /** Folder tempat log disimpan (di folder data AmberLauncher: logs). */
     fun logsDir(context: Context): File = File(InstanceManager.getNuxDir(context), "logs")
 
     /** Log yang tersimpan, yang terbaru di depan. */

@@ -46,7 +46,6 @@ Memuat Minecraft {0}	正在加载 Minecraft {0}
 Tutup loading	关闭加载
 Menyiapkan mesin Java dan grafis...	正在准备 Java 和图形引擎…
 Izin penyimpanan	存储权限
-AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, supaya mudah dicadangkan dan dipindahkan.	AmberLauncher 将世界、模组和设置保存在手机存储的 nuxlauncher 文件夹中，方便备份和迁移。
 Android akan membuka halaman pengaturan. Nyalakan izin akses ke semua file untuk AmberLauncher, lalu kembali ke sini.	Android 将打开设置页面。请为 AmberLauncher 开启“所有文件访问”权限，然后返回这里。
 Kalau memilih Nanti, game tetap bisa dipakai. Datanya disimpan di folder privat aplikasi yang tidak mudah dibuka lewat pengelola file.	如果选择“稍后”，游戏仍可使用。数据会保存在应用的私有文件夹中，不方便通过文件管理器打开。
 Hapus instance?	删除实例？

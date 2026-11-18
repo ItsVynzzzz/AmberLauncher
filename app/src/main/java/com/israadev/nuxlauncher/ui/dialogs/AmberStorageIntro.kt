@@ -59,8 +59,9 @@ fun AmberStorageIntro(
             }
         ) {
             Text(
-                text = "AmberLauncher menyimpan dunia, mod, dan pengaturan di folder nuxlauncher pada penyimpanan HP, " +
-                    "supaya mudah dicadangkan dan dipindahkan.",
+                text = "Data AmberLauncher kamu masih di folder lama pada penyimpanan HP, dan membacanya butuh izin akses " +
+                    "ke semua file. Kamu juga bisa memindahkannya ke folder AmberLauncher sendiri, tanpa izin, lewat " +
+                    "Pengaturan, bagian Penyimpanan data.",
                 color = Amber.Text,
                 fontSize = 14.sp,
                 lineHeight = 21.sp

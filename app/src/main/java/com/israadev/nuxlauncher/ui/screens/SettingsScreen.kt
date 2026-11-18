@@ -1238,6 +1238,9 @@ fun SettingsScreen(
                             SettingsGroup("Log game") {
                                 GameLogSettingsSection()
                             }
+                            SettingsGroup("Penyimpanan data") {
+                                StorageSettingsSection()
+                            }
                         }
                         SettingsGroup("Aplikasi") {
                             SettingActionRow(

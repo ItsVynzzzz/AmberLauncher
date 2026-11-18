@@ -1,0 +1,47 @@
+# Penyimpanan data: pemindahan ke Android/data
+Pindahkan data game	移动游戏数据
+Dunia, mod, instance, dan file game akan dipindahkan dari folder lama ke folder milik AmberLauncher sendiri di Android/data. Semuanya dipindahkan utuh, tidak perlu mengunduh ulang.	世界、模组、实例和游戏文件将从旧文件夹移动到 AmberLauncher 自己位于 Android/data 的文件夹。所有内容都会完整移动，无需重新下载。
+Keuntungan	优点
+Android 11 ke atas: membaca dan menulis file biasanya lebih cepat, karena Android/data tidak melewati lapisan FUSE seperti penyimpanan utama.	Android 11 及以上：读写文件通常更快，因为 Android/data 不经过主存储使用的 FUSE 层。
+Tidak perlu izin akses semua file.	无需所有文件访问权限。
+Lebih aman: di Android 11 ke atas, aplikasi lain tidak bisa membaca atau mengubah datamu.	更安全：在 Android 11 及以上版本，其他应用无法读取或修改你的数据。
+Folder rapi dengan nama AmberLauncher, tidak lagi berserakan di penyimpanan utama.	文件夹整洁，以 AmberLauncher 命名，不再散落在主存储中。
+Sesuai aturan penyimpanan Android terbaru, tidak ikut bermasalah bila Android memperketat akses.	符合 Android 最新的存储规则，即使 Android 进一步收紧访问限制也不受影响。
+Kekurangan	缺点
+Data ikut terhapus bila AmberLauncher dihapus atau penyimpanannya dikosongkan. Cadangkan dunia yang penting dulu.	如果卸载 AmberLauncher 或清除其存储空间，数据也会被一并删除。请先备份重要的世界。
+Folder sulit dibuka lewat pengelola file: Android 11 ke atas membatasi Android/data, dan di Android 13 ke atas hampir tidak bisa.	很难用文件管理器打开该文件夹：Android 11 及以上限制访问 Android/data，Android 13 及以上几乎无法打开。
+Bila Android tidak bisa memindahkan langsung, data disalin dulu sehingga butuh ruang kosong sebesar data, dan bisa memakan beberapa menit.	如果 Android 无法直接移动，数据会先被复制，因此需要与数据大小相当的可用空间，并可能耗时几分钟。
+Yang terasa biasanya waktu memuat dunia, mod, dan aset, bukan FPS saat bermain. Besarnya beda di tiap HP.	通常能感受到的是世界、模组和资源的加载时间，而不是游戏中的 FPS。差异因手机而异。
+Menghitung ukuran data...	正在计算数据大小...
+Ukuran data: {0}. Ruang kosong: {1}.	数据大小：{0}。可用空间：{1}。
+Tujuan: {0}	目标位置：{0}
+Pindahkan	移动
+Tetap	保持不变
+Memindahkan data	正在移动数据
+Menyiapkan...	正在准备...
+Menyalin data...	正在复制数据...
+Memeriksa hasil salinan...	正在检查副本...
+Menyelesaikan...	正在完成...
+Membersihkan data lama...	正在清理旧数据...
+{0}% \u00b7 {1} dari {2}	{0}% \u00b7 {1} / {2}
+Jangan tutup AmberLauncher sampai selesai. Kalau terputus, data lama tetap utuh.	完成之前请勿关闭 AmberLauncher。如果中断，旧数据仍然完好无损。
+Pemindahan selesai	移动完成
+Data sekarang disimpan di folder AmberLauncher sendiri. Instance, dunia, dan modmu langsung bisa dipakai.	你的数据现在保存在 AmberLauncher 自己的文件夹中。你的实例、世界和模组可以直接使用。
+Sebagian file lama belum bisa dihapus dan akan dibersihkan otomatis nanti.	部分旧文件暂时无法删除，稍后会自动清理。
+Pemindahan dibatalkan	已取消移动
+Data lama tetap utuh. Kamu bisa memindahkannya lagi kapan saja dari Pengaturan, bagian Penyimpanan data.	旧数据完好无损。你可以随时在“设置”的“数据存储”部分再次移动。
+Pemindahan gagal	移动失败
+Game masih berjalan. Tutup game sepenuhnya, lalu coba lagi.	游戏仍在运行。请完全关闭游戏后重试。
+Data lama tidak ditemukan atau tidak bisa dibaca. Pastikan izin akses semua file untuk AmberLauncher masih menyala.	找不到旧数据或无法读取。请确认 AmberLauncher 的“所有文件访问”权限仍处于开启状态。
+Folder tujuan sudah berisi data lain, jadi tidak ada yang diubah.	目标文件夹已包含其他数据，因此没有任何更改。
+Ruang kosong tidak cukup. Dibutuhkan sekitar {0}, tersedia {1}.	可用空间不足。大约需要 {0}，当前可用 {1}。
+Terjadi kesalahan saat memindahkan data.	移动数据时发生错误。
+Data lama tidak diubah.	旧数据未被更改。
+Penyimpanan data	数据存储
+Lokasi data	数据位置
+Dunia, mod, dan file game disimpan di:\n{0}	世界、模组和游戏文件保存在：\n{0}
+Pindahkan ke Android/data	移动到 Android/data
+Pindahkan data ke folder AmberLauncher sendiri tanpa izin akses semua file. Untung-ruginya dijelaskan dulu sebelum dimulai, dan bisa dibatalkan.	无需“所有文件访问”权限，即可将数据移动到 AmberLauncher 自己的文件夹。开始前会先说明优缺点，也可以随时取消。
+Penyimpanan aplikasi	应用存储
+Data disimpan di folder AmberLauncher sendiri (Android/data). Data ikut terhapus bila aplikasi dihapus, jadi cadangkan dunia yang penting.	数据保存在 AmberLauncher 自己的文件夹（Android/data）中。卸载应用时会一并删除，因此请备份重要的世界。
+Data AmberLauncher kamu masih di folder lama pada penyimpanan HP, dan membacanya butuh izin akses ke semua file. Kamu juga bisa memindahkannya ke folder AmberLauncher sendiri, tanpa izin, lewat Pengaturan, bagian Penyimpanan data.	你的 AmberLauncher 数据仍在手机存储中的旧文件夹里，读取它需要“所有文件访问”权限。你也可以在“设置”的“数据存储”部分，将其移动到 AmberLauncher 自己的文件夹，无需任何权限。

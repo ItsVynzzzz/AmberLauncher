@@ -4,12 +4,14 @@
 #
 # Isi paket (nama berkas tetap, dibaca scripts/fetch-horizon-engine.sh):
 #   libhorizon_android.so        mesinnya (arm64 atau armeabi-v7a sesuai --abi, sudah di-strip)
-#   engine-data.zip              tabel data mesin hasil generate
+#   engine-data.zip              tabel data mesin hasil generate (hanya schema 1: Horizon Android 0.7.x)
+#   starling-files.zip           (schema 2, --files-zip) java/, res/values/, assets/ untuk APK, satu commit dengan pustaka
+#   <pustaka pendamping>         berkas --extra (schema 2: Starling, mis. libstarling_java.so), semuanya ELF sesuai --abi
 #   LICENSE, THIRD_PARTY_NOTICES.md   pemberitahuan lisensi MIT dari sumber yang dikompilasi
 #   engine.properties            keterangan: sumber, commit, perubahan Amber (patch_set dan hash isinya), versi alat, ukuran dan SHA-256 tiap berkas
 #
 # Pemakaian:
-#   package-horizon-engine.sh --so BERKAS --data BERKAS --license-dir FOLDER --out FOLDER \
+#   package-horizon-engine.sh --so BERKAS [--data BERKAS | --extra BERKAS ...] --license-dir FOLDER --out FOLDER \
 #       --repo URL --commit SHA40 --profile release|fast [--abi arm64-v8a|armeabi-v7a] [--patch-set NAMA --patch-hash HEX8] \
 #       [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
 #
@@ -19,12 +21,16 @@ set -euo pipefail
 
 die() { echo "package-horizon-engine: $*" >&2; exit 1; }
 
+EXTRAS=()
+FILES_ZIP=""
 SO="" DATA="" LICENSE_DIR="" OUT="" REPO="" COMMIT="" PROFILE="" PATCH_SET="" PATCH_HASH="" RUST="" NDK="" READELF="" ABI="arm64-v8a"
 while [ $# -gt 0 ]; do
   case "$1" in
-    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf | --abi)
+    --so | --data | --license-dir | --out | --repo | --commit | --profile | --patch-set | --patch-hash | --rust | --ndk | --readelf | --abi | --extra | --files-zip)
       [ $# -ge 2 ] || die "$1 butuh nilai."
       case "$1" in
+        --extra) EXTRAS+=("$2") ;;
+        --files-zip) FILES_ZIP="$2" ;;
         --so) SO="$2" ;;
         --data) DATA="$2" ;;
         --license-dir) LICENSE_DIR="$2" ;;
@@ -49,7 +55,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-for v in SO DATA LICENSE_DIR OUT REPO COMMIT PROFILE; do
+for v in SO LICENSE_DIR OUT REPO COMMIT PROFILE; do
   [ -n "${!v}" ] || die "argumen wajib kurang: $v"
 done
 [[ $COMMIT =~ ^[0-9a-f]{40}$ ]] || die "commit harus 40 digit heksadesimal."
@@ -64,9 +70,26 @@ case "$ABI" in
   arm64-v8a | armeabi-v7a) ;;
   *) die "abi harus arm64-v8a atau armeabi-v7a." ;;
 esac
-BUNDLE_NAME="horizon-engine-$ABI.zip"
+BUNDLE_NAME="${AMBER_ENGINE:-horizon}-engine-$ABI.zip"
 [ -f "$SO" ] || die "pustaka tidak ada: $SO"
-[ -f "$DATA" ] || die "data mesin tidak ada: $DATA"
+# schema 1 = dengan tabel data (--data); schema 2 = tanpa data, dengan pustaka pendamping (--extra).
+if [ -n "$DATA" ]; then
+  SCHEMA=1
+  [ ${#EXTRAS[@]} -eq 0 ] || die "--data dan --extra tidak boleh bersama."
+  [ -f "$DATA" ] || die "data mesin tidak ada: $DATA"
+else
+  SCHEMA=2
+  [ ${#EXTRAS[@]} -gt 0 ] || die "isi --data (schema 1) atau --extra (schema 2)."
+fi
+if [ -n "$FILES_ZIP" ]; then
+  [ "$SCHEMA" = 2 ] || die "--files-zip hanya untuk schema 2."
+  [ -f "$FILES_ZIP" ] || die "berkas zip Starling tidak ada: $FILES_ZIP"
+  unzip -tq "$FILES_ZIP" > /dev/null 2>&1 || die "zip Starling bukan zip yang utuh: $FILES_ZIP"
+fi
+for x in ${EXTRAS[@]+"${EXTRAS[@]}"}; do
+  [ -f "$x" ] || die "pustaka pendamping tidak ada: $x"
+  [[ $(basename "$x") =~ ^[A-Za-z0-9_+.-]+\.so$ ]] || die "nama pustaka pendamping tidak sah: $(basename "$x")"
+done
 for f in LICENSE THIRD_PARTY_NOTICES.md; do
   [ -f "$LICENSE_DIR/$f" ] || die "berkas lisensi tidak ada: $LICENSE_DIR/$f"
 done
@@ -89,7 +112,16 @@ fi
 if [ "${HEADER:0:10}" != "$WANT_ELF" ] || [ "${HEADER:10:2}" != "01" ] || [ "${HEADER:36:4}" != "$WANT_MACHINE" ]; then
   die "$SO bukan pustaka $WANT_DESC."
 fi
-unzip -tq "$DATA" > /dev/null 2>&1 || die "data mesin bukan zip yang utuh: $DATA"
+if [ -n "$DATA" ]; then
+  unzip -tq "$DATA" > /dev/null 2>&1 || die "data mesin bukan zip yang utuh: $DATA"
+fi
+# Pustaka pendamping harus ELF sesuai ABI, sama ketatnya dengan pustaka utama.
+for x in ${EXTRAS[@]+"${EXTRAS[@]}"}; do
+  XH="$(od -An -v -tx1 -N20 "$x" | tr -d ' \n')"
+  if [ "${XH:0:10}" != "$WANT_ELF" ] || [ "${XH:36:4}" != "$WANT_MACHINE" ]; then
+    die "$(basename "$x") bukan pustaka $WANT_DESC."
+  fi
+done
 
 # Build ID membantu mencocokkan laporan crash dengan simbol; bila alatnya tidak ada, dikosongkan.
 BUILD_ID=""
@@ -103,11 +135,17 @@ STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT
 
 cp "$SO" "$STAGE/libhorizon_android.so"
-cp "$DATA" "$STAGE/engine-data.zip"
+if [ -n "$DATA" ]; then cp "$DATA" "$STAGE/engine-data.zip"; fi
+if [ -n "$FILES_ZIP" ]; then cp "$FILES_ZIP" "$STAGE/starling-files.zip"; fi
+EXTRA_NAMES=()
+for x in ${EXTRAS[@]+"${EXTRAS[@]}"}; do
+  cp "$x" "$STAGE/$(basename "$x")"
+  EXTRA_NAMES+=("$(basename "$x")")
+done
 cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
 
 {
-  echo "schema=1"
+  echo "schema=$SCHEMA"
   echo "abi=$ABI"
   echo "source_repo=$REPO"
   echo "source_commit=$COMMIT"
@@ -120,13 +158,29 @@ cp "$LICENSE_DIR/LICENSE" "$LICENSE_DIR/THIRD_PARTY_NOTICES.md" "$STAGE/"
   echo "built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "so_bytes=$(size_of "$STAGE/libhorizon_android.so")"
   echo "so_sha256=$(sha256_of "$STAGE/libhorizon_android.so")"
-  echo "data_bytes=$(size_of "$STAGE/engine-data.zip")"
-  echo "data_sha256=$(sha256_of "$STAGE/engine-data.zip")"
+  if [ -n "$DATA" ]; then
+    echo "data_bytes=$(size_of "$STAGE/engine-data.zip")"
+    echo "data_sha256=$(sha256_of "$STAGE/engine-data.zip")"
+  fi
+  if [ -n "$FILES_ZIP" ]; then
+    echo "files_bytes=$(size_of "$STAGE/starling-files.zip")"
+    echo "files_sha256=$(sha256_of "$STAGE/starling-files.zip")"
+  fi
+  if [ ${#EXTRA_NAMES[@]} -gt 0 ]; then
+    echo "extras=${EXTRA_NAMES[*]}"
+    for n in "${EXTRA_NAMES[@]}"; do
+      echo "extra_sha256.$n=$(sha256_of "$STAGE/$n")"
+    done
+  fi
 } > "$STAGE/engine.properties"
 
 rm -f "$OUT/$BUNDLE_NAME" "$OUT/$BUNDLE_NAME.sha256"
 # -X: tanpa atribut tambahan; urutan tetap supaya hasilnya mudah dibandingkan.
-(cd "$STAGE" && zip -q -X "$OUT/$BUNDLE_NAME" engine.properties libhorizon_android.so engine-data.zip LICENSE THIRD_PARTY_NOTICES.md)
+ZIP_FILES=(engine.properties libhorizon_android.so)
+[ -z "$DATA" ] || ZIP_FILES+=(engine-data.zip)
+[ -z "$FILES_ZIP" ] || ZIP_FILES+=(starling-files.zip)
+ZIP_FILES+=(${EXTRA_NAMES[@]+"${EXTRA_NAMES[@]}"} LICENSE THIRD_PARTY_NOTICES.md)
+(cd "$STAGE" && zip -q -X "$OUT/$BUNDLE_NAME" "${ZIP_FILES[@]}")
 unzip -tq "$OUT/$BUNDLE_NAME" > /dev/null 2>&1 || die "paket yang baru dibuat tidak lolos pemeriksaan zip."
 echo "$(sha256_of "$OUT/$BUNDLE_NAME")  $BUNDLE_NAME" > "$OUT/$BUNDLE_NAME.sha256"
 

@@ -4,9 +4,14 @@
 # x86-64), sekali setiap patokan commit diganti; build APK biasa hanya mengambil hasilnya
 # (scripts/fetch-horizon-engine.sh), jadi tidak menunggu kompilasi Rust.
 #
-# Sumbernya proyek Horizon Android (MIT) pada commit yang dipatok di horizon-engine.properties. Yang dipakai
-# adalah jalur build resmi proyeknya sendiri (tools/android_prepare.py dan tools/android_build.py dengan --public),
-# berhenti sebelum Gradle: yang dibutuhkan hanya pustaka native dan tabel datanya.
+# Sumbernya proyek Horizon/Starling (MIT) pada commit yang dipatok di horizon-engine.properties. Dua bentuk sumber dikenali
+# otomatis (LAYOUT):
+#   horizon   Horizon Android 0.7.x: jalur build resmi tools/android_prepare.py dan tools/android_build.py (--public),
+#             berhenti sebelum Gradle: yang dibutuhkan pustaka native dan tabel datanya.
+#   starling  Starling 0.8+ (mis. CihuyAkz/starling-extras): tools/android_*.py sudah tidak ada. Pustaka dibangun dengan
+#             perintah yang sama seperti packaging/android/build_apk.py (cargo ndk -p horizon-android), ditambah
+#             peluncur java/javac untuk menyiapkan game di HP, aset APK, serta kelas Java dan resource-nya (satu commit dengan
+#             pustaka). Tabel data TIDAK dibangun di CI: game disiapkan di HP.
 #
 # Tahap: sumber, alat, data (menyiapkan tabel data dari berkas Mojang yang diunduh sementara), kompilasi,
 # kemas, mesin 32-bit, terbitkan. Mesin 32-bit (armeabi-v7a) dibangun SETELAH arm64 selesai dan dikemas, dan
@@ -41,8 +46,13 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CONFIG="$ROOT/horizon-engine.properties"
-BUNDLE_NAME="horizon-engine-arm64-v8a.zip"
+# AMBER_ENGINE (horizon | starling) dan HORIZON_ENGINE_CONFIG dipasang oleh bagian "dua mesin" di bawah saat skrip ini
+# menjalankan dirinya sendiri untuk satu mesin; dipanggil biasa, hasilnya sama seperti sebelum ada Starling.
+ENGINE_NAME="${AMBER_ENGINE:-horizon}"
+ENGINE_LABEL=Horizon
+[ "$ENGINE_NAME" != starling ] || ENGINE_LABEL=Starling
+CONFIG="${HORIZON_ENGINE_CONFIG:-$ROOT/horizon-engine.properties}"
+BUNDLE_NAME="$ENGINE_NAME-engine-arm64-v8a.zip"
 BUNDLE_NAME32="horizon-engine-armeabi-v7a.zip"
 
 prop() {
@@ -77,6 +87,108 @@ while [ $# -gt 0 ]; do
   esac
 done
 
+
+# ---- Dua mesin dalam satu run: Horizon (horizon-engine.properties) dan Starling (starling-engine.properties) ----
+# Workflow hanya mengenal satu skrip dan satu tanda Release, jadi skrip ini yang membagi kerjanya. --print-tag mencetak
+# tanda gabungan (Horizon + Starling); membangun menjalankan skrip ini lagi untuk tiap mesin (AMBER_ENGINE_CHILD=1)
+# dengan pengaturan mesin itu saja. Satu mesin gagal tidak menggagalkan yang lain: Release diterbitkan dengan paket
+# yang berhasil dan run ditandai gagal supaya kelihatan. Tanpa starling-engine.properties (atau enabled=false) skrip
+# ini bekerja persis seperti sebelumnya, hanya untuk Horizon.
+STARLING_CONFIG="$ROOT/starling-engine.properties"
+sprop() {
+  [ -f "$STARLING_CONFIG" ] || return 0
+  { tr -d '\r' < "$STARLING_CONFIG" | grep -E "^[[:space:]]*$1[[:space:]]*=" || true; } \
+    | tail -n 1 | sed -E 's/^[^=]*=[[:space:]]*//; s/[[:space:]]+$//'
+}
+if [ -z "${AMBER_ENGINE_CHILD:-}" ] && [ -f "$STARLING_CONFIG" ] && [ "$(sprop enabled)" != "false" ]; then
+  child() { # $1 = horizon | starling; sisanya argumen untuk skrip ini
+    local name="$1"
+    shift
+    if [ "$name" = starling ]; then
+      env -u HORIZON_ENGINE_COMMIT -u HORIZON_ENGINE_SOURCE_REPO -u HORIZON_ENGINE_PATCH_SET -u HORIZON_ENGINE_PROFILE \
+        AMBER_ENGINE_CHILD=1 AMBER_ENGINE=starling HORIZON_ENGINE_CONFIG="$STARLING_CONFIG" bash "$0" "$@"
+    else
+      AMBER_ENGINE_CHILD=1 AMBER_ENGINE=horizon bash "$0" "$@"
+    fi
+  }
+  [ -z "$SRC_ARG" ] || die "--src tidak bisa dipakai bila dua mesin dibangun sekaligus (pakai enabled=false di starling-engine.properties)."
+  HTAG="$(child horizon --print-tag)" || die "konfigurasi mesin Horizon tidak valid (horizon-engine.properties)."
+  STAG="$(child starling --print-tag)" || die "konfigurasi mesin Starling tidak valid (starling-engine.properties)."
+  TAG="$HTAG-$STAG"
+  if [ "$PRINT_TAG" = 1 ]; then
+    echo "$TAG"
+    exit 0
+  fi
+  BASE="${WORK:-${RUNNER_TEMP:-/tmp}/horizon-engine}"
+  mkdir -p "$BASE"
+  BASE="$(cd "$BASE" && pwd)"
+  if [ "$PUBLISH" = 1 ]; then
+    command -v gh > /dev/null 2>&1 || die "--publish butuh perintah gh."
+    [ -n "${GH_TOKEN:-${GITHUB_TOKEN:-}}" ] || die "--publish butuh GH_TOKEN."
+    if gh release view "$TAG" > /dev/null 2>&1; then
+      if [ "$FORCE" = 1 ]; then
+        echo "Release $TAG sudah ada, akan diganti (--force)."
+      else
+        echo "Release $TAG sudah ada: tidak perlu membangun lagi (pakai force untuk membangun ulang)."
+        if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+          printf '### Mesin Rust (Horizon dan Starling): sudah ada\n\nRelease `%s` sudah ada, tidak ada yang dibangun. Pilih *force* untuk membangun ulang.\n' "$TAG" >> "$GITHUB_STEP_SUMMARY"
+        fi
+        exit 0
+      fi
+    fi
+  fi
+  FORCE_ARG=()
+  [ "$FORCE" = 1 ] && FORCE_ARG=(--force)
+  H_OK=1
+  S_OK=1
+  echo "=== Mesin 1 dari 2: Horizon ==="
+  child horizon ${FORCE_ARG[@]+"${FORCE_ARG[@]}"} --work "$BASE/horizon" || H_OK=0
+  echo "=== Mesin 2 dari 2: Starling ==="
+  child starling ${FORCE_ARG[@]+"${FORCE_ARG[@]}"} --work "$BASE/starling" || S_OK=0
+  HB="$BASE/horizon/out/horizon-engine-arm64-v8a.zip"
+  SB="$BASE/starling/out/starling-engine-arm64-v8a.zip"
+  [ -f "$HB" ] && [ -f "$HB.sha256" ] || H_OK=0
+  [ -f "$SB" ] && [ -f "$SB.sha256" ] || S_OK=0
+  echo "Hasil: Horizon $([ "$H_OK" = 1 ] && echo berhasil || echo GAGAL), Starling $([ "$S_OK" = 1 ] && echo berhasil || echo GAGAL)"
+  if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+    {
+      echo "### Hasil dua mesin Rust"
+      echo
+      echo "- Horizon: $([ "$H_OK" = 1 ] && echo berhasil || echo '**gagal** (lihat ringkasan dan log di atas)')"
+      echo "- Starling: $([ "$S_OK" = 1 ] && echo berhasil || echo '**gagal** (lihat ringkasan dan log di atas)')"
+      [ "$H_OK$S_OK" = 11 ] || echo "- Yang berhasil tetap diterbitkan dan dipasang. Untuk mencoba lagi yang gagal tanpa mengubah apa pun: jalankan ulang workflow dengan mesin = ulang."
+    } >> "$GITHUB_STEP_SUMMARY"
+  fi
+  [ "$H_OK$S_OK" != 00 ] || die "kedua mesin gagal dibangun, tidak ada yang diterbitkan."
+  if [ "$PUBLISH" != 1 ]; then
+    echo "Tanpa --publish: paket ada di $BASE/horizon/out dan $BASE/starling/out"
+    [ "$H_OK$S_OK" = 11 ]
+    exit $?
+  fi
+  gh release view "$TAG" > /dev/null 2>&1 && gh release delete "$TAG" --cleanup-tag --yes
+  ASSETS=()
+  [ "$H_OK" != 1 ] || ASSETS+=("$HB" "$HB.sha256")
+  if [ "$H_OK" = 1 ] && [ -f "$BASE/horizon/out/horizon-engine-armeabi-v7a.zip" ]; then
+    ASSETS+=("$BASE/horizon/out/horizon-engine-armeabi-v7a.zip" "$BASE/horizon/out/horizon-engine-armeabi-v7a.zip.sha256")
+  fi
+  [ "$S_OK" != 1 ] || ASSETS+=("$SB" "$SB.sha256")
+  NOTES="$BASE/release-notes.md"
+  {
+    echo "Mesin Rust Amber: Horizon dan Starling, dikompilasi dari sumber oleh workflow di repo ini."
+    echo
+    echo "- Horizon: $([ "$H_OK" = 1 ] && echo "ada ($HTAG)" || echo "GAGAL dibangun, tidak ada di Release ini")"
+    echo "- Starling: $([ "$S_OK" = 1 ] && echo "ada ($STAG)" || echo "GAGAL dibangun, tidak ada di Release ini")"
+    echo
+    echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"
+    echo "(scripts/fetch-horizon-engine.sh); tidak perlu diunduh atau dipasang sendiri."
+  } > "$NOTES"
+  TARGET_SHA="${GITHUB_SHA:-$(git -C "$ROOT" rev-parse HEAD)}"
+  gh release create "$TAG" "${ASSETS[@]}" --prerelease --target "$TARGET_SHA" \
+    --title "Mesin Rust: Horizon + Starling" --notes-file "$NOTES"
+  [ "$H_OK$S_OK" = 11 ] || die "satu mesin gagal dibangun; yang berhasil sudah diterbitkan ($TAG)."
+  exit 0
+fi
+
 REPO="${HORIZON_ENGINE_SOURCE_REPO:-$(prop source_repo)}"
 COMMIT="${HORIZON_ENGINE_COMMIT:-$(prop commit)}"
 COMMIT="$(printf '%s' "$COMMIT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
@@ -110,8 +222,12 @@ engine_tag() {
       || die "patch_set=$PATCH_SET tidak punya berkas .diff di third_party/horizon-patches/$PATCH_SET/."
     PATCH_HASH="$(patch_hash "$PATCH_DIR")"
   fi
-  TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET-$PATCH_HASH}"
+  TAG="$ENGINE_NAME-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET-$PATCH_HASH}"
   [ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
+  # Nomor revisi (hanya Starling): dinaikkan bila skrip build berubah tanpa mengubah commit atau patch, supaya mesin
+  # dibangun ulang otomatis.
+  REVISION="$(prop revision)"
+  [ -z "$REVISION" ] || TAG="$TAG-r$REVISION"
 }
 
 # --print-tag: hanya cetak tanda Release, tanpa membuat folder, mengunduh, atau membangun apa pun.
@@ -178,9 +294,9 @@ on_exit() {
   local tail_text errors
   tail_text="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | tail -n 60 || true)"
   errors="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | grep -E '^(error|Error|ERROR)|panicked|No such file|not found' | head -n 15 || true)"
-  echo "::error title=Mesin Rust (Horizon) gagal dibangun::Berhenti di tahap: $PHASE (kode $rc). Ujung lognya ada di ringkasan run."
+  echo "::error title=Mesin Rust ($ENGINE_LABEL) gagal dibangun::Berhenti di tahap: $PHASE (kode $rc). Ujung lognya ada di ringkasan run."
   {
-    echo "### Mesin Rust (Horizon) GAGAL dibangun"
+    echo "### Mesin Rust ($ENGINE_LABEL) GAGAL dibangun"
     echo
     echo "- Tahap: **$PHASE** (kode keluar $rc), setelah $(fmt_time $((SECONDS - STARTED)))"
     echo "- Sumber: \`${REPO:-?}\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
@@ -223,7 +339,7 @@ if [ "$PUBLISH" = 1 ]; then
     else
       echo "Release $TAG sudah ada: tidak perlu membangun lagi (pakai force untuk membangun ulang)."
       {
-        echo "### Mesin Rust (Horizon): sudah ada"
+        echo "### Mesin Rust ($ENGINE_LABEL): sudah ada"
         echo
         echo "Release \`$TAG\` sudah berisi mesin untuk commit \`${COMMIT:0:12}\` ($PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET}). Tidak ada yang dibangun. Pilih *force* untuk membangun ulang."
       } | summary
@@ -245,9 +361,19 @@ else
   git -C "$SRC" checkout -q --detach FETCH_HEAD
 fi
 [ "$(git -C "$SRC" rev-parse HEAD)" = "$COMMIT" ] || die "HEAD sumber bukan commit yang dipatok ($COMMIT)."
-for f in tools/android_prepare.py tools/android_build.py research-lock.json rust-toolchain.toml LICENSE THIRD_PARTY_NOTICES.md; do
-  [ -f "$SRC/$f" ] || die "sumber tidak berisi $f: bentuk repo sumber berubah, patokan perlu ditinjau."
+if [ -f "$SRC/tools/android_build.py" ]; then
+  LAYOUT=horizon
+  NEED_FILES="tools/android_prepare.py tools/android_build.py research-lock.json rust-toolchain.toml LICENSE THIRD_PARTY_NOTICES.md"
+elif [ -f "$SRC/packaging/android/build_apk.py" ]; then
+  LAYOUT=starling
+  NEED_FILES="Cargo.toml research-lock.json crates/horizon-theme/src/lib.rs packaging/android/build_apk.py packaging/android/native/java_launcher.c LICENSE THIRD_PARTY_NOTICES.md"
+else
+  die "bentuk sumber tidak dikenal: tidak ada tools/android_build.py maupun packaging/android/build_apk.py. Patokan perlu ditinjau."
+fi
+for f in $NEED_FILES; do
+  [ -f "$SRC/$f" ] || die "sumber ($LAYOUT) tidak berisi $f: bentuk repo sumber berubah, patokan perlu ditinjau."
 done
+echo "Bentuk sumber: $LAYOUT"
 
 # Perubahan kecil milik AmberLauncher (third_party/horizon-patches/<patch_set>/*.diff), diterapkan berurutan nama.
 # Salinan --src yang sudah pernah diberi patch dikenali dan dilewati. Tidak ada commit baru dibuat.
@@ -300,16 +426,69 @@ rm -rf "$SDK_MINI"
 mkdir -p "$SDK_MINI/ndk" "$SDK_MINI/build-tools/35.0.0"
 ln -s "$NDK_HOME" "$SDK_MINI/ndk/$NDK_VERSION"
 
-RUST_CHANNEL="$(sed -n 's/^channel *= *"\([^"]*\)".*/\1/p' "$SRC/rust-toolchain.toml" | head -n 1)"
+if [ -f "$SRC/rust-toolchain.toml" ]; then
+  RUST_CHANNEL="$(sed -n 's/^channel *= *"\([^"]*\)".*/\1/p' "$SRC/rust-toolchain.toml" | head -n 1)"
+else
+  # Starling tidak mematok toolchain; CI proyeknya memakai stable terbaru (rust-version 1.85 ke atas).
+  RUST_CHANNEL=stable
+fi
 [ -n "$RUST_CHANNEL" ] || die "rust-toolchain.toml sumber tidak menyebut channel."
 command -v rustup > /dev/null 2>&1 || die "rustup tidak ditemukan."
 logged rustup toolchain install "$RUST_CHANNEL" --profile minimal --component clippy --component rustfmt --no-self-update
 logged rustup target add --toolchain "$RUST_CHANNEL" aarch64-linux-android
 export RUSTUP_TOOLCHAIN="$RUST_CHANNEL"
 echo "Rust: $(rustc --version)"
+if [ "$LAYOUT" = starling ]; then
+  # Versi yang sama dengan CI proyek sumber (.github/workflows/android.yml).
+  if ! cargo ndk --version > /dev/null 2>&1; then
+    logged cargo install cargo-ndk --version 3.5.4 --locked
+  fi
+  echo "cargo-ndk: $(cargo ndk --version)"
+fi
 
 # ---- 3. Data ----
 phase 03-data "3/6 Siapkan tabel data (unduh berkas Mojang sementara, jalankan eksporter)"
+if [ "$LAYOUT" = starling ]; then
+  echo "Starling menyiapkan data game di HP: tidak ada tabel data dan tidak ada berkas Mojang yang diunduh."
+  # Aset APK Starling lewat fungsi sumber sendiri (build_apk.assets): prepare-kit.zip (eksporter dikompilasi dengan JDK),
+  # lowbudget.zip, StarlingVisuals.zip (shader bawaan), font, dan mod native bawaan.
+  STARLING_OUT="$WORK/starling-out"
+  rm -rf "$STARLING_OUT"
+  mkdir -p "$STARLING_OUT"
+  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off JAVA_HOME="$JDK" PATH="$JDK/bin:$PATH" python3 - "$SRC" "$STARLING_OUT" <<'PY'
+import pathlib
+import sys
+sys.path.insert(0, sys.argv[1] + "/packaging/android")
+import build_apk
+build_apk.assets(pathlib.Path(sys.argv[2]))
+PY
+  )
+  [ -f "$STARLING_OUT/assets/prepare-kit.zip" ] || die "aset Starling tidak terbentuk: prepare-kit.zip tidak ada."
+  # Kelas Java dan resource yang HARUS cocok dengan pustaka native (fungsi JNI terikat pada nama kelasnya). Diambil dari
+  # sumber SETELAH perubahan Amber diterapkan, dan dikemas bersama pustakanya supaya selalu satu commit. Hanya paket
+  # dev/horizon/android (salinan io/github/... tidak dipakai pustaka) dan resource values (tema dan ikon milik Amber).
+  FILES_STAGE="$WORK/starling-files"
+  rm -rf "$FILES_STAGE" "$WORK/starling-files.zip"
+  mkdir -p "$FILES_STAGE/java/dev/horizon" "$FILES_STAGE/res/values"
+  cp -r "$SRC/packaging/android/java/dev/horizon/android" "$FILES_STAGE/java/dev/horizon/android"
+  cp "$SRC"/packaging/android/res/values/*.xml "$FILES_STAGE/res/values/"
+  rm -f "$FILES_STAGE/res/values/themes.xml"
+  # Warna layar diagnostik dibuat saat build oleh build_apk.link_resources() dari palet gelap crates/horizon-theme: sama di sini.
+  python3 - "$SRC" "$FILES_STAGE/res/values/starling-colors.xml" <<'PY'
+import pathlib
+import re
+import sys
+theme = pathlib.Path(sys.argv[1], "crates/horizon-theme/src/lib.rs").read_text(encoding="utf-8")
+dark = theme.split("pub const DARK: Palette = Palette {", 1)[1].split("};", 1)[0]
+colors = dict(re.findall(r"(\w+): 0x([0-9a-fA-F]{6})", dark))
+names = ("page", "rule", "ink", "ink_soft", "accent", "on_accent")
+entries = "\n".join(f'<color name="starling_{n}">#{colors[n]}</color>' for n in names)
+pathlib.Path(sys.argv[2]).write_text(f"<resources>\n{entries}\n</resources>\n", encoding="utf-8")
+PY
+  cp -r "$STARLING_OUT/assets" "$FILES_STAGE/assets"
+  (cd "$FILES_STAGE" && zip -q -X -r "$WORK/starling-files.zip" java res assets)
+  echo "Berkas Starling untuk APK: $(wc -c < "$WORK/starling-files.zip" | tr -d ' ') byte ($(find "$FILES_STAGE" -type f | wc -l | tr -d ' ') berkas)"
+else
 MC_VERSION="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["minecraft"]["version"])' "$SRC/research-lock.json")"
 RESOURCES="$SRC/.local/horizon-client/$MC_VERSION"
 if [ -f "$RESOURCES/horizon-resources.json" ] && [ -f "$RESOURCES/worldgen/blocks/structure-blocks.json" ]; then
@@ -319,13 +498,25 @@ else
   # kebetulan terbit ulang hari ini (horizon-prepare menolak yang tidak dikenalnya).
   (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off python3 "$ROOT/scripts/prepare-horizon-data.py" "$SRC" --java-home "$JDK")
 fi
+fi
 
 # ---- 4. Kompilasi ----
 phase 04-kompilasi "4/6 Kompilasi mesin Rust (arm64, profil $PROFILE)"
 TARGET_DIR="$WORK/target"
 [ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
-(cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
-  --abi arm64-v8a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK")
+if [ "$LAYOUT" = starling ]; then
+  MIN_SDK="$(sed -n 's/^MIN_SDK *= *\([0-9][0-9]*\).*/\1/p' "$SRC/packaging/android/build_apk.py" | head -n 1)"
+  MIN_SDK="${MIN_SDK:-26}"
+  # Sama seperti build_library() di packaging/android/build_apk.py: halaman 16 KB dan BuildId di pustaka.
+  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off \
+    ANDROID_NDK_HOME="$NDK_HOME" ANDROID_HOME="$SDK_ROOT" \
+    HORIZON_ANDROID_BUILD_COMMIT="$COMMIT" HORIZON_ANDROID_BUILD_DIRTY=false \
+    RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--build-id=sha1" \
+    cargo ndk -t arm64-v8a --platform "$MIN_SDK" build --profile "$PROFILE" -p horizon-android)
+else
+  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
+    --abi arm64-v8a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK")
+fi
 LIB="$TARGET_DIR/aarch64-linux-android/$PROFILE/libhorizon_android.so"
 [ -f "$LIB" ] || die "kompilasi selesai tetapi pustaka tidak ada: $LIB"
 echo "Pustaka mentah: $(wc -c < "$LIB" | tr -d ' ') byte"
@@ -338,6 +529,25 @@ mkdir -p "$STAGE"
 cp "$LIB" "$STAGE/libhorizon_android.so"
 # Sama seperti jalur APK proyek sumber: llvm-strip --strip-unneeded.
 logged "$NDK_BIN/llvm-strip" --strip-unneeded "$STAGE/libhorizon_android.so"
+if [ "$LAYOUT" = starling ]; then
+  # Peluncur `java` dan `javac` untuk menyiapkan game di HP (packaging/android/native/java_launcher.c): sebuah aplikasi
+  # hanya boleh menjalankan program dari folder pustakanya, jadi keduanya dikemas sebagai pustaka, bersama runtime C++.
+  CLANG="$NDK_BIN/aarch64-linux-android${MIN_SDK}-clang"
+  [ -x "$CLANG" ] || die "clang NDK tidak ditemukan: $CLANG"
+  logged "$CLANG" -O2 -fPIE -pie -Wall -Werror -Wl,-z,max-page-size=16384 \
+    -o "$STAGE/libstarling_java.so" "$SRC/packaging/android/native/java_launcher.c" -ldl
+  logged "$CLANG" -O2 -fPIE -pie -Wall -Werror -DJAVAC -Wl,-z,max-page-size=16384 \
+    -o "$STAGE/libstarling_javac.so" "$SRC/packaging/android/native/java_launcher.c" -ldl
+  CXX_SHARED="$NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so"
+  [ -f "$CXX_SHARED" ] || die "libc++_shared.so NDK tidak ditemukan: $CXX_SHARED"
+  cp "$CXX_SHARED" "$STAGE/libc++_shared.so"
+  logged bash "$ROOT/scripts/package-horizon-engine.sh" \
+    --so "$STAGE/libhorizon_android.so" --license-dir "$SRC" --out "$OUT" \
+    --extra "$STAGE/libstarling_java.so" --extra "$STAGE/libstarling_javac.so" --extra "$STAGE/libc++_shared.so" \
+    --files-zip "$WORK/starling-files.zip" \
+    --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
+    --readelf "$NDK_BIN/llvm-readelf"
+else
 # Tabel data dibuat oleh fungsi proyek sumber sendiri; hanya berkas hasil generate yang diizinkan untuk build
 # publik (daftar putih generated_engine_file di tools/android_build.py).
 if ! DATA_ZIP="$(cd "$SRC" && python3 - "$SRC" 2> "$STAGE/python.err" <<'PY'
@@ -356,6 +566,7 @@ logged bash "$ROOT/scripts/package-horizon-engine.sh" \
   --so "$STAGE/libhorizon_android.so" --data "$DATA_ZIP" --license-dir "$SRC" --out "$OUT" \
   --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
   --readelf "$NDK_BIN/llvm-readelf"
+fi
 
 # ---- 5b. Mesin 32-bit (armeabi-v7a), eksperimental ----
 # Tidak pernah menggagalkan run: bila apa pun di sini gagal, paket 32-bit tidak dibuat dan Release terbit dengan paket
@@ -383,7 +594,10 @@ build_arm32() {
     --repo "$REPO" --commit "$COMMIT" --profile "$PROFILE" --patch-set "$PATCH_SET" --patch-hash "$PATCH_HASH" --rust "$(rustc --version)" --ndk "$NDK_VERSION" \
     --readelf "$NDK_BIN/llvm-readelf" || return 1
 }
-if [ "${HORIZON_ENGINE_ARM32:-on}" = "off" ]; then
+if [ "$LAYOUT" = starling ]; then
+  ARM32_NOTE="mesin Starling belum dibangun untuk 32-bit"
+  echo "Mesin 32-bit: $ARM32_NOTE"
+elif [ "${HORIZON_ENGINE_ARM32:-on}" = "off" ]; then
   ARM32_NOTE="dimatikan (HORIZON_ENGINE_ARM32=off)"
   echo "Mesin 32-bit: $ARM32_NOTE"
 else
@@ -439,12 +653,16 @@ M="$(mktemp)"
 unzip -p "$OUT/$BUNDLE_NAME" engine.properties > "$M"
 val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
 {
-  echo "### Mesin Rust (Horizon) berhasil dibangun"
+  echo "### Mesin Rust ($ENGINE_LABEL) berhasil dibangun"
   echo
   echo "- Sumber: \`$REPO\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
-  echo "- Alat: $(val rust), NDK $NDK_VERSION, javac $JAVA_HAVE"
+  echo "- Alat: $(val rust), NDK $NDK_VERSION${JAVA_HAVE:+, javac $JAVA_HAVE}"
   echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
-  echo "- \`engine-data.zip\`: $(val data_bytes) byte"
+  if [ "$LAYOUT" = starling ]; then
+    echo "- Pustaka pendamping: $(val extras)"
+  else
+    echo "- \`engine-data.zip\`: $(val data_bytes) byte"
+  fi
   echo "- Paket arm64: $(wc -c < "$OUT/$BUNDLE_NAME" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME.sha256")\`"
   case "$ARM32_STATE" in
     dibuat) echo "- Paket 32-bit (armeabi-v7a, eksperimental): $(wc -c < "$OUT/$BUNDLE_NAME32" | tr -d ' ') byte, sha256 \`$(cut -d' ' -f1 "$OUT/$BUNDLE_NAME32.sha256")\`" ;;

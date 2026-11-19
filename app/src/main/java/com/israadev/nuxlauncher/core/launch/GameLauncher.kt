@@ -8,6 +8,7 @@ import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -39,6 +40,10 @@ object GameLauncher {
         // Jaring pengaman: instance mesin Rust tidak lewat JVM (tombol PLAY di Beranda sudah mencabangkannya lebih dulu)
         if (HorizonEngine.isEngine(instance.loader)) {
             HorizonEngine.launch(context, instance, account)
+            return
+        }
+        if (StarlingEngine.isEngine(instance.loader)) {
+            StarlingEngine.launch(context, instance, account)
             return
         }
         LauncherLog.event(

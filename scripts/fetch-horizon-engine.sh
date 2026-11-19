@@ -41,13 +41,29 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MAIN="$ROOT/app/src/main"
 ABI="arm64-v8a"
 DATA_DEST="$MAIN/assets/engine-data.zip"
+STARLING_DIR="$ROOT/app/src/starling"
 LICENSE_DIR="$MAIN/assets/licenses/horizon"
-LICENSE_FALLBACK="$ROOT/third_party/horizon"
 STAMP="$ROOT/.horizon-engine-installed"
 CONFIG="$ROOT/horizon-engine.properties"
+# Dua mesin berbagi skrip ini: AMBER_ENGINE=starling memasang Starling (starling-engine.properties), selain itu Horizon.
+# Gradle menjalankannya sekali untuk tiap mesin (fetchHorizonEngine dan fetchStarlingEngine).
+ENGINE="${AMBER_ENGINE:-horizon}"
+LIB_FILE="libhorizon_android.so"
+LICENSE_FALLBACK_DIR="$ROOT/third_party/horizon"
+case "$ENGINE" in
+  horizon) ;;
+  starling)
+    STAMP="$ROOT/.starling-engine-installed"
+    CONFIG="$ROOT/starling-engine.properties"
+    LIB_FILE="libstarling_android.so"
+    LICENSE_DIR="$MAIN/assets/licenses/starling"
+    LICENSE_FALLBACK_DIR="$ROOT/third_party/starling"
+    ;;
+  *) echo "fetch-horizon-engine: AMBER_ENGINE harus horizon atau starling." >&2; exit 1 ;;
+esac
 MAX_BUNDLE_BYTES=$((600 * 1024 * 1024))
 
-say() { echo "Mesin Rust (Horizon): $*"; }
+say() { echo "Mesin Rust ($([ "${AMBER_ENGINE:-horizon}" = starling ] && echo Starling || echo Horizon)): $*"; }
 
 # Berhenti dengan kode $1. Di GitHub Actions pesannya juga muncul sebagai peringatan dan di ringkasan run.
 fail() {
@@ -76,7 +92,8 @@ prop() {
 
 # Nilai $1 dari engine.properties milik paket (berkas $2).
 manifest() {
-  { tr -d '\r' < "$2" | grep -E "^$1=" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'
+  # Pencocokan kunci harfiah (bukan regex): kunci pustaka bisa memuat '+' dan '.', mis. extra_sha256.libc++_shared.so.
+  tr -d '\r' < "$2" | awk -v k="$1" 'index($0, k "=") == 1 { v = substr($0, length(k) + 2) } END { if (v != "") print v }'
 }
 
 sha256_of() {
@@ -143,11 +160,24 @@ case "$ABI" in
   arm64-v8a | armeabi-v7a) ;;
   *) fail 1 "--abi harus arm64-v8a atau armeabi-v7a." ;;
 esac
-SO_DEST="$MAIN/jniLibs/$ABI/libhorizon_android.so"
-BUNDLE_NAME="horizon-engine-$ABI.zip"
+SO_DEST="$MAIN/jniLibs/$ABI/$LIB_FILE"
+engine_present() {
+  [ -f "$SO_DEST" ] || return 1
+  if [ "$ENGINE" = starling ]; then [ -d "$STARLING_DIR/java" ]; else [ -f "$DATA_DEST" ]; fi
+}
+BUNDLE_NAME="$ENGINE-engine-$ABI.zip"
+if [ "$ENGINE" = starling ] && [ "$ABI" != "arm64-v8a" ]; then
+  say "Starling hanya tersedia untuk arm64-v8a, dilewati."
+  exit 0
+fi
 
 if [ "$REMOVE" = 1 ]; then
-  rm -f "$MAIN/jniLibs/arm64-v8a/libhorizon_android.so" "$MAIN/jniLibs/armeabi-v7a/libhorizon_android.so" "$DATA_DEST" "$STAMP"
+  if [ "$ENGINE" = starling ]; then
+    rm -f "$MAIN/jniLibs/arm64-v8a/$LIB_FILE" "$MAIN/jniLibs/arm64-v8a/libstarling_java.so" "$MAIN/jniLibs/arm64-v8a/libstarling_javac.so" "$STAMP"
+    rm -rf "$STARLING_DIR"
+  else
+    rm -f "$MAIN/jniLibs/arm64-v8a/libhorizon_android.so" "$MAIN/jniLibs/armeabi-v7a/libhorizon_android.so" "$DATA_DEST" "$STAMP"
+  fi
   rm -rf "$LICENSE_DIR"
   say "berkas mesin dihapus dari pohon kerja."
   exit 0
@@ -158,14 +188,16 @@ if [ "${HORIZON_ENGINE:-}" = "off" ]; then
   exit 0
 fi
 
-COMMIT="${HORIZON_ENGINE_COMMIT:-}"
+COMMIT=""
+[ "$ENGINE" != horizon ] || COMMIT="${HORIZON_ENGINE_COMMIT:-}"
 [ -n "$COMMIT" ] || COMMIT="$(prop commit)"
 COMMIT="$(printf '%s' "$COMMIT" | tr 'A-F' 'a-f' | tr -d '[:space:]')"
-PROFILE="${HORIZON_ENGINE_PROFILE:-}"
+PROFILE=""
+[ "$ENGINE" != horizon ] || PROFILE="${HORIZON_ENGINE_PROFILE:-}"
 [ -n "$PROFILE" ] || PROFILE="$(prop profile)"
 PROFILE="${PROFILE:-release}"
 
-PATCH_SET="${HORIZON_ENGINE_PATCH_SET-$(prop patch_set)}"
+if [ "$ENGINE" = horizon ]; then PATCH_SET="${HORIZON_ENGINE_PATCH_SET-$(prop patch_set)}"; else PATCH_SET="$(prop patch_set)"; fi
 PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
 
 if [ -z "$COMMIT" ]; then
@@ -186,7 +218,7 @@ fi
 
 # Sudah terpasang untuk patokan yang sama: tidak perlu mengunduh lagi (build lokal berulang tetap cepat).
 WANT_STAMP="$COMMIT $PROFILE${PATCH_SET:+ $PATCH_SET $PATCH_HASH} $ABI"
-if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && [ -f "$SO_DEST" ] && [ -f "$DATA_DEST" ] \
+if [ "$FORCE" = 0 ] && [ -z "$BUNDLE_LOCAL" ] && engine_present \
   && [ -f "$STAMP" ] && [ "$(cat "$STAMP")" = "$WANT_STAMP" ]; then
   say "sudah terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE)."
   exit 0
@@ -198,8 +230,10 @@ command -v curl > /dev/null 2>&1 || [ -n "$BUNDLE_LOCAL" ] || fail 1 "perintah c
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-TAG="horizon-engine-${COMMIT:0:12}${PATCH_SET:+-$PATCH_SET-$PATCH_HASH}"
-[ "$PROFILE" = "release" ] || TAG="$TAG-$PROFILE"
+# Tanda Release dihitung oleh skrip pembangun (--print-tag): sama persis dengan yang dipakai workflow, dan bila Starling
+# aktif tandanya gabungan Horizon + Starling dalam satu Release.
+TAG="$(AMBER_ENGINE_CHILD="" AMBER_ENGINE="" HORIZON_ENGINE_CONFIG="" bash "$ROOT/scripts/build-horizon-engine.sh" --print-tag 2> "$TMP/tag-err.txt")" \
+  || fail 1 "tanda Release tidak bisa dihitung: $(head -n 1 "$TMP/tag-err.txt")"
 
 BUNDLE="$TMP/$BUNDLE_NAME"
 if [ -n "$BUNDLE_LOCAL" ]; then
@@ -284,10 +318,78 @@ unzip -tq "$BUNDLE" > /dev/null 2>&1 || fail 4 "paket mesin bukan zip yang utuh.
 # Hanya entri bernama pasti yang dibaca, ke berkas sementara.
 extract() { unzip -p "$BUNDLE" "$1" > "$2" 2> /dev/null && [ -s "$2" ]; }
 extract engine.properties "$TMP/engine.properties" || fail 4 "paket tidak berisi engine.properties."
+M="$TMP/engine.properties"
+# Schema 2 = mesin Starling (tanpa tabel data; pustaka pendamping, kelas Java, resource, dan aset dalam satu commit).
+if [ "$(manifest schema "$M")" = "2" ]; then
+  [ "$ENGINE" = starling ] || fail 4 "paket schema 2 hanya untuk mesin Starling."
+  extract libhorizon_android.so "$TMP/lib.so" || fail 4 "paket tidak berisi libhorizon_android.so."
+  extract starling-files.zip "$TMP/files.zip" || fail 4 "paket mesin Starling tidak berisi starling-files.zip."
+  [ "$(manifest abi "$M")" = "$ABI" ] || fail 4 "paket bukan untuk $ABI."
+  [ "$(manifest source_commit "$M")" = "$COMMIT" ] \
+    || fail 4 "paket dibangun dari commit lain ($(manifest source_commit "$M")), bukan yang dipatok ($COMMIT)."
+  [ "$(manifest patch_set "$M")" = "$PATCH_SET" ] \
+    || fail 4 "paket memakai perubahan sumber '$(manifest patch_set "$M")', bukan '$PATCH_SET' yang diminta."
+  [ "$(manifest patch_hash "$M")" = "$PATCH_HASH" ] \
+    || fail 4 "paket dibangun dari isi patch '$(manifest patch_hash "$M")', bukan '$PATCH_HASH' yang ada di repo ini. Bangun ulang mesinnya."
+  [ "$(manifest so_sha256 "$M")" = "$(sha256_of "$TMP/lib.so")" ] || fail 4 "libhorizon_android.so tidak cocok dengan catatan di paket."
+  [ "$(manifest files_sha256 "$M")" = "$(sha256_of "$TMP/files.zip")" ] || fail 4 "starling-files.zip tidak cocok dengan catatan di paket."
+  elf_ok() { # $1 berkas: ELF 64-bit arm64 little-endian
+    local h
+    h="$(od -An -v -tx1 -N20 "$1" | tr -d ' \n')"
+    [ "${h:0:10}" = "7f454c4602" ] && [ "${h:10:2}" = "01" ] && [ "${h:36:4}" = "b700" ]
+  }
+  [ "$ABI" = "arm64-v8a" ] || fail 4 "mesin Starling hanya tersedia untuk arm64-v8a."
+  elf_ok "$TMP/lib.so" || fail 4 "libhorizon_android.so bukan pustaka ELF 64-bit arm64 (AArch64)."
+  unzip -tq "$TMP/files.zip" > /dev/null 2>&1 || fail 4 "starling-files.zip di paket rusak (bukan zip yang utuh)."
+  # Isi zip dianggap tak tepercaya: hanya java/, res/, assets/ dengan nama aman yang boleh diekstrak.
+  BAD="$(unzip -Z1 "$TMP/files.zip" | grep -Ev '^(java|res|assets)/[A-Za-z0-9_+./-]*$' || true)"
+  BAD="$BAD$(unzip -Z1 "$TMP/files.zip" | grep -E '(^|/)\.\.(/|$)' || true)"
+  [ -z "$BAD" ] || fail 4 "starling-files.zip berisi nama berkas yang tidak diizinkan: $(printf '%s' "$BAD" | head -n 3 | tr '\n' ' ')"
+  for f in LICENSE THIRD_PARTY_NOTICES.md; do
+    if ! extract "$f" "$TMP/$f"; then
+      [ -f "$LICENSE_FALLBACK_DIR/$f" ] || fail 4 "pemberitahuan lisensi $f tidak ada di paket maupun di third_party/horizon, mesin tidak dipasang."
+      cp "$LICENSE_FALLBACK_DIR/$f" "$TMP/$f"
+    fi
+  done
+  EXTRA_LIST="$(manifest extras "$M")"
+  for n in $EXTRA_LIST; do
+    [[ $n =~ ^[A-Za-z0-9_+.-]+\.so$ ]] || fail 4 "nama pustaka pendamping tidak sah: $n"
+    extract "$n" "$TMP/x_$n" || fail 4 "paket tidak berisi $n."
+    [ "$(manifest "extra_sha256.$n" "$M")" = "$(sha256_of "$TMP/x_$n")" ] || fail 4 "$n tidak cocok dengan catatan di paket."
+    elf_ok "$TMP/x_$n" || fail 4 "$n bukan pustaka ELF 64-bit arm64."
+  done
+  mkdir -p "$(dirname "$SO_DEST")" "$LICENSE_DIR"
+  cp "$TMP/lib.so" "$SO_DEST"
+  for n in $EXTRA_LIST; do
+    # libc++_shared.so sudah dibawa pustaka lain di APK ini: yang ada dipertahankan.
+    if [ "$n" = "libc++_shared.so" ] && [ -f "$(dirname "$SO_DEST")/$n" ]; then continue; fi
+    cp "$TMP/x_$n" "$(dirname "$SO_DEST")/$n"
+    chmod 644 "$(dirname "$SO_DEST")/$n"
+  done
+  rm -rf "$STARLING_DIR"
+  mkdir -p "$STARLING_DIR"
+  unzip -q -o "$TMP/files.zip" -d "$STARLING_DIR"
+  cp "$TMP/LICENSE" "$TMP/THIRD_PARTY_NOTICES.md" "$LICENSE_DIR/"
+  chmod 644 "$SO_DEST"
+  printf '%s\n' "$WANT_STAMP" > "$STAMP"
+  say "mesin Starling terpasang ($ABI, commit ${COMMIT:0:12}, $PROFILE${PATCH_SET:+, perubahan Amber: $PATCH_SET})."
+  say "  $LIB_FILE -> $(size_of "$SO_DEST") byte, pustaka pendamping: ${EXTRA_LIST:-tidak ada}"
+  say "  java/res/aset -> app/src/starling ($(find "$STARLING_DIR" -type f | wc -l | tr -d ' ') berkas)"
+  if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+    {
+      echo "### Mesin Rust (Starling) ikut dibangun"
+      echo
+      echo "- Sumber: \`$(manifest source_repo "$M")\` commit \`${COMMIT:0:12}\` ($PROFILE)${PATCH_SET:+, perubahan Amber: $PATCH_SET}"
+      echo "- \`libhorizon_android.so\`: $(size_of "$SO_DEST") byte; pustaka pendamping: ${EXTRA_LIST:-tidak ada}"
+      echo "- Kelas Java, resource, dan aset dipasang ke \`app/src/starling\`"
+    } >> "$GITHUB_STEP_SUMMARY"
+  fi
+  exit 0
+fi
 extract libhorizon_android.so "$TMP/lib.so" || fail 4 "paket tidak berisi libhorizon_android.so."
 extract engine-data.zip "$TMP/engine-data.zip" || fail 4 "paket tidak berisi engine-data.zip."
 
-M="$TMP/engine.properties"
+[ "$ENGINE" = horizon ] || fail 4 "paket schema 1 hanya untuk mesin Horizon."
 [ "$(manifest schema "$M")" = "1" ] || fail 4 "format paket tidak dikenal (schema bukan 1)."
 [ "$(manifest abi "$M")" = "$ABI" ] || fail 4 "paket bukan untuk $ABI."
 [ "$(manifest source_commit "$M")" = "$COMMIT" ] \
@@ -316,8 +418,8 @@ unzip -tq "$TMP/engine-data.zip" > /dev/null 2>&1 || fail 4 "engine-data.zip di 
 # atau salinan di third_party/horizon bila paket tidak membawanya.
 for f in LICENSE THIRD_PARTY_NOTICES.md; do
   if ! extract "$f" "$TMP/$f"; then
-    [ -f "$LICENSE_FALLBACK/$f" ] || fail 4 "pemberitahuan lisensi $f tidak ada di paket maupun di third_party/horizon, mesin tidak dipasang."
-    cp "$LICENSE_FALLBACK/$f" "$TMP/$f"
+    [ -f "$LICENSE_FALLBACK_DIR/$f" ] || fail 4 "pemberitahuan lisensi $f tidak ada di paket maupun di third_party/horizon, mesin tidak dipasang."
+    cp "$LICENSE_FALLBACK_DIR/$f" "$TMP/$f"
   fi
 done
 

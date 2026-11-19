@@ -46,6 +46,8 @@ enum class ForgeFlavor(
         fun label(loader: String): String = of(loader)?.displayName
             ?: if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(loader)) {
                 com.israadev.nuxlauncher.core.horizon.HorizonEngine.LABEL
+            } else if (com.israadev.nuxlauncher.core.horizon.StarlingEngine.isEngine(loader)) {
+                com.israadev.nuxlauncher.core.horizon.StarlingEngine.LABEL
             } else {
                 loader.replaceFirstChar { it.uppercase() }
             }

@@ -1,0 +1,124 @@
+diff --git a/packaging/android/java/dev/horizon/android/DiagnosticsActivity.java b/packaging/android/java/dev/horizon/android/DiagnosticsActivity.java
+index d122434..d79bcda 100644
+--- a/packaging/android/java/dev/horizon/android/DiagnosticsActivity.java
++++ b/packaging/android/java/dev/horizon/android/DiagnosticsActivity.java
+@@ -1,5 +1,6 @@
+ package dev.horizon.android;
+ 
++import com.israadev.nuxlauncher.R;
+ import android.app.Activity;
+ import android.app.Dialog;
+ import android.content.DialogInterface;
+@@ -143,7 +144,7 @@ public final class DiagnosticsActivity extends Activity {
+             @Override public void run() {
+                 try {
+                     // Lazy: even a broken native library cannot prevent the system window opening.
+-                    System.loadLibrary("horizon_android");
++                    System.loadLibrary("starling_android");
+                     final String result = makeReport(privateFolder, game, export);
+                     runOnUiThread(new Runnable() {
+                         @Override public void run() {
+diff --git a/packaging/android/java/dev/horizon/android/GameActivity.java b/packaging/android/java/dev/horizon/android/GameActivity.java
+index 2838ec6..1156540 100644
+--- a/packaging/android/java/dev/horizon/android/GameActivity.java
++++ b/packaging/android/java/dev/horizon/android/GameActivity.java
+@@ -1,4 +1,65 @@
+ package dev.horizon.android;
+ 
+-/** Native game component; StarlingActivity keeps the existing Java/JNI bridge API. */
+-public final class GameActivity extends StarlingActivity {}
++import android.content.Intent;
++import android.os.Bundle;
++import com.israadev.nuxlauncher.BuildConfig;
++import com.israadev.nuxlauncher.discord.DiscordPresence;
++import java.io.File;
++
++/**
++ * Native game component; StarlingActivity keeps the existing Java/JNI bridge API.
++ *
++ * Perubahan AmberLauncher: getFilesDir() dan getCacheDir() diarahkan ke subfolder "starling" (data mesin terpisah dari
++ * data launcher dan dari mesin Horizon, yang memakai "horizon"), dan Discord Rich Presence opsional yang diminta launcher lewat Intent.
++ */
++public final class GameActivity extends StarlingActivity {
++    /** Diisi launcher: true bila pemain menyalakan Discord Rich Presence. */
++    public static final String EXTRA_DISCORD_RPC = "amber_discord_rpc";
++    /** Versi Minecraft yang ditampilkan di Rich Presence. */
++    public static final String EXTRA_MC_VERSION = "amber_mc_version";
++
++    @Override protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        startDiscordPresence();
++    }
++
++    // singleTask: bila mesin masih berjalan di latar, membukanya lagi datang lewat sini, bukan onCreate.
++    @Override protected void onNewIntent(Intent intent) {
++        super.onNewIntent(intent);
++        setIntent(intent);
++        startDiscordPresence();
++    }
++
++    @Override protected void onDestroy() {
++        try {
++            if (BuildConfig.HAS_DISCORD_SDK) DiscordPresence.INSTANCE.stopBlocking(800L);
++        } catch (Throwable ignored) {
++            // Presence hanyalah pelengkap: apa pun yang terjadi, mesin harus tetap bisa ditutup.
++        }
++        super.onDestroy();
++    }
++
++    private void startDiscordPresence() {
++        try {
++            if (!BuildConfig.HAS_DISCORD_SDK) return;
++            Intent intent = getIntent();
++            boolean requested = intent != null && intent.getBooleanExtra(EXTRA_DISCORD_RPC, false);
++            String version = intent == null ? null : intent.getStringExtra(EXTRA_MC_VERSION);
++            DiscordPresence.INSTANCE.onEngineStart(this, requested, version == null ? "" : version);
++        } catch (Throwable ignored) {
++            // Gagal menyalakan presence tidak boleh mengganggu mesin.
++        }
++    }
++
++    // NativeActivity membaca getFilesDir() dan getCacheDir() saat dibuat, lalu mesin memakainya sebagai rumah datanya.
++    @Override public File getFilesDir() { return subfolder(super.getFilesDir()); }
++
++    @Override public File getCacheDir() { return subfolder(super.getCacheDir()); }
++
++    private static File subfolder(File base) {
++        File dir = new File(base, "starling");
++        //noinspection ResultOfMethodCallIgnored
++        dir.mkdirs();
++        return dir;
++    }
++}
+diff --git a/packaging/android/java/dev/horizon/android/StarlingActivity.java b/packaging/android/java/dev/horizon/android/StarlingActivity.java
+index 6833e2b..f76aaee 100644
+--- a/packaging/android/java/dev/horizon/android/StarlingActivity.java
++++ b/packaging/android/java/dev/horizon/android/StarlingActivity.java
+@@ -1,6 +1,7 @@
+ package dev.horizon.android;
+ 
+ import android.Manifest;
++import com.israadev.nuxlauncher.R;
+ import android.app.AlertDialog;
+ import android.app.NativeActivity;
+ import android.content.ActivityNotFoundException;
+@@ -148,7 +149,8 @@ public class StarlingActivity extends NativeActivity {
+                 NativeMods.failed(this, e.getMessage());
+             }
+         }
+-        System.loadLibrary("horizon_android");
++        // AmberLauncher: pustaka Starling diganti nama supaya tidak bentrok dengan libhorizon_android.so milik mesin Horizon.
++        System.loadLibrary("starling_android");
+     }
+ 
+     /** The keyboard's height in window pixels, 0 when it is hidden (android_lib.rs). */
+@@ -172,6 +174,9 @@ public class StarlingActivity extends NativeActivity {
+      *  StarlingExtras for Starling Dev (build_apk.py --dev) and StarlingPreview for Starling Preview
+      *  (--preview), which keep out of the release's. */
+     static String sharedFolder(Context context) {
++        // AmberLauncher: game selalu di folder privat aplikasi (files/horizon), yang dikelola launcher.
++        // Tanpa ini mesin memindahkan datanya ke folder bersama bila aplikasi punya akses semua berkas.
++        if (true) return null;
+         boolean allowed = Build.VERSION.SDK_INT >= 30
+                 ? Environment.isExternalStorageManager()
+                 : context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

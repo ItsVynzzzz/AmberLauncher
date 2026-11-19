@@ -358,6 +358,7 @@ object InstanceManager {
     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
         // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
         if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
+        if (com.israadev.nuxlauncher.core.horizon.StarlingEngine.isEngine(inst.loader)) return true
         // Instance dari modpack yang isinya belum selesai dipasang belum siap main: UNDUH melanjutkannya
         if (ModpackStaging.hasPending(getInstanceDir(context, inst))) return false
         val versionsDir = getVersionsDir(context)

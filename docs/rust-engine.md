@@ -261,3 +261,36 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log 
 - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
 - Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
 - Akun Ely.by.
+
+## Dua mesin Rust: Horizon dan Starling
+
+Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak berubah. **Starling** (penerus Horizon Android, MIT; fork `CihuyAkz/starling-extras`) adalah loader kedua di Buat Instance, dengan shader, mod bawaan, dan kontrolnya sendiri. Tujuan akhirnya: Starling dimodifikasi dan disatukan penuh dengan Amber; langkah pertama ini membuatnya bisa dipakai dari Amber.
+
+| | Horizon | Starling |
+|---|---|---|
+| Pengaturan | `horizon-engine.properties` | `starling-engine.properties` |
+| Loader instance | `horizon` (tab Rust) | `starling` (tab Starling) |
+| Pustaka | `libhorizon_android.so` | `libstarling_android.so` (+ `libstarling_java.so`, `libstarling_javac.so`) |
+| Kelas Java | `HorizonActivity` (di repo, proses `:horizon`) | `GameActivity` dan pendampingnya (dari sumber, proses `:starling`) |
+| Folder data | `files/horizon` | `files/starling` |
+| Perubahan Amber pada sumber | patch `amber3` (menu, makro, akun lewat `amber-launch.json`) | patch `amber4` (kecil) |
+| Kontrol Kotlin | `HorizonEngine` | `StarlingEngine` |
+| Mod, shader, resource pack | dikelola layar Mod Amber | dikelola dari dalam game (Options) |
+
+**Build (satu run, satu Release).** Workflow hanya mengenal `scripts/build-horizon-engine.sh` dan satu tanda Release, jadi skrip itu yang membagi kerjanya: `--print-tag` mencetak tanda gabungan (`horizon-engine-...-starling-engine-...-r<revisi>`), dan membangun menjalankan skrip yang sama untuk tiap mesin (`AMBER_ENGINE`, `HORIZON_ENGINE_CONFIG`). **Satu mesin gagal tidak menggagalkan yang lain**: Release diterbitkan dengan paket yang berhasil dan run ditandai gagal supaya terlihat. Karena Release yang sudah ada dilewati, mencoba lagi yang gagal butuh salah satu: jalankan ulang workflow dengan *mesin = ulang*, atau naikkan `revision=` di `starling-engine.properties` (untuk perbaikan skrip build). `enabled=false` di `starling-engine.properties` mengembalikan cara kerja lama (hanya Horizon, tanda Release lama).
+
+**Bentuk sumber Starling.** Berbeda dari Horizon 0.7.8: tidak ada `launcher.rs`, `tools/android_build.py`, maupun `HorizonActivity`. Skrip build mengenalinya otomatis: pustaka dibangun dengan `cargo ndk -p horizon-android` (sama dengan `packaging/android/build_apk.py`), ditambah peluncur `java`/`javac` untuk menyiapkan game di HP, aset APK lewat `build_apk.assets()`, serta kelas Java dan resource sumbernya (setelah patch diterapkan) dalam satu paket **schema 2** supaya selalu satu commit dengan pustakanya. Tidak ada `engine-data.zip` dan tidak ada berkas Mojang yang diunduh CI: game disiapkan di HP. Hanya arm64.
+
+**Pemasangan.** `scripts/fetch-horizon-engine.sh` dijalankan Gradle dua kali (`fetchHorizonEngine`, `fetchStarlingEngine`). Paket Starling diperiksa (commit, patch, sidik jari, ELF, nama berkas di zip) lalu pustaka masuk ke `jniLibs` dan kelas Java, resource, serta aset ke `app/src/starling` (diabaikan git; dibaca Gradle lewat `sourceSets`). Tiap mesin hanya menyentuh berkasnya sendiri, termasuk saat `--remove`.
+
+**Patch `amber4`.** `0001`: kelas Java memakai `R` milik Amber; game selalu di folder privat (bukan folder bersama); pustaka dimuat sebagai `starling_android` (diganti nama supaya tidak bentrok dengan Horizon); `GameActivity` memisahkan folder data (`files/starling`) dan membawa Discord Rich Presence. `0002`: pemberitahuan pembaruan Starling dimatikan bila `AMBER_EMBEDDED` diatur.
+
+**Akun tanpa patch Rust.** `StarlingEngine` memakai antarmuka peluncur yang sudah ada di mesin: PLAY menulis `accounts/accounts.json` (pemain offline), `amber-session.json` (sesi Microsoft, dibaca sekali lalu dihapus mesin), dan `horizon-args.txt` (`--session-file`, `AMBER_EMBEDDED=1`).
+
+**Yang belum (dan perlu diketahui):**
+- Penyiapan game pertama (unduhan sekitar 500 MiB dan penyiapan di HP) memakai layar Starling, sekali saja. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
+- Layar Mod Amber belum mengelola instance Starling (menampilkan catatan).
+- Fitur mod native Starling yang mencari `libhorizon_android.so` memakai nama lama; pustakanya diganti nama di Amber. Dampaknya hanya pada mod native.
+- Diagnostik Starling membaca folder data biasa, bukan `files/starling`. Mesin 32-bit belum ada.
+- Fork itu ditulis tangan pihak ketiga, dan `SYNC.md`-nya menyebut hasil penggabungannya belum dijalankan di HP. Commit dipatok; periksa diff-nya sebelum mengganti `commit=`. Pemeriksaan awal terhadap upstream hanya menemukan dua URL baru di kode Rust (penunjuk server kompilasi mod native di repo fork, dan tautan donasi). Itu bukan audit.
+- Build mesin Starling belum pernah dijalankan di CI dan belum diuji di perangkat. Run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.

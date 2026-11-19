@@ -38,3 +38,10 @@ Thumbs.db
 
 # Catatan "Yang baru" dibuat saat build oleh scripts/release-notes.py, tidak disimpan di repo
 /app/src/main/assets/whatsnew.json
+
+# Starling (mesin Rust kedua): dipasang saat build oleh scripts/fetch-horizon-engine.sh (AMBER_ENGINE=starling)
+/app/src/starling/
+/app/src/main/jniLibs/arm64-v8a/libstarling_android.so
+/app/src/main/jniLibs/arm64-v8a/libstarling_java.so
+/app/src/main/jniLibs/arm64-v8a/libstarling_javac.so
+/.starling-engine-installed

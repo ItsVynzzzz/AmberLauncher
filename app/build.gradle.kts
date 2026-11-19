@@ -166,6 +166,16 @@ android {
         prefab = buildArm32 || hasDiscordSdk
     }
 
+    // Starling (mesin Rust kedua): kelas Java, resource, dan aset dari paket mesinnya. scripts/fetch-horizon-engine.sh
+    // (AMBER_ENGINE=starling) mengisi src/starling sebelum build; folder itu tidak ada di repo, dan tanpa paketnya kosong.
+    sourceSets {
+        getByName("main") {
+            java.srcDir("src/starling/java")
+            res.srcDir("src/starling/res")
+            assets.srcDir("src/starling/assets")
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -290,7 +300,23 @@ val fetchHorizonEngine by tasks.registering(Exec::class) {
         !System.getProperty("os.name").lowercase().contains("win") &&
         File(rootDir, "scripts/fetch-horizon-engine.sh").isFile
 }
-tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine) }
+
+// Mesin Rust kedua (Starling): skrip yang sama, dengan AMBER_ENGINE=starling. Tanpa paketnya di Release, dilewati.
+val fetchStarlingEngine by tasks.registering(Exec::class) {
+    group = "amber"
+    description = "Memasang mesin Starling (mesin Rust kedua) dari Release repo ini bila tersedia"
+    workingDir = rootDir
+    environment("AMBER_ENGINE", "starling")
+    commandLine("bash", "scripts/fetch-horizon-engine.sh")
+    isIgnoreExitValue = true
+    outputs.upToDateWhen { false }
+    mustRunAfter(fetchHorizonEngine)
+    enabled = !buildArm32 &&
+        !System.getProperty("os.name").lowercase().contains("win") &&
+        File(rootDir, "scripts/fetch-horizon-engine.sh").isFile &&
+        File(rootDir, "starling-engine.properties").isFile
+}
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine, fetchStarlingEngine) }
 
 dependencies {
     implementation(libs.androidx.core.ktx)

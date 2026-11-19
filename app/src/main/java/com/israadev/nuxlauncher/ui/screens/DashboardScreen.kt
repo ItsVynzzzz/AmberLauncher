@@ -132,6 +132,7 @@ import com.israadev.nuxlauncher.core.background.HomeVideo
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.launch.GameLauncher
 import com.israadev.nuxlauncher.core.modpack.ModpackStaging
@@ -406,6 +407,11 @@ fun DashboardScreen() {
         // Mesin Rust (Horizon): tanpa JVM dan tanpa unduhan lewat launcher; langsung masuk game dengan akun yang dipilih
         if (HorizonEngine.isEngine(inst.loader)) {
             HorizonEngine.launch(context, inst, account)
+            return
+        }
+        // Starling (mesin Rust kedua): sama, tanpa JVM dan tanpa unduhan lewat launcher
+        if (StarlingEngine.isEngine(inst.loader)) {
+            StarlingEngine.launch(context, inst, account)
             return
         }
 
@@ -971,7 +977,7 @@ private fun HomeScene(
             Column(modifier = Modifier.fillMaxWidth()) {
                 if (instance != null) {
                     val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime, instance.loader) {
-                        if (HorizonEngine.isEngine(instance.loader)) {
+                        if (HorizonEngine.isEngine(instance.loader) || StarlingEngine.isEngine(instance.loader)) {
                             "Tanpa Java"
                         } else {
                             val rt = if (instance.javaRuntime != "auto") instance.javaRuntime

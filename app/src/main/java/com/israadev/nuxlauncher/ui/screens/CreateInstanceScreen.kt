@@ -72,6 +72,7 @@ import com.israadev.nuxlauncher.core.fabric.LegacyFabric
 import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.forge.ForgeService
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.VersionItem
@@ -114,6 +115,7 @@ private val CI_LOADERS = listOf(
     CiLoader("forge", "Forge", Icons.Outlined.Extension),
     CiLoader("neoforge", "NeoForge", Icons.Outlined.Memory),
     CiLoader(HorizonEngine.LOADER_ID, HorizonEngine.DISPLAY_NAME, Icons.Outlined.ViewInAr),
+    CiLoader(StarlingEngine.LOADER_ID, StarlingEngine.DISPLAY_NAME, Icons.Outlined.ViewInAr),
     CiLoader("vanilla", "Vanilla", Icons.Outlined.Public),
     CiLoader(CI_MODPACK, "Modpack", Icons.Outlined.Folder)
 )
@@ -299,7 +301,11 @@ fun CreateInstanceScreen(
         loaderVersion = ""
         loaderLoadedKey = ""
         val mc = selectedVersion
-        if (mc == null || selectedLoader == "vanilla" || selectedLoader == HorizonEngine.LOADER_ID) return@LaunchedEffect
+        if (mc == null || selectedLoader == "vanilla" || selectedLoader == HorizonEngine.LOADER_ID ||
+            selectedLoader == StarlingEngine.LOADER_ID
+        ) {
+            return@LaunchedEffect
+        }
         if (selectedLoader == "fabric") {
             val loaders = FabricService.getFabricLoaders(mc).getOrNull() ?: emptyList()
             loaderChoices = loaders.take(40).mapIndexed { index, v ->
@@ -327,7 +333,9 @@ fun CreateInstanceScreen(
     }
 
     val isVanilla = selectedLoader == "vanilla"
-    val isEngine = selectedLoader == HorizonEngine.LOADER_ID
+    // Dua mesin Rust: Horizon dan Starling. isEngine berlaku untuk keduanya (satu versi, tanpa daftar Mojang).
+    val isStarling = selectedLoader == StarlingEngine.LOADER_ID
+    val isEngine = selectedLoader == HorizonEngine.LOADER_ID || isStarling
     val isModpack = selectedLoader == CI_MODPACK
     // Vanilla, mesin Rust, dan modpack tidak punya versi loader untuk dipilih di daftar versi.
     val noLoaderVersions = isVanilla || isEngine || isModpack
@@ -386,7 +394,13 @@ fun CreateInstanceScreen(
     val chosenMc = selectedVersion
 
     // Mesin Rust: build ini harus membawa mesinnya dan HP-nya harus mampu. Alasan bila tidak, tampil di CiEngineNotice.
-    val engineStatus = remember(isEngine) { if (isEngine) HorizonEngine.availability(context) else null }
+    val engineStatus = remember(selectedLoader) {
+        when {
+            isStarling -> StarlingEngine.availability(context)
+            isEngine -> HorizonEngine.availability(context)
+            else -> null
+        }
+    }
     val engineBlocked = engineStatus is HorizonEngine.Availability.Unavailable
     val packInfo = pack
     val packLoaderLabel = packInfo?.let { p -> CI_LOADERS.firstOrNull { it.id == p.loader }?.label ?: p.loader }.orEmpty()
@@ -576,7 +590,7 @@ fun CreateInstanceScreen(
                                 selectedLoader = loader.id
                                 // Versi sebelumnya belum tentu didukung loader baru: pilih ulang. Mesin Rust
                                 // hanya punya satu versi, jadi langsung terpilih.
-                                selectedVersion = if (loader.id == HorizonEngine.LOADER_ID) {
+                                selectedVersion = if (loader.id == HorizonEngine.LOADER_ID || loader.id == StarlingEngine.LOADER_ID) {
                                     HorizonEngine.SUPPORTED_MC_VERSION
                                 } else {
                                     null
@@ -660,7 +674,7 @@ fun CreateInstanceScreen(
                         contentPadding = PaddingValues(bottom = 12.dp)
                     ) {
                         if (isEngine) {
-                            item(key = "engine-notice") { CiEngineNotice(status = engineStatus) }
+                            item(key = "engine-notice") { CiEngineNotice(status = engineStatus, starling = isStarling) }
                         } else if (hasYearVersions) {
                             item(key = "mc26-notice") { CiModernNotice(selectedMc = selectedVersion) }
                         }
@@ -808,7 +822,7 @@ private fun ColumnScope.CiNote(
  * assets/lang/<bahasa>/horizon.tsv supaya ikut diterjemahkan.
  */
 @Composable
-private fun CiEngineNotice(status: HorizonEngine.Availability?) {
+private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolean = false) {
     val shape = RoundedCornerShape(20.dp)
     Column(
         modifier = Modifier
@@ -819,7 +833,7 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
-            text = "MESIN RUST (HORIZON)",
+            text = if (starling) "MESIN RUST (STARLING)" else "MESIN RUST (HORIZON)",
             color = AmberUi.TextDim,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
@@ -833,7 +847,11 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?) {
             lineHeight = 18.sp
         )
         Text(
-            text = "Hanya mendukung Minecraft ${HorizonEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka.",
+            text = if (starling) {
+                "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
+            } else {
+                "Hanya mendukung Minecraft ${HorizonEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka."
+            },
             color = AmberUi.TextDim,
             fontSize = 12.sp,
             lineHeight = 17.sp

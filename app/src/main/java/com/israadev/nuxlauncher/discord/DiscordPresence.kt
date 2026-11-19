@@ -192,6 +192,7 @@ object DiscordPresence {
             "neoforge", "neo_forge", "neo-forge" -> "NeoForge"
             "quilt" -> "Quilt"
             "horizon" -> "Horizon (Rust)"
+            "starling" -> "Starling (Rust)"
             else -> loader.trim().replaceFirstChar { it.uppercase() }
         }
         return PresenceInfo(details, state, startMs)

@@ -1,0 +1,268 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 2881e81..c152513 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -112,6 +112,10 @@ class MainActivity : ComponentActivity() {
+             try {
+                 DataLocation.cleanupPending(appCtx)
+             } catch (_: Throwable) {}
++            // Sisa berkas sementara di cache (salinan modpack tak terpakai, log yang sudah dibagikan, dll.)
++            try {
++                com.israadev.nuxlauncher.core.utils.CacheSweeper.sweep(appCtx.cacheDir)
++            } catch (_: Throwable) {}
+             try {
+                 com.israadev.nuxlauncher.core.crash.CrashManager.checkAndNotify(appCtx)
+             } catch (_: Throwable) {}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateFiles.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateFiles.kt
+new file mode 100644
+index 0000000..e8f386f
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateFiles.kt
+@@ -0,0 +1,51 @@
++package com.israadev.nuxlauncher.core.update
++
++import java.io.File
++
++/**
++ * Berkas unduhan APK pembaruan di cache: mana yang masih berguna dan mana yang harus dibuang, supaya
++ * data aplikasi tidak menggembung oleh APK lama. Tanpa ketergantungan Android, jadi bisa diuji di JVM.
++ */
++object UpdateFiles {
++    private const val STALE_PART_MS = 14L * 24 * 3600 * 1000
++
++    // Nama lama (AmberLauncher-0.1.0-beta.7.apk, ...-32bit.apk) dan nama rilis sekarang
++    // (AmberLauncher-0.1.0-beta.7-64bit-arm64-v8a-RECOMMENDED.apk, ...-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk).
++    private val NAME = Regex("""^AmberLauncher-(.+?)(?:-(?:32|64)bit[A-Za-z0-9_-]*)?\.apk(\.part)?$""")
++
++    /**
++     * Membuang APK versi yang sudah terpasang atau lebih lama, berkas bernama aneh, dan unduhan setengah
++     * jadi yang lebih dari 14 hari. APK versi lebih baru (yang menunggu dipasang) tidak disentuh.
++     */
++    fun cleanup(dir: File, installed: AppVersion, now: Long = System.currentTimeMillis()) {
++        val files = dir.listFiles() ?: return
++        for (f in files) {
++            if (!f.isFile) continue
++            val m = NAME.matchEntire(f.name)
++            val version = m?.let { AppVersion.parse(it.groupValues[1]) }
++            val stalePart = f.name.endsWith(".part") && now - f.lastModified() > STALE_PART_MS
++            if (version == null || version <= installed || stalePart) {
++                try {
++                    f.delete()
++                } catch (_: Exception) {
++                }
++            }
++        }
++    }
++
++    /**
++     * Membuang semua isi [dir] selain [keep]: APK versi lain yang sudah tidak dipakai (mis. rilis yang
++     * dilewati dan sudah ada yang lebih baru) dan sisa unduhan setengah jadi. Dipanggil setelah satu
++     * unduhan utuh lolos pemeriksaan, jadi folder ini tidak pernah menampung lebih dari satu APK.
++     */
++    fun cleanupExcept(dir: File, keep: File) {
++        val files = dir.listFiles() ?: return
++        for (f in files) {
++            if (f.name == keep.name) continue
++            try {
++                f.deleteRecursively()
++            } catch (_: Exception) {
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateInstaller.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateInstaller.kt
+index 50d6464..98c4c39 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateInstaller.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateInstaller.kt
+@@ -45,24 +45,12 @@ object UpdateInstaller {
+      * berkas bernama aneh, dan unduhan setengah jadi yang lebih dari 14 hari. Jalankan di thread latar.
+      */
+     fun cleanup(context: Context, installed: AppVersion) {
+-        val dir = updatesDir(context)
+-        val files = dir.listFiles() ?: return
+-        // Nama lama (AmberLauncher-0.1.0-beta.7.apk, ...-32bit.apk) dan nama rilis sekarang
+-        // (AmberLauncher-0.1.0-beta.7-64bit-arm64-v8a-RECOMMENDED.apk, ...-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk).
+-        val pattern = Regex("""^AmberLauncher-(.+?)(?:-(?:32|64)bit[A-Za-z0-9_-]*)?\.apk(\.part)?$""")
+-        val now = System.currentTimeMillis()
+-        for (f in files) {
+-            if (!f.isFile) continue
+-            val m = pattern.matchEntire(f.name)
+-            val version = m?.let { AppVersion.parse(it.groupValues[1]) }
+-            val stalePart = f.name.endsWith(".part") && now - f.lastModified() > 14L * 24 * 3600 * 1000
+-            if (version == null || version <= installed || stalePart) {
+-                try {
+-                    f.delete()
+-                } catch (_: Exception) {
+-                }
+-            }
+-        }
++        UpdateFiles.cleanup(updatesDir(context), installed)
++    }
++
++    /** Menghapus semua unduhan selain [keep] (APK versi lain dan sisa setengah jadi). Jalankan di thread latar. */
++    fun cleanupExcept(context: Context, keep: File) {
++        UpdateFiles.cleanupExcept(updatesDir(context), keep)
+     }
+ 
+     // ---- Keadaan perangkat ----------------------------------------------------------------
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
+index f7fed59..14bdd3f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/update/UpdateManager.kt
+@@ -69,6 +69,7 @@ object UpdateManager {
+     fun onForeground(context: Context) {
+         val app = context.applicationContext
+         foreground = true
++        sweepOnce(app)
+ 
+         val s = _state.value
+         if (s is UpdateState.Installing && backgroundedWhileInstalling) {
+@@ -119,9 +120,14 @@ object UpdateManager {
+         scope.launch { runCheck(app, manual = true) }
+     }
+ 
+-    private suspend fun autoCheck(app: Context) {
+-        if (!cleanedUp) {
+-            cleanedUp = true
++    /**
++     * Sekali per proses: membuang APK pembaruan yang sudah tidak berguna (terutama yang barusan dipasang).
++     * Berjalan apa pun pengaturan "Periksa otomatis", supaya APK lama tidak menumpuk di data aplikasi.
++     */
++    private fun sweepOnce(app: Context) {
++        if (cleanedUp) return
++        cleanedUp = true
++        scope.launch {
+             withContext(Dispatchers.IO) {
+                 try {
+                     UpdateInstaller.cleanup(app, installedVersion(app))
+@@ -129,6 +135,9 @@ object UpdateManager {
+                 }
+             }
+         }
++    }
++
++    private suspend fun autoCheck(app: Context) {
+         when (_state.value) {
+             is UpdateState.Checking,
+             is UpdateState.Downloading,
+@@ -281,7 +290,14 @@ object UpdateManager {
+                             }
+                         }
+                     )
+-                    UpdateInstaller.verifyApk(app, target)?.also { target.delete() }
++                    val problem = UpdateInstaller.verifyApk(app, target)
++                    if (problem != null) {
++                        target.delete()
++                    } else {
++                        // Hanya satu APK yang perlu disimpan: buang versi lain dan sisa unduhan setengah jadi
++                        UpdateInstaller.cleanupExcept(app, target)
++                    }
++                    problem
+                 } catch (e: ApkDownloader.DownloadException) {
+                     e.failure
+                 }
+@@ -383,6 +399,11 @@ object UpdateManager {
+         val pending = pendingInstall
+         when (status) {
+             PackageInstaller.STATUS_SUCCESS -> {
++                // Sudah terpasang: APK-nya tidak diperlukan lagi (bila proses ini sempat menerima hasilnya)
++                try {
++                    pending?.second?.delete()
++                } catch (_: Exception) {
++                }
+                 pendingInstall = null
+                 _state.value = UpdateState.Idle
+                 _promptOpen.value = false
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/utils/CacheSweeper.kt b/app/src/main/java/com/israadev/nuxlauncher/core/utils/CacheSweeper.kt
+new file mode 100644
+index 0000000..2236e98
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/utils/CacheSweeper.kt
+@@ -0,0 +1,40 @@
++package com.israadev.nuxlauncher.core.utils
++
++import com.israadev.nuxlauncher.core.storage.StorageMigration
++import java.io.File
++
++/**
++ * Membuang sisa berkas sementara di cache aplikasi yang tidak akan dipakai lagi, supaya data aplikasi
++ * tidak menggembung: salinan modpack yang dipilih tapi tidak jadi dipasang, berkas tahap unduhan mod
++ * mesin Rust yang terputus, salinan log untuk dibagikan, dan installer Forge lama. Hanya menyentuh berkas
++ * yang sudah lama tidak diubah, jadi aman dijalankan di thread latar saat aplikasi dibuka.
++ * Tanpa ketergantungan Android, jadi bisa diuji di JVM.
++ */
++object CacheSweeper {
++    private const val HOUR_MS = 60L * 60 * 1000
++
++    /** Folder cache yang isinya hanya dipakai sebentar; lewat [SHORT_LIVED_HOURS] jam berarti sisa. */
++    private val SHORT_LIVED = listOf("modpack-import", "horizon-dl", "shared_logs")
++    private const val SHORT_LIVED_HOURS = 24L
++
++    /** Installer Forge disimpan agar pemasangan yang gagal bisa diulang tanpa mengunduh lagi. */
++    private const val FORGE_DIR = "forge"
++    private const val FORGE_KEEP_DAYS = 14L
++
++    fun sweep(cacheDir: File, now: Long = System.currentTimeMillis()) {
++        for (name in SHORT_LIVED) sweepDir(File(cacheDir, name), now - SHORT_LIVED_HOURS * HOUR_MS)
++        sweepDir(File(cacheDir, FORGE_DIR), now - FORGE_KEEP_DAYS * 24 * HOUR_MS)
++    }
++
++    /** Menghapus isi [dir] yang terakhir diubah sebelum [cutoff]; [dir] sendiri dihapus bila jadi kosong. */
++    private fun sweepDir(dir: File, cutoff: Long) {
++        if (!dir.isDirectory) return
++        try {
++            for (child in dir.listFiles() ?: return) {
++                if (child.lastModified() < cutoff) StorageMigration.deleteTree(child)
++            }
++            if (dir.list().isNullOrEmpty()) dir.delete()
++        } catch (_: Exception) {
++        }
++    }
++}
+diff --git a/changelog/entries/20261120-bersih-sisa-file.txt b/changelog/entries/20261120-bersih-sisa-file.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..1886097ea26a5576cc0456830f5d921ed3a5ffe5
+GIT binary patch
+literal 3129
+zcmZ{m-A)`w7RT>-iley#X~H{XqvU2+T1y-44a&ut?wam$cUN_)sv-Eo0s{uTII*>0
+z1o&$*LD<*?8wl=Uuzb<peU6@ZW`HZd!s=A_3^?)L!1UDl_@7_>`)DS(``yS*`10Cc
+zA!bnxRe}PhQFx#e7kzMfBHYA>fC~;T_c2a1)R@Oj0vLxpKuzD*k^n(7!$S0_5NZ@2
+ziYi=BJcJq#5h~Z1;(<nxMn-73u7JzwLqKsZ3h+@(BWN^<)niq-T=OVKF+Oq={=qdu
+zji~@NXcjSHP$7(J47or7k#u8pf+Ejw7X!GCE~$&HoGOIU`*gM%dPRFKw81cB3ciub
+zV-RA5V>B02n)?BYp=!`cjME4%8oVS>w2PSVJQmdw;f;?>FhOL$^%=NwN`w+!=0Xy?
+zXqcUkYY=h@Toy9JT%e((6!hQt3^0yC#!P6yx?yUdkP8pEsREm10(c!NU-`@l0Fwf$
+zgJC#bq0+KmuL24eqzI=$ieb-y#fE79jn$2uWC{$6VyRF~L!F0A!{`8{BV*1;4H}qY
+zih*DhKVaorpjXc^R1Do|&^{_UmZ4kn9ONiH2B;V~Awywtd@3EZw3A!9u4IJBfT!dX
+z0o4Tb>(J738K7el4EYUocy=fNeW}QVz(O8zfuK2yV#NSMz?$L;Lb|aS5`i$uZj_?X
+zl~v%v2@@^Bkpe1zNwkBi5SBFzcaXfsD&R7Wj^UFwg|vo}`gsW|7a<WO%%YVVP&q!I
+zlzM=d$ZA<rC=4+swy0@}lD3BL69&Q-ENG#Uq6&(6TpJ}dOd~ilicuNvN==%{v*=32
+zG@vltOQfx6Ej&ibLLS8&#h*rjnBE*}7*YzFBC+HnBshxQaOka@sPmAhU&9bRGG8sJ
+zB?^5mKp@bbxZ>ylWAs2^EeSMr6`tiCp}|;ci13Tj2UQ5r=LQ4@_=T+3ZD{4oslvp8
+zwChK4E-F<(1Dv*rz4g%6wC?~K^d!-~Oannjf`>fhf)f-EA`d~J;ffw&6dEHG#7%hC
+z?=Tw3cp8C1%LO73d@fuL;)-C}9fC^n8v5wbVHLt8qB=u&Q<ajwC0vvVlStO2Rbzc!
+zU>P5ohz+6r`_Rv&owJ>+DFHpQbM~B8opo`H9=Z}xmToTJ6c$TvuYKr;Dnv|2WabDe
+z|742S`Owe!2RjekObdqz)R070PWBv#6L$;5>igu1nX`uCvM{W*w898Ro$T;WmKHR~
+zP?s(j#`UZ*baLq9|1mRJQVwWpDnxFkH*2`->}z@HWou=($fNh%c6Suh*$zhIBNN6a
+z+<9w0PoL!JcHUaCqvq*ep1#i0t-Ljpr>l9omZwX3`YKN!<Y_BUXDK$_%+vKeP3_}+
+zo;E3^wVbDm_WR%R){;%%%F`n%(wenpxAOFbO@D18*UD4+Fi5A!ZCh#w>_fvo6bj06
+zP_Ze^Jl(O{c5U&^f%3Jybt_Ld^0Z+Gp)Qr8);7&SW6kER#XQ|C1||YK)P+tS=jm^G
+z`ZMXfLT13CINJFGw>-UL2UxO#3LFRa^Ey>4Srn7M$<sX;%}Mj2t-6s@Y{LrL8?bt8
+zA7`(?oVPJcR@ACR@)>$y*)3WSSCeP0!e-uDvH4q{QZDcl%g>c8egO=qE#>LK7<|SN
+zbomGNRtx)l<`Rk`kMr~mAxZbFmWIVMN5-HMx9s0Ndv`56&CofUR$_x<(qkL8F)}g9
+z$;9+~&FP%%#UT97$({j^ciN92OtK>ZwNCqA@I!Wp5cnLTPWuUT+RudtZl}FXs}&P_
+z^8S9-1SfmSs}OYBb5yWt4@~D|-$3QtPWv^yzu#$Z2oD0@Y0pJq6jrJ*nLP!^@3fa~
+z-+k(_VMrA1<FB%Y1E$knjHyr~0w+5VptC~*qqWXSQ-DS}T(*Iq9SINK-~aEcPP^%p
+zddjJS>}{#i=LouU(yoG0*-PQuxbmu;|2!YNEZ}z9cLnvo)J`+Z(ZN21ywhGxKIKtL
+zh<#hw$nlYh8+KLnw~qP`URl_^htGPyE}u6SdiQ?p@Bh?)+2}9-yLUR%J6Szjeb!$;
+zzL<O4J>5M2`9*K(>BYt`A5T|$cMrR7-}M#_FV^?EC%1o}d3e6K+q?6u-<;_`+5Uaz
+z5yiBQyXk80r`_(mM`vpr-E^j#?oz`KGq*-=!o}?R+1ke0=6p9j>aQR7A1rp;#~)9Z
+z`VV&tHD{ai{k5asy`|pDLT`D$|M2C9nc3c(gWl5Z?#T-}UEl7#TmLXK+h5-~+ng_n
+zm7{Dt`*^xss4k_Y3upIke>`2en0?n<xLXdl_NssP*Yo2$XFL1n$9H<a?2x$s0qB(G
+AV*mgE
+
+literal 0
+HcmV?d00001
+
+
+
+# FIN part=1/1 files=6

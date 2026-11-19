@@ -1,0 +1,652 @@
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index 2edacdc..93fd04c 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -89,6 +89,16 @@ android {
+         // true bila SDK Discord ikut terbangun; layar Pengaturan dan GameActivity memeriksanya.
+         buildConfigField("boolean", "HAS_DISCORD_SDK", hasDiscordSdk.toString())
+ 
++        // ID aplikasi Microsoft (Azure) yang dipakai untuk login akun Minecraft. Login berjalan atas nama aplikasi ini, jadi
++        // pemiliknyalah yang menentukan apakah login tetap berfungsi. Bawaannya ID lama; untuk memakai aplikasi sendiri, isi
++        // variabel lingkungan AMBER_MS_CLIENT_ID (GitHub Actions) atau amber.msClientId di local.properties.
++        // Cara mendaftarkannya: docs/microsoft-login.md. Nilai yang bukan GUID diabaikan (kembali ke bawaan).
++        val defaultMsClientId = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb"
++        val msClientId = (System.getenv("AMBER_MS_CLIENT_ID") ?: localProperties.getProperty("amber.msClientId") ?: "").trim()
++            .takeIf { Regex("^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$").matches(it) }
++            ?: defaultMsClientId
++        buildConfigField("String", "MS_CLIENT_ID", "\"" + msClientId + "\"")
++
+         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables {
+             useSupportLibrary = true
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
+index 26d9756..c1175a2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/account/microsoft/MicrosoftAuthService.kt
+@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.account.microsoft
+ import com.google.gson.Gson
+ import com.google.gson.JsonObject
+ import com.google.gson.JsonParser
++import com.israadev.nuxlauncher.BuildConfig
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
+ import com.israadev.nuxlauncher.core.models.UserAccount
+ import kotlinx.coroutines.Dispatchers
+@@ -28,7 +29,8 @@ data class MicrosoftDeviceCode(
+ )
+ 
+ object MicrosoftAuthService {
+-    private const val CLIENT_ID = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb"
++    // ID aplikasi Azure dari konfigurasi build (lihat docs/microsoft-login.md); bawaannya sama dengan yang dulu ditanam di sini.
++    private val CLIENT_ID: String = BuildConfig.MS_CLIENT_ID
+     private const val SCOPE = "XboxLive.signin offline_access openid profile email"
+     private const val TENANT = "/consumers"
+     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/download/InstallSession.kt b/app/src/main/java/com/israadev/nuxlauncher/core/download/InstallSession.kt
+index 08a672c..a29d360 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/download/InstallSession.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/download/InstallSession.kt
+@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableFloatStateOf
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.setValue
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.utils.FriendlyError
+ import com.israadev.nuxlauncher.ui.i18n.Toast
+ import kotlinx.coroutines.CancellationException
+ import kotlinx.coroutines.CoroutineScope
+@@ -32,6 +33,28 @@ object InstallSession {
+ 
+     val progress = Progress()
+ 
++    /** Kegagalan terakhir yang perlu dilihat pengguna (ditampilkan sebagai dialog, bukan Toast yang cepat hilang). */
++    class Failure(
++        val title: String,
++        val message: String,
++        val detail: String,
++        /** Instance yang bisa dicoba lagi lewat tombol "Coba lagi"; null bila tidak ada. */
++        val retryInstanceId: String?
++    )
++
++    var failure by mutableStateOf<Failure?>(null)
++        private set
++
++    fun reportFailure(title: String, error: Throwable?, retryInstanceId: String? = null) {
++        if (error != null) LauncherLog.w("Unduhan", "$title: ${error.javaClass.simpleName}: ${error.message}", error)
++        val info = FriendlyError.describe(error)
++        failure = Failure(title, info.message, info.detail, retryInstanceId)
++    }
++
++    fun dismissFailure() {
++        failure = null
++    }
++
+     /** True selama ada pemasangan berjalan. Aman dibaca di komposisi. */
+     var active by mutableStateOf(false)
+         private set
+@@ -56,6 +79,7 @@ object InstallSession {
+     ): Boolean {
+         if (active) return false
+         val app = context.applicationContext
++        failure = null
+         active = true
+         targetName = name
+         progress.progress = 0f
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/utils/FriendlyError.kt b/app/src/main/java/com/israadev/nuxlauncher/core/utils/FriendlyError.kt
+new file mode 100644
+index 0000000..23518f0
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/utils/FriendlyError.kt
+@@ -0,0 +1,79 @@
++package com.israadev.nuxlauncher.core.utils
++
++import android.os.Build
++import com.israadev.nuxlauncher.BuildConfig
++import java.io.InterruptedIOException
++import java.net.ConnectException
++import java.net.NoRouteToHostException
++import java.net.SocketException
++import java.net.SocketTimeoutException
++import java.net.UnknownHostException
++import javax.net.ssl.SSLException
++
++/**
++ * Mengubah exception mentah menjadi kalimat yang bisa ditindaklanjuti pengguna, plus rincian teknis terpisah yang
++ * bisa disalin untuk laporan. Dulu pengguna melihat teks seperti "Gagal mengunduh: Unable to resolve host
++ * piston-meta.mojang.com" dalam Toast yang hilang dalam beberapa detik.
++ */
++object FriendlyError {
++
++    class Info(
++        /** Kalimat untuk pengguna: apa yang terjadi dan apa yang bisa dilakukan. */
++        val message: String,
++        /** Rincian teknis (jenis galat, rantai penyebab, versi) untuk disalin. */
++        val detail: String
++    )
++
++    fun describe(error: Throwable?): Info {
++        if (error == null) {
++            return Info("Terjadi masalah yang tidak diketahui. Coba lagi.", header())
++        }
++        val chain = causeChain(error)
++        val message = when {
++            chain.any { it is UnknownHostException || it is ConnectException || it is NoRouteToHostException } ->
++                "Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi."
++            chain.any { it is SocketTimeoutException || (it is InterruptedIOException && it.message?.contains("timeout", true) == true) } ->
++                "Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi."
++            chain.any { it is SSLException } ->
++                "Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi."
++            chain.any { it is SocketException } ->
++                "Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang."
++            chain.any { isOutOfSpace(it) } ->
++                "Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi."
++            else -> {
++                // Pesan dari kode kita sendiri (mis. "Sebagian file game belum terunduh...") sudah berbahasa jelas: pakai apa adanya.
++                val own = error.localizedMessage?.trim().orEmpty()
++                if (own.isNotEmpty() && own.length <= 220) own else "Terjadi masalah yang tidak terduga. Coba lagi."
++            }
++        }
++        return Info(message, buildDetail(chain))
++    }
++
++    private fun isOutOfSpace(t: Throwable): Boolean {
++        val m = t.message ?: return false
++        return m.contains("No space left", ignoreCase = true) || m.contains("ENOSPC") || m.contains("Ruang penyimpanan", ignoreCase = true)
++    }
++
++    private fun causeChain(error: Throwable): List<Throwable> {
++        val out = ArrayList<Throwable>(4)
++        var cur: Throwable? = error
++        while (cur != null && out.size < 6 && out.none { it === cur }) {
++            out.add(cur)
++            cur = cur.cause
++        }
++        return out
++    }
++
++    private fun header(): String =
++        "AmberLauncher ${BuildConfig.VERSION_NAME}, Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT}), ${Build.MANUFACTURER} ${Build.MODEL}"
++
++    private fun buildDetail(chain: List<Throwable>): String {
++        val sb = StringBuilder(header()).append('\n')
++        chain.forEachIndexed { i, t ->
++            sb.append(if (i == 0) "" else "Penyebab: ").append(t.javaClass.name)
++            t.message?.let { sb.append(": ").append(it.take(300)) }
++            sb.append('\n')
++        }
++        return sb.toString().trimEnd()
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberErrorDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberErrorDialog.kt
+new file mode 100644
+index 0000000..e16bca0
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberErrorDialog.kt
+@@ -0,0 +1,72 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import android.content.ClipData
++import android.content.ClipboardManager
++import android.content.Context
++import androidx.compose.foundation.layout.padding
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.ui.components.AmberAlert
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.theme.Amber
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++
++/**
++ * Dialog galat yang menetap sampai ditutup (Toast hilang dalam beberapa detik, dan terlalu singkat untuk dibaca
++ * atau disalin). Menjelaskan apa yang terjadi, dan menawarkan "Coba lagi" (bila ada) serta "Salin detail" untuk laporan.
++ */
++@Composable
++fun AmberErrorDialog(
++    title: String,
++    message: String,
++    detail: String,
++    onDismiss: () -> Unit,
++    onRetry: (() -> Unit)? = null
++) {
++    val context = LocalContext.current
++    AmberAlert(
++        onDismissRequest = onDismiss,
++        title = title,
++        icon = "warning",
++        accent = Amber.Yellow,
++        actions = {
++            AmberButton(
++                text = "Salin detail",
++                onClick = {
++                    copyToClipboard(context, detail)
++                    Toast.makeText(context, "Detail disalin", Toast.LENGTH_SHORT).show()
++                },
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Ghost
++            )
++            AmberButton(
++                text = if (onRetry != null) "Coba lagi" else "Tutup",
++                onClick = { if (onRetry != null) onRetry() else onDismiss() },
++                modifier = Modifier.weight(1f),
++                style = AmberButtonStyle.Primary
++            )
++        }
++    ) {
++        Text(
++            text = message,
++            color = AmberUi.TextDim,
++            fontSize = 13.sp,
++            lineHeight = 19.sp,
++            modifier = Modifier.padding(top = 12.dp)
++        )
++    }
++}
++
++private fun copyToClipboard(context: Context, text: String) {
++    try {
++        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
++        cm.setPrimaryClip(ClipData.newPlainText("AmberLauncher", text))
++    } catch (_: Exception) {
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberHelpDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberHelpDialog.kt
+new file mode 100644
+index 0000000..a39d88b
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/AmberHelpDialog.kt
+@@ -0,0 +1,174 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Info
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPanel
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++
++private class HelpTopic(val title: String, val steps: List<String>)
++
++/**
++ * Isi bantuan. Hanya menyebut tombol dan pengaturan yang memang ada di aplikasi (nama persis seperti di layar),
++ * supaya pengguna baru tidak diarahkan ke menu yang tidak ada.
++ */
++private val HELP_TOPICS = listOf(
++    HelpTopic(
++        "Game langsung tertutup atau tidak mau mulai",
++        listOf(
++            "Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.",
++            "Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan \"Verifikasi & perbaiki\".",
++            "Turunkan \"Memori game (RAM)\" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.",
++            "Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama)."
++        )
++    ),
++    HelpTopic(
++        "FPS rendah atau game patah-patah",
++        listOf(
++            "Turunkan \"Skala resolusi layar\" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.",
++            "Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.",
++            "Nyalakan \"Tampilkan FPS dan RAM\" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.",
++            "Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri."
++        )
++    ),
++    HelpTopic(
++        "Launcher terasa berat",
++        listOf(
++            "Matikan \"Gerakkan GIF dan video\" dan \"Efek di beranda\" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.",
++            "Pakai latar foto biasa, bukan video atau GIF besar."
++        )
++    ),
++    HelpTopic(
++        "Unduhan gagal atau terputus",
++        listOf(
++            "Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.",
++            "Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.",
++            "Bila game terasa tidak lengkap sesudah selesai, tekan \"Verifikasi & perbaiki\" di Ubah instance."
++        )
++    ),
++    HelpTopic(
++        "Login Microsoft gagal atau diminta masuk lagi",
++        listOf(
++            "Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.",
++            "Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.",
++            "Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera."
++        )
++    ),
++    HelpTopic(
++        "Apa itu akun offline?",
++        listOf(
++            "Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.",
++            "Namanya 3-16 karakter: huruf, angka, atau garis bawah.",
++            "Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana."
++        )
++    ),
++    HelpTopic(
++        "Di mana dunia dan mod disimpan? Cara mencadangkan",
++        listOf(
++            "Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data (\"Lokasi data\").",
++            "Setiap instance punya folder sendiri. Tekan \"Buka folder instance\" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.",
++            "Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.",
++            "Bila datamu masih di folder nuxlauncher yang lama, tombol \"Pindahkan\" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file."
++        )
++    ),
++    HelpTopic(
++        "Cara memasang mod",
++        listOf(
++            "Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.",
++            "Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.",
++            "Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu."
++        )
++    )
++)
++
++/** Halaman Bantuan: pertanyaan yang paling sering muncul beserta langkahnya, dibuka dari Pengaturan > Tentang. */
++@Composable
++fun AmberHelpDialog(onDismiss: () -> Unit) {
++    AmberPage(
++        onDismiss = onDismiss,
++        title = "Bantuan",
++        icon = Icons.Outlined.Info,
++        subtitle = "Pertanyaan yang sering muncul"
++    ) { _ ->
++        Column(
++            modifier = Modifier
++                .fillMaxSize()
++                .verticalScroll(rememberScrollState())
++                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
++            verticalArrangement = Arrangement.spacedBy(10.dp)
++        ) {
++            HELP_TOPICS.forEachIndexed { index, topic ->
++                HelpTopicCard(topic, startOpen = index == 0)
++            }
++        }
++    }
++}
++
++@Composable
++private fun HelpTopicCard(topic: HelpTopic, startOpen: Boolean) {
++    var open by remember { mutableStateOf(startOpen) }
++    AmberPanel(modifier = Modifier.clickable { open = !open }) {
++        Row(
++            modifier = Modifier.fillMaxWidth(),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Text(
++                text = topic.title,
++                color = AmberUi.Text,
++                fontSize = 15.sp,
++                fontWeight = FontWeight.SemiBold,
++                modifier = Modifier.weight(1f)
++            )
++            Spacer(modifier = Modifier.width(10.dp))
++            Text(
++                text = if (open) "−" else "+",
++                color = AmberUi.AccentSoft,
++                fontSize = 20.sp,
++                fontWeight = FontWeight.Bold
++            )
++        }
++        if (open) {
++            Spacer(modifier = Modifier.height(8.dp))
++            topic.steps.forEach { step ->
++                Row(modifier = Modifier.padding(top = 4.dp)) {
++                    Text(
++                        text = "•",
++                        color = AmberUi.AccentSoft,
++                        fontSize = 14.sp,
++                        modifier = Modifier.padding(end = 8.dp)
++                    )
++                    Text(
++                        text = step,
++                        color = AmberUi.TextDim,
++                        fontSize = 13.sp,
++                        lineHeight = 19.sp,
++                        modifier = Modifier.weight(1f)
++                    )
++                }
++            }
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 0b2b693..0934ea3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -160,6 +160,7 @@ import com.israadev.nuxlauncher.ui.components.NuxDialog
+ import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
+ import com.israadev.nuxlauncher.ui.components.rememberIsResumed
+ import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
++import com.israadev.nuxlauncher.ui.dialogs.AmberErrorDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAddonImportDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxCrashDialog
+@@ -362,9 +363,9 @@ fun DashboardScreen() {
+             if (packReport != null && packReport.failed == 0) ModpackStaging.clear(instDir)
+ 
+             when {
+-                !res.isSuccess -> Toast.makeText(
+-                    appContext, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
+-                ).show()
++                !res.isSuccess -> InstallSession.reportFailure(
++                    "Gagal memasang ${inst.name}", res.exceptionOrNull(), retryInstanceId = inst.id
++                )
+                 packRes == null -> Toast.makeText(
+                     appContext, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT
+                 ).show()
+@@ -469,7 +470,7 @@ fun DashboardScreen() {
+                         Toast.makeText(appContext, "Meluncurkan ${inst.name}...", Toast.LENGTH_SHORT).show()
+                         GameLauncher.launch(appContext, inst, account)
+                     } else {
+-                        Toast.makeText(appContext, "Gagal menyiapkan OpenJDK: ${extRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
++                        InstallSession.reportFailure("Gagal menyiapkan Java", extRes.exceptionOrNull())
+                     }
+                 }
+                 return
+@@ -788,6 +789,27 @@ fun DashboardScreen() {
+             DownloadDialogHost(name = InstallSession.targetName, state = dl, onCancel = { cancelInstall() })
+         }
+ 
++        // Pemasangan gagal: dialog yang menetap (bisa disalin), bukan Toast yang hilang dalam beberapa detik
++        InstallSession.failure?.let { failed ->
++            val retryId = failed.retryInstanceId
++            val retry: (() -> Unit)? = if (retryId == null) {
++                null
++            } else {
++                {
++                    val target = InstanceManager.instances.value.firstOrNull { it.id == retryId }
++                    InstallSession.dismissFailure()
++                    if (target != null) installInstance(target)
++                }
++            }
++            AmberErrorDialog(
++                title = failed.title,
++                message = failed.message,
++                detail = failed.detail,
++                onDismiss = { InstallSession.dismissFailure() },
++                onRetry = retry
++            )
++        }
++
+         // Unsupported Renderer Warning Dialog (Persis seperti Zalith)
+         val warnRenderer = unsupportedRendererInfo
+         val launchInst = pendingLaunchInstance
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index ab8433c..908907e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.utils.FriendlyError
+ import com.israadev.nuxlauncher.core.horizon.HorizonContent
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.horizon.HorizonMods
+@@ -634,7 +635,7 @@ fun ModsScreen(
+                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                 reloadInstalled()
+             } else {
+-                Toast.makeText(context, "Gagal mengunduh: ${downRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
++                Toast.makeText(context, "Gagal mengunduh. " + FriendlyError.describe(downRes.exceptionOrNull()).message, Toast.LENGTH_LONG).show()
+             }
+         }
+     }
+@@ -678,7 +679,7 @@ fun ModsScreen(
+                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                 reloadInstalled()
+             } else {
+-                Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
++                Toast.makeText(context, "Gagal mengunduh. " + FriendlyError.describe(res.exceptionOrNull()).message, Toast.LENGTH_LONG).show()
+             }
+         }
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index d61932c..86c0f14 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -66,6 +66,7 @@ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
+ import com.israadev.nuxlauncher.ui.components.*
+ import com.israadev.nuxlauncher.ui.dialogs.NuxRendererV2ConfigDialog
++import com.israadev.nuxlauncher.ui.dialogs.AmberHelpDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
+@@ -90,6 +91,7 @@ fun SettingsScreen(
+     val currentSettings by SettingsManager.settings.collectAsState()
+ 
+     var showAboutDialog by remember { mutableStateOf(false) }
++    var showHelpDialog by remember { mutableStateOf(false) }
+     var showControlPresets by remember { mutableStateOf(false) }
+ 
+     // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
+@@ -1243,6 +1245,13 @@ fun SettingsScreen(
+                             }
+                         }
+                         SettingsGroup("Aplikasi") {
++                            SettingActionRow(
++                                title = "Bantuan",
++                                desc = "Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.",
++                                actionLabel = "Buka",
++                                onClick = { showHelpDialog = true }
++                            )
++                            SettingDivider()
+                             SettingActionRow(
+                                 title = "Tentang & lisensi",
+                                 desc = "Informasi aplikasi, lisensi GPL-3.0, dan kredit.",
+@@ -1659,6 +1668,10 @@ fun SettingsScreen(
+         )
+     }
+ 
++    if (showHelpDialog) {
++        AmberHelpDialog(onDismiss = { showHelpDialog = false })
++    }
++
+     if (showAboutDialog) {
+         NuxAboutDialog(
+             onDismissRequest = { showAboutDialog = false }
+diff --git a/changelog/entries/20261118-bantuan-dan-galat-ramah.txt b/changelog/entries/20261118-bantuan-dan-galat-ramah.txt
+new file mode 100644
+index 0000000..0e620cd
+--- /dev/null
++++ b/changelog/entries/20261118-bantuan-dan-galat-ramah.txt
+@@ -0,0 +1,8 @@
++[id]
+++ Halaman Bantuan (Pengaturan > Tentang) berisi jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.
++~ Galat saat memasang instance kini tampil sebagai dialog yang menjelaskan sebabnya, dengan tombol Coba lagi dan Salin detail.
++~ Pesan gagal mengunduh mod kini berbahasa jelas (koneksi bermasalah, penyimpanan penuh), bukan teks teknis mentah.
++[en]
+++ A Help page (Settings > About) answers common problems: game closing, low FPS, failed downloads, login and where data is stored.
++~ An error while installing an instance now appears as a dialog that explains the cause, with Try again and Copy details buttons.
++~ A failed mod download now gives a plain-language message (connection problem, storage full) instead of raw technical text.
+diff --git a/docs/microsoft-login.md b/docs/microsoft-login.md
+new file mode 100644
+index 0000000..490ee2f
+--- /dev/null
++++ b/docs/microsoft-login.md
+@@ -0,0 +1,59 @@
++# Login Microsoft: memakai aplikasi Azure sendiri
++
++Login akun Minecraft (Microsoft) di AmberLauncher berjalan atas nama sebuah **aplikasi Azure**, dikenali lewat *Client ID*.
++Aplikasi itu yang menentukan apakah login tetap berfungsi: bila pemiliknya menghapusnya, mengubah pengaturannya, atau
++Mojang mencabut persetujuannya, login gagal untuk **semua** pengguna sekaligus, tanpa perubahan apa pun di kode kita.
++
++Bawaan saat ini adalah Client ID `c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb` (warisan dari kode awal). Tidak diketahui siapa
++pemiliknya, jadi sebaiknya diganti dengan aplikasi yang kamu kendalikan sendiri. Langkah di bawah dilakukan **sekali**,
++dan tidak ada yang berubah di kode: cukup isi Client ID baru di konfigurasi build.
++
++## 1. Daftarkan aplikasi di Azure
++
++1. Buka <https://portal.azure.com> dengan akun Microsoft, lalu cari **Microsoft Entra ID** > **App registrations** > **New registration**.
++2. **Name**: bebas (mis. `AmberLauncher`).
++3. **Supported account types**: pilih yang mengizinkan **akun Microsoft pribadi** (*Personal Microsoft accounts*).
++   Login Minecraft hanya memakai tenant `consumers`, dan itu sudah dipakai kode (`MicrosoftAuthService`).
++4. **Redirect URI**: dikosongkan. Launcher memakai *device code flow* (kode yang dimasukkan di halaman login), bukan pengalihan.
++5. Setelah dibuat, buka **Authentication** > nyalakan **Allow public client flows** (Yes) > simpan.
++   Tidak ada *client secret* yang perlu dibuat atau disimpan.
++6. Salin **Application (client) ID** dari halaman *Overview*.
++
++## 2. Minta persetujuan Mojang untuk aplikasinya
++
++Aplikasi Azure baru **belum boleh** memakai API Minecraft. Tanpa persetujuan, langkah terakhir login
++(`api.minecraftservices.com`) menjawab galat 403 dengan pesan sejenis *Invalid app registration*.
++Ajukan Client ID-nya lewat formulir tinjauan aplikasi Mojang/Microsoft:
++
++- Pesan galatnya sendiri menunjuk ke <https://aka.ms/AppRegInfo>.
++- Komunitas (wiki.vg) menautkan formulirnya di <https://aka.ms/mce-reviewappid>.
++
++Persetujuan bisa memakan waktu beberapa hari. Selama belum disetujui, login dengan Client ID baru akan ditolak; jangan
++menyebarkan build dengan Client ID baru sebelum kamu mencoba login berhasil sampai masuk game.
++
++> Halaman Microsoft/Mojang dapat berubah. Bila tautan di atas sudah usang, cari "Minecraft API app registration review".
++
++## 3. Pakai Client ID-nya di build
++
++Client ID dibaca saat build (`BuildConfig.MS_CLIENT_ID`) dengan urutan:
++
++1. variabel lingkungan `AMBER_MS_CLIENT_ID` (untuk GitHub Actions: simpan sebagai *Variable* atau *Secret*, lalu teruskan
++   ke langkah build sebagai `env`),
++2. `amber.msClientId` di `local.properties` (build lokal),
++3. bawaan lama bila keduanya kosong atau bukan GUID yang valid.
++
++Contoh `local.properties`:
++
++```
++amber.msClientId=00000000-0000-0000-0000-000000000000
++```
++
++Langkah `env` di workflow tidak bisa diubah lewat patch (aturan repo untuk `.github/workflows`), jadi tambahkan
++`AMBER_MS_CLIENT_ID: ${{ vars.AMBER_MS_CLIENT_ID }}` pada langkah build secara manual.
++
++## 4. Uji sebelum dirilis
++
++1. Pasang build uji, tambah akun Microsoft, selesaikan kode perangkat di halaman login.
++2. Pastikan nama pemain tampil di layar Akun dan game bisa dibuka ke server online.
++3. Akun yang sudah login dengan Client ID lama **perlu login ulang** setelah Client ID diganti (token dikaitkan ke aplikasi).
++   Beri tahu pengguna di catatan rilis.
+# FIN part=1/1 files=11

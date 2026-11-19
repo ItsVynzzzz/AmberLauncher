@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.crash
 import android.content.Context
 import com.google.gson.JsonParser
 import com.israadev.nuxlauncher.core.instance.InstanceManager
+import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
 import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -201,16 +202,22 @@ object CrashRecovery {
             val source = CrashAdvisor.sourceOf(info)
             val settings = SettingsManager.settings.value
             val gameDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it) }?.takeIf { it.isDirectory }
+            // Bila instance yang crash punya pengaturan sendiri, itulah yang dipakai game: dasar tawaran dan tempat perbaikannya.
+            val own = instanceOverrides(info)
 
             // 1. RAM: hanya bila HP kehabisan RAM (bukan heap Java yang sempit)
             if (source == CrashSource.MEMORY && !isJavaHeapOutOfMemory(log)) {
-                val target = loweredRamMb(settings.ramMb)
+                val target = loweredRamMb(own?.ramMb ?: settings.ramMb)
                 if (target != null) {
                     options.add(
                         RecoveryOption(
                             RecoveryAction.LOWER_RAM,
                             "Turunkan RAM ke $target MB",
-                            "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.",
+                            if (own?.ramMb != null) {
+                                "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance."
+                            } else {
+                                "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori."
+                            },
                             target.toString()
                         )
                     )
@@ -219,7 +226,7 @@ object CrashRecovery {
 
             // 2. Renderer: hanya untuk crash grafis
             if (source == CrashSource.GRAPHICS) {
-                rendererOption(context, info, settings.selectedRenderer)?.let { options.add(it) }
+                rendererOption(context, info, own?.renderer ?: settings.selectedRenderer)?.let { options.add(it) }
             }
 
             // 3. Shader: bila masih menyala dan crash berkaitan dengan grafis, memori, atau log menyebut shader
@@ -271,12 +278,22 @@ object CrashRecovery {
             when (option.action) {
                 RecoveryAction.LOWER_RAM -> {
                     val mb = option.arg.toIntOrNull() ?: return RecoveryResult(false, FAIL_MESSAGE)
+                    if (instanceOverrides(info)?.ramMb != null && updateOwnInstance(context, info) { it.copy(overrideRamMb = mb) }) {
+                        return RecoveryResult(true, "RAM instance ini diturunkan ke $mb MB.")
+                    }
                     SettingsManager.init(context)
                     SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(ramMb = mb))
                     RecoveryResult(true, "RAM game diturunkan ke $mb MB.")
                 }
                 RecoveryAction.RESET_RENDERER -> {
                     val id = option.arg.ifBlank { "auto" }
+                    if (instanceOverrides(info)?.renderer != null && updateOwnInstance(context, info) { it.copy(overrideRenderer = id) }) {
+                        return RecoveryResult(
+                            true,
+                            if (id == "auto") "Renderer instance ini dikembalikan ke Otomatis."
+                            else "Renderer instance ini diganti ke ${NuxRendererRegistry.findRendererById(id).displayName}."
+                        )
+                    }
                     SettingsManager.init(context)
                     SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(selectedRenderer = id))
                     if (id == "auto") {
@@ -411,6 +428,35 @@ object CrashRecovery {
         } catch (_: Throwable) {
             null
         }
+    }
+
+    /** Pengaturan yang dikunci khusus untuk instance yang crash (dibaca ringan dari instance.json), atau null. */
+    private class OwnSettings(val ramMb: Int?, val renderer: String?)
+
+    private fun instanceOverrides(info: GameCrashInfo): OwnSettings? {
+        val instDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it).parentFile } ?: return null
+        val f = File(instDir, "instance.json")
+        if (!f.isFile || f.length() > 65_536) return null
+        return try {
+            val o = JsonParser.parseString(f.readText()).asJsonObject
+            val ram = o.get("overrideRamMb")?.takeIf { it.isJsonPrimitive }?.asInt
+            val renderer = o.get("overrideRenderer")?.takeIf { it.isJsonPrimitive }?.asString?.takeIf { it.isNotBlank() }
+            if (ram == null && renderer == null) null else OwnSettings(ram, renderer)
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    /** Mengubah instance yang crash di daftar instance. False bila instance-nya tidak ditemukan (pemanggil lalu memakai pengaturan global). */
+    private fun updateOwnInstance(context: Context, info: GameCrashInfo, change: (Instance) -> Instance): Boolean {
+        // Daftar instance dimuat dulu supaya menyimpan satu instance tidak menimpa daftar dengan isi kosong.
+        InstanceManager.init(context)
+        if (InstanceManager.instances.value.isEmpty()) return false
+        val id = resolveInstanceId(info)
+        val inst = InstanceManager.instances.value.firstOrNull { (id != null && it.id == id) || it.name == info.instanceName }
+            ?: return false
+        InstanceManager.updateInstance(context, change(inst))
+        return true
     }
 
     private fun javaIsManual(info: GameCrashInfo): Boolean {

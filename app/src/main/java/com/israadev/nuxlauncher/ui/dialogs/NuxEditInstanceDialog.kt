@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.mods.NuxModManager
@@ -81,6 +84,7 @@ fun NuxEditInstanceDialog(
     var editName by remember { mutableStateOf(instance.name) }
     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var showInstanceSettings by remember { mutableStateOf(false) }
     var modCount by remember { mutableStateOf<Int?>(null) }
 
     val autoRecommendedRuntime = remember(instance.mcVersion) {
@@ -166,6 +170,16 @@ fun NuxEditInstanceDialog(
                 InstanceManager.openInstanceFolder(context, instance)
             }
         )
+        // Mesin Rust (Horizon, Starling) tidak memakai JVM, RAM Java, maupun renderer launcher: tidak ada yang bisa diatur.
+        if (!HorizonEngine.isEngine(instance.loader) && !StarlingEngine.isEngine(instance.loader)) {
+            AmberActionPill(
+                icon = Icons.Outlined.Speed,
+                label = "Pengaturan instance",
+                trailing = if (instance.hasOverrides) "Khusus" else "Ikuti global",
+                showChevron = true,
+                onClick = { showInstanceSettings = true }
+            )
+        }
         if (onRepair != null) {
             AmberActionPill(
                 icon = Icons.Outlined.Refresh,
@@ -241,6 +255,15 @@ fun NuxEditInstanceDialog(
                 }
             }
         }
+    }
+
+    if (showInstanceSettings) {
+        // Dibuka di atas halaman ini. Tersimpan lewat tombol Simpan di halamannya; nama dan Java di halaman ini tidak ikut berubah.
+        NuxInstanceSettingsDialog(
+            instance = instance,
+            onDismiss = { showInstanceSettings = false },
+            onSave = onInstanceUpdated
+        )
     }
 }
 

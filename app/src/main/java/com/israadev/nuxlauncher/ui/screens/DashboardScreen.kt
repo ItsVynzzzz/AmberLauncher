@@ -476,7 +476,8 @@ fun DashboardScreen() {
                 return
             }
 
-            val currentRendererInfo = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
+            // Instance bisa punya renderer sendiri; bila tidak, ikut Pengaturan.
+            val currentRendererInfo = NuxRendererRegistry.findRendererById(inst.overrideRenderer?.takeIf { it.isNotBlank() } ?: launcherSettings.selectedRenderer)
             val isSupported = NuxRendererRegistry.isSupportedForVersion(currentRendererInfo, inst.mcVersion)
             if (!isSupported) {
                 unsupportedRendererInfo = currentRendererInfo
@@ -565,8 +566,9 @@ fun DashboardScreen() {
             when (currentTab) {
                 // Home: layar penuh tanpa sidebar dan kartu; navigasinya ada di bar bawah.
                 "home" -> NuxReadable {
-                    val rendererLabel = remember(launcherSettings.selectedRenderer) {
-                        val info = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
+                    val effectiveRenderer = selectedInstance?.overrideRenderer?.takeIf { it.isNotBlank() } ?: launcherSettings.selectedRenderer
+                    val rendererLabel = remember(effectiveRenderer) {
+                        val info = NuxRendererRegistry.findRendererById(effectiveRenderer)
                         HomeInfo.rendererLabel(info.id, info.displayName)
                     }
                     HomeScene(

@@ -60,10 +60,55 @@ object SettingsManager {
         writeNow()
     }
 
+    // --- Penimpa per instance (hanya proses game) -----------------------------------------------
+    // Proses game membaca pengaturan dari berkas global, lalu menimpa sebagian nilainya di memori dengan penimpa milik
+    // instance yang sedang dimainkan. Penimpa TIDAK PERNAH ditulis ke berkas global: lihat [persistable].
+    private class Overrides(val ramMb: Int?, val renderer: String?, val resolutionRatio: Int?, val jvmArgs: String?)
+    @Volatile private var overrides: Overrides? = null
+    @Volatile private var baseline: LauncherSettings? = null
+
+    /**
+     * Menimpa pengaturan global di memori untuk sesi game ini. Nilai null berarti "ikuti global". Dipanggil setelah [init].
+     * Perubahan dari menu dalam game pada nilai yang ditimpa hanya berlaku untuk sesi ini.
+     */
+    fun applyInstanceOverrides(ramMb: Int?, renderer: String?, resolutionRatio: Int?, jvmArgs: String?) {
+        val cur = _settings.value
+        if (ramMb == null && renderer == null && resolutionRatio == null && jvmArgs == null) {
+            overrides = null
+            baseline = null
+            return
+        }
+        baseline = cur
+        overrides = Overrides(ramMb, renderer, resolutionRatio, jvmArgs)
+        _settings.value = cur.copy(
+            ramMb = ramMb?.coerceAtLeast(512) ?: cur.ramMb,
+            selectedRenderer = renderer?.takeIf { it.isNotBlank() } ?: cur.selectedRenderer,
+            // Mode Hemat membatasi resolusi untuk semua game; resolusi khusus instance tidak boleh menembus batas itu.
+            resolutionRatio = resolutionRatio?.coerceIn(40, 125)?.let { if (cur.powerSaverMode) PowerSaver.cappedResolution(it) else it }
+                ?: cur.resolutionRatio,
+            customJvmArgs = jvmArgs ?: cur.customJvmArgs
+        )
+    }
+
+    /** Nilai yang boleh ditulis ke berkas global: bagian yang ditimpa dikembalikan ke nilai global aslinya. */
+    private fun persistable(s: LauncherSettings): LauncherSettings {
+        val o = overrides ?: return s
+        val b = baseline ?: return s
+        return s.copy(
+            ramMb = if (o.ramMb != null) b.ramMb else s.ramMb,
+            selectedRenderer = if (o.renderer != null) b.selectedRenderer else s.selectedRenderer,
+            resolutionRatio = if (o.resolutionRatio != null) b.resolutionRatio else s.resolutionRatio,
+            customJvmArgs = if (o.jvmArgs != null) b.customJvmArgs else s.customJvmArgs
+        )
+    }
+
     fun init(context: Context) {
         // Init ulang (mis. dari alur pemulihan) membaca berkas lagi: tuntaskan dulu penulisan yang tertunda
         // supaya perubahan terakhir di memori tidak tertimpa isi berkas yang lebih lama.
         flush()
+        // Memuat ulang dari berkas berarti kembali ke nilai global; penimpa sesi sebelumnya (proses game bisa dipakai ulang) hilang.
+        overrides = null
+        baseline = null
         val file = getSettingsFile(context)
         settingsFile = file
         // Isi berkas bisa saja diubah proses lain (mis. tombol HUD di dalam game): jangan lewati tulis berikutnya
@@ -191,7 +236,7 @@ object SettingsManager {
         val file = settingsFile ?: return
         synchronized(writeLock) {
             try {
-                val json = gson.toJson(_settings.value)
+                val json = gson.toJson(persistable(_settings.value))
                 if (json == lastWrittenJson) return
                 com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
                 lastWrittenJson = json

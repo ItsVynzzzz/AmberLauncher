@@ -113,8 +113,19 @@ data class Instance(
     val icon: String = "crafting_table",
     val javaRuntime: String = "auto", // "auto", "jre-8", "jre-17", "jre-21", "jre-25"
     val createdTime: Long = System.currentTimeMillis(),
-    var isDownloaded: Boolean = false
-)
+    var isDownloaded: Boolean = false,
+    // Penimpa pengaturan global khusus instance ini. null = ikuti Pengaturan. Instance lama tidak punya field ini
+    // di JSON-nya dan terbaca null, jadi tetap mengikuti pengaturan global seperti sebelumnya.
+    val overrideRamMb: Int? = null,
+    val overrideRenderer: String? = null,
+    val overrideResolutionRatio: Int? = null,
+    val overrideJvmArgs: String? = null
+) {
+    /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
+    val hasOverrides: Boolean
+        get() = overrideRamMb != null || overrideRenderer != null ||
+            overrideResolutionRatio != null || overrideJvmArgs != null
+}
 
 /**
  * User Account representation

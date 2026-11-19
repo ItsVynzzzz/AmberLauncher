@@ -446,6 +446,11 @@ object GameLauncher {
                 putStringArrayListExtra(GameActivity.EXTRA_EXTRA_JVM_ARGS, ArrayList(forgeLaunch.jvmArgs))
                 putStringArrayListExtra(GameActivity.EXTRA_EXTRA_GAME_ARGS, ArrayList(forgeLaunch.gameArgs))
             }
+            // Pengaturan yang dikunci khusus untuk instance ini; yang kosong mengikuti Pengaturan global.
+            instance.overrideRamMb?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RAM_MB, it) }
+            instance.overrideRenderer?.takeIf { it.isNotBlank() }?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RENDERER, it) }
+            instance.overrideResolutionRatio?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RESOLUTION, it) }
+            instance.overrideJvmArgs?.let { putExtra(GameActivity.EXTRA_OVERRIDE_JVM_ARGS, it) }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }

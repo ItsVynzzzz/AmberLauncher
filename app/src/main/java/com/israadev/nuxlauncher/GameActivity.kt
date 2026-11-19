@@ -164,6 +164,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         const val EXTRA_LOADER_VERSION = "extra_loader_version"
         const val EXTRA_INSTALLED_MODS = "extra_installed_mods"
         const val EXTRA_EXTRA_JVM_ARGS = "extra_extra_jvm_args"
+        // Penimpa pengaturan khusus instance (tidak ada = ikuti global)
+        const val EXTRA_OVERRIDE_RAM_MB = "extra_override_ram_mb"
+        const val EXTRA_OVERRIDE_RENDERER = "extra_override_renderer"
+        const val EXTRA_OVERRIDE_RESOLUTION = "extra_override_resolution"
+        const val EXTRA_OVERRIDE_JVM_ARGS = "extra_override_jvm_args"
         const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
 
         // Setelah sesi ketik layar berakhir, tombol sisa dari keyboard layar yang datang dalam rentang ini
@@ -547,6 +552,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
         MouseDiag.devices()
         SettingsManager.init(this)
+        // Pengaturan khusus instance yang dimainkan menimpa nilai global untuk sesi ini saja. Dipanggil juga bila semuanya
+        // kosong, supaya penimpa dari sesi sebelumnya tidak terbawa (proses game bisa dipakai ulang).
+        SettingsManager.applyInstanceOverrides(
+            ramMb = if (intent.hasExtra(EXTRA_OVERRIDE_RAM_MB)) intent.getIntExtra(EXTRA_OVERRIDE_RAM_MB, 0) else null,
+            renderer = intent.getStringExtra(EXTRA_OVERRIDE_RENDERER),
+            resolutionRatio = if (intent.hasExtra(EXTRA_OVERRIDE_RESOLUTION)) intent.getIntExtra(EXTRA_OVERRIDE_RESOLUTION, 100) else null,
+            jvmArgs = intent.getStringExtra(EXTRA_OVERRIDE_JVM_ARGS)
+        )
         // GameActivity jalan di proses :game, terpisah dari MainActivity: warna aksen dan gaya pilihan pemain
         // harus diterapkan di sini juga, kalau tidak sidebar dan layar loading selalu memakai aksen bawaan.
         SettingsManager.settings.value.let {

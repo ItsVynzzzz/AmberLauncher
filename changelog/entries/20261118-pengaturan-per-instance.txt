@@ -1,0 +1,8 @@
+[id]
++ Pengaturan per instance (Ubah instance > Pengaturan instance): RAM, skala resolusi, renderer, dan argumen JVM bisa dikunci khusus untuk satu instance. Modpack berat dapat diberi RAM besar tanpa membuat dunia vanilla ringan ikut boros.
+~ "Ikuti global" tetap menjadi bawaan: instance lama berjalan seperti sebelumnya dan ikut berubah bila Pengaturan umum diubah.
+~ Tawaran perbaikan setelah crash (turunkan RAM, ganti renderer) kini mengubah pengaturan instance yang crash bila instance itu punya pengaturan sendiri.
+[en]
++ Per-instance settings (Edit instance > Instance settings): RAM, resolution scale, renderer and JVM arguments can be locked for a single instance. A heavy modpack can get more RAM without making a light vanilla world waste memory.
+~ "Follow global" stays the default: existing instances behave as before and follow the general Settings when those change.
+~ The fixes offered after a crash (lower RAM, change renderer) now change the crashed instance's own settings when it has any.

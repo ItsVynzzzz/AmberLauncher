@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Fonte Horizon: shaders nativo
 Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fonte Modrinth: shaders cl\u00e1ssicos; a compatibilidade com o motor Rust ainda \u00e9 limitada.
 Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fonte Horizon: pacotes de recursos criados ou testados para o motor Rust.
 Coba ubah kata kunci atau pindah ke sumber Modrinth	Tente mudar a palavra-chave ou trocar para a fonte Modrinth
+# Unduhan berkas Starling lewat launcher
+Menyiapkan daftar berkas Starling...	Preparando a lista de arquivos do Starling...
+Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	Baixando recursos do Starling: {0} de {1} MB ({2} MB/s)
+Mengunduh sumber daya Starling: {0} dari {1} MB	Baixando recursos do Starling: {0} de {1} MB
+Menyelesaikan unduhan Starling...	Concluindo o download do Starling...
+Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Download do Starling conclu\u00eddo. Toque em PLAY; na primeira vez, o Starling prepara o jogo no celular, apenas uma vez.
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	S\u00f3 \u00e9 compat\u00edvel com o Minecraft {0}. O launcher baixa os recursos do jogo (cerca de 500 MiB) pelo bot\u00e3o BAIXAR; depois, o Starling os prepara no celular uma \u00fanica vez. Este motor \u00e9 separado do Horizon, com shaders, mods e menus pr\u00f3prios.

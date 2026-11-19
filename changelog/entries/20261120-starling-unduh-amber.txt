@@ -1,0 +1,16 @@
+[id]
++ Instance Starling kini mengunduh berkas game resmi (sekitar 500 MiB) lewat dialog unduhan Amber, tidak lagi lewat layar Starling. Tekan UNDUH; setelah selesai, PLAY menyiapkan game di HP sekali saja.
+[en]
++ Starling instances now download the official game files (about 500 MiB) through Amber's download dialog instead of Starling's own screen. Press DOWNLOAD; when it finishes, PLAY prepares the game on your phone just once.
+[es]
++ Las instancias de Starling ahora descargan los archivos oficiales del juego (unos 500 MiB) con el diálogo de descarga de Amber, no con la pantalla de Starling. Pulsa DESCARGAR; al terminar, PLAY prepara el juego en tu teléfono una sola vez.
+[fil]
++ Dina-download na ng mga Starling instance ang opisyal na file ng laro (mga 500 MiB) gamit ang download dialog ng Amber, hindi na ang sariling screen ng Starling. Pindutin ang I-DOWNLOAD; pagkatapos, ihahanda ng PLAY ang laro sa telepono nang isang beses lang.
+[pt]
++ As instâncias do Starling agora baixam os arquivos oficiais do jogo (cerca de 500 MiB) pelo diálogo de download do Amber, e não mais pela tela do Starling. Toque em BAIXAR; ao terminar, o PLAY prepara o jogo no celular uma única vez.
+[th]
++ อินสแตนซ์ Starling ดาวน์โหลดไฟล์เกมทางการ (ประมาณ 500 MiB) ผ่านหน้าต่างดาวน์โหลดของ Amber แล้ว ไม่ใช้หน้าจอของ Starling อีก กดดาวน์โหลด เมื่อเสร็จ PLAY จะเตรียมเกมบนมือถือเพียงครั้งเดียว
+[vi]
++ Instance Starling giờ tải các tệp game chính thức (khoảng 500 MiB) bằng hộp thoại tải của Amber, không còn dùng màn hình của Starling. Nhấn TẢI XUỐNG; khi xong, PLAY sẽ chuẩn bị game trên điện thoại một lần duy nhất.
+[zh]
++ Starling 实例现在通过 Amber 的下载对话框下载官方游戏文件（约 500 MiB），不再使用 Starling 自己的界面。点击“下载”；完成后，PLAY 会在手机上准备游戏，仅需一次。

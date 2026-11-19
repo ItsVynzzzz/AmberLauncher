@@ -38,7 +38,9 @@ import java.util.concurrent.atomic.AtomicBoolean
  *   accounts/accounts.json (pemain offline yang dipilih), [SESSION_FILE] (sesi Microsoft, dibaca sekali oleh mesin lalu
  *   dihapus), dan [ARGS_FILE] (horizon-args.txt: --session-file dan AMBER_EMBEDDED=1 yang mematikan pemberitahuan
  *   pembaruan Starling).
- * - Penyiapan game pertama (unduhan sekitar 500 MiB dan penyiapan di HP) masih memakai layar milik Starling, sekali saja.
+ * - Unduhan berkas resmi Minecraft (sekitar 500 MiB) dikerjakan launcher dengan dialog unduhan Amber ([StarlingFiles]),
+ *   bukan layar Starling; mesin hanya melihat penanda "berkas lengkap" yang sama dengan buatannya sendiri. Penyiapan game
+ *   di HP sesudahnya (Java 25, horizon-prepare; sekali saja) masih memakai layar milik Starling.
  *   Menu, kontrol, dan pengaturan di dalam game juga masih milik Starling; pengaturan Rust di tab Pengaturan Amber
  *   hanya untuk Horizon. Menyatukannya dengan UI Amber adalah tahap berikutnya.
  */
@@ -107,7 +109,10 @@ object StarlingEngine {
     /** Folder data mesin: sama dengan getFilesDir() milik GameActivity di proses :starling. */
     internal fun engineHome(context: Context): File = File(context.filesDir, "starling")
 
-    /** True bila berkas game resmi sudah diunduh Starling; bila belum, PLAY pertama menampilkan layar penyiapannya. */
+    /**
+     * True bila berkas game resmi sudah lengkap (diunduh launcher atau mesin; penandanya sama). Bila belum, launcher
+     * mengunduhnya lewat tombol UNDUH ([StarlingFiles]); tanpa patokan, PLAY pertama menampilkan layar unduhan Starling.
+     */
     fun gameInstalled(context: Context): Boolean =
         File(engineHome(context), "minecraft/starling-files.json").isFile
 

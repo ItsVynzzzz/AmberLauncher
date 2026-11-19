@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Ngu\u1ed3n Horizon: shader g\
 Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Ngu\u1ed3n Modrinth: shader c\u1ed5 \u0111i\u1ec3n, kh\u1ea3 n\u0103ng t\u01b0\u01a1ng th\u00edch v\u1edbi engine Rust v\u1eabn c\u00f2n h\u1ea1n ch\u1ebf.
 Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Ngu\u1ed3n Horizon: resource pack \u0111\u01b0\u1ee3c t\u1ea1o ho\u1eb7c th\u1eed nghi\u1ec7m cho engine Rust.
 Coba ubah kata kunci atau pindah ke sumber Modrinth	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a ho\u1eb7c chuy\u1ec3n sang ngu\u1ed3n Modrinth
+# Unduhan berkas Starling lewat launcher
+Menyiapkan daftar berkas Starling...	\u0110ang chu\u1ea9n b\u1ecb danh s\u00e1ch t\u1ec7p c\u1ee7a Starling...
+Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	\u0110ang t\u1ea3i t\u00e0i nguy\u00ean Starling: {0} tr\u00ean {1} MB ({2} MB/gi\u00e2y)
+Mengunduh sumber daya Starling: {0} dari {1} MB	\u0110ang t\u1ea3i t\u00e0i nguy\u00ean Starling: {0} tr\u00ean {1} MB
+Menyelesaikan unduhan Starling...	\u0110ang ho\u00e0n t\u1ea5t t\u1ea3i Starling...
+Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	\u0110\u00e3 t\u1ea3i xong Starling. Nh\u1ea5n PLAY; l\u1ea7n \u0111\u1ea7u, Starling s\u1ebd chu\u1ea9n b\u1ecb game tr\u00ean \u0111i\u1ec7n tho\u1ea1i, ch\u1ec9 m\u1ed9t l\u1ea7n.
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft {0}. Launcher t\u1ea3i t\u00e0i nguy\u00ean game (kho\u1ea3ng 500 MiB) b\u1eb1ng n\u00fat T\u1ea2I XU\u1ed0NG; sau \u0111\u00f3 Starling chu\u1ea9n b\u1ecb ch\u00fang tr\u00ean \u0111i\u1ec7n tho\u1ea1i m\u1ed9t l\u1ea7n duy nh\u1ea5t. Engine n\u00e0y t\u00e1ch bi\u1ec7t v\u1edbi Horizon, c\u00f3 shader, mod v\u00e0 menu ri\u00eang.

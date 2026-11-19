@@ -66,3 +66,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	แหล่ง Horizon: shad
 Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	แหล่ง Modrinth: shader แบบคลาสสิก ความเข้ากันได้กับเอนจิน Rust ยังจำกัด
 Tidak ada berkas yang cocok di versi ini.	ไม่มีไฟล์ที่ตรงกันในเวอร์ชันนี้
 Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง
+# Unduhan berkas Starling lewat launcher
+Menyiapkan daftar berkas Starling...	กำลังเตรียมรายการไฟล์ของ Starling...
+Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	กำลังดาวน์โหลดทรัพยากรของ Starling: {0} จาก {1} MB ({2} MB/วินาที)
+Mengunduh sumber daya Starling: {0} dari {1} MB	กำลังดาวน์โหลดทรัพยากรของ Starling: {0} จาก {1} MB
+Menyelesaikan unduhan Starling...	กำลังดาวน์โหลด Starling ให้เสร็จสิ้น...
+Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	ดาวน์โหลด Starling เสร็จแล้ว กด PLAY ครั้งแรก Starling จะเตรียมเกมบนมือถือ เพียงครั้งเดียว
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	รองรับเฉพาะ Minecraft {0} ตัวเปิดเกมจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) ด้วยปุ่มดาวน์โหลด หลังจากนั้น Starling จะเตรียมบนมือถือเพียงครั้งเดียว เอนจินนี้แยกจาก Horizon และมีเชเดอร์ ม็อด และเมนูของตัวเอง

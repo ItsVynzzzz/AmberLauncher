@@ -1,0 +1,14 @@
+{
+  "_comment": "Salinan patokan berkas resmi Mojang dari research-lock.json sumber Starling (blok minecraft). Dipakai core/horizon/StarlingFiles.kt supaya launcher bisa mengunduh berkasnya dengan UI Amber. Harus sama dengan sumber yang dibangun (starling-engine.properties): scripts/build-horizon-engine.sh memeriksanya dan menghentikan build Starling bila beda.",
+  "source_commit": "32961a037f4127904262ab651f08d73a1d262a84",
+  "version": "26.3",
+  "manifest_sha1": "11f1aefe473eefba0af62e3286c33b692807b2eb",
+  "accepted_manifest_sha1": [
+    "4fe1aa1ef8da1cb95c5bad1fb98890ca56dd8ca3",
+    "702fe59163c6ee6578607daa85811d9bc9c7cc40",
+    "61fff1316bd50312624a858bbb5eb18fa45208ed",
+    "5df1795e16eea19d75b923d66ecca9ce183353c5"
+  ],
+  "client_sha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "server_sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c"
+}

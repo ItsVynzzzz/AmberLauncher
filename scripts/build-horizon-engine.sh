@@ -403,6 +403,23 @@ python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' || di
 JDK="${HORIZON_ENGINE_JDK:-${JAVA_HOME:-}}"
 [ -n "$JDK" ] && [ -x "$JDK/bin/javac" ] || die "JDK dengan javac tidak ditemukan (isi JAVA_HOME atau HORIZON_ENGINE_JDK ke JDK 25)."
 JAVA_NEED="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["minecraft"]["java_major"])' "$SRC/research-lock.json")"
+# Starling: launcher mengunduh berkas resmi Minecraft sendiri (StarlingFiles.kt) dengan patokan salinan di
+# assets/starling-pins.json. Salinan itu harus sama dengan research-lock.json sumber yang dibangun; kalau beda
+# (commit= di starling-engine.properties dinaikkan tanpa memperbarui salinan), launcher akan menolak atau salah
+# mengunduh, jadi build dihentikan di sini.
+if [ "$ENGINE_NAME" = "starling" ]; then
+  python3 - "$SRC/research-lock.json" "$ROOT/app/src/main/assets/starling-pins.json" <<'PY' || die "app/src/main/assets/starling-pins.json tidak sama dengan blok minecraft di research-lock.json sumber Starling. Salin ulang version, manifest_sha1, accepted_manifest_sha1, client_sha1, dan server_sha1 dari sumber."
+import json, sys
+lock = json.load(open(sys.argv[1]))["minecraft"]
+pins = json.load(open(sys.argv[2]))
+bad = [k for k in ("version", "manifest_sha1", "accepted_manifest_sha1", "client_sha1", "server_sha1")
+       if lock.get(k) != pins.get(k)]
+if bad:
+    print("berbeda: " + ", ".join(bad), file=sys.stderr)
+    sys.exit(1)
+PY
+  echo "Patokan berkas Starling: starling-pins.json cocok dengan research-lock.json"
+fi
 JAVA_HAVE="$("$JDK/bin/javac" -version 2>&1 | sed -n 's/^javac \([0-9]*\).*/\1/p' | head -n 1)"
 [ -n "$JAVA_HAVE" ] && [ "$JAVA_HAVE" -ge "$JAVA_NEED" ] || die "butuh JDK $JAVA_NEED atau lebih baru untuk eksporter tabel data; yang ada: javac ${JAVA_HAVE:-?} di $JDK."
 echo "JDK: javac $JAVA_HAVE ($JDK), dibutuhkan >= $JAVA_NEED"

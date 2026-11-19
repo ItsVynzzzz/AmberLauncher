@@ -73,6 +73,7 @@ import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.forge.ForgeService
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingFiles
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.VersionItem
@@ -848,7 +849,11 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
         )
         Text(
             text = if (starling) {
-                "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
+                if (StarlingFiles.pins(LocalContext.current) != null) {
+                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
+                } else {
+                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
+                }
             } else {
                 "Hanya mendukung Minecraft ${HorizonEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka."
             },

@@ -133,6 +133,7 @@ import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingFiles
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.launch.GameLauncher
 import com.israadev.nuxlauncher.core.modpack.ModpackStaging
@@ -282,7 +283,7 @@ fun DashboardScreen() {
     // Status unduhan instance terpilih: dihitung ulang hanya saat instance berganti
     // atau saat proses unduh selesai (hindari cek file di tiap recomposition).
     val isInstanceReady = remember(selectedInstance, isDownloading) {
-        selectedInstance?.let { it.isDownloaded && InstanceManager.isInstanceDownloaded(context, it) } ?: false
+        selectedInstance?.let { isInstanceReadyToPlay(context, it) } ?: false
     }
 
     // Pasang instance: siapkan Java, lalu unduh client, library, dan aset game. Dipakai tombol UNDUH
@@ -387,6 +388,45 @@ fun DashboardScreen() {
         }
     }
 
+    // Starling: berkas resmi Minecraft (client, server, library, aset; ±500 MiB) diunduh launcher dengan dialog yang
+    // sama seperti instance Java, bukan oleh layar penyiapan Starling. Setelah selesai, PLAY membuka Starling, yang
+    // hanya menyiapkan game di HP (sekali saja). Tidak langsung dibuka: pemain perlu tahu penyiapan itu menyusul.
+    fun downloadStarlingFiles(inst: Instance) {
+        if (isDownloading) return
+        isDownloading = true
+        downloadTargetName = inst.name
+        dl.progress = 0f
+        dl.message = "Menyiapkan daftar berkas Starling..."
+
+        com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
+        downloadJob = scope.launch {
+            val res = StarlingFiles.download(context) { p ->
+                dl.progress = p.fraction
+                dl.message = starlingProgressMessage(p)
+            }
+            // Dibatalkan lewat tombol Batal: layar sudah dikembalikan oleh pemanggil, jangan disentuh lagi.
+            if (!isActive) return@launch
+
+            isDownloading = false
+            downloadJob = null
+            if (res.isSuccess) {
+                Toast.makeText(
+                    context,
+                    "Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                    context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
+                ).show()
+            }
+        }.also { job ->
+            job.invokeOnCompletion {
+                com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.stop(context)
+            }
+        }
+    }
+
     // Tombol Batal di dialog unduhan. Berkas yang sudah selesai tetap dipakai; tekan UNDUH untuk melanjutkan.
     fun cancelInstall() {
         downloadJob?.cancel()
@@ -409,9 +449,14 @@ fun DashboardScreen() {
             HorizonEngine.launch(context, inst, account)
             return
         }
-        // Starling (mesin Rust kedua): sama, tanpa JVM dan tanpa unduhan lewat launcher
+        // Starling (mesin Rust kedua): tanpa JVM. Berkas resmi game diunduh launcher dulu (dialog Amber); sesudahnya
+        // Starling dibuka dan menyiapkan game di HP.
         if (StarlingEngine.isEngine(inst.loader)) {
-            StarlingEngine.launch(context, inst, account)
+            if (StarlingFiles.needsDownload(context)) {
+                downloadStarlingFiles(inst)
+            } else {
+                StarlingEngine.launch(context, inst, account)
+            }
             return
         }
 
@@ -597,7 +642,11 @@ fun DashboardScreen() {
                                 onInstanceCreated = { newInst ->
                                     InstanceManager.createInstance(context, newInst)
                                     currentTab = "home"
-                                    if (newInst.isDownloaded) {
+                                    if (StarlingEngine.isEngine(newInst.loader) && StarlingFiles.needsDownload(context)) {
+                                        // Starling: berkas resmi game diunduh launcher, langsung setelah instance dibuat
+                                        Toast.makeText(context, "Instance ${newInst.name} dibuat. Mengunduh game...", Toast.LENGTH_SHORT).show()
+                                        downloadStarlingFiles(newInst)
+                                    } else if (newInst.isDownloaded) {
                                         // Mesin Horizon (Rust) tidak butuh unduhan lewat launcher
                                         Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
                                     } else {
@@ -1396,6 +1445,32 @@ private const val BG_ANIM_SIDE = 1280   // GIF/WebP bergerak: sisi terpanjang pa
 private class DownloadUiState {
     var progress by mutableFloatStateOf(0f)
     var message by mutableStateOf("")
+}
+
+/**
+ * Siap dimainkan? Instance Java: unduhan game lengkap. Starling: berkas resminya sudah diunduh (status ini dibaca
+ * dari berkas di disk, bukan dari penanda tersimpan di instance, karena semua instance Starling memakai berkas yang sama).
+ */
+private fun isInstanceReadyToPlay(context: Context, inst: Instance): Boolean =
+    if (StarlingEngine.isEngine(inst.loader)) {
+        StarlingFiles.ready(context)
+    } else {
+        inst.isDownloaded && InstanceManager.isInstanceDownloaded(context, inst)
+    }
+
+/** Teks dialog unduhan Starling: jumlah MB yang sudah diunduh, total, dan kecepatan bila sudah terukur. */
+private fun starlingProgressMessage(p: StarlingFiles.Progress): String {
+    if (p.preparing || p.bytesTotal <= 0L) return "Menyiapkan daftar berkas Starling..."
+    if (p.filesDone >= p.filesTotal && p.bytesDone >= p.bytesTotal) return "Menyelesaikan unduhan Starling..."
+    val mb = 1024L * 1024L
+    val done = p.bytesDone / mb
+    val total = p.bytesTotal / mb
+    val perSecondMb = p.bytesPerSecond.toDouble() / mb
+    return if (p.bytesPerSecond > 0L) {
+        "Mengunduh sumber daya Starling: $done dari $total MB (${"%.1f".format(java.util.Locale.US, perSecondMb)} MB/dtk)"
+    } else {
+        "Mengunduh sumber daya Starling: $done dari $total MB"
+    }
 }
 
 @Composable

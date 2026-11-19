@@ -259,7 +259,7 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log 
 ## Rencana berikutnya
 
 - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
-- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
+- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
 - Akun Ely.by.
 
 ## Dua mesin Rust: Horizon dan Starling
@@ -287,10 +287,13 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
 
 **Akun tanpa patch Rust.** `StarlingEngine` memakai antarmuka peluncur yang sudah ada di mesin: PLAY menulis `accounts/accounts.json` (pemain offline), `amber-session.json` (sesi Microsoft, dibaca sekali lalu dihapus mesin), dan `horizon-args.txt` (`--session-file`, `AMBER_EMBEDDED=1`).
 
+**Unduhan berkas resmi lewat launcher (`StarlingFiles`).** Tombol UNDUH di Home (dan otomatis begitu instance Starling dibuat) mengunduh berkas resmi Minecraft 26.3 (client, server, library, aset; sekitar 500 MiB) dengan dialog unduhan Amber, bukan layar Starling. Kotlin mengerjakan langkah yang sama dengan `accounts::download_files()` di sumber Starling: berkas versi diambil dari piston-meta dengan hash yang dipatok, sidik jari jar client dan server harus sama dengan yang dipatok, library disaring untuk Linux, aset dari `resources.download.minecraft.net`, semuanya ditaruh di `files/starling/minecraft/` dengan tata letak launcher resmi, dan `starling-files.json` ditulis paling akhir dengan isi yang sama dengan buatan mesin. Begitu penanda itu ada, mesin menganggap berkasnya siap dan langsung menyiapkan game di HP tanpa menanyakan akun atau mengunduh lagi. Unduhan bisa dilanjutkan (berkas yang sudah benar dilewati). Patokannya ada di `app/src/main/assets/starling-pins.json`, salinan blok `minecraft` dari `research-lock.json` sumber Starling; `scripts/build-horizon-engine.sh` menghentikan build Starling bila salinan itu beda dengan sumber yang dibangun, jadi **saat `commit=` di `starling-engine.properties` dinaikkan, salin ulang patokannya**. Tanpa berkas patokan (atau bila versinya bukan 26.3), launcher tidak mengunduh dan mesin mengunduh sendiri seperti sebelumnya.
+
 **Yang belum (dan perlu diketahui):**
-- Penyiapan game pertama (unduhan sekitar 500 MiB dan penyiapan di HP) memakai layar Starling, sekali saja. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
+- Penyiapan game di HP sesudah unduhan (unduh Java 25, buka bungkusannya, jalankan `horizon-prepare` atas berkas Mojang menjadi folder resources; sekali saja) masih memakai layar Starling. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
 - Layar Mod Amber memperlakukan Starling seperti Horizon: folder `shaderpacks`, `resourcepacks`, dan `horizon-mods`, serta kunci `pickedShaderPack` dan `resourcePacks` sama di kedua mesin (satu garis keturunan). Daftar modul bawaan di Amber masih daftar Horizon, jadi "Minimap" muncul untuk Starling padahal Starling tidak memasangnya di Android (mengaktifkannya tidak berefek).
 - Fitur mod native Starling yang mencari `libhorizon_android.so` memakai nama lama; pustakanya diganti nama di Amber. Dampaknya hanya pada mod native.
 - Diagnostik Starling membaca folder data biasa, bukan `files/starling`. Mesin 32-bit belum ada.
 - Fork itu ditulis tangan pihak ketiga, dan `SYNC.md`-nya menyebut hasil penggabungannya belum dijalankan di HP. Commit dipatok; periksa diff-nya sebelum mengganti `commit=`. Pemeriksaan awal terhadap upstream hanya menemukan dua URL baru di kode Rust (penunjuk server kompilasi mod native di repo fork, dan tautan donasi). Itu bukan audit.
 - Build mesin Starling belum pernah dijalankan di CI dan belum diuji di perangkat. Run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
+- `StarlingFiles` ditulis dari membaca sumber Starling dan belum dijalankan di perangkat. Bila mesin menolak berkas hasil unduhan launcher, kirim log-nya; jalan keluar sementara: build tanpa `assets/starling-pins.json` mengembalikan unduhan ke mesin.

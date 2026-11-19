@@ -91,10 +91,16 @@ class MainActivity : ComponentActivity() {
 
         handleIncomingAddonIntent(intent)
 
-        // Initialize core engines
+        // Initialize core engines (waktu tiap langkah dicatat ke log launcher untuk mencari yang lambat di HP kelas bawah)
+        val initStart = System.nanoTime()
         AccountManager.init(this)
+        val tAccounts = System.nanoTime()
         InstanceManager.init(this)
+        val tInstances = System.nanoTime()
         SettingsManager.init(this)
+        val tSettings = System.nanoTime()
+        // Di proses launcher, pengaturan ditulis di thread latar (slider tidak lagi menunggu fsync di thread UI)
+        SettingsManager.enableDeferredWrites()
         // Terapkan warna aksen dan gaya tampilan tersimpan sebelum layar pertama digambar
         SettingsManager.settings.value.let {
             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
@@ -103,6 +109,7 @@ class MainActivity : ComponentActivity() {
         }
         com.israadev.nuxlauncher.core.device.PhysicalMouseChecker.initChecker(this)
         com.israadev.nuxlauncher.core.controls.ControlLayoutManager.init(this)
+        val tAll = System.nanoTime()
         val appCtx = applicationContext
         bgExecutor.execute {
             try {
@@ -176,6 +183,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // Catatan waktu start dingin: dari proses dimulai sampai kerangka layar pertama siap digambar.
+        // Hanya pada pembuatan pertama; Activity yang dibuat ulang (mis. setelah proses dimatikan) tidak mewakili start dingin.
+        if (savedInstanceState == null) window.decorView.post {
+            val sinceProcessMs = android.os.SystemClock.elapsedRealtime() - android.os.Process.getStartElapsedRealtime()
+            com.israadev.nuxlauncher.core.crash.LauncherLog.i(
+                "Mulai",
+                "Layar pertama siap ${sinceProcessMs} ms setelah proses dimulai (akun ${(tAccounts - initStart) / 1_000_000} ms, " +
+                    "instance ${(tInstances - tAccounts) / 1_000_000} ms, pengaturan ${(tSettings - tInstances) / 1_000_000} ms, " +
+                    "total init ${(tAll - initStart) / 1_000_000} ms)"
+            )
+            reportFullyDrawn()
+        }
     }
 
     override fun onResume() {
@@ -213,6 +233,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onStop() {
+        // Aplikasi keluar dari layar (bisa dimatikan sistem kapan saja): tuntaskan penulisan pengaturan yang tertunda
+        SettingsManager.flush()
         UpdateManager.onBackground()
         super.onStop()
     }

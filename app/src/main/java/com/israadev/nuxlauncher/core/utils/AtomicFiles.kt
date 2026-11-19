@@ -8,12 +8,19 @@ import java.io.FileOutputStream
  * tertinggal setengah tertulis bila proses dimatikan sistem tepat saat menulis (sering terjadi di HP RAM kecil).
  */
 object AtomicFiles {
-    fun writeText(target: File, text: String) {
+    /**
+     * [sync] = tunggu data benar-benar sampai ke penyimpanan (fsync) sebelum rename. Aman untuk data yang tidak boleh
+     * hilang; mahal di penyimpanan HP kelas bawah. Berkas turunan yang bisa dibuat ulang dari berkas lain boleh `false`:
+     * rename tetap atomik, jadi paling buruk berkasnya hilang, tidak pernah setengah tertulis.
+     */
+    fun writeText(target: File, text: String, sync: Boolean = true) {
         val tmp = File(target.parentFile, target.name + ".tmp")
         FileOutputStream(tmp).use { out ->
             out.write(text.toByteArray(Charsets.UTF_8))
             out.flush()
-            try { out.fd.sync() } catch (_: Exception) {}
+            if (sync) {
+                try { out.fd.sync() } catch (_: Exception) {}
+            }
         }
         if (!tmp.renameTo(target)) {
             // Sebagian penyimpanan menolak rename ke berkas yang sudah ada: jatuh ke tulis biasa.

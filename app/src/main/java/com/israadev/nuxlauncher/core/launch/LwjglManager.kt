@@ -100,6 +100,9 @@ object LwjglManager {
         return jar
     }
 
+    // Dikunci: pemanasan di latar (setelah unduh) dan PLAY bisa tiba bersamaan, dan keduanya tidak boleh
+    // menyalin berkas yang sama sekaligus.
+    @Synchronized
     fun prepareLwjgl(context: Context, lwjglVersion: String = "3.3.3"): File {
         val targetDir = File(context.filesDir, "components/lwjgl/$lwjglVersion")
         val nativesDir = File(targetDir, "natives")

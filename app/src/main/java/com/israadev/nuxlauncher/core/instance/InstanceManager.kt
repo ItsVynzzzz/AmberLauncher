@@ -296,17 +296,21 @@ object InstanceManager {
     }
 
     private fun initLocked(context: Context) {
+        val startNs = System.nanoTime()
         appContext = context.applicationContext
         migrateOldStorage(context)
 
         val file = getInstancesFile(context)
         val loadedList = mutableListOf<Instance>()
+        // Daftar persis seperti terbaca dari berkas; null bila berkas tidak ada atau tidak terbaca.
+        var rawLoaded: List<Instance>? = null
         if (file.exists()) {
             try {
                 val json = file.readText()
                 val type = object : TypeToken<List<Instance>>() {}.type
                 val list: List<Instance>? = gson.fromJson(json, type)
                 if (list != null) {
+                    rawLoaded = list
                     loadedList.addAll(list.filterNot { it.id == "instance_default" || it.name == "Minecraft 1.20.4" })
                 }
             } catch (e: Exception) {
@@ -352,7 +356,18 @@ object InstanceManager {
 
         _selectedInstance.value = targetInstance
         targetInstance?.let { saveSelectedInstanceId(context, it.id) }
-        save(context)
+
+        // Dulu setiap init menulis ulang instances.json dan instance.json SEMUA instance (masing-masing dengan fsync) di
+        // thread UI, padahal biasanya tidak ada yang berubah. Di HP kelas bawah itu bisa memakan ratusan milidetik di
+        // setiap pembukaan. Sekarang hanya menulis bila daftarnya memang berubah atau ada instance.json yang hilang.
+        val needsSave = rawLoaded == null || verifiedList != rawLoaded || folderInstances.isNotEmpty() ||
+            verifiedList.any { !File(getInstanceDir(context, it), "instance.json").exists() }
+        if (needsSave) save(context)
+        LauncherLog.i(
+            "Mulai",
+            "InstanceManager.init ${(System.nanoTime() - startNs) / 1_000_000} ms: ${verifiedList.size} instance, " +
+                if (needsSave) "daftar disimpan ulang" else "tidak ada yang perlu ditulis"
+        )
     }
 
     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
@@ -461,15 +476,32 @@ object InstanceManager {
         }
     }
 
+    // Isi terakhir yang ditulis proses ini, supaya berkas yang tidak berubah tidak ditulis ulang.
+    // Dikaitkan dengan jalurnya: setelah data dipindahkan ke folder lain, berkas di sana tetap ditulis sendiri.
+    private var lastInstancesJson: String? = null
+    private var lastInstancesPath: String? = null
+    private val lastInstanceJson = HashMap<String, String>()
+
+    @Synchronized
     private fun save(context: Context) {
         try {
             val file = getInstancesFile(context)
-            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_instances.value))
-            // Also sync each instance.json in its isolated directory
+            val json = gson.toJson(_instances.value)
+            // instances.json adalah sumber kebenaran daftar: ditulis dengan fsync, dan hanya bila isinya berubah.
+            if (json != lastInstancesJson || file.path != lastInstancesPath || !file.exists()) {
+                com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
+                lastInstancesJson = json
+                lastInstancesPath = file.path
+            }
+            // instance.json per folder hanyalah salinan yang bisa dibuat ulang dari daftar di atas (dipakai saat
+            // memulihkan instance yang hilang dari daftar): cukup rename atomik tanpa fsync, dan lewati yang tidak berubah.
             _instances.value.forEach { inst ->
                 try {
-                    val instDir = getInstanceDir(context, inst)
-                    com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(File(instDir, "instance.json"), gson.toJson(inst))
+                    val target = File(getInstanceDir(context, inst), "instance.json")
+                    val instJson = gson.toJson(inst)
+                    if (lastInstanceJson[target.path] == instJson && target.exists()) return@forEach
+                    com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(target, instJson, sync = false)
+                    lastInstanceJson[target.path] = instJson
                 } catch (_: Exception) {}
             }
         } catch (e: Exception) {

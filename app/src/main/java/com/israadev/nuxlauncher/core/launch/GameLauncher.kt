@@ -17,8 +17,13 @@ import com.israadev.nuxlauncher.ui.i18n.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
@@ -29,7 +34,18 @@ object GameLauncher {
     // Batas menunggu pembaruan sesi Microsoft sebelum game tetap dijalankan.
     private const val SESSION_REFRESH_TIMEOUT_MS = 12_000L
     private val refreshScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val refreshing = AtomicBoolean(false)
+    private val busyFlag = AtomicBoolean(false)
+    private val _busy = MutableStateFlow(false)
+
+    /**
+     * True selama PLAY sedang diproses (pembaruan sesi Microsoft + persiapan berkas). Tombol PLAY memakainya
+     * untuk menampilkan "Menyiapkan..." dan menolak ketukan ganda. Persiapan dulu berjalan di thread UI sehingga
+     * layar membeku (pembukaan pertama menyalin LWJGL puluhan MB); kini berjalan di thread latar.
+     */
+    val busy: StateFlow<Boolean> = _busy.asStateFlow()
+
+    /** Dilempar bila game memang belum bisa dimulai dan penggunanya perlu diberi tahu apa langkah berikutnya. */
+    private class LaunchBlocked(message: String) : Exception(message)
 
     /**
      * Menjalankan game. Untuk akun Microsoft yang token Minecraft-nya sudah lama, sesi diperbarui
@@ -51,66 +67,106 @@ object GameLauncher {
             "PLAY ditekan: instance=" + instance.name + ", Minecraft " + instance.mcVersion +
                 ", loader=" + instance.loader + " " + instance.loaderVersion + ", akun=" + account.safeAccountType
         )
-        if (!MicrosoftAuthService.needsRefresh(account)) {
-            launchNow(context, instance, account)
+        // Ketukan ganda pada tombol main tidak boleh memulai dua persiapan (atau dua pembaruan sesi) sekaligus.
+        if (!busyFlag.compareAndSet(false, true)) {
+            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan")
             return
         }
-        // Ketukan ganda pada tombol main tidak boleh memulai dua pembaruan sekaligus.
-        if (!refreshing.compareAndSet(false, true)) {
-            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: pembaruan sesi Microsoft masih berjalan")
-            return
-        }
+        _busy.value = true
 
         val appContext = context.applicationContext
-        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
         refreshScope.launch {
-            var launchAccount = account
             try {
-                // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
-                val job = async(Dispatchers.IO) {
-                    MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
-                        result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
-                    }
+                var launchAccount = account
+                if (MicrosoftAuthService.needsRefresh(account)) {
+                    launchAccount = refreshSession(appContext, account)
                 }
-                val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
-                val fresh = result?.getOrNull()
-                if (fresh != null) {
-                    launchAccount = fresh
-                    LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum main")
-                } else {
-                    LauncherLog.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
-                    Toast.makeText(
-                        appContext,
-                        "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            } catch (e: Exception) {
-                LauncherLog.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
+                launchPreparedOffMain(appContext, instance, launchAccount)
             } finally {
-                refreshing.set(false)
+                busyFlag.set(false)
+                _busy.value = false
             }
-            launchNow(appContext, instance, launchAccount)
         }
     }
 
-    private fun launchNow(context: Context, instance: Instance, account: UserAccount) {
+    /** Memperbarui token Microsoft; bila gagal atau melewati batas waktu, mengembalikan akun semula. */
+    private suspend fun refreshSession(appContext: Context, account: UserAccount): UserAccount {
+        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
         try {
-            launchPrepared(context, instance, account)
+            // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
+            val job = refreshScope.async(Dispatchers.IO) {
+                MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
+                    result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
+                }
+            }
+            val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
+            val fresh = result?.getOrNull()
+            if (fresh != null) {
+                LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum main")
+                return fresh
+            }
+            LauncherLog.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
+            Toast.makeText(
+                appContext,
+                "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
+                Toast.LENGTH_LONG
+            ).show()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            LauncherLog.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
+        }
+        return account
+    }
+
+    /** Menyiapkan di thread latar, lalu membuka GameActivity di thread utama. */
+    private suspend fun launchPreparedOffMain(appContext: Context, instance: Instance, account: UserAccount) {
+        try {
+            val t0 = System.nanoTime()
+            val intent = withContext(Dispatchers.IO) {
+                // Pengaturan yang masih tertunda ditulis dulu: proses game membaca berkasnya sendiri.
+                com.israadev.nuxlauncher.core.settings.SettingsManager.flush()
+                launchPrepared(appContext, instance, account)
+            }
+            LauncherLog.event("Peluncuran", "Persiapan selesai dalam ${(System.nanoTime() - t0) / 1_000_000} ms")
+            appContext.startActivity(intent)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (b: LaunchBlocked) {
+            Toast.makeText(appContext, b.message ?: "Game belum bisa dimulai.", Toast.LENGTH_LONG).show()
         } catch (t: Throwable) {
             LauncherLog.e("Peluncuran", "Persiapan ${instance.name} gagal sebelum game dimulai", t)
             // Kehabisan memori JVM tidak aman dilanjutkan: biarkan layar crash launcher yang menanganinya.
             if (t is VirtualMachineError) throw t
             // Galat lain (berkas versi rusak, library hilang, disk penuh) tidak boleh menjatuhkan seluruh launcher.
             Toast.makeText(
-                context.applicationContext,
+                appContext,
                 "Game belum bisa dimulai: ${t.message ?: t.javaClass.simpleName}. Rincian ada di log launcher.",
                 Toast.LENGTH_LONG
             ).show()
         }
     }
 
-    private fun launchPrepared(context: Context, instance: Instance, account: UserAccount) {
+    /**
+     * Menyalin LWJGL bawaan ke penyimpanan aplikasi (hanya sekali per versi) di latar, supaya PLAY pertama
+     * tidak menunggu salinan puluhan MB. Aman dipanggil kapan saja: tidak melakukan apa pun bila sudah lengkap.
+     */
+    fun prewarm(context: Context, instance: Instance) {
+        val appContext = context.applicationContext
+        refreshScope.launch(Dispatchers.IO) {
+            try {
+                val versionDir = File(InstanceManager.getVersionsDir(appContext), instance.mcVersion)
+                val versionJson = File(versionDir, "${instance.mcVersion}.json")
+                val version = LwjglManager.getLwjglVersion(instance.mcVersion, versionJson)
+                LwjglManager.getLwjglJars(appContext, version, withLwjglx = LwjglManager.usesLwjgl2(instance.mcVersion, versionJson))
+            } catch (t: Throwable) {
+                if (t is VirtualMachineError) throw t
+                LauncherLog.w("Peluncuran", "Pemanasan LWJGL dilewati: ${t.message}", t)
+            }
+        }
+    }
+
+    private fun launchPrepared(context: Context, instance: Instance, account: UserAccount): Intent {
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
         val versionDir = File(InstanceManager.getVersionsDir(context), instance.mcVersion)
         val versionJson = File(versionDir, "${instance.mcVersion}.json")
@@ -154,12 +210,7 @@ object GameLauncher {
             }
 
             if (fabricProfile == null) {
-                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
-                    context,
-                    "Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
-                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
-                ).show()
-                return
+                throw LaunchBlocked("Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!")
             }
 
             fabricProfile.mainClass?.let { mainClass = it } ?: run {
@@ -180,12 +231,7 @@ object GameLauncher {
                 )
             }
             if (forgeLaunch == null) {
-                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
-                    context,
-                    "Profil ${forgeFlavor.displayName} (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
-                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
-                ).show()
-                return
+                throw LaunchBlocked("Profil ${forgeFlavor.displayName} (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!")
             }
             mainClass = forgeLaunch.mainClass
         }
@@ -365,7 +411,7 @@ object GameLauncher {
                 "mainClass=$mainClass, mod=${installedMods.size}"
         )
 
-        val intent = Intent(context, GameActivity::class.java).apply {
+        return Intent(context, GameActivity::class.java).apply {
             putExtra(GameActivity.EXTRA_INSTANCE_NAME, instance.name)
             putExtra(GameActivity.EXTRA_MC_VERSION, instance.mcVersion)
             putExtra(GameActivity.EXTRA_LOADER, instance.loader)
@@ -394,7 +440,5 @@ object GameLauncher {
             }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-
-        context.startActivity(intent)
     }
 }

@@ -1,0 +1,10 @@
+[id]
+~ Slider dan isian di Pengaturan tidak lagi tersendat: penyimpanan dikerjakan di latar.
+~ Launcher terbuka lebih cepat di HP kelas bawah (tidak lagi menulis ulang semua data instance setiap dibuka).
+~ Tombol PLAY menyiapkan game di latar dan menampilkan "Memuat", tidak lagi membuat layar membeku.
+~ LWJGL disalin sekali setelah unduhan selesai, jadi PLAY pertama tidak menunggu lama.
+[en]
+~ Sliders and fields in Settings no longer stutter: saving happens in the background.
+~ The launcher opens faster on low-end phones (it no longer rewrites every instance's data on each start).
+~ PLAY prepares the game in the background and shows "Loading" instead of freezing the screen.
+~ LWJGL is copied once after a download finishes, so the first PLAY does not wait.

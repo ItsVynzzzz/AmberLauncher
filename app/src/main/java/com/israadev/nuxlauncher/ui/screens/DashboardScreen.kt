@@ -106,6 +106,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -348,6 +349,8 @@ fun DashboardScreen() {
                 dl.message = msg
             }
             if (!isActive) return@launch
+            // Salin LWJGL di latar sekarang (sekali per versi) supaya PLAY pertama tidak menunggu salinan puluhan MB
+            if (res.isSuccess) GameLauncher.prewarm(context, inst)
 
             // Game dan loader sudah terpasang; bila ada modpack yang menunggu, pasang isinya sekarang
             val instDir = InstanceManager.getInstanceDir(context, inst)
@@ -880,6 +883,8 @@ private fun HomeScene(
     modifier: Modifier = Modifier
 ) {
     val freeRamMb = rememberFreeRamMb()
+    // PLAY sedang diproses (persiapan berkas di thread latar): tombol menampilkan status dan tidak menerima ketukan lagi
+    val launching by GameLauncher.busy.collectAsState()
     val config = LocalConfiguration.current
     // Ambang dihitung dari ukuran rancangan (ukuran layar dibagi skala UI), bukan dp mentah. Skala UI sudah menyamakan
     // tinggi rancangan di semua HP, jadi judul dan tata letak punya proporsi yang sama di HP 360 dp maupun 392 dp.
@@ -1208,9 +1213,10 @@ private fun HomeScene(
                         )
                         if (instance != null) {
                             HomeMainButton(
-                                text = if (isReady) "PLAY" else "UNDUH",
+                                text = if (launching) "MEMUAT" else if (isReady) "PLAY" else "UNDUH",
                                 icon = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
                                 onClick = onPlay,
+                                enabled = !launching,
                                 modifier = Modifier.width(mainWidth)
                             )
                         } else {
@@ -1385,15 +1391,17 @@ private fun HomeMainButton(
     text: String,
     icon: ImageVector,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
-    val lift by animateDpAsState(if (pressed) 0.dp else 4.dp, label = "homeMainLift")
+    val lift by animateDpAsState(if (pressed && enabled) 0.dp else 4.dp, label = "homeMainLift")
     Box(
         modifier = modifier
             .height(64.dp)
-            .clickable(interactionSource = interaction, indication = null) { onClick() }
+            .alpha(if (enabled) 1f else 0.65f)
+            .clickable(enabled = enabled, interactionSource = interaction, indication = null) { onClick() }
     ) {
         Box(
             modifier = Modifier

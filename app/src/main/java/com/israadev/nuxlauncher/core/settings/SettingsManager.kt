@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 object SettingsManager {
     /** Nomor gelombang penyederhanaan bawaan terbaru (lihat [applyPerfDefaults]). */
@@ -21,8 +24,51 @@ object SettingsManager {
         return File(context.filesDir, "settings.json")
     }
 
+    // --- Penulisan ke disk -------------------------------------------------------------------
+    // Menyimpan = tulis berkas sementara + fsync + rename. Di penyimpanan HP kelas bawah itu bisa memakan
+    // puluhan hingga ratusan milidetik, dan dulu dikerjakan di thread UI pada SETIAP langkah slider atau
+    // ketukan keyboard, sehingga geser slider terasa tersendat. Di proses utama penulisan kini ditunda
+    // sebentar dan digabung (hanya nilai terbaru yang ditulis) di thread latar; [flush] menuntaskannya.
+    private const val WRITE_DELAY_MS = 300L
+    private val writeLock = Any()
+    private val writeScheduled = AtomicBoolean(false)
+    @Volatile private var settingsFile: File? = null
+    @Volatile private var initialized = false
+    @Volatile private var deferWrites = false
+    private var lastWrittenJson: String? = null
+
+    private val writer: ScheduledThreadPoolExecutor by lazy {
+        ScheduledThreadPoolExecutor(1) { r ->
+            Thread(r, "settings-writer").apply { isDaemon = true; priority = Thread.MIN_PRIORITY }
+        }.apply {
+            setKeepAliveTime(5, TimeUnit.SECONDS)
+            allowCoreThreadTimeOut(true)
+        }
+    }
+
+    /**
+     * Menyalakan penulisan tertunda untuk proses ini. Dipanggil hanya oleh proses utama (launcher); proses
+     * game dan alur pemulihan tetap menulis langsung supaya tidak ada perubahan yang hilang saat proses ditutup.
+     */
+    fun enableDeferredWrites() {
+        deferWrites = true
+    }
+
+    /** Menuntaskan penulisan yang masih tertunda. Murah bila tidak ada yang tertunda (tidak menyentuh disk). */
+    fun flush() {
+        if (!initialized) return
+        writeNow()
+    }
+
     fun init(context: Context) {
+        // Init ulang (mis. dari alur pemulihan) membaca berkas lagi: tuntaskan dulu penulisan yang tertunda
+        // supaya perubahan terakhir di memori tidak tertimpa isi berkas yang lebih lama.
+        flush()
         val file = getSettingsFile(context)
+        settingsFile = file
+        // Isi berkas bisa saja diubah proses lain (mis. tombol HUD di dalam game): jangan lewati tulis berikutnya
+        // hanya karena nilainya sama dengan yang dulu kita tulis.
+        synchronized(writeLock) { lastWrittenJson = null }
         if (file.exists()) {
             try {
                 val json = file.readText()
@@ -30,6 +76,7 @@ object SettingsManager {
                 if (loaded != null) {
                     val migrated = applyPerfDefaults(loaded)
                     _settings.value = migrated
+                    initialized = true
                     if (migrated !== loaded) save(context)
                     return
                 }
@@ -39,6 +86,7 @@ object SettingsManager {
         }
 
         _settings.value = defaultSettingsFor(context)
+        initialized = true
         save(context)
     }
 
@@ -118,11 +166,38 @@ object SettingsManager {
     }
 
     private fun save(context: Context) {
-        try {
-            val file = getSettingsFile(context)
-            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_settings.value))
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (settingsFile == null) settingsFile = getSettingsFile(context)
+        if (!deferWrites) {
+            writeNow()
+            return
+        }
+        // Gabungkan: selama satu jadwal menunggu, perubahan berikutnya cukup memperbarui nilai di memori;
+        // yang ditulis nanti selalu nilai terbaru.
+        if (writeScheduled.compareAndSet(false, true)) {
+            try {
+                writer.schedule(Runnable {
+                    writeScheduled.set(false)
+                    writeNow()
+                }, WRITE_DELAY_MS, TimeUnit.MILLISECONDS)
+            } catch (e: Exception) {
+                writeScheduled.set(false)
+                writeNow()
+            }
+        }
+    }
+
+    /** Menulis nilai terbaru bila berbeda dari yang terakhir ditulis. Aman dipanggil dari thread mana pun. */
+    private fun writeNow() {
+        val file = settingsFile ?: return
+        synchronized(writeLock) {
+            try {
+                val json = gson.toJson(_settings.value)
+                if (json == lastWrittenJson) return
+                com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
+                lastWrittenJson = json
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

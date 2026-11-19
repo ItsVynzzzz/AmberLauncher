@@ -1,0 +1,824 @@
+diff --git a/app/src/main/assets/lang/en/horizon.tsv b/app/src/main/assets/lang/en/horizon.tsv
+index 441c18f..ee45363 100644
+--- a/app/src/main/assets/lang/en/horizon.tsv
++++ b/app/src/main/assets/lang/en/horizon.tsv
+@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon source: native Rust e
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth source: classic shaders, compatibility with the Rust engine is still limited.
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon source: resource packs made or tested for the Rust engine.
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	Try changing the keyword or switch to the Modrinth source
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	Preparing the Starling file list...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	Downloading Starling resources: {0} of {1} MB ({2} MB/s)
++Mengunduh sumber daya Starling: {0} dari {1} MB	Downloading Starling resources: {0} of {1} MB
++Menyelesaikan unduhan Starling...	Finishing the Starling download...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Starling download finished. Press PLAY; the first time, Starling prepares the game on your phone, just once.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Supports Minecraft {0} only. The launcher downloads the game resources (about 500 MiB) with the DOWNLOAD button; after that, Starling prepares them on your phone just once. This engine is separate from Horizon, with its own shaders, mods and menus.
+diff --git a/app/src/main/assets/lang/es/horizon.tsv b/app/src/main/assets/lang/es/horizon.tsv
+index 271c658..d8bc263 100644
+--- a/app/src/main/assets/lang/es/horizon.tsv
++++ b/app/src/main/assets/lang/es/horizon.tsv
+@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Fuente Horizon: shaders nativ
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fuente Modrinth: shaders cl\u00e1sicos; la compatibilidad con el motor Rust a\u00fan es limitada.
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fuente Horizon: resource packs creados o probados para el motor Rust.
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	Prueba a cambiar la palabra clave o cambia a la fuente Modrinth
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	Preparando la lista de archivos de Starling...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	Descargando recursos de Starling: {0} de {1} MB ({2} MB/s)
++Mengunduh sumber daya Starling: {0} dari {1} MB	Descargando recursos de Starling: {0} de {1} MB
++Menyelesaikan unduhan Starling...	Finalizando la descarga de Starling...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Descarga de Starling terminada. Pulsa PLAY; la primera vez, Starling prepara el juego en tu tel\u00e9fono, una sola vez.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Solo admite Minecraft {0}. El launcher descarga los recursos del juego (unos 500 MiB) con el bot\u00f3n DESCARGAR; despu\u00e9s, Starling los prepara en tu tel\u00e9fono una sola vez. Este motor es independiente de Horizon, con sus propios shaders, mods y men\u00fas.
+diff --git a/app/src/main/assets/lang/fil/horizon.tsv b/app/src/main/assets/lang/fil/horizon.tsv
+index b0c02bd..f638535 100644
+--- a/app/src/main/assets/lang/fil/horizon.tsv
++++ b/app/src/main/assets/lang/fil/horizon.tsv
+@@ -66,3 +66,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon source: mga native sh
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth source: mga klasikong shader, limitado pa rin ang compatibility sa Rust engine.
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon source: mga resource pack na ginawa o sinubukan para sa Rust engine.
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	Subukang palitan ang keyword o lumipat sa Modrinth source
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	Inihahanda ang listahan ng mga file ng Starling...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	Dina-download ang mga resource ng Starling: {0} sa {1} MB ({2} MB/seg)
++Mengunduh sumber daya Starling: {0} dari {1} MB	Dina-download ang mga resource ng Starling: {0} sa {1} MB
++Menyelesaikan unduhan Starling...	Tinatapos ang pag-download ng Starling...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Tapos na ang pag-download ng Starling. Pindutin ang PLAY; sa unang beses, ihahanda ng Starling ang laro sa telepono, isang beses lang.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Minecraft {0} lang ang sinusuportahan. Ang launcher ang nagda-download ng mga resource ng game (mga 500 MiB) gamit ang I-DOWNLOAD na button; pagkatapos, ihahanda ito ng Starling sa telepono nang isang beses lang. Hiwalay ang engine na ito sa Horizon, may sarili nitong shader, mod, at menu.
+diff --git a/app/src/main/assets/lang/pt/horizon.tsv b/app/src/main/assets/lang/pt/horizon.tsv
+index 25ef2f1..f6fed4a 100644
+--- a/app/src/main/assets/lang/pt/horizon.tsv
++++ b/app/src/main/assets/lang/pt/horizon.tsv
+@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Fonte Horizon: shaders nativo
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Fonte Modrinth: shaders cl\u00e1ssicos; a compatibilidade com o motor Rust ainda \u00e9 limitada.
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Fonte Horizon: pacotes de recursos criados ou testados para o motor Rust.
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	Tente mudar a palavra-chave ou trocar para a fonte Modrinth
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	Preparando a lista de arquivos do Starling...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	Baixando recursos do Starling: {0} de {1} MB ({2} MB/s)
++Mengunduh sumber daya Starling: {0} dari {1} MB	Baixando recursos do Starling: {0} de {1} MB
++Menyelesaikan unduhan Starling...	Concluindo o download do Starling...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Download do Starling conclu\u00eddo. Toque em PLAY; na primeira vez, o Starling prepara o jogo no celular, apenas uma vez.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	S\u00f3 \u00e9 compat\u00edvel com o Minecraft {0}. O launcher baixa os recursos do jogo (cerca de 500 MiB) pelo bot\u00e3o BAIXAR; depois, o Starling os prepara no celular uma \u00fanica vez. Este motor \u00e9 separado do Horizon, com shaders, mods e menus pr\u00f3prios.
+diff --git a/app/src/main/assets/lang/th/horizon.tsv b/app/src/main/assets/lang/th/horizon.tsv
+index 49f578c..9e3a5a7 100644
+--- a/app/src/main/assets/lang/th/horizon.tsv
++++ b/app/src/main/assets/lang/th/horizon.tsv
+@@ -66,3 +66,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	แหล่ง Horizon: shad
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	แหล่ง Modrinth: shader แบบคลาสสิก ความเข้ากันได้กับเอนจิน Rust ยังจำกัด
+ Tidak ada berkas yang cocok di versi ini.	ไม่มีไฟล์ที่ตรงกันในเวอร์ชันนี้
+ Ukuran berkas tidak sama dengan yang tertulis di katalog, jadi tidak dipasang.	ขนาดไฟล์ไม่ตรงกับที่ระบุในแคตตาล็อก จึงไม่ได้ติดตั้ง
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	กำลังเตรียมรายการไฟล์ของ Starling...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	กำลังดาวน์โหลดทรัพยากรของ Starling: {0} จาก {1} MB ({2} MB/วินาที)
++Mengunduh sumber daya Starling: {0} dari {1} MB	กำลังดาวน์โหลดทรัพยากรของ Starling: {0} จาก {1} MB
++Menyelesaikan unduhan Starling...	กำลังดาวน์โหลด Starling ให้เสร็จสิ้น...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	ดาวน์โหลด Starling เสร็จแล้ว กด PLAY ครั้งแรก Starling จะเตรียมเกมบนมือถือ เพียงครั้งเดียว
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	รองรับเฉพาะ Minecraft {0} ตัวเปิดเกมจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) ด้วยปุ่มดาวน์โหลด หลังจากนั้น Starling จะเตรียมบนมือถือเพียงครั้งเดียว เอนจินนี้แยกจาก Horizon และมีเชเดอร์ ม็อด และเมนูของตัวเอง
+diff --git a/app/src/main/assets/lang/vi/horizon.tsv b/app/src/main/assets/lang/vi/horizon.tsv
+index d4ff356..243edad 100644
+--- a/app/src/main/assets/lang/vi/horizon.tsv
++++ b/app/src/main/assets/lang/vi/horizon.tsv
+@@ -70,3 +70,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Ngu\u1ed3n Horizon: shader g\
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Ngu\u1ed3n Modrinth: shader c\u1ed5 \u0111i\u1ec3n, kh\u1ea3 n\u0103ng t\u01b0\u01a1ng th\u00edch v\u1edbi engine Rust v\u1eabn c\u00f2n h\u1ea1n ch\u1ebf.
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Ngu\u1ed3n Horizon: resource pack \u0111\u01b0\u1ee3c t\u1ea1o ho\u1eb7c th\u1eed nghi\u1ec7m cho engine Rust.
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	H\u00e3y th\u1eed \u0111\u1ed5i t\u1eeb kh\u00f3a ho\u1eb7c chuy\u1ec3n sang ngu\u1ed3n Modrinth
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	\u0110ang chu\u1ea9n b\u1ecb danh s\u00e1ch t\u1ec7p c\u1ee7a Starling...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	\u0110ang t\u1ea3i t\u00e0i nguy\u00ean Starling: {0} tr\u00ean {1} MB ({2} MB/gi\u00e2y)
++Mengunduh sumber daya Starling: {0} dari {1} MB	\u0110ang t\u1ea3i t\u00e0i nguy\u00ean Starling: {0} tr\u00ean {1} MB
++Menyelesaikan unduhan Starling...	\u0110ang ho\u00e0n t\u1ea5t t\u1ea3i Starling...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	\u0110\u00e3 t\u1ea3i xong Starling. Nh\u1ea5n PLAY; l\u1ea7n \u0111\u1ea7u, Starling s\u1ebd chu\u1ea9n b\u1ecb game tr\u00ean \u0111i\u1ec7n tho\u1ea1i, ch\u1ec9 m\u1ed9t l\u1ea7n.
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Ch\u1ec9 h\u1ed7 tr\u1ee3 Minecraft {0}. Launcher t\u1ea3i t\u00e0i nguy\u00ean game (kho\u1ea3ng 500 MiB) b\u1eb1ng n\u00fat T\u1ea2I XU\u1ed0NG; sau \u0111\u00f3 Starling chu\u1ea9n b\u1ecb ch\u00fang tr\u00ean \u0111i\u1ec7n tho\u1ea1i m\u1ed9t l\u1ea7n duy nh\u1ea5t. Engine n\u00e0y t\u00e1ch bi\u1ec7t v\u1edbi Horizon, c\u00f3 shader, mod v\u00e0 menu ri\u00eang.
+diff --git a/app/src/main/assets/lang/zh/horizon.tsv b/app/src/main/assets/lang/zh/horizon.tsv
+index f415817..a1fcb49 100644
+--- a/app/src/main/assets/lang/zh/horizon.tsv
++++ b/app/src/main/assets/lang/zh/horizon.tsv
+@@ -66,3 +66,10 @@ Sumber Horizon: shader asli mesin Rust (.hshader).	Horizon 来源：Rust 引擎
+ Sumber Modrinth: shader klasik, kompatibilitas dengan mesin Rust masih terbatas.	Modrinth 来源：经典光影，与 Rust 引擎的兼容性仍然有限。
+ Sumber Horizon: resource pack yang dibuat atau diuji untuk mesin Rust.	Horizon 来源：为 Rust 引擎制作或测试过的资源包。
+ Coba ubah kata kunci atau pindah ke sumber Modrinth	请尝试更换关键词，或切换到 Modrinth 来源
++# Unduhan berkas Starling lewat launcher
++Menyiapkan daftar berkas Starling...	正在准备 Starling 文件列表...
++Mengunduh sumber daya Starling: {0} dari {1} MB ({2} MB/dtk)	正在下载 Starling 资源：{0} / {1} MB（{2} MB/秒）
++Mengunduh sumber daya Starling: {0} dari {1} MB	正在下载 Starling 资源：{0} / {1} MB
++Menyelesaikan unduhan Starling...	正在完成 Starling 下载...
++Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	Starling 下载完成。点击 PLAY；首次运行时，Starling 会在手机上准备游戏，仅需一次。
++Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	仅支持 Minecraft {0}。启动器通过“下载”按钮下载游戏资源（约 500 MiB），之后 Starling 会在手机上准备它们，仅需一次。此引擎与 Horizon 相互独立，拥有自己的光影、模组和菜单。
+diff --git a/app/src/main/assets/starling-pins.json b/app/src/main/assets/starling-pins.json
+new file mode 100644
+index 0000000..997d66b
+--- /dev/null
++++ b/app/src/main/assets/starling-pins.json
+@@ -0,0 +1,14 @@
++{
++  "_comment": "Salinan patokan berkas resmi Mojang dari research-lock.json sumber Starling (blok minecraft). Dipakai core/horizon/StarlingFiles.kt supaya launcher bisa mengunduh berkasnya dengan UI Amber. Harus sama dengan sumber yang dibangun (starling-engine.properties): scripts/build-horizon-engine.sh memeriksanya dan menghentikan build Starling bila beda.",
++  "source_commit": "32961a037f4127904262ab651f08d73a1d262a84",
++  "version": "26.3",
++  "manifest_sha1": "11f1aefe473eefba0af62e3286c33b692807b2eb",
++  "accepted_manifest_sha1": [
++    "4fe1aa1ef8da1cb95c5bad1fb98890ca56dd8ca3",
++    "702fe59163c6ee6578607daa85811d9bc9c7cc40",
++    "61fff1316bd50312624a858bbb5eb18fa45208ed",
++    "5df1795e16eea19d75b923d66ecca9ce183353c5"
++  ],
++  "client_sha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
++  "server_sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c"
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+index a1b81e2..74e72e9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+@@ -38,7 +38,9 @@ import java.util.concurrent.atomic.AtomicBoolean
+  *   accounts/accounts.json (pemain offline yang dipilih), [SESSION_FILE] (sesi Microsoft, dibaca sekali oleh mesin lalu
+  *   dihapus), dan [ARGS_FILE] (horizon-args.txt: --session-file dan AMBER_EMBEDDED=1 yang mematikan pemberitahuan
+  *   pembaruan Starling).
+- * - Penyiapan game pertama (unduhan sekitar 500 MiB dan penyiapan di HP) masih memakai layar milik Starling, sekali saja.
++ * - Unduhan berkas resmi Minecraft (sekitar 500 MiB) dikerjakan launcher dengan dialog unduhan Amber ([StarlingFiles]),
++ *   bukan layar Starling; mesin hanya melihat penanda "berkas lengkap" yang sama dengan buatannya sendiri. Penyiapan game
++ *   di HP sesudahnya (Java 25, horizon-prepare; sekali saja) masih memakai layar milik Starling.
+  *   Menu, kontrol, dan pengaturan di dalam game juga masih milik Starling; pengaturan Rust di tab Pengaturan Amber
+  *   hanya untuk Horizon. Menyatukannya dengan UI Amber adalah tahap berikutnya.
+  */
+@@ -107,7 +109,10 @@ object StarlingEngine {
+     /** Folder data mesin: sama dengan getFilesDir() milik GameActivity di proses :starling. */
+     internal fun engineHome(context: Context): File = File(context.filesDir, "starling")
+ 
+-    /** True bila berkas game resmi sudah diunduh Starling; bila belum, PLAY pertama menampilkan layar penyiapannya. */
++    /**
++     * True bila berkas game resmi sudah lengkap (diunduh launcher atau mesin; penandanya sama). Bila belum, launcher
++     * mengunduhnya lewat tombol UNDUH ([StarlingFiles]); tanpa patokan, PLAY pertama menampilkan layar unduhan Starling.
++     */
+     fun gameInstalled(context: Context): Boolean =
+         File(engineHome(context), "minecraft/starling-files.json").isFile
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingFiles.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingFiles.kt
+new file mode 100644
+index 0000000..1ed95d2
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingFiles.kt
+@@ -0,0 +1,416 @@
++package com.israadev.nuxlauncher.core.horizon
++
++import android.content.Context
++import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.download.MinecraftDownloader
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.core.utils.SafePaths
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.async
++import kotlinx.coroutines.awaitAll
++import kotlinx.coroutines.coroutineScope
++import kotlinx.coroutines.currentCoroutineContext
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.ensureActive
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import org.json.JSONObject
++import java.io.File
++import java.io.IOException
++import java.security.MessageDigest
++import java.util.concurrent.ConcurrentLinkedQueue
++import java.util.concurrent.atomic.AtomicInteger
++import java.util.concurrent.atomic.AtomicLong
++import java.util.concurrent.atomic.AtomicReference
++
++/**
++ * Berkas resmi Minecraft untuk Starling (client, server, library, dan aset, sekitar 500 MiB), diunduh oleh
++ * launcher sendiri dengan dialog unduhan Amber, bukan oleh layar penyiapan milik mesin.
++ *
++ * Ini menggantikan satu langkah di mesin, bukan mesinnya: mesin (accounts::download_files di sumber Starling)
++ * hanya mengambil berkas yang didaftar Mojang, mencocokkan SHA-1 tiap berkas dengan daftar itu, menaruhnya di tata
++ * letak launcher resmi di `files/starling/minecraft/` (`versions/`, `libraries/`, `assets/`), lalu menulis
++ * `starling-files.json`. Di sini langkah yang sama dikerjakan dengan aturan yang sama (sumber, hash, penyaringan
++ * library untuk Linux, nama berkas), dan penanda itu ditulis paling akhir dengan isi yang sama. Begitu penandanya
++ * ada, mesin menganggap berkasnya sudah siap dan langsung ke langkah berikutnya (menyiapkan game di HP), tanpa
++ * menanyakan akun atau mengunduh lagi.
++ *
++ * Patokannya (versi, hash berkas versi, hash client dan server) adalah salinan blok `minecraft` dari
++ * `research-lock.json` sumber Starling, ada di `assets/starling-pins.json`, dan dijaga sama dengan sumber yang
++ * dibangun oleh scripts/build-horizon-engine.sh. Tanpa berkas itu (atau bila versinya bukan versi yang dikerjakan
++ * Starling), [needsDownload] false dan semuanya jalan seperti sebelumnya: mesin mengunduh sendiri.
++ *
++ * Bisa dilanjutkan: berkas yang sudah ada dengan ukuran yang benar dilewati, dan unduhan yang terputus tidak
++ * meninggalkan berkas setengah jadi (MinecraftDownloader menulis ke berkas sementara lalu memindahkannya setelah
++ * hash cocok).
++ */
++object StarlingFiles {
++    private const val PINS_ASSET = "starling-pins.json"
++
++    /** Penanda "semua berkas ada dan cocok": nama dan bentuk yang sama dengan yang ditulis mesin. */
++    private const val FILES_DONE = "starling-files.json"
++
++    private const val META_URL = "https://piston-meta.mojang.com"
++    private const val RESOURCES_URL = "https://resources.download.minecraft.net"
++
++    /** Kegagalan berkas sebanyak ini menghentikan unduhan (dilanjutkan oleh unduhan berikutnya). */
++    private const val MAX_FAILED_FILES = 3
++
++    /** Cadangan ruang kosong di atas ukuran unduhan, untuk berkas sementara dan penyiapan mesin berikutnya. */
++    private const val SPACE_MARGIN_BYTES = 256L * 1024L * 1024L
++
++    private const val REPORT_INTERVAL_MS = 300L
++
++    /** SHA-1 dari isi kosong: berkas 0 byte tidak bisa lewat MinecraftDownloader (ia menolak berkas kosong). */
++    private const val EMPTY_SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709"
++
++    /** Patokan berkas resmi: versi game dan hash berkas yang dipatok Starling. */
++    class Pins(
++        val version: String,
++        /** Hash berkas versi: yang pertama diunduh, sisanya yang pernah diterbitkan ulang Mojang. */
++        val manifests: List<String>,
++        val clientSha1: String,
++        val serverSha1: String
++    )
++
++    /** Kemajuan unduhan, untuk dialog. */
++    class Progress(
++        val filesDone: Int,
++        val filesTotal: Int,
++        val bytesDone: Long,
++        val bytesTotal: Long,
++        /** Kecepatan yang sudah diperhalus, byte per detik; 0 bila belum terukur. */
++        val bytesPerSecond: Long,
++        /** True selama daftar berkas masih disiapkan (belum ada total). */
++        val preparing: Boolean
++    ) {
++        val fraction: Float
++            get() = if (bytesTotal > 0L) (bytesDone.toFloat() / bytesTotal).coerceIn(0f, 1f) else 0f
++    }
++
++    private class Item(val url: String, val file: File, val sha1: String, val size: Long)
++
++    private val pinsLock = Any()
++    private var pinsLoaded = false
++    private var cachedPins: Pins? = null
++
++    /** Patokan dari assets, atau null bila tidak ada, rusak, atau bukan untuk versi yang dikerjakan Starling. */
++    fun pins(context: Context): Pins? = synchronized(pinsLock) {
++        if (!pinsLoaded) {
++            pinsLoaded = true
++            cachedPins = try {
++                val json = JSONObject(
++                    context.applicationContext.assets.open(PINS_ASSET).use { it.readBytes().toString(Charsets.UTF_8) }
++                )
++                readPins(json)
++            } catch (e: Exception) {
++                LauncherLog.w("StarlingFiles", "Patokan berkas Starling tidak terbaca: ${e.message}")
++                null
++            }
++        }
++        cachedPins
++    }
++
++    private fun readPins(json: JSONObject): Pins? {
++        val version = json.optString("version")
++        val manifests = ArrayList<String>()
++        manifests += json.optString("manifest_sha1")
++        json.optJSONArray("accepted_manifest_sha1")?.let { list ->
++            for (i in 0 until list.length()) manifests += list.optString(i)
++        }
++        val client = json.optString("client_sha1")
++        val server = json.optString("server_sha1")
++        val valid = version == StarlingEngine.SUPPORTED_MC_VERSION &&
++            manifests.all { isSha1(it) } && isSha1(client) && isSha1(server)
++        return if (valid) Pins(version, manifests, client, server) else null
++    }
++
++    private fun isSha1(text: String): Boolean =
++        text.length == 40 && text.all { it in '0'..'9' || it in 'a'..'f' }
++
++    /** Folder berkas resmi milik mesin (tata letak launcher resmi). */
++    internal fun root(context: Context): File = File(StarlingEngine.engineHome(context), "minecraft")
++
++    /** True bila berkasnya sudah lengkap (penanda ada), oleh launcher ini atau oleh mesin. */
++    fun installed(context: Context): Boolean = StarlingEngine.gameInstalled(context)
++
++    /** True bila launcher harus mengunduh berkas resmi dulu sebelum Starling dibuka. */
++    fun needsDownload(context: Context): Boolean = !installed(context) && pins(context) != null
++
++    /**
++     * True bila Starling boleh dibuka sekarang: berkasnya lengkap, atau launcher tidak bisa mengunduhnya (tanpa
++     * patokan) sehingga mesin mengunduh sendiri seperti sebelumnya. Dipakai tombol PLAY/UNDUH di Home.
++     */
++    fun ready(context: Context): Boolean = !needsDownload(context)
++
++    /**
++     * Mengunduh semua berkas resmi lalu menulis penanda. [onProgress] dipanggil dari utas latar sekitar tiga kali
++     * per detik. Dibatalkan lewat pembatalan coroutine (berkas yang sedang berjalan selesai dulu, yang sudah
++     * jadi tetap dipakai pada unduhan berikutnya). Gagal berarti Result.failure dengan pesan untuk pemain.
++     */
++    suspend fun download(context: Context, onProgress: (Progress) -> Unit): Result<Unit> =
++        withContext(Dispatchers.IO) {
++            try {
++                val pins = pins(context) ?: throw IOException("Patokan berkas Starling tidak tersedia di aplikasi ini.")
++                runDownload(context.applicationContext, pins, onProgress)
++                Result.success(Unit)
++            } catch (e: CancellationException) {
++                throw e
++            } catch (e: Exception) {
++                LauncherLog.w("StarlingFiles", "Unduhan berkas Starling gagal: ${e.message}", e)
++                Result.failure(e)
++            }
++        }
++
++    private suspend fun runDownload(context: Context, pins: Pins, onProgress: (Progress) -> Unit) {
++        val root = root(context)
++        if (!root.isDirectory && !root.mkdirs()) throw IOException("Folder data Starling tidak bisa dibuat.")
++        cleanStaleParts(root)
++        // Penanda lama dihapus lebih dulu: unduhan yang terputus tidak boleh tampak selesai.
++        File(root, FILES_DONE).delete()
++        onProgress(Progress(0, 0, 0L, 0L, 0L, preparing = true))
++
++        val downloader = MinecraftDownloader(context)
++        val v = pins.version
++
++        // 1. Berkas versi (hash-nya dipatok), dari piston-meta
++        val manifestFile = File(root, "versions/$v/$v.json")
++        val manifestBytes = readIfHashIn(manifestFile, pins.manifests) ?: run {
++            downloader.downloadFile(
++                url = "$META_URL/v1/packages/${pins.manifests[0]}/$v.json",
++                targetFile = manifestFile,
++                retries = 4,
++                expectedSha1 = pins.manifests[0]
++            )
++            manifestFile.readBytes()
++        }
++        currentCoroutineContext().ensureActive()
++        val json = try {
++            JSONObject(manifestBytes.toString(Charsets.UTF_8))
++        } catch (_: Exception) {
++            throw IOException("Berkas versi $v dari Mojang tidak valid.")
++        }
++
++        // 2. Daftar semua berkas yang harus ada: client, server, library, indeks aset, dan objek aset
++        val items = LinkedHashMap<String, Item>()
++        fun add(item: Item) {
++            items.putIfAbsent(item.file.absolutePath, item)
++        }
++
++        val downloads = json.optJSONObject("downloads") ?: throw IOException("Berkas versi $v tidak mendaftar unduhan.")
++        fun jarItem(key: String, file: File, pinned: String): Item {
++            val d = downloads.optJSONObject(key) ?: throw IOException("Berkas versi $v tidak mendaftar unduhan $key.")
++            val url = d.optString("url")
++            val sha1 = d.optString("sha1")
++            if (url.isBlank() || sha1.isBlank()) throw IOException("Berkas versi $v tidak mendaftar unduhan $key.")
++            if (sha1 != pinned) throw IOException("Berkas versi $v memuat jar $key yang lain dari yang dipatok Starling.")
++            return Item(url, file, sha1, d.optLong("size"))
++        }
++
++        val clientJar = File(root, "versions/$v/$v.jar")
++        val serverJar = File(root, "versions/$v/$v-server.jar")
++        add(jarItem("client", clientJar, pins.clientSha1))
++        add(jarItem("server", serverJar, pins.serverSha1))
++
++        val librariesDir = File(root, "libraries")
++        json.optJSONArray("libraries")?.let { libraries ->
++            for (i in 0 until libraries.length()) {
++                val library = libraries.optJSONObject(i) ?: continue
++                val artifact = library.optJSONObject("downloads")?.optJSONObject("artifact") ?: continue
++                val path = artifact.optString("path")
++                val url = artifact.optString("url")
++                val sha1 = artifact.optString("sha1")
++                if (path.isBlank() || url.isBlank() || sha1.isBlank()) continue
++                if (!libraryApplies(library)) continue
++                val target = SafePaths.resolveInside(librariesDir, path) ?: continue
++                add(Item(url, target, sha1, artifact.optLong("size")))
++            }
++        }
++
++        val assetIndex = json.optJSONObject("assetIndex") ?: throw IOException("Berkas versi $v tidak mendaftar indeks aset.")
++        val indexId = assetIndex.optString("id")
++        val indexUrl = assetIndex.optString("url")
++        val indexSha1 = assetIndex.optString("sha1")
++        if (indexId.isBlank() || indexUrl.isBlank() || indexSha1.isBlank()) {
++            throw IOException("Berkas versi $v tidak mendaftar indeks aset.")
++        }
++        val indexFile = SafePaths.resolveInside(File(root, "assets/indexes"), "$indexId.json")
++            ?: throw IOException("Nama indeks aset tidak valid.")
++        val indexBytes = readIfHashIn(indexFile, listOf(indexSha1)) ?: run {
++            downloader.downloadFile(url = indexUrl, targetFile = indexFile, retries = 4, expectedSha1 = indexSha1)
++            indexFile.readBytes()
++        }
++        currentCoroutineContext().ensureActive()
++        val objects = try {
++            JSONObject(indexBytes.toString(Charsets.UTF_8)).optJSONObject("objects")
++        } catch (_: Exception) {
++            null
++        } ?: throw IOException("Indeks aset dari Mojang tidak valid.")
++        val objectsDir = File(root, "assets/objects")
++        val names = objects.keys()
++        while (names.hasNext()) {
++            val entry = objects.optJSONObject(names.next()) ?: continue
++            val hash = entry.optString("hash")
++            if (!isSha1(hash)) continue
++            val prefix = hash.substring(0, 2)
++            add(Item("$RESOURCES_URL/$prefix/$hash", File(objectsDir, "$prefix/$hash"), hash, entry.optLong("size")))
++        }
++
++        // 3. Ruang kosong: cukup untuk sisa unduhan dan cadangan
++        val pending = items.values.filter { !isComplete(it) }
++        val pendingBytes = pending.sumOf { it.size.coerceAtLeast(0L) }
++        val totalBytes = items.values.sumOf { it.size.coerceAtLeast(0L) }
++        val free = root.usableSpace
++        if (pendingBytes + SPACE_MARGIN_BYTES > free) {
++            val needMb = (pendingBytes + SPACE_MARGIN_BYTES - free) / (1024L * 1024L) + 1L
++            throw IOException("Ruang penyimpanan tidak cukup: butuh sekitar $needMb MB lagi.")
++        }
++
++        // 4. Unduh: yang besar lebih dulu, beberapa sekaligus
++        val bytes = AtomicLong(totalBytes - pendingBytes)
++        val files = AtomicInteger(items.size - pending.size)
++        val failed = AtomicInteger(0)
++        val firstError = AtomicReference<String?>(null)
++        val queue = ConcurrentLinkedQueue(pending.sortedByDescending { it.size })
++        val workers = if (SettingsManager.getTotalDeviceMemoryMb(context) < 2500) 8 else 16
++
++        fun report(preparing: Boolean, speed: Long) = onProgress(
++            Progress(files.get(), items.size, bytes.get().coerceAtMost(totalBytes), totalBytes, speed, preparing)
++        )
++        report(preparing = false, speed = 0L)
++
++        coroutineScope {
++            val reporter = launch {
++                var lastBytes = bytes.get()
++                var lastTime = System.nanoTime()
++                var speed = 0.0
++                while (true) {
++                    delay(REPORT_INTERVAL_MS)
++                    val now = System.nanoTime()
++                    val current = bytes.get()
++                    val seconds = (now - lastTime) / 1_000_000_000.0
++                    if (seconds > 0.0) {
++                        val instant = ((current - lastBytes) / seconds).coerceAtLeast(0.0)
++                        speed = if (speed == 0.0) instant else speed * 0.7 + instant * 0.3
++                    }
++                    lastBytes = current
++                    lastTime = now
++                    report(preparing = false, speed = speed.toLong())
++                }
++            }
++            val jobs = List(workers) {
++                async {
++                    while (failed.get() < MAX_FAILED_FILES) {
++                        ensureActive()
++                        val item = queue.poll() ?: break
++                        item.file.parentFile?.mkdirs()
++                        if (item.size == 0L && item.sha1 == EMPTY_SHA1) {
++                            item.file.writeBytes(ByteArray(0))
++                            files.incrementAndGet()
++                            continue
++                        }
++                        var counted = 0L
++                        try {
++                            downloader.downloadFile(
++                                url = item.url,
++                                targetFile = item.file,
++                                expectedSize = item.size,
++                                onProgress = { read, _ ->
++                                    // Percobaan ulang memulai dari nol: selisihnya negatif, jadi hitungan tetap benar
++                                    bytes.addAndGet(read - counted)
++                                    counted = read
++                                },
++                                retries = 3,
++                                expectedSha1 = item.sha1
++                            )
++                            files.incrementAndGet()
++                        } catch (e: CancellationException) {
++                            throw e
++                        } catch (e: Exception) {
++                            bytes.addAndGet(-counted)
++                            firstError.compareAndSet(null, "${item.file.name}: ${e.message}")
++                            if (failed.incrementAndGet() <= MAX_FAILED_FILES) {
++                                LauncherLog.w("StarlingFiles", "Berkas gagal: ${item.file.name}: ${e.message}")
++                            }
++                        }
++                    }
++                }
++            }
++            try {
++                jobs.awaitAll()
++            } finally {
++                reporter.cancel()
++            }
++        }
++        currentCoroutineContext().ensureActive()
++        if (failed.get() > 0) {
++            throw IOException(
++                "Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. " +
++                    "(${firstError.get() ?: "tidak diketahui"})"
++            )
++        }
++        // Semuanya harus ada sebelum penanda ditulis
++        val missing = items.values.firstOrNull { !it.file.isFile }
++        if (missing != null) throw IOException("Berkas ${missing.file.name} belum ada setelah diunduh.")
++
++        // 5. Penanda: isi dan nama sama dengan yang ditulis mesin, ditulis paling akhir lewat berkas sementara
++        val done = JSONObject()
++            .put("version", v)
++            .put("client", clientJar.absolutePath)
++            .put("server", serverJar.absolutePath)
++        val temp = File(root, "$FILES_DONE.tmp")
++        temp.writeText(done.toString())
++        val marker = File(root, FILES_DONE)
++        marker.delete()
++        if (!temp.renameTo(marker)) {
++            temp.delete()
++            throw IOException("$FILES_DONE tidak bisa disimpan.")
++        }
++        report(preparing = false, speed = 0L)
++        LauncherLog.event("Unduhan", "Berkas resmi Starling $v lengkap (${items.size} berkas, ${totalBytes / (1024L * 1024L)} MB)")
++    }
++
++    /** Berkas ada dan ukurannya sama dengan daftar Mojang (berkas hanya dipindah ke tempatnya setelah hash cocok). */
++    private fun isComplete(item: Item): Boolean = item.file.isFile && item.file.length() == item.size
++
++    /** Isi berkas bila hash SHA-1-nya salah satu dari [hashes]; selain itu null. */
++    private fun readIfHashIn(file: File, hashes: List<String>): ByteArray? {
++        if (!file.isFile) return null
++        val data = try {
++            file.readBytes()
++        } catch (_: Exception) {
++            return null
++        }
++        val digest = MessageDigest.getInstance("SHA-1").digest(data).joinToString("") { "%02x".format(it) }
++        return if (digest in hashes) data else null
++    }
++
++    /**
++     * Aturan library Mojang untuk HP: dihitung sebagai Linux (seperti yang dibaca horizon-prepare), dan hanya
++     * artefak biasa (tanpa klasifier native). Aturan yang sama dengan starling_account::files::library_applies.
++     */
++    private fun libraryApplies(library: JSONObject): Boolean {
++        val rules = library.optJSONArray("rules") ?: return true
++        var allowed = false
++        for (i in 0 until rules.length()) {
++            val rule = rules.optJSONObject(i) ?: continue
++            val osName = rule.optJSONObject("os")?.optString("name")?.takeIf { it.isNotEmpty() }
++            if (osName == null || osName == "linux") {
++                allowed = rule.optString("action") == "allow"
++            }
++        }
++        return allowed
++    }
++
++    /** Menghapus berkas sementara unduhan (`.part_`) yang sudah lama tidak disentuh. */
++    private fun cleanStaleParts(root: File) {
++        val cutoff = System.currentTimeMillis() - 10L * 60L * 1000L
++        try {
++            root.walkTopDown()
++                .filter { it.isFile && it.name.contains(".part_") && it.lastModified() < cutoff }
++                .forEach { it.delete() }
++        } catch (_: Throwable) {
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index f1a219a..69e0a5a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -358,7 +358,10 @@ object InstanceManager {
+     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
+         // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
+         if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
+-        if (com.israadev.nuxlauncher.core.horizon.StarlingEngine.isEngine(inst.loader)) return true
++        // Starling: berkas resmi game (±500 MiB) diunduh launcher lewat tombol UNDUH; tanpa patokan mesin mengunduh sendiri
++        if (com.israadev.nuxlauncher.core.horizon.StarlingEngine.isEngine(inst.loader)) {
++            return com.israadev.nuxlauncher.core.horizon.StarlingFiles.ready(context)
++        }
+         // Instance dari modpack yang isinya belum selesai dipasang belum siap main: UNDUH melanjutkannya
+         if (ModpackStaging.hasPending(getInstanceDir(context, inst))) return false
+         val versionsDir = getVersionsDir(context)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+index 36f800c..4190835 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+@@ -73,6 +73,7 @@ import com.israadev.nuxlauncher.core.forge.ForgeFlavor
+ import com.israadev.nuxlauncher.core.forge.ForgeService
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.horizon.StarlingEngine
++import com.israadev.nuxlauncher.core.horizon.StarlingFiles
+ import com.israadev.nuxlauncher.core.manifest.MojangManifestService
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.VersionItem
+@@ -848,7 +849,11 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
+         )
+         Text(
+             text = if (starling) {
+-                "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
++                if (StarlingFiles.pins(LocalContext.current) != null) {
++                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
++                } else {
++                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
++                }
+             } else {
+                 "Hanya mendukung Minecraft ${HorizonEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka."
+             },
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 2f2731b..e8cd501 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -133,6 +133,7 @@ import com.israadev.nuxlauncher.core.crash.CrashManager
+ import com.israadev.nuxlauncher.core.download.MinecraftDownloader
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.horizon.StarlingEngine
++import com.israadev.nuxlauncher.core.horizon.StarlingFiles
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.launch.GameLauncher
+ import com.israadev.nuxlauncher.core.modpack.ModpackStaging
+@@ -282,7 +283,7 @@ fun DashboardScreen() {
+     // Status unduhan instance terpilih: dihitung ulang hanya saat instance berganti
+     // atau saat proses unduh selesai (hindari cek file di tiap recomposition).
+     val isInstanceReady = remember(selectedInstance, isDownloading) {
+-        selectedInstance?.let { it.isDownloaded && InstanceManager.isInstanceDownloaded(context, it) } ?: false
++        selectedInstance?.let { isInstanceReadyToPlay(context, it) } ?: false
+     }
+ 
+     // Pasang instance: siapkan Java, lalu unduh client, library, dan aset game. Dipakai tombol UNDUH
+@@ -387,6 +388,45 @@ fun DashboardScreen() {
+         }
+     }
+ 
++    // Starling: berkas resmi Minecraft (client, server, library, aset; ±500 MiB) diunduh launcher dengan dialog yang
++    // sama seperti instance Java, bukan oleh layar penyiapan Starling. Setelah selesai, PLAY membuka Starling, yang
++    // hanya menyiapkan game di HP (sekali saja). Tidak langsung dibuka: pemain perlu tahu penyiapan itu menyusul.
++    fun downloadStarlingFiles(inst: Instance) {
++        if (isDownloading) return
++        isDownloading = true
++        downloadTargetName = inst.name
++        dl.progress = 0f
++        dl.message = "Menyiapkan daftar berkas Starling..."
++
++        com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
++        downloadJob = scope.launch {
++            val res = StarlingFiles.download(context) { p ->
++                dl.progress = p.fraction
++                dl.message = starlingProgressMessage(p)
++            }
++            // Dibatalkan lewat tombol Batal: layar sudah dikembalikan oleh pemanggil, jangan disentuh lagi.
++            if (!isActive) return@launch
++
++            isDownloading = false
++            downloadJob = null
++            if (res.isSuccess) {
++                Toast.makeText(
++                    context,
++                    "Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.",
++                    Toast.LENGTH_LONG
++                ).show()
++            } else {
++                Toast.makeText(
++                    context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
++                ).show()
++            }
++        }.also { job ->
++            job.invokeOnCompletion {
++                com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.stop(context)
++            }
++        }
++    }
++
+     // Tombol Batal di dialog unduhan. Berkas yang sudah selesai tetap dipakai; tekan UNDUH untuk melanjutkan.
+     fun cancelInstall() {
+         downloadJob?.cancel()
+@@ -409,9 +449,14 @@ fun DashboardScreen() {
+             HorizonEngine.launch(context, inst, account)
+             return
+         }
+-        // Starling (mesin Rust kedua): sama, tanpa JVM dan tanpa unduhan lewat launcher
++        // Starling (mesin Rust kedua): tanpa JVM. Berkas resmi game diunduh launcher dulu (dialog Amber); sesudahnya
++        // Starling dibuka dan menyiapkan game di HP.
+         if (StarlingEngine.isEngine(inst.loader)) {
+-            StarlingEngine.launch(context, inst, account)
++            if (StarlingFiles.needsDownload(context)) {
++                downloadStarlingFiles(inst)
++            } else {
++                StarlingEngine.launch(context, inst, account)
++            }
+             return
+         }
+ 
+@@ -597,7 +642,11 @@ fun DashboardScreen() {
+                                 onInstanceCreated = { newInst ->
+                                     InstanceManager.createInstance(context, newInst)
+                                     currentTab = "home"
+-                                    if (newInst.isDownloaded) {
++                                    if (StarlingEngine.isEngine(newInst.loader) && StarlingFiles.needsDownload(context)) {
++                                        // Starling: berkas resmi game diunduh launcher, langsung setelah instance dibuat
++                                        Toast.makeText(context, "Instance ${newInst.name} dibuat. Mengunduh game...", Toast.LENGTH_SHORT).show()
++                                        downloadStarlingFiles(newInst)
++                                    } else if (newInst.isDownloaded) {
+                                         // Mesin Horizon (Rust) tidak butuh unduhan lewat launcher
+                                         Toast.makeText(context, "Instance ${newInst.name} berhasil dibuat!", Toast.LENGTH_SHORT).show()
+                                     } else {
+@@ -1398,6 +1447,32 @@ private class DownloadUiState {
+     var message by mutableStateOf("")
+ }
+ 
++/**
++ * Siap dimainkan? Instance Java: unduhan game lengkap. Starling: berkas resminya sudah diunduh (status ini dibaca
++ * dari berkas di disk, bukan dari penanda tersimpan di instance, karena semua instance Starling memakai berkas yang sama).
++ */
++private fun isInstanceReadyToPlay(context: Context, inst: Instance): Boolean =
++    if (StarlingEngine.isEngine(inst.loader)) {
++        StarlingFiles.ready(context)
++    } else {
++        inst.isDownloaded && InstanceManager.isInstanceDownloaded(context, inst)
++    }
++
++/** Teks dialog unduhan Starling: jumlah MB yang sudah diunduh, total, dan kecepatan bila sudah terukur. */
++private fun starlingProgressMessage(p: StarlingFiles.Progress): String {
++    if (p.preparing || p.bytesTotal <= 0L) return "Menyiapkan daftar berkas Starling..."
++    if (p.filesDone >= p.filesTotal && p.bytesDone >= p.bytesTotal) return "Menyelesaikan unduhan Starling..."
++    val mb = 1024L * 1024L
++    val done = p.bytesDone / mb
++    val total = p.bytesTotal / mb
++    val perSecondMb = p.bytesPerSecond.toDouble() / mb
++    return if (p.bytesPerSecond > 0L) {
++        "Mengunduh sumber daya Starling: $done dari $total MB (${"%.1f".format(java.util.Locale.US, perSecondMb)} MB/dtk)"
++    } else {
++        "Mengunduh sumber daya Starling: $done dari $total MB"
++    }
++}
++
+ @Composable
+ private fun DownloadDialogHost(name: String, state: DownloadUiState, onCancel: () -> Unit) {
+     NuxDownloadProgressDialog(
+diff --git a/changelog/entries/20261120-starling-unduh-amber.txt b/changelog/entries/20261120-starling-unduh-amber.txt
+new file mode 100644
+index 0000000..0eb7e2d
+--- /dev/null
++++ b/changelog/entries/20261120-starling-unduh-amber.txt
+@@ -0,0 +1,16 @@
++[id]
+++ Instance Starling kini mengunduh berkas game resmi (sekitar 500 MiB) lewat dialog unduhan Amber, tidak lagi lewat layar Starling. Tekan UNDUH; setelah selesai, PLAY menyiapkan game di HP sekali saja.
++[en]
+++ Starling instances now download the official game files (about 500 MiB) through Amber's download dialog instead of Starling's own screen. Press DOWNLOAD; when it finishes, PLAY prepares the game on your phone just once.
++[es]
+++ Las instancias de Starling ahora descargan los archivos oficiales del juego (unos 500 MiB) con el diálogo de descarga de Amber, no con la pantalla de Starling. Pulsa DESCARGAR; al terminar, PLAY prepara el juego en tu teléfono una sola vez.
++[fil]
+++ Dina-download na ng mga Starling instance ang opisyal na file ng laro (mga 500 MiB) gamit ang download dialog ng Amber, hindi na ang sariling screen ng Starling. Pindutin ang I-DOWNLOAD; pagkatapos, ihahanda ng PLAY ang laro sa telepono nang isang beses lang.
++[pt]
+++ As instâncias do Starling agora baixam os arquivos oficiais do jogo (cerca de 500 MiB) pelo diálogo de download do Amber, e não mais pela tela do Starling. Toque em BAIXAR; ao terminar, o PLAY prepara o jogo no celular uma única vez.
++[th]
+++ อินสแตนซ์ Starling ดาวน์โหลดไฟล์เกมทางการ (ประมาณ 500 MiB) ผ่านหน้าต่างดาวน์โหลดของ Amber แล้ว ไม่ใช้หน้าจอของ Starling อีก กดดาวน์โหลด เมื่อเสร็จ PLAY จะเตรียมเกมบนมือถือเพียงครั้งเดียว
++[vi]
+++ Instance Starling giờ tải các tệp game chính thức (khoảng 500 MiB) bằng hộp thoại tải của Amber, không còn dùng màn hình của Starling. Nhấn TẢI XUỐNG; khi xong, PLAY sẽ chuẩn bị game trên điện thoại một lần duy nhất.
++[zh]
+++ Starling 实例现在通过 Amber 的下载对话框下载官方游戏文件（约 500 MiB），不再使用 Starling 自己的界面。点击“下载”；完成后，PLAY 会在手机上准备游戏，仅需一次。
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index a146eba..1b98900 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -259,7 +259,7 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ ## Rencana berikutnya
+ 
+ - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
+-- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin.
++- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
+ - Akun Ely.by.
+ 
+ ## Dua mesin Rust: Horizon dan Starling
+@@ -287,10 +287,13 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ 
+ **Akun tanpa patch Rust.** `StarlingEngine` memakai antarmuka peluncur yang sudah ada di mesin: PLAY menulis `accounts/accounts.json` (pemain offline), `amber-session.json` (sesi Microsoft, dibaca sekali lalu dihapus mesin), dan `horizon-args.txt` (`--session-file`, `AMBER_EMBEDDED=1`).
+ 
++**Unduhan berkas resmi lewat launcher (`StarlingFiles`).** Tombol UNDUH di Home (dan otomatis begitu instance Starling dibuat) mengunduh berkas resmi Minecraft 26.3 (client, server, library, aset; sekitar 500 MiB) dengan dialog unduhan Amber, bukan layar Starling. Kotlin mengerjakan langkah yang sama dengan `accounts::download_files()` di sumber Starling: berkas versi diambil dari piston-meta dengan hash yang dipatok, sidik jari jar client dan server harus sama dengan yang dipatok, library disaring untuk Linux, aset dari `resources.download.minecraft.net`, semuanya ditaruh di `files/starling/minecraft/` dengan tata letak launcher resmi, dan `starling-files.json` ditulis paling akhir dengan isi yang sama dengan buatan mesin. Begitu penanda itu ada, mesin menganggap berkasnya siap dan langsung menyiapkan game di HP tanpa menanyakan akun atau mengunduh lagi. Unduhan bisa dilanjutkan (berkas yang sudah benar dilewati). Patokannya ada di `app/src/main/assets/starling-pins.json`, salinan blok `minecraft` dari `research-lock.json` sumber Starling; `scripts/build-horizon-engine.sh` menghentikan build Starling bila salinan itu beda dengan sumber yang dibangun, jadi **saat `commit=` di `starling-engine.properties` dinaikkan, salin ulang patokannya**. Tanpa berkas patokan (atau bila versinya bukan 26.3), launcher tidak mengunduh dan mesin mengunduh sendiri seperti sebelumnya.
++
+ **Yang belum (dan perlu diketahui):**
+-- Penyiapan game pertama (unduhan sekitar 500 MiB dan penyiapan di HP) memakai layar Starling, sekali saja. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
++- Penyiapan game di HP sesudah unduhan (unduh Java 25, buka bungkusannya, jalankan `horizon-prepare` atas berkas Mojang menjadi folder resources; sekali saja) masih memakai layar Starling. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
+ - Layar Mod Amber memperlakukan Starling seperti Horizon: folder `shaderpacks`, `resourcepacks`, dan `horizon-mods`, serta kunci `pickedShaderPack` dan `resourcePacks` sama di kedua mesin (satu garis keturunan). Daftar modul bawaan di Amber masih daftar Horizon, jadi "Minimap" muncul untuk Starling padahal Starling tidak memasangnya di Android (mengaktifkannya tidak berefek).
+ - Fitur mod native Starling yang mencari `libhorizon_android.so` memakai nama lama; pustakanya diganti nama di Amber. Dampaknya hanya pada mod native.
+ - Diagnostik Starling membaca folder data biasa, bukan `files/starling`. Mesin 32-bit belum ada.
+ - Fork itu ditulis tangan pihak ketiga, dan `SYNC.md`-nya menyebut hasil penggabungannya belum dijalankan di HP. Commit dipatok; periksa diff-nya sebelum mengganti `commit=`. Pemeriksaan awal terhadap upstream hanya menemukan dua URL baru di kode Rust (penunjuk server kompilasi mod native di repo fork, dan tautan donasi). Itu bukan audit.
+ - Build mesin Starling belum pernah dijalankan di CI dan belum diuji di perangkat. Run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
++- `StarlingFiles` ditulis dari membaca sumber Starling dan belum dijalankan di perangkat. Bila mesin menolak berkas hasil unduhan launcher, kirim log-nya; jalan keluar sementara: build tanpa `assets/starling-pins.json` mengembalikan unduhan ke mesin.
+diff --git a/scripts/build-horizon-engine.sh b/scripts/build-horizon-engine.sh
+index 4275b90..a8ca269 100755
+--- a/scripts/build-horizon-engine.sh
++++ b/scripts/build-horizon-engine.sh
+@@ -403,6 +403,23 @@ python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' || di
+ JDK="${HORIZON_ENGINE_JDK:-${JAVA_HOME:-}}"
+ [ -n "$JDK" ] && [ -x "$JDK/bin/javac" ] || die "JDK dengan javac tidak ditemukan (isi JAVA_HOME atau HORIZON_ENGINE_JDK ke JDK 25)."
+ JAVA_NEED="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["minecraft"]["java_major"])' "$SRC/research-lock.json")"
++# Starling: launcher mengunduh berkas resmi Minecraft sendiri (StarlingFiles.kt) dengan patokan salinan di
++# assets/starling-pins.json. Salinan itu harus sama dengan research-lock.json sumber yang dibangun; kalau beda
++# (commit= di starling-engine.properties dinaikkan tanpa memperbarui salinan), launcher akan menolak atau salah
++# mengunduh, jadi build dihentikan di sini.
++if [ "$ENGINE_NAME" = "starling" ]; then
++  python3 - "$SRC/research-lock.json" "$ROOT/app/src/main/assets/starling-pins.json" <<'PY' || die "app/src/main/assets/starling-pins.json tidak sama dengan blok minecraft di research-lock.json sumber Starling. Salin ulang version, manifest_sha1, accepted_manifest_sha1, client_sha1, dan server_sha1 dari sumber."
++import json, sys
++lock = json.load(open(sys.argv[1]))["minecraft"]
++pins = json.load(open(sys.argv[2]))
++bad = [k for k in ("version", "manifest_sha1", "accepted_manifest_sha1", "client_sha1", "server_sha1")
++       if lock.get(k) != pins.get(k)]
++if bad:
++    print("berbeda: " + ", ".join(bad), file=sys.stderr)
++    sys.exit(1)
++PY
++  echo "Patokan berkas Starling: starling-pins.json cocok dengan research-lock.json"
++fi
+ JAVA_HAVE="$("$JDK/bin/javac" -version 2>&1 | sed -n 's/^javac \([0-9]*\).*/\1/p' | head -n 1)"
+ [ -n "$JAVA_HAVE" ] && [ "$JAVA_HAVE" -ge "$JAVA_NEED" ] || die "butuh JDK $JAVA_NEED atau lebih baru untuk eksporter tabel data; yang ada: javac ${JAVA_HAVE:-?} di $JDK."
+ echo "JDK: javac $JAVA_HAVE ($JDK), dibutuhkan >= $JAVA_NEED"
+# FIN part=1/1 files=16

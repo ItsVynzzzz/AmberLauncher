@@ -322,6 +322,7 @@ private fun CancelledDialog() {
 private fun FailedDialog(s: UiState.Failed) {
     val message = when (s.kind) {
         FailKind.GAME_RUNNING -> "Game masih berjalan. Tutup game sepenuhnya, lalu coba lagi."
+        FailKind.INSTALL_RUNNING -> "Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi."
         FailKind.NO_SOURCE -> "Data lama tidak ditemukan atau tidak bisa dibaca. Pastikan izin akses semua file untuk AmberLauncher masih menyala."
         FailKind.TARGET_NOT_EMPTY -> "Folder tujuan sudah berisi data lain, jadi tidak ada yang diubah."
         FailKind.NOT_ENOUGH_SPACE ->

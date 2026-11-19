@@ -2,6 +2,7 @@ package com.israadev.nuxlauncher.core.storage
 
 import android.app.ActivityManager
 import android.content.Context
+import com.israadev.nuxlauncher.core.download.InstallSession
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 object StorageMigrationRunner {
 
-    enum class FailKind { GAME_RUNNING, NO_SOURCE, TARGET_NOT_EMPTY, NOT_ENOUGH_SPACE, ERROR }
+    enum class FailKind { GAME_RUNNING, INSTALL_RUNNING, NO_SOURCE, TARGET_NOT_EMPTY, NOT_ENOUGH_SPACE, ERROR }
 
     sealed interface UiState {
         object Idle : UiState
@@ -101,6 +102,11 @@ object StorageMigrationRunner {
                     _state.value = UiState.Failed(FailKind.GAME_RUNNING, 0L, 0L)
                     return@launch
                 }
+                // Unduhan atau pemasangan yang sedang berjalan menulis ke folder data lama: tunggu sampai selesai
+                if (InstallSession.active) {
+                    _state.value = UiState.Failed(FailKind.INSTALL_RUNNING, 0L, 0L)
+                    return@launch
+                }
                 val source = DataLocation.legacySource(app)
                 if (source == null) {
                     _state.value = UiState.Failed(FailKind.NO_SOURCE, 0L, 0L)
@@ -161,6 +167,11 @@ object StorageMigrationRunner {
             try {
                 if (isGameProcessAlive(app)) {
                     _state.value = UiState.Failed(FailKind.GAME_RUNNING, 0L, 0L)
+                    return@launch
+                }
+                // Unduhan atau pemasangan yang sedang berjalan menulis ke folder data lama: tunggu sampai selesai
+                if (InstallSession.active) {
+                    _state.value = UiState.Failed(FailKind.INSTALL_RUNNING, 0L, 0L)
                     return@launch
                 }
                 // Menunggu pemuatan daftar instance yang sedang berjalan, lalu menahan yang berikutnya

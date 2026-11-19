@@ -1,0 +1,12 @@
+[id]
+! Unduhan yang masih kurang file tidak lagi dianggap selesai; tekan UNDUH lagi untuk melengkapi (hanya file yang kurang yang diunduh).
+! PLAY berhenti dengan pesan yang jelas bila ada library game yang hilang, dan tombolnya kembali menjadi UNDUH.
++ Tombol "Verifikasi & perbaiki" di Ubah instance untuk memeriksa ulang berkas game.
+! Unduhan tidak lagi batal bila layar dibuat ulang; tombol Batal saat menyiapkan Java kini benar-benar membatalkan.
+~ Memindahkan data ke Android/data kini ditolak dengan penjelasan selama unduhan atau pemasangan masih berjalan, supaya berkas tidak terpecah di dua folder.
+[en]
+! A download that is still missing files is no longer reported as finished; press DOWNLOAD again to complete it (only the missing files are fetched).
+! PLAY stops with a clear message when a game library is missing, and the button goes back to DOWNLOAD.
++ A "Verify & repair" button in Edit instance to re-check the game files.
+! Downloads are no longer cancelled when the screen is recreated; Cancel while preparing Java now really cancels.
+~ Moving data to Android/data is now declined with an explanation while a download or install is still running, so files are not split across two folders.

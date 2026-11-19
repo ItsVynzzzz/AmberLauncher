@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,7 +73,9 @@ fun NuxEditInstanceDialog(
     onDismiss: () -> Unit,
     onInstanceUpdated: (Instance) -> Unit,
     onInstanceDeleted: (Instance) -> Unit,
-    onOpenContent: () -> Unit
+    onOpenContent: () -> Unit,
+    // Cek ulang berkas game dan unduh yang kurang atau rusak (null = tombolnya tidak ditampilkan)
+    onRepair: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     var editName by remember { mutableStateOf(instance.name) }
@@ -163,6 +166,14 @@ fun NuxEditInstanceDialog(
                 InstanceManager.openInstanceFolder(context, instance)
             }
         )
+        if (onRepair != null) {
+            AmberActionPill(
+                icon = Icons.Outlined.Refresh,
+                label = "Verifikasi & perbaiki",
+                showChevron = true,
+                onClick = onRepair
+            )
+        }
         if (!showDeleteConfirm) {
             AmberActionPill(
                 icon = Icons.Outlined.DeleteOutline,

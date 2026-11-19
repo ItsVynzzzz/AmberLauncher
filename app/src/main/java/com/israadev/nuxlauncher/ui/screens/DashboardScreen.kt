@@ -107,6 +107,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
+import com.israadev.nuxlauncher.core.download.InstallSession
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -229,16 +230,11 @@ fun DashboardScreen() {
     var showAboutDialog by remember { mutableStateOf(false) }
     val pendingImport by NuxAddonImportManager.pendingImport.collectAsState()
 
-    // Download progress state
-    var isDownloading by remember { mutableStateOf(false) }
-    var downloadTargetName by remember { mutableStateOf("") }
-    // Job unduhan yang sedang jalan; dipegang supaya tombol Batal di dialog bisa menghentikannya.
-    var downloadJob by remember { mutableStateOf<Job?>(null) }
-    // Kemajuan unduhan disimpan di objek tersendiri yang hanya dibaca dialog,
-    // sehingga tiap kemajuan tidak menggambar ulang seluruh layar Home.
-    val dl = remember { DownloadUiState() }
-
-    val downloader = remember { MinecraftDownloader(context) }
+    // Status pemasangan dipegang InstallSession (hidup selama proses), bukan layar ini, supaya unduhan yang sedang
+    // berjalan tidak ikut batal bila Beranda keluar dari komposisi atau Activity dibuat ulang. Layar hanya mengamatinya.
+    val isDownloading = InstallSession.active
+    // Kemajuan dibaca hanya oleh dialog unduhan, sehingga tiap kemajuan tidak menggambar ulang seluruh layar Home.
+    val dl = InstallSession.progress
 
     // Latar belakang Home yang bisa diganti (foto, GIF, atau video dari galeri). Untuk video,
     // bgFile berisi satu bingkai diam (poster) dan videonya disimpan terpisah di bgVideoFile.
@@ -307,97 +303,84 @@ fun DashboardScreen() {
     // terpasang, isinya dipasang, lalu penanda dihapus. Bila terputus atau dibatalkan, tombol UNDUH melanjutkan
     // dari penanda itu dengan [packFile] kosong.
     fun installInstance(inst: Instance, packFile: File? = null, packName: String = "") {
-        if (isDownloading) return
         val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
-        isDownloading = true
-        downloadTargetName = inst.name
-        dl.progress = 0f
-        dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
-
-        com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
-        downloadJob = scope.launch {
+        val runtimeMessage = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
+        // Context aplikasi: pemasangan berjalan di luar layar ini dan tidak boleh menahan Activity di memori.
+        val appContext = context.applicationContext
+        InstallSession.start(appContext, inst.name, runtimeMessage) {
             if (packFile != null) {
                 dl.message = "Menyimpan modpack..."
                 val saved = withContext(Dispatchers.IO) {
-                    runCatching { ModpackStaging.stage(InstanceManager.getInstanceDir(context, inst), packFile, packName) }
+                    runCatching { ModpackStaging.stage(InstanceManager.getInstanceDir(appContext, inst), packFile, packName) }
                 }
-                if (!isActive) return@launch
+                if (!isActive) return@start
                 if (saved.isFailure) {
                     // Tanpa penanda modpack-nya akan hilang diam-diam: batalkan instance ini seluruhnya
-                    InstanceManager.deleteInstance(context, inst.id)
-                    isDownloading = false
-                    downloadJob = null
+                    InstanceManager.deleteInstance(appContext, inst.id)
                     Toast.makeText(
-                        context,
+                        appContext,
                         "Gagal menyimpan modpack: ${saved.exceptionOrNull()?.localizedMessage}. Instance dibatalkan.",
                         Toast.LENGTH_LONG
                     ).show()
-                    return@launch
+                    return@start
                 }
-                dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
+                dl.message = runtimeMessage
             }
 
-            JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
+            JavaRuntimeManager.extractRuntime(appContext, targetRuntime) { p, msg ->
                 dl.progress = p
                 dl.message = msg
             }
             // Dibatalkan lewat tombol Batal: layar sudah dikembalikan oleh pemanggil, jangan disentuh lagi.
-            if (!isActive) return@launch
+            if (!isActive) return@start
 
-            val res = downloader.downloadInstance(inst) { p, msg ->
+            val res = MinecraftDownloader(appContext).downloadInstance(inst) { p, msg ->
                 dl.progress = p
                 dl.message = msg
             }
-            if (!isActive) return@launch
+            if (!isActive) return@start
             // Salin LWJGL di latar sekarang (sekali per versi) supaya PLAY pertama tidak menunggu salinan puluhan MB
-            if (res.isSuccess) GameLauncher.prewarm(context, inst)
+            if (res.isSuccess) GameLauncher.prewarm(appContext, inst)
 
             // Game dan loader sudah terpasang; bila ada modpack yang menunggu, pasang isinya sekarang
-            val instDir = InstanceManager.getInstanceDir(context, inst)
+            val instDir = InstanceManager.getInstanceDir(appContext, inst)
             val waiting = if (res.isSuccess) ModpackStaging.pending(instDir) else null
             val packRes = if (waiting != null) {
                 dl.progress = 0f
                 dl.message = "Memasang modpack..."
-                NuxModManager.installStagedModpack(context, inst, waiting) { text, cur, total ->
+                NuxModManager.installStagedModpack(appContext, inst, waiting) { text, cur, total ->
                     dl.message = text
                     if (total > 0) dl.progress = (cur.toFloat() / total).coerceIn(0f, 1f)
                 }
             } else {
                 null
             }
-            if (!isActive) return@launch
+            if (!isActive) return@start
 
             val packReport = packRes?.getOrNull()
             // Penanda dihapus hanya bila semuanya terpasang; kalau tidak, UNDUH mengulang dan melengkapi
             if (packReport != null && packReport.failed == 0) ModpackStaging.clear(instDir)
 
-            isDownloading = false
-            downloadJob = null
             when {
                 !res.isSuccess -> Toast.makeText(
-                    context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
+                    appContext, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
                 ).show()
                 packRes == null -> Toast.makeText(
-                    context, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT
+                    appContext, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT
                 ).show()
                 packRes.isFailure -> Toast.makeText(
-                    context,
+                    appContext,
                     "Game terpasang, tapi modpack gagal: ${packRes.exceptionOrNull()?.localizedMessage}. Tekan UNDUH untuk mencoba lagi.",
                     Toast.LENGTH_LONG
                 ).show()
                 packReport != null && packReport.failed > 0 -> Toast.makeText(
-                    context,
+                    appContext,
                     "${packReport.failed} berkas modpack gagal diunduh. Periksa koneksi lalu tekan UNDUH untuk melengkapi.",
                     Toast.LENGTH_LONG
                 ).show()
                 else -> Toast.makeText(
-                    context, "Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.", Toast.LENGTH_LONG
+                    appContext, "Instalasi selesai! Modpack terpasang. Tekan PLAY untuk bermain.", Toast.LENGTH_LONG
                 ).show()
-            }
-        }.also { job ->
-            // Selesai, gagal, atau dibatalkan: penjaga proses tidak diperlukan lagi
-            job.invokeOnCompletion {
-                com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.stop(context)
             }
         }
     }
@@ -407,46 +390,35 @@ fun DashboardScreen() {
     // hanya menyiapkan game di HP (sekali saja). Tidak langsung dibuka: pemain perlu tahu penyiapan itu menyusul.
     fun downloadStarlingFiles(inst: Instance) {
         if (isDownloading) return
-        isDownloading = true
-        downloadTargetName = inst.name
-        dl.progress = 0f
-        dl.message = "Menyiapkan daftar berkas Starling..."
-
-        com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.start(context)
-        downloadJob = scope.launch {
-            val res = StarlingFiles.download(context) { p ->
+        val appContext = context.applicationContext
+        // Lewat InstallSession yang sama dengan instance Java: ikut hidup bila layar dibuat ulang, dan Batal menghentikannya.
+        InstallSession.start(appContext, inst.name, "Menyiapkan daftar berkas Starling...") {
+            val res = StarlingFiles.download(appContext) { p ->
                 dl.progress = p.fraction
                 dl.message = starlingProgressMessage(p)
             }
             // Dibatalkan lewat tombol Batal: layar sudah dikembalikan oleh pemanggil, jangan disentuh lagi.
-            if (!isActive) return@launch
+            if (!isActive) return@start
 
-            isDownloading = false
-            downloadJob = null
             if (res.isSuccess) {
                 Toast.makeText(
-                    context,
+                    appContext,
                     "Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
                 Toast.makeText(
-                    context, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
+                    appContext, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
                 ).show()
-            }
-        }.also { job ->
-            job.invokeOnCompletion {
-                com.israadev.nuxlauncher.core.download.DownloadKeepAliveService.stop(context)
             }
         }
     }
 
     // Tombol Batal di dialog unduhan. Berkas yang sudah selesai tetap dipakai; tekan UNDUH untuk melanjutkan.
     fun cancelInstall() {
-        downloadJob?.cancel()
-        downloadJob = null
-        isDownloading = false
-        Toast.makeText(context, "Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.", Toast.LENGTH_SHORT).show()
+        if (InstallSession.cancel()) {
+            Toast.makeText(context, "Unduhan dibatalkan. Tekan UNDUH untuk melanjutkan.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // Tombol PLAY / UNDUH: unduh dulu bila belum lengkap, siapkan Java bila belum ada, lalu luncurkan.
@@ -480,21 +452,24 @@ fun DashboardScreen() {
         } else {
             val targetRuntime = JavaRuntimeManager.getRecommendedRuntime(inst.mcVersion)
             if (!JavaRuntimeManager.isRuntimeInstalled(context, targetRuntime)) {
-                isDownloading = true
-                downloadTargetName = inst.name
-                dl.progress = 0f
-                dl.message = "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})..."
-                scope.launch {
-                    val extRes = JavaRuntimeManager.extractRuntime(context, targetRuntime) { p, msg ->
+                val appContext = context.applicationContext
+                // Pekerjaan singkat (tanpa unduhan besar): tidak perlu penjaga proses. Lewat sesi yang sama, jadi tombol
+                // Batal benar-benar menghentikannya (dulu hanya menutup dialog dan game tetap diluncurkan).
+                InstallSession.start(
+                    appContext, inst.name,
+                    "Menyiapkan OpenJDK (${JavaRuntimeManager.getRuntimeDisplayName(targetRuntime)})...",
+                    keepAlive = false
+                ) {
+                    val extRes = JavaRuntimeManager.extractRuntime(appContext, targetRuntime) { p, msg ->
                         dl.progress = p
                         dl.message = msg
                     }
-                    isDownloading = false
+                    if (!isActive) return@start
                     if (extRes.isSuccess) {
-                        Toast.makeText(context, "Meluncurkan ${inst.name}...", Toast.LENGTH_SHORT).show()
-                        GameLauncher.launch(context, inst, account)
+                        Toast.makeText(appContext, "Meluncurkan ${inst.name}...", Toast.LENGTH_SHORT).show()
+                        GameLauncher.launch(appContext, inst, account)
                     } else {
-                        Toast.makeText(context, "Gagal menyiapkan OpenJDK: ${extRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(appContext, "Gagal menyiapkan OpenJDK: ${extRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
                 return
@@ -776,6 +751,17 @@ fun DashboardScreen() {
                         showEditInstanceDialog = false
                         currentTab = "instance_content"
                     },
+                    // Mesin Rust tidak memakai berkas game dari launcher: tidak ada yang perlu diverifikasi
+                    onRepair = if (HorizonEngine.isEngine(inst.loader) || StarlingEngine.isEngine(inst.loader)) null else {
+                        {
+                            showEditInstanceDialog = false
+                            // Tandai belum lengkap lalu jalankan alur UNDUH: hanya berkas yang hilang atau salah ukuran
+                            // yang diunduh ulang, sisanya dipakai apa adanya.
+                            val marked = inst.copy(isDownloaded = false)
+                            InstanceManager.updateInstance(context, marked)
+                            installInstance(marked)
+                        }
+                    },
                     onInstanceDeleted = { toDelete ->
                         InstanceManager.deleteInstance(context, toDelete.id)
                         Toast.makeText(context, "Instance ${toDelete.name} berhasil dihapus!", Toast.LENGTH_SHORT).show()
@@ -799,7 +785,7 @@ fun DashboardScreen() {
 
         // Download Progress Dialog
         if (isDownloading) {
-            DownloadDialogHost(name = downloadTargetName, state = dl, onCancel = { cancelInstall() })
+            DownloadDialogHost(name = InstallSession.targetName, state = dl, onCancel = { cancelInstall() })
         }
 
         // Unsupported Renderer Warning Dialog (Persis seperti Zalith)
@@ -1460,12 +1446,6 @@ private const val BG_MAX_BYTES = 30L * 1024 * 1024
 private const val BG_MAX_SIDE = 1600
 private const val BG_ANIM_SIDE = 1280   // GIF/WebP bergerak: sisi terpanjang pas dengan lebar panel Home (tidak diperbesar kasar)
 
-/** Status unduhan; hanya dibaca oleh dialog unduhan. */
-private class DownloadUiState {
-    var progress by mutableFloatStateOf(0f)
-    var message by mutableStateOf("")
-}
-
 /**
  * Siap dimainkan? Instance Java: unduhan game lengkap. Starling: berkas resminya sudah diunduh (status ini dibaca
  * dari berkas di disk, bukan dari penanda tersimpan di instance, karena semua instance Starling memakai berkas yang sama).
@@ -1493,7 +1473,7 @@ private fun starlingProgressMessage(p: StarlingFiles.Progress): String {
 }
 
 @Composable
-private fun DownloadDialogHost(name: String, state: DownloadUiState, onCancel: () -> Unit) {
+private fun DownloadDialogHost(name: String, state: InstallSession.Progress, onCancel: () -> Unit) {
     NuxDownloadProgressDialog(
         instanceName = name,
         progress = state.progress,

@@ -328,8 +328,9 @@ object GameLauncher {
                 val file = File(libDir, path)
                 if (file.exists()) {
                     classpathEntries.add(file.absolutePath)
-                } else if (lib.rules == null) {
+                } else if (lib.rules == null && !lib.downloads?.artifact?.url.isNullOrBlank()) {
                     // Library beraturan OS (mis. khusus Windows atau macOS) memang tidak diunduh di Android, jadi tidak dihitung.
+                    // Hanya yang punya alamat unduhan: itulah yang diunduh MinecraftDownloader, jadi hilangnya berarti unduhan kurang.
                     missingLibs.add(path)
                 }
             }
@@ -402,6 +403,13 @@ object GameLauncher {
                 "Peluncuran",
                 "${missingLibs.size} library wajib tidak ada di folder libraries (unduhan belum lengkap?): " +
                     missingLibs.take(12).joinToString(", ") + (if (missingLibs.size > 12) ", ..." else "")
+            )
+            // Game pasti mogok dengan galat kelas tidak ditemukan yang tidak jelas bagi pengguna. Lebih baik berhenti di sini,
+            // tandai instance belum lengkap (tombol kembali menjadi UNDUH), dan katakan apa yang harus dilakukan.
+            InstanceManager.updateInstance(context, instance.copy(isDownloaded = false))
+            throw LaunchBlocked(
+                "${missingLibs.size} file library game hilang (unduhan belum lengkap atau terhapus). " +
+                    "Tekan UNDUH pada instance ini untuk melengkapinya."
             )
         }
         LauncherLog.event(

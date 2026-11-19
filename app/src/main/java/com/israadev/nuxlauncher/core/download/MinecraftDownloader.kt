@@ -28,6 +28,13 @@ import java.util.concurrent.atomic.AtomicInteger
 /** Isi unduhan tidak cocok dengan sidik jari resmi: jangan dicoba ulang dari alamat yang sama. */
 private class HashMismatchException(message: String) : IOException(message)
 
+/**
+ * Sebagian berkas wajib belum terunduh (biasanya koneksi terputus). Instance TIDAK ditandai terpasang; UNDUH
+ * berikutnya hanya mengunduh berkas yang kurang. Dulu kegagalan seperti ini hanya dicatat di log lalu instalasi
+ * dilaporkan "selesai", dan penggunanya baru tahu saat game mogok dengan galat yang tidak jelas.
+ */
+class IncompleteInstallException(message: String) : IOException(message)
+
 class MinecraftDownloader(
     private val context: Context,
     clientOverride: OkHttpClient? = null,
@@ -150,6 +157,12 @@ class MinecraftDownloader(
                 )
             }
 
+            // Berkas wajib (library game dan library Fabric) yang gagal diunduh; bila ada, instalasi tidak dianggap selesai.
+            val failedRequired = AtomicInteger(0)
+            // Aset (suara, bahasa) yang gagal: game tetap bisa jalan tanpa sebagian kecilnya, jadi ada toleransi.
+            var assetFailures = 0
+            var assetTotal = 0
+
             // 3. Download Libraries (paralel, sampai 20 thread; lebih sedikit di HP RAM kecil)
             val libraries = detail.libraries ?: emptyList()
             // org.lwjgl milik Mojang (versi desktop) tidak dipakai: GameLauncher dan Forge melewatinya dan memakai LWJGL
@@ -191,6 +204,7 @@ class MinecraftDownloader(
                                         downloadFile(artifact.url, targetFile, expectedSize, expectedSha1 = artifact.sha1)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
+                                        failedRequired.incrementAndGet()
                                         if (failedLibs.incrementAndGet() <= MAX_LOGGED_FAILURES) {
                                             LauncherLog.w("Unduhan", "Library gagal: ${artifact.path}: ${e.message}")
                                         }
@@ -270,6 +284,8 @@ class MinecraftDownloader(
                             }
                         }
                         assetJobs.awaitAll()
+                        assetFailures = failedAssets.get()
+                        assetTotal = totalObjects
                         if (failedAssets.get() > 0) {
                             LauncherLog.w("Unduhan", "${failedAssets.get()} dari $totalObjects aset gagal diunduh (suara atau bahasa bisa hilang di game)")
                         }
@@ -333,6 +349,7 @@ class MinecraftDownloader(
                                             } catch (_: Exception) {}
                                         }
                                         if (!success) {
+                                            failedRequired.incrementAndGet()
                                             LauncherLog.w("MinecraftDownloader", "Gagal mengunduh library Fabric: ${lib.name}")
                                         }
                                     }
@@ -345,6 +362,22 @@ class MinecraftDownloader(
                     }
                     fabricJobs.awaitAll()
                 }
+            }
+
+            // Berkas wajib yang kurang: berhenti di sini (sebelum memasang Forge yang berat) dan jangan tandai terpasang.
+            // Toleransi aset kecil (maks. 1%, minimal 5 berkas): bila server aset sesekali menolak, game tetap layak main.
+            val tolerableAssets = maxOf(5, assetTotal / 100)
+            if (failedRequired.get() > 0 || assetFailures > tolerableAssets) {
+                val parts = mutableListOf<String>()
+                if (failedRequired.get() > 0) parts.add("${failedRequired.get()} library")
+                if (assetFailures > tolerableAssets) parts.add("$assetFailures aset suara/bahasa")
+                val msg = "Sebagian file game belum terunduh (${parts.joinToString(" dan ")}), biasanya karena koneksi terputus. " +
+                    "Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang."
+                LauncherLog.w("Unduhan", "Instalasi ${instance.name} belum lengkap: ${parts.joinToString(", ")}")
+                return@withContext Result.failure(IncompleteInstallException(msg))
+            }
+            if (assetFailures > 0) {
+                LauncherLog.w("Unduhan", "$assetFailures aset belum terunduh (di bawah batas toleransi $tolerableAssets); instalasi tetap dianggap selesai")
             }
 
             // 6. Pasang Forge (1.7.10+) atau NeoForge (1.20.2+). Installer Forge modern dijalankan sekali

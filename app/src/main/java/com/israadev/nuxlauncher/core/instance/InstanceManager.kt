@@ -442,11 +442,7 @@ object InstanceManager {
     }
 
     fun updateInstance(context: Context, updated: Instance) {
-        val instDir = getInstanceDir(context, updated)
-        try {
-            File(instDir, "instance.json").writeText(gson.toJson(updated))
-        } catch (_: Exception) {}
-
+        // instance.json ikut ditulis oleh save() di bawah (atomik, dan dilewati bila tidak berubah)
         val list = _instances.value.map { if (it.id == updated.id) updated else it }
         _instances.value = list
         if (_selectedInstance.value?.id == updated.id) {

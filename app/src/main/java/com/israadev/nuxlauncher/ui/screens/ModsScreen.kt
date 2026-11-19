@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
-import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
@@ -184,50 +183,6 @@ fun ModsScreen(
     initialType: String = "mods",
     onOpenBrowse: (String) -> Unit = {}
 ) {
-    // Instance Starling mengelola mod, shader, dan resource pack dari dalam game; Amber belum ikut mengelolanya.
-    val starlingInstance by InstanceManager.selectedInstance.collectAsState()
-    if (StarlingEngine.isEngine(starlingInstance?.loader)) {
-        StarlingModsNote(modifier)
-    } else {
-        JavaAndHorizonModsScreen(onNavigateBack, modifier, onOpenAccounts, onOpenSettings, mode, initialType, onOpenBrowse)
-    }
-}
-
-@Composable
-private fun StarlingModsNote(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Mod, shader, dan resource pack Starling",
-            color = AmberUi.Text,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Text(
-            text = "Starling mengelolanya dari dalam game (menu Options). Pengelola mod Amber belum mendukung mesin ini.",
-            color = AmberUi.TextDim,
-            fontSize = 13.sp,
-            lineHeight = 18.sp,
-            modifier = Modifier.padding(top = 6.dp)
-        )
-    }
-}
-
-@Composable
-private fun JavaAndHorizonModsScreen(
-    onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier,
-    onOpenAccounts: () -> Unit = {},
-    onOpenSettings: () -> Unit = {},
-    mode: ModsMode = ModsMode.BROWSE,
-    initialType: String = "mods",
-    onOpenBrowse: (String) -> Unit = {}
-) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -238,7 +193,7 @@ private fun JavaAndHorizonModsScreen(
     val mainMode = if (mode == ModsMode.MANAGE) "installed" else "browse"
 
     // Mesin Rust (Horizon) hanya memakai Shader dan Resource Pack, dan hanya dari Modrinth
-    val rustInstance = HorizonEngine.isEngine(selectedInstance?.loader)
+    val rustInstance = HorizonEngine.isRust(selectedInstance?.loader)
 
     // Item Type: "mods" | "modpacks" | "resourcepacks" | "shaderpacks" | "datapacks"
     var activeTypeState by remember { mutableStateOf(initialType) }
@@ -997,7 +952,7 @@ private fun JavaAndHorizonModsScreen(
                                         scope.launch {
                                             if (rustInstance) {
                                                 // Mesin Rust: pilihan disimpan di pengaturan mesin, bukan ganti nama berkas
-                                                val picked = NuxModManager.toggleEngineItem(context, activeType, item)
+                                                val picked = NuxModManager.toggleEngineItem(context, activeType, item, selectedInstance?.loader)
                                                 val problem = picked.exceptionOrNull()
                                                 if (problem != null) {
                                                     Toast.makeText(

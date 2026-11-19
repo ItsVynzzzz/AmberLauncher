@@ -145,11 +145,11 @@ object NuxModManager {
     ): List<InstalledModItem> = withContext(Dispatchers.IO) {
         // World: tiap folder di saves yang punya level.dat (mesin Rust belum mendukung world)
         if (itemType == WorldInstaller.ITEM_TYPE) {
-            return@withContext if (HorizonEngine.isEngine(instance.loader)) emptyList() else listWorldItems(context, instance)
+            return@withContext if (HorizonEngine.isRust(instance.loader)) emptyList() else listWorldItems(context, instance)
         }
         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
-        if (HorizonEngine.isEngine(instance.loader)) {
-            return@withContext HorizonContent.installed(HorizonEngine.engineHome(context), itemType)
+        if (HorizonEngine.isRust(instance.loader)) {
+            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType)
         }
         val targetDir = getTargetDir(context, instance, itemType, worldName)
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
@@ -319,8 +319,8 @@ object NuxModManager {
         item: InstalledModItem,
         worldName: String? = null
     ): Boolean = withContext(Dispatchers.IO) {
-        if (HorizonEngine.isEngine(instance.loader)) {
-            return@withContext HorizonContent.delete(HorizonEngine.engineHome(context), itemType, item.originalFilename)
+        if (HorizonEngine.isRust(instance.loader)) {
+            return@withContext HorizonContent.delete(HorizonEngine.homeFor(context, instance.loader), itemType, item.originalFilename)
         }
         try {
             val targetDir = getTargetDir(context, instance, itemType, worldName)
@@ -408,8 +408,8 @@ object NuxModManager {
             }
 
             // Mesin Rust: diperiksa dengan aturan mesin lalu masuk ke folder mesin
-            if (HorizonEngine.isEngine(instance.loader)) {
-                return@withContext importEngineFile(context, uri, itemType, fileName)
+            if (HorizonEngine.isRust(instance.loader)) {
+                return@withContext importEngineFile(context, uri, itemType, fileName, instance.loader)
             }
 
             // Validasi format ekstensi file sesuai tipe
@@ -531,7 +531,7 @@ object NuxModManager {
         fileName: String,
         onProgress: ((statusText: String, current: Int, total: Int) -> Unit)?
     ): Result<String> {
-        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        if (HorizonEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
         if (!fileName.lowercase().endsWith(".zip")) {
             return Result.failure(IllegalArgumentException("File world harus berformat .zip"))
         }
@@ -572,7 +572,7 @@ object NuxModManager {
         version: ModrinthVersion,
         onProgress: (statusText: String) -> Unit
     ): Result<List<String>> {
-        if (HorizonEngine.isEngine(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        if (HorizonEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
         val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
             ?: return Result.failure(WorldImportException("Versi ini tidak punya berkas untuk diunduh."))
         val fileName = SafePaths.fileName(file.filename)
@@ -640,7 +640,7 @@ object NuxModManager {
      * Memilih atau melepas satu shader / resource pack lewat berkas pengaturan mesin (bukan ganti nama berkas).
      * Berlaku saat game dibuka lagi. Galatnya berisi pesan yang aman ditampilkan ke pengguna.
      */
-    suspend fun toggleEngineItem(context: Context, itemType: String, item: InstalledModItem): Result<Unit> =
+    suspend fun toggleEngineItem(context: Context, itemType: String, item: InstalledModItem, loader: String? = null): Result<Unit> =
         withContext(Dispatchers.IO) {
             try {
                 // Mesin tidak menjalankan mod di APK 32-bit; mematikan tetap boleh
@@ -648,7 +648,7 @@ object NuxModManager {
                     throw java.io.IOException(HorizonMods.MSG_NEED_64)
                 }
                 HorizonContent.setEnabled(
-                    HorizonEngine.engineHome(context),
+                    HorizonEngine.homeFor(context, loader),
                     itemType,
                     item.originalFilename,
                     !item.isEnabled
@@ -668,11 +668,12 @@ object NuxModManager {
         context: Context,
         version: ModrinthVersion,
         itemType: String,
+        loader: String?,
         onProgress: (String) -> Unit
     ): Result<List<String>> {
         // Mod selalu dari katalog Horizon; shader dan resource pack bila versinya berasal dari katalog itu
         if (itemType == HorizonContent.TYPE_MODS || HorizonRegistry.isRegistryVersion(version)) {
-            return downloadHorizonFile(context, version, itemType, onProgress)
+            return downloadHorizonFile(context, version, itemType, loader, onProgress)
         }
         var staged: File? = null
         return try {
@@ -683,7 +684,7 @@ object NuxModManager {
 
             // Nama berkas datang dari respons server: pastikan tidak berisi folder ("../")
             val name = SafePaths.fileName(picked.filename)
-            val home = HorizonEngine.engineHome(context)
+            val home = HorizonEngine.homeFor(context, loader)
             if (HorizonContent.exists(home, itemType, name)) {
                 Result.success(emptyList())
             } else {
@@ -715,6 +716,7 @@ object NuxModManager {
         context: Context,
         version: ModrinthVersion,
         itemType: String,
+        loader: String?,
         onProgress: (String) -> Unit
     ): Result<List<String>> {
         var staged: File? = null
@@ -732,7 +734,7 @@ object NuxModManager {
                 throw java.io.IOException(if (kind == HorizonRegistry.KIND_MOD) HorizonMods.MSG_TOO_BIG else HorizonContent.MSG_TOO_BIG)
             }
 
-            val home = HorizonEngine.engineHome(context)
+            val home = HorizonEngine.homeFor(context, loader)
             if (kind != HorizonRegistry.KIND_MOD && HorizonContent.exists(home, itemType, name)) {
                 Result.success(emptyList())
             } else {
@@ -796,7 +798,7 @@ object NuxModManager {
     }
 
     /** Impor berkas dari HP untuk mesin Rust: disalin ke berkas sementara (paling besar 256 MB), diperiksa, lalu dipasang. */
-    private fun importEngineFile(context: Context, uri: Uri, itemType: String, fileName: String): Result<String> {
+    private fun importEngineFile(context: Context, uri: Uri, itemType: String, fileName: String, loader: String?): Result<String> {
         var staged: File? = null
         return try {
             if (!HorizonContent.supports(itemType)) throw java.io.IOException(HorizonContent.MSG_TYPE)
@@ -807,7 +809,7 @@ object NuxModManager {
             val input = context.contentResolver.openInputStream(uri)
                 ?: throw java.io.IOException("Gagal membuka berkas yang dipilih")
             input.use { HorizonContent.copyBounded(it, target) }
-            HorizonContent.install(target, HorizonEngine.engineHome(context), itemType, fileName)
+            HorizonContent.install(target, HorizonEngine.homeFor(context, loader), itemType, fileName)
         } catch (e: Exception) {
             Result.failure(e)
         } finally {
@@ -831,7 +833,7 @@ object NuxModManager {
         source: String = SOURCE_MODRINTH
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
         // Mesin Rust: Modrinth atau katalog Horizon, tanpa CurseForge dan tanpa saringan versi Minecraft
-        val engineSearch = HorizonEngine.isEngine(instance?.loader)
+        val engineSearch = HorizonEngine.isRust(instance?.loader)
         // Mod untuk mesin Rust selalu dari katalog Horizon; shader dan resource pack dari Horizon bila sumber itu dipilih
         val horizonKind = if (engineSearch && (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)) {
             HorizonRegistry.kindFor(itemType)
@@ -1002,7 +1004,7 @@ object NuxModManager {
     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
         // Mesin Rust: mod (dan shader/resource pack bila sumbernya Horizon) dari katalog Horizon, versi yang cocok
         // dengan versi game mesin
-        val horizonKind = if (HorizonEngine.isEngine(instance?.loader) &&
+        val horizonKind = if (HorizonEngine.isRust(instance?.loader) &&
             (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)
         ) {
             HorizonRegistry.kindFor(itemType)
@@ -1021,7 +1023,7 @@ object NuxModManager {
             }
         }
         // Mesin Rust: semua versi yang punya berkas .zip; yang mencantumkan versi game mesin diurutkan lebih dulu
-        if (HorizonEngine.isEngine(instance?.loader)) {
+        if (HorizonEngine.isRust(instance?.loader)) {
             return@withContext getProjectVersions(projectId)
                 .map { HorizonContent.usableVersions(it, HorizonEngine.SUPPORTED_MC_VERSION) }
         }
@@ -1128,8 +1130,8 @@ object NuxModManager {
         if (itemType == WorldInstaller.ITEM_TYPE) {
             return@withContext downloadWorld(context, instance, version, onProgress)
         }
-        if (HorizonEngine.isEngine(instance.loader)) {
-            return@withContext downloadForEngine(context, version, itemType, onProgress)
+        if (HorizonEngine.isRust(instance.loader)) {
+            return@withContext downloadForEngine(context, version, itemType, instance.loader, onProgress)
         }
         val visitedProjects = mutableSetOf<String>()
         val downloadedFiles = mutableListOf<String>()

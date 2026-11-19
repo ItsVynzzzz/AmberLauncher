@@ -98,6 +98,17 @@ object HorizonEngine {
     fun isEngine(loader: String?): Boolean = loader?.trim().equals(LOADER_ID, ignoreCase = true)
 
     /**
+     * True bila [loader] dijalankan salah satu mesin Rust: Horizon (loader ini) atau Starling. Layar konten (mod,
+     * shader, resource pack) memakai aturan yang sama untuk keduanya: Starling berasal dari garis keturunan yang sama
+     * (folder shaderpacks, resourcepacks, horizon-mods, dan berkas options.txt yang sama).
+     */
+    fun isRust(loader: String?): Boolean = isEngine(loader) || StarlingEngine.isEngine(loader)
+
+    /** Folder data mesin untuk instance berloader [loader]: files/starling untuk Starling, selain itu files/horizon. */
+    fun homeFor(context: Context, loader: String?): File =
+        if (StarlingEngine.isEngine(loader)) StarlingEngine.engineHome(context) else engineHome(context)
+
+    /**
      * True bila pustaka mesin ikut terpasang di APK ini. Memeriksa folder pustaka native aplikasi, yang
      * terisi karena build memakai useLegacyPackaging (lihat app/build.gradle.kts). Hanya cek satu berkas,
      * jadi aman dipanggil dari komposisi UI.

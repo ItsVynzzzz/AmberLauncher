@@ -1,0 +1,6 @@
+[id]
++ Mesin Rust kedua, Starling, kini ada di Buat Instance (tab Starling), berdampingan dengan mesin Rust yang sudah ada. Masih eksperimental: penyiapan game pertama memakai layar Starling.
++ Mod, shader, dan resource pack untuk instance Starling bisa dikelola dari layar Mod Amber, sama seperti mesin Rust lainnya.
+[en]
++ A second Rust engine, Starling, is now in Create Instance (Starling tab), alongside the existing Rust engine. Still experimental: the first game setup uses Starling's own screen.
++ Mods, shaders and resource packs for Starling instances can be managed from Amber's Mods screen, just like the other Rust engine.

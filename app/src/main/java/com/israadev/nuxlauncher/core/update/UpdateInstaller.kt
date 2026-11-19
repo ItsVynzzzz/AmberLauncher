@@ -45,24 +45,12 @@ object UpdateInstaller {
      * berkas bernama aneh, dan unduhan setengah jadi yang lebih dari 14 hari. Jalankan di thread latar.
      */
     fun cleanup(context: Context, installed: AppVersion) {
-        val dir = updatesDir(context)
-        val files = dir.listFiles() ?: return
-        // Nama lama (AmberLauncher-0.1.0-beta.7.apk, ...-32bit.apk) dan nama rilis sekarang
-        // (AmberLauncher-0.1.0-beta.7-64bit-arm64-v8a-RECOMMENDED.apk, ...-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk).
-        val pattern = Regex("""^AmberLauncher-(.+?)(?:-(?:32|64)bit[A-Za-z0-9_-]*)?\.apk(\.part)?$""")
-        val now = System.currentTimeMillis()
-        for (f in files) {
-            if (!f.isFile) continue
-            val m = pattern.matchEntire(f.name)
-            val version = m?.let { AppVersion.parse(it.groupValues[1]) }
-            val stalePart = f.name.endsWith(".part") && now - f.lastModified() > 14L * 24 * 3600 * 1000
-            if (version == null || version <= installed || stalePart) {
-                try {
-                    f.delete()
-                } catch (_: Exception) {
-                }
-            }
-        }
+        UpdateFiles.cleanup(updatesDir(context), installed)
+    }
+
+    /** Menghapus semua unduhan selain [keep] (APK versi lain dan sisa setengah jadi). Jalankan di thread latar. */
+    fun cleanupExcept(context: Context, keep: File) {
+        UpdateFiles.cleanupExcept(updatesDir(context), keep)
     }
 
     // ---- Keadaan perangkat ----------------------------------------------------------------

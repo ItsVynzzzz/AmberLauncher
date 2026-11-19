@@ -1,0 +1,24 @@
+[id]
+~ APK pembaruan yang sudah diunduh kini dihapus begitu aplikasi dibuka setelah pemasangan, juga bila "Periksa otomatis" dimatikan, dan hanya satu APK yang disimpan.
+~ Sisa berkas sementara (salinan modpack yang tidak jadi dipasang, log yang sudah dibagikan, installer Forge lama) dibersihkan otomatis supaya data aplikasi tidak menggembung.
+[en]
+~ The downloaded update APK is now deleted as soon as the app opens after installing it, even if "Check automatically" is off, and only one APK is kept.
+~ Leftover temporary files (modpack copies that were never installed, logs that were already shared, old Forge installers) are cleaned up automatically so app data does not grow.
+[es]
+~ El APK de actualización ahora se elimina siempre al abrir la app una vez instalado, incluso con "Buscar automáticamente" desactivado, y solo se guarda un APK.
+~ Los archivos temporales sobrantes (copias de modpacks que no se instalaron, registros ya compartidos, instaladores antiguos de Forge) se limpian automáticamente para que los datos de la app no crezcan.
+[fil]
+~ Palaging buburahin na ang update APK kapag nabuksan ang app matapos ma-install, kahit naka-off ang "Awtomatikong suriin", at isang APK lang ang itatago.
+~ Awtomatiko nang nililinis ang mga natirang pansamantalang file (kopya ng modpack na hindi na-install, log na naibahagi na, lumang installer ng Forge) para hindi lumobo ang data ng app.
+[pt]
+~ O APK de atualização agora é sempre apagado ao abrir o app depois de instalado, mesmo com "Verificar automaticamente" desativado, e apenas um APK é mantido.
+~ Arquivos temporários que sobraram (cópias de modpacks não instalados, logs já compartilhados, instaladores antigos do Forge) são limpos automaticamente para que os dados do app não cresçam.
+[th]
+~ ไฟล์ APK อัปเดตจะถูกลบทุกครั้งที่เปิดแอปหลังติดตั้งแล้ว แม้จะปิด "ตรวจสอบอัตโนมัติ" และเก็บ APK ไว้เพียงไฟล์เดียว
+~ ไฟล์ชั่วคราวที่เหลือ (สำเนาม็อดแพ็กที่ไม่ได้ติดตั้ง ล็อกที่แชร์ไปแล้ว ตัวติดตั้ง Forge เก่า) จะถูกล้างอัตโนมัติ เพื่อไม่ให้ข้อมูลแอปบวมขึ้น
+[vi]
+~ APK cập nhật giờ luôn bị xóa khi mở ứng dụng sau khi đã cài, kể cả khi tắt "Tự động kiểm tra", và chỉ giữ một APK.
+~ Các tệp tạm còn sót (bản sao modpack không được cài, nhật ký đã chia sẻ, trình cài Forge cũ) được dọn tự động để dữ liệu ứng dụng không phình to.
+[zh]
+~ 更新 APK 在安装后每次打开应用时都会被删除，即使关闭了“自动检查”，并且只保留一个 APK。
+~ 遗留的临时文件（未安装的整合包副本、已分享的日志、旧的 Forge 安装器）会被自动清理，避免应用数据越积越大。

@@ -112,6 +112,10 @@ class MainActivity : ComponentActivity() {
             try {
                 DataLocation.cleanupPending(appCtx)
             } catch (_: Throwable) {}
+            // Sisa berkas sementara di cache (salinan modpack tak terpakai, log yang sudah dibagikan, dll.)
+            try {
+                com.israadev.nuxlauncher.core.utils.CacheSweeper.sweep(appCtx.cacheDir)
+            } catch (_: Throwable) {}
             try {
                 com.israadev.nuxlauncher.core.crash.CrashManager.checkAndNotify(appCtx)
             } catch (_: Throwable) {}

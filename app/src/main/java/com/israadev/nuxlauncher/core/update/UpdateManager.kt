@@ -69,6 +69,7 @@ object UpdateManager {
     fun onForeground(context: Context) {
         val app = context.applicationContext
         foreground = true
+        sweepOnce(app)
 
         val s = _state.value
         if (s is UpdateState.Installing && backgroundedWhileInstalling) {
@@ -119,9 +120,14 @@ object UpdateManager {
         scope.launch { runCheck(app, manual = true) }
     }
 
-    private suspend fun autoCheck(app: Context) {
-        if (!cleanedUp) {
-            cleanedUp = true
+    /**
+     * Sekali per proses: membuang APK pembaruan yang sudah tidak berguna (terutama yang barusan dipasang).
+     * Berjalan apa pun pengaturan "Periksa otomatis", supaya APK lama tidak menumpuk di data aplikasi.
+     */
+    private fun sweepOnce(app: Context) {
+        if (cleanedUp) return
+        cleanedUp = true
+        scope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     UpdateInstaller.cleanup(app, installedVersion(app))
@@ -129,6 +135,9 @@ object UpdateManager {
                 }
             }
         }
+    }
+
+    private suspend fun autoCheck(app: Context) {
         when (_state.value) {
             is UpdateState.Checking,
             is UpdateState.Downloading,
@@ -281,7 +290,14 @@ object UpdateManager {
                             }
                         }
                     )
-                    UpdateInstaller.verifyApk(app, target)?.also { target.delete() }
+                    val problem = UpdateInstaller.verifyApk(app, target)
+                    if (problem != null) {
+                        target.delete()
+                    } else {
+                        // Hanya satu APK yang perlu disimpan: buang versi lain dan sisa unduhan setengah jadi
+                        UpdateInstaller.cleanupExcept(app, target)
+                    }
+                    problem
                 } catch (e: ApkDownloader.DownloadException) {
                     e.failure
                 }
@@ -383,6 +399,11 @@ object UpdateManager {
         val pending = pendingInstall
         when (status) {
             PackageInstaller.STATUS_SUCCESS -> {
+                // Sudah terpasang: APK-nya tidak diperlukan lagi (bila proses ini sempat menerima hasilnya)
+                try {
+                    pending?.second?.delete()
+                } catch (_: Exception) {
+                }
                 pendingInstall = null
                 _state.value = UpdateState.Idle
                 _promptOpen.value = false

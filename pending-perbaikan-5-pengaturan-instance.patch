@@ -1,0 +1,656 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 38dffd7..026ed8c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -164,6 +164,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         const val EXTRA_LOADER_VERSION = "extra_loader_version"
+         const val EXTRA_INSTALLED_MODS = "extra_installed_mods"
+         const val EXTRA_EXTRA_JVM_ARGS = "extra_extra_jvm_args"
++        // Penimpa pengaturan khusus instance (tidak ada = ikuti global)
++        const val EXTRA_OVERRIDE_RAM_MB = "extra_override_ram_mb"
++        const val EXTRA_OVERRIDE_RENDERER = "extra_override_renderer"
++        const val EXTRA_OVERRIDE_RESOLUTION = "extra_override_resolution"
++        const val EXTRA_OVERRIDE_JVM_ARGS = "extra_override_jvm_args"
+         const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
+ 
+         // Setelah sesi ketik layar berakhir, tombol sisa dari keyboard layar yang datang dalam rentang ini
+@@ -547,6 +552,14 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         MouseDiag.sink = { line -> runOnUiThread { liveLogs.add(line) } }
+         MouseDiag.devices()
+         SettingsManager.init(this)
++        // Pengaturan khusus instance yang dimainkan menimpa nilai global untuk sesi ini saja. Dipanggil juga bila semuanya
++        // kosong, supaya penimpa dari sesi sebelumnya tidak terbawa (proses game bisa dipakai ulang).
++        SettingsManager.applyInstanceOverrides(
++            ramMb = if (intent.hasExtra(EXTRA_OVERRIDE_RAM_MB)) intent.getIntExtra(EXTRA_OVERRIDE_RAM_MB, 0) else null,
++            renderer = intent.getStringExtra(EXTRA_OVERRIDE_RENDERER),
++            resolutionRatio = if (intent.hasExtra(EXTRA_OVERRIDE_RESOLUTION)) intent.getIntExtra(EXTRA_OVERRIDE_RESOLUTION, 100) else null,
++            jvmArgs = intent.getStringExtra(EXTRA_OVERRIDE_JVM_ARGS)
++        )
+         // GameActivity jalan di proses :game, terpisah dari MainActivity: warna aksen dan gaya pilihan pemain
+         // harus diterapkan di sini juga, kalau tidak sidebar dan layar loading selalu memakai aksen bawaan.
+         SettingsManager.settings.value.let {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt
+index a3cb55b..a1241b4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashRecovery.kt
+@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.crash
+ import android.content.Context
+ import com.google.gson.JsonParser
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
++import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererInfo
+ import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+@@ -201,16 +202,22 @@ object CrashRecovery {
+             val source = CrashAdvisor.sourceOf(info)
+             val settings = SettingsManager.settings.value
+             val gameDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it) }?.takeIf { it.isDirectory }
++            // Bila instance yang crash punya pengaturan sendiri, itulah yang dipakai game: dasar tawaran dan tempat perbaikannya.
++            val own = instanceOverrides(info)
+ 
+             // 1. RAM: hanya bila HP kehabisan RAM (bukan heap Java yang sempit)
+             if (source == CrashSource.MEMORY && !isJavaHeapOutOfMemory(log)) {
+-                val target = loweredRamMb(settings.ramMb)
++                val target = loweredRamMb(own?.ramMb ?: settings.ramMb)
+                 if (target != null) {
+                     options.add(
+                         RecoveryOption(
+                             RecoveryAction.LOWER_RAM,
+                             "Turunkan RAM ke $target MB",
+-                            "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori.",
++                            if (own?.ramMb != null) {
++                                "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance."
++                            } else {
++                                "Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Pengaturan > Memori."
++                            },
+                             target.toString()
+                         )
+                     )
+@@ -219,7 +226,7 @@ object CrashRecovery {
+ 
+             // 2. Renderer: hanya untuk crash grafis
+             if (source == CrashSource.GRAPHICS) {
+-                rendererOption(context, info, settings.selectedRenderer)?.let { options.add(it) }
++                rendererOption(context, info, own?.renderer ?: settings.selectedRenderer)?.let { options.add(it) }
+             }
+ 
+             // 3. Shader: bila masih menyala dan crash berkaitan dengan grafis, memori, atau log menyebut shader
+@@ -271,12 +278,22 @@ object CrashRecovery {
+             when (option.action) {
+                 RecoveryAction.LOWER_RAM -> {
+                     val mb = option.arg.toIntOrNull() ?: return RecoveryResult(false, FAIL_MESSAGE)
++                    if (instanceOverrides(info)?.ramMb != null && updateOwnInstance(context, info) { it.copy(overrideRamMb = mb) }) {
++                        return RecoveryResult(true, "RAM instance ini diturunkan ke $mb MB.")
++                    }
+                     SettingsManager.init(context)
+                     SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(ramMb = mb))
+                     RecoveryResult(true, "RAM game diturunkan ke $mb MB.")
+                 }
+                 RecoveryAction.RESET_RENDERER -> {
+                     val id = option.arg.ifBlank { "auto" }
++                    if (instanceOverrides(info)?.renderer != null && updateOwnInstance(context, info) { it.copy(overrideRenderer = id) }) {
++                        return RecoveryResult(
++                            true,
++                            if (id == "auto") "Renderer instance ini dikembalikan ke Otomatis."
++                            else "Renderer instance ini diganti ke ${NuxRendererRegistry.findRendererById(id).displayName}."
++                        )
++                    }
+                     SettingsManager.init(context)
+                     SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(selectedRenderer = id))
+                     if (id == "auto") {
+@@ -413,6 +430,35 @@ object CrashRecovery {
+         }
+     }
+ 
++    /** Pengaturan yang dikunci khusus untuk instance yang crash (dibaca ringan dari instance.json), atau null. */
++    private class OwnSettings(val ramMb: Int?, val renderer: String?)
++
++    private fun instanceOverrides(info: GameCrashInfo): OwnSettings? {
++        val instDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it).parentFile } ?: return null
++        val f = File(instDir, "instance.json")
++        if (!f.isFile || f.length() > 65_536) return null
++        return try {
++            val o = JsonParser.parseString(f.readText()).asJsonObject
++            val ram = o.get("overrideRamMb")?.takeIf { it.isJsonPrimitive }?.asInt
++            val renderer = o.get("overrideRenderer")?.takeIf { it.isJsonPrimitive }?.asString?.takeIf { it.isNotBlank() }
++            if (ram == null && renderer == null) null else OwnSettings(ram, renderer)
++        } catch (_: Throwable) {
++            null
++        }
++    }
++
++    /** Mengubah instance yang crash di daftar instance. False bila instance-nya tidak ditemukan (pemanggil lalu memakai pengaturan global). */
++    private fun updateOwnInstance(context: Context, info: GameCrashInfo, change: (Instance) -> Instance): Boolean {
++        // Daftar instance dimuat dulu supaya menyimpan satu instance tidak menimpa daftar dengan isi kosong.
++        InstanceManager.init(context)
++        if (InstanceManager.instances.value.isEmpty()) return false
++        val id = resolveInstanceId(info)
++        val inst = InstanceManager.instances.value.firstOrNull { (id != null && it.id == id) || it.name == info.instanceName }
++            ?: return false
++        InstanceManager.updateInstance(context, change(inst))
++        return true
++    }
++
+     private fun javaIsManual(info: GameCrashInfo): Boolean {
+         if (!SettingsManager.settings.value.defaultJavaRuntime.equals("auto", ignoreCase = true)) return true
+         val runtime = instanceJavaRuntime(info) ?: return false
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+index e57bd53..cb4aa01 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+@@ -446,6 +446,11 @@ object GameLauncher {
+                 putStringArrayListExtra(GameActivity.EXTRA_EXTRA_JVM_ARGS, ArrayList(forgeLaunch.jvmArgs))
+                 putStringArrayListExtra(GameActivity.EXTRA_EXTRA_GAME_ARGS, ArrayList(forgeLaunch.gameArgs))
+             }
++            // Pengaturan yang dikunci khusus untuk instance ini; yang kosong mengikuti Pengaturan global.
++            instance.overrideRamMb?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RAM_MB, it) }
++            instance.overrideRenderer?.takeIf { it.isNotBlank() }?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RENDERER, it) }
++            instance.overrideResolutionRatio?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RESOLUTION, it) }
++            instance.overrideJvmArgs?.let { putExtra(GameActivity.EXTRA_OVERRIDE_JVM_ARGS, it) }
+             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+         }
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+index 8112614..440a64a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+@@ -113,8 +113,19 @@ data class Instance(
+     val icon: String = "crafting_table",
+     val javaRuntime: String = "auto", // "auto", "jre-8", "jre-17", "jre-21", "jre-25"
+     val createdTime: Long = System.currentTimeMillis(),
+-    var isDownloaded: Boolean = false
+-)
++    var isDownloaded: Boolean = false,
++    // Penimpa pengaturan global khusus instance ini. null = ikuti Pengaturan. Instance lama tidak punya field ini
++    // di JSON-nya dan terbaca null, jadi tetap mengikuti pengaturan global seperti sebelumnya.
++    val overrideRamMb: Int? = null,
++    val overrideRenderer: String? = null,
++    val overrideResolutionRatio: Int? = null,
++    val overrideJvmArgs: String? = null
++) {
++    /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
++    val hasOverrides: Boolean
++        get() = overrideRamMb != null || overrideRenderer != null ||
++            overrideResolutionRatio != null || overrideJvmArgs != null
++}
+ 
+ /**
+  * User Account representation
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
+index 097b92e..1c28192 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
+@@ -60,10 +60,55 @@ object SettingsManager {
+         writeNow()
+     }
+ 
++    // --- Penimpa per instance (hanya proses game) -----------------------------------------------
++    // Proses game membaca pengaturan dari berkas global, lalu menimpa sebagian nilainya di memori dengan penimpa milik
++    // instance yang sedang dimainkan. Penimpa TIDAK PERNAH ditulis ke berkas global: lihat [persistable].
++    private class Overrides(val ramMb: Int?, val renderer: String?, val resolutionRatio: Int?, val jvmArgs: String?)
++    @Volatile private var overrides: Overrides? = null
++    @Volatile private var baseline: LauncherSettings? = null
++
++    /**
++     * Menimpa pengaturan global di memori untuk sesi game ini. Nilai null berarti "ikuti global". Dipanggil setelah [init].
++     * Perubahan dari menu dalam game pada nilai yang ditimpa hanya berlaku untuk sesi ini.
++     */
++    fun applyInstanceOverrides(ramMb: Int?, renderer: String?, resolutionRatio: Int?, jvmArgs: String?) {
++        val cur = _settings.value
++        if (ramMb == null && renderer == null && resolutionRatio == null && jvmArgs == null) {
++            overrides = null
++            baseline = null
++            return
++        }
++        baseline = cur
++        overrides = Overrides(ramMb, renderer, resolutionRatio, jvmArgs)
++        _settings.value = cur.copy(
++            ramMb = ramMb?.coerceAtLeast(512) ?: cur.ramMb,
++            selectedRenderer = renderer?.takeIf { it.isNotBlank() } ?: cur.selectedRenderer,
++            // Mode Hemat membatasi resolusi untuk semua game; resolusi khusus instance tidak boleh menembus batas itu.
++            resolutionRatio = resolutionRatio?.coerceIn(40, 125)?.let { if (cur.powerSaverMode) PowerSaver.cappedResolution(it) else it }
++                ?: cur.resolutionRatio,
++            customJvmArgs = jvmArgs ?: cur.customJvmArgs
++        )
++    }
++
++    /** Nilai yang boleh ditulis ke berkas global: bagian yang ditimpa dikembalikan ke nilai global aslinya. */
++    private fun persistable(s: LauncherSettings): LauncherSettings {
++        val o = overrides ?: return s
++        val b = baseline ?: return s
++        return s.copy(
++            ramMb = if (o.ramMb != null) b.ramMb else s.ramMb,
++            selectedRenderer = if (o.renderer != null) b.selectedRenderer else s.selectedRenderer,
++            resolutionRatio = if (o.resolutionRatio != null) b.resolutionRatio else s.resolutionRatio,
++            customJvmArgs = if (o.jvmArgs != null) b.customJvmArgs else s.customJvmArgs
++        )
++    }
++
+     fun init(context: Context) {
+         // Init ulang (mis. dari alur pemulihan) membaca berkas lagi: tuntaskan dulu penulisan yang tertunda
+         // supaya perubahan terakhir di memori tidak tertimpa isi berkas yang lebih lama.
+         flush()
++        // Memuat ulang dari berkas berarti kembali ke nilai global; penimpa sesi sebelumnya (proses game bisa dipakai ulang) hilang.
++        overrides = null
++        baseline = null
+         val file = getSettingsFile(context)
+         settingsFile = file
+         // Isi berkas bisa saja diubah proses lain (mis. tombol HUD di dalam game): jangan lewati tulis berikutnya
+@@ -191,7 +236,7 @@ object SettingsManager {
+         val file = settingsFile ?: return
+         synchronized(writeLock) {
+             try {
+-                val json = gson.toJson(_settings.value)
++                val json = gson.toJson(persistable(_settings.value))
+                 if (json == lastWrittenJson) return
+                 com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
+                 lastWrittenJson = json
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+index d372b20..89f161e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.Edit
+ import androidx.compose.material.icons.outlined.Extension
+ import androidx.compose.material.icons.outlined.Folder
+ import androidx.compose.material.icons.outlined.Refresh
++import androidx.compose.material.icons.outlined.Speed
+ import androidx.compose.material.icons.outlined.Tune
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
+@@ -40,6 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.horizon.HorizonEngine
++import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.mods.NuxModManager
+@@ -81,6 +84,7 @@ fun NuxEditInstanceDialog(
+     var editName by remember { mutableStateOf(instance.name) }
+     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
+     var showDeleteConfirm by remember { mutableStateOf(false) }
++    var showInstanceSettings by remember { mutableStateOf(false) }
+     var modCount by remember { mutableStateOf<Int?>(null) }
+ 
+     val autoRecommendedRuntime = remember(instance.mcVersion) {
+@@ -166,6 +170,16 @@ fun NuxEditInstanceDialog(
+                 InstanceManager.openInstanceFolder(context, instance)
+             }
+         )
++        // Mesin Rust (Horizon, Starling) tidak memakai JVM, RAM Java, maupun renderer launcher: tidak ada yang bisa diatur.
++        if (!HorizonEngine.isEngine(instance.loader) && !StarlingEngine.isEngine(instance.loader)) {
++            AmberActionPill(
++                icon = Icons.Outlined.Speed,
++                label = "Pengaturan instance",
++                trailing = if (instance.hasOverrides) "Khusus" else "Ikuti global",
++                showChevron = true,
++                onClick = { showInstanceSettings = true }
++            )
++        }
+         if (onRepair != null) {
+             AmberActionPill(
+                 icon = Icons.Outlined.Refresh,
+@@ -242,6 +256,15 @@ fun NuxEditInstanceDialog(
+             }
+         }
+     }
++
++    if (showInstanceSettings) {
++        // Dibuka di atas halaman ini. Tersimpan lewat tombol Simpan di halamannya; nama dan Java di halaman ini tidak ikut berubah.
++        NuxInstanceSettingsDialog(
++            instance = instance,
++            onDismiss = { showInstanceSettings = false },
++            onSave = onInstanceUpdated
++        )
++    }
+ }
+ 
+ /** Kartu kaca bersudut besar untuk satu kelompok isian. */
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstanceSettingsDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstanceSettingsDialog.kt
+new file mode 100644
+index 0000000..1cd02a3
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstanceSettingsDialog.kt
+@@ -0,0 +1,300 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ExperimentalLayoutApi
++import androidx.compose.foundation.layout.FlowRow
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.outlined.Check
++import androidx.compose.material.icons.outlined.Refresh
++import androidx.compose.material.icons.outlined.Tune
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.collectAsState
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.models.Instance
++import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
++import com.israadev.nuxlauncher.core.settings.PowerSaver
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.ui.components.AmberChoicePill
++import com.israadev.nuxlauncher.ui.components.AmberField
++import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.screens.AmberPillButton
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import com.israadev.nuxlauncher.ui.theme.amberGlass
++
++private fun ramLabel(mb: Int): String =
++    if (mb % 1024 == 0) "${mb / 1024} GB" else "${String.format("%.1f", mb / 1024f)} GB"
++
++/**
++ * Pengaturan khusus satu instance: RAM, skala resolusi, renderer, dan argumen JVM.
++ *
++ * Tiap bagian punya pilihan "Ikuti global" (bawaan): selama itu terpilih, instance memakai Pengaturan umum dan ikut
++ * berubah bila Pengaturan diubah. Memilih nilai lain mengunci nilai itu hanya untuk instance ini, tanpa menyentuh
++ * Pengaturan umum. Berguna untuk HP kelas bawah: modpack berat diberi RAM besar, dunia vanilla ringan tetap hemat.
++ *
++ * Tersimpan lewat [onSave] saat tombol Simpan ditekan; panah kembali menutup tanpa menyimpan.
++ */
++@OptIn(ExperimentalLayoutApi::class)
++@Composable
++fun NuxInstanceSettingsDialog(
++    instance: Instance,
++    onDismiss: () -> Unit,
++    onSave: (Instance) -> Unit
++) {
++    val context = LocalContext.current
++    val global by SettingsManager.settings.collectAsState()
++
++    var ram by remember { mutableStateOf(instance.overrideRamMb) }
++    var resolution by remember { mutableStateOf(instance.overrideResolutionRatio) }
++    var renderer by remember { mutableStateOf(instance.overrideRenderer?.takeIf { it.isNotBlank() }) }
++    var useJvm by remember { mutableStateOf(instance.overrideJvmArgs != null) }
++    var jvm by remember { mutableStateOf(instance.overrideJvmArgs.orEmpty()) }
++
++    val totalRamMb = remember { SettingsManager.getTotalDeviceMemoryMb(context) }
++    val maxRam = remember(totalRamMb) { (totalRamMb * 0.6f).toInt().coerceAtLeast(1024) }
++    val ramChoices = remember(ram, maxRam) {
++        (listOf(1024, 1536, 2048, 3072, 4096).filter { it <= maxRam } + listOfNotNull(ram)).distinct().sorted()
++    }
++    val resolutionChoices = remember(resolution) {
++        (listOf(50, 60, 70, 80, 90, 100) + listOfNotNull(resolution)).distinct().sorted()
++    }
++    val rendererChoices = remember(renderer, instance.mcVersion) {
++        val list = NuxRendererRegistry.availableRenderers
++            .filter { NuxRendererRegistry.isSupportedForVersion(it, instance.mcVersion) }
++            .toMutableList()
++        // Pilihan tersimpan yang tidak ada di daftar tetap ditampilkan, supaya pengguna bisa melihat dan menggantinya.
++        renderer?.let { id ->
++            val info = NuxRendererRegistry.findRendererById(id)
++            if (list.none { it.id == info.id }) list.add(info)
++        }
++        list
++    }
++    val globalRenderer = remember(global.selectedRenderer) {
++        NuxRendererRegistry.findRendererById(global.selectedRenderer).displayName
++    }
++
++    val anySet = ram != null || resolution != null || renderer != null || useJvm
++
++    val save: () -> Unit = {
++        onSave(
++            instance.copy(
++                overrideRamMb = ram,
++                overrideResolutionRatio = resolution,
++                overrideRenderer = renderer,
++                overrideJvmArgs = if (useJvm) jvm.trim().replace(Regex("\\s+"), " ") else null
++            )
++        )
++        Toast.makeText(context, "Pengaturan instance disimpan", Toast.LENGTH_SHORT).show()
++        onDismiss()
++    }
++
++    AmberPage(
++        onDismiss = onDismiss,
++        title = "Pengaturan instance",
++        icon = Icons.Outlined.Tune,
++        subtitle = instance.name,
++        actions = {
++            AmberPillButton(
++                text = "Simpan",
++                onClick = save,
++                icon = Icons.Outlined.Check
++            )
++        }
++    ) { _ ->
++        Column(
++            modifier = Modifier
++                .fillMaxSize()
++                .verticalScroll(rememberScrollState())
++                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
++            verticalArrangement = Arrangement.spacedBy(12.dp)
++        ) {
++            Text(
++                text = "Nilai yang dipilih di sini hanya berlaku untuk instance ini. \"Ikuti global\" memakai Pengaturan umum, " +
++                    "dan ikut berubah bila Pengaturan umum diubah.",
++                color = AmberUi.TextDim,
++                fontSize = 12.sp,
++                lineHeight = 17.sp,
++                modifier = Modifier.padding(horizontal = 4.dp)
++            )
++
++            SectionCard {
++                AmberPageLabel("MEMORI (RAM)")
++                FlowRow(
++                    horizontalArrangement = Arrangement.spacedBy(8.dp),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberChoicePill(
++                        text = "Ikuti global (${ramLabel(global.ramMb)})",
++                        selected = ram == null,
++                        onClick = { ram = null }
++                    )
++                    ramChoices.forEach { mb ->
++                        AmberChoicePill(text = ramLabel(mb), selected = ram == mb, onClick = { ram = mb })
++                    }
++                }
++                val chosen = ram
++                if (chosen != null && chosen > totalRamMb * 0.5f) {
++                    Spacer(modifier = Modifier.height(8.dp))
++                    Text(
++                        text = "Lebih dari separuh RAM HP: game bisa ditutup sendiri oleh Android.",
++                        color = AmberUi.Danger,
++                        fontSize = 12.sp,
++                        lineHeight = 16.sp
++                    )
++                }
++            }
++
++            SectionCard {
++                AmberPageLabel("SKALA RESOLUSI")
++                FlowRow(
++                    horizontalArrangement = Arrangement.spacedBy(8.dp),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberChoicePill(
++                        text = "Ikuti global (${global.resolutionRatio}%)",
++                        selected = resolution == null,
++                        onClick = { resolution = null }
++                    )
++                    resolutionChoices.forEach { r ->
++                        AmberChoicePill(text = "$r%", selected = resolution == r, onClick = { resolution = r })
++                    }
++                }
++                Spacer(modifier = Modifier.height(8.dp))
++                Text(
++                    text = "Lebih kecil = FPS lebih tinggi, gambar lebih buram.",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 16.sp
++                )
++                val chosen = resolution
++                if (chosen != null && global.powerSaverMode && chosen > PowerSaver.MAX_RESOLUTION) {
++                    Spacer(modifier = Modifier.height(4.dp))
++                    Text(
++                        text = "Mode Hemat sedang menyala: resolusi dibatasi ${PowerSaver.MAX_RESOLUTION}%.",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        lineHeight = 16.sp
++                    )
++                }
++            }
++
++            SectionCard {
++                AmberPageLabel("RENDERER")
++                FlowRow(
++                    horizontalArrangement = Arrangement.spacedBy(8.dp),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberChoicePill(
++                        text = "Ikuti global ($globalRenderer)",
++                        selected = renderer == null,
++                        onClick = { renderer = null }
++                    )
++                    rendererChoices.forEach { info ->
++                        AmberChoicePill(
++                            text = info.displayName,
++                            selected = renderer == info.id,
++                            onClick = { renderer = info.id }
++                        )
++                    }
++                }
++                Spacer(modifier = Modifier.height(8.dp))
++                Text(
++                    text = "Hanya renderer yang cocok dengan Minecraft ${instance.mcVersion} yang ditampilkan.",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 16.sp
++                )
++            }
++
++            SectionCard {
++                AmberPageLabel("ARGUMEN JVM TAMBAHAN")
++                FlowRow(
++                    horizontalArrangement = Arrangement.spacedBy(8.dp),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
++                ) {
++                    AmberChoicePill(
++                        text = if (global.customJvmArgs.isBlank()) "Ikuti global (kosong)" else "Ikuti global",
++                        selected = !useJvm,
++                        onClick = { useJvm = false }
++                    )
++                    AmberChoicePill(
++                        text = "Khusus instance ini",
++                        selected = useJvm,
++                        onClick = { useJvm = true }
++                    )
++                }
++                if (useJvm) {
++                    Spacer(modifier = Modifier.height(10.dp))
++                    AmberField(
++                        value = jvm,
++                        onValueChange = { jvm = it.replace("\n", " ") },
++                        placeholder = "Contoh: -XX:+UseG1GC"
++                    )
++                }
++                Spacer(modifier = Modifier.height(8.dp))
++                Text(
++                    text = if (useJvm) {
++                        "Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini."
++                    } else if (global.customJvmArgs.isBlank()) {
++                        "Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan."
++                    } else {
++                        "Memakai argumen dari Pengaturan umum: ${global.customJvmArgs}"
++                    },
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 16.sp
++                )
++            }
++
++            if (anySet) {
++                AmberPillButton(
++                    text = "Kembalikan semua ke global",
++                    onClick = {
++                        ram = null
++                        resolution = null
++                        renderer = null
++                        useJvm = false
++                        jvm = ""
++                    },
++                    icon = Icons.Outlined.Refresh,
++                    filled = false,
++                    modifier = Modifier.fillMaxWidth()
++                )
++            }
++        }
++    }
++}
++
++/** Kartu kaca bersudut besar untuk satu kelompok pilihan. */
++@Composable
++private fun SectionCard(content: @Composable () -> Unit) {
++    val shape = RoundedCornerShape(24.dp)
++    Column(
++        modifier = Modifier
++            .fillMaxWidth()
++            .clip(shape)
++            .amberGlass(shape)
++            .padding(16.dp)
++    ) {
++        content()
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 0934ea3..54978c9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -476,7 +476,8 @@ fun DashboardScreen() {
+                 return
+             }
+ 
+-            val currentRendererInfo = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
++            // Instance bisa punya renderer sendiri; bila tidak, ikut Pengaturan.
++            val currentRendererInfo = NuxRendererRegistry.findRendererById(inst.overrideRenderer?.takeIf { it.isNotBlank() } ?: launcherSettings.selectedRenderer)
+             val isSupported = NuxRendererRegistry.isSupportedForVersion(currentRendererInfo, inst.mcVersion)
+             if (!isSupported) {
+                 unsupportedRendererInfo = currentRendererInfo
+@@ -565,8 +566,9 @@ fun DashboardScreen() {
+             when (currentTab) {
+                 // Home: layar penuh tanpa sidebar dan kartu; navigasinya ada di bar bawah.
+                 "home" -> NuxReadable {
+-                    val rendererLabel = remember(launcherSettings.selectedRenderer) {
+-                        val info = NuxRendererRegistry.findRendererById(launcherSettings.selectedRenderer)
++                    val effectiveRenderer = selectedInstance?.overrideRenderer?.takeIf { it.isNotBlank() } ?: launcherSettings.selectedRenderer
++                    val rendererLabel = remember(effectiveRenderer) {
++                        val info = NuxRendererRegistry.findRendererById(effectiveRenderer)
+                         HomeInfo.rendererLabel(info.id, info.displayName)
+                     }
+                     HomeScene(
+diff --git a/changelog/entries/20261118-pengaturan-per-instance.txt b/changelog/entries/20261118-pengaturan-per-instance.txt
+new file mode 100644
+index 0000000..1d0531d
+--- /dev/null
++++ b/changelog/entries/20261118-pengaturan-per-instance.txt
+@@ -0,0 +1,8 @@
++[id]
+++ Pengaturan per instance (Ubah instance > Pengaturan instance): RAM, skala resolusi, renderer, dan argumen JVM bisa dikunci khusus untuk satu instance. Modpack berat dapat diberi RAM besar tanpa membuat dunia vanilla ringan ikut boros.
++~ "Ikuti global" tetap menjadi bawaan: instance lama berjalan seperti sebelumnya dan ikut berubah bila Pengaturan umum diubah.
++~ Tawaran perbaikan setelah crash (turunkan RAM, ganti renderer) kini mengubah pengaturan instance yang crash bila instance itu punya pengaturan sendiri.
++[en]
+++ Per-instance settings (Edit instance > Instance settings): RAM, resolution scale, renderer and JVM arguments can be locked for a single instance. A heavy modpack can get more RAM without making a light vanilla world waste memory.
++~ "Follow global" stays the default: existing instances behave as before and follow the general Settings when those change.
++~ The fixes offered after a crash (lower RAM, change renderer) now change the crashed instance's own settings when it has any.
+# FIN part=1/1 files=9

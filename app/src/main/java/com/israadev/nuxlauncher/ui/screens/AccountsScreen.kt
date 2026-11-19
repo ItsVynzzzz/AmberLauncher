@@ -926,10 +926,13 @@ internal fun AddAccountModal(
     val tintMicrosoft = Color(0xFF6CB6FF)
     val tintElyBy = Color(0xFFB79CFF)
 
+    // Aturan nama Minecraft: 3-16 karakter, huruf/angka/garis bawah. Server (termasuk server offline-mode) menolak selain itu.
+    val offlineNameRegex = remember { Regex("^[A-Za-z0-9_]{3,16}$") }
+
     val saveOffline: () -> Unit = {
         val cleanName = offlineName.trim()
-        if (cleanName.isBlank()) {
-            Toast.makeText(context, "Username tidak boleh kosong", Toast.LENGTH_SHORT).show()
+        if (!offlineNameRegex.matches(cleanName)) {
+            Toast.makeText(context, "Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)", Toast.LENGTH_SHORT).show()
         } else {
             val offlineUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$cleanName".toByteArray(Charsets.UTF_8))
                 .toString()
@@ -1010,6 +1013,7 @@ internal fun AddAccountModal(
             when (selectedTab) {
                 // ---------------- OFFLINE ----------------
                 "offline" -> {
+                    val offlineNameOk = offlineNameRegex.matches(offlineName.trim())
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -1024,7 +1028,8 @@ internal fun AddAccountModal(
                                 .border(1.dp, AmberUi.Border, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            if (offlineName.trim().isNotBlank()) {
+                            // Pratinjau hanya untuk nama yang valid, supaya tiap ketikan tidak memicu unduhan gambar.
+                            if (offlineNameOk) {
                                 NuxNetworkImage(
                                     model = "https://mc-heads.net/avatar/${offlineName.trim()}/80",
                                     contentDescription = offlineName,
@@ -1051,12 +1056,28 @@ internal fun AddAccountModal(
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    if (offlineName.trim().isNotEmpty() && !offlineNameOk) {
+                        Text(
+                            text = "Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).",
+                            color = AmberUi.Danger,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    Text(
+                        text = "Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.",
+                        color = AmberUi.TextDim,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                        modifier = Modifier.padding(top = 10.dp)
+                    )
                     Spacer(modifier = Modifier.height(14.dp))
                     AmberActionButton(
                         text = "Simpan akun",
                         onClick = saveOffline,
                         icon = Icons.Outlined.Check,
-                        enabled = offlineName.trim().isNotBlank(),
+                        enabled = offlineNameOk,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

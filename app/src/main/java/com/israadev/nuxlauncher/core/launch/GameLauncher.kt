@@ -99,7 +99,14 @@ object GameLauncher {
             launchPrepared(context, instance, account)
         } catch (t: Throwable) {
             LauncherLog.e("Peluncuran", "Persiapan ${instance.name} gagal sebelum game dimulai", t)
-            throw t
+            // Kehabisan memori JVM tidak aman dilanjutkan: biarkan layar crash launcher yang menanganinya.
+            if (t is VirtualMachineError) throw t
+            // Galat lain (berkas versi rusak, library hilang, disk penuh) tidak boleh menjatuhkan seluruh launcher.
+            Toast.makeText(
+                context.applicationContext,
+                "Game belum bisa dimulai: ${t.message ?: t.javaClass.simpleName}. Rincian ada di log launcher.",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

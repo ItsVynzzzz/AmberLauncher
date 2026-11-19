@@ -1,0 +1,10 @@
+[id]
+! Tombol Kembali sekarang kembali ke layar sebelumnya, tidak lagi menutup launcher.
+! Memutar layar atau mengganti tema/bahasa tidak lagi mematikan game yang sedang berjalan.
+! Galat saat menekan PLAY kini tampil sebagai pesan yang jelas, bukan menutup launcher.
+~ Nama akun offline diperiksa langsung (3-16 huruf, angka, atau garis bawah) dengan penjelasan di bawah isian.
+[en]
+! The Back button now returns to the previous screen instead of closing the launcher.
+! Rotating the screen or changing theme/language no longer kills a running game.
+! An error when pressing PLAY now shows a clear message instead of closing the launcher.
+~ The offline account name is checked as you type (3-16 letters, digits or underscore) with a hint under the field.

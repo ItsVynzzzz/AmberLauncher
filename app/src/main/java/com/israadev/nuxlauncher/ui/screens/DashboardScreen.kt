@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.widget.ImageView
 import com.israadev.nuxlauncher.ui.i18n.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
@@ -186,6 +187,16 @@ fun DashboardScreen() {
     // (dari Home = Home, dari layar kelola konten = layar kelola konten).
     var modsInitialType by remember { mutableStateOf("mods") }
     var modsBackTab by remember { mutableStateOf("home") }
+
+    // Tombol Back sistem, gestur Back, dan tombol B gamepad: dari layar mana pun kembali ke layar asalnya
+    // (sama dengan panah kembali di tiap layar), bukan menutup launcher. Di Home Back tetap keluar seperti biasa.
+    BackHandler(enabled = currentTab != "home") {
+        currentTab = when (currentTab) {
+            "gui_editor" -> "settings"
+            "mods" -> modsBackTab
+            else -> "home"
+        }
+    }
 
     // Controller: LB/RB berpindah antar tab (Home, Akun, Mod, Pengaturan).
     DisposableEffect(Unit) {

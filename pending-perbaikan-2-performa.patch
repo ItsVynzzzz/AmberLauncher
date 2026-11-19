@@ -1,0 +1,613 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 2881e81..ceccfa7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -91,10 +91,16 @@ class MainActivity : ComponentActivity() {
+ 
+         handleIncomingAddonIntent(intent)
+ 
+-        // Initialize core engines
++        // Initialize core engines (waktu tiap langkah dicatat ke log launcher untuk mencari yang lambat di HP kelas bawah)
++        val initStart = System.nanoTime()
+         AccountManager.init(this)
++        val tAccounts = System.nanoTime()
+         InstanceManager.init(this)
++        val tInstances = System.nanoTime()
+         SettingsManager.init(this)
++        val tSettings = System.nanoTime()
++        // Di proses launcher, pengaturan ditulis di thread latar (slider tidak lagi menunggu fsync di thread UI)
++        SettingsManager.enableDeferredWrites()
+         // Terapkan warna aksen dan gaya tampilan tersimpan sebelum layar pertama digambar
+         SettingsManager.settings.value.let {
+             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
+@@ -103,6 +109,7 @@ class MainActivity : ComponentActivity() {
+         }
+         com.israadev.nuxlauncher.core.device.PhysicalMouseChecker.initChecker(this)
+         com.israadev.nuxlauncher.core.controls.ControlLayoutManager.init(this)
++        val tAll = System.nanoTime()
+         val appCtx = applicationContext
+         bgExecutor.execute {
+             try {
+@@ -172,6 +179,19 @@ class MainActivity : ComponentActivity() {
+                 }
+             }
+         }
++
++        // Catatan waktu start dingin: dari proses dimulai sampai kerangka layar pertama siap digambar.
++        // Hanya pada pembuatan pertama; Activity yang dibuat ulang (mis. setelah proses dimatikan) tidak mewakili start dingin.
++        if (savedInstanceState == null) window.decorView.post {
++            val sinceProcessMs = android.os.SystemClock.elapsedRealtime() - android.os.Process.getStartElapsedRealtime()
++            com.israadev.nuxlauncher.core.crash.LauncherLog.i(
++                "Mulai",
++                "Layar pertama siap ${sinceProcessMs} ms setelah proses dimulai (akun ${(tAccounts - initStart) / 1_000_000} ms, " +
++                    "instance ${(tInstances - tAccounts) / 1_000_000} ms, pengaturan ${(tSettings - tInstances) / 1_000_000} ms, " +
++                    "total init ${(tAll - initStart) / 1_000_000} ms)"
++            )
++            reportFullyDrawn()
++        }
+     }
+ 
+     override fun onResume() {
+@@ -209,6 +229,8 @@ class MainActivity : ComponentActivity() {
+     }
+ 
+     override fun onStop() {
++        // Aplikasi keluar dari layar (bisa dimatikan sistem kapan saja): tuntaskan penulisan pengaturan yang tertunda
++        SettingsManager.flush()
+         UpdateManager.onBackground()
+         super.onStop()
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index 69e0a5a..232b7fa 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -296,17 +296,21 @@ object InstanceManager {
+     }
+ 
+     private fun initLocked(context: Context) {
++        val startNs = System.nanoTime()
+         appContext = context.applicationContext
+         migrateOldStorage(context)
+ 
+         val file = getInstancesFile(context)
+         val loadedList = mutableListOf<Instance>()
++        // Daftar persis seperti terbaca dari berkas; null bila berkas tidak ada atau tidak terbaca.
++        var rawLoaded: List<Instance>? = null
+         if (file.exists()) {
+             try {
+                 val json = file.readText()
+                 val type = object : TypeToken<List<Instance>>() {}.type
+                 val list: List<Instance>? = gson.fromJson(json, type)
+                 if (list != null) {
++                    rawLoaded = list
+                     loadedList.addAll(list.filterNot { it.id == "instance_default" || it.name == "Minecraft 1.20.4" })
+                 }
+             } catch (e: Exception) {
+@@ -352,7 +356,18 @@ object InstanceManager {
+ 
+         _selectedInstance.value = targetInstance
+         targetInstance?.let { saveSelectedInstanceId(context, it.id) }
+-        save(context)
++
++        // Dulu setiap init menulis ulang instances.json dan instance.json SEMUA instance (masing-masing dengan fsync) di
++        // thread UI, padahal biasanya tidak ada yang berubah. Di HP kelas bawah itu bisa memakan ratusan milidetik di
++        // setiap pembukaan. Sekarang hanya menulis bila daftarnya memang berubah atau ada instance.json yang hilang.
++        val needsSave = rawLoaded == null || verifiedList != rawLoaded || folderInstances.isNotEmpty() ||
++            verifiedList.any { !File(getInstanceDir(context, it), "instance.json").exists() }
++        if (needsSave) save(context)
++        LauncherLog.i(
++            "Mulai",
++            "InstanceManager.init ${(System.nanoTime() - startNs) / 1_000_000} ms: ${verifiedList.size} instance, " +
++                if (needsSave) "daftar disimpan ulang" else "tidak ada yang perlu ditulis"
++        )
+     }
+ 
+     fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
+@@ -461,15 +476,32 @@ object InstanceManager {
+         }
+     }
+ 
++    // Isi terakhir yang ditulis proses ini, supaya berkas yang tidak berubah tidak ditulis ulang.
++    // Dikaitkan dengan jalurnya: setelah data dipindahkan ke folder lain, berkas di sana tetap ditulis sendiri.
++    private var lastInstancesJson: String? = null
++    private var lastInstancesPath: String? = null
++    private val lastInstanceJson = HashMap<String, String>()
++
++    @Synchronized
+     private fun save(context: Context) {
+         try {
+             val file = getInstancesFile(context)
+-            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_instances.value))
+-            // Also sync each instance.json in its isolated directory
++            val json = gson.toJson(_instances.value)
++            // instances.json adalah sumber kebenaran daftar: ditulis dengan fsync, dan hanya bila isinya berubah.
++            if (json != lastInstancesJson || file.path != lastInstancesPath || !file.exists()) {
++                com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
++                lastInstancesJson = json
++                lastInstancesPath = file.path
++            }
++            // instance.json per folder hanyalah salinan yang bisa dibuat ulang dari daftar di atas (dipakai saat
++            // memulihkan instance yang hilang dari daftar): cukup rename atomik tanpa fsync, dan lewati yang tidak berubah.
+             _instances.value.forEach { inst ->
+                 try {
+-                    val instDir = getInstanceDir(context, inst)
+-                    com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(File(instDir, "instance.json"), gson.toJson(inst))
++                    val target = File(getInstanceDir(context, inst), "instance.json")
++                    val instJson = gson.toJson(inst)
++                    if (lastInstanceJson[target.path] == instJson && target.exists()) return@forEach
++                    com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(target, instJson, sync = false)
++                    lastInstanceJson[target.path] = instJson
+                 } catch (_: Exception) {}
+             }
+         } catch (e: Exception) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+index 9cbf145..e6faf18 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/GameLauncher.kt
+@@ -17,8 +17,13 @@ import com.israadev.nuxlauncher.ui.i18n.Toast
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.SupervisorJob
++import kotlinx.coroutines.CancellationException
+ import kotlinx.coroutines.async
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asStateFlow
+ import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
+ import kotlinx.coroutines.withTimeoutOrNull
+ import java.io.File
+ import java.util.concurrent.atomic.AtomicBoolean
+@@ -29,7 +34,18 @@ object GameLauncher {
+     // Batas menunggu pembaruan sesi Microsoft sebelum game tetap dijalankan.
+     private const val SESSION_REFRESH_TIMEOUT_MS = 12_000L
+     private val refreshScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+-    private val refreshing = AtomicBoolean(false)
++    private val busyFlag = AtomicBoolean(false)
++    private val _busy = MutableStateFlow(false)
++
++    /**
++     * True selama PLAY sedang diproses (pembaruan sesi Microsoft + persiapan berkas). Tombol PLAY memakainya
++     * untuk menampilkan "Menyiapkan..." dan menolak ketukan ganda. Persiapan dulu berjalan di thread UI sehingga
++     * layar membeku (pembukaan pertama menyalin LWJGL puluhan MB); kini berjalan di thread latar.
++     */
++    val busy: StateFlow<Boolean> = _busy.asStateFlow()
++
++    /** Dilempar bila game memang belum bisa dimulai dan penggunanya perlu diberi tahu apa langkah berikutnya. */
++    private class LaunchBlocked(message: String) : Exception(message)
+ 
+     /**
+      * Menjalankan game. Untuk akun Microsoft yang token Minecraft-nya sudah lama, sesi diperbarui
+@@ -51,66 +67,106 @@ object GameLauncher {
+             "PLAY ditekan: instance=" + instance.name + ", Minecraft " + instance.mcVersion +
+                 ", loader=" + instance.loader + " " + instance.loaderVersion + ", akun=" + account.safeAccountType
+         )
+-        if (!MicrosoftAuthService.needsRefresh(account)) {
+-            launchNow(context, instance, account)
+-            return
+-        }
+-        // Ketukan ganda pada tombol main tidak boleh memulai dua pembaruan sekaligus.
+-        if (!refreshing.compareAndSet(false, true)) {
+-            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: pembaruan sesi Microsoft masih berjalan")
++        // Ketukan ganda pada tombol main tidak boleh memulai dua persiapan (atau dua pembaruan sesi) sekaligus.
++        if (!busyFlag.compareAndSet(false, true)) {
++            LauncherLog.event("Peluncuran", "Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan")
+             return
+         }
++        _busy.value = true
+ 
+         val appContext = context.applicationContext
+-        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
+         refreshScope.launch {
+-            var launchAccount = account
+             try {
+-                // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
+-                val job = async(Dispatchers.IO) {
+-                    MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
+-                        result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
+-                    }
++                var launchAccount = account
++                if (MicrosoftAuthService.needsRefresh(account)) {
++                    launchAccount = refreshSession(appContext, account)
+                 }
+-                val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
+-                val fresh = result?.getOrNull()
+-                if (fresh != null) {
+-                    launchAccount = fresh
+-                    LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum main")
+-                } else {
+-                    LauncherLog.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
+-                    Toast.makeText(
+-                        appContext,
+-                        "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
+-                        Toast.LENGTH_LONG
+-                    ).show()
+-                }
+-            } catch (e: Exception) {
+-                LauncherLog.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
++                launchPreparedOffMain(appContext, instance, launchAccount)
+             } finally {
+-                refreshing.set(false)
++                busyFlag.set(false)
++                _busy.value = false
+             }
+-            launchNow(appContext, instance, launchAccount)
+         }
+     }
+ 
+-    private fun launchNow(context: Context, instance: Instance, account: UserAccount) {
++    /** Memperbarui token Microsoft; bila gagal atau melewati batas waktu, mengembalikan akun semula. */
++    private suspend fun refreshSession(appContext: Context, account: UserAccount): UserAccount {
++        Toast.makeText(appContext, "Memperbarui sesi Microsoft...", Toast.LENGTH_SHORT).show()
+         try {
+-            launchPrepared(context, instance, account)
++            // Hasil disimpan di dalam tugas ini, jadi tetap tersimpan walau selesai setelah batas waktu.
++            val job = refreshScope.async(Dispatchers.IO) {
++                MicrosoftAuthService.refreshMicrosoftAccount(account).also { result ->
++                    result.getOrNull()?.let { fresh -> AccountManager.updateAccount(appContext, fresh) }
++                }
++            }
++            val result = withTimeoutOrNull(SESSION_REFRESH_TIMEOUT_MS) { job.await() }
++            val fresh = result?.getOrNull()
++            if (fresh != null) {
++                LauncherLog.event("Peluncuran", "Sesi Microsoft diperbarui sebelum main")
++                return fresh
++            }
++            LauncherLog.w("GameLauncher", "Sesi Microsoft tidak diperbarui: ${result?.exceptionOrNull()?.message ?: "melebihi batas waktu"}", result?.exceptionOrNull())
++            Toast.makeText(
++                appContext,
++                "Sesi Microsoft belum bisa diperbarui. Game tetap dijalankan, tetapi fitur online mungkin butuh login ulang.",
++                Toast.LENGTH_LONG
++            ).show()
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: Exception) {
++            LauncherLog.w("GameLauncher", "Pembaruan sesi Microsoft gagal", e)
++        }
++        return account
++    }
++
++    /** Menyiapkan di thread latar, lalu membuka GameActivity di thread utama. */
++    private suspend fun launchPreparedOffMain(appContext: Context, instance: Instance, account: UserAccount) {
++        try {
++            val t0 = System.nanoTime()
++            val intent = withContext(Dispatchers.IO) {
++                // Pengaturan yang masih tertunda ditulis dulu: proses game membaca berkasnya sendiri.
++                com.israadev.nuxlauncher.core.settings.SettingsManager.flush()
++                launchPrepared(appContext, instance, account)
++            }
++            LauncherLog.event("Peluncuran", "Persiapan selesai dalam ${(System.nanoTime() - t0) / 1_000_000} ms")
++            appContext.startActivity(intent)
++        } catch (e: CancellationException) {
++            throw e
++        } catch (b: LaunchBlocked) {
++            Toast.makeText(appContext, b.message ?: "Game belum bisa dimulai.", Toast.LENGTH_LONG).show()
+         } catch (t: Throwable) {
+             LauncherLog.e("Peluncuran", "Persiapan ${instance.name} gagal sebelum game dimulai", t)
+             // Kehabisan memori JVM tidak aman dilanjutkan: biarkan layar crash launcher yang menanganinya.
+             if (t is VirtualMachineError) throw t
+             // Galat lain (berkas versi rusak, library hilang, disk penuh) tidak boleh menjatuhkan seluruh launcher.
+             Toast.makeText(
+-                context.applicationContext,
++                appContext,
+                 "Game belum bisa dimulai: ${t.message ?: t.javaClass.simpleName}. Rincian ada di log launcher.",
+                 Toast.LENGTH_LONG
+             ).show()
+         }
+     }
+ 
+-    private fun launchPrepared(context: Context, instance: Instance, account: UserAccount) {
++    /**
++     * Menyalin LWJGL bawaan ke penyimpanan aplikasi (hanya sekali per versi) di latar, supaya PLAY pertama
++     * tidak menunggu salinan puluhan MB. Aman dipanggil kapan saja: tidak melakukan apa pun bila sudah lengkap.
++     */
++    fun prewarm(context: Context, instance: Instance) {
++        val appContext = context.applicationContext
++        refreshScope.launch(Dispatchers.IO) {
++            try {
++                val versionDir = File(InstanceManager.getVersionsDir(appContext), instance.mcVersion)
++                val versionJson = File(versionDir, "${instance.mcVersion}.json")
++                val version = LwjglManager.getLwjglVersion(instance.mcVersion, versionJson)
++                LwjglManager.getLwjglJars(appContext, version, withLwjglx = LwjglManager.usesLwjgl2(instance.mcVersion, versionJson))
++            } catch (t: Throwable) {
++                if (t is VirtualMachineError) throw t
++                LauncherLog.w("Peluncuran", "Pemanasan LWJGL dilewati: ${t.message}", t)
++            }
++        }
++    }
++
++    private fun launchPrepared(context: Context, instance: Instance, account: UserAccount): Intent {
+         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
+         val versionDir = File(InstanceManager.getVersionsDir(context), instance.mcVersion)
+         val versionJson = File(versionDir, "${instance.mcVersion}.json")
+@@ -154,12 +210,7 @@ object GameLauncher {
+             }
+ 
+             if (fabricProfile == null) {
+-                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+-                    context,
+-                    "Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
+-                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
+-                ).show()
+-                return
++                throw LaunchBlocked("Profil Fabric (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!")
+             }
+ 
+             fabricProfile.mainClass?.let { mainClass = it } ?: run {
+@@ -180,12 +231,7 @@ object GameLauncher {
+                 )
+             }
+             if (forgeLaunch == null) {
+-                com.israadev.nuxlauncher.ui.i18n.Toast.makeText(
+-                    context,
+-                    "Profil ${forgeFlavor.displayName} (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!",
+-                    com.israadev.nuxlauncher.ui.i18n.Toast.LENGTH_LONG
+-                ).show()
+-                return
++                throw LaunchBlocked("Profil ${forgeFlavor.displayName} (${instance.loaderVersion}) belum terpasang. Silakan tekan tombol UNDUH pada instance!")
+             }
+             mainClass = forgeLaunch.mainClass
+         }
+@@ -365,7 +411,7 @@ object GameLauncher {
+                 "mainClass=$mainClass, mod=${installedMods.size}"
+         )
+ 
+-        val intent = Intent(context, GameActivity::class.java).apply {
++        return Intent(context, GameActivity::class.java).apply {
+             putExtra(GameActivity.EXTRA_INSTANCE_NAME, instance.name)
+             putExtra(GameActivity.EXTRA_MC_VERSION, instance.mcVersion)
+             putExtra(GameActivity.EXTRA_LOADER, instance.loader)
+@@ -394,7 +440,5 @@ object GameLauncher {
+             }
+             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+         }
+-
+-        context.startActivity(intent)
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/launch/LwjglManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/launch/LwjglManager.kt
+index bbf2939..4749f72 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/launch/LwjglManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/launch/LwjglManager.kt
+@@ -100,6 +100,9 @@ object LwjglManager {
+         return jar
+     }
+ 
++    // Dikunci: pemanasan di latar (setelah unduh) dan PLAY bisa tiba bersamaan, dan keduanya tidak boleh
++    // menyalin berkas yang sama sekaligus.
++    @Synchronized
+     fun prepareLwjgl(context: Context, lwjglVersion: String = "3.3.3"): File {
+         val targetDir = File(context.filesDir, "components/lwjgl/$lwjglVersion")
+         val nativesDir = File(targetDir, "natives")
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
+index 12f13ea..097b92e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/settings/SettingsManager.kt
+@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
+ import kotlinx.coroutines.flow.StateFlow
+ import kotlinx.coroutines.flow.asStateFlow
+ import java.io.File
++import java.util.concurrent.ScheduledThreadPoolExecutor
++import java.util.concurrent.TimeUnit
++import java.util.concurrent.atomic.AtomicBoolean
+ 
+ object SettingsManager {
+     /** Nomor gelombang penyederhanaan bawaan terbaru (lihat [applyPerfDefaults]). */
+@@ -21,8 +24,51 @@ object SettingsManager {
+         return File(context.filesDir, "settings.json")
+     }
+ 
++    // --- Penulisan ke disk -------------------------------------------------------------------
++    // Menyimpan = tulis berkas sementara + fsync + rename. Di penyimpanan HP kelas bawah itu bisa memakan
++    // puluhan hingga ratusan milidetik, dan dulu dikerjakan di thread UI pada SETIAP langkah slider atau
++    // ketukan keyboard, sehingga geser slider terasa tersendat. Di proses utama penulisan kini ditunda
++    // sebentar dan digabung (hanya nilai terbaru yang ditulis) di thread latar; [flush] menuntaskannya.
++    private const val WRITE_DELAY_MS = 300L
++    private val writeLock = Any()
++    private val writeScheduled = AtomicBoolean(false)
++    @Volatile private var settingsFile: File? = null
++    @Volatile private var initialized = false
++    @Volatile private var deferWrites = false
++    private var lastWrittenJson: String? = null
++
++    private val writer: ScheduledThreadPoolExecutor by lazy {
++        ScheduledThreadPoolExecutor(1) { r ->
++            Thread(r, "settings-writer").apply { isDaemon = true; priority = Thread.MIN_PRIORITY }
++        }.apply {
++            setKeepAliveTime(5, TimeUnit.SECONDS)
++            allowCoreThreadTimeOut(true)
++        }
++    }
++
++    /**
++     * Menyalakan penulisan tertunda untuk proses ini. Dipanggil hanya oleh proses utama (launcher); proses
++     * game dan alur pemulihan tetap menulis langsung supaya tidak ada perubahan yang hilang saat proses ditutup.
++     */
++    fun enableDeferredWrites() {
++        deferWrites = true
++    }
++
++    /** Menuntaskan penulisan yang masih tertunda. Murah bila tidak ada yang tertunda (tidak menyentuh disk). */
++    fun flush() {
++        if (!initialized) return
++        writeNow()
++    }
++
+     fun init(context: Context) {
++        // Init ulang (mis. dari alur pemulihan) membaca berkas lagi: tuntaskan dulu penulisan yang tertunda
++        // supaya perubahan terakhir di memori tidak tertimpa isi berkas yang lebih lama.
++        flush()
+         val file = getSettingsFile(context)
++        settingsFile = file
++        // Isi berkas bisa saja diubah proses lain (mis. tombol HUD di dalam game): jangan lewati tulis berikutnya
++        // hanya karena nilainya sama dengan yang dulu kita tulis.
++        synchronized(writeLock) { lastWrittenJson = null }
+         if (file.exists()) {
+             try {
+                 val json = file.readText()
+@@ -30,6 +76,7 @@ object SettingsManager {
+                 if (loaded != null) {
+                     val migrated = applyPerfDefaults(loaded)
+                     _settings.value = migrated
++                    initialized = true
+                     if (migrated !== loaded) save(context)
+                     return
+                 }
+@@ -39,6 +86,7 @@ object SettingsManager {
+         }
+ 
+         _settings.value = defaultSettingsFor(context)
++        initialized = true
+         save(context)
+     }
+ 
+@@ -118,11 +166,38 @@ object SettingsManager {
+     }
+ 
+     private fun save(context: Context) {
+-        try {
+-            val file = getSettingsFile(context)
+-            com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, gson.toJson(_settings.value))
+-        } catch (e: Exception) {
+-            e.printStackTrace()
++        if (settingsFile == null) settingsFile = getSettingsFile(context)
++        if (!deferWrites) {
++            writeNow()
++            return
++        }
++        // Gabungkan: selama satu jadwal menunggu, perubahan berikutnya cukup memperbarui nilai di memori;
++        // yang ditulis nanti selalu nilai terbaru.
++        if (writeScheduled.compareAndSet(false, true)) {
++            try {
++                writer.schedule(Runnable {
++                    writeScheduled.set(false)
++                    writeNow()
++                }, WRITE_DELAY_MS, TimeUnit.MILLISECONDS)
++            } catch (e: Exception) {
++                writeScheduled.set(false)
++                writeNow()
++            }
++        }
++    }
++
++    /** Menulis nilai terbaru bila berbeda dari yang terakhir ditulis. Aman dipanggil dari thread mana pun. */
++    private fun writeNow() {
++        val file = settingsFile ?: return
++        synchronized(writeLock) {
++            try {
++                val json = gson.toJson(_settings.value)
++                if (json == lastWrittenJson) return
++                com.israadev.nuxlauncher.core.utils.AtomicFiles.writeText(file, json)
++                lastWrittenJson = json
++            } catch (e: Exception) {
++                e.printStackTrace()
++            }
+         }
+     }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/utils/AtomicFiles.kt b/app/src/main/java/com/israadev/nuxlauncher/core/utils/AtomicFiles.kt
+index f7a8c6e..b49bc8e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/utils/AtomicFiles.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/utils/AtomicFiles.kt
+@@ -8,12 +8,19 @@ import java.io.FileOutputStream
+  * tertinggal setengah tertulis bila proses dimatikan sistem tepat saat menulis (sering terjadi di HP RAM kecil).
+  */
+ object AtomicFiles {
+-    fun writeText(target: File, text: String) {
++    /**
++     * [sync] = tunggu data benar-benar sampai ke penyimpanan (fsync) sebelum rename. Aman untuk data yang tidak boleh
++     * hilang; mahal di penyimpanan HP kelas bawah. Berkas turunan yang bisa dibuat ulang dari berkas lain boleh `false`:
++     * rename tetap atomik, jadi paling buruk berkasnya hilang, tidak pernah setengah tertulis.
++     */
++    fun writeText(target: File, text: String, sync: Boolean = true) {
+         val tmp = File(target.parentFile, target.name + ".tmp")
+         FileOutputStream(tmp).use { out ->
+             out.write(text.toByteArray(Charsets.UTF_8))
+             out.flush()
+-            try { out.fd.sync() } catch (_: Exception) {}
++            if (sync) {
++                try { out.fd.sync() } catch (_: Exception) {}
++            }
+         }
+         if (!tmp.renameTo(target)) {
+             // Sebagian penyimpanan menolak rename ke berkas yang sudah ada: jatuh ke tulis biasa.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index acba5d5..8f91cd4 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -106,6 +106,7 @@ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.alpha
+ import androidx.compose.ui.graphics.Brush
+ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.geometry.Rect
+@@ -348,6 +349,8 @@ fun DashboardScreen() {
+                 dl.message = msg
+             }
+             if (!isActive) return@launch
++            // Salin LWJGL di latar sekarang (sekali per versi) supaya PLAY pertama tidak menunggu salinan puluhan MB
++            if (res.isSuccess) GameLauncher.prewarm(context, inst)
+ 
+             // Game dan loader sudah terpasang; bila ada modpack yang menunggu, pasang isinya sekarang
+             val instDir = InstanceManager.getInstanceDir(context, inst)
+@@ -880,6 +883,8 @@ private fun HomeScene(
+     modifier: Modifier = Modifier
+ ) {
+     val freeRamMb = rememberFreeRamMb()
++    // PLAY sedang diproses (persiapan berkas di thread latar): tombol menampilkan status dan tidak menerima ketukan lagi
++    val launching by GameLauncher.busy.collectAsState()
+     val config = LocalConfiguration.current
+     // Ambang dihitung dari ukuran rancangan (ukuran layar dibagi skala UI), bukan dp mentah. Skala UI sudah menyamakan
+     // tinggi rancangan di semua HP, jadi judul dan tata letak punya proporsi yang sama di HP 360 dp maupun 392 dp.
+@@ -1208,9 +1213,10 @@ private fun HomeScene(
+                         )
+                         if (instance != null) {
+                             HomeMainButton(
+-                                text = if (isReady) "PLAY" else "UNDUH",
++                                text = if (launching) "MEMUAT" else if (isReady) "PLAY" else "UNDUH",
+                                 icon = if (isReady) Icons.Default.PlayArrow else Icons.Default.Download,
+                                 onClick = onPlay,
++                                enabled = !launching,
+                                 modifier = Modifier.width(mainWidth)
+                             )
+                         } else {
+@@ -1385,15 +1391,17 @@ private fun HomeMainButton(
+     text: String,
+     icon: ImageVector,
+     onClick: () -> Unit,
+-    modifier: Modifier = Modifier
++    modifier: Modifier = Modifier,
++    enabled: Boolean = true
+ ) {
+     val interaction = remember { MutableInteractionSource() }
+     val pressed by interaction.collectIsPressedAsState()
+-    val lift by animateDpAsState(if (pressed) 0.dp else 4.dp, label = "homeMainLift")
++    val lift by animateDpAsState(if (pressed && enabled) 0.dp else 4.dp, label = "homeMainLift")
+     Box(
+         modifier = modifier
+             .height(64.dp)
+-            .clickable(interactionSource = interaction, indication = null) { onClick() }
++            .alpha(if (enabled) 1f else 0.65f)
++            .clickable(enabled = enabled, interactionSource = interaction, indication = null) { onClick() }
+     ) {
+         Box(
+             modifier = Modifier
+diff --git a/changelog/entries/20261118-performa-pengaturan-dan-play.txt b/changelog/entries/20261118-performa-pengaturan-dan-play.txt
+new file mode 100644
+index 0000000..037b066
+--- /dev/null
++++ b/changelog/entries/20261118-performa-pengaturan-dan-play.txt
+@@ -0,0 +1,10 @@
++[id]
++~ Slider dan isian di Pengaturan tidak lagi tersendat: penyimpanan dikerjakan di latar.
++~ Launcher terbuka lebih cepat di HP kelas bawah (tidak lagi menulis ulang semua data instance setiap dibuka).
++~ Tombol PLAY menyiapkan game di latar dan menampilkan "Memuat", tidak lagi membuat layar membeku.
++~ LWJGL disalin sekali setelah unduhan selesai, jadi PLAY pertama tidak menunggu lama.
++[en]
++~ Sliders and fields in Settings no longer stutter: saving happens in the background.
++~ The launcher opens faster on low-end phones (it no longer rewrites every instance's data on each start).
++~ PLAY prepares the game in the background and shows "Loading" instead of freezing the screen.
++~ LWJGL is copied once after a download finishes, so the first PLAY does not wait.
+# FIN part=1/1 files=8

@@ -160,6 +160,7 @@ import com.israadev.nuxlauncher.ui.components.NuxDialog
 import com.israadev.nuxlauncher.ui.components.NUX_NAV_ITEMS
 import com.israadev.nuxlauncher.ui.components.rememberIsResumed
 import com.israadev.nuxlauncher.ui.components.rememberPowerSaveMode
+import com.israadev.nuxlauncher.ui.dialogs.AmberErrorDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAddonImportDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxCrashDialog
@@ -362,9 +363,9 @@ fun DashboardScreen() {
             if (packReport != null && packReport.failed == 0) ModpackStaging.clear(instDir)
 
             when {
-                !res.isSuccess -> Toast.makeText(
-                    appContext, "Gagal mengunduh: ${res.exceptionOrNull()?.localizedMessage}", Toast.LENGTH_LONG
-                ).show()
+                !res.isSuccess -> InstallSession.reportFailure(
+                    "Gagal memasang ${inst.name}", res.exceptionOrNull(), retryInstanceId = inst.id
+                )
                 packRes == null -> Toast.makeText(
                     appContext, "Instalasi selesai! Tekan PLAY untuk bermain.", Toast.LENGTH_SHORT
                 ).show()
@@ -469,7 +470,7 @@ fun DashboardScreen() {
                         Toast.makeText(appContext, "Meluncurkan ${inst.name}...", Toast.LENGTH_SHORT).show()
                         GameLauncher.launch(appContext, inst, account)
                     } else {
-                        Toast.makeText(appContext, "Gagal menyiapkan OpenJDK: ${extRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                        InstallSession.reportFailure("Gagal menyiapkan Java", extRes.exceptionOrNull())
                     }
                 }
                 return
@@ -786,6 +787,27 @@ fun DashboardScreen() {
         // Download Progress Dialog
         if (isDownloading) {
             DownloadDialogHost(name = InstallSession.targetName, state = dl, onCancel = { cancelInstall() })
+        }
+
+        // Pemasangan gagal: dialog yang menetap (bisa disalin), bukan Toast yang hilang dalam beberapa detik
+        InstallSession.failure?.let { failed ->
+            val retryId = failed.retryInstanceId
+            val retry: (() -> Unit)? = if (retryId == null) {
+                null
+            } else {
+                {
+                    val target = InstanceManager.instances.value.firstOrNull { it.id == retryId }
+                    InstallSession.dismissFailure()
+                    if (target != null) installInstance(target)
+                }
+            }
+            AmberErrorDialog(
+                title = failed.title,
+                message = failed.message,
+                detail = failed.detail,
+                onDismiss = { InstallSession.dismissFailure() },
+                onRetry = retry
+            )
         }
 
         // Unsupported Renderer Warning Dialog (Persis seperti Zalith)

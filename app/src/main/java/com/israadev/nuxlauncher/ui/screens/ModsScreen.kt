@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.israadev.nuxlauncher.core.utils.FriendlyError
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
@@ -634,7 +635,7 @@ fun ModsScreen(
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 reloadInstalled()
             } else {
-                Toast.makeText(context, "Gagal mengunduh: ${downRes.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Gagal mengunduh. " + FriendlyError.describe(downRes.exceptionOrNull()).message, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -678,7 +679,7 @@ fun ModsScreen(
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 reloadInstalled()
             } else {
-                Toast.makeText(context, "Gagal mengunduh: ${res.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Gagal mengunduh. " + FriendlyError.describe(res.exceptionOrNull()).message, Toast.LENGTH_LONG).show()
             }
         }
     }

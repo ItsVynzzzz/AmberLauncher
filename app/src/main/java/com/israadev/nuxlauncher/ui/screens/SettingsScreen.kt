@@ -66,6 +66,7 @@ import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.utils.NuxVersionUtils
 import com.israadev.nuxlauncher.ui.components.*
 import com.israadev.nuxlauncher.ui.dialogs.NuxRendererV2ConfigDialog
+import com.israadev.nuxlauncher.ui.dialogs.AmberHelpDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
@@ -90,6 +91,7 @@ fun SettingsScreen(
     val currentSettings by SettingsManager.settings.collectAsState()
 
     var showAboutDialog by remember { mutableStateOf(false) }
+    var showHelpDialog by remember { mutableStateOf(false) }
     var showControlPresets by remember { mutableStateOf(false) }
 
     // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
@@ -1244,6 +1246,13 @@ fun SettingsScreen(
                         }
                         SettingsGroup("Aplikasi") {
                             SettingActionRow(
+                                title = "Bantuan",
+                                desc = "Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.",
+                                actionLabel = "Buka",
+                                onClick = { showHelpDialog = true }
+                            )
+                            SettingDivider()
+                            SettingActionRow(
                                 title = "Tentang & lisensi",
                                 desc = "Informasi aplikasi, lisensi GPL-3.0, dan kredit.",
                                 actionLabel = "Buka",
@@ -1657,6 +1666,10 @@ fun SettingsScreen(
             onDismiss = { showControlPresets = false },
             onOpenEditor = onOpenGuiEditor
         )
+    }
+
+    if (showHelpDialog) {
+        AmberHelpDialog(onDismiss = { showHelpDialog = false })
     }
 
     if (showAboutDialog) {

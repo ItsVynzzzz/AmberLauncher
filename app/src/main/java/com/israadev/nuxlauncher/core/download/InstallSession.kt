@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.israadev.nuxlauncher.core.crash.LauncherLog
+import com.israadev.nuxlauncher.core.utils.FriendlyError
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +33,28 @@ object InstallSession {
 
     val progress = Progress()
 
+    /** Kegagalan terakhir yang perlu dilihat pengguna (ditampilkan sebagai dialog, bukan Toast yang cepat hilang). */
+    class Failure(
+        val title: String,
+        val message: String,
+        val detail: String,
+        /** Instance yang bisa dicoba lagi lewat tombol "Coba lagi"; null bila tidak ada. */
+        val retryInstanceId: String?
+    )
+
+    var failure by mutableStateOf<Failure?>(null)
+        private set
+
+    fun reportFailure(title: String, error: Throwable?, retryInstanceId: String? = null) {
+        if (error != null) LauncherLog.w("Unduhan", "$title: ${error.javaClass.simpleName}: ${error.message}", error)
+        val info = FriendlyError.describe(error)
+        failure = Failure(title, info.message, info.detail, retryInstanceId)
+    }
+
+    fun dismissFailure() {
+        failure = null
+    }
+
     /** True selama ada pemasangan berjalan. Aman dibaca di komposisi. */
     var active by mutableStateOf(false)
         private set
@@ -56,6 +79,7 @@ object InstallSession {
     ): Boolean {
         if (active) return false
         val app = context.applicationContext
+        failure = null
         active = true
         targetName = name
         progress.progress = 0f

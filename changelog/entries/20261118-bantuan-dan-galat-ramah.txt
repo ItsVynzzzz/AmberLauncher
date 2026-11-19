@@ -1,0 +1,8 @@
+[id]
++ Halaman Bantuan (Pengaturan > Tentang) berisi jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.
+~ Galat saat memasang instance kini tampil sebagai dialog yang menjelaskan sebabnya, dengan tombol Coba lagi dan Salin detail.
+~ Pesan gagal mengunduh mod kini berbahasa jelas (koneksi bermasalah, penyimpanan penuh), bukan teks teknis mentah.
+[en]
++ A Help page (Settings > About) answers common problems: game closing, low FPS, failed downloads, login and where data is stored.
+~ An error while installing an instance now appears as a dialog that explains the cause, with Try again and Copy details buttons.
+~ A failed mod download now gives a plain-language message (connection problem, storage full) instead of raw technical text.

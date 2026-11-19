@@ -89,6 +89,16 @@ android {
         // true bila SDK Discord ikut terbangun; layar Pengaturan dan GameActivity memeriksanya.
         buildConfigField("boolean", "HAS_DISCORD_SDK", hasDiscordSdk.toString())
 
+        // ID aplikasi Microsoft (Azure) yang dipakai untuk login akun Minecraft. Login berjalan atas nama aplikasi ini, jadi
+        // pemiliknyalah yang menentukan apakah login tetap berfungsi. Bawaannya ID lama; untuk memakai aplikasi sendiri, isi
+        // variabel lingkungan AMBER_MS_CLIENT_ID (GitHub Actions) atau amber.msClientId di local.properties.
+        // Cara mendaftarkannya: docs/microsoft-login.md. Nilai yang bukan GUID diabaikan (kembali ke bawaan).
+        val defaultMsClientId = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb"
+        val msClientId = (System.getenv("AMBER_MS_CLIENT_ID") ?: localProperties.getProperty("amber.msClientId") ?: "").trim()
+            .takeIf { Regex("^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$").matches(it) }
+            ?: defaultMsClientId
+        buildConfigField("String", "MS_CLIENT_ID", "\"" + msClientId + "\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

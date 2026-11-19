@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.core.account.microsoft
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.UserAccount
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,8 @@ data class MicrosoftDeviceCode(
 )
 
 object MicrosoftAuthService {
-    private const val CLIENT_ID = "c36a9fb6-4f2a-41ff-90bd-ae7cc92031eb"
+    // ID aplikasi Azure dari konfigurasi build (lihat docs/microsoft-login.md); bawaannya sama dengan yang dulu ditanam di sini.
+    private val CLIENT_ID: String = BuildConfig.MS_CLIENT_ID
     private const val SCOPE = "XboxLive.signin offline_access openid profile email"
     private const val TENANT = "/consumers"
     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()

@@ -105,3 +105,168 @@ Samudra	Đại dương
 Tengah malam	Nửa đêm
 Bara	Than hồng
 Gradient halus	Gradient nhẹ
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Giúp điện thoại có thêm dung lượng trống. Có thể tăng lại ở Sửa instance > Cài đặt instance.
+RAM instance ini diturunkan ke {0} MB.	RAM của instance này đã được giảm xuống {0} MB.
+Renderer instance ini dikembalikan ke Otomatis.	Renderer của instance này đã được đặt lại về Tự động.
+Renderer instance ini diganti ke {0}.	Renderer của instance này đã được đổi sang {0}.
+Tidak dapat menemukan {0} untuk versi {1}	Không tìm thấy {0} cho phiên bản {1}
+Installer {0} gagal (kode {1})	Trình cài đặt {0} thất bại (mã {1})
+Proses ini hanya berjalan sekali per versi {0}.	Bước này chỉ chạy một lần cho mỗi phiên bản {0}.
+Versi {0} belum dipilih	Chưa chọn phiên bản {0}
+{0} hanya mendukung Minecraft {1} ke atas	{0} chỉ hỗ trợ Minecraft {1} trở lên
+Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	Không đủ dung lượng để cài {0} (còn {1} MB, cần ít nhất {2} MB)
+Installer {0} {1} rusak atau tidak lengkap	Trình cài đặt {0} {1} bị hỏng hoặc không đầy đủ
+Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	Không nhận ra định dạng trình cài đặt {0} này (Amber cần {1} {2} trở lên)
+Installer {0} untuk Minecraft {1}, bukan {2}	Trình cài đặt {0} này dành cho Minecraft {1}, không phải {2}
+version.json di installer {0} tidak terbaca	Không đọc được version.json trong trình cài đặt {0}
+Installer {0} gagal	Trình cài đặt {0} thất bại
+Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	Trình cài đặt {0} đã chạy xong nhưng không tìm thấy file jar Minecraft đã vá ({1})
+Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	Tải thư viện {0} thất bại: {1}{2}. Hãy kiểm tra kết nối rồi thử lại.
+Path library {0} tidak aman: {1}	Đường dẫn thư viện {0} không an toàn: {1}
+Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	Tải thư viện {0} thất bại: {1}. Hãy kiểm tra kết nối rồi thử lại.
+install_profile.json tidak ada di installer {0}	Thiếu install_profile.json trong trình cài đặt {0}
+versionInfo tidak ada di installer {0}	Thiếu versionInfo trong trình cài đặt {0}
+{0} tidak ada di installer {1}	Thiếu {0} trong trình cài đặt {1}
+Tidak ada versi {0} yang didukung	Không có phiên bản {0} nào được hỗ trợ
+Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling không còn chạy mod WebAssembly (mod.wasm). Cần tạo lại mod này thành mod native (.hnmod).
+Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	Đây không phải mod native mà Starling đọc được: thiếu horizon-native.json hoặc file không hợp lệ.
+Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Mod native không được bật từ đây: hãy mở Options > Mods trong game rồi chọn Compile để mod được đưa vào game.
+Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Mod native (.hnmod) chỉ được engine Starling hỗ trợ. Hãy tạo instance Starling để dùng.
+Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Mod native (.hnmod). Chưa có trong game: hãy mở Options > Mods trong game rồi chọn Compile.
+Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Module native có sẵn của Starling. Cài đặt của nó nằm ở Options > Mods trong game.
+Starling hanya tersedia untuk HP 64-bit (arm64).	Starling chỉ có trên điện thoại 64-bit (arm64).
+Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Bản build này chưa có Starling. Cách thêm được ghi trong docs/rust-engine.md.
+Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Hiện Starling chỉ hỗ trợ tài khoản Offline và Microsoft. Hãy chọn một trong hai ở tab Tài khoản.
+Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	Tên tài khoản offline cho Starling phải dài từ 1 đến 16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới. Hãy tạo tài khoản offline mới ở tab Tài khoản.
+Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	Lần mở đầu tiên: màn hình Starling sẽ chuẩn bị game (tải khoảng 500 MiB). Hãy làm theo màn hình cho đến khi xong.
+Starling gagal dibuka: {0}	Không mở được Starling: {0}
+Folder akun mesin tidak bisa dibuat	Không tạo được thư mục tài khoản của engine
+{0} tidak bisa disimpan	Không lưu được {0}
+Patokan berkas Starling tidak tersedia di aplikasi ini.	Ứng dụng này không có tệp tham chiếu của Starling.
+Folder data Starling tidak bisa dibuat.	Không tạo được thư mục dữ liệu của Starling.
+Berkas versi {0} dari Mojang tidak valid.	Tệp phiên bản {0} từ Mojang không hợp lệ.
+Berkas versi {0} tidak mendaftar unduhan.	Tệp phiên bản {0} không liệt kê bản tải nào.
+Berkas versi {0} tidak mendaftar unduhan {1}.	Tệp phiên bản {0} không liệt kê bản tải {1}.
+Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	Tệp phiên bản {0} chứa jar {1} khác với jar mà Starling mong đợi.
+Berkas versi {0} tidak mendaftar indeks aset.	Tệp phiên bản {0} không liệt kê asset index.
+Nama indeks aset tidak valid.	Tên asset index không hợp lệ.
+Indeks aset dari Mojang tidak valid.	Asset index từ Mojang không hợp lệ.
+Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	Không đủ dung lượng: cần thêm khoảng {0} MB.
+Berkas {0} belum ada setelah diunduh.	Tệp {0} vẫn chưa có sau khi tải.
+Game belum bisa dimulai.	Chưa thể bắt đầu game.
+Game belum bisa dimulai: {0}. Rincian ada di log launcher.	Chưa thể bắt đầu game: {0}. Chi tiết nằm trong nhật ký của launcher.
+Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hồ sơ {0} ({1}) chưa được cài. Hãy nhấn nút TẢI XUỐNG ở instance!
+{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	Thiếu {0} file thư viện của game (bản tải chưa đủ hoặc đã bị xóa). Nhấn TẢI XUỐNG ở instance này để bổ sung cho đủ.
+Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Modpack này cần Quilt, nhưng hiện AmberLauncher chỉ hỗ trợ Fabric, Forge và NeoForge.
+Daftar modpack terlalu besar	Danh sách modpack quá lớn
+Gagal menyiapkan folder modpack	Không chuẩn bị được thư mục modpack
+Gagal menyimpan berkas modpack	Không lưu được tệp modpack
+Berkas lama tidak ditemukan	Không tìm thấy tệp cũ
+Berkas {0} berubah sejak diperiksa	Tệp {0} đã thay đổi sau khi được kiểm tra
+Nama berkas baru tidak valid	Tên tệp mới không hợp lệ
+Berkas baru tanpa sidik jari tidak dipasang	Tệp mới không có dấu vân tay nên không được cài
+Berkas {0} sudah ada	Tệp {0} đã tồn tại
+Gagal menyiapkan penggantian berkas	Không chuẩn bị được việc thay tệp
+Gagal menyimpan berkas baru	Không lưu được tệp mới
+Gagal menghapus berkas lama	Không xóa được tệp cũ
+{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	Không tải được {0} mod vì tác giả đã chặn tải qua launcher. Hãy cài thủ công từ trang web CurseForge nếu cần.
+Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	Modpack này cần {0}. Hãy tạo instance {1} trước, rồi cài modpack vào instance đó.
+Pilih APK	Chọn APK
+Izinkan dari sumber ini	Cho phép từ nguồn này
+Terjadi masalah yang tidak diketahui. Coba lagi.	Đã xảy ra sự cố không rõ nguyên nhân. Hãy thử lại.
+Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	Không kết nối được tới máy chủ tải. Hãy kiểm tra kết nối internet rồi thử lại.
+Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	Máy chủ phản hồi quá lâu. Kết nối có thể chậm hoặc không ổn định; hãy thử lại.
+Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	Kết nối an toàn tới máy chủ thất bại. Hãy kiểm tra ngày giờ của điện thoại và kết nối internet rồi thử lại.
+Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	Kết nối bị ngắt giữa chừng. Hãy thử lại; các file đã tải xong sẽ không bị tải lại.
+Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	Bộ nhớ điện thoại đã đầy. Hãy giải phóng dung lượng (khoảng 500 MB cho một phiên bản) rồi thử lại.
+Terjadi masalah yang tidak terduga. Coba lagi.	Đã xảy ra sự cố bất ngờ. Hãy thử lại.
+Game langsung tertutup atau tidak mau mulai	Game tự đóng ngay hoặc không chịu khởi động
+Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Mở Cài đặt > Giới thiệu > Nhật ký game. Nguyên nhân gần nhất được ghi ở đó; hãy chia sẻ nội dung này khi nhờ trợ giúp.
+Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	Nếu thông báo nhắc đến file hoặc thư viện bị thiếu: mở Sửa instance (biểu tượng bút chì ở màn hình chính) rồi nhấn "Xác minh & sửa chữa".
+Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Giảm "Bộ nhớ game (RAM)" trong Cài đặt > Game. Yêu cầu quá nhiều RAM so với điện thoại có thể khiến Android đóng game.
+Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Thử phiên bản Java khác trong Sửa instance (ví dụ Java 17 hoặc 21 cho Minecraft mới, Java 8 cho bản cũ).
+FPS rendah atau game patah-patah	FPS thấp hoặc game giật
+Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Giảm "Tỷ lệ độ phân giải màn hình" trong Cài đặt > Game: hình được vẽ thô hơn nhưng nhẹ hơn nhiều.
+Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	Trong game, hãy giảm Render Distance và Simulation Distance, và tắt các hiệu ứng đồ họa nặng.
+Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	Bật "Hiện FPS và RAM" trong Cài đặt > Điều khiển để xem vấn đề là RAM gần hết hay bộ xử lý đang quá tải.
+Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Đóng các ứng dụng khác, và để điện thoại nguội bớt nếu thấy nóng: điện thoại nóng sẽ tự giảm tốc độ.
+Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	Tắt "Phát chuyển động GIF và video" và "Hiệu ứng ở màn hình chính" trong Cài đặt > Giao diện; nền chuyển động tốn pin của điện thoại.
+Pakai latar foto biasa, bukan video atau GIF besar.	Dùng ảnh thường làm nền, không dùng video hay GIF lớn.
+Unduhan gagal atau terputus	Tải xuống thất bại hoặc bị gián đoạn
+Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Nhấn TẢI XUỐNG lần nữa. Chỉ các file còn thiếu được tải lại, nên không phải bắt đầu từ đầu.
+Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Hãy đảm bảo điện thoại còn đủ dung lượng trống (khoảng 500 MB cho một phiên bản); xem trong Cài đặt của điện thoại > Lưu trữ.
+Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	Nếu sau khi xong thấy game chưa đầy đủ, hãy nhấn "Xác minh & sửa chữa" trong Sửa instance.
+Login Microsoft gagal atau diminta masuk lagi	Đăng nhập Microsoft thất bại hoặc bị yêu cầu đăng nhập lại
+Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	Phiên đăng nhập có thể đã hết hạn. Hãy mở màn hình Tài khoản và đăng nhập lại bằng cùng tài khoản Microsoft.
+Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	Tài khoản phải sở hữu Minecraft Java Edition; tài khoản không có thì không chơi online được.
+Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Làm theo mã và địa chỉ mà launcher hiển thị; mã chỉ có hiệu lực trong thời gian ngắn nên hãy hoàn tất sớm.
+Apa itu akun offline?	Tài khoản offline là gì?
+Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	Tài khoản offline chỉ là một tên người chơi trên điện thoại này, không cần đăng nhập. Phù hợp để chơi thế giới của riêng bạn (một người chơi) hoặc LAN.
+Namanya 3-16 karakter: huruf, angka, atau garis bawah.	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới.
+Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	Hầu hết máy chủ online chỉ nhận tài khoản chính thức, nên tài khoản offline thường bị từ chối ở đó.
+Di mana dunia dan mod disimpan? Cara mencadangkan	Thế giới và mod được lưu ở đâu? Cách sao lưu
+Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	Xem vị trí trong Cài đặt > Giới thiệu > Lưu trữ dữ liệu ("Vị trí dữ liệu").
+Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	Mỗi instance có thư mục riêng. Nhấn "Mở thư mục instance" trong Sửa instance để đến đó; thế giới nằm trong thư mục saves.
+Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Dữ liệu trong thư mục riêng của AmberLauncher (Android/data) sẽ bị xóa cùng ứng dụng khi gỡ cài đặt, nên hãy sao chép các thế giới quan trọng sang nơi khác trước.
+Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	Nếu dữ liệu của bạn vẫn nằm trong thư mục nuxlauncher cũ, nút "Chuyển" trong Lưu trữ dữ liệu sẽ chuyển nó sang Android/data mà không cần quyền truy cập mọi file.
+Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Mở Sửa instance > Mod & nội dung để tìm và cài mod, hoặc thêm các file bạn đã tải sẵn.
+Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	File .jar hoặc .mrpack cũng có thể mở trực tiếp bằng AmberLauncher từ trình quản lý file.
+Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Hãy đảm bảo mod khớp với phiên bản Minecraft và loader (Fabric hoặc Forge) của instance đó.
+Pertanyaan yang sering muncul	Câu hỏi thường gặp
+Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	Việc tải hoặc cài đặt instance vẫn đang chạy. Hãy đợi đến khi xong rồi thử lại.
+Geser antar tombol	Vuốt giữa các nút
+Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	Trượt ngón tay từ W sang D để nhấn các nút ở giữa mà không cần nhấc tay.
+Pengaturan instance	Cài đặt instance
+Pengaturan instance disimpan	Đã lưu cài đặt instance
+Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Giá trị chọn ở đây chỉ áp dụng cho instance này. "Theo cài đặt chung" dùng Cài đặt chung và thay đổi theo chúng.
+Mode Hemat sedang menyala: resolusi dibatasi {0}%.	Chế độ Tiết kiệm đang bật: độ phân giải bị giới hạn ở {0}%.
+Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Chỉ hiện các renderer phù hợp với Minecraft {0}.
+Ikuti global (kosong)	Theo cài đặt chung (trống)
+Khusus instance ini	Chỉ instance này
+Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	Dành cho người dùng nâng cao; nhập sai có thể khiến game không chạy được. Để trống = không có tham số bổ sung cho instance này.
+Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	Dành cho người dùng nâng cao. Cài đặt chung không dùng tham số bổ sung.
+Memakai argumen dari Pengaturan umum: {0}	Đang dùng tham số từ Cài đặt chung: {0}
+Kembalikan semua ke global	Đặt lại tất cả về cài đặt chung
+Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới (_)
+Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới (_).
+Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Tài khoản offline không cần đăng nhập. Không vào được máy chủ premium (online-mode), và skin tùy chỉnh thường chỉ mình bạn thấy. Đổi tên được tính là người chơi mới trên máy chủ, nên túi đồ và tiến trình không được giữ lại.
+Kategori Semua \u2304	Danh mục Tất cả ⌄
+Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Chỉ hỗ trợ Minecraft {0}. Lần mở đầu tiên, màn hình Starling sẽ chuẩn bị game (tải khoảng 500 MiB). Engine này tách biệt với Horizon, có shader, mod và menu riêng.
+Gagal menyiapkan folder sementara	Không chuẩn bị được thư mục tạm
+Gagal membaca berkas	Không đọc được tệp
+Gagal memasang {0}	Cài {0} thất bại
+Gagal menyiapkan Java	Không chuẩn bị được Java
+terlalu besar	quá lớn
+tambah aksi	thêm hành động
+Memuat data dari {0}...	Đang tải dữ liệu từ {0}...
+Gagal memuat dari {0}	Tải từ {0} thất bại
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Mod Starling: .hmod (nội dung, hoặc có mã native) và .hnmod (mod native), không phải file .jar của Fabric hay Forge. Mod WebAssembly (mod.wasm) không còn chạy trên Starling. Mod .hnmod chỉ có hiệu lực trong game sau khi được biên dịch từ trong game (Options > Mods > Compile). Các module có sẵn được bật bằng công tắc trong danh sách.
+Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Trượt ngón tay từ nút này sang nút khác (ví dụ từ W sang D) sẽ nhấn các nút ở giữa mà không cần nhấc tay. Nút tấn công và dùng không nằm trong số đó.
+Discord Rich Presence saat bermain	Discord Rich Presence khi chơi
+Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Hiển thị AmberLauncher cùng phiên bản Minecraft và loader (hoặc engine Rust) trên hồ sơ Discord của bạn khi chơi. Tên instance và tài khoản của bạn không được chia sẻ. Cần ứng dụng Discord đã cài và đã đăng nhập trên điện thoại này; không dùng thông tin đăng nhập hay token. Không dành cho người dùng dưới 13 tuổi. Có hiệu lực từ lần chơi tiếp theo.
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Khi launcher đang mở và bạn chưa chơi, hồ sơ Discord hiển thị AmberLauncher với trạng thái Đang chuẩn bị game. Có hiệu lực vào lần mở launcher tiếp theo. Dùng cùng ứng dụng Discord bạn đã đăng nhập; không dành cho người dùng dưới 13 tuổi.
+Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Câu trả lời cho các sự cố thường gặp: game tự đóng, FPS thấp, tải xuống thất bại, đăng nhập và nơi lưu dữ liệu.
+Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	Một số file game chưa được tải ({0}), thường do kết nối bị ngắt. Nhấn TẢI XUỐNG lần nữa: chỉ các file còn thiếu được tải lại.
+{0} library	{0} thư viện
+{0} aset suara/bahasa	{0} tài nguyên âm thanh/ngôn ngữ
+Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Một số file tải thất bại. Hãy kiểm tra kết nối internet rồi nhấn TẢI XUỐNG lần nữa để tiếp tục. ({0})
+Gagal memeriksa pembaruan: {0}	Kiểm tra cập nhật thất bại: {0}
+Gagal terhubung ke {0}	Kết nối tới {0} thất bại
+{0} library dan {1} aset suara/bahasa	{0} thư viện và {1} tài nguyên âm thanh/ngôn ngữ
+Ikuti global	Theo cài đặt chung
+Khusus	Tùy chỉnh
+Verifikasi & perbaiki	Xác minh & sửa chữa
+Gagal	Thất bại
+Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	Tài khoản Ely.by này dùng xác minh hai bước (2FA). Hãy nhập mã từ ứng dụng xác thực của bạn.
+Email atau username Ely.by	Email hoặc tên người dùng Ely.by
+Email/username atau password Ely.by salah.	Email/tên người dùng hoặc mật khẩu Ely.by không đúng.
+Email/username, password, atau kode 2FA Ely.by salah.	Email/tên người dùng, mật khẩu hoặc mã 2FA của Ely.by không đúng.
+Gagal masuk ke Ely.by.	Đăng nhập Ely.by thất bại.
+Kode 2FA (6 digit)	Mã 2FA (6 chữ số)
+Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	Mã 2FA sai hoặc đã hết hạn. Hãy thử mã mới nhất.
+Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Đăng nhập bằng email hoặc tên người dùng và mật khẩu tài khoản Ely.by. Hỗ trợ xác minh hai bước (2FA).
+Masuk ke Ely.by	Đăng nhập Ely.by
+Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Mật khẩu của bạn chỉ được gửi tới máy chủ Ely.by và không được lưu trong launcher. Chỉ token đăng nhập được lưu.
+Respon Ely.by tidak berisi token akses.	Phản hồi từ Ely.by không chứa token truy cập.
+Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Phiên Ely.by không còn hiệu lực. Hãy xóa tài khoản này rồi đăng nhập lại.
+Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Không kết nối được tới Ely.by. Hãy kiểm tra kết nối internet.

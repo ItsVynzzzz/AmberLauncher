@@ -109,3 +109,168 @@ Samudra	海洋
 Tengah malam	午夜
 Bara	余烬
 Gradient halus	柔和渐变
+Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	为手机腾出更多空间。可在 编辑实例 > 实例设置 中再调高。
+RAM instance ini diturunkan ke {0} MB.	此实例的内存已降至 {0} MB。
+Renderer instance ini dikembalikan ke Otomatis.	此实例的渲染器已恢复为自动。
+Renderer instance ini diganti ke {0}.	此实例的渲染器已更换为 {0}。
+Tidak dapat menemukan {0} untuk versi {1}	找不到适用于版本 {1} 的 {0}
+Installer {0} gagal (kode {1})	{0} 安装器失败（代码 {1}）
+Proses ini hanya berjalan sekali per versi {0}.	此步骤对每个 {0} 版本只运行一次。
+Versi {0} belum dipilih	尚未选择 {0} 版本
+{0} hanya mendukung Minecraft {1} ke atas	{0} 仅支持 Minecraft {1} 及以上版本
+Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	存储空间不足，无法安装 {0}（剩余 {1} MB，至少需要 {2} MB）
+Installer {0} {1} rusak atau tidak lengkap	{0} {1} 安装器已损坏或不完整
+Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	无法识别此 {0} 安装器的格式（Amber 需要 {1} {2} 及以上版本）
+Installer {0} untuk Minecraft {1}, bukan {2}	此 {0} 安装器适用于 Minecraft {1}，而不是 {2}
+version.json di installer {0} tidak terbaca	无法读取 {0} 安装器中的 version.json
+Installer {0} gagal	{0} 安装器失败
+Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	{0} 安装器已运行完毕，但找不到打过补丁的 Minecraft jar（{1}）
+Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	下载 {0} 库失败：{1}{2}。请检查网络连接后重试。
+Path library {0} tidak aman: {1}	{0} 库路径不安全：{1}
+Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	下载 {0} 库失败：{1}。请检查网络连接后重试。
+install_profile.json tidak ada di installer {0}	{0} 安装器中缺少 install_profile.json
+versionInfo tidak ada di installer {0}	{0} 安装器中缺少 versionInfo
+{0} tidak ada di installer {1}	{1} 安装器中缺少 {0}
+Tidak ada versi {0} yang didukung	没有受支持的 {0} 版本
+Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling 不再运行 WebAssembly 模组（mod.wasm）。需要把此模组重新制作为原生模组（.hnmod）。
+Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	这不是 Starling 可读取的原生模组：缺少 horizon-native.json 或文件无效。
+Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	无法在此启用原生模组：请在游戏中打开 Options > Mods 并选择 Compile，让模组进入游戏。
+Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	原生模组（.hnmod）仅受 Starling 引擎支持。请创建 Starling 实例来使用。
+Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	原生模组（.hnmod）。尚未进入游戏：请在游戏中打开 Options > Mods 并选择 Compile。
+Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Starling 内置原生模块。其设置在游戏中的 Options > Mods。
+Starling hanya tersedia untuk HP 64-bit (arm64).	Starling 仅适用于 64 位手机（arm64）。
+Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	此构建未包含 Starling。添加方法见 docs/rust-engine.md。
+Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Starling 目前仅支持离线和 Microsoft 账号。请在账号标签页中选择其中之一。
+Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	Starling 的离线账号名称必须为 1 到 16 个字符，可使用字母、数字或下划线。请在账号标签页中新建离线账号。
+Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	首次打开：Starling 界面会准备游戏（下载约 500 MiB）。请按界面提示操作直到完成。
+Starling gagal dibuka: {0}	Starling 打开失败：{0}
+Folder akun mesin tidak bisa dibuat	无法创建引擎账号文件夹
+{0} tidak bisa disimpan	无法保存 {0}
+Patokan berkas Starling tidak tersedia di aplikasi ini.	此应用中没有 Starling 的文件基准。
+Folder data Starling tidak bisa dibuat.	无法创建 Starling 数据文件夹。
+Berkas versi {0} dari Mojang tidak valid.	来自 Mojang 的版本文件 {0} 无效。
+Berkas versi {0} tidak mendaftar unduhan.	版本文件 {0} 没有列出任何下载项。
+Berkas versi {0} tidak mendaftar unduhan {1}.	版本文件 {0} 没有列出下载项 {1}。
+Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	版本文件 {0} 包含的 {1} jar 与 Starling 预期的不同。
+Berkas versi {0} tidak mendaftar indeks aset.	版本文件 {0} 没有列出资源索引。
+Nama indeks aset tidak valid.	资源索引名称无效。
+Indeks aset dari Mojang tidak valid.	来自 Mojang 的资源索引无效。
+Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	存储空间不足：还需要约 {0} MB。
+Berkas {0} belum ada setelah diunduh.	下载后仍然找不到文件 {0}。
+Game belum bisa dimulai.	游戏暂时无法启动。
+Game belum bisa dimulai: {0}. Rincian ada di log launcher.	游戏暂时无法启动：{0}。详情见启动器日志。
+Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	配置 {0}（{1}）尚未安装。请点击实例上的“下载”按钮！
+{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	缺少 {0} 个游戏库文件（下载不完整或已被删除）。请点击此实例上的“下载”来补全。
+Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	此整合包需要 Quilt，但 AmberLauncher 目前只支持 Fabric、Forge 和 NeoForge。
+Daftar modpack terlalu besar	整合包列表过大
+Gagal menyiapkan folder modpack	无法准备整合包文件夹
+Gagal menyimpan berkas modpack	无法保存整合包文件
+Berkas lama tidak ditemukan	找不到旧文件
+Berkas {0} berubah sejak diperiksa	文件 {0} 在检查后发生了变化
+Nama berkas baru tidak valid	新文件名无效
+Berkas baru tanpa sidik jari tidak dipasang	没有指纹的新文件未被安装
+Berkas {0} sudah ada	文件 {0} 已存在
+Gagal menyiapkan penggantian berkas	无法准备文件替换
+Gagal menyimpan berkas baru	无法保存新文件
+Gagal menghapus berkas lama	无法删除旧文件
+{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	有 {0} 个模组无法下载，因为作者禁止通过启动器下载。如有需要，请从 CurseForge 网站手动安装。
+Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	此整合包需要 {0}。请先创建 {1} 实例，再把整合包安装到该实例中。
+Pilih APK	选择 APK
+Izinkan dari sumber ini	允许来自此来源
+Terjadi masalah yang tidak diketahui. Coba lagi.	发生了未知问题。请重试。
+Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	无法连接到下载服务器。请检查网络连接后重试。
+Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	服务器响应太慢。网络可能较慢或不稳定，请重试。
+Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	与服务器的安全连接失败。请检查手机的日期和时间以及网络连接后重试。
+Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	连接中途断开。请重试；已完成的文件不会重新下载。
+Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	手机存储空间已满。请释放一些空间（一个版本约需 500 MB）后重试。
+Terjadi masalah yang tidak terduga. Coba lagi.	发生了意外问题。请重试。
+Game langsung tertutup atau tidak mau mulai	游戏立即闪退或无法启动
+Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	打开 设置 > 关于 > 游戏日志。最近一次的原因记录在那里；求助时请分享其中的内容。
+Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	如果提示信息提到缺少文件或库：打开 编辑实例（主页上的铅笔图标），然后点击“验证并修复”。
+Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	在 设置 > 游戏 中调低“游戏内存（RAM）”。向手机申请过多内存可能导致 Android 关闭游戏。
+Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	在 编辑实例 中尝试其他 Java 版本（例如较新的 Minecraft 用 Java 17 或 21，旧版本用 Java 8）。
+FPS rendah atau game patah-patah	FPS 低或游戏卡顿
+Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	在 设置 > 游戏 中调低“屏幕分辨率缩放”：画面会更粗糙，但负担轻得多。
+Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	在游戏中调小 Render Distance 和 Simulation Distance，并关闭较重的画面效果。
+Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	在 设置 > 控制 中打开“显示 FPS 和内存”，查看问题是内存快用完还是处理器太忙。
+Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	关闭其他应用；如果手机发烫，让它先降温：过热的手机会自动降速。
+Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	在 设置 > 显示 中关闭“让 GIF 和视频动起来”和“主页特效”；动态背景会消耗手机电量。
+Pakai latar foto biasa, bukan video atau GIF besar.	使用普通照片作为背景，不要用大的视频或 GIF。
+Unduhan gagal atau terputus	下载失败或被中断
+Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	再次点击“下载”。只会重新下载缺少的文件，所以不用从头开始。
+Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	确保手机有足够的可用空间（一个版本约需 500 MB）；可在手机自带的 设置 > 存储 中查看。
+Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	如果完成后觉得游戏不完整，请在 编辑实例 中点击“验证并修复”。
+Login Microsoft gagal atau diminta masuk lagi	Microsoft 登录失败或被要求重新登录
+Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	会话可能已过期。请打开账号界面，用同一个 Microsoft 账号重新登录。
+Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	账号必须拥有 Minecraft Java 版；没有的账号无法进行在线游戏。
+Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	请按启动器显示的代码和地址操作；代码有效期很短，请尽快完成。
+Apa itu akun offline?	什么是离线账号？
+Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	离线账号只是这台手机上的一个玩家名称，无需登录。适合玩自己的世界（单人）或局域网。
+Namanya 3-16 karakter: huruf, angka, atau garis bawah.	名称为 3-16 个字符：字母、数字或下划线。
+Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	大多数在线服务器只接受正版账号，所以离线账号通常会被拒绝。
+Di mana dunia dan mod disimpan? Cara mencadangkan	世界和模组存放在哪里？如何备份
+Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	在 设置 > 关于 > 数据存储（“数据位置”）中查看位置。
+Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	每个实例都有自己的文件夹。在 编辑实例 中点击“打开实例文件夹”即可前往；世界在 saves 文件夹中。
+Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	AmberLauncher 自己的文件夹（Android/data）里的数据会在卸载应用时一并删除，所以请先把重要的世界复制到别处。
+Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	如果你的数据仍在旧的 nuxlauncher 文件夹，数据存储 中的“移动”按钮会把它移到 Android/data，无需“所有文件”访问权限。
+Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	打开 编辑实例 > 模组与内容 来搜索和安装模组，或添加你已下载的文件。
+Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	.jar 或 .mrpack 文件也可以直接从文件管理器用 AmberLauncher 打开。
+Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	确保模组与该实例的 Minecraft 版本和加载器（Fabric 或 Forge）相符。
+Pertanyaan yang sering muncul	常见问题
+Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	实例的下载或安装仍在进行中。请等它完成后重试。
+Geser antar tombol	在按钮间滑动
+Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	把手指从 W 滑到 D，即可在不抬手的情况下按下中间经过的按钮。
+Pengaturan instance	实例设置
+Pengaturan instance disimpan	实例设置已保存
+Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	此处选择的值只对此实例生效。“跟随全局”使用通用设置，并会随之变化。
+Mode Hemat sedang menyala: resolusi dibatasi {0}%.	省电模式已开启：分辨率限制为 {0}%。
+Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	只显示与 Minecraft {0} 匹配的渲染器。
+Ikuti global (kosong)	跟随全局（空）
+Khusus instance ini	仅此实例
+Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	供高级用户使用；填错可能导致游戏无法运行。留空 = 此实例不使用额外参数。
+Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	供高级用户使用。通用设置不使用额外参数。
+Memakai argumen dari Pengaturan umum: {0}	正在使用通用设置中的参数：{0}
+Kembalikan semua ke global	全部恢复为全局
+Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	名称为 3-16 个字符：字母、数字或下划线（_）
+Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	名称为 3-16 个字符：字母、数字或下划线（_）。
+Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	离线账号无需登录。无法进入正版（online-mode）服务器，自定义皮肤通常也只有你自己能看到。改名会被服务器视为新玩家，所以背包和进度不会保留。
+Kategori Semua \u2304	类别 全部 ⌄
+Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	仅支持 Minecraft {0}。首次打开时，Starling 界面会准备游戏（下载约 500 MiB）。此引擎与 Horizon 相互独立，有自己的光影、模组和菜单。
+Gagal menyiapkan folder sementara	无法准备临时文件夹
+Gagal membaca berkas	无法读取文件
+Gagal memasang {0}	安装 {0} 失败
+Gagal menyiapkan Java	无法准备 Java
+terlalu besar	过大
+tambah aksi	添加动作
+Memuat data dari {0}...	正在从 {0} 加载数据...
+Gagal memuat dari {0}	从 {0} 加载失败
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Starling 模组：.hmod（内容，或带原生代码）和 .hnmod（原生模组），不是 Fabric 或 Forge 的 .jar 文件。WebAssembly 模组（mod.wasm）不再能在 Starling 上运行。.hnmod 模组需要在游戏内编译后（Options > Mods > Compile）才会生效。内置模块通过列表中的开关启用。
+Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	把手指从一个按钮滑到另一个按钮（例如从 W 到 D），会在不抬手的情况下按下中间经过的按钮。攻击和使用按钮不包含在内。
+Discord Rich Presence saat bermain	游玩时显示 Discord Rich Presence
+Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	游玩时，在你的 Discord 个人资料中显示 AmberLauncher 以及 Minecraft 版本和加载器（或 Rust 引擎）。不会共享你的实例名称和账号。需要在这台手机上安装并登录 Discord 应用；不使用登录信息或令牌。不适用于 13 岁以下用户。从下一次游戏开始生效。
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	启动器打开而你尚未游玩时，你的 Discord 个人资料会显示 AmberLauncher，状态为“正在准备游戏”。下次打开启动器时生效。与你已登录的 Discord 应用配合使用；不适用于 13 岁以下用户。
+Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	常见问题解答：游戏闪退、FPS 低、下载失败、登录以及数据存放位置。
+Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	部分游戏文件尚未下载（{0}），通常是因为连接中断。再次点击“下载”：只会重新下载缺少的文件。
+{0} library	{0} 个库
+{0} aset suara/bahasa	{0} 个声音/语言资源
+Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	部分文件下载失败。请检查网络连接，然后再次点击“下载”继续。（{0}）
+Gagal memeriksa pembaruan: {0}	检查更新失败：{0}
+Gagal terhubung ke {0}	连接 {0} 失败
+{0} library dan {1} aset suara/bahasa	{0} 个库和 {1} 个声音/语言资源
+Ikuti global	跟随全局
+Khusus	自定义
+Verifikasi & perbaiki	验证并修复
+Gagal	失败
+Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	此 Ely.by 账号启用了两步验证（2FA）。请输入验证器应用中的代码。
+Email atau username Ely.by	Ely.by 邮箱或用户名
+Email/username atau password Ely.by salah.	Ely.by 邮箱/用户名或密码错误。
+Email/username, password, atau kode 2FA Ely.by salah.	Ely.by 邮箱/用户名、密码或 2FA 验证码错误。
+Gagal masuk ke Ely.by.	登录 Ely.by 失败。
+Kode 2FA (6 digit)	2FA 验证码（6 位）
+Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	2FA 验证码错误或已过期。请使用最新的验证码。
+Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	使用 Ely.by 账号的邮箱或用户名和密码登录。支持两步验证（2FA）。
+Masuk ke Ely.by	登录 Ely.by
+Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	你的密码只会发送到 Ely.by 服务器，不会保存在启动器中。只保存登录令牌。
+Respon Ely.by tidak berisi token akses.	Ely.by 的响应中不包含访问令牌。
+Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Ely.by 会话已失效。请删除此账号后重新登录。
+Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	无法连接到 Ely.by。请检查网络连接。

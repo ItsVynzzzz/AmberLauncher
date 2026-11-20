@@ -1,0 +1,1265 @@
+diff --git a/README.en.md b/README.en.md
+index 728296ade98fe943c14a827c759599d6e67dd266..b8c909050c8dcaab95988618898808a0ada55903 100644
+GIT binary patch
+delta 268
+zcmZ9{F-`+96ola(%7}hyYsmpXN=qG<3p~XW+roZc*)Qy-ilSTyi3_3y(NK@{>zmvD
+zI({yj%V>>K*ifpcb5E!rY+247Rbh2PJ;EXpq!4qm2;*V{Qjx$uASZqAzk^`^ibM4r
+zAnGBoRM@t7J2geJHF#3b2IoeaB@G>y9bVS*4*wv}m}APsl;xZ>3=s4pIU|bt%pYAO
+qGLHuOz&~d{G*VF~YKLGFWrkJsSZCCRm^{}*WqbDs=f0NB{lhms^IOLN
+
+delta 12
+TcmZn+ZVuc~A-uUvgj*B<AeaO}
+
+diff --git a/README.md b/README.md
+index 199f0bc7dfafae50cb04fc98553308a2d2b5cf29..ac3c958d45a349c69dc5d04c41ca006d2e44def1 100644
+GIT binary patch
+delta 268
+zcmZ9FJxT>Z5C(I@hX?rLVSNWsc#&YD^7IDZy3NweOz$#3!bG0LI|v@Zz*`u35b4yk
+zD5`!Rf6gCYhqs4q5!6<MSxN}k*j}Y14lD{bR;<i|S&CLglUOGwGs}de7O{w}G(^ul
+zJx^F@Xqu%QajQ0%7-=30;p}Sbg@zOEJbS|b{|zeH{FkZbua&kU%8MqiG}#qViz0Eb
+sAWNQmBzBr4bZb2#i!tw-e9Xq~V7O;PBh3bn7gq@3p8NLseR#k81HcYoF8}}l
+
+delta 12
+UcmcZ?@WgM!VWG`?g%^qd04&W09smFU
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 026ed8c..42e11c9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -10,6 +10,7 @@ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
+ import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
+ import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
+ import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
++import com.israadev.nuxlauncher.ui.streamer.StreamerLayer
+ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
+ import androidx.core.view.WindowCompat
+@@ -1945,9 +1946,11 @@ fun GameScreen(
+     var isConsoleVisible by remember { mutableStateOf(false) }
+     var isConsoleExpanded by remember { mutableStateOf(false) }
+     var showExitConfirmDialog by remember { mutableStateOf(false) }
++    // Panel mode streamer (sidebar kiri) terbuka. Bukan dialog, tapi menutupi sebagian game selama terbuka.
++    var showStreamerPanel by remember { mutableStateOf(false) }
+     // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
+     // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
+-    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay
++    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || showStreamerPanel
+     SideEffect { MenuMouse.overlayOpen = overlayCoversGame }
+     LaunchedEffect(overlayCoversGame) {
+         if (overlayCoversGame) MenuMouse.reset()
+@@ -2300,6 +2303,17 @@ fun GameScreen(
+             }
+         }
+ 
++        // Overlay mode streamer: teks, gambar, link/QR, dan timer di atas game, plus sidebar kiri untuk
++        // menyalakan dan mematikannya. Di atas tombol layar (supaya gagangnya bisa disentuh), di bawah menu.
++        if (launcherSettings.streamerMode && controlsAllowed) {
++            StreamerLayer(
++                items = launcherSettings.streamerItems,
++                panelOpen = showStreamerPanel,
++                onPanelChange = { showStreamerPanel = it },
++                ghostHandle = ghostControls
++            )
++        }
++
+         // Preview ketikan di atas keyboard layar: di atas tombol kontrol supaya tidak tertutup, di bawah dialog.
+         if (isKeyboardRequested && launcherSettings.typingPreview) {
+             TypingPreviewBar(typingMirror)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
+index 0020567..ad0fa09 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
+@@ -122,7 +122,7 @@ internal fun MenuToggleRow(
+ 
+ /** Gambar saklar saja (tidak bisa diketuk sendiri; barisnya yang menangani ketukan). */
+ @Composable
+-private fun MenuSwitch(checked: Boolean) {
++internal fun MenuSwitch(checked: Boolean) {
+     Box(
+         modifier = Modifier
+             .size(width = 42.dp, height = 24.dp)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt
+new file mode 100644
+index 0000000..97d7496
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt
+@@ -0,0 +1,459 @@
++package com.israadev.nuxlauncher.ui.dialogs
++
++import android.net.Uri
++import androidx.activity.compose.rememberLauncherForActivityResult
++import androidx.activity.result.contract.ActivityResultContracts
++import androidx.compose.foundation.Image
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.collectAsState
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.settings.SettingsManager
++import com.israadev.nuxlauncher.core.streamer.QrCode
++import com.israadev.nuxlauncher.core.streamer.StreamerImages
++import com.israadev.nuxlauncher.core.streamer.StreamerItem
++import com.israadev.nuxlauncher.core.streamer.StreamerLogic
++import com.israadev.nuxlauncher.ui.components.AmberButton
++import com.israadev.nuxlauncher.ui.components.AmberButtonStyle
++import com.israadev.nuxlauncher.ui.components.AmberIcon
++import com.israadev.nuxlauncher.ui.components.NuxDialog
++import com.israadev.nuxlauncher.ui.components.NuxTextField
++import com.israadev.nuxlauncher.ui.components.SettingChip
++import com.israadev.nuxlauncher.ui.components.amberTap
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.i18n.Toast
++import com.israadev.nuxlauncher.ui.streamer.ItemTitle
++import com.israadev.nuxlauncher.ui.streamer.posLabel
++import com.israadev.nuxlauncher.ui.streamer.rememberStreamerBitmap
++import com.israadev.nuxlauncher.ui.streamer.typeLabel
++import com.israadev.nuxlauncher.ui.theme.Amber
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++
++private fun keepNames(list: List<StreamerItem?>?): Set<String> =
++    StreamerLogic.sanitize(list).mapNotNull { it.image.takeIf { n -> n.isNotEmpty() } }.toSet()
++
++private fun canSave(d: StreamerItem): Boolean = StreamerLogic.isDisplayable(StreamerLogic.sanitizeOne(d))
++
++/**
++ * Dialog untuk mengatur overlay streamer: daftar overlay (maksimal [StreamerLogic.MAX_ITEMS]) dan
++ * formulir tambah/ubah/hapus. Perubahan langsung disimpan ke pengaturan saat menekan Simpan atau Hapus
++ * dan berlaku mulai game berikutnya. Gambar yang tidak terpakai lagi dihapus dari folder aplikasi.
++ */
++@Composable
++fun StreamerManagerDialog(onDismiss: () -> Unit) {
++    val context = LocalContext.current
++    val scope = rememberCoroutineScope()
++    val settings by SettingsManager.settings.collectAsState()
++    val items = remember(settings.streamerItems) { StreamerLogic.sanitize(settings.streamerItems) }
++
++    var draft by remember { mutableStateOf<StreamerItem?>(null) }
++    var isNew by remember { mutableStateOf(false) }
++    var importing by remember { mutableStateOf(false) }
++
++    // Sisa gambar dari perubahan atau reset sebelumnya dibersihkan saat dialog dibuka.
++    LaunchedEffect(Unit) {
++        val keep = keepNames(SettingsManager.settings.value.streamerItems)
++        withContext(Dispatchers.IO) { StreamerImages.sweep(context, keep) }
++    }
++
++    fun sweepInBackground(list: List<StreamerItem?>?) {
++        val keep = keepNames(list)
++        Thread { StreamerImages.sweep(context, keep) }.start()
++    }
++
++    fun persist(newItems: List<StreamerItem>) {
++        val clean = StreamerLogic.sanitize(newItems)
++        SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(streamerItems = clean))
++        sweepInBackground(clean)
++    }
++
++    fun closeEditor() {
++        draft = null
++        importing = false
++        // Gambar yang dipilih lalu dibatalkan ikut dibersihkan.
++        sweepInBackground(SettingsManager.settings.value.streamerItems)
++    }
++
++    val pickImage = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
++        val current = draft
++        if (uri != null && current != null) {
++            importing = true
++            scope.launch {
++                val name = withContext(Dispatchers.IO) { StreamerImages.importImage(context, uri, current.id) }
++                importing = false
++                if (name == null) {
++                    Toast.makeText(context, "Gambar tidak bisa dibaca", Toast.LENGTH_SHORT).show()
++                } else {
++                    draft = draft?.copy(image = name)
++                }
++            }
++        }
++    }
++
++    NuxDialog(
++        onDismissRequest = { if (draft != null) closeEditor() else onDismiss() },
++        modifier = Modifier.widthIn(max = 540.dp),
++        compact = true
++    ) {
++        val d = draft
++        if (d == null) {
++            ListPane(
++                items = items,
++                onAdd = {
++                    val id = StreamerLogic.newId(items.map { it.id }.toSet(), System.currentTimeMillis())
++                    draft = StreamerItem(id = id, type = StreamerLogic.TYPE_TEXT, on = true)
++                    isNew = true
++                },
++                onEdit = {
++                    draft = it
++                    isNew = false
++                },
++                onDone = onDismiss
++            )
++        } else {
++            EditPane(
++                draft = d,
++                isNew = isNew,
++                importing = importing,
++                onChange = { draft = it },
++                onPickImage = { pickImage.launch(arrayOf("image/*")) },
++                onSave = {
++                    val clean = StreamerLogic.sanitizeOne(d)
++                    persist(if (isNew) items + clean else items.map { if (it.id == clean.id) clean else it })
++                    draft = null
++                    importing = false
++                },
++                onDelete = {
++                    persist(items.filter { it.id != d.id })
++                    draft = null
++                    importing = false
++                },
++                onCancel = { closeEditor() }
++            )
++        }
++    }
++}
++
++@Composable
++private fun ListPane(
++    items: List<StreamerItem>,
++    onAdd: () -> Unit,
++    onEdit: (StreamerItem) -> Unit,
++    onDone: () -> Unit
++) {
++    Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
++        Text(
++            text = "Atur overlay",
++            color = Amber.Text,
++            fontSize = 19.sp,
++            fontWeight = FontWeight.Bold
++        )
++        Spacer(modifier = Modifier.height(4.dp))
++        Text(
++            text = "Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.",
++            color = Amber.TextDim,
++            fontSize = 12.sp,
++            lineHeight = 17.sp
++        )
++        Spacer(modifier = Modifier.height(14.dp))
++        Column(
++            modifier = Modifier
++                .weight(1f, fill = false)
++                .verticalScroll(rememberScrollState())
++        ) {
++            if (items.isEmpty()) {
++                Text(
++                    text = "Belum ada overlay. Ketuk Tambah untuk membuatnya.",
++                    color = Amber.TextDim,
++                    fontSize = 13.sp,
++                    modifier = Modifier.padding(vertical = 10.dp)
++                )
++            } else {
++                MenuGroup {
++                    items.forEachIndexed { index, item ->
++                        if (index > 0) MenuDivider()
++                        Row(
++                            modifier = Modifier
++                                .fillMaxWidth()
++                                .clip(RoundedCornerShape(12.dp))
++                                .amberTap { onEdit(item) }
++                                .padding(vertical = 12.dp),
++                            verticalAlignment = Alignment.CenterVertically
++                        ) {
++                            Column(modifier = Modifier.weight(1f)) {
++                                ItemTitle(item, 14)
++                                // Dua bagian diterjemahkan sendiri-sendiri (kunci terjemahan per kata).
++                                Row {
++                                    Text(text = typeLabel(item.type), color = AmberUi.TextDim, fontSize = 11.sp)
++                                    Text(text = " \u00B7 ", color = AmberUi.TextDim, fontSize = 11.sp)
++                                    Text(text = posLabel(item.pos), color = AmberUi.TextDim, fontSize = 11.sp)
++                                }
++                            }
++                            Spacer(modifier = Modifier.width(10.dp))
++                            AmberIcon("chev_right", 14.dp, AmberUi.TextDim)
++                        }
++                    }
++                }
++            }
++        }
++        Spacer(modifier = Modifier.height(18.dp))
++        Row(
++            modifier = Modifier.fillMaxWidth(),
++            horizontalArrangement = Arrangement.spacedBy(10.dp)
++        ) {
++            AmberButton(
++                text = "Selesai",
++                onClick = onDone,
++                style = AmberButtonStyle.Ghost,
++                modifier = Modifier.weight(1f)
++            )
++            AmberButton(
++                text = "Tambah",
++                onClick = onAdd,
++                enabled = items.size < StreamerLogic.MAX_ITEMS,
++                modifier = Modifier.weight(1f)
++            )
++        }
++    }
++}
++
++@Composable
++private fun EditPane(
++    draft: StreamerItem,
++    isNew: Boolean,
++    importing: Boolean,
++    onChange: (StreamerItem) -> Unit,
++    onPickImage: () -> Unit,
++    onSave: () -> Unit,
++    onDelete: () -> Unit,
++    onCancel: () -> Unit
++) {
++    Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
++        Text(
++            text = if (isNew) "Overlay baru" else "Ubah overlay",
++            color = Amber.Text,
++            fontSize = 19.sp,
++            fontWeight = FontWeight.Bold
++        )
++        Spacer(modifier = Modifier.height(14.dp))
++        Column(
++            modifier = Modifier
++                .weight(1f, fill = false)
++                .verticalScroll(rememberScrollState()),
++            verticalArrangement = Arrangement.spacedBy(8.dp)
++        ) {
++            FieldLabel("Jenis")
++            ChipRow {
++                for (t in StreamerLogic.TYPES) {
++                    SettingChip(
++                        text = typeLabel(t),
++                        selected = draft.type == t,
++                        onClick = { if (draft.type != t) onChange(draft.copy(type = t)) }
++                    )
++                }
++            }
++
++            when (draft.type) {
++                StreamerLogic.TYPE_TEXT -> {
++                    Spacer(modifier = Modifier.height(4.dp))
++                    NuxTextField(
++                        value = draft.text,
++                        onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_TEXT_CHARS))) },
++                        placeholder = "Tulis teks overlay"
++                    )
++                }
++                StreamerLogic.TYPE_LINK -> {
++                    Spacer(modifier = Modifier.height(4.dp))
++                    NuxTextField(
++                        value = draft.text,
++                        onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_LINK_CHARS))) },
++                        placeholder = "Contoh: ko-fi.com/namamu"
++                    )
++                    MenuGroup {
++                        MenuToggleRow(
++                            title = "Tampilkan kode QR",
++                            subtitle = "Penonton bisa memindainya langsung dari layar.",
++                            checked = draft.qr,
++                            onChange = { onChange(draft.copy(qr = it)) }
++                        )
++                    }
++                    val payload = StreamerLogic.qrPayload(draft.text)
++                    if (draft.qr && payload.isNotEmpty() && QrCode.encode(payload) == null) {
++                        Text(
++                            text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
++                            color = Amber.DangerSoft,
++                            fontSize = 12.sp,
++                            lineHeight = 17.sp
++                        )
++                    }
++                }
++                StreamerLogic.TYPE_IMAGE -> {
++                    Spacer(modifier = Modifier.height(4.dp))
++                    ImagePicker(draft.image, importing, onPickImage)
++                }
++                else -> {
++                    Text(
++                        text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.",
++                        color = Amber.TextDim,
++                        fontSize = 12.sp,
++                        lineHeight = 17.sp
++                    )
++                }
++            }
++
++            Spacer(modifier = Modifier.height(4.dp))
++            FieldLabel("Posisi")
++            ChipRow {
++                for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
++                    SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
++                }
++            }
++            ChipRow {
++                for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
++                    SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
++                }
++            }
++
++            Spacer(modifier = Modifier.height(4.dp))
++            FieldLabel("Ukuran")
++            ChipRow {
++                SettingChip("Kecil", draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL)) })
++                SettingChip("Sedang", draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM)) })
++                SettingChip("Besar", draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE)) })
++            }
++
++            Spacer(modifier = Modifier.height(4.dp))
++            MenuGroup {
++                MenuToggleRow(
++                    title = "Tampil saat game mulai",
++                    subtitle = "Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.",
++                    checked = draft.on,
++                    onChange = { onChange(draft.copy(on = it)) }
++                )
++            }
++        }
++        Spacer(modifier = Modifier.height(18.dp))
++        Row(
++            modifier = Modifier.fillMaxWidth(),
++            horizontalArrangement = Arrangement.spacedBy(8.dp)
++        ) {
++            if (!isNew) {
++                AmberButton(
++                    text = "Hapus",
++                    onClick = onDelete,
++                    style = AmberButtonStyle.Danger,
++                    modifier = Modifier.weight(1f)
++                )
++            }
++            AmberButton(
++                text = "Batal",
++                onClick = onCancel,
++                style = AmberButtonStyle.Ghost,
++                modifier = Modifier.weight(1f)
++            )
++            AmberButton(
++                text = "Simpan",
++                onClick = onSave,
++                enabled = !importing && canSave(draft),
++                modifier = Modifier.weight(1f)
++            )
++        }
++    }
++}
++
++@Composable
++private fun FieldLabel(text: String) {
++    Text(
++        text = text,
++        color = Amber.TextDim,
++        fontSize = 12.sp,
++        fontWeight = FontWeight.SemiBold
++    )
++}
++
++@Composable
++private fun ChipRow(content: @Composable () -> Unit) {
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .horizontalScroll(rememberScrollState()),
++        horizontalArrangement = Arrangement.spacedBy(8.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        content()
++    }
++}
++
++@Composable
++private fun ImagePicker(image: String, importing: Boolean, onPick: () -> Unit) {
++    val bmp = if (image.isNotEmpty()) rememberStreamerBitmap(image) else null
++    val shape = RoundedCornerShape(12.dp)
++    Row(verticalAlignment = Alignment.CenterVertically) {
++        Box(
++            modifier = Modifier
++                .size(72.dp)
++                .clip(shape)
++                .background(Amber.Fill)
++                .border(1.dp, Amber.Line, shape),
++            contentAlignment = Alignment.Center
++        ) {
++            if (bmp != null) {
++                Image(
++                    bitmap = bmp,
++                    contentDescription = null,
++                    contentScale = ContentScale.Fit,
++                    modifier = Modifier.fillMaxSize()
++                )
++            }
++        }
++        Spacer(modifier = Modifier.width(12.dp))
++        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
++            AmberButton(
++                text = if (image.isEmpty()) "Pilih gambar" else "Ganti gambar",
++                onClick = onPick,
++                style = AmberButtonStyle.Ghost,
++                enabled = !importing,
++                height = 40.dp
++            )
++            Text(
++                text = if (importing) "Memproses gambar..." else "Foto atau logo. Dikecilkan otomatis supaya ringan.",
++                color = Amber.TextDim,
++                fontSize = 11.sp,
++                lineHeight = 15.sp
++            )
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 46940ee..761058a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -70,6 +70,9 @@ import com.israadev.nuxlauncher.ui.dialogs.AmberHelpDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
+ import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
++import com.israadev.nuxlauncher.ui.dialogs.StreamerManagerDialog
++import com.israadev.nuxlauncher.core.streamer.StreamerImages
++import com.israadev.nuxlauncher.core.streamer.StreamerLogic
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+ import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ import kotlinx.coroutines.Dispatchers
+@@ -93,6 +96,7 @@ fun SettingsScreen(
+     var showAboutDialog by remember { mutableStateOf(false) }
+     var showHelpDialog by remember { mutableStateOf(false) }
+     var showControlPresets by remember { mutableStateOf(false) }
++    var showStreamerDialog by remember { mutableStateOf(false) }
+ 
+     // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
+     // dikerjakan di thread IO; layar hanya menyimpan hasil pemeriksaan sampai pengguna menyetujui.
+@@ -561,6 +565,24 @@ fun SettingsScreen(
+                         )
+                         }
+ 
++                        SettingsGroup("Mode streamer") {
++                            SettingSwitchRow(
++                                title = "Mode streamer",
++                                desc = "Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.",
++                                checked = currentSettings.streamerMode,
++                                onCheckedChange = {
++                                    SettingsManager.updateSettings(context, currentSettings.copy(streamerMode = it))
++                                }
++                            )
++                            SettingDivider()
++                            SettingValueRow(
++                                title = "Atur overlay",
++                                desc = "Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.",
++                                value = "${currentSettings.streamerItems.size}/${StreamerLogic.MAX_ITEMS}",
++                                onClick = { showStreamerDialog = true }
++                            )
++                        }
++
+                         // Pengaturan untuk pengguna mahir: tidak perlu disentuh untuk bermain.
+                         SettingsGroup("Lanjutan") {
+                             SettingFrame("Argumen JVM tambahan", "Opsional, untuk pengguna mahir. Salah isi bisa membuat game gagal jalan.") {
+@@ -1281,6 +1303,8 @@ fun SettingsScreen(
+                                 danger = true,
+                                 onClick = {
+                                     SettingsManager.resetToDefaults(context)
++                                    // Reset menghapus daftar overlay streamer; gambarnya ikut dibersihkan.
++                                    Thread { StreamerImages.sweep(context, emptySet()) }.start()
+                     val reset = SettingsManager.settings.value
+                     ramMb = reset.ramMb
+                     initialHeapMb = reset.initialHeapMb
+@@ -1683,6 +1707,10 @@ fun SettingsScreen(
+         )
+     }
+ 
++    if (showStreamerDialog) {
++        StreamerManagerDialog(onDismiss = { showStreamerDialog = false })
++    }
++
+     if (showHelpDialog) {
+         AmberHelpDialog(onDismiss = { showHelpDialog = false })
+     }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt
+new file mode 100644
+index 0000000..c3efa73
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt
+@@ -0,0 +1,589 @@
++package com.israadev.nuxlauncher.ui.streamer
++
++import android.graphics.Bitmap
++import android.graphics.Color as AColor
++import android.os.SystemClock
++import androidx.compose.foundation.Image
++import androidx.compose.foundation.background
++import androidx.compose.foundation.border
++import androidx.compose.foundation.gestures.detectTapGestures
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.ColumnScope
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.WindowInsets
++import androidx.compose.foundation.layout.WindowInsetsSides
++import androidx.compose.foundation.layout.displayCutout
++import androidx.compose.foundation.layout.fillMaxHeight
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.only
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.size
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.layout.windowInsetsPadding
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.foundation.shape.RoundedCornerShape
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material3.Text as UserText
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.key
++import androidx.compose.runtime.mutableLongStateOf
++import androidx.compose.runtime.mutableStateMapOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.produceState
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberUpdatedState
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.FilterQuality
++import androidx.compose.ui.graphics.ImageBitmap
++import androidx.compose.ui.graphics.asImageBitmap
++import androidx.compose.ui.graphics.graphicsLayer
++import androidx.compose.ui.input.pointer.pointerInput
++import androidx.compose.ui.layout.ContentScale
++import androidx.compose.ui.platform.LocalConfiguration
++import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.text.font.FontFamily
++import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import com.israadev.nuxlauncher.core.streamer.QrCode
++import com.israadev.nuxlauncher.core.streamer.Stopwatch
++import com.israadev.nuxlauncher.core.streamer.StreamerImages
++import com.israadev.nuxlauncher.core.streamer.StreamerItem
++import com.israadev.nuxlauncher.core.streamer.StreamerLogic
++import com.israadev.nuxlauncher.ui.components.AmberIcon
++import com.israadev.nuxlauncher.ui.components.amberTap
++import com.israadev.nuxlauncher.ui.dialogs.MenuDivider
++import com.israadev.nuxlauncher.ui.dialogs.MenuGroup
++import com.israadev.nuxlauncher.ui.dialogs.MenuSwitch
++import com.israadev.nuxlauncher.ui.i18n.Text
++import com.israadev.nuxlauncher.ui.theme.AmberUi
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.withContext
++
++/*
++ * Overlay streamer di dalam game: teks, gambar, link (dengan kode QR), dan timer yang melayang di
++ * enam posisi layar, plus sidebar kiri yang tersembunyi untuk menyalakan/mematikannya saat bermain.
++ *
++ * Ringan: item hanya komponen biasa tanpa animasi dan tanpa blur. Satu-satunya yang berubah terus
++ * adalah timer, dan itu hanya menggambar ulang satu teks kecil sekali per detik, hanya saat berjalan.
++ * Item tidak menangkap sentuhan, jadi kontrol dan kamera di bawahnya tetap bekerja. Hanya gagang
++ * kecil di tepi kiri dan panelnya yang menerima sentuhan.
++ */
++
++/** Stopwatch satu item timer. Angka detik dibaca lewat state supaya hanya teks timer yang tergambar ulang. */
++internal class StreamerTimer {
++    val watch = Stopwatch { SystemClock.elapsedRealtime() }
++
++    var running by mutableStateOf(false)
++        private set
++
++    var seconds by mutableLongStateOf(0L)
++        private set
++
++    fun refresh() {
++        seconds = watch.elapsedMs() / 1000L
++    }
++
++    fun toggle() {
++        if (watch.running) watch.pause() else watch.start()
++        running = watch.running
++        refresh()
++    }
++
++    fun reset() {
++        watch.reset()
++        refresh()
++    }
++}
++
++/**
++ * Keadaan overlay selama game berjalan (di memori saja): item mana yang sedang tampil dan timer-nya.
++ * Tidak disimpan ke pengaturan, jadi menyalakan atau mematikan di dalam game tidak mengubah apa pun
++ * di berkas pengaturan; permainan berikutnya mulai lagi dari pilihan "Tampil saat game mulai".
++ */
++object StreamerRuntime {
++    private val shown = mutableStateMapOf<String, Boolean>()
++    private val timers = HashMap<String, StreamerTimer>()
++
++    fun isShown(item: StreamerItem): Boolean = shown[item.id] ?: item.on
++
++    fun toggle(item: StreamerItem) {
++        shown[item.id] = !isShown(item)
++    }
++
++    internal fun timer(id: String): StreamerTimer = timers.getOrPut(id) { StreamerTimer() }
++}
++
++private val ChipShape = RoundedCornerShape(10.dp)
++private val ChipBg = Color(0xB8121217)
++private val ChipEdge = Color(0x33FFFFFF)
++
++/** Nama posisi untuk tampilan (kunci terjemahan). */
++internal fun posLabel(pos: String): String = when (pos) {
++    StreamerLogic.POS_TOP_START -> "Kiri atas"
++    StreamerLogic.POS_TOP_END -> "Kanan atas"
++    StreamerLogic.POS_BOTTOM_START -> "Kiri bawah"
++    StreamerLogic.POS_BOTTOM -> "Bawah"
++    StreamerLogic.POS_BOTTOM_END -> "Kanan bawah"
++    else -> "Atas"
++}
++
++internal fun typeLabel(type: String): String = when (type) {
++    StreamerLogic.TYPE_IMAGE -> "Gambar"
++    StreamerLogic.TYPE_LINK -> "Link"
++    StreamerLogic.TYPE_TIMER -> "Timer"
++    else -> "Teks"
++}
++
++private fun alignmentOf(pos: String): Alignment = when (pos) {
++    StreamerLogic.POS_TOP_START -> Alignment.TopStart
++    StreamerLogic.POS_TOP_END -> Alignment.TopEnd
++    StreamerLogic.POS_BOTTOM_START -> Alignment.BottomStart
++    StreamerLogic.POS_BOTTOM -> Alignment.BottomCenter
++    StreamerLogic.POS_BOTTOM_END -> Alignment.BottomEnd
++    else -> Alignment.TopCenter
++}
++
++private fun horizontalOf(pos: String): Alignment.Horizontal = when (pos) {
++    StreamerLogic.POS_TOP_START, StreamerLogic.POS_BOTTOM_START -> Alignment.Start
++    StreamerLogic.POS_TOP_END, StreamerLogic.POS_BOTTOM_END -> Alignment.End
++    else -> Alignment.CenterHorizontally
++}
++
++/** Kode QR sebagai gambar: modul hitam di atas putih, dengan tepi putih dua modul supaya mudah dipindai. */
++internal fun qrBitmap(payload: String): ImageBitmap? {
++    val m = QrCode.encode(payload) ?: return null
++    val quiet = 2
++    val n = m.size + 2 * quiet
++    val px = IntArray(n * n) { AColor.WHITE }
++    for (y in m.indices) {
++        for (x in m.indices) {
++            if (m[y][x]) px[(y + quiet) * n + (x + quiet)] = AColor.BLACK
++        }
++    }
++    return Bitmap.createBitmap(px, n, n, Bitmap.Config.ARGB_8888).asImageBitmap()
++}
++
++/** Memuat gambar overlay di thread latar; null selama belum siap atau bila berkas hilang. */
++@Composable
++internal fun rememberStreamerBitmap(name: String): ImageBitmap? {
++    val context = LocalContext.current
++    val state = produceState<ImageBitmap?>(null, name) {
++        value = withContext(Dispatchers.IO) { StreamerImages.load(context, name)?.asImageBitmap() }
++    }
++    return state.value
++}
++
++/**
++ * Lapisan overlay streamer. [items] boleh berisi item yang belum layak tampil; yang kosong disaring di sini.
++ * [ghostHandle] menyembunyikan gagang (tetap bisa disentuh), dipakai saat merekam "Game saja".
++ */
++@Composable
++fun StreamerLayer(
++    items: List<StreamerItem>,
++    panelOpen: Boolean,
++    onPanelChange: (Boolean) -> Unit,
++    ghostHandle: Boolean
++) {
++    val list = remember(items) {
++        StreamerLogic.sanitize(items).filter { StreamerLogic.isDisplayable(it) }
++    }
++    val maxWidthDp = LocalConfiguration.current.screenWidthDp * 0.42f
++
++    Box(modifier = Modifier.fillMaxSize()) {
++        // Item overlay: tanpa penangan sentuhan, jadi sentuhan lewat ke kontrol dan game di bawahnya.
++        Box(
++            modifier = Modifier
++                .fillMaxSize()
++                .windowInsetsPadding(WindowInsets.displayCutout)
++                .padding(8.dp)
++        ) {
++            for (pos in StreamerLogic.POSITIONS) {
++                val group = list.filter { it.pos == pos && StreamerRuntime.isShown(it) }
++                if (group.isEmpty()) continue
++                Column(
++                    modifier = Modifier.align(alignmentOf(pos)),
++                    horizontalAlignment = horizontalOf(pos),
++                    verticalArrangement = Arrangement.spacedBy(6.dp)
++                ) {
++                    for (item in group) {
++                        key(item.id) { StreamerItemView(item, maxWidthDp) }
++                    }
++                }
++            }
++        }
++
++        if (panelOpen) {
++            StreamerPanel(
++                items = list,
++                onClose = { onPanelChange(false) },
++                modifier = Modifier.align(Alignment.CenterStart)
++            )
++        } else {
++            StreamerHandle(
++                ghost = ghostHandle,
++                onOpen = { onPanelChange(true) },
++                modifier = Modifier.align(Alignment.CenterStart)
++            )
++        }
++    }
++}
++
++@Composable
++private fun StreamerItemView(item: StreamerItem, maxWidthDp: Float) {
++    when (item.type) {
++        StreamerLogic.TYPE_TEXT -> Chip(Modifier.widthIn(max = maxWidthDp.dp)) {
++            UserText(
++                text = item.text,
++                color = Color.White,
++                fontSize = StreamerLogic.textSp(item.size).sp,
++                fontWeight = FontWeight.SemiBold,
++                textAlign = TextAlign.Center,
++                maxLines = 2,
++                overflow = TextOverflow.Ellipsis
++            )
++        }
++        StreamerLogic.TYPE_LINK -> LinkChip(item, maxWidthDp)
++        StreamerLogic.TYPE_IMAGE -> ImageItem(item, maxWidthDp)
++        StreamerLogic.TYPE_TIMER -> Chip {
++            TimerText(
++                timer = StreamerRuntime.timer(item.id),
++                fontSizeSp = StreamerLogic.textSp(item.size),
++                color = Color.White
++            )
++        }
++    }
++}
++
++/** Kotak kaca gelap dengan tepi putih tipis tempat teks, link, dan timer digambar. */
++@Composable
++private fun Chip(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
++    Column(
++        modifier = modifier
++            .clip(ChipShape)
++            .background(ChipBg)
++            .border(1.dp, ChipEdge, ChipShape)
++            .padding(horizontal = 10.dp, vertical = 6.dp),
++        horizontalAlignment = Alignment.CenterHorizontally,
++        content = content
++    )
++}
++
++@Composable
++private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
++    val qr = remember(item.text, item.qr) {
++        if (item.qr) qrBitmap(StreamerLogic.qrPayload(item.text)) else null
++    }
++    Chip(Modifier.widthIn(max = maxWidthDp.dp)) {
++        if (qr != null) {
++            Image(
++                bitmap = qr,
++                contentDescription = null,
++                filterQuality = FilterQuality.None,
++                modifier = Modifier
++                    .size(StreamerLogic.qrSizeDp(item.size).dp)
++                    .clip(RoundedCornerShape(6.dp))
++            )
++            Spacer(modifier = Modifier.height(5.dp))
++        }
++        UserText(
++            text = StreamerLogic.linkDisplay(item.text),
++            color = Color.White,
++            fontSize = StreamerLogic.linkSp(item.size).sp,
++            fontWeight = FontWeight.Medium,
++            textAlign = TextAlign.Center,
++            maxLines = 2,
++            overflow = TextOverflow.Ellipsis
++        )
++    }
++}
++
++@Composable
++private fun ImageItem(item: StreamerItem, maxWidthDp: Float) {
++    val bmp = rememberStreamerBitmap(item.image) ?: return
++    val (w, h) = StreamerLogic.fitSize(
++        ratio = bmp.width.toFloat() / bmp.height.toFloat(),
++        maxH = StreamerLogic.imageHeightDp(item.size).toFloat(),
++        maxW = maxWidthDp
++    )
++    Image(
++        bitmap = bmp,
++        contentDescription = null,
++        contentScale = ContentScale.Fit,
++        modifier = Modifier
++            .size(w.dp, h.dp)
++            .clip(RoundedCornerShape(8.dp))
++    )
++}
++
++/**
++ * Angka timer. Berdetak hanya selama timer berjalan, tepat di pergantian detik; saat tampil
++ * kembali setelah disembunyikan, angkanya langsung disegarkan.
++ */
++@Composable
++private fun TimerText(timer: StreamerTimer, fontSizeSp: Int, color: Color) {
++    val running = timer.running
++    LaunchedEffect(timer, running) {
++        timer.refresh()
++        while (running) {
++            delay(timer.watch.msToNextSecond() + 8L)
++            timer.refresh()
++        }
++    }
++    UserText(
++        text = StreamerLogic.formatElapsed(timer.seconds * 1000L),
++        color = color,
++        fontSize = fontSizeSp.sp,
++        fontFamily = FontFamily.Monospace,
++        fontWeight = FontWeight.Bold,
++        maxLines = 1
++    )
++}
++
++/** Gagang kecil di tepi kiri layar; ketuk untuk membuka panel. */
++@Composable
++private fun StreamerHandle(ghost: Boolean, onOpen: () -> Unit, modifier: Modifier) {
++    val currentOnOpen by rememberUpdatedState(onOpen)
++    val shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)
++    Box(
++        modifier = modifier
++            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Start))
++            .size(width = 34.dp, height = 96.dp)
++            .pointerInput(Unit) { detectTapGestures { currentOnOpen() } },
++        contentAlignment = Alignment.CenterStart
++    ) {
++        Box(
++            modifier = Modifier
++                .size(width = 20.dp, height = 60.dp)
++                .then(if (ghost) Modifier.graphicsLayer { alpha = 0f } else Modifier)
++                .clip(shape)
++                .background(Color(0x99121217))
++                .border(1.dp, ChipEdge, shape),
++            contentAlignment = Alignment.Center
++        ) {
++            AmberIcon("chev_right", 12.dp, AmberUi.TextDim)
++        }
++    }
++}
++
++/**
++ * Panel di sisi kiri: daftar item dengan saklar tampil/sembunyi, dan kontrol timer. Bukan dialog:
++ * game tetap berjalan di belakangnya. Latarnya menelan sentuhan supaya jari yang menyentuh panel
++ * tidak ikut menggerakkan kamera atau menekan kontrol di bawahnya.
++ */
++@Composable
++private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifier: Modifier) {
++    val shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
++    Column(
++        modifier = modifier
++            .fillMaxHeight()
++            .width(290.dp)
++            .clip(shape)
++            .background(AmberUi.MenuCard)
++            .border(1.dp, AmberUi.Border, shape)
++            .pointerInput(Unit) { detectTapGestures { } }
++            .windowInsetsPadding(
++                WindowInsets.displayCutout.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
++            )
++            .padding(horizontal = 16.dp, vertical = 14.dp)
++    ) {
++        Row(
++            modifier = Modifier.fillMaxWidth(),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Column(modifier = Modifier.weight(1f)) {
++                Text(
++                    text = "Mode streamer",
++                    color = AmberUi.Text,
++                    fontSize = 17.sp,
++                    fontWeight = FontWeight.SemiBold
++                )
++                Text(
++                    text = "Ketuk untuk menampilkan atau menyembunyikan.",
++                    color = AmberUi.TextDim,
++                    fontSize = 11.sp,
++                    lineHeight = 15.sp
++                )
++            }
++            Spacer(modifier = Modifier.width(10.dp))
++            Box(
++                modifier = Modifier
++                    .size(34.dp)
++                    .clip(CircleShape)
++                    .background(AmberUi.SurfaceRaised)
++                    .amberTap(onClose),
++                contentAlignment = Alignment.Center
++            ) {
++                AmberIcon("close", 13.dp, AmberUi.Text)
++            }
++        }
++        Spacer(modifier = Modifier.height(12.dp))
++        Column(
++            modifier = Modifier
++                .weight(1f)
++                .verticalScroll(rememberScrollState())
++        ) {
++            if (items.isEmpty()) {
++                Text(
++                    text = "Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.",
++                    color = AmberUi.TextDim,
++                    fontSize = 12.sp,
++                    lineHeight = 17.sp,
++                    modifier = Modifier.padding(vertical = 8.dp)
++                )
++            } else {
++                MenuGroup {
++                    items.forEachIndexed { index, item ->
++                        if (index > 0) MenuDivider()
++                        key(item.id) { PanelRow(item) }
++                    }
++                }
++            }
++        }
++    }
++}
++
++@Composable
++private fun PanelRow(item: StreamerItem) {
++    val on = StreamerRuntime.isShown(item)
++    Column(modifier = Modifier.fillMaxWidth()) {
++        Row(
++            modifier = Modifier
++                .fillMaxWidth()
++                .clip(RoundedCornerShape(12.dp))
++                .amberTap { StreamerRuntime.toggle(item) }
++                .padding(vertical = 10.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            if (item.type == StreamerLogic.TYPE_IMAGE) {
++                PanelThumb(item.image)
++                Spacer(modifier = Modifier.width(10.dp))
++            }
++            Column(modifier = Modifier.weight(1f)) {
++                ItemTitle(item, 13)
++                Text(
++                    text = posLabel(item.pos),
++                    color = AmberUi.TextDim,
++                    fontSize = 11.sp
++                )
++            }
++            Spacer(modifier = Modifier.width(12.dp))
++            MenuSwitch(on)
++        }
++        if (item.type == StreamerLogic.TYPE_TIMER) TimerControls(StreamerRuntime.timer(item.id))
++    }
++}
++
++/** Judul item: teks dan link tampil apa adanya (tidak diterjemahkan), jenis lain memakai nama jenisnya. */
++@Composable
++internal fun ItemTitle(item: StreamerItem, fontSizeSp: Int) {
++    val user = when (item.type) {
++        StreamerLogic.TYPE_TEXT -> item.text
++        StreamerLogic.TYPE_LINK -> StreamerLogic.linkDisplay(item.text)
++        else -> ""
++    }
++    if (user.isNotEmpty()) {
++        UserText(
++            text = user,
++            color = AmberUi.Text,
++            fontSize = fontSizeSp.sp,
++            fontWeight = FontWeight.Medium,
++            maxLines = 1,
++            overflow = TextOverflow.Ellipsis
++        )
++    } else {
++        Text(
++            text = typeLabel(item.type),
++            color = AmberUi.Text,
++            fontSize = fontSizeSp.sp,
++            fontWeight = FontWeight.Medium,
++            maxLines = 1
++        )
++    }
++}
++
++@Composable
++private fun PanelThumb(name: String) {
++    val bmp = rememberStreamerBitmap(name)
++    val shape = RoundedCornerShape(8.dp)
++    Box(
++        modifier = Modifier
++            .size(40.dp)
++            .clip(shape)
++            .background(AmberUi.SurfaceRaised)
++            .border(1.dp, AmberUi.Border, shape),
++        contentAlignment = Alignment.Center
++    ) {
++        if (bmp != null) {
++            Image(
++                bitmap = bmp,
++                contentDescription = null,
++                contentScale = ContentScale.Fit,
++                modifier = Modifier.fillMaxSize()
++            )
++        }
++    }
++}
++
++@Composable
++private fun TimerControls(timer: StreamerTimer) {
++    Row(
++        modifier = Modifier
++            .fillMaxWidth()
++            .padding(bottom = 10.dp),
++        verticalAlignment = Alignment.CenterVertically,
++        horizontalArrangement = Arrangement.spacedBy(8.dp)
++    ) {
++        Box(modifier = Modifier.weight(1f)) {
++            TimerText(timer = timer, fontSizeSp = 18, color = AmberUi.Text)
++        }
++        PillButton(
++            label = if (timer.running) "Jeda" else "Mulai",
++            primary = !timer.running,
++            onClick = { timer.toggle() }
++        )
++        PillButton(label = "Reset", primary = false, onClick = { timer.reset() })
++    }
++}
++
++@Composable
++private fun PillButton(label: String, primary: Boolean, onClick: () -> Unit) {
++    val shape = RoundedCornerShape(16.dp)
++    Box(
++        modifier = Modifier
++            .height(32.dp)
++            .clip(shape)
++            .then(
++                if (primary) Modifier.background(AmberUi.AccentBrush, shape)
++                else Modifier.background(AmberUi.SurfaceRaised, shape)
++            )
++            .border(1.dp, if (primary) AmberUi.AccentEdge else AmberUi.BorderStrong, shape)
++            .amberTap(onClick)
++            .padding(horizontal = 14.dp),
++        contentAlignment = Alignment.Center
++    ) {
++        Text(
++            text = label,
++            color = AmberUi.Text,
++            fontSize = 12.sp,
++            fontWeight = FontWeight.SemiBold,
++            maxLines = 1
++        )
++    }
++}
+diff --git a/changelog/entries/20261120-overlay-streamer.txt b/changelog/entries/20261120-overlay-streamer.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..67680c11f90b23fe31205f6678e8523bdf5ab946
+GIT binary patch
+literal 4534
+zcma)9OLyDW5#H-p%+bm@ruhT1@HuW4jhm)vYoF7FP8UPq8n`BKFAQ8rVOEl&gp#dT
+zY5a=hM@6fOY`L=JM{Mw6dBHTl1B?YyTKO;Z%z&UQ+iALyz~P;lZ@zD4E;u3WzmFY<
+zPqi%|GNC|Ugdc*Q6rqPTuqB|u2pseUR75Bv2}V?-5?Lx3!m)GOXgU*vryc!42|TH)
+zU<>7-f+|J*%U_{}%7KcE5NsJpWut^ZD6NcEC9qL}k-iAa@TVGjSVcv7|4boF9HN4g
+z@O#RC@+is@c<9AIXFx_$)et-}g$Bk?k!e`MczNtNoIx}M-$$vykChdB;GjdOs=|^U
+z<uf9XP?ezs4{I2f;S*uvD#VKZ`ogcoRfGVQ@bYqeq0kScM{v1*U#J=#Q#DC8BQYpI
+zlpqqJK?)OlC`)wqys$AZ-WQ>Wgege)Y{<QlHd1EgxagsBBt$})*d<;CD^ebt5Q@}0
+zGZYSdZHtk55oiTQ2cXY^adQ`#lEwuiJ~t(hJ~|?TV}YxUjzEVjVKme*%8w%HXOWJR
+zQcQ_30t*#H7OE1UvH=U&XX8+TG?Y^+I3tXa%83rOJA$!9fD};Galqg#t&C76Pda`k
+z|6-_N#3KI9m7ajW!<tl12@oP5Jr7(|wkH6CKwy}c><aM2IRnCWL{WTXg+iz@oW+1p
+z8Vx!S3JOV$iv}WBPcaX!v_%90Ew_NcwMGU*6O|yqI1*7_KT8*J3Bx8H>KB2nL1_aO
+zPg_+mI<{O9QQ|@ik}nz#pMH1vB8YS)6d*h}9}7nlMXa1A>ADR^C{m9GFapim85yvC
+zLV0M3h&^HjR`-c59ZgDJhy{2$0ucqmGHB~iL=eQn777HZDlmi^IT_&xI+S0~nKGQR
+zOm}M%Jq<#^sq=AU1Zn#R2F8PVSOL^1@j2<lArksrT50DMjDJ*oH=5C0-&0hlgCSsm
+zp|Avj2*ib0bRTIjG9)0BU3gH@p)EjuaUqr>v^CfQJXX@6=V2MncAr>;HNX%7E1?WI
+z7!NNo;Kw2|Awmq=iamp1p^YP{YkWp3X-Uk*MyQd{1}h!`6W&|w{E-yM$2J0`N%9M^
+zK*dxWdX4~xGM2|C&Pne*Q|mj25F!Lw!3s`+a=^n-gF^7J#><x)z{3!yP{A=znh>d*
+zkL=&!>0)&GBVs6(1M&pPOmQipk4h`8?GoT<0i8ZUGi)@W_|(B-mVb4W19YlrFwhZT
+z4X_qRQUUE&4}IDd2;-+u3`d>JZxqUd{V`U^tkCh0YAtc4^jyIx$L>jK=xI3Y5keI`
+zIYn-c^rTJY6cc{>gy9(<%3q1A5v^$D47ayJN)=#$RcR22TF0P4M^lsv(iKwNe@I!K
+zNJf$tcPV!~!Sm0IDRe?{B46LiDK@~zQrQw*snEp``6fJC_7IIjccC^^4%J;An+VKr
+z?*k3zHE#p|a2uc_)Zs43@8V(^(1lE^z=zm>dlkI13A8Qz!$ly-<*h|v<fH)M!)T1V
+z8{HrCWk9gr-UVW`3k2{2FrwSCHAVRKO~55$SUOw<KIXeXA)wdYAPIR3Ac*KfEJ7Q>
+zMlgb>p9T(;;FWN=0DK5g()G<7K=T67@81C8JsUtkC~R>~DyrisC!f7J{oS=<{w4ZE
+z@NoWBu3LF*!nh=I+MG?32WiqsldEa6nI_lLWGzj8BujIe?OSANE`FGw-D2}bTA2Cc
+zdYar#n~Q0(k|xV+nPJx(6sbAS&p)QgY}#C4$GMauJWi7aaJpui+)R^IHr;_^Z`iK0
+z`(uhvFxS%LIYl7U>-={nZ7zHO^eK6oCiRpIi)nI)LFd^TDJ6W$Ikz|m)x+L%jOc25
+zi1b#PG}(BOQE#Tr8H!0|%@Ie<1z^*9n(Q!Jk2vmpN)IaqIqPZi82H0Y&U|&`JxT=}
+z_A%FVjl2nMouCq7kKttQPek(b|Ep60kHT%FLts}K%QCSyB;^4UajT$r8ODdz9EHIw
+z{V&bOsfm)=G`T{AP|K`y%w<l!Q%FDRgg1#=Pn#qdq|L8k#0v-8;#RuEU~=(ixpC^;
+z1<QqfK25grdao7P?{JOu#ZmfaQj)fQn1(Ey-1T|TqO~Y1yHgs@N=5xj!&8uJd_M1o
+zHD>khNZP!;H<*R%Y4VH^P`EYf3LXsLiteUK!dNbHC(LugIX?F|O*RTmiBFzRigAhA
+zyY`z+_**p)i#yz(4TiMBt;~}&Y|l-$G?>9h%-TrKO?IiX`%RwGM@5a)xnmQPlGe;e
+zZm;zce)>nRz5K>2rqyj&qf0JuyITk*>~5<3hn~}GU-4n`r!N&$daX580=N5b<pMps
+za4i4l>R#))b@<jn-ql{~rGaYqo)3O^jb1+}@t2^SpLcrg+Y&w(K3s^q_e}{VyQ@$k
+zRBo@;RN%;7`*s<A*K2JVFuhho!bjazNda2V&EdPp`|2q{*lS;rU|h)nyk2W70M%<R
+zOR!_QmqV=_7(aXD`!|0ee&R~7+@Bi~qF(C--ICz<+RFwE)<E@I+de3_*It5N`=4O-
+zS`FnAVGRj>cU9%|lo?yYr^@uOaG%aIhYq;1*RHFAw_fYM0@G_hP)>oQ1lE7<(~FS%
+z^A0&}8?JsME-@iK*!gi{Zb*yAM7>L6@f))0cAqK-EVtKsuINXO21C-5p+HK%?aN~m
+zU+}H8m$dueZT0Upvd+@$&PsOcUO!3t^Gk!P?StEQ_mYeK?{^3PYW1(zv#lGirf0I7
+zyMu-L>(2b(tBt`zy+40F+kMert-tOp(6>w5d%HLHH)i)bH~I??`b$fLmASpv;-LL>
+zusU;aWw(EMJ^OBP|6!wl<5{+R@745dcIzJOKinO>cnBvU&kZM!z=FMGE9*>W-)_I|
+zEDq+LW#3*tm|od`S^s7FR_>WCt!5Wjvq!VPOy55E>YKrfhuPO(We=OLrf0{FQ_#WX
+z`~4fwUUwF=M@w1rTK4>h{oUrE^Zj0DC9Agvmv{D(>Ahq#+ga*gyx3p3^lEx`Fx%`e
+zE@a<4$(FYJ3s<tv^ug`B{o5~JcNT|~%wIoP`F8)tQh$4id<zVerTL5iZ(MpcJ=0&A
+t&1P<8-z^^03D}X+3zxm*o4wA;!T0U{Vk6sb4i#9L+u!)1e|dwd_%F<2w_pGO
+
+literal 0
+HcmV?d00001
+
+
+
+# FIN part=2/2 files=8

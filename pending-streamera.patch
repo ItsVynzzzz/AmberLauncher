@@ -1,0 +1,1112 @@
+diff --git a/app/src/main/assets/lang/en/streamer.tsv b/app/src/main/assets/lang/en/streamer.tsv
+new file mode 100644
+index 0000000..8741f98
+--- /dev/null
++++ b/app/src/main/assets/lang/en/streamer.tsv
+@@ -0,0 +1,36 @@
++# Mode streamer: overlay di dalam game
++Mode streamer	Streamer mode
++Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Shows a small handle on the left edge of the game screen. Tap it to open a panel that shows and hides overlays.
++Atur overlay	Set up overlays
++Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Text, images, links with a QR code, and timers shown on top of the game.
++Ketuk untuk menampilkan atau menyembunyikan.	Tap to show or hide.
++Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	No overlays yet. Add some in Settings > Game > Streamer mode > Set up overlays.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Show text, images, links, or timers on top of the game. Show and hide them from the panel on the left edge of the screen while playing.
++Belum ada overlay. Ketuk Tambah untuk membuatnya.	No overlays yet. Tap Add to create one.
++Overlay baru	New overlay
++Ubah overlay	Edit overlay
++Jenis	Type
++Posisi	Position
++Teks	Text
++Gambar	Image
++Link	Link
++Timer	Timer
++Tulis teks overlay	Type the overlay text
++Contoh: ko-fi.com/namamu	Example: ko-fi.com/yourname
++Tampilkan kode QR	Show QR code
++Penonton bisa memindainya langsung dari layar.	Viewers can scan it right from the screen.
++Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	This address is too long for a QR code, so only the text is shown.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	The timer starts at 00:00. Start, pause, and reset it from the panel on the left edge of the screen while playing.
++Kiri atas	Top left
++Atas	Top
++Kanan atas	Top right
++Kiri bawah	Bottom left
++Bawah	Bottom
++Kanan bawah	Bottom right
++Kecil	Small
++Besar	Large
++Tampil saat game mulai	Show when the game starts
++Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	If off, turn it on from the panel on the left edge of the screen while playing.
++Memproses gambar...	Processing image...
++Foto atau logo. Dikecilkan otomatis supaya ringan.	A photo or logo. It is resized automatically to stay light.
++Mulai	Start
+diff --git a/app/src/main/assets/lang/es/streamer.tsv b/app/src/main/assets/lang/es/streamer.tsv
+new file mode 100644
+index 0000000..10e3cbe
+--- /dev/null
++++ b/app/src/main/assets/lang/es/streamer.tsv
+@@ -0,0 +1,36 @@
++# Mode streamer: overlay di dalam game
++Mode streamer	Modo streamer
++Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Muestra un peque\u00f1o tirador en el borde izquierdo de la pantalla del juego. T\u00f3calo para abrir un panel que muestra y oculta los overlays.
++Atur overlay	Configurar overlays
++Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Texto, im\u00e1genes, enlaces con c\u00f3digo QR y temporizadores que se muestran sobre el juego.
++Ketuk untuk menampilkan atau menyembunyikan.	Toca para mostrar u ocultar.
++Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	A\u00fan no hay overlays. A\u00f1ade alguno en Ajustes > Juego > Modo streamer > Configurar overlays.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Muestra texto, im\u00e1genes, enlaces o temporizadores sobre el juego. Mu\u00e9stralos y oc\u00faltalos desde el panel del borde izquierdo de la pantalla mientras juegas.
++Belum ada overlay. Ketuk Tambah untuk membuatnya.	A\u00fan no hay overlays. Toca A\u00f1adir para crear uno.
++Overlay baru	Nuevo overlay
++Ubah overlay	Editar overlay
++Jenis	Tipo
++Posisi	Posici\u00f3n
++Teks	Texto
++Gambar	Imagen
++Link	Enlace
++Timer	Temporizador
++Tulis teks overlay	Escribe el texto del overlay
++Contoh: ko-fi.com/namamu	Ejemplo: ko-fi.com/tunombre
++Tampilkan kode QR	Mostrar c\u00f3digo QR
++Penonton bisa memindainya langsung dari layar.	Los espectadores pueden escanearlo directamente desde la pantalla.
++Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Esta direcci\u00f3n es demasiado larga para un c\u00f3digo QR, as\u00ed que solo se muestra el texto.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	El temporizador empieza en 00:00. In\u00edcialo, p\u00e1usalo y restabl\u00e9celo desde el panel del borde izquierdo de la pantalla mientras juegas.
++Kiri atas	Arriba izquierda
++Atas	Arriba
++Kanan atas	Arriba derecha
++Kiri bawah	Abajo izquierda
++Bawah	Abajo
++Kanan bawah	Abajo derecha
++Kecil	Peque\u00f1a
++Besar	Grande
++Tampil saat game mulai	Mostrar al iniciar el juego
++Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Si est\u00e1 desactivado, act\u00edvalo desde el panel del borde izquierdo de la pantalla mientras juegas.
++Memproses gambar...	Procesando imagen...
++Foto atau logo. Dikecilkan otomatis supaya ringan.	Una foto o un logotipo. Se reduce autom\u00e1ticamente para que sea ligero.
++Mulai	Iniciar
+diff --git a/app/src/main/assets/lang/fil/streamer.tsv b/app/src/main/assets/lang/fil/streamer.tsv
+new file mode 100644
+index 0000000..6ba85d4
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/streamer.tsv
+@@ -0,0 +1,36 @@
++# Mode streamer: overlay di dalam game
++Mode streamer	Streamer mode
++Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Nagpapakita ng maliit na handle sa kaliwang gilid ng screen ng laro. I-tap ito para buksan ang panel na nagpapakita at nagtatago ng mga overlay.
++Atur overlay	I-set up ang mga overlay
++Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Teksto, larawan, link na may QR code, at timer na lumalabas sa ibabaw ng laro.
++Ketuk untuk menampilkan atau menyembunyikan.	I-tap para ipakita o itago.
++Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Wala pang overlay. Magdagdag sa Mga Setting > Game > Streamer mode > I-set up ang mga overlay.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Magpakita ng teksto, larawan, link, o timer sa ibabaw ng laro. Ipakita at itago ang mga ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Belum ada overlay. Ketuk Tambah untuk membuatnya.	Wala pang overlay. I-tap ang Magdagdag para gumawa.
++Overlay baru	Bagong overlay
++Ubah overlay	I-edit ang overlay
++Jenis	Uri
++Posisi	Posisyon
++Teks	Teksto
++Gambar	Larawan
++Link	Link
++Timer	Timer
++Tulis teks overlay	I-type ang teksto ng overlay
++Contoh: ko-fi.com/namamu	Halimbawa: ko-fi.com/pangalanmo
++Tampilkan kode QR	Ipakita ang QR code
++Penonton bisa memindainya langsung dari layar.	Maaaring i-scan ito ng mga manonood nang direkta mula sa screen.
++Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Masyadong mahaba ang address na ito para sa QR code, kaya teksto lang ang ipapakita.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	Nagsisimula ang timer sa 00:00. Simulan, i-pause, at i-reset ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Kiri atas	Itaas na kaliwa
++Atas	Itaas
++Kanan atas	Itaas na kanan
++Kiri bawah	Ibaba na kaliwa
++Bawah	Ibaba
++Kanan bawah	Ibaba na kanan
++Kecil	Maliit
++Besar	Malaki
++Tampil saat game mulai	Ipakita pagsisimula ng laro
++Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Kapag naka-off, i-on ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Memproses gambar...	Pinoproseso ang larawan...
++Foto atau logo. Dikecilkan otomatis supaya ringan.	Larawan o logo. Awtomatikong liliit para gumaan.
++Mulai	Simulan
+diff --git a/app/src/main/assets/lang/pt/streamer.tsv b/app/src/main/assets/lang/pt/streamer.tsv
+new file mode 100644
+index 0000000..260dc7f
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/streamer.tsv
+@@ -0,0 +1,36 @@
++# Mode streamer: overlay di dalam game
++Mode streamer	Modo streamer
++Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Mostra uma pequena al\u00e7a na borda esquerda da tela do jogo. Toque nela para abrir um painel que mostra e oculta os overlays.
++Atur overlay	Configurar overlays
++Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Texto, imagens, links com c\u00f3digo QR e temporizadores exibidos sobre o jogo.
++Ketuk untuk menampilkan atau menyembunyikan.	Toque para mostrar ou ocultar.
++Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Ainda n\u00e3o h\u00e1 overlays. Adicione em Configura\u00e7\u00f5es > Jogo > Modo streamer > Configurar overlays.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Exiba texto, imagens, links ou temporizadores sobre o jogo. Mostre e oculte pelo painel na borda esquerda da tela enquanto joga.
++Belum ada overlay. Ketuk Tambah untuk membuatnya.	Ainda n\u00e3o h\u00e1 overlays. Toque em Adicionar para criar um.
++Overlay baru	Novo overlay
++Ubah overlay	Editar overlay
++Jenis	Tipo
++Posisi	Posi\u00e7\u00e3o
++Teks	Texto
++Gambar	Imagem
++Link	Link
++Timer	Temporizador
++Tulis teks overlay	Digite o texto do overlay
++Contoh: ko-fi.com/namamu	Exemplo: ko-fi.com/seunome
++Tampilkan kode QR	Mostrar c\u00f3digo QR
++Penonton bisa memindainya langsung dari layar.	Os espectadores podem escane\u00e1-lo direto da tela.
++Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Este endere\u00e7o \u00e9 longo demais para um c\u00f3digo QR, ent\u00e3o s\u00f3 o texto \u00e9 exibido.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	O temporizador come\u00e7a em 00:00. Inicie, pause e redefina pelo painel na borda esquerda da tela enquanto joga.
++Kiri atas	Superior esquerdo
++Atas	Topo
++Kanan atas	Superior direito
++Kiri bawah	Inferior esquerdo
++Bawah	Base
++Kanan bawah	Inferior direito
++Kecil	Pequena
++Besar	Grande
++Tampil saat game mulai	Exibir ao iniciar o jogo
++Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Se estiver desativado, ative pelo painel na borda esquerda da tela enquanto joga.
++Memproses gambar...	Processando imagem...
++Foto atau logo. Dikecilkan otomatis supaya ringan.	Uma foto ou logotipo. \u00c9 reduzida automaticamente para ficar leve.
++Mulai	Iniciar
+diff --git a/app/src/main/assets/lang/th/streamer.tsv b/app/src/main/assets/lang/th/streamer.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..4c34c5bfc9cc96629aab4ed8fd9c89eecf5187a8
+GIT binary patch
+literal 3789
+zcmcInT~8ZF6n*yoiYxV%xIFWK6k0V>DJre#54et}X7KJT+K)zliz%v2(mn+eK@bX9
+z2#E+OIHVo_oB1i#xwC8Uf*YDvc|rCvJ9FopbI(2gg4W`;qBKhsM=DvO_!pIg+@rRp
+zHisNhha(l#7B$>t$Jw{eo;thl?4`2@&W@b@fG3lu^85-<Ccg)3%5b!;!!8@@aEDEY
+zy6UkGv45tvHFb5ODdZj}a#E94RhD-tH~1T=sFin_w%MqVdU!jkY}jUl?>($CJ&iMp
+z@|z7e=}T$*&JLV?h3Y0lXNS&SJ9{K$p1aAw**>|+Z&X>b<52yPv(MdR&)KoFXRdfS
+zkZT{7&xcrv3-_HpB{}iH*?02j#M!^(M8D#-vo}BsRUJ!7m(ISI?M7uum4fm499y9X
+zIR>XnWjOCbN(8{gMeG^CewgJ+i9kbGxt3A~&hE-K<NNp6P~CI^RJ1r*pirAGwUz0x
+zp)Q2-!;cFBd!{3mct$cI7=&`hsb{eP#DLxvjz+y>fe4qKIH2)H9-WZf^F|Qq<30dx
+zRK9vDZ{L&`9(z&AC3a=azDM0dbs#`q)JeXO1I9Cct1yG*!zqJ7U3xR&a>n^Bp%ns~
+zOLv7wbjb)x01z`OgB2C#5pkPKx|*~B$Ty+kwx)GJp5+M}TBb)FDO#>KDlJo$Z2*2I
+z*B`jauJqwh`tZZOj8iGs8<EJVyuUB#7F|OkZ~@<A3}R=RqGi8@Gyy*UTXVqTc^lqa
+za<DP=l<baN7d%~Fpfyp_3cLiSkyacdR8Kf79A=IwrOX+%R1&c+Nxu}^8~j&^Q(YAw
+zS8Yw89_Ol+-1UfEahW}7f-#7L9KGXAP4E*P4(nf(zIHAunX6#mK3>OF1Lw^2`2Q)i
+zFG6{DTdULWrPYEP?;c}k2f_EnFl%v=`>EyKc)owS$*)4qshbRgpIW?GHm4sZedr$e
+z?%XfXZ<Wz$LyT@zBKOAGSHXIm>QsAkelOg-6$=`oTzKz%=L{Z+AveTLY6cp7r%ktU
+z%SD3?*mF4o{=pK1jXcz;bkOXgu-_YTjuUa?IWB(x?Z1jm7H=+5H-7N5Za$8qFAYZ=
+z<<)|&WM&Oz3Jj`CoqaYNowK>S>#TM5MWywNd30;i?@Ili;5qXmSXTzs8EWa25iqoA
+zvo<}ZkWDAeO^4cCMiPkj7!wN(^-N&76w>-a+MQl2$n>efr-L0ai!;&h2qZrYIpU18
+zK>$iZ4s)2#7P5^GJ<~b6#cfTSjM_3##ReZG1^Jna@}^BKfTGkPYJ>6b$xIl7|01N^
+zlx4q`PO0aQ`=BH7ls{qp)e(oS_e3{i2`qCI<K;+E9x_s8qG@q)X>qYhYk0CiTdK`I
+zRwOD_*#lwYlWh6pE{YOI&_yv6%ef|1cn_KV+uQS*$ZcO(zn1qd1fY=!_M#d)B>Ccq
+z=aMH6Dg)HZ`?GoQDzY;|SEEQWmB<=AoIMX#*|4dv-0`W*@6qBXyeTG9c4Td<l{^0~
+zcAWR#bYsN)h5%Cp?O;Wvj9(AlX8(ZA`bqAmEPiQtk<@z{*q+Wj;TD_tis%un=#VMm
+zOfQh>ama{LpQxg@!fs!DTjF}9tEi|OL*Qv;#b@StO-0*DoGJ;{El!$EbbVibJe(Ja
+z5A7^t1~B=+dn^;-cG_+>o54467W;@4#+|rHUu*e6CO@9C82F`>=G)w3N;HB$&YN!Z
+zvQ)@fEycj*&gCzrq<4yU&c2ki-!HBHO8op#K;9Q@uhF@9`A}+?ujtdKVkqTQ_kt;a
+QKXP^)h;evv%{n*u8!x`}$p8QV
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/assets/lang/vi/streamer.tsv b/app/src/main/assets/lang/vi/streamer.tsv
+new file mode 100644
+index 0000000..fdbd194
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/streamer.tsv
+@@ -0,0 +1,36 @@
++# Mode streamer: overlay di dalam game
++Mode streamer	Ch\u1ebf \u0111\u1ed9 streamer
++Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Hi\u1ec7n m\u1ed9t tay n\u1eafm nh\u1ecf \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh game. Ch\u1ea1m v\u00e0o \u0111\u1ec3 m\u1edf b\u1ea3ng hi\u1ec7n v\u00e0 \u1ea9n c\u00e1c overlay.
++Atur overlay	Thi\u1ebft l\u1eadp overlay
++Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	V\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft k\u00e8m m\u00e3 QR v\u00e0 b\u1ed9 h\u1eb9n gi\u1edd hi\u1ec3n th\u1ecb ph\u00eda tr\u00ean game.
++Ketuk untuk menampilkan atau menyembunyikan.	Ch\u1ea1m \u0111\u1ec3 hi\u1ec7n ho\u1eb7c \u1ea9n.
++Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Ch\u01b0a c\u00f3 overlay n\u00e0o. H\u00e3y th\u00eam t\u1ea1i C\u00e0i \u0111\u1eb7t > Game > Ch\u1ebf \u0111\u1ed9 streamer > Thi\u1ebft l\u1eadp overlay.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Hi\u1ec7n v\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft ho\u1eb7c b\u1ed9 h\u1eb9n gi\u1edd ph\u00eda tr\u00ean game. Hi\u1ec7n v\u00e0 \u1ea9n ch\u00fang t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Belum ada overlay. Ketuk Tambah untuk membuatnya.	Ch\u01b0a c\u00f3 overlay n\u00e0o. Ch\u1ea1m Th\u00eam \u0111\u1ec3 t\u1ea1o.
++Overlay baru	Overlay m\u1edbi
++Ubah overlay	S\u1eeda overlay
++Jenis	Lo\u1ea1i
++Posisi	V\u1ecb tr\u00ed
++Teks	V\u0103n b\u1ea3n
++Gambar	H\u00ecnh \u1ea3nh
++Link	Li\u00ean k\u1ebft
++Timer	B\u1ed9 h\u1eb9n gi\u1edd
++Tulis teks overlay	Nh\u1eadp v\u0103n b\u1ea3n overlay
++Contoh: ko-fi.com/namamu	V\u00ed d\u1ee5: ko-fi.com/tencuaban
++Tampilkan kode QR	Hi\u1ec7n m\u00e3 QR
++Penonton bisa memindainya langsung dari layar.	Ng\u01b0\u1eddi xem c\u00f3 th\u1ec3 qu\u00e9t tr\u1ef1c ti\u1ebfp t\u1eeb m\u00e0n h\u00ecnh.
++Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	\u0110\u1ecba ch\u1ec9 n\u00e0y qu\u00e1 d\u00e0i cho m\u00e3 QR n\u00ean ch\u1ec9 hi\u1ec7n v\u0103n b\u1ea3n.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	B\u1ed9 h\u1eb9n gi\u1edd b\u1eaft \u0111\u1ea7u t\u1eeb 00:00. B\u1eaft \u0111\u1ea7u, t\u1ea1m d\u1eebng v\u00e0 \u0111\u1eb7t l\u1ea1i t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Kiri atas	Tr\u00ean tr\u00e1i
++Atas	Tr\u00ean
++Kanan atas	Tr\u00ean ph\u1ea3i
++Kiri bawah	D\u01b0\u1edbi tr\u00e1i
++Bawah	D\u01b0\u1edbi
++Kanan bawah	D\u01b0\u1edbi ph\u1ea3i
++Kecil	Nh\u1ecf
++Besar	L\u1edbn
++Tampil saat game mulai	Hi\u1ec7n khi game b\u1eaft \u0111\u1ea7u
++Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	N\u1ebfu t\u1eaft, h\u00e3y b\u1eadt t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Memproses gambar...	\u0110ang x\u1eed l\u00fd h\u00ecnh \u1ea3nh...
++Foto atau logo. Dikecilkan otomatis supaya ringan.	\u1ea2nh ho\u1eb7c logo. T\u1ef1 \u0111\u1ed9ng thu nh\u1ecf \u0111\u1ec3 nh\u1eb9.
++Mulai	B\u1eaft \u0111\u1ea7u
+diff --git a/app/src/main/assets/lang/zh/streamer.tsv b/app/src/main/assets/lang/zh/streamer.tsv
+new file mode 100644
+index 0000000000000000000000000000000000000000..dfabe186fb51cee9bc7ef2772d488087ee0d69c9
+GIT binary patch
+literal 2230
+zcmb7FT~8ZF6n)<P6(jYPY<bQDQfSpkrKo8|f53G-HG_9&(S9`Yn{i2vjl<F;U~25v
+zq!^r3e56Fd!N&ZTurq5v<u6os$1Emkq~yh#^~~Hm_ndRj{esNeX-Ztrp<q$xHnD%9
+zjtM!EW+V+JSR?}$)o&cq!cJE{K9KDl(F^oh%E4M>W)?WfKn8e*Wa)ioVg!#aGLmHu
+zBPQg)iDMaLhI)RM_#A&NYNh-vkVW9sBssiojRi~t$L}1T;yH#nMh`SJQE$smN3I0X
+z)9$eGOq}iw`fsA%mfY$`yJul1A9h}d<3N_nvb1`cFGPhmvQiR{PDF4dOHV{EKWsdc
+zjf;1^O7yfX8!dHFu51o#>w{__f~F`p#mmBFzM$XneCH~)HaP4@=ZDF@K1Z|e1QwS9
+zXM&iFXGxm!3~-V~aDVu5A}+*Z7IjpOUJMyR1Rl5w7ft1VudJ|Bj%v$tvnUR#m-!{J
+z-H%E|Ty*xrvr5!`6*ZTl+Vb#8U#_*p<I3Q0M^;~pKic@}n@C^t1RnVB;c93%@QE=@
+zpukwu)buR^X}E&HAahvpJd%=T<Q`V+`3`V0Mec${$<$44kts5cqM;2gw&cG%vR+D%
+zyv!E{N2j9RCJJIQMHIzkij0enOpOjCH%Ztzkf&WyZsJ?#5=D9+P&1*bS7h8EfJ~zj
+zQF88>-c0%cypcZtN762UM^e<WfbkDB8FtDeBtPI!5hhnQ#|e|2PPFzM`3sJQ`P$&3
+zC|(BQ%|@baWI7h@rxB$1S2T?`9C$njA0a@=;BCIH;C!2JsFo2c+oF4h=zc%4h!i-!
+zCO3~o_blN-|0xCYR|?Uh-sYhH`}O9xlrvY0UUtQwtNK0LWiHdg^GDJ7VcbKSf=Ry{
+zcao;Gu7AgPR#R~4bJ#*!0+~MNo6L<#PI3<VPsGDkl5-UDE1P@v{B4r8Z~e@S`?mEZ
+z2Ma7;3;U~Lukfx{yWR=Un^A39tUnS5)iEiJdU@2QN%QIVD97NOq?ik6XpE<U@f;8n
+zc*ga4hNR)j0u61jUkH0u5gdixR<!*}uC-+89~lISY1QsYaD@Ag2^M&Sar9Hi1k*<~
+zE}&H^4^2#F0n&`j1E%&67~r^!O;s6=p~-_?Q9l-q{NSQE+(7S>)uuezh@So>SJsof
+z?|K!n-NeJei<=5AC=Q6_n}8$2VPtah_T;2NX7Qg1vOv?I{LY~+^=`#Ld`=G~?1tSn
+z6`P1&UhJcXe|m#lU0IT~f>^4H$CY6bg@%aE;6y^>)x_yu*eUCGa6R04J^Zz;&j1HL
+z+6_){H$I+%2QaVBuj<q4<80&l!e}3Ftm-p305x$O=+o2%M-#jIBOxijz?rHL)Re!e
+z*UIW^1-3rTOdu9`Y=ZC{n1CMpc_6N~#KV(e^#B?EWLLpwtREpnv(#F2Y?sEfDFu#U
+zpmzQi^|shuj@Exuy=fSR{*CR~%2G``V;kga7LWgURC_ko;1btggd7lu;ZQWR=;3};
+xD$12j(La~X;$^-N_G*LT3sG)Iz31XM2)nKDq9H3wgY)jN7>}P=U7Es4{|`c{c+LO-
+
+literal 0
+HcmV?d00001
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 2b33fb9..c839ab6 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -1,5 +1,7 @@
+ package com.israadev.nuxlauncher.core.models
+ 
++import com.israadev.nuxlauncher.core.streamer.StreamerItem
++
+ /**
+  * Global Configuration for NUX Launcher (Java, RAM, Controls, Graphics)
+  */
+@@ -138,6 +140,11 @@ data class LauncherSettings(
+     val uiScalePercent: Int = 100,
+     val homeSkinScalePercent: Int = 100,
+ 
++    // Mode streamer: sidebar tersembunyi di tepi kiri layar game untuk menampilkan overlay (teks, gambar,
++    // link dengan kode QR, timer). Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
++    val streamerMode: Boolean = false,
++    val streamerItems: List<StreamerItem> = emptyList(),
++
+     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
+     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.
+     val perfRev: Int = 0
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/streamer/QrCode.kt b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/QrCode.kt
+new file mode 100644
+index 0000000..a0d1eb7
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/QrCode.kt
+@@ -0,0 +1,363 @@
++package com.israadev.nuxlauncher.core.streamer
++
++/**
++ * Pembuat kode QR sederhana untuk link overlay: mode byte (UTF-8), koreksi galat M, versi 1 sampai 10
++ * (sampai 213 byte). Ditulis sendiri supaya launcher tidak perlu pustaka tambahan. Murni JVM, diuji dengan
++ * pembaca QR independen.
++ *
++ * Hasilnya matriks modul (true = gelap) TANPA zona tenang; yang menggambar menambah tepi kosong sendiri.
++ */
++object QrCode {
++    const val MAX_VERSION = 10
++
++    // Level koreksi M, versi 1..10: jumlah kodeword data, kodeword koreksi per blok, jumlah blok.
++    private val DATA_WORDS = intArrayOf(16, 28, 44, 64, 86, 108, 124, 154, 182, 216)
++    private val ECC_PER_BLOCK = intArrayOf(10, 16, 26, 18, 24, 16, 18, 22, 22, 26)
++    private val BLOCKS = intArrayOf(1, 1, 1, 2, 2, 4, 4, 4, 5, 5)
++
++    /** Berapa byte UTF-8 yang muat di versi terbesar. */
++    fun maxBytes(): Int = (DATA_WORDS[MAX_VERSION - 1] * 8 - 4 - 16) / 8
++
++    /** Matriks modul untuk [text], atau null bila kosong atau terlalu panjang. */
++    fun encode(text: String): Array<BooleanArray>? {
++        val bytes = text.toByteArray(Charsets.UTF_8)
++        if (bytes.isEmpty()) return null
++        var version = 0
++        for (v in 1..MAX_VERSION) {
++            val countBits = if (v <= 9) 8 else 16
++            if (4 + countBits + 8 * bytes.size <= DATA_WORDS[v - 1] * 8) {
++                version = v
++                break
++            }
++        }
++        if (version == 0) return null
++
++        val data = buildData(bytes, version)
++        val all = addEccAndInterleave(data, version)
++        return build(all, version)
++    }
++
++    private class BitBuffer {
++        val bits = ArrayList<Boolean>()
++        fun append(value: Int, count: Int) {
++            for (i in count - 1 downTo 0) bits.add(((value ushr i) and 1) != 0)
++        }
++    }
++
++    private fun buildData(bytes: ByteArray, version: Int): ByteArray {
++        val capacityBits = DATA_WORDS[version - 1] * 8
++        val bb = BitBuffer()
++        bb.append(0x4, 4)
++        bb.append(bytes.size, if (version <= 9) 8 else 16)
++        for (b in bytes) bb.append(b.toInt() and 0xFF, 8)
++        bb.append(0, minOf(4, capacityBits - bb.bits.size))
++        while (bb.bits.size % 8 != 0) bb.bits.add(false)
++        var pad = 0xEC
++        while (bb.bits.size < capacityBits) {
++            bb.append(pad, 8)
++            pad = pad xor (0xEC xor 0x11)
++        }
++        val out = ByteArray(capacityBits / 8)
++        for (i in bb.bits.indices) {
++            if (bb.bits[i]) out[i ushr 3] = (out[i ushr 3].toInt() or (1 shl (7 - (i and 7)))).toByte()
++        }
++        return out
++    }
++
++    // --- Reed-Solomon di GF(256), polinomial 0x11D ---------------------------------------------
++
++    private fun gfMul(x: Int, y: Int): Int {
++        var z = 0
++        for (i in 7 downTo 0) {
++            z = (z shl 1) xor ((z ushr 7) * 0x11D)
++            z = z xor (((y ushr i) and 1) * x)
++        }
++        return z
++    }
++
++    private fun rsDivisor(degree: Int): IntArray {
++        val result = IntArray(degree)
++        result[degree - 1] = 1
++        var root = 1
++        for (i in 0 until degree) {
++            for (j in 0 until degree) {
++                result[j] = gfMul(result[j], root)
++                if (j + 1 < degree) result[j] = result[j] xor result[j + 1]
++            }
++            root = gfMul(root, 0x02)
++        }
++        return result
++    }
++
++    private fun rsRemainder(data: IntArray, divisor: IntArray): IntArray {
++        val result = IntArray(divisor.size)
++        for (b in data) {
++            val factor = b xor result[0]
++            for (i in 0 until result.size - 1) result[i] = result[i + 1]
++            result[result.size - 1] = 0
++            for (i in result.indices) result[i] = result[i] xor gfMul(divisor[i], factor)
++        }
++        return result
++    }
++
++    private fun rawDataModules(version: Int): Int {
++        var result = (16 * version + 128) * version + 64
++        if (version >= 2) {
++            val numAlign = version / 7 + 2
++            result -= (25 * numAlign - 10) * numAlign - 55
++            if (version >= 7) result -= 36
++        }
++        return result
++    }
++
++    private fun addEccAndInterleave(data: ByteArray, version: Int): ByteArray {
++        val numBlocks = BLOCKS[version - 1]
++        val eccLen = ECC_PER_BLOCK[version - 1]
++        val rawWords = rawDataModules(version) / 8
++        val numShort = numBlocks - rawWords % numBlocks
++        val shortLen = rawWords / numBlocks
++        val divisor = rsDivisor(eccLen)
++
++        val blocks = ArrayList<IntArray>()
++        var k = 0
++        for (i in 0 until numBlocks) {
++            val datLen = shortLen - eccLen + (if (i < numShort) 0 else 1)
++            val dat = IntArray(datLen) { data[k + it].toInt() and 0xFF }
++            k += datLen
++            val ecc = rsRemainder(dat, divisor)
++            // Semua blok dibuat sepanjang blok panjang. Blok pendek punya satu sel kosong tepat sebelum
++            // kodeword koreksi, supaya kodeword koreksi tiap blok sejajar saat disisipkan.
++            val block = IntArray(shortLen + 1)
++            for (j in dat.indices) block[j] = dat[j]
++            val eccStart = shortLen + 1 - eccLen
++            for (j in ecc.indices) block[eccStart + j] = ecc[j]
++            blocks.add(block)
++        }
++
++        val result = ByteArray(rawWords)
++        var out = 0
++        for (i in 0..shortLen) {
++            for (j in 0 until numBlocks) {
++                // Sel kosong (kolom data terakhir) hanya ada di blok pendek dan dilewati.
++                if (i != shortLen - eccLen || j >= numShort) {
++                    result[out++] = blocks[j][i].toByte()
++                }
++            }
++        }
++        return result
++    }
++
++    // --- Menyusun matriks ----------------------------------------------------------------------
++
++    private class Grid(val size: Int) {
++        val dark = Array(size) { BooleanArray(size) }
++        val fn = Array(size) { BooleanArray(size) }
++        fun setFn(x: Int, y: Int, v: Boolean) {
++            if (x < 0 || y < 0 || x >= size || y >= size) return
++            dark[y][x] = v
++            fn[y][x] = true
++        }
++    }
++
++    private fun alignPositions(version: Int, size: Int): IntArray {
++        if (version == 1) return IntArray(0)
++        val num = version / 7 + 2
++        val step = (version * 4 + num * 2 + 1) / (num * 2 - 2) * 2
++        val result = IntArray(num)
++        result[0] = 6
++        var pos = size - 7
++        for (i in num - 1 downTo 1) {
++            result[i] = pos
++            pos -= step
++        }
++        return result
++    }
++
++    private fun bit(v: Int, i: Int): Boolean = ((v ushr i) and 1) != 0
++
++    private fun drawFormat(g: Grid, mask: Int) {
++        // Level M = 0b00.
++        val data = (0 shl 3) or mask
++        var rem = data
++        for (i in 0 until 10) rem = (rem shl 1) xor ((rem ushr 9) * 0x537)
++        val bits = ((data shl 10) or rem) xor 0x5412
++        val size = g.size
++        for (i in 0..5) g.setFn(8, i, bit(bits, i))
++        g.setFn(8, 7, bit(bits, 6))
++        g.setFn(8, 8, bit(bits, 7))
++        g.setFn(7, 8, bit(bits, 8))
++        for (i in 9 until 15) g.setFn(14 - i, 8, bit(bits, i))
++        for (i in 0 until 8) g.setFn(size - 1 - i, 8, bit(bits, i))
++        for (i in 8 until 15) g.setFn(8, size - 15 + i, bit(bits, i))
++        g.setFn(8, size - 8, true)
++    }
++
++    private fun drawVersion(g: Grid, version: Int) {
++        if (version < 7) return
++        var rem = version
++        for (i in 0 until 12) rem = (rem shl 1) xor ((rem ushr 11) * 0x1F25)
++        val bits = (version shl 12) or rem
++        for (i in 0 until 18) {
++            val b = bit(bits, i)
++            val a = g.size - 11 + i % 3
++            val c = i / 3
++            g.setFn(a, c, b)
++            g.setFn(c, a, b)
++        }
++    }
++
++    private fun drawFinder(g: Grid, cx: Int, cy: Int) {
++        for (dy in -4..4) {
++            for (dx in -4..4) {
++                val dist = maxOf(Math.abs(dx), Math.abs(dy))
++                g.setFn(cx + dx, cy + dy, dist != 2 && dist != 4)
++            }
++        }
++    }
++
++    private fun drawAlign(g: Grid, cx: Int, cy: Int) {
++        for (dy in -2..2) {
++            for (dx in -2..2) {
++                g.setFn(cx + dx, cy + dy, maxOf(Math.abs(dx), Math.abs(dy)) != 1)
++            }
++        }
++    }
++
++    private fun drawFunctionPatterns(g: Grid, version: Int) {
++        val size = g.size
++        for (i in 0 until size) {
++            g.setFn(6, i, i % 2 == 0)
++            g.setFn(i, 6, i % 2 == 0)
++        }
++        drawFinder(g, 3, 3)
++        drawFinder(g, size - 4, 3)
++        drawFinder(g, 3, size - 4)
++        val pos = alignPositions(version, size)
++        val n = pos.size
++        for (i in 0 until n) {
++            for (j in 0 until n) {
++                if ((i == 0 && j == 0) || (i == 0 && j == n - 1) || (i == n - 1 && j == 0)) continue
++                drawAlign(g, pos[i], pos[j])
++            }
++        }
++        drawFormat(g, 0)
++        drawVersion(g, version)
++    }
++
++    private fun drawCodewords(g: Grid, data: ByteArray) {
++        val size = g.size
++        var i = 0
++        var right = size - 1
++        while (right >= 1) {
++            if (right == 6) right = 5
++            for (vert in 0 until size) {
++                for (j in 0 until 2) {
++                    val x = right - j
++                    val upward = ((right + 1) and 2) == 0
++                    val y = if (upward) size - 1 - vert else vert
++                    if (!g.fn[y][x] && i < data.size * 8) {
++                        g.dark[y][x] = ((data[i ushr 3].toInt() ushr (7 - (i and 7))) and 1) != 0
++                        i++
++                    }
++                }
++            }
++            right -= 2
++        }
++    }
++
++    private fun applyMask(g: Grid, mask: Int) {
++        for (y in 0 until g.size) {
++            for (x in 0 until g.size) {
++                val invert = when (mask) {
++                    0 -> (x + y) % 2 == 0
++                    1 -> y % 2 == 0
++                    2 -> x % 3 == 0
++                    3 -> (x + y) % 3 == 0
++                    4 -> (x / 3 + y / 2) % 2 == 0
++                    5 -> x * y % 2 + x * y % 3 == 0
++                    6 -> (x * y % 2 + x * y % 3) % 2 == 0
++                    else -> ((x + y) % 2 + x * y % 3) % 2 == 0
++                }
++                if (invert && !g.fn[y][x]) g.dark[y][x] = !g.dark[y][x]
++            }
++        }
++    }
++
++    private fun penalty(g: Grid): Int {
++        val n = g.size
++        var score = 0
++        // Aturan 1: deret lima modul atau lebih yang sewarna, di baris dan kolom.
++        for (dir in 0..1) {
++            for (a in 0 until n) {
++                var run = 1
++                for (b in 1 until n) {
++                    val cur = if (dir == 0) g.dark[a][b] else g.dark[b][a]
++                    val prev = if (dir == 0) g.dark[a][b - 1] else g.dark[b - 1][a]
++                    if (cur == prev) {
++                        run++
++                        if (run == 5) score += 3 else if (run > 5) score += 1
++                    } else {
++                        run = 1
++                    }
++                }
++            }
++        }
++        // Aturan 2: kotak 2x2 sewarna.
++        for (y in 0 until n - 1) {
++            for (x in 0 until n - 1) {
++                val c = g.dark[y][x]
++                if (c == g.dark[y][x + 1] && c == g.dark[y + 1][x] && c == g.dark[y + 1][x + 1]) score += 3
++            }
++        }
++        // Aturan 3: pola mirip penanda sudut (1:1:3:1:1) dengan empat modul terang di salah satu sisi.
++        val p1 = booleanArrayOf(true, false, true, true, true, false, true, false, false, false, false)
++        val p2 = booleanArrayOf(false, false, false, false, true, false, true, true, true, false, true)
++        for (dir in 0..1) {
++            for (a in 0 until n) {
++                for (s in 0..n - 11) {
++                    var m1 = true
++                    var m2 = true
++                    for (k in 0 until 11) {
++                        val v = if (dir == 0) g.dark[a][s + k] else g.dark[s + k][a]
++                        if (v != p1[k]) m1 = false
++                        if (v != p2[k]) m2 = false
++                        if (!m1 && !m2) break
++                    }
++                    if (m1) score += 40
++                    if (m2) score += 40
++                }
++            }
++        }
++        // Aturan 4: keseimbangan modul gelap dan terang.
++        var dark = 0
++        for (y in 0 until n) for (x in 0 until n) if (g.dark[y][x]) dark++
++        val total = n * n
++        val k = (Math.abs(dark * 20 - total * 10) + total - 1) / total - 1
++        score += maxOf(k, 0) * 10
++        return score
++    }
++
++    private fun build(codewords: ByteArray, version: Int): Array<BooleanArray> {
++        val size = version * 4 + 17
++        val g = Grid(size)
++        drawFunctionPatterns(g, version)
++        drawCodewords(g, codewords)
++
++        var bestMask = 0
++        var bestScore = Int.MAX_VALUE
++        for (m in 0 until 8) {
++            applyMask(g, m)
++            drawFormat(g, m)
++            val s = penalty(g)
++            if (s < bestScore) {
++                bestScore = s
++                bestMask = m
++            }
++            // Mengulang topeng yang sama membatalkannya.
++            applyMask(g, m)
++        }
++        applyMask(g, bestMask)
++        drawFormat(g, bestMask)
++        return Array(size) { y -> BooleanArray(size) { x -> g.dark[y][x] } }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerImages.kt b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerImages.kt
+new file mode 100644
+index 0000000..ecc41e9
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerImages.kt
+@@ -0,0 +1,133 @@
++package com.israadev.nuxlauncher.core.streamer
++
++import android.content.Context
++import android.graphics.Bitmap
++import android.graphics.BitmapFactory
++import android.graphics.Matrix
++import android.media.ExifInterface
++import android.net.Uri
++import java.io.File
++import java.io.FileOutputStream
++
++/**
++ * Gambar untuk overlay streamer. Foto yang dipilih pengguna dikecilkan (sisi terpanjang paling besar
++ * [StreamerLogic.IMAGE_MAX_SIDE]) lalu disimpan sebagai PNG di folder aplikasi sendiri, jadi tidak
++ * bergantung pada berkas aslinya dan tidak butuh izin penyimpanan. Semua fungsi di sini memakai disk:
++ * panggil dari thread latar, bukan dari komposisi.
++ */
++object StreamerImages {
++    private const val DIR = "streamer"
++
++    /** Batas jumlah piksel foto asli yang mau dibaca (cegah foto panorama raksasa memenuhi memori). */
++    private const val MAX_SOURCE_PIXELS = 120_000_000L
++
++    fun dir(context: Context): File = File(context.filesDir, DIR)
++
++    private fun fileOf(context: Context, name: String?): File? {
++        val safe = StreamerLogic.safeImageName(name) ?: return null
++        return File(dir(context), safe)
++    }
++
++    /** Memuat gambar tersimpan, atau null bila berkas tidak ada atau rusak. */
++    fun load(context: Context, name: String?): Bitmap? {
++        val f = fileOf(context, name) ?: return null
++        if (!f.isFile) return null
++        return try {
++            BitmapFactory.decodeFile(f.absolutePath)
++        } catch (_: Throwable) {
++            null
++        }
++    }
++
++    /**
++     * Membaca foto dari [uri] (pemilih berkas sistem), mengecilkannya, dan menyimpannya.
++     * Hasilnya nama berkas baru, atau null bila foto tidak bisa dibaca.
++     */
++    fun importImage(context: Context, uri: Uri, id: String): String? {
++        return try {
++            val resolver = context.contentResolver
++            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
++            val opened = resolver.openInputStream(uri) ?: return null
++            opened.use { BitmapFactory.decodeStream(it, null, bounds) }
++            val w = bounds.outWidth
++            val h = bounds.outHeight
++            if (w <= 0 || h <= 0 || w.toLong() * h.toLong() > MAX_SOURCE_PIXELS) return null
++
++            val opts = BitmapFactory.Options().apply {
++                inSampleSize = StreamerLogic.sampleSize(w, h, StreamerLogic.IMAGE_MAX_SIDE)
++            }
++            val src = (resolver.openInputStream(uri) ?: return null).use {
++                BitmapFactory.decodeStream(it, null, opts)
++            } ?: return null
++
++            val rotation = readRotation(context, uri)
++            val (tw, th) = StreamerLogic.scaledSize(src.width, src.height, StreamerLogic.IMAGE_MAX_SIDE)
++            val matrix = Matrix()
++            if (tw != src.width || th != src.height) {
++                matrix.postScale(tw.toFloat() / src.width, th.toFloat() / src.height)
++            }
++            if (rotation != 0) matrix.postRotate(rotation.toFloat())
++            val out = if (matrix.isIdentity) src else Bitmap.createBitmap(src, 0, 0, src.width, src.height, matrix, true)
++
++            val dir = dir(context)
++            if (!dir.isDirectory && !dir.mkdirs()) return null
++            val name = "${safeId(id)}_${System.currentTimeMillis()}.png"
++            val target = File(dir, name)
++            // Tulis ke berkas sementara dulu supaya berkas setengah jadi tidak pernah terbaca game.
++            val tmp = File(dir, "$name.tmp")
++            val ok = try {
++                FileOutputStream(tmp).use { out.compress(Bitmap.CompressFormat.PNG, 100, it) }
++            } catch (_: Throwable) {
++                false
++            }
++            if (out !== src) out.recycle()
++            src.recycle()
++            if (!ok || !tmp.renameTo(target)) {
++                tmp.delete()
++                return null
++            }
++            name
++        } catch (_: Throwable) {
++            null
++        }
++    }
++
++    private fun safeId(id: String): String {
++        val cleaned = id.filter { it.isLetterOrDigit() && it.code < 128 || it == '_' || it == '-' }.take(24)
++        return if (cleaned.isEmpty()) "img" else cleaned
++    }
++
++    private fun readRotation(context: Context, uri: Uri): Int {
++        return try {
++            val stream = context.contentResolver.openInputStream(uri) ?: return 0
++            val orientation = stream.use {
++                ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
++            }
++            when (orientation) {
++                ExifInterface.ORIENTATION_ROTATE_90 -> 90
++                ExifInterface.ORIENTATION_ROTATE_180 -> 180
++                ExifInterface.ORIENTATION_ROTATE_270 -> 270
++                else -> 0
++            }
++        } catch (_: Throwable) {
++            0
++        }
++    }
++
++    fun delete(context: Context, name: String?) {
++        try {
++            fileOf(context, name)?.delete()
++        } catch (_: Throwable) {
++        }
++    }
++
++    /** Menghapus semua berkas di folder streamer yang tidak ada di [keep] (sisa gambar yang diganti atau dihapus). */
++    fun sweep(context: Context, keep: Set<String>) {
++        try {
++            dir(context).listFiles()?.forEach { f ->
++                if (f.isFile && f.name !in keep) f.delete()
++            }
++        } catch (_: Throwable) {
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt
+new file mode 100644
+index 0000000..b1f3ad6
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt
+@@ -0,0 +1,293 @@
++package com.israadev.nuxlauncher.core.streamer
++
++/**
++ * Satu item overlay streamer (teks, gambar, link, atau timer). Disimpan di LauncherSettings sebagai JSON.
++ * Semua bidang punya nilai bawaan supaya berkas pengaturan yang kurang kolom tetap terbaca.
++ */
++data class StreamerItem(
++    val id: String = "",
++    val type: String = StreamerLogic.TYPE_TEXT,
++    /** Teks: isi tulisan. Link: alamatnya. Jenis lain: tidak dipakai. */
++    val text: String = "",
++    /** Gambar: nama berkas di folder streamer (lihat StreamerImages). */
++    val image: String = "",
++    /** Link: tampilkan kode QR di atas alamat. */
++    val qr: Boolean = true,
++    val pos: String = StreamerLogic.POS_TOP,
++    val size: String = StreamerLogic.SIZE_MEDIUM,
++    /** Tampil di layar sejak game dimulai. Menyalakan atau mematikan lewat sidebar tidak mengubah ini. */
++    val on: Boolean = false
++)
++
++/**
++ * Aturan murni (tanpa Android) untuk overlay streamer: batas isian, perapian teks, alamat link,
++ * ukuran, dan stopwatch. Dipisah supaya bisa diuji di JVM.
++ */
++object StreamerLogic {
++    const val TYPE_TEXT = "text"
++    const val TYPE_IMAGE = "image"
++    const val TYPE_LINK = "link"
++    const val TYPE_TIMER = "timer"
++    val TYPES = listOf(TYPE_TEXT, TYPE_IMAGE, TYPE_LINK, TYPE_TIMER)
++
++    const val POS_TOP_START = "topstart"
++    const val POS_TOP = "top"
++    const val POS_TOP_END = "topend"
++    const val POS_BOTTOM_START = "bottomstart"
++    const val POS_BOTTOM = "bottom"
++    const val POS_BOTTOM_END = "bottomend"
++    val POSITIONS = listOf(POS_TOP_START, POS_TOP, POS_TOP_END, POS_BOTTOM_START, POS_BOTTOM, POS_BOTTOM_END)
++
++    const val SIZE_SMALL = "small"
++    const val SIZE_MEDIUM = "medium"
++    const val SIZE_LARGE = "large"
++    val SIZES = listOf(SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE)
++
++    const val MAX_ITEMS = 8
++    const val MAX_TEXT_CHARS = 60
++    const val MAX_LINK_CHARS = 190
++
++    /** Sisi terpanjang gambar yang disimpan. Cukup tajam untuk tampil di layar, tetap kecil di memori. */
++    const val IMAGE_MAX_SIDE = 512
++    private const val MAX_ID_CHARS = 24
++    private val IMAGE_NAME = Regex("^[A-Za-z0-9_-]{1,64}\\.png$")
++    private val ID_OK = Regex("^[A-Za-z0-9_-]{1,$MAX_ID_CHARS}$")
++
++    fun normalizeType(t: String?): String = TYPES.firstOrNull { it == t } ?: TYPE_TEXT
++    fun normalizePos(p: String?): String = POSITIONS.firstOrNull { it == p } ?: POS_TOP
++    fun normalizeSize(s: String?): String = SIZES.firstOrNull { it == s } ?: SIZE_MEDIUM
++
++    private fun isBidiControl(cp: Int): Boolean =
++        cp in 0x202A..0x202E || cp in 0x2066..0x2069 || cp == 0x200E || cp == 0x200F || cp == 0x061C
++
++    /**
++     * Merapikan teks dari pengguna: spasi dan baris baru jadi satu spasi, ujung dipangkas, karakter kontrol
++     * dan pengubah arah tulisan dibuang, lalu dipotong di [maxChars] huruf (emoji dihitung satu).
++     */
++    fun cleanText(raw: String?, maxChars: Int): String {
++        if (raw.isNullOrEmpty() || maxChars <= 0) return ""
++        val sb = StringBuilder()
++        var count = 0
++        var pendingSpace = false
++        var i = 0
++        while (i < raw.length) {
++            val cp = raw.codePointAt(i)
++            i += Character.charCount(cp)
++            // Setengah pasangan surrogate tidak bisa digambar.
++            if (cp in 0xD800..0xDFFF) continue
++            if (isBidiControl(cp)) continue
++            if (Character.isWhitespace(cp) || Character.isSpaceChar(cp) || Character.isISOControl(cp)) {
++                if (sb.isNotEmpty()) pendingSpace = true
++                continue
++            }
++            if (count >= maxChars) break
++            if (pendingSpace) {
++                // Spasi dan satu huruf sesudahnya harus sama-sama muat.
++                if (count + 1 >= maxChars) break
++                sb.append(' ')
++                count++
++                pendingSpace = false
++            }
++            sb.appendCodePoint(cp)
++            count++
++        }
++        return sb.toString()
++    }
++
++    /** Memotong isian di [maxChars] huruf tanpa merapikan, supaya spasi masih bisa diketik. */
++    fun limitInput(raw: String, maxChars: Int): String {
++        if (raw.length <= maxChars) return raw
++        val total = raw.codePointCount(0, raw.length)
++        if (total <= maxChars) return raw
++        return raw.substring(0, raw.offsetByCodePoints(0, maxChars))
++    }
++
++    /** Alamat link: dirapikan seperti teks, lalu semua spasi dibuang (alamat tidak mengandung spasi). */
++    fun cleanLink(raw: String?): String = cleanText(raw, MAX_LINK_CHARS).replace(" ", "")
++
++    private fun hasScheme(s: String): Boolean =
++        s.contains("://") || s.startsWith("mailto:", ignoreCase = true)
++
++    private fun looksLikeHost(s: String): Boolean {
++        val host = s.substringBefore('/')
++        return host.contains('.') && !host.startsWith('.') && !host.endsWith('.') && !host.contains('@')
++    }
++
++    /** Isi kode QR: alamat apa adanya; kalau hanya nama situs tanpa skema, ditambah https:// supaya terbaca sebagai link. */
++    fun qrPayload(raw: String?): String {
++        val s = cleanLink(raw)
++        if (s.isEmpty()) return ""
++        return if (hasScheme(s) || !looksLikeHost(s)) s else "https://$s"
++    }
++
++    /** Alamat untuk ditampilkan: tanpa skema, tanpa www., tanpa garis miring di ujung. */
++    fun linkDisplay(raw: String?): String {
++        val s = cleanLink(raw)
++        var t = s
++        for (prefix in listOf("https://", "http://")) {
++            if (t.startsWith(prefix, ignoreCase = true)) {
++                t = t.substring(prefix.length)
++                break
++            }
++        }
++        if (t.startsWith("www.", ignoreCase = true)) t = t.substring(4)
++        t = t.trimEnd('/')
++        return if (t.isEmpty()) s else t
++    }
++
++    /** Nama berkas gambar yang aman (tanpa folder, tanpa ".."), atau null. */
++    fun safeImageName(name: String?): String? = name?.takeIf { IMAGE_NAME.matches(it) }
++
++    private fun cleanId(id: String?): String = id?.takeIf { ID_OK.matches(it) } ?: ""
++
++    fun newId(used: Set<String>, seed: Long): String {
++        var n = if (seed < 0) -seed else seed
++        while (true) {
++            val id = "i" + n.toString(36)
++            if (id !in used) return id
++            n++
++        }
++    }
++
++    /** Merapikan satu item. Id dibiarkan kosong bila tidak valid; [sanitize] yang memberi id. */
++    fun sanitizeOne(src: StreamerItem): StreamerItem {
++        val type = normalizeType(src.type)
++        return StreamerItem(
++            id = cleanId(src.id),
++            type = type,
++            text = when (type) {
++                TYPE_TEXT -> cleanText(src.text, MAX_TEXT_CHARS)
++                TYPE_LINK -> cleanLink(src.text)
++                else -> ""
++            },
++            image = if (type == TYPE_IMAGE) safeImageName(src.image) ?: "" else "",
++            qr = src.qr,
++            pos = normalizePos(src.pos),
++            size = normalizeSize(src.size),
++            on = src.on
++        )
++    }
++
++    /** Daftar item yang aman dipakai: batas jumlah, jenis/posisi/ukuran valid, id unik dan tidak kosong. */
++    fun sanitize(raw: List<StreamerItem?>?): List<StreamerItem> {
++        if (raw == null) return emptyList()
++        val out = ArrayList<StreamerItem>()
++        val used = HashSet<String>()
++        for (src in raw) {
++            // Berkas pengaturan yang rusak bisa memuat elemen kosong (null) meski tipenya tidak boleh null.
++            if (src == null) continue
++            if (out.size >= MAX_ITEMS) break
++            val item = sanitizeOne(src)
++            val id = if (item.id.isEmpty() || item.id in used) newId(used, out.size.toLong() + 1L) else item.id
++            used.add(id)
++            out.add(if (id == item.id) item else item.copy(id = id))
++        }
++        return out
++    }
++
++    /** Item yang punya isi untuk digambar (teks kosong atau gambar belum dipilih tidak ikut tampil). */
++    fun isDisplayable(item: StreamerItem): Boolean = when (item.type) {
++        TYPE_TEXT, TYPE_LINK -> item.text.isNotEmpty()
++        TYPE_IMAGE -> item.image.isNotEmpty()
++        TYPE_TIMER -> true
++        else -> false
++    }
++
++    /** MM:SS, atau H:MM:SS bila sudah lewat satu jam. */
++    fun formatElapsed(ms: Long): String {
++        val total = if (ms < 0L) 0L else ms / 1000L
++        val h = total / 3600L
++        val m = (total / 60L) % 60L
++        val s = total % 60L
++        return if (h > 0L) "$h:${two(m)}:${two(s)}" else "${two(m)}:${two(s)}"
++    }
++
++    private fun two(v: Long): String = if (v < 10L) "0$v" else "$v"
++
++    fun textSp(size: String): Int = when (normalizeSize(size)) {
++        SIZE_SMALL -> 12
++        SIZE_LARGE -> 20
++        else -> 15
++    }
++
++    fun linkSp(size: String): Int = when (normalizeSize(size)) {
++        SIZE_SMALL -> 10
++        SIZE_LARGE -> 15
++        else -> 12
++    }
++
++    fun imageHeightDp(size: String): Int = when (normalizeSize(size)) {
++        SIZE_SMALL -> 48
++        SIZE_LARGE -> 128
++        else -> 80
++    }
++
++    fun qrSizeDp(size: String): Int = when (normalizeSize(size)) {
++        SIZE_SMALL -> 88
++        SIZE_LARGE -> 168
++        else -> 124
++    }
++
++    /** Ukuran gambar tampil: setinggi [maxH], tetap seimbang, dan tidak lebih lebar dari [maxW]. */
++    fun fitSize(ratio: Float, maxH: Float, maxW: Float): Pair<Float, Float> {
++        val r = if (ratio.isFinite() && ratio > 0f) ratio else 1f
++        var h = maxH
++        var w = h * r
++        if (w > maxW) {
++            w = maxW
++            h = w / r
++        }
++        return Pair(w, h)
++    }
++
++    /** Pembagi pengecilan saat memuat gambar besar: sisi terpanjang hasilnya tetap minimal [maxSide]. */
++    fun sampleSize(w: Int, h: Int, maxSide: Int): Int {
++        if (w <= 0 || h <= 0 || maxSide <= 0) return 1
++        val longSide = maxOf(w, h)
++        var s = 1
++        while (longSide / (s * 2) >= maxSide) s *= 2
++        return s
++    }
++
++    /** Ukuran akhir gambar yang disimpan: sisi terpanjang paling besar [maxSide]. */
++    fun scaledSize(w: Int, h: Int, maxSide: Int): Pair<Int, Int> {
++        val longSide = maxOf(w, h)
++        if (longSide <= maxSide || longSide <= 0) return Pair(w, h)
++        val k = maxSide.toDouble() / longSide.toDouble()
++        return Pair(maxOf(1, Math.round(w * k).toInt()), maxOf(1, Math.round(h * k).toInt()))
++    }
++}
++
++/** Stopwatch dengan jam yang bisa diganti (untuk uji). Jam harus naik terus, mis. SystemClock.elapsedRealtime. */
++class Stopwatch(private val clock: () -> Long) {
++    private var base = 0L
++    private var startedAt = 0L
++    var running = false
++        private set
++
++    fun elapsedMs(): Long {
++        val extra = if (running) (clock() - startedAt).coerceAtLeast(0L) else 0L
++        return base + extra
++    }
++
++    fun start() {
++        if (running) return
++        startedAt = clock()
++        running = true
++    }
++
++    fun pause() {
++        if (!running) return
++        base = elapsedMs()
++        running = false
++    }
++
++    /** Kembali ke nol. Bila sedang berjalan, lanjut menghitung dari nol. */
++    fun reset() {
++        base = 0L
++        startedAt = clock()
++    }
++
++    /** Berapa milidetik lagi sampai detik berikutnya, supaya tampilan berganti tepat waktu. */
++    fun msToNextSecond(): Long = 1000L - (elapsedMs() % 1000L)
++}
+
+
+# FIN part=1/2 files=11

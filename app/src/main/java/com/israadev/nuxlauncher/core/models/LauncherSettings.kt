@@ -33,8 +33,10 @@ data class LauncherSettings(
     // Discord Rich Presence ("Bermain AmberLauncher" di profil Discord). Bawaan MATI: pemain memilih sendiri.
     // Hanya berarti pada build yang membawa SDK Discord (BuildConfig.HAS_DISCORD_SDK).
     val discordRpcEnabled: Boolean = false,
-    // Presence juga saat launcher terbuka dan belum bermain ("Menyiapkan game"). Bawaan MATI, terpisah dari yang di atas.
+    // Presence juga saat launcher terbuka dan belum bermain ("Getting ready to play"). Bawaan MATI, terpisah dari yang di atas.
     val discordRpcLauncherEnabled: Boolean = false,
+    // Alamat server multiplayer yang sedang dimainkan ikut tampil di Discord (loader Java). Bawaan MATI.
+    val discordRpcShowServer: Boolean = false,
     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
     // dari versi sebelumnya tidak terbawa.

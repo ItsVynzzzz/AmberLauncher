@@ -612,8 +612,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         // Discord Rich Presence (opsional): hanya pada build yang membawa SDK dan bila pemain menyalakannya.
         // Tanpa aplikasi Discord di HP ini, attach() langsung menyerah dan tidak ada yang berjalan.
         if (BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled) {
-            DiscordPresence.attach(this)
-            DiscordPresence.update(DiscordPresence.gamePresence(mcVersion, loader, System.currentTimeMillis()))
+            DiscordPresence.startGame(this, mcVersion, loader, SettingsManager.settings.value.discordRpcShowServer)
         }
 
         // Setup real-time native LoggerBridge
@@ -768,6 +767,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
 
         LoggerBridge.setListener { text ->
             if (text != null) {
+                // Discord: baca server dari log (langsung kembali bila fitur mati atau build tanpa SDK)
+                if (BuildConfig.HAS_DISCORD_SDK) DiscordPresence.onGameLogLine(text)
                 pendingLogs.offer(text)
                 if (logFlushScheduled.compareAndSet(false, true)) {
                     logHandler.postDelayed(logFlushRunnable, 250L)

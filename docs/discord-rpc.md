@@ -31,10 +31,23 @@ pemain tidak ikut dikirim.
 
 ## Presence di launcher
 
-Toggle terpisah "Perlihatkan aktivitas di launcher" (mati bawaan) menampilkan "Menyiapkan game" selama MainActivity di
+Toggle terpisah "Perlihatkan aktivitas di launcher" (mati bawaan) menampilkan "Getting ready to play" selama MainActivity di
 depan (`discord/DiscordLauncherPresence.kt`, proses utama). Saat layar launcher ditinggalkan (`onPause`, mis. game
 dibuka), presence dihapus dan klien SDK dilepas dengan segera, supaya tidak bentrok dengan presence game. Bila proses
 `:game` atau `:horizon` masih hidup di latar, presence launcher dilewati.
+
+## Bahasa dan server
+
+Semua teks yang tampil di profil Discord memakai bahasa Inggris (orang lain yang melihatnya), mis. "Minecraft 1.21.11" /
+"Fabric", dan "Getting ready to play" / "In the launcher". Catatan di log launcher tetap bahasa Indonesia.
+
+Toggle "Tampilkan server yang dimainkan" (mati bawaan, hanya loader Java) menambahkan alamat server multiplayer:
+"Playing on mc.contoh.com" / "Minecraft 1.21.11 · Fabric". Launcher tidak memilihkan server (pemain memilihnya di menu
+Minecraft), jadi alamatnya dibaca dari baris log game (`discord/DiscordServerLog.kt`): "Connecting to host, port" untuk
+masuk, serta "Starting integrated minecraft server" dan "Client disconnected with reason" untuk keluar. Minecraft tidak
+mencatat saat pemain keluar dari server ke menu dengan sengaja, jadi alamat terakhir bisa bertahan sampai pemain masuk
+server lain atau membuka dunia singleplayer. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan.
+Mesin Rust belum mendukung ini.
 
 ## Melacak presence yang tidak muncul
 

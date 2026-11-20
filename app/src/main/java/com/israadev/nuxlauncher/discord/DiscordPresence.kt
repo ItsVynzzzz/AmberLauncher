@@ -93,6 +93,15 @@ object DiscordPresence {
     @Volatile
     private var worker: Worker? = null
 
+    /** Game Java yang sedang berjalan; dipakai untuk menyusun ulang presence saat server berubah. */
+    private class GameInfo(val mcVersion: String, val loader: String, val startMs: Long, val showServer: Boolean)
+
+    @Volatile
+    private var game: GameInfo? = null
+
+    // Hanya disentuh dari thread log game.
+    private var server: String? = null
+
     /**
      * Dipanggil dari activity yang menjalankan game. SDK perlu Activity untuk mengenali aplikasi ini, dan kelas
      * pembukanya (DiscordSocialSdkInit) harus dimuat SEBELUM jembatan kita supaya library SDK dimuat lewat
@@ -119,6 +128,36 @@ object DiscordPresence {
         }
     }
 
+    /**
+     * Dipanggil GameActivity (loader Java) saat game dibuka. [showServer] true bila pemain mengizinkan alamat
+     * server tampil; alamatnya dibaca dari log game lewat [onGameLogLine].
+     */
+    fun startGame(activity: Activity, mcVersion: String, loader: String, showServer: Boolean) {
+        attach(activity)
+        val startMs = System.currentTimeMillis()
+        game = GameInfo(mcVersion, loader, startMs, showServer)
+        server = null
+        update(gamePresence(mcVersion, loader, startMs))
+    }
+
+    /**
+     * Dipanggil untuk setiap baris log game (dari thread log). Hampir selalu langsung kembali: tanpa game aktif
+     * atau tanpa izin menampilkan server, tidak ada yang dikerjakan.
+     */
+    fun onGameLogLine(text: String) {
+        val g = game ?: return
+        if (!g.showServer) return
+        val label = when (val event = ServerLog.parse(text)) {
+            is ServerEvent.Joined -> event.label
+            ServerEvent.Left -> null
+            null -> return
+        }
+        if (label == server) return
+        server = label
+        LauncherLog.i(TAG, if (label != null) "Server terdeteksi dari log game" else "Server dilepas (singleplayer atau terputus)")
+        update(gamePresence(g.mcVersion, g.loader, g.startMs, label))
+    }
+
     /** Menampilkan [info] di profil Discord. null = hapus presence. */
     fun update(info: PresenceInfo?) {
         if (!supported) {
@@ -135,6 +174,7 @@ object DiscordPresence {
      * (mis. game dibuka), supaya peralihan layar tidak tertahan.
      */
     fun stop() {
+        game = null
         val w = worker ?: return
         w.handler.post { w.engine.stop() }
     }
@@ -144,6 +184,7 @@ object DiscordPresence {
      * selesai sebelum proses game dimatikan; bila tidak pernah dipakai langsung kembali.
      */
     fun stopBlocking(timeoutMs: Long = 800L) {
+        game = null
         val w = worker ?: return
         val done = CountDownLatch(1)
         val posted = w.handler.post {
@@ -181,11 +222,15 @@ object DiscordPresence {
         }
     }
 
-    /** Teks presence untuk game yang sedang berjalan. Nama instance dan akun pemain sengaja tidak ikut. */
-    fun gamePresence(mcVersion: String, loader: String, startMs: Long): PresenceInfo {
+    /**
+     * Teks presence untuk game yang sedang berjalan, SELURUHNYA bahasa Inggris karena tampil di profil Discord
+     * orang lain. Nama instance dan akun pemain sengaja tidak ikut. Tanpa [server]: "Minecraft 1.21.11" dan
+     * loader. Dengan [server]: "Playing on mc.contoh.com" dan "Minecraft 1.21.11 · Fabric".
+     */
+    fun gamePresence(mcVersion: String, loader: String, startMs: Long, server: String? = null): PresenceInfo {
         val version = mcVersion.trim().takeIf { it.isNotEmpty() && !it.equals("Unknown", ignoreCase = true) }
-        val details = if (version != null) "Minecraft $version" else "Minecraft"
-        val state = when (loader.trim().lowercase()) {
+        val minecraft = if (version != null) "Minecraft $version" else "Minecraft"
+        val loaderLabel = when (loader.trim().lowercase()) {
             "", "vanilla" -> "Vanilla"
             "fabric" -> "Fabric"
             "forge" -> "Forge"
@@ -195,7 +240,8 @@ object DiscordPresence {
             "starling" -> "Starling (Rust)"
             else -> loader.trim().replaceFirstChar { it.uppercase() }
         }
-        return PresenceInfo(details, state, startMs)
+        if (server != null) return PresenceInfo("Playing on $server", "$minecraft · $loaderLabel", startMs)
+        return PresenceInfo(minecraft, loaderLabel, startMs)
     }
 
     private fun isDiscordInstalled(activity: Activity): Boolean = try {

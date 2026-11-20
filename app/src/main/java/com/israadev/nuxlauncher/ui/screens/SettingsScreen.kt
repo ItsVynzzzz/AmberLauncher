@@ -150,6 +150,7 @@ fun SettingsScreen(
     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
     var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
+    var discordRpcShowServer by remember(currentSettings.discordRpcShowServer) { mutableStateOf(currentSettings.discordRpcShowServer) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
@@ -226,6 +227,7 @@ fun SettingsScreen(
             buttonSlide = buttonSlide,
             discordRpcEnabled = discordRpc,
             discordRpcLauncherEnabled = discordRpcLauncher,
+            discordRpcShowServer = discordRpcShowServer,
             touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
             physicalMouseSystemPointer = physicalSystemPointer,
@@ -1256,8 +1258,18 @@ fun SettingsScreen(
                                 )
                                 SettingDivider()
                                 SettingSwitchRow(
+                                    title = "Tampilkan server yang dimainkan",
+                                    desc = "Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.",
+                                    checked = discordRpcShowServer,
+                                    onCheckedChange = {
+                                        discordRpcShowServer = it
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
+                                SettingSwitchRow(
                                     title = "Perlihatkan aktivitas di launcher",
-                                    desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
+                                    desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
                                     checked = discordRpcLauncher,
                                     onCheckedChange = {
                                         discordRpcLauncher = it
@@ -1319,6 +1331,7 @@ fun SettingsScreen(
                     buttonSlide = reset.buttonSlide
                     discordRpc = reset.discordRpcEnabled
                     discordRpcLauncher = reset.discordRpcLauncherEnabled
+                    discordRpcShowServer = reset.discordRpcShowServer
                     touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalSystemPointer = reset.physicalMouseSystemPointer

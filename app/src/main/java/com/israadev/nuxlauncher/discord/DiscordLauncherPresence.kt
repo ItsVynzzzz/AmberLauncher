@@ -8,7 +8,7 @@ import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 
 /**
- * Discord Rich Presence saat launcher terbuka dan pemain belum bermain ("Menyiapkan game"), di proses utama.
+ * Discord Rich Presence saat launcher terbuka dan pemain belum bermain ("Getting ready to play"), di proses utama.
  * Opsional lewat Pengaturan > Tampilan > Discord, dan bawaannya mati.
  *
  * Hanya berjalan selama MainActivity di depan. Begitu layarnya ditinggalkan (mis. game dibuka), presence dihapus
@@ -33,7 +33,7 @@ object DiscordLauncherPresence {
             }
             if (sessionStartMs == 0L) sessionStartMs = System.currentTimeMillis()
             DiscordPresence.attach(activity)
-            DiscordPresence.update(PresenceInfo("Menyiapkan game", "Di launcher", sessionStartMs))
+            DiscordPresence.update(PresenceInfo("Getting ready to play", "In the launcher", sessionStartMs))
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Presence launcher gagal: ${e.message}", e)
         }

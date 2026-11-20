@@ -1,0 +1,610 @@
+diff --git a/app/src/main/assets/lang/en/tambahan.tsv b/app/src/main/assets/lang/en/tambahan.tsv
+index 4893929..0315f19 100644
+--- a/app/src/main/assets/lang/en/tambahan.tsv
++++ b/app/src/main/assets/lang/en/tambahan.tsv
+@@ -90,3 +90,16 @@ Kunang-kunang	Fireflies
+ Kilau bintang	Starlight sparkle
+ Bara api	Embers
+ Gelembung	Bubbles
++Biru	Blue
++Biru langit	Sky blue
++Merah muda	Pink
++Merah	Red
++Jingga	Orange
++Hutan	Forest
++Abu-abu	Gray
++Senja	Dusk
++Fajar	Dawn
++Samudra	Ocean
++Tengah malam	Midnight
++Bara	Ember
++Gradient halus	Subtle gradients
+diff --git a/app/src/main/assets/lang/es/tambahan.tsv b/app/src/main/assets/lang/es/tambahan.tsv
+index ea90332..79bad5d 100644
+--- a/app/src/main/assets/lang/es/tambahan.tsv
++++ b/app/src/main/assets/lang/es/tambahan.tsv
+@@ -92,3 +92,16 @@ Kunang-kunang	Luciérnagas
+ Kilau bintang	Destellos estelares
+ Bara api	Brasas
+ Gelembung	Burbujas
++Biru	Azul
++Biru langit	Azul cielo
++Merah muda	Rosa
++Merah	Rojo
++Jingga	Naranja
++Hutan	Bosque
++Abu-abu	Gris
++Senja	Crepúsculo
++Fajar	Amanecer
++Samudra	Océano
++Tengah malam	Medianoche
++Bara	Brasa
++Gradient halus	Degradados suaves
+diff --git a/app/src/main/assets/lang/fil/tambahan.tsv b/app/src/main/assets/lang/fil/tambahan.tsv
+index 5f772f0..501d9f6 100644
+--- a/app/src/main/assets/lang/fil/tambahan.tsv
++++ b/app/src/main/assets/lang/fil/tambahan.tsv
+@@ -94,3 +94,16 @@ Kunang-kunang	Mga alitaptap
+ Kilau bintang	Kislap ng bituin
+ Bara api	Mga baga
+ Gelembung	Mga bula
++Biru	Asul
++Biru langit	Asul langit
++Merah muda	Rosas
++Merah	Pula
++Jingga	Kahel
++Hutan	Gubat
++Abu-abu	Abo
++Senja	Dapithapon
++Fajar	Bukang-liwayway
++Samudra	Karagatan
++Tengah malam	Hatinggabi
++Bara	Baga
++Gradient halus	Banayad na gradient
+diff --git a/app/src/main/assets/lang/pt/tambahan.tsv b/app/src/main/assets/lang/pt/tambahan.tsv
+index 62fd00f..f4a55bf 100644
+--- a/app/src/main/assets/lang/pt/tambahan.tsv
++++ b/app/src/main/assets/lang/pt/tambahan.tsv
+@@ -92,3 +92,16 @@ Kunang-kunang	Vaga-lumes
+ Kilau bintang	Brilho estelar
+ Bara api	Brasas
+ Gelembung	Bolhas
++Biru	Azul
++Biru langit	Azul-celeste
++Merah muda	Rosa
++Merah	Vermelho
++Jingga	Laranja
++Hutan	Floresta
++Abu-abu	Cinza
++Senja	Crepúsculo
++Fajar	Alvorecer
++Samudra	Oceano
++Tengah malam	Meia-noite
++Bara	Brasa
++Gradient halus	Gradientes suaves
+diff --git a/app/src/main/assets/lang/th/tambahan.tsv b/app/src/main/assets/lang/th/tambahan.tsv
+index 1ee4616..81e246c 100644
+--- a/app/src/main/assets/lang/th/tambahan.tsv
++++ b/app/src/main/assets/lang/th/tambahan.tsv
+@@ -92,3 +92,16 @@ Kunang-kunang	หิ่งห้อย
+ Kilau bintang	ประกายดาว
+ Bara api	ถ่านไฟ
+ Gelembung	ฟองอากาศ
++Biru	น้ำเงิน
++Biru langit	ฟ้า
++Merah muda	ชมพู
++Merah	แดง
++Jingga	ส้ม
++Hutan	ป่า
++Abu-abu	เทา
++Senja	พลบค่ำ
++Fajar	รุ่งอรุณ
++Samudra	มหาสมุทร
++Tengah malam	เที่ยงคืน
++Bara	ถ่านไฟ
++Gradient halus	ไล่สีแบบนุ่มนวล
+diff --git a/app/src/main/assets/lang/vi/tambahan.tsv b/app/src/main/assets/lang/vi/tambahan.tsv
+index e35fb8d..5e44bb5 100644
+--- a/app/src/main/assets/lang/vi/tambahan.tsv
++++ b/app/src/main/assets/lang/vi/tambahan.tsv
+@@ -92,3 +92,16 @@ Kunang-kunang	Đom đóm
+ Kilau bintang	Ánh sao lấp lánh
+ Bara api	Than hồng
+ Gelembung	Bong bóng
++Biru	Xanh dương
++Biru langit	Xanh da trời
++Merah muda	Hồng
++Merah	Đỏ
++Jingga	Cam
++Hutan	Rừng
++Abu-abu	Xám
++Senja	Hoàng hôn
++Fajar	Bình minh
++Samudra	Đại dương
++Tengah malam	Nửa đêm
++Bara	Than hồng
++Gradient halus	Gradient nhẹ
+diff --git a/app/src/main/assets/lang/zh/tambahan.tsv b/app/src/main/assets/lang/zh/tambahan.tsv
+index c4fd209..d27839c 100644
+--- a/app/src/main/assets/lang/zh/tambahan.tsv
++++ b/app/src/main/assets/lang/zh/tambahan.tsv
+@@ -96,3 +96,16 @@ Kunang-kunang	萤火虫
+ Kilau bintang	星光闪烁
+ Bara api	火星
+ Gelembung	气泡
++Biru	蓝色
++Biru langit	天蓝色
++Merah muda	粉色
++Merah	红色
++Jingga	橙色
++Hutan	森林绿
++Abu-abu	灰色
++Senja	黄昏
++Fajar	黎明
++Samudra	海洋
++Tengah malam	午夜
++Bara	余烬
++Gradient halus	柔和渐变
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+index 5ffcaea..d5d6050 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+@@ -357,7 +357,7 @@ fun AmberChoicePill(
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent, CircleShape)
++                        .background(AmberUi.AccentBrush, CircleShape)
+                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                 } else {
+                     Modifier.amberGlass(CircleShape)
+@@ -476,7 +476,7 @@ fun AmberRailItem(
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent, CircleShape)
++                        .background(AmberUi.AccentBrush, CircleShape)
+                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                 } else {
+                     Modifier.amberGlass(CircleShape)
+@@ -547,7 +547,7 @@ fun AmberActionButton(
+             .alpha(if (enabled) 1f else 0.45f)
+             .height(height)
+             .clip(CircleShape)
+-            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
++            .background(if (filled) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
+             .border(
+                 1.dp,
+                 if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+index b191066..e097736 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.SolidColor
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.text.font.FontWeight
+@@ -127,7 +128,7 @@ fun SettingChip(
+         modifier = modifier
+             .height(34.dp)
+             .clip(shape)
+-            .background(if (selected) AmberUi.Accent else Color.Transparent, shape)
++            .background(if (selected) AmberUi.AccentBrush else SolidColor(Color.Transparent), shape)
+             .border(
+                 1.dp,
+                 if (selected) AmberUi.AccentEdge else AmberUi.BorderStrong,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
+index 223e2ea..0020567 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuParts.kt
+@@ -305,7 +305,7 @@ internal fun MenuSegmented(
+                     .then(
+                         if (on) {
+                             Modifier
+-                                .background(AmberUi.Accent)
++                                .background(AmberUi.AccentBrush)
+                                 .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                         } else {
+                             Modifier
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index 87853ea..f2089b7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.SolidColor
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.platform.LocalView
+@@ -452,7 +453,7 @@ private fun QuickAction(
+         Box(
+             modifier = Modifier
+                 .size(48.dp)
+-                .background(if (active) AmberUi.Accent else AmberUi.SurfaceRaised, CircleShape)
++                .background(if (active) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), CircleShape)
+                 .then(
+                     if (active) Modifier.border(1.dp, AmberUi.AccentEdge, CircleShape) else Modifier
+                 ),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+index feac81b..9b040bc 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxAboutDialog.kt
+@@ -268,7 +268,7 @@ fun NuxAboutDialog(
+                         modifier = Modifier
+                             .size(48.dp)
+                             .clip(CircleShape)
+-                            .background(AmberUi.Accent, CircleShape)
++                            .background(AmberUi.AccentBrush, CircleShape)
+                             .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                             .clickable { onDonate() },
+                         contentAlignment = Alignment.Center
+@@ -521,7 +521,7 @@ private fun BrandCard(version: String) {
+                 modifier = Modifier
+                     .size(46.dp)
+                     .clip(RoundedCornerShape(15.dp))
+-                    .background(AmberUi.Accent, RoundedCornerShape(15.dp))
++                    .background(AmberUi.AccentBrush, RoundedCornerShape(15.dp))
+                     .border(1.dp, AmberUi.AccentEdge, RoundedCornerShape(15.dp)),
+                 contentAlignment = Alignment.Center
+             ) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+index bb76b4d..3cc1054 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+@@ -95,7 +95,7 @@ fun NuxInstancePickerDialog(
+                 modifier = Modifier
+                     .size(48.dp)
+                     .clip(CircleShape)
+-                    .background(AmberUi.Accent, CircleShape)
++                    .background(AmberUi.AccentBrush, CircleShape)
+                     .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                     .clickable { onAdd() },
+                 contentAlignment = Alignment.Center
+@@ -303,7 +303,7 @@ private fun AddInstanceCard(onClick: () -> Unit) {
+             modifier = Modifier
+                 .size(48.dp)
+                 .clip(CircleShape)
+-                .background(AmberUi.Accent, CircleShape)
++                .background(AmberUi.AccentBrush, CircleShape)
+                 .border(1.dp, AmberUi.AccentEdge, CircleShape),
+             contentAlignment = Alignment.Center
+         ) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+index 7529e3b..db0087d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxWardrobeDialog.kt
+@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.SolidColor
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.platform.LocalContext
+@@ -345,7 +346,7 @@ fun NuxWardrobeDialog(
+                         modifier = Modifier
+                             .height(30.dp)
+                             .clip(CircleShape)
+-                            .background(if (isSelected) AmberUi.Accent else Color.Transparent, CircleShape)
++                            .background(if (isSelected) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
+                             .clickable {
+                                 selectedAnim = animKey
+                                 playerSkin.startAnim(animKey, 0.8f)
+@@ -750,7 +751,7 @@ private fun ViewportButton(
+         modifier = Modifier
+             .size(36.dp)
+             .clip(CircleShape)
+-            .background(if (active) AmberUi.Accent else Color.Black.copy(alpha = 0.55f), CircleShape)
++            .background(if (active) AmberUi.AccentBrush else SolidColor(Color.Black.copy(alpha = 0.55f)), CircleShape)
+             .border(1.dp, if (active) AmberUi.AccentEdge else AmberUi.Border, CircleShape)
+             .clickable { onClick() },
+         contentAlignment = Alignment.Center
+@@ -810,7 +811,7 @@ private fun ModelOption(
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent, shape)
++                        .background(AmberUi.AccentBrush, shape)
+                         .border(1.dp, AmberUi.AccentEdge, shape)
+                 } else {
+                     Modifier.amberGlass(shape)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index 87193b9..a037d01 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -336,7 +336,7 @@ private fun AccountListCard(
+                 modifier = Modifier
+                     .height(30.dp)
+                     .clip(CircleShape)
+-                    .background(AmberUi.Accent, CircleShape)
++                    .background(AmberUi.AccentBrush, CircleShape)
+                     .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                     .padding(horizontal = 11.dp),
+                 verticalAlignment = Alignment.CenterVertically
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AmberScreenParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AmberScreenParts.kt
+index 4553053..244784c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AmberScreenParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AmberScreenParts.kt
+@@ -250,7 +250,7 @@ internal fun AmberSideItem(
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent, CircleShape)
++                        .background(AmberUi.AccentBrush, CircleShape)
+                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                 } else {
+                     Modifier.amberGlass(CircleShape)
+@@ -342,7 +342,7 @@ internal fun AmberPillButton(
+             .alpha(if (enabled) 1f else 0.4f)
+             .height(40.dp)
+             .clip(CircleShape)
+-            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
++            .background(if (filled) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
+             .border(1.dp, if (danger) AmberUi.Danger.copy(alpha = 0.6f) else if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong, CircleShape)
+             .clickable(enabled = enabled) { onClick() }
+             .padding(horizontal = 18.dp),
+@@ -382,7 +382,7 @@ internal fun AmberPickRow(
+             .fillMaxWidth()
+             .defaultMinSize(minHeight = 42.dp)
+             .clip(shape)
+-            .background(if (selected) AmberUi.Accent else NuxColors.SurfaceWhite, shape)
++            .background(if (selected) AmberUi.AccentBrush else SolidColor(NuxColors.SurfaceWhite), shape)
+             .border(1.dp, if (selected) AmberUi.AccentEdge else NuxColors.CardBorder, shape)
+             .clickable { onClick() }
+             .padding(horizontal = 14.dp, vertical = 8.dp),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+index 4190835..d97d72f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CreateInstanceScreen.kt
+@@ -769,7 +769,7 @@ private fun CiChip(label: String, selected: Boolean, onClick: () -> Unit) {
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent, CircleShape)
++                        .background(AmberUi.AccentBrush, CircleShape)
+                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
+                 } else {
+                     Modifier.amberGlass(CircleShape)
+@@ -1037,7 +1037,7 @@ private fun CiVersionCard(
+                 modifier = Modifier
+                     .size(52.dp)
+                     .clip(iconShape)
+-                    .background(if (selected) AmberUi.Accent else AmberUi.SurfaceRaised, iconShape)
++                    .background(if (selected) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), iconShape)
+                     .border(1.dp, AmberUi.Border, iconShape),
+                 contentAlignment = Alignment.Center
+             ) {
+@@ -1179,7 +1179,7 @@ private fun CiLoaderRow(choice: CiChoice, picked: Boolean, onClick: () -> Unit)
+             .fillMaxWidth()
+             .height(40.dp)
+             .clip(shape)
+-            .background(if (picked) AmberUi.Accent else AmberUi.SurfaceRaised, shape)
++            .background(if (picked) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), shape)
+             .border(1.dp, if (picked) AmberUi.AccentEdge else AmberUi.Border, shape)
+             .clickable { onClick() }
+             .padding(horizontal = 14.dp),
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 54978c9..6127907 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -996,7 +996,7 @@ private fun HomeScene(
+                         Box(
+                             modifier = Modifier
+                                 .size(30.dp)
+-                                .background(AmberUi.Accent, CircleShape),
++                                .background(AmberUi.AccentBrush, CircleShape),
+                             contentAlignment = Alignment.Center
+                         ) {
+                             Icon(
+@@ -1427,7 +1427,7 @@ private fun HomeMainButton(
+                 .align(Alignment.TopCenter)
+                 .offset(y = 4.dp - lift)
+                 .clip(CircleShape)
+-                .background(AmberUi.Accent, CircleShape)
++                .background(AmberUi.AccentBrush, CircleShape)
+                 .border(1.5.dp, AmberUi.AccentEdge, CircleShape),
+             horizontalArrangement = Arrangement.Center,
+             verticalAlignment = Alignment.CenterVertically
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt
+index 101cabc..c64403e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/MacroBuilderDialog.kt
+@@ -357,7 +357,7 @@ private fun MbSectionTitle(
+             Box(
+                 modifier = Modifier
+                     .size(28.dp)
+-                    .background(AmberUi.Accent, CircleShape)
++                    .background(AmberUi.AccentBrush, CircleShape)
+                     .border(1.dp, AmberUi.AccentEdge, CircleShape),
+                 contentAlignment = Alignment.Center
+             ) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt
+index 44ef03f..8c96c4d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModUpdateBar.kt
+@@ -280,7 +280,7 @@ internal fun ModUpdateBar(
+                         modifier = Modifier
+                             .fillMaxWidth(fraction)
+                             .fillMaxHeight()
+-                            .background(AmberUi.Accent)
++                            .background(AmberUi.AccentBrush)
+                     )
+                 }
+             }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 86c0f14..46940ee 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -1011,36 +1011,51 @@ fun SettingsScreen(
+                                         desc = "Warna tombol dan penanda terpilih di seluruh launcher."
+                                     )
+                                     Spacer(modifier = Modifier.height(12.dp))
+-                                    Row(
+-                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+-                                        verticalAlignment = Alignment.CenterVertically
+-                                    ) {
+-                                        AMBER_ACCENTS.forEach { accent ->
+-                                            val picked = accent.id == accentId
+-                                            Box(
+-                                                modifier = Modifier
+-                                                    .size(44.dp)
+-                                                    .clip(CircleShape)
+-                                                    .background(accent.base, CircleShape)
+-                                                    .border(
+-                                                        if (picked) 2.5.dp else 1.dp,
+-                                                        if (picked) Color.White else AmberUi.BorderStrong,
+-                                                        CircleShape
+-                                                    )
+-                                                    .clickable {
+-                                                        accentId = accent.id
+-                                                        AmberUi.setAccent(accent.id)
+-                                                        commitSettings()
+-                                                    },
+-                                                contentAlignment = Alignment.Center
++                                    val solidAccents = AMBER_ACCENTS.filter { it.end == null }
++                                    val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
++                                    listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
++                                        if (groupIndex == 1) {
++                                            Text(
++                                                text = "Gradient halus",
++                                                color = AmberUi.TextDim,
++                                                fontSize = 12.sp,
++                                                modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
++                                            )
++                                        }
++                                        group.chunked(6).forEach { rowAccents ->
++                                            Row(
++                                                horizontalArrangement = Arrangement.spacedBy(10.dp),
++                                                verticalAlignment = Alignment.CenterVertically,
++                                                modifier = Modifier.padding(bottom = 10.dp)
+                                             ) {
+-                                                if (picked) {
+-                                                    Icon(
+-                                                        imageVector = Icons.Outlined.Check,
+-                                                        contentDescription = accent.label,
+-                                                        tint = Color.White,
+-                                                        modifier = Modifier.size(22.dp)
+-                                                    )
++                                                rowAccents.forEach { accent ->
++                                                    val picked = accent.id == accentId
++                                                    Box(
++                                                        modifier = Modifier
++                                                            .size(44.dp)
++                                                            .clip(CircleShape)
++                                                            .background(accent.brush, CircleShape)
++                                                            .border(
++                                                                if (picked) 2.5.dp else 1.dp,
++                                                                if (picked) Color.White else AmberUi.BorderStrong,
++                                                                CircleShape
++                                                            )
++                                                            .clickable {
++                                                                accentId = accent.id
++                                                                AmberUi.setAccent(accent.id)
++                                                                commitSettings()
++                                                            },
++                                                        contentAlignment = Alignment.Center
++                                                    ) {
++                                                        if (picked) {
++                                                            Icon(
++                                                                imageVector = Icons.Outlined.Check,
++                                                                contentDescription = accent.label,
++                                                                tint = Color.White,
++                                                                modifier = Modifier.size(22.dp)
++                                                            )
++                                                        }
++                                                    }
+                                                 }
+                                             }
+                                         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
+index 11587c4..ffdf948 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
+@@ -5,23 +5,66 @@ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.graphics.Brush
+ import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.graphics.SolidColor
++import androidx.compose.ui.graphics.lerp
+ 
+-/** Satu pilihan warna aksen. [base] isian tombol, [edge] tepi, [soft] teks/ikon terang, [deep] bayangan keras. */
++/**
++ * Satu pilihan warna aksen. [base] isian tombol, [edge] tepi, [soft] teks/ikon terang, [deep] bayangan keras.
++ * [end] hanya diisi untuk aksen gradient halus: isian bergeser dari [base] ke [end] (kiri ke kanan).
++ */
+ class AmberAccent(
+     val id: String,
+     val label: String,
+     val base: Color,
+     val edge: Color,
+     val soft: Color,
+-    val deep: Color
+-)
++    val deep: Color,
++    val end: Color? = null
++) {
++    /** Isian untuk tombol dan penanda terpilih: warna polos, atau gradient bila [end] ada. */
++    val brush: Brush
++        get() {
++            val to = end
++            return if (to == null) SolidColor(base) else Brush.horizontalGradient(listOf(base, to))
++        }
++}
++
++/** Menurunkan warna tepi, teks terang, dan bayangan dari warna dasar (dan warna akhir untuk gradient). */
++private fun accentOf(id: String, label: String, base: Color, end: Color? = null): AmberAccent {
++    val mid = if (end == null) base else lerp(base, end, 0.5f)
++    return AmberAccent(
++        id = id,
++        label = label,
++        base = base,
++        edge = lerp(mid, Color.White, 0.55f),
++        soft = lerp(mid, Color.White, 0.62f),
++        deep = lerp(base, Color.Black, 0.55f),
++        end = end
++    )
++}
+ 
+ /** Pilihan aksen yang tampil di Pengaturan > Tampilan. Navy adalah bawaan. */
+ val AMBER_ACCENTS = listOf(
+     AmberAccent("navy", "Navy", Color(0xFF1F3380), Color(0xFF8F99C0), Color(0xFFA9BDFF), Color(0xFF0F1A4D)),
+     AmberAccent("green", "Hijau", Color(0xFF2FB86C), Color(0xFF9ADDB8), Color(0xFF8DF0B8), Color(0xFF14603A)),
+     AmberAccent("purple", "Ungu", Color(0xFF6B4BD1), Color(0xFFB9A8EC), Color(0xFFC9B8FF), Color(0xFF39257D)),
+-    AmberAccent("teal", "Teal", Color(0xFF14A3A8), Color(0xFF8FD6D9), Color(0xFF8FE6EA), Color(0xFF0A5659))
++    AmberAccent("teal", "Teal", Color(0xFF14A3A8), Color(0xFF8FD6D9), Color(0xFF8FE6EA), Color(0xFF0A5659)),
++    // Warna yang sering menyatu dengan wallpaper Minecraft: langit malam, hutan, senja, laut, bunga sakura, obor.
++    accentOf("blue", "Biru", Color(0xFF2F62D8)),
++    accentOf("sky", "Biru langit", Color(0xFF1E88C7)),
++    accentOf("pink", "Merah muda", Color(0xFFC93F78)),
++    accentOf("red", "Merah", Color(0xFFCC3F4A)),
++    accentOf("orange", "Jingga", Color(0xFFD9692A)),
++    accentOf("amber", "Amber", Color(0xFFC48A14)),
++    accentOf("forest", "Hutan", Color(0xFF2E7D4F)),
++    accentOf("gray", "Abu-abu", Color(0xFF52627A)),
++    // Gradient halus: dua warna berdekatan yang bergeser pelan dari kiri ke kanan.
++    accentOf("dusk", "Senja", Color(0xFF6B4BD1), Color(0xFFC04B9C)),
++    accentOf("dawn", "Fajar", Color(0xFFD9692A), Color(0xFFC93F78)),
++    accentOf("ocean", "Samudra", Color(0xFF1F5FD0), Color(0xFF14A3A8)),
++    accentOf("aurora", "Aurora", Color(0xFF14A3A8), Color(0xFF5B6CE0)),
++    accentOf("midnight", "Tengah malam", Color(0xFF1F3380), Color(0xFF6B4BD1)),
++    accentOf("ember", "Bara", Color(0xFFCC3F4A), Color(0xFFD9892A))
+ )
+ 
+ /** Gaya tampilan: DEFAULT = tema AmberLauncher sendiri, LIQUID = kaca buram (blur) ala liquid glass. */
+@@ -63,6 +106,9 @@ object AmberUi {
+     }
+ 
+     val Accent: Color get() = accentPreset.base
++
++    /** Isian aksen untuk tombol dan penanda terpilih. Polos untuk aksen biasa, gradient halus untuk aksen gradient. */
++    val AccentBrush: Brush get() = accentPreset.brush
+     val AccentEdge: Color get() = accentPreset.edge
+     val AccentSoft: Color get() = accentPreset.soft
+     val AccentDeep: Color get() = accentPreset.deep
+# FIN part=1/1 files=22

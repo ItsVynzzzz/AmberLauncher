@@ -70,6 +70,9 @@ import com.israadev.nuxlauncher.ui.dialogs.AmberHelpDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxAboutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxImportLayoutDialog
 import com.israadev.nuxlauncher.ui.dialogs.NuxControlPresetsDialog
+import com.israadev.nuxlauncher.ui.dialogs.StreamerManagerDialog
+import com.israadev.nuxlauncher.core.streamer.StreamerImages
+import com.israadev.nuxlauncher.core.streamer.StreamerLogic
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 import kotlinx.coroutines.Dispatchers
@@ -93,6 +96,7 @@ fun SettingsScreen(
     var showAboutDialog by remember { mutableStateOf(false) }
     var showHelpDialog by remember { mutableStateOf(false) }
     var showControlPresets by remember { mutableStateOf(false) }
+    var showStreamerDialog by remember { mutableStateOf(false) }
 
     // Ekspor/impor layout kontrol lewat pemilih berkas sistem. Baca/tulis berkas dan penyimpanan
     // dikerjakan di thread IO; layar hanya menyimpan hasil pemeriksaan sampai pengguna menyetujui.
@@ -559,6 +563,24 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
+
+                        SettingsGroup("Mode streamer") {
+                            SettingSwitchRow(
+                                title = "Mode streamer",
+                                desc = "Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.",
+                                checked = currentSettings.streamerMode,
+                                onCheckedChange = {
+                                    SettingsManager.updateSettings(context, currentSettings.copy(streamerMode = it))
+                                }
+                            )
+                            SettingDivider()
+                            SettingValueRow(
+                                title = "Atur overlay",
+                                desc = "Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.",
+                                value = "${currentSettings.streamerItems.size}/${StreamerLogic.MAX_ITEMS}",
+                                onClick = { showStreamerDialog = true }
+                            )
                         }
 
                         // Pengaturan untuk pengguna mahir: tidak perlu disentuh untuk bermain.
@@ -1281,6 +1303,8 @@ fun SettingsScreen(
                                 danger = true,
                                 onClick = {
                                     SettingsManager.resetToDefaults(context)
+                                    // Reset menghapus daftar overlay streamer; gambarnya ikut dibersihkan.
+                                    Thread { StreamerImages.sweep(context, emptySet()) }.start()
                     val reset = SettingsManager.settings.value
                     ramMb = reset.ramMb
                     initialHeapMb = reset.initialHeapMb
@@ -1681,6 +1705,10 @@ fun SettingsScreen(
             onDismiss = { showControlPresets = false },
             onOpenEditor = onOpenGuiEditor
         )
+    }
+
+    if (showStreamerDialog) {
+        StreamerManagerDialog(onDismiss = { showStreamerDialog = false })
     }
 
     if (showHelpDialog) {

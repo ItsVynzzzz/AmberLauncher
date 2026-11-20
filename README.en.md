@@ -68,6 +68,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 **More**
 - **Accounts**: Microsoft, Ely.by, and offline.
 - **Built-in screen recording**: choose *Game only* or *With buttons*. It uses the hardware encoder (720p/30 fps by default) and saves to the Gallery (Movies/AmberLauncher). Game audio is not recorded yet.
+- **Streamer mode**: overlays on top of the game with text, images, links with a QR code, and a timer. Turn it on under **Settings > Game > Streamer mode**; while playing, a small handle on the left edge of the screen opens a panel to show or hide them.
 - **Crash reports** with optional log upload to mclo.gs.
 - **In-app updates**, with the 32-bit/64-bit APK chosen automatically. Only numbered releases are offered; per-patch test builds and documentation changes never prompt an update.
 - **Multilingual interface**: Bahasa Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, and Filipino.

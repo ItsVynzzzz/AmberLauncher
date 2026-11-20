@@ -1,0 +1,36 @@
+# Mode streamer: overlay di dalam game
+Mode streamer	โหมดสตรีมเมอร์
+Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	แสดงที่จับเล็ก ๆ ที่ขอบซ้ายของหน้าจอเกม แตะเพื่อเปิดแผงสำหรับแสดงและซ่อนโอเวอร์เลย์
+Atur overlay	ตั้งค่าโอเวอร์เลย์
+Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	ข้อความ รูปภาพ ลิงก์พร้อมคิวอาร์โค้ด และตัวจับเวลาที่แสดงบนเกม
+Ketuk untuk menampilkan atau menyembunyikan.	แตะเพื่อแสดงหรือซ่อน
+Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	ยังไม่มีโอเวอร์เลย์ เพิ่มได้ที่ การตั้งค่า > เกม > โหมดสตรีมเมอร์ > ตั้งค่าโอเวอร์เลย์
+Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	แสดงข้อความ รูปภาพ ลิงก์ หรือตัวจับเวลาบนเกม เปิดและซ่อนได้จากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
+Belum ada overlay. Ketuk Tambah untuk membuatnya.	ยังไม่มีโอเวอร์เลย์ แตะ เพิ่ม เพื่อสร้าง
+Overlay baru	โอเวอร์เลย์ใหม่
+Ubah overlay	แก้ไขโอเวอร์เลย์
+Jenis	ประเภท
+Posisi	ตำแหน่ง
+Teks	ข้อความ
+Gambar	รูปภาพ
+Link	ลิงก์
+Timer	ตัวจับเวลา
+Tulis teks overlay	พิมพ์ข้อความโอเวอร์เลย์
+Contoh: ko-fi.com/namamu	ตัวอย่าง: ko-fi.com/ชื่อของคุณ
+Tampilkan kode QR	แสดงคิวอาร์โค้ด
+Penonton bisa memindainya langsung dari layar.	ผู้ชมสแกนได้จากหน้าจอโดยตรง
+Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	ที่อยู่นี้ยาวเกินไปสำหรับคิวอาร์โค้ด จึงแสดงเฉพาะข้อความ
+Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	ตัวจับเวลาเริ่มที่ 00:00 เริ่ม หยุดชั่วคราว และรีเซ็ตได้จากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
+Kiri atas	บนซ้าย
+Atas	บน
+Kanan atas	บนขวา
+Kiri bawah	ล่างซ้าย
+Bawah	ล่าง
+Kanan bawah	ล่างขวา
+Kecil	เล็ก
+Besar	ใหญ่
+Tampil saat game mulai	แสดงเมื่อเริ่มเกม
+Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	หากปิดอยู่ ให้เปิดจากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
+Memproses gambar...	กำลังประมวลผลรูปภาพ...
+Foto atau logo. Dikecilkan otomatis supaya ringan.	รูปถ่ายหรือโลโก้ จะถูกย่อขนาดอัตโนมัติเพื่อให้เบา
+Mulai	เริ่ม

@@ -10,6 +10,7 @@ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
 import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
 import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
 import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
+import com.israadev.nuxlauncher.ui.streamer.StreamerLayer
 import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
 import androidx.core.view.WindowCompat
@@ -1945,9 +1946,11 @@ fun GameScreen(
     var isConsoleVisible by remember { mutableStateOf(false) }
     var isConsoleExpanded by remember { mutableStateOf(false) }
     var showExitConfirmDialog by remember { mutableStateOf(false) }
+    // Panel mode streamer (sidebar kiri) terbuka. Bukan dialog, tapi menutupi sebagian game selama terbuka.
+    var showStreamerPanel by remember { mutableStateOf(false) }
     // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
     // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
-    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay
+    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || showStreamerPanel
     SideEffect { MenuMouse.overlayOpen = overlayCoversGame }
     LaunchedEffect(overlayCoversGame) {
         if (overlayCoversGame) MenuMouse.reset()
@@ -2298,6 +2301,17 @@ fun GameScreen(
                     inMenu = gameCursorMode != CURSOR_DISABLED
                 )
             }
+        }
+
+        // Overlay mode streamer: teks, gambar, link/QR, dan timer di atas game, plus sidebar kiri untuk
+        // menyalakan dan mematikannya. Di atas tombol layar (supaya gagangnya bisa disentuh), di bawah menu.
+        if (launcherSettings.streamerMode && controlsAllowed) {
+            StreamerLayer(
+                items = launcherSettings.streamerItems,
+                panelOpen = showStreamerPanel,
+                onPanelChange = { showStreamerPanel = it },
+                ghostHandle = ghostControls
+            )
         }
 
         // Preview ketikan di atas keyboard layar: di atas tombol kontrol supaya tidak tertutup, di bawah dialog.

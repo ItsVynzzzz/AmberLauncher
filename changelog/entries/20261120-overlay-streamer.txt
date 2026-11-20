@@ -1,0 +1,24 @@
+[id]
++ Mode streamer: overlay di atas game berisi teks, gambar (foto atau logo), link dengan kode QR yang bisa dipindai penonton, dan timer. Nyalakan di Pengaturan > Game > Mode streamer, lalu atur isinya lewat "Atur overlay".
++ Saat bermain muncul gagang kecil di tepi kiri layar. Ketuk untuk membuka panel yang menampilkan atau menyembunyikan tiap overlay, serta memulai, menjeda, dan mereset timer. Overlay tidak menghalangi sentuhan ke game.
+[en]
++ Streamer mode: overlays on top of the game with text, images (photos or logos), links with a QR code viewers can scan, and a timer. Turn it on in Settings > Game > Streamer mode, then set up the content with "Set up overlays".
++ While playing, a small handle appears on the left edge of the screen. Tap it to open a panel that shows or hides each overlay and starts, pauses, and resets the timer. Overlays do not block touches to the game.
+[es]
++ Modo streamer: overlays sobre el juego con texto, imágenes (fotos o logotipos), enlaces con un código QR que los espectadores pueden escanear y un temporizador. Actívalo en Ajustes > Juego > Modo streamer y configura el contenido con "Configurar overlays".
++ Al jugar aparece un pequeño tirador en el borde izquierdo de la pantalla. Tócalo para abrir un panel que muestra u oculta cada overlay y que inicia, pausa y restablece el temporizador. Los overlays no bloquean los toques al juego.
+[fil]
++ Streamer mode: mga overlay sa ibabaw ng laro na may teksto, larawan (litrato o logo), link na may QR code na maaaring i-scan ng mga manonood, at timer. I-on ito sa Mga Setting > Game > Streamer mode, pagkatapos ay ayusin ang laman sa "I-set up ang mga overlay".
++ Habang naglalaro, may lalabas na maliit na handle sa kaliwang gilid ng screen. I-tap ito para buksan ang panel na nagpapakita o nagtatago ng bawat overlay at nagsisimula, nagpa-pause, at nagre-reset ng timer. Hindi hinaharangan ng mga overlay ang pagpindot sa laro.
+[pt]
++ Modo streamer: overlays sobre o jogo com texto, imagens (fotos ou logotipos), links com um código QR que os espectadores podem escanear e um temporizador. Ative em Configurações > Jogo > Modo streamer e configure o conteúdo em "Configurar overlays".
++ Ao jogar, aparece uma pequena alça na borda esquerda da tela. Toque nela para abrir um painel que mostra ou oculta cada overlay e que inicia, pausa e redefine o temporizador. Os overlays não bloqueiam os toques no jogo.
+[th]
++ โหมดสตรีมเมอร์: โอเวอร์เลย์บนเกมที่มีข้อความ รูปภาพ (รูปถ่ายหรือโลโก้) ลิงก์พร้อมคิวอาร์โค้ดที่ผู้ชมสแกนได้ และตัวจับเวลา เปิดได้ที่ การตั้งค่า > เกม > โหมดสตรีมเมอร์ แล้วจัดเนื้อหาผ่าน "ตั้งค่าโอเวอร์เลย์"
++ ขณะเล่นจะมีที่จับเล็ก ๆ ที่ขอบซ้ายของหน้าจอ แตะเพื่อเปิดแผงที่แสดงหรือซ่อนโอเวอร์เลย์แต่ละรายการ รวมถึงเริ่ม หยุดชั่วคราว และรีเซ็ตตัวจับเวลา โอเวอร์เลย์จะไม่บังการสัมผัสที่ส่งไปยังเกม
+[vi]
++ Chế độ streamer: các overlay phía trên game gồm văn bản, hình ảnh (ảnh hoặc logo), liên kết kèm mã QR để người xem quét, và bộ hẹn giờ. Bật tại Cài đặt > Game > Chế độ streamer, rồi thiết lập nội dung trong "Thiết lập overlay".
++ Khi chơi sẽ có một tay nắm nhỏ ở cạnh trái màn hình. Chạm vào để mở bảng hiện hoặc ẩn từng overlay, cũng như bắt đầu, tạm dừng và đặt lại bộ hẹn giờ. Overlay không chặn thao tác chạm vào game.
+[zh]
++ 主播模式：在游戏画面上显示文字、图片（照片或徽标）、可供观众扫描的二维码链接和计时器。在 设置 > 游戏 > 主播模式 中开启，然后通过“设置叠加层”配置内容。
++ 游玩时，屏幕左边缘会出现一个小把手。点按即可打开面板，显示或隐藏每个叠加层，并开始、暂停和重置计时器。叠加层不会阻挡对游戏的触控。

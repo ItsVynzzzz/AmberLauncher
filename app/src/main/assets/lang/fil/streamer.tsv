@@ -1,0 +1,36 @@
+# Mode streamer: overlay di dalam game
+Mode streamer	Streamer mode
+Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Nagpapakita ng maliit na handle sa kaliwang gilid ng screen ng laro. I-tap ito para buksan ang panel na nagpapakita at nagtatago ng mga overlay.
+Atur overlay	I-set up ang mga overlay
+Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Teksto, larawan, link na may QR code, at timer na lumalabas sa ibabaw ng laro.
+Ketuk untuk menampilkan atau menyembunyikan.	I-tap para ipakita o itago.
+Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Wala pang overlay. Magdagdag sa Mga Setting > Game > Streamer mode > I-set up ang mga overlay.
+Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Magpakita ng teksto, larawan, link, o timer sa ibabaw ng laro. Ipakita at itago ang mga ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
+Belum ada overlay. Ketuk Tambah untuk membuatnya.	Wala pang overlay. I-tap ang Magdagdag para gumawa.
+Overlay baru	Bagong overlay
+Ubah overlay	I-edit ang overlay
+Jenis	Uri
+Posisi	Posisyon
+Teks	Teksto
+Gambar	Larawan
+Link	Link
+Timer	Timer
+Tulis teks overlay	I-type ang teksto ng overlay
+Contoh: ko-fi.com/namamu	Halimbawa: ko-fi.com/pangalanmo
+Tampilkan kode QR	Ipakita ang QR code
+Penonton bisa memindainya langsung dari layar.	Maaaring i-scan ito ng mga manonood nang direkta mula sa screen.
+Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Masyadong mahaba ang address na ito para sa QR code, kaya teksto lang ang ipapakita.
+Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	Nagsisimula ang timer sa 00:00. Simulan, i-pause, at i-reset ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
+Kiri atas	Itaas na kaliwa
+Atas	Itaas
+Kanan atas	Itaas na kanan
+Kiri bawah	Ibaba na kaliwa
+Bawah	Ibaba
+Kanan bawah	Ibaba na kanan
+Kecil	Maliit
+Besar	Malaki
+Tampil saat game mulai	Ipakita pagsisimula ng laro
+Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Kapag naka-off, i-on ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
+Memproses gambar...	Pinoproseso ang larawan...
+Foto atau logo. Dikecilkan otomatis supaya ringan.	Larawan o logo. Awtomatikong liliit para gumaan.
+Mulai	Simulan

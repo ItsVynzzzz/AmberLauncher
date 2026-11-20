@@ -1,5 +1,7 @@
 package com.israadev.nuxlauncher.core.models
 
+import com.israadev.nuxlauncher.core.streamer.StreamerItem
+
 /**
  * Global Configuration for NUX Launcher (Java, RAM, Controls, Graphics)
  */
@@ -137,6 +139,11 @@ data class LauncherSettings(
     // uiScalePercent: seluruh UI launcher (70 - 130). homeSkinScalePercent: hanya figur skin di Home (50 - 130).
     val uiScalePercent: Int = 100,
     val homeSkinScalePercent: Int = 100,
+
+    // Mode streamer: sidebar tersembunyi di tepi kiri layar game untuk menampilkan overlay (teks, gambar,
+    // link dengan kode QR, timer). Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
+    val streamerMode: Boolean = false,
+    val streamerItems: List<StreamerItem> = emptyList(),
 
     // Gelombang penyederhanaan bawaan yang sudah diterapkan ke berkas pengaturan ini (0 = belum
     // pernah). Dipakai SettingsManager supaya perubahan bawaan hanya diterapkan sekali.

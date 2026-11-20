@@ -122,7 +122,7 @@ internal fun MenuToggleRow(
 
 /** Gambar saklar saja (tidak bisa diketuk sendiri; barisnya yang menangani ketukan). */
 @Composable
-private fun MenuSwitch(checked: Boolean) {
+internal fun MenuSwitch(checked: Boolean) {
     Box(
         modifier = Modifier
             .size(width = 42.dp, height = 24.dp)

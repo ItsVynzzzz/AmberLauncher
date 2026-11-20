@@ -22,11 +22,14 @@ import org.json.JSONObject
  *   wajib kecuali manifest memberi kemampuan `registries` (mod konten murni).
  *
  * Starling (mesin Rust kedua, files/starling) punya aturan sendiri, dikenali dari nama [home] ([StarlingEngine.HOME_DIR]):
- * - Modul bawaannya 20 modul native yang sudah dikompilasi ke pustakanya ([BUNDLED_STARLING]), bukan empat modul Horizon.
+ * - Modul bawaannya modul native ([BUNDLED_STARLING]), bukan empat modul Horizon. Yang tampil hanya yang benar-benar
+ *   dikompilasi ke dalam pustaka mesin oleh build Amber (native_mods di starling-engine.properties, dicatat di
+ *   assets/native-mods/compiled.txt; lihat [StarlingEngine.compiledNativeMods]).
  * - Mod WebAssembly (`mod.wasm`) tidak jalan lagi di sana: `.hmod` berkode WASM ditolak, dan `.hmod` yang membawa kode
  *   native (`horizon-native.json`) diterima.
  * - Mod native `.hnmod` (zip berisi `horizon-native.json` dan mixin) dipasang di `horizon-native-mods/<id>.hnmod`.
- *   Mod itu baru masuk ke game setelah dikompilasi dari dalam game (Options > Mods > Compile).
+ *   Mod native tidak bisa dikompilasi di HP (Compile di dalam game dimatikan oleh patch amber5): mod masuk ke game lewat
+ *   build mesin Amber, jadi berkas .hnmod yang dipasang di sini hanya disimpan.
  *
  * Tanpa Android: hanya berkas dan teks, jadi mudah diuji. [home] selalu folder data mesin.
  */
@@ -77,10 +80,10 @@ object HorizonMods {
     const val MSG_NATIVE_BAD =
         "Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah."
     const val MSG_NATIVE_TOGGLE =
-        "Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game."
+        "Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP."
     const val MSG_NATIVE_ONLY_STARLING = "Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya."
     private const val NATIVE_NOTE =
-        "Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile."
+        "Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP."
 
     private val OUR_MESSAGES = setOf(
         MSG_FORMAT, MSG_TOO_BIG, MSG_EXPANDED, MSG_NO_MANIFEST, MSG_BAD_MANIFEST, MSG_NO_CODE, MSG_WASM_BIG,
@@ -99,9 +102,10 @@ object HorizonMods {
     )
 
     /**
-     * Modul native yang sudah dikompilasi ke dalam pustaka Starling-extras: ANDROID_BUNDLED di mod_list.rs, sama dengan
-     * BUILTIN_NATIVE_MODS di packaging/android/build_apk.py. Mati sampai dihidupkan, dengan baris `mod.<id>:true` yang
-     * sama seperti modul bawaan Horizon. Minimap dan worldmap sudah dihapus di sana, jadi tidak ada di daftar ini.
+     * Modul native bawaan Starling-extras: ANDROID_BUNDLED di mod_list.rs, sama dengan BUILTIN_NATIVE_MODS di
+     * packaging/android/build_apk.py. Daftar ini hanya nama dan id; modul yang ADA di pustaka mesin ini diberi tahu oleh
+     * build-nya (parameter `compiled` di [installed]). Mati sampai dihidupkan, dengan baris `mod.<id>:true` yang sama
+     * seperti modul bawaan Horizon. Minimap dan worldmap sudah dihapus di sana, jadi tidak ada di daftar ini.
      */
     val BUNDLED_STARLING = listOf(
         "zoom" to "Zoom",
@@ -146,12 +150,17 @@ object HorizonMods {
     // Daftar terpasang
     // ------------------------------------------------------------------------------------------
 
-    /** Modul bawaan lalu berkas / folder mod di folder mesin, lengkap dengan status hidup dari horizon-mods.txt. */
-    fun installed(home: File): List<InstalledModItem> {
+    /**
+     * Modul bawaan lalu berkas / folder mod di folder mesin, lengkap dengan status hidup dari horizon-mods.txt.
+     * [compiled] (hanya Starling): id modul native yang ada di pustaka mesin; modul bawaan di luar himpunan itu tidak
+     * ditampilkan karena sakelarnya tidak akan berbuat apa-apa. null = tampilkan semua.
+     */
+    fun installed(home: File, compiled: Set<String>? = null): List<InstalledModItem> {
         val game = HorizonContent.gameHome(home)
         val state = readList(game)
         val result = ArrayList<InstalledModItem>()
         for (b in bundledFor(home)) {
+            if (compiled != null && home.name == StarlingEngine.HOME_DIR && b.id !in compiled) continue
             result.add(
                 InstalledModItem(
                     id = BUILTIN + b.id,
@@ -240,7 +249,7 @@ object HorizonMods {
 
     /** Menghidupkan atau mematikan satu mod ([fileName] dari daftar Terpasang). Berlaku saat game dibuka lagi. */
     fun setEnabled(home: File, fileName: String, on: Boolean) {
-        // Mod native (.hnmod) baru jalan setelah dikompilasi ke game dari dalam game; tidak ada saklar di sini.
+        // Mod native (.hnmod) tidak ada saklarnya: mod masuk ke game lewat build mesin Amber, bukan di HP.
         if (fileName.startsWith(NATIVE_PREFIX)) throw IOException(MSG_NATIVE_TOGGLE)
         val id = idOf(home, fileName) ?: throw IOException(MSG_NOT_FOUND)
         writeEnabled(HorizonContent.gameHome(home), id, on)
@@ -462,8 +471,8 @@ object HorizonMods {
     /**
      * Memasang mod native `.hnmod` (hanya Starling) ke `horizon-native-mods/<id>.hnmod`. Bundel diperiksa seperti
      * mesin (Bundle::read): zip dengan `horizon-native.json` yang sah, path aman, tanpa `mod.wasm`, paling banyak 512
-     * berkas dan 64 MB setelah dibuka. Kodenya tidak dijalankan di sini; bundel baru ikut di game setelah dikompilasi
-     * dari dalam game. Mod dengan id yang sama diganti. Mengembalikan nama berkas akhir.
+     * berkas dan 64 MB setelah dibuka. Kodenya tidak dijalankan di sini; bundel hanya disimpan, karena mod native masuk
+     * ke game lewat build mesin Amber (bukan Compile di HP). Mod dengan id yang sama diganti. Mengembalikan nama berkas akhir.
      */
     fun installNative(staged: File, home: File, name: String): Result<String> {
         return try {

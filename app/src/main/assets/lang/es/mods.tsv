@@ -197,3 +197,7 @@ Segarkan login	Actualizar inicio de sesión
 Menyegarkan...	Actualizando...
 Login berhasil disegarkan	Inicio de sesión actualizado
 Gagal menyegarkan login	No se pudo actualizar el inicio de sesión
+# Mod native Starling dibangun oleh CI Amber
+Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Los mods nativos no se activan desde aqu\u00ed: entran al juego mediante la compilaci\u00f3n del motor de Amber (native_mods), no con Compile en el tel\u00e9fono.
+Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Mod nativo (.hnmod). A\u00fan no est\u00e1 en el juego: los mods nativos entran mediante la compilaci\u00f3n del motor de Amber, no con Compile en el tel\u00e9fono.
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mods de Starling: .hmod (contenido, o con c\u00f3digo nativo) y .hnmod (mods nativos), no .jar de Fabric o Forge. Los mods WebAssembly (mod.wasm) ya no funcionan en Starling. Los m\u00f3dulos nativos integrados ya vienen compilados en el motor por la compilaci\u00f3n de Amber y se activan con los interruptores de la lista. Compile dentro del juego est\u00e1 desactivado, as\u00ed que un archivo .hnmod instalado solo se guarda.

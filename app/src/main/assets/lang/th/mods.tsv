@@ -196,3 +196,7 @@ Gagal menyegarkan login	รีเฟรชการเข้าสู่ระ�
 Pasang	ติดตั้ง
 Tema	ธีม
 Klasik	คลาสสิก
+# Mod native Starling dibangun oleh CI Amber
+Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	เปิดม็อดเนทีฟจากตรงนี้ไม่ได้ ม็อดจะเข้าเกมผ่านการบิลด์เอนจินของ Amber (native_mods) ไม่ใช่ผ่าน Compile บนมือถือ
+Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	ม็อดเนทีฟ (.hnmod) ยังไม่อยู่ในเกม ม็อดเนทีฟจะเข้าเกมผ่านการบิลด์เอนจินของ Amber ไม่ใช่ Compile บนมือถือ
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	ม็อด Starling: .hmod (เนื้อหา หรือมีโค้ดเนทีฟ) และ .hnmod (ม็อดเนทีฟ) ไม่ใช่ .jar ของ Fabric หรือ Forge ม็อด WebAssembly (mod.wasm) ใช้บน Starling ไม่ได้อีกแล้ว โมดูลเนทีฟที่มาพร้อมกันถูกคอมไพล์รวมเข้าเอนจินโดยการบิลด์ของ Amber แล้ว และเปิดด้วยสวิตช์ในรายการ ปุ่ม Compile ในเกมถูกปิดไว้ ไฟล์ .hnmod ที่ติดตั้งจึงถูกเก็บไว้เฉยๆ

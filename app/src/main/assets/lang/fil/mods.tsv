@@ -198,3 +198,7 @@ Game	Game
 Pasang	I-install
 Klasik	Klasiko
 Resource Pack (.zip)	Resource Pack (.zip)
+# Mod native Starling dibangun oleh CI Amber
+Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Hindi mabubuksan ang mga native mod mula rito: napapasok ang mga ito sa laro sa pamamagitan ng engine build ng Amber (native_mods), hindi sa Compile sa telepono.
+Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Native mod (.hnmod). Wala pa sa laro: napapasok ang mga native mod sa pamamagitan ng engine build ng Amber, hindi ng Compile sa telepono.
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mga mod ng Starling: .hmod (nilalaman, o may native code) at .hnmod (native mod), hindi .jar ng Fabric o Forge. Hindi na tumatakbo sa Starling ang mga WebAssembly mod (mod.wasm). Ang mga built-in na native module ay na-compile na sa engine ng build ng Amber at binubuksan gamit ang mga switch sa listahan. Naka-off ang Compile sa loob ng laro, kaya naka-store lang ang na-install na .hnmod file.

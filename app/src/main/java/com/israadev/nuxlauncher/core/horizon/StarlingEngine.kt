@@ -59,11 +59,11 @@ object StarlingEngine {
 
     /**
      * Nama kelas WAJIB persis ini: fungsi JNI di libstarling_android.so terikat pada nama paket dan kelasnya. Kelasnya
-     * ada di sumber Starling (dev.horizon.android), bukan di repo ini; patch amber4 hanya mengubahnya sedikit.
+     * ada di sumber Starling (dev.horizon.android), bukan di repo ini; patch amber5 hanya mengubahnya sedikit.
      */
     const val ACTIVITY_CLASS = "dev.horizon.android.GameActivity"
 
-    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber4).
+    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber5).
     private const val EXTRA_DISCORD_RPC = "amber_discord_rpc"
     private const val EXTRA_MC_VERSION = "amber_mc_version"
 
@@ -118,6 +118,45 @@ object StarlingEngine {
      */
     fun gameInstalled(context: Context): Boolean =
         File(engineHome(context), "minecraft/starling-files.json").isFile
+
+    /** Daftar mod native yang dikompilasi ke dalam pustaka mesin ini oleh build-nya (ditulis build_apk.assets). */
+    private const val COMPILED_NATIVE_ASSET = "native-mods/compiled.txt"
+
+    @Volatile
+    private var compiledNative: Set<String>? = null
+
+    /**
+     * Id mod native yang BENAR-BENAR ada di dalam pustaka mesin yang terpasang di APK ini. Dibangun oleh
+     * scripts/build-horizon-engine.sh (native_mods di starling-engine.properties) dan dicatat di
+     * `assets/native-mods/compiled.txt`; mesin membacanya lewat StarlingActivity (STARLING_APK_NATIVE_MODS). Berkas itu
+     * tidak ada bila pustakanya tanpa mod, dan hasilnya himpunan kosong: modul bawaan yang tidak ada di pustaka tidak
+     * boleh tampil sebagai saklar yang tidak berbuat apa-apa.
+     */
+    fun compiledNativeMods(context: Context): Set<String> {
+        compiledNative?.let { return it }
+        val ids = try {
+            context.applicationContext.assets.open(COMPILED_NATIVE_ASSET).use { it.readBytes().toString(Charsets.UTF_8) }
+                .split(Regex("\\s+"))
+                .filter { Regex("[a-z0-9_]{1,64}").matches(it) }
+                .toSet()
+        } catch (_: IOException) {
+            emptySet()
+        }
+        compiledNative = ids
+        return ids
+    }
+
+    /**
+     * Mesin milik Amber tidak memuat pustaka game dari server pembangun pihak ketiga (Compile di dalam game, sekarang
+     * dimatikan oleh patch amber5): sisa pilihan dari mesin sebelumnya dibuang supaya yang jalan selalu pustaka bawaan
+     * APK, yang memuat mod native hasil build Amber.
+     */
+    private fun dropForeignGameLibrary(context: Context) {
+        try {
+            File(engineHome(context), "native/current").delete()
+        } catch (_: Exception) {
+        }
+    }
 
     /** Nama pemain offline untuk mesin: 1 sampai 16 huruf, angka, atau garis bawah (aturan akun offline Starling). */
     private fun validEngineName(name: String): Boolean =
@@ -227,6 +266,7 @@ object StarlingEngine {
     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
         return try {
             val firstRun = !gameInstalled(context)
+            dropForeignGameLibrary(context)
             writeLaunchFiles(context, account)
             if (firstRun) {
                 Toast.makeText(

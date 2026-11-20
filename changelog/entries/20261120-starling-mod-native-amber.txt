@@ -1,0 +1,24 @@
+[id]
++ Mod native Starling kini dikompilasi langsung ke dalam mesin oleh build Amber, bukan lagi tempelan dari luar. Layar Mod hanya menampilkan modul bawaan yang benar-benar ada di mesin.
+~ Tombol Compile di dalam game Starling dimatikan, karena akan menimpa mesin Amber dengan buatan pihak ketiga. Lima mod yang lisensinya belum jelas (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) belum disertakan.
+[en]
++ Starling native mods are now compiled straight into the engine by Amber's build, no longer bolted on from outside. The Mods screen only lists the built-in modules that are really in the engine.
+~ The Compile button inside Starling is turned off, because it would overwrite Amber's engine with a third-party build. Five mods with unclear licenses (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) are not included yet.
+[es]
++ Los mods nativos de Starling ahora se compilan directamente dentro del motor con la compilación de Amber, y ya no se añaden desde fuera. La pantalla de Mods solo muestra los módulos integrados que realmente están en el motor.
+~ El botón Compile dentro de Starling está desactivado, porque sobrescribiría el motor de Amber con una compilación de terceros. Cinco mods con licencia poco clara (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) aún no se incluyen.
+[fil]
++ Direkta nang kino-compile sa loob ng engine ang mga native mod ng Starling sa build ng Amber, hindi na nakadikit mula sa labas. Ang mga built-in na module lang na talagang nasa engine ang ipinapakita ng Mods screen.
+~ Naka-off ang Compile button sa loob ng Starling, dahil papalitan nito ang engine ng Amber ng build ng ibang tao. Hindi pa kasama ang limang mod na hindi malinaw ang lisensya (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block).
+[pt]
++ Os mods nativos do Starling agora são compilados diretamente dentro do motor pela compilação do Amber, e não mais acrescentados por fora. A tela de Mods mostra apenas os módulos integrados que realmente estão no motor.
+~ O botão Compile dentro do Starling foi desativado, porque ele sobrescreveria o motor do Amber com uma compilação de terceiros. Cinco mods com licença pouco clara (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) ainda não estão incluídos.
+[th]
++ ม็อดเนทีฟของ Starling ถูกคอมไพล์รวมเข้าเอนจินโดยตรงจากการบิลด์ของ Amber แล้ว ไม่ใช่การแปะจากภายนอกอีกต่อไป หน้าม็อดจะแสดงเฉพาะโมดูลที่มีอยู่ในเอนจินจริงเท่านั้น
+~ ปุ่ม Compile ในเกม Starling ถูกปิดไว้ เพราะจะเขียนทับเอนจินของ Amber ด้วยตัวที่บุคคลที่สามบิลด์ ม็อด 5 ตัวที่ยังไม่ชัดเจนเรื่องไลเซนส์ (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) ยังไม่รวมอยู่ด้วย
+[vi]
++ Mod native của Starling giờ được bản dựng của Amber biên dịch thẳng vào engine, không còn là phần gắn thêm từ bên ngoài. Màn hình Mod chỉ liệt kê các mô-đun tích hợp thực sự có trong engine.
+~ Nút Compile trong game Starling đã bị tắt vì nó sẽ ghi đè engine của Amber bằng bản dựng của bên thứ ba. Năm mod có giấy phép chưa rõ ràng (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) chưa được đưa vào.
+[zh]
++ Starling 原生模组现在由 Amber 的构建直接编译进引擎，不再是从外部“贴”上去的。模组界面只显示引擎里真正存在的内置模块。
+~ Starling 游戏内的 Compile 按钮已关闭，因为它会用第三方构建的版本覆盖 Amber 的引擎。有五个许可证不明确的模组（Veinminer、AppleSkin、RightClickHarvest、Beautiful Day Counter、Carry Block）暂未包含。

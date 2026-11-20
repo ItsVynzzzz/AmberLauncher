@@ -199,6 +199,19 @@ PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
 NDK_VERSION="$(prop ndk)"
 NDK_VERSION="${NDK_VERSION:-28.2.13676358}"
 
+# Starling: mod native (id folder di native-mods/ pada sumber) yang dikompilasi ke dalam pustaka mesin oleh build ini,
+# lewat horizon-mixins seperti native_build.sh milik sumber (docs/rust-engine.md). Dipisah spasi atau koma. Kosong =
+# pustaka tanpa mod. Tanpa ini mod bawaan Starling tidak ada di pustakanya: build_apk.py hanya menjalankan `cargo ndk`.
+NATIVE_MODS=""
+if [ "$ENGINE_NAME" = starling ]; then
+  NATIVE_MODS="${HORIZON_ENGINE_NATIVE_MODS-$(prop native_mods)}"
+  NATIVE_MODS="$(printf '%s' "$NATIVE_MODS" | tr 'A-Z,' 'a-z ' | tr -s '[:space:]' ' ' | sed -E 's/^ +//; s/ +$//')"
+  NATIVE_RE='^[a-z0-9_]{1,64}( [a-z0-9_]{1,64})*$'
+  [[ -z $NATIVE_MODS || $NATIVE_MODS =~ $NATIVE_RE ]] \
+    || die "native_mods hanya boleh berisi id (huruf kecil, angka, garis bawah) dipisah spasi atau koma."
+  NATIVE_MODS="$(printf '%s\n' $NATIVE_MODS | sort -u | tr '\n' ' ' | sed 's/ $//')"
+fi
+
 # 8 digit pertama hash isi perubahan Amber di folder $1 (nama dan isi tiap .diff, urut nama). HARUS sama dengan
 # patch_hash() di scripts/fetch-horizon-engine.sh.
 patch_hash() {
@@ -228,6 +241,8 @@ engine_tag() {
   # dibangun ulang otomatis.
   REVISION="$(prop revision)"
   [ -z "$REVISION" ] || TAG="$TAG-r$REVISION"
+  # Daftar mod native (hanya Starling) ikut tanda: mengubahnya berarti mesin baru.
+  [ -z "$NATIVE_MODS" ] || TAG="$TAG-m$(printf '%s' "$NATIVE_MODS" | sha256sum | cut -c1-6)"
 }
 
 # --print-tag: hanya cetak tanda Release, tanpa membuat folder, mengunduh, atau membangun apa pun.
@@ -463,6 +478,135 @@ if [ "$LAYOUT" = starling ]; then
   echo "cargo-ndk: $(cargo ndk --version)"
 fi
 
+# ---- 2b. Mod native (hanya Starling) ----
+# Sama dengan packaging/android/native_build.sh milik sumber, yang dipakai CI-nya untuk APK Dev "dengan mod bawaan":
+# bundel di native-mods/<id>/mixins/<id> disisipkan ke kode game oleh horizon-mixins, lalu pustaka dikompilasi dari
+# hasilnya. Bedanya, sumbernya adalah sumber yang SUDAH diberi perubahan Amber (native_build.sh membaca commit bersih),
+# dan hasilnya tidak menjadi APK melainkan pustaka yang dikemas seperti biasa.
+TARGET_DIR="$WORK/target"
+[ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
+MIN_SDK=26
+if [ "$LAYOUT" = starling ]; then
+  MIN_SDK="$(sed -n 's/^MIN_SDK *= *\([0-9][0-9]*\).*/\1/p' "$SRC/packaging/android/build_apk.py" | head -n 1)"
+  MIN_SDK="${MIN_SDK:-26}"
+fi
+LIB="$TARGET_DIR/aarch64-linux-android/$PROFILE/libhorizon_android.so"
+
+# Kompilasi pustaka Starling dari folder sumber $1: perintah dan flag yang sama dengan build_library() di
+# packaging/android/build_apk.py (halaman 16 KB dan BuildId di pustaka). AMBER_EMBEDDED dibaca patch amber5 saat
+# kompilasi (native_builds.rs): tanpa tombol Compile ke server pihak ketiga di mesin milik Amber.
+compile_starling() {
+  (cd "$1" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off \
+    ANDROID_NDK_HOME="$NDK_HOME" ANDROID_HOME="$SDK_ROOT" \
+    HORIZON_ANDROID_BUILD_COMMIT="$COMMIT" HORIZON_ANDROID_BUILD_DIRTY=false \
+    AMBER_EMBEDDED=1 \
+    RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--build-id=sha1" \
+    cargo ndk -t arm64-v8a --platform "$MIN_SDK" build --profile "$PROFILE" -p horizon-android)
+}
+
+# Menyusun mod native ke salinan sumber lalu mengompilasinya. Dipanggil di dalam `if`, jadi `set -e` tidak berlaku di
+# sini: tiap langkah yang bisa gagal diakhiri `|| return 1`. Gagal = pemanggil membangun tanpa mod (tidak fatal).
+native_mods_build() {
+  local rev git_url work stage mods tools id bundle manifest lib_line lib_attr
+  rev="$(sed -n 's/^MIXINS_REV=\([0-9a-f]\{40\}\).*/\1/p' "$SRC/packaging/android/native_build.sh" | head -n 1)"
+  git_url="$(sed -n 's|^MIXINS_GIT=\(https://[^ ]*\).*|\1|p' "$SRC/packaging/android/native_build.sh" | head -n 1)"
+  [[ $rev =~ ^[0-9a-f]{40}$ && -n $git_url ]] \
+    || { echo "native_mods: MIXINS_REV atau MIXINS_GIT tidak terbaca dari packaging/android/native_build.sh."; return 1; }
+  [ -f "$SRC/packaging/android/native_mod_adapt.py" ] \
+    || { echo "native_mods: packaging/android/native_mod_adapt.py tidak ada di sumber."; return 1; }
+  tools="$WORK/mixins-tools"
+  work="$WORK/native-src"
+  stage="$WORK/native-stage"
+  mods="$WORK/native-mods"
+  rm -rf "$work" "$stage" "$mods"
+  mkdir -p "$work" "$mods"
+
+  if [ ! -x "$tools/bin/horizon-mixins" ]; then
+    logged cargo install --locked --git "$git_url" --rev "$rev" --root "$tools" horizon-mixins-cli || return 1
+  fi
+  [ -x "$tools/bin/horizon-mixins" ] || { echo "native_mods: horizon-mixins tidak terpasang."; return 1; }
+
+  # Sumber (dengan perubahan Amber) tanpa .git dan tanpa tautan: horizon-mixins menolak tautan.
+  (cd "$SRC" && tar --exclude=./.git --exclude=./target -cf - .) | tar -xf - -C "$work" || return 1
+  find "$work" -type l -delete
+  printf '%s\n' "$COMMIT" > "$work/.horizon-revision"
+
+  # Modul game dikompilasi oleh dua crate (biner horizon-client dan horizon-android lewat android_lib.rs), dan
+  # horizon-mixins menolak tujuan modul yang dicapai lewat dua nama: selama merencanakan, pustaka horizon-android
+  # berupa berkas kosong dan lib.rs kehilangan atribut bersyaratnya (tidak berpengaruh di Android).
+  manifest=crates/horizon-android/Cargo.toml
+  lib_line='path = "../horizon-client/src/android_lib.rs"'
+  grep -qxF "$lib_line" "$work/$manifest" \
+    || { echo "native_mods: $manifest tidak lagi berisi: $lib_line"; return 1; }
+  sed -i 's|^path = "../horizon-client/src/android_lib.rs"$|path = "plan-stub.rs"|' "$work/$manifest" || return 1
+  : > "$work/crates/horizon-android/plan-stub.rs"
+  lib_attr='#![cfg_attr(not(target_os = "android"), forbid(unsafe_code))]'
+  grep -qxF "$lib_attr" "$work/crates/horizon-client/src/lib.rs" \
+    || { echo "native_mods: crates/horizon-client/src/lib.rs tidak lagi berisi: $lib_attr"; return 1; }
+  grep -vxF "$lib_attr" "$work/crates/horizon-client/src/lib.rs" > "$WORK/native-lib.rs" || return 1
+  cp "$WORK/native-lib.rs" "$work/crates/horizon-client/src/lib.rs" || return 1
+
+  # Bundel, tiap satu dipatok ke commit yang dibangun (commit Starling bukan commit Horizon).
+  for id in $NATIVE_MODS; do
+    bundle="$SRC/native-mods/$id/mixins/$id"
+    [ -f "$bundle/horizon-mixin.toml" ] \
+      || { echo "native_mods: '$id' tidak ada di sumber (native-mods/$id/mixins/$id/horizon-mixin.toml)."; return 1; }
+    cp -r "$bundle" "$mods/$id" || return 1
+    sed -i -E "s|^horizon_revision = \"[0-9a-f]*\"|horizon_revision = \"$COMMIT\"|" "$mods/$id/horizon-mixin.toml" || return 1
+  done
+  python3 "$SRC/packaging/android/native_mod_adapt.py" "$work" "$mods" || return 1
+
+  logged cargo fetch --locked --manifest-path "$work/Cargo.toml" || return 1
+  logged "$tools/bin/horizon-mixins" apply --workspace "$work" --mods "$mods" --out "$stage" || return 1
+  # Manifest horizon-android kembali membangun android_lib.rs.
+  cp "$SRC/$manifest" "$stage/$manifest" || return 1
+
+  rm -f "$LIB"
+  compile_starling "$stage" || return 1
+  [ -f "$LIB" ] || { echo "native_mods: kompilasi selesai tetapi pustaka tidak ada: $LIB"; return 1; }
+  return 0
+}
+
+# Id yang diminta harus modul bawaan sumber (BUILTIN_NATIVE_MODS di build_apk.py, yang juga memeriksanya di tahap 3);
+# diperiksa di sini supaya salah ketik gagal sekarang, bukan setelah kompilasi berjam-jam.
+if [ "$LAYOUT" = starling ] && [ -n "$NATIVE_MODS" ]; then
+  python3 - "$SRC/packaging/android/build_apk.py" > "$WORK/builtin-native-mods.txt" <<'PY' || die "BUILTIN_NATIVE_MODS tidak terbaca dari packaging/android/build_apk.py."
+import ast, sys
+tree = ast.parse(open(sys.argv[1], encoding="utf-8").read())
+for node in tree.body:
+    if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "BUILTIN_NATIVE_MODS" for t in node.targets):
+        print(" ".join(ast.literal_eval(node.value)))
+PY
+  BUILTIN_IDS="$(cat "$WORK/builtin-native-mods.txt")"
+  [ -n "$BUILTIN_IDS" ] || die "BUILTIN_NATIVE_MODS kosong atau tidak ditemukan di packaging/android/build_apk.py."
+  for id in $NATIVE_MODS; do
+    case " $BUILTIN_IDS " in
+      *" $id "*) ;;
+      *) die "native_mods: '$id' bukan modul bawaan sumber. Yang ada: $BUILTIN_IDS" ;;
+    esac
+  done
+fi
+
+NATIVE_COMPILED=""
+NATIVE_STATE="tidak diminta"
+NATIVE_NOTE=""
+LIB_BUILT=0
+if [ "$LAYOUT" = starling ] && [ -n "$NATIVE_MODS" ]; then
+  phase 02b-mod-native "2b/6 Kompilasi Starling dengan mod native di dalamnya (horizon-mixins)"
+  echo "Mod native diminta: $NATIVE_MODS"
+  if native_mods_build; then
+    NATIVE_COMPILED="$NATIVE_MODS"
+    NATIVE_STATE="dibuat"
+    LIB_BUILT=1
+    echo "Mod native masuk ke pustaka: $NATIVE_COMPILED"
+  else
+    NATIVE_STATE="gagal"
+    NATIVE_NOTE="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | { grep -E '^(error|Error|ERROR)|native_mods:|panicked' || true; } | head -n 15)"
+    echo "::warning title=Mod native Starling gagal dikompilasi::Mesin dibangun TANPA mod native; sisanya tetap jalan. Lihat tahap 2b di log."
+    rm -f "$LIB"
+  fi
+fi
+
 # ---- 3. Data ----
 phase 03-data "3/6 Siapkan tabel data (unduh berkas Mojang sementara, jalankan eksporter)"
 if [ "$LAYOUT" = starling ]; then
@@ -472,7 +616,8 @@ if [ "$LAYOUT" = starling ]; then
   STARLING_OUT="$WORK/starling-out"
   rm -rf "$STARLING_OUT"
   mkdir -p "$STARLING_OUT"
-  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off JAVA_HOME="$JDK" PATH="$JDK/bin:$PATH" python3 - "$SRC" "$STARLING_OUT" <<'PY'
+  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off JAVA_HOME="$JDK" PATH="$JDK/bin:$PATH" \
+    STARLING_APK_NATIVE_MODS="$NATIVE_COMPILED" python3 - "$SRC" "$STARLING_OUT" <<'PY'
 import pathlib
 import sys
 sys.path.insert(0, sys.argv[1] + "/packaging/android")
@@ -519,17 +664,13 @@ fi
 
 # ---- 4. Kompilasi ----
 phase 04-kompilasi "4/6 Kompilasi mesin Rust (arm64, profil $PROFILE)"
-TARGET_DIR="$WORK/target"
-[ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
 if [ "$LAYOUT" = starling ]; then
-  MIN_SDK="$(sed -n 's/^MIN_SDK *= *\([0-9][0-9]*\).*/\1/p' "$SRC/packaging/android/build_apk.py" | head -n 1)"
-  MIN_SDK="${MIN_SDK:-26}"
-  # Sama seperti build_library() di packaging/android/build_apk.py: halaman 16 KB dan BuildId di pustaka.
-  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off \
-    ANDROID_NDK_HOME="$NDK_HOME" ANDROID_HOME="$SDK_ROOT" \
-    HORIZON_ANDROID_BUILD_COMMIT="$COMMIT" HORIZON_ANDROID_BUILD_DIRTY=false \
-    RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--build-id=sha1" \
-    cargo ndk -t arm64-v8a --platform "$MIN_SDK" build --profile "$PROFILE" -p horizon-android)
+  # Sudah dikompilasi di tahap 2b bila mod native berhasil disusun; selain itu (tanpa mod, atau gagal) tanpa mod.
+  if [ "$LIB_BUILT" = 1 ]; then
+    echo "Pustaka sudah dikompilasi di tahap 2b (dengan mod native): $NATIVE_COMPILED"
+  else
+    compile_starling "$SRC"
+  fi
 else
   (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
     --abi arm64-v8a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK")
@@ -646,6 +787,7 @@ if [ "$PUBLISH" = 1 ]; then
     echo "- Sumber: $REPO"
     echo "- Commit: \`$COMMIT\`"
     [ -z "$PATCH_SET" ] || echo "- Perubahan Amber pada sumber: \`$PATCH_SET\`, isi \`$PATCH_HASH\` (third_party/horizon-patches/$PATCH_SET)"
+    [ -z "$NATIVE_COMPILED" ] || echo "- Mod native di dalam pustaka: $NATIVE_COMPILED"
     echo "- Profil: $PROFILE, NDK $NDK_VERSION, $(rustc --version)"
     echo
     echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"
@@ -677,6 +819,21 @@ val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
   echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
   if [ "$LAYOUT" = starling ]; then
     echo "- Pustaka pendamping: $(val extras)"
+    case "$NATIVE_STATE" in
+      dibuat) echo "- Mod native di dalam pustaka: $NATIVE_COMPILED" ;;
+      gagal)
+        echo "- Mod native: **GAGAL dikompilasi**; mesin dibangun TANPA mod (diminta: $NATIVE_MODS). Layar Mod Amber akan menampilkan tanpa modul bawaan."
+        if [ -n "$NATIVE_NOTE" ]; then
+          echo
+          echo "Baris galat tahap 2b:"
+          echo
+          echo '```'
+          printf '%s\n' "$NATIVE_NOTE"
+          echo '```'
+        fi
+        ;;
+      *) echo "- Mod native: tidak diminta (native_mods kosong), pustaka tanpa mod." ;;
+    esac
   else
     echo "- \`engine-data.zip\`: $(val data_bytes) byte"
   fi

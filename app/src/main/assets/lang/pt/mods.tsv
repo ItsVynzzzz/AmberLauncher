@@ -202,3 +202,7 @@ Pasang	Instalar
 Tema	Tema
 Klasik	Cl\u00e1ssico
 Home	In\u00edcio
+# Mod native Starling dibangun oleh CI Amber
+Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Mods nativos n\u00e3o s\u00e3o ativados por aqui: eles entram no jogo pela compila\u00e7\u00e3o do motor do Amber (native_mods), n\u00e3o pelo Compile no celular.
+Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Mod nativo (.hnmod). Ainda n\u00e3o est\u00e1 no jogo: mods nativos entram pela compila\u00e7\u00e3o do motor do Amber, n\u00e3o pelo Compile no celular.
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mods do Starling: .hmod (conte\u00fado, ou com c\u00f3digo nativo) e .hnmod (mods nativos), n\u00e3o .jar do Fabric ou Forge. Mods WebAssembly (mod.wasm) n\u00e3o funcionam mais no Starling. Os m\u00f3dulos nativos integrados j\u00e1 s\u00e3o compilados no motor pela compila\u00e7\u00e3o do Amber e s\u00e3o ativados pelos interruptores da lista. O Compile dentro do jogo est\u00e1 desativado, ent\u00e3o um arquivo .hnmod instalado s\u00f3 fica guardado.

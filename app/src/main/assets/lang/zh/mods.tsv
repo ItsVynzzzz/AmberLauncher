@@ -198,3 +198,7 @@ Game	游戏
 Pasang	安装
 Klasik	经典
 Resource Pack (.zip)	资源包（.zip）
+# Mod native Starling dibangun oleh CI Amber
+Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	原生模组无法在这里开启：它们通过 Amber 的引擎构建（native_mods）进入游戏，而不是在手机上点“Compile”。
+Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	原生模组（.hnmod）。尚未进入游戏：原生模组通过 Amber 的引擎构建进入游戏，而不是在手机上 Compile。
+Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Starling 模组：.hmod（内容，或带原生代码）和 .hnmod（原生模组），不是 Fabric 或 Forge 的 .jar。WebAssembly 模组（mod.wasm）在 Starling 上不再运行。内置原生模块已由 Amber 的构建编译进引擎，通过列表中的开关启用。游戏内的 Compile 已关闭，因此安装的 .hnmod 文件只会被保存。

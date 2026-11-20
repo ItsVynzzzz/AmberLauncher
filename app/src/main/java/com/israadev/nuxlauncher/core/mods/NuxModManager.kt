@@ -11,6 +11,7 @@ import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.utils.SafePaths
@@ -149,7 +150,9 @@ object NuxModManager {
         }
         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
         if (HorizonEngine.isRust(instance.loader)) {
-            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType)
+            // Starling: modul bawaan yang tampil hanya yang benar-benar ada di pustaka mesin yang dibangun Amber.
+            val compiled = if (StarlingEngine.isEngine(instance.loader)) StarlingEngine.compiledNativeMods(context) else null
+            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType, compiled)
         }
         val targetDir = getTargetDir(context, instance, itemType, worldName)
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)

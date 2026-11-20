@@ -131,9 +131,12 @@ object HorizonContent {
     // Daftar terpasang
     // ------------------------------------------------------------------------------------------
 
-    /** Berkas shader / resource pack di folder mesin, lengkap dengan status "dipilih" dari berkas pengaturan. */
-    fun installed(home: File, itemType: String): List<InstalledModItem> {
-        if (itemType == TYPE_MODS) return HorizonMods.installed(home)
+    /**
+     * Berkas shader / resource pack di folder mesin, lengkap dengan status "dipilih" dari berkas pengaturan.
+     * [compiledNative]: lihat [HorizonMods.installed] (hanya dipakai untuk daftar mod Starling).
+     */
+    fun installed(home: File, itemType: String, compiledNative: Set<String>? = null): List<InstalledModItem> {
+        if (itemType == TYPE_MODS) return HorizonMods.installed(home, compiledNative)
         if (!supports(itemType)) return emptyList()
         val files = dirFor(home, itemType).listFiles() ?: return emptyList()
         val on = enabledNames(home, itemType)

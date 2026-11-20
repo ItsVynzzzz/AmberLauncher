@@ -1,0 +1,23 @@
+diff --git a/crates/horizon-client/src/game/native_builds.rs b/crates/horizon-client/src/game/native_builds.rs
+index 3e3b6853d6..a7d215af8a 100644
+--- a/crates/horizon-client/src/game/native_builds.rs
++++ b/crates/horizon-client/src/game/native_builds.rs
+@@ -59,8 +59,17 @@ const SHOWN: usize = 4;
+ const ID: &str = "starling-native-builds";
+ 
+ // The hosted build service and prebuilt libraries currently target ARM64 only.
+-const SERVICE_SUPPORTED: bool = cfg!(target_arch = "aarch64");
++// AmberLauncher: AMBER_EMBEDDED is set (at build time) when the app builds this game itself. Amber
++// compiles the native mods it ships into the game's library, and a library from a build service is
++// made from another source, without Amber's changes, and would replace this one on the phone. So
++// there is no Compile here: the Mods page lists the mods built in, and nothing offers the service.
++const SERVICE_SUPPORTED: bool =
++    cfg!(target_arch = "aarch64") && option_env!("AMBER_EMBEDDED").is_none();
+ fn unsupported() -> String {
++    if option_env!("AMBER_EMBEDDED").is_some() {
++        return "AmberLauncher builds the native mods into this game. One that is not built in can't be added on the phone."
++            .to_owned();
++    }
+     horizon_client::lang::tr("starling.native_builds.arm64_only", &[])
+ }
+ 

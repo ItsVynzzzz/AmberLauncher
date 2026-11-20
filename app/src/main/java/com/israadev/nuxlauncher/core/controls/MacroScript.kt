@@ -37,8 +37,17 @@ sealed class MacroStep {
 }
 
 /**
- * Contoh siap pakai di editor. [title] dan [description] juga kunci terjemahan; [emoji] hanya hiasan
- * di kartu contoh.
+ * Satu slot hotbar yang dipilih pengguna sebelum contoh dipakai. [label] juga kunci terjemahan;
+ * [default] = nomor slot awal (1-9).
+ */
+class MacroSlot(val label: String, val default: Int)
+
+/**
+ * Contoh siap pakai di editor. [title], [description], [group], dan label slot juga kunci
+ * terjemahan; [emoji] hanya hiasan di kartu contoh.
+ *
+ * Contoh yang butuh pindah slot hotbar memakai penanda `{0}`, `{1}`, ... di [steps] (urutannya sama
+ * dengan [slots]); [withSlots] menggantinya dengan tombol angka hotbar pilihan pengguna.
  */
 class MacroTemplate(
     val title: String,
@@ -47,8 +56,24 @@ class MacroTemplate(
     val repeat: Int = 1,
     val loopDelayMs: Int = 0,
     val description: String = "",
-    val emoji: String = ""
-)
+    val emoji: String = "",
+    val group: String = "",
+    val slots: List<MacroSlot> = emptyList()
+) {
+    /** Salinan dengan penanda slot di [steps] diganti tombol angka hotbar dari [chosen] (1-9). */
+    fun withSlots(chosen: List<Int>): MacroTemplate {
+        if (slots.isEmpty()) return this
+        val resolved = steps.map { token ->
+            var out = token
+            for (i in slots.indices) {
+                val slot = chosen.getOrNull(i) ?: slots[i].default
+                out = out.replace("{$i}", MacroScript.hotbarKey(slot).toString())
+            }
+            out
+        }
+        return MacroTemplate(title, resolved, runMode, repeat, loopDelayMs, description, emoji, group, emptyList())
+    }
+}
 
 /**
  * Bahasa makro: tiap langkah disimpan sebagai teks pendek `OP:ARG[:ARG2]` di
@@ -164,6 +189,9 @@ object MacroScript {
         return total
     }
 
+    /** Kode tombol angka untuk slot hotbar [slot] (1-9): 1 = GLFW_KEY_1, ..., 9 = GLFW_KEY_9. */
+    fun hotbarKey(slot: Int): Int = LwjglGlfwKeycode.GLFW_KEY_1 + (slot.coerceIn(1, 9) - 1)
+
     // ---- Untuk editor ----
 
     /**
@@ -227,21 +255,24 @@ object MacroScript {
             steps = listOf("MDOWN:0", "WAIT:1000"),
             runMode = MacroRunMode.TOGGLE,
             description = "Menahan klik kiri terus-menerus untuk menggali atau menyerang.",
-            emoji = "\u26cf\ufe0f"
+            emoji = "\u26cf\ufe0f",
+            group = "Dasar"
         ),
         MacroTemplate(
             title = "Auto Klik Kanan",
             steps = listOf("CLICK:1", "WAIT:150"),
             runMode = MacroRunMode.TOGGLE,
             description = "Klik kanan berulang, cocok untuk membangun atau memancing.",
-            emoji = "\ud83d\uddb1\ufe0f"
+            emoji = "\ud83d\uddb1\ufe0f",
+            group = "Dasar"
         ),
         MacroTemplate(
             title = "Lompat Terus",
             steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:450"),
             runMode = MacroRunMode.TOGGLE,
             description = "Melompat terus-menerus tanpa berhenti.",
-            emoji = "\ud83e\udd98"
+            emoji = "\ud83e\udd98",
+            group = "Dasar"
         ),
         MacroTemplate(
             title = "Lari + Lompat",
@@ -253,14 +284,16 @@ object MacroScript {
             ),
             runMode = MacroRunMode.TOGGLE,
             description = "Berlari sambil melompat terus (bunny hop).",
-            emoji = "\ud83c\udfc3"
+            emoji = "\ud83c\udfc3",
+            group = "Dasar"
         ),
         MacroTemplate(
             title = "Makan",
             steps = listOf("MHOLD:1:1800"),
             runMode = MacroRunMode.ONCE,
             description = "Menahan klik kanan 1,8 detik untuk makan atau minum.",
-            emoji = "\ud83c\udf56"
+            emoji = "\ud83c\udf56",
+            group = "Dasar"
         ),
         MacroTemplate(
             title = "Buang Item x10",
@@ -268,7 +301,130 @@ object MacroScript {
             runMode = MacroRunMode.ONCE,
             repeat = 10,
             description = "Membuang item 10 kali berturut-turut.",
-            emoji = "\ud83d\uddd1\ufe0f"
+            emoji = "\ud83d\uddd1\ufe0f",
+            group = "Dasar"
+        ),
+        // ---- Crystal PvP ----
+        MacroTemplate(
+            title = "Crystal Spam",
+            steps = listOf("CLICK:1", "WAIT:45", "CLICK:0", "WAIT:45"),
+            runMode = MacroRunMode.TOGGLE,
+            description = "Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.",
+            emoji = "\ud83d\udc8e",
+            group = "Crystal PvP"
+        ),
+        MacroTemplate(
+            title = "Crystal Combo",
+            steps = listOf(
+                "TAP:{0}", "WAIT:60", "CLICK:1", "WAIT:60",
+                "TAP:{1}", "WAIT:60", "CLICK:1", "WAIT:60",
+                "CLICK:0"
+            ),
+            runMode = MacroRunMode.ONCE,
+            description = "Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.",
+            emoji = "\ud83d\udca5",
+            group = "Crystal PvP",
+            slots = listOf(MacroSlot("Slot obsidian", 3), MacroSlot("Slot end crystal", 2))
+        ),
+        MacroTemplate(
+            title = "Anchor Bomb",
+            steps = listOf(
+                "TAP:{0}", "WAIT:60", "CLICK:1", "WAIT:60",
+                "TAP:{1}", "WAIT:60", "CLICK:1", "WAIT:60",
+                "TAP:{0}", "WAIT:60", "CLICK:1"
+            ),
+            runMode = MacroRunMode.ONCE,
+            description = "Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.",
+            emoji = "\u2693",
+            group = "Crystal PvP",
+            slots = listOf(MacroSlot("Slot respawn anchor", 4), MacroSlot("Slot glowstone", 5))
+        ),
+        // ---- Elytra + Spear ----
+        MacroTemplate(
+            title = "Roket + Spear",
+            steps = listOf("TAP:{0}", "WAIT:70", "CLICK:1", "WAIT:70", "TAP:{1}"),
+            runMode = MacroRunMode.ONCE,
+            description = "Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.",
+            emoji = "\ud83d\ude80",
+            group = "Elytra + Spear",
+            slots = listOf(MacroSlot("Slot roket", 2), MacroSlot("Slot spear", 1))
+        ),
+        MacroTemplate(
+            title = "Roket Otomatis + Spear",
+            steps = listOf("TAP:{0}", "WAIT:70", "CLICK:1", "WAIT:70", "TAP:{1}"),
+            runMode = MacroRunMode.TOGGLE,
+            loopDelayMs = 1200,
+            description = "Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.",
+            emoji = "\ud83e\udd85",
+            group = "Elytra + Spear",
+            slots = listOf(MacroSlot("Slot roket", 2), MacroSlot("Slot spear", 1))
+        ),
+        MacroTemplate(
+            title = "Roket + Charge Spear",
+            steps = listOf("TAP:{0}", "WAIT:70", "CLICK:1", "WAIT:70", "TAP:{1}", "WAIT:70", "MHOLD:1:900"),
+            runMode = MacroRunMode.TOGGLE,
+            loopDelayMs = 100,
+            description = "Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.",
+            emoji = "\ud83d\udd31",
+            group = "Elytra + Spear",
+            slots = listOf(MacroSlot("Slot roket", 2), MacroSlot("Slot spear", 1))
+        ),
+        // ---- PvP Umum ----
+        MacroTemplate(
+            title = "Totem Cepat",
+            steps = listOf(
+                "TAP:{0}", "WAIT:50",
+                "TAP:${LwjglGlfwKeycode.GLFW_KEY_F}", "WAIT:50",
+                "TAP:{1}"
+            ),
+            runMode = MacroRunMode.ONCE,
+            description = "Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.",
+            emoji = "\ud83d\udee1\ufe0f",
+            group = "PvP Umum",
+            slots = listOf(MacroSlot("Slot totem", 9), MacroSlot("Slot senjata", 1))
+        ),
+        MacroTemplate(
+            title = "Makan Gapple + Balik",
+            steps = listOf("TAP:{0}", "WAIT:60", "MHOLD:1:1750", "WAIT:40", "TAP:{1}"),
+            runMode = MacroRunMode.ONCE,
+            description = "Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.",
+            emoji = "\ud83c\udf4e",
+            group = "PvP Umum",
+            slots = listOf(MacroSlot("Slot golden apple", 3), MacroSlot("Slot senjata", 1))
+        ),
+        MacroTemplate(
+            title = "Lempar Pearl / Potion + Balik",
+            steps = listOf("TAP:{0}", "WAIT:60", "CLICK:1", "WAIT:60", "TAP:{1}"),
+            runMode = MacroRunMode.ONCE,
+            description = "Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.",
+            emoji = "\ud83d\udd2e",
+            group = "PvP Umum",
+            slots = listOf(MacroSlot("Slot item lempar", 4), MacroSlot("Slot senjata", 1))
+        ),
+        MacroTemplate(
+            title = "Axe Swap",
+            steps = listOf("TAP:{0}", "WAIT:50", "CLICK:0", "WAIT:50", "TAP:{1}"),
+            runMode = MacroRunMode.ONCE,
+            description = "Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.",
+            emoji = "\ud83e\ude93",
+            group = "PvP Umum",
+            slots = listOf(MacroSlot("Slot kapak", 2), MacroSlot("Slot pedang", 1))
+        ),
+        MacroTemplate(
+            title = "Crit Jump",
+            steps = listOf("TAP:${LwjglGlfwKeycode.GLFW_KEY_SPACE}", "WAIT:300", "CLICK:0"),
+            runMode = MacroRunMode.ONCE,
+            description = "Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.",
+            emoji = "\u26a1",
+            group = "PvP Umum"
+        ),
+        MacroTemplate(
+            title = "S-Tap",
+            steps = listOf("HOLD:${LwjglGlfwKeycode.GLFW_KEY_S}:70"),
+            runMode = MacroRunMode.ONCE,
+            description = "Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.",
+            emoji = "\ud83d\udc5f",
+            group = "PvP Umum"
         )
     )
 

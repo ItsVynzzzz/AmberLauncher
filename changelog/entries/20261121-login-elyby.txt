@@ -1,0 +1,4 @@
+[id]
+~ Login Ely.by kini memakai email atau username dan password (mendukung verifikasi dua langkah 2FA), menggantikan login lewat browser yang selalu gagal dengan galat invalid_client. Tombol Segarkan login juga berlaku untuk akun Ely.by.
+[en]
+~ Ely.by sign-in now uses your email or username and password (two-factor authentication is supported), replacing the browser sign-in that always failed with an invalid_client error. Refresh login now works for Ely.by accounts too.

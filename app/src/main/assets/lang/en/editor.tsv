@@ -175,3 +175,36 @@ Mengganti urutan yang sekarang. Lanjutkan?	This replaces the current sequence. C
 Ya, ganti	Yes, replace
 Buat Urutan Aksi	Create Action Sequence
 Atur Urutan Aksi	Edit Action Sequence
+# Contoh makro PvP (Crystal, Elytra + Spear, PvP umum)
+Dasar	Basics
+PvP Umum	General PvP
+Roket + Spear	Rocket + Spear
+Roket Otomatis + Spear	Auto Rocket + Spear
+Roket + Charge Spear	Rocket + Charge Spear
+Totem Cepat	Quick Totem
+Makan Gapple + Balik	Eat Gapple + Switch Back
+Lempar Pearl / Potion + Balik	Throw Pearl / Potion + Switch Back
+Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.	Hold an end crystal and aim at obsidian: places and breaks it in turns.
+Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.	Place obsidian, put an end crystal on top, then break it. One tap.
+Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.	Place a respawn anchor, charge it with glowstone, then detonate it. One tap.
+Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.	Switch to a rocket, fire it, then go back to the spear. One tap = one boost.
+Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.	Fires rockets periodically while you keep holding the spear. Tap again to stop.
+Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.	Rocket, then the spear with right-click held for a charge attack, repeated nonstop.
+Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.	Switch to a totem, move it to your offhand, then go back to your weapon.
+Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.	Switch to a golden apple, eat it fully, then go back to your weapon.
+Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.	Switch to an ender pearl or splash potion, throw it, then go back to your weapon.
+Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.	Hit once with an axe to knock down the opponent's shield, then go back to your sword.
+Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.	Jump, then hit as you start falling (critical hit). Adjust the Wait if the timing is off.
+Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.	Tap S briefly mid-duel to reset your sprint and manage spacing.
+Slot obsidian	Obsidian slot
+Slot end crystal	End crystal slot
+Slot respawn anchor	Respawn anchor slot
+Slot glowstone	Glowstone slot
+Slot roket	Rocket slot
+Slot spear	Spear slot
+Slot totem	Totem slot
+Slot senjata	Weapon slot
+Slot golden apple	Golden apple slot
+Slot item lempar	Throwable item slot
+Slot kapak	Axe slot
+Slot pedang	Sword slot

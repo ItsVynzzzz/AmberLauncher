@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -1148,6 +1149,8 @@ private fun MbAdvancedHeader(open: Boolean, onClick: () -> Unit) {
 @Composable
 private fun MbExamplesSection(hasSteps: Boolean, onApply: (MacroTemplate) -> Unit) {
     var pending by remember { mutableIntStateOf(-1) }
+    // Slot hotbar pilihan per contoh. Kunci = indeks contoh * 10 + indeks slot; kosong = slot bawaan contoh.
+    val slotPicks = remember { mutableStateMapOf<Int, Int>() }
 
     MbSectionTitle(
         number = null,
@@ -1155,20 +1158,36 @@ private fun MbExamplesSection(hasSteps: Boolean, onApply: (MacroTemplate) -> Uni
         hint = "Ketuk contoh untuk memakainya, lalu ubah sesukamu."
     )
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        var lastGroup = ""
         MacroScript.TEMPLATES.forEachIndexed { index, template ->
+            if (template.group.isNotEmpty() && template.group != lastGroup) {
+                lastGroup = template.group
+                Text(
+                    text = template.group,
+                    color = AmberUi.TextDim,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 4.dp, top = if (index == 0) 0.dp else 8.dp)
+                )
+            }
+            val chosen = template.slots.mapIndexed { slotIndex, slot ->
+                slotPicks[index * 10 + slotIndex] ?: slot.default
+            }
             MbExampleCard(
                 template = template,
+                chosenSlots = chosen,
+                onSlotPick = { slotIndex, value -> slotPicks[index * 10 + slotIndex] = value },
                 confirming = pending == index,
                 onClick = {
                     if (hasSteps) {
                         pending = index
                     } else {
-                        onApply(template)
+                        onApply(template.withSlots(chosen))
                     }
                 },
                 onConfirm = {
                     pending = -1
-                    onApply(template)
+                    onApply(template.withSlots(chosen))
                 },
                 onCancel = { pending = -1 }
             )
@@ -1179,6 +1198,8 @@ private fun MbExamplesSection(hasSteps: Boolean, onApply: (MacroTemplate) -> Uni
 @Composable
 private fun MbExampleCard(
     template: MacroTemplate,
+    chosenSlots: List<Int>,
+    onSlotPick: (slotIndex: Int, value: Int) -> Unit,
     confirming: Boolean,
     onClick: () -> Unit,
     onConfirm: () -> Unit,
@@ -1221,6 +1242,24 @@ private fun MbExampleCard(
                 AmberTag(text = mbModeTitle(template.runMode))
             }
         }
+        template.slots.forEachIndexed { slotIndex, slot ->
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(text = slot.label, color = AmberUi.TextDim, fontSize = 12.sp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    for (n in 1..9) {
+                        MbSlotChip(
+                            number = n,
+                            selected = chosenSlots.getOrNull(slotIndex) == n,
+                            onClick = { onSlotPick(slotIndex, n) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+        }
         if (confirming) {
             Text(
                 text = "Mengganti urutan yang sekarang. Lanjutkan?",
@@ -1246,5 +1285,39 @@ private fun MbExampleCard(
                 )
             }
         }
+    }
+}
+
+/** Kotak kecil angka 1-9 untuk memilih slot hotbar di kartu contoh. */
+@Composable
+private fun MbSlotChip(
+    number: Int,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(10.dp)
+    Box(
+        modifier = modifier
+            .height(32.dp)
+            .clip(shape)
+            .then(
+                if (selected) {
+                    Modifier
+                        .background(AmberUi.Accent, shape)
+                        .border(1.dp, AmberUi.AccentEdge, shape)
+                } else {
+                    Modifier.amberGlass(shape)
+                }
+            )
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = number.toString(),
+            color = AmberUi.Text,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

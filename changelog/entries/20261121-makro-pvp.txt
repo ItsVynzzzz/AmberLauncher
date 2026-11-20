@@ -1,0 +1,4 @@
+[id]
++ Pembuat Makro punya contoh siap pakai untuk PvP: Crystal Spam, Crystal Combo, Anchor Bomb, Roket + Spear (sekali ketuk, otomatis, dan dengan charge), Totem Cepat, Makan Gapple, Lempar Pearl/Potion, Axe Swap, Crit Jump, dan S-Tap. Slot hotbar tiap contoh dipilih langsung di kartunya, jadi tidak perlu mengubah langkah satu per satu.
+[en]
++ The Macro Builder now has ready-made PvP examples: Crystal Spam, Crystal Combo, Anchor Bomb, Rocket + Spear (single tap, automatic, and with charge), Quick Totem, Eat Gapple, Throw Pearl/Potion, Axe Swap, Crit Jump and S-Tap. You pick the hotbar slot for each example right on its card, so there is no need to edit the steps one by one.

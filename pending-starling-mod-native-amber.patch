@@ -1,0 +1,682 @@
+diff --git a/app/src/main/assets/lang/en/mods.tsv b/app/src/main/assets/lang/en/mods.tsv
+index 522dddc..5ec3087 100644
+--- a/app/src/main/assets/lang/en/mods.tsv
++++ b/app/src/main/assets/lang/en/mods.tsv
+@@ -191,3 +191,7 @@ Segarkan login	Refresh login
+ Menyegarkan...	Refreshing...
+ Login berhasil disegarkan	Login refreshed
+ Gagal menyegarkan login	Failed to refresh login
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Native mods can't be turned on from here: they get into the game through Amber's engine build (native_mods), not through Compile on the phone.
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Native mod (.hnmod). Not in the game yet: native mods get in through Amber's engine build, not Compile on the phone.
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Starling mods: .hmod (content, or with native code) and .hnmod (native mods), not Fabric or Forge .jar files. WebAssembly mods (mod.wasm) no longer run on Starling. The built-in native modules are already compiled into the engine by Amber's build and are turned on with the switches in the list. Compile inside the game is turned off, so an installed .hnmod file is only stored.
+diff --git a/app/src/main/assets/lang/es/mods.tsv b/app/src/main/assets/lang/es/mods.tsv
+index 97b63d1..179bb2e 100644
+--- a/app/src/main/assets/lang/es/mods.tsv
++++ b/app/src/main/assets/lang/es/mods.tsv
+@@ -197,3 +197,7 @@ Segarkan login	Actualizar inicio de sesión
+ Menyegarkan...	Actualizando...
+ Login berhasil disegarkan	Inicio de sesión actualizado
+ Gagal menyegarkan login	No se pudo actualizar el inicio de sesión
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Los mods nativos no se activan desde aqu\u00ed: entran al juego mediante la compilaci\u00f3n del motor de Amber (native_mods), no con Compile en el tel\u00e9fono.
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Mod nativo (.hnmod). A\u00fan no est\u00e1 en el juego: los mods nativos entran mediante la compilaci\u00f3n del motor de Amber, no con Compile en el tel\u00e9fono.
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mods de Starling: .hmod (contenido, o con c\u00f3digo nativo) y .hnmod (mods nativos), no .jar de Fabric o Forge. Los mods WebAssembly (mod.wasm) ya no funcionan en Starling. Los m\u00f3dulos nativos integrados ya vienen compilados en el motor por la compilaci\u00f3n de Amber y se activan con los interruptores de la lista. Compile dentro del juego est\u00e1 desactivado, as\u00ed que un archivo .hnmod instalado solo se guarda.
+diff --git a/app/src/main/assets/lang/fil/mods.tsv b/app/src/main/assets/lang/fil/mods.tsv
+index 22a1808..a027ce3 100644
+--- a/app/src/main/assets/lang/fil/mods.tsv
++++ b/app/src/main/assets/lang/fil/mods.tsv
+@@ -198,3 +198,7 @@ Game	Game
+ Pasang	I-install
+ Klasik	Klasiko
+ Resource Pack (.zip)	Resource Pack (.zip)
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Hindi mabubuksan ang mga native mod mula rito: napapasok ang mga ito sa laro sa pamamagitan ng engine build ng Amber (native_mods), hindi sa Compile sa telepono.
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Native mod (.hnmod). Wala pa sa laro: napapasok ang mga native mod sa pamamagitan ng engine build ng Amber, hindi ng Compile sa telepono.
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mga mod ng Starling: .hmod (nilalaman, o may native code) at .hnmod (native mod), hindi .jar ng Fabric o Forge. Hindi na tumatakbo sa Starling ang mga WebAssembly mod (mod.wasm). Ang mga built-in na native module ay na-compile na sa engine ng build ng Amber at binubuksan gamit ang mga switch sa listahan. Naka-off ang Compile sa loob ng laro, kaya naka-store lang ang na-install na .hnmod file.
+diff --git a/app/src/main/assets/lang/pt/mods.tsv b/app/src/main/assets/lang/pt/mods.tsv
+index 94f69f8..7cfd02a 100644
+--- a/app/src/main/assets/lang/pt/mods.tsv
++++ b/app/src/main/assets/lang/pt/mods.tsv
+@@ -202,3 +202,7 @@ Pasang	Instalar
+ Tema	Tema
+ Klasik	Cl\u00e1ssico
+ Home	In\u00edcio
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Mods nativos n\u00e3o s\u00e3o ativados por aqui: eles entram no jogo pela compila\u00e7\u00e3o do motor do Amber (native_mods), n\u00e3o pelo Compile no celular.
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Mod nativo (.hnmod). Ainda n\u00e3o est\u00e1 no jogo: mods nativos entram pela compila\u00e7\u00e3o do motor do Amber, n\u00e3o pelo Compile no celular.
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mods do Starling: .hmod (conte\u00fado, ou com c\u00f3digo nativo) e .hnmod (mods nativos), n\u00e3o .jar do Fabric ou Forge. Mods WebAssembly (mod.wasm) n\u00e3o funcionam mais no Starling. Os m\u00f3dulos nativos integrados j\u00e1 s\u00e3o compilados no motor pela compila\u00e7\u00e3o do Amber e s\u00e3o ativados pelos interruptores da lista. O Compile dentro do jogo est\u00e1 desativado, ent\u00e3o um arquivo .hnmod instalado s\u00f3 fica guardado.
+diff --git a/app/src/main/assets/lang/th/mods.tsv b/app/src/main/assets/lang/th/mods.tsv
+index 2487629..bfca67e 100644
+--- a/app/src/main/assets/lang/th/mods.tsv
++++ b/app/src/main/assets/lang/th/mods.tsv
+@@ -196,3 +196,7 @@ Gagal menyegarkan login	รีเฟรชการเข้าสู่ระ
+ Pasang	ติดตั้ง
+ Tema	ธีม
+ Klasik	คลาสสิก
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	เปิดม็อดเนทีฟจากตรงนี้ไม่ได้ ม็อดจะเข้าเกมผ่านการบิลด์เอนจินของ Amber (native_mods) ไม่ใช่ผ่าน Compile บนมือถือ
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	ม็อดเนทีฟ (.hnmod) ยังไม่อยู่ในเกม ม็อดเนทีฟจะเข้าเกมผ่านการบิลด์เอนจินของ Amber ไม่ใช่ Compile บนมือถือ
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	ม็อด Starling: .hmod (เนื้อหา หรือมีโค้ดเนทีฟ) และ .hnmod (ม็อดเนทีฟ) ไม่ใช่ .jar ของ Fabric หรือ Forge ม็อด WebAssembly (mod.wasm) ใช้บน Starling ไม่ได้อีกแล้ว โมดูลเนทีฟที่มาพร้อมกันถูกคอมไพล์รวมเข้าเอนจินโดยการบิลด์ของ Amber แล้ว และเปิดด้วยสวิตช์ในรายการ ปุ่ม Compile ในเกมถูกปิดไว้ ไฟล์ .hnmod ที่ติดตั้งจึงถูกเก็บไว้เฉยๆ
+diff --git a/app/src/main/assets/lang/vi/mods.tsv b/app/src/main/assets/lang/vi/mods.tsv
+index caa922e..02e476c 100644
+--- a/app/src/main/assets/lang/vi/mods.tsv
++++ b/app/src/main/assets/lang/vi/mods.tsv
+@@ -197,3 +197,7 @@ Segarkan login	Làm mới đăng nhập
+ Menyegarkan...	Đang làm mới...
+ Login berhasil disegarkan	Đã làm mới đăng nhập
+ Gagal menyegarkan login	Không thể làm mới đăng nhập
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	Mod native kh\u00f4ng b\u1eadt t\u1eeb \u0111\u00e2y: mod v\u00e0o game qua b\u1ea3n d\u1ef1ng engine c\u1ee7a Amber (native_mods), kh\u00f4ng ph\u1ea3i qua Compile tr\u00ean \u0111i\u1ec7n tho\u1ea1i.
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	Mod native (.hnmod). Ch\u01b0a c\u00f3 trong game: mod native v\u00e0o game qua b\u1ea3n d\u1ef1ng engine c\u1ee7a Amber, kh\u00f4ng ph\u1ea3i Compile tr\u00ean \u0111i\u1ec7n tho\u1ea1i.
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Mod Starling: .hmod (n\u1ed9i dung, ho\u1eb7c c\u00f3 m\u00e3 native) v\u00e0 .hnmod (mod native), kh\u00f4ng ph\u1ea3i .jar c\u1ee7a Fabric hay Forge. Mod WebAssembly (mod.wasm) kh\u00f4ng c\u00f2n ch\u1ea1y tr\u00ean Starling. C\u00e1c m\u00f4-\u0111un native t\u00edch h\u1ee3p \u0111\u00e3 \u0111\u01b0\u1ee3c b\u1ea3n d\u1ef1ng c\u1ee7a Amber bi\u00ean d\u1ecbch s\u1eb5n v\u00e0o engine v\u00e0 b\u1eadt b\u1eb1ng c\u00f4ng t\u1eafc trong danh s\u00e1ch. Compile trong game \u0111\u00e3 b\u1ecb t\u1eaft, n\u00ean t\u1ec7p .hnmod \u0111\u00e3 c\u00e0i ch\u1ec9 \u0111\u01b0\u1ee3c l\u01b0u l\u1ea1i.
+diff --git a/app/src/main/assets/lang/zh/mods.tsv b/app/src/main/assets/lang/zh/mods.tsv
+index 2cdaa35..abb3c28 100644
+--- a/app/src/main/assets/lang/zh/mods.tsv
++++ b/app/src/main/assets/lang/zh/mods.tsv
+@@ -198,3 +198,7 @@ Game	游戏
+ Pasang	安装
+ Klasik	经典
+ Resource Pack (.zip)	资源包（.zip）
++# Mod native Starling dibangun oleh CI Amber
++Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP.	原生模组无法在这里开启：它们通过 Amber 的引擎构建（native_mods）进入游戏，而不是在手机上点“Compile”。
++Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP.	原生模组（.hnmod）。尚未进入游戏：原生模组通过 Amber 的引擎构建进入游戏，而不是在手机上 Compile。
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan.	Starling 模组：.hmod（内容，或带原生代码）和 .hnmod（原生模组），不是 Fabric 或 Forge 的 .jar。WebAssembly 模组（mod.wasm）在 Starling 上不再运行。内置原生模块已由 Amber 的构建编译进引擎，通过列表中的开关启用。游戏内的 Compile 已关闭，因此安装的 .hnmod 文件只会被保存。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
+index c31d13a..772314a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonContent.kt
+@@ -131,9 +131,12 @@ object HorizonContent {
+     // Daftar terpasang
+     // ------------------------------------------------------------------------------------------
+ 
+-    /** Berkas shader / resource pack di folder mesin, lengkap dengan status "dipilih" dari berkas pengaturan. */
+-    fun installed(home: File, itemType: String): List<InstalledModItem> {
+-        if (itemType == TYPE_MODS) return HorizonMods.installed(home)
++    /**
++     * Berkas shader / resource pack di folder mesin, lengkap dengan status "dipilih" dari berkas pengaturan.
++     * [compiledNative]: lihat [HorizonMods.installed] (hanya dipakai untuk daftar mod Starling).
++     */
++    fun installed(home: File, itemType: String, compiledNative: Set<String>? = null): List<InstalledModItem> {
++        if (itemType == TYPE_MODS) return HorizonMods.installed(home, compiledNative)
+         if (!supports(itemType)) return emptyList()
+         val files = dirFor(home, itemType).listFiles() ?: return emptyList()
+         val on = enabledNames(home, itemType)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonMods.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonMods.kt
+index 293ca76..fff4e46 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonMods.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/HorizonMods.kt
+@@ -22,11 +22,14 @@ import org.json.JSONObject
+  *   wajib kecuali manifest memberi kemampuan `registries` (mod konten murni).
+  *
+  * Starling (mesin Rust kedua, files/starling) punya aturan sendiri, dikenali dari nama [home] ([StarlingEngine.HOME_DIR]):
+- * - Modul bawaannya 20 modul native yang sudah dikompilasi ke pustakanya ([BUNDLED_STARLING]), bukan empat modul Horizon.
++ * - Modul bawaannya modul native ([BUNDLED_STARLING]), bukan empat modul Horizon. Yang tampil hanya yang benar-benar
++ *   dikompilasi ke dalam pustaka mesin oleh build Amber (native_mods di starling-engine.properties, dicatat di
++ *   assets/native-mods/compiled.txt; lihat [StarlingEngine.compiledNativeMods]).
+  * - Mod WebAssembly (`mod.wasm`) tidak jalan lagi di sana: `.hmod` berkode WASM ditolak, dan `.hmod` yang membawa kode
+  *   native (`horizon-native.json`) diterima.
+  * - Mod native `.hnmod` (zip berisi `horizon-native.json` dan mixin) dipasang di `horizon-native-mods/<id>.hnmod`.
+- *   Mod itu baru masuk ke game setelah dikompilasi dari dalam game (Options > Mods > Compile).
++ *   Mod native tidak bisa dikompilasi di HP (Compile di dalam game dimatikan oleh patch amber5): mod masuk ke game lewat
++ *   build mesin Amber, jadi berkas .hnmod yang dipasang di sini hanya disimpan.
+  *
+  * Tanpa Android: hanya berkas dan teks, jadi mudah diuji. [home] selalu folder data mesin.
+  */
+@@ -77,10 +80,10 @@ object HorizonMods {
+     const val MSG_NATIVE_BAD =
+         "Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah."
+     const val MSG_NATIVE_TOGGLE =
+-        "Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game."
++        "Mod native tidak dihidupkan dari sini: mod masuk ke game lewat build mesin Amber (native_mods), bukan lewat Compile di HP."
+     const val MSG_NATIVE_ONLY_STARLING = "Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya."
+     private const val NATIVE_NOTE =
+-        "Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile."
++        "Mod native (.hnmod). Belum ikut di game: mod native masuk lewat build mesin Amber, bukan Compile di HP."
+ 
+     private val OUR_MESSAGES = setOf(
+         MSG_FORMAT, MSG_TOO_BIG, MSG_EXPANDED, MSG_NO_MANIFEST, MSG_BAD_MANIFEST, MSG_NO_CODE, MSG_WASM_BIG,
+@@ -99,9 +102,10 @@ object HorizonMods {
+     )
+ 
+     /**
+-     * Modul native yang sudah dikompilasi ke dalam pustaka Starling-extras: ANDROID_BUNDLED di mod_list.rs, sama dengan
+-     * BUILTIN_NATIVE_MODS di packaging/android/build_apk.py. Mati sampai dihidupkan, dengan baris `mod.<id>:true` yang
+-     * sama seperti modul bawaan Horizon. Minimap dan worldmap sudah dihapus di sana, jadi tidak ada di daftar ini.
++     * Modul native bawaan Starling-extras: ANDROID_BUNDLED di mod_list.rs, sama dengan BUILTIN_NATIVE_MODS di
++     * packaging/android/build_apk.py. Daftar ini hanya nama dan id; modul yang ADA di pustaka mesin ini diberi tahu oleh
++     * build-nya (parameter `compiled` di [installed]). Mati sampai dihidupkan, dengan baris `mod.<id>:true` yang sama
++     * seperti modul bawaan Horizon. Minimap dan worldmap sudah dihapus di sana, jadi tidak ada di daftar ini.
+      */
+     val BUNDLED_STARLING = listOf(
+         "zoom" to "Zoom",
+@@ -146,12 +150,17 @@ object HorizonMods {
+     // Daftar terpasang
+     // ------------------------------------------------------------------------------------------
+ 
+-    /** Modul bawaan lalu berkas / folder mod di folder mesin, lengkap dengan status hidup dari horizon-mods.txt. */
+-    fun installed(home: File): List<InstalledModItem> {
++    /**
++     * Modul bawaan lalu berkas / folder mod di folder mesin, lengkap dengan status hidup dari horizon-mods.txt.
++     * [compiled] (hanya Starling): id modul native yang ada di pustaka mesin; modul bawaan di luar himpunan itu tidak
++     * ditampilkan karena sakelarnya tidak akan berbuat apa-apa. null = tampilkan semua.
++     */
++    fun installed(home: File, compiled: Set<String>? = null): List<InstalledModItem> {
+         val game = HorizonContent.gameHome(home)
+         val state = readList(game)
+         val result = ArrayList<InstalledModItem>()
+         for (b in bundledFor(home)) {
++            if (compiled != null && home.name == StarlingEngine.HOME_DIR && b.id !in compiled) continue
+             result.add(
+                 InstalledModItem(
+                     id = BUILTIN + b.id,
+@@ -240,7 +249,7 @@ object HorizonMods {
+ 
+     /** Menghidupkan atau mematikan satu mod ([fileName] dari daftar Terpasang). Berlaku saat game dibuka lagi. */
+     fun setEnabled(home: File, fileName: String, on: Boolean) {
+-        // Mod native (.hnmod) baru jalan setelah dikompilasi ke game dari dalam game; tidak ada saklar di sini.
++        // Mod native (.hnmod) tidak ada saklarnya: mod masuk ke game lewat build mesin Amber, bukan di HP.
+         if (fileName.startsWith(NATIVE_PREFIX)) throw IOException(MSG_NATIVE_TOGGLE)
+         val id = idOf(home, fileName) ?: throw IOException(MSG_NOT_FOUND)
+         writeEnabled(HorizonContent.gameHome(home), id, on)
+@@ -462,8 +471,8 @@ object HorizonMods {
+     /**
+      * Memasang mod native `.hnmod` (hanya Starling) ke `horizon-native-mods/<id>.hnmod`. Bundel diperiksa seperti
+      * mesin (Bundle::read): zip dengan `horizon-native.json` yang sah, path aman, tanpa `mod.wasm`, paling banyak 512
+-     * berkas dan 64 MB setelah dibuka. Kodenya tidak dijalankan di sini; bundel baru ikut di game setelah dikompilasi
+-     * dari dalam game. Mod dengan id yang sama diganti. Mengembalikan nama berkas akhir.
++     * berkas dan 64 MB setelah dibuka. Kodenya tidak dijalankan di sini; bundel hanya disimpan, karena mod native masuk
++     * ke game lewat build mesin Amber (bukan Compile di HP). Mod dengan id yang sama diganti. Mengembalikan nama berkas akhir.
+      */
+     fun installNative(staged: File, home: File, name: String): Result<String> {
+         return try {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+index 1c00cb1..17a6920 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+@@ -59,11 +59,11 @@ object StarlingEngine {
+ 
+     /**
+      * Nama kelas WAJIB persis ini: fungsi JNI di libstarling_android.so terikat pada nama paket dan kelasnya. Kelasnya
+-     * ada di sumber Starling (dev.horizon.android), bukan di repo ini; patch amber4 hanya mengubahnya sedikit.
++     * ada di sumber Starling (dev.horizon.android), bukan di repo ini; patch amber5 hanya mengubahnya sedikit.
+      */
+     const val ACTIVITY_CLASS = "dev.horizon.android.GameActivity"
+ 
+-    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber4).
++    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber5).
+     private const val EXTRA_DISCORD_RPC = "amber_discord_rpc"
+     private const val EXTRA_MC_VERSION = "amber_mc_version"
+ 
+@@ -119,6 +119,45 @@ object StarlingEngine {
+     fun gameInstalled(context: Context): Boolean =
+         File(engineHome(context), "minecraft/starling-files.json").isFile
+ 
++    /** Daftar mod native yang dikompilasi ke dalam pustaka mesin ini oleh build-nya (ditulis build_apk.assets). */
++    private const val COMPILED_NATIVE_ASSET = "native-mods/compiled.txt"
++
++    @Volatile
++    private var compiledNative: Set<String>? = null
++
++    /**
++     * Id mod native yang BENAR-BENAR ada di dalam pustaka mesin yang terpasang di APK ini. Dibangun oleh
++     * scripts/build-horizon-engine.sh (native_mods di starling-engine.properties) dan dicatat di
++     * `assets/native-mods/compiled.txt`; mesin membacanya lewat StarlingActivity (STARLING_APK_NATIVE_MODS). Berkas itu
++     * tidak ada bila pustakanya tanpa mod, dan hasilnya himpunan kosong: modul bawaan yang tidak ada di pustaka tidak
++     * boleh tampil sebagai saklar yang tidak berbuat apa-apa.
++     */
++    fun compiledNativeMods(context: Context): Set<String> {
++        compiledNative?.let { return it }
++        val ids = try {
++            context.applicationContext.assets.open(COMPILED_NATIVE_ASSET).use { it.readBytes().toString(Charsets.UTF_8) }
++                .split(Regex("\\s+"))
++                .filter { Regex("[a-z0-9_]{1,64}").matches(it) }
++                .toSet()
++        } catch (_: IOException) {
++            emptySet()
++        }
++        compiledNative = ids
++        return ids
++    }
++
++    /**
++     * Mesin milik Amber tidak memuat pustaka game dari server pembangun pihak ketiga (Compile di dalam game, sekarang
++     * dimatikan oleh patch amber5): sisa pilihan dari mesin sebelumnya dibuang supaya yang jalan selalu pustaka bawaan
++     * APK, yang memuat mod native hasil build Amber.
++     */
++    private fun dropForeignGameLibrary(context: Context) {
++        try {
++            File(engineHome(context), "native/current").delete()
++        } catch (_: Exception) {
++        }
++    }
++
+     /** Nama pemain offline untuk mesin: 1 sampai 16 huruf, angka, atau garis bawah (aturan akun offline Starling). */
+     private fun validEngineName(name: String): Boolean =
+         name.length in 1..16 && name.all { it in 'a'..'z' || it in 'A'..'Z' || it in '0'..'9' || it == '_' }
+@@ -227,6 +266,7 @@ object StarlingEngine {
+     private fun start(context: Context, instance: Instance, account: UserAccount): Boolean {
+         return try {
+             val firstRun = !gameInstalled(context)
++            dropForeignGameLibrary(context)
+             writeLaunchFiles(context, account)
+             if (firstRun) {
+                 Toast.makeText(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+index e33123b..c846c6b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/mods/NuxModManager.kt
+@@ -11,6 +11,7 @@ import com.israadev.nuxlauncher.core.horizon.HorizonContent
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+ import com.israadev.nuxlauncher.core.horizon.HorizonMods
+ import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
++import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.*
+ import com.israadev.nuxlauncher.core.utils.SafePaths
+@@ -149,7 +150,9 @@ object NuxModManager {
+         }
+         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
+         if (HorizonEngine.isRust(instance.loader)) {
+-            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType)
++            // Starling: modul bawaan yang tampil hanya yang benar-benar ada di pustaka mesin yang dibangun Amber.
++            val compiled = if (StarlingEngine.isEngine(instance.loader)) StarlingEngine.compiledNativeMods(context) else null
++            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType, compiled)
+         }
+         val targetDir = getTargetDir(context, instance, itemType, worldName)
+         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index a0c71b2..e763e14 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -1864,7 +1864,7 @@ private fun RustNotice(type: String, horizon: Boolean, starling: Boolean = false
+             Spacer(modifier = Modifier.height(4.dp))
+             Text(
+                 text = if (starling) {
+-                    "Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar."
++                    "Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Modul native bawaan sudah dikompilasi ke dalam mesin oleh build Amber dan hidup lewat saklar di daftar. Compile di dalam game dimatikan, jadi berkas .hnmod yang dipasang hanya disimpan."
+                 } else {
+                     "Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game."
+                 },
+diff --git a/changelog/entries/20261120-starling-mod-native-amber.txt b/changelog/entries/20261120-starling-mod-native-amber.txt
+new file mode 100644
+index 0000000..69fab29
+--- /dev/null
++++ b/changelog/entries/20261120-starling-mod-native-amber.txt
+@@ -0,0 +1,24 @@
++[id]
+++ Mod native Starling kini dikompilasi langsung ke dalam mesin oleh build Amber, bukan lagi tempelan dari luar. Layar Mod hanya menampilkan modul bawaan yang benar-benar ada di mesin.
++~ Tombol Compile di dalam game Starling dimatikan, karena akan menimpa mesin Amber dengan buatan pihak ketiga. Lima mod yang lisensinya belum jelas (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) belum disertakan.
++[en]
+++ Starling native mods are now compiled straight into the engine by Amber's build, no longer bolted on from outside. The Mods screen only lists the built-in modules that are really in the engine.
++~ The Compile button inside Starling is turned off, because it would overwrite Amber's engine with a third-party build. Five mods with unclear licenses (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) are not included yet.
++[es]
+++ Los mods nativos de Starling ahora se compilan directamente dentro del motor con la compilación de Amber, y ya no se añaden desde fuera. La pantalla de Mods solo muestra los módulos integrados que realmente están en el motor.
++~ El botón Compile dentro de Starling está desactivado, porque sobrescribiría el motor de Amber con una compilación de terceros. Cinco mods con licencia poco clara (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) aún no se incluyen.
++[fil]
+++ Direkta nang kino-compile sa loob ng engine ang mga native mod ng Starling sa build ng Amber, hindi na nakadikit mula sa labas. Ang mga built-in na module lang na talagang nasa engine ang ipinapakita ng Mods screen.
++~ Naka-off ang Compile button sa loob ng Starling, dahil papalitan nito ang engine ng Amber ng build ng ibang tao. Hindi pa kasama ang limang mod na hindi malinaw ang lisensya (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block).
++[pt]
+++ Os mods nativos do Starling agora são compilados diretamente dentro do motor pela compilação do Amber, e não mais acrescentados por fora. A tela de Mods mostra apenas os módulos integrados que realmente estão no motor.
++~ O botão Compile dentro do Starling foi desativado, porque ele sobrescreveria o motor do Amber com uma compilação de terceiros. Cinco mods com licença pouco clara (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) ainda não estão incluídos.
++[th]
+++ ม็อดเนทีฟของ Starling ถูกคอมไพล์รวมเข้าเอนจินโดยตรงจากการบิลด์ของ Amber แล้ว ไม่ใช่การแปะจากภายนอกอีกต่อไป หน้าม็อดจะแสดงเฉพาะโมดูลที่มีอยู่ในเอนจินจริงเท่านั้น
++~ ปุ่ม Compile ในเกม Starling ถูกปิดไว้ เพราะจะเขียนทับเอนจินของ Amber ด้วยตัวที่บุคคลที่สามบิลด์ ม็อด 5 ตัวที่ยังไม่ชัดเจนเรื่องไลเซนส์ (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) ยังไม่รวมอยู่ด้วย
++[vi]
+++ Mod native của Starling giờ được bản dựng của Amber biên dịch thẳng vào engine, không còn là phần gắn thêm từ bên ngoài. Màn hình Mod chỉ liệt kê các mô-đun tích hợp thực sự có trong engine.
++~ Nút Compile trong game Starling đã bị tắt vì nó sẽ ghi đè engine của Amber bằng bản dựng của bên thứ ba. Năm mod có giấy phép chưa rõ ràng (Veinminer, AppleSkin, RightClickHarvest, Beautiful Day Counter, Carry Block) chưa được đưa vào.
++[zh]
+++ Starling 原生模组现在由 Amber 的构建直接编译进引擎，不再是从外部“贴”上去的。模组界面只显示引擎里真正存在的内置模块。
++~ Starling 游戏内的 Compile 按钮已关闭，因为它会用第三方构建的版本覆盖 Amber 的引擎。有五个许可证不明确的模组（Veinminer、AppleSkin、RightClickHarvest、Beautiful Day Counter、Carry Block）暂未包含。
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 511d89c..72205d3 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -259,7 +259,7 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ ## Rencana berikutnya
+ 
+ - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
+-- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
++- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`0004` di seri `amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
+ - Akun Ely.by.
+ 
+ ## Dua mesin Rust: Horizon dan Starling
+@@ -273,7 +273,7 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ | Pustaka | `libhorizon_android.so` | `libstarling_android.so` (+ `libstarling_java.so`, `libstarling_javac.so`) |
+ | Kelas Java | `HorizonActivity` (di repo, proses `:horizon`) | `GameActivity` dan pendampingnya (dari sumber, proses `:starling`) |
+ | Folder data | `files/horizon` | `files/starling` |
+-| Perubahan Amber pada sumber | patch `amber3` (menu, makro, akun lewat `amber-launch.json`) | patch `amber4` (kecil) |
++| Perubahan Amber pada sumber | patch `amber3` (menu, makro, akun lewat `amber-launch.json`) | patch `amber5` (Java, pembaruan, mod native) |
+ | Kontrol Kotlin | `HorizonEngine` | `StarlingEngine` |
+ | Mod, shader, resource pack | layar Mod Amber (folder `files/horizon`) | layar Mod Amber yang sama (folder `files/starling`) |
+ 
+@@ -283,7 +283,18 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ 
+ **Pemasangan.** `scripts/fetch-horizon-engine.sh` dijalankan Gradle dua kali (`fetchHorizonEngine`, `fetchStarlingEngine`). Paket Starling diperiksa (commit, patch, sidik jari, ELF, nama berkas di zip) lalu pustaka masuk ke `jniLibs` dan kelas Java, resource, serta aset ke `app/src/starling` (diabaikan git; dibaca Gradle lewat `sourceSets`). Tiap mesin hanya menyentuh berkasnya sendiri, termasuk saat `--remove`.
+ 
+-**Patch `amber4`.** `0001`: kelas Java memakai `R` milik Amber; game selalu di folder privat (bukan folder bersama); pustaka dimuat sebagai `starling_android` (diganti nama supaya tidak bentrok dengan Horizon); `GameActivity` memisahkan folder data (`files/starling`) dan membawa Discord Rich Presence. `0002`: pemberitahuan pembaruan Starling dimatikan bila `AMBER_EMBEDDED` diatur.
++**Patch `amber5`** (seri Rust/Java di `third_party/horizon-patches/amber5`, diterapkan berurutan oleh CI pada commit yang dipatok). `0001`: kelas Java memakai `R` milik Amber; game selalu di folder privat (bukan folder bersama); pustaka dimuat sebagai `starling_android` (diganti nama supaya tidak bentrok dengan Horizon); `GameActivity` memisahkan folder data (`files/starling`) dan membawa Discord Rich Presence. `0002`: pemberitahuan pembaruan Starling dimatikan bila `AMBER_EMBEDDED` diatur. `0003` (Rust, `game/native_builds.rs`): bila mesin dikompilasi dengan `AMBER_EMBEDDED` (lihat di bawah), tombol Compile di Options > Mods tidak lagi mengirim kode ke server pembangun pihak ketiga; yang tampil adalah pesan bahwa mod native sudah dibangun ke dalam mesin oleh Amber. Mesin yang dibangun tanpa `AMBER_EMBEDDED` berperilaku seperti sumbernya. Perubahan mesin berikutnya (menu, makro, akun, kemajuan penyiapan) ditulis sebagai `0004`, `0005`, dan seterusnya di folder yang sama, jadi semuanya tetap berupa diff atas sumber yang dipatok, bukan salinan sumbernya.
++
++**Mod native di dalam mesin (`native_mods`).** Sebelumnya pustaka Starling di Amber dibangun dengan `cargo ndk` biasa: `build_apk.py` milik sumber hanya menyalin bundel mod ke APK sebagai kode sumber, jadi pustakanya **tidak memuat satu pun mod**, walaupun layar Mod Amber menampilkan 20 saklar bawaan dan Compile di dalam game tidak bisa dipakai pada mesin yang diganti namanya (hasilnya akan menimpa pustaka Amber dengan pustaka dari sumber tanpa patch). Sekarang `native_mods=` di `starling-engine.properties` (atau variabel lingkungan `HORIZON_ENGINE_NATIVE_MODS`) berisi id mod, dan tahap **2b** `scripts/build-horizon-engine.sh` mengompilasinya ke dalam pustaka dengan alur yang sama dengan `packaging/android/native_build.sh` milik sumber:
++  1. `horizon-mixins` dipasang pada revisi yang dipatok `native_build.sh` (`MIXINS_REV`, `MIXINS_GIT`) lewat `cargo install --locked`.
++  2. Sumber yang **sudah diberi patch Amber** disalin tanpa `.git` dan tanpa tautan; selama merencanakan, pustaka `horizon-android` diganti berkas kosong dan atribut bersyarat di `lib.rs` dilepas (modul game dikompilasi dua crate, dan `horizon-mixins` menolak tujuan yang dicapai lewat dua nama; tidak berpengaruh di Android).
++  3. Bundel `native-mods/<id>/mixins/<id>` dipatok ke commit yang dibangun, disesuaikan oleh `native_mod_adapt.py`, lalu `horizon-mixins apply` menyisipkannya ke kode game.
++  4. Pustaka dikompilasi dengan perintah, flag, dan halaman 16 KB yang sama dengan `build_library()` (`AMBER_EMBEDDED=1` diatur saat kompilasi untuk patch `0003`).
++  5. Daftar mod yang berhasil ditulis ke `assets/native-mods/compiled.txt` (lewat `STARLING_APK_NATIVE_MODS`, fungsi `build_apk.assets()` sumber). Mesin membacanya lewat `StarlingActivity` dan memakai pustaka APK sendiri tanpa kompilasi di HP bila semua mod yang diminta ada di daftar itu; Amber membacanya lewat `StarlingEngine.compiledNativeMods()` supaya layar Mod hanya menampilkan saklar bagi modul yang benar-benar ada di pustakanya.
++  Id harus ada di `BUILTIN_NATIVE_MODS` sumber (diperiksa di awal build). Mengubah daftar mengubah tanda Release (`-m<6 hex>`), jadi mesin baru dibangun. `StarlingEngine.start()` juga menghapus pilihan pustaka lama (`files/starling/native/current`) sebelum PLAY, supaya yang jalan selalu pustaka APK.
++  - **Lima mod tidak dimasukkan** karena catatan sumber sendiri (`docs/native-mods-android-port.md`) menyebut arsipnya tanpa lisensi dan belum boleh disebarkan: `veinminer`, `appleskin`, `rightharvest`, `customhud`, `carryblock`. Tambahkan idnya ke `native_mods` bila sudah ada izin dari pembuatnya.
++  - **Gagal lembut.** Bila tahap 2b gagal (pemasangan `horizon-mixins`, penyisipan, atau kompilasi), build jatuh ke pustaka tanpa mod, memberi `::warning`, dan menulis kegagalannya di ringkasan dan catatan Release. Mesin tetap bisa dimainkan, dan tanpa `compiled.txt` Amber menyembunyikan saklar bawaan. Release yang sudah ada dilewati, jadi untuk mencoba lagi setelah memperbaiki: jalankan ulang dengan *mesin = ulang* atau naikkan `revision=`.
++  - **Belum diuji.** Tahap 2b dan patch `0003` disusun tanpa bisa dikompilasi (sandbox pengembangan tidak bisa mengakses crates.io dan GitHub): patch hanya dicek dapat diterapkan pada commit yang dipatok, dan perintah `horizon-mixins` mengikuti `native_build.sh` sumber. Hasil run CI pertama yang menentukan; log tahap 2b adalah bahan untuk memperbaikinya.
+ 
+ **Akun tanpa patch Rust.** `StarlingEngine` memakai antarmuka peluncur yang sudah ada di mesin: PLAY menulis `accounts/accounts.json` (pemain offline), `amber-session.json` (sesi Microsoft, dibaca sekali lalu dihapus mesin), dan `horizon-args.txt` (`--session-file`, `AMBER_EMBEDDED=1`).
+ 
+@@ -292,10 +303,10 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ **Yang belum (dan perlu diketahui):**
+ - Penyiapan game di HP sesudah unduhan (unduh Java 25, buka bungkusannya, jalankan `horizon-prepare` atas berkas Mojang menjadi folder resources; sekali saja) masih memakai layar Starling. Menu, editor kontrol, dan pengaturan di dalam game juga masih milik Starling. Pengaturan Rust di tab Pengaturan Amber, tata letak tombol, tema, dan makro hanya untuk Horizon.
+ - Layar Mod Amber memperlakukan Starling seperti Horizon untuk shader dan resource pack: folder `shaderpacks` dan `resourcepacks` serta kunci `pickedShaderPack` dan `resourcePacks` sama di kedua mesin (satu garis keturunan). **Mod berbeda**, karena starling-extras sudah berubah dari Horizon (`HorizonMods.kt` mengenali Starling dari nama folder datanya, `files/starling`):
+-  - **Modul bawaan**: 20 modul native yang sudah dikompilasi ke pustakanya (`ANDROID_BUNDLED` di `mod_list.rs`, sama dengan `BUILTIN_NATIVE_MODS` di `build_apk.py`): zoom, recipes, smartf3, freecam_plus, connected_textures, armorhud, jade, basic_hud, appleskin, visuality_horizon, punchy, freelook, cinematic_interactions, firstpersonmodel, eatinganimation, veinminer, liteminer, rightharvest, customhud, carryblock. Semuanya mati sampai dihidupkan (baris `mod.<id>:true` di `horizon-mods.txt`, sama seperti Horizon). Minimap dan worldmap sudah dihapus di sana. Judul di Amber diturunkan dari id; nama aslinya ada di kode tiap mod.
++  - **Modul bawaan**: 20 modul native yang dikenal sumber (`ANDROID_BUNDLED` di `mod_list.rs`, sama dengan `BUILTIN_NATIVE_MODS` di `build_apk.py`): zoom, recipes, smartf3, freecam_plus, connected_textures, armorhud, jade, basic_hud, appleskin, visuality_horizon, punchy, freelook, cinematic_interactions, firstpersonmodel, eatinganimation, veinminer, liteminer, rightharvest, customhud, carryblock. **Yang benar-benar ada di pustaka hanya yang dikompilasi oleh build Amber** (`native_mods`, lihat di atas); layar Mod menampilkan saklar hanya untuk itu. Semuanya mati sampai dihidupkan (baris `mod.<id>:true` di `horizon-mods.txt`, sama seperti Horizon). Minimap dan worldmap sudah dihapus di sana. Judul di Amber diturunkan dari id; nama aslinya ada di kode tiap mod.
+   - **Mod WebAssembly tidak jalan lagi.** `.hmod` yang membawa `mod.wasm` ditolak dengan pesan yang jelas; yang diterima: `.hmod` konten (kemampuan `registries`) dan `.hmod` yang membawa kode native (`horizon-native.json`).
+-  - **Mod native `.hnmod`**: zip berisi `horizon-native.json` dan mixin (kode sumber yang menambal game sebelum dikompilasi). Amber memasangnya ke `horizon-native-mods/<id>.hnmod`, setelah memeriksanya seperti mesin (`Bundle::read`: skema 1, id `[a-z0-9_]{1,64}`, dua revisi 40 digit hex, tanpa kunci asing, path aman, tanpa `mod.wasm`, paling banyak 512 berkas dan 64 MB setelah dibuka). Mod itu **belum ikut di game** sampai dikompilasi dari dalam game: Options > Mods > Compile membangun game dengan mod itu lewat gateway GitHub Actions yang diatur Starling (di luar kendali Amber; belum diuji). Di daftar Terpasang mod native hanya bisa dihapus, tidak ada saklarnya.
+-- Fitur mod native Starling yang mencari `libhorizon_android.so` memakai nama lama; pustakanya diganti nama di Amber. Dampaknya hanya pada mod native.
++  - **Mod native `.hnmod`**: zip berisi `horizon-native.json` dan mixin (kode sumber yang menambal game sebelum dikompilasi). Amber memasangnya ke `horizon-native-mods/<id>.hnmod`, setelah memeriksanya seperti mesin (`Bundle::read`: skema 1, id `[a-z0-9_]{1,64}`, dua revisi 40 digit hex, tanpa kunci asing, path aman, tanpa `mod.wasm`, paling banyak 512 berkas dan 64 MB setelah dibuka). Mod itu **tidak ikut di game** lewat HP: Compile di dalam game (gateway GitHub Actions milik Starling) dimatikan oleh patch `0003` karena akan menimpa pustaka Amber dengan buatan sumber tanpa patch. Mod native masuk ke game hanya lewat build mesin Amber (`native_mods`), jadi `.hnmod` yang dipasang di sini hanya disimpan. Di daftar Terpasang mod native hanya bisa dihapus, tidak ada saklarnya.
++- Fitur mod native Starling yang mencari `libhorizon_android.so` memakai nama lama; pustakanya diganti nama di Amber. Karena Compile sudah dimatikan (`0003`), bagian itu tidak terpakai.
+ - Diagnostik Starling membaca folder data biasa, bukan `files/starling`. Mesin 32-bit belum ada.
+ - Fork itu ditulis tangan pihak ketiga, dan `SYNC.md`-nya menyebut hasil penggabungannya belum dijalankan di HP. Commit dipatok; periksa diff-nya sebelum mengganti `commit=`. Pemeriksaan awal terhadap upstream hanya menemukan dua URL baru di kode Rust (penunjuk server kompilasi mod native di repo fork, dan tautan donasi). Itu bukan audit.
+ - Build mesin Starling belum pernah dijalankan di CI dan belum diuji di perangkat. Run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
+diff --git a/scripts/build-horizon-engine.sh b/scripts/build-horizon-engine.sh
+index a8ca269..f3797cd 100755
+--- a/scripts/build-horizon-engine.sh
++++ b/scripts/build-horizon-engine.sh
+@@ -199,6 +199,19 @@ PATCH_SET="$(printf '%s' "$PATCH_SET" | tr 'A-Z' 'a-z' | tr -d '[:space:]')"
+ NDK_VERSION="$(prop ndk)"
+ NDK_VERSION="${NDK_VERSION:-28.2.13676358}"
+ 
++# Starling: mod native (id folder di native-mods/ pada sumber) yang dikompilasi ke dalam pustaka mesin oleh build ini,
++# lewat horizon-mixins seperti native_build.sh milik sumber (docs/rust-engine.md). Dipisah spasi atau koma. Kosong =
++# pustaka tanpa mod. Tanpa ini mod bawaan Starling tidak ada di pustakanya: build_apk.py hanya menjalankan `cargo ndk`.
++NATIVE_MODS=""
++if [ "$ENGINE_NAME" = starling ]; then
++  NATIVE_MODS="${HORIZON_ENGINE_NATIVE_MODS-$(prop native_mods)}"
++  NATIVE_MODS="$(printf '%s' "$NATIVE_MODS" | tr 'A-Z,' 'a-z ' | tr -s '[:space:]' ' ' | sed -E 's/^ +//; s/ +$//')"
++  NATIVE_RE='^[a-z0-9_]{1,64}( [a-z0-9_]{1,64})*$'
++  [[ -z $NATIVE_MODS || $NATIVE_MODS =~ $NATIVE_RE ]] \
++    || die "native_mods hanya boleh berisi id (huruf kecil, angka, garis bawah) dipisah spasi atau koma."
++  NATIVE_MODS="$(printf '%s\n' $NATIVE_MODS | sort -u | tr '\n' ' ' | sed 's/ $//')"
++fi
++
+ # 8 digit pertama hash isi perubahan Amber di folder $1 (nama dan isi tiap .diff, urut nama). HARUS sama dengan
+ # patch_hash() di scripts/fetch-horizon-engine.sh.
+ patch_hash() {
+@@ -228,6 +241,8 @@ engine_tag() {
+   # dibangun ulang otomatis.
+   REVISION="$(prop revision)"
+   [ -z "$REVISION" ] || TAG="$TAG-r$REVISION"
++  # Daftar mod native (hanya Starling) ikut tanda: mengubahnya berarti mesin baru.
++  [ -z "$NATIVE_MODS" ] || TAG="$TAG-m$(printf '%s' "$NATIVE_MODS" | sha256sum | cut -c1-6)"
+ }
+ 
+ # --print-tag: hanya cetak tanda Release, tanpa membuat folder, mengunduh, atau membangun apa pun.
+@@ -463,6 +478,135 @@ if [ "$LAYOUT" = starling ]; then
+   echo "cargo-ndk: $(cargo ndk --version)"
+ fi
+ 
++# ---- 2b. Mod native (hanya Starling) ----
++# Sama dengan packaging/android/native_build.sh milik sumber, yang dipakai CI-nya untuk APK Dev "dengan mod bawaan":
++# bundel di native-mods/<id>/mixins/<id> disisipkan ke kode game oleh horizon-mixins, lalu pustaka dikompilasi dari
++# hasilnya. Bedanya, sumbernya adalah sumber yang SUDAH diberi perubahan Amber (native_build.sh membaca commit bersih),
++# dan hasilnya tidak menjadi APK melainkan pustaka yang dikemas seperti biasa.
++TARGET_DIR="$WORK/target"
++[ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
++MIN_SDK=26
++if [ "$LAYOUT" = starling ]; then
++  MIN_SDK="$(sed -n 's/^MIN_SDK *= *\([0-9][0-9]*\).*/\1/p' "$SRC/packaging/android/build_apk.py" | head -n 1)"
++  MIN_SDK="${MIN_SDK:-26}"
++fi
++LIB="$TARGET_DIR/aarch64-linux-android/$PROFILE/libhorizon_android.so"
++
++# Kompilasi pustaka Starling dari folder sumber $1: perintah dan flag yang sama dengan build_library() di
++# packaging/android/build_apk.py (halaman 16 KB dan BuildId di pustaka). AMBER_EMBEDDED dibaca patch amber5 saat
++# kompilasi (native_builds.rs): tanpa tombol Compile ke server pihak ketiga di mesin milik Amber.
++compile_starling() {
++  (cd "$1" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off \
++    ANDROID_NDK_HOME="$NDK_HOME" ANDROID_HOME="$SDK_ROOT" \
++    HORIZON_ANDROID_BUILD_COMMIT="$COMMIT" HORIZON_ANDROID_BUILD_DIRTY=false \
++    AMBER_EMBEDDED=1 \
++    RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--build-id=sha1" \
++    cargo ndk -t arm64-v8a --platform "$MIN_SDK" build --profile "$PROFILE" -p horizon-android)
++}
++
++# Menyusun mod native ke salinan sumber lalu mengompilasinya. Dipanggil di dalam `if`, jadi `set -e` tidak berlaku di
++# sini: tiap langkah yang bisa gagal diakhiri `|| return 1`. Gagal = pemanggil membangun tanpa mod (tidak fatal).
++native_mods_build() {
++  local rev git_url work stage mods tools id bundle manifest lib_line lib_attr
++  rev="$(sed -n 's/^MIXINS_REV=\([0-9a-f]\{40\}\).*/\1/p' "$SRC/packaging/android/native_build.sh" | head -n 1)"
++  git_url="$(sed -n 's|^MIXINS_GIT=\(https://[^ ]*\).*|\1|p' "$SRC/packaging/android/native_build.sh" | head -n 1)"
++  [[ $rev =~ ^[0-9a-f]{40}$ && -n $git_url ]] \
++    || { echo "native_mods: MIXINS_REV atau MIXINS_GIT tidak terbaca dari packaging/android/native_build.sh."; return 1; }
++  [ -f "$SRC/packaging/android/native_mod_adapt.py" ] \
++    || { echo "native_mods: packaging/android/native_mod_adapt.py tidak ada di sumber."; return 1; }
++  tools="$WORK/mixins-tools"
++  work="$WORK/native-src"
++  stage="$WORK/native-stage"
++  mods="$WORK/native-mods"
++  rm -rf "$work" "$stage" "$mods"
++  mkdir -p "$work" "$mods"
++
++  if [ ! -x "$tools/bin/horizon-mixins" ]; then
++    logged cargo install --locked --git "$git_url" --rev "$rev" --root "$tools" horizon-mixins-cli || return 1
++  fi
++  [ -x "$tools/bin/horizon-mixins" ] || { echo "native_mods: horizon-mixins tidak terpasang."; return 1; }
++
++  # Sumber (dengan perubahan Amber) tanpa .git dan tanpa tautan: horizon-mixins menolak tautan.
++  (cd "$SRC" && tar --exclude=./.git --exclude=./target -cf - .) | tar -xf - -C "$work" || return 1
++  find "$work" -type l -delete
++  printf '%s\n' "$COMMIT" > "$work/.horizon-revision"
++
++  # Modul game dikompilasi oleh dua crate (biner horizon-client dan horizon-android lewat android_lib.rs), dan
++  # horizon-mixins menolak tujuan modul yang dicapai lewat dua nama: selama merencanakan, pustaka horizon-android
++  # berupa berkas kosong dan lib.rs kehilangan atribut bersyaratnya (tidak berpengaruh di Android).
++  manifest=crates/horizon-android/Cargo.toml
++  lib_line='path = "../horizon-client/src/android_lib.rs"'
++  grep -qxF "$lib_line" "$work/$manifest" \
++    || { echo "native_mods: $manifest tidak lagi berisi: $lib_line"; return 1; }
++  sed -i 's|^path = "../horizon-client/src/android_lib.rs"$|path = "plan-stub.rs"|' "$work/$manifest" || return 1
++  : > "$work/crates/horizon-android/plan-stub.rs"
++  lib_attr='#![cfg_attr(not(target_os = "android"), forbid(unsafe_code))]'
++  grep -qxF "$lib_attr" "$work/crates/horizon-client/src/lib.rs" \
++    || { echo "native_mods: crates/horizon-client/src/lib.rs tidak lagi berisi: $lib_attr"; return 1; }
++  grep -vxF "$lib_attr" "$work/crates/horizon-client/src/lib.rs" > "$WORK/native-lib.rs" || return 1
++  cp "$WORK/native-lib.rs" "$work/crates/horizon-client/src/lib.rs" || return 1
++
++  # Bundel, tiap satu dipatok ke commit yang dibangun (commit Starling bukan commit Horizon).
++  for id in $NATIVE_MODS; do
++    bundle="$SRC/native-mods/$id/mixins/$id"
++    [ -f "$bundle/horizon-mixin.toml" ] \
++      || { echo "native_mods: '$id' tidak ada di sumber (native-mods/$id/mixins/$id/horizon-mixin.toml)."; return 1; }
++    cp -r "$bundle" "$mods/$id" || return 1
++    sed -i -E "s|^horizon_revision = \"[0-9a-f]*\"|horizon_revision = \"$COMMIT\"|" "$mods/$id/horizon-mixin.toml" || return 1
++  done
++  python3 "$SRC/packaging/android/native_mod_adapt.py" "$work" "$mods" || return 1
++
++  logged cargo fetch --locked --manifest-path "$work/Cargo.toml" || return 1
++  logged "$tools/bin/horizon-mixins" apply --workspace "$work" --mods "$mods" --out "$stage" || return 1
++  # Manifest horizon-android kembali membangun android_lib.rs.
++  cp "$SRC/$manifest" "$stage/$manifest" || return 1
++
++  rm -f "$LIB"
++  compile_starling "$stage" || return 1
++  [ -f "$LIB" ] || { echo "native_mods: kompilasi selesai tetapi pustaka tidak ada: $LIB"; return 1; }
++  return 0
++}
++
++# Id yang diminta harus modul bawaan sumber (BUILTIN_NATIVE_MODS di build_apk.py, yang juga memeriksanya di tahap 3);
++# diperiksa di sini supaya salah ketik gagal sekarang, bukan setelah kompilasi berjam-jam.
++if [ "$LAYOUT" = starling ] && [ -n "$NATIVE_MODS" ]; then
++  python3 - "$SRC/packaging/android/build_apk.py" > "$WORK/builtin-native-mods.txt" <<'PY' || die "BUILTIN_NATIVE_MODS tidak terbaca dari packaging/android/build_apk.py."
++import ast, sys
++tree = ast.parse(open(sys.argv[1], encoding="utf-8").read())
++for node in tree.body:
++    if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "BUILTIN_NATIVE_MODS" for t in node.targets):
++        print(" ".join(ast.literal_eval(node.value)))
++PY
++  BUILTIN_IDS="$(cat "$WORK/builtin-native-mods.txt")"
++  [ -n "$BUILTIN_IDS" ] || die "BUILTIN_NATIVE_MODS kosong atau tidak ditemukan di packaging/android/build_apk.py."
++  for id in $NATIVE_MODS; do
++    case " $BUILTIN_IDS " in
++      *" $id "*) ;;
++      *) die "native_mods: '$id' bukan modul bawaan sumber. Yang ada: $BUILTIN_IDS" ;;
++    esac
++  done
++fi
++
++NATIVE_COMPILED=""
++NATIVE_STATE="tidak diminta"
++NATIVE_NOTE=""
++LIB_BUILT=0
++if [ "$LAYOUT" = starling ] && [ -n "$NATIVE_MODS" ]; then
++  phase 02b-mod-native "2b/6 Kompilasi Starling dengan mod native di dalamnya (horizon-mixins)"
++  echo "Mod native diminta: $NATIVE_MODS"
++  if native_mods_build; then
++    NATIVE_COMPILED="$NATIVE_MODS"
++    NATIVE_STATE="dibuat"
++    LIB_BUILT=1
++    echo "Mod native masuk ke pustaka: $NATIVE_COMPILED"
++  else
++    NATIVE_STATE="gagal"
++    NATIVE_NOTE="$(sed -E 's/\x1b\[[0-9;]*[A-Za-z]//g' "$PHASE_LOG" 2> /dev/null | { grep -E '^(error|Error|ERROR)|native_mods:|panicked' || true; } | head -n 15)"
++    echo "::warning title=Mod native Starling gagal dikompilasi::Mesin dibangun TANPA mod native; sisanya tetap jalan. Lihat tahap 2b di log."
++    rm -f "$LIB"
++  fi
++fi
++
+ # ---- 3. Data ----
+ phase 03-data "3/6 Siapkan tabel data (unduh berkas Mojang sementara, jalankan eksporter)"
+ if [ "$LAYOUT" = starling ]; then
+@@ -472,7 +616,8 @@ if [ "$LAYOUT" = starling ]; then
+   STARLING_OUT="$WORK/starling-out"
+   rm -rf "$STARLING_OUT"
+   mkdir -p "$STARLING_OUT"
+-  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off JAVA_HOME="$JDK" PATH="$JDK/bin:$PATH" python3 - "$SRC" "$STARLING_OUT" <<'PY'
++  (cd "$SRC" && logged env HORIZON_TELEMETRY_URL=off JAVA_HOME="$JDK" PATH="$JDK/bin:$PATH" \
++    STARLING_APK_NATIVE_MODS="$NATIVE_COMPILED" python3 - "$SRC" "$STARLING_OUT" <<'PY'
+ import pathlib
+ import sys
+ sys.path.insert(0, sys.argv[1] + "/packaging/android")
+@@ -519,17 +664,13 @@ fi
+ 
+ # ---- 4. Kompilasi ----
+ phase 04-kompilasi "4/6 Kompilasi mesin Rust (arm64, profil $PROFILE)"
+-TARGET_DIR="$WORK/target"
+-[ -z "${HORIZON_ENGINE_JOBS:-}" ] || export CARGO_BUILD_JOBS="$HORIZON_ENGINE_JOBS"
+ if [ "$LAYOUT" = starling ]; then
+-  MIN_SDK="$(sed -n 's/^MIN_SDK *= *\([0-9][0-9]*\).*/\1/p' "$SRC/packaging/android/build_apk.py" | head -n 1)"
+-  MIN_SDK="${MIN_SDK:-26}"
+-  # Sama seperti build_library() di packaging/android/build_apk.py: halaman 16 KB dan BuildId di pustaka.
+-  (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off \
+-    ANDROID_NDK_HOME="$NDK_HOME" ANDROID_HOME="$SDK_ROOT" \
+-    HORIZON_ANDROID_BUILD_COMMIT="$COMMIT" HORIZON_ANDROID_BUILD_DIRTY=false \
+-    RUSTFLAGS="${RUSTFLAGS:-} -C link-arg=-Wl,-z,max-page-size=16384 -C link-arg=-Wl,--build-id=sha1" \
+-    cargo ndk -t arm64-v8a --platform "$MIN_SDK" build --profile "$PROFILE" -p horizon-android)
++  # Sudah dikompilasi di tahap 2b bila mod native berhasil disusun; selain itu (tanpa mod, atau gagal) tanpa mod.
++  if [ "$LIB_BUILT" = 1 ]; then
++    echo "Pustaka sudah dikompilasi di tahap 2b (dengan mod native): $NATIVE_COMPILED"
++  else
++    compile_starling "$SRC"
++  fi
+ else
+   (cd "$SRC" && logged env CARGO_TARGET_DIR="$TARGET_DIR" HORIZON_TELEMETRY_URL=off python3 tools/android_build.py \
+     --abi arm64-v8a --public --rust-only --profile "$PROFILE" --sdk "$SDK_MINI" --java-home "$JDK")
+@@ -646,6 +787,7 @@ if [ "$PUBLISH" = 1 ]; then
+     echo "- Sumber: $REPO"
+     echo "- Commit: \`$COMMIT\`"
+     [ -z "$PATCH_SET" ] || echo "- Perubahan Amber pada sumber: \`$PATCH_SET\`, isi \`$PATCH_HASH\` (third_party/horizon-patches/$PATCH_SET)"
++    [ -z "$NATIVE_COMPILED" ] || echo "- Mod native di dalam pustaka: $NATIVE_COMPILED"
+     echo "- Profil: $PROFILE, NDK $NDK_VERSION, $(rustc --version)"
+     echo
+     echo "**Ini bukan rilis aplikasi.** Berkas di sini dipasang otomatis ke APK oleh build GitHub Actions"
+@@ -677,6 +819,21 @@ val() { { grep -E "^$1=" "$M" || true; } | tail -n 1 | sed -E 's/^[^=]*=//'; }
+   echo "- \`libhorizon_android.so\` (di-strip): $(val so_bytes) byte, sha256 \`$(val so_sha256)\`"
+   if [ "$LAYOUT" = starling ]; then
+     echo "- Pustaka pendamping: $(val extras)"
++    case "$NATIVE_STATE" in
++      dibuat) echo "- Mod native di dalam pustaka: $NATIVE_COMPILED" ;;
++      gagal)
++        echo "- Mod native: **GAGAL dikompilasi**; mesin dibangun TANPA mod (diminta: $NATIVE_MODS). Layar Mod Amber akan menampilkan tanpa modul bawaan."
++        if [ -n "$NATIVE_NOTE" ]; then
++          echo
++          echo "Baris galat tahap 2b:"
++          echo
++          echo '```'
++          printf '%s\n' "$NATIVE_NOTE"
++          echo '```'
++        fi
++        ;;
++      *) echo "- Mod native: tidak diminta (native_mods kosong), pustaka tanpa mod." ;;
++    esac
+   else
+     echo "- \`engine-data.zip\`: $(val data_bytes) byte"
+   fi
+diff --git a/starling-engine.properties b/starling-engine.properties
+index 0b83122..ddd2025 100644
+--- a/starling-engine.properties
++++ b/starling-engine.properties
+@@ -15,8 +15,18 @@ profile=release
+ 
+ # Perubahan Amber untuk Starling (third_party/horizon-patches/<nama>): kelas Java memakai R milik Amber, data game
+ # di files/starling, pustaka diganti nama supaya tidak bentrok dengan Horizon, Discord Rich Presence, dan pemberitahuan
+-# pembaruan Starling dimatikan. Akun tidak butuh patch: launcher memakai horizon-args.txt (--session-file).
+-patch_set=amber4
++# pembaruan Starling dimatikan, dan Compile mod native lewat server pihak ketiga dimatikan (mod native dibangun oleh
++# build ini, lihat native_mods). Akun tidak butuh patch: launcher memakai horizon-args.txt (--session-file).
++patch_set=amber5
++
++# Mod native yang dikompilasi KE DALAM pustaka mesin oleh build ini (horizon-mixins, seperti native_build.sh milik
++# sumber), dipisah spasi. Tanpa ini pustaka tidak memuat satu pun: build_apk.py milik sumber hanya menjalankan
++# `cargo ndk`, dan 20 modul bawaan itu cuma bundel sumber di dalam APK. Id harus ada di BUILTIN_NATIVE_MODS sumber.
++# Lima modul tidak dimasukkan karena sumber mencatat bahwa arsipnya tidak membawa lisensi dan "tidak boleh
++# disebarkan sebelum ada kejelasan" (docs/native-mods-android-port.md): veinminer appleskin rightharvest customhud
++# carryblock. Tambahkan idnya di sini bila sudah ada izin. Mengubah daftar ini = mesin baru (ikut di tanda Release).
++# Kosong = pustaka tanpa mod. Bila kompilasi dengan mod gagal, build jatuh ke pustaka tanpa mod dan melapor di ringkasan.
++native_mods=zoom recipes smartf3 freecam_plus connected_textures armorhud jade basic_hud visuality_horizon punchy freelook cinematic_interactions firstpersonmodel eatinganimation liteminer
+ 
+ # Dinaikkan bila skrip build berubah tanpa mengubah commit atau patch, supaya mesin dibangun ulang.
+ revision=1
+diff --git a/third_party/horizon-patches/amber4/0001-amber-java.diff b/third_party/horizon-patches/amber5/0001-amber-java.diff
+similarity index 100%
+rename from third_party/horizon-patches/amber4/0001-amber-java.diff
+rename to third_party/horizon-patches/amber5/0001-amber-java.diff
+diff --git a/third_party/horizon-patches/amber4/0002-amber-update-off.diff b/third_party/horizon-patches/amber5/0002-amber-update-off.diff
+similarity index 100%
+rename from third_party/horizon-patches/amber4/0002-amber-update-off.diff
+rename to third_party/horizon-patches/amber5/0002-amber-update-off.diff
+diff --git a/third_party/horizon-patches/amber5/0003-amber-native-mods.diff b/third_party/horizon-patches/amber5/0003-amber-native-mods.diff
+new file mode 100644
+index 0000000..48996a6
+--- /dev/null
++++ b/third_party/horizon-patches/amber5/0003-amber-native-mods.diff
+@@ -0,0 +1,23 @@
++diff --git a/crates/horizon-client/src/game/native_builds.rs b/crates/horizon-client/src/game/native_builds.rs
++index 3e3b6853d6..a7d215af8a 100644
++--- a/crates/horizon-client/src/game/native_builds.rs
+++++ b/crates/horizon-client/src/game/native_builds.rs
++@@ -59,8 +59,17 @@ const SHOWN: usize = 4;
++ const ID: &str = "starling-native-builds";
++ 
++ // The hosted build service and prebuilt libraries currently target ARM64 only.
++-const SERVICE_SUPPORTED: bool = cfg!(target_arch = "aarch64");
+++// AmberLauncher: AMBER_EMBEDDED is set (at build time) when the app builds this game itself. Amber
+++// compiles the native mods it ships into the game's library, and a library from a build service is
+++// made from another source, without Amber's changes, and would replace this one on the phone. So
+++// there is no Compile here: the Mods page lists the mods built in, and nothing offers the service.
+++const SERVICE_SUPPORTED: bool =
+++    cfg!(target_arch = "aarch64") && option_env!("AMBER_EMBEDDED").is_none();
++ fn unsupported() -> String {
+++    if option_env!("AMBER_EMBEDDED").is_some() {
+++        return "AmberLauncher builds the native mods into this game. One that is not built in can't be added on the phone."
+++            .to_owned();
+++    }
++     horizon_client::lang::tr("starling.native_builds.arm64_only", &[])
++ }
++ 
+# FIN part=1/1 files=19

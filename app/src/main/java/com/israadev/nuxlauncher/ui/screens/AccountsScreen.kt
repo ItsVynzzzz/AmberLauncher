@@ -336,7 +336,7 @@ private fun AccountListCard(
                 modifier = Modifier
                     .height(30.dp)
                     .clip(CircleShape)
-                    .background(AmberUi.Accent, CircleShape)
+                    .background(AmberUi.AccentBrush, CircleShape)
                     .border(1.dp, AmberUi.AccentEdge, CircleShape)
                     .padding(horizontal = 11.dp),
                 verticalAlignment = Alignment.CenterVertically

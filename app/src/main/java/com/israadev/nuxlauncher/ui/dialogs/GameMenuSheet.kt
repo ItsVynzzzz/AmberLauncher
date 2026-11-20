@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
@@ -452,7 +453,7 @@ private fun QuickAction(
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .background(if (active) AmberUi.Accent else AmberUi.SurfaceRaised, CircleShape)
+                .background(if (active) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), CircleShape)
                 .then(
                     if (active) Modifier.border(1.dp, AmberUi.AccentEdge, CircleShape) else Modifier
                 ),

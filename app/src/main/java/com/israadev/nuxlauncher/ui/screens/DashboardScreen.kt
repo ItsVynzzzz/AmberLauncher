@@ -996,7 +996,7 @@ private fun HomeScene(
                         Box(
                             modifier = Modifier
                                 .size(30.dp)
-                                .background(AmberUi.Accent, CircleShape),
+                                .background(AmberUi.AccentBrush, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -1427,7 +1427,7 @@ private fun HomeMainButton(
                 .align(Alignment.TopCenter)
                 .offset(y = 4.dp - lift)
                 .clip(CircleShape)
-                .background(AmberUi.Accent, CircleShape)
+                .background(AmberUi.AccentBrush, CircleShape)
                 .border(1.5.dp, AmberUi.AccentEdge, CircleShape),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically

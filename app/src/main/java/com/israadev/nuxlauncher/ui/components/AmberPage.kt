@@ -357,7 +357,7 @@ fun AmberChoicePill(
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent, CircleShape)
+                        .background(AmberUi.AccentBrush, CircleShape)
                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
                 } else {
                     Modifier.amberGlass(CircleShape)
@@ -476,7 +476,7 @@ fun AmberRailItem(
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent, CircleShape)
+                        .background(AmberUi.AccentBrush, CircleShape)
                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
                 } else {
                     Modifier.amberGlass(CircleShape)
@@ -547,7 +547,7 @@ fun AmberActionButton(
             .alpha(if (enabled) 1f else 0.45f)
             .height(height)
             .clip(CircleShape)
-            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
+            .background(if (filled) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
             .border(
                 1.dp,
                 if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong,

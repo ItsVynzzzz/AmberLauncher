@@ -357,7 +357,7 @@ private fun MbSectionTitle(
             Box(
                 modifier = Modifier
                     .size(28.dp)
-                    .background(AmberUi.Accent, CircleShape)
+                    .background(AmberUi.AccentBrush, CircleShape)
                     .border(1.dp, AmberUi.AccentEdge, CircleShape),
                 contentAlignment = Alignment.Center
             ) {

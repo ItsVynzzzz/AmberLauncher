@@ -250,7 +250,7 @@ internal fun AmberSideItem(
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent, CircleShape)
+                        .background(AmberUi.AccentBrush, CircleShape)
                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
                 } else {
                     Modifier.amberGlass(CircleShape)
@@ -342,7 +342,7 @@ internal fun AmberPillButton(
             .alpha(if (enabled) 1f else 0.4f)
             .height(40.dp)
             .clip(CircleShape)
-            .background(if (filled) AmberUi.Accent else Color.Transparent, CircleShape)
+            .background(if (filled) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
             .border(1.dp, if (danger) AmberUi.Danger.copy(alpha = 0.6f) else if (filled) AmberUi.AccentEdge else AmberUi.BorderStrong, CircleShape)
             .clickable(enabled = enabled) { onClick() }
             .padding(horizontal = 18.dp),
@@ -382,7 +382,7 @@ internal fun AmberPickRow(
             .fillMaxWidth()
             .defaultMinSize(minHeight = 42.dp)
             .clip(shape)
-            .background(if (selected) AmberUi.Accent else NuxColors.SurfaceWhite, shape)
+            .background(if (selected) AmberUi.AccentBrush else SolidColor(NuxColors.SurfaceWhite), shape)
             .border(1.dp, if (selected) AmberUi.AccentEdge else NuxColors.CardBorder, shape)
             .clickable { onClick() }
             .padding(horizontal = 14.dp, vertical = 8.dp),

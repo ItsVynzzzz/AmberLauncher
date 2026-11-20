@@ -280,7 +280,7 @@ internal fun ModUpdateBar(
                         modifier = Modifier
                             .fillMaxWidth(fraction)
                             .fillMaxHeight()
-                            .background(AmberUi.Accent)
+                            .background(AmberUi.AccentBrush)
                     )
                 }
             }

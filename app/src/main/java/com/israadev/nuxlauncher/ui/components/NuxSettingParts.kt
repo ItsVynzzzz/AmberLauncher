@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -127,7 +128,7 @@ fun SettingChip(
         modifier = modifier
             .height(34.dp)
             .clip(shape)
-            .background(if (selected) AmberUi.Accent else Color.Transparent, shape)
+            .background(if (selected) AmberUi.AccentBrush else SolidColor(Color.Transparent), shape)
             .border(
                 1.dp,
                 if (selected) AmberUi.AccentEdge else AmberUi.BorderStrong,

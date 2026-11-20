@@ -1011,36 +1011,51 @@ fun SettingsScreen(
                                         desc = "Warna tombol dan penanda terpilih di seluruh launcher."
                                     )
                                     Spacer(modifier = Modifier.height(12.dp))
-                                    Row(
-                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        AMBER_ACCENTS.forEach { accent ->
-                                            val picked = accent.id == accentId
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(44.dp)
-                                                    .clip(CircleShape)
-                                                    .background(accent.base, CircleShape)
-                                                    .border(
-                                                        if (picked) 2.5.dp else 1.dp,
-                                                        if (picked) Color.White else AmberUi.BorderStrong,
-                                                        CircleShape
-                                                    )
-                                                    .clickable {
-                                                        accentId = accent.id
-                                                        AmberUi.setAccent(accent.id)
-                                                        commitSettings()
-                                                    },
-                                                contentAlignment = Alignment.Center
+                                    val solidAccents = AMBER_ACCENTS.filter { it.end == null }
+                                    val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
+                                    listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
+                                        if (groupIndex == 1) {
+                                            Text(
+                                                text = "Gradient halus",
+                                                color = AmberUi.TextDim,
+                                                fontSize = 12.sp,
+                                                modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
+                                            )
+                                        }
+                                        group.chunked(6).forEach { rowAccents ->
+                                            Row(
+                                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.padding(bottom = 10.dp)
                                             ) {
-                                                if (picked) {
-                                                    Icon(
-                                                        imageVector = Icons.Outlined.Check,
-                                                        contentDescription = accent.label,
-                                                        tint = Color.White,
-                                                        modifier = Modifier.size(22.dp)
-                                                    )
+                                                rowAccents.forEach { accent ->
+                                                    val picked = accent.id == accentId
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(44.dp)
+                                                            .clip(CircleShape)
+                                                            .background(accent.brush, CircleShape)
+                                                            .border(
+                                                                if (picked) 2.5.dp else 1.dp,
+                                                                if (picked) Color.White else AmberUi.BorderStrong,
+                                                                CircleShape
+                                                            )
+                                                            .clickable {
+                                                                accentId = accent.id
+                                                                AmberUi.setAccent(accent.id)
+                                                                commitSettings()
+                                                            },
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                        if (picked) {
+                                                            Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = accent.label,
+                                                                tint = Color.White,
+                                                                modifier = Modifier.size(22.dp)
+                                                            )
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }

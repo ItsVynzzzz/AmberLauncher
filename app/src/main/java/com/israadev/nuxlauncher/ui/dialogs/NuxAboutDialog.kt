@@ -268,7 +268,7 @@ fun NuxAboutDialog(
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .background(AmberUi.Accent, CircleShape)
+                            .background(AmberUi.AccentBrush, CircleShape)
                             .border(1.dp, AmberUi.AccentEdge, CircleShape)
                             .clickable { onDonate() },
                         contentAlignment = Alignment.Center
@@ -521,7 +521,7 @@ private fun BrandCard(version: String) {
                 modifier = Modifier
                     .size(46.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(AmberUi.Accent, RoundedCornerShape(15.dp))
+                    .background(AmberUi.AccentBrush, RoundedCornerShape(15.dp))
                     .border(1.dp, AmberUi.AccentEdge, RoundedCornerShape(15.dp)),
                 contentAlignment = Alignment.Center
             ) {

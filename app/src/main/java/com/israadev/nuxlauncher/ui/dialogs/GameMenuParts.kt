@@ -305,7 +305,7 @@ internal fun MenuSegmented(
                     .then(
                         if (on) {
                             Modifier
-                                .background(AmberUi.Accent)
+                                .background(AmberUi.AccentBrush)
                                 .border(1.dp, AmberUi.AccentEdge, CircleShape)
                         } else {
                             Modifier

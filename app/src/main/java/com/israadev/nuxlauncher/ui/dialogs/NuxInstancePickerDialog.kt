@@ -95,7 +95,7 @@ fun NuxInstancePickerDialog(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
-                    .background(AmberUi.Accent, CircleShape)
+                    .background(AmberUi.AccentBrush, CircleShape)
                     .border(1.dp, AmberUi.AccentEdge, CircleShape)
                     .clickable { onAdd() },
                 contentAlignment = Alignment.Center
@@ -303,7 +303,7 @@ private fun AddInstanceCard(onClick: () -> Unit) {
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(AmberUi.Accent, CircleShape)
+                .background(AmberUi.AccentBrush, CircleShape)
                 .border(1.dp, AmberUi.AccentEdge, CircleShape),
             contentAlignment = Alignment.Center
         ) {

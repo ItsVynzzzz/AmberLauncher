@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -345,7 +346,7 @@ fun NuxWardrobeDialog(
                         modifier = Modifier
                             .height(30.dp)
                             .clip(CircleShape)
-                            .background(if (isSelected) AmberUi.Accent else Color.Transparent, CircleShape)
+                            .background(if (isSelected) AmberUi.AccentBrush else SolidColor(Color.Transparent), CircleShape)
                             .clickable {
                                 selectedAnim = animKey
                                 playerSkin.startAnim(animKey, 0.8f)
@@ -750,7 +751,7 @@ private fun ViewportButton(
         modifier = Modifier
             .size(36.dp)
             .clip(CircleShape)
-            .background(if (active) AmberUi.Accent else Color.Black.copy(alpha = 0.55f), CircleShape)
+            .background(if (active) AmberUi.AccentBrush else SolidColor(Color.Black.copy(alpha = 0.55f)), CircleShape)
             .border(1.dp, if (active) AmberUi.AccentEdge else AmberUi.Border, CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
@@ -810,7 +811,7 @@ private fun ModelOption(
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent, shape)
+                        .background(AmberUi.AccentBrush, shape)
                         .border(1.dp, AmberUi.AccentEdge, shape)
                 } else {
                     Modifier.amberGlass(shape)

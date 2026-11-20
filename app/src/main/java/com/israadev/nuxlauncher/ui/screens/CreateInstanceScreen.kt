@@ -769,7 +769,7 @@ private fun CiChip(label: String, selected: Boolean, onClick: () -> Unit) {
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent, CircleShape)
+                        .background(AmberUi.AccentBrush, CircleShape)
                         .border(1.dp, AmberUi.AccentEdge, CircleShape)
                 } else {
                     Modifier.amberGlass(CircleShape)
@@ -1037,7 +1037,7 @@ private fun CiVersionCard(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(iconShape)
-                    .background(if (selected) AmberUi.Accent else AmberUi.SurfaceRaised, iconShape)
+                    .background(if (selected) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), iconShape)
                     .border(1.dp, AmberUi.Border, iconShape),
                 contentAlignment = Alignment.Center
             ) {
@@ -1179,7 +1179,7 @@ private fun CiLoaderRow(choice: CiChoice, picked: Boolean, onClick: () -> Unit) 
             .fillMaxWidth()
             .height(40.dp)
             .clip(shape)
-            .background(if (picked) AmberUi.Accent else AmberUi.SurfaceRaised, shape)
+            .background(if (picked) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), shape)
             .border(1.dp, if (picked) AmberUi.AccentEdge else AmberUi.Border, shape)
             .clickable { onClick() }
             .padding(horizontal = 14.dp),

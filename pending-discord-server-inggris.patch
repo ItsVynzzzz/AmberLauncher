@@ -1,0 +1,315 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 42e11c9..12d0177 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -612,8 +612,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         // Discord Rich Presence (opsional): hanya pada build yang membawa SDK dan bila pemain menyalakannya.
+         // Tanpa aplikasi Discord di HP ini, attach() langsung menyerah dan tidak ada yang berjalan.
+         if (BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled) {
+-            DiscordPresence.attach(this)
+-            DiscordPresence.update(DiscordPresence.gamePresence(mcVersion, loader, System.currentTimeMillis()))
++            DiscordPresence.startGame(this, mcVersion, loader, SettingsManager.settings.value.discordRpcShowServer)
+         }
+ 
+         // Setup real-time native LoggerBridge
+@@ -768,6 +767,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+ 
+         LoggerBridge.setListener { text ->
+             if (text != null) {
++                // Discord: baca server dari log (langsung kembali bila fitur mati atau build tanpa SDK)
++                if (BuildConfig.HAS_DISCORD_SDK) DiscordPresence.onGameLogLine(text)
+                 pendingLogs.offer(text)
+                 if (logFlushScheduled.compareAndSet(false, true)) {
+                     logHandler.postDelayed(logFlushRunnable, 250L)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index c839ab6..cdccbd7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -33,8 +33,10 @@ data class LauncherSettings(
+     // Discord Rich Presence ("Bermain AmberLauncher" di profil Discord). Bawaan MATI: pemain memilih sendiri.
+     // Hanya berarti pada build yang membawa SDK Discord (BuildConfig.HAS_DISCORD_SDK).
+     val discordRpcEnabled: Boolean = false,
+-    // Presence juga saat launcher terbuka dan belum bermain ("Menyiapkan game"). Bawaan MATI, terpisah dari yang di atas.
++    // Presence juga saat launcher terbuka dan belum bermain ("Getting ready to play"). Bawaan MATI, terpisah dari yang di atas.
+     val discordRpcLauncherEnabled: Boolean = false,
++    // Alamat server multiplayer yang sedang dimainkan ikut tampil di Discord (loader Java). Bawaan MATI.
++    val discordRpcShowServer: Boolean = false,
+     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
+     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
+     // dari versi sebelumnya tidak terbawa.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordLauncherPresence.kt b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordLauncherPresence.kt
+index 54865e4..87f31e2 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordLauncherPresence.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordLauncherPresence.kt
+@@ -8,7 +8,7 @@ import com.israadev.nuxlauncher.core.crash.LauncherLog
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ 
+ /**
+- * Discord Rich Presence saat launcher terbuka dan pemain belum bermain ("Menyiapkan game"), di proses utama.
++ * Discord Rich Presence saat launcher terbuka dan pemain belum bermain ("Getting ready to play"), di proses utama.
+  * Opsional lewat Pengaturan > Tampilan > Discord, dan bawaannya mati.
+  *
+  * Hanya berjalan selama MainActivity di depan. Begitu layarnya ditinggalkan (mis. game dibuka), presence dihapus
+@@ -33,7 +33,7 @@ object DiscordLauncherPresence {
+             }
+             if (sessionStartMs == 0L) sessionStartMs = System.currentTimeMillis()
+             DiscordPresence.attach(activity)
+-            DiscordPresence.update(PresenceInfo("Menyiapkan game", "Di launcher", sessionStartMs))
++            DiscordPresence.update(PresenceInfo("Getting ready to play", "In the launcher", sessionStartMs))
+         } catch (e: Throwable) {
+             LauncherLog.w(TAG, "Presence launcher gagal: ${e.message}", e)
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt
+index 43c69d8..f9906e3 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordPresence.kt
+@@ -93,6 +93,15 @@ object DiscordPresence {
+     @Volatile
+     private var worker: Worker? = null
+ 
++    /** Game Java yang sedang berjalan; dipakai untuk menyusun ulang presence saat server berubah. */
++    private class GameInfo(val mcVersion: String, val loader: String, val startMs: Long, val showServer: Boolean)
++
++    @Volatile
++    private var game: GameInfo? = null
++
++    // Hanya disentuh dari thread log game.
++    private var server: String? = null
++
+     /**
+      * Dipanggil dari activity yang menjalankan game. SDK perlu Activity untuk mengenali aplikasi ini, dan kelas
+      * pembukanya (DiscordSocialSdkInit) harus dimuat SEBELUM jembatan kita supaya library SDK dimuat lewat
+@@ -119,6 +128,36 @@ object DiscordPresence {
+         }
+     }
+ 
++    /**
++     * Dipanggil GameActivity (loader Java) saat game dibuka. [showServer] true bila pemain mengizinkan alamat
++     * server tampil; alamatnya dibaca dari log game lewat [onGameLogLine].
++     */
++    fun startGame(activity: Activity, mcVersion: String, loader: String, showServer: Boolean) {
++        attach(activity)
++        val startMs = System.currentTimeMillis()
++        game = GameInfo(mcVersion, loader, startMs, showServer)
++        server = null
++        update(gamePresence(mcVersion, loader, startMs))
++    }
++
++    /**
++     * Dipanggil untuk setiap baris log game (dari thread log). Hampir selalu langsung kembali: tanpa game aktif
++     * atau tanpa izin menampilkan server, tidak ada yang dikerjakan.
++     */
++    fun onGameLogLine(text: String) {
++        val g = game ?: return
++        if (!g.showServer) return
++        val label = when (val event = ServerLog.parse(text)) {
++            is ServerEvent.Joined -> event.label
++            ServerEvent.Left -> null
++            null -> return
++        }
++        if (label == server) return
++        server = label
++        LauncherLog.i(TAG, if (label != null) "Server terdeteksi dari log game" else "Server dilepas (singleplayer atau terputus)")
++        update(gamePresence(g.mcVersion, g.loader, g.startMs, label))
++    }
++
+     /** Menampilkan [info] di profil Discord. null = hapus presence. */
+     fun update(info: PresenceInfo?) {
+         if (!supported) {
+@@ -135,6 +174,7 @@ object DiscordPresence {
+      * (mis. game dibuka), supaya peralihan layar tidak tertahan.
+      */
+     fun stop() {
++        game = null
+         val w = worker ?: return
+         w.handler.post { w.engine.stop() }
+     }
+@@ -144,6 +184,7 @@ object DiscordPresence {
+      * selesai sebelum proses game dimatikan; bila tidak pernah dipakai langsung kembali.
+      */
+     fun stopBlocking(timeoutMs: Long = 800L) {
++        game = null
+         val w = worker ?: return
+         val done = CountDownLatch(1)
+         val posted = w.handler.post {
+@@ -181,11 +222,15 @@ object DiscordPresence {
+         }
+     }
+ 
+-    /** Teks presence untuk game yang sedang berjalan. Nama instance dan akun pemain sengaja tidak ikut. */
+-    fun gamePresence(mcVersion: String, loader: String, startMs: Long): PresenceInfo {
++    /**
++     * Teks presence untuk game yang sedang berjalan, SELURUHNYA bahasa Inggris karena tampil di profil Discord
++     * orang lain. Nama instance dan akun pemain sengaja tidak ikut. Tanpa [server]: "Minecraft 1.21.11" dan
++     * loader. Dengan [server]: "Playing on mc.contoh.com" dan "Minecraft 1.21.11 · Fabric".
++     */
++    fun gamePresence(mcVersion: String, loader: String, startMs: Long, server: String? = null): PresenceInfo {
+         val version = mcVersion.trim().takeIf { it.isNotEmpty() && !it.equals("Unknown", ignoreCase = true) }
+-        val details = if (version != null) "Minecraft $version" else "Minecraft"
+-        val state = when (loader.trim().lowercase()) {
++        val minecraft = if (version != null) "Minecraft $version" else "Minecraft"
++        val loaderLabel = when (loader.trim().lowercase()) {
+             "", "vanilla" -> "Vanilla"
+             "fabric" -> "Fabric"
+             "forge" -> "Forge"
+@@ -195,7 +240,8 @@ object DiscordPresence {
+             "starling" -> "Starling (Rust)"
+             else -> loader.trim().replaceFirstChar { it.uppercase() }
+         }
+-        return PresenceInfo(details, state, startMs)
++        if (server != null) return PresenceInfo("Playing on $server", "$minecraft · $loaderLabel", startMs)
++        return PresenceInfo(minecraft, loaderLabel, startMs)
+     }
+ 
+     private fun isDiscordInstalled(activity: Activity): Boolean = try {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordServerLog.kt b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordServerLog.kt
+new file mode 100644
+index 0000000..67aa49f
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/discord/DiscordServerLog.kt
+@@ -0,0 +1,65 @@
++package com.israadev.nuxlauncher.discord
++
++/** Hasil membaca satu baris log game untuk Rich Presence. */
++internal sealed class ServerEvent {
++    /** Pemain mulai tersambung ke server multiplayer; [label] siap ditampilkan. */
++    data class Joined(val label: String) : ServerEvent()
++
++    /** Pemain di dunia singleplayer atau sudah terputus dari server. */
++    object Left : ServerEvent()
++}
++
++/**
++ * Membaca server multiplayer dari log game (Java). Launcher tidak ikut memilih server (pemain memilihnya di menu
++ * Minecraft), jadi satu-satunya petunjuknya baris log Minecraft seperti "Connecting to mc.contoh.com, 25565".
++ *
++ * Keterbatasan: Minecraft tidak mencatat saat pemain keluar dari server ke menu utama dengan sengaja, jadi
++ * alamat terakhir bertahan sampai pemain masuk server lain, membuka dunia singleplayer, atau terputus
++ * oleh server. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan.
++ */
++internal object ServerLog {
++    const val PRIVATE_LABEL = "a private server"
++
++    private const val CONNECTING = "Connecting to "
++    private const val DEFAULT_PORT = 25565
++    private val connectPattern = Regex("""Connecting to ([A-Za-z0-9._\-\[\]:]{1,100}), (\d{1,5})\s*$""")
++    private val ipv4 = Regex("""^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$""")
++
++    /** Mengembalikan null bila baris ini tidak menyangkut server. Penyaring murahnya jalan dulu: hampir semua baris dilewati. */
++    fun parse(text: String): ServerEvent? {
++        val at = text.indexOf(CONNECTING)
++        if (at >= 0) {
++            val m = connectPattern.find(text, at) ?: return null
++            val port = m.groupValues[2].toIntOrNull() ?: return null
++            if (port !in 1..65535) return null
++            return ServerEvent.Joined(label(m.groupValues[1], port))
++        }
++        if (text.contains("Starting integrated minecraft server") ||
++            text.contains("Client disconnected with reason") ||
++            text.contains("Stopping singleplayer server")
++        ) {
++            return ServerEvent.Left
++        }
++        return null
++    }
++
++    /** Alamat yang aman ditampilkan, atau [PRIVATE_LABEL] bila alamatnya jaringan lokal. Port bawaan disembunyikan. */
++    fun label(host: String, port: Int): String {
++        val h = host.lowercase()
++        if (isPrivate(h)) return PRIVATE_LABEL
++        return if (port == DEFAULT_PORT) h else "$h:$port"
++    }
++
++    private fun isPrivate(h: String): Boolean {
++        if (h == "localhost" || h.endsWith(".local") || h.endsWith(".localhost") || h.endsWith(".lan")) return true
++        if (h.startsWith("[") || h.contains(':')) return true // IPv6: tidak ditampilkan
++        val m = ipv4.matchEntire(h) ?: return false
++        val a = m.groupValues[1].toInt()
++        val b = m.groupValues[2].toInt()
++        return a == 0 || a == 10 || a == 127 ||
++            (a == 192 && b == 168) ||
++            (a == 172 && b in 16..31) ||
++            (a == 169 && b == 254) ||
++            (a == 100 && b in 64..127)
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 761058a..caed0fe 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -150,6 +150,7 @@ fun SettingsScreen(
+     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
+     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
+     var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
++    var discordRpcShowServer by remember(currentSettings.discordRpcShowServer) { mutableStateOf(currentSettings.discordRpcShowServer) }
+     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
+     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
+     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
+@@ -226,6 +227,7 @@ fun SettingsScreen(
+             buttonSlide = buttonSlide,
+             discordRpcEnabled = discordRpc,
+             discordRpcLauncherEnabled = discordRpcLauncher,
++            discordRpcShowServer = discordRpcShowServer,
+             touchControllerEnabled = touchControllerEnabled,
+             mouseSizeDp = mouseSizeDp,
+             physicalMouseSystemPointer = physicalSystemPointer,
+@@ -1255,9 +1257,19 @@ fun SettingsScreen(
+                                     }
+                                 )
+                                 SettingDivider()
++                                SettingSwitchRow(
++                                    title = "Tampilkan server yang dimainkan",
++                                    desc = "Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.",
++                                    checked = discordRpcShowServer,
++                                    onCheckedChange = {
++                                        discordRpcShowServer = it
++                                        commitSettings()
++                                    }
++                                )
++                                SettingDivider()
+                                 SettingSwitchRow(
+                                     title = "Perlihatkan aktivitas di launcher",
+-                                    desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
++                                    desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
+                                     checked = discordRpcLauncher,
+                                     onCheckedChange = {
+                                         discordRpcLauncher = it
+@@ -1319,6 +1331,7 @@ fun SettingsScreen(
+                     buttonSlide = reset.buttonSlide
+                     discordRpc = reset.discordRpcEnabled
+                     discordRpcLauncher = reset.discordRpcLauncherEnabled
++                    discordRpcShowServer = reset.discordRpcShowServer
+                     touchControllerEnabled = reset.touchControllerEnabled
+                     mouseSizeDp = reset.mouseSizeDp
+                     physicalSystemPointer = reset.physicalMouseSystemPointer
+diff --git a/docs/discord-rpc.md b/docs/discord-rpc.md
+index 6bdb3d9..0b9fda3 100644
+--- a/docs/discord-rpc.md
++++ b/docs/discord-rpc.md
+@@ -31,11 +31,24 @@ pemain tidak ikut dikirim.
+ 
+ ## Presence di launcher
+ 
+-Toggle terpisah "Perlihatkan aktivitas di launcher" (mati bawaan) menampilkan "Menyiapkan game" selama MainActivity di
++Toggle terpisah "Perlihatkan aktivitas di launcher" (mati bawaan) menampilkan "Getting ready to play" selama MainActivity di
+ depan (`discord/DiscordLauncherPresence.kt`, proses utama). Saat layar launcher ditinggalkan (`onPause`, mis. game
+ dibuka), presence dihapus dan klien SDK dilepas dengan segera, supaya tidak bentrok dengan presence game. Bila proses
+ `:game` atau `:horizon` masih hidup di latar, presence launcher dilewati.
+ 
++## Bahasa dan server
++
++Semua teks yang tampil di profil Discord memakai bahasa Inggris (orang lain yang melihatnya), mis. "Minecraft 1.21.11" /
++"Fabric", dan "Getting ready to play" / "In the launcher". Catatan di log launcher tetap bahasa Indonesia.
++
++Toggle "Tampilkan server yang dimainkan" (mati bawaan, hanya loader Java) menambahkan alamat server multiplayer:
++"Playing on mc.contoh.com" / "Minecraft 1.21.11 · Fabric". Launcher tidak memilihkan server (pemain memilihnya di menu
++Minecraft), jadi alamatnya dibaca dari baris log game (`discord/DiscordServerLog.kt`): "Connecting to host, port" untuk
++masuk, serta "Starting integrated minecraft server" dan "Client disconnected with reason" untuk keluar. Minecraft tidak
++mencatat saat pemain keluar dari server ke menu dengan sengaja, jadi alamat terakhir bisa bertahan sampai pemain masuk
++server lain atau membuka dunia singleplayer. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan.
++Mesin Rust belum mendukung ini.
++
+ ## Melacak presence yang tidak muncul
+ 
+ Tiap langkah (SDK siap, klien dibuat, presence diminta, hasil dari Discord, alasan dilewati) dicatat di log launcher
+# FIN part=1/1 files=7

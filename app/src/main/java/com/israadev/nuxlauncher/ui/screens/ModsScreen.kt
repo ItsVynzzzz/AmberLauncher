@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.utils.FriendlyError
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
@@ -85,19 +86,20 @@ private fun getMimeTypesForType(type: String, rust: Boolean = false): Array<Stri
     }
 }
 
-private fun isValidExtensionForType(itemType: String, filename: String, rust: Boolean = false): Boolean {
+private fun isValidExtensionForType(itemType: String, filename: String, rust: Boolean = false, starling: Boolean = false): Boolean {
     val lower = filename.lowercase()
     return when (itemType) {
-        "mods" -> if (rust) lower.endsWith(".hmod") else lower.endsWith(".jar")
+        // Starling juga menerima mod native (.hnmod); Horizon hanya .hmod
+        "mods" -> if (rust) lower.endsWith(".hmod") || (starling && lower.endsWith(".hnmod")) else lower.endsWith(".jar")
         "modpacks" -> lower.endsWith(".mrpack") || lower.endsWith(".zip")
         "shaderpacks", "resourcepacks", "datapacks", "worlds" -> lower.endsWith(".zip")
         else -> false
     }
 }
 
-private fun getAllowedExtensionLabel(itemType: String, rust: Boolean = false): String {
+private fun getAllowedExtensionLabel(itemType: String, rust: Boolean = false, starling: Boolean = false): String {
     return when (itemType) {
-        "mods" -> if (rust) ".hmod" else ".jar"
+        "mods" -> if (rust) (if (starling) ".hmod, .hnmod" else ".hmod") else ".jar"
         "modpacks" -> ".mrpack, .zip"
         "shaderpacks" -> ".zip (Shaderpack)"
         "resourcepacks" -> ".zip (Resource Pack)"
@@ -195,6 +197,7 @@ fun ModsScreen(
 
     // Mesin Rust (Horizon) hanya memakai Shader dan Resource Pack, dan hanya dari Modrinth
     val rustInstance = HorizonEngine.isRust(selectedInstance?.loader)
+    val starlingInstance = StarlingEngine.isEngine(selectedInstance?.loader)
 
     // Item Type: "mods" | "modpacks" | "resourcepacks" | "shaderpacks" | "datapacks"
     var activeTypeState by remember { mutableStateOf(initialType) }
@@ -390,7 +393,7 @@ fun ModsScreen(
 
                 for (uri in uris) {
                     val fileName = getFileNameFromUri(context, uri)
-                    if (isValidExtensionForType(activeType, fileName, rustInstance)) {
+                    if (isValidExtensionForType(activeType, fileName, rustInstance, starlingInstance)) {
                         validUris.add(Pair(uri, fileName))
                     } else {
                         rejectedNames.add(fileName)
@@ -398,7 +401,7 @@ fun ModsScreen(
                 }
 
                 if (rejectedNames.isNotEmpty()) {
-                    val hint = getAllowedExtensionLabel(activeType, rustInstance)
+                    val hint = getAllowedExtensionLabel(activeType, rustInstance, starlingInstance)
                     val msg = if (rejectedNames.size == 1) {
                         "File \"${rejectedNames.first()}\" diabaikan! Format yang didukung untuk $activeType hanya $hint"
                     } else {
@@ -873,7 +876,7 @@ fun ModsScreen(
                 }
 
                 if (rustInstance) {
-                    RustNotice(type = activeType, horizon = rustHorizon)
+                    RustNotice(type = activeType, horizon = rustHorizon, starling = starlingInstance)
                 }
 
                 // =====================================================================
@@ -1790,7 +1793,7 @@ private fun ModsTagChip(text: String) {
 
 /** Catatan singkat di atas daftar untuk instance mesin Rust (Horizon). */
 @Composable
-private fun RustNotice(type: String, horizon: Boolean) {
+private fun RustNotice(type: String, horizon: Boolean, starling: Boolean = false) {
     val shape = RoundedCornerShape(16.dp)
     Column(
         modifier = Modifier
@@ -1836,7 +1839,11 @@ private fun RustNotice(type: String, horizon: Boolean) {
         if (type == HorizonContent.TYPE_MODS) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game.",
+                text = if (starling) {
+                    "Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar."
+                } else {
+                    "Mod mesin Rust berformat .hmod (bukan .jar Fabric atau Forge). Mod berkode dipasang dalam keadaan mati; hidupkan setelah memeriksa izinnya di Options > Mods dalam game."
+                },
                 color = AmberUi.TextDim,
                 fontSize = 12.sp,
                 lineHeight = 17.sp

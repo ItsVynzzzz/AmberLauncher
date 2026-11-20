@@ -1,0 +1,24 @@
+[id]
++ Instance Starling kini bisa mengimpor mod native (.hnmod) di layar Mod. Mod itu baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile).
+~ Modul bawaan Starling kini sesuai versinya (20 modul native), bukan daftar Horizon. Mod WebAssembly (mod.wasm) ditolak karena tidak jalan lagi di Starling.
+[en]
++ Starling instances can now import native mods (.hnmod) in the Mods screen. The mod only joins the game after it is compiled from inside the game (Options > Mods > Compile).
+~ Starling's built-in modules now match its own version (20 native modules) instead of Horizon's list. WebAssembly mods (mod.wasm) are rejected because they no longer run in Starling.
+[es]
++ Las instancias de Starling ahora pueden importar mods nativos (.hnmod) en la pantalla de Mods. El mod solo se une al juego después de compilarlo desde dentro del juego (Options > Mods > Compile).
+~ Los módulos integrados de Starling ahora corresponden a su propia versión (20 módulos nativos) en lugar de la lista de Horizon. Los mods WebAssembly (mod.wasm) se rechazan porque ya no funcionan en Starling.
+[fil]
++ Maaari nang mag-import ang mga Starling instance ng native mod (.hnmod) sa Mods screen. Sasama lang ang mod sa laro pagkatapos itong i-compile mula sa loob ng laro (Options > Mods > Compile).
+~ Tugma na ngayon ang mga built-in module ng Starling sa sarili nitong bersyon (20 native module), hindi na ang listahan ng Horizon. Tinatanggihan ang mga WebAssembly mod (mod.wasm) dahil hindi na tumatakbo ang mga ito sa Starling.
+[pt]
++ As instâncias do Starling agora podem importar mods nativos (.hnmod) na tela de Mods. O mod só entra no jogo depois de ser compilado de dentro do jogo (Options > Mods > Compile).
+~ Os módulos integrados do Starling agora correspondem à versão dele (20 módulos nativos), e não à lista do Horizon. Mods WebAssembly (mod.wasm) são recusados porque não funcionam mais no Starling.
+[th]
++ อินสแตนซ์ Starling นำเข้าม็อดเนทีฟ (.hnmod) ในหน้าม็อดได้แล้ว ม็อดจะเข้าไปอยู่ในเกมหลังจากคอมไพล์จากในเกมเท่านั้น (Options > Mods > Compile)
+~ โมดูลในตัวของ Starling ตรงกับเวอร์ชันของตัวเองแล้ว (โมดูลเนทีฟ 20 ตัว) ไม่ใช้รายการของ Horizon ม็อด WebAssembly (mod.wasm) จะถูกปฏิเสธเพราะใช้งานใน Starling ไม่ได้อีกแล้ว
+[vi]
++ Instance Starling giờ có thể nhập mod native (.hnmod) ở màn hình Mod. Mod chỉ vào game sau khi được biên dịch từ bên trong game (Options > Mods > Compile).
+~ Các module tích hợp của Starling giờ khớp với phiên bản của nó (20 module native) thay vì danh sách của Horizon. Mod WebAssembly (mod.wasm) bị từ chối vì không còn chạy trong Starling.
+[zh]
++ Starling 实例现在可以在“模组”界面导入原生模组（.hnmod）。模组需要在游戏内编译（Options > Mods > Compile）后才会加入游戏。
+~ Starling 的内置模块现在与其自身版本一致（20 个原生模块），不再使用 Horizon 的列表。WebAssembly 模组（mod.wasm）会被拒绝，因为它们在 Starling 中已无法运行。

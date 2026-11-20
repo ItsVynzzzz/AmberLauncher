@@ -68,6 +68,9 @@ object StarlingEngine {
     private const val EXTRA_MC_VERSION = "amber_mc_version"
 
     private const val LIBRARY_FILE = "libstarling_android.so"
+
+    /** Nama folder data mesin di filesDir; juga dipakai [HorizonMods] untuk mengenali mesin Starling dari folder datanya. */
+    const val HOME_DIR = "starling"
     private const val MIN_SDK = 28
 
     /** Antarmuka peluncur mesin: argumen dan variabel lingkungan satu per baris, dibaca dari folder data mesin. */
@@ -107,7 +110,7 @@ object StarlingEngine {
     }
 
     /** Folder data mesin: sama dengan getFilesDir() milik GameActivity di proses :starling. */
-    internal fun engineHome(context: Context): File = File(context.filesDir, "starling")
+    internal fun engineHome(context: Context): File = File(context.filesDir, HOME_DIR)
 
     /**
      * True bila berkas game resmi sudah lengkap (diunduh launcher atau mesin; penandanya sama). Bila belum, launcher

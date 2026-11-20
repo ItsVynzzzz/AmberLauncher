@@ -1,0 +1,1199 @@
+diff --git a/app/src/main/assets/lang/en/tambahan.tsv b/app/src/main/assets/lang/en/tambahan.tsv
+index 0315f19..669ca65 100644
+--- a/app/src/main/assets/lang/en/tambahan.tsv
++++ b/app/src/main/assets/lang/en/tambahan.tsv
+@@ -103,3 +103,155 @@ Samudra	Ocean
+ Tengah malam	Midnight
+ Bara	Ember
+ Gradient halus	Subtle gradients
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Gives your phone more room. You can raise it again in Edit instance > Instance settings.
++RAM instance ini diturunkan ke {0} MB.	This instance's RAM was lowered to {0} MB.
++Renderer instance ini dikembalikan ke Otomatis.	This instance's renderer was set back to Auto.
++Renderer instance ini diganti ke {0}.	This instance's renderer was changed to {0}.
++Tidak dapat menemukan {0} untuk versi {1}	Could not find {0} for version {1}
++Installer {0} gagal (kode {1})	The {0} installer failed (code {1})
++Proses ini hanya berjalan sekali per versi {0}.	This step only runs once per {0} version.
++Versi {0} belum dipilih	No {0} version selected
++{0} hanya mendukung Minecraft {1} ke atas	{0} only supports Minecraft {1} and newer
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	Not enough storage to install {0} ({1} MB left, at least {2} MB needed)
++Installer {0} {1} rusak atau tidak lengkap	The {0} {1} installer is damaged or incomplete
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	This {0} installer format is not recognized (Amber needs {1} {2} or newer)
++Installer {0} untuk Minecraft {1}, bukan {2}	This {0} installer is for Minecraft {1}, not {2}
++version.json di installer {0} tidak terbaca	version.json in the {0} installer could not be read
++Installer {0} gagal	The {0} installer failed
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	The {0} installer finished, but the patched Minecraft jar was not found ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	Failed to download {0} libraries: {1}{2}. Check your connection and try again.
++Path library {0} tidak aman: {1}	Unsafe {0} library path: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	Failed to download {0} libraries: {1}. Check your connection and try again.
++install_profile.json tidak ada di installer {0}	install_profile.json is missing from the {0} installer
++versionInfo tidak ada di installer {0}	versionInfo is missing from the {0} installer
++{0} tidak ada di installer {1}	{0} is missing from the {1} installer
++Tidak ada versi {0} yang didukung	No supported {0} version
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling no longer runs WebAssembly mods (mod.wasm). This mod has to be rebuilt as a native mod (.hnmod).
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	This is not a native mod Starling can read: horizon-native.json is missing or invalid.
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Native mods are not enabled from here: open Options > Mods in the game and choose Compile so the mod is added to the game.
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Native mods (.hnmod) are only supported by the Starling engine. Create a Starling instance to use them.
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Native mod (.hnmod). Not in the game yet: open Options > Mods in the game and choose Compile.
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Built-in Starling native module. Its settings are in Options > Mods in the game.
++Starling hanya tersedia untuk HP 64-bit (arm64).	Starling is only available on 64-bit phones (arm64).
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Starling is not included in this build. How to add it is described in docs/rust-engine.md.
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Starling only supports Offline and Microsoft accounts for now. Pick one of them in the Accounts tab.
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	An offline account name for Starling must be 1 to 16 letters, digits, or underscores. Create a new offline account in the Accounts tab.
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	First launch: the Starling screen prepares the game (about 500 MiB download). Follow the screen until it finishes.
++Starling gagal dibuka: {0}	Starling failed to start: {0}
++Folder akun mesin tidak bisa dibuat	Could not create the engine account folder
++{0} tidak bisa disimpan	{0} could not be saved
++Patokan berkas Starling tidak tersedia di aplikasi ini.	The Starling file reference is not available in this app.
++Folder data Starling tidak bisa dibuat.	Could not create the Starling data folder.
++Berkas versi {0} dari Mojang tidak valid.	The version file {0} from Mojang is not valid.
++Berkas versi {0} tidak mendaftar unduhan.	The version file {0} does not list any downloads.
++Berkas versi {0} tidak mendaftar unduhan {1}.	The version file {0} does not list the {1} download.
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	The version file {0} contains a {1} jar different from the one Starling expects.
++Berkas versi {0} tidak mendaftar indeks aset.	The version file {0} does not list an asset index.
++Nama indeks aset tidak valid.	The asset index name is not valid.
++Indeks aset dari Mojang tidak valid.	The asset index from Mojang is not valid.
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	Not enough storage: about {0} MB more is needed.
++Berkas {0} belum ada setelah diunduh.	The file {0} is still missing after downloading.
++Game belum bisa dimulai.	The game can't start yet.
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	The game can't start yet: {0}. Details are in the launcher log.
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Profile {0} ({1}) is not installed yet. Please tap the DOWNLOAD button on the instance!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	{0} game library files are missing (the download was incomplete or they were deleted). Tap DOWNLOAD on this instance to complete them.
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	This modpack needs Quilt, but AmberLauncher currently only supports Fabric, Forge, and NeoForge.
++Daftar modpack terlalu besar	The modpack list is too large
++Gagal menyiapkan folder modpack	Could not prepare the modpack folder
++Gagal menyimpan berkas modpack	Could not save the modpack file
++Berkas lama tidak ditemukan	The old file was not found
++Berkas {0} berubah sejak diperiksa	The file {0} changed after it was checked
++Nama berkas baru tidak valid	The new file name is not valid
++Berkas baru tanpa sidik jari tidak dipasang	A new file without a fingerprint was not installed
++Berkas {0} sudah ada	The file {0} already exists
++Gagal menyiapkan penggantian berkas	Could not prepare the file replacement
++Gagal menyimpan berkas baru	Could not save the new file
++Gagal menghapus berkas lama	Could not delete the old file
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	{0} mods could not be downloaded because their authors disabled downloads through launchers. Install them manually from the CurseForge website if needed.
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	This modpack needs {0}. Create a {1} instance first, then install the modpack into that instance.
++Pilih APK	Choose APK
++Izinkan dari sumber ini	Allow from this source
++Terjadi masalah yang tidak diketahui. Coba lagi.	Something unknown went wrong. Try again.
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	Can't reach the download server. Check your internet connection, then try again.
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	The server took too long to respond. The connection may be slow or unstable; try again.
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	The secure connection to the server failed. Check your phone's date and time and your internet connection, then try again.
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	The connection dropped midway. Try again; files that already finished won't be downloaded again.
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	Your phone's storage is full. Free up some space (about 500 MB for one version), then try again.
++Terjadi masalah yang tidak terduga. Coba lagi.	Something unexpected went wrong. Try again.
++Game langsung tertutup atau tidak mau mulai	The game closes right away or won't start
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Open Settings > About > Game logs. The last cause is recorded there; share it if you ask for help.
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	If the message mentions a missing file or library: open Edit instance (the pencil icon on Home) and tap "Verify & repair".
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Lower "Game memory (RAM)" in Settings > Game. Asking for too much RAM for your phone can make Android close the game.
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Try another Java version in Edit instance (for example Java 17 or 21 for newer Minecraft, Java 8 for older versions).
++FPS rendah atau game patah-patah	Low FPS or choppy game
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Lower "Screen resolution scale" in Settings > Game: the screen is drawn coarser but is much lighter on your phone.
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	In the game, reduce Render Distance and Simulation Distance, and turn off heavy graphics effects.
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	Turn on "Show FPS and RAM" in Settings > Controls to see whether the problem is nearly full RAM or a busy processor.
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Close other apps, and let your phone cool down if it feels hot: a hot phone slows itself down.
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	Turn off "Animate GIFs and videos" and "Home screen effect" in Settings > Display; moving backgrounds use up your phone's power.
++Pakai latar foto biasa, bukan video atau GIF besar.	Use a regular photo as the background, not a large video or GIF.
++Unduhan gagal atau terputus	The download failed or was interrupted
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Tap DOWNLOAD again. Only the missing files are downloaded again, so it does not start from zero.
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Make sure your phone has enough free space (about 500 MB for one version); check in your phone's own Settings > Storage.
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	If the game feels incomplete after it finishes, tap "Verify & repair" in Edit instance.
++Login Microsoft gagal atau diminta masuk lagi	Microsoft sign-in failed or asks you to sign in again
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	The session may have expired. Open the Accounts screen and sign in again with the same Microsoft account.
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	The account must own Minecraft Java Edition; an account without it can't be used to play online.
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Follow the code and address shown by the launcher; the code is only valid briefly, so finish it quickly.
++Apa itu akun offline?	What is an offline account?
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	An offline account is just a player name on this phone, with no sign-in. It suits your own world (single player) or LAN.
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	The name must be 3-16 characters: letters, digits, or underscores.
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	Most online servers only accept official accounts, so offline accounts are usually rejected there.
++Di mana dunia dan mod disimpan? Cara mencadangkan	Where are worlds and mods stored? How to back them up
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	See the location in Settings > About > Data storage ("Data location").
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	Every instance has its own folder. Tap "Open instance folder" in Edit instance to go there; worlds are in the saves folder.
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Data in AmberLauncher's own folder (Android/data) is deleted along with the app if you uninstall it, so copy important worlds somewhere else first.
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	If your data is still in the old nuxlauncher folder, the "Move" button in Data storage moves it to Android/data without needing all-files access.
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Open Edit instance > Mods & content to find and install mods, or add files you've already downloaded.
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	.jar or .mrpack files can also be opened directly with AmberLauncher from a file manager.
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Make sure the mod matches the Minecraft version and loader (Fabric or Forge) of that instance.
++Pertanyaan yang sering muncul	Frequently asked questions
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	An instance download or installation is still running. Wait until it finishes, then try again.
++Geser antar tombol	Swipe between buttons
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	Slide your finger from W to D to press the buttons in between without lifting your finger.
++Pengaturan instance	Instance settings
++Pengaturan instance disimpan	Instance settings saved
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Values chosen here only apply to this instance. "Follow global" uses the general Settings and changes along with them.
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	Power Saver Mode is on: resolution is limited to {0}%.
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Only renderers that match Minecraft {0} are shown.
++Ikuti global (kosong)	Follow global (empty)
++Khusus instance ini	This instance only
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	For advanced users; a wrong value can stop the game from running. Left empty = no extra arguments for this instance.
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	For advanced users. The general Settings use no extra arguments.
++Memakai argumen dari Pengaturan umum: {0}	Using arguments from the general Settings: {0}
++Kembalikan semua ke global	Reset everything to global
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	The name must be 3-16 characters: letters, digits, or underscores (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	The name must be 3-16 characters: letters, digits, or underscores (_).
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Offline accounts need no sign-in. They can't join premium (online-mode) servers, and custom skins are usually only visible to you. Changing the name counts as a new player on a server, so inventory and progress don't carry over.
++Kategori Semua \u2304	Category All ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Only supports Minecraft {0}. On first launch, the Starling screen prepares the game (about 500 MiB download). This engine is separate from Horizon, with its own shaders, mods, and menus.
++Gagal menyiapkan folder sementara	Could not prepare the temporary folder
++Gagal membaca berkas	Could not read the file
++Gagal memasang {0}	Failed to install {0}
++Gagal menyiapkan Java	Could not prepare Java
++terlalu besar	too large
++tambah aksi	add action
++Memuat data dari {0}...	Loading data from {0}...
++Gagal memuat dari {0}	Failed to load from {0}
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Starling mods: .hmod (content, or with native code) and .hnmod (native mods), not Fabric or Forge .jar files. WebAssembly mods (mod.wasm) no longer run on Starling. .hnmod mods only take effect in the game after being compiled from inside the game (Options > Mods > Compile). Built-in modules are turned on with the switch in the list.
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Sliding your finger from one button to another (for example from W to D) presses the buttons in between, without lifting your finger. The attack and use buttons are not included.
++Discord Rich Presence saat bermain	Discord Rich Presence while playing
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Shows AmberLauncher along with the Minecraft version and loader (or the Rust engine) on your Discord profile while you play. Your instance and account names are not shared. Needs the Discord app installed and signed in on this phone; no login or token is used. Not for users under 13. Takes effect from the next game.
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	While the launcher is open and you aren't playing, your Discord profile shows AmberLauncher with the status Preparing game. Takes effect the next time the launcher is opened. Used with the Discord app you're already signed in to; not for users under 13.
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Answers to common problems: the game closing, low FPS, failed downloads, sign-in, and where data is stored.
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	Some game files have not been downloaded yet ({0}), usually because the connection dropped. Tap DOWNLOAD again: only the missing files are downloaded again.
++{0} library	{0} libraries
++{0} aset suara/bahasa	{0} sound/language assets
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Some files failed to download. Check your internet connection and tap DOWNLOAD again to continue. ({0})
++Gagal memeriksa pembaruan: {0}	Failed to check for updates: {0}
++Gagal terhubung ke {0}	Failed to connect to {0}
++{0} library dan {1} aset suara/bahasa	{0} libraries and {1} sound/language assets
++Ikuti global	Follow global
++Khusus	Custom
++Verifikasi & perbaiki	Verify & repair
++Gagal	Failed
+diff --git a/app/src/main/assets/lang/es/tambahan.tsv b/app/src/main/assets/lang/es/tambahan.tsv
+index 79bad5d..b461e2f 100644
+--- a/app/src/main/assets/lang/es/tambahan.tsv
++++ b/app/src/main/assets/lang/es/tambahan.tsv
+@@ -105,3 +105,168 @@ Samudra	Océano
+ Tengah malam	Medianoche
+ Bara	Brasa
+ Gradient halus	Degradados suaves
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Deja más margen al teléfono. Puedes volver a subirlo en Editar instancia > Ajustes de la instancia.
++RAM instance ini diturunkan ke {0} MB.	La RAM de esta instancia se bajó a {0} MB.
++Renderer instance ini dikembalikan ke Otomatis.	El renderizador de esta instancia volvió a Auto.
++Renderer instance ini diganti ke {0}.	El renderizador de esta instancia cambió a {0}.
++Tidak dapat menemukan {0} untuk versi {1}	No se encontró {0} para la versión {1}
++Installer {0} gagal (kode {1})	Falló el instalador de {0} (código {1})
++Proses ini hanya berjalan sekali per versi {0}.	Este paso solo se ejecuta una vez por versión de {0}.
++Versi {0} belum dipilih	No se ha elegido ninguna versión de {0}
++{0} hanya mendukung Minecraft {1} ke atas	{0} solo es compatible con Minecraft {1} o posterior
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	No hay almacenamiento suficiente para instalar {0} (quedan {1} MB, se necesitan al menos {2} MB)
++Installer {0} {1} rusak atau tidak lengkap	El instalador de {0} {1} está dañado o incompleto
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	No se reconoce el formato de este instalador de {0} (Amber necesita {1} {2} o posterior)
++Installer {0} untuk Minecraft {1}, bukan {2}	Este instalador de {0} es para Minecraft {1}, no para {2}
++version.json di installer {0} tidak terbaca	No se pudo leer version.json del instalador de {0}
++Installer {0} gagal	Falló el instalador de {0}
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	El instalador de {0} terminó, pero no se encontró el jar de Minecraft parcheado ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de {0}: {1}{2}. Comprueba la conexión e inténtalo de nuevo.
++Path library {0} tidak aman: {1}	Ruta de biblioteca de {0} no segura: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	No se pudieron descargar las bibliotecas de {0}: {1}. Comprueba la conexión e inténtalo de nuevo.
++install_profile.json tidak ada di installer {0}	Falta install_profile.json en el instalador de {0}
++versionInfo tidak ada di installer {0}	Falta versionInfo en el instalador de {0}
++{0} tidak ada di installer {1}	Falta {0} en el instalador de {1}
++Tidak ada versi {0} yang didukung	No hay ninguna versión compatible de {0}
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling ya no ejecuta mods de WebAssembly (mod.wasm). Este mod debe recrearse como mod nativo (.hnmod).
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	Este no es un mod nativo que Starling pueda leer: horizon-native.json falta o no es válido.
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Los mods nativos no se activan desde aquí: abre Options > Mods dentro del juego y elige Compile para que el mod entre en el juego.
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Los mods nativos (.hnmod) solo son compatibles con el motor Starling. Crea una instancia de Starling para usarlos.
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Mod nativo (.hnmod). Aún no está en el juego: abre Options > Mods dentro del juego y elige Compile.
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Módulo nativo integrado de Starling. Sus ajustes están en Options > Mods dentro del juego.
++Starling hanya tersedia untuk HP 64-bit (arm64).	Starling solo está disponible en teléfonos de 64 bits (arm64).
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Starling no está incluido en esta compilación. Cómo añadirlo se explica en docs/rust-engine.md.
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Starling por ahora solo admite cuentas sin conexión y de Microsoft. Elige una en la pestaña Cuentas.
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	El nombre de una cuenta sin conexión para Starling debe tener de 1 a 16 letras, números o guiones bajos. Crea una cuenta sin conexión nueva en la pestaña Cuentas.
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	Primera vez: la pantalla de Starling prepara el juego (descarga de unos 500 MiB). Sigue la pantalla hasta que termine.
++Starling gagal dibuka: {0}	No se pudo abrir Starling: {0}
++Folder akun mesin tidak bisa dibuat	No se pudo crear la carpeta de cuentas del motor
++{0} tidak bisa disimpan	No se pudo guardar {0}
++Patokan berkas Starling tidak tersedia di aplikasi ini.	La referencia de archivos de Starling no está disponible en esta aplicación.
++Folder data Starling tidak bisa dibuat.	No se pudo crear la carpeta de datos de Starling.
++Berkas versi {0} dari Mojang tidak valid.	El archivo de versión {0} de Mojang no es válido.
++Berkas versi {0} tidak mendaftar unduhan.	El archivo de versión {0} no lista ninguna descarga.
++Berkas versi {0} tidak mendaftar unduhan {1}.	El archivo de versión {0} no lista la descarga {1}.
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	El archivo de versión {0} contiene un jar {1} distinto del que espera Starling.
++Berkas versi {0} tidak mendaftar indeks aset.	El archivo de versión {0} no lista un índice de recursos.
++Nama indeks aset tidak valid.	El nombre del índice de recursos no es válido.
++Indeks aset dari Mojang tidak valid.	El índice de recursos de Mojang no es válido.
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	No hay almacenamiento suficiente: faltan unos {0} MB.
++Berkas {0} belum ada setelah diunduh.	El archivo {0} sigue sin existir después de la descarga.
++Game belum bisa dimulai.	El juego aún no puede iniciarse.
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	El juego aún no puede iniciarse: {0}. Los detalles están en el registro del launcher.
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	El perfil {0} ({1}) aún no está instalado. ¡Pulsa el botón DESCARGAR de la instancia!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	Faltan {0} archivos de bibliotecas del juego (la descarga quedó incompleta o se borraron). Pulsa DESCARGAR en esta instancia para completarlos.
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack necesita Quilt, pero AmberLauncher por ahora solo admite Fabric, Forge y NeoForge.
++Daftar modpack terlalu besar	La lista del modpack es demasiado grande
++Gagal menyiapkan folder modpack	No se pudo preparar la carpeta del modpack
++Gagal menyimpan berkas modpack	No se pudo guardar el archivo del modpack
++Berkas lama tidak ditemukan	No se encontró el archivo antiguo
++Berkas {0} berubah sejak diperiksa	El archivo {0} cambió después de comprobarlo
++Nama berkas baru tidak valid	El nombre del archivo nuevo no es válido
++Berkas baru tanpa sidik jari tidak dipasang	No se instaló un archivo nuevo sin huella digital
++Berkas {0} sudah ada	El archivo {0} ya existe
++Gagal menyiapkan penggantian berkas	No se pudo preparar el reemplazo del archivo
++Gagal menyimpan berkas baru	No se pudo guardar el archivo nuevo
++Gagal menghapus berkas lama	No se pudo eliminar el archivo antiguo
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	No se pudieron descargar {0} mods porque sus autores desactivaron las descargas desde launchers. Instálalos manualmente desde el sitio de CurseForge si lo necesitas.
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	Este modpack necesita {0}. Crea primero una instancia de {1} y luego instala el modpack en esa instancia.
++Pilih APK	Elegir APK
++Izinkan dari sumber ini	Permitir desde esta fuente
++Terjadi masalah yang tidak diketahui. Coba lagi.	Ocurrió un problema desconocido. Inténtalo de nuevo.
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	No se puede conectar con el servidor de descargas. Comprueba tu conexión a internet e inténtalo de nuevo.
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	El servidor tardó demasiado en responder. La conexión puede ser lenta o inestable; inténtalo de nuevo.
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	Falló la conexión segura con el servidor. Comprueba la fecha y la hora del teléfono y tu conexión a internet, e inténtalo de nuevo.
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	La conexión se cortó a mitad de camino. Inténtalo de nuevo; los archivos ya terminados no se descargan otra vez.
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	El almacenamiento del teléfono está lleno. Libera espacio (unos 500 MB por versión) e inténtalo de nuevo.
++Terjadi masalah yang tidak terduga. Coba lagi.	Ocurrió un problema inesperado. Inténtalo de nuevo.
++Game langsung tertutup atau tidak mau mulai	El juego se cierra enseguida o no arranca
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Abre Ajustes > Acerca de > Registros del juego. Allí queda anotada la última causa; compártela si pides ayuda.
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	Si el mensaje menciona un archivo o una biblioteca que falta: abre Editar instancia (el icono de lápiz en Inicio) y pulsa "Verificar y reparar".
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Baja "Memoria del juego (RAM)" en Ajustes > Juego. Pedir demasiada RAM para tu teléfono puede hacer que Android cierre el juego.
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Prueba otra versión de Java en Editar instancia (por ejemplo, Java 17 o 21 para Minecraft reciente, Java 8 para versiones antiguas).
++FPS rendah atau game patah-patah	FPS bajos o juego entrecortado
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Baja "Escala de resolución de pantalla" en Ajustes > Juego: la pantalla se dibuja con menos detalle, pero pesa mucho menos.
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	Dentro del juego, reduce Render Distance y Simulation Distance, y desactiva los efectos gráficos pesados.
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	Activa "Mostrar FPS y RAM" en Ajustes > Controles para ver si el problema es que casi no queda RAM o que el procesador está saturado.
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Cierra otras aplicaciones y deja que el teléfono se enfríe si está caliente: un teléfono caliente se ralentiza solo.
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	Desactiva "Animar GIF y vídeos" y "Efecto en la pantalla de inicio" en Ajustes > Apariencia; los fondos en movimiento consumen energía del teléfono.
++Pakai latar foto biasa, bukan video atau GIF besar.	Usa una foto normal como fondo, no un vídeo o un GIF grande.
++Unduhan gagal atau terputus	La descarga falló o se interrumpió
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Pulsa DESCARGAR otra vez. Solo se vuelven a descargar los archivos que faltan, así que no empieza desde cero.
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Asegúrate de que el teléfono tenga espacio libre suficiente (unos 500 MB por versión); compruébalo en los Ajustes del propio teléfono > Almacenamiento.
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	Si el juego parece incompleto al terminar, pulsa "Verificar y reparar" en Editar instancia.
++Login Microsoft gagal atau diminta masuk lagi	Falló el inicio de sesión de Microsoft o te pide iniciar sesión otra vez
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	La sesión puede haber caducado. Abre la pantalla Cuentas e inicia sesión de nuevo con la misma cuenta de Microsoft.
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	La cuenta debe tener Minecraft Java Edition; una cuenta sin él no sirve para jugar en línea.
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Sigue el código y la dirección que muestra el launcher; el código es válido solo un momento, así que termínalo pronto.
++Apa itu akun offline?	¿Qué es una cuenta sin conexión?
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	Una cuenta sin conexión es solo un nombre de jugador en este teléfono, sin inicio de sesión. Sirve para tu propio mundo (un jugador) o LAN.
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	El nombre debe tener de 3 a 16 caracteres: letras, números o guiones bajos.
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	La mayoría de los servidores en línea solo aceptan cuentas oficiales, así que las cuentas sin conexión suelen ser rechazadas allí.
++Di mana dunia dan mod disimpan? Cara mencadangkan	¿Dónde se guardan los mundos y los mods? Cómo hacer copias de seguridad
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	Mira la ubicación en Ajustes > Acerca de > Almacenamiento de datos ("Ubicación de los datos").
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	Cada instancia tiene su propia carpeta. Pulsa "Abrir carpeta de la instancia" en Editar instancia para ir allí; los mundos están en la carpeta saves.
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Los datos en la carpeta propia de AmberLauncher (Android/data) se borran junto con la aplicación si la desinstalas, así que copia antes los mundos importantes a otro sitio.
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	Si tus datos siguen en la carpeta antigua nuxlauncher, el botón "Mover" de Almacenamiento de datos los pasa a Android/data sin necesitar acceso a todos los archivos.
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Abre Editar instancia > Mods y contenido para buscar e instalar mods, o añade archivos que ya hayas descargado.
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	Los archivos .jar o .mrpack también se pueden abrir directamente con AmberLauncher desde un administrador de archivos.
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Asegúrate de que el mod coincida con la versión de Minecraft y el loader (Fabric o Forge) de esa instancia.
++Pertanyaan yang sering muncul	Preguntas frecuentes
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	Aún hay una descarga o instalación de instancia en curso. Espera a que termine e inténtalo de nuevo.
++Geser antar tombol	Deslizar entre botones
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	Desliza el dedo de W a D para pulsar los botones intermedios sin levantar el dedo.
++Pengaturan instance	Ajustes de la instancia
++Pengaturan instance disimpan	Ajustes de la instancia guardados
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Los valores elegidos aquí solo se aplican a esta instancia. "Seguir global" usa los Ajustes generales y cambia junto con ellos.
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	El Modo Ahorro está activado: la resolución está limitada al {0}%.
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Solo se muestran los renderizadores compatibles con Minecraft {0}.
++Ikuti global (kosong)	Seguir global (vacío)
++Khusus instance ini	Solo esta instancia
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	Para usuarios avanzados; un valor incorrecto puede impedir que el juego se ejecute. Si se deja vacío, no hay argumentos adicionales para esta instancia.
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	Para usuarios avanzados. Los Ajustes generales no usan argumentos adicionales.
++Memakai argumen dari Pengaturan umum: {0}	Usando los argumentos de los Ajustes generales: {0}
++Kembalikan semua ke global	Restablecer todo a global
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	El nombre debe tener de 3 a 16 caracteres: letras, números o guiones bajos (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	El nombre debe tener de 3 a 16 caracteres: letras, números o guiones bajos (_).
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Las cuentas sin conexión no necesitan iniciar sesión. No pueden entrar en servidores premium (modo online) y las skins personalizadas normalmente solo las ves tú. Cambiar el nombre cuenta como un jugador nuevo en un servidor, así que el inventario y el progreso no se conservan.
++Kategori Semua \u2304	Categoría Todas ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Solo es compatible con Minecraft {0}. La primera vez, la pantalla de Starling prepara el juego (descarga de unos 500 MiB). Este motor es independiente de Horizon, con sus propios shaders, mods y menús.
++Gagal menyiapkan folder sementara	No se pudo preparar la carpeta temporal
++Gagal membaca berkas	No se pudo leer el archivo
++Gagal memasang {0}	No se pudo instalar {0}
++Gagal menyiapkan Java	No se pudo preparar Java
++terlalu besar	demasiado grande
++tambah aksi	añadir acción
++Memuat data dari {0}...	Cargando datos de {0}...
++Gagal memuat dari {0}	No se pudo cargar desde {0}
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Mods de Starling: .hmod (contenido, o con código nativo) y .hnmod (mods nativos), no archivos .jar de Fabric o Forge. Los mods de WebAssembly (mod.wasm) ya no funcionan en Starling. Los mods .hnmod solo se aplican en el juego después de compilarlos desde dentro del juego (Options > Mods > Compile). Los módulos integrados se activan con el interruptor de la lista.
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Deslizar el dedo de un botón a otro (por ejemplo, de W a D) pulsa los botones intermedios sin levantar el dedo. Los botones de atacar y usar no se incluyen.
++Discord Rich Presence saat bermain	Discord Rich Presence al jugar
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Muestra AmberLauncher junto con la versión de Minecraft y el loader (o el motor Rust) en tu perfil de Discord mientras juegas. No se comparten el nombre de tu instancia ni de tu cuenta. Necesita la aplicación de Discord instalada y con sesión iniciada en este teléfono; no usa inicio de sesión ni tokens. No es para menores de 13 años. Se aplica desde la próxima partida.
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Mientras el launcher está abierto y no estás jugando, tu perfil de Discord muestra AmberLauncher con el estado Preparando el juego. Se aplica la próxima vez que se abra el launcher. Se usa con la aplicación de Discord en la que ya has iniciado sesión; no es para menores de 13 años.
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Respuestas a problemas frecuentes: el juego se cierra, FPS bajos, descargas fallidas, inicio de sesión y dónde se guardan los datos.
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	Faltan por descargar algunos archivos del juego ({0}), normalmente porque se cortó la conexión. Pulsa DESCARGAR otra vez: solo se vuelven a descargar los archivos que faltan.
++{0} library	{0} bibliotecas
++{0} aset suara/bahasa	{0} recursos de sonido/idioma
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Algunos archivos no se pudieron descargar. Comprueba tu conexión a internet y pulsa DESCARGAR otra vez para continuar. ({0})
++Gagal memeriksa pembaruan: {0}	No se pudo buscar actualizaciones: {0}
++Gagal terhubung ke {0}	No se pudo conectar con {0}
++{0} library dan {1} aset suara/bahasa	{0} bibliotecas y {1} recursos de sonido/idioma
++Ikuti global	Seguir global
++Khusus	Personalizado
++Verifikasi & perbaiki	Verificar y reparar
++Gagal	Falló
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	Esta cuenta de Ely.by usa verificación en dos pasos (2FA). Introduce el código de tu aplicación de autenticación.
++Email atau username Ely.by	Correo o nombre de usuario de Ely.by
++Email/username atau password Ely.by salah.	Correo/usuario o contraseña de Ely.by incorrectos.
++Email/username, password, atau kode 2FA Ely.by salah.	Correo/usuario, contraseña o código 2FA de Ely.by incorrectos.
++Gagal masuk ke Ely.by.	No se pudo iniciar sesión en Ely.by.
++Kode 2FA (6 digit)	Código 2FA (6 dígitos)
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	El código 2FA es incorrecto o ha caducado. Prueba con el código más reciente.
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Inicia sesión con el correo o nombre de usuario y la contraseña de tu cuenta de Ely.by. Admite verificación en dos pasos (2FA).
++Masuk ke Ely.by	Iniciar sesión en Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Tu contraseña solo se envía al servidor de Ely.by y no se guarda en el launcher. Solo se guarda el token de inicio de sesión.
++Respon Ely.by tidak berisi token akses.	La respuesta de Ely.by no incluía un token de acceso.
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	La sesión de Ely.by ya no es válida. Elimina esta cuenta e inicia sesión de nuevo.
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	No se puede conectar con Ely.by. Comprueba tu conexión a internet.
+diff --git a/app/src/main/assets/lang/fil/tambahan.tsv b/app/src/main/assets/lang/fil/tambahan.tsv
+index 501d9f6..e3b10bd 100644
+--- a/app/src/main/assets/lang/fil/tambahan.tsv
++++ b/app/src/main/assets/lang/fil/tambahan.tsv
+@@ -107,3 +107,168 @@ Samudra	Karagatan
+ Tengah malam	Hatinggabi
+ Bara	Baga
+ Gradient halus	Banayad na gradient
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Nagbibigay ng mas maluwag na espasyo sa phone mo. Maaari mo itong itaas ulit sa I-edit ang instance > Mga setting ng instance.
++RAM instance ini diturunkan ke {0} MB.	Ibinaba sa {0} MB ang RAM ng instance na ito.
++Renderer instance ini dikembalikan ke Otomatis.	Ibinalik sa Auto ang renderer ng instance na ito.
++Renderer instance ini diganti ke {0}.	Ginawang {0} ang renderer ng instance na ito.
++Tidak dapat menemukan {0} untuk versi {1}	Hindi makita ang {0} para sa bersyon {1}
++Installer {0} gagal (kode {1})	Nabigo ang installer ng {0} (code {1})
++Proses ini hanya berjalan sekali per versi {0}.	Isang beses lang tumatakbo ang hakbang na ito sa bawat bersyon ng {0}.
++Versi {0} belum dipilih	Wala pang napiling bersyon ng {0}
++{0} hanya mendukung Minecraft {1} ke atas	Sinusuportahan lang ng {0} ang Minecraft {1} pataas
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	Kulang ang storage para i-install ang {0} ({1} MB na lang ang natira, kailangan ng hindi bababa sa {2} MB)
++Installer {0} {1} rusak atau tidak lengkap	Sira o hindi kumpleto ang installer ng {0} {1}
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	Hindi nakikilala ang format ng installer ng {0} (kailangan ng Amber ang {1} {2} pataas)
++Installer {0} untuk Minecraft {1}, bukan {2}	Ang installer ng {0} na ito ay para sa Minecraft {1}, hindi {2}
++version.json di installer {0} tidak terbaca	Hindi mabasa ang version.json sa installer ng {0}
++Installer {0} gagal	Nabigo ang installer ng {0}
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	Natapos ang installer ng {0}, pero hindi makita ang na-patch na Minecraft jar ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	Hindi na-download ang mga library ng {0}: {1}{2}. Suriin ang koneksyon at subukan ulit.
++Path library {0} tidak aman: {1}	Hindi ligtas ang path ng library ng {0}: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	Hindi na-download ang mga library ng {0}: {1}. Suriin ang koneksyon at subukan ulit.
++install_profile.json tidak ada di installer {0}	Wala ang install_profile.json sa installer ng {0}
++versionInfo tidak ada di installer {0}	Wala ang versionInfo sa installer ng {0}
++{0} tidak ada di installer {1}	Wala ang {0} sa installer ng {1}
++Tidak ada versi {0} yang didukung	Walang sinusuportahang bersyon ng {0}
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Hindi na pinapatakbo ng Starling ang mga WebAssembly mod (mod.wasm). Kailangang gawing muli ang mod na ito bilang native mod (.hnmod).
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	Hindi ito native mod na mababasa ng Starling: wala o hindi valid ang horizon-native.json.
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Hindi dito ina-enable ang mga native mod: buksan ang Options > Mods sa loob ng game at piliin ang Compile para mapasok ang mod sa game.
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Ang mga native mod (.hnmod) ay sinusuportahan lang ng Starling engine. Gumawa ng Starling instance para magamit ang mga ito.
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Native mod (.hnmod). Wala pa sa game: buksan ang Options > Mods sa loob ng game at piliin ang Compile.
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Built-in na native module ng Starling. Nasa Options > Mods sa loob ng game ang mga setting nito.
++Starling hanya tersedia untuk HP 64-bit (arm64).	Available lang ang Starling sa mga 64-bit na phone (arm64).
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Hindi kasama ang Starling sa build na ito. Nasa docs/rust-engine.md kung paano ito idagdag.
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Sa ngayon, Offline at Microsoft account lang ang sinusuportahan ng Starling. Pumili ng isa sa tab na Mga Account.
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	Ang pangalan ng offline account para sa Starling ay dapat 1 hanggang 16 na letra, numero, o underscore. Gumawa ng bagong offline account sa tab na Mga Account.
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	Unang bukas: ihahanda ng screen ng Starling ang game (humigit-kumulang 500 MiB ang download). Sundan ang screen hanggang matapos.
++Starling gagal dibuka: {0}	Hindi nabuksan ang Starling: {0}
++Folder akun mesin tidak bisa dibuat	Hindi magawa ang folder ng account ng engine
++{0} tidak bisa disimpan	Hindi ma-save ang {0}
++Patokan berkas Starling tidak tersedia di aplikasi ini.	Hindi available sa app na ito ang file reference ng Starling.
++Folder data Starling tidak bisa dibuat.	Hindi magawa ang data folder ng Starling.
++Berkas versi {0} dari Mojang tidak valid.	Hindi valid ang version file {0} mula sa Mojang.
++Berkas versi {0} tidak mendaftar unduhan.	Walang nakalistang download ang version file {0}.
++Berkas versi {0} tidak mendaftar unduhan {1}.	Hindi nakalista sa version file {0} ang download na {1}.
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	Ang version file {0} ay may {1} jar na iba sa inaasahan ng Starling.
++Berkas versi {0} tidak mendaftar indeks aset.	Walang nakalistang asset index ang version file {0}.
++Nama indeks aset tidak valid.	Hindi valid ang pangalan ng asset index.
++Indeks aset dari Mojang tidak valid.	Hindi valid ang asset index mula sa Mojang.
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	Kulang ang storage: kailangan pa ng humigit-kumulang {0} MB.
++Berkas {0} belum ada setelah diunduh.	Wala pa rin ang file na {0} pagkatapos mag-download.
++Game belum bisa dimulai.	Hindi pa masimulan ang game.
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	Hindi pa masimulan ang game: {0}. Nasa launcher log ang mga detalye.
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hindi pa naka-install ang profile na {0} ({1}). Pindutin ang button na I-DOWNLOAD sa instance!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	Nawawala ang {0} library file ng game (hindi kumpleto ang download o nabura ang mga ito). Pindutin ang I-DOWNLOAD sa instance na ito para makumpleto ang mga ito.
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Kailangan ng modpack na ito ang Quilt, pero sa ngayon Fabric, Forge, at NeoForge lang ang sinusuportahan ng AmberLauncher.
++Daftar modpack terlalu besar	Masyadong malaki ang listahan ng modpack
++Gagal menyiapkan folder modpack	Hindi maihanda ang folder ng modpack
++Gagal menyimpan berkas modpack	Hindi ma-save ang file ng modpack
++Berkas lama tidak ditemukan	Hindi makita ang lumang file
++Berkas {0} berubah sejak diperiksa	Nagbago ang file na {0} pagkatapos itong suriin
++Nama berkas baru tidak valid	Hindi valid ang bagong pangalan ng file
++Berkas baru tanpa sidik jari tidak dipasang	Hindi ini-install ang bagong file na walang fingerprint
++Berkas {0} sudah ada	Mayroon nang file na {0}
++Gagal menyiapkan penggantian berkas	Hindi maihanda ang pagpapalit ng file
++Gagal menyimpan berkas baru	Hindi ma-save ang bagong file
++Gagal menghapus berkas lama	Hindi mabura ang lumang file
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	Hindi ma-download ang {0} mod dahil isinara ng mga may-akda ang pag-download sa pamamagitan ng launcher. I-install ang mga ito nang mano-mano mula sa website ng CurseForge kung kailangan.
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	Kailangan ng modpack na ito ang {0}. Gumawa muna ng {1} instance, saka i-install ang modpack sa instance na iyon.
++Pilih APK	Pumili ng APK
++Izinkan dari sumber ini	Payagan mula sa source na ito
++Terjadi masalah yang tidak diketahui. Coba lagi.	May hindi kilalang problema. Subukan ulit.
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	Hindi makakonekta sa download server. Suriin ang internet connection mo, saka subukan ulit.
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	Masyadong natagalan ang sagot ng server. Maaaring mabagal o hindi stable ang koneksyon; subukan ulit.
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	Nabigo ang secure na koneksyon sa server. Suriin ang petsa at oras ng phone at ang internet connection mo, saka subukan ulit.
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	Naputol ang koneksyon sa kalagitnaan. Subukan ulit; hindi na ido-download ulit ang mga file na natapos na.
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	Puno na ang storage ng phone. Maglaan ng espasyo (humigit-kumulang 500 MB para sa isang bersyon), saka subukan ulit.
++Terjadi masalah yang tidak terduga. Coba lagi.	May hindi inaasahang problema. Subukan ulit.
++Game langsung tertutup atau tidak mau mulai	Agad na nagsasara o hindi nagsisimula ang game
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Buksan ang Mga Setting > Tungkol > Mga log ng game. Nakatala doon ang huling sanhi; ibahagi ito kapag humihingi ng tulong.
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	Kung binabanggit ng mensahe ang nawawalang file o library: buksan ang I-edit ang instance (ang icon na lapis sa Home) at pindutin ang "I-verify at ayusin".
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Ibaba ang "Memory ng game (RAM)" sa Mga Setting > Game. Ang paghingi ng sobrang RAM para sa phone mo ay maaaring magpasara ng game sa Android.
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Subukan ang ibang bersyon ng Java sa I-edit ang instance (halimbawa Java 17 o 21 para sa bagong Minecraft, Java 8 para sa luma).
++FPS rendah atau game patah-patah	Mababang FPS o putol-putol na game
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Ibaba ang "Scale ng resolution ng screen" sa Mga Setting > Game: mas magaspang ang pagkaguhit ng screen pero mas magaan ito nang malaki.
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	Sa loob ng game, paliitin ang Render Distance at Simulation Distance, at patayin ang mabibigat na graphics effect.
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	I-on ang "Ipakita ang FPS at RAM" sa Mga Setting > Controls para makita kung ubos na ang RAM o abala na ang processor.
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Isara ang ibang app, at hayaang lumamig ang phone kapag mainit: bumabagal ang mainit na phone.
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	I-off ang "I-animate ang mga GIF at video" at "Epekto sa home" sa Mga Setting > Display; kumakain ng lakas ng phone ang gumagalaw na background.
++Pakai latar foto biasa, bukan video atau GIF besar.	Gumamit ng karaniwang larawan bilang background, hindi malaking video o GIF.
++Unduhan gagal atau terputus	Nabigo o naputol ang download
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Pindutin ulit ang I-DOWNLOAD. Ang mga kulang na file lang ang ida-download ulit, kaya hindi ito nagsisimula sa zero.
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Siguraduhing may sapat na libreng espasyo ang phone (humigit-kumulang 500 MB para sa isang bersyon); tingnan sa sariling Mga Setting ng phone > Storage.
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	Kung parang kulang ang game pagkatapos matapos, pindutin ang "I-verify at ayusin" sa I-edit ang instance.
++Login Microsoft gagal atau diminta masuk lagi	Nabigo ang Microsoft sign-in o hinihilingang mag-sign in ulit
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	Maaaring nag-expire na ang session. Buksan ang screen ng Mga Account at mag-sign in ulit gamit ang parehong Microsoft account.
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	Dapat may Minecraft Java Edition ang account; hindi magagamit sa online play ang account na wala nito.
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Sundan ang code at address na ipinapakita ng launcher; sandali lang valid ang code, kaya tapusin agad.
++Apa itu akun offline?	Ano ang offline account?
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	Ang offline account ay pangalan lang ng player sa phone na ito, walang sign-in. Bagay ito sa sarili mong mundo (single player) o LAN.
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	Dapat 3-16 na character ang pangalan: letra, numero, o underscore.
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	Karamihan ng online server ay opisyal na account lang ang tinatanggap, kaya kadalasang tinatanggihan doon ang mga offline account.
++Di mana dunia dan mod disimpan? Cara mencadangkan	Saan naka-save ang mga mundo at mod? Paano mag-back up
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	Tingnan ang lokasyon sa Mga Setting > Tungkol > Storage ng data ("Lokasyon ng data").
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	May sariling folder ang bawat instance. Pindutin ang "Buksan ang folder ng instance" sa I-edit ang instance para pumunta roon; nasa folder na saves ang mga mundo.
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Nabubura kasama ng app ang data sa sariling folder ng AmberLauncher (Android/data) kapag ina-uninstall ito, kaya kopyahin muna sa ibang lugar ang mahahalagang mundo.
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	Kung nasa lumang folder na nuxlauncher pa ang data mo, inililipat ito ng button na "Ilipat" sa Storage ng data papunta sa Android/data nang hindi kailangan ng access sa lahat ng file.
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Buksan ang I-edit ang instance > Mga Mod at nilalaman para maghanap at mag-install ng mod, o magdagdag ng mga file na na-download mo na.
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	Maaari ring direktang buksan sa AmberLauncher ang mga .jar o .mrpack file mula sa file manager.
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Siguraduhing tugma ang mod sa bersyon ng Minecraft at loader (Fabric o Forge) ng instance na iyon.
++Pertanyaan yang sering muncul	Mga madalas itanong
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	Tumatakbo pa ang download o pag-install ng instance. Hintayin hanggang matapos, saka subukan ulit.
++Geser antar tombol	Mag-swipe sa pagitan ng mga button
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	I-slide ang daliri mula W papuntang D para mapindot ang mga button sa pagitan nang hindi inaangat ang daliri.
++Pengaturan instance	Mga setting ng instance
++Pengaturan instance disimpan	Na-save ang mga setting ng instance
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Sa instance na ito lang naaangkop ang mga value na pinili rito. Ginagamit ng "Sundan ang global" ang pangkalahatang Mga Setting at nagbabago kasabay nito.
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	Naka-on ang Power Saver Mode: nililimitahan sa {0}% ang resolution.
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Mga renderer lang na tugma sa Minecraft {0} ang ipinapakita.
++Ikuti global (kosong)	Sundan ang global (walang laman)
++Khusus instance ini	Para sa instance na ito lang
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	Para sa mga advanced na user; ang maling value ay maaaring pigilan ang pagtakbo ng game. Kapag walang laman = walang dagdag na argument para sa instance na ito.
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	Para sa mga advanced na user. Walang dagdag na argument ang pangkalahatang Mga Setting.
++Memakai argumen dari Pengaturan umum: {0}	Ginagamit ang mga argument mula sa pangkalahatang Mga Setting: {0}
++Kembalikan semua ke global	Ibalik lahat sa global
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	Dapat 3-16 na character ang pangalan: letra, numero, o underscore (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	Dapat 3-16 na character ang pangalan: letra, numero, o underscore (_).
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Hindi kailangan ng sign-in ng offline account. Hindi ito makakapasok sa premium (online-mode) na server, at kadalasan ikaw lang ang nakakakita ng custom skin. Ang pagpapalit ng pangalan ay bagong player sa server, kaya hindi madadala ang inventory at progress.
++Kategori Semua \u2304	Kategorya Lahat ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Minecraft {0} lang ang sinusuportahan. Sa unang bukas, ihahanda ng screen ng Starling ang game (humigit-kumulang 500 MiB ang download). Hiwalay ang engine na ito sa Horizon, may sarili itong shader, mod, at menu.
++Gagal menyiapkan folder sementara	Hindi maihanda ang pansamantalang folder
++Gagal membaca berkas	Hindi mabasa ang file
++Gagal memasang {0}	Hindi na-install ang {0}
++Gagal menyiapkan Java	Hindi maihanda ang Java
++terlalu besar	masyadong malaki
++tambah aksi	magdagdag ng action
++Memuat data dari {0}...	Nilo-load ang data mula sa {0}...
++Gagal memuat dari {0}	Hindi na-load mula sa {0}
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Mga mod ng Starling: .hmod (nilalaman, o may native code) at .hnmod (native mod), hindi .jar ng Fabric o Forge. Hindi na tumatakbo sa Starling ang mga WebAssembly mod (mod.wasm). Epektibo lang sa game ang mga .hnmod pagkatapos i-compile mula sa loob ng game (Options > Mods > Compile). Ina-on ang mga built-in na module gamit ang switch sa listahan.
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Ang pag-slide ng daliri mula sa isang button papunta sa iba (halimbawa mula W papuntang D) ay pipindot sa mga button sa pagitan nang hindi inaangat ang daliri. Hindi kasama ang mga button ng atake at gamit.
++Discord Rich Presence saat bermain	Discord Rich Presence habang naglalaro
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Ipinapakita ang AmberLauncher kasama ang bersyon ng Minecraft at loader (o ang Rust engine) sa Discord profile mo habang naglalaro. Hindi kasama ang pangalan ng instance at account mo. Kailangan ang Discord app na naka-install at naka-sign in sa phone na ito; walang ginagamit na login o token. Hindi para sa mga wala pang 13 taong gulang. Epektibo simula sa susunod na game.
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Kapag bukas ang launcher at hindi ka pa naglalaro, ipinapakita ng Discord profile mo ang AmberLauncher na may status na Inihahanda ang game. Epektibo sa susunod na pagbukas ng launcher. Ginagamit kasama ng Discord app na naka-sign in ka na; hindi para sa mga wala pang 13 taong gulang.
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Mga sagot sa karaniwang problema: pagsasara ng game, mababang FPS, bigong download, sign-in, at kung saan naka-save ang data.
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	May ilang game file na hindi pa na-download ({0}), kadalasan dahil naputol ang koneksyon. Pindutin ulit ang I-DOWNLOAD: ang mga kulang na file lang ang ida-download ulit.
++{0} library	{0} library
++{0} aset suara/bahasa	{0} sound/language asset
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Hindi na-download ang ilang file. Suriin ang internet connection mo at pindutin ulit ang I-DOWNLOAD para magpatuloy. ({0})
++Gagal memeriksa pembaruan: {0}	Hindi nasuri ang mga update: {0}
++Gagal terhubung ke {0}	Hindi makakonekta sa {0}
++{0} library dan {1} aset suara/bahasa	{0} library at {1} sound/language asset
++Ikuti global	Sundan ang global
++Khusus	Custom
++Verifikasi & perbaiki	I-verify at ayusin
++Gagal	Nabigo
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	Gumagamit ng two-factor authentication (2FA) ang Ely.by account na ito. Ilagay ang code mula sa authenticator app mo.
++Email atau username Ely.by	Email o username sa Ely.by
++Email/username atau password Ely.by salah.	Mali ang email/username o password sa Ely.by.
++Email/username, password, atau kode 2FA Ely.by salah.	Mali ang email/username, password, o 2FA code sa Ely.by.
++Gagal masuk ke Ely.by.	Hindi nakapag-sign in sa Ely.by.
++Kode 2FA (6 digit)	2FA code (6 na digit)
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	Mali o expired na ang 2FA code. Subukan ang pinakabagong code.
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Mag-sign in gamit ang email o username at password ng Ely.by account mo. Sinusuportahan ang two-factor authentication (2FA).
++Masuk ke Ely.by	Mag-sign in sa Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Sa Ely.by server lang ipinapadala ang password mo at hindi ito sine-save sa launcher. Ang login token lang ang sine-save.
++Respon Ely.by tidak berisi token akses.	Walang access token ang tugon ng Ely.by.
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Hindi na valid ang session ng Ely.by. Burahin ang account na ito at mag-sign in ulit.
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Hindi makakonekta sa Ely.by. Suriin ang internet connection mo.
+diff --git a/app/src/main/assets/lang/pt/tambahan.tsv b/app/src/main/assets/lang/pt/tambahan.tsv
+index f4a55bf..23ad417 100644
+--- a/app/src/main/assets/lang/pt/tambahan.tsv
++++ b/app/src/main/assets/lang/pt/tambahan.tsv
+@@ -105,3 +105,168 @@ Samudra	Oceano
+ Tengah malam	Meia-noite
+ Bara	Brasa
+ Gradient halus	Gradientes suaves
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Dá mais folga ao celular. Você pode aumentar de novo em Editar instância > Configurações da instância.
++RAM instance ini diturunkan ke {0} MB.	A RAM desta instância foi reduzida para {0} MB.
++Renderer instance ini dikembalikan ke Otomatis.	O renderizador desta instância voltou para Automático.
++Renderer instance ini diganti ke {0}.	O renderizador desta instância foi alterado para {0}.
++Tidak dapat menemukan {0} untuk versi {1}	Não foi possível encontrar {0} para a versão {1}
++Installer {0} gagal (kode {1})	O instalador do {0} falhou (código {1})
++Proses ini hanya berjalan sekali per versi {0}.	Esta etapa só é executada uma vez por versão do {0}.
++Versi {0} belum dipilih	Nenhuma versão do {0} selecionada
++{0} hanya mendukung Minecraft {1} ke atas	O {0} só oferece suporte ao Minecraft {1} ou mais recente
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	Armazenamento insuficiente para instalar o {0} (restam {1} MB, são necessários pelo menos {2} MB)
++Installer {0} {1} rusak atau tidak lengkap	O instalador do {0} {1} está danificado ou incompleto
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	O formato deste instalador do {0} não foi reconhecido (o Amber precisa do {1} {2} ou mais recente)
++Installer {0} untuk Minecraft {1}, bukan {2}	Este instalador do {0} é para o Minecraft {1}, não para o {2}
++version.json di installer {0} tidak terbaca	Não foi possível ler o version.json do instalador do {0}
++Installer {0} gagal	O instalador do {0} falhou
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	O instalador do {0} terminou, mas o jar do Minecraft modificado não foi encontrado ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do {0}: {1}{2}. Verifique a conexão e tente novamente.
++Path library {0} tidak aman: {1}	Caminho de biblioteca do {0} inseguro: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	Falha ao baixar as bibliotecas do {0}: {1}. Verifique a conexão e tente novamente.
++install_profile.json tidak ada di installer {0}	O install_profile.json não existe no instalador do {0}
++versionInfo tidak ada di installer {0}	O versionInfo não existe no instalador do {0}
++{0} tidak ada di installer {1}	{0} não existe no instalador do {1}
++Tidak ada versi {0} yang didukung	Nenhuma versão compatível do {0}
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	O Starling não executa mais mods WebAssembly (mod.wasm). Este mod precisa ser refeito como mod nativo (.hnmod).
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	Este não é um mod nativo que o Starling consiga ler: o horizon-native.json está ausente ou inválido.
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Mods nativos não são ativados por aqui: abra Options > Mods dentro do jogo e escolha Compile para o mod entrar no jogo.
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Mods nativos (.hnmod) só são compatíveis com o motor Starling. Crie uma instância do Starling para usá-los.
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Mod nativo (.hnmod). Ainda não está no jogo: abra Options > Mods dentro do jogo e escolha Compile.
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Módulo nativo integrado do Starling. As configurações dele ficam em Options > Mods dentro do jogo.
++Starling hanya tersedia untuk HP 64-bit (arm64).	O Starling só está disponível em celulares de 64 bits (arm64).
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	O Starling não está incluído nesta versão. Como adicioná-lo está descrito em docs/rust-engine.md.
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Por enquanto o Starling só aceita contas offline e Microsoft. Escolha uma delas na aba Contas.
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	O nome da conta offline para o Starling deve ter de 1 a 16 letras, números ou sublinhados. Crie uma nova conta offline na aba Contas.
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	Primeira abertura: a tela do Starling prepara o jogo (download de cerca de 500 MiB). Siga a tela até terminar.
++Starling gagal dibuka: {0}	Falha ao abrir o Starling: {0}
++Folder akun mesin tidak bisa dibuat	Não foi possível criar a pasta de contas do motor
++{0} tidak bisa disimpan	Não foi possível salvar {0}
++Patokan berkas Starling tidak tersedia di aplikasi ini.	A referência de arquivos do Starling não está disponível neste app.
++Folder data Starling tidak bisa dibuat.	Não foi possível criar a pasta de dados do Starling.
++Berkas versi {0} dari Mojang tidak valid.	O arquivo de versão {0} da Mojang não é válido.
++Berkas versi {0} tidak mendaftar unduhan.	O arquivo de versão {0} não lista nenhum download.
++Berkas versi {0} tidak mendaftar unduhan {1}.	O arquivo de versão {0} não lista o download {1}.
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	O arquivo de versão {0} contém um jar {1} diferente do esperado pelo Starling.
++Berkas versi {0} tidak mendaftar indeks aset.	O arquivo de versão {0} não lista um índice de recursos.
++Nama indeks aset tidak valid.	O nome do índice de recursos não é válido.
++Indeks aset dari Mojang tidak valid.	O índice de recursos da Mojang não é válido.
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	Armazenamento insuficiente: são necessários mais cerca de {0} MB.
++Berkas {0} belum ada setelah diunduh.	O arquivo {0} ainda não existe depois do download.
++Game belum bisa dimulai.	O jogo ainda não pode ser iniciado.
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	O jogo ainda não pode ser iniciado: {0}. Os detalhes estão no log do launcher.
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	O perfil {0} ({1}) ainda não está instalado. Toque no botão BAIXAR da instância!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	Faltam {0} arquivos de bibliotecas do jogo (o download ficou incompleto ou eles foram apagados). Toque em BAIXAR nesta instância para completá-los.
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Este modpack precisa do Quilt, mas por enquanto o AmberLauncher só oferece suporte a Fabric, Forge e NeoForge.
++Daftar modpack terlalu besar	A lista do modpack é grande demais
++Gagal menyiapkan folder modpack	Não foi possível preparar a pasta do modpack
++Gagal menyimpan berkas modpack	Não foi possível salvar o arquivo do modpack
++Berkas lama tidak ditemukan	O arquivo antigo não foi encontrado
++Berkas {0} berubah sejak diperiksa	O arquivo {0} mudou depois de ser verificado
++Nama berkas baru tidak valid	O nome do novo arquivo não é válido
++Berkas baru tanpa sidik jari tidak dipasang	Um arquivo novo sem impressão digital não foi instalado
++Berkas {0} sudah ada	O arquivo {0} já existe
++Gagal menyiapkan penggantian berkas	Não foi possível preparar a substituição do arquivo
++Gagal menyimpan berkas baru	Não foi possível salvar o novo arquivo
++Gagal menghapus berkas lama	Não foi possível apagar o arquivo antigo
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	Não foi possível baixar {0} mods porque os autores bloquearam downloads por launchers. Instale-os manualmente pelo site do CurseForge, se precisar.
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	Este modpack precisa do {0}. Crie primeiro uma instância do {1} e depois instale o modpack nela.
++Pilih APK	Escolher APK
++Izinkan dari sumber ini	Permitir desta fonte
++Terjadi masalah yang tidak diketahui. Coba lagi.	Ocorreu um problema desconhecido. Tente novamente.
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	Não foi possível conectar ao servidor de download. Verifique sua conexão com a internet e tente novamente.
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	O servidor demorou demais para responder. A conexão pode estar lenta ou instável; tente novamente.
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	A conexão segura com o servidor falhou. Verifique a data e a hora do celular e a conexão com a internet, e tente novamente.
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	A conexão caiu no meio do caminho. Tente novamente; os arquivos já concluídos não são baixados de novo.
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	O armazenamento do celular está cheio. Libere espaço (cerca de 500 MB por versão) e tente novamente.
++Terjadi masalah yang tidak terduga. Coba lagi.	Ocorreu um problema inesperado. Tente novamente.
++Game langsung tertutup atau tidak mau mulai	O jogo fecha na hora ou não inicia
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Abra Configurações > Sobre > Log do jogo. A última causa fica registrada ali; compartilhe o conteúdo ao pedir ajuda.
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	Se a mensagem citar um arquivo ou biblioteca ausente: abra Editar instância (o ícone de lápis na tela Início) e toque em "Verificar e reparar".
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Diminua a "Memória do jogo (RAM)" em Configurações > Jogo. Pedir RAM demais para o celular pode fazer o Android fechar o jogo.
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Tente outra versão do Java em Editar instância (por exemplo, Java 17 ou 21 para Minecraft recente, Java 8 para versões antigas).
++FPS rendah atau game patah-patah	FPS baixo ou jogo travando
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Diminua a "Escala da resolução da tela" em Configurações > Jogo: a tela é desenhada com menos detalhe, mas fica bem mais leve.
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	Dentro do jogo, diminua a Render Distance e a Simulation Distance e desative os efeitos gráficos pesados.
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	Ative "Mostrar FPS e RAM" em Configurações > Controles para ver se o problema é a RAM quase esgotada ou o processador sobrecarregado.
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Feche outros apps e deixe o celular esfriar se estiver quente: um celular quente reduz a própria velocidade.
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	Desative "Animar GIFs e vídeos" e "Efeito na tela inicial" em Configurações > Aparência; fundos em movimento gastam energia do celular.
++Pakai latar foto biasa, bukan video atau GIF besar.	Use uma foto comum como plano de fundo, não um vídeo ou GIF grande.
++Unduhan gagal atau terputus	O download falhou ou foi interrompido
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Toque em BAIXAR de novo. Só os arquivos que faltam são baixados outra vez, então não recomeça do zero.
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Verifique se o celular tem espaço livre suficiente (cerca de 500 MB por versão); veja nas Configurações do próprio celular > Armazenamento.
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	Se o jogo parecer incompleto depois de terminar, toque em "Verificar e reparar" em Editar instância.
++Login Microsoft gagal atau diminta masuk lagi	O login da Microsoft falhou ou pede para entrar de novo
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	A sessão pode ter expirado. Abra a tela Contas e entre novamente com a mesma conta Microsoft.
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	A conta precisa ter o Minecraft Java Edition; uma conta sem ele não pode ser usada para jogar online.
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Siga o código e o endereço mostrados pelo launcher; o código vale por pouco tempo, então conclua logo.
++Apa itu akun offline?	O que é uma conta offline?
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	Uma conta offline é apenas um nome de jogador neste celular, sem login. Serve para o seu próprio mundo (um jogador) ou LAN.
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	O nome deve ter de 3 a 16 caracteres: letras, números ou sublinhados.
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	A maioria dos servidores online só aceita contas oficiais, então contas offline costumam ser recusadas lá.
++Di mana dunia dan mod disimpan? Cara mencadangkan	Onde ficam os mundos e os mods? Como fazer backup
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	Veja o local em Configurações > Sobre > Armazenamento de dados ("Local dos dados").
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	Cada instância tem sua própria pasta. Toque em "Abrir pasta da instância" em Editar instância para ir até ela; os mundos ficam na pasta saves.
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Os dados na pasta própria do AmberLauncher (Android/data) são apagados junto com o app se você o desinstalar, então copie antes os mundos importantes para outro lugar.
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	Se seus dados ainda estão na pasta antiga nuxlauncher, o botão "Mover" em Armazenamento de dados os leva para Android/data sem precisar de acesso a todos os arquivos.
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Abra Editar instância > Mods e conteúdo para procurar e instalar mods, ou adicione arquivos que você já baixou.
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	Arquivos .jar ou .mrpack também podem ser abertos diretamente com o AmberLauncher a partir de um gerenciador de arquivos.
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Verifique se o mod é compatível com a versão do Minecraft e o loader (Fabric ou Forge) dessa instância.
++Pertanyaan yang sering muncul	Perguntas frequentes
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	O download ou a instalação de uma instância ainda está em andamento. Espere terminar e tente novamente.
++Geser antar tombol	Deslizar entre botões
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	Deslize o dedo de W para D para pressionar os botões do caminho sem levantar o dedo.
++Pengaturan instance	Configurações da instância
++Pengaturan instance disimpan	Configurações da instância salvas
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Os valores escolhidos aqui valem só para esta instância. "Seguir global" usa as Configurações gerais e muda junto com elas.
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	O Modo Economia está ligado: a resolução está limitada a {0}%.
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Só os renderizadores compatíveis com o Minecraft {0} são exibidos.
++Ikuti global (kosong)	Seguir global (vazio)
++Khusus instance ini	Só esta instância
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	Para usuários avançados; um valor errado pode impedir o jogo de rodar. Em branco = sem argumentos extras para esta instância.
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	Para usuários avançados. As Configurações gerais não usam argumentos extras.
++Memakai argumen dari Pengaturan umum: {0}	Usando os argumentos das Configurações gerais: {0}
++Kembalikan semua ke global	Restaurar tudo para global
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	O nome deve ter de 3 a 16 caracteres: letras, números ou sublinhados (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	O nome deve ter de 3 a 16 caracteres: letras, números ou sublinhados (_).
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Contas offline não precisam de login. Elas não entram em servidores premium (online-mode), e skins personalizadas normalmente só aparecem para você. Mudar o nome conta como um jogador novo no servidor, então inventário e progresso não são mantidos.
++Kategori Semua \u2304	Categoria Todas ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Só é compatível com o Minecraft {0}. Na primeira abertura, a tela do Starling prepara o jogo (download de cerca de 500 MiB). Este motor é separado do Horizon, com shaders, mods e menus próprios.
++Gagal menyiapkan folder sementara	Não foi possível preparar a pasta temporária
++Gagal membaca berkas	Não foi possível ler o arquivo
++Gagal memasang {0}	Falha ao instalar {0}
++Gagal menyiapkan Java	Não foi possível preparar o Java
++terlalu besar	grande demais
++tambah aksi	adicionar ação
++Memuat data dari {0}...	Carregando dados de {0}...
++Gagal memuat dari {0}	Falha ao carregar de {0}
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Mods do Starling: .hmod (conteúdo, ou com código nativo) e .hnmod (mods nativos), não arquivos .jar do Fabric ou Forge. Mods WebAssembly (mod.wasm) não rodam mais no Starling. Os mods .hnmod só passam a valer no jogo depois de compilados de dentro do jogo (Options > Mods > Compile). Os módulos integrados são ativados pela chave na lista.
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Deslizar o dedo de um botão para outro (por exemplo, de W para D) pressiona os botões do caminho sem levantar o dedo. Os botões de atacar e usar não entram.
++Discord Rich Presence saat bermain	Discord Rich Presence ao jogar
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Mostra o AmberLauncher junto com a versão do Minecraft e o loader (ou o motor Rust) no seu perfil do Discord enquanto você joga. O nome da instância e da conta não são compartilhados. Precisa do app do Discord instalado e com login feito neste celular; não usa login nem token. Não é para menores de 13 anos. Vale a partir do próximo jogo.
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Enquanto o launcher está aberto e você não está jogando, seu perfil do Discord mostra o AmberLauncher com o status Preparando o jogo. Vale na próxima vez que o launcher for aberto. Usado com o app do Discord em que você já fez login; não é para menores de 13 anos.
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Respostas para problemas comuns: o jogo fechando, FPS baixo, downloads que falham, login e onde os dados ficam.
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	Alguns arquivos do jogo ainda não foram baixados ({0}), geralmente porque a conexão caiu. Toque em BAIXAR de novo: só os arquivos que faltam são baixados outra vez.
++{0} library	{0} bibliotecas
++{0} aset suara/bahasa	{0} recursos de som/idioma
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Alguns arquivos não puderam ser baixados. Verifique sua conexão com a internet e toque em BAIXAR de novo para continuar. ({0})
++Gagal memeriksa pembaruan: {0}	Falha ao verificar atualizações: {0}
++Gagal terhubung ke {0}	Falha ao conectar a {0}
++{0} library dan {1} aset suara/bahasa	{0} bibliotecas e {1} recursos de som/idioma
++Ikuti global	Seguir global
++Khusus	Personalizado
++Verifikasi & perbaiki	Verificar e reparar
++Gagal	Falhou
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	Esta conta do Ely.by usa verificação em duas etapas (2FA). Digite o código do seu app autenticador.
++Email atau username Ely.by	E-mail ou nome de usuário do Ely.by
++Email/username atau password Ely.by salah.	E-mail/usuário ou senha do Ely.by incorretos.
++Email/username, password, atau kode 2FA Ely.by salah.	E-mail/usuário, senha ou código 2FA do Ely.by incorretos.
++Gagal masuk ke Ely.by.	Falha ao entrar no Ely.by.
++Kode 2FA (6 digit)	Código 2FA (6 dígitos)
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	O código 2FA está errado ou expirou. Tente o código mais recente.
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Entre com o e-mail ou nome de usuário e a senha da sua conta Ely.by. A verificação em duas etapas (2FA) é compatível.
++Masuk ke Ely.by	Entrar no Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Sua senha só é enviada ao servidor do Ely.by e não é guardada no launcher. Apenas o token de login é salvo.
++Respon Ely.by tidak berisi token akses.	A resposta do Ely.by não trouxe um token de acesso.
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	A sessão do Ely.by não é mais válida. Exclua esta conta e entre novamente.
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Não foi possível conectar ao Ely.by. Verifique sua conexão com a internet.
+diff --git a/app/src/main/assets/lang/th/tambahan.tsv b/app/src/main/assets/lang/th/tambahan.tsv
+index 81e246c..670e6ae 100644
+--- a/app/src/main/assets/lang/th/tambahan.tsv
++++ b/app/src/main/assets/lang/th/tambahan.tsv
+@@ -105,3 +105,168 @@ Samudra	มหาสมุทร
+ Tengah malam	เที่ยงคืน
+ Bara	ถ่านไฟ
+ Gradient halus	ไล่สีแบบนุ่มนวล
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	เพิ่มพื้นที่ว่างให้มือถือ เพิ่มกลับได้ที่ แก้ไข instance > การตั้งค่า instance
++RAM instance ini diturunkan ke {0} MB.	ลด RAM ของ instance นี้เหลือ {0} MB แล้ว
++Renderer instance ini dikembalikan ke Otomatis.	ตั้ง renderer ของ instance นี้กลับเป็นอัตโนมัติแล้ว
++Renderer instance ini diganti ke {0}.	เปลี่ยน renderer ของ instance นี้เป็น {0} แล้ว
++Tidak dapat menemukan {0} untuk versi {1}	ไม่พบ {0} สำหรับเวอร์ชัน {1}
++Installer {0} gagal (kode {1})	ตัวติดตั้ง {0} ล้มเหลว (รหัส {1})
++Proses ini hanya berjalan sekali per versi {0}.	ขั้นตอนนี้ทำเพียงครั้งเดียวต่อเวอร์ชัน {0}
++Versi {0} belum dipilih	ยังไม่ได้เลือกเวอร์ชัน {0}
++{0} hanya mendukung Minecraft {1} ke atas	{0} รองรับเฉพาะ Minecraft {1} ขึ้นไป
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	พื้นที่เก็บข้อมูลไม่พอสำหรับติดตั้ง {0} (เหลือ {1} MB ต้องการอย่างน้อย {2} MB)
++Installer {0} {1} rusak atau tidak lengkap	ตัวติดตั้ง {0} {1} เสียหายหรือไม่สมบูรณ์
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	ไม่รู้จักรูปแบบตัวติดตั้ง {0} นี้ (Amber ต้องใช้ {1} {2} ขึ้นไป)
++Installer {0} untuk Minecraft {1}, bukan {2}	ตัวติดตั้ง {0} นี้สำหรับ Minecraft {1} ไม่ใช่ {2}
++version.json di installer {0} tidak terbaca	อ่าน version.json ในตัวติดตั้ง {0} ไม่ได้
++Installer {0} gagal	ตัวติดตั้ง {0} ล้มเหลว
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	ตัวติดตั้ง {0} ทำงานเสร็จแล้วแต่ไม่พบ jar ของ Minecraft ที่แพตช์แล้ว ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี {0} ไม่สำเร็จ: {1}{2} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
++Path library {0} tidak aman: {1}	พาธไลบรารี {0} ไม่ปลอดภัย: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	ดาวน์โหลดไลบรารี {0} ไม่สำเร็จ: {1} ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง
++install_profile.json tidak ada di installer {0}	ไม่พบ install_profile.json ในตัวติดตั้ง {0}
++versionInfo tidak ada di installer {0}	ไม่พบ versionInfo ในตัวติดตั้ง {0}
++{0} tidak ada di installer {1}	ไม่พบ {0} ในตัวติดตั้ง {1}
++Tidak ada versi {0} yang didukung	ไม่มีเวอร์ชัน {0} ที่รองรับ
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling ไม่รันมอด WebAssembly (mod.wasm) อีกต่อไป ต้องสร้างมอดนี้ใหม่เป็นมอดเนทีฟ (.hnmod)
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	นี่ไม่ใช่มอดเนทีฟที่ Starling อ่านได้: ไม่พบ horizon-native.json หรือไม่ถูกต้อง
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	เปิดใช้มอดเนทีฟจากที่นี่ไม่ได้: ให้เปิด Options > Mods ในเกมแล้วเลือก Compile เพื่อให้มอดเข้าไปในเกม
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	มอดเนทีฟ (.hnmod) รองรับเฉพาะเอนจิน Starling สร้าง instance Starling เพื่อใช้งาน
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	มอดเนทีฟ (.hnmod) ยังไม่เข้าไปในเกม: เปิด Options > Mods ในเกมแล้วเลือก Compile
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	โมดูลเนทีฟที่มาพร้อม Starling การตั้งค่าอยู่ที่ Options > Mods ในเกม
++Starling hanya tersedia untuk HP 64-bit (arm64).	Starling ใช้ได้เฉพาะมือถือ 64 บิต (arm64)
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	บิลด์นี้ยังไม่มี Starling วิธีเพิ่มดูได้ที่ docs/rust-engine.md
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	ตอนนี้ Starling รองรับเฉพาะบัญชีออฟไลน์และ Microsoft เลือกอย่างใดอย่างหนึ่งในแท็บบัญชี
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	ชื่อบัญชีออฟไลน์สำหรับ Starling ต้องมี 1 ถึง 16 ตัว เป็นตัวอักษร ตัวเลข หรือขีดล่าง สร้างบัญชีออฟไลน์ใหม่ในแท็บบัญชี
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	เปิดครั้งแรก: หน้าจอ Starling จะเตรียมเกม (ดาวน์โหลดประมาณ 500 MiB) ทำตามหน้าจอจนเสร็จ
++Starling gagal dibuka: {0}	เปิด Starling ไม่สำเร็จ: {0}
++Folder akun mesin tidak bisa dibuat	สร้างโฟลเดอร์บัญชีของเอนจินไม่ได้
++{0} tidak bisa disimpan	บันทึก {0} ไม่ได้
++Patokan berkas Starling tidak tersedia di aplikasi ini.	ไม่มีไฟล์อ้างอิงของ Starling ในแอปนี้
++Folder data Starling tidak bisa dibuat.	สร้างโฟลเดอร์ข้อมูลของ Starling ไม่ได้
++Berkas versi {0} dari Mojang tidak valid.	ไฟล์เวอร์ชัน {0} จาก Mojang ไม่ถูกต้อง
++Berkas versi {0} tidak mendaftar unduhan.	ไฟล์เวอร์ชัน {0} ไม่ได้ระบุรายการดาวน์โหลด
++Berkas versi {0} tidak mendaftar unduhan {1}.	ไฟล์เวอร์ชัน {0} ไม่ได้ระบุการดาวน์โหลด {1}
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	ไฟล์เวอร์ชัน {0} มี jar {1} ที่ต่างจากที่ Starling กำหนดไว้
++Berkas versi {0} tidak mendaftar indeks aset.	ไฟล์เวอร์ชัน {0} ไม่ได้ระบุ asset index
++Nama indeks aset tidak valid.	ชื่อ asset index ไม่ถูกต้อง
++Indeks aset dari Mojang tidak valid.	asset index จาก Mojang ไม่ถูกต้อง
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	พื้นที่เก็บข้อมูลไม่พอ: ต้องการอีกประมาณ {0} MB
++Berkas {0} belum ada setelah diunduh.	ยังไม่พบไฟล์ {0} หลังดาวน์โหลด
++Game belum bisa dimulai.	ยังเริ่มเกมไม่ได้
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	ยังเริ่มเกมไม่ได้: {0} ดูรายละเอียดในล็อกของตัวเปิดเกม
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	ยังไม่ได้ติดตั้งโปรไฟล์ {0} ({1}) กรุณากดปุ่มดาวน์โหลดที่ instance!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	ไฟล์ไลบรารีเกม {0} ไฟล์หายไป (ดาวน์โหลดไม่สมบูรณ์หรือถูกลบ) กดดาวน์โหลดที่ instance นี้เพื่อทำให้ครบ
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	modpack นี้ต้องใช้ Quilt แต่ตอนนี้ AmberLauncher รองรับเฉพาะ Fabric, Forge และ NeoForge
++Daftar modpack terlalu besar	รายการ modpack ใหญ่เกินไป
++Gagal menyiapkan folder modpack	เตรียมโฟลเดอร์ modpack ไม่สำเร็จ
++Gagal menyimpan berkas modpack	บันทึกไฟล์ modpack ไม่สำเร็จ
++Berkas lama tidak ditemukan	ไม่พบไฟล์เดิม
++Berkas {0} berubah sejak diperiksa	ไฟล์ {0} เปลี่ยนไปหลังตรวจสอบ
++Nama berkas baru tidak valid	ชื่อไฟล์ใหม่ไม่ถูกต้อง
++Berkas baru tanpa sidik jari tidak dipasang	ไม่ได้ติดตั้งไฟล์ใหม่ที่ไม่มีลายนิ้วมือ
++Berkas {0} sudah ada	มีไฟล์ {0} อยู่แล้ว
++Gagal menyiapkan penggantian berkas	เตรียมการแทนที่ไฟล์ไม่สำเร็จ
++Gagal menyimpan berkas baru	บันทึกไฟล์ใหม่ไม่สำเร็จ
++Gagal menghapus berkas lama	ลบไฟล์เดิมไม่สำเร็จ
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	ดาวน์โหลด Mod {0} รายการไม่ได้ เพราะผู้สร้างปิดการดาวน์โหลดผ่านตัวเปิดเกม ติดตั้งเองจากเว็บไซต์ CurseForge หากต้องการ
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	modpack นี้ต้องใช้ {0} สร้าง instance {1} ก่อน แล้วติดตั้ง modpack ลงใน instance นั้น
++Pilih APK	เลือก APK
++Izinkan dari sumber ini	อนุญาตจากแหล่งที่มานี้
++Terjadi masalah yang tidak diketahui. Coba lagi.	เกิดปัญหาที่ไม่ทราบสาเหตุ ลองอีกครั้ง
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	เชื่อมต่อกับเซิร์ฟเวอร์ดาวน์โหลดไม่ได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองอีกครั้ง
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	เซิร์ฟเวอร์ตอบช้าเกินไป การเชื่อมต่ออาจช้าหรือไม่เสถียร ลองอีกครั้ง
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	การเชื่อมต่อที่ปลอดภัยไปยังเซิร์ฟเวอร์ล้มเหลว ตรวจสอบวันที่และเวลาของมือถือและการเชื่อมต่ออินเทอร์เน็ต แล้วลองอีกครั้ง
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	การเชื่อมต่อหลุดกลางคัน ลองอีกครั้ง ไฟล์ที่เสร็จแล้วจะไม่ถูกดาวน์โหลดซ้ำ
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	พื้นที่เก็บข้อมูลของมือถือเต็ม เคลียร์พื้นที่ (ประมาณ 500 MB ต่อหนึ่งเวอร์ชัน) แล้วลองอีกครั้ง
++Terjadi masalah yang tidak terduga. Coba lagi.	เกิดปัญหาที่ไม่คาดคิด ลองอีกครั้ง
++Game langsung tertutup atau tidak mau mulai	เกมปิดทันทีหรือเริ่มไม่ขึ้น
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	เปิด การตั้งค่า > เกี่ยวกับ > ล็อกเกม สาเหตุล่าสุดถูกบันทึกไว้ที่นั่น แชร์เนื้อหานั้นเมื่อขอความช่วยเหลือ
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	หากข้อความระบุว่าไฟล์หรือไลบรารีหาย: เปิด แก้ไข instance (ไอคอนดินสอที่หน้าหลัก) แล้วกด "ตรวจสอบและซ่อมแซม"
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	ลด "หน่วยความจำเกม (RAM)" ใน การตั้งค่า > เกม การขอ RAM มากเกินไปสำหรับมือถืออาจทำให้ Android ปิดเกม
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	ลองใช้ Java เวอร์ชันอื่นใน แก้ไข instance (เช่น Java 17 หรือ 21 สำหรับ Minecraft ใหม่ Java 8 สำหรับรุ่นเก่า)
++FPS rendah atau game patah-patah	FPS ต่ำหรือเกมกระตุก
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	ลด "สเกลความละเอียดหน้าจอ" ใน การตั้งค่า > เกม หน้าจอจะหยาบขึ้นแต่เบากว่ามาก
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	ในเกม ลด Render Distance และ Simulation Distance แล้วปิดเอฟเฟกต์กราฟิกที่หนัก
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	เปิด "แสดง FPS และ RAM" ใน การตั้งค่า > การควบคุม เพื่อดูว่าปัญหาคือ RAM เกือบเต็มหรือโปรเซสเซอร์ทำงานหนักเกินไป
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	ปิดแอปอื่น และปล่อยให้มือถือเย็นลงหากรู้สึกร้อน เพราะมือถือที่ร้อนจะลดความเร็วตัวเอง
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	ปิด "ทำให้ GIF และวิดีโอเคลื่อนไหว" และ "เอฟเฟกต์หน้าหลัก" ใน การตั้งค่า > การแสดงผล พื้นหลังที่เคลื่อนไหวใช้พลังงานของมือถือ
++Pakai latar foto biasa, bukan video atau GIF besar.	ใช้ภาพถ่ายธรรมดาเป็นพื้นหลัง ไม่ใช่วิดีโอหรือ GIF ขนาดใหญ่
++Unduhan gagal atau terputus	ดาวน์โหลดไม่สำเร็จหรือหยุดกลางคัน
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	กดดาวน์โหลดอีกครั้ง จะดาวน์โหลดซ้ำเฉพาะไฟล์ที่ขาด จึงไม่ต้องเริ่มจากศูนย์
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	ตรวจสอบว่ามือถือมีพื้นที่ว่างพอ (ประมาณ 500 MB ต่อหนึ่งเวอร์ชัน) ดูได้ที่ การตั้งค่าของมือถือ > ที่เก็บข้อมูล
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	หากเกมดูไม่ครบหลังติดตั้งเสร็จ ให้กด "ตรวจสอบและซ่อมแซม" ใน แก้ไข instance
++Login Microsoft gagal atau diminta masuk lagi	เข้าสู่ระบบ Microsoft ไม่สำเร็จหรือถูกขอให้เข้าสู่ระบบอีกครั้ง
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	เซสชันอาจหมดอายุ เปิดหน้าบัญชีแล้วเข้าสู่ระบบอีกครั้งด้วยบัญชี Microsoft เดิม
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	บัญชีต้องมี Minecraft Java Edition บัญชีที่ไม่มีใช้เล่นออนไลน์ไม่ได้
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	ทำตามรหัสและที่อยู่ที่ตัวเปิดเกมแสดง รหัสใช้ได้ชั่วครู่ ให้ทำให้เสร็จเร็วๆ
++Apa itu akun offline?	บัญชีออฟไลน์คืออะไร
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	บัญชีออฟไลน์เป็นเพียงชื่อผู้เล่นบนมือถือเครื่องนี้ ไม่ต้องเข้าสู่ระบบ เหมาะกับโลกของคุณเอง (เล่นคนเดียว) หรือ LAN
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	ชื่อต้องมี 3-16 ตัว เป็นตัวอักษร ตัวเลข หรือขีดล่าง
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	เซิร์ฟเวอร์ออนไลน์ส่วนใหญ่รับเฉพาะบัญชีทางการ บัญชีออฟไลน์จึงมักถูกปฏิเสธที่นั่น
++Di mana dunia dan mod disimpan? Cara mencadangkan	โลกและมอดเก็บไว้ที่ไหน วิธีสำรองข้อมูล
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	ดูตำแหน่งได้ที่ การตั้งค่า > เกี่ยวกับ > ที่เก็บข้อมูล ("ตำแหน่งข้อมูล")
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	แต่ละ instance มีโฟลเดอร์ของตัวเอง กด "เปิดโฟลเดอร์ instance" ใน แก้ไข instance เพื่อไปที่นั่น โลกอยู่ในโฟลเดอร์ saves
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	ข้อมูลในโฟลเดอร์ของ AmberLauncher เอง (Android/data) จะถูกลบไปพร้อมแอปเมื่อถอนการติดตั้ง ดังนั้นควรคัดลอกโลกที่สำคัญไปเก็บที่อื่นก่อน
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	หากข้อมูลของคุณยังอยู่ในโฟลเดอร์ nuxlauncher เดิม ปุ่ม "ย้าย" ในที่เก็บข้อมูลจะย้ายไปที่ Android/data โดยไม่ต้องใช้สิทธิ์เข้าถึงไฟล์ทั้งหมด
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	เปิด แก้ไข instance > Mod และเนื้อหา เพื่อค้นหาและติดตั้งมอด หรือเพิ่มไฟล์ที่คุณดาวน์โหลดไว้แล้ว
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	ไฟล์ .jar หรือ .mrpack ยังเปิดตรงๆ ด้วย AmberLauncher จากตัวจัดการไฟล์ได้
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	ตรวจสอบว่ามอดตรงกับเวอร์ชัน Minecraft และ loader (Fabric หรือ Forge) ของ instance นั้น
++Pertanyaan yang sering muncul	คำถามที่พบบ่อย
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	การดาวน์โหลดหรือติดตั้ง instance ยังทำงานอยู่ รอให้เสร็จแล้วลองอีกครั้ง
++Geser antar tombol	ปัดข้ามระหว่างปุ่ม
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	ลากนิ้วจาก W ไป D เพื่อกดปุ่มที่ผ่านโดยไม่ต้องยกนิ้ว
++Pengaturan instance	การตั้งค่า instance
++Pengaturan instance disimpan	บันทึกการตั้งค่า instance แล้ว
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	ค่าที่เลือกที่นี่ใช้กับ instance นี้เท่านั้น "ตามค่าส่วนกลาง" ใช้การตั้งค่าทั่วไปและเปลี่ยนตามเมื่อการตั้งค่าทั่วไปเปลี่ยน
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	โหมดประหยัดเปิดอยู่: จำกัดความละเอียดไว้ที่ {0}%
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	แสดงเฉพาะ renderer ที่ตรงกับ Minecraft {0}
++Ikuti global (kosong)	ตามค่าส่วนกลาง (ว่าง)
++Khusus instance ini	เฉพาะ instance นี้
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	สำหรับผู้ใช้ขั้นสูง ใส่ค่าผิดอาจทำให้เกมรันไม่ได้ เว้นว่าง = ไม่มีอาร์กิวเมนต์เพิ่มเติมสำหรับ instance นี้
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	สำหรับผู้ใช้ขั้นสูง การตั้งค่าทั่วไปไม่ใช้อาร์กิวเมนต์เพิ่มเติม
++Memakai argumen dari Pengaturan umum: {0}	ใช้อาร์กิวเมนต์จากการตั้งค่าทั่วไป: {0}
++Kembalikan semua ke global	คืนทุกอย่างเป็นค่าส่วนกลาง
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	ชื่อต้องมี 3-16 ตัว เป็นตัวอักษร ตัวเลข หรือขีดล่าง (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	ชื่อต้องมี 3-16 ตัว เป็นตัวอักษร ตัวเลข หรือขีดล่าง (_)
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	บัญชีออฟไลน์ไม่ต้องเข้าสู่ระบบ เข้าเซิร์ฟเวอร์พรีเมียม (online-mode) ไม่ได้ และสกินกำหนดเองมักมีแค่คุณที่เห็น การเปลี่ยนชื่อจะถือเป็นผู้เล่นใหม่บนเซิร์ฟเวอร์ ช่องเก็บของและความคืบหน้าจึงไม่ติดไปด้วย
++Kategori Semua \u2304	หมวดหมู่ ทั้งหมด ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	รองรับเฉพาะ Minecraft {0} เปิดครั้งแรก หน้าจอ Starling จะเตรียมเกม (ดาวน์โหลดประมาณ 500 MiB) เอนจินนี้แยกจาก Horizon มี shader มอด และเมนูของตัวเอง
++Gagal menyiapkan folder sementara	เตรียมโฟลเดอร์ชั่วคราวไม่สำเร็จ
++Gagal membaca berkas	อ่านไฟล์ไม่ได้
++Gagal memasang {0}	ติดตั้ง {0} ไม่สำเร็จ
++Gagal menyiapkan Java	เตรียม Java ไม่สำเร็จ
++terlalu besar	ใหญ่เกินไป
++tambah aksi	เพิ่มการทำงาน
++Memuat data dari {0}...	กำลังโหลดข้อมูลจาก {0}...
++Gagal memuat dari {0}	โหลดจาก {0} ไม่สำเร็จ
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	มอด Starling: .hmod (เนื้อหา หรือมีโค้ดเนทีฟ) และ .hnmod (มอดเนทีฟ) ไม่ใช่ไฟล์ .jar ของ Fabric หรือ Forge มอด WebAssembly (mod.wasm) ไม่ทำงานบน Starling อีกต่อไป มอด .hnmod จะมีผลในเกมหลังคอมไพล์จากในเกมเท่านั้น (Options > Mods > Compile) โมดูลที่มาพร้อมเกมเปิดด้วยสวิตช์ในรายการ
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	การลากนิ้วจากปุ่มหนึ่งไปอีกปุ่ม (เช่น จาก W ไป D) จะกดปุ่มที่ผ่านระหว่างทางโดยไม่ต้องยกนิ้ว ปุ่มโจมตีและใช้ไม่รวมอยู่ด้วย
++Discord Rich Presence saat bermain	Discord Rich Presence ขณะเล่น
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	แสดง AmberLauncher พร้อมเวอร์ชัน Minecraft และ loader (หรือเอนจิน Rust) บนโปรไฟล์ Discord ขณะที่คุณเล่น ชื่อ instance และบัญชีของคุณจะไม่ถูกแชร์ ต้องติดตั้งและเข้าสู่ระบบแอป Discord บนมือถือเครื่องนี้ ไม่ใช้การเข้าสู่ระบบหรือโทเค็น ไม่เหมาะกับผู้ใช้ที่อายุต่ำกว่า 13 ปี มีผลตั้งแต่เกมครั้งถัดไป
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	ขณะที่ตัวเปิดเกมเปิดอยู่และคุณยังไม่ได้เล่น โปรไฟล์ Discord จะแสดง AmberLauncher พร้อมสถานะ กำลังเตรียมเกม มีผลเมื่อเปิดตัวเปิดเกมครั้งถัดไป ใช้ร่วมกับแอป Discord ที่คุณเข้าสู่ระบบอยู่แล้ว ไม่เหมาะกับผู้ใช้ที่อายุต่ำกว่า 13 ปี
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	คำตอบสำหรับปัญหาที่พบบ่อย: เกมปิดเอง FPS ต่ำ ดาวน์โหลดไม่สำเร็จ การเข้าสู่ระบบ และที่เก็บข้อมูล
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	ยังดาวน์โหลดไฟล์เกมไม่ครบ ({0}) มักเกิดจากการเชื่อมต่อหลุด กดดาวน์โหลดอีกครั้ง จะดาวน์โหลดซ้ำเฉพาะไฟล์ที่ขาด
++{0} library	ไลบรารี {0} รายการ
++{0} aset suara/bahasa	แอสเซ็ตเสียง/ภาษา {0} รายการ
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	ดาวน์โหลดบางไฟล์ไม่สำเร็จ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วกดดาวน์โหลดอีกครั้งเพื่อดำเนินการต่อ ({0})
++Gagal memeriksa pembaruan: {0}	ตรวจสอบการอัปเดตไม่สำเร็จ: {0}
++Gagal terhubung ke {0}	เชื่อมต่อ {0} ไม่สำเร็จ
++{0} library dan {1} aset suara/bahasa	ไลบรารี {0} รายการและแอสเซ็ตเสียง/ภาษา {1} รายการ
++Ikuti global	ตามค่าส่วนกลาง
++Khusus	กำหนดเอง
++Verifikasi & perbaiki	ตรวจสอบและซ่อมแซม
++Gagal	ล้มเหลว
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	บัญชี Ely.by นี้ใช้การยืนยันตัวตนสองขั้นตอน (2FA) ใส่รหัสจากแอปยืนยันตัวตนของคุณ
++Email atau username Ely.by	อีเมลหรือชื่อผู้ใช้ Ely.by
++Email/username atau password Ely.by salah.	อีเมล/ชื่อผู้ใช้หรือรหัสผ่าน Ely.by ไม่ถูกต้อง
++Email/username, password, atau kode 2FA Ely.by salah.	อีเมล/ชื่อผู้ใช้ รหัสผ่าน หรือรหัส 2FA ของ Ely.by ไม่ถูกต้อง
++Gagal masuk ke Ely.by.	เข้าสู่ระบบ Ely.by ไม่สำเร็จ
++Kode 2FA (6 digit)	รหัส 2FA (6 หลัก)
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	รหัส 2FA ไม่ถูกต้องหรือหมดอายุ ลองใช้รหัสล่าสุด
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	เข้าสู่ระบบด้วยอีเมลหรือชื่อผู้ใช้และรหัสผ่านของบัญชี Ely.by รองรับการยืนยันตัวตนสองขั้นตอน (2FA)
++Masuk ke Ely.by	เข้าสู่ระบบ Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	รหัสผ่านของคุณถูกส่งไปยังเซิร์ฟเวอร์ Ely.by เท่านั้นและไม่ถูกเก็บไว้ในตัวเปิดเกม เก็บไว้เฉพาะโทเค็นการเข้าสู่ระบบ
++Respon Ely.by tidak berisi token akses.	การตอบกลับจาก Ely.by ไม่มีโทเค็นเข้าถึง
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	เซสชัน Ely.by ไม่ใช้งานได้แล้ว ลบบัญชีนี้แล้วเข้าสู่ระบบใหม่
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	เชื่อมต่อ Ely.by ไม่ได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+diff --git a/app/src/main/assets/lang/vi/tambahan.tsv b/app/src/main/assets/lang/vi/tambahan.tsv
+index 5e44bb5..b683099 100644
+--- a/app/src/main/assets/lang/vi/tambahan.tsv
++++ b/app/src/main/assets/lang/vi/tambahan.tsv
+@@ -105,3 +105,168 @@ Samudra	Đại dương
+ Tengah malam	Nửa đêm
+ Bara	Than hồng
+ Gradient halus	Gradient nhẹ
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	Giúp điện thoại có thêm dung lượng trống. Có thể tăng lại ở Sửa instance > Cài đặt instance.
++RAM instance ini diturunkan ke {0} MB.	RAM của instance này đã được giảm xuống {0} MB.
++Renderer instance ini dikembalikan ke Otomatis.	Renderer của instance này đã được đặt lại về Tự động.
++Renderer instance ini diganti ke {0}.	Renderer của instance này đã được đổi sang {0}.
++Tidak dapat menemukan {0} untuk versi {1}	Không tìm thấy {0} cho phiên bản {1}
++Installer {0} gagal (kode {1})	Trình cài đặt {0} thất bại (mã {1})
++Proses ini hanya berjalan sekali per versi {0}.	Bước này chỉ chạy một lần cho mỗi phiên bản {0}.
++Versi {0} belum dipilih	Chưa chọn phiên bản {0}
++{0} hanya mendukung Minecraft {1} ke atas	{0} chỉ hỗ trợ Minecraft {1} trở lên
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	Không đủ dung lượng để cài {0} (còn {1} MB, cần ít nhất {2} MB)
++Installer {0} {1} rusak atau tidak lengkap	Trình cài đặt {0} {1} bị hỏng hoặc không đầy đủ
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	Không nhận ra định dạng trình cài đặt {0} này (Amber cần {1} {2} trở lên)
++Installer {0} untuk Minecraft {1}, bukan {2}	Trình cài đặt {0} này dành cho Minecraft {1}, không phải {2}
++version.json di installer {0} tidak terbaca	Không đọc được version.json trong trình cài đặt {0}
++Installer {0} gagal	Trình cài đặt {0} thất bại
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	Trình cài đặt {0} đã chạy xong nhưng không tìm thấy file jar Minecraft đã vá ({1})
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	Tải thư viện {0} thất bại: {1}{2}. Hãy kiểm tra kết nối rồi thử lại.
++Path library {0} tidak aman: {1}	Đường dẫn thư viện {0} không an toàn: {1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	Tải thư viện {0} thất bại: {1}. Hãy kiểm tra kết nối rồi thử lại.
++install_profile.json tidak ada di installer {0}	Thiếu install_profile.json trong trình cài đặt {0}
++versionInfo tidak ada di installer {0}	Thiếu versionInfo trong trình cài đặt {0}
++{0} tidak ada di installer {1}	Thiếu {0} trong trình cài đặt {1}
++Tidak ada versi {0} yang didukung	Không có phiên bản {0} nào được hỗ trợ
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling không còn chạy mod WebAssembly (mod.wasm). Cần tạo lại mod này thành mod native (.hnmod).
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	Đây không phải mod native mà Starling đọc được: thiếu horizon-native.json hoặc file không hợp lệ.
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	Mod native không được bật từ đây: hãy mở Options > Mods trong game rồi chọn Compile để mod được đưa vào game.
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	Mod native (.hnmod) chỉ được engine Starling hỗ trợ. Hãy tạo instance Starling để dùng.
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	Mod native (.hnmod). Chưa có trong game: hãy mở Options > Mods trong game rồi chọn Compile.
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Module native có sẵn của Starling. Cài đặt của nó nằm ở Options > Mods trong game.
++Starling hanya tersedia untuk HP 64-bit (arm64).	Starling chỉ có trên điện thoại 64-bit (arm64).
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	Bản build này chưa có Starling. Cách thêm được ghi trong docs/rust-engine.md.
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Hiện Starling chỉ hỗ trợ tài khoản Offline và Microsoft. Hãy chọn một trong hai ở tab Tài khoản.
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	Tên tài khoản offline cho Starling phải dài từ 1 đến 16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới. Hãy tạo tài khoản offline mới ở tab Tài khoản.
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	Lần mở đầu tiên: màn hình Starling sẽ chuẩn bị game (tải khoảng 500 MiB). Hãy làm theo màn hình cho đến khi xong.
++Starling gagal dibuka: {0}	Không mở được Starling: {0}
++Folder akun mesin tidak bisa dibuat	Không tạo được thư mục tài khoản của engine
++{0} tidak bisa disimpan	Không lưu được {0}
++Patokan berkas Starling tidak tersedia di aplikasi ini.	Ứng dụng này không có tệp tham chiếu của Starling.
++Folder data Starling tidak bisa dibuat.	Không tạo được thư mục dữ liệu của Starling.
++Berkas versi {0} dari Mojang tidak valid.	Tệp phiên bản {0} từ Mojang không hợp lệ.
++Berkas versi {0} tidak mendaftar unduhan.	Tệp phiên bản {0} không liệt kê bản tải nào.
++Berkas versi {0} tidak mendaftar unduhan {1}.	Tệp phiên bản {0} không liệt kê bản tải {1}.
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	Tệp phiên bản {0} chứa jar {1} khác với jar mà Starling mong đợi.
++Berkas versi {0} tidak mendaftar indeks aset.	Tệp phiên bản {0} không liệt kê asset index.
++Nama indeks aset tidak valid.	Tên asset index không hợp lệ.
++Indeks aset dari Mojang tidak valid.	Asset index từ Mojang không hợp lệ.
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	Không đủ dung lượng: cần thêm khoảng {0} MB.
++Berkas {0} belum ada setelah diunduh.	Tệp {0} vẫn chưa có sau khi tải.
++Game belum bisa dimulai.	Chưa thể bắt đầu game.
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	Chưa thể bắt đầu game: {0}. Chi tiết nằm trong nhật ký của launcher.
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	Hồ sơ {0} ({1}) chưa được cài. Hãy nhấn nút TẢI XUỐNG ở instance!
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	Thiếu {0} file thư viện của game (bản tải chưa đủ hoặc đã bị xóa). Nhấn TẢI XUỐNG ở instance này để bổ sung cho đủ.
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	Modpack này cần Quilt, nhưng hiện AmberLauncher chỉ hỗ trợ Fabric, Forge và NeoForge.
++Daftar modpack terlalu besar	Danh sách modpack quá lớn
++Gagal menyiapkan folder modpack	Không chuẩn bị được thư mục modpack
++Gagal menyimpan berkas modpack	Không lưu được tệp modpack
++Berkas lama tidak ditemukan	Không tìm thấy tệp cũ
++Berkas {0} berubah sejak diperiksa	Tệp {0} đã thay đổi sau khi được kiểm tra
++Nama berkas baru tidak valid	Tên tệp mới không hợp lệ
++Berkas baru tanpa sidik jari tidak dipasang	Tệp mới không có dấu vân tay nên không được cài
++Berkas {0} sudah ada	Tệp {0} đã tồn tại
++Gagal menyiapkan penggantian berkas	Không chuẩn bị được việc thay tệp
++Gagal menyimpan berkas baru	Không lưu được tệp mới
++Gagal menghapus berkas lama	Không xóa được tệp cũ
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	Không tải được {0} mod vì tác giả đã chặn tải qua launcher. Hãy cài thủ công từ trang web CurseForge nếu cần.
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	Modpack này cần {0}. Hãy tạo instance {1} trước, rồi cài modpack vào instance đó.
++Pilih APK	Chọn APK
++Izinkan dari sumber ini	Cho phép từ nguồn này
++Terjadi masalah yang tidak diketahui. Coba lagi.	Đã xảy ra sự cố không rõ nguyên nhân. Hãy thử lại.
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	Không kết nối được tới máy chủ tải. Hãy kiểm tra kết nối internet rồi thử lại.
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	Máy chủ phản hồi quá lâu. Kết nối có thể chậm hoặc không ổn định; hãy thử lại.
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	Kết nối an toàn tới máy chủ thất bại. Hãy kiểm tra ngày giờ của điện thoại và kết nối internet rồi thử lại.
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	Kết nối bị ngắt giữa chừng. Hãy thử lại; các file đã tải xong sẽ không bị tải lại.
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	Bộ nhớ điện thoại đã đầy. Hãy giải phóng dung lượng (khoảng 500 MB cho một phiên bản) rồi thử lại.
++Terjadi masalah yang tidak terduga. Coba lagi.	Đã xảy ra sự cố bất ngờ. Hãy thử lại.
++Game langsung tertutup atau tidak mau mulai	Game tự đóng ngay hoặc không chịu khởi động
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	Mở Cài đặt > Giới thiệu > Nhật ký game. Nguyên nhân gần nhất được ghi ở đó; hãy chia sẻ nội dung này khi nhờ trợ giúp.
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	Nếu thông báo nhắc đến file hoặc thư viện bị thiếu: mở Sửa instance (biểu tượng bút chì ở màn hình chính) rồi nhấn "Xác minh & sửa chữa".
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	Giảm "Bộ nhớ game (RAM)" trong Cài đặt > Game. Yêu cầu quá nhiều RAM so với điện thoại có thể khiến Android đóng game.
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	Thử phiên bản Java khác trong Sửa instance (ví dụ Java 17 hoặc 21 cho Minecraft mới, Java 8 cho bản cũ).
++FPS rendah atau game patah-patah	FPS thấp hoặc game giật
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	Giảm "Tỷ lệ độ phân giải màn hình" trong Cài đặt > Game: hình được vẽ thô hơn nhưng nhẹ hơn nhiều.
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	Trong game, hãy giảm Render Distance và Simulation Distance, và tắt các hiệu ứng đồ họa nặng.
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	Bật "Hiện FPS và RAM" trong Cài đặt > Điều khiển để xem vấn đề là RAM gần hết hay bộ xử lý đang quá tải.
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	Đóng các ứng dụng khác, và để điện thoại nguội bớt nếu thấy nóng: điện thoại nóng sẽ tự giảm tốc độ.
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	Tắt "Phát chuyển động GIF và video" và "Hiệu ứng ở màn hình chính" trong Cài đặt > Giao diện; nền chuyển động tốn pin của điện thoại.
++Pakai latar foto biasa, bukan video atau GIF besar.	Dùng ảnh thường làm nền, không dùng video hay GIF lớn.
++Unduhan gagal atau terputus	Tải xuống thất bại hoặc bị gián đoạn
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	Nhấn TẢI XUỐNG lần nữa. Chỉ các file còn thiếu được tải lại, nên không phải bắt đầu từ đầu.
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	Hãy đảm bảo điện thoại còn đủ dung lượng trống (khoảng 500 MB cho một phiên bản); xem trong Cài đặt của điện thoại > Lưu trữ.
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	Nếu sau khi xong thấy game chưa đầy đủ, hãy nhấn "Xác minh & sửa chữa" trong Sửa instance.
++Login Microsoft gagal atau diminta masuk lagi	Đăng nhập Microsoft thất bại hoặc bị yêu cầu đăng nhập lại
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	Phiên đăng nhập có thể đã hết hạn. Hãy mở màn hình Tài khoản và đăng nhập lại bằng cùng tài khoản Microsoft.
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	Tài khoản phải sở hữu Minecraft Java Edition; tài khoản không có thì không chơi online được.
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	Làm theo mã và địa chỉ mà launcher hiển thị; mã chỉ có hiệu lực trong thời gian ngắn nên hãy hoàn tất sớm.
++Apa itu akun offline?	Tài khoản offline là gì?
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	Tài khoản offline chỉ là một tên người chơi trên điện thoại này, không cần đăng nhập. Phù hợp để chơi thế giới của riêng bạn (một người chơi) hoặc LAN.
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới.
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	Hầu hết máy chủ online chỉ nhận tài khoản chính thức, nên tài khoản offline thường bị từ chối ở đó.
++Di mana dunia dan mod disimpan? Cara mencadangkan	Thế giới và mod được lưu ở đâu? Cách sao lưu
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	Xem vị trí trong Cài đặt > Giới thiệu > Lưu trữ dữ liệu ("Vị trí dữ liệu").
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	Mỗi instance có thư mục riêng. Nhấn "Mở thư mục instance" trong Sửa instance để đến đó; thế giới nằm trong thư mục saves.
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	Dữ liệu trong thư mục riêng của AmberLauncher (Android/data) sẽ bị xóa cùng ứng dụng khi gỡ cài đặt, nên hãy sao chép các thế giới quan trọng sang nơi khác trước.
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	Nếu dữ liệu của bạn vẫn nằm trong thư mục nuxlauncher cũ, nút "Chuyển" trong Lưu trữ dữ liệu sẽ chuyển nó sang Android/data mà không cần quyền truy cập mọi file.
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	Mở Sửa instance > Mod & nội dung để tìm và cài mod, hoặc thêm các file bạn đã tải sẵn.
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	File .jar hoặc .mrpack cũng có thể mở trực tiếp bằng AmberLauncher từ trình quản lý file.
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	Hãy đảm bảo mod khớp với phiên bản Minecraft và loader (Fabric hoặc Forge) của instance đó.
++Pertanyaan yang sering muncul	Câu hỏi thường gặp
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	Việc tải hoặc cài đặt instance vẫn đang chạy. Hãy đợi đến khi xong rồi thử lại.
++Geser antar tombol	Vuốt giữa các nút
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	Trượt ngón tay từ W sang D để nhấn các nút ở giữa mà không cần nhấc tay.
++Pengaturan instance	Cài đặt instance
++Pengaturan instance disimpan	Đã lưu cài đặt instance
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	Giá trị chọn ở đây chỉ áp dụng cho instance này. "Theo cài đặt chung" dùng Cài đặt chung và thay đổi theo chúng.
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	Chế độ Tiết kiệm đang bật: độ phân giải bị giới hạn ở {0}%.
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	Chỉ hiện các renderer phù hợp với Minecraft {0}.
++Ikuti global (kosong)	Theo cài đặt chung (trống)
++Khusus instance ini	Chỉ instance này
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	Dành cho người dùng nâng cao; nhập sai có thể khiến game không chạy được. Để trống = không có tham số bổ sung cho instance này.
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	Dành cho người dùng nâng cao. Cài đặt chung không dùng tham số bổ sung.
++Memakai argumen dari Pengaturan umum: {0}	Đang dùng tham số từ Cài đặt chung: {0}
++Kembalikan semua ke global	Đặt lại tất cả về cài đặt chung
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới (_)
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	Tên dài 3-16 ký tự: chữ cái, chữ số hoặc dấu gạch dưới (_).
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	Tài khoản offline không cần đăng nhập. Không vào được máy chủ premium (online-mode), và skin tùy chỉnh thường chỉ mình bạn thấy. Đổi tên được tính là người chơi mới trên máy chủ, nên túi đồ và tiến trình không được giữ lại.
++Kategori Semua \u2304	Danh mục Tất cả ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	Chỉ hỗ trợ Minecraft {0}. Lần mở đầu tiên, màn hình Starling sẽ chuẩn bị game (tải khoảng 500 MiB). Engine này tách biệt với Horizon, có shader, mod và menu riêng.
++Gagal menyiapkan folder sementara	Không chuẩn bị được thư mục tạm
++Gagal membaca berkas	Không đọc được tệp
++Gagal memasang {0}	Cài {0} thất bại
++Gagal menyiapkan Java	Không chuẩn bị được Java
++terlalu besar	quá lớn
++tambah aksi	thêm hành động
++Memuat data dari {0}...	Đang tải dữ liệu từ {0}...
++Gagal memuat dari {0}	Tải từ {0} thất bại
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Mod Starling: .hmod (nội dung, hoặc có mã native) và .hnmod (mod native), không phải file .jar của Fabric hay Forge. Mod WebAssembly (mod.wasm) không còn chạy trên Starling. Mod .hnmod chỉ có hiệu lực trong game sau khi được biên dịch từ trong game (Options > Mods > Compile). Các module có sẵn được bật bằng công tắc trong danh sách.
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	Trượt ngón tay từ nút này sang nút khác (ví dụ từ W sang D) sẽ nhấn các nút ở giữa mà không cần nhấc tay. Nút tấn công và dùng không nằm trong số đó.
++Discord Rich Presence saat bermain	Discord Rich Presence khi chơi
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	Hiển thị AmberLauncher cùng phiên bản Minecraft và loader (hoặc engine Rust) trên hồ sơ Discord của bạn khi chơi. Tên instance và tài khoản của bạn không được chia sẻ. Cần ứng dụng Discord đã cài và đã đăng nhập trên điện thoại này; không dùng thông tin đăng nhập hay token. Không dành cho người dùng dưới 13 tuổi. Có hiệu lực từ lần chơi tiếp theo.
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Khi launcher đang mở và bạn chưa chơi, hồ sơ Discord hiển thị AmberLauncher với trạng thái Đang chuẩn bị game. Có hiệu lực vào lần mở launcher tiếp theo. Dùng cùng ứng dụng Discord bạn đã đăng nhập; không dành cho người dùng dưới 13 tuổi.
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	Câu trả lời cho các sự cố thường gặp: game tự đóng, FPS thấp, tải xuống thất bại, đăng nhập và nơi lưu dữ liệu.
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	Một số file game chưa được tải ({0}), thường do kết nối bị ngắt. Nhấn TẢI XUỐNG lần nữa: chỉ các file còn thiếu được tải lại.
++{0} library	{0} thư viện
++{0} aset suara/bahasa	{0} tài nguyên âm thanh/ngôn ngữ
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	Một số file tải thất bại. Hãy kiểm tra kết nối internet rồi nhấn TẢI XUỐNG lần nữa để tiếp tục. ({0})
++Gagal memeriksa pembaruan: {0}	Kiểm tra cập nhật thất bại: {0}
++Gagal terhubung ke {0}	Kết nối tới {0} thất bại
++{0} library dan {1} aset suara/bahasa	{0} thư viện và {1} tài nguyên âm thanh/ngôn ngữ
++Ikuti global	Theo cài đặt chung
++Khusus	Tùy chỉnh
++Verifikasi & perbaiki	Xác minh & sửa chữa
++Gagal	Thất bại
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	Tài khoản Ely.by này dùng xác minh hai bước (2FA). Hãy nhập mã từ ứng dụng xác thực của bạn.
++Email atau username Ely.by	Email hoặc tên người dùng Ely.by
++Email/username atau password Ely.by salah.	Email/tên người dùng hoặc mật khẩu Ely.by không đúng.
++Email/username, password, atau kode 2FA Ely.by salah.	Email/tên người dùng, mật khẩu hoặc mã 2FA của Ely.by không đúng.
++Gagal masuk ke Ely.by.	Đăng nhập Ely.by thất bại.
++Kode 2FA (6 digit)	Mã 2FA (6 chữ số)
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	Mã 2FA sai hoặc đã hết hạn. Hãy thử mã mới nhất.
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Đăng nhập bằng email hoặc tên người dùng và mật khẩu tài khoản Ely.by. Hỗ trợ xác minh hai bước (2FA).
++Masuk ke Ely.by	Đăng nhập Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Mật khẩu của bạn chỉ được gửi tới máy chủ Ely.by và không được lưu trong launcher. Chỉ token đăng nhập được lưu.
++Respon Ely.by tidak berisi token akses.	Phản hồi từ Ely.by không chứa token truy cập.
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Phiên Ely.by không còn hiệu lực. Hãy xóa tài khoản này rồi đăng nhập lại.
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Không kết nối được tới Ely.by. Hãy kiểm tra kết nối internet.
+diff --git a/app/src/main/assets/lang/zh/tambahan.tsv b/app/src/main/assets/lang/zh/tambahan.tsv
+index d27839c..88cc18e 100644
+--- a/app/src/main/assets/lang/zh/tambahan.tsv
++++ b/app/src/main/assets/lang/zh/tambahan.tsv
+@@ -109,3 +109,168 @@ Samudra	海洋
+ Tengah malam	午夜
+ Bara	余烬
+ Gradient halus	柔和渐变
++Memberi ruang lebih bagi HP. Bisa dinaikkan lagi di Ubah instance > Pengaturan instance.	为手机腾出更多空间。可在 编辑实例 > 实例设置 中再调高。
++RAM instance ini diturunkan ke {0} MB.	此实例的内存已降至 {0} MB。
++Renderer instance ini dikembalikan ke Otomatis.	此实例的渲染器已恢复为自动。
++Renderer instance ini diganti ke {0}.	此实例的渲染器已更换为 {0}。
++Tidak dapat menemukan {0} untuk versi {1}	找不到适用于版本 {1} 的 {0}
++Installer {0} gagal (kode {1})	{0} 安装器失败（代码 {1}）
++Proses ini hanya berjalan sekali per versi {0}.	此步骤对每个 {0} 版本只运行一次。
++Versi {0} belum dipilih	尚未选择 {0} 版本
++{0} hanya mendukung Minecraft {1} ke atas	{0} 仅支持 Minecraft {1} 及以上版本
++Ruang penyimpanan tidak cukup untuk memasang {0} (tersisa {1} MB, butuh minimal {2} MB)	存储空间不足，无法安装 {0}（剩余 {1} MB，至少需要 {2} MB）
++Installer {0} {1} rusak atau tidak lengkap	{0} {1} 安装器已损坏或不完整
++Format installer {0} ini tidak dikenali (Amber butuh {1} {2} ke atas)	无法识别此 {0} 安装器的格式（Amber 需要 {1} {2} 及以上版本）
++Installer {0} untuk Minecraft {1}, bukan {2}	此 {0} 安装器适用于 Minecraft {1}，而不是 {2}
++version.json di installer {0} tidak terbaca	无法读取 {0} 安装器中的 version.json
++Installer {0} gagal	{0} 安装器失败
++Installer {0} selesai tetapi jar Minecraft hasil tambalan tidak ditemukan ({1})	{0} 安装器已运行完毕，但找不到打过补丁的 Minecraft jar（{1}）
++Gagal mengunduh library {0}: {1}{2}. Periksa koneksi lalu coba lagi.	下载 {0} 库失败：{1}{2}。请检查网络连接后重试。
++Path library {0} tidak aman: {1}	{0} 库路径不安全：{1}
++Gagal mengunduh library {0}: {1}. Periksa koneksi lalu coba lagi.	下载 {0} 库失败：{1}。请检查网络连接后重试。
++install_profile.json tidak ada di installer {0}	{0} 安装器中缺少 install_profile.json
++versionInfo tidak ada di installer {0}	{0} 安装器中缺少 versionInfo
++{0} tidak ada di installer {1}	{1} 安装器中缺少 {0}
++Tidak ada versi {0} yang didukung	没有受支持的 {0} 版本
++Starling tidak lagi menjalankan mod WebAssembly (mod.wasm). Mod ini harus dibuat ulang sebagai mod native (.hnmod).	Starling 不再运行 WebAssembly 模组（mod.wasm）。需要把此模组重新制作为原生模组（.hnmod）。
++Ini bukan mod native yang bisa dibaca Starling: horizon-native.json tidak ada atau tidak sah.	这不是 Starling 可读取的原生模组：缺少 horizon-native.json 或文件无效。
++Mod native tidak dihidupkan dari sini: buka Options > Mods di dalam game lalu pilih Compile supaya mod masuk ke game.	无法在此启用原生模组：请在游戏中打开 Options > Mods 并选择 Compile，让模组进入游戏。
++Mod native (.hnmod) hanya didukung mesin Starling. Buat instance Starling untuk memakainya.	原生模组（.hnmod）仅受 Starling 引擎支持。请创建 Starling 实例来使用。
++Mod native (.hnmod). Belum ikut di game: buka Options > Mods di dalam game lalu pilih Compile.	原生模组（.hnmod）。尚未进入游戏：请在游戏中打开 Options > Mods 并选择 Compile。
++Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.	Starling 内置原生模块。其设置在游戏中的 Options > Mods。
++Starling hanya tersedia untuk HP 64-bit (arm64).	Starling 仅适用于 64 位手机（arm64）。
++Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md.	此构建未包含 Starling。添加方法见 docs/rust-engine.md。
++Starling baru mendukung akun Offline dan Microsoft. Pilih salah satunya di tab Akun.	Starling 目前仅支持离线和 Microsoft 账号。请在账号标签页中选择其中之一。
++Nama akun offline untuk Starling harus 1 sampai 16 huruf, angka, atau garis bawah. Buat akun offline baru di tab Akun.	Starling 的离线账号名称必须为 1 到 16 个字符，可使用字母、数字或下划线。请在账号标签页中新建离线账号。
++Pertama kali dibuka: layar Starling menyiapkan game (unduhan sekitar 500 MiB). Ikuti layarnya sampai selesai.	首次打开：Starling 界面会准备游戏（下载约 500 MiB）。请按界面提示操作直到完成。
++Starling gagal dibuka: {0}	Starling 打开失败：{0}
++Folder akun mesin tidak bisa dibuat	无法创建引擎账号文件夹
++{0} tidak bisa disimpan	无法保存 {0}
++Patokan berkas Starling tidak tersedia di aplikasi ini.	此应用中没有 Starling 的文件基准。
++Folder data Starling tidak bisa dibuat.	无法创建 Starling 数据文件夹。
++Berkas versi {0} dari Mojang tidak valid.	来自 Mojang 的版本文件 {0} 无效。
++Berkas versi {0} tidak mendaftar unduhan.	版本文件 {0} 没有列出任何下载项。
++Berkas versi {0} tidak mendaftar unduhan {1}.	版本文件 {0} 没有列出下载项 {1}。
++Berkas versi {0} memuat jar {1} yang lain dari yang dipatok Starling.	版本文件 {0} 包含的 {1} jar 与 Starling 预期的不同。
++Berkas versi {0} tidak mendaftar indeks aset.	版本文件 {0} 没有列出资源索引。
++Nama indeks aset tidak valid.	资源索引名称无效。
++Indeks aset dari Mojang tidak valid.	来自 Mojang 的资源索引无效。
++Ruang penyimpanan tidak cukup: butuh sekitar {0} MB lagi.	存储空间不足：还需要约 {0} MB。
++Berkas {0} belum ada setelah diunduh.	下载后仍然找不到文件 {0}。
++Game belum bisa dimulai.	游戏暂时无法启动。
++Game belum bisa dimulai: {0}. Rincian ada di log launcher.	游戏暂时无法启动：{0}。详情见启动器日志。
++Profil {0} ({1}) belum terpasang. Silakan tekan tombol UNDUH pada instance!	配置 {0}（{1}）尚未安装。请点击实例上的“下载”按钮！
++{0} file library game hilang (unduhan belum lengkap atau terhapus). Tekan UNDUH pada instance ini untuk melengkapinya.	缺少 {0} 个游戏库文件（下载不完整或已被删除）。请点击此实例上的“下载”来补全。
++Modpack ini membutuhkan Quilt, sedangkan AmberLauncher saat ini hanya mendukung Fabric, Forge, dan NeoForge.	此整合包需要 Quilt，但 AmberLauncher 目前只支持 Fabric、Forge 和 NeoForge。
++Daftar modpack terlalu besar	整合包列表过大
++Gagal menyiapkan folder modpack	无法准备整合包文件夹
++Gagal menyimpan berkas modpack	无法保存整合包文件
++Berkas lama tidak ditemukan	找不到旧文件
++Berkas {0} berubah sejak diperiksa	文件 {0} 在检查后发生了变化
++Nama berkas baru tidak valid	新文件名无效
++Berkas baru tanpa sidik jari tidak dipasang	没有指纹的新文件未被安装
++Berkas {0} sudah ada	文件 {0} 已存在
++Gagal menyiapkan penggantian berkas	无法准备文件替换
++Gagal menyimpan berkas baru	无法保存新文件
++Gagal menghapus berkas lama	无法删除旧文件
++{0} mod tidak bisa diunduh karena penulisnya menutup unduhan lewat launcher. Pasang manual dari situs CurseForge bila perlu.	有 {0} 个模组无法下载，因为作者禁止通过启动器下载。如有需要，请从 CurseForge 网站手动安装。
++Modpack ini membutuhkan {0}. Buat instance {1} dulu, lalu pasang modpack di instance itu.	此整合包需要 {0}。请先创建 {1} 实例，再把整合包安装到该实例中。
++Pilih APK	选择 APK
++Izinkan dari sumber ini	允许来自此来源
++Terjadi masalah yang tidak diketahui. Coba lagi.	发生了未知问题。请重试。
++Tidak bisa terhubung ke server unduhan. Periksa koneksi internet, lalu coba lagi.	无法连接到下载服务器。请检查网络连接后重试。
++Server terlalu lama menjawab. Koneksi mungkin lambat atau tidak stabil; coba lagi.	服务器响应太慢。网络可能较慢或不稳定，请重试。
++Sambungan aman ke server gagal. Periksa tanggal dan jam HP serta koneksi internet, lalu coba lagi.	与服务器的安全连接失败。请检查手机的日期和时间以及网络连接后重试。
++Koneksi terputus di tengah jalan. Coba lagi; file yang sudah selesai tidak diunduh ulang.	连接中途断开。请重试；已完成的文件不会重新下载。
++Penyimpanan HP penuh. Kosongkan ruang (sekitar 500 MB untuk satu versi), lalu coba lagi.	手机存储空间已满。请释放一些空间（一个版本约需 500 MB）后重试。
++Terjadi masalah yang tidak terduga. Coba lagi.	发生了意外问题。请重试。
++Game langsung tertutup atau tidak mau mulai	游戏立即闪退或无法启动
++Buka Pengaturan > Tentang > Log game. Di sana tercatat sebab terakhir; bagikan isinya bila meminta bantuan.	打开 设置 > 关于 > 游戏日志。最近一次的原因记录在那里；求助时请分享其中的内容。
++Bila pesannya menyebut file atau library hilang: buka Ubah instance (ikon pensil di Beranda) lalu tekan "Verifikasi & perbaiki".	如果提示信息提到缺少文件或库：打开 编辑实例（主页上的铅笔图标），然后点击“验证并修复”。
++Turunkan "Memori game (RAM)" di Pengaturan > Game. RAM yang diminta terlalu besar untuk HP bisa membuat Android menutup game.	在 设置 > 游戏 中调低“游戏内存（RAM）”。向手机申请过多内存可能导致 Android 关闭游戏。
++Coba versi Java lain di Ubah instance (mis. Java 17 atau 21 untuk Minecraft baru, Java 8 untuk yang lama).	在 编辑实例 中尝试其他 Java 版本（例如较新的 Minecraft 用 Java 17 或 21，旧版本用 Java 8）。
++FPS rendah atau game patah-patah	FPS 低或游戏卡顿
++Turunkan "Skala resolusi layar" di Pengaturan > Game: layar digambar lebih kasar tetapi jauh lebih ringan.	在 设置 > 游戏 中调低“屏幕分辨率缩放”：画面会更粗糙，但负担轻得多。
++Di dalam game, kecilkan Render Distance dan Simulation Distance, dan matikan efek grafis yang berat.	在游戏中调小 Render Distance 和 Simulation Distance，并关闭较重的画面效果。
++Nyalakan "Tampilkan FPS dan RAM" di Pengaturan > Kontrol untuk melihat apakah masalahnya RAM yang hampir habis atau prosesor yang terlalu sibuk.	在 设置 > 控制 中打开“显示 FPS 和内存”，查看问题是内存快用完还是处理器太忙。
++Tutup aplikasi lain, dan beri HP waktu dingin bila terasa panas: HP yang panas menurunkan kecepatannya sendiri.	关闭其他应用；如果手机发烫，让它先降温：过热的手机会自动降速。
++Matikan "Gerakkan GIF dan video" dan "Efek di beranda" di Pengaturan > Tampilan; latar yang bergerak memakai tenaga HP.	在 设置 > 显示 中关闭“让 GIF 和视频动起来”和“主页特效”；动态背景会消耗手机电量。
++Pakai latar foto biasa, bukan video atau GIF besar.	使用普通照片作为背景，不要用大的视频或 GIF。
++Unduhan gagal atau terputus	下载失败或被中断
++Tekan UNDUH lagi. Hanya file yang kurang yang diunduh ulang, jadi tidak mulai dari nol.	再次点击“下载”。只会重新下载缺少的文件，所以不用从头开始。
++Pastikan ruang kosong di HP cukup (sekitar 500 MB untuk satu versi); lihat di Pengaturan bawaan HP > Penyimpanan.	确保手机有足够的可用空间（一个版本约需 500 MB）；可在手机自带的 设置 > 存储 中查看。
++Bila game terasa tidak lengkap sesudah selesai, tekan "Verifikasi & perbaiki" di Ubah instance.	如果完成后觉得游戏不完整，请在 编辑实例 中点击“验证并修复”。
++Login Microsoft gagal atau diminta masuk lagi	Microsoft 登录失败或被要求重新登录
++Sesi bisa kedaluwarsa. Buka layar Akun dan masuk lagi dengan akun Microsoft yang sama.	会话可能已过期。请打开账号界面，用同一个 Microsoft 账号重新登录。
++Akunnya harus memiliki Minecraft Java Edition; akun tanpa itu tidak bisa dipakai bermain online.	账号必须拥有 Minecraft Java 版；没有的账号无法进行在线游戏。
++Ikuti kode dan alamat yang ditampilkan launcher; kodenya berlaku singkat, jadi selesaikan segera.	请按启动器显示的代码和地址操作；代码有效期很短，请尽快完成。
++Apa itu akun offline?	什么是离线账号？
++Akun offline hanya berupa nama pemain di HP ini, tanpa login. Cocok untuk dunia sendiri (satu pemain) atau LAN.	离线账号只是这台手机上的一个玩家名称，无需登录。适合玩自己的世界（单人）或局域网。
++Namanya 3-16 karakter: huruf, angka, atau garis bawah.	名称为 3-16 个字符：字母、数字或下划线。
++Sebagian besar server online hanya menerima akun resmi, jadi akun offline biasanya ditolak di sana.	大多数在线服务器只接受正版账号，所以离线账号通常会被拒绝。
++Di mana dunia dan mod disimpan? Cara mencadangkan	世界和模组存放在哪里？如何备份
++Lihat lokasinya di Pengaturan > Tentang > Penyimpanan data ("Lokasi data").	在 设置 > 关于 > 数据存储（“数据位置”）中查看位置。
++Setiap instance punya folder sendiri. Tekan "Buka folder instance" di Ubah instance untuk menuju ke sana; dunia ada di folder saves.	每个实例都有自己的文件夹。在 编辑实例 中点击“打开实例文件夹”即可前往；世界在 saves 文件夹中。
++Data di folder AmberLauncher sendiri (Android/data) ikut terhapus bila aplikasi dihapus, jadi salin dunia yang penting ke tempat lain lebih dulu.	AmberLauncher 自己的文件夹（Android/data）里的数据会在卸载应用时一并删除，所以请先把重要的世界复制到别处。
++Bila datamu masih di folder nuxlauncher yang lama, tombol "Pindahkan" di Penyimpanan data memindahkannya ke Android/data tanpa izin akses semua file.	如果你的数据仍在旧的 nuxlauncher 文件夹，数据存储 中的“移动”按钮会把它移到 Android/data，无需“所有文件”访问权限。
++Buka Ubah instance > Mod & konten untuk mencari dan memasang mod, atau tambahkan file yang sudah kamu unduh.	打开 编辑实例 > 模组与内容 来搜索和安装模组，或添加你已下载的文件。
++Berkas .jar atau .mrpack juga bisa dibuka langsung dengan AmberLauncher dari pengelola file.	.jar 或 .mrpack 文件也可以直接从文件管理器用 AmberLauncher 打开。
++Pastikan mod cocok dengan versi Minecraft dan loader (Fabric atau Forge) instance itu.	确保模组与该实例的 Minecraft 版本和加载器（Fabric 或 Forge）相符。
++Pertanyaan yang sering muncul	常见问题
++Unduhan atau pemasangan instance masih berjalan. Tunggu sampai selesai, lalu coba lagi.	实例的下载或安装仍在进行中。请等它完成后重试。
++Geser antar tombol	在按钮间滑动
++Geser jari dari W ke D untuk menekan tombol yang dilewati tanpa mengangkat jari.	把手指从 W 滑到 D，即可在不抬手的情况下按下中间经过的按钮。
++Pengaturan instance	实例设置
++Pengaturan instance disimpan	实例设置已保存
++Nilai yang dipilih di sini hanya berlaku untuk instance ini. "Ikuti global" memakai Pengaturan umum, dan ikut berubah bila Pengaturan umum diubah.	此处选择的值只对此实例生效。“跟随全局”使用通用设置，并会随之变化。
++Mode Hemat sedang menyala: resolusi dibatasi {0}%.	省电模式已开启：分辨率限制为 {0}%。
++Hanya renderer yang cocok dengan Minecraft {0} yang ditampilkan.	只显示与 Minecraft {0} 匹配的渲染器。
++Ikuti global (kosong)	跟随全局（空）
++Khusus instance ini	仅此实例
++Untuk pengguna mahir; salah isi bisa membuat game gagal jalan. Dikosongkan = tanpa argumen tambahan untuk instance ini.	供高级用户使用；填错可能导致游戏无法运行。留空 = 此实例不使用额外参数。
++Untuk pengguna mahir. Pengaturan umum tidak memakai argumen tambahan.	供高级用户使用。通用设置不使用额外参数。
++Memakai argumen dari Pengaturan umum: {0}	正在使用通用设置中的参数：{0}
++Kembalikan semua ke global	全部恢复为全局
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_)	名称为 3-16 个字符：字母、数字或下划线（_）
++Nama harus 3-16 karakter: huruf, angka, atau garis bawah (_).	名称为 3-16 个字符：字母、数字或下划线（_）。
++Akun offline tidak butuh login. Tidak bisa masuk server premium (online-mode), dan skin kustom biasanya hanya terlihat olehmu. Mengganti nama dianggap pemain baru di server, jadi inventori dan progres tidak ikut.	离线账号无需登录。无法进入正版（online-mode）服务器，自定义皮肤通常也只有你自己能看到。改名会被服务器视为新玩家，所以背包和进度不会保留。
++Kategori Semua \u2304	类别 全部 ⌄
++Hanya mendukung Minecraft {0}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	仅支持 Minecraft {0}。首次打开时，Starling 界面会准备游戏（下载约 500 MiB）。此引擎与 Horizon 相互独立，有自己的光影、模组和菜单。
++Gagal menyiapkan folder sementara	无法准备临时文件夹
++Gagal membaca berkas	无法读取文件
++Gagal memasang {0}	安装 {0} 失败
++Gagal menyiapkan Java	无法准备 Java
++terlalu besar	过大
++tambah aksi	添加动作
++Memuat data dari {0}...	正在从 {0} 加载数据...
++Gagal memuat dari {0}	从 {0} 加载失败
++Mod Starling: .hmod (konten, atau berkode native) dan .hnmod (mod native), bukan .jar Fabric atau Forge. Mod WebAssembly (mod.wasm) tidak jalan lagi di Starling. Mod .hnmod baru ikut di game setelah dikompilasi dari dalam game (Options > Mods > Compile). Modul bawaan hidup lewat saklar di daftar.	Starling 模组：.hmod（内容，或带原生代码）和 .hnmod（原生模组），不是 Fabric 或 Forge 的 .jar 文件。WebAssembly 模组（mod.wasm）不再能在 Starling 上运行。.hnmod 模组需要在游戏内编译后（Options > Mods > Compile）才会生效。内置模块通过列表中的开关启用。
++Menggeser jari dari satu tombol ke tombol lain (mis. dari W ke D) langsung menekan tombol yang dilewati, tanpa mengangkat jari. Tombol pukul dan pakai tidak ikut.	把手指从一个按钮滑到另一个按钮（例如从 W 到 D），会在不抬手的情况下按下中间经过的按钮。攻击和使用按钮不包含在内。
++Discord Rich Presence saat bermain	游玩时显示 Discord Rich Presence
++Menampilkan AmberLauncher beserta versi Minecraft dan loader (atau mesin Rust) di profil Discord saat bermain. Nama instance dan akunmu tidak ikut. Butuh aplikasi Discord terpasang dan sudah login di HP ini; tidak memakai login atau token. Tidak untuk pengguna di bawah 13 tahun. Berlaku mulai game berikutnya.	游玩时，在你的 Discord 个人资料中显示 AmberLauncher 以及 Minecraft 版本和加载器（或 Rust 引擎）。不会共享你的实例名称和账号。需要在这台手机上安装并登录 Discord 应用；不使用登录信息或令牌。不适用于 13 岁以下用户。从下一次游戏开始生效。
++Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Menyiapkan game. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	启动器打开而你尚未游玩时，你的 Discord 个人资料会显示 AmberLauncher，状态为“正在准备游戏”。下次打开启动器时生效。与你已登录的 Discord 应用配合使用；不适用于 13 岁以下用户。
++Jawaban untuk masalah yang sering muncul: game tertutup, FPS rendah, unduhan gagal, login, dan lokasi data.	常见问题解答：游戏闪退、FPS 低、下载失败、登录以及数据存放位置。
++Sebagian file game belum terunduh ({~0}), biasanya karena koneksi terputus. Tekan UNDUH lagi: hanya file yang kurang yang diunduh ulang.	部分游戏文件尚未下载（{0}），通常是因为连接中断。再次点击“下载”：只会重新下载缺少的文件。
++{0} library	{0} 个库
++{0} aset suara/bahasa	{0} 个声音/语言资源
++Sebagian berkas gagal diunduh. Periksa koneksi internet lalu tekan UNDUH lagi untuk melanjutkan. ({0})	部分文件下载失败。请检查网络连接，然后再次点击“下载”继续。（{0}）
++Gagal memeriksa pembaruan: {0}	检查更新失败：{0}
++Gagal terhubung ke {0}	连接 {0} 失败
++{0} library dan {1} aset suara/bahasa	{0} 个库和 {1} 个声音/语言资源
++Ikuti global	跟随全局
++Khusus	自定义
++Verifikasi & perbaiki	验证并修复
++Gagal	失败
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	此 Ely.by 账号启用了两步验证（2FA）。请输入验证器应用中的代码。
++Email atau username Ely.by	Ely.by 邮箱或用户名
++Email/username atau password Ely.by salah.	Ely.by 邮箱/用户名或密码错误。
++Email/username, password, atau kode 2FA Ely.by salah.	Ely.by 邮箱/用户名、密码或 2FA 验证码错误。
++Gagal masuk ke Ely.by.	登录 Ely.by 失败。
++Kode 2FA (6 digit)	2FA 验证码（6 位）
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	2FA 验证码错误或已过期。请使用最新的验证码。
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	使用 Ely.by 账号的邮箱或用户名和密码登录。支持两步验证（2FA）。
++Masuk ke Ely.by	登录 Ely.by
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	你的密码只会发送到 Ely.by 服务器，不会保存在启动器中。只保存登录令牌。
++Respon Ely.by tidak berisi token akses.	Ely.by 的响应中不包含访问令牌。
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Ely.by 会话已失效。请删除此账号后重新登录。
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	无法连接到 Ely.by。请检查网络连接。
+# FIN part=1/1 files=7

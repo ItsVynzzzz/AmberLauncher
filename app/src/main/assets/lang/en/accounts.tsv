@@ -113,3 +113,17 @@ Selesaikan login di browser, lalu kembali ke sini	Finish signing in in the brows
 Tidak ada browser yang bisa dibuka	No browser available to open
 Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	The code has been copied. If the code field in the browser is still empty, paste it and choose Continue.
 Buka di browser	Open in browser
+# Login Ely.by lewat email/username + password
+Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Sign in with your Ely.by email or username and password. Two-factor authentication (2FA) is supported.
+Email atau username Ely.by	Ely.by email or username
+Kode 2FA (6 digit)	2FA code (6 digits)
+Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Your password is only sent to the Ely.by server and is not stored in the launcher. Only the login token is saved.
+Masuk ke Ely.by	Sign in to Ely.by
+Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	This Ely.by account uses two-factor authentication (2FA). Enter the code from your authenticator app.
+Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	The 2FA code is wrong or expired. Try the latest code.
+Email/username atau password Ely.by salah.	Wrong Ely.by email/username or password.
+Email/username, password, atau kode 2FA Ely.by salah.	Wrong Ely.by email/username, password, or 2FA code.
+Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Can't reach Ely.by. Check your internet connection.
+Respon Ely.by tidak berisi token akses.	The Ely.by response did not contain an access token.
+Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	The Ely.by session is no longer valid. Delete this account and sign in again.
+Gagal masuk ke Ely.by.	Failed to sign in to Ely.by.

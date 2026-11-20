@@ -59,13 +59,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.elyby.ElyByAuthService
-import com.israadev.nuxlauncher.core.account.elyby.ElyByDeviceCode
-import com.israadev.nuxlauncher.core.account.elyby.ElyByLoginState
+import com.israadev.nuxlauncher.core.account.elyby.ElyByTwoFactorRequiredException
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftDeviceCode
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -205,10 +205,16 @@ fun AccountsScreen(
                         onEdit = { openWardrobe(acc) },
                         onOpenSkin = { openWardrobe(acc) },
                         onRefresh = {
-                            if (acc.safeAccountType != "microsoft") return@AccountDetailCard
+                            val accType = acc.safeAccountType
+                            if (accType != "microsoft" && accType != "elyby") return@AccountDetailCard
                             coroutineScope.launch {
                                 refreshing = true
-                                MicrosoftAuthService.refreshMicrosoftAccount(acc)
+                                val refreshResult = if (accType == "elyby") {
+                                    ElyByAuthService.refreshElyByAccount(acc)
+                                } else {
+                                    MicrosoftAuthService.refreshMicrosoftAccount(acc)
+                                }
+                                refreshResult
                                     .onSuccess { fresh ->
                                         AccountManager.updateAccount(context, fresh)
                                         Toast.makeText(context, "Login berhasil disegarkan", Toast.LENGTH_SHORT).show()
@@ -471,7 +477,7 @@ private fun AccountDetailCard(
                     text = if (refreshing) "Menyegarkan..." else "Segarkan login",
                     icon = Icons.Outlined.Refresh,
                     filled = false,
-                    enabled = type == "microsoft" && !refreshing,
+                    enabled = (type == "microsoft" || type == "elyby") && !refreshing,
                     onClick = onRefresh
                 )
                 AmberPillButton(
@@ -909,16 +915,49 @@ internal fun AddAccountModal(
     var msErrorMsg by remember { mutableStateOf<String?>(null) }
     var isMsLoading by remember { mutableStateOf(false) }
 
-    // Ely.by State (Browser Device Code Flow)
-    val elyLoginState by ElyByAuthService.loginState.collectAsState()
+    // Ely.by State (login langsung email/username + password, kode 2FA diminta hanya bila akun memakainya)
+    var elyLogin by remember { mutableStateOf("") }
+    var elyPassword by remember { mutableStateOf("") }
+    var elyTwoFactor by remember { mutableStateOf("") }
+    var elyNeedsTwoFactor by remember { mutableStateOf(false) }
+    var elyErrorMsg by remember { mutableStateOf<String?>(null) }
+    var isElyLoading by remember { mutableStateOf(false) }
 
-    // Handle Ely.by login success
-    LaunchedEffect(elyLoginState) {
-        val state = elyLoginState
-        if (state is ElyByLoginState.Success) {
-            Toast.makeText(context, "Akun ${state.account.username} berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
-            ElyByAuthService.resetState()
-            onDismiss()
+    val submitElyBy: () -> Unit = submit@{
+        if (isElyLoading) return@submit
+        isElyLoading = true
+        elyErrorMsg = null
+        scope.launch {
+            val sentCode = elyTwoFactor.isNotBlank()
+            val res = ElyByAuthService.loginWithCredentials(
+                usernameOrEmail = elyLogin,
+                password = elyPassword,
+                twoFactorCode = if (elyNeedsTwoFactor) elyTwoFactor else null
+            )
+            val acc = res.getOrNull()
+            if (acc != null) {
+                val cached = try {
+                    SkinUtils.ensureSkinAndCapeCached(context, acc)
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    acc
+                }
+                isElyLoading = false
+                elyPassword = ""
+                elyTwoFactor = ""
+                onAccountAdded(cached)
+            } else {
+                isElyLoading = false
+                val err = res.exceptionOrNull()
+                if (err is ElyByTwoFactorRequiredException) {
+                    elyNeedsTwoFactor = true
+                    elyErrorMsg = if (sentCode) "Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru." else err.message
+                    elyTwoFactor = ""
+                } else {
+                    elyErrorMsg = err?.message ?: "Gagal masuk ke Ely.by."
+                }
+            }
         }
     }
 
@@ -968,47 +1007,43 @@ internal fun AddAccountModal(
         }
         val headDesc = when (selectedTab) {
             "microsoft" -> "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi."
-            "elyby" -> "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password."
+            "elyby" -> "Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA)."
             else -> "Lokal · tanpa login"
         }
-        val elyWaiting = selectedTab == "elyby" && elyLoginState is ElyByLoginState.WaitingForApproval
-
         AmberPanel {
-            if (!elyWaiting) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(tint.copy(alpha = 0.18f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = headIcon,
-                            contentDescription = null,
-                            tint = tint,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = headTitle,
-                        color = AmberUi.Text,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 15.sp,
-                        lineHeight = 19.sp,
-                        modifier = Modifier.weight(1f)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(tint.copy(alpha = 0.18f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = headIcon,
+                        contentDescription = null,
+                        tint = tint,
+                        modifier = Modifier.size(22.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = headDesc,
-                    color = AmberUi.TextDim,
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp
+                    text = headTitle,
+                    color = AmberUi.Text,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 15.sp,
+                    lineHeight = 19.sp,
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.height(14.dp))
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = headDesc,
+                color = AmberUi.TextDim,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+            Spacer(modifier = Modifier.height(14.dp))
 
             when (selectedTab) {
                 // ---------------- OFFLINE ----------------
@@ -1119,107 +1154,60 @@ internal fun AddAccountModal(
 
                 // ---------------- ELY.BY ----------------
                 "elyby" -> {
-                    when (val state = elyLoginState) {
-                        is ElyByLoginState.WaitingForApproval -> {
-                            val dc = state.deviceCode
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                AmberSpinner(
-                                    modifier = Modifier.size(18.dp),
-                                    color = tintElyBy,
-                                    strokeWidth = 2.dp
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text(
-                                    text = state.statusMsg.ifBlank { "Menunggu otorisasi di browser Ely.by..." },
-                                    color = AmberUi.Text,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    lineHeight = 18.sp,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(14.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .height(48.dp)
-                                        .clip(CircleShape)
-                                        .background(AmberUi.SurfaceRaised, CircleShape)
-                                        .border(1.dp, AmberUi.BorderStrong, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = dc.userCode,
-                                        color = tintElyBy,
-                                        fontSize = 18.sp,
-                                        fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Black,
-                                        letterSpacing = 2.sp,
-                                        maxLines = 1
-                                    )
-                                }
-                                AmberActionButton(
-                                    text = "Salin",
-                                    onClick = {
-                                        clipboardManager.setText(AnnotatedString(dc.userCode))
-                                        Toast.makeText(context, "Kode disalin", Toast.LENGTH_SHORT).show()
-                                    },
-                                    icon = Icons.Outlined.ContentCopy,
-                                    filled = false,
-                                    height = 48.dp
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(14.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
-                            ) {
-                                AmberActionButton(
-                                    text = "Buka lagi",
-                                    onClick = {
-                                        ElyByAuthService.openBrowser(context, dc.verificationUrlWithCode)
-                                    },
-                                    icon = Icons.Outlined.OpenInBrowser,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                AmberActionButton(
-                                    text = "Batal",
-                                    onClick = { ElyByAuthService.cancelLogin() },
-                                    filled = false,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                        }
-                        else -> {
-                            val isStarting = state is ElyByLoginState.Starting
-                            val errMsg = (state as? ElyByLoginState.Error)?.message
-                            if (errMsg != null) {
-                                Text(
-                                    text = errMsg,
-                                    color = AmberUi.Danger,
-                                    fontSize = 12.sp,
-                                    lineHeight = 17.sp,
-                                    modifier = Modifier.padding(bottom = 12.dp)
-                                )
-                            }
-                            AmberActionButton(
-                                text = if (isStarting) "Menghubungi..." else "Buka browser Ely.by",
-                                onClick = { ElyByAuthService.startLogin(context) },
-                                icon = Icons.Outlined.OpenInBrowser,
-                                loading = isStarting,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
+                    val elyCanSubmit = elyLogin.isNotBlank() && elyPassword.isNotEmpty() &&
+                        (!elyNeedsTwoFactor || elyTwoFactor.isNotBlank()) && !isElyLoading
+                    AmberField(
+                        value = elyLogin,
+                        onValueChange = { elyLogin = it },
+                        placeholder = "Email atau username Ely.by",
+                        icon = Icons.Outlined.Person,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AmberField(
+                        value = elyPassword,
+                        onValueChange = { elyPassword = it },
+                        placeholder = "Password",
+                        icon = Icons.Outlined.Lock,
+                        password = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (elyNeedsTwoFactor) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        AmberField(
+                            value = elyTwoFactor,
+                            onValueChange = { elyTwoFactor = it.filter { ch -> ch.isDigit() }.take(8) },
+                            placeholder = "Kode 2FA (6 digit)",
+                            icon = Icons.Outlined.Lock,
+                            keyboardType = KeyboardType.Number,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
+                    if (elyErrorMsg != null) {
+                        Text(
+                            text = elyErrorMsg!!,
+                            color = AmberUi.Danger,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp,
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                    Text(
+                        text = "Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.",
+                        color = AmberUi.TextDim,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp,
+                        modifier = Modifier.padding(top = 10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(14.dp))
+                    AmberActionButton(
+                        text = if (isElyLoading) "Menghubungi..." else "Masuk ke Ely.by",
+                        onClick = submitElyBy,
+                        icon = Icons.Outlined.Check,
+                        loading = isElyLoading,
+                        enabled = elyCanSubmit,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

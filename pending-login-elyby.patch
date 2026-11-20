@@ -1,0 +1,978 @@
+diff --git a/app/src/main/assets/lang/en/accounts.tsv b/app/src/main/assets/lang/en/accounts.tsv
+index 19f7948..02b30cb 100644
+--- a/app/src/main/assets/lang/en/accounts.tsv
++++ b/app/src/main/assets/lang/en/accounts.tsv
+@@ -113,3 +113,17 @@ Selesaikan login di browser, lalu kembali ke sini	Finish signing in in the brows
+ Tidak ada browser yang bisa dibuka	No browser available to open
+ Kode sudah disalin. Bila kolom kode di browser masih kosong, tempel lalu pilih Lanjutkan.	The code has been copied. If the code field in the browser is still empty, paste it and choose Continue.
+ Buka di browser	Open in browser
++# Login Ely.by lewat email/username + password
++Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA).	Sign in with your Ely.by email or username and password. Two-factor authentication (2FA) is supported.
++Email atau username Ely.by	Ely.by email or username
++Kode 2FA (6 digit)	2FA code (6 digits)
++Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.	Your password is only sent to the Ely.by server and is not stored in the launcher. Only the login token is saved.
++Masuk ke Ely.by	Sign in to Ely.by
++Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.	This Ely.by account uses two-factor authentication (2FA). Enter the code from your authenticator app.
++Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru.	The 2FA code is wrong or expired. Try the latest code.
++Email/username atau password Ely.by salah.	Wrong Ely.by email/username or password.
++Email/username, password, atau kode 2FA Ely.by salah.	Wrong Ely.by email/username, password, or 2FA code.
++Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Can't reach Ely.by. Check your internet connection.
++Respon Ely.by tidak berisi token akses.	The Ely.by response did not contain an access token.
++Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	The Ely.by session is no longer valid. Delete this account and sign in again.
++Gagal masuk ke Ely.by.	Failed to sign in to Ely.by.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt b/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
+index bb2d25e..a1a6588 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/account/elyby/ElyByAuthService.kt
+@@ -1,346 +1,195 @@
+ package com.israadev.nuxlauncher.core.account.elyby
+ 
+-import android.content.ClipData
+-import android.content.ClipboardManager
+-import android.content.Context
+-import android.content.Intent
+-import android.net.Uri
+-import com.google.gson.Gson
+ import com.google.gson.JsonObject
+ import com.google.gson.JsonParser
+-import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.models.UserAccount
+-import com.israadev.nuxlauncher.core.skin.SkinUtils
+-import kotlinx.coroutines.CoroutineScope
++import com.israadev.nuxlauncher.core.network.HttpClients
++import kotlinx.coroutines.CancellationException
+ import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.Job
+-import kotlinx.coroutines.SupervisorJob
+-import kotlinx.coroutines.delay
+-import kotlinx.coroutines.flow.MutableStateFlow
+-import kotlinx.coroutines.flow.StateFlow
+-import kotlinx.coroutines.flow.asStateFlow
+-import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
+-import okhttp3.FormBody
+ import okhttp3.MediaType.Companion.toMediaType
+-import okhttp3.OkHttpClient
+-import com.israadev.nuxlauncher.core.network.HttpClients
+ import okhttp3.Request
+ import okhttp3.RequestBody.Companion.toRequestBody
++import java.io.IOException
+ import java.util.UUID
+ import java.util.concurrent.TimeUnit
+ 
+-data class ElyByDeviceCode(
+-    val deviceCode: String,
+-    val userCode: String,
+-    val verificationUri: String,
+-    val expiresIn: Long,
+-    val interval: Long
+-) {
+-    val verificationUrlWithCode: String
+-        get() {
+-            val base = if (verificationUri.isNotBlank()) {
+-                if (verificationUri.startsWith("http://")) verificationUri.replace("http://", "https://")
+-                else verificationUri
+-            } else {
+-                "https://account.ely.by/code"
+-            }
+-            return if (base.contains("?")) {
+-                "$base&user_code=$userCode"
+-            } else {
+-                "$base?user_code=$userCode"
+-            }
+-        }
+-}
+-
+-sealed class ElyByLoginState {
+-    object Idle : ElyByLoginState()
+-    object Starting : ElyByLoginState()
+-    data class WaitingForApproval(
+-        val deviceCode: ElyByDeviceCode,
+-        val statusMsg: String
+-    ) : ElyByLoginState()
+-    data class Success(val account: UserAccount) : ElyByLoginState()
+-    data class Error(val message: String) : ElyByLoginState()
+-}
+-
++/**
++ * Akun Ely.by memakai verifikasi dua langkah (2FA). Pemanggil harus meminta kode TOTP dari
++ * pengguna lalu mengulang login dengan kode itu.
++ */
++class ElyByTwoFactorRequiredException :
++    Exception("Akun Ely.by ini memakai verifikasi dua langkah (2FA). Masukkan kode dari aplikasi autentikator.")
++
++/**
++ * Login Ely.by lewat autentikasi langsung (email/username + password) ke authserver.ely.by,
++ * protokol Yggdrasil yang didokumentasikan Ely.by dan dipakai launcher lain (Prism, HMCL, dll).
++ *
++ * Alur OAuth lama (Device Code dengan client_id "ely") dibuang: "ely" hanya contoh di dokumentasi
++ * Ely.by, bukan aplikasi terdaftar, sehingga server selalu menjawab invalid_client. OAuth Ely.by yang
++ * resmi butuh aplikasi terdaftar sendiri (client_id + secret) dan alur authorization code, bukan Device Code.
++ *
++ * Password tidak pernah disimpan: hanya accessToken dan clientToken (di kolom refreshToken).
++ */
+ object ElyByAuthService {
+     const val AUTHLIB_INJECTOR_URL = "https://authserver.ely.by/api/authlib-injector"
+-    private const val CLIENT_ID = "ely"
+-    private const val SCOPE = "account_info minecraft_server_session"
++    private const val AUTH_SERVER = "https://authserver.ely.by"
++    private const val RELOGIN_MESSAGE = "Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi."
+     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+ 
+-    private val gson = Gson()
+     private val httpClient = HttpClients.base.newBuilder()
+         .connectTimeout(20, TimeUnit.SECONDS)
+         .readTimeout(30, TimeUnit.SECONDS)
+         .build()
+ 
+-    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+-    private var activeJob: Job? = null
+-
+-    private val _loginState = MutableStateFlow<ElyByLoginState>(ElyByLoginState.Idle)
+-    val loginState: StateFlow<ElyByLoginState> = _loginState.asStateFlow()
++    private class AuthReply(val code: Int, val success: Boolean, val json: JsonObject?, val body: String)
+ 
+-    fun resetState() {
+-        activeJob?.cancel()
+-        activeJob = null
+-        _loginState.value = ElyByLoginState.Idle
+-    }
++    private fun JsonObject.str(name: String): String? =
++        get(name)?.takeIf { it.isJsonPrimitive }?.asString
+ 
+-    fun cancelLogin() {
+-        activeJob?.cancel()
+-        activeJob = null
+-        _loginState.value = ElyByLoginState.Idle
+-    }
++    private fun JsonObject.obj(name: String): JsonObject? =
++        get(name)?.takeIf { it.isJsonObject }?.asJsonObject
+ 
+-    fun openBrowser(context: Context, url: String) {
+-        runCatching {
+-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+-            }
+-            context.startActivity(intent)
++    private fun postJson(path: String, payload: JsonObject): AuthReply {
++        val request = Request.Builder()
++            .url("$AUTH_SERVER$path")
++            .header("Accept", "application/json")
++            .post(payload.toString().toRequestBody(JSON_MEDIA_TYPE))
++            .build()
++        httpClient.newCall(request).execute().use { response ->
++            val body = response.body?.string() ?: ""
++            val json = runCatching { JsonParser.parseString(body).asJsonObject }.getOrNull()
++            return AuthReply(response.code, response.isSuccessful, json, body)
+         }
+     }
+ 
+     /**
+-     * Memulai alur login browser Ely.by OAuth Device Code.
+-     * Berjalan di serviceScope sehingga tidak terputus saat pengguna berpindah ke browser.
++     * Masuk dengan email atau username Ely.by dan password. Bila akun memakai 2FA, hasilnya gagal dengan
++     * [ElyByTwoFactorRequiredException]; panggil lagi dengan [twoFactorCode] terisi (kode 6 digit dari aplikasi
++     * autentikator). Sesuai dokumentasi Ely.by, kode ditempel ke password dalam bentuk `password:kode`.
+      */
+-    fun startLogin(context: Context) {
+-        activeJob?.cancel()
+-        _loginState.value = ElyByLoginState.Starting
+-
+-        activeJob = serviceScope.launch {
+-            try {
+-                val dcRes = startDeviceCodeFlow()
+-                if (dcRes.isFailure) {
+-                    _loginState.value = ElyByLoginState.Error(
+-                        dcRes.exceptionOrNull()?.message ?: "Gagal memulai otorisasi Ely.by."
+-                    )
+-                    return@launch
+-                }
+-
+-                val dc = dcRes.getOrThrow()
+-                _loginState.value = ElyByLoginState.WaitingForApproval(
+-                    deviceCode = dc,
+-                    statusMsg = "Menunggu otorisasi di browser Ely.by..."
+-                )
+-
+-                // Salin kode ke clipboard
+-                runCatching {
+-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+-                    val clip = ClipData.newPlainText("Ely.by User Code", dc.userCode)
+-                    clipboard?.setPrimaryClip(clip)
+-                }
+-
+-                // Buka browser ke URL otorisasi
+-                openBrowser(context, dc.verificationUrlWithCode)
++    suspend fun loginWithCredentials(
++        usernameOrEmail: String,
++        password: String,
++        twoFactorCode: String? = null
++    ): Result<UserAccount> = withContext(Dispatchers.IO) {
++        try {
++            val login = usernameOrEmail.trim()
++            val code = twoFactorCode?.trim().orEmpty()
++            val clientToken = UUID.randomUUID().toString().replace("-", "")
++            val payload = JsonObject().apply {
++                add("agent", JsonObject().apply {
++                    addProperty("name", "Minecraft")
++                    addProperty("version", 1)
++                })
++                addProperty("username", login)
++                addProperty("password", if (code.isEmpty()) password else "$password:$code")
++                addProperty("clientToken", clientToken)
++                addProperty("requestUser", true)
++            }
+ 
+-                // Polling token sampai selesai atau dibatalkan
+-                val pollRes = pollForToken(
+-                    deviceCode = dc,
+-                    isCancelled = { activeJob?.isCancelled == true },
+-                    onStatusUpdate = { msg ->
+-                        val current = _loginState.value
+-                        if (current is ElyByLoginState.WaitingForApproval) {
+-                            _loginState.value = current.copy(statusMsg = msg)
+-                        }
++            val reply = postJson("/auth/authenticate", payload)
++            val json = reply.json
++            val errMsg = json?.str("errorMessage")
++            if (errMsg != null) {
++                return@withContext Result.failure(
++                    when {
++                        errMsg.contains("two factor", ignoreCase = true) -> ElyByTwoFactorRequiredException()
++                        errMsg.contains("Invalid credentials", ignoreCase = true) -> Exception(
++                            if (code.isEmpty()) "Email/username atau password Ely.by salah."
++                            else "Email/username, password, atau kode 2FA Ely.by salah."
++                        )
++                        else -> Exception("Ely.by: $errMsg")
+                     }
+                 )
+-
+-                if (pollRes.isSuccess) {
+-                    val rawAcc = pollRes.getOrThrow()
+-                    val cachedAcc = SkinUtils.ensureSkinAndCapeCached(context, rawAcc)
+-                    AccountManager.addAccount(context, cachedAcc)
+-                    _loginState.value = ElyByLoginState.Success(cachedAcc)
+-                } else {
+-                    _loginState.value = ElyByLoginState.Error(
+-                        pollRes.exceptionOrNull()?.message ?: "Otorisasi Ely.by gagal."
+-                    )
+-                }
+-            } catch (e: Exception) {
+-                _loginState.value = ElyByLoginState.Error(
+-                    e.message ?: "Terjadi kesalahan saat login Ely.by."
++            }
++            if (!reply.success || json == null) {
++                return@withContext Result.failure(
++                    Exception("Gagal login ke Ely.by (HTTP ${reply.code}): ${reply.body.take(200)}")
+                 )
+             }
+-        }
+-    }
+-
+-    /**
+-     * Memulai request device code ke Ely.by API
+-     */
+-    suspend fun startDeviceCodeFlow(): Result<ElyByDeviceCode> = withContext(Dispatchers.IO) {
+-        try {
+-            val formBody = FormBody.Builder()
+-                .add("client_id", CLIENT_ID)
+-                .add("scope", SCOPE)
+-                .build()
+ 
+-            val request = Request.Builder()
+-                .url("https://account.ely.by/api/oauth2/v1/devicecode")
+-                .post(formBody)
+-                .build()
+-
+-            httpClient.newCall(request).execute().use { response ->
+-                val bodyStr = response.body?.string() ?: ""
+-                if (!response.isSuccessful) {
+-                    return@withContext Result.failure(Exception("Gagal memulai login Ely.by Device Code (${response.code}): $bodyStr"))
+-                }
+-
+-                val json = JsonParser.parseString(bodyStr).asJsonObject
+-                val deviceCode = json.get("device_code")?.asString ?: ""
+-                val userCode = json.get("user_code")?.asString ?: ""
+-                val verificationUri = json.get("verification_uri")?.asString ?: "https://account.ely.by/code"
+-                val expiresIn = json.get("expires_in")?.asLong ?: 600L
+-                val interval = json.get("interval")?.asLong ?: 5L
++            val accessToken = json.str("accessToken").orEmpty()
++            if (accessToken.isBlank()) {
++                return@withContext Result.failure(Exception("Respon Ely.by tidak berisi token akses."))
++            }
++            val resClientToken = json.str("clientToken") ?: clientToken
++            val profile = json.obj("selectedProfile")?.takeIf { it.has("id") }
++                ?: json.get("availableProfiles")?.takeIf { it.isJsonArray }?.asJsonArray
++                    ?.firstOrNull { it.isJsonObject && it.asJsonObject.has("id") }?.asJsonObject
++                ?: return@withContext Result.failure(Exception("Profil Ely.by tidak ditemukan dalam respon."))
++
++            val profileId = (profile.str("id") ?: "").replace("-", "")
++            if (profileId.isBlank()) {
++                return@withContext Result.failure(Exception("Profil Ely.by tidak ditemukan dalam respon."))
++            }
++            val profileName = profile.str("name") ?: login
+ 
+-                Result.success(
+-                    ElyByDeviceCode(
+-                        deviceCode = deviceCode,
+-                        userCode = userCode,
+-                        verificationUri = verificationUri,
+-                        expiresIn = expiresIn,
+-                        interval = interval
+-                    )
++            Result.success(
++                UserAccount(
++                    id = "ely_$profileId",
++                    username = profileName,
++                    uuid = profileId,
++                    accessToken = accessToken,
++                    refreshToken = resClientToken,
++                    isOffline = false,
++                    accountType = "elyby",
++                    authServerUrl = AUTHLIB_INJECTOR_URL,
++                    email = if (login.contains("@")) login else "",
++                    skinUrl = "https://skinsystem.ely.by/skins/$profileName.png",
++                    tokenIssuedAt = System.currentTimeMillis()
+                 )
+-            }
++            )
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: IOException) {
++            Result.failure(Exception("Tidak bisa terhubung ke Ely.by. Periksa koneksi internet."))
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
+ 
+     /**
+-     * Melakukan polling ke server Ely.by sampai otorisasi browser selesai
++     * Memeriksa token akun Ely.by dan memperbaruinya bila sudah tidak sah, tanpa menanyakan password lagi.
++     * Gagal bila token tidak bisa diperbarui; pengguna perlu masuk ulang.
+      */
+-    suspend fun pollForToken(
+-        deviceCode: ElyByDeviceCode,
+-        isCancelled: () -> Boolean,
+-        onStatusUpdate: (String) -> Unit
+-    ): Result<UserAccount> = withContext(Dispatchers.IO) {
+-        val startTime = System.currentTimeMillis()
+-        val timeoutMs = deviceCode.expiresIn * 1000L
+-        var pollIntervalMs = (if (deviceCode.interval <= 0) 5L else deviceCode.interval) * 1000L
+-
+-        var accessToken: String? = null
+-
+-        while (System.currentTimeMillis() - startTime < timeoutMs) {
+-            if (isCancelled()) {
+-                return@withContext Result.failure(Exception("Login dibatalkan oleh pengguna."))
+-            }
+-
+-            delay(pollIntervalMs)
+-
+-            if (isCancelled()) {
+-                return@withContext Result.failure(Exception("Login dibatalkan oleh pengguna."))
++    suspend fun refreshElyByAccount(account: UserAccount): Result<UserAccount> = withContext(Dispatchers.IO) {
++        try {
++            val accessToken = account.safeAccessToken
++            val clientToken = account.safeRefreshToken
++            if (accessToken == "0" || clientToken == "0") {
++                return@withContext Result.failure(Exception(RELOGIN_MESSAGE))
+             }
+ 
+-            try {
+-                val formBody = FormBody.Builder()
+-                    .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
+-                    .add("client_id", CLIENT_ID)
+-                    .add("device_code", deviceCode.deviceCode)
+-                    .build()
+-
+-                val request = Request.Builder()
+-                    .url("https://account.ely.by/api/oauth2/v1/token")
+-                    .post(formBody)
+-                    .build()
+-
+-                httpClient.newCall(request).execute().use { response ->
+-                    val bodyStr = response.body?.string() ?: ""
+-                    val json = runCatching { JsonParser.parseString(bodyStr).asJsonObject }.getOrNull()
+-
+-                    if (response.isSuccessful && json != null) {
+-                        val token = json.get("access_token")?.asString
+-                        if (!token.isNullOrBlank()) {
+-                            accessToken = token
+-                        }
+-                    }
+-
+-                    if (json != null && json.has("error")) {
+-                        val err = json.get("error").asString
+-                        when (err) {
+-                            "authorization_pending" -> {
+-                                onStatusUpdate("Menunggu konfirmasi di browser...")
+-                            }
+-                            "slow_down" -> {
+-                                pollIntervalMs += 2000L
+-                                onStatusUpdate("Memperlambat polling...")
+-                            }
+-                            else -> {
+-                                return@withContext Result.failure(Exception("Ely.by OAuth Error: $err"))
+-                            }
+-                        }
+-                    }
+-                }
+-
+-                if (accessToken != null) {
+-                    break
+-                }
+-            } catch (e: Exception) {
+-                // Abaikan error jaringan sementara
++            val validate = postJson("/auth/validate", JsonObject().apply {
++                addProperty("accessToken", accessToken)
++            })
++            if (validate.success) {
++                return@withContext Result.success(account.copy(tokenIssuedAt = System.currentTimeMillis()))
+             }
+-        }
+-
+-        val token = accessToken ?: return@withContext Result.failure(Exception("Waktu otorisasi Ely.by habis."))
+-
+-        // Step 2: Ambil info akun (username & email)
+-        onStatusUpdate("Mengambil informasi akun Ely.by...")
+-        val infoReq = Request.Builder()
+-            .url("https://account.ely.by/api/account/v1/info")
+-            .header("Authorization", "Bearer $token")
+-            .get()
+-            .build()
+ 
+-        var username = "Player"
+-        var email = ""
+-        httpClient.newCall(infoReq).execute().use { response ->
+-            val bodyStr = response.body?.string() ?: ""
+-            if (!response.isSuccessful) {
+-                return@withContext Result.failure(Exception("Gagal mengambil info akun Ely.by (${response.code})"))
++            val refresh = postJson("/auth/refresh", JsonObject().apply {
++                addProperty("accessToken", accessToken)
++                addProperty("clientToken", clientToken)
++            })
++            val newToken = refresh.json?.str("accessToken")
++            if (!refresh.success || newToken.isNullOrBlank()) {
++                return@withContext Result.failure(Exception(RELOGIN_MESSAGE))
+             }
+-            val json = JsonParser.parseString(bodyStr).asJsonObject
+-            username = json.get("username")?.asString ?: "Player"
+-            email = json.get("email")?.asString ?: ""
++            Result.success(
++                account.copy(
++                    accessToken = newToken,
++                    refreshToken = refresh.json?.str("clientToken") ?: clientToken,
++                    tokenIssuedAt = System.currentTimeMillis()
++                )
++            )
++        } catch (e: CancellationException) {
++            throw e
++        } catch (e: IOException) {
++            Result.failure(Exception("Tidak bisa terhubung ke Ely.by. Periksa koneksi internet."))
++        } catch (e: Exception) {
++            Result.failure(e)
+         }
+-
+-        // Step 3: Ambil Minecraft UUID dari server Ely.by
+-        onStatusUpdate("Mengambil UUID Minecraft untuk $username...")
+-        var playerUuid = UUID.nameUUIDFromBytes("OfflinePlayer:$username".toByteArray(Charsets.UTF_8)).toString().replace("-", "")
+-        try {
+-            val uuidReq = Request.Builder()
+-                .url("https://authserver.ely.by/api/users/profiles/minecraft/$username")
+-                .get()
+-                .build()
+-
+-            httpClient.newCall(uuidReq).execute().use { response ->
+-                if (response.isSuccessful) {
+-                    val bodyStr = response.body?.string() ?: ""
+-                    val json = JsonParser.parseString(bodyStr).asJsonObject
+-                    val id = json.get("id")?.asString
+-                    if (!id.isNullOrBlank()) {
+-                        playerUuid = id.replace("-", "")
+-                    }
+-                }
+-            }
+-        } catch (_: Exception) {}
+-
+-        val cleanUuid = playerUuid.replace("-", "")
+-        val skinUrl = "https://skinsystem.ely.by/skins/$username.png"
+-        val account = UserAccount(
+-            id = "ely_$cleanUuid",
+-            username = username,
+-            uuid = cleanUuid,
+-            accessToken = token,
+-            isOffline = false,
+-            accountType = "elyby",
+-            authServerUrl = AUTHLIB_INJECTOR_URL,
+-            email = email,
+-            skinUrl = skinUrl
+-        )
+-
+-        Result.success(account)
+     }
+ 
+     /**
+@@ -363,74 +212,4 @@ object ElyByAuthService {
+             ""
+         }
+     }
+-
+-    /**
+-     * Fallback login langsung (tidak ditampilkan di UI, disimpan untuk kompatibilitas)
+-     */
+-    suspend fun loginWithCredentials(
+-        usernameOrEmail: String,
+-        password: String
+-    ): Result<UserAccount> = withContext(Dispatchers.IO) {
+-        try {
+-            val clientToken = UUID.randomUUID().toString().replace("-", "")
+-            val payload = JsonObject().apply {
+-                val agent = JsonObject().apply {
+-                    addProperty("name", "Minecraft")
+-                    addProperty("version", 1)
+-                }
+-                add("agent", agent)
+-                addProperty("username", usernameOrEmail.trim())
+-                addProperty("password", password)
+-                addProperty("requestUser", true)
+-                addProperty("clientToken", clientToken)
+-            }
+-
+-            val request = Request.Builder()
+-                .url("$AUTHLIB_INJECTOR_URL/authserver/authenticate")
+-                .header("Content-Type", "application/json")
+-                .header("Accept", "application/json")
+-                .post(payload.toString().toRequestBody(JSON_MEDIA_TYPE))
+-                .build()
+-
+-            httpClient.newCall(request).execute().use { response ->
+-                val bodyStr = response.body?.string() ?: ""
+-                val json = runCatching { JsonParser.parseString(bodyStr).asJsonObject }.getOrNull()
+-
+-                if (json != null && json.has("errorMessage")) {
+-                    val errMsg = json.get("errorMessage").asString
+-                    return@withContext Result.failure(Exception("Ely.by: $errMsg"))
+-                }
+-
+-                if (!response.isSuccessful || json == null) {
+-                    return@withContext Result.failure(Exception("Gagal login ke Ely.by (HTTP ${response.code}): $bodyStr"))
+-                }
+-
+-                val accessToken = json.get("accessToken")?.asString ?: "0"
+-                val resClientToken = json.get("clientToken")?.asString ?: clientToken
+-                val selectedProfile = json.getAsJsonObject("selectedProfile")
+-                    ?: return@withContext Result.failure(Exception("Profil Ely.by tidak ditemukan dalam respon."))
+-
+-                val profileId = selectedProfile.get("id")?.asString ?: UUID.randomUUID().toString().replace("-", "")
+-                val profileName = selectedProfile.get("name")?.asString ?: usernameOrEmail.trim()
+-                val skinUrl = "https://skinsystem.ely.by/skins/$profileName.png"
+-
+-                val account = UserAccount(
+-                    id = "ely_${profileId.replace("-", "")}",
+-                    username = profileName,
+-                    uuid = profileId.replace("-", ""),
+-                    accessToken = accessToken,
+-                    refreshToken = resClientToken,
+-                    isOffline = false,
+-                    accountType = "elyby",
+-                    authServerUrl = AUTHLIB_INJECTOR_URL,
+-                    email = usernameOrEmail.trim(),
+-                    skinUrl = skinUrl
+-                )
+-
+-                Result.success(account)
+-            }
+-        } catch (e: Exception) {
+-            Result.failure(e)
+-        }
+-    }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+index a0e6f81..5ffcaea 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/AmberPage.kt
+@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.text.BasicTextField
++import androidx.compose.foundation.text.KeyboardOptions
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+ import androidx.compose.material.icons.outlined.ChevronRight
+@@ -50,6 +51,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.input.KeyboardType
++import androidx.compose.ui.text.input.PasswordVisualTransformation
++import androidx.compose.ui.text.input.VisualTransformation
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.Dp
+@@ -285,7 +289,9 @@ fun AmberField(
+     onValueChange: (String) -> Unit,
+     placeholder: String,
+     modifier: Modifier = Modifier,
+-    icon: ImageVector? = null
++    icon: ImageVector? = null,
++    password: Boolean = false,
++    keyboardType: KeyboardType = KeyboardType.Text
+ ) {
+     Row(
+         modifier = modifier
+@@ -328,6 +334,8 @@ fun AmberField(
+                 ),
+                 cursorBrush = SolidColor(AmberUi.AccentSoft),
+                 singleLine = true,
++                visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
++                keyboardOptions = KeyboardOptions(keyboardType = if (password) KeyboardType.Password else keyboardType),
+                 modifier = Modifier.fillMaxWidth()
+             )
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+index 6c0168c..87193b9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/AccountsScreen.kt
+@@ -59,13 +59,13 @@ import androidx.compose.ui.platform.LocalContext
+ import androidx.compose.ui.text.AnnotatedString
+ import androidx.compose.ui.text.font.FontFamily
+ import androidx.compose.ui.text.font.FontWeight
++import androidx.compose.ui.text.input.KeyboardType
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.account.elyby.ElyByAuthService
+-import com.israadev.nuxlauncher.core.account.elyby.ElyByDeviceCode
+-import com.israadev.nuxlauncher.core.account.elyby.ElyByLoginState
++import com.israadev.nuxlauncher.core.account.elyby.ElyByTwoFactorRequiredException
+ import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
+ import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftDeviceCode
+ import com.israadev.nuxlauncher.core.models.UserAccount
+@@ -205,10 +205,16 @@ fun AccountsScreen(
+                         onEdit = { openWardrobe(acc) },
+                         onOpenSkin = { openWardrobe(acc) },
+                         onRefresh = {
+-                            if (acc.safeAccountType != "microsoft") return@AccountDetailCard
++                            val accType = acc.safeAccountType
++                            if (accType != "microsoft" && accType != "elyby") return@AccountDetailCard
+                             coroutineScope.launch {
+                                 refreshing = true
+-                                MicrosoftAuthService.refreshMicrosoftAccount(acc)
++                                val refreshResult = if (accType == "elyby") {
++                                    ElyByAuthService.refreshElyByAccount(acc)
++                                } else {
++                                    MicrosoftAuthService.refreshMicrosoftAccount(acc)
++                                }
++                                refreshResult
+                                     .onSuccess { fresh ->
+                                         AccountManager.updateAccount(context, fresh)
+                                         Toast.makeText(context, "Login berhasil disegarkan", Toast.LENGTH_SHORT).show()
+@@ -471,7 +477,7 @@ private fun AccountDetailCard(
+                     text = if (refreshing) "Menyegarkan..." else "Segarkan login",
+                     icon = Icons.Outlined.Refresh,
+                     filled = false,
+-                    enabled = type == "microsoft" && !refreshing,
++                    enabled = (type == "microsoft" || type == "elyby") && !refreshing,
+                     onClick = onRefresh
+                 )
+                 AmberPillButton(
+@@ -909,16 +915,49 @@ internal fun AddAccountModal(
+     var msErrorMsg by remember { mutableStateOf<String?>(null) }
+     var isMsLoading by remember { mutableStateOf(false) }
+ 
+-    // Ely.by State (Browser Device Code Flow)
+-    val elyLoginState by ElyByAuthService.loginState.collectAsState()
+-
+-    // Handle Ely.by login success
+-    LaunchedEffect(elyLoginState) {
+-        val state = elyLoginState
+-        if (state is ElyByLoginState.Success) {
+-            Toast.makeText(context, "Akun ${state.account.username} berhasil ditambahkan!", Toast.LENGTH_SHORT).show()
+-            ElyByAuthService.resetState()
+-            onDismiss()
++    // Ely.by State (login langsung email/username + password, kode 2FA diminta hanya bila akun memakainya)
++    var elyLogin by remember { mutableStateOf("") }
++    var elyPassword by remember { mutableStateOf("") }
++    var elyTwoFactor by remember { mutableStateOf("") }
++    var elyNeedsTwoFactor by remember { mutableStateOf(false) }
++    var elyErrorMsg by remember { mutableStateOf<String?>(null) }
++    var isElyLoading by remember { mutableStateOf(false) }
++
++    val submitElyBy: () -> Unit = submit@{
++        if (isElyLoading) return@submit
++        isElyLoading = true
++        elyErrorMsg = null
++        scope.launch {
++            val sentCode = elyTwoFactor.isNotBlank()
++            val res = ElyByAuthService.loginWithCredentials(
++                usernameOrEmail = elyLogin,
++                password = elyPassword,
++                twoFactorCode = if (elyNeedsTwoFactor) elyTwoFactor else null
++            )
++            val acc = res.getOrNull()
++            if (acc != null) {
++                val cached = try {
++                    SkinUtils.ensureSkinAndCapeCached(context, acc)
++                } catch (e: kotlinx.coroutines.CancellationException) {
++                    throw e
++                } catch (_: Exception) {
++                    acc
++                }
++                isElyLoading = false
++                elyPassword = ""
++                elyTwoFactor = ""
++                onAccountAdded(cached)
++            } else {
++                isElyLoading = false
++                val err = res.exceptionOrNull()
++                if (err is ElyByTwoFactorRequiredException) {
++                    elyNeedsTwoFactor = true
++                    elyErrorMsg = if (sentCode) "Kode 2FA salah atau sudah kedaluwarsa. Coba kode terbaru." else err.message
++                    elyTwoFactor = ""
++                } else {
++                    elyErrorMsg = err?.message ?: "Gagal masuk ke Ely.by."
++                }
++            }
+         }
+     }
+ 
+@@ -968,47 +1007,43 @@ internal fun AddAccountModal(
+         }
+         val headDesc = when (selectedTab) {
+             "microsoft" -> "Jendela otorisasi dibuka langsung di launcher, tanpa perlu keluar aplikasi."
+-            "elyby" -> "Browser dibuka otomatis untuk konfirmasi akun Ely.by, tanpa mengetik password."
++            "elyby" -> "Masuk dengan email atau username dan password akun Ely.by. Mendukung verifikasi dua langkah (2FA)."
+             else -> "Lokal · tanpa login"
+         }
+-        val elyWaiting = selectedTab == "elyby" && elyLoginState is ElyByLoginState.WaitingForApproval
+-
+         AmberPanel {
+-            if (!elyWaiting) {
+-                Row(verticalAlignment = Alignment.CenterVertically) {
+-                    Box(
+-                        modifier = Modifier
+-                            .size(40.dp)
+-                            .clip(CircleShape)
+-                            .background(tint.copy(alpha = 0.18f), CircleShape),
+-                        contentAlignment = Alignment.Center
+-                    ) {
+-                        Icon(
+-                            imageVector = headIcon,
+-                            contentDescription = null,
+-                            tint = tint,
+-                            modifier = Modifier.size(22.dp)
+-                        )
+-                    }
+-                    Spacer(modifier = Modifier.width(12.dp))
+-                    Text(
+-                        text = headTitle,
+-                        color = AmberUi.Text,
+-                        fontWeight = FontWeight.Black,
+-                        fontSize = 15.sp,
+-                        lineHeight = 19.sp,
+-                        modifier = Modifier.weight(1f)
++            Row(verticalAlignment = Alignment.CenterVertically) {
++                Box(
++                    modifier = Modifier
++                        .size(40.dp)
++                        .clip(CircleShape)
++                        .background(tint.copy(alpha = 0.18f), CircleShape),
++                    contentAlignment = Alignment.Center
++                ) {
++                    Icon(
++                        imageVector = headIcon,
++                        contentDescription = null,
++                        tint = tint,
++                        modifier = Modifier.size(22.dp)
+                     )
+                 }
+-                Spacer(modifier = Modifier.height(8.dp))
++                Spacer(modifier = Modifier.width(12.dp))
+                 Text(
+-                    text = headDesc,
+-                    color = AmberUi.TextDim,
+-                    fontSize = 12.sp,
+-                    lineHeight = 17.sp
++                    text = headTitle,
++                    color = AmberUi.Text,
++                    fontWeight = FontWeight.Black,
++                    fontSize = 15.sp,
++                    lineHeight = 19.sp,
++                    modifier = Modifier.weight(1f)
+                 )
+-                Spacer(modifier = Modifier.height(14.dp))
+             }
++            Spacer(modifier = Modifier.height(8.dp))
++            Text(
++                text = headDesc,
++                color = AmberUi.TextDim,
++                fontSize = 12.sp,
++                lineHeight = 17.sp
++            )
++            Spacer(modifier = Modifier.height(14.dp))
+ 
+             when (selectedTab) {
+                 // ---------------- OFFLINE ----------------
+@@ -1119,107 +1154,60 @@ internal fun AddAccountModal(
+ 
+                 // ---------------- ELY.BY ----------------
+                 "elyby" -> {
+-                    when (val state = elyLoginState) {
+-                        is ElyByLoginState.WaitingForApproval -> {
+-                            val dc = state.deviceCode
+-                            Row(verticalAlignment = Alignment.CenterVertically) {
+-                                AmberSpinner(
+-                                    modifier = Modifier.size(18.dp),
+-                                    color = tintElyBy,
+-                                    strokeWidth = 2.dp
+-                                )
+-                                Spacer(modifier = Modifier.width(10.dp))
+-                                Text(
+-                                    text = state.statusMsg.ifBlank { "Menunggu otorisasi di browser Ely.by..." },
+-                                    color = AmberUi.Text,
+-                                    fontSize = 13.sp,
+-                                    fontWeight = FontWeight.Bold,
+-                                    lineHeight = 18.sp,
+-                                    modifier = Modifier.weight(1f)
+-                                )
+-                            }
+-
+-                            Spacer(modifier = Modifier.height(14.dp))
+-
+-                            Row(
+-                                modifier = Modifier.fillMaxWidth(),
+-                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+-                                verticalAlignment = Alignment.CenterVertically
+-                            ) {
+-                                Box(
+-                                    modifier = Modifier
+-                                        .weight(1f)
+-                                        .height(48.dp)
+-                                        .clip(CircleShape)
+-                                        .background(AmberUi.SurfaceRaised, CircleShape)
+-                                        .border(1.dp, AmberUi.BorderStrong, CircleShape),
+-                                    contentAlignment = Alignment.Center
+-                                ) {
+-                                    Text(
+-                                        text = dc.userCode,
+-                                        color = tintElyBy,
+-                                        fontSize = 18.sp,
+-                                        fontFamily = FontFamily.Monospace,
+-                                        fontWeight = FontWeight.Black,
+-                                        letterSpacing = 2.sp,
+-                                        maxLines = 1
+-                                    )
+-                                }
+-                                AmberActionButton(
+-                                    text = "Salin",
+-                                    onClick = {
+-                                        clipboardManager.setText(AnnotatedString(dc.userCode))
+-                                        Toast.makeText(context, "Kode disalin", Toast.LENGTH_SHORT).show()
+-                                    },
+-                                    icon = Icons.Outlined.ContentCopy,
+-                                    filled = false,
+-                                    height = 48.dp
+-                                )
+-                            }
+-
+-                            Spacer(modifier = Modifier.height(14.dp))
+-
+-                            Row(
+-                                modifier = Modifier.fillMaxWidth(),
+-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+-                            ) {
+-                                AmberActionButton(
+-                                    text = "Buka lagi",
+-                                    onClick = {
+-                                        ElyByAuthService.openBrowser(context, dc.verificationUrlWithCode)
+-                                    },
+-                                    icon = Icons.Outlined.OpenInBrowser,
+-                                    modifier = Modifier.weight(1f)
+-                                )
+-                                AmberActionButton(
+-                                    text = "Batal",
+-                                    onClick = { ElyByAuthService.cancelLogin() },
+-                                    filled = false,
+-                                    modifier = Modifier.weight(1f)
+-                                )
+-                            }
+-                        }
+-                        else -> {
+-                            val isStarting = state is ElyByLoginState.Starting
+-                            val errMsg = (state as? ElyByLoginState.Error)?.message
+-                            if (errMsg != null) {
+-                                Text(
+-                                    text = errMsg,
+-                                    color = AmberUi.Danger,
+-                                    fontSize = 12.sp,
+-                                    lineHeight = 17.sp,
+-                                    modifier = Modifier.padding(bottom = 12.dp)
+-                                )
+-                            }
+-                            AmberActionButton(
+-                                text = if (isStarting) "Menghubungi..." else "Buka browser Ely.by",
+-                                onClick = { ElyByAuthService.startLogin(context) },
+-                                icon = Icons.Outlined.OpenInBrowser,
+-                                loading = isStarting,
+-                                modifier = Modifier.fillMaxWidth()
+-                            )
+-                        }
++                    val elyCanSubmit = elyLogin.isNotBlank() && elyPassword.isNotEmpty() &&
++                        (!elyNeedsTwoFactor || elyTwoFactor.isNotBlank()) && !isElyLoading
++                    AmberField(
++                        value = elyLogin,
++                        onValueChange = { elyLogin = it },
++                        placeholder = "Email atau username Ely.by",
++                        icon = Icons.Outlined.Person,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                    Spacer(modifier = Modifier.height(8.dp))
++                    AmberField(
++                        value = elyPassword,
++                        onValueChange = { elyPassword = it },
++                        placeholder = "Password",
++                        icon = Icons.Outlined.Lock,
++                        password = true,
++                        modifier = Modifier.fillMaxWidth()
++                    )
++                    if (elyNeedsTwoFactor) {
++                        Spacer(modifier = Modifier.height(8.dp))
++                        AmberField(
++                            value = elyTwoFactor,
++                            onValueChange = { elyTwoFactor = it.filter { ch -> ch.isDigit() }.take(8) },
++                            placeholder = "Kode 2FA (6 digit)",
++                            icon = Icons.Outlined.Lock,
++                            keyboardType = KeyboardType.Number,
++                            modifier = Modifier.fillMaxWidth()
++                        )
+                     }
++                    if (elyErrorMsg != null) {
++                        Text(
++                            text = elyErrorMsg!!,
++                            color = AmberUi.Danger,
++                            fontSize = 12.sp,
++                            lineHeight = 17.sp,
++                            modifier = Modifier.padding(top = 10.dp)
++                        )
++                    }
++                    Text(
++                        text = "Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang disimpan hanya token login.",
++                        color = AmberUi.TextDim,
++                        fontSize = 12.sp,
++                        lineHeight = 17.sp,
++                        modifier = Modifier.padding(top = 10.dp)
++                    )
++                    Spacer(modifier = Modifier.height(14.dp))
++                    AmberActionButton(
++                        text = if (isElyLoading) "Menghubungi..." else "Masuk ke Ely.by",
++                        onClick = submitElyBy,
++                        icon = Icons.Outlined.Check,
++                        loading = isElyLoading,
++                        enabled = elyCanSubmit,
++                        modifier = Modifier.fillMaxWidth()
++                    )
+                 }
+             }
+         }
+# FIN part=1/1 files=4

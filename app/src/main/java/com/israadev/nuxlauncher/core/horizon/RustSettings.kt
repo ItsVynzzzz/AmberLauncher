@@ -134,6 +134,19 @@ object RustSettingsStore {
         }
     }
 
+    /**
+     * Membaca pengaturan langsung dari berkas, di thread pemanggil, tanpa menunggu [reload]. Dipakai saat PLAY mesin
+     * lain yang ikut memakai pilihan tab ini ([StarlingSettingsSync]). Berkas hilang atau rusak = semua bawaan.
+     */
+    fun readNow(context: Context): RustSettings = synchronized(fileLock) {
+        try {
+            parse(readJson(configFile(context.applicationContext)))
+        } catch (e: Exception) {
+            LauncherLog.w(TAG, "Config mesin Rust tidak terbaca, memakai bawaan: ${e.message}", e)
+            RustSettings()
+        }
+    }
+
     /** Mengubah pengaturan: tampilan langsung berubah, berkas ditulis di latar. */
     fun update(context: Context, change: (RustSettings) -> RustSettings) {
         val file = configFile(context.applicationContext)

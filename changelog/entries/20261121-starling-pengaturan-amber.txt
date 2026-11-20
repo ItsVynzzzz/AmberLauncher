@@ -1,0 +1,16 @@
+[id]
++ Pengaturan di tab Pengaturan > Rust kini ikut berlaku untuk Starling: Renderer, Skala resolusi, Batas pekerja chunk, Hemat baterai, Kurangi animasi game, dan Sederhanakan daun diteruskan ke mesin saat PLAY. Perubahan yang dibuat di dalam game tidak ditimpa sampai pilihannya diubah lagi di Amber.
+[en]
++ The options in Settings > Rust now apply to Starling too: Renderer, Resolution scale, Chunk worker limit, Battery saver, Reduce game animations and Simplify leaves are passed to the engine on PLAY. Changes made inside the game are not overwritten until you change the option in Amber again.
+[es]
++ Las opciones de Ajustes > Rust ahora también se aplican a Starling: Renderizador, Escala de resolución, Límite de trabajadores de chunks, Ahorro de batería, Reducir animaciones del juego y Simplificar hojas se pasan al motor al pulsar PLAY. Los cambios hechos dentro del juego no se sobrescriben hasta que vuelvas a cambiar la opción en Amber.
+[fil]
++ Ang mga opsyon sa Settings > Rust ay umiiral na rin para sa Starling: ipinapasa sa engine pagpindot ng PLAY ang Renderer, Resolution scale, Limitasyon ng chunk worker, Battery saver, Bawasan ang mga animation ng game, at Pasimplehin ang mga dahon. Hindi pinapalitan ang mga binago sa loob ng laro hangga't hindi mo muling binabago ang opsyon sa Amber.
+[pt]
++ As opções de Configurações > Rust agora também valem para o Starling: Renderizador, Escala de resolução, Limite de workers de chunk, Economia de bateria, Reduzir animações do jogo e Simplificar folhagem são passados ao motor ao tocar em PLAY. Mudanças feitas dentro do jogo não são sobrescritas até você alterar a opção no Amber de novo.
+[th]
++ ตัวเลือกในการตั้งค่า > Rust ใช้กับ Starling ด้วยแล้ว ได้แก่ Renderer, สเกลความละเอียด, ขีดจำกัด worker ของ chunk, ประหยัดแบตเตอรี่, ลดแอนิเมชันในเกม และลดรายละเอียดใบไม้ จะถูกส่งให้เอนจินเมื่อกด PLAY ค่าที่เปลี่ยนในเกมจะไม่ถูกเขียนทับจนกว่าคุณจะเปลี่ยนตัวเลือกนั้นใน Amber อีกครั้ง
+[vi]
++ Các tùy chọn trong Cài đặt > Rust giờ cũng áp dụng cho Starling: Renderer, Tỉ lệ độ phân giải, Giới hạn worker chunk, Tiết kiệm pin, Giảm hoạt ảnh trong game và Đơn giản hóa tán lá được chuyển cho engine khi nhấn PLAY. Thay đổi bạn làm trong game sẽ không bị ghi đè cho đến khi bạn đổi lại tùy chọn trong Amber.
+[zh]
++ “设置 > Rust”中的选项现在也适用于 Starling：渲染器、分辨率缩放、区块工作线程上限、省电、减少游戏动画和简化树叶会在点击 PLAY 时传给引擎。在游戏内所做的更改不会被覆盖，直到你再次在 Amber 中更改该选项。

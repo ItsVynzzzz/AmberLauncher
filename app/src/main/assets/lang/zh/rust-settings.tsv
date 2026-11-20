@@ -77,3 +77,6 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
 Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	还没有性能报告。请开启“记录性能”，玩一会儿，然后重试。
 Landscape	横屏
 Portrait	竖屏
+# Pengaturan Amber untuk Starling
+Starling memakai sebagian pilihan	Starling 使用其中一部分选项
+Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Starling 实例会使用此标签页中的渲染器、分辨率缩放、区块工作线程上限、性能模式（仅省电）、减少游戏动画和简化树叶。其他选项仅适用于 Horizon。在 Starling 游戏内修改的值会一直生效，直到你再次在这里更改该选项。

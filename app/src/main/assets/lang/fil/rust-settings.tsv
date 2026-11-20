@@ -77,3 +77,6 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
 Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Wala pang performance report. I-on ang I-record ang performance, maglaro sandali, saka subukan ulit.
 Landscape	Landscape
 Portrait	Portrait
+# Pengaturan Amber untuk Starling
+Starling memakai sebagian pilihan	Ginagamit ng Starling ang ilan sa mga opsyong ito
+Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Ginagamit ng mga Starling instance ang Renderer, Resolution scale, Limitasyon ng chunk worker, Performance mode (Battery saver lang), Bawasan ang mga animation ng game, at Pasimplehin ang mga dahon mula sa tab na ito. Para sa Horizon lang ang iba pang opsyon. Mananatiling may bisa ang halagang binago sa loob ng laro ng Starling hanggang baguhin muli ang opsyon dito.

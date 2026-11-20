@@ -113,6 +113,19 @@ fun RustStatusRows() {
                 .padding(vertical = 10.dp)
         )
     }
+    SettingDivider()
+    SettingFrame(
+        "Starling memakai sebagian pilihan",
+        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini."
+    ) {
+        SettingRowText(
+            title = "Starling memakai sebagian pilihan",
+            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        )
+    }
 }
 
 /** Renderer dan skala resolusi. */

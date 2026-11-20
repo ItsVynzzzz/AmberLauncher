@@ -267,6 +267,7 @@ object StarlingEngine {
         return try {
             val firstRun = !gameInstalled(context)
             dropForeignGameLibrary(context)
+            StarlingSettingsSync.sync(context)
             writeLaunchFiles(context, account)
             if (firstRun) {
                 Toast.makeText(

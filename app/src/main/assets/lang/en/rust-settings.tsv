@@ -75,3 +75,6 @@ Merekam waktu frame dan pembuatan chunk saat bermain (sampai 30 menit) ke lapora
 Bagikan laporan performa	Share performance report
 Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilampirkan saat melaporkan game yang lambat.	Sends the latest recorded report through the app you choose, for example to attach when reporting a slow game.
 Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	There is no performance report yet. Turn on Record performance, play for a bit, then try again.
+# Pengaturan Amber untuk Starling
+Starling memakai sebagian pilihan	Starling uses some of these options
+Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Starling instances use the Renderer, Resolution scale, Chunk worker limit, Performance mode (Battery saver only), Reduce game animations and Simplify leaves options from this tab. The other options are for Horizon only. A value changed inside the Starling game stays in effect until its option is changed here again.

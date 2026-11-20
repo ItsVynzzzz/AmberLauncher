@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -188,7 +189,11 @@ class ModUpdateState {
 }
 
 /**
- * Bar di atas daftar mod terpasang: periksa pembaruan, perbarui semua sekaligus, dan sakelar mode otomatis.
+ * Bar ringkas untuk daftar mod terpasang: periksa pembaruan, perbarui semua sekaligus, dan sakelar mode otomatis.
+ *
+ * Tingginya mengikuti pil filter (40dp) supaya bisa duduk sebaris dengan pil Instance dan tidak memakan ruang
+ * daftar mod. Pemanggil yang menaruhnya di baris yang sama memberi `Modifier.weight(1f)`; di layar sempit
+ * dipasang sendiri satu baris dengan `Modifier.fillMaxWidth()`.
  */
 @Composable
 internal fun ModUpdateBar(
@@ -200,7 +205,7 @@ internal fun ModUpdateBar(
     onAutoChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(18.dp)
+    val shape = RoundedCornerShape(20.dp)
     val phase = state.phase
     val check = state.check
     val pending = state.pendingCount
@@ -215,6 +220,8 @@ internal fun ModUpdateBar(
         autoEnabled -> "Pembaruan otomatis aktif"
         else -> "Cek versi baru semua mod lewat Modrinth"
     }
+    // Keadaan diam tanpa kabar apa pun: judulnya dibuang agar bar tetap pendek, tombol "Periksa pembaruan" sudah jelas.
+    val showTitle = phase != ModUpdatePhase.IDLE || state.note != null || check != null || autoEnabled
     val detail: String? = if (phase == ModUpdatePhase.IDLE && check != null) {
         when {
             check.skipped.isNotEmpty() ->
@@ -233,30 +240,32 @@ internal fun ModUpdateBar(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
+            .heightIn(min = 40.dp)
             .clip(shape)
             .background(AmberUi.SurfaceRaised, shape)
             .border(1.dp, AmberUi.Border, shape)
-            .padding(start = 14.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = if (state.isError && phase == ModUpdatePhase.IDLE) AmberUi.Danger else AmberUi.AccentSoft,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(18.dp)
         )
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                color = AmberUi.Text,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (showTitle) {
+                Text(
+                    text = title,
+                    color = AmberUi.Text,
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             if (detail != null) {
                 Text(
                     text = detail,
@@ -267,7 +276,7 @@ internal fun ModUpdateBar(
                 )
             }
             if (phase == ModUpdatePhase.APPLYING && state.total > 0) {
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 val fraction = (state.done.toFloat() / state.total.toFloat()).coerceIn(0f, 1f)
                 Box(
                     modifier = Modifier
@@ -301,18 +310,21 @@ internal fun ModUpdateBar(
                 maxLines = 1
             )
             Spacer(modifier = Modifier.width(2.dp))
-            Switch(
-                checked = autoEnabled,
-                onCheckedChange = { onAutoChange(it) },
-                modifier = Modifier.scale(0.78f),
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = AmberUi.Accent,
-                    checkedBorderColor = AmberUi.AccentEdge,
-                    uncheckedThumbColor = AmberUi.TextDim,
-                    uncheckedTrackColor = NuxColors.SurfaceElevated
+            // Tinggi dikunci 32dp: tanpa ini Switch memakai area sentuh minimum 48dp dan memuaikan bar.
+            Box(modifier = Modifier.height(32.dp), contentAlignment = Alignment.Center) {
+                Switch(
+                    checked = autoEnabled,
+                    onCheckedChange = { onAutoChange(it) },
+                    modifier = Modifier.scale(0.72f),
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.White,
+                        checkedTrackColor = AmberUi.Accent,
+                        checkedBorderColor = AmberUi.AccentEdge,
+                        uncheckedThumbColor = AmberUi.TextDim,
+                        uncheckedTrackColor = NuxColors.SurfaceElevated
+                    )
                 )
-            )
+            }
         }
 
         when {
@@ -320,25 +332,25 @@ internal fun ModUpdateBar(
                 text = "Batal",
                 onClick = onCancel,
                 filled = false,
-                height = 38.dp
+                height = 32.dp
             )
             phase == ModUpdatePhase.CHECKING -> AmberActionButton(
                 text = "Memeriksa...",
                 onClick = {},
                 loading = true,
                 filled = false,
-                height = 38.dp
+                height = 32.dp
             )
             pending > 0 -> AmberActionButton(
                 text = "Perbarui semua ($pending)",
                 onClick = onApplyAll,
-                height = 38.dp
+                height = 32.dp
             )
             else -> AmberActionButton(
                 text = "Periksa pembaruan",
                 onClick = onCheck,
                 filled = false,
-                height = 38.dp
+                height = 32.dp
             )
         }
     }

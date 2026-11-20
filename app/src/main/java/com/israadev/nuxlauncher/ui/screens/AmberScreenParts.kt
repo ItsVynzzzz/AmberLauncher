@@ -297,13 +297,16 @@ internal fun AmberFilterPill(
             .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = label,
-            color = AmberUi.TextDim,
-            fontSize = 13.sp,
-            maxLines = 1
-        )
-        Spacer(modifier = Modifier.width(6.dp))
+        // Label kosong = hanya nilai (dipakai saat ruang sempit, mis. sebaris dengan bar pembaruan mod).
+        if (label.isNotBlank()) {
+            Text(
+                text = label,
+                color = AmberUi.TextDim,
+                fontSize = 13.sp,
+                maxLines = 1
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+        }
         Text(
             text = value,
             color = AmberUi.Text,

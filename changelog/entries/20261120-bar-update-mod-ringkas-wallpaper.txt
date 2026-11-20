@@ -1,0 +1,24 @@
+[id]
+~ Bar "Perbarui semua mod" kini ringkas dan duduk sebaris dengan pil Instance, jadi daftar mod terpasang mendapat ruang lebih luas.
+~ Wallpaper bawaan diganti ke pemandangan sakura dan dibuat jauh lebih kecil (sekitar 210 KB, sebelumnya sekitar 830 KB) agar hemat RAM di HP kelas bawah.
+[en]
+~ The "Update all mods" bar is now compact and sits on the same row as the Instance chip, giving the installed mods list more room.
+~ The default wallpaper is now a cherry-blossom landscape and much smaller (about 210 KB, down from about 830 KB) to save RAM on low-end phones.
+[es]
+~ La barra "Actualizar todos los mods" ahora es compacta y comparte fila con el selector de instancia, así la lista de mods instalados tiene más espacio.
+~ El fondo predeterminado ahora es un paisaje de cerezos en flor y pesa mucho menos (unos 210 KB, antes unos 830 KB) para ahorrar RAM en teléfonos modestos.
+[fil]
+~ Ang bar na "I-update lahat ng mod" ay compact na at nasa parehong hilera ng Instance chip, kaya mas maluwag ang listahan ng naka-install na mod.
+~ Ang default na wallpaper ay tanawin na ng sakura at mas maliit na (mga 210 KB, dating mga 830 KB) para makatipid ng RAM sa mga low-end na telepono.
+[pt]
+~ A barra "Atualizar todos os mods" agora é compacta e fica na mesma linha do seletor de instância, dando mais espaço à lista de mods instalados.
+~ O papel de parede padrão agora é uma paisagem de cerejeiras em flor e ficou bem menor (cerca de 210 KB, antes cerca de 830 KB) para economizar RAM em celulares fracos.
+[th]
+~ แถบ "อัปเดตม็อดทั้งหมด" กะทัดรัดขึ้นและอยู่แถวเดียวกับชิป Instance ทำให้รายการม็อดที่ติดตั้งมีพื้นที่กว้างขึ้น
+~ วอลเปเปอร์เริ่มต้นเปลี่ยนเป็นทิวทัศน์ซากุระ และเล็กลงมาก (ประมาณ 210 KB จากเดิมประมาณ 830 KB) เพื่อประหยัด RAM บนมือถือรุ่นล่าง
+[vi]
+~ Thanh "Cập nhật tất cả mod" giờ gọn hơn và nằm cùng hàng với nút Instance, giúp danh sách mod đã cài rộng chỗ hơn.
+~ Hình nền mặc định giờ là phong cảnh hoa anh đào và nhẹ hơn nhiều (khoảng 210 KB, trước đây khoảng 830 KB) để tiết kiệm RAM trên điện thoại cấu hình thấp.
+[zh]
+~ “更新所有模组”栏现在更紧凑，并与实例按钮位于同一行，已安装模组列表因此有更多空间。
+~ 默认壁纸换成樱花风景，体积也小得多（约 210 KB，原来约 830 KB），为低端手机节省内存。

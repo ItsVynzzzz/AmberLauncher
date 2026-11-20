@@ -819,71 +819,10 @@ fun ModsScreen(
                         .padding(bottom = 10.dp)
                 ) {
                     val rowMinWidth = maxWidth
-                    Row(
-                        modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
-                            .widthIn(min = rowMinWidth),
-                        horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.End),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        AmberFilterPill(
-                            label = "Instance",
-                            value = currentInst.name,
-                            showChevron = mainMode == "browse" && instances.size > 1,
-                            onClick = { if (mainMode == "browse" && instances.size > 1) showInstanceMenu = true }
-                        )
-
-                        if (activeType == "datapacks") {
-                            AmberFilterPill(
-                                label = "World",
-                                value = if (worlds.isNotEmpty()) selectedWorld else "Tidak ada world",
-                                showChevron = worlds.isNotEmpty(),
-                                onClick = { if (worlds.isNotEmpty()) showWorldMenu = true }
-                            )
-                        }
-
-                        if (mainMode == "browse") {
-                            // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
-                            if (!isCurseForge && !rustHorizon) {
-                                AmberFilterPill(
-                                    label = "Kategori",
-                                    value = modsPlainLabel(selectedCategoryLabel),
-                                    onClick = { showCategoryMenu = true }
-                                )
-                            }
-                            // Shader dan resource pack untuk mesin Rust tidak disaring per versi game
-                            if (!rustInstance) {
-                                AmberFilterPill(
-                                    label = "Versi",
-                                    value = if (filterByGameVersion) "Auto" else "Semua",
-                                    onClick = { showVersionMenu = true }
-                                )
-                            }
-                            if (!rustInstance && (activeType == "mods" || activeType == "modpacks")) {
-                                AmberFilterPill(
-                                    label = "Loader",
-                                    value = if (filterByLoader) "Auto" else "Semua",
-                                    onClick = { showLoaderMenu = true }
-                                )
-                            }
-                            AmberFilterPill(
-                                label = "Urutkan",
-                                value = selectedSortLabel,
-                                onClick = { showSortMenu = true }
-                            )
-                        }
-                    }
-                }
-
-                if (rustInstance) {
-                    RustNotice(type = activeType, horizon = rustHorizon, starling = starlingInstance)
-                }
-
-                // =====================================================================
-                // DAFTAR
-                // =====================================================================
-                if (mainMode == "installed") {
-                    if (modUpdateVisible) {
+                    // Bar "Perbarui semua mod" duduk sebaris dengan pil Instance bila cukup lebar, supaya daftar mod
+                    // dapat ruang vertikal lebih. Di layar sempit ia jadi satu baris ringkas tepat di atas pil.
+                    val updateInline = modUpdateVisible && rowMinWidth >= 560.dp
+                    val updateBar: @Composable (Modifier) -> Unit = { barModifier ->
                         ModUpdateBar(
                             state = modUpdate,
                             autoEnabled = autoUpdateMods,
@@ -897,9 +836,94 @@ fun ModsScreen(
                             onAutoChange = { on ->
                                 SettingsManager.updateSettings(context, SettingsManager.settings.value.copy(autoUpdateMods = on))
                             },
-                            modifier = Modifier.padding(bottom = 10.dp)
+                            modifier = barModifier
                         )
                     }
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        if (modUpdateVisible && !updateInline) {
+                            updateBar(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                            )
+                        }
+                        Row(
+                            modifier = if (updateInline) {
+                                Modifier.fillMaxWidth()
+                            } else {
+                                Modifier
+                                    .horizontalScroll(rememberScrollState())
+                                    .widthIn(min = rowMinWidth)
+                            },
+                            horizontalArrangement = if (updateInline) {
+                                Arrangement.spacedBy(9.dp)
+                            } else {
+                                Arrangement.spacedBy(9.dp, Alignment.End)
+                            },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            if (updateInline) {
+                                updateBar(Modifier.weight(1f))
+                            }
+                            AmberFilterPill(
+                                // Sebaris dengan bar, label dibuang pada lebar sedang agar judul bar tidak terpotong.
+                                label = if (updateInline && rowMinWidth < 680.dp) "" else "Instance",
+                                value = currentInst.name,
+                                showChevron = mainMode == "browse" && instances.size > 1,
+                                onClick = { if (mainMode == "browse" && instances.size > 1) showInstanceMenu = true }
+                            )
+
+                            if (activeType == "datapacks") {
+                                AmberFilterPill(
+                                    label = "World",
+                                    value = if (worlds.isNotEmpty()) selectedWorld else "Tidak ada world",
+                                    showChevron = worlds.isNotEmpty(),
+                                    onClick = { if (worlds.isNotEmpty()) showWorldMenu = true }
+                                )
+                            }
+
+                            if (mainMode == "browse") {
+                                // Kategori CurseForge berbeda dari Modrinth, jadi pilihan kategori hanya untuk Modrinth
+                                if (!isCurseForge && !rustHorizon) {
+                                    AmberFilterPill(
+                                        label = "Kategori",
+                                        value = modsPlainLabel(selectedCategoryLabel),
+                                        onClick = { showCategoryMenu = true }
+                                    )
+                                }
+                                // Shader dan resource pack untuk mesin Rust tidak disaring per versi game
+                                if (!rustInstance) {
+                                    AmberFilterPill(
+                                        label = "Versi",
+                                        value = if (filterByGameVersion) "Auto" else "Semua",
+                                        onClick = { showVersionMenu = true }
+                                    )
+                                }
+                                if (!rustInstance && (activeType == "mods" || activeType == "modpacks")) {
+                                    AmberFilterPill(
+                                        label = "Loader",
+                                        value = if (filterByLoader) "Auto" else "Semua",
+                                        onClick = { showLoaderMenu = true }
+                                    )
+                                }
+                                AmberFilterPill(
+                                    label = "Urutkan",
+                                    value = selectedSortLabel,
+                                    onClick = { showSortMenu = true }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                if (rustInstance) {
+                    RustNotice(type = activeType, horizon = rustHorizon, starling = starlingInstance)
+                }
+
+                // =====================================================================
+                // DAFTAR
+                // =====================================================================
+                if (mainMode == "installed") {
                     val filteredInstalled = remember(installedItems, installedSearch) {
                         if (installedSearch.isBlank()) installedItems
                         else installedItems.filter {

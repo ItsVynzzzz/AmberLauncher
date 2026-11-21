@@ -1,0 +1,641 @@
+diff --git a/app/src/main/assets/lang/en/rust-settings.tsv b/app/src/main/assets/lang/en/rust-settings.tsv
+index fbeb39b..6471bd7 100644
+--- a/app/src/main/assets/lang/en/rust-settings.tsv
++++ b/app/src/main/assets/lang/en/rust-settings.tsv
+@@ -77,4 +77,5 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
+ Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	There is no performance report yet. Turn on Record performance, play for a bit, then try again.
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Starling uses some of these options
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Starling instances use the Renderer, Resolution scale, Chunk worker limit, Performance mode (Battery saver only), Reduce game animations and Simplify leaves options from this tab. The other options are for Horizon only. A value changed inside the Starling game stays in effect until its option is changed here again.
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	Starling instances use the Renderer, Resolution scale, Chunk worker limit, Performance mode (Battery saver only), Reduce game animations, Simplify leaves and Record performance options from this tab. The other options are for Horizon only. A value changed inside the Starling game stays in effect until its option is changed here again. The log and diagnostics of every Starling session are saved in Settings > Game logs.
+diff --git a/app/src/main/assets/lang/es/rust-settings.tsv b/app/src/main/assets/lang/es/rust-settings.tsv
+index 5d665d7..0744d93 100644
+--- a/app/src/main/assets/lang/es/rust-settings.tsv
++++ b/app/src/main/assets/lang/es/rust-settings.tsv
+@@ -79,4 +79,5 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
+ Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	A\u00fan no hay ning\u00fan informe de rendimiento. Activa Grabar rendimiento, juega un rato y vuelve a intentarlo.
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Starling usa parte de estas opciones
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Las instancias de Starling usan de esta pesta\u00f1a Renderizador, Escala de resoluci\u00f3n, L\u00edmite de trabajadores de chunks, Modo de rendimiento (solo Ahorro de bater\u00eda), Reducir animaciones del juego y Simplificar hojas. Las dem\u00e1s opciones son solo para Horizon. Un valor cambiado dentro del juego de Starling se mantiene hasta que vuelvas a cambiar su opci\u00f3n aqu\u00ed.
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	Las instancias de Starling usan de esta pesta\u00f1a Renderizador, Escala de resoluci\u00f3n, L\u00edmite de trabajadores de chunks, Modo de rendimiento (solo Ahorro de bater\u00eda), Reducir animaciones del juego, Simplificar hojas y Grabar rendimiento. Las dem\u00e1s opciones son solo para Horizon. Un valor cambiado dentro del juego de Starling se mantiene hasta que vuelvas a cambiar su opci\u00f3n aqu\u00ed. El registro y los diagn\u00f3sticos de cada sesi\u00f3n de Starling se guardan en Ajustes > Registros del juego.
+diff --git a/app/src/main/assets/lang/fil/rust-settings.tsv b/app/src/main/assets/lang/fil/rust-settings.tsv
+index af7b8c1..a02c945 100644
+--- a/app/src/main/assets/lang/fil/rust-settings.tsv
++++ b/app/src/main/assets/lang/fil/rust-settings.tsv
+@@ -79,4 +79,5 @@ Landscape	Landscape
+ Portrait	Portrait
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Ginagamit ng Starling ang ilan sa mga opsyong ito
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Ginagamit ng mga Starling instance ang Renderer, Resolution scale, Limitasyon ng chunk worker, Performance mode (Battery saver lang), Bawasan ang mga animation ng game, at Pasimplehin ang mga dahon mula sa tab na ito. Para sa Horizon lang ang iba pang opsyon. Mananatiling may bisa ang halagang binago sa loob ng laro ng Starling hanggang baguhin muli ang opsyon dito.
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	Ginagamit ng mga Starling instance ang Renderer, Resolution scale, Limitasyon ng chunk worker, Performance mode (Battery saver lang), Bawasan ang mga animation ng game, Pasimplehin ang mga dahon, at I-record ang performance mula sa tab na ito. Para sa Horizon lang ang iba pang opsyon. Mananatiling may bisa ang halagang binago sa loob ng laro ng Starling hanggang baguhin muli ang opsyon dito. Ang log at diagnostics ng bawat Starling session ay naka-save sa Mga Setting > Mga log ng game.
+diff --git a/app/src/main/assets/lang/pt/rust-settings.tsv b/app/src/main/assets/lang/pt/rust-settings.tsv
+index d59fb69..9641e70 100644
+--- a/app/src/main/assets/lang/pt/rust-settings.tsv
++++ b/app/src/main/assets/lang/pt/rust-settings.tsv
+@@ -79,4 +79,5 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
+ Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Ainda n\u00e3o h\u00e1 relat\u00f3rio de desempenho. Ative Gravar desempenho, jogue um pouco e tente de novo.
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	O Starling usa parte destas op\u00e7\u00f5es
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	As inst\u00e2ncias do Starling usam desta aba Renderizador, Escala de resolu\u00e7\u00e3o, Limite de workers de chunk, Modo de desempenho (somente Economia de bateria), Reduzir anima\u00e7\u00f5es do jogo e Simplificar folhagem. As demais op\u00e7\u00f5es s\u00e3o s\u00f3 para o Horizon. Um valor alterado dentro do jogo do Starling continua valendo at\u00e9 que a op\u00e7\u00e3o seja alterada aqui de novo.
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	As inst\u00e2ncias do Starling usam desta aba Renderizador, Escala de resolu\u00e7\u00e3o, Limite de workers de chunk, Modo de desempenho (somente Economia de bateria), Reduzir anima\u00e7\u00f5es do jogo, Simplificar folhagem e Gravar desempenho. As demais op\u00e7\u00f5es s\u00e3o s\u00f3 para o Horizon. Um valor alterado dentro do jogo do Starling continua valendo at\u00e9 que a op\u00e7\u00e3o seja alterada aqui de novo. O log e os diagn\u00f3sticos de cada sess\u00e3o do Starling ficam em Configura\u00e7\u00f5es > Log do jogo.
+diff --git a/app/src/main/assets/lang/th/rust-settings.tsv b/app/src/main/assets/lang/th/rust-settings.tsv
+index d71d73a..72b24dc 100644
+--- a/app/src/main/assets/lang/th/rust-settings.tsv
++++ b/app/src/main/assets/lang/th/rust-settings.tsv
+@@ -79,4 +79,5 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
+ Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e23\u0e32\u0e22\u0e07\u0e32\u0e19\u0e1b\u0e23\u0e30\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e20\u0e32\u0e1e \u0e40\u0e1b\u0e34\u0e14 \u0e1a\u0e31\u0e19\u0e17\u0e36\u0e01\u0e1b\u0e23\u0e30\u0e2a\u0e34\u0e17\u0e18\u0e34\u0e20\u0e32\u0e1e \u0e40\u0e25\u0e48\u0e19\u0e2a\u0e31\u0e01\u0e04\u0e23\u0e39\u0e48 \u0e41\u0e25\u0e49\u0e27\u0e25\u0e2d\u0e07\u0e2d\u0e35\u0e01\u0e04\u0e23\u0e31\u0e49\u0e07
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Starling ใช้ตัวเลือกบางส่วนเหล่านี้
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	อินสแตนซ์ Starling ใช้ตัวเลือก Renderer, สเกลความละเอียด, ขีดจำกัด worker ของ chunk, โหมดประสิทธิภาพ (เฉพาะประหยัดแบตเตอรี่), ลดแอนิเมชันในเกม และลดรายละเอียดใบไม้ จากแท็บนี้ ตัวเลือกอื่นใช้กับ Horizon เท่านั้น ค่าที่เปลี่ยนในเกม Starling จะยังคงอยู่จนกว่าจะเปลี่ยนตัวเลือกนั้นที่นี่อีกครั้ง
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	อินสแตนซ์ Starling ใช้ตัวเลือก Renderer, สเกลความละเอียด, ขีดจำกัด worker ของ chunk, โหมดประสิทธิภาพ (เฉพาะประหยัดแบตเตอรี่), ลดแอนิเมชันในเกม, ลดรายละเอียดใบไม้ และบันทึกประสิทธิภาพ จากแท็บนี้ ตัวเลือกอื่นใช้กับ Horizon เท่านั้น ค่าที่เปลี่ยนในเกม Starling จะยังคงอยู่จนกว่าจะเปลี่ยนตัวเลือกนั้นที่นี่อีกครั้ง ล็อกและข้อมูลวินิจฉัยของทุกเซสชัน Starling ถูกเก็บไว้ที่การตั้งค่า > ล็อกเกม
+diff --git a/app/src/main/assets/lang/vi/rust-settings.tsv b/app/src/main/assets/lang/vi/rust-settings.tsv
+index ff5dcf9..08adaee 100644
+--- a/app/src/main/assets/lang/vi/rust-settings.tsv
++++ b/app/src/main/assets/lang/vi/rust-settings.tsv
+@@ -79,4 +79,5 @@ Mengirim laporan rekaman terakhir lewat aplikasi pilihanmu, misalnya untuk dilam
+ Belum ada laporan performa. Nyalakan Rekam performa, mainkan sebentar, lalu coba lagi.	Ch\u01b0a c\u00f3 b\u00e1o c\u00e1o hi\u1ec7u n\u0103ng. H\u00e3y b\u1eadt Ghi hi\u1ec7u n\u0103ng, ch\u01a1i m\u1ed9t l\u00fac r\u1ed3i th\u1eed l\u1ea1i.
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Starling d\u00f9ng m\u1ed9t ph\u1ea7n c\u00e1c t\u00f9y ch\u1ecdn n\u00e0y
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Instance Starling d\u00f9ng Renderer, T\u1ec9 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i, Gi\u1edbi h\u1ea1n worker chunk, Ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng (ch\u1ec9 Ti\u1ebft ki\u1ec7m pin), Gi\u1ea3m ho\u1ea1t \u1ea3nh trong game v\u00e0 \u0110\u01a1n gi\u1ea3n h\u00f3a t\u00e1n l\u00e1 t\u1eeb tab n\u00e0y. C\u00e1c t\u00f9y ch\u1ecdn kh\u00e1c ch\u1ec9 d\u00e0nh cho Horizon. Gi\u00e1 tr\u1ecb \u0111\u1ed5i ngay trong game Starling v\u1eabn \u0111\u01b0\u1ee3c gi\u1eef cho \u0111\u1ebfn khi t\u00f9y ch\u1ecdn \u0111\u00f3 \u0111\u01b0\u1ee3c \u0111\u1ed5i l\u1ea1i \u1edf \u0111\u00e2y.
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	Instance Starling d\u00f9ng Renderer, T\u1ec9 l\u1ec7 \u0111\u1ed9 ph\u00e2n gi\u1ea3i, Gi\u1edbi h\u1ea1n worker chunk, Ch\u1ebf \u0111\u1ed9 hi\u1ec7u n\u0103ng (ch\u1ec9 Ti\u1ebft ki\u1ec7m pin), Gi\u1ea3m ho\u1ea1t \u1ea3nh trong game, \u0110\u01a1n gi\u1ea3n h\u00f3a t\u00e1n l\u00e1 v\u00e0 Ghi hi\u1ec7u n\u0103ng t\u1eeb tab n\u00e0y. C\u00e1c t\u00f9y ch\u1ecdn kh\u00e1c ch\u1ec9 d\u00e0nh cho Horizon. Gi\u00e1 tr\u1ecb \u0111\u1ed5i ngay trong game Starling v\u1eabn \u0111\u01b0\u1ee3c gi\u1eef cho \u0111\u1ebfn khi t\u00f9y ch\u1ecdn \u0111\u00f3 \u0111\u01b0\u1ee3c \u0111\u1ed5i l\u1ea1i \u1edf \u0111\u00e2y. Nh\u1eadt k\u00fd v\u00e0 ch\u1ea9n \u0111o\u00e1n c\u1ee7a m\u1ed7i phi\u00ean Starling \u0111\u01b0\u1ee3c l\u01b0u trong C\u00e0i \u0111\u1eb7t > Nh\u1eadt k\u00fd game.
+diff --git a/app/src/main/assets/lang/zh/rust-settings.tsv b/app/src/main/assets/lang/zh/rust-settings.tsv
+index 9ab18bf..5313cd6 100644
+--- a/app/src/main/assets/lang/zh/rust-settings.tsv
++++ b/app/src/main/assets/lang/zh/rust-settings.tsv
+@@ -79,4 +79,5 @@ Landscape	横屏
+ Portrait	竖屏
+ # Pengaturan Amber untuk Starling
+ Starling memakai sebagian pilihan	Starling 使用其中一部分选项
+-Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.	Starling 实例会使用此标签页中的渲染器、分辨率缩放、区块工作线程上限、性能模式（仅省电）、减少游戏动画和简化树叶。其他选项仅适用于 Horizon。在 Starling 游戏内修改的值会一直生效，直到你再次在这里更改该选项。
++# Log dan rekaman performa Starling
++Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.	Starling 实例会使用此标签页中的渲染器、分辨率缩放、区块工作线程上限、性能模式（仅省电）、减少游戏动画、简化树叶和记录性能。其他选项仅适用于 Horizon。在 Starling 游戏内修改的值会一直生效，直到你再次在这里更改该选项。每次 Starling 会话的日志和诊断信息都保存在“设置 > 游戏日志”中。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+index 83ed6e7..7e31686 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/GameLogArchive.kt
+@@ -4,9 +4,12 @@ import android.app.ActivityManager
+ import android.content.Context
+ import android.os.Build
+ import android.os.Environment
++import android.os.Looper
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.horizon.HorizonContent
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
++import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
++import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.core.update.UpdateChecker
+@@ -35,6 +38,10 @@ import org.json.JSONObject
+  * laporan launcher ([saveLauncherReport]) yang berisi ringkasan perangkat, kejadian launcher, dan
+  * peringatan sistem.
+  *
++ * Sesi mesin Starling ([ENGINE_STARLING]) disimpan dengan cara yang sama, tetapi isinya disusun dari berkas milik mesin
++ * (logs/latest.log, performance/, horizon-graphics.txt) dan dari riwayat Android tentang kenapa prosesnya berhenti,
++ * karena mesinnya berjalan di proses :starling dan tidak menulis ke latestlog.txt milik launcher.
++ *
+  * Aman dipanggil dari proses game maupun proses launcher.
+  */
+ object GameLogArchive {
+@@ -73,6 +80,18 @@ object GameLogArchive {
+     private const val KEY_GAME_DIR = "gameDir"
+     private const val KEY_MG_DIR = "mgDir"
+     private const val KEY_ARCHIVED = "archived"
++    private const val KEY_ENGINE = "engine"
++
++    /** Nilai KEY_ENGINE untuk sesi mesin Starling (kosong untuk sesi game Java). */
++    const val ENGINE_STARLING = "starling"
++
++    private const val MAX_SESSION_JSON_BYTES = 8L * 1024L
++    private const val MAX_PERF_FRAMES_CHARS = 900
++    private val STARLING_OPTION_KEYS = setOf(
++        "renderDistance", "simulationDistance", "maxFps", "graphicsMode", "particles", "biomeBlendRadius",
++        "entityDistanceScaling", "mipmapLevels", "enableVsync", "guiScale", "fov", "renderClouds", "ao",
++        "entityShadows", "fancyGraphics", "cloudRange", "menuBackgroundBlurriness"
++    )
+ 
+     private val metaLock = Any()
+ 
+@@ -113,7 +132,8 @@ object GameLogArchive {
+         mcVersion: String,
+         loader: String,
+         loaderVersion: String?,
+-        gameDir: String
++        gameDir: String,
++        engine: String = ""
+     ) {
+         val props = Properties()
+         props.setProperty(KEY_START, startTime.toString())
+@@ -122,6 +142,7 @@ object GameLogArchive {
+         props.setProperty(KEY_LOADER, loader)
+         props.setProperty(KEY_LOADER_VERSION, loaderVersion.orEmpty())
+         props.setProperty(KEY_GAME_DIR, gameDir)
++        if (engine.isNotBlank()) props.setProperty(KEY_ENGINE, engine)
+         writeMeta(context, props)
+     }
+ 
+@@ -142,22 +163,30 @@ object GameLogArchive {
+     fun archiveIfNeeded(context: Context): File? {
+         val props = readMeta(context) ?: return null
+         if (props.getProperty(KEY_ARCHIVED) == "1") return null
++        // Sesi Starling yang masih berjalan belum selesai: laporannya disusun setelah prosesnya berhenti.
++        if (isEngineSession(props) && StarlingEngine.isProcessAlive(context)) return null
+         return archiveSession(context)
+     }
+ 
+     /** Menyimpan sesi terakhir (menimpa simpanan sebelumnya untuk sesi yang sama). */
+     fun archiveSession(context: Context): File? {
+         val props = readMeta(context) ?: return null
+-        val source = File(context.filesDir, LOG_NAME)
++        val engine = isEngineSession(props)
++        val source = if (engine) File(props.getProperty(KEY_GAME_DIR).orEmpty(), "logs/latest.log") else File(context.filesDir, LOG_NAME)
+         var result: File? = null
+         try {
+-            if (source.exists() && source.length() > 0L) {
+-                val start = props.getProperty(KEY_START)?.toLongOrNull() ?: source.lastModified()
++            // Sesi mesin tetap disimpan walau latest.log kosong: sebab proses berhenti dan pengaturannya justru paling
++            // berguna saat mesin gagal sebelum sempat menulis log.
++            if (engine || (source.exists() && source.length() > 0L)) {
++                val start = props.getProperty(KEY_START)?.toLongOrNull()
++                    ?: source.lastModified().takeIf { it > 0L } ?: System.currentTimeMillis()
+                 val dir = logsDir(context)
+                 if (!dir.exists()) dir.mkdirs()
+                 val out = File(dir, ARCHIVE_PREFIX + fileStamp(start) + "_" + safeName(props.getProperty(KEY_INSTANCE)) + ".txt")
+                 val tmp = File(dir, out.name + ".tmp")
+-                tmp.bufferedWriter(Charsets.UTF_8).use { w -> writeReport(context, w, props, source, start) }
++                tmp.bufferedWriter(Charsets.UTF_8).use { w ->
++                    if (engine) writeStarlingReport(context, w, props, source, start) else writeReport(context, w, props, source, start)
++                }
+                 if (out.exists()) out.delete()
+                 if (tmp.renameTo(out)) result = out else tmp.delete()
+                 prune(dir)
+@@ -311,6 +340,7 @@ object GameLogArchive {
+         if (events.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, events)
+ 
+         writeEngineSection(context, w)
++        writeStarlingEngineSection(context, w)
+ 
+         w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
+         val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
+@@ -377,6 +407,243 @@ object GameLogArchive {
+         }
+     }
+ 
++    // ---------------------------------------------------------------------------------------------
++    // Sesi mesin Starling
++    // ---------------------------------------------------------------------------------------------
++
++    private fun isEngineSession(props: Properties): Boolean = props.getProperty(KEY_ENGINE) == ENGINE_STARLING
++
++    /** Laporan satu sesi Starling: ringkasan, kejadian launcher, sebab proses berhenti, pengaturan, performa, dan log. */
++    private fun writeStarlingReport(context: Context, w: Writer, props: Properties, source: File, start: Long) {
++        val clock = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
++        val gameDir = File(props.getProperty(KEY_GAME_DIR).orEmpty())
++        val home = StarlingEngine.engineHome(context)
++
++        w.line("===== AmberLauncher: laporan sesi Starling =====")
++        w.line("Disimpan     : " + clock.format(Date()))
++        w.line("Mulai        : " + clock.format(Date(start)))
++        if (source.isFile && source.lastModified() > start) {
++            val secs = (source.lastModified() - start) / 1000L
++            w.line("Log terakhir : " + clock.format(Date(source.lastModified())) + " (sekitar " + (secs / 60L) + " menit " + (secs % 60L) + " detik)")
++        }
++        writeEnvironmentLines(context, w)
++        w.line("Instance     : " + props.getProperty(KEY_INSTANCE).orEmpty())
++        w.line("Minecraft    : " + props.getProperty(KEY_MC).orEmpty() + " | Mesin: Starling (Rust)")
++        try {
++            val r = RustSettingsStore.readNow(context)
++            w.line("Pengaturan Rust Amber: renderer=" + r.renderer + ", skala=" + r.renderScale + "%, mode=" + r.perfMode +
++                ", pekerja=" + r.workerLimit + ", kurangi animasi=" + yesNo(r.gameAnimationsOff) + ", daun=" + yesNo(r.leafCulling) +
++                ", rekam performa=" + yesNo(r.recordPerformance))
++        } catch (_: Throwable) {
++        }
++        try {
++            val compiled = StarlingEngine.compiledNativeMods(context).sorted()
++            w.line("Mod native di pustaka mesin: " + if (compiled.isEmpty()) "(tidak ada)" else compiled.joinToString(", "))
++        } catch (_: Throwable) {
++        }
++
++        w.section("Log launcher (sebelum dan selama sesi ini)")
++        val launcherText = LauncherLog.recentText(context, start - LAUNCHER_LOOKBACK_MS, MAX_LAUNCHER_BYTES)
++        if (launcherText.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, launcherText)
++
++        writeStarlingProcess(context, w, start)
++        writeStarlingSessionState(w, home)
++        writeStarlingSettings(w, gameDir)
++        writeStarlingPerformance(w, home, start)
++        writeStarlingDiagnosticLog(w, home)
++
++        // Laporan crash Starling bila ada yang terbit selama sesi ini
++        val reports = File(gameDir, "crash-reports")
++        val newest = reports.listFiles { f -> f.isFile && f.name.startsWith("crash-") && f.name.endsWith(".txt") }
++            ?.maxByOrNull { it.lastModified() }
++        if (newest != null && newest.lastModified() >= start - 10_000L) {
++            w.section("Laporan crash Starling (" + newest.name + ")")
++            writeHead(w, newest, MAX_EXTRA_BYTES)
++        }
++
++        w.section("Log mesin (logs/latest.log)")
++        if (source.isFile && source.length() > 0L) {
++            writeMainLog(w, source)
++        } else {
++            w.line("(logs/latest.log tidak ada atau kosong: mesin belum sempat menulis log)")
++        }
++
++        w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
++        if (Looper.myLooper() == Looper.getMainLooper()) {
++            w.line("(dilewati: laporan ini disusun di thread utama; buka Pengaturan > Log game untuk menyimpannya ulang)")
++        } else {
++            val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
++            if (logcat.isBlank()) w.line("(tidak tersedia di HP ini atau kosong)") else writeLines(w, logcat.trimEnd('\n'))
++        }
++        w.flush()
++    }
++
++    private fun writeEnvironmentLines(context: Context, w: Writer) {
++        w.line("Launcher     : " + UpdateChecker.currentVersionName(context) + " (build " +
++            UpdateChecker.currentVersionCode(context) + ", " + (if (UpdateChecker.wants32BitApk()) "32-bit" else "64-bit") + ")")
++        w.line("Perangkat    : " + Build.MANUFACTURER + " " + Build.MODEL + ", Android " + Build.VERSION.RELEASE +
++            " (API " + Build.VERSION.SDK_INT + "), " + Build.SUPPORTED_ABIS.joinToString("/") + ", RAM " + totalRamMb(context) + " MB")
++    }
++
++    /**
++     * Bagian Starling pada laporan launcher (di luar sesi): keadaan sesi terakhir, pengaturan, dan log diagnostik.
++     * Tidak ditulis bila mesin belum pernah dijalankan.
++     */
++    private fun writeStarlingEngineSection(context: Context, w: Writer) {
++        try {
++            val home = StarlingEngine.engineHome(context)
++            if (!home.isDirectory) return
++            w.section("Mesin Starling")
++            w.line("Proses mesin berjalan sekarang: " + yesNo(StarlingEngine.isProcessAlive(context)))
++            writeStarlingSessionState(w, home)
++            writeStarlingSettings(w, HorizonContent.gameHome(home))
++            writeStarlingDiagnosticLog(w, home)
++        } catch (_: Throwable) {
++            w.line("(data mesin Starling tidak bisa dibaca)")
++        }
++    }
++
++    /**
++     * Sebab terakhir Android menghentikan proses :starling (Android 11 ke atas). LOW_MEMORY berarti HP kehabisan RAM,
++     * CRASH_NATIVE adalah crash di kode Rust atau driver GPU, EXIT_SELF keluar biasa dari mesin, dan USER_REQUESTED
++     * dihentikan dari pengaturan atau daftar aplikasi.
++     */
++    private fun writeStarlingProcess(context: Context, w: Writer, start: Long) {
++        w.section("Mesin Starling: proses Android")
++        w.line("Proses mesin berjalan sekarang: " + yesNo(StarlingEngine.isProcessAlive(context)))
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
++            try {
++                val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
++                val name = context.packageName + StarlingEngine.PROCESS_SUFFIX
++                val exits = manager.getHistoricalProcessExitReasons(context.packageName, 0, 12)
++                    .filter { it.processName == name }
++                    .take(3)
++                if (exits.isEmpty()) {
++                    w.line("(Android belum mencatat proses mesin yang berhenti)")
++                } else {
++                    val clock = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
++                    for (e in exits) {
++                        val whose = if (e.timestamp >= start) "sesi ini" else "sebelum sesi ini"
++                        w.line(clock.format(Date(e.timestamp)) + " [" + whose + "] " + exitReasonName(e.reason) +
++                            ", status=" + e.status + ", pss=" + e.pss + " KB, rss=" + e.rss + " KB, " + e.description.orEmpty())
++                    }
++                }
++            } catch (_: Throwable) {
++                w.line("(riwayat proses tidak bisa dibaca)")
++            }
++        } else {
++            w.line("(riwayat penyebab proses berhenti butuh Android 11 ke atas)")
++        }
++    }
++
++    private fun exitReasonName(reason: Int): String = when (reason) {
++        1 -> "EXIT_SELF (mesin keluar sendiri)"
++        2 -> "SIGNALED (dimatikan sinyal)"
++        3 -> "LOW_MEMORY (HP kehabisan RAM)"
++        4 -> "CRASH (Java)"
++        5 -> "CRASH_NATIVE (crash kode native)"
++        6 -> "ANR (tidak merespons)"
++        7 -> "INITIALIZATION_FAILURE"
++        8 -> "PERMISSION_CHANGE"
++        9 -> "EXCESSIVE_RESOURCE_USAGE"
++        10 -> "USER_REQUESTED (dihentikan pengguna)"
++        11 -> "USER_STOPPED"
++        12 -> "DEPENDENCY_DIED"
++        13 -> "OTHER"
++        14 -> "FREEZER"
++        15 -> "PACKAGE_STATE_CHANGE"
++        16 -> "PACKAGE_UPDATED"
++        else -> "UNKNOWN ($reason)"
++    }
++
++    /**
++     * Keadaan sesi yang dicatat mesin sendiri (diagnostics.rs): fase terakhir, `clean_exit`, dan pemakaian memori. Sesi
++     * yang berakhir tanpa `clean_exit` true dimatikan di tengah jalan; `phase` menunjukkan sampai mana ia sempat.
++     */
++    private fun writeStarlingSessionState(w: Writer, home: File) {
++        for ((file, title) in listOf(
++            "current-session.json" to "sesi ini atau terakhir",
++            "previous-session.json" to "sesi sebelumnya"
++        )) {
++            val f = File(home, "performance/$file")
++            if (!f.isFile || f.length() == 0L) continue
++            w.section("Mesin Starling: $file ($title)")
++            writeHead(w, f, MAX_SESSION_JSON_BYTES)
++        }
++    }
++
++    /**
++     * Pengaturan yang menentukan beban mesin: berkas horizon-* di folder game dan beberapa kunci options.txt (jarak
++     * render, FPS, grafik). Pengaturan Amber yang diteruskan ([com.israadev.nuxlauncher.core.horizon.StarlingSettingsSync])
++     * dicatat di amber-applied.json.
++     */
++    private fun writeStarlingSettings(w: Writer, gameDir: File) {
++        w.section("Mesin Starling: pengaturan")
++        for (name in listOf("horizon-graphics.txt", "horizon-extras.txt", "horizon-mods.txt", "amber-applied.json")) {
++            val f = File(gameDir, name)
++            if (!f.isFile || f.length() == 0L) continue
++            w.line("-- $name --")
++            writeHead(w, f, MAX_CONFIG_BYTES)
++        }
++        val options = File(gameDir, "options.txt")
++        if (options.isFile && options.length() < 256L * 1024L) {
++            val kept = options.readLines(Charsets.UTF_8).filter { it.substringBefore(':') in STARLING_OPTION_KEYS }
++            w.line("-- options.txt (hanya kunci grafik dan performa) --")
++            if (kept.isEmpty()) w.line("(tidak ada kunci yang dikenal)") else kept.forEach { w.line(it) }
++        }
++    }
++
++    /**
++     * Rekaman performa terbaru mesin (performance/horizon-performance-*.jsonl, dinyalakan dengan Rekam performa di
++     * Pengaturan > Rust). Hanya ringkasan: jumlah sampel, jumlah kejadian lambat, dan ringkasan frame tiga sampel
++     * terakhir; berkas lengkapnya dibagikan dari tombol "Bagikan laporan performa".
++     */
++    private fun writeStarlingPerformance(w: Writer, home: File, start: Long) {
++        w.section("Mesin Starling: rekaman performa")
++        try {
++            val report = File(home, "performance")
++                .listFiles { f -> f.isFile && f.length() > 0L && f.name.startsWith("horizon-performance-") && f.name.endsWith(".jsonl") }
++                ?.maxByOrNull { it.name }
++            if (report == null) {
++                w.line("Belum ada rekaman. Nyalakan Rekam performa di Pengaturan > Rust, mainkan sebentar, lalu simpan ulang log.")
++                return
++            }
++            w.line(report.name + " (" + sizeText(report.length()) + ", " +
++                (if (report.lastModified() >= start - 5_000L) "dari sesi ini" else "dari sesi sebelumnya") + ")")
++            var samples = 0
++            var slowEvents = 0
++            val lastFrames = ArrayList<String>()
++            report.useLines(Charsets.UTF_8) { lines ->
++                for (line in lines) {
++                    if (!line.contains("\"type\":\"sample\"")) continue
++                    val row = try {
++                        JSONObject(line)
++                    } catch (_: Exception) {
++                        continue
++                    }
++                    samples++
++                    slowEvents += row.optJSONArray("slow_events")?.length() ?: 0
++                    row.optJSONObject("frames")?.let {
++                        lastFrames.add(it.toString().take(MAX_PERF_FRAMES_CHARS))
++                        if (lastFrames.size > 3) lastFrames.removeAt(0)
++                    }
++                }
++            }
++            w.line("Sampel per detik: $samples, kejadian lambat tercatat: $slowEvents")
++            lastFrames.forEach { w.line("frames: $it") }
++        } catch (_: Throwable) {
++            w.line("(rekaman performa tidak bisa dibaca)")
++        }
++    }
++
++    /** Akhir performance/diagnostic.log milik mesin (pengaturan yang dibaca, peringatan, dan kegagalan, sudah disamarkan). */
++    private fun writeStarlingDiagnosticLog(w: Writer, home: File) {
++        val log = File(home, "performance/diagnostic.log")
++        if (!log.isFile || log.length() == 0L) return
++        w.section("Mesin Starling: diagnostic.log (akhir)")
++        writeTail(w, log, MAX_ENGINE_LOG_BYTES)
++    }
++
+     private fun storageText(context: Context): String {
+         val allFiles = try {
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) yesNo(Environment.isExternalStorageManager()) else "(tidak berlaku)"
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt
+index 6d6e5f5..062df69 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustPerformanceReport.kt
+@@ -13,7 +13,8 @@ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import java.io.File
+ 
+ /**
+- * Laporan performa yang direkam mesin Rust (pengaturan "Rekam performa"). Mesin menulis satu berkas JSON per baris
++ * Laporan performa yang direkam mesin Rust, Horizon maupun Starling (pengaturan "Rekam performa"; di Starling lewat
++ * patch amber5/0004). Mesin menulis satu berkas JSON per baris
+  * (`performance/horizon-performance-<waktu>.jsonl`, paling besar 8 MiB, maksimal 3 berkas) di folder data mesin.
+  * Berkas itu tidak berisi akun, chat, nama dunia, atau posisi pemain.
+  *
+@@ -41,8 +42,15 @@ object RustPerformanceReport {
+         dir.listFiles { f -> f.isFile && f.length() > 0L && f.name.startsWith(PREFIX) && f.name.endsWith(EXTENSION) }
+             ?.maxByOrNull { it.name }
+ 
+-    /** Laporan terbaru milik mesin, atau null bila belum pernah merekam. */
+-    fun latest(context: Context): File? = latestIn(File(HorizonEngine.engineHome(context), FOLDER))
++    /**
++     * Laporan terbaru dari kedua mesin (Horizon dan Starling), atau null bila belum pernah merekam. Nama berkas memuat
++     * waktu pembuatan (nanodetik), jadi nama terbesar adalah yang terbaru di antara keduanya.
++     */
++    fun latest(context: Context): File? =
++        listOfNotNull(
++            latestIn(File(HorizonEngine.engineHome(context), FOLDER)),
++            latestIn(File(StarlingEngine.engineHome(context), FOLDER))
++        ).maxByOrNull { it.name }
+ 
+     /** Membuka pilihan aplikasi untuk membagikan laporan terbaru. Aman dipanggil dari ketukan tombol. */
+     fun share(context: Context) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+index 5a4d99d..3cbea90 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+@@ -8,6 +8,7 @@ import android.os.Build
+ import com.israadev.nuxlauncher.BuildConfig
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
++import com.israadev.nuxlauncher.core.crash.GameLogArchive
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.core.models.UserAccount
+@@ -119,6 +120,43 @@ object StarlingEngine {
+     fun gameInstalled(context: Context): Boolean =
+         File(engineHome(context), "minecraft/starling-files.json").isFile
+ 
++    /** Akhiran nama proses mesin (AndroidManifest: android:process=":starling"). */
++    const val PROCESS_SUFFIX = ":starling"
++
++    /** True bila proses mesin Starling sedang berjalan (di depan maupun di latar). */
++    fun isProcessAlive(context: Context): Boolean = try {
++        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
++        val name = context.packageName + PROCESS_SUFFIX
++        manager.runningAppProcesses.orEmpty().any { it.processName == name }
++    } catch (_: Exception) {
++        false
++    }
++
++    /**
++     * Mencatat sesi Starling untuk Pengaturan > Log game ([GameLogArchive]): sesi sebelumnya (Java maupun Starling)
++     * disimpan dulu, lalu sesi ini dicatat. Laporannya disusun dari berkas milik mesin (logs/latest.log, performance/,
++     * horizon-graphics.txt) setelah sesi selesai. Dilewati bila mesin masih berjalan: PLAY lagi hanya membawanya ke
++     * depan, sesinya tetap yang sama. Tidak pernah melempar.
++     */
++    private fun beginLogSession(context: Context, instance: Instance) {
++        try {
++            if (isProcessAlive(context)) return
++            GameLogArchive.archiveIfNeeded(context)
++            GameLogArchive.beginSession(
++                context,
++                System.currentTimeMillis(),
++                instance.name,
++                SUPPORTED_MC_VERSION,
++                instance.loader,
++                instance.loaderVersion,
++                HorizonContent.gameHome(engineHome(context)).absolutePath,
++                GameLogArchive.ENGINE_STARLING
++            )
++        } catch (e: Exception) {
++            LauncherLog.w("StarlingEngine", "Sesi log Starling tidak dicatat: ${e.message}", e)
++        }
++    }
++
+     /** Daftar mod native yang dikompilasi ke dalam pustaka mesin ini oleh build-nya (ditulis build_apk.assets). */
+     private const val COMPILED_NATIVE_ASSET = "native-mods/compiled.txt"
+ 
+@@ -268,6 +306,7 @@ object StarlingEngine {
+             val firstRun = !gameInstalled(context)
+             dropForeignGameLibrary(context)
+             StarlingSettingsSync.sync(context)
++            beginLogSession(context, instance)
+             writeLaunchFiles(context, account)
+             if (firstRun) {
+                 Toast.makeText(
+@@ -320,6 +359,8 @@ object StarlingEngine {
+         writeAccountsFile(dir, if (microsoft) null else account.username)
+         val session = File(dir, SESSION_FILE)
+         val args = StringBuilder("AMBER_EMBEDDED=1\n")
++        // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
++        if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
+         if (microsoft) {
+             val json = JSONObject()
+                 .put("name", account.username)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+index 00fde93..19790cd 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+@@ -116,11 +116,11 @@ fun RustStatusRows() {
+     SettingDivider()
+     SettingFrame(
+         "Starling memakai sebagian pilihan",
+-        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini."
++        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game."
+     ) {
+         SettingRowText(
+             title = "Starling memakai sebagian pilihan",
+-            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.",
++            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.",
+             modifier = Modifier
+                 .fillMaxWidth()
+                 .padding(vertical = 10.dp)
+diff --git a/changelog/entries/20261121-starling-log-amber.txt b/changelog/entries/20261121-starling-log-amber.txt
+new file mode 100644
+index 0000000..0972fb8
+--- /dev/null
++++ b/changelog/entries/20261121-starling-log-amber.txt
+@@ -0,0 +1,24 @@
++[id]
+++ Log Starling kini masuk ke Amber: tiap sesi Starling tersimpan di Pengaturan > Log game, lengkap dengan sebab Android menghentikan mesin (misalnya RAM habis atau crash native), pengaturan grafis yang dipakai, log mesin, dan ringkasan performa. Bisa dibagikan seperti log game lainnya.
+++ Rekam performa di Pengaturan > Rust kini juga berlaku untuk Starling, dan Bagikan laporan performa ikut mencari laporan Starling.
++[en]
+++ Starling logs now reach Amber: every Starling session is saved in Settings > Game logs, with the reason Android stopped the engine (for example out of memory or a native crash), the graphics settings in use, the engine log and a performance summary. You can share it like any other game log.
+++ Record performance in Settings > Rust now applies to Starling too, and Share performance report also looks for Starling reports.
++[es]
+++ Los registros de Starling ahora llegan a Amber: cada sesión de Starling se guarda en Ajustes > Registros del juego, con el motivo por el que Android detuvo el motor (por ejemplo, falta de memoria o un fallo nativo), los ajustes gráficos usados, el registro del motor y un resumen de rendimiento. Se puede compartir como cualquier otro registro del juego.
+++ Grabar rendimiento en Ajustes > Rust ahora también se aplica a Starling, y Compartir informe de rendimiento también busca informes de Starling.
++[fil]
+++ Umaabot na sa Amber ang mga log ng Starling: bawat Starling session ay naka-save sa Mga Setting > Mga log ng game, kasama ang dahilan kung bakit itinigil ng Android ang engine (halimbawa, naubusan ng memorya o native crash), ang mga graphics setting na ginamit, ang log ng engine, at buod ng performance. Maibabahagi ito tulad ng ibang log ng laro.
+++ Umiiral na rin sa Starling ang I-record ang performance sa Mga Setting > Rust, at hinahanap na rin ng Ibahagi ang performance report ang mga report ng Starling.
++[pt]
+++ Os logs do Starling agora chegam ao Amber: cada sessão do Starling é salva em Configurações > Log do jogo, com o motivo pelo qual o Android encerrou o motor (por exemplo, falta de memória ou falha nativa), as configurações gráficas usadas, o log do motor e um resumo de desempenho. Dá para compartilhar como qualquer outro log do jogo.
+++ Gravar desempenho em Configurações > Rust agora também vale para o Starling, e Compartilhar relatório de desempenho também procura relatórios do Starling.
++[th]
+++ ล็อกของ Starling ส่งมาถึง Amber แล้ว ทุกเซสชัน Starling จะถูกเก็บไว้ที่การตั้งค่า > ล็อกเกม พร้อมสาเหตุที่ Android หยุดเอนจิน (เช่น หน่วยความจำหมดหรือแครชแบบเนทีฟ) ค่ากราฟิกที่ใช้ ล็อกของเอนจิน และสรุปประสิทธิภาพ แชร์ได้เหมือนล็อกเกมอื่น
+++ บันทึกประสิทธิภาพในการตั้งค่า > Rust ใช้กับ Starling ด้วยแล้ว และการแชร์รายงานประสิทธิภาพจะค้นหารายงานของ Starling ด้วย
++[vi]
+++ Nhật ký của Starling giờ đã đến Amber: mỗi phiên Starling được lưu trong Cài đặt > Nhật ký game, kèm lý do Android dừng engine (ví dụ hết RAM hoặc crash native), cài đặt đồ họa đang dùng, nhật ký engine và tóm tắt hiệu năng. Có thể chia sẻ như mọi nhật ký game khác.
+++ Ghi hiệu năng trong Cài đặt > Rust giờ cũng áp dụng cho Starling, và Chia sẻ báo cáo hiệu năng cũng tìm báo cáo của Starling.
++[zh]
+++ Starling 的日志现在会进入 Amber：每次 Starling 会话都保存在“设置 > 游戏日志”中，包含 Android 停止引擎的原因（例如内存不足或原生崩溃）、使用的图形设置、引擎日志和性能摘要，可以像其他游戏日志一样分享。
+++ “设置 > Rust”中的记录性能现在也适用于 Starling，分享性能报告也会查找 Starling 的报告。
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 8ed8a22..627cd64 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -259,7 +259,7 @@ Bila gagal, kirim laporan log launcher (Pengaturan > Log game; sudah memuat log
+ ## Rencana berikutnya
+ 
+ - Pembaruan dari katalog: mod, shader asli, dan resource pack yang sudah terpasang diberi tanda bila ada versi yang lebih baru (sekarang versi lama dan baru bisa terpasang berdampingan untuk shader dan resource pack).
+-- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`0004` di seri `amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
++- Kemajuan unduhan sumber daya tampil di UI launcher, bukan di layar mesin. Untuk Starling, unduhan berkas resmi sudah begitu (`StarlingFiles`); sisanya penyiapan game di HP (Java 25 dan `horizon-prepare`). Langkah berikutnya: patch Rust kecil (`0005` di seri `amber5`) yang menulis tahap `preparer::stage()` ke sebuah berkas JSON supaya launcher menampilkannya di dialog Amber, atau menjalankan penyiapan itu dari launcher.
+ - Akun Ely.by.
+ 
+ ## Dua mesin Rust: Horizon dan Starling
+@@ -284,7 +284,7 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ 
+ **Pemasangan.** `scripts/fetch-horizon-engine.sh` dijalankan Gradle dua kali (`fetchHorizonEngine`, `fetchStarlingEngine`). Paket Starling diperiksa (commit, patch, sidik jari, ELF, nama berkas di zip) lalu pustaka masuk ke `jniLibs` dan kelas Java, resource, serta aset ke `app/src/starling` (diabaikan git; dibaca Gradle lewat `sourceSets`). Tiap mesin hanya menyentuh berkasnya sendiri, termasuk saat `--remove`.
+ 
+-**Patch `amber5`** (seri Rust/Java di `third_party/horizon-patches/amber5`, diterapkan berurutan oleh CI pada commit yang dipatok). `0001`: kelas Java memakai `R` milik Amber; game selalu di folder privat (bukan folder bersama); pustaka dimuat sebagai `starling_android` (diganti nama supaya tidak bentrok dengan Horizon); `GameActivity` memisahkan folder data (`files/starling`) dan membawa Discord Rich Presence. `0002`: pemberitahuan pembaruan Starling dimatikan bila `AMBER_EMBEDDED` diatur. `0003` (Rust, `game/native_builds.rs`): bila mesin dikompilasi dengan `AMBER_EMBEDDED` (lihat di bawah), tombol Compile di Options > Mods tidak lagi mengirim kode ke server pembangun pihak ketiga; yang tampil adalah pesan bahwa mod native sudah dibangun ke dalam mesin oleh Amber. Mesin yang dibangun tanpa `AMBER_EMBEDDED` berperilaku seperti sumbernya. Perubahan mesin berikutnya (menu, makro, akun, kemajuan penyiapan) ditulis sebagai `0004`, `0005`, dan seterusnya di folder yang sama, jadi semuanya tetap berupa diff atas sumber yang dipatok, bukan salinan sumbernya.
++**Patch `amber5`** (seri Rust/Java di `third_party/horizon-patches/amber5`, diterapkan berurutan oleh CI pada commit yang dipatok). `0001`: kelas Java memakai `R` milik Amber; game selalu di folder privat (bukan folder bersama); pustaka dimuat sebagai `starling_android` (diganti nama supaya tidak bentrok dengan Horizon); `GameActivity` memisahkan folder data (`files/starling`) dan membawa Discord Rich Presence. `0002`: pemberitahuan pembaruan Starling dimatikan bila `AMBER_EMBEDDED` diatur. `0003` (Rust, `game/native_builds.rs`): bila mesin dikompilasi dengan `AMBER_EMBEDDED` (lihat di bawah), tombol Compile di Options > Mods tidak lagi mengirim kode ke server pembangun pihak ketiga; yang tampil adalah pesan bahwa mod native sudah dibangun ke dalam mesin oleh Amber. Mesin yang dibangun tanpa `AMBER_EMBEDDED` berperilaku seperti sumbernya. `0004` (Rust, `android.rs`): bila `AMBER_PERF_RECORD=1` ada di `horizon-args.txt`, rekaman performa dimulai saat mesin dibuka (seperti Options > Diagnostics > Record di dalam mesin); tanpa variabel itu tidak ada yang berubah. Perubahan mesin berikutnya (menu, tema, kemajuan penyiapan) ditulis sebagai `0005` dan seterusnya di folder yang sama, jadi semuanya tetap berupa diff atas sumber yang dipatok, bukan salinan sumbernya.
+ 
+ **Mod native di dalam mesin (`native_mods`).** Sebelumnya pustaka Starling di Amber dibangun dengan `cargo ndk` biasa: `build_apk.py` milik sumber hanya menyalin bundel mod ke APK sebagai kode sumber, jadi pustakanya **tidak memuat satu pun mod**, walaupun layar Mod Amber menampilkan 20 saklar bawaan dan Compile di dalam game tidak bisa dipakai pada mesin yang diganti namanya (hasilnya akan menimpa pustaka Amber dengan pustaka dari sumber tanpa patch). Sekarang `native_mods=` di `starling-engine.properties` (atau variabel lingkungan `HORIZON_ENGINE_NATIVE_MODS`) berisi id mod, dan tahap **2b** `scripts/build-horizon-engine.sh` mengompilasinya ke dalam pustaka dengan alur yang sama dengan `packaging/android/native_build.sh` milik sumber:
+   1. `horizon-mixins` dipasang pada revisi yang dipatok `native_build.sh` (`MIXINS_REV`, `MIXINS_GIT`) lewat `cargo install --locked`.
+@@ -297,7 +297,9 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+   - **Gagal lembut.** Bila tahap 2b gagal (pemasangan `horizon-mixins`, penyisipan, atau kompilasi), build jatuh ke pustaka tanpa mod, memberi `::warning`, dan menulis kegagalannya di ringkasan dan catatan Release. Mesin tetap bisa dimainkan, dan tanpa `compiled.txt` Amber menyembunyikan saklar bawaan. Release yang sudah ada dilewati, jadi untuk mencoba lagi setelah memperbaiki: jalankan ulang dengan *mesin = ulang* atau naikkan `revision=`.
+   - **Belum diuji.** Tahap 2b dan patch `0003` disusun tanpa bisa dikompilasi (sandbox pengembangan tidak bisa mengakses crates.io dan GitHub): patch hanya dicek dapat diterapkan pada commit yang dipatok, dan perintah `horizon-mixins` mengikuti `native_build.sh` sumber. Hasil run CI pertama yang menentukan; log tahap 2b adalah bahan untuk memperbaikinya.
+ 
+-**Pengaturan Amber untuk Starling (`StarlingSettingsSync`).** Tab Pengaturan > Rust dulu hanya menulis `android-launcher.json` milik Horizon, yang tidak dibaca Starling. Saat PLAY, `StarlingEngine.start()` memanggil `StarlingSettingsSync.sync()`, yang menerjemahkan pilihan Amber yang punya padanan ke `horizon-graphics.txt` (satu baris `kunci:nilai` di folder game, format di `graphics.rs` sumber): Renderer → `graphicsApi` (kompatibel = `auto`, Vulkan cepat = `vulkan`, OpenGL ES = `opengl`); Skala resolusi → `resolutionScale`; Batas pekerja chunk → `workers`; Mode performa Hemat baterai → `batteryMode`; Kurangi animasi game → `animatedTextures` (di Starling hanya tekstur beranimasi, tidak termasuk fade chunk, goyang kamera, dan blur menu); Sederhanakan daun → `leafCulling` (`solid` atau `off`). Pilihan lain (arah layar, laju layar, immersive, poni, rasio, server otomatis, unggah chunk cepat, cache RAM, petunjuk performa, rekam performa, perangkat input) diatur kelas Java dan peluncur milik Horizon, atau tidak punya padanan yang dipastikan di Starling, jadi belum diteruskan. **Aturan menimpa:** pemain juga bisa mengubah nilai yang sama dari menu di dalam game, jadi Amber tidak menimpa tiap PLAY. Nilai terakhir yang Amber tulis dicatat di `amber-applied.json` (folder game); sebuah kunci hanya ditulis ulang bila pilihannya di Amber berubah sejak itu. Pada PLAY pertama hanya pilihan yang berbeda dari bawaan Amber yang ditulis, jadi pemain yang tidak pernah menyentuh tab itu tidak kehilangan apa pun di Starling. Kunci lain di `horizon-graphics.txt` (preset, HDR, shader, dan seterusnya) tidak disentuh. Berkas ditulis lewat berkas sementara lalu dipindah, dan setiap kegagalan hanya dicatat di log: Starling lalu memakai pengaturannya sendiri. **Belum diuji di HP** (nama kunci dan nilainya dibaca dari kode sumber yang dipatok, bukan dari mesin yang berjalan); bila Starling mengabaikan sebuah kunci, `horizon-graphics.txt` di `files/starling` akan memperlihatkannya.
++**Pengaturan Amber untuk Starling (`StarlingSettingsSync`).** Tab Pengaturan > Rust dulu hanya menulis `android-launcher.json` milik Horizon, yang tidak dibaca Starling. Saat PLAY, `StarlingEngine.start()` memanggil `StarlingSettingsSync.sync()`, yang menerjemahkan pilihan Amber yang punya padanan ke `horizon-graphics.txt` (satu baris `kunci:nilai` di folder game, format di `graphics.rs` sumber): Renderer → `graphicsApi` (kompatibel = `auto`, Vulkan cepat = `vulkan`, OpenGL ES = `opengl`); Skala resolusi → `resolutionScale`; Batas pekerja chunk → `workers`; Mode performa Hemat baterai → `batteryMode`; Kurangi animasi game → `animatedTextures` (di Starling hanya tekstur beranimasi, tidak termasuk fade chunk, goyang kamera, dan blur menu); Sederhanakan daun → `leafCulling` (`solid` atau `off`). Rekam performa diteruskan sebagai `AMBER_PERF_RECORD=1` di `horizon-args.txt` (dibaca patch `0004`; lihat bagian log di bawah). Pilihan lain (arah layar, laju layar, immersive, poni, rasio, server otomatis, unggah chunk cepat, cache RAM, petunjuk performa, perangkat input) diatur kelas Java dan peluncur milik Horizon, atau tidak punya padanan yang dipastikan di Starling, jadi belum diteruskan. **Aturan menimpa:** pemain juga bisa mengubah nilai yang sama dari menu di dalam game, jadi Amber tidak menimpa tiap PLAY. Nilai terakhir yang Amber tulis dicatat di `amber-applied.json` (folder game); sebuah kunci hanya ditulis ulang bila pilihannya di Amber berubah sejak itu. Pada PLAY pertama hanya pilihan yang berbeda dari bawaan Amber yang ditulis, jadi pemain yang tidak pernah menyentuh tab itu tidak kehilangan apa pun di Starling. Kunci lain di `horizon-graphics.txt` (preset, HDR, shader, dan seterusnya) tidak disentuh. Berkas ditulis lewat berkas sementara lalu dipindah, dan setiap kegagalan hanya dicatat di log: Starling lalu memakai pengaturannya sendiri. **Belum diuji di HP** (nama kunci dan nilainya dibaca dari kode sumber yang dipatok, bukan dari mesin yang berjalan); bila Starling mengabaikan sebuah kunci, `horizon-graphics.txt` di `files/starling` akan memperlihatkannya.
++
++**Log dan diagnostik Starling di Amber.** Mesin berjalan di proses `:starling` dan menulis sendiri: `logs/latest.log` dan `crash-reports/` di folder game, serta `performance/` di folder data mesin (`current-session.json` dan `previous-session.json` dengan fase terakhir, `clean_exit`, dan memori; `diagnostic.log`; `horizon-performance-*.jsonl` bila rekaman dinyalakan). Dulu tidak satu pun sampai ke Amber. Sekarang `StarlingEngine.start()` mencatat sesi ke `GameLogArchive` (`beginSession` dengan `engine=starling`; sesi sebelumnya, Java atau Starling, disimpan dulu bila prosesnya sudah berhenti), dan `archiveSession` menyusun laporan `amber-log_<waktu>_<instance>.txt` yang muncul di Pengaturan > Log game dan bisa dibagikan seperti log Java. Isinya: ringkasan HP dan pengaturan Rust Amber; kejadian launcher; **sebab Android menghentikan proses `:starling`** (`getHistoricalProcessExitReasons`, Android 11 ke atas: LOW_MEMORY berarti HP kehabisan RAM, CRASH_NATIVE crash di kode Rust atau driver, EXIT_SELF keluar biasa); keadaan sesi dari mesin; `horizon-graphics.txt`, `horizon-extras.txt`, `horizon-mods.txt`, `amber-applied.json`, dan kunci grafik di `options.txt`; ringkasan rekaman performa (jumlah sampel, kejadian lambat, tiga ringkasan frame terakhir; berkas lengkapnya dibagikan dari Pengaturan > Rust > Bagikan laporan performa, yang kini juga mencari di folder Starling); akhir `diagnostic.log`; laporan crash yang terbit selama sesi; `logs/latest.log` (maksimal 4 MiB, awal dan akhir); dan peringatan logcat milik aplikasi. Sesi disimpan walau `latest.log` kosong, karena justru saat itulah sebab berhentinya yang berguna. Sesi yang prosesnya masih berjalan tidak disimpan dulu (PLAY lagi hanya membawa mesin ke depan; sesinya tetap satu). Laporan launcher biasa juga memuat bagian "Mesin Starling". Log disamarkan oleh `LogRedactor` seperti log lain. Catatan: bagian logcat dilewati bila laporan disusun di thread utama (saat PLAY berikutnya); buka Pengaturan > Log game untuk menyimpan ulang dengan logcat. **Belum diuji di HP.**
+ 
+ **Akun tanpa patch Rust.** `StarlingEngine` memakai antarmuka peluncur yang sudah ada di mesin: PLAY menulis `accounts/accounts.json` (pemain offline), `amber-session.json` (sesi Microsoft, dibaca sekali lalu dihapus mesin), dan `horizon-args.txt` (`--session-file`, `AMBER_EMBEDDED=1`).
+ 
+diff --git a/third_party/horizon-patches/amber5/0004-amber-performance-record.diff b/third_party/horizon-patches/amber5/0004-amber-performance-record.diff
+new file mode 100644
+index 0000000..1eecea9
+--- /dev/null
++++ b/third_party/horizon-patches/amber5/0004-amber-performance-record.diff
+@@ -0,0 +1,19 @@
++diff --git a/crates/horizon-client/src/android.rs b/crates/horizon-client/src/android.rs
++--- a/crates/horizon-client/src/android.rs
+++++ b/crates/horizon-client/src/android.rs
++@@ -1290,6 +1290,15 @@
++         log::warn!("Could not initialize diagnostics: {error}");
++     }
++     crate::diagnostics::collect_exits(&private);
+++    // AmberLauncher: its "Rekam performa" switch writes AMBER_PERF_RECORD=1 into horizon-args.txt, which starts the
+++    // performance recording at launch, as the in-game diagnostics menu would (Options > Diagnostics > Record).
+++    if std::env::var_os("AMBER_PERF_RECORD").is_some_and(|value| value == "1") {
+++        if let Err(error) =
+++            crate::performance::start(&private, serde_json::json!({"phase": "amber"}))
+++        {
+++            log::warn!("Cannot start performance recording: {error}");
+++        }
+++    }
++     crate::entry::start(Default::default(), || {
++         log::info!(
++             "Horizon: Android, game folder {}, private files {}, arguments {args:?}, environment {env:?}",
+# FIN part=1/1 files=14

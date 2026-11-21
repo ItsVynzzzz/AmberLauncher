@@ -1,0 +1,16 @@
+[id]
+~ Mesin Starling tidak lagi menawarkan sendiri memindahkan folder game ke penyimpanan bersama atau membawa dunia dari Horizon Android, dan tidak lagi menyisipkan server resmi Horizon ke daftar server kamu. Folder game sepenuhnya diatur launcher.
+[en]
+~ Starling no longer offers on its own to move the game folder to shared storage or bring over worlds from Horizon Android, and no longer adds Horizon's official server to your server list. The game folder is fully managed by the launcher.
+[es]
+~ Starling ya no ofrece por su cuenta mover la carpeta del juego al almacenamiento compartido ni traer mundos de Horizon Android, y ya no añade el servidor oficial de Horizon a tu lista de servidores. La carpeta del juego la gestiona por completo el launcher.
+[fil]
+~ Hindi na nag-aalok ang Starling nang kusa na ilipat ang folder ng laro sa shared storage o magdala ng mga mundo mula sa Horizon Android, at hindi na nito idinaragdag ang opisyal na server ng Horizon sa listahan ng iyong mga server. Ang launcher na ang ganap na namamahala sa folder ng laro.
+[pt]
+~ O Starling não oferece mais, por conta própria, mover a pasta do jogo para o armazenamento compartilhado nem trazer mundos do Horizon Android, e não adiciona mais o servidor oficial do Horizon à sua lista de servidores. A pasta do jogo é gerenciada inteiramente pelo launcher.
+[th]
+~ Starling จะไม่เสนอย้ายโฟลเดอร์เกมไปยังที่เก็บข้อมูลที่ใช้ร่วมกัน หรือนำโลกมาจาก Horizon Android ด้วยตัวเองอีกต่อไป และจะไม่เพิ่มเซิร์ฟเวอร์ทางการของ Horizon ลงในรายการเซิร์ฟเวอร์ของคุณอีก โฟลเดอร์เกมถูกจัดการโดยแลนเชอร์ทั้งหมด
+[vi]
+~ Starling không còn tự đề nghị chuyển thư mục game sang bộ nhớ dùng chung hay mang thế giới từ Horizon Android sang, và không còn thêm máy chủ chính thức của Horizon vào danh sách máy chủ của bạn. Thư mục game do launcher quản lý hoàn toàn.
+[zh]
+~ Starling 不再自行提议把游戏文件夹移到共享存储，或从 Horizon Android 导入世界，也不再把 Horizon 官方服务器加入你的服务器列表。游戏文件夹完全由启动器管理。

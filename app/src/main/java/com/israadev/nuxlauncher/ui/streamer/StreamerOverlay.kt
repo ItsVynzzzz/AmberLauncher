@@ -74,6 +74,7 @@ import com.israadev.nuxlauncher.ui.components.AmberIcon
 import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.dialogs.MenuDivider
 import com.israadev.nuxlauncher.ui.dialogs.MenuSwitch
+import com.israadev.nuxlauncher.ui.dialogs.fractionWidthCapped
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 import kotlinx.coroutines.Dispatchers
@@ -479,8 +480,7 @@ private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifi
         modifier = modifier
             .fillMaxHeight()
             // Sempit supaya layar game tetap terlihat.
-            .fillMaxWidth(PANEL_WIDTH_FRACTION)
-            .widthIn(max = PANEL_MAX_WIDTH_DP.dp)
+            .fractionWidthCapped(PANEL_WIDTH_FRACTION, PANEL_MAX_WIDTH_DP.dp)
             .clip(shape)
             .background(AmberUi.MenuCard)
             .border(1.dp, AmberUi.Border, shape)

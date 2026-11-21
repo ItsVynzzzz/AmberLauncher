@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -57,6 +56,7 @@ import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.dialogs.MenuSliderRow
 import com.israadev.nuxlauncher.ui.dialogs.MenuSwitch
 import com.israadev.nuxlauncher.ui.dialogs.StreamerColorRow
+import com.israadev.nuxlauncher.ui.dialogs.fractionWidthCapped
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 
@@ -352,8 +352,7 @@ private fun Inspector(
         modifier = modifier
             .padding(top = 44.dp)
             .fillMaxHeight()
-            .fillMaxWidth(0.30f)
-            .widthIn(max = INSPECTOR_MAX_WIDTH_DP.dp)
+            .fractionWidthCapped(0.30f, INSPECTOR_MAX_WIDTH_DP.dp)
             .clip(shape)
             .background(AmberUi.MenuCard)
             .border(1.dp, AmberUi.Border, shape)

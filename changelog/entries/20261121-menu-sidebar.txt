@@ -1,0 +1,6 @@
+[id]
+! Menu dalam game kembali selebar dulu (paling lebar 340dp) dan tidak lagi memenuhi layar, termasuk saat Mode streamer menyala. Panel overlay di sisi kiri dan panel pengaturan overlay juga kembali ke lebar sempit yang dimaksud.
+~ Isi menu dibuat lebih ringkas: tombol, baris pengaturan, penggeser, dan tombol Keluar lebih tipis, jadi daftar pengaturan yang terlihat lebih panjang dan layar game tidak banyak tertutup.
+[en]
+! The in-game menu is back to its old width (at most 340dp) and no longer fills the screen, including when Streamer mode is on. The overlay panel on the left and the overlay settings panel are back to the narrow width they were meant to have.
+~ The menu contents are more compact: buttons, setting rows, sliders and the Exit button are slimmer, so more settings are visible at once and less of the game is covered.

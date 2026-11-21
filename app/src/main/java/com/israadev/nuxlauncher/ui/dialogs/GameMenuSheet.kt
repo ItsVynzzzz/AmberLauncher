@@ -178,9 +178,11 @@ fun GameMenuSheet(
             if (showRight) Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    // Bersama panel kiri, lebarnya dibatasi setengah layar supaya sisa layar tetap terlihat.
-                    .fillMaxWidth(if (hasLeft) 0.50f else 1f)
-                    .widthIn(max = if (hasLeft) 280.dp else 340.dp)
+                    // Urutan penting: widthIn dulu (batas luar), baru fillMaxWidth mengisi sampai batas itu.
+                    // Kebalikannya mengunci lebar sebesar layar dulu, sehingga batas 340dp tidak berlaku
+                    // dan menu jadi selebar layar.
+                    .widthIn(max = 340.dp)
+                    .fillMaxWidth()
                     .clip(panelShape)
                     .background(AmberUi.MenuCard)
                     .border(1.dp, AmberUi.Border, panelShape)
@@ -191,7 +193,7 @@ fun GameMenuSheet(
                     .windowInsetsPadding(
                         WindowInsets.displayCutout.only(WindowInsetsSides.End + WindowInsetsSides.Vertical)
                     )
-                    .padding(horizontal = 18.dp, vertical = 14.dp)
+                    .padding(horizontal = 14.dp, vertical = 8.dp)
             ) {
                 // Kepala: judul, FPS, tutup
                 Row(
@@ -219,7 +221,7 @@ fun GameMenuSheet(
                         // Sembunyikan panel kanan (panah ke kanan); gagang di tepi kanan memunculkannya lagi.
                         Box(
                             modifier = Modifier
-                                .size(34.dp)
+                                .size(32.dp)
                                 .clip(CircleShape)
                                 .background(AmberUi.SurfaceRaised)
                                 .amberTap { rightHidden = true },
@@ -231,7 +233,7 @@ fun GameMenuSheet(
                     }
                     Box(
                         modifier = Modifier
-                            .size(34.dp)
+                            .size(32.dp)
                             .clip(CircleShape)
                             .background(AmberUi.SurfaceRaised)
                             .amberTap(onDismissRequest),
@@ -241,7 +243,7 @@ fun GameMenuSheet(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Aksi cepat
                 Row(
@@ -285,7 +287,7 @@ fun GameMenuSheet(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 RecordBar(onClick = {
                     onDismissRequest()
                     onToggleRecord()
@@ -368,7 +370,7 @@ fun GameMenuSheet(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 12.dp)
+                                .padding(vertical = 8.dp)
                         ) {
                             Text(
                                 text = "Mode sentuh",
@@ -420,11 +422,11 @@ fun GameMenuSheet(
                         Triple("TAB", "Pemain", LwjglGlfwKeycode.GLFW_KEY_TAB),
                         Triple("F1", "Sembunyi HUD", LwjglGlfwKeycode.GLFW_KEY_F1)
                     )
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         keys.chunked(3).forEach { rowKeys ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 rowKeys.forEach { (label, desc, code) ->
                                     KeyChip(Modifier.weight(1f), label, desc) { onSendKeycode(code) }
@@ -433,11 +435,11 @@ fun GameMenuSheet(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 // Satu-satunya jalan keluar dari game: tombol merah yang selalu terlihat di dasar panel.
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 ExitButton(
                     onClick = {
                         onDismissRequest()
@@ -489,7 +491,7 @@ private val DangerSoft = Color(0xFFFF9A9C)
 
 @Composable
 private fun SectionGap() {
-    Spacer(modifier = Modifier.height(14.dp))
+    Spacer(modifier = Modifier.height(10.dp))
 }
 
 /** Aksi cepat: ikon bulat tanpa garis tepi dengan label kecil; aktif = berwarna aksen pengguna. */
@@ -506,21 +508,21 @@ private fun QuickAction(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .amberTap(onClick)
-            .padding(vertical = 4.dp),
+            .padding(vertical = 2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(38.dp)
                 .background(if (active) AmberUi.AccentBrush else SolidColor(AmberUi.SurfaceRaised), CircleShape)
                 .then(
                     if (active) Modifier.border(1.dp, AmberUi.AccentEdge, CircleShape) else Modifier
                 ),
             contentAlignment = Alignment.Center
         ) {
-            AmberIcon(icon, 20.dp, if (active) Color.White else AmberUi.Text, slash = slash)
+            AmberIcon(icon, 18.dp, if (active) Color.White else AmberUi.Text, slash = slash)
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(3.dp))
         Text(
             text = label,
             color = if (active) AmberUi.Text else AmberUi.TextDim,
@@ -551,14 +553,14 @@ private fun RecordBar(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(44.dp)
+            .height(34.dp)
             .clip(CircleShape)
             .background(if (rec) AmberUi.Danger.copy(alpha = 0.18f) else AmberUi.SurfaceRaised)
             .amberTap(onClick)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AmberIcon(if (rec) "stop" else "record", 18.dp, if (rec) DangerSoft else AmberUi.Text)
+        AmberIcon(if (rec) "stop" else "record", 16.dp, if (rec) DangerSoft else AmberUi.Text)
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = if (rec) "Berhenti merekam" else "Rekam layar",
@@ -586,7 +588,7 @@ private fun RecordModeRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
+            .padding(vertical = 8.dp)
     ) {
         MenuSegmented(
             options = listOf("Game saja", "Dengan tombol"),
@@ -617,7 +619,7 @@ private fun KeyChip(
     val shape = RoundedCornerShape(14.dp)
     Column(
         modifier = modifier
-            .height(46.dp)
+            .height(38.dp)
             .clip(shape)
             .background(AmberUi.SurfaceRaised)
             .amberTap(onClick),
@@ -646,7 +648,7 @@ private fun ExitButton(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(46.dp)
+            .height(38.dp)
             .clip(CircleShape)
             .background(AmberUi.Danger.copy(alpha = 0.18f))
             .border(1.dp, AmberUi.Danger.copy(alpha = 0.5f), CircleShape)
@@ -654,7 +656,7 @@ private fun ExitButton(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        AmberIcon("power", 17.dp, DangerSoft)
+        AmberIcon("power", 16.dp, DangerSoft)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "Keluar dari game",

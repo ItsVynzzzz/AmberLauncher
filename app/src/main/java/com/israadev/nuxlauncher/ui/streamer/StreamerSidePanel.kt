@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.israadev.nuxlauncher.core.streamer.StreamerItem
 import com.israadev.nuxlauncher.core.streamer.StreamerLogic
 import com.israadev.nuxlauncher.ui.components.AmberButton
+import com.israadev.nuxlauncher.ui.dialogs.fractionWidthCapped
 import com.israadev.nuxlauncher.ui.theme.AmberUi
 
 /**
@@ -47,8 +47,7 @@ fun StreamerSidePanel(
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .fillMaxWidth(PANEL_WIDTH_FRACTION)
-            .widthIn(max = PANEL_MAX_WIDTH_DP.dp)
+            .fractionWidthCapped(PANEL_WIDTH_FRACTION, PANEL_MAX_WIDTH_DP.dp)
             .clip(shape)
             .background(AmberUi.MenuCard)
             .border(1.dp, AmberUi.Border, shape)

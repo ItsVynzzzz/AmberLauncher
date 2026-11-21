@@ -43,7 +43,9 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.ui.components.amberTap
@@ -60,16 +62,34 @@ import kotlin.math.roundToInt
  * sedang berjalan di belakangnya.
  */
 
+/**
+ * Lebar = [fraction] dari lebar yang tersedia, tetapi tidak lebih dari [maxWidth].
+ *
+ * Rangkaian `fillMaxWidth(fraction).widthIn(max = ...)` TIDAK membatasi: fillMaxWidth mengunci lebar
+ * lebih dulu, jadi widthIn sesudahnya tidak bisa menyempitkannya. Akibatnya panel melebar sebesar
+ * pecahan layar, bukan paling lebar [maxWidth].
+ */
+internal fun Modifier.fractionWidthCapped(fraction: Float, maxWidth: Dp): Modifier =
+    layout { measurable, constraints ->
+        val cap = maxWidth.roundToPx()
+        val byFraction = if (constraints.hasBoundedWidth) (constraints.maxWidth * fraction).roundToInt() else cap
+        var w = minOf(byFraction, cap)
+        if (constraints.hasBoundedWidth) w = w.coerceAtMost(constraints.maxWidth)
+        w = w.coerceAtLeast(constraints.minWidth)
+        val placeable = measurable.measure(constraints.copy(minWidth = w, maxWidth = w))
+        layout(placeable.width, placeable.height) { placeable.place(0, 0) }
+    }
+
 /** Kelompok pengaturan: satu kartu tipis; isinya dipisah dengan [MenuDivider]. */
 @Composable
 internal fun MenuGroup(content: @Composable ColumnScope.() -> Unit) {
-    val shape = RoundedCornerShape(20.dp)
+    val shape = RoundedCornerShape(16.dp)
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
             .background(AmberUi.SurfaceRaised)
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 12.dp),
         content = content
     )
 }
@@ -98,7 +118,7 @@ internal fun MenuToggleRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .amberTap { onChange(!checked) }
-            .padding(vertical = 12.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -166,7 +186,7 @@ internal fun MenuSliderRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 6.dp)
+            .padding(top = 8.dp, bottom = 2.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -219,7 +239,7 @@ private fun MenuSlider(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(30.dp)
+            .height(26.dp)
             // D-pad kiri/kanan menggeser satu langkah saat penggeser disorot.
             .onKeyEvent { event ->
                 val dir = when (event.key) {
@@ -294,7 +314,7 @@ internal fun MenuSegmented(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(34.dp)
+            .height(30.dp)
             .clip(CircleShape)
             .background(Color(0x40000000))
             .padding(2.dp),

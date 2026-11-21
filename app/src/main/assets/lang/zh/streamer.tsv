@@ -38,3 +38,8 @@ Warna teks	文字颜色
 Latar belakang	背景
 Kotak di belakang tulisan. Matikan supaya tulisannya polos.	文字后面的底框。关闭后只显示文字。
 Gambar hanya bisa diganti dari layar utama: Pengaturan > Game > Mode streamer > Atur overlay.	图片只能在主界面更改：设置 > 游戏 > 主播模式 > 设置叠加层。
+Atur di layar	在屏幕上调整
+Belum ada overlay.	还没有叠加层。
+Posisi bebas	自由位置
+Opasitas	不透明度
+Seret overlay untuk memindahkan, cubit untuk mengubah ukuran.	拖动叠加层可移动，双指捏合可调整大小。

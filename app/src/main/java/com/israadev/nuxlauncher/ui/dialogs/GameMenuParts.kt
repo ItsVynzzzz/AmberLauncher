@@ -158,7 +158,9 @@ internal fun MenuSliderRow(
     min: Int,
     max: Int,
     step: Int,
-    onCommit: (Int) -> Unit
+    onCommit: (Int) -> Unit,
+    /** Dipanggil tiap nilai berganti saat digeser (mis. editor overlay yang ingin hasilnya terlihat langsung). */
+    onLive: ((Int) -> Unit)? = null
 ) {
     var live by remember(value) { mutableFloatStateOf(value.toFloat()) }
     Column(
@@ -188,7 +190,10 @@ internal fun MenuSliderRow(
             value = { live },
             range = min.toFloat()..max.toFloat(),
             step = step.toFloat(),
-            onChange = { live = it },
+            onChange = {
+                live = it
+                onLive?.invoke(it.roundToInt())
+            },
             onFinished = { onCommit(live.roundToInt()) }
         )
     }

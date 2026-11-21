@@ -20,7 +20,17 @@ data class StreamerItem(
     /** Teks, link, dan timer: kotak latar di belakang tulisan. Mati = tulisan polos dengan bayangan keras (tanpa blur). */
     val bg: Boolean = true,
     /** Warna tulisan (salah satu dari [StreamerLogic.COLORS]). */
-    val color: String = StreamerLogic.COLOR_WHITE
+    val color: String = StreamerLogic.COLOR_WHITE,
+    /**
+     * Posisi bebas di layar, pecahan 0..1 dari ruang gerak (0 = rapat kiri atau atas, 1 = rapat kanan atau
+     * bawah). Selama keduanya di luar 0..1 (bawaan -1), posisi mengikuti titik [pos].
+     */
+    val x: Float = -1f,
+    val y: Float = -1f,
+    /** Skala ukuran bebas ([StreamerLogic.SCALE_MIN]..[StreamerLogic.SCALE_MAX]). 0 = ikuti [size]. */
+    val scale: Float = 0f,
+    /** Kepekatan seluruh item ([StreamerLogic.ALPHA_MIN]..1). */
+    val alpha: Float = 1f
 )
 
 /**
@@ -52,7 +62,20 @@ object StreamerLogic {
     const val COLOR_BLACK = "black"
     const val COLOR_RED = "red"
     const val COLOR_BLUE = "blue"
-    val COLORS = listOf(COLOR_WHITE, COLOR_AMBER, COLOR_BLACK, COLOR_RED, COLOR_BLUE)
+    const val COLOR_GREEN = "green"
+    const val COLOR_PURPLE = "purple"
+    const val COLOR_PINK = "pink"
+    val COLORS = listOf(
+        COLOR_WHITE, COLOR_AMBER, COLOR_RED, COLOR_PINK,
+        COLOR_PURPLE, COLOR_BLUE, COLOR_GREEN, COLOR_BLACK
+    )
+
+    const val SCALE_MIN = 0.5f
+    const val SCALE_MAX = 3f
+    const val ALPHA_MIN = 0.3f
+
+    /** Jarak tumpukan (pecahan tinggi layar) saat item lama yang berbagi satu titik diubah jadi posisi bebas. */
+    private const val STACK_STEP = 0.18f
 
     const val MAX_ITEMS = 8
     const val MAX_TEXT_CHARS = 60
@@ -75,6 +98,9 @@ object StreamerLogic {
         COLOR_BLACK -> 0xFF111111.toInt()
         COLOR_RED -> 0xFFFF5A4D.toInt()
         COLOR_BLUE -> 0xFF5AC8FA.toInt()
+        COLOR_GREEN -> 0xFF4CD964.toInt()
+        COLOR_PURPLE -> 0xFFBF5AF2.toInt()
+        COLOR_PINK -> 0xFFFF6FB5.toInt()
         else -> 0xFFFFFFFF.toInt()
     }
 
@@ -195,7 +221,11 @@ object StreamerLogic {
             size = normalizeSize(src.size),
             on = src.on,
             bg = src.bg,
-            color = normalizeColor(src.color)
+            color = normalizeColor(src.color),
+            x = if (src.x in 0f..1f && src.y in 0f..1f) src.x else -1f,
+            y = if (src.x in 0f..1f && src.y in 0f..1f) src.y else -1f,
+            scale = if (src.scale.isFinite() && src.scale > 0f) src.scale.coerceIn(SCALE_MIN, SCALE_MAX) else 0f,
+            alpha = if (src.alpha.isFinite()) src.alpha.coerceIn(ALPHA_MIN, 1f) else 1f
         )
     }
 
@@ -261,6 +291,74 @@ object StreamerLogic {
         SIZE_LARGE -> 168
         else -> 124
     }
+
+    /** Item punya posisi bebas (bukan titik [StreamerItem.pos]). */
+    fun isFree(item: StreamerItem): Boolean = item.x in 0f..1f && item.y in 0f..1f
+
+    private fun hasScale(item: StreamerItem): Boolean = item.scale.isFinite() && item.scale > 0f
+
+    /** Skala ukuran item: skala bebas bila ada, kalau tidak setara pilihan kecil/sedang/besar. */
+    fun scaleOf(item: StreamerItem): Float =
+        if (hasScale(item)) {
+            item.scale.coerceIn(SCALE_MIN, SCALE_MAX)
+        } else {
+            when (normalizeSize(item.size)) {
+                SIZE_SMALL -> 0.8f
+                SIZE_LARGE -> 1.35f
+                else -> 1f
+            }
+        }
+
+    private fun scaled(item: StreamerItem, base: Int, bySize: Int): Int =
+        if (hasScale(item)) maxOf(1, Math.round(base * scaleOf(item))) else bySize
+
+    fun textSpOf(item: StreamerItem): Int = scaled(item, textSp(SIZE_MEDIUM), textSp(item.size))
+    fun linkSpOf(item: StreamerItem): Int = scaled(item, linkSp(SIZE_MEDIUM), linkSp(item.size))
+    fun imageHeightDpOf(item: StreamerItem): Int = scaled(item, imageHeightDp(SIZE_MEDIUM), imageHeightDp(item.size))
+    fun qrSizeDpOf(item: StreamerItem): Int = scaled(item, qrSizeDp(SIZE_MEDIUM), qrSizeDp(item.size))
+
+    /** Letak titik bawaan sebagai posisi bebas (pecahan 0..1). */
+    fun anchorXY(pos: String): Pair<Float, Float> = when (normalizePos(pos)) {
+        POS_TOP_START -> Pair(0f, 0f)
+        POS_TOP_END -> Pair(1f, 0f)
+        POS_BOTTOM_START -> Pair(0f, 1f)
+        POS_BOTTOM -> Pair(0.5f, 1f)
+        POS_BOTTOM_END -> Pair(1f, 1f)
+        else -> Pair(0.5f, 0f)
+    }
+
+    /**
+     * Mengubah item yang masih memakai titik bawaan jadi posisi bebas (untuk editor di layar). Item yang
+     * berbagi satu titik disusun bertumpuk seperti sebelumnya supaya tidak saling menutup.
+     */
+    fun withFreePositions(items: List<StreamerItem>): List<StreamerItem> {
+        val seen = HashMap<String, Int>()
+        return items.map { item ->
+            if (isFree(item)) {
+                item
+            } else {
+                val k = seen[item.pos] ?: 0
+                seen[item.pos] = k + 1
+                val (ax, ay) = anchorXY(item.pos)
+                val dy = STACK_STEP * k
+                item.copy(x = ax, y = (if (ay < 0.5f) ay + dy else ay - dy).coerceIn(0f, 1f))
+            }
+        }
+    }
+
+    /** Titik piksel tempat item ditaruh: pecahan [fraction] dari ruang gerak [rangePx] (tidak pernah keluar wadah). */
+    fun placeAt(fraction: Float, rangePx: Int): Int =
+        if (rangePx <= 0 || !fraction.isFinite()) 0 else Math.round(fraction.coerceIn(0f, 1f) * rangePx)
+
+    /** Pecahan posisi baru setelah digeser [deltaPx] piksel; tanpa ruang gerak, posisi tidak berubah. */
+    fun movedFraction(current: Float, deltaPx: Float, rangePx: Float): Float {
+        val c = if (current.isFinite()) current.coerceIn(0f, 1f) else 0f
+        return if (rangePx < 1f || !deltaPx.isFinite()) c else (c + deltaPx / rangePx).coerceIn(0f, 1f)
+    }
+
+    /** Skala baru setelah dicubit sebesar [zoom] kali. */
+    fun zoomedScale(current: Float, zoom: Float): Float =
+        if (!zoom.isFinite() || zoom <= 0f) current else (current * zoom).coerceIn(SCALE_MIN, SCALE_MAX)
 
     /** Ukuran gambar tampil: setinggi [maxH], tetap seimbang, dan tidak lebih lebar dari [maxW]. */
     fun fitSize(ratio: Float, maxH: Float, maxW: Float): Pair<Float, Float> {

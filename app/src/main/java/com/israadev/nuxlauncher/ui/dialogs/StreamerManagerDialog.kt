@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -55,6 +56,7 @@ import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.streamer.ItemTitle
+import com.israadev.nuxlauncher.ui.streamer.placeLabel
 import com.israadev.nuxlauncher.ui.streamer.posLabel
 import com.israadev.nuxlauncher.ui.streamer.rememberStreamerBitmap
 import com.israadev.nuxlauncher.ui.streamer.typeLabel
@@ -219,7 +221,7 @@ private fun ListPane(
                                 Row {
                                     Text(text = typeLabel(item.type), color = AmberUi.TextDim, fontSize = 11.sp)
                                     Text(text = " \u00B7 ", color = AmberUi.TextDim, fontSize = 11.sp)
-                                    Text(text = posLabel(item.pos), color = AmberUi.TextDim, fontSize = 11.sp)
+                                    Text(text = placeLabel(item), color = AmberUi.TextDim, fontSize = 11.sp)
                                 }
                             }
                             Spacer(modifier = Modifier.width(10.dp))
@@ -308,8 +310,8 @@ private fun EditPane(
 
 /**
  * Isian formulir satu overlay: jenis, isi, posisi, ukuran, warna, latar, dan "tampil saat game mulai".
- * Dipakai dialog di Pengaturan dan panel kiri di menu game, jadi keduanya selalu sama. [onPickImage]
- * null berarti memilih gambar tidak tersedia (di dalam game, supaya proses game tidak ditinggalkan ke
+ * Dipakai dialog di Pengaturan. Di dalam game, overlay diatur lewat editor di layar (lihat StreamerEditorLayer).
+ * [onPickImage] null berarti memilih gambar tidak tersedia (supaya proses game tidak ditinggalkan ke
  * pemilih berkas di HP yang RAM-nya kecil); gambar yang sudah ada tetap bisa diatur posisi dan ukurannya.
  * Dipanggil di dalam Column pemanggil, jadi jarak antar bagian mengikuti Column itu.
  */
@@ -380,31 +382,34 @@ internal fun StreamerEditFields(
         }
     }
 
+    // Posisi bebas (diatur lewat editor di layar game): tidak ada titik bawaan yang terpilih.
+    val free = StreamerLogic.isFree(draft)
     Spacer(modifier = Modifier.height(4.dp))
     FieldLabel("Posisi")
     ChipRow {
         for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
-            SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
+            SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
         }
     }
     ChipRow {
         for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
-            SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
+            SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
         }
     }
 
     Spacer(modifier = Modifier.height(4.dp))
     FieldLabel("Ukuran")
     ChipRow {
-        SettingChip("Kecil", draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL)) })
-        SettingChip("Sedang", draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM)) })
-        SettingChip("Besar", draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE)) })
+        val custom = draft.scale > 0f
+        SettingChip("Kecil", !custom && draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL, scale = 0f)) })
+        SettingChip("Sedang", !custom && draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM, scale = 0f)) })
+        SettingChip("Besar", !custom && draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE, scale = 0f)) })
     }
 
     if (draft.type != StreamerLogic.TYPE_IMAGE) {
         Spacer(modifier = Modifier.height(4.dp))
         FieldLabel("Warna teks")
-        ColorRow(selected = draft.color, onPick = { onChange(draft.copy(color = it)) })
+        StreamerColorRow(selected = draft.color, onPick = { onChange(draft.copy(color = it)) })
         MenuGroup {
             MenuToggleRow(
                 title = "Latar belakang",
@@ -449,25 +454,32 @@ private fun ChipRow(content: @Composable () -> Unit) {
     }
 }
 
-/** Pilihan warna tulisan: bulatan berwarna tanpa teks, jadi tidak perlu terjemahan. */
+/**
+ * Pilihan warna tulisan: bulatan berwarna tanpa teks, jadi tidak perlu terjemahan. Dua baris, empat warna
+ * tiap baris, supaya muat di panel yang sempit dan semua warna terlihat tanpa menggulir.
+ */
 @Composable
-private fun ColorRow(selected: String, onPick: (String) -> Unit) {
+internal fun StreamerColorRow(selected: String, onPick: (String) -> Unit, swatch: Dp = 34.dp) {
     val current = StreamerLogic.normalizeColor(selected)
-    ChipRow {
-        for (c in StreamerLogic.COLORS) {
-            val on = current == c
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .clip(CircleShape)
-                    .background(Color(StreamerLogic.textArgb(c)))
-                    .border(
-                        if (on) 3.dp else 1.dp,
-                        if (on) AmberUi.Accent else AmberUi.BorderStrong,
-                        CircleShape
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        for (rowColors in StreamerLogic.COLORS.chunked(4)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                for (c in rowColors) {
+                    val on = current == c
+                    Box(
+                        modifier = Modifier
+                            .size(swatch)
+                            .clip(CircleShape)
+                            .background(Color(StreamerLogic.textArgb(c)))
+                            .border(
+                                if (on) 3.dp else 1.dp,
+                                if (on) AmberUi.Accent else AmberUi.BorderStrong,
+                                CircleShape
+                            )
+                            .amberTap { onPick(c) }
                     )
-                    .amberTap { onPick(c) }
-            )
+                }
+            }
         }
     }
 }

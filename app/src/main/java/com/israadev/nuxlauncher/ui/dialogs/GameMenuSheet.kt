@@ -110,8 +110,7 @@ fun GameMenuSheet(
     onToggleRecord: () -> Unit = {},
     recordWithControls: Boolean = false,
     onRecordWithControlsChange: (Boolean) -> Unit = {},
-    leftPanel: (@Composable BoxScope.() -> Unit)? = null,
-    dismissOnOutsideTap: Boolean = true
+    leftPanel: (@Composable BoxScope.() -> Unit)? = null
 ) {
     // Selama menu terbuka rekaman dijeda: menunya (dan geseran masuk/keluarnya) tidak perlu ikut
     // terekam. Dilepas sedikit terlambat supaya animasi menutup tidak masuk video.
@@ -162,7 +161,6 @@ fun GameMenuSheet(
         }
 
         val dismiss by rememberUpdatedState(onDismissRequest)
-        val outsideDismiss by rememberUpdatedState(dismissOnOutsideTap)
         val panelShape = RoundedCornerShape(topStart = 28.dp, bottomStart = 28.dp)
         // Panel kiri (mis. pengaturan overlay streamer) tampil bersama panel kanan; panel kanan bisa
         // disembunyikan supaya panel kiri dan game lebih lega. Keadaan ini hilang saat menu ditutup.
@@ -174,15 +172,15 @@ fun GameMenuSheet(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) { detectTapGestures { if (outsideDismiss) dismiss() } },
+                .pointerInput(Unit) { detectTapGestures { dismiss() } },
             contentAlignment = Alignment.CenterEnd
         ) {
             if (showRight) Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    // Bersama panel kiri, lebarnya dibatasi sebagian layar supaya keduanya tidak bertumpuk di layar sempit.
-                    .fillMaxWidth(if (hasLeft) 0.54f else 1f)
-                    .widthIn(max = if (hasLeft) 300.dp else 340.dp)
+                    // Bersama panel kiri, lebarnya dibatasi setengah layar supaya sisa layar tetap terlihat.
+                    .fillMaxWidth(if (hasLeft) 0.50f else 1f)
+                    .widthIn(max = if (hasLeft) 280.dp else 340.dp)
                     .clip(panelShape)
                     .background(AmberUi.MenuCard)
                     .border(1.dp, AmberUi.Border, panelShape)

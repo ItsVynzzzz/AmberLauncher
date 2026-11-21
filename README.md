@@ -68,7 +68,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 **Lainnya**
 - **Akun** Microsoft, Ely.by, dan offline.
 - **Rekam layar bawaan**: pilih *Game saja* atau *Dengan tombol*. Memakai encoder perangkat keras (bawaannya 720p/30 fps), hasilnya ada di Galeri (Movies/AmberLauncher). Suara game belum ikut terekam.
-- **Mode streamer**: overlay di atas game berisi teks, gambar, link dengan kode QR, dan timer. Dinyalakan di **Pengaturan > Game > Mode streamer**; saat bermain, gagang kecil di tepi kiri layar membuka panel untuk menampilkan atau menyembunyikannya, dan tombol pengaturan di dalam game membuka sidebar kiri untuk menambah dan mengubah overlay tanpa keluar dari game.
+- **Mode streamer**: overlay di atas game berisi teks, gambar, link dengan kode QR, dan timer. Dinyalakan di **Pengaturan > Game > Mode streamer**; saat bermain, gagang kecil di tepi kiri layar membuka panel untuk menampilkan atau menyembunyikannya, dan tombol pengaturan di dalam game membuka sidebar kiri yang ringkas dengan tombol **Atur di layar**: geser overlay ke mana saja, cubit untuk mengubah ukuran, dan atur warna, opasitas, serta latar langsung di atas game.
 - **Laporan crash** dengan opsi unggah log ke mclo.gs.
 - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
 - **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, dan Filipino.

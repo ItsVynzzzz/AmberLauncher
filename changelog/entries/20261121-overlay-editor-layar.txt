@@ -1,0 +1,32 @@
+[id]
++ Panel overlay di sisi kiri menu game kini ringkas dan sempit, jadi layar game tidak tertutup. Isinya daftar overlay (ketuk untuk tampil atau sembunyi) dan tombol Atur di layar.
++ Overlay streamer kini diatur langsung di layar, seperti editor kontrol: geser ke mana saja, cubit untuk mengubah ukuran, atau pakai penggeser. Tersedia juga warna, opasitas, latar, dan hapus. Panel pengaturannya kecil dan menempel di sisi yang berlawanan dengan overlay yang dipilih.
++ Pilihan warna tulisan bertambah jadi delapan.
+[en]
++ The overlay panel on the left side of the in-game menu is now compact and narrow, so the game screen stays visible. It holds a list of overlays (tap to show or hide) and an Arrange on screen button.
++ Streamer overlays are now arranged right on the screen, like the controls editor: drag them anywhere, pinch to resize, or use the slider. Color, opacity, background, and delete are there too. The settings panel is small and docks on the opposite side from the selected overlay.
++ There are now eight text colors to choose from.
+[es]
++ El panel de overlays en el lado izquierdo del menú del juego ahora es compacto y estrecho, así que la pantalla del juego sigue visible. Contiene una lista de overlays (toca para mostrar u ocultar) y un botón Organizar en pantalla.
++ Los overlays de streamer ahora se organizan directamente en la pantalla, como el editor de controles: arrástralos a cualquier lugar, pellizca para cambiar el tamaño o usa el control deslizante. También hay color, opacidad, fondo y eliminar. El panel de ajustes es pequeño y se coloca en el lado opuesto al overlay seleccionado.
++ Ahora hay ocho colores de texto para elegir.
+[fil]
++ Ang panel ng overlay sa kaliwang bahagi ng menu ng laro ay compact na at makitid, kaya nananatiling nakikita ang screen ng laro. May listahan ito ng mga overlay (i-tap para ipakita o itago) at button na Ayusin sa screen.
++ Ang mga streamer overlay ay inaayos na ngayon mismo sa screen, tulad ng controls editor: i-drag kahit saan, i-pinch para palitan ang laki, o gamitin ang slider. Narito rin ang kulay, opacity, background, at tanggalin. Maliit ang settings panel at dumidikit sa kabilang panig ng napiling overlay.
++ Walo na ang mapagpipiliang kulay ng teksto.
+[pt]
++ O painel de overlays no lado esquerdo do menu do jogo agora é compacto e estreito, então a tela do jogo continua visível. Ele traz uma lista de overlays (toque para mostrar ou ocultar) e um botão Organizar na tela.
++ Os overlays de streamer agora são organizados direto na tela, como o editor de controles: arraste para qualquer lugar, use o gesto de pinça para redimensionar ou use o controle deslizante. Também há cor, opacidade, fundo e excluir. O painel de ajustes é pequeno e fica no lado oposto ao overlay selecionado.
++ Agora há oito cores de texto para escolher.
+[th]
++ แผงโอเวอร์เลย์ทางซ้ายของเมนูในเกมตอนนี้กะทัดรัดและแคบลง จึงมองเห็นหน้าจอเกมได้ ภายในมีรายการโอเวอร์เลย์ (แตะเพื่อแสดงหรือซ่อน) และปุ่มจัดวางบนหน้าจอ
++ ตอนนี้จัดวางโอเวอร์เลย์สตรีมเมอร์บนหน้าจอได้โดยตรง เหมือนตัวแก้ไขปุ่มควบคุม: ลากไปที่ไหนก็ได้ บีบนิ้วเพื่อเปลี่ยนขนาด หรือใช้แถบเลื่อน มีสี ความทึบ พื้นหลัง และลบให้ด้วย แผงตั้งค่ามีขนาดเล็กและอยู่ฝั่งตรงข้ามกับโอเวอร์เลย์ที่เลือก
++ เลือกสีข้อความได้ 8 สี
+[vi]
++ Bảng overlay ở bên trái menu trong game nay gọn và hẹp hơn, nên màn hình game vẫn nhìn thấy được. Bảng gồm danh sách overlay (chạm để hiện hoặc ẩn) và nút Sắp xếp trên màn hình.
++ Overlay streamer nay được sắp xếp ngay trên màn hình, giống trình chỉnh sửa điều khiển: kéo đi bất kỳ đâu, chụm hai ngón để đổi kích thước hoặc dùng thanh trượt. Cũng có màu, độ mờ đục, nền và xóa. Bảng cài đặt nhỏ và nằm ở phía đối diện với overlay đang chọn.
++ Nay có tám màu chữ để chọn.
+[zh]
++ 游戏内菜单左侧的叠加层面板现在更紧凑、更窄，游戏画面不会被遮住。面板中有叠加层列表（点按即可显示或隐藏）和“在屏幕上调整”按钮。
++ 主播叠加层现在可以直接在屏幕上调整，就像控制布局编辑器一样：可拖到任意位置，双指捏合调整大小，或使用滑块。还提供颜色、不透明度、背景和删除。设置面板很小，会停靠在与所选叠加层相反的一侧。
++ 文字颜色增加到八种。

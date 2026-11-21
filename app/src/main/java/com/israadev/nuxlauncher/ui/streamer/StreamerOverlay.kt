@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -72,7 +73,6 @@ import com.israadev.nuxlauncher.core.streamer.StreamerLogic
 import com.israadev.nuxlauncher.ui.components.AmberIcon
 import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.dialogs.MenuDivider
-import com.israadev.nuxlauncher.ui.dialogs.MenuGroup
 import com.israadev.nuxlauncher.ui.dialogs.MenuSwitch
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -147,6 +147,10 @@ internal fun posLabel(pos: String): String = when (pos) {
     else -> "Atas"
 }
 
+/** Keterangan letak di daftar: titik bawaan, atau "Posisi bebas" untuk item yang digeser di editor. */
+internal fun placeLabel(item: StreamerItem): String =
+    if (StreamerLogic.isFree(item)) "Posisi bebas" else posLabel(item.pos)
+
 internal fun typeLabel(type: String): String = when (type) {
     StreamerLogic.TYPE_IMAGE -> "Gambar"
     StreamerLogic.TYPE_LINK -> "Link"
@@ -220,8 +224,16 @@ fun StreamerLayer(
                 .windowInsetsPadding(WindowInsets.displayCutout)
                 .padding(8.dp)
         ) {
+            // Item berposisi bebas (hasil editor di layar): masing-masing ditaruh sendiri.
+            for (item in list) {
+                if (!StreamerLogic.isFree(item) || !StreamerRuntime.isShown(item)) continue
+                key(item.id) {
+                    Box(modifier = Modifier.freePlaced(item.x, item.y)) { StreamerItemView(item, maxWidthDp) }
+                }
+            }
+            // Item lama yang masih memakai titik bawaan: bertumpuk di titiknya seperti sebelumnya.
             for (pos in StreamerLogic.POSITIONS) {
-                val group = list.filter { it.pos == pos && StreamerRuntime.isShown(it) }
+                val group = list.filter { !StreamerLogic.isFree(it) && it.pos == pos && StreamerRuntime.isShown(it) }
                 if (group.isEmpty()) continue
                 Column(
                     modifier = Modifier.align(alignmentOf(pos)),
@@ -268,14 +280,38 @@ private fun itemTextStyle(item: StreamerItem): TextStyle {
     }
 }
 
+/**
+ * Menaruh item di posisi bebas: pecahan [fx], [fy] (0..1) dari ruang gerak di dalam wadah, jadi tidak
+ * pernah keluar wadah dan sama di semua ukuran layar. Wadah dipakai bersama oleh game dan editor.
+ */
+internal fun Modifier.freePlaced(fx: Float, fy: Float): Modifier = layout { measurable, constraints ->
+    val p = measurable.measure(constraints.copy(minWidth = 0, minHeight = 0))
+    layout(constraints.maxWidth, constraints.maxHeight) {
+        p.place(
+            StreamerLogic.placeAt(fx, constraints.maxWidth - p.width),
+            StreamerLogic.placeAt(fy, constraints.maxHeight - p.height)
+        )
+    }
+}
+
+/** Isi satu item, dengan kepekatannya. Lapisan tambahan hanya dibuat bila item sengaja dibuat transparan. */
 @Composable
-private fun StreamerItemView(item: StreamerItem, maxWidthDp: Float) {
+internal fun StreamerItemView(item: StreamerItem, maxWidthDp: Float) {
+    if (item.alpha < 0.999f) {
+        Box(modifier = Modifier.graphicsLayer(alpha = item.alpha)) { ItemBody(item, maxWidthDp) }
+    } else {
+        ItemBody(item, maxWidthDp)
+    }
+}
+
+@Composable
+private fun ItemBody(item: StreamerItem, maxWidthDp: Float) {
     when (item.type) {
         StreamerLogic.TYPE_TEXT -> Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
             UserText(
                 text = item.text,
                 color = Color(StreamerLogic.textArgb(item.color)),
-                fontSize = StreamerLogic.textSp(item.size).sp,
+                fontSize = StreamerLogic.textSpOf(item).sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
@@ -288,7 +324,7 @@ private fun StreamerItemView(item: StreamerItem, maxWidthDp: Float) {
         StreamerLogic.TYPE_TIMER -> Chip(item) {
             TimerText(
                 timer = StreamerRuntime.timer(item.id),
-                fontSizeSp = StreamerLogic.textSp(item.size),
+                fontSizeSp = StreamerLogic.textSpOf(item),
                 color = Color(StreamerLogic.textArgb(item.color)),
                 style = itemTextStyle(item)
             )
@@ -323,6 +359,12 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
     val qr = remember(item.text, item.qr) {
         if (item.qr) qrBitmap(StreamerLogic.qrPayload(item.text)) else null
     }
+    // Skala besar tidak boleh membuat kode QR lebih besar dari layar.
+    val qrDp = minOf(
+        StreamerLogic.qrSizeDpOf(item).toFloat(),
+        maxWidthDp - 20f,
+        LocalConfiguration.current.screenHeightDp * 0.6f
+    ).coerceAtLeast(40f)
     Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
         if (qr != null) {
             Image(
@@ -330,7 +372,7 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
                 contentDescription = null,
                 filterQuality = FilterQuality.None,
                 modifier = Modifier
-                    .size(StreamerLogic.qrSizeDp(item.size).dp)
+                    .size(qrDp.dp)
                     .clip(RoundedCornerShape(6.dp))
             )
             Spacer(modifier = Modifier.height(5.dp))
@@ -338,7 +380,7 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
         UserText(
             text = StreamerLogic.linkDisplay(item.text),
             color = Color(StreamerLogic.textArgb(item.color)),
-            fontSize = StreamerLogic.linkSp(item.size).sp,
+            fontSize = StreamerLogic.linkSpOf(item).sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
             maxLines = 2,
@@ -353,7 +395,10 @@ private fun ImageItem(item: StreamerItem, maxWidthDp: Float) {
     val bmp = rememberStreamerBitmap(item.image) ?: return
     val (w, h) = StreamerLogic.fitSize(
         ratio = bmp.width.toFloat() / bmp.height.toFloat(),
-        maxH = StreamerLogic.imageHeightDp(item.size).toFloat(),
+        maxH = minOf(
+            StreamerLogic.imageHeightDpOf(item).toFloat(),
+            LocalConfiguration.current.screenHeightDp * 0.7f
+        ),
         maxW = maxWidthDp
     )
     Image(
@@ -433,7 +478,9 @@ private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifi
     Column(
         modifier = modifier
             .fillMaxHeight()
-            .width(290.dp)
+            // Sempit supaya layar game tetap terlihat.
+            .fillMaxWidth(PANEL_WIDTH_FRACTION)
+            .widthIn(max = PANEL_MAX_WIDTH_DP.dp)
             .clip(shape)
             .background(AmberUi.MenuCard)
             .border(1.dp, AmberUi.Border, shape)
@@ -441,70 +488,92 @@ private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifi
             .windowInsetsPadding(
                 WindowInsets.displayCutout.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
             )
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .padding(horizontal = 12.dp, vertical = 12.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Mode streamer",
-                    color = AmberUi.Text,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "Ketuk untuk menampilkan atau menyembunyikan.",
-                    color = AmberUi.TextDim,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp
-                )
-            }
-            Spacer(modifier = Modifier.width(10.dp))
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .clip(CircleShape)
-                    .background(AmberUi.SurfaceRaised)
-                    .amberTap(onClose),
-                contentAlignment = Alignment.Center
-            ) {
-                AmberIcon("close", 13.dp, AmberUi.Text)
-            }
-        }
-        Spacer(modifier = Modifier.height(12.dp))
+        PanelHeader(onClose = onClose)
+        Spacer(modifier = Modifier.height(10.dp))
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            if (items.isEmpty()) {
-                Text(
-                    text = "Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.",
-                    color = AmberUi.TextDim,
-                    fontSize = 12.sp,
-                    lineHeight = 17.sp,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-            } else {
-                MenuGroup {
-                    items.forEachIndexed { index, item ->
-                        if (index > 0) MenuDivider()
-                        key(item.id) { PanelRow(item) }
-                    }
-                }
+            PanelList(items)
+        }
+    }
+}
+
+/** Lebar panel samping overlay: sebagian layar, paling lebar [PANEL_MAX_WIDTH_DP]. Sempit, supaya layar game tetap terlihat. */
+internal const val PANEL_WIDTH_FRACTION = 0.28f
+internal const val PANEL_MAX_WIDTH_DP = 190
+
+/** Kepala panel samping: judul, petunjuk satu baris, dan tombol tutup. */
+@Composable
+internal fun PanelHeader(onClose: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "Mode streamer",
+                color = AmberUi.Text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Ketuk untuk menampilkan atau menyembunyikan.",
+                color = AmberUi.TextDim,
+                fontSize = 10.5.sp,
+                lineHeight = 14.sp
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Box(
+            modifier = Modifier
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(AmberUi.SurfaceRaised)
+                .amberTap(onClose),
+            contentAlignment = Alignment.Center
+        ) {
+            AmberIcon("close", 12.dp, AmberUi.Text)
+        }
+    }
+}
+
+/** Daftar item (tampil/sembunyi), atau satu baris petunjuk bila belum ada. */
+@Composable
+internal fun PanelList(items: List<StreamerItem>) {
+    if (items.isEmpty()) {
+        Text(
+            text = "Belum ada overlay.",
+            color = AmberUi.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 16.sp,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+    } else {
+        val shape = RoundedCornerShape(16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape)
+                .background(AmberUi.SurfaceRaised)
+                .padding(horizontal = 10.dp)
+        ) {
+            items.forEachIndexed { index, item ->
+                if (index > 0) MenuDivider()
+                key(item.id) { PanelRow(item) }
             }
         }
     }
 }
 
-/**
- * Satu baris item di panel: ketuk untuk menampilkan atau menyembunyikan. Bila [onEdit] diberikan
- * (panel di menu pengaturan game), ada tombol kecil untuk mengubah item itu.
- */
+/** Satu baris item di panel: ketuk untuk menampilkan atau menyembunyikan. */
 @Composable
-internal fun PanelRow(item: StreamerItem, onEdit: (() -> Unit)? = null) {
+private fun PanelRow(item: StreamerItem) {
     val on = StreamerRuntime.isShown(item)
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -512,35 +581,24 @@ internal fun PanelRow(item: StreamerItem, onEdit: (() -> Unit)? = null) {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .amberTap { StreamerRuntime.toggle(item) }
-                .padding(vertical = 10.dp),
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (item.type == StreamerLogic.TYPE_IMAGE) {
                 PanelThumb(item.image)
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(8.dp))
             }
             Column(modifier = Modifier.weight(1f)) {
-                ItemTitle(item, 13)
+                ItemTitle(item, 12)
                 Text(
-                    text = posLabel(item.pos),
+                    text = placeLabel(item),
                     color = AmberUi.TextDim,
-                    fontSize = 11.sp
+                    fontSize = 10.5.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            Spacer(modifier = Modifier.width(10.dp))
-            if (onEdit != null) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(AmberUi.SurfaceRaised)
-                        .amberTap(onEdit),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AmberIcon("sliders", 14.dp, AmberUi.Text)
-                }
-                Spacer(modifier = Modifier.width(10.dp))
-            }
+            Spacer(modifier = Modifier.width(8.dp))
             MenuSwitch(on)
         }
         if (item.type == StreamerLogic.TYPE_TIMER) TimerControls(StreamerRuntime.timer(item.id))
@@ -600,30 +658,36 @@ private fun PanelThumb(name: String) {
 
 @Composable
 private fun TimerControls(timer: StreamerTimer) {
-    Row(
+    // Angka di atas, tombol di bawahnya berdampingan: muat di panel yang sempit.
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Box(modifier = Modifier.weight(1f)) {
-            TimerText(timer = timer, fontSizeSp = 18, color = AmberUi.Text)
+        TimerText(timer = timer, fontSizeSp = 18, color = AmberUi.Text)
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            PillButton(
+                label = if (timer.running) "Jeda" else "Mulai",
+                primary = !timer.running,
+                onClick = { timer.toggle() },
+                modifier = Modifier.weight(1f)
+            )
+            PillButton(
+                label = "Reset",
+                primary = false,
+                onClick = { timer.reset() },
+                modifier = Modifier.weight(1f)
+            )
         }
-        PillButton(
-            label = if (timer.running) "Jeda" else "Mulai",
-            primary = !timer.running,
-            onClick = { timer.toggle() }
-        )
-        PillButton(label = "Reset", primary = false, onClick = { timer.reset() })
     }
 }
 
 @Composable
-private fun PillButton(label: String, primary: Boolean, onClick: () -> Unit) {
+private fun PillButton(label: String, primary: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(16.dp)
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(32.dp)
             .clip(shape)
             .then(
@@ -632,7 +696,7 @@ private fun PillButton(label: String, primary: Boolean, onClick: () -> Unit) {
             )
             .border(1.dp, if (primary) AmberUi.AccentEdge else AmberUi.BorderStrong, shape)
             .amberTap(onClick)
-            .padding(horizontal = 14.dp),
+            .padding(horizontal = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(

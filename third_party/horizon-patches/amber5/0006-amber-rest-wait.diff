@@ -1,0 +1,204 @@
+diff --git a/crates/horizon-client/src/game.rs b/crates/horizon-client/src/game.rs
+index 458c440..4d58445 100644
+--- a/crates/horizon-client/src/game.rs
++++ b/crates/horizon-client/src/game.rs
+@@ -1895,6 +1895,24 @@ fn falling_block_visible(state: BlockStateId, cell: BlockStateId) -> bool {
+     state != cell
+ }
+ 
++/// AmberLauncher: how many world-resource loader threads are running (`Resources::wait_for_rest` waits for them).
++static REST_LOADERS_RUNNING: std::sync::atomic::AtomicUsize =
++    std::sync::atomic::AtomicUsize::new(0);
++
++/// One count of `REST_LOADERS_RUNNING`, held by the loader thread: it ends when the thread returns, fails or panics.
++struct RestLoaderRunning;
++impl RestLoaderRunning {
++    fn start() -> Self {
++        REST_LOADERS_RUNNING.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
++        Self
++    }
++}
++impl Drop for RestLoaderRunning {
++    fn drop(&mut self) {
++        REST_LOADERS_RUNNING.fetch_sub(1, std::sync::atomic::Ordering::SeqCst);
++    }
++}
++
+ /// The data loaded once at startup and never changed: blocks, items,
+ /// recipes, biomes, mobs, collision and motion. Read-only and `Send + Sync`,
+ /// so the client and an integrated server thread can share one copy.
+@@ -1964,7 +1982,40 @@ impl Resources {
+     fn rest_ready(&self) -> bool {
+         self.rest.get().is_some()
+     }
++    #[track_caller]
+     fn rest(&self) -> &WorldRest {
++        match self.rest.get() {
++            Some(rest) => rest,
++            None => self.wait_for_rest(),
++        }
++    }
++    /// AmberLauncher: a slow phone (few workers) can show the title, and a frame can ask for the world's
++    /// resources, before the background loader has set them. Wait for the loader (as `join_world_rest` does
++    /// on entry) instead of ending the game with a panic. The first wait names the caller in the log, so the
++    /// frame that asks too early can be given its own `rest_ready` guard. A loader that ended without setting
++    /// them (it failed) is still the panic it was.
++    #[cold]
++    #[track_caller]
++    fn wait_for_rest(&self) -> &WorldRest {
++        let caller = std::panic::Location::caller();
++        let on_loader = std::thread::current().name() == Some("world-rest-loader");
++        if !on_loader {
++            let waited = Instant::now();
++            log::warn!(
++                "Amber: world resources asked for at {caller} before the loader finished; waiting for it"
++            );
++            while self.rest.get().is_none()
++                && REST_LOADERS_RUNNING.load(std::sync::atomic::Ordering::SeqCst) > 0
++            {
++                std::thread::sleep(Duration::from_millis(5));
++            }
++            if self.rest.get().is_some() {
++                log::warn!(
++                    "Amber: world resources ready after waiting {} ms at {caller}",
++                    waited.elapsed().as_millis()
++                );
++            }
++        }
+         self.rest
+             .get()
+             .expect("world resources joined before entry")
+@@ -1972,21 +2023,27 @@ impl Resources {
+     fn facts(&self) -> &BlockFacts {
+         &self.core.facts
+     }
++    #[track_caller]
+     fn items(&self) -> &Items {
+         &self.rest().items
+     }
++    #[track_caller]
+     fn kinetics(&self) -> &horizon_client::kinetics::KineticTable {
+         &self.rest().kinetics
+     }
++    #[track_caller]
+     fn create_recipes(&self) -> &kinetic_machines::Recipes {
+         &self.rest().create_recipes
+     }
++    #[track_caller]
+     fn basin_recipes(&self) -> &basins::BasinRecipes {
+         &self.rest().basin_recipes
+     }
++    #[track_caller]
+     fn recipes(&self) -> &Recipes {
+         &self.rest().recipes
+     }
++    #[track_caller]
+     fn transformers(&self) -> &horizon_client::block_transform::Transformers {
+         &self.rest().transformers
+     }
+@@ -1996,36 +2053,47 @@ impl Resources {
+     fn environment(&self) -> &Environment {
+         &self.core.environment
+     }
++    #[track_caller]
+     fn mob_types(&self) -> &HashMap<String, Arc<MobType>> {
+         &self.rest().mob_types
+     }
++    #[track_caller]
+     fn mob_data(&self) -> &horizon_client::mobs::MobData {
+         &self.rest().mob_data
+     }
++    #[track_caller]
+     fn providers(&self) -> &Providers {
+         &self.rest().providers
+     }
++    #[track_caller]
+     fn block_entity_render(&self) -> &BlockEntityRenderer {
+         &self.rest().block_entity_render
+     }
++    #[track_caller]
+     fn animate(&self) -> &horizon_client::animate_tick::AnimateTables {
+         &self.rest().animate
+     }
++    #[track_caller]
+     fn fog(&self) -> &horizon_client::fog::FogTables {
+         &self.rest().fog
+     }
++    #[track_caller]
+     fn music(&self) -> &horizon_client::music::MusicTables {
+         &self.rest().music
+     }
++    #[track_caller]
+     fn ambient(&self) -> &horizon_client::ambience::AmbientTables {
+         &self.rest().ambient
+     }
++    #[track_caller]
+     fn nether_environment(&self) -> &Environment {
+         &self.rest().nether_environment
+     }
++    #[track_caller]
+     fn end_environment(&self) -> &Environment {
+         &self.rest().end_environment
+     }
++    #[track_caller]
+     fn behaviours(&self) -> &Behaviours {
+         &self.rest().behaviours
+     }
+@@ -2038,6 +2106,7 @@ impl Resources {
+     fn threads(&self) -> usize {
+         self.core.threads
+     }
++    #[track_caller]
+     fn player_arm(&self, slim: bool, left: bool) -> &Option<horizon_client::mobs::Part> {
+         let arms = if slim {
+             &self.rest().player_arm_slim
+@@ -2046,12 +2115,15 @@ impl Resources {
+         };
+         &arms[usize::from(left)]
+     }
++    #[track_caller]
+     fn player_type(&self) -> &Option<Arc<horizon_client::mobs::MobType>> {
+         &self.rest().player_type
+     }
++    #[track_caller]
+     fn spin_attack(&self) -> &Option<horizon_client::mobs::Part> {
+         &self.rest().spin_attack
+     }
++    #[track_caller]
+     fn stations(&self) -> &horizon_client::stations::StationData {
+         &self.rest().stations
+     }
+@@ -19780,18 +19852,21 @@ impl Game<'_> {
+ 
+     /// The content tables the world plays with: its data packs' over the
+     /// game's own when it has packs, `Resources.rest`'s own otherwise.
++    #[track_caller]
+     fn items(&self) -> &Items {
+         match &self.world_tables {
+             Some(t) => &t.items,
+             None => self.res.items(),
+         }
+     }
++    #[track_caller]
+     fn recipes(&self) -> &Recipes {
+         match &self.world_tables {
+             Some(t) => &t.recipes,
+             None => self.synced_recipes().unwrap_or_else(|| self.res.recipes()),
+         }
+     }
++    #[track_caller]
+     fn stations(&self) -> &horizon_client::stations::StationData {
+         match &self.world_tables {
+             Some(t) => &t.stations,
+@@ -20404,9 +20479,11 @@ fn load_resources(
+         let vanilla_root = vanilla_root.to_owned();
+         let rest_progress = progress.clone();
+         let progress = progress.clone();
++        let running = RestLoaderRunning::start();
+         let handle = std::thread::Builder::new()
+             .name("world-rest-loader".into())
+             .spawn(move || {
++                let _running = running;
+                 let _step = startup::step("rest");
+                 let rest = load_world_rest(
+                     &root,

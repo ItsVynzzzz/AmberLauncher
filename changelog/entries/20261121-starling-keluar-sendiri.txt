@@ -1,0 +1,16 @@
+[id]
+! Starling tidak lagi keluar sendiri ke layar utama saat game baru dibuka di HP yang lambat. Sebabnya menu sudah tampil sebelum sumber daya dunia selesai dimuat (terutama dengan Batas pekerja chunk = 1); sekarang mesin menunggu pemuatan itu selesai, dan mencatat di log bagian kode yang memintanya terlalu cepat.
+[en]
+! Starling no longer quits by itself back to the home screen when the game has just opened on a slow phone. The menu was shown before the world resources finished loading (especially with Chunk worker limit set to 1); the engine now waits for that loading to finish, and logs which part of the code asked for it too early.
+[es]
+! Starling ya no se cierra solo y vuelve a la pantalla de inicio cuando el juego se acaba de abrir en un móvil lento. El menú se mostraba antes de que terminaran de cargarse los recursos del mundo (sobre todo con el Límite de trabajadores de chunks en 1); ahora el motor espera a que esa carga termine y registra en el log qué parte del código los pidió demasiado pronto.
+[fil]
+! Hindi na kusang lumalabas ang Starling pabalik sa home screen kapag kabubukas pa lang ng laro sa mabagal na telepono. Lumabas ang menu bago pa matapos ang pag-load ng mga resource ng mundo (lalo na kapag 1 ang Limitasyon ng chunk worker); ngayon ay hinihintay na ng makina na matapos ang pag-load, at itinatala sa log kung aling bahagi ng code ang humingi nito nang masyadong maaga.
+[pt]
+! O Starling não sai mais sozinho para a tela inicial quando o jogo acaba de abrir em um celular lento. O menu aparecia antes de os recursos do mundo terminarem de carregar (principalmente com o Limite de trabalhadores de chunks em 1); agora o motor espera esse carregamento terminar e registra no log qual parte do código os pediu cedo demais.
+[th]
+! Starling จะไม่ออกกลับหน้าจอหลักเองอีกเมื่อเพิ่งเปิดเกมในมือถือที่ช้า เดิมเมนูแสดงขึ้นก่อนที่ทรัพยากรของโลกจะโหลดเสร็จ (โดยเฉพาะเมื่อตั้งขีดจำกัดเวิร์กเกอร์ของชังก์เป็น 1) ตอนนี้เอนจินจะรอให้การโหลดนั้นเสร็จ และบันทึกในล็อกว่าโค้ดส่วนไหนขอข้อมูลเร็วเกินไป
+[vi]
+! Starling không còn tự thoát về màn hình chính khi vừa mở game trên điện thoại chậm. Trước đây menu hiện ra trước khi tài nguyên thế giới tải xong (nhất là khi Giới hạn worker chunk đặt là 1); giờ engine sẽ chờ việc tải đó xong và ghi vào log phần mã nào đã hỏi quá sớm.
+[zh]
+! 在较慢的手机上刚打开游戏时，Starling 不再自己退回主屏幕。原因是菜单在世界资源加载完成前就已显示（尤其是在区块工作线程上限设为 1 时）；现在引擎会等待加载完成，并在日志中记录是哪段代码请求得太早。

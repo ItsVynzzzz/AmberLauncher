@@ -116,11 +116,11 @@ fun RustStatusRows() {
     SettingDivider()
     SettingFrame(
         "Starling memakai sebagian pilihan",
-        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini."
+        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game."
     ) {
         SettingRowText(
             title = "Starling memakai sebagian pilihan",
-            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, dan Sederhanakan daun dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini.",
+            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 10.dp)

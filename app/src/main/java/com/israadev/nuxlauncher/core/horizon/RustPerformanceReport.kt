@@ -13,7 +13,8 @@ import com.israadev.nuxlauncher.ui.i18n.Tr
 import java.io.File
 
 /**
- * Laporan performa yang direkam mesin Rust (pengaturan "Rekam performa"). Mesin menulis satu berkas JSON per baris
+ * Laporan performa yang direkam mesin Rust, Horizon maupun Starling (pengaturan "Rekam performa"; di Starling lewat
+ * patch amber5/0004). Mesin menulis satu berkas JSON per baris
  * (`performance/horizon-performance-<waktu>.jsonl`, paling besar 8 MiB, maksimal 3 berkas) di folder data mesin.
  * Berkas itu tidak berisi akun, chat, nama dunia, atau posisi pemain.
  *
@@ -41,8 +42,15 @@ object RustPerformanceReport {
         dir.listFiles { f -> f.isFile && f.length() > 0L && f.name.startsWith(PREFIX) && f.name.endsWith(EXTENSION) }
             ?.maxByOrNull { it.name }
 
-    /** Laporan terbaru milik mesin, atau null bila belum pernah merekam. */
-    fun latest(context: Context): File? = latestIn(File(HorizonEngine.engineHome(context), FOLDER))
+    /**
+     * Laporan terbaru dari kedua mesin (Horizon dan Starling), atau null bila belum pernah merekam. Nama berkas memuat
+     * waktu pembuatan (nanodetik), jadi nama terbesar adalah yang terbaru di antara keduanya.
+     */
+    fun latest(context: Context): File? =
+        listOfNotNull(
+            latestIn(File(HorizonEngine.engineHome(context), FOLDER)),
+            latestIn(File(StarlingEngine.engineHome(context), FOLDER))
+        ).maxByOrNull { it.name }
 
     /** Membuka pilihan aplikasi untuk membagikan laporan terbaru. Aman dipanggil dari ketukan tombol. */
     fun share(context: Context) {

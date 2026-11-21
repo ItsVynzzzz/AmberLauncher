@@ -4,9 +4,12 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
 import android.os.Environment
+import android.os.Looper
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.update.UpdateChecker
@@ -34,6 +37,10 @@ import org.json.JSONObject
  * Masalah yang terjadi di luar game (game belum sempat berjalan) tidak punya log game; untuk itu ada
  * laporan launcher ([saveLauncherReport]) yang berisi ringkasan perangkat, kejadian launcher, dan
  * peringatan sistem.
+ *
+ * Sesi mesin Starling ([ENGINE_STARLING]) disimpan dengan cara yang sama, tetapi isinya disusun dari berkas milik mesin
+ * (logs/latest.log, performance/, horizon-graphics.txt) dan dari riwayat Android tentang kenapa prosesnya berhenti,
+ * karena mesinnya berjalan di proses :starling dan tidak menulis ke latestlog.txt milik launcher.
  *
  * Aman dipanggil dari proses game maupun proses launcher.
  */
@@ -73,6 +80,18 @@ object GameLogArchive {
     private const val KEY_GAME_DIR = "gameDir"
     private const val KEY_MG_DIR = "mgDir"
     private const val KEY_ARCHIVED = "archived"
+    private const val KEY_ENGINE = "engine"
+
+    /** Nilai KEY_ENGINE untuk sesi mesin Starling (kosong untuk sesi game Java). */
+    const val ENGINE_STARLING = "starling"
+
+    private const val MAX_SESSION_JSON_BYTES = 8L * 1024L
+    private const val MAX_PERF_FRAMES_CHARS = 900
+    private val STARLING_OPTION_KEYS = setOf(
+        "renderDistance", "simulationDistance", "maxFps", "graphicsMode", "particles", "biomeBlendRadius",
+        "entityDistanceScaling", "mipmapLevels", "enableVsync", "guiScale", "fov", "renderClouds", "ao",
+        "entityShadows", "fancyGraphics", "cloudRange", "menuBackgroundBlurriness"
+    )
 
     private val metaLock = Any()
 
@@ -113,7 +132,8 @@ object GameLogArchive {
         mcVersion: String,
         loader: String,
         loaderVersion: String?,
-        gameDir: String
+        gameDir: String,
+        engine: String = ""
     ) {
         val props = Properties()
         props.setProperty(KEY_START, startTime.toString())
@@ -122,6 +142,7 @@ object GameLogArchive {
         props.setProperty(KEY_LOADER, loader)
         props.setProperty(KEY_LOADER_VERSION, loaderVersion.orEmpty())
         props.setProperty(KEY_GAME_DIR, gameDir)
+        if (engine.isNotBlank()) props.setProperty(KEY_ENGINE, engine)
         writeMeta(context, props)
     }
 
@@ -142,22 +163,30 @@ object GameLogArchive {
     fun archiveIfNeeded(context: Context): File? {
         val props = readMeta(context) ?: return null
         if (props.getProperty(KEY_ARCHIVED) == "1") return null
+        // Sesi Starling yang masih berjalan belum selesai: laporannya disusun setelah prosesnya berhenti.
+        if (isEngineSession(props) && StarlingEngine.isProcessAlive(context)) return null
         return archiveSession(context)
     }
 
     /** Menyimpan sesi terakhir (menimpa simpanan sebelumnya untuk sesi yang sama). */
     fun archiveSession(context: Context): File? {
         val props = readMeta(context) ?: return null
-        val source = File(context.filesDir, LOG_NAME)
+        val engine = isEngineSession(props)
+        val source = if (engine) File(props.getProperty(KEY_GAME_DIR).orEmpty(), "logs/latest.log") else File(context.filesDir, LOG_NAME)
         var result: File? = null
         try {
-            if (source.exists() && source.length() > 0L) {
-                val start = props.getProperty(KEY_START)?.toLongOrNull() ?: source.lastModified()
+            // Sesi mesin tetap disimpan walau latest.log kosong: sebab proses berhenti dan pengaturannya justru paling
+            // berguna saat mesin gagal sebelum sempat menulis log.
+            if (engine || (source.exists() && source.length() > 0L)) {
+                val start = props.getProperty(KEY_START)?.toLongOrNull()
+                    ?: source.lastModified().takeIf { it > 0L } ?: System.currentTimeMillis()
                 val dir = logsDir(context)
                 if (!dir.exists()) dir.mkdirs()
                 val out = File(dir, ARCHIVE_PREFIX + fileStamp(start) + "_" + safeName(props.getProperty(KEY_INSTANCE)) + ".txt")
                 val tmp = File(dir, out.name + ".tmp")
-                tmp.bufferedWriter(Charsets.UTF_8).use { w -> writeReport(context, w, props, source, start) }
+                tmp.bufferedWriter(Charsets.UTF_8).use { w ->
+                    if (engine) writeStarlingReport(context, w, props, source, start) else writeReport(context, w, props, source, start)
+                }
                 if (out.exists()) out.delete()
                 if (tmp.renameTo(out)) result = out else tmp.delete()
                 prune(dir)
@@ -311,6 +340,7 @@ object GameLogArchive {
         if (events.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, events)
 
         writeEngineSection(context, w)
+        writeStarlingEngineSection(context, w)
 
         w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
         val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
@@ -375,6 +405,243 @@ object GameLogArchive {
         } catch (_: Throwable) {
             w.line("(log mesin Rust tidak bisa dibaca)")
         }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Sesi mesin Starling
+    // ---------------------------------------------------------------------------------------------
+
+    private fun isEngineSession(props: Properties): Boolean = props.getProperty(KEY_ENGINE) == ENGINE_STARLING
+
+    /** Laporan satu sesi Starling: ringkasan, kejadian launcher, sebab proses berhenti, pengaturan, performa, dan log. */
+    private fun writeStarlingReport(context: Context, w: Writer, props: Properties, source: File, start: Long) {
+        val clock = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        val gameDir = File(props.getProperty(KEY_GAME_DIR).orEmpty())
+        val home = StarlingEngine.engineHome(context)
+
+        w.line("===== AmberLauncher: laporan sesi Starling =====")
+        w.line("Disimpan     : " + clock.format(Date()))
+        w.line("Mulai        : " + clock.format(Date(start)))
+        if (source.isFile && source.lastModified() > start) {
+            val secs = (source.lastModified() - start) / 1000L
+            w.line("Log terakhir : " + clock.format(Date(source.lastModified())) + " (sekitar " + (secs / 60L) + " menit " + (secs % 60L) + " detik)")
+        }
+        writeEnvironmentLines(context, w)
+        w.line("Instance     : " + props.getProperty(KEY_INSTANCE).orEmpty())
+        w.line("Minecraft    : " + props.getProperty(KEY_MC).orEmpty() + " | Mesin: Starling (Rust)")
+        try {
+            val r = RustSettingsStore.readNow(context)
+            w.line("Pengaturan Rust Amber: renderer=" + r.renderer + ", skala=" + r.renderScale + "%, mode=" + r.perfMode +
+                ", pekerja=" + r.workerLimit + ", kurangi animasi=" + yesNo(r.gameAnimationsOff) + ", daun=" + yesNo(r.leafCulling) +
+                ", rekam performa=" + yesNo(r.recordPerformance))
+        } catch (_: Throwable) {
+        }
+        try {
+            val compiled = StarlingEngine.compiledNativeMods(context).sorted()
+            w.line("Mod native di pustaka mesin: " + if (compiled.isEmpty()) "(tidak ada)" else compiled.joinToString(", "))
+        } catch (_: Throwable) {
+        }
+
+        w.section("Log launcher (sebelum dan selama sesi ini)")
+        val launcherText = LauncherLog.recentText(context, start - LAUNCHER_LOOKBACK_MS, MAX_LAUNCHER_BYTES)
+        if (launcherText.isBlank()) w.line("(tidak ada kejadian tercatat)") else writeLines(w, launcherText)
+
+        writeStarlingProcess(context, w, start)
+        writeStarlingSessionState(w, home)
+        writeStarlingSettings(w, gameDir)
+        writeStarlingPerformance(w, home, start)
+        writeStarlingDiagnosticLog(w, home)
+
+        // Laporan crash Starling bila ada yang terbit selama sesi ini
+        val reports = File(gameDir, "crash-reports")
+        val newest = reports.listFiles { f -> f.isFile && f.name.startsWith("crash-") && f.name.endsWith(".txt") }
+            ?.maxByOrNull { it.lastModified() }
+        if (newest != null && newest.lastModified() >= start - 10_000L) {
+            w.section("Laporan crash Starling (" + newest.name + ")")
+            writeHead(w, newest, MAX_EXTRA_BYTES)
+        }
+
+        w.section("Log mesin (logs/latest.log)")
+        if (source.isFile && source.length() > 0L) {
+            writeMainLog(w, source)
+        } else {
+            w.line("(logs/latest.log tidak ada atau kosong: mesin belum sempat menulis log)")
+        }
+
+        w.section("Peringatan dan galat sistem (logcat, hanya milik aplikasi ini)")
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            w.line("(dilewati: laporan ini disusun di thread utama; buka Pengaturan > Log game untuk menyimpannya ulang)")
+        } else {
+            val logcat = LauncherLog.logcatWarnings(LOGCAT_LINES)
+            if (logcat.isBlank()) w.line("(tidak tersedia di HP ini atau kosong)") else writeLines(w, logcat.trimEnd('\n'))
+        }
+        w.flush()
+    }
+
+    private fun writeEnvironmentLines(context: Context, w: Writer) {
+        w.line("Launcher     : " + UpdateChecker.currentVersionName(context) + " (build " +
+            UpdateChecker.currentVersionCode(context) + ", " + (if (UpdateChecker.wants32BitApk()) "32-bit" else "64-bit") + ")")
+        w.line("Perangkat    : " + Build.MANUFACTURER + " " + Build.MODEL + ", Android " + Build.VERSION.RELEASE +
+            " (API " + Build.VERSION.SDK_INT + "), " + Build.SUPPORTED_ABIS.joinToString("/") + ", RAM " + totalRamMb(context) + " MB")
+    }
+
+    /**
+     * Bagian Starling pada laporan launcher (di luar sesi): keadaan sesi terakhir, pengaturan, dan log diagnostik.
+     * Tidak ditulis bila mesin belum pernah dijalankan.
+     */
+    private fun writeStarlingEngineSection(context: Context, w: Writer) {
+        try {
+            val home = StarlingEngine.engineHome(context)
+            if (!home.isDirectory) return
+            w.section("Mesin Starling")
+            w.line("Proses mesin berjalan sekarang: " + yesNo(StarlingEngine.isProcessAlive(context)))
+            writeStarlingSessionState(w, home)
+            writeStarlingSettings(w, HorizonContent.gameHome(home))
+            writeStarlingDiagnosticLog(w, home)
+        } catch (_: Throwable) {
+            w.line("(data mesin Starling tidak bisa dibaca)")
+        }
+    }
+
+    /**
+     * Sebab terakhir Android menghentikan proses :starling (Android 11 ke atas). LOW_MEMORY berarti HP kehabisan RAM,
+     * CRASH_NATIVE adalah crash di kode Rust atau driver GPU, EXIT_SELF keluar biasa dari mesin, dan USER_REQUESTED
+     * dihentikan dari pengaturan atau daftar aplikasi.
+     */
+    private fun writeStarlingProcess(context: Context, w: Writer, start: Long) {
+        w.section("Mesin Starling: proses Android")
+        w.line("Proses mesin berjalan sekarang: " + yesNo(StarlingEngine.isProcessAlive(context)))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                val name = context.packageName + StarlingEngine.PROCESS_SUFFIX
+                val exits = manager.getHistoricalProcessExitReasons(context.packageName, 0, 12)
+                    .filter { it.processName == name }
+                    .take(3)
+                if (exits.isEmpty()) {
+                    w.line("(Android belum mencatat proses mesin yang berhenti)")
+                } else {
+                    val clock = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+                    for (e in exits) {
+                        val whose = if (e.timestamp >= start) "sesi ini" else "sebelum sesi ini"
+                        w.line(clock.format(Date(e.timestamp)) + " [" + whose + "] " + exitReasonName(e.reason) +
+                            ", status=" + e.status + ", pss=" + e.pss + " KB, rss=" + e.rss + " KB, " + e.description.orEmpty())
+                    }
+                }
+            } catch (_: Throwable) {
+                w.line("(riwayat proses tidak bisa dibaca)")
+            }
+        } else {
+            w.line("(riwayat penyebab proses berhenti butuh Android 11 ke atas)")
+        }
+    }
+
+    private fun exitReasonName(reason: Int): String = when (reason) {
+        1 -> "EXIT_SELF (mesin keluar sendiri)"
+        2 -> "SIGNALED (dimatikan sinyal)"
+        3 -> "LOW_MEMORY (HP kehabisan RAM)"
+        4 -> "CRASH (Java)"
+        5 -> "CRASH_NATIVE (crash kode native)"
+        6 -> "ANR (tidak merespons)"
+        7 -> "INITIALIZATION_FAILURE"
+        8 -> "PERMISSION_CHANGE"
+        9 -> "EXCESSIVE_RESOURCE_USAGE"
+        10 -> "USER_REQUESTED (dihentikan pengguna)"
+        11 -> "USER_STOPPED"
+        12 -> "DEPENDENCY_DIED"
+        13 -> "OTHER"
+        14 -> "FREEZER"
+        15 -> "PACKAGE_STATE_CHANGE"
+        16 -> "PACKAGE_UPDATED"
+        else -> "UNKNOWN ($reason)"
+    }
+
+    /**
+     * Keadaan sesi yang dicatat mesin sendiri (diagnostics.rs): fase terakhir, `clean_exit`, dan pemakaian memori. Sesi
+     * yang berakhir tanpa `clean_exit` true dimatikan di tengah jalan; `phase` menunjukkan sampai mana ia sempat.
+     */
+    private fun writeStarlingSessionState(w: Writer, home: File) {
+        for ((file, title) in listOf(
+            "current-session.json" to "sesi ini atau terakhir",
+            "previous-session.json" to "sesi sebelumnya"
+        )) {
+            val f = File(home, "performance/$file")
+            if (!f.isFile || f.length() == 0L) continue
+            w.section("Mesin Starling: $file ($title)")
+            writeHead(w, f, MAX_SESSION_JSON_BYTES)
+        }
+    }
+
+    /**
+     * Pengaturan yang menentukan beban mesin: berkas horizon-* di folder game dan beberapa kunci options.txt (jarak
+     * render, FPS, grafik). Pengaturan Amber yang diteruskan ([com.israadev.nuxlauncher.core.horizon.StarlingSettingsSync])
+     * dicatat di amber-applied.json.
+     */
+    private fun writeStarlingSettings(w: Writer, gameDir: File) {
+        w.section("Mesin Starling: pengaturan")
+        for (name in listOf("horizon-graphics.txt", "horizon-extras.txt", "horizon-mods.txt", "amber-applied.json")) {
+            val f = File(gameDir, name)
+            if (!f.isFile || f.length() == 0L) continue
+            w.line("-- $name --")
+            writeHead(w, f, MAX_CONFIG_BYTES)
+        }
+        val options = File(gameDir, "options.txt")
+        if (options.isFile && options.length() < 256L * 1024L) {
+            val kept = options.readLines(Charsets.UTF_8).filter { it.substringBefore(':') in STARLING_OPTION_KEYS }
+            w.line("-- options.txt (hanya kunci grafik dan performa) --")
+            if (kept.isEmpty()) w.line("(tidak ada kunci yang dikenal)") else kept.forEach { w.line(it) }
+        }
+    }
+
+    /**
+     * Rekaman performa terbaru mesin (performance/horizon-performance-*.jsonl, dinyalakan dengan Rekam performa di
+     * Pengaturan > Rust). Hanya ringkasan: jumlah sampel, jumlah kejadian lambat, dan ringkasan frame tiga sampel
+     * terakhir; berkas lengkapnya dibagikan dari tombol "Bagikan laporan performa".
+     */
+    private fun writeStarlingPerformance(w: Writer, home: File, start: Long) {
+        w.section("Mesin Starling: rekaman performa")
+        try {
+            val report = File(home, "performance")
+                .listFiles { f -> f.isFile && f.length() > 0L && f.name.startsWith("horizon-performance-") && f.name.endsWith(".jsonl") }
+                ?.maxByOrNull { it.name }
+            if (report == null) {
+                w.line("Belum ada rekaman. Nyalakan Rekam performa di Pengaturan > Rust, mainkan sebentar, lalu simpan ulang log.")
+                return
+            }
+            w.line(report.name + " (" + sizeText(report.length()) + ", " +
+                (if (report.lastModified() >= start - 5_000L) "dari sesi ini" else "dari sesi sebelumnya") + ")")
+            var samples = 0
+            var slowEvents = 0
+            val lastFrames = ArrayList<String>()
+            report.useLines(Charsets.UTF_8) { lines ->
+                for (line in lines) {
+                    if (!line.contains("\"type\":\"sample\"")) continue
+                    val row = try {
+                        JSONObject(line)
+                    } catch (_: Exception) {
+                        continue
+                    }
+                    samples++
+                    slowEvents += row.optJSONArray("slow_events")?.length() ?: 0
+                    row.optJSONObject("frames")?.let {
+                        lastFrames.add(it.toString().take(MAX_PERF_FRAMES_CHARS))
+                        if (lastFrames.size > 3) lastFrames.removeAt(0)
+                    }
+                }
+            }
+            w.line("Sampel per detik: $samples, kejadian lambat tercatat: $slowEvents")
+            lastFrames.forEach { w.line("frames: $it") }
+        } catch (_: Throwable) {
+            w.line("(rekaman performa tidak bisa dibaca)")
+        }
+    }
+
+    /** Akhir performance/diagnostic.log milik mesin (pengaturan yang dibaca, peringatan, dan kegagalan, sudah disamarkan). */
+    private fun writeStarlingDiagnosticLog(w: Writer, home: File) {
+        val log = File(home, "performance/diagnostic.log")
+        if (!log.isFile || log.length() == 0L) return
+        w.section("Mesin Starling: diagnostic.log (akhir)")
+        writeTail(w, log, MAX_ENGINE_LOG_BYTES)
     }
 
     private fun storageText(context: Context): String {

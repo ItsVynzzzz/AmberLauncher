@@ -8,6 +8,7 @@ import android.os.Build
 import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
+import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -118,6 +119,43 @@ object StarlingEngine {
      */
     fun gameInstalled(context: Context): Boolean =
         File(engineHome(context), "minecraft/starling-files.json").isFile
+
+    /** Akhiran nama proses mesin (AndroidManifest: android:process=":starling"). */
+    const val PROCESS_SUFFIX = ":starling"
+
+    /** True bila proses mesin Starling sedang berjalan (di depan maupun di latar). */
+    fun isProcessAlive(context: Context): Boolean = try {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val name = context.packageName + PROCESS_SUFFIX
+        manager.runningAppProcesses.orEmpty().any { it.processName == name }
+    } catch (_: Exception) {
+        false
+    }
+
+    /**
+     * Mencatat sesi Starling untuk Pengaturan > Log game ([GameLogArchive]): sesi sebelumnya (Java maupun Starling)
+     * disimpan dulu, lalu sesi ini dicatat. Laporannya disusun dari berkas milik mesin (logs/latest.log, performance/,
+     * horizon-graphics.txt) setelah sesi selesai. Dilewati bila mesin masih berjalan: PLAY lagi hanya membawanya ke
+     * depan, sesinya tetap yang sama. Tidak pernah melempar.
+     */
+    private fun beginLogSession(context: Context, instance: Instance) {
+        try {
+            if (isProcessAlive(context)) return
+            GameLogArchive.archiveIfNeeded(context)
+            GameLogArchive.beginSession(
+                context,
+                System.currentTimeMillis(),
+                instance.name,
+                SUPPORTED_MC_VERSION,
+                instance.loader,
+                instance.loaderVersion,
+                HorizonContent.gameHome(engineHome(context)).absolutePath,
+                GameLogArchive.ENGINE_STARLING
+            )
+        } catch (e: Exception) {
+            LauncherLog.w("StarlingEngine", "Sesi log Starling tidak dicatat: ${e.message}", e)
+        }
+    }
 
     /** Daftar mod native yang dikompilasi ke dalam pustaka mesin ini oleh build-nya (ditulis build_apk.assets). */
     private const val COMPILED_NATIVE_ASSET = "native-mods/compiled.txt"
@@ -268,6 +306,7 @@ object StarlingEngine {
             val firstRun = !gameInstalled(context)
             dropForeignGameLibrary(context)
             StarlingSettingsSync.sync(context)
+            beginLogSession(context, instance)
             writeLaunchFiles(context, account)
             if (firstRun) {
                 Toast.makeText(
@@ -320,6 +359,8 @@ object StarlingEngine {
         writeAccountsFile(dir, if (microsoft) null else account.username)
         val session = File(dir, SESSION_FILE)
         val args = StringBuilder("AMBER_EMBEDDED=1\n")
+        // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
+        if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
         if (microsoft) {
             val json = JSONObject()
                 .put("name", account.username)

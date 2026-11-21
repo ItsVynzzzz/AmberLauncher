@@ -1,0 +1,24 @@
+[id]
++ Log Starling kini masuk ke Amber: tiap sesi Starling tersimpan di Pengaturan > Log game, lengkap dengan sebab Android menghentikan mesin (misalnya RAM habis atau crash native), pengaturan grafis yang dipakai, log mesin, dan ringkasan performa. Bisa dibagikan seperti log game lainnya.
++ Rekam performa di Pengaturan > Rust kini juga berlaku untuk Starling, dan Bagikan laporan performa ikut mencari laporan Starling.
+[en]
++ Starling logs now reach Amber: every Starling session is saved in Settings > Game logs, with the reason Android stopped the engine (for example out of memory or a native crash), the graphics settings in use, the engine log and a performance summary. You can share it like any other game log.
++ Record performance in Settings > Rust now applies to Starling too, and Share performance report also looks for Starling reports.
+[es]
++ Los registros de Starling ahora llegan a Amber: cada sesión de Starling se guarda en Ajustes > Registros del juego, con el motivo por el que Android detuvo el motor (por ejemplo, falta de memoria o un fallo nativo), los ajustes gráficos usados, el registro del motor y un resumen de rendimiento. Se puede compartir como cualquier otro registro del juego.
++ Grabar rendimiento en Ajustes > Rust ahora también se aplica a Starling, y Compartir informe de rendimiento también busca informes de Starling.
+[fil]
++ Umaabot na sa Amber ang mga log ng Starling: bawat Starling session ay naka-save sa Mga Setting > Mga log ng game, kasama ang dahilan kung bakit itinigil ng Android ang engine (halimbawa, naubusan ng memorya o native crash), ang mga graphics setting na ginamit, ang log ng engine, at buod ng performance. Maibabahagi ito tulad ng ibang log ng laro.
++ Umiiral na rin sa Starling ang I-record ang performance sa Mga Setting > Rust, at hinahanap na rin ng Ibahagi ang performance report ang mga report ng Starling.
+[pt]
++ Os logs do Starling agora chegam ao Amber: cada sessão do Starling é salva em Configurações > Log do jogo, com o motivo pelo qual o Android encerrou o motor (por exemplo, falta de memória ou falha nativa), as configurações gráficas usadas, o log do motor e um resumo de desempenho. Dá para compartilhar como qualquer outro log do jogo.
++ Gravar desempenho em Configurações > Rust agora também vale para o Starling, e Compartilhar relatório de desempenho também procura relatórios do Starling.
+[th]
++ ล็อกของ Starling ส่งมาถึง Amber แล้ว ทุกเซสชัน Starling จะถูกเก็บไว้ที่การตั้งค่า > ล็อกเกม พร้อมสาเหตุที่ Android หยุดเอนจิน (เช่น หน่วยความจำหมดหรือแครชแบบเนทีฟ) ค่ากราฟิกที่ใช้ ล็อกของเอนจิน และสรุปประสิทธิภาพ แชร์ได้เหมือนล็อกเกมอื่น
++ บันทึกประสิทธิภาพในการตั้งค่า > Rust ใช้กับ Starling ด้วยแล้ว และการแชร์รายงานประสิทธิภาพจะค้นหารายงานของ Starling ด้วย
+[vi]
++ Nhật ký của Starling giờ đã đến Amber: mỗi phiên Starling được lưu trong Cài đặt > Nhật ký game, kèm lý do Android dừng engine (ví dụ hết RAM hoặc crash native), cài đặt đồ họa đang dùng, nhật ký engine và tóm tắt hiệu năng. Có thể chia sẻ như mọi nhật ký game khác.
++ Ghi hiệu năng trong Cài đặt > Rust giờ cũng áp dụng cho Starling, và Chia sẻ báo cáo hiệu năng cũng tìm báo cáo của Starling.
+[zh]
++ Starling 的日志现在会进入 Amber：每次 Starling 会话都保存在“设置 > 游戏日志”中，包含 Android 停止引擎的原因（例如内存不足或原生崩溃）、使用的图形设置、引擎日志和性能摘要，可以像其他游戏日志一样分享。
++ “设置 > Rust”中的记录性能现在也适用于 Starling，分享性能报告也会查找 Starling 的报告。

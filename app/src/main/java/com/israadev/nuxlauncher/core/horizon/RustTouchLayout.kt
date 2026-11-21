@@ -304,7 +304,7 @@ object RustTouchLayout {
     }
 
     /** Kode tombol GLFW ke token keyboard mesin (`key.keyboard.*`); null bila mesin tidak mengenalnya. */
-    private fun keyToken(code: Int): String? {
+    internal fun keyToken(code: Int): String? {
         val name = when (code) {
             in 65..90 -> ('a' + (code - 65)).toString() // A..Z
             in 48..57 -> (code - 48).toString() // 0..9

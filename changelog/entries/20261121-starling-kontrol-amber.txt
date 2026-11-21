@@ -1,0 +1,4 @@
+[id]
+~ Starling kini memakai kontrol dan menu Amber di atas game: tombol, tombol hitam, dan pop-up milik mesin dimatikan (tata letak Bedrock-nya disimpan di mesin). Dapat dimatikan lewat Pengaturan > Rust (Kontrol Amber untuk mesin Rust).
+[en]
+~ Starling now uses Amber's controls and menu over the game: the engine's own buttons, black button and pop-up are off (its Bedrock layout is kept in the engine). Can be turned off in Settings > Rust (Amber controls for the Rust engine).

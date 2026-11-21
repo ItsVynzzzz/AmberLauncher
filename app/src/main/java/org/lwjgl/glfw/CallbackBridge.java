@@ -234,15 +234,38 @@ public class CallbackBridge {
         sGamepadDirectInput = true;
     }
 
+    /**
+     * Penerima input untuk mesin yang tidak memakai pustaka GLFW milik launcher: mesin Rust Starling (proses :starling),
+     * yang kontrol Amber-nya memakai kelas ini apa adanya. Null di proses game Java, jadi semua jalur lama berjalan
+     * seperti biasa. Menyala lewat com.israadev.nuxlauncher.starling.StarlingOverlay.
+     */
+    public interface InputSink {
+        void key(int keycode, boolean isDown);
+
+        void mouseButton(int button, boolean isDown);
+
+        void cursorDelta(float dx, float dy);
+
+        void scroll(double xoffset, double yoffset);
+    }
+
+    public static volatile InputSink sink;
+
     public static void sendCursorPos(float x, float y) {
         mouseX = x;
         mouseY = y;
+        if (sink != null) return; // mesin Starling memakai sentuhan aslinya di menu, bukan posisi kursor dari sini
         nativeSendCursorPos(mouseX, mouseY);
         if (!SdlBridge.getSdlEnabled()) return;
         SDLActivity.onNativeMouse(0, MotionEvent.ACTION_MOVE, x, y, false);
     }
 
     public static void sendCursorDelta(float dx, float dy) {
+        InputSink s = sink;
+        if (s != null) {
+            s.cursorDelta(dx, dy);
+            return;
+        }
         deltaX = dx;
         deltaY = dy;
         mouseX += dx;
@@ -306,6 +329,11 @@ public class CallbackBridge {
     }
 
     public static void sendMouseKeycode(int button, int modifiers, boolean isDown) {
+        InputSink s = sink;
+        if (s != null) {
+            s.mouseButton(button, isDown);
+            return;
+        }
         nativeSendMouseButton(button, isDown ? 1 : 0, modifiers);
         if (!SdlBridge.getSdlEnabled()) return;
         int aKey = -1;
@@ -355,6 +383,13 @@ public class CallbackBridge {
         // Catat Shift/Ctrl/Alt supaya klik mouse dan tombol berikutnya membawa "mods" yang benar
         // (Minecraft baru membaca Shift + klik di inventory dari sini).
         modifiers = sHeldModifiers.onKey(keycode, isDown, modifiers);
+        InputSink s = sink;
+        if (s != null) {
+            if (keycode > LwjglGlfwKeycode.GLFW_KEY_UNKNOWN && keycode <= LwjglGlfwKeycode.GLFW_KEY_LAST) {
+                s.key(keycode, isDown);
+            }
+            return; // teks lewat papan ketik mesin sendiri, bukan karakter dari sini
+        }
         if (keycode > LwjglGlfwKeycode.GLFW_KEY_UNKNOWN && keycode <= LwjglGlfwKeycode.GLFW_KEY_LAST) {
             nativeSendKey(keycode, scancode, isDown ? 1 : 0, modifiers);
         }
@@ -404,6 +439,7 @@ public class CallbackBridge {
     }
 
     public static void sendChar(char keychar, int modifiers) {
+        if (sink != null) return;
         nativeSendCharMods(keychar, modifiers);
         nativeSendChar(keychar);
         if (!SdlBridge.getSdlEnabled()) return;
@@ -419,12 +455,22 @@ public class CallbackBridge {
     }
 
     public static void sendScroll(double xoffset, double yoffset) {
+        InputSink s = sink;
+        if (s != null) {
+            s.scroll(xoffset, yoffset);
+            return;
+        }
         nativeSendScroll(xoffset, yoffset);
         if (!SdlBridge.getSdlEnabled()) return;
         SDLActivity.onNativeMouse(0, MotionEvent.ACTION_SCROLL, (float) xoffset, (float) yoffset, false);
     }
 
     public static void resetInputState() {
+        if (sink != null) {
+            deltaX = 0f;
+            deltaY = 0f;
+            return;
+        }
         nativeResetInputState();
         if (SdlBridge.getSdlEnabled() && sMouseButtonState != 0) {
             SDLActivity.onNativeMouse(0, MotionEvent.ACTION_UP, mouseX, mouseY, false);
@@ -458,10 +504,26 @@ public class CallbackBridge {
     private static native ByteBuffer nativeCreateGamepadAxisBuffer();
 
     static {
-        NativeLibraryLoader.loadPojavLib();
-        sGamepadButtonBuffer = nativeCreateGamepadButtonBuffer();
-        sGamepadAxisBuffer = nativeCreateGamepadAxisBuffer() != null 
-            ? nativeCreateGamepadAxisBuffer().order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer()
-            : null;
+        if (isStarlingProcess()) {
+            // Proses :starling memakai kelas ini hanya untuk kontrol Amber dan tidak memuat pustaka game Java (libpojavexec).
+            sGamepadButtonBuffer = null;
+            sGamepadAxisBuffer = null;
+        } else {
+            NativeLibraryLoader.loadPojavLib();
+            sGamepadButtonBuffer = nativeCreateGamepadButtonBuffer();
+            sGamepadAxisBuffer = nativeCreateGamepadAxisBuffer() != null 
+                ? nativeCreateGamepadAxisBuffer().order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer()
+                : null;
+        }
+    }
+
+    private static boolean isStarlingProcess() {
+        try {
+            if (android.os.Build.VERSION.SDK_INT < 28) return false;
+            String name = android.app.Application.getProcessName();
+            return name != null && name.endsWith(":starling");
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 }

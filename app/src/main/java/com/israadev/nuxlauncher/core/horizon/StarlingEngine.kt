@@ -67,6 +67,8 @@ object StarlingEngine {
     // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber5).
     private const val EXTRA_DISCORD_RPC = "amber_discord_rpc"
     private const val EXTRA_MC_VERSION = "amber_mc_version"
+    private const val EXTRA_AMBER_CONTROLS = "amber_controls"
+    private const val EXTRA_INSTANCE_NAME = "amber_instance"
 
     private const val LIBRARY_FILE = "libstarling_android.so"
 
@@ -328,6 +330,8 @@ object StarlingEngine {
                         BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled
                     )
                     .putExtra(EXTRA_MC_VERSION, SUPPORTED_MC_VERSION)
+                    .putExtra(EXTRA_AMBER_CONTROLS, amberControls())
+                    .putExtra(EXTRA_INSTANCE_NAME, instance.name)
                     // REORDER_TO_FRONT: bila mesin masih berjalan di latar, kembali ke sana, bukan membuka yang kedua.
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT),
                 // Tanpa animasi peralihan: layar mesin muncul seketika begitu siap.
@@ -352,6 +356,9 @@ object StarlingEngine {
      * Semua ditulis ke berkas sementara lalu dipindah, dan hanya bisa dibaca aplikasi ini (mesin menolak berkas sesi
      * yang bisa dibaca pengguna lain).
      */
+    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan nyala). */
+    private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
+
     private fun writeLaunchFiles(context: Context, account: UserAccount) {
         val dir = engineHome(context)
         if (!dir.isDirectory && !dir.mkdirs()) throw IOException("Folder data mesin tidak bisa dibuat")
@@ -359,6 +366,9 @@ object StarlingEngine {
         writeAccountsFile(dir, if (microsoft) null else account.username)
         val session = File(dir, SESSION_FILE)
         val args = StringBuilder("AMBER_EMBEDDED=1\n")
+        // Kontrol Amber di atas game (patch amber5/0005): mesin mematikan tombol, tombol hitam, dan pop-up miliknya.
+        // Dimatikan di Pengaturan Rust: tombol mesin sendiri (tata letak Bedrock) kembali.
+        if (amberControls()) args.append("AMBER_CONTROLS=1\n")
         // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
         if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
         if (microsoft) {

@@ -16,7 +16,11 @@ data class StreamerItem(
     val pos: String = StreamerLogic.POS_TOP,
     val size: String = StreamerLogic.SIZE_MEDIUM,
     /** Tampil di layar sejak game dimulai. Menyalakan atau mematikan lewat sidebar tidak mengubah ini. */
-    val on: Boolean = false
+    val on: Boolean = false,
+    /** Teks, link, dan timer: kotak latar di belakang tulisan. Mati = tulisan polos dengan bayangan keras (tanpa blur). */
+    val bg: Boolean = true,
+    /** Warna tulisan (salah satu dari [StreamerLogic.COLORS]). */
+    val color: String = StreamerLogic.COLOR_WHITE
 )
 
 /**
@@ -43,6 +47,13 @@ object StreamerLogic {
     const val SIZE_LARGE = "large"
     val SIZES = listOf(SIZE_SMALL, SIZE_MEDIUM, SIZE_LARGE)
 
+    const val COLOR_WHITE = "white"
+    const val COLOR_AMBER = "amber"
+    const val COLOR_BLACK = "black"
+    const val COLOR_RED = "red"
+    const val COLOR_BLUE = "blue"
+    val COLORS = listOf(COLOR_WHITE, COLOR_AMBER, COLOR_BLACK, COLOR_RED, COLOR_BLUE)
+
     const val MAX_ITEMS = 8
     const val MAX_TEXT_CHARS = 60
     const val MAX_LINK_CHARS = 190
@@ -56,6 +67,24 @@ object StreamerLogic {
     fun normalizeType(t: String?): String = TYPES.firstOrNull { it == t } ?: TYPE_TEXT
     fun normalizePos(p: String?): String = POSITIONS.firstOrNull { it == p } ?: POS_TOP
     fun normalizeSize(s: String?): String = SIZES.firstOrNull { it == s } ?: SIZE_MEDIUM
+    fun normalizeColor(c: String?): String = COLORS.firstOrNull { it == c } ?: COLOR_WHITE
+
+    /** Warna tulisan (ARGB). */
+    fun textArgb(color: String?): Int = when (normalizeColor(color)) {
+        COLOR_AMBER -> 0xFFFFD60A.toInt()
+        COLOR_BLACK -> 0xFF111111.toInt()
+        COLOR_RED -> 0xFFFF5A4D.toInt()
+        COLOR_BLUE -> 0xFF5AC8FA.toInt()
+        else -> 0xFFFFFFFF.toInt()
+    }
+
+    /** Warna bayangan tulisan saat tanpa latar: gelap untuk tulisan terang, terang untuk tulisan hitam. */
+    fun shadowArgb(color: String?): Int =
+        if (normalizeColor(color) == COLOR_BLACK) 0xCCFFFFFF.toInt() else 0xCC000000.toInt()
+
+    /** Warna kotak latar: kaca gelap, atau kaca terang bila tulisannya hitam supaya tetap terbaca. */
+    fun chipBgArgb(color: String?): Int =
+        if (normalizeColor(color) == COLOR_BLACK) 0xD9F4F3EE.toInt() else 0xB8121217.toInt()
 
     private fun isBidiControl(cp: Int): Boolean =
         cp in 0x202A..0x202E || cp in 0x2066..0x2069 || cp == 0x200E || cp == 0x200F || cp == 0x061C
@@ -164,7 +193,9 @@ object StreamerLogic {
             qr = src.qr,
             pos = normalizePos(src.pos),
             size = normalizeSize(src.size),
-            on = src.on
+            on = src.on,
+            bg = src.bg,
+            color = normalizeColor(src.color)
         )
     }
 
@@ -192,6 +223,9 @@ object StreamerLogic {
         TYPE_TIMER -> true
         else -> false
     }
+
+    /** Boleh disimpan: setelah dibersihkan, item masih punya isi untuk digambar. */
+    fun canSave(item: StreamerItem): Boolean = isDisplayable(sanitizeOne(item))
 
     /** MM:SS, atau H:MM:SS bila sudah lewat satu jam. */
     fun formatElapsed(ms: Long): String {

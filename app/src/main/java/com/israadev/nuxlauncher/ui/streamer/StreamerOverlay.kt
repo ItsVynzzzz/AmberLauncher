@@ -30,6 +30,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text as UserText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,15 +46,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -131,7 +135,6 @@ object StreamerRuntime {
 }
 
 private val ChipShape = RoundedCornerShape(10.dp)
-private val ChipBg = Color(0xB8121217)
 private val ChipEdge = Color(0x33FFFFFF)
 
 /** Nama posisi untuk tampilan (kunci terjemahan). */
@@ -193,13 +196,16 @@ internal fun rememberStreamerBitmap(name: String): ImageBitmap? {
 /**
  * Lapisan overlay streamer. [items] boleh berisi item yang belum layak tampil; yang kosong disaring di sini.
  * [ghostHandle] menyembunyikan gagang (tetap bisa disentuh), dipakai saat merekam "Game saja".
+ * [chromeVisible] = false menyembunyikan gagang dan panel cepat (mis. saat menu pengaturan game terbuka,
+ * karena menu itu sudah membawa panel overlay sendiri); item overlay tetap tampil.
  */
 @Composable
 fun StreamerLayer(
     items: List<StreamerItem>,
     panelOpen: Boolean,
     onPanelChange: (Boolean) -> Unit,
-    ghostHandle: Boolean
+    ghostHandle: Boolean,
+    chromeVisible: Boolean = true
 ) {
     val list = remember(items) {
         StreamerLogic.sanitize(items).filter { StreamerLogic.isDisplayable(it) }
@@ -229,57 +235,84 @@ fun StreamerLayer(
             }
         }
 
-        if (panelOpen) {
-            StreamerPanel(
-                items = list,
-                onClose = { onPanelChange(false) },
-                modifier = Modifier.align(Alignment.CenterStart)
-            )
-        } else {
-            StreamerHandle(
-                ghost = ghostHandle,
-                onOpen = { onPanelChange(true) },
-                modifier = Modifier.align(Alignment.CenterStart)
-            )
+        // Tanpa gagang dan panel saat menu pengaturan game terbuka: menu itu mengurus overlay sendiri.
+        if (chromeVisible) {
+            if (panelOpen) {
+                StreamerPanel(
+                    items = list,
+                    onClose = { onPanelChange(false) },
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+            } else {
+                StreamerHandle(
+                    ghost = ghostHandle,
+                    onOpen = { onPanelChange(true) },
+                    modifier = Modifier.align(Alignment.CenterStart)
+                )
+            }
         }
+    }
+}
+
+/**
+ * Gaya tulisan item. Tanpa latar, tulisan diberi bayangan keras satu lapis (tanpa blur) supaya tetap
+ * terbaca di atas adegan game yang terang; dengan latar, kotak kacanya yang menjaga keterbacaan.
+ */
+@Composable
+private fun itemTextStyle(item: StreamerItem): TextStyle {
+    val base = LocalTextStyle.current
+    return if (item.bg) {
+        base
+    } else {
+        base.copy(shadow = Shadow(Color(StreamerLogic.shadowArgb(item.color)), Offset(1.5f, 1.5f), 0f))
     }
 }
 
 @Composable
 private fun StreamerItemView(item: StreamerItem, maxWidthDp: Float) {
     when (item.type) {
-        StreamerLogic.TYPE_TEXT -> Chip(Modifier.widthIn(max = maxWidthDp.dp)) {
+        StreamerLogic.TYPE_TEXT -> Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
             UserText(
                 text = item.text,
-                color = Color.White,
+                color = Color(StreamerLogic.textArgb(item.color)),
                 fontSize = StreamerLogic.textSp(item.size).sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                style = itemTextStyle(item)
             )
         }
         StreamerLogic.TYPE_LINK -> LinkChip(item, maxWidthDp)
         StreamerLogic.TYPE_IMAGE -> ImageItem(item, maxWidthDp)
-        StreamerLogic.TYPE_TIMER -> Chip {
+        StreamerLogic.TYPE_TIMER -> Chip(item) {
             TimerText(
                 timer = StreamerRuntime.timer(item.id),
                 fontSizeSp = StreamerLogic.textSp(item.size),
-                color = Color.White
+                color = Color(StreamerLogic.textArgb(item.color)),
+                style = itemTextStyle(item)
             )
         }
     }
 }
 
-/** Kotak kaca gelap dengan tepi putih tipis tempat teks, link, dan timer digambar. */
+/**
+ * Tempat teks, link, dan timer digambar. Dengan latar: kotak kaca dengan tepi putih tipis (gelap, atau
+ * terang bila tulisannya hitam). Tanpa latar: hanya tulisannya, tanpa lapisan gambar tambahan.
+ */
 @Composable
-private fun Chip(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Column(
-        modifier = modifier
+private fun Chip(item: StreamerItem, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val framed = if (item.bg) {
+        modifier
             .clip(ChipShape)
-            .background(ChipBg)
+            .background(Color(StreamerLogic.chipBgArgb(item.color)))
             .border(1.dp, ChipEdge, ChipShape)
-            .padding(horizontal = 10.dp, vertical = 6.dp),
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+    } else {
+        modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+    }
+    Column(
+        modifier = framed,
         horizontalAlignment = Alignment.CenterHorizontally,
         content = content
     )
@@ -290,7 +323,7 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
     val qr = remember(item.text, item.qr) {
         if (item.qr) qrBitmap(StreamerLogic.qrPayload(item.text)) else null
     }
-    Chip(Modifier.widthIn(max = maxWidthDp.dp)) {
+    Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
         if (qr != null) {
             Image(
                 bitmap = qr,
@@ -304,12 +337,13 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
         }
         UserText(
             text = StreamerLogic.linkDisplay(item.text),
-            color = Color.White,
+            color = Color(StreamerLogic.textArgb(item.color)),
             fontSize = StreamerLogic.linkSp(item.size).sp,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
             maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            style = itemTextStyle(item)
         )
     }
 }
@@ -337,7 +371,12 @@ private fun ImageItem(item: StreamerItem, maxWidthDp: Float) {
  * kembali setelah disembunyikan, angkanya langsung disegarkan.
  */
 @Composable
-private fun TimerText(timer: StreamerTimer, fontSizeSp: Int, color: Color) {
+private fun TimerText(
+    timer: StreamerTimer,
+    fontSizeSp: Int,
+    color: Color,
+    style: TextStyle = LocalTextStyle.current
+) {
     val running = timer.running
     LaunchedEffect(timer, running) {
         timer.refresh()
@@ -352,7 +391,8 @@ private fun TimerText(timer: StreamerTimer, fontSizeSp: Int, color: Color) {
         fontSize = fontSizeSp.sp,
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold,
-        maxLines = 1
+        maxLines = 1,
+        style = style
     )
 }
 
@@ -459,8 +499,12 @@ private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifi
     }
 }
 
+/**
+ * Satu baris item di panel: ketuk untuk menampilkan atau menyembunyikan. Bila [onEdit] diberikan
+ * (panel di menu pengaturan game), ada tombol kecil untuk mengubah item itu.
+ */
 @Composable
-private fun PanelRow(item: StreamerItem) {
+internal fun PanelRow(item: StreamerItem, onEdit: (() -> Unit)? = null) {
     val on = StreamerRuntime.isShown(item)
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -483,7 +527,20 @@ private fun PanelRow(item: StreamerItem) {
                     fontSize = 11.sp
                 )
             }
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(10.dp))
+            if (onEdit != null) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(AmberUi.SurfaceRaised)
+                        .amberTap(onEdit),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AmberIcon("sliders", 14.dp, AmberUi.Text)
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+            }
             MenuSwitch(on)
         }
         if (item.type == StreamerLogic.TYPE_TIMER) TimerControls(StreamerRuntime.timer(item.id))

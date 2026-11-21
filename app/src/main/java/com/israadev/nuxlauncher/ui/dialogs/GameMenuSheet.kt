@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
@@ -44,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
@@ -106,7 +109,9 @@ fun GameMenuSheet(
     onOpenCustomGui: () -> Unit,
     onToggleRecord: () -> Unit = {},
     recordWithControls: Boolean = false,
-    onRecordWithControlsChange: (Boolean) -> Unit = {}
+    onRecordWithControlsChange: (Boolean) -> Unit = {},
+    leftPanel: (@Composable BoxScope.() -> Unit)? = null,
+    dismissOnOutsideTap: Boolean = true
 ) {
     // Selama menu terbuka rekaman dijeda: menunya (dan geseran masuk/keluarnya) tidak perlu ikut
     // terekam. Dilepas sedikit terlambat supaya animasi menutup tidak masuk video.
@@ -157,20 +162,27 @@ fun GameMenuSheet(
         }
 
         val dismiss by rememberUpdatedState(onDismissRequest)
+        val outsideDismiss by rememberUpdatedState(dismissOnOutsideTap)
         val panelShape = RoundedCornerShape(topStart = 28.dp, bottomStart = 28.dp)
+        // Panel kiri (mis. pengaturan overlay streamer) tampil bersama panel kanan; panel kanan bisa
+        // disembunyikan supaya panel kiri dan game lebih lega. Keadaan ini hilang saat menu ditutup.
+        val hasLeft = leftPanel != null
+        var rightHidden by remember { mutableStateOf(false) }
+        val showRight = !(hasLeft && rightHidden)
 
         // Wadah penuh layar hanya menangkap ketukan di luar panel (menutup menu); tidak menggambar apa pun.
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) { detectTapGestures { dismiss() } },
+                .pointerInput(Unit) { detectTapGestures { if (outsideDismiss) dismiss() } },
             contentAlignment = Alignment.CenterEnd
         ) {
-            Column(
+            if (showRight) Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .widthIn(max = 340.dp)
-                    .fillMaxWidth()
+                    // Bersama panel kiri, lebarnya dibatasi sebagian layar supaya keduanya tidak bertumpuk di layar sempit.
+                    .fillMaxWidth(if (hasLeft) 0.54f else 1f)
+                    .widthIn(max = if (hasLeft) 300.dp else 340.dp)
                     .clip(panelShape)
                     .background(AmberUi.MenuCard)
                     .border(1.dp, AmberUi.Border, panelShape)
@@ -205,6 +217,20 @@ fun GameMenuSheet(
                     }
                     FpsReadout(fps)
                     Spacer(modifier = Modifier.width(10.dp))
+                    if (hasLeft) {
+                        // Sembunyikan panel kanan (panah ke kanan); gagang di tepi kanan memunculkannya lagi.
+                        Box(
+                            modifier = Modifier
+                                .size(34.dp)
+                                .clip(CircleShape)
+                                .background(AmberUi.SurfaceRaised)
+                                .amberTap { rightHidden = true },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AmberIcon("chev_right", 13.dp, AmberUi.Text)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
                     Box(
                         modifier = Modifier
                             .size(34.dp)
@@ -421,6 +447,41 @@ fun GameMenuSheet(
                     }
                 )
             }
+            if (!showRight) RightPanelHandle(onShow = { rightHidden = false })
+            leftPanel?.invoke(this)
+        }
+    }
+}
+
+/**
+ * Gagang kecil di tepi kanan saat panel kanan disembunyikan; ketuk untuk memunculkannya lagi.
+ * Daerah sentuhnya sedikit lebih lebar dari gambarnya supaya mudah kena jari.
+ */
+@Composable
+private fun RightPanelHandle(onShow: () -> Unit) {
+    val currentOnShow by rememberUpdatedState(onShow)
+    val shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
+    Box(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.End))
+            .size(width = 34.dp, height = 96.dp)
+            .pointerInput(Unit) { detectTapGestures { currentOnShow() } },
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Box(
+            modifier = Modifier
+                .size(width = 20.dp, height = 60.dp)
+                .clip(shape)
+                .background(AmberUi.MenuCard)
+                .border(1.dp, AmberUi.Border, shape),
+            contentAlignment = Alignment.Center
+        ) {
+            AmberIcon(
+                "chev_right",
+                12.dp,
+                AmberUi.TextDim,
+                modifier = Modifier.graphicsLayer { rotationZ = 180f }
+            )
         }
     }
 }

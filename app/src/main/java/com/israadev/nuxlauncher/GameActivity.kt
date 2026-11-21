@@ -10,7 +10,9 @@ import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
 import com.israadev.nuxlauncher.ui.dialogs.ExitConfirmDialog
 import com.israadev.nuxlauncher.ui.dialogs.GameConsolePanel
 import com.israadev.nuxlauncher.ui.dialogs.GameMenuSheet
+import com.israadev.nuxlauncher.core.streamer.StreamerLogic
 import com.israadev.nuxlauncher.ui.streamer.StreamerLayer
+import com.israadev.nuxlauncher.ui.streamer.StreamerSidePanel
 import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.screens.CustomGuiEditorScreen
 import androidx.core.view.WindowCompat
@@ -1952,6 +1954,12 @@ fun GameScreen(
     var showExitConfirmDialog by remember { mutableStateOf(false) }
     // Panel mode streamer (sidebar kiri) terbuka. Bukan dialog, tapi menutupi sebagian game selama terbuka.
     var showStreamerPanel by remember { mutableStateOf(false) }
+    // Formulir overlay di panel kiri menu pengaturan sedang terbuka: mengetuk area kosong tidak menutup menu.
+    var streamerEditing by remember { mutableStateOf(false) }
+    // Menu pengaturan membawa panel overlay sendiri, jadi panel cepat di tepi kiri ditutup saat menu dibuka.
+    LaunchedEffect(showInGameSettingsDialog) {
+        if (showInGameSettingsDialog) showStreamerPanel = false
+    }
     // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
     // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
     val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || showStreamerPanel
@@ -2314,7 +2322,8 @@ fun GameScreen(
                 items = launcherSettings.streamerItems,
                 panelOpen = showStreamerPanel,
                 onPanelChange = { showStreamerPanel = it },
-                ghostHandle = ghostControls
+                ghostHandle = ghostControls,
+                chromeVisible = !showInGameSettingsDialog
             )
         }
 
@@ -2331,6 +2340,22 @@ fun GameScreen(
                     showExitConfirmDialog = false
                     onExit()
                 }
+            )
+        }
+
+        // Panel kiri menu pengaturan: atur overlay streamer tanpa keluar dari game. Hanya dibuat saat menu terbuka.
+        val streamerSidePanel: @Composable BoxScope.() -> Unit = {
+            StreamerSidePanel(
+                items = launcherSettings.streamerItems,
+                onItemsChange = { list ->
+                    SettingsManager.updateSettings(
+                        context,
+                        SettingsManager.settings.value.copy(streamerItems = StreamerLogic.sanitize(list))
+                    )
+                },
+                onEditingChange = { streamerEditing = it },
+                onClose = { showInGameSettingsDialog = false },
+                modifier = Modifier.align(Alignment.CenterStart)
             )
         }
 
@@ -2417,7 +2442,9 @@ fun GameScreen(
                     context,
                     launcherSettings.copy(recordWithControls = withControls)
                 )
-            }
+            },
+            leftPanel = if (launcherSettings.streamerMode) streamerSidePanel else null,
+            dismissOnOutsideTap = !streamerEditing
         )
         }
     }

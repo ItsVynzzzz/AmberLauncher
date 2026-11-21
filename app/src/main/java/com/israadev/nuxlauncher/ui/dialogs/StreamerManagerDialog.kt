@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -64,8 +66,6 @@ import kotlinx.coroutines.withContext
 
 private fun keepNames(list: List<StreamerItem?>?): Set<String> =
     StreamerLogic.sanitize(list).mapNotNull { it.image.takeIf { n -> n.isNotEmpty() } }.toSet()
-
-private fun canSave(d: StreamerItem): Boolean = StreamerLogic.isDisplayable(StreamerLogic.sanitizeOne(d))
 
 /**
  * Dialog untuk mengatur overlay streamer: daftar overlay (maksimal [StreamerLogic.MAX_ITEMS]) dan
@@ -275,95 +275,7 @@ private fun EditPane(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            FieldLabel("Jenis")
-            ChipRow {
-                for (t in StreamerLogic.TYPES) {
-                    SettingChip(
-                        text = typeLabel(t),
-                        selected = draft.type == t,
-                        onClick = { if (draft.type != t) onChange(draft.copy(type = t)) }
-                    )
-                }
-            }
-
-            when (draft.type) {
-                StreamerLogic.TYPE_TEXT -> {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    NuxTextField(
-                        value = draft.text,
-                        onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_TEXT_CHARS))) },
-                        placeholder = "Tulis teks overlay"
-                    )
-                }
-                StreamerLogic.TYPE_LINK -> {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    NuxTextField(
-                        value = draft.text,
-                        onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_LINK_CHARS))) },
-                        placeholder = "Contoh: ko-fi.com/namamu"
-                    )
-                    MenuGroup {
-                        MenuToggleRow(
-                            title = "Tampilkan kode QR",
-                            subtitle = "Penonton bisa memindainya langsung dari layar.",
-                            checked = draft.qr,
-                            onChange = { onChange(draft.copy(qr = it)) }
-                        )
-                    }
-                    val payload = StreamerLogic.qrPayload(draft.text)
-                    if (draft.qr && payload.isNotEmpty() && QrCode.encode(payload) == null) {
-                        Text(
-                            text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
-                            color = Amber.DangerSoft,
-                            fontSize = 12.sp,
-                            lineHeight = 17.sp
-                        )
-                    }
-                }
-                StreamerLogic.TYPE_IMAGE -> {
-                    Spacer(modifier = Modifier.height(4.dp))
-                    ImagePicker(draft.image, importing, onPickImage)
-                }
-                else -> {
-                    Text(
-                        text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.",
-                        color = Amber.TextDim,
-                        fontSize = 12.sp,
-                        lineHeight = 17.sp
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            FieldLabel("Posisi")
-            ChipRow {
-                for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
-                    SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
-                }
-            }
-            ChipRow {
-                for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
-                    SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            FieldLabel("Ukuran")
-            ChipRow {
-                SettingChip("Kecil", draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL)) })
-                SettingChip("Sedang", draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM)) })
-                SettingChip("Besar", draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE)) })
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            MenuGroup {
-                MenuToggleRow(
-                    title = "Tampil saat game mulai",
-                    subtitle = "Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.",
-                    checked = draft.on,
-                    onChange = { onChange(draft.copy(on = it)) }
-                )
-            }
+            StreamerEditFields(draft, importing, onChange, onPickImage)
         }
         Spacer(modifier = Modifier.height(18.dp))
         Row(
@@ -387,10 +299,130 @@ private fun EditPane(
             AmberButton(
                 text = "Simpan",
                 onClick = onSave,
-                enabled = !importing && canSave(draft),
+                enabled = !importing && StreamerLogic.canSave(draft),
                 modifier = Modifier.weight(1f)
             )
         }
+    }
+}
+
+/**
+ * Isian formulir satu overlay: jenis, isi, posisi, ukuran, warna, latar, dan "tampil saat game mulai".
+ * Dipakai dialog di Pengaturan dan panel kiri di menu game, jadi keduanya selalu sama. [onPickImage]
+ * null berarti memilih gambar tidak tersedia (di dalam game, supaya proses game tidak ditinggalkan ke
+ * pemilih berkas di HP yang RAM-nya kecil); gambar yang sudah ada tetap bisa diatur posisi dan ukurannya.
+ * Dipanggil di dalam Column pemanggil, jadi jarak antar bagian mengikuti Column itu.
+ */
+@Composable
+internal fun StreamerEditFields(
+    draft: StreamerItem,
+    importing: Boolean,
+    onChange: (StreamerItem) -> Unit,
+    onPickImage: (() -> Unit)?
+) {
+    FieldLabel("Jenis")
+    ChipRow {
+        for (t in StreamerLogic.TYPES) {
+            if (t == StreamerLogic.TYPE_IMAGE && onPickImage == null && draft.type != t) continue
+            SettingChip(
+                text = typeLabel(t),
+                selected = draft.type == t,
+                onClick = { if (draft.type != t) onChange(draft.copy(type = t)) }
+            )
+        }
+    }
+
+    when (draft.type) {
+        StreamerLogic.TYPE_TEXT -> {
+            Spacer(modifier = Modifier.height(4.dp))
+            NuxTextField(
+                value = draft.text,
+                onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_TEXT_CHARS))) },
+                placeholder = "Tulis teks overlay"
+            )
+        }
+        StreamerLogic.TYPE_LINK -> {
+            Spacer(modifier = Modifier.height(4.dp))
+            NuxTextField(
+                value = draft.text,
+                onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_LINK_CHARS))) },
+                placeholder = "Contoh: ko-fi.com/namamu"
+            )
+            MenuGroup {
+                MenuToggleRow(
+                    title = "Tampilkan kode QR",
+                    subtitle = "Penonton bisa memindainya langsung dari layar.",
+                    checked = draft.qr,
+                    onChange = { onChange(draft.copy(qr = it)) }
+                )
+            }
+            val payload = StreamerLogic.qrPayload(draft.text)
+            if (draft.qr && payload.isNotEmpty() && QrCode.encode(payload) == null) {
+                Text(
+                    text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
+                    color = Amber.DangerSoft,
+                    fontSize = 12.sp,
+                    lineHeight = 17.sp
+                )
+            }
+        }
+        StreamerLogic.TYPE_IMAGE -> {
+            Spacer(modifier = Modifier.height(4.dp))
+            ImagePicker(draft.image, importing, onPickImage)
+        }
+        else -> {
+            Text(
+                text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.",
+                color = Amber.TextDim,
+                fontSize = 12.sp,
+                lineHeight = 17.sp
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(4.dp))
+    FieldLabel("Posisi")
+    ChipRow {
+        for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
+            SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
+        }
+    }
+    ChipRow {
+        for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
+            SettingChip(posLabel(p), draft.pos == p, { onChange(draft.copy(pos = p)) })
+        }
+    }
+
+    Spacer(modifier = Modifier.height(4.dp))
+    FieldLabel("Ukuran")
+    ChipRow {
+        SettingChip("Kecil", draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL)) })
+        SettingChip("Sedang", draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM)) })
+        SettingChip("Besar", draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE)) })
+    }
+
+    if (draft.type != StreamerLogic.TYPE_IMAGE) {
+        Spacer(modifier = Modifier.height(4.dp))
+        FieldLabel("Warna teks")
+        ColorRow(selected = draft.color, onPick = { onChange(draft.copy(color = it)) })
+        MenuGroup {
+            MenuToggleRow(
+                title = "Latar belakang",
+                subtitle = "Kotak di belakang tulisan. Matikan supaya tulisannya polos.",
+                checked = draft.bg,
+                onChange = { onChange(draft.copy(bg = it)) }
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(4.dp))
+    MenuGroup {
+        MenuToggleRow(
+            title = "Tampil saat game mulai",
+            subtitle = "Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.",
+            checked = draft.on,
+            onChange = { onChange(draft.copy(on = it)) }
+        )
     }
 }
 
@@ -417,8 +449,31 @@ private fun ChipRow(content: @Composable () -> Unit) {
     }
 }
 
+/** Pilihan warna tulisan: bulatan berwarna tanpa teks, jadi tidak perlu terjemahan. */
 @Composable
-private fun ImagePicker(image: String, importing: Boolean, onPick: () -> Unit) {
+private fun ColorRow(selected: String, onPick: (String) -> Unit) {
+    val current = StreamerLogic.normalizeColor(selected)
+    ChipRow {
+        for (c in StreamerLogic.COLORS) {
+            val on = current == c
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(Color(StreamerLogic.textArgb(c)))
+                    .border(
+                        if (on) 3.dp else 1.dp,
+                        if (on) AmberUi.Accent else AmberUi.BorderStrong,
+                        CircleShape
+                    )
+                    .amberTap { onPick(c) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ImagePicker(image: String, importing: Boolean, onPick: (() -> Unit)?) {
     val bmp = if (image.isNotEmpty()) rememberStreamerBitmap(image) else null
     val shape = RoundedCornerShape(12.dp)
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -441,15 +496,21 @@ private fun ImagePicker(image: String, importing: Boolean, onPick: () -> Unit) {
         }
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            AmberButton(
-                text = if (image.isEmpty()) "Pilih gambar" else "Ganti gambar",
-                onClick = onPick,
-                style = AmberButtonStyle.Ghost,
-                enabled = !importing,
-                height = 40.dp
-            )
+            if (onPick != null) {
+                AmberButton(
+                    text = if (image.isEmpty()) "Pilih gambar" else "Ganti gambar",
+                    onClick = onPick,
+                    style = AmberButtonStyle.Ghost,
+                    enabled = !importing,
+                    height = 40.dp
+                )
+            }
             Text(
-                text = if (importing) "Memproses gambar..." else "Foto atau logo. Dikecilkan otomatis supaya ringan.",
+                text = when {
+                    importing -> "Memproses gambar..."
+                    onPick == null -> "Gambar hanya bisa diganti dari layar utama: Pengaturan > Game > Mode streamer > Atur overlay."
+                    else -> "Foto atau logo. Dikecilkan otomatis supaya ringan."
+                },
                 color = Amber.TextDim,
                 fontSize = 11.sp,
                 lineHeight = 15.sp

@@ -135,6 +135,31 @@ object SettingsManager {
         save(context)
     }
 
+    /**
+     * Membaca ulang berkas pengaturan bila proses lain (game) mengubahnya sejak penulisan terakhir proses ini,
+     * mis. overlay streamer yang diatur dari menu di dalam game. Tanpa ini, proses utama akan menimpa
+     * perubahan itu dengan salinan lamanya pada penyimpanan berikutnya. Murah: hanya membaca satu berkas kecil
+     * dan tidak melakukan apa pun bila isinya sama dengan yang terakhir kita tulis. Aman dari thread mana pun.
+     */
+    fun syncFromDisk() {
+        if (!initialized) return
+        val file = settingsFile ?: return
+        // Ada perubahan pengguna yang baru menunggu ditulis: itu yang terbaru, jangan ditimpa isi berkas.
+        if (writeScheduled.get()) return
+        try {
+            if (!file.exists()) return
+            val json = file.readText()
+            synchronized(writeLock) {
+                if (json == lastWrittenJson) return
+                val loaded = gson.fromJson(json, LauncherSettings::class.java) ?: return
+                _settings.value = applyPerfDefaults(loaded)
+                lastWrittenJson = json
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun updateSettings(context: Context, newSettings: LauncherSettings) {
         _settings.value = newSettings
         save(context)

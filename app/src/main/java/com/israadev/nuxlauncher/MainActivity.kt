@@ -202,6 +202,9 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         hideSystemBars()
         val appCtx = applicationContext
+        // Game berjalan di proses lain dan bisa mengubah pengaturan (mis. overlay streamer yang diatur dari
+        // menu di dalam game): baca ulang bila berkasnya berubah, supaya tidak tertimpa salinan lama di sini.
+        bgExecutor.execute { try { SettingsManager.syncFromDisk() } catch (_: Throwable) {} }
         // Muat ulang instance hanya bila izin penyimpanan baru saja berubah (bukan tiap kali
         // kembali ke aplikasi, mis. setelah memilih foto) dan tidak di thread utama.
         val granted = storageAccessGranted()

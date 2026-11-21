@@ -1,0 +1,24 @@
+[id]
++ Overlay streamer bisa diatur langsung di dalam game: tekan tombol pengaturan, lalu panel di sisi kiri muncul bersama menu di kanan. Tambah, ubah, hapus, dan tampilkan atau sembunyikan overlay tanpa keluar dari game. Menu di kanan bisa disembunyikan dengan panah di kepalanya.
++ Tiap overlay kini punya pilihan warna tulisan dan bisa dibuat tanpa latar, jadi hanya tulisannya yang tampil.
+[en]
++ Streamer overlays can now be set up right inside the game: press the settings button and a panel appears on the left together with the menu on the right. Add, edit, delete, and show or hide overlays without leaving the game. The right-hand menu can be hidden with the arrow in its header.
++ Each overlay now has a text color option and can be shown without a background, so only the text appears.
+[es]
++ Los overlays de streamer ahora se pueden configurar dentro del propio juego: pulsa el botón de ajustes y aparece un panel a la izquierda junto con el menú de la derecha. Añade, edita, elimina y muestra u oculta overlays sin salir del juego. El menú de la derecha se puede ocultar con la flecha de su cabecera.
++ Cada overlay ahora tiene una opción de color de texto y puede mostrarse sin fondo, de modo que solo aparezca el texto.
+[fil]
++ Maaari nang i-set up ang mga streamer overlay mismo sa loob ng laro: pindutin ang settings button at lalabas ang panel sa kaliwa kasabay ng menu sa kanan. Magdagdag, mag-edit, magtanggal, at magpakita o magtago ng mga overlay nang hindi lumalabas sa laro. Maitatago ang menu sa kanan gamit ang arrow sa itaas nito.
++ May opsyon na ngayon ang bawat overlay para sa kulay ng teksto at maaari itong ipakita nang walang background, kaya teksto lang ang lalabas.
+[pt]
++ Os overlays de streamer agora podem ser configurados dentro do próprio jogo: toque no botão de configurações e um painel aparece à esquerda junto com o menu da direita. Adicione, edite, exclua e mostre ou oculte overlays sem sair do jogo. O menu da direita pode ser ocultado com a seta no cabeçalho dele.
++ Cada overlay agora tem uma opção de cor do texto e pode ser exibido sem fundo, para que apareça só o texto.
+[th]
++ ตั้งค่าโอเวอร์เลย์สตรีมเมอร์ได้จากในเกมโดยตรง: กดปุ่มการตั้งค่า แผงทางซ้ายจะปรากฏพร้อมเมนูทางขวา เพิ่ม แก้ไข ลบ และแสดงหรือซ่อนโอเวอร์เลย์ได้โดยไม่ต้องออกจากเกม ซ่อนเมนูทางขวาได้ด้วยลูกศรที่หัวเมนู
++ โอเวอร์เลย์แต่ละรายการมีตัวเลือกสีข้อความ และแสดงแบบไม่มีพื้นหลังได้ เพื่อให้เห็นเฉพาะข้อความ
+[vi]
++ Có thể thiết lập overlay streamer ngay trong game: nhấn nút cài đặt, một bảng sẽ hiện ở bên trái cùng với menu bên phải. Thêm, sửa, xóa và hiện hoặc ẩn overlay mà không cần thoát game. Menu bên phải có thể ẩn bằng mũi tên ở đầu menu.
++ Mỗi overlay nay có tùy chọn màu chữ và có thể hiển thị không có nền, chỉ hiện chữ.
+[zh]
++ 现在可以直接在游戏内设置主播叠加层：按下设置按钮，左侧会出现面板，与右侧菜单一同显示。无需退出游戏即可添加、编辑、删除以及显示或隐藏叠加层。右侧菜单可通过标题栏中的箭头隐藏。
++ 每个叠加层现在都有文字颜色选项，也可以不带背景显示，只显示文字。

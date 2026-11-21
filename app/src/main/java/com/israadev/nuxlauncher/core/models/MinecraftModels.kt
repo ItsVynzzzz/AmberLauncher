@@ -119,7 +119,9 @@ data class Instance(
     val overrideRamMb: Int? = null,
     val overrideRenderer: String? = null,
     val overrideResolutionRatio: Int? = null,
-    val overrideJvmArgs: String? = null
+    val overrideJvmArgs: String? = null,
+    // Preset layout kontrol khusus instance ini (id dari ControlPresetManager). null = pakai layout kontrol global.
+    val controlPresetId: String? = null
 ) {
     /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
     val hasOverrides: Boolean

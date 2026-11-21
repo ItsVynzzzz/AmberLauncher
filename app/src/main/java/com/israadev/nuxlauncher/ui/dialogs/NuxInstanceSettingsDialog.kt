@@ -286,7 +286,7 @@ fun NuxInstanceSettingsDialog(
 
 /** Kartu kaca bersudut besar untuk satu kelompok pilihan. */
 @Composable
-private fun SectionCard(content: @Composable () -> Unit) {
+internal fun SectionCard(content: @Composable () -> Unit) {
     val shape = RoundedCornerShape(24.dp)
     Column(
         modifier = Modifier

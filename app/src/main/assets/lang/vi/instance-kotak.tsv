@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	Điều khiển của instance
+Kontrol instance disimpan	Đã lưu điều khiển của instance
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	Chọn bố cục nút trên màn hình luôn được dùng khi chơi instance này. "Theo cài đặt chung" dùng bố cục đang bật trong Cài đặt.
+LAYOUT KONTROL	BỐ CỤC ĐIỀU KHIỂN
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	Dùng bố cục đang bật trong Cài đặt và đổi theo khi bố cục đó thay đổi.
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	Mẫu này có {0} nút. Chỉ dùng cho instance này; bố cục chung không đổi. Các nút bạn sắp xếp lại trong game sẽ được lưu vào mẫu này.
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	Công cụ Rust chỉ dùng bố cục này khi "Điều khiển Amber" được bật trong Cài đặt.
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	Tạo hoặc quản lý mẫu tại Cài đặt > Điều khiển > Mẫu.
+Penyimpanan instance	Lưu trữ của instance
+Ruang & log	Dung lượng và nhật ký
+Bawaan mesin	Mặc định của công cụ
+Menghitung...	Đang tính...
+RUANG DIPAKAI	DUNG LƯỢNG ĐÃ DÙNG
+Total	Tổng
+Dunia	Thế giới
+Resource & shader pack	Resource và shader pack
+Log & laporan crash	Nhật ký và báo cáo lỗi
+Hapus log lama & laporan crash	Xóa nhật ký cũ và báo cáo lỗi
+Ketuk lagi untuk menghapus	Chạm lần nữa để xóa
+Dibebaskan {0}	Đã giải phóng {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	Thế giới và mod không bao giờ bị xóa từ đây. Chỉ xóa nhật ký cũ và báo cáo lỗi; latest.log vẫn được giữ.

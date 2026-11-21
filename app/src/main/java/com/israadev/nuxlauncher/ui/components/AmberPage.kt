@@ -455,6 +455,67 @@ fun AmberActionPill(
 }
 
 /**
+ * Kotak pintasan persegi untuk halaman pengaturan: ikon dalam lingkaran di atas, judul dan keterangan status di
+ * bawah. Dipakai berjejer (masing-masing `Modifier.weight(1f)`) sebagai jalan cepat ke satu pengaturan. [enabled] =
+ * false meredupkan kotak dan mematikan ketukan.
+ */
+@Composable
+fun AmberTile(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    status: String? = null,
+    enabled: Boolean = true
+) {
+    val shape = RoundedCornerShape(22.dp)
+    Column(
+        modifier = modifier
+            .alpha(if (enabled) 1f else 0.45f)
+            .height(104.dp)
+            .clip(shape)
+            .amberGlass(shape)
+            .clickable(enabled = enabled) { onClick() }
+            .padding(12.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Box(
+            modifier = Modifier
+                .size(34.dp)
+                .clip(CircleShape)
+                .background(AmberUi.AccentSoft.copy(alpha = 0.16f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = AmberUi.AccentSoft,
+                modifier = Modifier.size(19.dp)
+            )
+        }
+        Column {
+            Text(
+                text = label,
+                color = AmberUi.Text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            if (status != null) {
+                Text(
+                    text = status,
+                    color = AmberUi.TextDim,
+                    fontSize = 11.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+/**
  * Item navigasi samping berbentuk pil (sama bahasanya dengan menu samping layar Mod/Akun):
  * ikon dalam lingkaran, judul, dan keterangan kecil bila ada. Terpilih = isian aksen.
  */

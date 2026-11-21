@@ -1090,7 +1090,10 @@ private fun HomeScene(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = textStyle,
-                            modifier = Modifier.weight(1f, fill = false)
+                            // Mengetuk nama instance langsung membuka "Pilih instance" (sama seperti tombol panah di sebelahnya).
+                            modifier = Modifier
+                                .weight(1f, fill = false)
+                                .clickable(onClick = onPickInstance)
                         )
                         Spacer(modifier = Modifier.width(14.dp))
                         HomeInstanceButton(

@@ -1,0 +1,24 @@
+[id]
++ Ubah instance kini punya tiga kotak pintasan: Kontrol, Performa, dan Penyimpanan. Kontrol membuat tiap instance memakai preset layout tombol layar sendiri tanpa mengubah layout global; Penyimpanan menunjukkan ruang yang dipakai dunia, mod, dan log, dan bisa menghapus log lama.
+~ Mengetuk nama instance di Beranda langsung membuka Pilih instance.
+[en]
++ Edit instance now has three shortcut tiles: Controls, Performance and Storage. Controls lets each instance use its own on-screen button preset without touching the global layout; Storage shows the space used by worlds, mods and logs, and can delete old logs.
+~ Tapping the instance name on Home now opens Choose instance directly.
+[es]
++ Editar instancia ahora tiene tres accesos en cuadro: Controles, Rendimiento y Almacenamiento. Controles hace que cada instancia use su propio preset de botones en pantalla sin tocar la disposición global; Almacenamiento muestra el espacio de mundos, mods y registros, y puede borrar registros antiguos.
+~ Tocar el nombre de la instancia en Inicio abre directamente Elegir instancia.
+[fil]
++ May tatlong shortcut tile na ang Edit instance: Controls, Performance at Storage. Sa Controls, magagamit ng bawat instance ang sarili nitong preset ng mga button sa screen nang hindi ginagalaw ang global na layout; ipinapakita ng Storage ang espasyong gamit ng mga world, mod at log, at nakakapagbura ito ng mga lumang log.
+~ Kapag tinapik ang pangalan ng instance sa Home, direktang bubukas ang Pumili ng instance.
+[pt]
++ Editar instância agora tem três atalhos em bloco: Controles, Desempenho e Armazenamento. Controles faz cada instância usar sua própria predefinição de botões na tela sem mexer no layout global; Armazenamento mostra o espaço usado por mundos, mods e logs e pode apagar logs antigos.
+~ Tocar no nome da instância no Início agora abre direto Escolher instância.
+[th]
++ หน้าแก้ไข instance มีทางลัดแบบช่องสี่เหลี่ยมสามช่อง: การควบคุม ประสิทธิภาพ และการเก็บของ การควบคุมทำให้แต่ละ instance ใช้พรีเซ็ตปุ่มบนหน้าจอของตัวเองโดยไม่แตะเลย์เอาต์ส่วนกลาง ส่วนการเก็บของแสดงพื้นที่ที่โลก ม็อด และบันทึกใช้ และลบบันทึกเก่าได้
+~ แตะชื่อ instance บนหน้าหลักเพื่อเปิดหน้าเลือก instance ได้ทันที
+[vi]
++ Màn hình Sửa instance giờ có ba ô tắt: Điều khiển, Hiệu năng và Lưu trữ. Điều khiển cho phép mỗi instance dùng mẫu nút trên màn hình riêng mà không đụng đến bố cục chung; Lưu trữ cho biết dung lượng của thế giới, mod và nhật ký, và có thể xóa nhật ký cũ.
+~ Chạm vào tên instance ở Trang chủ giờ mở thẳng màn hình Chọn instance.
+[zh]
++ 编辑实例页面新增三个快捷方块：控制、性能和存储。“控制”让每个实例使用自己的屏幕按键预设，而不改动全局布局；“存储”显示存档、模组和日志占用的空间，并可删除旧日志。
+~ 点击主页上的实例名称即可直接打开“选择实例”。

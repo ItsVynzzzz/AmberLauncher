@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	การควบคุมของ instance
+Kontrol instance disimpan	บันทึกการควบคุมของ instance แล้ว
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	เลือกเลย์เอาต์ปุ่มบนหน้าจอที่ใช้ทุกครั้งเมื่อเล่น instance นี้ "ตามค่าส่วนกลาง" จะใช้เลย์เอาต์ที่เปิดใช้อยู่ในการตั้งค่า
+LAYOUT KONTROL	เลย์เอาต์การควบคุม
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	ใช้เลย์เอาต์ที่เปิดใช้อยู่ในการตั้งค่า และเปลี่ยนตามเมื่อเลย์เอาต์นั้นถูกแก้ไข
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	พรีเซ็ตนี้มี {0} ปุ่ม ใช้กับ instance นี้เท่านั้น เลย์เอาต์ส่วนกลางไม่เปลี่ยน ปุ่มที่คุณจัดใหม่ในเกมจะถูกบันทึกลงพรีเซ็ตนี้
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	เอนจิน Rust จะใช้เลย์เอาต์นี้ก็ต่อเมื่อเปิด "การควบคุม Amber" ในการตั้งค่า
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	สร้างหรือจัดการพรีเซ็ตได้ที่ การตั้งค่า > การควบคุม > พรีเซ็ต
+Penyimpanan instance	พื้นที่เก็บของ instance
+Ruang & log	พื้นที่และบันทึก
+Bawaan mesin	ค่าเริ่มต้นของเอนจิน
+Menghitung...	กำลังคำนวณ...
+RUANG DIPAKAI	พื้นที่ที่ใช้
+Total	รวม
+Dunia	โลก
+Resource & shader pack	Resource และ shader pack
+Log & laporan crash	บันทึกและรายงานแครช
+Hapus log lama & laporan crash	ลบบันทึกเก่าและรายงานแครช
+Ketuk lagi untuk menghapus	แตะอีกครั้งเพื่อลบ
+Dibebaskan {0}	คืนพื้นที่ {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	ที่นี่จะไม่ลบโลกและม็อด ลบเฉพาะบันทึกเก่าและรายงานแครช ส่วน latest.log จะยังอยู่

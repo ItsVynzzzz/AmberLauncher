@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	Controles da instância
+Kontrol instance disimpan	Controles da instância salvos
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	Escolha o layout de botões na tela usado sempre que esta instância for jogada. "Seguir global" usa o layout ativo em Configurações.
+LAYOUT KONTROL	LAYOUT DOS CONTROLES
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	Usa o layout ativo em Configurações e muda junto com ele.
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	Esta predefinição tem {0} botões. Ela só vale para esta instância; o layout global não muda. Os botões que você reorganizar no jogo são salvos nesta predefinição.
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	O motor Rust só usa este layout se "Controles do Amber" estiver ligado em Configurações.
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	Crie ou gerencie predefinições em Configurações > Controles > Predefinições.
+Penyimpanan instance	Armazenamento da instância
+Ruang & log	Espaço e logs
+Bawaan mesin	Padrão do motor
+Menghitung...	Calculando...
+RUANG DIPAKAI	ESPAÇO USADO
+Total	Total
+Dunia	Mundos
+Resource & shader pack	Resource e shader packs
+Log & laporan crash	Logs e relatórios de falha
+Hapus log lama & laporan crash	Apagar logs antigos e relatórios de falha
+Ketuk lagi untuk menghapus	Toque de novo para apagar
+Dibebaskan {0}	Liberado: {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	Mundos e mods nunca são apagados daqui. Só são removidos logs antigos e relatórios de falha; o latest.log permanece.

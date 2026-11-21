@@ -8,6 +8,7 @@ import android.os.Build
 import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
+import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.models.UserAccount
@@ -257,7 +258,11 @@ object HorizonEngine {
         return try {
             val firstRun = !gameInstalled(context)
             // Tombol layar mesin mengikuti tata letak Amber (atau dikembalikan ke bawaan mesin bila dimatikan).
-            RustTouchLayout.sync(context, SettingsManager.settings.value.rustAmberControls)
+            RustTouchLayout.sync(
+                context,
+                SettingsManager.settings.value.rustAmberControls,
+                ControlLayoutManager.presetButtons(context, instance.controlPresetId)
+            )
             // Warna UI mesin (menu garis tiga, editor kontrol, layar mesin) mengikuti aksen Amber.
             RustSettingsStore.syncTheme(context, SettingsManager.settings.value.accentColor)
             writeLaunchFile(context, account)

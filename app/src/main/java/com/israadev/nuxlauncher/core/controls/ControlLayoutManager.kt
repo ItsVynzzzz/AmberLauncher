@@ -19,6 +19,10 @@ object ControlLayoutManager {
     private val _buttons = MutableStateFlow<List<CustomControlButton>>(emptyList())
     val buttons: StateFlow<List<CustomControlButton>> = _buttons.asStateFlow()
 
+    // Id preset kontrol milik instance yang sedang dimainkan (null = layout global). Hanya diisi di proses game oleh
+    // [useInstancePreset]; selama terisi, tombol yang diubah di dalam game disimpan ke preset itu, bukan ke layout global.
+    @Volatile private var instancePresetId: String? = null
+
     private fun getLayoutFile(context: Context): File {
         val dir = File(context.filesDir, "controls")
         if (!dir.exists()) dir.mkdirs()
@@ -621,6 +625,13 @@ object ControlLayoutManager {
      * milik orang lain tidak bisa membuat menu game tidak terjangkau. Panggil dari thread latar.
      */
     fun importLayout(context: Context, imported: List<CustomControlButton>): List<CustomControlButton> {
+        val result = withSystemButtons(imported)
+        saveButtons(context, result)
+        return result
+    }
+
+    /** [imported] ditambah tombol sistem bawaan yang belum ada di dalamnya (menu game tetap terjangkau). */
+    private fun withSystemButtons(imported: List<CustomControlButton>): List<CustomControlButton> {
         fun actionOf(b: CustomControlButton) = if (b.systemAction == "CLOSE") "MENU" else b.systemAction
 
         val result = ArrayList<CustomControlButton>(imported)
@@ -632,8 +643,33 @@ object ControlLayoutManager {
             while (result.any { it.id == id }) id = d.id + "_" + n++
             result.add(if (id == d.id) d else d.copy(id = id))
         }
-        saveButtons(context, result)
         return result
+    }
+
+    /**
+     * Tombol milik preset [presetId] siap pakai (tombol sistem dilengkapi), atau null bila id kosong, preset sudah
+     * dihapus, atau isinya rusak. Tidak mengubah layout aktif dan tidak menulis apa pun; panggil dari thread latar.
+     */
+    fun presetButtons(context: Context, presetId: String?): List<CustomControlButton>? {
+        if (presetId.isNullOrBlank()) return null
+        val buttons = ControlPresetManager.read(ControlPresetManager.dir(context), presetId)
+        if (buttons.isNullOrEmpty()) return null
+        return withSystemButtons(buttons)
+    }
+
+    /**
+     * Dipanggil di proses game sebelum bermain: bila instance punya preset kontrol sendiri, layout sesi ini diganti
+     * dengan preset itu TANPA menyentuh layout global di penyimpanan. Perubahan tombol di dalam game selama sesi ini
+     * ikut tersimpan ke preset tersebut. Preset yang sudah dihapus atau rusak diabaikan (kembali ke layout global).
+     * Selalu panggil (juga dengan null) setelah [init], supaya sisa sesi sebelumnya tidak terbawa. Mengembalikan true
+     * bila preset dipakai.
+     */
+    fun useInstancePreset(context: Context, presetId: String?): Boolean {
+        instancePresetId = null
+        val buttons = presetButtons(context, presetId) ?: return false
+        instancePresetId = presetId
+        _buttons.value = buttons
+        return true
     }
 
     fun addButton(context: Context, button: CustomControlButton) {
@@ -657,6 +693,16 @@ object ControlLayoutManager {
     }
 
     private fun save(context: Context, list: List<CustomControlButton>) {
+        val presetId = instancePresetId
+        if (presetId != null) {
+            // Sesi instance dengan preset sendiri: ubahan masuk ke preset itu; layout global dan cadangannya tidak disentuh.
+            try {
+                ControlPresetManager.overwrite(ControlPresetManager.dir(context), presetId, ControlLayoutIO.toJson(list))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return
+        }
         try {
             rememberMediaDir(context)
             val file = getLayoutFile(context)

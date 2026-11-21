@@ -451,6 +451,8 @@ object GameLauncher {
             instance.overrideRenderer?.takeIf { it.isNotBlank() }?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RENDERER, it) }
             instance.overrideResolutionRatio?.let { putExtra(GameActivity.EXTRA_OVERRIDE_RESOLUTION, it) }
             instance.overrideJvmArgs?.let { putExtra(GameActivity.EXTRA_OVERRIDE_JVM_ARGS, it) }
+            // Preset layout kontrol khusus instance ini; kosong = layout kontrol global.
+            instance.controlPresetId?.takeIf { it.isNotBlank() }?.let { putExtra(GameActivity.EXTRA_CONTROL_PRESET_ID, it) }
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }

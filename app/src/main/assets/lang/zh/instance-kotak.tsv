@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	实例控制
+Kontrol instance disimpan	实例控制已保存
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	选择游玩此实例时始终使用的屏幕按键布局。“跟随全局”会使用设置中当前启用的布局。
+LAYOUT KONTROL	控制布局
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	使用设置中当前启用的布局，并随其改动而变化。
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	此预设有 {0} 个按键。仅用于此实例，全局布局不变。你在游戏内调整的按键会保存到此预设。
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	仅当设置中开启“Amber 控制”时，Rust 引擎才会使用此布局。
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	可在 设置 > 控制 > 预设 中创建或管理预设。
+Penyimpanan instance	实例存储
+Ruang & log	空间与日志
+Bawaan mesin	引擎默认
+Menghitung...	正在计算...
+RUANG DIPAKAI	已用空间
+Total	合计
+Dunia	存档
+Resource & shader pack	资源包与光影包
+Log & laporan crash	日志与崩溃报告
+Hapus log lama & laporan crash	删除旧日志与崩溃报告
+Ketuk lagi untuk menghapus	再点一次以删除
+Dibebaskan {0}	已释放 {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	此处不会删除存档和模组。只会清除旧日志和崩溃报告；latest.log 会保留。

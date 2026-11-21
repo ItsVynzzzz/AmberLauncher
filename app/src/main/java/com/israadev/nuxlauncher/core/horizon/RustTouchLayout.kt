@@ -106,18 +106,19 @@ object RustTouchLayout {
     }
 
     /**
-     * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. Tidak pernah
-     * melempar: kegagalan hanya dicatat dan mesin memakai kontrol bawaannya.
+     * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. [layout] = tombol
+     * preset kontrol milik instance (null = layout Amber yang aktif). Tidak pernah melempar: kegagalan hanya dicatat
+     * dan mesin memakai kontrol bawaannya.
      */
-    fun sync(context: Context, enabled: Boolean) {
+    fun sync(context: Context, enabled: Boolean, layout: List<CustomControlButton>? = null) {
         try {
-            apply(context.applicationContext, enabled)
+            apply(context.applicationContext, enabled, layout)
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Tata letak kontrol Amber tidak bisa diterapkan ke mesin Rust: ${e.message}", e)
         }
     }
 
-    private fun apply(context: Context, enabled: Boolean) {
+    private fun apply(context: Context, enabled: Boolean, layout: List<CustomControlButton>?) {
         val home = HorizonEngine.engineHome(context)
         val config = readObject(File(home, CONFIG_FILE))
         val profile = config?.optInt("profile", 0) ?: 0
@@ -132,7 +133,7 @@ object RustTouchLayout {
             return
         }
 
-        val buttons = ControlLayoutManager.buttons.value.ifEmpty {
+        val buttons = layout ?: ControlLayoutManager.buttons.value.ifEmpty {
             ControlLayoutManager.init(context)
             ControlLayoutManager.buttons.value
         }

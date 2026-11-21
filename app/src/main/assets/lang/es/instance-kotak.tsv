@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	Controles de la instancia
+Kontrol instance disimpan	Controles de la instancia guardados
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	Elige la disposición de botones en pantalla que se usa siempre al jugar esta instancia. "Seguir global" usa la disposición activa en Ajustes.
+LAYOUT KONTROL	DISPOSICIÓN DE CONTROLES
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	Usa la disposición activa en Ajustes y cambia junto con ella.
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	Este preset tiene {0} botones. Solo se usa en esta instancia; la disposición global no cambia. Los botones que reorganices en el juego se guardan en este preset.
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	El motor Rust solo usa esta disposición si "Controles de Amber" está activado en Ajustes.
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	Crea o gestiona presets en Ajustes > Controles > Presets.
+Penyimpanan instance	Almacenamiento de la instancia
+Ruang & log	Espacio y registros
+Bawaan mesin	Del motor
+Menghitung...	Calculando...
+RUANG DIPAKAI	ESPACIO USADO
+Total	Total
+Dunia	Mundos
+Resource & shader pack	Resource y shader packs
+Log & laporan crash	Registros e informes de fallos
+Hapus log lama & laporan crash	Borrar registros antiguos e informes de fallos
+Ketuk lagi untuk menghapus	Toca de nuevo para borrar
+Dibebaskan {0}	Liberado: {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	Aquí nunca se borran mundos ni mods. Solo se eliminan registros antiguos e informes de fallos; latest.log se conserva.

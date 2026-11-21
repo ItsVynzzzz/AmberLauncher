@@ -25,6 +25,8 @@ import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.Storage
+import androidx.compose.material.icons.outlined.TouchApp
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+import com.israadev.nuxlauncher.core.controls.ControlPresetManager
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.core.mods.NuxModManager
@@ -52,6 +55,7 @@ import com.israadev.nuxlauncher.ui.components.AmberChoicePill
 import com.israadev.nuxlauncher.ui.components.AmberField
 import com.israadev.nuxlauncher.ui.components.AmberPage
 import com.israadev.nuxlauncher.ui.components.AmberPageLabel
+import com.israadev.nuxlauncher.ui.components.AmberTile
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.screens.AmberPillButton
@@ -61,8 +65,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Halaman "Ubah instance" (tombol pensil di Home): nama, versi Java, aksi (Mod & konten, Buka
- * folder), dan Hapus.
+ * Halaman "Ubah instance" (tombol pensil di Home): nama, versi Java, tiga kotak pintasan (Kontrol,
+ * Performa, Penyimpanan), aksi (Mod & konten, Buka folder), dan Hapus.
  *
  * Bentuknya halaman kaca layar penuh seperti layar Mod/Akun/Pengaturan, bukan kotak di tengah:
  * bar atas melayang berisi panah kembali, judul, dan tombol Simpan; di bawahnya dua kolom (kiri
@@ -85,7 +89,11 @@ fun NuxEditInstanceDialog(
     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var showInstanceSettings by remember { mutableStateOf(false) }
+    var showControls by remember { mutableStateOf(false) }
+    var showStorage by remember { mutableStateOf(false) }
     var modCount by remember { mutableStateOf<Int?>(null) }
+    // Nama preset kontrol milik instance ini (null = ikut global atau preset sudah dihapus), untuk keterangan kotak Kontrol.
+    var controlName by remember { mutableStateOf<String?>(null) }
 
     val autoRecommendedRuntime = remember(instance.mcVersion) {
         JavaRuntimeManager.getRecommendedRuntime(instance.mcVersion)
@@ -98,6 +106,13 @@ fun NuxEditInstanceDialog(
             files?.count { f ->
                 f.isFile && (f.name.endsWith(".jar", true) || f.name.endsWith(".jar.disabled", true))
             } ?: 0
+        }
+    }
+
+    LaunchedEffect(instance.controlPresetId) {
+        val id = instance.controlPresetId
+        controlName = if (id.isNullOrBlank()) null else withContext(Dispatchers.IO) {
+            ControlPresetManager.list(ControlPresetManager.dir(context)).firstOrNull { it.id == id }?.name
         }
     }
 
@@ -152,6 +167,42 @@ fun NuxEditInstanceDialog(
         }
     }
 
+    // Tiga kotak pintasan di bawah kartu kiri: pengaturan khusus instance ini.
+    // Mesin Rust tidak memakai JVM, RAM Java, maupun renderer launcher, jadi kotak Performa mati untuk keduanya;
+    // Starling juga tidak memakai tata letak kontrol Amber, jadi kotak Kontrol mati untuk Starling.
+    val rustEngine = HorizonEngine.isEngine(instance.loader) || StarlingEngine.isEngine(instance.loader)
+    val starling = StarlingEngine.isEngine(instance.loader)
+    val tiles: @Composable () -> Unit = {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            AmberTile(
+                icon = Icons.Outlined.TouchApp,
+                label = "Kontrol",
+                status = if (starling) "Bawaan mesin" else controlName ?: "Ikuti global",
+                enabled = !starling,
+                onClick = { showControls = true },
+                modifier = Modifier.weight(1f)
+            )
+            AmberTile(
+                icon = Icons.Outlined.Speed,
+                label = "Performa",
+                status = if (rustEngine) "Bawaan mesin" else if (instance.hasOverrides) "Khusus" else "Ikuti global",
+                enabled = !rustEngine,
+                onClick = { showInstanceSettings = true },
+                modifier = Modifier.weight(1f)
+            )
+            AmberTile(
+                icon = Icons.Outlined.Storage,
+                label = "Penyimpanan",
+                status = "Ruang & log",
+                onClick = { showStorage = true },
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+
     // Kolom kanan: aksi berbentuk pil. Hapus dipisah paling bawah dan butuh konfirmasi.
     val actions: @Composable () -> Unit = {
         AmberActionPill(
@@ -170,16 +221,6 @@ fun NuxEditInstanceDialog(
                 InstanceManager.openInstanceFolder(context, instance)
             }
         )
-        // Mesin Rust (Horizon, Starling) tidak memakai JVM, RAM Java, maupun renderer launcher: tidak ada yang bisa diatur.
-        if (!HorizonEngine.isEngine(instance.loader) && !StarlingEngine.isEngine(instance.loader)) {
-            AmberActionPill(
-                icon = Icons.Outlined.Speed,
-                label = "Pengaturan instance",
-                trailing = if (instance.hasOverrides) "Khusus" else "Ikuti global",
-                showChevron = true,
-                onClick = { showInstanceSettings = true }
-            )
-        }
         if (onRepair != null) {
             AmberActionPill(
                 icon = Icons.Outlined.Refresh,
@@ -229,6 +270,7 @@ fun NuxEditInstanceDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 EditCard { identity() }
+                tiles()
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) { actions() }
             }
         } else {
@@ -241,9 +283,11 @@ fun NuxEditInstanceDialog(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     EditCard { identity() }
+                    tiles()
                 }
                 Column(
                     modifier = Modifier
@@ -263,6 +307,22 @@ fun NuxEditInstanceDialog(
             instance = instance,
             onDismiss = { showInstanceSettings = false },
             onSave = onInstanceUpdated
+        )
+    }
+
+    if (showControls) {
+        // Seperti Pengaturan instance: tersimpan lewat tombol Simpan di halamannya sendiri.
+        NuxInstanceControlsDialog(
+            instance = instance,
+            onDismiss = { showControls = false },
+            onSave = onInstanceUpdated
+        )
+    }
+
+    if (showStorage) {
+        NuxInstanceStorageDialog(
+            instance = instance,
+            onDismiss = { showStorage = false }
         )
     }
 }

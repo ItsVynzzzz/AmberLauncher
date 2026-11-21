@@ -170,6 +170,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         const val EXTRA_OVERRIDE_RENDERER = "extra_override_renderer"
         const val EXTRA_OVERRIDE_RESOLUTION = "extra_override_resolution"
         const val EXTRA_OVERRIDE_JVM_ARGS = "extra_override_jvm_args"
+        const val EXTRA_CONTROL_PRESET_ID = "extra_control_preset_id"
         const val EXTRA_EXTRA_GAME_ARGS = "extra_extra_game_args"
 
         // Setelah sesi ketik layar berakhir, tombol sisa dari keyboard layar yang datang dalam rentang ini
@@ -569,6 +570,8 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
             com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
         }
         ControlLayoutManager.init(this)
+        // Preset kontrol milik instance (bila ada) dipakai untuk sesi ini; null memastikan layout global dipakai.
+        ControlLayoutManager.useInstancePreset(this, intent.getStringExtra(EXTRA_CONTROL_PRESET_ID))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && SettingsManager.settings.value.sustainedPerformanceMode) {
             window.setSustainedPerformanceMode(true)
         }

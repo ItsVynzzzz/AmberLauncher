@@ -1,0 +1,22 @@
+# Kotak pintasan di Ubah instance: Kontrol per instance, Penyimpanan instance.
+Kontrol instance	Mga control ng instance
+Kontrol instance disimpan	Na-save ang mga control ng instance
+Pilih layout tombol layar yang selalu dipakai saat memainkan instance ini. "Ikuti global" memakai layout aktif di Pengaturan.	Piliin ang layout ng mga button sa screen na laging gagamitin sa paglalaro ng instance na ito. Ang "Sundan ang global" ay gumagamit ng layout na aktibo sa Mga Setting.
+LAYOUT KONTROL	LAYOUT NG CONTROL
+Memakai layout yang aktif di Pengaturan, dan ikut berubah bila layout itu diubah.	Gumagamit ng layout na aktibo sa Mga Setting, at nagbabago kasabay nito.
+Preset ini punya {0} tombol. Hanya dipakai untuk instance ini; layout global tidak berubah. Tombol yang kamu atur di dalam game ikut tersimpan ke preset ini.	Ang preset na ito ay may {0} button. Para lang ito sa instance na ito; hindi nagbabago ang global na layout. Ang mga button na inayos mo sa loob ng laro ay nase-save sa preset na ito.
+Mesin Rust memakai layout ini hanya bila "Kontrol Amber" menyala di Pengaturan.	Gagamitin lang ng Rust engine ang layout na ito kung naka-on ang "Mga control ng Amber" sa Mga Setting.
+Buat atau kelola preset di Pengaturan > Kontrol > Preset.	Gumawa o mag-manage ng mga preset sa Mga Setting > Controls > Mga preset.
+Penyimpanan instance	Storage ng instance
+Ruang & log	Espasyo at mga log
+Bawaan mesin	Default ng engine
+Menghitung...	Kinukuwenta...
+RUANG DIPAKAI	GINAMIT NA ESPASYO
+Total	Kabuuan
+Dunia	Mga world
+Resource & shader pack	Mga resource at shader pack
+Log & laporan crash	Mga log at crash report
+Hapus log lama & laporan crash	Burahin ang mga lumang log at crash report
+Ketuk lagi untuk menghapus	I-tap ulit para burahin
+Dibebaskan {0}	Nabakante: {0}
+Dunia dan mod tidak pernah dihapus dari sini. Yang dihapus hanya log lama dan laporan crash; latest.log tetap ada.	Hindi kailanman binubura rito ang mga world at mod. Mga lumang log at crash report lang ang inaalis; nananatili ang latest.log.

@@ -1,0 +1,100 @@
+diff --git a/changelog/entries/20261121-starling-patuh-ringan.txt b/changelog/entries/20261121-starling-patuh-ringan.txt
+new file mode 100644
+index 0000000..ec20ef2
+--- /dev/null
++++ b/changelog/entries/20261121-starling-patuh-ringan.txt
+@@ -0,0 +1,16 @@
++[id]
++~ Mesin Starling tidak lagi menawarkan sendiri memindahkan folder game ke penyimpanan bersama atau membawa dunia dari Horizon Android, dan tidak lagi menyisipkan server resmi Horizon ke daftar server kamu. Folder game sepenuhnya diatur launcher.
++[en]
++~ Starling no longer offers on its own to move the game folder to shared storage or bring over worlds from Horizon Android, and no longer adds Horizon's official server to your server list. The game folder is fully managed by the launcher.
++[es]
++~ Starling ya no ofrece por su cuenta mover la carpeta del juego al almacenamiento compartido ni traer mundos de Horizon Android, y ya no añade el servidor oficial de Horizon a tu lista de servidores. La carpeta del juego la gestiona por completo el launcher.
++[fil]
++~ Hindi na nag-aalok ang Starling nang kusa na ilipat ang folder ng laro sa shared storage o magdala ng mga mundo mula sa Horizon Android, at hindi na nito idinaragdag ang opisyal na server ng Horizon sa listahan ng iyong mga server. Ang launcher na ang ganap na namamahala sa folder ng laro.
++[pt]
++~ O Starling não oferece mais, por conta própria, mover a pasta do jogo para o armazenamento compartilhado nem trazer mundos do Horizon Android, e não adiciona mais o servidor oficial do Horizon à sua lista de servidores. A pasta do jogo é gerenciada inteiramente pelo launcher.
++[th]
++~ Starling จะไม่เสนอย้ายโฟลเดอร์เกมไปยังที่เก็บข้อมูลที่ใช้ร่วมกัน หรือนำโลกมาจาก Horizon Android ด้วยตัวเองอีกต่อไป และจะไม่เพิ่มเซิร์ฟเวอร์ทางการของ Horizon ลงในรายการเซิร์ฟเวอร์ของคุณอีก โฟลเดอร์เกมถูกจัดการโดยแลนเชอร์ทั้งหมด
++[vi]
++~ Starling không còn tự đề nghị chuyển thư mục game sang bộ nhớ dùng chung hay mang thế giới từ Horizon Android sang, và không còn thêm máy chủ chính thức của Horizon vào danh sách máy chủ của bạn. Thư mục game do launcher quản lý hoàn toàn.
++[zh]
++~ Starling 不再自行提议把游戏文件夹移到共享存储，或从 Horizon Android 导入世界，也不再把 Horizon 官方服务器加入你的服务器列表。游戏文件夹完全由启动器管理。
+diff --git a/third_party/horizon-patches/amber5/0005-amber-patuh-launcher.diff b/third_party/horizon-patches/amber5/0005-amber-patuh-launcher.diff
+new file mode 100644
+index 0000000..ff28b13
+--- /dev/null
++++ b/third_party/horizon-patches/amber5/0005-amber-patuh-launcher.diff
+@@ -0,0 +1,71 @@
++diff --git a/crates/horizon-client/src/game.rs b/crates/horizon-client/src/game.rs
++index 76da1f8..458c440 100644
++--- a/crates/horizon-client/src/game.rs
+++++ b/crates/horizon-client/src/game.rs
++@@ -22087,8 +22087,11 @@ pub fn run_with() -> Result<()> {
++     // horizon-ctl drives: those start in a source checkout and wrote the list there.
++     if !options.offscreen && !synchronous_startup(&options) {
++         horizon_client::heartbeat::start();
++-        if let Err(e) =
++-            horizon_client::multiplayer::add_official_server(&horizon_client::logging::player_dir())
+++        // AmberLauncher: daftar server pemain (servers.dat) tidak disisipi server resmi Horizon oleh mesin.
+++        if option_env!("AMBER_EMBEDDED").is_none()
+++            && let Err(e) = horizon_client::multiplayer::add_official_server(
+++                &horizon_client::logging::player_dir(),
+++            )
++         {
++             log::warn!("could not add the official server to servers.dat: {e}");
++         }
++diff --git a/crates/horizon-client/src/game/files_offer.rs b/crates/horizon-client/src/game/files_offer.rs
++index fd5fae6..d6e1303 100644
++--- a/crates/horizon-client/src/game/files_offer.rs
+++++ b/crates/horizon-client/src/game/files_offer.rs
++@@ -112,6 +112,10 @@ fn density(w: f32, h: f32) -> f32 {
++ impl Game<'_> {
++     /// Once at start, then while the player is away in the setting.
++     pub(super) fn poll_files_offer(&mut self) {
+++        // AmberLauncher: tanpa kartu tawaran folder bersama dan impor Horizon Android di atas layar judul (lihat setup.rs).
+++        if option_env!("AMBER_EMBEDDED").is_some() {
+++            return;
+++        }
++         let offer = &mut self.files_offer;
++         if !offer.started {
++             offer.started = true;
++@@ -144,6 +148,10 @@ impl Game<'_> {
++     /// A folder button while the game folder is still in the app's private files, which no file
++     /// manager opens: the offer again, turned down or not.
++     pub(super) fn ask_files_offer(&mut self) {
+++        // AmberLauncher: tombol folder tidak memunculkan tawaran folder bersama (lihat poll_files_offer).
+++        if option_env!("AMBER_EMBEDDED").is_some() {
+++            return;
+++        }
++         let _ = std::fs::remove_file(declined());
++         let offer = &mut self.files_offer;
++         offer.stage = Some(if crate::android::file_access_allowed() {
++diff --git a/crates/horizon-client/src/game/setup.rs b/crates/horizon-client/src/game/setup.rs
++index f608d17..25dfbc3 100644
++--- a/crates/horizon-client/src/game/setup.rs
+++++ b/crates/horizon-client/src/game/setup.rs
++@@ -238,6 +238,11 @@ fn account_step(setup: &Setup, state: State) -> Step {
++ #[cfg(target_os = "android")]
++ fn folder_offer(setup: &Setup) -> Option<super::files_offer::Stage> {
++     use super::files_offer::{Stage, declined};
+++    // AmberLauncher: folder game dikelola launcher dan tidak pernah dipindah ke penyimpanan bersama (StarlingActivity
+++    // .sharedFolder selalu null), jadi tawaran ini tidak mungkin berhasil dan hanya jadi layar buntu.
+++    if option_env!("AMBER_EMBEDDED").is_some() {
+++        return None;
+++    }
++     let private = horizon_client::logging::game_home() == horizon_client::logging::private_home();
++     if !private || setup.folder_later || declined().exists() {
++         return None;
++@@ -267,6 +272,10 @@ pub(super) static HORIZON_LATER: std::sync::atomic::AtomicBool =
++ /// Whether to offer Horizon Android's worlds and packs: it is installed, and not answered yet.
++ #[cfg(target_os = "android")]
++ fn horizon_offer(setup: &Setup) -> bool {
+++    // AmberLauncher: memindahkan dunia dari aplikasi lain bukan urusan mesin; launcher yang mengurus data game.
+++    if option_env!("AMBER_EMBEDDED").is_some() {
+++        return false;
+++    }
++     if horizon_answered().exists() || HORIZON_LATER.load(std::sync::atomic::Ordering::Relaxed) {
++         return false;
++     }
+# FIN part=1/1 files=2

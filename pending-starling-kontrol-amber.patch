@@ -138,10 +138,10 @@ index 0000000..4747821
 +}
 diff --git a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
 new file mode 100644
-index 0000000..b93064b
+index 0000000..3cff445
 --- /dev/null
 +++ b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,241 @@
 +package com.israadev.nuxlauncher.starling
 +
 +import android.app.Activity
@@ -165,12 +165,12 @@ index 0000000..b93064b
 +import androidx.lifecycle.LifecycleRegistry
 +import androidx.lifecycle.ViewModelStore
 +import androidx.lifecycle.ViewModelStoreOwner
-+import androidx.lifecycle.ViewTreeLifecycleOwner
-+import androidx.lifecycle.ViewTreeViewModelStoreOwner
++import androidx.lifecycle.setViewTreeLifecycleOwner
++import androidx.lifecycle.setViewTreeViewModelStoreOwner
 +import androidx.savedstate.SavedStateRegistry
 +import androidx.savedstate.SavedStateRegistryController
 +import androidx.savedstate.SavedStateRegistryOwner
-+import androidx.savedstate.ViewTreeSavedStateRegistryOwner
++import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 +import com.israadev.nuxlauncher.FpsMode
 +import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 +import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -216,9 +216,10 @@ index 0000000..b93064b
 +        CallbackBridge.sink = StarlingInput
 +        val host = OverlayOwner().also { it.start() }
 +        val decor = activity.window.decorView
-+        ViewTreeLifecycleOwner.set(decor, host)
-+        ViewTreeViewModelStoreOwner.set(decor, host)
-+        ViewTreeSavedStateRegistryOwner.set(decor, host)
++        // Sejak lifecycle 2.6 kelas ViewTree*Owner tidak terlihat dari Kotlin; yang tersedia fungsi ekstensi View.setViewTree*Owner.
++        decor.setViewTreeLifecycleOwner(host)
++        decor.setViewTreeViewModelStoreOwner(host)
++        decor.setViewTreeSavedStateRegistryOwner(host)
 +        val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
 +        val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
 +        val compose = ComposeView(activity).apply {
@@ -525,10 +526,10 @@ index 0000000..5e162c0
 +[en]
 +~ Starling now uses Amber's controls and menu over the game: the engine's own buttons, black button and pop-up are off (its Bedrock layout is kept in the engine). Can be turned off in Settings > Rust (Amber controls for the Rust engine).
 diff --git a/docs/rust-engine.md b/docs/rust-engine.md
-index 627cd64..8ff8444 100644
+index 2f35e29..01501cf 100644
 --- a/docs/rust-engine.md
 +++ b/docs/rust-engine.md
-@@ -316,3 +316,12 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+@@ -318,3 +318,12 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
  - Fork itu ditulis tangan pihak ketiga, dan `SYNC.md`-nya menyebut hasil penggabungannya belum dijalankan di HP. Commit dipatok; periksa diff-nya sebelum mengganti `commit=`. Pemeriksaan awal terhadap upstream hanya menemukan dua URL baru di kode Rust (penunjuk server kompilasi mod native di repo fork, dan tautan donasi). Itu bukan audit.
  - Build mesin Starling belum pernah dijalankan di CI dan belum diuji di perangkat. Run pertama bisa gagal dan perlu diperbaiki berdasarkan ringkasan run.
  - `StarlingFiles` ditulis dari membaca sumber Starling dan belum dijalankan di perangkat. Bila mesin menolak berkas hasil unduhan launcher, kirim log-nya; jalan keluar sementara: build tanpa `assets/starling-pins.json` mengembalikan unduhan ke mesin.

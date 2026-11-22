@@ -8,6 +8,7 @@ import android.os.Build
 import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
+import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.models.Instance
@@ -67,7 +68,6 @@ object StarlingEngine {
     // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber5).
     private const val EXTRA_DISCORD_RPC = "amber_discord_rpc"
     private const val EXTRA_MC_VERSION = "amber_mc_version"
-    private const val EXTRA_AMBER_CONTROLS = "amber_controls"
     private const val EXTRA_INSTANCE_NAME = "amber_instance"
 
     private const val LIBRARY_FILE = "libstarling_android.so"
@@ -308,6 +308,16 @@ object StarlingEngine {
             val firstRun = !gameInstalled(context)
             dropForeignGameLibrary(context)
             StarlingSettingsSync.sync(context)
+            // Kontrol Amber: tata letak Amber ditulis ke horizon-touch.json milik mesin, jadi mesin sendiri yang menggambar
+            // dan memproses tombolnya (tanpa jendela Android tambahan di atas game). Dimatikan di Pengaturan Rust: berkas
+            // mesin dikembalikan. Pemutar makro Amber tidak ada di Starling, jadi tombol makro dilewati.
+            RustTouchLayout.sync(
+                context,
+                amberControls(),
+                ControlLayoutManager.presetButtons(context, instance.controlPresetId),
+                engineDir = engineHome(context),
+                macros = false
+            )
             beginLogSession(context, instance)
             writeLaunchFiles(context, account)
             if (firstRun) {
@@ -330,7 +340,6 @@ object StarlingEngine {
                         BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled
                     )
                     .putExtra(EXTRA_MC_VERSION, SUPPORTED_MC_VERSION)
-                    .putExtra(EXTRA_AMBER_CONTROLS, amberControls())
                     .putExtra(EXTRA_INSTANCE_NAME, instance.name)
                     // REORDER_TO_FRONT: bila mesin masih berjalan di latar, kembali ke sana, bukan membuka yang kedua.
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT),
@@ -356,7 +365,7 @@ object StarlingEngine {
      * Semua ditulis ke berkas sementara lalu dipindah, dan hanya bisa dibaca aplikasi ini (mesin menolak berkas sesi
      * yang bisa dibaca pengguna lain).
      */
-    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan mati). */
+    /** Tombol layar Starling mengikuti tata letak Amber: pengaturan yang sama dengan "Kontrol Amber" mesin Rust (bawaan mati). */
     private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
 
     private fun writeLaunchFiles(context: Context, account: UserAccount) {
@@ -366,9 +375,9 @@ object StarlingEngine {
         writeAccountsFile(dir, if (microsoft) null else account.username)
         val session = File(dir, SESSION_FILE)
         val args = StringBuilder("AMBER_EMBEDDED=1\n")
-        // Kontrol Amber di atas game (patch amber5/0005): mesin mematikan tombol, tombol hitam, dan pop-up miliknya.
-        // Dimatikan di Pengaturan Rust: tombol mesin sendiri (tata letak Bedrock) kembali.
-        if (amberControls()) args.append("AMBER_CONTROLS=1\n")
+        // AMBER_CONTROLS (patch amber5/0005, kontrol Amber di jendela terpisah di atas game) sengaja tidak ditulis lagi:
+        // jendela tambahan itu membebani GPU dan membuat tombol dibuat ulang tiap menu dibuka/ditutup. Tombol Amber kini
+        // digambar mesin sendiri lewat horizon-touch.json (lihat start).
         // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
         if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
         if (microsoft) {

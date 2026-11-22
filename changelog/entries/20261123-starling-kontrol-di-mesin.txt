@@ -1,0 +1,16 @@
+[id]
+~ Kontrol Amber di Starling kini digambar dan diproses oleh mesin sendiri, tanpa jendela tambahan di atas game. Tombol tidak lagi dibuat ulang saat inventori dibuka atau ditutup. Tombol makro belum didukung di Starling.
+[en]
+~ Amber controls in Starling are now drawn and handled by the engine itself, with no extra window on top of the game. Buttons are no longer rebuilt when the inventory is opened or closed. Macro buttons are not supported in Starling yet.
+[es]
+~ Los controles Amber en Starling ahora los dibuja y gestiona el propio motor, sin una ventana adicional sobre el juego. Los botones ya no se recrean al abrir o cerrar el inventario. Los botones de macro aún no son compatibles con Starling.
+[fil]
+~ Ang Amber controls sa Starling ay iginuguhit at pinoproseso na ng mismong engine, walang dagdag na window sa ibabaw ng laro. Hindi na muling nililikha ang mga button kapag binubuksan o isinasara ang inventory. Hindi pa sinusuportahan sa Starling ang mga macro button.
+[pt]
+~ Os controles Amber no Starling agora são desenhados e tratados pelo próprio motor, sem uma janela extra sobre o jogo. Os botões não são mais recriados ao abrir ou fechar o inventário. Os botões de macro ainda não são compatíveis com o Starling.
+[th]
+~ ตอนนี้ตัวควบคุม Amber ใน Starling ถูกวาดและประมวลผลโดยเอนจินเอง ไม่มีหน้าต่างเพิ่มเติมซ้อนเหนือเกม ปุ่มจะไม่ถูกสร้างใหม่เมื่อเปิดหรือปิดช่องเก็บของ ปุ่มมาโครยังไม่รองรับใน Starling
+[vi]
+~ Điều khiển Amber trong Starling nay do chính động cơ vẽ và xử lý, không còn cửa sổ phụ nằm trên game. Các nút không bị tạo lại khi mở hoặc đóng kho đồ. Nút macro chưa được hỗ trợ trong Starling.
+[zh]
+~ Starling 中的 Amber 控制现在由引擎自己绘制和处理，不再在游戏上方叠加额外的窗口。打开或关闭物品栏时，按钮不会再被重建。Starling 暂不支持宏按钮。

@@ -109,17 +109,26 @@ object RustTouchLayout {
      * Dipanggil tepat sebelum mesin dibuka. [enabled] = pilihan "Kontrol Amber" di Pengaturan Rust. [layout] = tombol
      * preset kontrol milik instance (null = layout Amber yang aktif). Tidak pernah melempar: kegagalan hanya dicatat
      * dan mesin memakai kontrol bawaannya.
+     *
+     * [engineDir] = folder data mesin tujuan (null = folder Horizon); Starling memakai `files/starling`. [macros] = false
+     * untuk mesin tanpa pemutar makro Amber (Starling): tombol makro dilewati dan `amber-macros.json` tidak ditulis.
      */
-    fun sync(context: Context, enabled: Boolean, layout: List<CustomControlButton>? = null) {
+    fun sync(
+        context: Context,
+        enabled: Boolean,
+        layout: List<CustomControlButton>? = null,
+        engineDir: File? = null,
+        macros: Boolean = true
+    ) {
         try {
-            apply(context.applicationContext, enabled, layout)
+            apply(context.applicationContext, enabled, layout, engineDir, macros)
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Tata letak kontrol Amber tidak bisa diterapkan ke mesin Rust: ${e.message}", e)
         }
     }
 
-    private fun apply(context: Context, enabled: Boolean, layout: List<CustomControlButton>?) {
-        val home = HorizonEngine.engineHome(context)
+    private fun apply(context: Context, enabled: Boolean, layout: List<CustomControlButton>?, engineDir: File?, macros: Boolean) {
+        val home = engineDir ?: HorizonEngine.engineHome(context)
         val config = readObject(File(home, CONFIG_FILE))
         val profile = config?.optInt("profile", 0) ?: 0
         val dir = if (profile > 0) File(home, "profiles/profile-$profile") else home
@@ -138,7 +147,7 @@ object RustTouchLayout {
             ControlLayoutManager.buttons.value
         }
         val heightDp = surfaceHeightDp(context, config?.optString("orientation", "landscape"))
-        val plan = plan(buttons, heightDp, SettingsManager.settings.value.buttonLookDrag)
+        val plan = plan(buttons, heightDp, SettingsManager.settings.value.buttonLookDrag, macros)
         // Tata letak tanpa joystick dan tanpa tombol apa pun jangan diterapkan: game jadi tidak bisa dikendalikan.
         if (plan.joy == null && plan.buttons.isEmpty()) return
 
@@ -147,7 +156,7 @@ object RustTouchLayout {
             writeAtomic(backup, if (touch.isFile) touch.readText() else "{}")
         }
 
-        writeMacros(dir, plan.macros)
+        if (macros) writeMacros(dir, plan.macros)
         val json = build(readObject(touch) ?: JSONObject(), plan)
         val text = json.toString(2)
         if (touch.isFile && touch.readText() == text) return
@@ -181,7 +190,7 @@ object RustTouchLayout {
 
     // ---- terjemahan tata letak ----
 
-    private fun plan(buttons: List<CustomControlButton>, heightDp: Float, lookDrag: Boolean): Plan {
+    private fun plan(buttons: List<CustomControlButton>, heightDp: Float, lookDrag: Boolean, macros: Boolean): Plan {
         val scale = ENGINE_UI_HEIGHT / heightDp
         var joy: Joy? = null
         val out = ArrayList<Btn>()
@@ -217,19 +226,20 @@ object RustTouchLayout {
                 system.add(b)
                 continue
             }
-            buttonOf(b, heightDp, lookDrag)?.let { add(it) }
+            buttonOf(b, heightDp, lookDrag, macros)?.let { add(it) }
         }
         for (b in system) {
-            val btn = buttonOf(b, heightDp, lookDrag) ?: continue
+            val btn = buttonOf(b, heightDp, lookDrag, macros) ?: continue
             if (out.none { it.keys == btn.keys }) add(btn)
         }
         return Plan(joy, out, scale)
     }
 
     /** Tombol Amber biasa (keyboard, mouse, kombinasi, atau sistem yang punya padanan) sebagai tombol mesin. */
-    private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean): Btn? {
-        // Perintah, turbo, dan urutan aksi dijalankan pemutar makro mesin; tombolnya hanya memicu makro itu.
-        val macro = if (b.isMacro && b.macroType != "COMBO") RustMacros.defOf(b, { keyToken(it) }, { tokenOf(it) }) else null
+    private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean, macros: Boolean): Btn? {
+        // Perintah, turbo, dan urutan aksi dijalankan pemutar makro mesin; tombolnya hanya memicu makro itu. Mesin tanpa
+        // pemutar makro (macros = false): makro non-kombo tidak punya padanan dan dilewati oleh baris di bawah.
+        val macro = if (macros && b.isMacro && b.macroType != "COMBO") RustMacros.defOf(b, { keyToken(it) }, { tokenOf(it) }) else null
         if (b.isMacro && b.macroType != "COMBO" && macro == null) return null
         val keys = if (macro != null) listOf(RustMacros.tokenFor(b.id)) else keysOf(b)
         if (keys.isEmpty()) return null

@@ -29,6 +29,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
@@ -87,6 +88,19 @@ object StarlingOverlay {
         )
         view = compose
         owner = host
+        log("Kontrol Amber dipasang (instance $instanceName)")
+    }
+
+    /** Dicatat ke log launcher (bisa diekspor) dan logcat: lapisan ini jalan di proses :starling yang tidak terlihat pemain. */
+    private fun log(message: String) {
+        try {
+            LauncherLog.event("KontrolAmber", message)
+        } catch (_: Throwable) {
+        }
+        try {
+            android.util.Log.i("AmberControls", message)
+        } catch (_: Throwable) {
+        }
     }
 
     fun detach() {
@@ -109,13 +123,19 @@ object StarlingOverlay {
 
         // Keadaan layar mesin dibaca tiap ~50 ms: cukup halus untuk berganti antara kontrol bermain dan menu.
         LaunchedEffect(Unit) {
+            var failed = false
             while (true) {
                 val next = try {
                     bridge.state()
-                } catch (_: Throwable) {
+                } catch (error: Throwable) {
+                    if (!failed) log("Keadaan mesin tidak terbaca (fungsi native hilang?): $error")
+                    failed = true
                     0
                 }
-                if (next != state) state = next
+                if (next != state) {
+                    if (state == 0) log("Mesin melapor berjalan (keadaan $next): kontrol Amber ditampilkan")
+                    state = next
+                }
                 delay(50)
             }
         }

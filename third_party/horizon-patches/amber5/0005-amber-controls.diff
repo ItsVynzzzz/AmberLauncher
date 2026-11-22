@@ -227,7 +227,7 @@ index 3699d71..bca4f7a 100644
  pub mod game;
  pub mod mod_api;
 diff --git a/packaging/android/java/dev/horizon/android/GameActivity.java b/packaging/android/java/dev/horizon/android/GameActivity.java
-index 1156540..c232cdf 100644
+index 1156540..762ddbe 100644
 --- a/packaging/android/java/dev/horizon/android/GameActivity.java
 +++ b/packaging/android/java/dev/horizon/android/GameActivity.java
 @@ -4,6 +4,8 @@ import android.content.Intent;
@@ -258,7 +258,7 @@ index 1156540..c232cdf 100644
      }
  
      // singleTask: bila mesin masih berjalan di latar, membukanya lagi datang lewat sini, bukan onCreate.
-@@ -36,9 +46,30 @@ public final class GameActivity extends StarlingActivity {
+@@ -36,9 +46,48 @@ public final class GameActivity extends StarlingActivity {
          } catch (Throwable ignored) {
              // Presence hanyalah pelengkap: apa pun yang terjadi, mesin harus tetap bisa ditutup.
          }
@@ -270,19 +270,37 @@ index 1156540..c232cdf 100644
          super.onDestroy();
      }
  
++    /**
++     * Kontrol Amber diminta bila horizon-args.txt (ditulis launcher tiap PLAY, dibaca mesin dari folder yang sama)
++     * memuat AMBER_CONTROLS=1. Intent tidak dipakai: LauncherActivity memulai ulang mesin (mis. setelah penyiapan
++     * pertama) dengan Intent baru tanpa extra, padahal mesin tetap mematikan tombolnya karena berkas yang sama.
++     */
++    private boolean amberControlsRequested() {
++        try {
++            java.io.File args = new java.io.File(getFilesDir(), "horizon-args.txt");
++            if (!args.isFile() || args.length() > 65536) return false;
++            for (String line : java.nio.file.Files.readAllLines(args.toPath(), java.nio.charset.StandardCharsets.UTF_8)) {
++                if (line.trim().equals("AMBER_CONTROLS=1")) return true;
++            }
++        } catch (Throwable ignored) {
++            // Tidak terbaca: anggap tidak diminta.
++        }
++        return false;
++    }
++
 +    /** Memasang kontrol dan menu Amber di atas game (com.israadev.nuxlauncher.starling) bila launcher memintanya. */
 +    private void attachAmberControls() {
 +        try {
-+            Intent intent = getIntent();
-+            if (intent == null || !intent.getBooleanExtra(EXTRA_AMBER_CONTROLS, false)) return;
++            if (!amberControlsRequested()) return;
 +            StarlingOverlay.INSTANCE.attach(this, new StarlingBridge() {
 +                @Override public void token(String name, boolean down) { nativeAmberToken(name, down); }
 +                @Override public void look(float dx, float dy) { nativeAmberLook(dx, dy); }
 +                @Override public int state() { return nativeAmberState(); }
 +                @Override public void exit() { finishAndRemoveTask(); }
 +            });
-+        } catch (Throwable ignored) {
-+            // Gagal memasang kontrol Amber tidak boleh menjatuhkan mesin.
++        } catch (Throwable error) {
++            // Gagal memasang kontrol Amber tidak boleh menjatuhkan mesin; penyebabnya dicatat.
++            android.util.Log.e("AmberControls", "Kontrol Amber gagal dipasang", error);
 +        }
 +    }
 +

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -33,6 +34,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
@@ -92,7 +95,10 @@ fun GameControlsLayer(
     // Game sedang menampilkan kursor (menu/GUI). Dibaca dari status kursor game, bukan dari layar.
     inMenu: Boolean = false,
     // Tampilan FPS dan RAM dimatikan pemain (Pengaturan atau menu dalam game).
-    fpsHudEnabled: Boolean = true
+    fpsHudEnabled: Boolean = true,
+    // Tiap tombol menjadi jendela kecil sendiri (bukan satu lapisan penuh layar). Dipakai kontrol Amber di atas mesin
+    // Starling saat menu terbuka: hanya area tombol yang menerima sentuhan, sisanya langsung ke mesin di bawahnya.
+    buttonsAsWindows: Boolean = false
 ) {
     val density = LocalDensity.current
     // Lapisan tombol hilang (game ditutup): hentikan semua makro supaya tidak ada yang jalan sendiri.
@@ -119,11 +125,8 @@ fun GameControlsLayer(
                 .coerceIn(0f, (screenWidth - widthPx).coerceAtLeast(0f))
             val top = (screenHeight * (btn.yPercent / 100f) - heightPx / 2f)
                 .coerceIn(0f, (screenHeight - heightPx).coerceAtLeast(0f))
-            // graphicsLayer harus sebelum size/drawBehind milik tombol, supaya gambarnya masuk ke lapisan ini.
-            val place = Modifier
-                .offset { IntOffset(left.roundToInt(), top.roundToInt()) }
-                .graphicsLayer { }
-
+            // Posisi dan lapisan gambar tiap tombol diatur PlacedAt (offset di lapisan ini, atau jendela kecil sendiri
+            // bila [buttonsAsWindows]); tombol yang tidak tampil tidak membuat jendela.
             if (btn.isSystem) {
                 when (btn.systemAction) {
                     "FPS" -> {
@@ -133,28 +136,74 @@ fun GameControlsLayer(
                             FpsMode.SHOW_LOG -> false
                         }
                         if (show && fpsHudEnabled) {
-                            FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
+                            PlacedAt(buttonsAsWindows, left, top) { place ->
+                                FpsText(btn, place, fpsMode == FpsMode.PINNED, fps, perfText, perfWarn, onFpsClick)
+                            }
                         }
                     }
                     "KEYBOARD" -> if (controlsVisible) {
-                        SystemIconButton(btn, place, active = keyboardActive, onTap = onToggleKeyboard)
+                        PlacedAt(buttonsAsWindows, left, top) { place ->
+                            SystemIconButton(btn, place, active = keyboardActive, onTap = onToggleKeyboard)
+                        }
                     }
                     // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
-                    "HIDE_GUI" -> SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+                    "HIDE_GUI" -> PlacedAt(buttonsAsWindows, left, top) { place ->
+                        SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+                    }
                     // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
                     "MENU", "CLOSE" -> if (controlsVisible) {
-                        SystemIconButton(btn, place, onTap = onOpenMenu)
+                        PlacedAt(buttonsAsWindows, left, top) { place ->
+                            SystemIconButton(btn, place, onTap = onOpenMenu)
+                        }
                     }
                 }
             } else if (controlsVisible && ControlShowMode.visible(btn.showMode, inMenu)) {
-                if (btn.isJoystick) {
-                    CustomVirtualJoystick(button = btn, modifier = place)
-                } else {
-                    CustomVirtualButton(button = btn, modifier = place)
+                PlacedAt(buttonsAsWindows, left, top) { place ->
+                    if (btn.isJoystick) {
+                        CustomVirtualJoystick(button = btn, modifier = place)
+                    } else {
+                        CustomVirtualButton(button = btn, modifier = place)
+                    }
                 }
             }
             Unit
         }
+    }
+}
+
+/**
+ * Menempatkan satu tombol di ([left], [top]) piksel. Biasa: offset di lapisan yang sama dengan tombol lain, dengan
+ * lapisan gambar sendiri (graphicsLayer harus sebelum size/drawBehind milik tombol, supaya gambarnya masuk ke lapisan
+ * itu). [asWindow]: tombol menjadi jendela kecil sendiri sebesar isinya, sehingga sentuhan di luar tombol tidak
+ * ditelan dan langsung sampai ke jendela di bawahnya (dipakai kontrol Amber di atas mesin Starling saat menu terbuka).
+ * Jendela tidak mengambil fokus dan tidak menutup sendiri.
+ */
+@Composable
+private fun PlacedAt(
+    asWindow: Boolean,
+    left: Float,
+    top: Float,
+    content: @Composable (Modifier) -> Unit
+) {
+    if (asWindow) {
+        Popup(
+            alignment = Alignment.TopStart,
+            offset = IntOffset(left.roundToInt(), top.roundToInt()),
+            properties = PopupProperties(
+                focusable = false,
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+                clippingEnabled = false
+            )
+        ) {
+            content(Modifier.graphicsLayer { })
+        }
+    } else {
+        content(
+            Modifier
+                .offset { IntOffset(left.roundToInt(), top.roundToInt()) }
+                .graphicsLayer { }
+        )
     }
 }
 

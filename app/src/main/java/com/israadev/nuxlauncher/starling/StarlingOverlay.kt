@@ -1,7 +1,11 @@
 package com.israadev.nuxlauncher.starling
 
 import android.app.Activity
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -55,12 +59,12 @@ object StarlingOverlay {
     private const val ALIVE = 1
     private const val MENU = 2
 
-    private var view: ComposeView? = null
+    private var dialog: Dialog? = null
     private var owner: OverlayOwner? = null
 
     /** Dipasang dari GameActivity milik Starling bila launcher memintanya (extra amber_controls). */
     fun attach(activity: Activity, bridge: StarlingBridge) {
-        if (view != null) return
+        if (dialog != null) return
         try {
             SettingsManager.init(activity)
         } catch (_: Throwable) {
@@ -72,23 +76,44 @@ object StarlingOverlay {
         StarlingInput.bridge = bridge
         CallbackBridge.sink = StarlingInput
         val host = OverlayOwner().also { it.start() }
-        val decor = activity.window.decorView
-        // Sejak lifecycle 2.6 kelas ViewTree*Owner tidak terlihat dari Kotlin; yang tersedia fungsi ekstensi View.setViewTree*Owner.
+        val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
+        val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
+        // Jendela terpisah di atas jendela mesin. Mesin (NativeActivity) mengambil alih permukaan jendela Activity-nya, jadi
+        // View yang ditambahkan ke Activity itu tidak pernah tergambar; jendela milik Dialog punya permukaan sendiri.
+        val overlay = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
+        val window = overlay.window ?: return
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        // Tidak mengambil fokus (tombol dan penunjuk tetap ke mesin) dan awalnya tidak menerima sentuhan: di menu dan layar
+        // mesin sentuhan langsung ke mesin; jendela ini baru menerimanya saat bermain (setTouchable).
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        )
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        window.attributes = window.attributes.also {
+            it.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+        }
+        val decor = window.decorView
         decor.setViewTreeLifecycleOwner(host)
         decor.setViewTreeViewModelStoreOwner(host)
         decor.setViewTreeSavedStateRegistryOwner(host)
-        val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
-        val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
         val compose = ComposeView(activity).apply {
             setContent { OverlayContent(bridge, instanceName, mcVersion) }
         }
-        activity.addContentView(
-            compose,
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        )
-        view = compose
+        overlay.setCancelable(false)
+        overlay.setContentView(compose)
+        try {
+            overlay.show()
+        } catch (error: Throwable) {
+            log("Jendela kontrol gagal ditampilkan: $error")
+            return
+        }
+        dialog = overlay
         owner = host
-        log("Kontrol Amber dipasang (instance $instanceName)")
+        log("Kontrol Amber dipasang di jendela terpisah (instance $instanceName)")
     }
 
     /** Dicatat ke log launcher (bisa diekspor) dan logcat: lapisan ini jalan di proses :starling yang tidak terlihat pemain. */
@@ -106,9 +131,25 @@ object StarlingOverlay {
     fun detach() {
         CallbackBridge.sink = null
         StarlingInput.bridge = null
+        try {
+            dialog?.dismiss()
+        } catch (_: Throwable) {
+        }
+        dialog = null
         owner?.stop()
         owner = null
-        view = null
+    }
+
+    /** Jendela kontrol menerima sentuhan hanya saat bermain; selain itu sentuhan lewat langsung ke mesin. */
+    private fun setTouchable(touchable: Boolean) {
+        val window = dialog?.window ?: return
+        if (touchable) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }
+        // Dicatat tiap pergantian (bukan tiap frame), supaya log menunjukkan apakah mesin melapor "bermain".
+        log(if (touchable) "Bermain: kontrol Amber tampil dan menerima sentuhan" else "Menu/layar mesin: tombol Amber jadi jendela kecil, sentuhan lainnya langsung ke mesin")
     }
 
     @Composable
@@ -145,6 +186,7 @@ object StarlingOverlay {
         // Lapisan Amber membaca mode kursor dari sini: tertangkap saat bermain, kursor biasa di menu.
         LaunchedEffect(playing) {
             ZLBridgeStates.changeCursorMode(if (playing) CURSOR_DISABLED else CURSOR_ENABLED)
+            setTouchable(playing)
         }
         val mouseControlMode = if (settings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
 
@@ -171,6 +213,9 @@ object StarlingOverlay {
                     onCursorPositionChange = {}
                 )
             }
+            // Tombol tampil saat bermain dan juga di menu (inventori, chat, jeda), sesuai mode tampil tiap tombol. Saat bermain
+            // mereka ada di jendela penuh ini; di menu tiap tombol jadi jendela kecil sendiri, supaya sentuhan di luar tombol
+            // langsung ke mesin dan inventori tetap bisa disentuh.
             if (alive) {
                 GameControlsLayer(
                     buttons = buttons,
@@ -188,7 +233,8 @@ object StarlingOverlay {
                     onToggleControls = { controlsVisible = !controlsVisible },
                     onOpenMenu = { menuOpen = true },
                     inMenu = inMenu,
-                    fpsHudEnabled = false
+                    fpsHudEnabled = false,
+                    buttonsAsWindows = !playing
                 )
             }
             GameMenuSheet(

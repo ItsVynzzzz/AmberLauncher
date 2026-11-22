@@ -1,0 +1,132 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+index 3cff445..679c3a1 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+@@ -29,6 +29,7 @@ import androidx.savedstate.SavedStateRegistryOwner
+ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+ import com.israadev.nuxlauncher.FpsMode
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
++import com.israadev.nuxlauncher.core.crash.LauncherLog
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.control.GameControlsLayer
+ import com.israadev.nuxlauncher.ui.control.MouseControlMode
+@@ -87,6 +88,19 @@ object StarlingOverlay {
+         )
+         view = compose
+         owner = host
++        log("Kontrol Amber dipasang (instance $instanceName)")
++    }
++
++    /** Dicatat ke log launcher (bisa diekspor) dan logcat: lapisan ini jalan di proses :starling yang tidak terlihat pemain. */
++    private fun log(message: String) {
++        try {
++            LauncherLog.event("KontrolAmber", message)
++        } catch (_: Throwable) {
++        }
++        try {
++            android.util.Log.i("AmberControls", message)
++        } catch (_: Throwable) {
++        }
+     }
+ 
+     fun detach() {
+@@ -109,13 +123,19 @@ object StarlingOverlay {
+ 
+         // Keadaan layar mesin dibaca tiap ~50 ms: cukup halus untuk berganti antara kontrol bermain dan menu.
+         LaunchedEffect(Unit) {
++            var failed = false
+             while (true) {
+                 val next = try {
+                     bridge.state()
+-                } catch (_: Throwable) {
++                } catch (error: Throwable) {
++                    if (!failed) log("Keadaan mesin tidak terbaca (fungsi native hilang?): $error")
++                    failed = true
+                     0
+                 }
+-                if (next != state) state = next
++                if (next != state) {
++                    if (state == 0) log("Mesin melapor berjalan (keadaan $next): kontrol Amber ditampilkan")
++                    state = next
++                }
+                 delay(50)
+             }
+         }
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 01501cf..668aa46 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -321,7 +321,7 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ 
+ ## Kontrol dan menu Amber di atas Starling
+ 
+-Starling tidak lagi memakai tombol, tombol hitam (hub), maupun pop-up miliknya. Yang tampil di atas game adalah kontrol dan menu Amber yang sama dengan game Java (`GameControlsLayer`, `SwitchableMouseLayout`, `GameMenuSheet`), dipasang di `GameActivity` Starling oleh `starling/StarlingOverlay.kt`.
++Starling tidak lagi memakai tombol, tombol hitam (hub), maupun pop-up miliknya. Yang tampil di atas game adalah kontrol dan menu Amber yang sama dengan game Java (`GameControlsLayer`, `SwitchableMouseLayout`, `GameMenuSheet`), dipasang di `GameActivity` Starling oleh `starling/StarlingOverlay.kt`. Lapisan ini dipasang bila `horizon-args.txt` memuat `AMBER_CONTROLS=1` (berkas yang sama yang dibaca mesin untuk mematikan tombolnya), bukan dari Intent: `LauncherActivity` memulai ulang mesin dengan Intent baru, mis. setelah penyiapan pertama. Pemasangan dan keadaan mesin dicatat ke log launcher (tag `KontrolAmber`) dan logcat (`AmberControls`).
+ 
+ - **Mesin** (patch `amber5/0005-amber-controls.diff`): bila `AMBER_CONTROLS=1` (ditulis ke `horizon-args.txt`), `mobile_controls.rs` tidak menggambar dan tidak memproses tombol, hub, atau pop-up mesin (kodenya, termasuk tata letak Bedrock dan Goy, tetap ada). Input dari Amber masuk lewat modul `amber_input.rs` (antrean aman antar-thread) dan tiga fungsi JNI di `GameActivity`; tombol dan mouse dikirim dengan token milik game (`key.keyboard.w`, `key.mouse.left`, `mouse.scroll.up`) lewat jalur yang sama dengan tombol kustom mesin, putaran kamera seperti gerak mouse yang ditangkap. Keadaan layar (berjalan, menu terbuka, penunjuk ditangkap) dibaca balik oleh Amber tiap ~50 ms.
+ - **Amber**: `CallbackBridge` (kelas yang dipakai kontrol Amber untuk mengirim input) punya penerima `sink`; di proses `:starling` penerimanya `StarlingInput`, yang meneruskan ke mesin, dan pustaka game Java tidak dimuat di sana. Di menu dan layar mesin, sentuhan tetap langsung ke mesin: lapisan kamera Amber hanya ada saat bermain.
+diff --git a/third_party/horizon-patches/amber5/0005-amber-controls.diff b/third_party/horizon-patches/amber5/0005-amber-controls.diff
+index 3bcd9ae..3b75b3f 100644
+--- a/third_party/horizon-patches/amber5/0005-amber-controls.diff
++++ b/third_party/horizon-patches/amber5/0005-amber-controls.diff
+@@ -227,7 +227,7 @@ index 3699d71..bca4f7a 100644
+  pub mod game;
+  pub mod mod_api;
+ diff --git a/packaging/android/java/dev/horizon/android/GameActivity.java b/packaging/android/java/dev/horizon/android/GameActivity.java
+-index 1156540..c232cdf 100644
++index 1156540..762ddbe 100644
+ --- a/packaging/android/java/dev/horizon/android/GameActivity.java
+ +++ b/packaging/android/java/dev/horizon/android/GameActivity.java
+ @@ -4,6 +4,8 @@ import android.content.Intent;
+@@ -258,7 +258,7 @@ index 1156540..c232cdf 100644
+      }
+  
+      // singleTask: bila mesin masih berjalan di latar, membukanya lagi datang lewat sini, bukan onCreate.
+-@@ -36,9 +46,30 @@ public final class GameActivity extends StarlingActivity {
++@@ -36,9 +46,48 @@ public final class GameActivity extends StarlingActivity {
+          } catch (Throwable ignored) {
+              // Presence hanyalah pelengkap: apa pun yang terjadi, mesin harus tetap bisa ditutup.
+          }
+@@ -270,19 +270,37 @@ index 1156540..c232cdf 100644
+          super.onDestroy();
+      }
+  
+++    /**
+++     * Kontrol Amber diminta bila horizon-args.txt (ditulis launcher tiap PLAY, dibaca mesin dari folder yang sama)
+++     * memuat AMBER_CONTROLS=1. Intent tidak dipakai: LauncherActivity memulai ulang mesin (mis. setelah penyiapan
+++     * pertama) dengan Intent baru tanpa extra, padahal mesin tetap mematikan tombolnya karena berkas yang sama.
+++     */
+++    private boolean amberControlsRequested() {
+++        try {
+++            java.io.File args = new java.io.File(getFilesDir(), "horizon-args.txt");
+++            if (!args.isFile() || args.length() > 65536) return false;
+++            for (String line : java.nio.file.Files.readAllLines(args.toPath(), java.nio.charset.StandardCharsets.UTF_8)) {
+++                if (line.trim().equals("AMBER_CONTROLS=1")) return true;
+++            }
+++        } catch (Throwable ignored) {
+++            // Tidak terbaca: anggap tidak diminta.
+++        }
+++        return false;
+++    }
+++
+ +    /** Memasang kontrol dan menu Amber di atas game (com.israadev.nuxlauncher.starling) bila launcher memintanya. */
+ +    private void attachAmberControls() {
+ +        try {
+-+            Intent intent = getIntent();
+-+            if (intent == null || !intent.getBooleanExtra(EXTRA_AMBER_CONTROLS, false)) return;
+++            if (!amberControlsRequested()) return;
+ +            StarlingOverlay.INSTANCE.attach(this, new StarlingBridge() {
+ +                @Override public void token(String name, boolean down) { nativeAmberToken(name, down); }
+ +                @Override public void look(float dx, float dy) { nativeAmberLook(dx, dy); }
+ +                @Override public int state() { return nativeAmberState(); }
+ +                @Override public void exit() { finishAndRemoveTask(); }
+ +            });
+-+        } catch (Throwable ignored) {
+-+            // Gagal memasang kontrol Amber tidak boleh menjatuhkan mesin.
+++        } catch (Throwable error) {
+++            // Gagal memasang kontrol Amber tidak boleh menjatuhkan mesin; penyebabnya dicatat.
+++            android.util.Log.e("AmberControls", "Kontrol Amber gagal dipasang", error);
+ +        }
+ +    }
+ +
+# FIN part=1/1 files=3

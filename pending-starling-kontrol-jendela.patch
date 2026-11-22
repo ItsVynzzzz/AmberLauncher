@@ -1,0 +1,135 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+index 679c3a1..5730d2b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+@@ -1,7 +1,11 @@
+ package com.israadev.nuxlauncher.starling
+ 
+ import android.app.Activity
++import android.app.Dialog
++import android.graphics.Color
++import android.graphics.drawable.ColorDrawable
+ import android.view.ViewGroup
++import android.view.WindowManager
+ import androidx.compose.foundation.layout.BoxWithConstraints
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.runtime.Composable
+@@ -55,12 +59,12 @@ object StarlingOverlay {
+     private const val ALIVE = 1
+     private const val MENU = 2
+ 
+-    private var view: ComposeView? = null
++    private var dialog: Dialog? = null
+     private var owner: OverlayOwner? = null
+ 
+     /** Dipasang dari GameActivity milik Starling bila launcher memintanya (extra amber_controls). */
+     fun attach(activity: Activity, bridge: StarlingBridge) {
+-        if (view != null) return
++        if (dialog != null) return
+         try {
+             SettingsManager.init(activity)
+         } catch (_: Throwable) {
+@@ -72,21 +76,37 @@ object StarlingOverlay {
+         StarlingInput.bridge = bridge
+         CallbackBridge.sink = StarlingInput
+         val host = OverlayOwner().also { it.start() }
+-        val decor = activity.window.decorView
+-        // Sejak lifecycle 2.6 kelas ViewTree*Owner tidak terlihat dari Kotlin; yang tersedia fungsi ekstensi View.setViewTree*Owner.
+-        decor.setViewTreeLifecycleOwner(host)
+-        decor.setViewTreeViewModelStoreOwner(host)
+-        decor.setViewTreeSavedStateRegistryOwner(host)
+         val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
+         val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
++        // Jendela terpisah di atas jendela mesin. Mesin (NativeActivity) mengambil alih permukaan jendela Activity-nya, jadi
++        // View yang ditambahkan ke Activity itu tidak pernah tergambar; jendela milik Dialog punya permukaan sendiri.
++        val overlay = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
++        val window = overlay.window ?: return
++        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
++        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
++        // Tidak mengambil fokus (tombol dan penunjuk tetap ke mesin) dan awalnya tidak menerima sentuhan: di menu dan layar
++        // mesin sentuhan langsung ke mesin; jendela ini baru menerimanya saat bermain (setTouchable).
++        window.addFlags(
++            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
++                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
++                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
++                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
++        )
++        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
++        window.attributes = window.attributes.also {
++            it.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
++        }
++        val decor = window.decorView
++        ViewTreeLifecycleOwner.set(decor, host)
++        ViewTreeViewModelStoreOwner.set(decor, host)
++        ViewTreeSavedStateRegistryOwner.set(decor, host)
+         val compose = ComposeView(activity).apply {
+             setContent { OverlayContent(bridge, instanceName, mcVersion) }
+         }
+-        activity.addContentView(
+-            compose,
+-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+-        )
+-        view = compose
++        overlay.setCancelable(false)
++        overlay.setContentView(compose)
++        overlay.show()
++        dialog = overlay
+         owner = host
+         log("Kontrol Amber dipasang (instance $instanceName)")
+     }
+@@ -106,9 +126,23 @@ object StarlingOverlay {
+     fun detach() {
+         CallbackBridge.sink = null
+         StarlingInput.bridge = null
++        try {
++            dialog?.dismiss()
++        } catch (_: Throwable) {
++        }
++        dialog = null
+         owner?.stop()
+         owner = null
+-        view = null
++    }
++
++    /** Jendela kontrol menerima sentuhan hanya saat bermain; selain itu sentuhan lewat langsung ke mesin. */
++    private fun setTouchable(touchable: Boolean) {
++        val window = dialog?.window ?: return
++        if (touchable) {
++            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
++        } else {
++            window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
++        }
+     }
+ 
+     @Composable
+@@ -145,6 +179,7 @@ object StarlingOverlay {
+         // Lapisan Amber membaca mode kursor dari sini: tertangkap saat bermain, kursor biasa di menu.
+         LaunchedEffect(playing) {
+             ZLBridgeStates.changeCursorMode(if (playing) CURSOR_DISABLED else CURSOR_ENABLED)
++            setTouchable(playing)
+         }
+         val mouseControlMode = if (settings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
+ 
+@@ -171,7 +206,7 @@ object StarlingOverlay {
+                     onCursorPositionChange = {}
+                 )
+             }
+-            if (alive) {
++            if (playing) {
+                 GameControlsLayer(
+                     buttons = buttons,
+                     screenWidth = screenWidth,
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 668aa46..9d6e607 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -321,7 +321,7 @@ Amber punya **dua mesin Rust yang berdampingan**. Horizon (di atas) tidak beruba
+ 
+ ## Kontrol dan menu Amber di atas Starling
+ 
+-Starling tidak lagi memakai tombol, tombol hitam (hub), maupun pop-up miliknya. Yang tampil di atas game adalah kontrol dan menu Amber yang sama dengan game Java (`GameControlsLayer`, `SwitchableMouseLayout`, `GameMenuSheet`), dipasang di `GameActivity` Starling oleh `starling/StarlingOverlay.kt`. Lapisan ini dipasang bila `horizon-args.txt` memuat `AMBER_CONTROLS=1` (berkas yang sama yang dibaca mesin untuk mematikan tombolnya), bukan dari Intent: `LauncherActivity` memulai ulang mesin dengan Intent baru, mis. setelah penyiapan pertama. Pemasangan dan keadaan mesin dicatat ke log launcher (tag `KontrolAmber`) dan logcat (`AmberControls`).
++Starling tidak lagi memakai tombol, tombol hitam (hub), maupun pop-up miliknya. Yang tampil di atas game adalah kontrol dan menu Amber yang sama dengan game Java (`GameControlsLayer`, `SwitchableMouseLayout`, `GameMenuSheet`), dipasang di atas `GameActivity` Starling oleh `starling/StarlingOverlay.kt` **dalam jendela terpisah** (`Dialog` transparan, tanpa fokus): mesin (NativeActivity) mengambil alih permukaan jendela Activity-nya, jadi View yang ditambahkan ke Activity itu tidak pernah tergambar. Jendela itu hanya menerima sentuhan saat bermain; di menu dan layar mesin ia tidak menerima sentuhan (dan tidak menggambar apa pun), sehingga sentuhan langsung ke mesin. Lapisan ini dipasang bila `horizon-args.txt` memuat `AMBER_CONTROLS=1` (berkas yang sama yang dibaca mesin untuk mematikan tombolnya), bukan dari Intent: `LauncherActivity` memulai ulang mesin dengan Intent baru, mis. setelah penyiapan pertama. Pemasangan dan keadaan mesin dicatat ke log launcher (tag `KontrolAmber`) dan logcat (`AmberControls`).
+ 
+ - **Mesin** (patch `amber5/0005-amber-controls.diff`): bila `AMBER_CONTROLS=1` (ditulis ke `horizon-args.txt`), `mobile_controls.rs` tidak menggambar dan tidak memproses tombol, hub, atau pop-up mesin (kodenya, termasuk tata letak Bedrock dan Goy, tetap ada). Input dari Amber masuk lewat modul `amber_input.rs` (antrean aman antar-thread) dan tiga fungsi JNI di `GameActivity`; tombol dan mouse dikirim dengan token milik game (`key.keyboard.w`, `key.mouse.left`, `mouse.scroll.up`) lewat jalur yang sama dengan tombol kustom mesin, putaran kamera seperti gerak mouse yang ditangkap. Keadaan layar (berjalan, menu terbuka, penunjuk ditangkap) dibaca balik oleh Amber tiap ~50 ms.
+ - **Amber**: `CallbackBridge` (kelas yang dipakai kontrol Amber untuk mengirim input) punya penerima `sink`; di proses `:starling` penerimanya `StarlingInput`, yang meneruskan ke mesin, dan pustaka game Java tidak dimuat di sana. Di menu dan layar mesin, sentuhan tetap langsung ke mesin: lapisan kamera Amber hanya ada saat bermain.
+# FIN part=1/1 files=2

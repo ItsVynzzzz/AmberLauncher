@@ -1,0 +1,96 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+index 99e5f36..987e962 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+@@ -356,7 +356,7 @@ object StarlingEngine {
+      * Semua ditulis ke berkas sementara lalu dipindah, dan hanya bisa dibaca aplikasi ini (mesin menolak berkas sesi
+      * yang bisa dibaca pengguna lain).
+      */
+-    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan nyala). */
++    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan mati). */
+     private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
+ 
+     private fun writeLaunchFiles(context: Context, account: UserAccount) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index cdccbd7..eb90f3b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -42,8 +42,8 @@ data class LauncherSettings(
+     // dari versi sebelumnya tidak terbawa.
+     val touchControllerEnabled: Boolean = false,
+     val mouseSizeDp: Int = 24, // 16 - 48 dp
+-    // Mesin Rust: tombol layar mengikuti tata letak kontrol Amber (bukan kontrol bawaan mesin). Diterapkan saat PLAY.
+-    val rustAmberControls: Boolean = true,
++    // Mesin Rust: tombol layar mengikuti tata letak kontrol Amber (bukan kontrol bawaan mesin). Bawaan mati. Diterapkan saat PLAY.
++    val rustAmberControls: Boolean = false,
+     // Mesin Rust: tombol bergaris tiga di layar game yang membuka menu cepat mesin. Bawaan nyala. Diterapkan saat PLAY.
+     val rustControlHub: Boolean = true,
+     val hideMouseInClickMode: Boolean = true,
+diff --git a/changelog/entries/20261122-kontrol-amber-bawaan-mati.txt b/changelog/entries/20261122-kontrol-amber-bawaan-mati.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..63b7e2a3ceeeb45856b8ca100e47d3a652e42aa9
+GIT binary patch
+literal 2501
+zcmaJ?O;g)e6y5VH?!Msvz%HF;(oUycF<o3s59!6yeU9D}jJpCt2WZF#4Kx9g4umvN
+zs0o22$QY7^nEVcTg7{eFFLdsc?1U!mj7OHGbI(2J-eYM<x<B=O1>Yz#kqTfitcnO?
+zGI0$;p(Vlhu{KbXBq2m2K??^Xges0AQa@ZrSC+s~gjhofwUVlUPy;J)t$_j7kieBt
+z7v!OdBP^+_GC+{zNdlw7stO>$21XDH@?<SG5`-&_ih8_OVg<gFf%K7}f#iXXUG$+Y
+zB0?Vq$wkmItRsPuF4mwbqPU8FrEf?OyDeNgg-{K{Dgxt+!Ya2V0T>A&H418Y7^)3$
+z#W2Q!=?ASWv_!>PXplyO8l@gz1%8MlVps@@fQ@y@wJ=7Kr$G)wL&Y$PWb9o<1KNp%
+zAgIR1DAHgQ467heqxSwK#pOgQFbIyXq$4aB29ZFw0UAey3sM6q1CEd6374H~c79dq
+zu1=v#);cd#1Q047v)woPDnb~Mf&_spG&)9(psO^vg2xpi)Fa^vBcf0ey4Vk>(<a=A
+z#Yd)CBj{K|JyLb~Y2OMAIwoz7V4ySz0{+75u{Of;TLoIejaZ6EXiLhFsxpd%t*9dz
+z3<6%Whr}(*khtO#d#>n)<wrtLbw{RqWa%0RUW}28+VGme!LTZ^(l<0L10K^gtl<E!
+zp3nxAylw)3&o6C57X#GzX@2^lh7Gh}jgbr_d0k-|$m`~Z$vpHhltxkoz8>Jb7}X=|
+z<)s!gGS)^xsBGZLMPjDV!!k2mRfgy@k-f-Vk>pAs^r~1zPg!JLk_==)OzfN^1jO^G
+z8y?5E{}CD%^D#4?%}lx(+Qf7NQ&$nx(T&nI)enM9x~6({oDjtUN%!i}zawJgh!{{B
+z2yORa>BSMI>**^_i7HbfI3-#{cB@53EPxP<DDx45`f@x}FCHO+(2fdxv_vDyNjKqo
+zx(XVD5fuZm>M(YBB*y2FWXVF7G_z#UeqLp*8GGeLmaJ#Vq&+U#lO#)4%fMvGW|r(_
+z$yS!EWei=)T4P<7=`4AfC5wfxELpZc=d+gOYRy>Wa@Lx%{U)>4be8Pei))PJpR25Z
+zbu7Z?ycsumoh4IQ>t>ex`u}>fWWvgt`sk??I#p1As&3w@yJ>ZevnW=y!2Vdv6c53Q
+z?K<1CnDMUIrp0s%nP<xuE@w&7wY6l)xA@4MyVgwe(nxqt%eL=sIf-Hyt??`ww+bh%
+zD=X|vJL-AvEvpM<>wjj+z8%SUmORLK-_zag-se4XvqgLBwe8p2+Bny;=yfZ4#|mBL
+za;9Cj%mv$%ELrRu8j+l?<9o8x9*?2s%TD_ybsspsg5$YPdyyX|?^cU}5;ov??%htO
+zz2<=F96Yx#6a``DVBfLuTjcixrJHoA*iBpH!SUSXMv+W6nZ46qN1$}C0$0+t22?u-
+zO#>$4M~{=PNM<_NH>HBk!P^+ZxYM2^aMD!=C_P{_w+z!20zdtme14B9zRKs0-)YZ~
+z54zKC;%6#~_T`KIYN!1IZNY6~A*<{oU4!7=P7Eeu=gVv~-2>e@ID(p=z9bKfZwJ$9
+zFUU&Y(9iZyd-3>5es8W&ogXfo-oJCUG+7S!^v-%d{rc?APX1`)qW$oE`)U5m-o=CF
+zhr`)?dF8bEv?w?^Tsk>=dp5suKDC)A&(4-6i^BI~6Zx}=(?1^N$?WN)<^09nytQyT
+zJ9F{d_Qm+C{LSX&Hiy5TznRMyH$EKBo<HBuA8iz(&bQy39c`Z^&HQjIzxVw8*u=@v
+nO1{5)^7e7we0a7rc`-I~dh4%~<o3zo(&>CFzx(k0*hJqycQMMp
+
+literal 0
+HcmV?d00001
+
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 5153347..a598a03 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -94,7 +94,7 @@ Semuanya ditulis langsung ke `files/horizon/android-launcher.json`, berkas confi
+ 
+ #### Kontrol Amber (Pengaturan > Rust > Kontrol)
+ 
+-Saklar **Kontrol Amber** (bawaan hidup) membuat tombol layar mesin memakai **tata letak dan tampilan editor kontrol Amber**, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Tombol **Menu garis tiga** (menu cepat milik mesin, kunci `show_control_hub`) nyala secara bawaan dan bisa dimatikan di Pengaturan Rust; letak tombol tetap diambil dari editor Amber setiap PLAY, jadi perubahan tata letak yang dibuat di dalam editor mesin tidak bertahan.
++Saklar **Kontrol Amber** (bawaan mati) membuat tombol layar mesin memakai **tata letak dan tampilan editor kontrol Amber**, supaya hanya ada satu set kontrol dan tidak ada lapisan tambahan di atas mesin. Tombol **Menu garis tiga** (menu cepat milik mesin, kunci `show_control_hub`) nyala secara bawaan dan bisa dimatikan di Pengaturan Rust; letak tombol tetap diambil dari editor Amber setiap PLAY, jadi perubahan tata letak yang dibuat di dalam editor mesin tidak bertahan.
+ 
+ **Tema UI mesin.** Saat PLAY, Amber menulis kunci `theme` di `android-launcher.json` (`core/horizon/RustTheme.kt`): preset `custom`, mode gelap, latar `#121115`, kaca `#1B1720`, dan aksen yang dipilih di Pengaturan > Tampilan (dicampur dengan versi terangnya supaya teks terbaca di atas gelap). Mesin memakai satu tema ini di semua layarnya, termasuk menu garis tiga dan editor kontrolnya, jadi warna dan aksennya sama dengan Amber. Selain warna, `amber3/0003-amber-hub-editor.diff` mengubah dua layar mesin: (1) sidebar menu garis tiga menjadi rail ala sidebar Amber (ikon dalam pil beraksen, label di bawahnya, label Indonesia singkat) dengan tombol merah **Keluar** di bawahnya, yang menyimpan dunia lalu kembali ke instance (`begin_closing_save` lalu jalur keluar biasa mesin; dari layar judul langsung keluar); (2) panel properti di editor kontrol menempel di sisi berlawanan dari kontrol yang dipilih, seperti panel editor Amber, dengan latar yang tidak lagi digelapkan, jadi kontrol yang diedit tetap terlihat. Isi tab dan panel masih berbahasa Inggris dan bertata letak mesin. Mesin tetap menggambar dan menangani sentuhan tombolnya sendiri (satu-satunya cara tombol bisa disentuh di jendela mesin). Yang dipakai adalah gaya **GoyControl** mesin 0.7.8 (kontrol hitam), karena gaya ini bisa diatur warna, sudut, label, dan posisi tiap tombolnya. Gaya Bedrock bawaan mesin tidak dipakai selama saklar hidup.
+ 
+@@ -236,7 +236,7 @@ Mesin Rust tidak menjalankan mod Java (`.jar` Fabric, Forge, NeoForge). Yang dik
+ 6. Instance Fabric, Forge, NeoForge, dan Vanilla yang sudah ada tetap jalan seperti biasa.
+ 7. Pada build **tanpa** mesin: opsi Rust tampil dengan keterangan "belum disertakan" dan Install mati.
+ 8. Pengaturan > **Rust**: ubah skala resolusi atau renderer, PLAY lagi, dan perubahannya terasa; tab Game tidak berubah. Isi **Server otomatis** lalu PLAY: langsung masuk server itu. **Setel ulang** mengembalikan semuanya.
+-   Di bagian **Kontrol**, saklar **Kontrol Amber** hidup: PLAY lagi dan tombol layar mesin tampil berwarna dan bertata letak seperti editor kontrol Amber (kaca gelap, sudut membulat, kuning saat ditekan), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali.
++   Di bagian **Kontrol**, nyalakan saklar **Kontrol Amber** (bawaannya mati): PLAY lagi dan tombol layar mesin tampil berwarna dan bertata letak seperti editor kontrol Amber (kaca gelap, sudut membulat, kuning saat ditekan), tanpa tombol ganda. Matikan saklarnya lalu PLAY: tombol bawaan mesin kembali (itu juga tampilan bawaan).
+    Di bagian **Performa**, pilih **Super hemat** lalu PLAY: jarak render dan partikel turun; kembali ke **Normal** lalu PLAY, dan pengaturan video game bisa dikembalikan sendiri di dalam game (mesin tidak mengembalikan angka yang sudah diturunkannya). Coba matikan **Unggah chunk cepat** lalu PLAY dan bandingkan terasa tidak tersendat saat berlari menembus chunk baru; nyalakan **Sederhanakan daun** dan PLAY: dedaunan tampak lebih sederhana.
+    Di bagian **Diagnostik**: nyalakan **Rekam performa**, PLAY dan main beberapa menit, keluar, lalu ketuk **Bagikan laporan performa**: pilihan aplikasi muncul dengan berkas `horizon-performance-....jsonl`. Sebelum pernah merekam, tombol itu hanya menampilkan pesan petunjuk.
+ 9. Mod: buka layar Mod pada instance Rust. Tab Mod menampilkan empat modul bawaan (mati) tanpa tombol hapus. Hidupkan **Zoom**, PLAY, lalu tahan Z di game: pandangan membesar; matikan lalu PLAY: tidak lagi.
+@@ -325,5 +325,5 @@ Starling tidak lagi memakai tombol, tombol hitam (hub), maupun pop-up miliknya.
+ 
+ - **Mesin** (patch `amber5/0005-amber-controls.diff`): bila `AMBER_CONTROLS=1` (ditulis ke `horizon-args.txt`), `mobile_controls.rs` tidak menggambar dan tidak memproses tombol, hub, atau pop-up mesin (kodenya, termasuk tata letak Bedrock dan Goy, tetap ada). Input dari Amber masuk lewat modul `amber_input.rs` (antrean aman antar-thread) dan tiga fungsi JNI di `GameActivity`; tombol dan mouse dikirim dengan token milik game (`key.keyboard.w`, `key.mouse.left`, `mouse.scroll.up`) lewat jalur yang sama dengan tombol kustom mesin, putaran kamera seperti gerak mouse yang ditangkap. Keadaan layar (berjalan, menu terbuka, penunjuk ditangkap) dibaca balik oleh Amber tiap ~50 ms.
+ - **Amber**: `CallbackBridge` (kelas yang dipakai kontrol Amber untuk mengirim input) punya penerima `sink`; di proses `:starling` penerimanya `StarlingInput`, yang meneruskan ke mesin, dan pustaka game Java tidak dimuat di sana. Di menu dan layar mesin, sentuhan tetap langsung ke mesin: lapisan kamera Amber hanya ada saat bermain.
+-- **Dimatikan**: Pengaturan > Rust > "Kontrol Amber untuk mesin Rust" (bawaan nyala). Mati = tombol mesin sendiri (tata letak Bedrock) kembali.
++- **Dimatikan**: Pengaturan > Rust > "Kontrol Amber untuk mesin Rust" (bawaan mati). Mati = tombol mesin sendiri (tata letak Bedrock) kembali.
+ - **Belum / diketahui**: makro Amber, gamepad, papan ketik Amber, rekam layar, FPS dan resolusi di menu belum tersambung ke Starling. Sensitivitas kamera memakai setelan kursor Amber dan kecepatan putar mesin; mungkin perlu disetel. Belum diuji di perangkat.
+
+
+# FIN part=1/1 files=4

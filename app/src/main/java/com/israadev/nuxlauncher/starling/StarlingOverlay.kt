@@ -145,6 +145,7 @@ object StarlingOverlay {
         val window = dialog?.window ?: return
         if (touchable) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            StarlingInput.resetLookNote()
         } else {
             window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }

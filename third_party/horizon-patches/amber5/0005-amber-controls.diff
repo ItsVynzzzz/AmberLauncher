@@ -169,7 +169,7 @@ index f4b580f..578654e 100644
          let [w, h] = self.touch_size();
          let mut b = HudBatch::new([w, h]);
          let p = [t.location.x as f32 / b.scale, t.location.y as f32 / b.scale];
-@@ -697,6 +716,44 @@ impl Game<'_> {
+@@ -697,6 +716,51 @@ impl Game<'_> {
                  }
              })
      }
@@ -177,11 +177,17 @@ index f4b580f..578654e 100644
 +    /// Keys and mouse buttons go the way the engine's own custom buttons send them, by token.
 +    pub(super) fn amber_pump(&mut self) {
 +        use horizon_client::amber_input::{self, Event};
++        let mut turned = false;
 +        for event in amber_input::drain() {
 +            match event {
 +                Event::Token { name, down } => self.android_custom_token_edge(&name, down),
-+                Event::Look { x, y } => self.amber_look(x, y),
++                Event::Look { x, y } => turned |= self.amber_look(x, y),
 +            }
++        }
++        // A key's press asks for the pointer grab (android_dispatch_custom_token), and `capture` drops what `agent_pointer`
++        // says: a turn that came with it still counts as a grabbed pointer's in this frame (apply_mouse_look).
++        if turned {
++            self.agent_pointer = true;
 +        }
 +        let mut state = amber_input::ALIVE;
 +        if self.pad_in_menu() {
@@ -193,22 +199,23 @@ index f4b580f..578654e 100644
 +        amber_input::set_state(state);
 +    }
 +
-+    /// The view's turn from Amber's look layer, as the grabbed mouse's motion turns it (game.rs grabbed_mouse_motion,
-+    /// without its wait for a keyboard or a mouse to be the input in use: Amber's controls are touch).
-+    fn amber_look(&mut self, x: f32, y: f32) {
-+        if self.pad_in_menu() || !self.focused || self.pending_save.is_some() {
-+            return;
-+        }
-+        if !self.captured {
-+            self.capture(true);
++    /// The view's turn from Amber's look layer, fed the way an agent's `mouse-move` is (agent.rs). A finger is no captured
++    /// mouse: on a phone in its touch input mode `capture` never grabs the pointer, and each call makes the mouse skip its
++    /// next motion, so asking for the grab before each turn (what this did first) threw every turn away. The turn is added to
++    /// the frame's motion and apply_mouse_look counts it as a grabbed pointer's in an active window. False when it is not
++    /// taken: a menu or a screen is open, or the world is being saved.
++    fn amber_look(&mut self, x: f32, y: f32) -> bool {
++        if self.pad_in_menu() || self.pending_save.is_some() {
++            return false;
 +        }
 +        let (x, y) = (f64::from(x), f64::from(y));
 +        self.note_input(
 +            super::input_trace::InputOrigin::User,
 +            super::input_trace::TraceKind::Motion { x, y },
 +        );
-+        self.mouse.on_move(0.0, 0.0, x, y, true, true);
++        self.mouse.add_motion(x, y);
 +        self.last_input = std::time::Instant::now();
++        true
 +    }
 +
      pub(super) fn android_custom_events(&mut self) {

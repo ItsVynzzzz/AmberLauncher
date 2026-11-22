@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.starling
 
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.horizon.RustTouchLayout
 import org.lwjgl.glfw.CallbackBridge
 
@@ -26,7 +27,23 @@ internal object StarlingInput : CallbackBridge.InputSink {
         send(token, isDown)
     }
 
+    /** Sudah ada geseran kamera yang diteruskan sejak fase bermain terakhir dimulai (hanya yang pertama dicatat di log). */
+    private var lookNoted = false
+
+    /** Dipanggil tiap fase bermain dimulai, supaya geseran pertamanya tercatat lagi. */
+    fun resetLookNote() {
+        lookNoted = false
+    }
+
     override fun cursorDelta(dx: Float, dy: Float) {
+        if (!lookNoted) {
+            lookNoted = true
+            // Menunjukkan di log apakah geseran jari sampai ke mesin; kalau baris ini ada tetapi kamera diam, yang menahan ada di mesin.
+            try {
+                LauncherLog.event("KontrolAmber", "Kamera: geseran pertama diteruskan ke mesin (dx=$dx, dy=$dy)")
+            } catch (_: Throwable) {
+            }
+        }
         try {
             bridge?.look(dx, dy)
         } catch (_: Throwable) {

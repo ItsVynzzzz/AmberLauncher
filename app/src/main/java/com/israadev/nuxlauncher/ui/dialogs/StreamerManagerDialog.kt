@@ -34,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -54,6 +56,7 @@ import com.israadev.nuxlauncher.ui.components.NuxTextField
 import com.israadev.nuxlauncher.ui.components.SettingChip
 import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.i18n.Text
+import com.israadev.nuxlauncher.ui.streamer.LinkRevealButton
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.streamer.ItemTitle
 import com.israadev.nuxlauncher.ui.streamer.placeLabel
@@ -345,27 +348,72 @@ internal fun StreamerEditFields(
         }
         StreamerLogic.TYPE_LINK -> {
             Spacer(modifier = Modifier.height(4.dp))
+            // Alamat overlay web sensitif: disamarkan sampai pengguna mengetuk ikon mata.
+            var reveal by remember { mutableStateOf(false) }
             NuxTextField(
                 value = draft.text,
-                onValueChange = { onChange(draft.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_LINK_CHARS))) },
-                placeholder = "Contoh: ko-fi.com/namamu"
+                onValueChange = { onChange(StreamerLogic.withLinkText(draft, it)) },
+                placeholder = if (draft.web) "Tempel link overlay" else "Contoh: ko-fi.com/namamu",
+                visualTransformation = if (draft.web && !reveal) PasswordVisualTransformation() else VisualTransformation.None,
+                trailingContent = if (draft.web) {
+                    { LinkRevealButton(revealed = reveal, tint = Amber.TextDim, onToggle = { reveal = !reveal }) }
+                } else {
+                    null
+                }
             )
             MenuGroup {
                 MenuToggleRow(
-                    title = "Tampilkan kode QR",
-                    subtitle = "Penonton bisa memindainya langsung dari layar.",
-                    checked = draft.qr,
-                    onChange = { onChange(draft.copy(qr = it)) }
+                    title = "Overlay web",
+                    subtitle = "Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya " +
+                        "langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. " +
+                        "Link tidak ditampilkan.",
+                    checked = draft.web,
+                    onChange = { onChange(draft.copy(web = it)) }
                 )
+                if (!draft.web) {
+                    MenuDivider()
+                    MenuToggleRow(
+                        title = "Tampilkan kode QR",
+                        subtitle = "Penonton bisa memindainya langsung dari layar.",
+                        checked = draft.qr,
+                        onChange = { onChange(draft.copy(qr = it)) }
+                    )
+                }
             }
-            val payload = StreamerLogic.qrPayload(draft.text)
-            if (draft.qr && payload.isNotEmpty() && QrCode.encode(payload) == null) {
+            if (draft.web) {
                 Text(
-                    text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
-                    color = Amber.DangerSoft,
+                    text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
+                    color = Amber.TextDim,
                     fontSize = 12.sp,
                     lineHeight = 17.sp
                 )
+                if (draft.text.isNotEmpty() && StreamerLogic.webUrl(draft.text) == null) {
+                    Text(
+                        text = "Hanya alamat https yang bisa jadi overlay web.",
+                        color = Amber.DangerSoft,
+                        fontSize = 12.sp,
+                        lineHeight = 17.sp
+                    )
+                }
+            } else {
+                val payload = StreamerLogic.qrPayload(draft.text)
+                if (draft.qr && payload.isNotEmpty()) {
+                    if (QrCode.encode(payload) == null) {
+                        Text(
+                            text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
+                            color = Amber.DangerSoft,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp
+                        )
+                    } else {
+                        Text(
+                            text = "Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.",
+                            color = Amber.TextDim,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp
+                        )
+                    }
+                }
             }
         }
         StreamerLogic.TYPE_IMAGE -> {
@@ -382,41 +430,51 @@ internal fun StreamerEditFields(
         }
     }
 
-    // Posisi bebas (diatur lewat editor di layar game): tidak ada titik bawaan yang terpilih.
-    val free = StreamerLogic.isFree(draft)
-    Spacer(modifier = Modifier.height(4.dp))
-    FieldLabel("Posisi")
-    ChipRow {
-        for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
-            SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
-        }
-    }
-    ChipRow {
-        for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
-            SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
-        }
-    }
-
-    Spacer(modifier = Modifier.height(4.dp))
-    FieldLabel("Ukuran")
-    ChipRow {
-        val custom = draft.scale > 0f
-        SettingChip("Kecil", !custom && draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL, scale = 0f)) })
-        SettingChip("Sedang", !custom && draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM, scale = 0f)) })
-        SettingChip("Besar", !custom && draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE, scale = 0f)) })
-    }
-
-    if (draft.type != StreamerLogic.TYPE_IMAGE) {
+    if (StreamerLogic.isWeb(draft)) {
+        // Overlay web memenuhi layar dan menata dirinya sendiri: posisi, ukuran, warna, dan latar tidak berlaku.
+        Text(
+            text = "Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.",
+            color = Amber.TextDim,
+            fontSize = 12.sp,
+            lineHeight = 17.sp
+        )
+    } else {
+        // Posisi bebas (diatur lewat editor di layar game): tidak ada titik bawaan yang terpilih.
+        val free = StreamerLogic.isFree(draft)
         Spacer(modifier = Modifier.height(4.dp))
-        FieldLabel("Warna teks")
-        StreamerColorRow(selected = draft.color, onPick = { onChange(draft.copy(color = it)) })
-        MenuGroup {
-            MenuToggleRow(
-                title = "Latar belakang",
-                subtitle = "Kotak di belakang tulisan. Matikan supaya tulisannya polos.",
-                checked = draft.bg,
-                onChange = { onChange(draft.copy(bg = it)) }
-            )
+        FieldLabel("Posisi")
+        ChipRow {
+            for (p in listOf(StreamerLogic.POS_TOP_START, StreamerLogic.POS_TOP, StreamerLogic.POS_TOP_END)) {
+                SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
+            }
+        }
+        ChipRow {
+            for (p in listOf(StreamerLogic.POS_BOTTOM_START, StreamerLogic.POS_BOTTOM, StreamerLogic.POS_BOTTOM_END)) {
+                SettingChip(posLabel(p), !free && draft.pos == p, { onChange(draft.copy(pos = p, x = -1f, y = -1f)) })
+            }
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+        FieldLabel("Ukuran")
+        ChipRow {
+            val custom = draft.scale > 0f
+            SettingChip("Kecil", !custom && draft.size == StreamerLogic.SIZE_SMALL, { onChange(draft.copy(size = StreamerLogic.SIZE_SMALL, scale = 0f)) })
+            SettingChip("Sedang", !custom && draft.size == StreamerLogic.SIZE_MEDIUM, { onChange(draft.copy(size = StreamerLogic.SIZE_MEDIUM, scale = 0f)) })
+            SettingChip("Besar", !custom && draft.size == StreamerLogic.SIZE_LARGE, { onChange(draft.copy(size = StreamerLogic.SIZE_LARGE, scale = 0f)) })
+        }
+
+        if (draft.type != StreamerLogic.TYPE_IMAGE) {
+            Spacer(modifier = Modifier.height(4.dp))
+            FieldLabel("Warna teks")
+            StreamerColorRow(selected = draft.color, onPick = { onChange(draft.copy(color = it)) })
+            MenuGroup {
+                MenuToggleRow(
+                    title = "Latar belakang",
+                    subtitle = "Kotak di belakang tulisan. Matikan supaya tulisannya polos.",
+                    checked = draft.bg,
+                    onChange = { onChange(draft.copy(bg = it)) }
+                )
+            }
         }
     }
 

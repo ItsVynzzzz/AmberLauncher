@@ -33,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -320,7 +322,7 @@ private fun EditableItem(
                 Text(
                     text = when (item.type) {
                         StreamerLogic.TYPE_TEXT -> "Tulis teks overlay"
-                        StreamerLogic.TYPE_LINK -> "Contoh: ko-fi.com/namamu"
+                        StreamerLogic.TYPE_LINK -> if (item.web) "Tempel link overlay" else "Contoh: ko-fi.com/namamu"
                         else -> typeLabel(item.type)
                     },
                     color = Color(0xCCFFFFFF),
@@ -348,6 +350,7 @@ private fun Inspector(
 ) {
     val shape = RoundedCornerShape(16.dp)
     val isImage = item.type == StreamerLogic.TYPE_IMAGE
+    val isWeb = StreamerLogic.isWeb(item)
     Column(
         modifier = modifier
             .padding(top = 44.dp)
@@ -397,27 +400,58 @@ private fun Inspector(
                 textStyle = fieldStyle
             )
             StreamerLogic.TYPE_LINK -> {
+                // Alamat overlay web sensitif: disamarkan sampai pengguna mengetuk ikon mata.
+                var reveal by remember(item.id) { mutableStateOf(false) }
                 NuxTextField(
                     value = item.text,
-                    onValueChange = { onChange(item.copy(text = StreamerLogic.limitInput(it, StreamerLogic.MAX_LINK_CHARS))) },
-                    placeholder = "Contoh: ko-fi.com/namamu",
-                    textStyle = fieldStyle
+                    onValueChange = { onChange(StreamerLogic.withLinkText(item, it)) },
+                    placeholder = if (item.web) "Tempel link overlay" else "Contoh: ko-fi.com/namamu",
+                    textStyle = fieldStyle,
+                    visualTransformation = if (item.web && !reveal) PasswordVisualTransformation() else VisualTransformation.None,
+                    trailingContent = if (item.web) {
+                        { LinkRevealButton(revealed = reveal, tint = AmberUi.TextDim, onToggle = { reveal = !reveal }) }
+                    } else {
+                        null
+                    }
                 )
-                SwitchRow("Tampilkan kode QR", item.qr) { onChange(item.copy(qr = it)) }
-                val payload = StreamerLogic.qrPayload(item.text)
-                if (item.qr && payload.isNotEmpty() && QrCode.encode(payload) == null) {
+                SwitchRow("Overlay web", item.web) { onChange(item.copy(web = it)) }
+                if (item.web) {
                     Text(
-                        text = "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.",
+                        text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
                         color = AmberUi.TextDim,
                         fontSize = 10.5.sp,
                         lineHeight = 14.sp
                     )
+                    if (item.text.isNotEmpty() && StreamerLogic.webUrl(item.text) == null) {
+                        Text(
+                            text = "Hanya alamat https yang bisa jadi overlay web.",
+                            color = AmberUi.TextDim,
+                            fontSize = 10.5.sp,
+                            lineHeight = 14.sp
+                        )
+                    }
+                } else {
+                    SwitchRow("Tampilkan kode QR", item.qr) { onChange(item.copy(qr = it)) }
+                    val payload = StreamerLogic.qrPayload(item.text)
+                    if (item.qr && payload.isNotEmpty()) {
+                        Text(
+                            text = if (QrCode.encode(payload) == null) {
+                                "Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil."
+                            } else {
+                                "Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar."
+                            },
+                            color = AmberUi.TextDim,
+                            fontSize = 10.5.sp,
+                            lineHeight = 14.sp
+                        )
+                    }
                 }
             }
             else -> Unit
         }
 
-        MenuSliderRow(
+        // Overlay web memenuhi layar dan menata dirinya sendiri: ukuran, warna, dan latar tidak berlaku.
+        if (!isWeb) MenuSliderRow(
             label = "Ukuran",
             value = Math.round(StreamerLogic.scaleOf(item) * 100f),
             min = Math.round(StreamerLogic.SCALE_MIN * 100f),
@@ -436,7 +470,7 @@ private fun Inspector(
             onLive = { onChange(item.copy(alpha = it / 100f)) }
         )
 
-        if (!isImage) {
+        if (!isImage && !isWeb) {
             Text(
                 text = "Warna teks",
                 color = AmberUi.TextDim,

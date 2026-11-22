@@ -28,6 +28,10 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.Icon
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalTextStyle
@@ -149,8 +153,11 @@ internal fun posLabel(pos: String): String = when (pos) {
 }
 
 /** Keterangan letak di daftar: titik bawaan, atau "Posisi bebas" untuk item yang digeser di editor. */
-internal fun placeLabel(item: StreamerItem): String =
-    if (StreamerLogic.isFree(item)) "Posisi bebas" else posLabel(item.pos)
+internal fun placeLabel(item: StreamerItem): String = when {
+    StreamerLogic.isWeb(item) -> "Overlay web"
+    StreamerLogic.isFree(item) -> "Posisi bebas"
+    else -> posLabel(item.pos)
+}
 
 internal fun typeLabel(type: String): String = when (type) {
     StreamerLogic.TYPE_IMAGE -> "Gambar"
@@ -216,8 +223,17 @@ fun StreamerLayer(
         StreamerLogic.sanitize(items).filter { StreamerLogic.isDisplayable(it) }
     }
     val maxWidthDp = LocalConfiguration.current.screenWidthDp * 0.42f
+    // Overlay web yang sedang tampil (dibatasi jumlahnya); dijalankan di lapisan WebView terpisah, bukan di Compose.
+    val webSpecs = list
+        .filter { StreamerLogic.isWeb(it) && StreamerRuntime.isShown(it) }
+        .take(StreamerLogic.MAX_WEB_SHOWN)
+        .mapNotNull { item ->
+            StreamerLogic.webUrl(item.text)?.let { StreamerWebSpec(item.id, it, item.alpha) }
+        }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        StreamerWebLayer(specs = webSpecs, visible = chromeVisible)
+
         // Item overlay: tanpa penangan sentuhan, jadi sentuhan lewat ke kontrol dan game di bawahnya.
         Box(
             modifier = Modifier
@@ -227,14 +243,16 @@ fun StreamerLayer(
         ) {
             // Item berposisi bebas (hasil editor di layar): masing-masing ditaruh sendiri.
             for (item in list) {
-                if (!StreamerLogic.isFree(item) || !StreamerRuntime.isShown(item)) continue
+                if (StreamerLogic.isWeb(item) || !StreamerLogic.isFree(item) || !StreamerRuntime.isShown(item)) continue
                 key(item.id) {
                     Box(modifier = Modifier.freePlaced(item.x, item.y)) { StreamerItemView(item, maxWidthDp) }
                 }
             }
             // Item lama yang masih memakai titik bawaan: bertumpuk di titiknya seperti sebelumnya.
             for (pos in StreamerLogic.POSITIONS) {
-                val group = list.filter { !StreamerLogic.isFree(it) && it.pos == pos && StreamerRuntime.isShown(it) }
+                val group = list.filter {
+                    !StreamerLogic.isWeb(it) && !StreamerLogic.isFree(it) && it.pos == pos && StreamerRuntime.isShown(it)
+                }
                 if (group.isEmpty()) continue
                 Column(
                     modifier = Modifier.align(alignmentOf(pos)),
@@ -320,7 +338,8 @@ private fun ItemBody(item: StreamerItem, maxWidthDp: Float) {
                 style = itemTextStyle(item)
             )
         }
-        StreamerLogic.TYPE_LINK -> LinkChip(item, maxWidthDp)
+        StreamerLogic.TYPE_LINK ->
+            if (StreamerLogic.isWeb(item)) WebPlaceholder(item, maxWidthDp) else LinkChip(item, maxWidthDp)
         StreamerLogic.TYPE_IMAGE -> ImageItem(item, maxWidthDp)
         StreamerLogic.TYPE_TIMER -> Chip(item) {
             TimerText(
@@ -368,6 +387,8 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
     ).coerceAtLeast(40f)
     Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
         if (qr != null) {
+            // Dengan kode QR, alamatnya tidak ditulis di bawahnya: link sering sensitif dan tidak perlu terbaca
+            // di layar, penonton cukup memindai kodenya.
             Image(
                 bitmap = qr,
                 contentDescription = null,
@@ -376,18 +397,59 @@ private fun LinkChip(item: StreamerItem, maxWidthDp: Float) {
                     .size(qrDp.dp)
                     .clip(RoundedCornerShape(6.dp))
             )
-            Spacer(modifier = Modifier.height(5.dp))
+        } else {
+            UserText(
+                text = StreamerLogic.linkDisplay(item.text),
+                color = Color(StreamerLogic.textArgb(item.color)),
+                fontSize = StreamerLogic.linkSpOf(item).sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = itemTextStyle(item)
+            )
         }
-        UserText(
-            text = StreamerLogic.linkDisplay(item.text),
+    }
+}
+
+/** Tombol mata di kolom link overlay web: tampilkan atau samarkan alamat (disamarkan secara bawaan). */
+@Composable
+internal fun LinkRevealButton(revealed: Boolean, tint: Color, onToggle: () -> Unit) {
+    Icon(
+        imageVector = if (revealed) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility,
+        contentDescription = null,
+        tint = tint,
+        modifier = Modifier
+            .size(22.dp)
+            .clip(CircleShape)
+            .amberTap(onToggle)
+    )
+}
+
+/**
+ * Tanda tempat overlay web di editor layar dan pratinjau. Overlay web asli berjalan di lapisan WebView
+ * ([StreamerWebLayer]) dan memenuhi layar; di sini hanya nama situsnya, tidak pernah alamat lengkapnya.
+ */
+@Composable
+private fun WebPlaceholder(item: StreamerItem, maxWidthDp: Float) {
+    Chip(item, Modifier.widthIn(max = maxWidthDp.dp)) {
+        Text(
+            text = "Overlay web",
             color = Color(StreamerLogic.textArgb(item.color)),
             fontSize = StreamerLogic.linkSpOf(item).sp,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            style = itemTextStyle(item)
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1
         )
+        val host = StreamerLogic.hostOf(item.text)
+        if (host.isNotEmpty()) {
+            UserText(
+                text = host,
+                color = Color(StreamerLogic.textArgb(item.color)).copy(alpha = 0.7f),
+                fontSize = (StreamerLogic.linkSpOf(item) - 1).coerceAtLeast(8).sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
@@ -610,7 +672,7 @@ private fun PanelRow(item: StreamerItem) {
 internal fun ItemTitle(item: StreamerItem, fontSizeSp: Int) {
     val user = when (item.type) {
         StreamerLogic.TYPE_TEXT -> item.text
-        StreamerLogic.TYPE_LINK -> StreamerLogic.linkDisplay(item.text)
+        StreamerLogic.TYPE_LINK -> StreamerLogic.linkLabel(item)
         else -> ""
     }
     if (user.isNotEmpty()) {

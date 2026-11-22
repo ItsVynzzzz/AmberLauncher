@@ -1,0 +1,24 @@
+[id]
++ Mode streamer: item Link kini bisa menjalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan sejenisnya langsung di atas game (Alert, Media Share, Song Share, Subathon, Wheel, Goal, dan lainnya). Link overlay yang ditempel dikenali otomatis dan tidak pernah ditampilkan: kolomnya disamarkan dan tidak muncul di layar maupun di panel.
+~ Link dengan kode QR tidak lagi menulis alamatnya di bawah kode, jadi alamat tidak terbaca di layar.
+[en]
++ Streamer mode: the Link item can now run overlay links from Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs and similar services right on top of the game (Alerts, Media Share, Song Share, Subathon, Wheel, Goals and more). A pasted overlay link is recognized automatically and is never displayed: the field is masked and it does not appear on screen or in the panel.
+~ A link shown as a QR code no longer writes its address under the code, so the address cannot be read on screen.
+[es]
++ Modo streamer: el elemento Enlace ahora puede ejecutar enlaces de overlay de Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs y servicios similares directamente sobre el juego (Alertas, Media Share, Song Share, Subathon, Wheel, Metas y más). Un enlace de overlay pegado se reconoce solo y nunca se muestra: el campo se oculta y no aparece en pantalla ni en el panel.
+~ Un enlace mostrado como código QR ya no escribe su dirección bajo el código, así que no se puede leer en pantalla.
+[fil]
++ Streamer mode: kaya nang patakbuhin ng Link item ang mga overlay link mula sa Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs at mga katulad nito mismo sa ibabaw ng laro (Alert, Media Share, Song Share, Subathon, Wheel, Goal at iba pa). Awtomatikong nakikilala ang na-paste na overlay link at hindi ito kailanman ipinapakita: natatakpan ang field at hindi ito lumalabas sa screen o sa panel.
+~ Ang link na ipinapakita bilang QR code ay hindi na nagsusulat ng address sa ilalim ng code, kaya hindi na ito mababasa sa screen.
+[pt]
++ Modo streamer: o item Link agora pode executar links de overlay do Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs e serviços parecidos direto sobre o jogo (Alertas, Media Share, Song Share, Subathon, Wheel, Metas e mais). Um link de overlay colado é reconhecido automaticamente e nunca é exibido: o campo fica oculto e ele não aparece na tela nem no painel.
+~ Um link exibido como QR code não escreve mais o endereço abaixo do código, então o endereço não pode ser lido na tela.
+[th]
++ โหมดสตรีมเมอร์: รายการลิงก์สามารถรันลิงก์โอเวอร์เลย์จาก Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs และบริการที่คล้ายกันบนเกมได้โดยตรง (Alert, Media Share, Song Share, Subathon, Wheel, Goal และอื่น ๆ) ลิงก์โอเวอร์เลย์ที่วางจะถูกจดจำอัตโนมัติและไม่ถูกแสดงเลย ช่องกรอกจะถูกปิดบัง และไม่ปรากฏบนหน้าจอหรือในแผง
+~ ลิงก์ที่แสดงเป็นคิวอาร์โค้ดจะไม่เขียนที่อยู่ไว้ใต้โค้ดอีกต่อไป จึงอ่านที่อยู่บนหน้าจอไม่ได้
+[vi]
++ Chế độ streamer: mục Liên kết giờ có thể chạy liên kết overlay từ Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs và các dịch vụ tương tự ngay trên game (Alert, Media Share, Song Share, Subathon, Wheel, Goal và nhiều loại khác). Liên kết overlay được dán sẽ tự nhận diện và không bao giờ hiển thị: ô nhập được che đi, không xuất hiện trên màn hình hay trong bảng.
+~ Liên kết hiển thị dưới dạng mã QR không còn ghi địa chỉ bên dưới mã, nên không thể đọc địa chỉ trên màn hình.
+[zh]
++ 主播模式：“链接”项目现在可以直接在游戏上运行来自 Saweria、Sociabuzz、Trakteer、StreamElements、Streamlabs 等服务的叠加层链接（Alert、Media Share、Song Share、Subathon、Wheel、Goal 等）。粘贴的叠加层链接会被自动识别，并且永远不会被显示：输入框会被遮蔽，屏幕和面板上都不会出现。
+~ 以二维码显示的链接不再在二维码下方写出地址，因此无法在屏幕上读到地址。

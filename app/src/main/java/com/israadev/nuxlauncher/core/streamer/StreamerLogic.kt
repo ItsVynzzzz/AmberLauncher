@@ -30,7 +30,13 @@ data class StreamerItem(
     /** Skala ukuran bebas ([StreamerLogic.SCALE_MIN]..[StreamerLogic.SCALE_MAX]). 0 = ikuti [size]. */
     val scale: Float = 0f,
     /** Kepekatan seluruh item ([StreamerLogic.ALPHA_MIN]..1). */
-    val alpha: Float = 1f
+    val alpha: Float = 1f,
+    /**
+     * Link: jalankan alamatnya sebagai overlay web di atas game (seperti browser source di OBS), untuk link overlay
+     * Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan sejenisnya. Alamatnya sensitif, jadi tidak
+     * pernah ditulis di layar, di panel, maupun (tanpa ketukan mata) di kolom isian.
+     */
+    val web: Boolean = false
 )
 
 /**
@@ -80,6 +86,12 @@ object StreamerLogic {
     const val MAX_ITEMS = 8
     const val MAX_TEXT_CHARS = 60
     const val MAX_LINK_CHARS = 190
+
+    /** Alamat overlay web membawa token panjang (StreamElements bisa lebih dari 400 huruf), jadi batasnya longgar. */
+    const val MAX_WEB_CHARS = 1024
+
+    /** Paling banyak overlay web yang tampil bersamaan; tiap halaman memakan RAM. */
+    const val MAX_WEB_SHOWN = 4
 
     /** Sisi terpanjang gambar yang disimpan. Cukup tajam untuk tampil di layar, tetap kecil di memori. */
     const val IMAGE_MAX_SIDE = 512
@@ -190,6 +202,83 @@ object StreamerLogic {
         return if (t.isEmpty()) s else t
     }
 
+    /** Item ini dijalankan sebagai overlay web (bukan ditulis sebagai teks atau kode QR). */
+    fun isWeb(item: StreamerItem): Boolean = item.web && normalizeType(item.type) == TYPE_LINK
+
+    /** Batas isian kolom link: lebih longgar untuk overlay web. */
+    fun maxLinkChars(web: Boolean): Int = if (web) MAX_WEB_CHARS else MAX_LINK_CHARS
+
+    /** Alamat overlay web: dirapikan seperti [cleanLink] tetapi dengan batas [MAX_WEB_CHARS]. */
+    fun cleanWebUrl(raw: String?): String = cleanText(raw, MAX_WEB_CHARS).replace(" ", "")
+
+    /**
+     * Alamat https yang aman dimuat sebagai overlay web, atau null. Nama situs tanpa skema diberi https://.
+     * Skema lain (http, javascript:, file:, content:, intent:, data:, dll) ditolak, begitu juga alamat tanpa nama
+     * situs yang utuh, supaya halaman bertoken tidak pernah terkirim lewat jalur tanpa enkripsi.
+     */
+    fun webUrl(raw: String?): String? {
+        val s = cleanWebUrl(raw)
+        if (s.isEmpty()) return null
+        val full = when {
+            s.startsWith("https://", ignoreCase = true) -> s
+            hasScheme(s) -> return null
+            looksLikeHost(s) -> "https://$s"
+            else -> return null
+        }
+        val host = try {
+            java.net.URI(full).host
+        } catch (_: Exception) {
+            null
+        }
+        if (host.isNullOrEmpty() || !host.contains('.') || host.startsWith('.') || host.endsWith('.')) return null
+        return full
+    }
+
+    /** Nama situs saja (tanpa skema, www., jalur, token, dan port), huruf kecil. Kosong bila tidak terbaca. */
+    fun hostOf(raw: String?): String {
+        var t = cleanWebUrl(raw)
+        val scheme = t.indexOf("://")
+        if (scheme >= 0) t = t.substring(scheme + 3)
+        t = t.substringBefore('/').substringBefore('?').substringBefore('#')
+        t = t.substringAfterLast('@').substringBefore(':')
+        if (t.startsWith("www.", ignoreCase = true)) t = t.substring(4)
+        return t.lowercase()
+    }
+
+    // Petunjuk di alamat bahwa ini link overlay (bukan halaman donasi biasa). Hanya kata yang cukup panjang dan khas,
+    // supaya token acak tidak ikut terhitung.
+    private val OVERLAY_HINTS = listOf("overlay", "widget", "alert", "streamkey", "stream-key", "browsersource", "browser-source")
+
+    /**
+     * Alamat ini tampak seperti link overlay untuk browser source (Alert, Media Share, Song Share, Subathon, Wheel,
+     * Goal, dan seterusnya di Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dll)? Dipakai untuk
+     * menyalakan mode overlay web otomatis saat link ditempel; pengguna tetap bisa mematikannya.
+     */
+    fun looksLikeOverlay(raw: String?): Boolean {
+        val s = cleanWebUrl(raw).lowercase()
+        if (s.length < 8) return false
+        val body = s.substringAfter("://", s)
+        return OVERLAY_HINTS.any { body.contains(it) }
+    }
+
+    /**
+     * Mengganti alamat link dari isian pengguna. Alamat yang baru tampak seperti link overlay (mis. ditempel dari
+     * dasbor Saweria atau Sociabuzz) otomatis menyalakan mode overlay web; setelah itu pengguna bebas mematikannya.
+     */
+    fun withLinkText(item: StreamerItem, raw: String): StreamerItem {
+        val overlayLike = looksLikeOverlay(raw)
+        val text = limitInput(raw, maxLinkChars(item.web || overlayLike))
+        val auto = !item.web && overlayLike && !looksLikeOverlay(item.text)
+        return if (auto) item.copy(text = text, web = true) else item.copy(text = text)
+    }
+
+    /**
+     * Penanda link di daftar dan panel. Link sensitif (overlay web, atau yang tampil sebagai kode QR) hanya
+     * menampilkan nama situsnya; alamat lengkap tidak pernah ditulis. Link biasa tanpa QR tetap apa adanya.
+     */
+    fun linkLabel(item: StreamerItem): String =
+        if (isWeb(item) || item.qr) hostOf(item.text).ifEmpty { linkDisplay(item.text) } else linkDisplay(item.text)
+
     /** Nama berkas gambar yang aman (tanpa folder, tanpa ".."), atau null. */
     fun safeImageName(name: String?): String? = name?.takeIf { IMAGE_NAME.matches(it) }
 
@@ -212,7 +301,7 @@ object StreamerLogic {
             type = type,
             text = when (type) {
                 TYPE_TEXT -> cleanText(src.text, MAX_TEXT_CHARS)
-                TYPE_LINK -> cleanLink(src.text)
+                TYPE_LINK -> if (src.web) cleanWebUrl(src.text) else cleanLink(src.text)
                 else -> ""
             },
             image = if (type == TYPE_IMAGE) safeImageName(src.image) ?: "" else "",
@@ -225,7 +314,8 @@ object StreamerLogic {
             x = if (src.x in 0f..1f && src.y in 0f..1f) src.x else -1f,
             y = if (src.x in 0f..1f && src.y in 0f..1f) src.y else -1f,
             scale = if (src.scale.isFinite() && src.scale > 0f) src.scale.coerceIn(SCALE_MIN, SCALE_MAX) else 0f,
-            alpha = if (src.alpha.isFinite()) src.alpha.coerceIn(ALPHA_MIN, 1f) else 1f
+            alpha = if (src.alpha.isFinite()) src.alpha.coerceIn(ALPHA_MIN, 1f) else 1f,
+            web = src.web && type == TYPE_LINK
         )
     }
 
@@ -248,7 +338,9 @@ object StreamerLogic {
 
     /** Item yang punya isi untuk digambar (teks kosong atau gambar belum dipilih tidak ikut tampil). */
     fun isDisplayable(item: StreamerItem): Boolean = when (item.type) {
-        TYPE_TEXT, TYPE_LINK -> item.text.isNotEmpty()
+        TYPE_TEXT -> item.text.isNotEmpty()
+        // Overlay web hanya layak tampil bila alamatnya https yang utuh.
+        TYPE_LINK -> if (item.web) webUrl(item.text) != null else item.text.isNotEmpty()
         TYPE_IMAGE -> item.image.isNotEmpty()
         TYPE_TIMER -> true
         else -> false

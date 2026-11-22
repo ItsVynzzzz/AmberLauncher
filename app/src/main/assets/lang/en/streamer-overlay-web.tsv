@@ -1,0 +1,8 @@
+# Mode streamer: link jadi overlay web (Saweria, Sociabuzz, dll), alamat tidak ditampilkan.
+Overlay web	Web overlay
+Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Run overlay links from Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs and others right on top of the game. Alerts, Media Share, Song Share, Subathon, Wheel and the rest are supported. The link is never shown.
+Tempel link overlay	Paste overlay link
+Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	A web overlay uses extra RAM and internet data. On phones with little RAM, turn it on only when needed from the panel on the left edge of the screen. At most 4 web overlays can be shown at once.
+Hanya alamat https yang bisa jadi overlay web.	Only https addresses can be used as a web overlay.
+Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	A web overlay fills the screen, so it cannot be moved or resized. Its layout is set in the site's own overlay settings.
+Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	The address is not written under the QR code so it cannot be read on screen.

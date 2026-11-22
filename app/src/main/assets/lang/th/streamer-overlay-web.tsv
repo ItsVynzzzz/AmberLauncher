@@ -1,0 +1,8 @@
+# Mode streamer: link jadi overlay web (Saweria, Sociabuzz, dll), alamat tidak ditampilkan.
+Overlay web	โอเวอร์เลย์เว็บ
+Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	รันลิงก์โอเวอร์เลย์จาก Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs และอื่น ๆ บนเกมได้โดยตรง รองรับ Alert, Media Share, Song Share, Subathon, Wheel และอื่น ๆ ลิงก์จะไม่ถูกแสดง
+Tempel link overlay	วางลิงก์โอเวอร์เลย์
+Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	โอเวอร์เลย์เว็บใช้ RAM และอินเทอร์เน็ตเพิ่ม บนมือถือที่ RAM น้อย ให้เปิดเฉพาะตอนจำเป็นจากแผงที่ขอบซ้ายของหน้าจอ แสดงโอเวอร์เลย์เว็บพร้อมกันได้สูงสุด 4 รายการ
+Hanya alamat https yang bisa jadi overlay web.	ใช้ได้เฉพาะที่อยู่ https เป็นโอเวอร์เลย์เว็บ
+Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	โอเวอร์เลย์เว็บเต็มหน้าจอ จึงย้ายหรือปรับขนาดไม่ได้ เลย์เอาต์ตั้งค่าได้ที่การตั้งค่าโอเวอร์เลย์ของเว็บนั้นเอง
+Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	ที่อยู่จะไม่ถูกเขียนใต้คิวอาร์โค้ด เพื่อไม่ให้อ่านได้บนหน้าจอ

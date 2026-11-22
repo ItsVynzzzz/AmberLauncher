@@ -1,0 +1,16 @@
+[id]
++ Kontrol Amber untuk mesin Rust kini mati secara bawaan, jadi mesin memakai kontrol bawaannya. Nyalakan di pengaturan Rust bila ingin tombol layar mengikuti editor kontrol Amber. Pilihan yang sudah pernah Anda simpan tidak berubah.
+[en]
++ Amber controls for the Rust engine are now off by default, so the engine uses its own controls. Turn them on in the Rust settings if you want the on-screen buttons to follow the Amber control editor. A choice you already saved is not changed.
+[es]
++ Los controles Amber para el motor Rust ahora vienen desactivados de forma predeterminada, así que el motor usa sus propios controles. Actívalos en los ajustes de Rust si quieres que los botones en pantalla sigan el editor de controles de Amber. Una opción que ya guardaste no cambia.
+[fil]
++ Naka-off na bilang default ang Amber controls para sa Rust engine, kaya ang sariling controls ng engine ang gagamitin. I-on ito sa Rust settings kung gusto mong sundan ng mga button sa screen ang Amber control editor. Hindi nagbabago ang pinili mong naka-save na.
+[pt]
++ Os controles Amber para o motor Rust agora vêm desativados por padrão, então o motor usa os próprios controles. Ative-os nas configurações do Rust se quiser que os botões na tela sigam o editor de controles do Amber. Uma escolha que você já salvou não muda.
+[th]
++ ตอนนี้ตัวควบคุม Amber สำหรับเอนจิน Rust ปิดไว้เป็นค่าเริ่มต้น เอนจินจึงใช้ตัวควบคุมของตัวเอง เปิดได้ในการตั้งค่า Rust หากต้องการให้ปุ่มบนหน้าจอเป็นไปตามตัวแก้ไขตัวควบคุมของ Amber ตัวเลือกที่คุณบันทึกไว้แล้วจะไม่เปลี่ยน
+[vi]
++ Điều khiển Amber cho động cơ Rust nay được tắt theo mặc định, nên động cơ dùng điều khiển riêng của nó. Hãy bật trong cài đặt Rust nếu muốn các nút trên màn hình theo trình chỉnh sửa điều khiển của Amber. Lựa chọn bạn đã lưu trước đó sẽ không thay đổi.
+[zh]
++ 面向 Rust 引擎的 Amber 控制现在默认关闭，因此引擎会使用自带的控制。如果希望屏幕按钮遵循 Amber 控制编辑器，请在 Rust 设置中开启。你已保存的选择不会改变。

@@ -356,7 +356,7 @@ object StarlingEngine {
      * Semua ditulis ke berkas sementara lalu dipindah, dan hanya bisa dibaca aplikasi ini (mesin menolak berkas sesi
      * yang bisa dibaca pengguna lain).
      */
-    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan nyala). */
+    /** Kontrol dan menu Amber di atas Starling: pengaturan yang sama dengan "Kontrol Amber untuk mesin Rust" (bawaan mati). */
     private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
 
     private fun writeLaunchFiles(context: Context, account: UserAccount) {

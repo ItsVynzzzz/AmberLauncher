@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,7 @@ import com.israadev.nuxlauncher.ui.components.AmberPanel
 import com.israadev.nuxlauncher.ui.components.AmberRailItem
 import com.israadev.nuxlauncher.ui.components.AmberTag
 import com.israadev.nuxlauncher.ui.components.WhatsNewList
+import com.israadev.nuxlauncher.ui.components.amberTap
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.screens.AmberPillButton
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -377,7 +379,8 @@ private fun AboutContent(
 private fun OverviewTab(onOpen: (String) -> Unit, columns: Int) {
     AboutTitle(
         title = "Tentang AmberLauncher",
-        subtitle = "Peluncur Minecraft Java untuk Android, ringan dan sederhana."
+        subtitle = "Peluncur Minecraft Java untuk Android, ringan dan sederhana.",
+        trailing = { SocialLinks(onOpen) }
     )
     AboutNotice(
         title = "Unofficial Modified Version",
@@ -565,21 +568,74 @@ private fun BrandCard(version: String) {
     }
 }
 
+/** Judul halaman; [trailing] (bila ada) tampil di ujung kanan, sejajar dengan judul dan keterangannya. */
 @Composable
-private fun AboutTitle(title: String, subtitle: String) {
-    Column(modifier = Modifier.padding(start = 4.dp, top = 2.dp)) {
-        Text(
-            text = title,
-            color = AmberUi.Text,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Black
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = subtitle,
-            color = AmberUi.TextDim,
-            fontSize = 13.sp,
-            lineHeight = 19.sp
+private fun AboutTitle(title: String, subtitle: String, trailing: (@Composable () -> Unit)? = null) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, top = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                color = AmberUi.Text,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Black
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                color = AmberUi.TextDim,
+                fontSize = 13.sp,
+                lineHeight = 19.sp
+            )
+        }
+        if (trailing != null) {
+            Spacer(modifier = Modifier.width(12.dp))
+            trailing()
+        }
+    }
+}
+
+/**
+ * Ikon komunitas (Discord dan TikTok) di sebelah judul. Mengetuknya membuka tautan di peramban. Ikon
+ * yang tautannya dikosongkan di [AppLinks] tidak ditampilkan. Tanpa animasi dan tanpa blur.
+ */
+@Composable
+private fun SocialLinks(onOpen: (String) -> Unit) {
+    val discord = AppLinks.DISCORD_URL.trim()
+    val tiktok = AppLinks.TIKTOK_URL.trim()
+    if (discord.isEmpty() && tiktok.isEmpty()) return
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (discord.isNotEmpty()) {
+            SocialButton(com.israadev.nuxlauncher.R.drawable.ic_social_discord, "Discord") { onOpen(discord) }
+        }
+        if (tiktok.isNotEmpty()) {
+            SocialButton(com.israadev.nuxlauncher.R.drawable.ic_social_tiktok, "TikTok") { onOpen(tiktok) }
+        }
+    }
+}
+
+@Composable
+private fun SocialButton(iconRes: Int, label: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .amberGlass(CircleShape)
+            .amberTap(onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = label,
+            tint = AmberUi.Text,
+            modifier = Modifier.size(22.dp)
         )
     }
 }

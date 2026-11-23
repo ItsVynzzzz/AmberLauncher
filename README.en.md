@@ -82,6 +82,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Low FPS**: lower the render distance, lower the resolution ratio, or try another renderer in **Settings**.
 - **A mod does not work**: make sure the instance's loader and Minecraft version match what the mod requires.
 - **Found a bug?** Open an [issue](https://github.com/ItsVynzzzz/AmberLauncher/issues) with the AmberLauncher version, your phone model and Android version, the steps that cause the problem, and the log. Logs shared from the launcher are scrubbed of tokens and passwords.
+- **Have an idea or want to chat?** Join the [Discord](https://discord.gg/NHNf9T4kuf) to share ideas, report bugs, and ask questions.
 
 ## Privacy and security
 

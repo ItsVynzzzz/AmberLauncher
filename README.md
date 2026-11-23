@@ -82,6 +82,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **FPS rendah**: kecilkan jarak pandang, turunkan rasio resolusi, atau coba renderer lain di **Pengaturan**.
 - **Mod tidak jalan**: pastikan loader dan versi Minecraft instance sama dengan yang dibutuhkan mod.
 - **Menemukan bug?** Buka [Issue](https://github.com/ItsVynzzzz/AmberLauncher/issues) dan sertakan versi AmberLauncher, model HP dan versi Android, langkah yang menimbulkan masalah, serta log. Log yang dibagikan dari launcher sudah dibersihkan dari token dan kata sandi.
+- **Punya ide atau mau ngobrol?** Gabung [Discord](https://discord.gg/NHNf9T4kuf) untuk memberi ide, melaporkan bug, dan bertanya.
 
 ## Privasi dan keamanan
 

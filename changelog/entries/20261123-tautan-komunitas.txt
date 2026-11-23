@@ -1,0 +1,24 @@
+[id]
++ Layar Tentang kini punya ikon Discord dan TikTok di samping judul. Ketuk salah satunya untuk membuka tautannya di browser dan bergabung ke komunitas.
++ Situs web dan README kini juga memuat tautan Discord, tempat memberi ide dan melaporkan bug.
+[en]
++ The About screen now has Discord and TikTok icons next to the title. Tap one to open its link in your browser and join the community.
++ The website and README now also link to Discord, where you can share ideas and report bugs.
+[es]
++ La pantalla Acerca de ahora tiene iconos de Discord y TikTok junto al título. Toca uno para abrir su enlace en el navegador y unirte a la comunidad.
++ El sitio web y el README ahora también enlazan a Discord, donde puedes compartir ideas y reportar errores.
+[fil]
++ May icon na ng Discord at TikTok sa tabi ng pamagat sa screen na Tungkol. I-tap ang isa para buksan ang link nito sa browser at sumali sa komunidad.
++ Ang website at README ay may link na rin sa Discord, kung saan puwede kang magbahagi ng ideya at mag-ulat ng bug.
+[pt]
++ A tela Sobre agora tem ícones do Discord e do TikTok ao lado do título. Toque em um deles para abrir o link no navegador e entrar na comunidade.
++ O site e o README agora também trazem o link do Discord, onde você pode compartilhar ideias e relatar bugs.
+[th]
++ หน้าเกี่ยวกับมีไอคอน Discord และ TikTok อยู่ข้างชื่อหัวข้อแล้ว แตะไอคอนเพื่อเปิดลิงก์ในเบราว์เซอร์และเข้าร่วมชุมชน
++ เว็บไซต์และ README ก็มีลิงก์ Discord แล้วเช่นกัน ใช้แชร์ไอเดียและรายงานบั๊กได้
+[vi]
++ Màn hình Giới thiệu nay có biểu tượng Discord và TikTok bên cạnh tiêu đề. Chạm vào một biểu tượng để mở liên kết trong trình duyệt và tham gia cộng đồng.
++ Trang web và README nay cũng có liên kết Discord, nơi bạn có thể chia sẻ ý tưởng và báo lỗi.
+[zh]
++ “关于”页面标题旁现在有 Discord 和 TikTok 图标。点按图标即可在浏览器中打开链接并加入社区。
++ 网站和 README 现在也提供 Discord 链接，可以在那里分享想法和报告错误。

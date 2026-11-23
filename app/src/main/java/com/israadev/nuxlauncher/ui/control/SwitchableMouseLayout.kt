@@ -5,7 +5,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.israadev.nuxlauncher.core.controls.TouchForwarder
@@ -22,6 +24,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.lwjgl.glfw.CallbackBridge
+
+/**
+ * Mode Ketuk di menu: lama menahan jari (tanpa bergeser) sebelum tombol kiri "menempel" ke titik sentuh, supaya
+ * scrollbar putih Minecraft (atau slider) bisa diseret. Lebih singkat dari tekan-tahan biasa agar tidak terasa lambat.
+ */
+private const val MENU_GRAB_HOLD_MS = 300L
 
 enum class MouseControlMode {
     SLIDE, // Trackpad mode: Drag to move cursor, tap anywhere to click at cursor
@@ -80,6 +88,7 @@ fun SwitchableMouseLayout(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val viewConfiguration = LocalViewConfiguration.current
+    val haptic = LocalHapticFeedback.current
     val currentControlMode by rememberUpdatedState(controlMode)
     val currentCursorMode by rememberUpdatedState(cursorMode)
     val currentCursorPos by rememberUpdatedState(cursorPosition)
@@ -343,13 +352,27 @@ fun SwitchableMouseLayout(
                                     }
 
                                     longPressJob?.cancel()
+                                    // Di menu dengan mode Ketuk, tahan singkat sudah cukup untuk "memegang" scrollbar/slider.
+                                    val menuGrab = !capturedNow && currentControlMode == MouseControlMode.CLICK
+                                    val holdMs = if (menuGrab) {
+                                        minOf(viewConfiguration.longPressTimeoutMillis, MENU_GRAB_HOLD_MS)
+                                    } else {
+                                        viewConfiguration.longPressTimeoutMillis
+                                    }
                                     longPressJob = launch {
-                                        delay(viewConfiguration.longPressTimeoutMillis)
+                                        delay(holdMs)
                                         // Saat bermain (kursor terkunci), tahan di layar hanya memukul bila diizinkan
                                         if (!isDragging && activePointerId == downEvent.id && hotbarSlot < 0 &&
                                             (!capturedNow || currentTouchAttack)
                                         ) {
                                             longPressTriggered = true
+                                            if (menuGrab) {
+                                                // Getar singkat: tanda tombol kiri sudah menempel, jari boleh digeser.
+                                                try {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                } catch (_: Throwable) {
+                                                }
+                                            }
                                             val targetPos = if (capturedNow) {
                                                 Offset.Zero
                                             } else if (currentControlMode == MouseControlMode.CLICK) {

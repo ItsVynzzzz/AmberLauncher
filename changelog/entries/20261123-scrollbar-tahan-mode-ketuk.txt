@@ -1,0 +1,4 @@
+[id]
+! Mode sentuh "Ketuk": menahan jari di scrollbar putih Minecraft (atau slider) kini aktif lebih cepat, sekitar 0,3 detik, dan terasa getar saat sudah "menempel". Setelah itu jari bisa digeser untuk menyeret scrollbar.
+[en]
+! "Tap" touch mode: holding a finger on Minecraft's white scrollbar (or a slider) now kicks in faster, after about 0.3 seconds, with a short vibration once it has grabbed. You can then drag to move the scrollbar.

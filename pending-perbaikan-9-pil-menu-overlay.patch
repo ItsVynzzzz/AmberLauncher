@@ -1,0 +1,1884 @@
+diff --git a/app/src/main/assets/lang/en/pil-menu-overlay.tsv b/app/src/main/assets/lang/en/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..a431659
+--- /dev/null
++++ b/app/src/main/assets/lang/en/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	Menu pill: the gear opens the menu, the eye hides/shows the UI
++Ukuran pil (tinggi):	Pill size (height):
++Lebar	Width
++Tinggi	Height
++Skala halaman	Page scale
++Posisi mendatar	Horizontal position
++Posisi tegak	Vertical position
++Gandakan	Duplicate
++Kotak overlay	Overlay box
++Penuh	Full
++Tengah	Center
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Lower the scale if the alert is cut off: the page is laid out wider and then shrunk to fit the box. Below 100% uses more RAM.
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Lower the scale if the alert is cut off: the page is laid out wider and then shrunk to fit the box. Below 100% uses more RAM. Drag and resize the box right on screen via the in-game menu > Arrange on screen.
+diff --git a/app/src/main/assets/lang/en/streamer-overlay-web.tsv b/app/src/main/assets/lang/en/streamer-overlay-web.tsv
+index 3fdbfc9..1e9936f 100644
+--- a/app/src/main/assets/lang/en/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/en/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	Web overlay
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Run overlay links from Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs and others right on top of the game. Alerts, Media Share, Song Share, Subathon, Wheel and the rest are supported. The link is never shown.
+ Tempel link overlay	Paste overlay link
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	A web overlay uses extra RAM and internet data. On phones with little RAM, turn it on only when needed from the panel on the left edge of the screen. At most 4 web overlays can be shown at once.
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	A web overlay uses extra RAM and internet data. On phones with little RAM, turn it on only when needed from the in-game menu (gear icon). At most 4 web overlays can be shown at once.
+ Hanya alamat https yang bisa jadi overlay web.	Only https addresses can be used as a web overlay.
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	A web overlay fills the screen, so it cannot be moved or resized. Its layout is set in the site's own overlay settings.
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	The address is not written under the QR code so it cannot be read on screen.
+diff --git a/app/src/main/assets/lang/en/streamer.tsv b/app/src/main/assets/lang/en/streamer.tsv
+index 4c802d1..d6275c2 100644
+--- a/app/src/main/assets/lang/en/streamer.tsv
++++ b/app/src/main/assets/lang/en/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	Streamer mode
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Shows a small handle on the left edge of the game screen. Tap it to open a panel that shows and hides overlays.
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Shows overlays (text, images, links, timers, web overlays) on top of the game. Turn them on and off from the in-game menu (gear icon), with no extra button on screen.
+ Atur overlay	Set up overlays
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Text, images, links with a QR code, and timers shown on top of the game.
+ Ketuk untuk menampilkan atau menyembunyikan.	Tap to show or hide.
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	No overlays yet. Add some in Settings > Game > Streamer mode > Set up overlays.
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Show text, images, links, or timers on top of the game. Show and hide them from the panel on the left edge of the screen while playing.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Show text, images, links, or timers on top of the game. Show and hide them from the in-game menu (gear icon) while playing.
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	No overlays yet. Tap Add to create one.
+ Overlay baru	New overlay
+ Ubah overlay	Edit overlay
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Example: ko-fi.com/yourname
+ Tampilkan kode QR	Show QR code
+ Penonton bisa memindainya langsung dari layar.	Viewers can scan it right from the screen.
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	This address is too long for a QR code, so only the text is shown.
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	The timer starts at 00:00. Start, pause, and reset it from the panel on the left edge of the screen while playing.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	The timer starts at 00:00. Start, pause, and reset it from the in-game menu (gear icon) while playing.
+ Kiri atas	Top left
+ Atas	Top
+ Kanan atas	Top right
+@@ -30,7 +30,7 @@ Kanan bawah	Bottom right
+ Kecil	Small
+ Besar	Large
+ Tampil saat game mulai	Show when the game starts
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	If off, turn it on from the panel on the left edge of the screen while playing.
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	If off, turn it on from the in-game menu (gear icon) while playing.
+ Memproses gambar...	Processing image...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	A photo or logo. It is resized automatically to stay light.
+ Mulai	Start
+diff --git a/app/src/main/assets/lang/es/pil-menu-overlay.tsv b/app/src/main/assets/lang/es/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..053e888
+--- /dev/null
++++ b/app/src/main/assets/lang/es/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	P\u00edldora de men\u00fa: el engranaje abre el men\u00fa, el ojo oculta/muestra la interfaz
++Ukuran pil (tinggi):	Tama\u00f1o de la p\u00edldora (alto):
++Lebar	Ancho
++Tinggi	Alto
++Skala halaman	Escala de la p\u00e1gina
++Posisi mendatar	Posici\u00f3n horizontal
++Posisi tegak	Posici\u00f3n vertical
++Gandakan	Duplicar
++Kotak overlay	Cuadro del overlay
++Penuh	Completo
++Tengah	Centro
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Reduce la escala si la alerta se corta: la p\u00e1gina se maqueta m\u00e1s ancha y luego se reduce para caber en el cuadro. Por debajo del 100 % usa m\u00e1s RAM.
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Reduce la escala si la alerta se corta: la p\u00e1gina se maqueta m\u00e1s ancha y luego se reduce para caber en el cuadro. Por debajo del 100 % usa m\u00e1s RAM. Mueve y cambia el tama\u00f1o del cuadro directamente en pantalla desde el men\u00fa del juego > Organizar en pantalla.
+diff --git a/app/src/main/assets/lang/es/streamer-overlay-web.tsv b/app/src/main/assets/lang/es/streamer-overlay-web.tsv
+index f7b25eb..f8652b7 100644
+--- a/app/src/main/assets/lang/es/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/es/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	Overlay web
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Ejecuta enlaces de overlay de Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs y otros directamente sobre el juego. Se admiten Alertas, Media Share, Song Share, Subathon, Wheel y más. El enlace nunca se muestra.
+ Tempel link overlay	Pega el enlace del overlay
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	Un overlay web usa RAM y datos de internet adicionales. En teléfonos con poca RAM, actívalo solo cuando lo necesites desde el panel del borde izquierdo de la pantalla. Se pueden mostrar como máximo 4 overlays web a la vez.
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	Un overlay web usa RAM y datos de internet adicionales. En teléfonos con poca RAM, actívalo solo cuando lo necesites desde el menú del juego (icono de engranaje). Se pueden mostrar como máximo 4 overlays web a la vez.
+ Hanya alamat https yang bisa jadi overlay web.	Solo las direcciones https pueden usarse como overlay web.
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	Un overlay web llena la pantalla, así que no se puede mover ni cambiar de tamaño. Su diseño se configura en los ajustes de overlay del propio sitio.
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	La dirección no se escribe bajo el código QR para que no pueda leerse en pantalla.
+diff --git a/app/src/main/assets/lang/es/streamer.tsv b/app/src/main/assets/lang/es/streamer.tsv
+index 6db237e..4a5dec2 100644
+--- a/app/src/main/assets/lang/es/streamer.tsv
++++ b/app/src/main/assets/lang/es/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	Modo streamer
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Muestra un peque\u00f1o tirador en el borde izquierdo de la pantalla del juego. T\u00f3calo para abrir un panel que muestra y oculta los overlays.
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Muestra overlays (texto, im\u00e1genes, enlaces, temporizadores y overlays web) sobre el juego. Act\u00edvalos y oc\u00faltalos desde el men\u00fa del juego (icono de engranaje), sin ning\u00fan bot\u00f3n extra en pantalla.
+ Atur overlay	Configurar overlays
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Texto, im\u00e1genes, enlaces con c\u00f3digo QR y temporizadores que se muestran sobre el juego.
+ Ketuk untuk menampilkan atau menyembunyikan.	Toca para mostrar u ocultar.
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	A\u00fan no hay overlays. A\u00f1ade alguno en Ajustes > Juego > Modo streamer > Configurar overlays.
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Muestra texto, im\u00e1genes, enlaces o temporizadores sobre el juego. Mu\u00e9stralos y oc\u00faltalos desde el panel del borde izquierdo de la pantalla mientras juegas.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Muestra texto, im\u00e1genes, enlaces o temporizadores sobre el juego. Mu\u00e9stralos y oc\u00faltalos desde el men\u00fa del juego (icono de engranaje) mientras juegas.
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	A\u00fan no hay overlays. Toca A\u00f1adir para crear uno.
+ Overlay baru	Nuevo overlay
+ Ubah overlay	Editar overlay
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Ejemplo: ko-fi.com/tunombre
+ Tampilkan kode QR	Mostrar c\u00f3digo QR
+ Penonton bisa memindainya langsung dari layar.	Los espectadores pueden escanearlo directamente desde la pantalla.
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Esta direcci\u00f3n es demasiado larga para un c\u00f3digo QR, as\u00ed que solo se muestra el texto.
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	El temporizador empieza en 00:00. In\u00edcialo, p\u00e1usalo y restabl\u00e9celo desde el panel del borde izquierdo de la pantalla mientras juegas.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	El temporizador empieza en 00:00. In\u00edcialo, p\u00e1usalo y restabl\u00e9celo desde el men\u00fa del juego (icono de engranaje) mientras juegas.
+ Kiri atas	Arriba izquierda
+ Atas	Arriba
+ Kanan atas	Arriba derecha
+@@ -30,7 +30,7 @@ Kanan bawah	Abajo derecha
+ Kecil	Peque\u00f1a
+ Besar	Grande
+ Tampil saat game mulai	Mostrar al iniciar el juego
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Si est\u00e1 desactivado, act\u00edvalo desde el panel del borde izquierdo de la pantalla mientras juegas.
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	Si est\u00e1 desactivado, act\u00edvalo desde el men\u00fa del juego (icono de engranaje) mientras juegas.
+ Memproses gambar...	Procesando imagen...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	Una foto o un logotipo. Se reduce autom\u00e1ticamente para que sea ligero.
+ Mulai	Iniciar
+diff --git a/app/src/main/assets/lang/fil/pil-menu-overlay.tsv b/app/src/main/assets/lang/fil/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..9fb49b2
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	Menu pill: ang gear ay nagbubukas ng menu, ang mata ay nagtatago/nagpapakita ng UI
++Ukuran pil (tinggi):	Laki ng pill (taas):
++Lebar	Lapad
++Tinggi	Taas
++Skala halaman	Scale ng page
++Posisi mendatar	Pahalang na posisyon
++Posisi tegak	Patayong posisyon
++Gandakan	I-duplicate
++Kotak overlay	Kahon ng overlay
++Penuh	Buo
++Tengah	Gitna
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Ibaba ang scale kung naputol ang alert: mas malapad ang pagkaayos ng page at saka paliliitin para magkasya sa kahon. Kapag mas mababa sa 100%, mas maraming RAM ang ginagamit.
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Ibaba ang scale kung naputol ang alert: mas malapad ang pagkaayos ng page at saka paliliitin para magkasya sa kahon. Kapag mas mababa sa 100%, mas maraming RAM ang ginagamit. I-drag at baguhin ang laki ng kahon mismo sa screen mula sa menu sa loob ng laro > Ayusin sa screen.
+diff --git a/app/src/main/assets/lang/fil/streamer-overlay-web.tsv b/app/src/main/assets/lang/fil/streamer-overlay-web.tsv
+index dac13e7..fe72111 100644
+--- a/app/src/main/assets/lang/fil/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/fil/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	Web overlay
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Patakbuhin ang mga overlay link mula sa Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs at iba pa mismo sa ibabaw ng laro. Sinusuportahan ang Alert, Media Share, Song Share, Subathon, Wheel at iba pa. Hindi kailanman ipinapakita ang link.
+ Tempel link overlay	I-paste ang overlay link
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	Gumagamit ang web overlay ng dagdag na RAM at internet data. Sa mga teleponong maliit ang RAM, i-on lang kapag kailangan mula sa panel sa kaliwang gilid ng screen. Hanggang 4 na web overlay lang ang maipapakita nang sabay.
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	Gumagamit ang web overlay ng dagdag na RAM at internet data. Sa mga teleponong maliit ang RAM, i-on lang kapag kailangan mula sa menu sa loob ng laro (icon na gear). Hanggang 4 na web overlay lang ang maipapakita nang sabay.
+ Hanya alamat https yang bisa jadi overlay web.	Mga https na address lang ang puwedeng gawing web overlay.
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	Pumupuno sa screen ang web overlay, kaya hindi ito maililipat o mapapalitan ang laki. Sa sariling overlay settings ng site itinatakda ang layout nito.
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	Hindi isinusulat ang address sa ilalim ng QR code para hindi ito mabasa sa screen.
+diff --git a/app/src/main/assets/lang/fil/streamer.tsv b/app/src/main/assets/lang/fil/streamer.tsv
+index 75f8b7d..cf9c22b 100644
+--- a/app/src/main/assets/lang/fil/streamer.tsv
++++ b/app/src/main/assets/lang/fil/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	Streamer mode
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Nagpapakita ng maliit na handle sa kaliwang gilid ng screen ng laro. I-tap ito para buksan ang panel na nagpapakita at nagtatago ng mga overlay.
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Nagpapakita ng mga overlay (teksto, larawan, link, timer, web overlay) sa ibabaw ng laro. I-on at itago ang mga ito mula sa menu sa loob ng laro (icon na gear), walang dagdag na button sa screen.
+ Atur overlay	I-set up ang mga overlay
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Teksto, larawan, link na may QR code, at timer na lumalabas sa ibabaw ng laro.
+ Ketuk untuk menampilkan atau menyembunyikan.	I-tap para ipakita o itago.
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Wala pang overlay. Magdagdag sa Mga Setting > Game > Streamer mode > I-set up ang mga overlay.
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Magpakita ng teksto, larawan, link, o timer sa ibabaw ng laro. Ipakita at itago ang mga ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Magpakita ng teksto, larawan, link, o timer sa ibabaw ng laro. Ipakita at itago ang mga ito mula sa menu sa loob ng laro (icon na gear) habang naglalaro.
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	Wala pang overlay. I-tap ang Magdagdag para gumawa.
+ Overlay baru	Bagong overlay
+ Ubah overlay	I-edit ang overlay
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Halimbawa: ko-fi.com/pangalanmo
+ Tampilkan kode QR	Ipakita ang QR code
+ Penonton bisa memindainya langsung dari layar.	Maaaring i-scan ito ng mga manonood nang direkta mula sa screen.
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Masyadong mahaba ang address na ito para sa QR code, kaya teksto lang ang ipapakita.
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	Nagsisimula ang timer sa 00:00. Simulan, i-pause, at i-reset ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	Nagsisimula ang timer sa 00:00. Simulan, i-pause, at i-reset ito mula sa menu sa loob ng laro (icon na gear) habang naglalaro.
+ Kiri atas	Itaas na kaliwa
+ Atas	Itaas
+ Kanan atas	Itaas na kanan
+@@ -30,7 +30,7 @@ Kanan bawah	Ibaba na kanan
+ Kecil	Maliit
+ Besar	Malaki
+ Tampil saat game mulai	Ipakita pagsisimula ng laro
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Kapag naka-off, i-on ito mula sa panel sa kaliwang gilid ng screen habang naglalaro.
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	Kapag naka-off, i-on ito mula sa menu sa loob ng laro (icon na gear) habang naglalaro.
+ Memproses gambar...	Pinoproseso ang larawan...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	Larawan o logo. Awtomatikong liliit para gumaan.
+ Mulai	Simulan
+diff --git a/app/src/main/assets/lang/pt/pil-menu-overlay.tsv b/app/src/main/assets/lang/pt/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..2232366
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	P\u00edlula do menu: a engrenagem abre o menu, o olho oculta/mostra a interface
++Ukuran pil (tinggi):	Tamanho da p\u00edlula (altura):
++Lebar	Largura
++Tinggi	Altura
++Skala halaman	Escala da p\u00e1gina
++Posisi mendatar	Posi\u00e7\u00e3o horizontal
++Posisi tegak	Posi\u00e7\u00e3o vertical
++Gandakan	Duplicar
++Kotak overlay	Caixa do overlay
++Penuh	Cheio
++Tengah	Centro
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Reduza a escala se o alerta ficar cortado: a p\u00e1gina \u00e9 montada mais larga e depois reduzida para caber na caixa. Abaixo de 100% usa mais RAM.
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Reduza a escala se o alerta ficar cortado: a p\u00e1gina \u00e9 montada mais larga e depois reduzida para caber na caixa. Abaixo de 100% usa mais RAM. Arraste e redimensione a caixa direto na tela pelo menu do jogo > Organizar na tela.
+diff --git a/app/src/main/assets/lang/pt/streamer-overlay-web.tsv b/app/src/main/assets/lang/pt/streamer-overlay-web.tsv
+index 3fe6bc8..a359e47 100644
+--- a/app/src/main/assets/lang/pt/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/pt/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	Overlay web
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Execute links de overlay do Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs e outros direto sobre o jogo. Alertas, Media Share, Song Share, Subathon, Wheel e os demais são compatíveis. O link nunca é exibido.
+ Tempel link overlay	Cole o link do overlay
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	Um overlay web usa RAM e dados de internet extras. Em celulares com pouca RAM, ligue só quando precisar, pelo painel na borda esquerda da tela. No máximo 4 overlays web aparecem ao mesmo tempo.
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	Um overlay web usa RAM e dados de internet extras. Em celulares com pouca RAM, ligue só quando precisar, pelo menu do jogo (ícone de engrenagem). No máximo 4 overlays web aparecem ao mesmo tempo.
+ Hanya alamat https yang bisa jadi overlay web.	Só endereços https podem virar overlay web.
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	Um overlay web preenche a tela, então não pode ser movido nem redimensionado. O layout é definido nas configurações de overlay do próprio site.
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	O endereço não é escrito abaixo do QR code para que não possa ser lido na tela.
+diff --git a/app/src/main/assets/lang/pt/streamer.tsv b/app/src/main/assets/lang/pt/streamer.tsv
+index 7ec267f..8434ed5 100644
+--- a/app/src/main/assets/lang/pt/streamer.tsv
++++ b/app/src/main/assets/lang/pt/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	Modo streamer
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Mostra uma pequena al\u00e7a na borda esquerda da tela do jogo. Toque nela para abrir um painel que mostra e oculta os overlays.
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Mostra overlays (texto, imagens, links, temporizadores e overlays web) sobre o jogo. Ligue e desligue pelo menu do jogo (\u00edcone de engrenagem), sem nenhum bot\u00e3o extra na tela.
+ Atur overlay	Configurar overlays
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Texto, imagens, links com c\u00f3digo QR e temporizadores exibidos sobre o jogo.
+ Ketuk untuk menampilkan atau menyembunyikan.	Toque para mostrar ou ocultar.
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Ainda n\u00e3o h\u00e1 overlays. Adicione em Configura\u00e7\u00f5es > Jogo > Modo streamer > Configurar overlays.
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Exiba texto, imagens, links ou temporizadores sobre o jogo. Mostre e oculte pelo painel na borda esquerda da tela enquanto joga.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Exiba texto, imagens, links ou temporizadores sobre o jogo. Mostre e oculte pelo menu do jogo (\u00edcone de engrenagem) enquanto joga.
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	Ainda n\u00e3o h\u00e1 overlays. Toque em Adicionar para criar um.
+ Overlay baru	Novo overlay
+ Ubah overlay	Editar overlay
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Exemplo: ko-fi.com/seunome
+ Tampilkan kode QR	Mostrar c\u00f3digo QR
+ Penonton bisa memindainya langsung dari layar.	Os espectadores podem escane\u00e1-lo direto da tela.
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Este endere\u00e7o \u00e9 longo demais para um c\u00f3digo QR, ent\u00e3o s\u00f3 o texto \u00e9 exibido.
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	O temporizador come\u00e7a em 00:00. Inicie, pause e redefina pelo painel na borda esquerda da tela enquanto joga.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	O temporizador come\u00e7a em 00:00. Inicie, pause e redefina pelo menu do jogo (\u00edcone de engrenagem) enquanto joga.
+ Kiri atas	Superior esquerdo
+ Atas	Topo
+ Kanan atas	Superior direito
+@@ -30,7 +30,7 @@ Kanan bawah	Inferior direito
+ Kecil	Pequena
+ Besar	Grande
+ Tampil saat game mulai	Exibir ao iniciar o jogo
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Se estiver desativado, ative pelo painel na borda esquerda da tela enquanto joga.
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	Se estiver desativado, ative pelo menu do jogo (\u00edcone de engrenagem) enquanto joga.
+ Memproses gambar...	Processando imagem...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	Uma foto ou logotipo. \u00c9 reduzida automaticamente para ficar leve.
+ Mulai	Iniciar
+diff --git a/app/src/main/assets/lang/th/pil-menu-overlay.tsv b/app/src/main/assets/lang/th/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..9b77f00
+--- /dev/null
++++ b/app/src/main/assets/lang/th/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	ปุ่มแคปซูลเมนู: ไอคอนเฟืองเปิดเมนู ไอคอนตาซ่อน/แสดง UI
++Ukuran pil (tinggi):	ขนาดแคปซูล (ความสูง):
++Lebar	ความกว้าง
++Tinggi	ความสูง
++Skala halaman	สเกลหน้าเว็บ
++Posisi mendatar	ตำแหน่งแนวนอน
++Posisi tegak	ตำแหน่งแนวตั้ง
++Gandakan	ทำสำเนา
++Kotak overlay	กรอบโอเวอร์เลย์
++Penuh	เต็ม
++Tengah	กลาง
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	ลดสเกลหากการแจ้งเตือนถูกตัด: หน้าเว็บจะถูกจัดวางให้กว้างขึ้นแล้วย่อให้พอดีกรอบ ต่ำกว่า 100% จะใช้ RAM มากขึ้น
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	ลดสเกลหากการแจ้งเตือนถูกตัด: หน้าเว็บจะถูกจัดวางให้กว้างขึ้นแล้วย่อให้พอดีกรอบ ต่ำกว่า 100% จะใช้ RAM มากขึ้น ลากและปรับขนาดกรอบได้บนหน้าจอโดยตรงผ่านเมนูในเกม > จัดวางบนหน้าจอ
+diff --git a/app/src/main/assets/lang/th/streamer-overlay-web.tsv b/app/src/main/assets/lang/th/streamer-overlay-web.tsv
+index be02933..13015f9 100644
+--- a/app/src/main/assets/lang/th/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/th/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	โอเวอร์เลย์เว็บ
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	รันลิงก์โอเวอร์เลย์จาก Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs และอื่น ๆ บนเกมได้โดยตรง รองรับ Alert, Media Share, Song Share, Subathon, Wheel และอื่น ๆ ลิงก์จะไม่ถูกแสดง
+ Tempel link overlay	วางลิงก์โอเวอร์เลย์
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	โอเวอร์เลย์เว็บใช้ RAM และอินเทอร์เน็ตเพิ่ม บนมือถือที่ RAM น้อย ให้เปิดเฉพาะตอนจำเป็นจากแผงที่ขอบซ้ายของหน้าจอ แสดงโอเวอร์เลย์เว็บพร้อมกันได้สูงสุด 4 รายการ
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	โอเวอร์เลย์เว็บใช้ RAM และอินเทอร์เน็ตเพิ่ม บนมือถือที่ RAM น้อย ให้เปิดเฉพาะตอนจำเป็นจากเมนูในเกม (ไอคอนเฟือง) แสดงโอเวอร์เลย์เว็บพร้อมกันได้สูงสุด 4 รายการ
+ Hanya alamat https yang bisa jadi overlay web.	ใช้ได้เฉพาะที่อยู่ https เป็นโอเวอร์เลย์เว็บ
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	โอเวอร์เลย์เว็บเต็มหน้าจอ จึงย้ายหรือปรับขนาดไม่ได้ เลย์เอาต์ตั้งค่าได้ที่การตั้งค่าโอเวอร์เลย์ของเว็บนั้นเอง
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	ที่อยู่จะไม่ถูกเขียนใต้คิวอาร์โค้ด เพื่อไม่ให้อ่านได้บนหน้าจอ
+diff --git a/app/src/main/assets/lang/th/streamer.tsv b/app/src/main/assets/lang/th/streamer.tsv
+index cd207dc..8731423 100644
+--- a/app/src/main/assets/lang/th/streamer.tsv
++++ b/app/src/main/assets/lang/th/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	โหมดสตรีมเมอร์
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	แสดงที่จับเล็ก ๆ ที่ขอบซ้ายของหน้าจอเกม แตะเพื่อเปิดแผงสำหรับแสดงและซ่อนโอเวอร์เลย์
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	แสดงโอเวอร์เลย์ (ข้อความ รูปภาพ ลิงก์ ตัวจับเวลา โอเวอร์เลย์เว็บ) บนเกม เปิดและซ่อนได้จากเมนูในเกม (ไอคอนเฟือง) โดยไม่มีปุ่มเพิ่มบนหน้าจอ
+ Atur overlay	ตั้งค่าโอเวอร์เลย์
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	ข้อความ รูปภาพ ลิงก์พร้อมคิวอาร์โค้ด และตัวจับเวลาที่แสดงบนเกม
+ Ketuk untuk menampilkan atau menyembunyikan.	แตะเพื่อแสดงหรือซ่อน
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	ยังไม่มีโอเวอร์เลย์ เพิ่มได้ที่ การตั้งค่า > เกม > โหมดสตรีมเมอร์ > ตั้งค่าโอเวอร์เลย์
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	แสดงข้อความ รูปภาพ ลิงก์ หรือตัวจับเวลาบนเกม เปิดและซ่อนได้จากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	แสดงข้อความ รูปภาพ ลิงก์ หรือตัวจับเวลาบนเกม เปิดและซ่อนได้จากเมนูในเกม (ไอคอนเฟือง) ขณะเล่น
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	ยังไม่มีโอเวอร์เลย์ แตะ เพิ่ม เพื่อสร้าง
+ Overlay baru	โอเวอร์เลย์ใหม่
+ Ubah overlay	แก้ไขโอเวอร์เลย์
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	ตัวอย่าง: ko-fi.com/ชื่อขอ
+ Tampilkan kode QR	แสดงคิวอาร์โค้ด
+ Penonton bisa memindainya langsung dari layar.	ผู้ชมสแกนได้จากหน้าจอโดยตรง
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	ที่อยู่นี้ยาวเกินไปสำหรับคิวอาร์โค้ด จึงแสดงเฉพาะข้อความ
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	ตัวจับเวลาเริ่มที่ 00:00 เริ่ม หยุดชั่วคราว และรีเซ็ตได้จากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	ตัวจับเวลาเริ่มที่ 00:00 เริ่ม หยุดชั่วคราว และรีเซ็ตได้จากเมนูในเกม (ไอคอนเฟือง) ขณะเล่น
+ Kiri atas	บนซ้าย
+ Atas	บน
+ Kanan atas	บนขวา
+@@ -30,7 +30,7 @@ Kanan bawah	ล่างขวา
+ Kecil	เล็ก
+ Besar	ใหญ่
+ Tampil saat game mulai	แสดงเมื่อเริ่มเกม
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	หากปิดอยู่ ให้เปิดจากแผงที่ขอบซ้ายของหน้าจอขณะเล่น
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	หากปิดอยู่ ให้เปิดจากเมนูในเกม (ไอคอนเฟือง) ขณะเล่น
+ Memproses gambar...	กำลังประมวลผลรูปภาพ...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	รูปถ่ายหรือโลโก้ จะถูกย่อขนาดอัตโนมัติเพื่อให้เบา
+ Mulai	เริ่ม
+diff --git a/app/src/main/assets/lang/vi/pil-menu-overlay.tsv b/app/src/main/assets/lang/vi/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..d77d54e
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	N\u00fat menu d\u1ea1ng vi\u00ean: b\u00e1nh r\u0103ng m\u1edf menu, con m\u1eaft \u1ea9n/hi\u1ec7n giao di\u1ec7n
++Ukuran pil (tinggi):	C\u1ee1 n\u00fat (chi\u1ec1u cao):
++Lebar	Chi\u1ec1u r\u1ed9ng
++Tinggi	Chi\u1ec1u cao
++Skala halaman	T\u1ef7 l\u1ec7 trang
++Posisi mendatar	V\u1ecb tr\u00ed ngang
++Posisi tegak	V\u1ecb tr\u00ed d\u1ecdc
++Gandakan	Nh\u00e2n \u0111\u00f4i
++Kotak overlay	Khung overlay
++Penuh	To\u00e0n b\u1ed9
++Tengah	Gi\u1eefa
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Gi\u1ea3m t\u1ef7 l\u1ec7 n\u1ebfu th\u00f4ng b\u00e1o b\u1ecb c\u1eaft: trang \u0111\u01b0\u1ee3c d\u00e0n r\u1ed9ng h\u01a1n r\u1ed3i thu nh\u1ecf v\u1eeba khung. D\u01b0\u1edbi 100% s\u1ebd t\u1ed1n th\u00eam RAM.
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Gi\u1ea3m t\u1ef7 l\u1ec7 n\u1ebfu th\u00f4ng b\u00e1o b\u1ecb c\u1eaft: trang \u0111\u01b0\u1ee3c d\u00e0n r\u1ed9ng h\u01a1n r\u1ed3i thu nh\u1ecf v\u1eeba khung. D\u01b0\u1edbi 100% s\u1ebd t\u1ed1n th\u00eam RAM. K\u00e9o v\u00e0 \u0111\u1ed5i k\u00edch th\u01b0\u1edbc khung ngay tr\u00ean m\u00e0n h\u00ecnh qua menu trong game > S\u1eafp x\u1ebfp tr\u00ean m\u00e0n h\u00ecnh.
+diff --git a/app/src/main/assets/lang/vi/streamer-overlay-web.tsv b/app/src/main/assets/lang/vi/streamer-overlay-web.tsv
+index 5a790e7..28ecf62 100644
+--- a/app/src/main/assets/lang/vi/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/vi/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	Overlay web
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	Chạy liên kết overlay từ Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs và các nền tảng khác ngay trên game. Hỗ trợ Alert, Media Share, Song Share, Subathon, Wheel và nhiều loại khác. Liên kết không bao giờ được hiển thị.
+ Tempel link overlay	Dán liên kết overlay
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	Overlay web dùng thêm RAM và dữ liệu internet. Trên điện thoại ít RAM, chỉ bật khi cần từ bảng ở cạnh trái màn hình. Hiển thị tối đa 4 overlay web cùng lúc.
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	Overlay web dùng thêm RAM và dữ liệu internet. Trên điện thoại ít RAM, chỉ bật khi cần từ menu trong game (biểu tượng bánh răng). Hiển thị tối đa 4 overlay web cùng lúc.
+ Hanya alamat https yang bisa jadi overlay web.	Chỉ địa chỉ https mới dùng được làm overlay web.
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	Overlay web phủ kín màn hình nên không thể di chuyển hay đổi kích thước. Bố cục được đặt trong phần cài đặt overlay của chính trang web đó.
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	Địa chỉ không được ghi dưới mã QR để không bị đọc được trên màn hình.
+diff --git a/app/src/main/assets/lang/vi/streamer.tsv b/app/src/main/assets/lang/vi/streamer.tsv
+index 1c8ae15..890f7ab 100644
+--- a/app/src/main/assets/lang/vi/streamer.tsv
++++ b/app/src/main/assets/lang/vi/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	Ch\u1ebf \u0111\u1ed9 streamer
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Hi\u1ec7n m\u1ed9t tay n\u1eafm nh\u1ecf \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh game. Ch\u1ea1m v\u00e0o \u0111\u1ec3 m\u1edf b\u1ea3ng hi\u1ec7n v\u00e0 \u1ea9n c\u00e1c overlay.
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Hi\u1ec7n c\u00e1c overlay (v\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft, b\u1ed9 h\u1eb9n gi\u1edd, overlay web) ph\u00eda tr\u00ean game. B\u1eadt v\u00e0 \u1ea9n ch\u00fang t\u1eeb menu trong game (bi\u1ec3u t\u01b0\u1ee3ng b\u00e1nh r\u0103ng), kh\u00f4ng c\u1ea7n th\u00eam n\u00fat n\u00e0o tr\u00ean m\u00e0n h\u00ecnh.
+ Atur overlay	Thi\u1ebft l\u1eadp overlay
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	V\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft k\u00e8m m\u00e3 QR v\u00e0 b\u1ed9 h\u1eb9n gi\u1edd hi\u1ec3n th\u1ecb ph\u00eda tr\u00ean game.
+ Ketuk untuk menampilkan atau menyembunyikan.	Ch\u1ea1m \u0111\u1ec3 hi\u1ec7n ho\u1eb7c \u1ea9n.
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	Ch\u01b0a c\u00f3 overlay n\u00e0o. H\u00e3y th\u00eam t\u1ea1i C\u00e0i \u0111\u1eb7t > Game > Ch\u1ebf \u0111\u1ed9 streamer > Thi\u1ebft l\u1eadp overlay.
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Hi\u1ec7n v\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft ho\u1eb7c b\u1ed9 h\u1eb9n gi\u1edd ph\u00eda tr\u00ean game. Hi\u1ec7n v\u00e0 \u1ea9n ch\u00fang t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Hi\u1ec7n v\u0103n b\u1ea3n, h\u00ecnh \u1ea3nh, li\u00ean k\u1ebft ho\u1eb7c b\u1ed9 h\u1eb9n gi\u1edd ph\u00eda tr\u00ean game. Hi\u1ec7n v\u00e0 \u1ea9n ch\u00fang t\u1eeb menu trong game (bi\u1ec3u t\u01b0\u1ee3ng b\u00e1nh r\u0103ng) khi \u0111ang ch\u01a1i.
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	Ch\u01b0a c\u00f3 overlay n\u00e0o. Ch\u1ea1m Th\u00eam \u0111\u1ec3 t\u1ea1o.
+ Overlay baru	Overlay m\u1edbi
+ Ubah overlay	S\u1eeda overlay
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	V\u00ed d\u1ee5: ko-fi.com/tencuaban
+ Tampilkan kode QR	Hi\u1ec7n m\u00e3 QR
+ Penonton bisa memindainya langsung dari layar.	Ng\u01b0\u1eddi xem c\u00f3 th\u1ec3 qu\u00e9t tr\u1ef1c ti\u1ebfp t\u1eeb m\u00e0n h\u00ecnh.
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	\u0110\u1ecba ch\u1ec9 n\u00e0y qu\u00e1 d\u00e0i cho m\u00e3 QR n\u00ean ch\u1ec9 hi\u1ec7n v\u0103n b\u1ea3n.
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	B\u1ed9 h\u1eb9n gi\u1edd b\u1eaft \u0111\u1ea7u t\u1eeb 00:00. B\u1eaft \u0111\u1ea7u, t\u1ea1m d\u1eebng v\u00e0 \u0111\u1eb7t l\u1ea1i t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	B\u1ed9 h\u1eb9n gi\u1edd b\u1eaft \u0111\u1ea7u t\u1eeb 00:00. B\u1eaft \u0111\u1ea7u, t\u1ea1m d\u1eebng v\u00e0 \u0111\u1eb7t l\u1ea1i t\u1eeb menu trong game (bi\u1ec3u t\u01b0\u1ee3ng b\u00e1nh r\u0103ng) khi \u0111ang ch\u01a1i.
+ Kiri atas	Tr\u00ean tr\u00e1i
+ Atas	Tr\u00ean
+ Kanan atas	Tr\u00ean ph\u1ea3i
+@@ -30,7 +30,7 @@ Kanan bawah	D\u01b0\u1edbi ph\u1ea3i
+ Kecil	Nh\u1ecf
+ Besar	L\u1edbn
+ Tampil saat game mulai	Hi\u1ec7n khi game b\u1eaft \u0111\u1ea7u
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	N\u1ebfu t\u1eaft, h\u00e3y b\u1eadt t\u1eeb b\u1ea3ng \u1edf c\u1ea1nh tr\u00e1i m\u00e0n h\u00ecnh khi \u0111ang ch\u01a1i.
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	N\u1ebfu t\u1eaft, h\u00e3y b\u1eadt t\u1eeb menu trong game (bi\u1ec3u t\u01b0\u1ee3ng b\u00e1nh r\u0103ng) khi \u0111ang ch\u01a1i.
+ Memproses gambar...	\u0110ang x\u1eed l\u00fd h\u00ecnh \u1ea3nh...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	\u1ea2nh ho\u1eb7c logo. T\u1ef1 \u0111\u1ed9ng thu nh\u1ecf \u0111\u1ec3 nh\u1eb9.
+ Mulai	B\u1eaft \u0111\u1ea7u
+diff --git a/app/src/main/assets/lang/zh/pil-menu-overlay.tsv b/app/src/main/assets/lang/zh/pil-menu-overlay.tsv
+new file mode 100644
+index 0000000..d39a2e7
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/pil-menu-overlay.tsv
+@@ -0,0 +1,14 @@
++# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
++Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	菜单胶囊键：齿轮打开菜单，眼睛隐藏/显示界面
++Ukuran pil (tinggi):	胶囊大小（高度）：
++Lebar	宽度
++Tinggi	高度
++Skala halaman	页面缩放
++Posisi mendatar	水平位置
++Posisi tegak	垂直位置
++Gandakan	复制
++Kotak overlay	叠加层区域
++Penuh	全屏
++Tengah	居中
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	若提醒被截断，请调低缩放：页面会按更宽的版面排布，再缩小到框内。低于 100% 会占用更多内存。
++Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	若提醒被截断，请调低缩放：页面会按更宽的版面排布，再缩小到框内。低于 100% 会占用更多内存。可通过游戏内菜单 > 在屏幕上调整，直接在屏幕上拖动并调整框的大小。
+diff --git a/app/src/main/assets/lang/zh/streamer-overlay-web.tsv b/app/src/main/assets/lang/zh/streamer-overlay-web.tsv
+index 39eb400..e17683a 100644
+--- a/app/src/main/assets/lang/zh/streamer-overlay-web.tsv
++++ b/app/src/main/assets/lang/zh/streamer-overlay-web.tsv
+@@ -2,7 +2,7 @@
+ Overlay web	网页叠加层
+ Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	直接在游戏上运行来自 Saweria、Sociabuzz、Trakteer、StreamElements、Streamlabs 等平台的叠加层链接。支持 Alert、Media Share、Song Share、Subathon、Wheel 等类型。链接不会被显示。
+ Tempel link overlay	粘贴叠加层链接
+-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	网页叠加层会额外占用内存和网络流量。内存较小的手机请在需要时，通过屏幕左边缘的面板再开启。最多同时显示 4 个网页叠加层。
++Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	网页叠加层会额外占用内存和网络流量。内存较小的手机请在需要时，通过游戏内菜单（齿轮图标）再开启。最多同时显示 4 个网页叠加层。
+ Hanya alamat https yang bisa jadi overlay web.	只有 https 地址才能用作网页叠加层。
+ Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	网页叠加层会铺满屏幕，因此不能移动或调整大小。布局请在该网站自己的叠加层设置中调整。
+ Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	二维码下方不会写出地址，以免在屏幕上被读到。
+diff --git a/app/src/main/assets/lang/zh/streamer.tsv b/app/src/main/assets/lang/zh/streamer.tsv
+index 68c50cb..f609217 100644
+--- a/app/src/main/assets/lang/zh/streamer.tsv
++++ b/app/src/main/assets/lang/zh/streamer.tsv
+@@ -1,11 +1,11 @@
+ # Mode streamer: overlay di dalam game
+ Mode streamer	主播模式
+-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	在游戏画面左边缘显示一个小把手。点按即可打开面板，用来显示或隐藏叠加层。
++Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	在游戏画面上显示叠加层（文字、图片、链接、计时器、网页叠加层）。游玩时通过游戏内菜单（齿轮图标）开启或隐藏，屏幕上不再多出按钮。
+ Atur overlay	设置叠加层
+ Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	显示在游戏画面上的文字、图片、带二维码的链接和计时器。
+ Ketuk untuk menampilkan atau menyembunyikan.	点按即可显示或隐藏。
+ Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	还没有叠加层。请在 设置 > 游戏 > 主播模式 > 设置叠加层 中添加。
+-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	在游戏画面上显示文字、图片、链接或计时器。游玩时可通过屏幕左边缘的面板显示或隐藏。
++Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	在游戏画面上显示文字、图片、链接或计时器。游玩时可通过游戏内菜单（齿轮图标）显示或隐藏。
+ Belum ada overlay. Ketuk Tambah untuk membuatnya.	还没有叠加层。点按“添加”即可创建。
+ Overlay baru	新建叠加层
+ Ubah overlay	编辑叠加层
+@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	例如：ko-fi.com/你的名字
+ Tampilkan kode QR	显示二维码
+ Penonton bisa memindainya langsung dari layar.	观众可以直接扫描屏幕上的二维码。
+ Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	此地址过长，无法生成二维码，因此只显示文字。
+-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	计时器从 00:00 开始。游玩时可通过屏幕左边缘的面板开始、暂停和重置。
++Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	计时器从 00:00 开始。游玩时可通过游戏内菜单（齿轮图标）开始、暂停和重置。
+ Kiri atas	左上
+ Atas	顶部
+ Kanan atas	右上
+@@ -30,7 +30,7 @@ Kanan bawah	右下
+ Kecil	小
+ Besar	大
+ Tampil saat game mulai	游戏开始时显示
+-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	若关闭，游玩时可通过屏幕左边缘的面板开启。
++Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	若关闭，游玩时可通过游戏内菜单（齿轮图标）开启。
+ Memproses gambar...	正在处理图片...
+ Foto atau logo. Dikecilkan otomatis supaya ringan.	照片或徽标。会自动缩小以保持轻量。
+ Mulai	开始
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index e5ae8c2..edfb27d 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -940,8 +940,38 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+     private fun isPhysicalKeyboardKey(event: KeyEvent): Boolean =
+         event.deviceId >= 0 &&
+             (event.flags and KeyEvent.FLAG_SOFT_KEYBOARD) == 0 &&
++            !isSystemHardwareKey(event.keyCode) &&
+             !TouchCharInput.recentlyActive(SOFT_KEY_GRACE_MS)
+ 
++    /**
++     * Tombol bawaan HP (volume, daya, kamera) dan tombol media dari headset: datang dari "perangkat keyboard" milik
++     * HP sendiri, tapi bukan tanda pengguna memakai keyboard fisik. Dulu menekan volume saja menyembunyikan semua
++     * tombol layar.
++     */
++    private fun isSystemHardwareKey(keyCode: Int): Boolean = when (keyCode) {
++        KeyEvent.KEYCODE_VOLUME_UP,
++        KeyEvent.KEYCODE_VOLUME_DOWN,
++        KeyEvent.KEYCODE_VOLUME_MUTE,
++        KeyEvent.KEYCODE_POWER,
++        KeyEvent.KEYCODE_CAMERA,
++        KeyEvent.KEYCODE_HEADSETHOOK,
++        KeyEvent.KEYCODE_MEDIA_PLAY,
++        KeyEvent.KEYCODE_MEDIA_PAUSE,
++        KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
++        KeyEvent.KEYCODE_MEDIA_STOP,
++        KeyEvent.KEYCODE_MEDIA_NEXT,
++        KeyEvent.KEYCODE_MEDIA_PREVIOUS,
++        KeyEvent.KEYCODE_MEDIA_REWIND,
++        KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
++        KeyEvent.KEYCODE_BRIGHTNESS_UP,
++        KeyEvent.KEYCODE_BRIGHTNESS_DOWN,
++        KeyEvent.KEYCODE_SLEEP,
++        KeyEvent.KEYCODE_WAKEUP,
++        KeyEvent.KEYCODE_ASSIST,
++        KeyEvent.KEYCODE_VOICE_ASSIST -> true
++        else -> false
++    }
++
+     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+         // If soft keyboard IME input view is active, allow standard handling
+         if (TouchCharInput.isActive()) {
+@@ -1955,15 +1985,9 @@ fun GameScreen(
+     var isConsoleVisible by remember { mutableStateOf(false) }
+     var isConsoleExpanded by remember { mutableStateOf(false) }
+     var showExitConfirmDialog by remember { mutableStateOf(false) }
+-    // Panel mode streamer (sidebar kiri) terbuka. Bukan dialog, tapi menutupi sebagian game selama terbuka.
+-    var showStreamerPanel by remember { mutableStateOf(false) }
+-    // Menu pengaturan membawa panel overlay sendiri, jadi panel cepat di tepi kiri ditutup saat menu dibuka.
+-    LaunchedEffect(showInGameSettingsDialog) {
+-        if (showInGameSettingsDialog) showStreamerPanel = false
+-    }
+     // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
+     // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
+-    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || showStreamerPanel || streamerEditorOpen
++    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || streamerEditorOpen
+     SideEffect { MenuMouse.overlayOpen = overlayCoversGame }
+     LaunchedEffect(overlayCoversGame) {
+         if (overlayCoversGame) MenuMouse.reset()
+@@ -2316,15 +2340,12 @@ fun GameScreen(
+             }
+         }
+ 
+-        // Overlay mode streamer: teks, gambar, link/QR, dan timer di atas game, plus sidebar kiri untuk
+-        // menyalakan dan mematikannya. Di atas tombol layar (supaya gagangnya bisa disentuh), di bawah menu.
++        // Overlay mode streamer: teks, gambar, link/QR, timer, dan overlay web di atas game. Menyalakan dan
++        // mematikannya lewat panel kiri di menu dalam game (tidak ada gagang di tepi layar). Di bawah menu.
+         // Saat editor terbuka, editor menggambar overlay sendiri, jadi lapisan ini disembunyikan.
+         if (launcherSettings.streamerMode && controlsAllowed && !streamerEditorOpen) {
+             StreamerLayer(
+                 items = launcherSettings.streamerItems,
+-                panelOpen = showStreamerPanel,
+-                onPanelChange = { showStreamerPanel = it },
+-                ghostHandle = ghostControls,
+                 chromeVisible = !showInGameSettingsDialog
+             )
+         }
+@@ -2367,7 +2388,6 @@ fun GameScreen(
+                 items = launcherSettings.streamerItems,
+                 onArrange = {
+                     showInGameSettingsDialog = false
+-                    showStreamerPanel = false
+                     streamerEditorOpen = true
+                 },
+                 onClose = { showInGameSettingsDialog = false },
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index eb90f3b..caf6760 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -142,8 +142,8 @@ data class LauncherSettings(
+     val uiScalePercent: Int = 100,
+     val homeSkinScalePercent: Int = 100,
+ 
+-    // Mode streamer: sidebar tersembunyi di tepi kiri layar game untuk menampilkan overlay (teks, gambar,
+-    // link dengan kode QR, timer). Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
++    // Mode streamer: overlay (teks, gambar, link dengan kode QR, timer, overlay web) di atas game, dinyalakan dan
++    // dimatikan lewat panel kiri di menu dalam game. Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
+     val streamerMode: Boolean = false,
+     val streamerItems: List<StreamerItem> = emptyList(),
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt
+index 2058784..c89ab18 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/streamer/StreamerLogic.kt
+@@ -36,7 +36,19 @@ data class StreamerItem(
+      * Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan sejenisnya. Alamatnya sensitif, jadi tidak
+      * pernah ditulis di layar, di panel, maupun (tanpa ketukan mata) di kolom isian.
+      */
+-    val web: Boolean = false
++    val web: Boolean = false,
++    /**
++     * Overlay web: lebar dan tinggi kotak tempatnya di layar, pecahan dari lebar dan tinggi layar
++     * ([StreamerLogic.WEB_BOX_MIN]..1). 0 = penuh. Letak kiri-atas kotak mengikuti [x] dan [y].
++     */
++    val boxW: Float = 0f,
++    val boxH: Float = 0f,
++    /**
++     * Overlay web: skala halaman ([StreamerLogic.ZOOM_MIN]..1, 0 = 100%). Di bawah 100% halaman ditata untuk layar
++     * yang lebih besar lalu dikecilkan ke kotaknya, seperti ukuran kanvas browser source di OBS: alert besar yang
++     * dirancang untuk 1080p jadi muat di layar HP. Makin kecil, makin besar RAM yang dipakai.
++     */
++    val zoom: Float = 0f
+ )
+ 
+ /**
+@@ -93,6 +105,10 @@ object StreamerLogic {
+     /** Paling banyak overlay web yang tampil bersamaan; tiap halaman memakan RAM. */
+     const val MAX_WEB_SHOWN = 4
+ 
++    /** Kotak overlay web paling kecil (pecahan layar) dan skala halaman paling kecil. */
++    const val WEB_BOX_MIN = 0.1f
++    const val ZOOM_MIN = 0.5f
++
+     /** Sisi terpanjang gambar yang disimpan. Cukup tajam untuk tampil di layar, tetap kecil di memori. */
+     const val IMAGE_MAX_SIDE = 512
+     private const val MAX_ID_CHARS = 24
+@@ -296,6 +312,7 @@ object StreamerLogic {
+     /** Merapikan satu item. Id dibiarkan kosong bila tidak valid; [sanitize] yang memberi id. */
+     fun sanitizeOne(src: StreamerItem): StreamerItem {
+         val type = normalizeType(src.type)
++        val web = src.web && type == TYPE_LINK
+         return StreamerItem(
+             id = cleanId(src.id),
+             type = type,
+@@ -315,10 +332,17 @@ object StreamerLogic {
+             y = if (src.x in 0f..1f && src.y in 0f..1f) src.y else -1f,
+             scale = if (src.scale.isFinite() && src.scale > 0f) src.scale.coerceIn(SCALE_MIN, SCALE_MAX) else 0f,
+             alpha = if (src.alpha.isFinite()) src.alpha.coerceIn(ALPHA_MIN, 1f) else 1f,
+-            web = src.web && type == TYPE_LINK
++            web = web,
++            boxW = if (web) boxFractionOrZero(src.boxW) else 0f,
++            boxH = if (web) boxFractionOrZero(src.boxH) else 0f,
++            zoom = if (web && src.zoom.isFinite() && src.zoom > 0f) src.zoom.coerceIn(ZOOM_MIN, 1f) else 0f
+         )
+     }
+ 
++    /** Pecahan kotak yang valid, atau 0 (penuh) bila kosong atau tidak masuk akal. */
++    private fun boxFractionOrZero(v: Float): Float =
++        if (v.isFinite() && v > 0f) v.coerceIn(WEB_BOX_MIN, 1f) else 0f
++
+     /** Daftar item yang aman dipakai: batas jumlah, jenis/posisi/ukuran valid, id unik dan tidak kosong. */
+     fun sanitize(raw: List<StreamerItem?>?): List<StreamerItem> {
+         if (raw == null) return emptyList()
+@@ -438,6 +462,56 @@ object StreamerLogic {
+         }
+     }
+ 
++    /** Lebar atau tinggi kotak overlay web sebagai pecahan layar: 0 atau tidak valid = penuh. */
++    fun webBoxFraction(v: Float): Float = if (!v.isFinite() || v <= 0f) 1f else v.coerceIn(WEB_BOX_MIN, 1f)
++
++    /** Skala halaman overlay web (1 = 100%). */
++    fun webZoomOf(item: StreamerItem): Float =
++        if (!item.zoom.isFinite() || item.zoom <= 0f) 1f else item.zoom.coerceIn(ZOOM_MIN, 1f)
++
++    /** Kotak overlay web di layar, dalam piksel. */
++    data class WebRect(val left: Int, val top: Int, val width: Int, val height: Int)
++
++    /**
++     * Kotak overlay web di wadah seluas [areaW] x [areaH] piksel. Ukurannya pecahan wadah ([boxW], [boxH]; 0 = penuh),
++     * letaknya mengikuti aturan posisi bebas ([x], [y]), jadi tidak pernah keluar wadah. Tanpa posisi bebas
++     * (bawaan -1) kotak rapat ke kiri atas.
++     */
++    fun webRect(areaW: Int, areaH: Int, x: Float, y: Float, boxW: Float, boxH: Float): WebRect {
++        val w = maxOf(1, Math.round(maxOf(areaW, 0) * webBoxFraction(boxW)))
++        val h = maxOf(1, Math.round(maxOf(areaH, 0) * webBoxFraction(boxH)))
++        val free = x in 0f..1f && y in 0f..1f
++        return WebRect(
++            left = placeAt(if (free) x else 0f, areaW - w),
++            top = placeAt(if (free) y else 0f, areaH - h),
++            width = w,
++            height = h
++        )
++    }
++
++    /**
++     * Mengubah ukuran kotak overlay web sebesar [dxPx], [dyPx] piksel dari sudut kanan bawahnya (seret pegangan sudut).
++     * Sudut kiri atas tetap di tempatnya: [StreamerItem.x] dan [StreamerItem.y] disesuaikan dengan ukuran barunya.
++     * Kotak tidak bisa lebih kecil dari [WEB_BOX_MIN] dan tidak melewati tepi kanan atau bawah wadah.
++     */
++    fun resizedWebBox(item: StreamerItem, areaW: Int, areaH: Int, dxPx: Float, dyPx: Float): StreamerItem {
++        if (areaW <= 0 || areaH <= 0 || !dxPx.isFinite() || !dyPx.isFinite()) return item
++        val r = webRect(areaW, areaH, item.x, item.y, item.boxW, item.boxH)
++        val minW = maxOf(1, Math.round(areaW * WEB_BOX_MIN))
++        val minH = maxOf(1, Math.round(areaH * WEB_BOX_MIN))
++        val nw = Math.round(r.width + dxPx).coerceIn(minOf(minW, areaW - r.left).coerceAtLeast(1), maxOf(areaW - r.left, 1))
++        val nh = Math.round(r.height + dyPx).coerceIn(minOf(minH, areaH - r.top).coerceAtLeast(1), maxOf(areaH - r.top, 1))
++        // Kiri atas tetap: x dan y baru dihitung dari ruang gerak yang baru (0 bila kotak memenuhi sisi itu).
++        val nx = if (areaW - nw > 0) r.left.toFloat() / (areaW - nw) else 0f
++        val ny = if (areaH - nh > 0) r.top.toFloat() / (areaH - nh) else 0f
++        return item.copy(
++            x = nx.coerceIn(0f, 1f),
++            y = ny.coerceIn(0f, 1f),
++            boxW = (nw.toFloat() / areaW).coerceIn(WEB_BOX_MIN, 1f),
++            boxH = (nh.toFloat() / areaH).coerceIn(WEB_BOX_MIN, 1f)
++        )
++    }
++
+     /** Titik piksel tempat item ditaruh: pecahan [fraction] dari ruang gerak [rangePx] (tidak pernah keluar wadah). */
+     fun placeAt(fraction: Float, rangePx: Int): Int =
+         if (rangePx <= 0 || !fraction.isFinite()) 0 else Math.round(fraction.coerceIn(0f, 1f) * rangePx)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+index fdbf4af..14e1b5a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlOverlay.kt
+@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.DisposableEffect
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.key
++import androidx.compose.runtime.mutableIntStateOf
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.rememberCoroutineScope
+@@ -65,7 +66,8 @@ import kotlin.math.roundToInt
+  * sendiri di kanvas ([ControlSkin]); posisi dihitung saat tata letak, bukan saat penyusunan.
+  * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
+  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
+- * merah di dalam menu.
++ * merah di dalam menu. Pil menu (gerigi + mata, lihat [isMenuPill]) selalu tampil, juga saat UI disembunyikan, supaya
++ * menu tetap terbuka dengan satu ketukan tanpa memunculkan UI dulu.
+  *
+  * Tiap tombol punya lapisan gambar (RenderNode) sendiri. Tanpa itu, satu tombol yang berubah
+  * (ditekan, angka FPS baru, kenop joystick bergeser) membuat thread utama merekam ulang gambar
+@@ -105,6 +107,8 @@ fun GameControlsLayer(
+     DisposableEffect(Unit) {
+         onDispose { MacroRegistry.stopAll() }
+     }
++    // Ada pil menu: tombol "sembunyikan GUI" yang berdiri sendiri tidak digambar (fungsinya sudah ada di pil).
++    val hasPill = buttons.any { it.isMenuPill() }
+     buttons.forEach { source ->
+         key(source.id) {
+             // Tampilan FPS dan RAM lebih lebar dari tombol FPS lama; ukurannya diperlebar di sini saja,
+@@ -119,7 +123,7 @@ fun GameControlsLayer(
+                     source
+                 }
+             }
+-            val widthPx = with(density) { btn.widthDp.dp.toPx() }
++            val widthPx = with(density) { btn.shownWidthDp().dp.toPx() }
+             val heightPx = with(density) { btn.heightDp.dp.toPx() }
+             val left = (screenWidth * (btn.xPercent / 100f) - widthPx / 2f)
+                 .coerceIn(0f, (screenWidth - widthPx).coerceAtLeast(0f))
+@@ -146,16 +150,25 @@ fun GameControlsLayer(
+                             SystemIconButton(btn, place, active = keyboardActive, onTap = onToggleKeyboard)
+                         }
+                     }
+-                    // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
+-                    "HIDE_GUI" -> PlacedAt(buttonsAsWindows, left, top) { place ->
+-                        SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+-                    }
+-                    // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
+-                    "MENU", "CLOSE" -> if (controlsVisible) {
++                    // Mata sendiri: hanya bila tata letak tidak punya pil menu. Selalu tampil supaya tombol layar
++                    // bisa dimunculkan lagi.
++                    "HIDE_GUI" -> if (!hasPill) {
+                         PlacedAt(buttonsAsWindows, left, top) { place ->
+-                            SystemIconButton(btn, place, onTap = onOpenMenu)
++                            SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
+                         }
+                     }
++                    // Pil menu: gerigi buka menu, mata sembunyikan/munculkan UI. Selalu tampil (juga saat UI
++                    // disembunyikan, otomatis atau manual), jadi menu tidak perlu menunggu UI dimunculkan lagi.
++                    // "CLOSE" = nama lama tombol ini di tata letak tersimpan.
++                    "MENU", "CLOSE" -> PlacedAt(buttonsAsWindows, left, top) { place ->
++                        MenuPillButton(
++                            btn = btn,
++                            modifier = place,
++                            uiHidden = !controlsVisible,
++                            onMenu = onOpenMenu,
++                            onToggleUi = onToggleControls
++                        )
++                    }
+                 }
+             } else if (controlsVisible && ControlShowMode.visible(btn.showMode, inMenu)) {
+                 PlacedAt(buttonsAsWindows, left, top) { place ->
+@@ -336,6 +349,42 @@ private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, ram: String, r
+     }
+ }
+ 
++/**
++ * Pil menu di kontrol layar: separuh kiri (gerigi) membuka menu, separuh kanan (mata) menyembunyikan atau memunculkan
++ * UI. Bagian yang ditekan jadi kuning selama jari menahan. Hanya satu gambar kanvas; status tekan dibaca saat
++ * menggambar, jadi menekan tidak menyusun ulang apa pun.
++ */
++@Composable
++private fun MenuPillButton(
++    btn: CustomControlButton,
++    modifier: Modifier,
++    uiHidden: Boolean,
++    onMenu: () -> Unit,
++    onToggleUi: () -> Unit
++) {
++    // 0 = tidak ada yang ditekan, 1 = gerigi (kiri), 2 = mata (kanan)
++    var pressedSide by remember { mutableIntStateOf(0) }
++    val spec = remember(btn, uiHidden) { skinSpecFor(btn, slash = uiHidden) }
++    val openMenu by rememberUpdatedState(onMenu)
++    val toggleUi by rememberUpdatedState(onToggleUi)
++
++    Box(
++        modifier = modifier
++            .size(width = btn.shownWidthDp().dp, height = btn.heightDp.dp)
++            .drawBehind { drawControlButton(spec, false, pressedSide = pressedSide) }
++            .pointerInput(Unit) {
++                detectTapGestures(
++                    onPress = { at ->
++                        pressedSide = if (at.x < size.width / 2f) 1 else 2
++                        tryAwaitRelease()
++                        pressedSide = 0
++                    },
++                    onTap = { at -> if (at.x < size.width / 2f) openMenu() else toggleUi() }
++                )
++            }
++    )
++}
++
+ /** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, gerigi menu). */
+ @Composable
+ private fun SystemIconButton(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+index 3738f3a..859514c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/ControlSkin.kt
+@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.StrokeCap
+ import androidx.compose.ui.graphics.StrokeJoin
+ import androidx.compose.ui.graphics.drawscope.DrawScope
+ import androidx.compose.ui.graphics.drawscope.Stroke
++import androidx.compose.ui.graphics.drawscope.clipRect
+ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+ import androidx.compose.ui.graphics.nativeCanvas
+ import androidx.compose.ui.graphics.toArgb
+@@ -50,9 +51,31 @@ class SkinSpec(
+     val slash: Boolean = false
+ )
+ 
++/** Nama "ikon" khusus untuk pil menu (gerigi + mata); digambar oleh [drawControlPill], bukan [drawControlIcon]. */
++const val PILL_ICON = "pill"
++
++/**
++ * Tombol sistem "MENU" (nama lama "CLOSE") ditampilkan sebagai satu pil: gerigi di kiri membuka menu, mata di kanan
++ * menyembunyikan atau memunculkan lagi UI. Tombol sistem "HIDE_GUI" lama tidak digambar lagi di game Java dan
++ * Starling selama ada pil ini (fungsinya sudah ada di pil), tapi tetap disimpan di tata letak untuk mesin lain.
++ */
++fun CustomControlButton.isMenuPill(): Boolean =
++    isSystem && (systemAction == "MENU" || systemAction == "CLOSE")
++
++/** Tombol sistem "HIDE_GUI" (mata sendiri). */
++fun CustomControlButton.isHideGuiButton(): Boolean = isSystem && systemAction == "HIDE_GUI"
++
++/**
++ * Lebar tombol yang digambar dan disentuh (dp). Pil menu minimal dua kali tingginya (dua bulatan berdampingan),
++ * berapa pun lebar yang tersimpan di tata letak lama; tombol lain memakai lebarnya sendiri.
++ */
++fun CustomControlButton.shownWidthDp(): Int =
++    if (isMenuPill()) maxOf(widthDp, heightDp * 2) else widthDp
++
+ fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boolean = false): SkinSpec {
+     val icon = iconOverride ?: when {
+-        b.isSystem && (b.systemAction == "CLOSE" || b.systemAction == "MENU") -> "gear"
++        // Tombol menu = pil dua bagian: gerigi (buka menu) di kiri, mata (sembunyikan UI) di kanan.
++        b.isMenuPill() -> PILL_ICON
+         b.icon.isNotBlank() -> b.icon
+         b.isSystem -> when (b.systemAction) {
+             "KEYBOARD" -> "keyboard"
+@@ -82,7 +105,11 @@ private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+ }
+ 
+ /** Tombol biasa: isian kaca, garis putih; ditekan atau aktif = kuning penuh. */
+-fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Boolean = false) {
++fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Boolean = false, pressedSide: Int = 0) {
++    if (spec.icon == PILL_ICON) {
++        drawControlPill(spec, pressedSide, selected)
++        return
++    }
+     drawButtonBase(spec, pressed, selected)
+ 
+     val w = size.width
+@@ -101,6 +128,71 @@ fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Bool
+     }
+ }
+ 
++/**
++ * Pil menu: kapsul kaca gelap tipis berisi dua ikon yang dipisah garis halus. Kiri = gerigi (buka menu), kanan = mata
++ * (sembunyikan atau munculkan UI). [pressedSide]: 0 = tidak ada, 1 = gerigi, 2 = mata; bagian yang ditekan jadi kuning.
++ * Saat UI disembunyikan ([SkinSpec.slash]) mata dicoret kuning dan pil dibuat lebih redup, supaya tidak mengganggu
++ * layar (mis. saat siaran) tapi tetap bisa disentuh untuk membuka menu. Satu gambar kanvas, tanpa lapisan tambahan.
++ */
++fun DrawScope.drawControlPill(spec: SkinSpec, pressedSide: Int, selected: Boolean = false) {
++    val w = size.width
++    val h = size.height
++    val k = spec.opacity
++    val radius = min(spec.cornerDp.dp.toPx(), min(w, h) / 2f)
++    val corner = CornerRadius(radius)
++    val dim = if (spec.slash) 0.62f else 1f
++
++    drawRoundRect(color = Color.Black.copy(alpha = 0.30f * (0.4f + 0.6f * k) * dim), cornerRadius = corner)
++    val sw = 1f.dp.toPx()
++    drawRoundRect(
++        color = Color.White.copy(alpha = 0.14f * dim),
++        topLeft = Offset(sw / 2f, sw / 2f),
++        size = Size(w - sw, h - sw),
++        cornerRadius = CornerRadius(max(radius - sw / 2f, 0f)),
++        style = Stroke(width = sw)
++    )
++
++    // Bagian yang ditekan: isian kuning seluas separuh pil, dipotong mengikuti lengkung kapsul.
++    if (pressedSide == 1) {
++        clipRect(left = 0f, top = 0f, right = w / 2f, bottom = h) {
++            drawRoundRect(color = ControlSkin.Yellow.copy(alpha = 0.26f), cornerRadius = corner)
++        }
++    } else if (pressedSide == 2) {
++        clipRect(left = w / 2f, top = 0f, right = w, bottom = h) {
++            drawRoundRect(color = ControlSkin.Yellow.copy(alpha = 0.26f), cornerRadius = corner)
++        }
++    }
++
++    // Garis pemisah tipis di tengah.
++    drawLine(
++        color = Color.White.copy(alpha = 0.16f * dim),
++        start = Offset(w / 2f, h * 0.28f),
++        end = Offset(w / 2f, h * 0.72f),
++        strokeWidth = 1f.dp.toPx()
++    )
++
++    val rest = Color.White.copy(alpha = (0.58f + 0.32f * k) * dim)
++    val s = min(w / 2f, h) * 0.56f
++    drawControlIcon("gear", w * 0.25f, h / 2f, s, if (pressedSide == 1) ControlSkin.Yellow else rest)
++    val eyeColor = when {
++        pressedSide == 2 -> ControlSkin.Yellow
++        spec.slash -> ControlSkin.YellowSoft.copy(alpha = 0.85f)
++        else -> rest
++    }
++    drawControlIcon("eye", w * 0.75f, h / 2f, s, eyeColor, spec.slash)
++
++    if (selected) {
++        val ow = 1.6f.dp.toPx()
++        drawRoundRect(
++            color = ControlSkin.Yellow,
++            topLeft = Offset(ow / 2f, ow / 2f),
++            size = Size(w - ow, h - ow),
++            cornerRadius = CornerRadius(max(radius - ow / 2f, 0f)),
++            style = Stroke(width = ow)
++        )
++    }
++}
++
+ /** Widget gulir hotbar: dua panah dan nama kecil di tengah. */
+ fun DrawScope.drawControlScroll(spec: SkinSpec, pressed: Boolean, selected: Boolean = false) {
+     drawButtonBase(spec, pressed, selected)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt
+index 1fbee1a..9434a88 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/StreamerManagerDialog.kt
+@@ -188,7 +188,7 @@ private fun ListPane(
+         )
+         Spacer(modifier = Modifier.height(4.dp))
+         Text(
+-            text = "Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.",
++            text = "Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.",
+             color = Amber.TextDim,
+             fontSize = 12.sp,
+             lineHeight = 17.sp
+@@ -382,7 +382,7 @@ internal fun StreamerEditFields(
+             }
+             if (draft.web) {
+                 Text(
+-                    text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
++                    text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.",
+                     color = Amber.TextDim,
+                     fontSize = 12.sp,
+                     lineHeight = 17.sp
+@@ -422,7 +422,7 @@ internal fun StreamerEditFields(
+         }
+         else -> {
+             Text(
+-                text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.",
++                text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.",
+                 color = Amber.TextDim,
+                 fontSize = 12.sp,
+                 lineHeight = 17.sp
+@@ -431,9 +431,31 @@ internal fun StreamerEditFields(
+     }
+ 
+     if (StreamerLogic.isWeb(draft)) {
+-        // Overlay web memenuhi layar dan menata dirinya sendiri: posisi, ukuran, warna, dan latar tidak berlaku.
++        // Overlay web: kotaknya diatur di sini (pilihan cepat) atau lebih rinci di layar game. Warna dan latar tidak
++        // berlaku: tampilannya diatur oleh situs overlay-nya.
++        Spacer(modifier = Modifier.height(4.dp))
++        FieldLabel("Kotak overlay")
++        val box = Quad(draft.x, draft.y, StreamerLogic.webBoxFraction(draft.boxW), StreamerLogic.webBoxFraction(draft.boxH))
++        ChipRow {
++            for ((label, preset) in WEB_BOX_PRESETS.take(3)) {
++                SettingChip(label, sameBox(box, preset), { onChange(draft.copy(x = preset.a, y = preset.b, boxW = preset.c, boxH = preset.d)) })
++            }
++        }
++        ChipRow {
++            for ((label, preset) in WEB_BOX_PRESETS.drop(3)) {
++                SettingChip(label, sameBox(box, preset), { onChange(draft.copy(x = preset.a, y = preset.b, boxW = preset.c, boxH = preset.d)) })
++            }
++        }
++        Spacer(modifier = Modifier.height(4.dp))
++        FieldLabel("Skala halaman")
++        ChipRow {
++            val zoom = StreamerLogic.webZoomOf(draft)
++            for (z in listOf(1f, 0.75f, 0.5f)) {
++                SettingChip("${Math.round(z * 100f)}%", Math.abs(zoom - z) < 0.01f, { onChange(draft.copy(zoom = if (z >= 1f) 0f else z)) })
++            }
++        }
+         Text(
+-            text = "Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.",
++            text = "Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.",
+             color = Amber.TextDim,
+             fontSize = 12.sp,
+             lineHeight = 17.sp
+@@ -482,13 +504,35 @@ internal fun StreamerEditFields(
+     MenuGroup {
+         MenuToggleRow(
+             title = "Tampil saat game mulai",
+-            subtitle = "Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.",
++            subtitle = "Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.",
+             checked = draft.on,
+             onChange = { onChange(draft.copy(on = it)) }
+         )
+     }
+ }
+ 
++/** Empat angka sekaligus (x, y, lebar, tinggi kotak overlay web) tanpa membuat kelas khusus. */
++private data class Quad(val a: Float, val b: Float, val c: Float, val d: Float)
++
++/** Pilihan kotak cepat untuk overlay web: penuh, atau separuh layar di salah satu pojok atau di tengah. */
++private val WEB_BOX_PRESETS: List<Pair<String, Quad>> = listOf(
++    "Penuh" to Quad(-1f, -1f, 0f, 0f),
++    "Kiri atas" to Quad(0f, 0f, 0.5f, 0.5f),
++    "Kanan atas" to Quad(1f, 0f, 0.5f, 0.5f),
++    "Tengah" to Quad(0.5f, 0.5f, 0.5f, 0.5f),
++    "Kiri bawah" to Quad(0f, 1f, 0.5f, 0.5f),
++    "Kanan bawah" to Quad(1f, 1f, 0.5f, 0.5f)
++)
++
++private fun sameBox(current: Quad, preset: Quad): Boolean {
++    // Penuh: letaknya tidak berpengaruh (tidak ada ruang gerak).
++    val presetW = if (preset.c <= 0f) 1f else preset.c
++    val presetH = if (preset.d <= 0f) 1f else preset.d
++    if (Math.abs(current.c - presetW) > 0.01f || Math.abs(current.d - presetH) > 0.01f) return false
++    if (presetW >= 1f && presetH >= 1f) return true
++    return Math.abs(current.a - preset.a) < 0.02f && Math.abs(current.b - preset.b) < 0.02f
++}
++
+ @Composable
+ private fun FieldLabel(text: String) {
+     Text(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+index fdc50d0..8eb5cd8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/CustomGuiEditorScreen.kt
+@@ -25,6 +25,9 @@ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.drawBehind
+ import com.israadev.nuxlauncher.ui.control.drawControlButton
++import com.israadev.nuxlauncher.ui.control.isHideGuiButton
++import com.israadev.nuxlauncher.ui.control.isMenuPill
++import com.israadev.nuxlauncher.ui.control.shownWidthDp
+ import com.israadev.nuxlauncher.ui.control.drawControlJoystick
+ import com.israadev.nuxlauncher.ui.control.drawControlScroll
+ import com.israadev.nuxlauncher.ui.control.skinSpecFor
+@@ -73,6 +76,12 @@ private const val VIEW_ALL = "ALL"
+ private fun editorShows(b: CustomControlButton, view: String): Boolean =
+     view == VIEW_ALL || b.isSystem || ControlShowMode.visible(b.showMode, view == ControlShowMode.MENU)
+ 
++/**
++ * Mata yang berdiri sendiri tidak ditampilkan selama ada pil menu: di game Java dan Starling fungsinya sudah ada di
++ * pil (gerigi + mata), jadi tombolnya tidak digambar dan tidak perlu diatur.
++ */
++private fun editorHides(b: CustomControlButton, hasPill: Boolean): Boolean = hasPill && b.isHideGuiButton()
++
+ @Composable
+ fun CustomGuiEditorScreen(
+     onNavigateBack: () -> Unit,
+@@ -153,9 +162,10 @@ fun CustomGuiEditorScreen(
+         }
+ 
+         // 2. Interactive Draggable Buttons on Screen
+-        buttonsList.filter { editorShows(it, viewMode) }.forEach { btn ->
++        val hasPill = buttonsList.any { it.isMenuPill() }
++        buttonsList.filter { editorShows(it, viewMode) && !editorHides(it, hasPill) }.forEach { btn ->
+             val isSelected = btn.id == selectedButtonId
+-            val btnWidthPx = with(density) { btn.widthDp.dp.toPx() }
++            val btnWidthPx = with(density) { btn.shownWidthDp().dp.toPx() }
+             val btnHeightPx = with(density) { btn.heightDp.dp.toPx() }
+ 
+             // Convert percentage coordinates to pixel center
+@@ -173,7 +183,7 @@ fun CustomGuiEditorScreen(
+             Box(
+                 modifier = Modifier
+                     .offset(x = leftDp, y = topDp)
+-                    .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
++                    .size(width = btn.shownWidthDp().dp, height = btn.heightDp.dp)
+                     // Gambar yang sama persis dengan di dalam game (ControlSkin).
+                     .drawBehind {
+                         when {
+@@ -203,7 +213,7 @@ fun CustomGuiEditorScreen(
+                                 // Ukuran dibaca dari tombol saat ini (bukan yang ditangkap saat composition),
+                                 // supaya batas geser ikut berubah setelah slider ukuran digeser. Tombol yang
+                                 // lebih besar dari layar dipusatkan dan tidak membuat galat.
+-                                val halfW = with(density) { currentBtn.widthDp.dp.toPx() } / 2f
++                                val halfW = with(density) { currentBtn.shownWidthDp().dp.toPx() } / 2f
+                                 val halfH = with(density) { currentBtn.heightDp.dp.toPx() } / 2f
+                                 val newCenterX = (curCenterX + dragAmount.x).clampCenter(halfW, screenWidthPx - halfW)
+                                 val newCenterY = (curCenterY + dragAmount.y).clampCenter(halfH, screenHeightPx - halfH)
+@@ -607,7 +617,7 @@ fun CustomGuiEditorScreen(
+                                         "FPS" -> "Indikator FPS In-Game"
+                                         "KEYBOARD" -> "Toggle Keyboard Layar"
+                                         "HIDE_GUI" -> "Sembunyikan/Tampilkan GUI"
+-                                        "MENU", "CLOSE" -> "Buka Menu (pengaturan dan keluar)"
++                                        "MENU", "CLOSE" -> "Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI"
+                                         else -> "Aksi Sistem Launcher"
+                                     }
+                                     Text(actionDesc, color = Color(0xFFFFE566), fontWeight = FontWeight.Bold, fontSize = 11.sp)
+@@ -652,27 +662,29 @@ fun CustomGuiEditorScreen(
+                                 }
+                             }
+ 
+-                            // 3. Width Slider
+-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+-                                Text("Lebar (Width):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
+-                                Text("${selectedButton.widthDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
+-                            }
+-                            Slider(
+-                                value = selectedButton.widthDp.toFloat(),
+-                                onValueChange = { newW ->
+-                                    buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
+-                                },
+-                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
+-                                colors = SliderDefaults.colors(
+-                                    thumbColor = Color(0xFFFFD60A),
+-                                    activeTrackColor = Color(0xFFFFD60A),
+-                                    inactiveTrackColor = Color(0xFF2E2E2E)
++                            // 3. Width Slider (pil menu: lebarnya selalu dua kali tinggi, jadi cukup satu slider ukuran)
++                            if (!selectedButton.isMenuPill()) {
++                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
++                                    Text("Lebar (Width):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
++                                    Text("${selectedButton.widthDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
++                                }
++                                Slider(
++                                    value = selectedButton.widthDp.toFloat(),
++                                    onValueChange = { newW ->
++                                        buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
++                                    },
++                                    valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
++                                    colors = SliderDefaults.colors(
++                                        thumbColor = Color(0xFFFFD60A),
++                                        activeTrackColor = Color(0xFFFFD60A),
++                                        inactiveTrackColor = Color(0xFF2E2E2E)
++                                    )
+                                 )
+-                            )
++                            }
+ 
+                             // 4. Height Slider
+                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+-                                Text("Tinggi (Height):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
++                                Text(if (selectedButton.isMenuPill()) "Ukuran pil (tinggi):" else "Tinggi (Height):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
+                                 Text("${selectedButton.heightDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
+                             }
+                             Slider(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index caed0fe..74fca23 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -570,7 +570,7 @@ fun SettingsScreen(
+                         SettingsGroup("Mode streamer") {
+                             SettingSwitchRow(
+                                 title = "Mode streamer",
+-                                desc = "Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.",
++                                desc = "Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.",
+                                 checked = currentSettings.streamerMode,
+                                 onCheckedChange = {
+                                     SettingsManager.updateSettings(context, currentSettings.copy(streamerMode = it))
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerEditor.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerEditor.kt
+index df6425e..e9dc413 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerEditor.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerEditor.kt
+@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.ui.streamer
+ import androidx.compose.foundation.Canvas
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
++import androidx.compose.foundation.gestures.detectDragGestures
+ import androidx.compose.foundation.gestures.detectTapGestures
+ import androidx.compose.foundation.gestures.detectTransformGestures
+ import androidx.compose.foundation.layout.Arrangement
+@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.imePadding
++import androidx.compose.foundation.layout.offset
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+@@ -41,12 +43,15 @@ import androidx.compose.ui.graphics.graphicsLayer
+ import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.layout.onSizeChanged
+ import androidx.compose.ui.platform.LocalConfiguration
++import androidx.compose.ui.platform.LocalDensity
+ import androidx.compose.ui.text.TextStyle
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.IntOffset
+ import androidx.compose.ui.unit.IntSize
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import androidx.compose.material3.Text as UserText
+ import com.israadev.nuxlauncher.core.streamer.QrCode
+ import com.israadev.nuxlauncher.core.streamer.StreamerItem
+ import com.israadev.nuxlauncher.core.streamer.StreamerLogic
+@@ -93,9 +98,19 @@ fun StreamerEditorLayer(
+     // Pilihan manual sisi panel (null = otomatis di sisi yang berlawanan dengan item).
+     var flip by remember { mutableStateOf<Boolean?>(null) }
+     var area by remember { mutableStateOf(IntSize.Zero) }
++    // Seluruh layar (tanpa padding): tempat kotak overlay web, sama dengan lapisan WebView di game.
++    var full by remember { mutableStateOf(IntSize.Zero) }
+     val maxWidthDp = LocalConfiguration.current.screenWidthDp * 0.42f
++    val readItem: (String) -> StreamerItem? = { id -> work.firstOrNull { it.id == id } }
++    val writeItem: (StreamerItem) -> Unit = { changed -> work = work.map { if (it.id == changed.id) changed else it } }
++    val selectItem: (String) -> Unit = { id ->
++        if (selectedId != id) {
++            selectedId = id
++            flip = null
++        }
++    }
+ 
+-    Box(modifier = Modifier.fillMaxSize()) {
++    Box(modifier = Modifier.fillMaxSize().onSizeChanged { full = it }) {
+         // Latar redup, titik-titik bantu, dan garis tengah. Isinya tidak berubah, jadi digambar sekali.
+         // Mengetuk area kosong melepas pilihan; sentuhan tidak tembus ke game di bawahnya.
+         Canvas(
+@@ -120,6 +135,21 @@ fun StreamerEditorLayer(
+             drawLine(guide, Offset(0f, size.height / 2f), Offset(size.width, size.height / 2f), 1.dp.toPx())
+         }
+ 
++        // Overlay web: kotak seukuran aslinya di layar. Digambar di bawah item lain dan bar atas.
++        for (item in work) {
++            if (!StreamerLogic.isWeb(item)) continue
++            key(item.id) {
++                WebFrame(
++                    item = item,
++                    selected = item.id == selectedId,
++                    full = { full },
++                    read = readItem,
++                    write = writeItem,
++                    onSelect = selectItem
++                )
++            }
++        }
++
+         // Wadah yang sama persis dengan lapisan overlay di game (poni + 8dp), supaya letaknya identik.
+         Box(
+             modifier = Modifier
+@@ -158,6 +188,7 @@ fun StreamerEditorLayer(
+             }
+ 
+             for (item in work) {
++                if (StreamerLogic.isWeb(item)) continue
+                 key(item.id) {
+                     Box(modifier = Modifier.freePlaced(item.x, item.y)) {
+                         EditableItem(
+@@ -165,14 +196,9 @@ fun StreamerEditorLayer(
+                             selected = item.id == selectedId,
+                             maxWidthDp = maxWidthDp,
+                             area = { area },
+-                            read = { id -> work.firstOrNull { it.id == id } },
+-                            write = { changed -> work = work.map { if (it.id == changed.id) changed else it } },
+-                            onSelect = { id ->
+-                                if (selectedId != id) {
+-                                    selectedId = id
+-                                    flip = null
+-                                }
+-                            }
++                            read = readItem,
++                            write = writeItem,
++                            onSelect = selectItem
+                         )
+                     }
+                 }
+@@ -185,8 +211,27 @@ fun StreamerEditorLayer(
+                     item = sel,
+                     dockLeft = dockLeft,
+                     onFlip = { flip = !dockLeft },
++                    // Slider posisi mendatar menggeser overlay melewati tengah layar: panel tidak boleh ikut pindah
++                    // sisi di bawah jari, jadi sisinya dikunci begitu slider dipakai.
++                    onPinSide = { if (flip == null) flip = dockLeft },
+                     onClose = { selectedId = null },
+-                    onChange = { changed -> work = work.map { if (it.id == changed.id) changed else it } },
++                    onChange = writeItem,
++                    // Gambar tidak digandakan: berkasnya dipakai bersama dan terikat ke id item.
++                    onDuplicate = if (sel.type != StreamerLogic.TYPE_IMAGE && work.size < StreamerLogic.MAX_ITEMS) {
++                        {
++                            val id = StreamerLogic.newId(work.map { it.id }.toSet(), System.currentTimeMillis())
++                            val copy = sel.copy(
++                                id = id,
++                                x = (sel.x.coerceIn(0f, 1f) + 0.06f).coerceAtMost(1f),
++                                y = (sel.y.coerceIn(0f, 1f) + 0.08f).coerceAtMost(1f)
++                            )
++                            work = work + copy
++                            selectedId = id
++                            flip = null
++                        }
++                    } else {
++                        null
++                    },
+                     onDelete = {
+                         work = work.filter { it.id != sel.id }
+                         selectedId = null
+@@ -334,6 +379,101 @@ private fun EditableItem(
+     }
+ }
+ 
++/**
++ * Kotak overlay web di editor: seukuran dan seletak dengan WebView di game. Hanya dua pegangan yang menerima
++ * sentuhan: kiri atas (seret untuk memindah, ketuk untuk memilih) dan sudut kanan bawah (seret untuk mengubah
++ * ukuran). Dengan begitu kotak yang memenuhi layar tidak menutupi overlay lain dan tidak menelan ketukan
++ * "lepas pilihan". Alamat tidak pernah ditulis di sini, hanya nama situsnya.
++ */
++@Composable
++private fun WebFrame(
++    item: StreamerItem,
++    selected: Boolean,
++    full: () -> IntSize,
++    read: (String) -> StreamerItem?,
++    write: (StreamerItem) -> Unit,
++    onSelect: (String) -> Unit
++) {
++    val area = full()
++    if (area.width <= 0 || area.height <= 0) return
++    val id = item.id
++    val rect = StreamerLogic.webRect(area.width, area.height, item.x, item.y, item.boxW, item.boxH)
++    val density = LocalDensity.current
++    val edge = if (selected) AmberUi.Accent else Color(0x66FFFFFF)
++    val host = StreamerLogic.hostOf(item.text)
++    Box(
++        modifier = Modifier
++            .offset { IntOffset(rect.left, rect.top) }
++            .size(with(density) { rect.width.toDp() }, with(density) { rect.height.toDp() })
++            .background(Color(0x14FFFFFF))
++            .border(if (selected) 1.5.dp else 1.dp, edge)
++    ) {
++        Row(
++            modifier = Modifier
++                .align(Alignment.TopStart)
++                .padding(4.dp)
++                .clip(OutlineShape)
++                .background(Color(0xCC121217))
++                .pointerInput(id) { detectTapGestures { onSelect(id) } }
++                .pointerInput(id) {
++                    detectDragGestures(onDragStart = { onSelect(id) }) { change, drag ->
++                        change.consume()
++                        val cur = read(id) ?: return@detectDragGestures
++                        val a = full()
++                        val r = StreamerLogic.webRect(a.width, a.height, cur.x, cur.y, cur.boxW, cur.boxH)
++                        write(
++                            cur.copy(
++                                x = StreamerLogic.movedFraction(cur.x, drag.x, (a.width - r.width).toFloat()),
++                                y = StreamerLogic.movedFraction(cur.y, drag.y, (a.height - r.height).toFloat())
++                            )
++                        )
++                    }
++                }
++                .padding(horizontal = 8.dp, vertical = 5.dp),
++            verticalAlignment = Alignment.CenterVertically
++        ) {
++            Text(
++                text = "Overlay web",
++                color = AmberUi.Text,
++                fontSize = 11.sp,
++                fontWeight = FontWeight.SemiBold,
++                maxLines = 1
++            )
++            if (host.isNotEmpty()) {
++                Spacer(modifier = Modifier.width(6.dp))
++                UserText(
++                    text = host,
++                    color = AmberUi.TextDim,
++                    fontSize = 10.sp,
++                    maxLines = 1,
++                    overflow = TextOverflow.Ellipsis,
++                    modifier = Modifier.width(96.dp)
++                )
++            }
++        }
++        Box(
++            modifier = Modifier
++                .align(Alignment.BottomEnd)
++                .padding(4.dp)
++                .size(28.dp)
++                .clip(CircleShape)
++                .background(Color(0xCC121217))
++                .border(1.dp, edge, CircleShape)
++                .pointerInput(id) {
++                    detectDragGestures(onDragStart = { onSelect(id) }) { change, drag ->
++                        change.consume()
++                        val cur = read(id) ?: return@detectDragGestures
++                        val a = full()
++                        write(StreamerLogic.resizedWebBox(cur, a.width, a.height, drag.x, drag.y))
++                    }
++                },
++            contentAlignment = Alignment.Center
++        ) {
++            AmberIcon("chev_right", 11.dp, AmberUi.Text, Modifier.graphicsLayer { rotationZ = 45f })
++        }
++    }
++}
++
+ /**
+  * Panel pengaturan overlay yang dipilih. Menempel di sisi yang berlawanan dengan overlay-nya (bisa dibalik
+  * dengan panah), di bawah bar atas, dan bisa digulir. Perubahan langsung terlihat di layar.
+@@ -343,8 +483,10 @@ private fun Inspector(
+     item: StreamerItem,
+     dockLeft: Boolean,
+     onFlip: () -> Unit,
++    onPinSide: () -> Unit,
+     onClose: () -> Unit,
+     onChange: (StreamerItem) -> Unit,
++    onDuplicate: (() -> Unit)?,
+     onDelete: () -> Unit,
+     modifier: Modifier
+ ) {
+@@ -417,7 +559,7 @@ private fun Inspector(
+                 SwitchRow("Overlay web", item.web) { onChange(item.copy(web = it)) }
+                 if (item.web) {
+                     Text(
+-                        text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
++                        text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.",
+                         color = AmberUi.TextDim,
+                         fontSize = 10.5.sp,
+                         lineHeight = 14.sp
+@@ -450,16 +592,53 @@ private fun Inspector(
+             else -> Unit
+         }
+ 
+-        // Overlay web memenuhi layar dan menata dirinya sendiri: ukuran, warna, dan latar tidak berlaku.
+-        if (!isWeb) MenuSliderRow(
+-            label = "Ukuran",
+-            value = Math.round(StreamerLogic.scaleOf(item) * 100f),
+-            min = Math.round(StreamerLogic.SCALE_MIN * 100f),
+-            max = Math.round(StreamerLogic.SCALE_MAX * 100f),
+-            step = 5,
+-            onCommit = {},
+-            onLive = { onChange(item.copy(scale = it / 100f)) }
+-        )
++        if (isWeb) {
++            // Overlay web: kotaknya sendiri (juga bisa digeser dan diseret sudutnya di layar). Warna dan latar tidak
++            // berlaku: tampilannya diatur oleh situs overlay-nya.
++            MenuSliderRow(
++                label = "Lebar",
++                value = Math.round(StreamerLogic.webBoxFraction(item.boxW) * 100f),
++                min = Math.round(StreamerLogic.WEB_BOX_MIN * 100f),
++                max = 100,
++                step = 5,
++                onCommit = {},
++                onLive = { onChange(item.copy(boxW = it / 100f)) }
++            )
++            MenuSliderRow(
++                label = "Tinggi",
++                value = Math.round(StreamerLogic.webBoxFraction(item.boxH) * 100f),
++                min = Math.round(StreamerLogic.WEB_BOX_MIN * 100f),
++                max = 100,
++                step = 5,
++                onCommit = {},
++                onLive = { onChange(item.copy(boxH = it / 100f)) }
++            )
++            MenuSliderRow(
++                label = "Skala halaman",
++                value = Math.round(StreamerLogic.webZoomOf(item) * 100f),
++                min = Math.round(StreamerLogic.ZOOM_MIN * 100f),
++                max = 100,
++                step = 10,
++                onCommit = {},
++                onLive = { onChange(item.copy(zoom = it / 100f)) }
++            )
++            Text(
++                text = "Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.",
++                color = AmberUi.TextDim,
++                fontSize = 10.5.sp,
++                lineHeight = 14.sp
++            )
++        } else {
++            MenuSliderRow(
++                label = "Ukuran",
++                value = Math.round(StreamerLogic.scaleOf(item) * 100f),
++                min = Math.round(StreamerLogic.SCALE_MIN * 100f),
++                max = Math.round(StreamerLogic.SCALE_MAX * 100f),
++                step = 5,
++                onCommit = {},
++                onLive = { onChange(item.copy(scale = it / 100f)) }
++            )
++        }
+         MenuSliderRow(
+             label = "Opasitas",
+             value = Math.round(item.alpha * 100f),
+@@ -469,6 +648,28 @@ private fun Inspector(
+             onCommit = {},
+             onLive = { onChange(item.copy(alpha = it / 100f)) }
+         )
++        // Letak yang tepat tanpa menyeret: pecahan ruang gerak, 0% = rapat kiri atau atas, 100% = rapat kanan atau bawah.
++        MenuSliderRow(
++            label = "Posisi mendatar",
++            value = Math.round(item.x.coerceIn(0f, 1f) * 100f),
++            min = 0,
++            max = 100,
++            step = 1,
++            onCommit = {},
++            onLive = {
++                onPinSide()
++                onChange(item.copy(x = it / 100f, y = item.y.coerceIn(0f, 1f)))
++            }
++        )
++        MenuSliderRow(
++            label = "Posisi tegak",
++            value = Math.round(item.y.coerceIn(0f, 1f) * 100f),
++            min = 0,
++            max = 100,
++            step = 1,
++            onCommit = {},
++            onLive = { onChange(item.copy(x = item.x.coerceIn(0f, 1f), y = it / 100f)) }
++        )
+ 
+         if (!isImage && !isWeb) {
+             Text(
+@@ -486,6 +687,15 @@ private fun Inspector(
+         }
+         SwitchRow("Tampil saat game mulai", item.on) { onChange(item.copy(on = it)) }
+ 
++        if (onDuplicate != null) {
++            AmberButton(
++                text = "Gandakan",
++                onClick = onDuplicate,
++                style = AmberButtonStyle.Ghost,
++                height = 36.dp,
++                modifier = Modifier.fillMaxWidth()
++            )
++        }
+         AmberButton(
+             text = "Hapus",
+             onClick = onDelete,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt
+index 6306ed0..5c8d240 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerOverlay.kt
+@@ -86,13 +86,13 @@ import kotlinx.coroutines.delay
+ import kotlinx.coroutines.withContext
+ 
+ /*
+- * Overlay streamer di dalam game: teks, gambar, link (dengan kode QR), dan timer yang melayang di
+- * enam posisi layar, plus sidebar kiri yang tersembunyi untuk menyalakan/mematikannya saat bermain.
++ * Overlay streamer di dalam game: teks, gambar, link (dengan kode QR), timer, dan overlay web yang melayang di
++ * atas game. Menyalakan atau mematikannya saat bermain lewat panel kiri di menu dalam game (ikon gerigi), bukan
++ * lewat gagang di tepi layar: tidak ada lagi yang menempel di layar selain overlay itu sendiri.
+  *
+  * Ringan: item hanya komponen biasa tanpa animasi dan tanpa blur. Satu-satunya yang berubah terus
+  * adalah timer, dan itu hanya menggambar ulang satu teks kecil sekali per detik, hanya saat berjalan.
+- * Item tidak menangkap sentuhan, jadi kontrol dan kamera di bawahnya tetap bekerja. Hanya gagang
+- * kecil di tepi kiri dan panelnya yang menerima sentuhan.
++ * Item tidak menangkap sentuhan, jadi kontrol dan kamera di bawahnya tetap bekerja.
+  */
+ 
+ /** Stopwatch satu item timer. Angka detik dibaca lewat state supaya hanya teks timer yang tergambar ulang. */
+@@ -207,16 +207,12 @@ internal fun rememberStreamerBitmap(name: String): ImageBitmap? {
+ 
+ /**
+  * Lapisan overlay streamer. [items] boleh berisi item yang belum layak tampil; yang kosong disaring di sini.
+- * [ghostHandle] menyembunyikan gagang (tetap bisa disentuh), dipakai saat merekam "Game saja".
+- * [chromeVisible] = false menyembunyikan gagang dan panel cepat (mis. saat menu pengaturan game terbuka,
+- * karena menu itu sudah membawa panel overlay sendiri); item overlay tetap tampil.
++ * [chromeVisible] = false menyembunyikan overlay web (mis. saat menu pengaturan game terbuka, supaya halaman web
++ * yang berjalan tidak menutupi menu); item overlay biasa tetap tampil.
+  */
+ @Composable
+ fun StreamerLayer(
+     items: List<StreamerItem>,
+-    panelOpen: Boolean,
+-    onPanelChange: (Boolean) -> Unit,
+-    ghostHandle: Boolean,
+     chromeVisible: Boolean = true
+ ) {
+     val list = remember(items) {
+@@ -228,7 +224,18 @@ fun StreamerLayer(
+         .filter { StreamerLogic.isWeb(it) && StreamerRuntime.isShown(it) }
+         .take(StreamerLogic.MAX_WEB_SHOWN)
+         .mapNotNull { item ->
+-            StreamerLogic.webUrl(item.text)?.let { StreamerWebSpec(item.id, it, item.alpha) }
++            StreamerLogic.webUrl(item.text)?.let { url ->
++                StreamerWebSpec(
++                    id = item.id,
++                    url = url,
++                    alpha = item.alpha,
++                    x = item.x,
++                    y = item.y,
++                    boxW = item.boxW,
++                    boxH = item.boxH,
++                    zoom = StreamerLogic.webZoomOf(item)
++                )
++            }
+         }
+ 
+     Box(modifier = Modifier.fillMaxSize()) {
+@@ -265,23 +272,6 @@ fun StreamerLayer(
+                 }
+             }
+         }
+-
+-        // Tanpa gagang dan panel saat menu pengaturan game terbuka: menu itu mengurus overlay sendiri.
+-        if (chromeVisible) {
+-            if (panelOpen) {
+-                StreamerPanel(
+-                    items = list,
+-                    onClose = { onPanelChange(false) },
+-                    modifier = Modifier.align(Alignment.CenterStart)
+-                )
+-            } else {
+-                StreamerHandle(
+-                    ghost = ghostHandle,
+-                    onOpen = { onPanelChange(true) },
+-                    modifier = Modifier.align(Alignment.CenterStart)
+-                )
+-            }
+-        }
+     }
+ }
+ 
+@@ -427,8 +417,9 @@ internal fun LinkRevealButton(revealed: Boolean, tint: Color, onToggle: () -> Un
+ }
+ 
+ /**
+- * Tanda tempat overlay web di editor layar dan pratinjau. Overlay web asli berjalan di lapisan WebView
+- * ([StreamerWebLayer]) dan memenuhi layar; di sini hanya nama situsnya, tidak pernah alamat lengkapnya.
++ * Tanda tempat overlay web di pratinjau. Overlay web asli berjalan di lapisan WebView ([StreamerWebLayer]) di
++ * kotaknya sendiri; di sini hanya nama situsnya, tidak pernah alamat lengkapnya. Editor layar menggambar kotak
++ * seukuran aslinya sendiri (lihat StreamerEditor).
+  */
+ @Composable
+ private fun WebPlaceholder(item: StreamerItem, maxWidthDp: Float) {
+@@ -504,66 +495,6 @@ private fun TimerText(
+     )
+ }
+ 
+-/** Gagang kecil di tepi kiri layar; ketuk untuk membuka panel. */
+-@Composable
+-private fun StreamerHandle(ghost: Boolean, onOpen: () -> Unit, modifier: Modifier) {
+-    val currentOnOpen by rememberUpdatedState(onOpen)
+-    val shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)
+-    Box(
+-        modifier = modifier
+-            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Start))
+-            .size(width = 34.dp, height = 96.dp)
+-            .pointerInput(Unit) { detectTapGestures { currentOnOpen() } },
+-        contentAlignment = Alignment.CenterStart
+-    ) {
+-        Box(
+-            modifier = Modifier
+-                .size(width = 20.dp, height = 60.dp)
+-                .then(if (ghost) Modifier.graphicsLayer { alpha = 0f } else Modifier)
+-                .clip(shape)
+-                .background(Color(0x99121217))
+-                .border(1.dp, ChipEdge, shape),
+-            contentAlignment = Alignment.Center
+-        ) {
+-            AmberIcon("chev_right", 12.dp, AmberUi.TextDim)
+-        }
+-    }
+-}
+-
+-/**
+- * Panel di sisi kiri: daftar item dengan saklar tampil/sembunyi, dan kontrol timer. Bukan dialog:
+- * game tetap berjalan di belakangnya. Latarnya menelan sentuhan supaya jari yang menyentuh panel
+- * tidak ikut menggerakkan kamera atau menekan kontrol di bawahnya.
+- */
+-@Composable
+-private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifier: Modifier) {
+-    val shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
+-    Column(
+-        modifier = modifier
+-            .fillMaxHeight()
+-            // Sempit supaya layar game tetap terlihat.
+-            .fractionWidthCapped(PANEL_WIDTH_FRACTION, PANEL_MAX_WIDTH_DP.dp)
+-            .clip(shape)
+-            .background(AmberUi.MenuCard)
+-            .border(1.dp, AmberUi.Border, shape)
+-            .pointerInput(Unit) { detectTapGestures { } }
+-            .windowInsetsPadding(
+-                WindowInsets.displayCutout.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
+-            )
+-            .padding(horizontal = 12.dp, vertical = 12.dp)
+-    ) {
+-        PanelHeader(onClose = onClose)
+-        Spacer(modifier = Modifier.height(10.dp))
+-        Column(
+-            modifier = Modifier
+-                .weight(1f)
+-                .verticalScroll(rememberScrollState())
+-        ) {
+-            PanelList(items)
+-        }
+-    }
+-}
+-
+ /** Lebar panel samping overlay: sebagian layar, paling lebar [PANEL_MAX_WIDTH_DP]. Sempit, supaya layar game tetap terlihat. */
+ internal const val PANEL_WIDTH_FRACTION = 0.28f
+ internal const val PANEL_MAX_WIDTH_DP = 190
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerWebLayer.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerWebLayer.kt
+index de74168..ef283e7 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerWebLayer.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/streamer/StreamerWebLayer.kt
+@@ -6,6 +6,7 @@ import android.content.Context
+ import android.content.ContextWrapper
+ import android.graphics.Color
+ import android.os.Build
++import android.view.Gravity
+ import android.view.MotionEvent
+ import android.view.View
+ import android.view.ViewGroup
+@@ -26,17 +27,32 @@ import androidx.compose.ui.platform.LocalContext
+ import androidx.lifecycle.Lifecycle
+ import androidx.lifecycle.LifecycleEventObserver
+ import androidx.lifecycle.LifecycleOwner
++import com.israadev.nuxlauncher.core.streamer.StreamerLogic
+ 
+-/** Satu overlay web yang harus tampil: id item, alamat https yang sudah divalidasi, dan kepekatannya. */
+-internal data class StreamerWebSpec(val id: String, val url: String, val alpha: Float)
++/**
++ * Satu overlay web yang harus tampil: id item, alamat https yang sudah divalidasi, kepekatannya, dan kotaknya di layar
++ * (pecahan layar; lihat [StreamerLogic.webRect]) beserta skala halamannya (1 = 100%).
++ */
++internal data class StreamerWebSpec(
++    val id: String,
++    val url: String,
++    val alpha: Float,
++    val x: Float = -1f,
++    val y: Float = -1f,
++    val boxW: Float = 0f,
++    val boxH: Float = 0f,
++    val zoom: Float = 1f
++)
+ 
+ /**
+  * Lapisan overlay web: menjalankan link overlay donasi (Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs,
+  * dll) sebagai browser source di atas game. Semua jenisnya (Alert, Media Share, Song Share, Subathon, Wheel, Goal,
+  * Top 10, Poll, dan seterusnya) hanyalah halaman web, jadi satu mekanisme melayani semuanya.
+  *
+- * - Tiap overlay = satu WebView layar penuh dengan latar transparan, di dalam wadah yang menaruh sentuhan dan
+- *   gerakan mouse ke game di bawahnya (WebView tidak pernah menerima sentuhan).
++ * - Tiap overlay = satu WebView dengan latar transparan (layar penuh atau kotak yang diatur pengguna), di dalam wadah
++ *   yang menaruh sentuhan dan gerakan mouse ke game di bawahnya (WebView tidak pernah menerima sentuhan).
++ * - Skala halaman di bawah 100%: WebView dibuat lebih besar dari kotaknya (halaman ditata untuk layar yang lebih
++ *   lebar) lalu dikecilkan ke kotak, seperti ukuran kanvas browser source di OBS.
+  * - WebView hanya dibuat saat overlay tampil dan dibuang saat disembunyikan atau item dihapus, supaya tidak
+  *   memakan RAM selama tidak dipakai. Wadah ditambahkan ke jendela di atas Compose, karena sentuhan melewati
+  *   View biasa dengan benar, sedangkan AndroidView di dalam Compose ikut menelan sentuhan.
+@@ -83,7 +99,7 @@ private class PassThroughFrame(context: Context) : FrameLayout(context) {
+     override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean = false
+ }
+ 
+-private class WebEntry(val spec: StreamerWebSpec, val view: WebView) {
++private class WebEntry(var spec: StreamerWebSpec, val view: WebView) {
+     var retries = 0
+     var retry: Runnable? = null
+ }
+@@ -109,6 +125,42 @@ private class StreamerWebHost(private val activity: Activity) {
+             container,
+             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+         )
++        // Ukuran layar berubah (mis. diputar): kotak tiap overlay dihitung ulang. Ditunda ke luar proses layout.
++        container.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
++            val sizeChanged = right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop
++            if (sizeChanged) container.post { if (!destroyed) layoutAll() }
++        }
++    }
++
++    /** Taruh dan ukur satu WebView sesuai [WebEntry.spec] dan ukuran wadah saat ini (belum ada ukuran: ditunda). */
++    private fun layoutEntry(entry: WebEntry) {
++        val cw = container.width
++        val ch = container.height
++        if (cw <= 0 || ch <= 0) return
++        val spec = entry.spec
++        val rect = StreamerLogic.webRect(cw, ch, spec.x, spec.y, spec.boxW, spec.boxH)
++        val zoom = spec.zoom.coerceIn(StreamerLogic.ZOOM_MIN, 1f)
++        // Halaman ditata seluas kotak / skala, lalu dikecilkan dari pojok kiri atas supaya pas di kotaknya.
++        val lw = Math.round(rect.width / zoom)
++        val lh = Math.round(rect.height / zoom)
++        val view = entry.view
++        val lp = (view.layoutParams as? FrameLayout.LayoutParams) ?: FrameLayout.LayoutParams(lw, lh)
++        if (lp.width != lw || lp.height != lh || lp.leftMargin != rect.left || lp.topMargin != rect.top) {
++            lp.width = lw
++            lp.height = lh
++            lp.leftMargin = rect.left
++            lp.topMargin = rect.top
++            lp.gravity = Gravity.TOP or Gravity.START
++            view.layoutParams = lp
++        }
++        view.pivotX = 0f
++        view.pivotY = 0f
++        view.scaleX = zoom
++        view.scaleY = zoom
++    }
++
++    private fun layoutAll() {
++        for (entry in entries.values) layoutEntry(entry)
+     }
+ 
+     fun update(specs: List<StreamerWebSpec>, visible: Boolean) {
+@@ -130,6 +182,10 @@ private class StreamerWebHost(private val activity: Activity) {
+             val existing = entries[spec.id]
+             if (existing != null) {
+                 existing.view.alpha = spec.alpha
++                if (existing.spec != spec) {
++                    existing.spec = spec
++                    layoutEntry(existing)
++                }
+                 continue
+             }
+             val view = try {
+@@ -144,6 +200,8 @@ private class StreamerWebHost(private val activity: Activity) {
+                 view,
+                 FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+             )
++            // Ukuran wadah sudah diketahui: pasang kotaknya sekarang; kalau belum, dilakukan saat wadah selesai diukur.
++            layoutEntry(entry)
+             if (paused) view.onPause()
+             view.loadUrl(spec.url)
+         }
+diff --git a/changelog/entries/20261123-pil-menu-overlay-atur.txt b/changelog/entries/20261123-pil-menu-overlay-atur.txt
+new file mode 100644
+index 0000000..edbd3e2
+--- /dev/null
++++ b/changelog/entries/20261123-pil-menu-overlay-atur.txt
+@@ -0,0 +1,48 @@
++[id]
+++ Tombol menu di game kini berbentuk pil: ikon gerigi membuka menu, ikon mata menyembunyikan atau menampilkan UI. Menu tetap bisa dibuka walau UI sedang disembunyikan, jadi tidak perlu menampilkan UI dulu saat streaming. Ukuran dan letaknya diatur di editor kontrol.
+++ Overlay web kini bisa digeser dan diubah ukurannya langsung di layar (Atur di layar), punya pilihan kotak cepat dan skala halaman di Pengaturan, sehingga alert yang terpotong bisa dikecilkan.
+++ Semua overlay Streamer punya penggeser posisi mendatar dan tegak, serta tombol Gandakan.
++~ Mode streamer tidak lagi menaruh tombol ">" di tepi layar. Overlay dinyalakan dan disembunyikan lewat menu dalam game (ikon gerigi).
++! Tombol volume, daya, dan media tidak lagi menyembunyikan kontrol di layar seperti keyboard fisik.
++[en]
+++ The in-game menu button is now a pill: the gear icon opens the menu and the eye icon hides or shows the UI. The menu can be opened even while the UI is hidden, so there is no need to show the UI first while streaming. Its size and position are set in the controls editor.
+++ Web overlays can now be dragged and resized right on screen (Arrange on screen), with quick box presets and a page scale in Settings, so a cut-off alert can be shrunk to fit.
+++ Every Streamer overlay has horizontal and vertical position sliders and a Duplicate button.
++~ Streamer mode no longer puts a ">" handle on the screen edge. Overlays are turned on and off from the in-game menu (gear icon).
++! Volume, power, and media keys no longer hide the on-screen controls the way a physical keyboard does.
++[es]
+++ El botón de menú del juego ahora es una píldora: el icono de engranaje abre el menú y el icono de ojo oculta o muestra la interfaz. El menú se puede abrir aunque la interfaz esté oculta, así que no hace falta mostrarla antes al transmitir. Su tamaño y posición se ajustan en el editor de controles.
+++ Los overlays web ahora se pueden mover y cambiar de tamaño directamente en pantalla (Organizar en pantalla), con cuadros rápidos y una escala de página en Ajustes, para reducir una alerta que se corta.
+++ Todos los overlays de Streamer tienen controles deslizantes de posición horizontal y vertical, y un botón Duplicar.
++~ El modo streamer ya no pone un tirador ">" en el borde de la pantalla. Los overlays se activan y se ocultan desde el menú del juego (icono de engranaje).
++! Las teclas de volumen, encendido y multimedia ya no ocultan los controles en pantalla como lo hace un teclado físico.
++[fil]
+++ Ang menu button sa loob ng laro ay pill na ngayon: ang gear icon ay nagbubukas ng menu at ang eye icon ay nagtatago o nagpapakita ng UI. Mabubuksan ang menu kahit nakatago ang UI, kaya hindi na kailangang ipakita muna ang UI habang nag-i-stream. Ang laki at posisyon nito ay inaayos sa controls editor.
+++ Ang web overlay ay maaari nang i-drag at baguhin ang laki mismo sa screen (Ayusin sa screen), may mabilisang preset ng kahon at page scale sa Settings, para mapaliit ang alert na naputol.
+++ Ang bawat Streamer overlay ay may slider ng pahalang at patayong posisyon, at button na Duplicate.
++~ Hindi na naglalagay ang streamer mode ng ">" na handle sa gilid ng screen. Ino-on at itinatago ang mga overlay mula sa menu sa loob ng laro (icon na gear).
++! Hindi na itinatago ng volume, power, at media keys ang mga kontrol sa screen gaya ng physical keyboard.
++[pt]
+++ O botão de menu no jogo agora é uma pílula: o ícone de engrenagem abre o menu e o ícone de olho oculta ou mostra a interface. O menu abre mesmo com a interface oculta, então não é preciso mostrá-la antes ao transmitir. Tamanho e posição são ajustados no editor de controles.
+++ Os overlays web agora podem ser movidos e redimensionados direto na tela (Organizar na tela), com caixas rápidas e escala da página em Configurações, para reduzir um alerta cortado.
+++ Todos os overlays do Streamer têm controles de posição horizontal e vertical e um botão Duplicar.
++~ O modo streamer não coloca mais uma alça ">" na borda da tela. Os overlays são ligados e ocultados pelo menu do jogo (ícone de engrenagem).
++! As teclas de volume, energia e mídia não ocultam mais os controles na tela como um teclado físico faz.
++[th]
+++ ปุ่มเมนูในเกมเป็นรูปแคปซูลแล้ว: ไอคอนเฟืองเปิดเมนู ไอคอนตาซ่อนหรือแสดง UI เปิดเมนูได้แม้ซ่อน UI อยู่ จึงไม่ต้องแสดง UI ก่อนตอนสตรีม ปรับขนาดและตำแหน่งได้ในตัวแก้ไขการควบคุม
+++ โอเวอร์เลย์เว็บลากและปรับขนาดบนหน้าจอได้โดยตรง (จัดวางบนหน้าจอ) มีกรอบสำเร็จรูปและสเกลหน้าเว็บใน การตั้งค่า เพื่อย่อการแจ้งเตือนที่ถูกตัดให้พอดี
+++ โอเวอร์เลย์ Streamer ทุกรายการมีแถบเลื่อนตำแหน่งแนวนอนและแนวตั้ง และปุ่มทำสำเนา
++~ โหมดสตรีมเมอร์ไม่วางที่จับ ">" ที่ขอบหน้าจออีกต่อไป เปิดและซ่อนโอเวอร์เลย์ได้จากเมนูในเกม (ไอคอนเฟือง)
++! ปุ่มเสียง ปุ่มเปิดปิด และปุ่มมีเดียจะไม่ซ่อนตัวควบคุมบนหน้าจอเหมือนคีย์บอร์ดจริงอีกต่อไป
++[vi]
+++ Nút menu trong game nay có dạng viên: biểu tượng bánh răng mở menu, biểu tượng con mắt ẩn hoặc hiện giao diện. Có thể mở menu ngay cả khi giao diện đang bị ẩn nên không cần hiện giao diện trước khi phát trực tiếp. Kích thước và vị trí chỉnh trong trình chỉnh sửa điều khiển.
+++ Overlay web nay có thể kéo và đổi kích thước ngay trên màn hình (Sắp xếp trên màn hình), có khung chọn nhanh và tỷ lệ trang trong Cài đặt để thu nhỏ thông báo bị cắt.
+++ Mọi overlay Streamer đều có thanh trượt vị trí ngang và dọc, cùng nút Nhân đôi.
++~ Chế độ streamer không còn đặt tay nắm ">" ở mép màn hình. Bật và ẩn overlay từ menu trong game (biểu tượng bánh răng).
++! Phím âm lượng, nguồn và phương tiện không còn ẩn các nút điều khiển trên màn hình như bàn phím vật lý.
++[zh]
+++ 游戏内的菜单按钮现在是胶囊形：齿轮图标打开菜单，眼睛图标隐藏或显示界面。即使界面被隐藏也能打开菜单，直播时无需先显示界面。大小和位置可在控制编辑器中调整。
+++ 网页叠加层现在可以直接在屏幕上拖动和调整大小（在屏幕上调整），设置中提供快速选框和页面缩放，被截断的提醒可以缩小到合适大小。
+++ 每个 Streamer 叠加层都有水平和垂直位置滑块，以及复制按钮。
++~ 直播模式不再在屏幕边缘放置“>”把手。叠加层通过游戏内菜单（齿轮图标）开启和隐藏。
++! 音量键、电源键和媒体键不再像实体键盘那样隐藏屏幕上的控制按钮。
+# FIN part=1/1 files=33

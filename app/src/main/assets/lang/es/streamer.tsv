@@ -1,11 +1,11 @@
 # Mode streamer: overlay di dalam game
 Mode streamer	Modo streamer
-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Muestra un peque\u00f1o tirador en el borde izquierdo de la pantalla del juego. T\u00f3calo para abrir un panel que muestra y oculta los overlays.
+Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Muestra overlays (texto, im\u00e1genes, enlaces, temporizadores y overlays web) sobre el juego. Act\u00edvalos y oc\u00faltalos desde el men\u00fa del juego (icono de engranaje), sin ning\u00fan bot\u00f3n extra en pantalla.
 Atur overlay	Configurar overlays
 Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Texto, im\u00e1genes, enlaces con c\u00f3digo QR y temporizadores que se muestran sobre el juego.
 Ketuk untuk menampilkan atau menyembunyikan.	Toca para mostrar u ocultar.
 Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	A\u00fan no hay overlays. A\u00f1ade alguno en Ajustes > Juego > Modo streamer > Configurar overlays.
-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Muestra texto, im\u00e1genes, enlaces o temporizadores sobre el juego. Mu\u00e9stralos y oc\u00faltalos desde el panel del borde izquierdo de la pantalla mientras juegas.
+Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Muestra texto, im\u00e1genes, enlaces o temporizadores sobre el juego. Mu\u00e9stralos y oc\u00faltalos desde el men\u00fa del juego (icono de engranaje) mientras juegas.
 Belum ada overlay. Ketuk Tambah untuk membuatnya.	A\u00fan no hay overlays. Toca A\u00f1adir para crear uno.
 Overlay baru	Nuevo overlay
 Ubah overlay	Editar overlay
@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Ejemplo: ko-fi.com/tunombre
 Tampilkan kode QR	Mostrar c\u00f3digo QR
 Penonton bisa memindainya langsung dari layar.	Los espectadores pueden escanearlo directamente desde la pantalla.
 Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	Esta direcci\u00f3n es demasiado larga para un c\u00f3digo QR, as\u00ed que solo se muestra el texto.
-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	El temporizador empieza en 00:00. In\u00edcialo, p\u00e1usalo y restabl\u00e9celo desde el panel del borde izquierdo de la pantalla mientras juegas.
+Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	El temporizador empieza en 00:00. In\u00edcialo, p\u00e1usalo y restabl\u00e9celo desde el men\u00fa del juego (icono de engranaje) mientras juegas.
 Kiri atas	Arriba izquierda
 Atas	Arriba
 Kanan atas	Arriba derecha
@@ -30,7 +30,7 @@ Kanan bawah	Abajo derecha
 Kecil	Peque\u00f1a
 Besar	Grande
 Tampil saat game mulai	Mostrar al iniciar el juego
-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	Si est\u00e1 desactivado, act\u00edvalo desde el panel del borde izquierdo de la pantalla mientras juegas.
+Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	Si est\u00e1 desactivado, act\u00edvalo desde el men\u00fa del juego (icono de engranaje) mientras juegas.
 Memproses gambar...	Procesando imagen...
 Foto atau logo. Dikecilkan otomatis supaya ringan.	Una foto o un logotipo. Se reduce autom\u00e1ticamente para que sea ligero.
 Mulai	Iniciar

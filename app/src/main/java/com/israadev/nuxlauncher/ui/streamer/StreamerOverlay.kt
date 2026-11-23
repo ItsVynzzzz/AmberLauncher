@@ -86,13 +86,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 /*
- * Overlay streamer di dalam game: teks, gambar, link (dengan kode QR), dan timer yang melayang di
- * enam posisi layar, plus sidebar kiri yang tersembunyi untuk menyalakan/mematikannya saat bermain.
+ * Overlay streamer di dalam game: teks, gambar, link (dengan kode QR), timer, dan overlay web yang melayang di
+ * atas game. Menyalakan atau mematikannya saat bermain lewat panel kiri di menu dalam game (ikon gerigi), bukan
+ * lewat gagang di tepi layar: tidak ada lagi yang menempel di layar selain overlay itu sendiri.
  *
  * Ringan: item hanya komponen biasa tanpa animasi dan tanpa blur. Satu-satunya yang berubah terus
  * adalah timer, dan itu hanya menggambar ulang satu teks kecil sekali per detik, hanya saat berjalan.
- * Item tidak menangkap sentuhan, jadi kontrol dan kamera di bawahnya tetap bekerja. Hanya gagang
- * kecil di tepi kiri dan panelnya yang menerima sentuhan.
+ * Item tidak menangkap sentuhan, jadi kontrol dan kamera di bawahnya tetap bekerja.
  */
 
 /** Stopwatch satu item timer. Angka detik dibaca lewat state supaya hanya teks timer yang tergambar ulang. */
@@ -207,16 +207,12 @@ internal fun rememberStreamerBitmap(name: String): ImageBitmap? {
 
 /**
  * Lapisan overlay streamer. [items] boleh berisi item yang belum layak tampil; yang kosong disaring di sini.
- * [ghostHandle] menyembunyikan gagang (tetap bisa disentuh), dipakai saat merekam "Game saja".
- * [chromeVisible] = false menyembunyikan gagang dan panel cepat (mis. saat menu pengaturan game terbuka,
- * karena menu itu sudah membawa panel overlay sendiri); item overlay tetap tampil.
+ * [chromeVisible] = false menyembunyikan overlay web (mis. saat menu pengaturan game terbuka, supaya halaman web
+ * yang berjalan tidak menutupi menu); item overlay biasa tetap tampil.
  */
 @Composable
 fun StreamerLayer(
     items: List<StreamerItem>,
-    panelOpen: Boolean,
-    onPanelChange: (Boolean) -> Unit,
-    ghostHandle: Boolean,
     chromeVisible: Boolean = true
 ) {
     val list = remember(items) {
@@ -228,7 +224,18 @@ fun StreamerLayer(
         .filter { StreamerLogic.isWeb(it) && StreamerRuntime.isShown(it) }
         .take(StreamerLogic.MAX_WEB_SHOWN)
         .mapNotNull { item ->
-            StreamerLogic.webUrl(item.text)?.let { StreamerWebSpec(item.id, it, item.alpha) }
+            StreamerLogic.webUrl(item.text)?.let { url ->
+                StreamerWebSpec(
+                    id = item.id,
+                    url = url,
+                    alpha = item.alpha,
+                    x = item.x,
+                    y = item.y,
+                    boxW = item.boxW,
+                    boxH = item.boxH,
+                    zoom = StreamerLogic.webZoomOf(item)
+                )
+            }
         }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -263,23 +270,6 @@ fun StreamerLayer(
                         key(item.id) { StreamerItemView(item, maxWidthDp) }
                     }
                 }
-            }
-        }
-
-        // Tanpa gagang dan panel saat menu pengaturan game terbuka: menu itu mengurus overlay sendiri.
-        if (chromeVisible) {
-            if (panelOpen) {
-                StreamerPanel(
-                    items = list,
-                    onClose = { onPanelChange(false) },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
-            } else {
-                StreamerHandle(
-                    ghost = ghostHandle,
-                    onOpen = { onPanelChange(true) },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
             }
         }
     }
@@ -427,8 +417,9 @@ internal fun LinkRevealButton(revealed: Boolean, tint: Color, onToggle: () -> Un
 }
 
 /**
- * Tanda tempat overlay web di editor layar dan pratinjau. Overlay web asli berjalan di lapisan WebView
- * ([StreamerWebLayer]) dan memenuhi layar; di sini hanya nama situsnya, tidak pernah alamat lengkapnya.
+ * Tanda tempat overlay web di pratinjau. Overlay web asli berjalan di lapisan WebView ([StreamerWebLayer]) di
+ * kotaknya sendiri; di sini hanya nama situsnya, tidak pernah alamat lengkapnya. Editor layar menggambar kotak
+ * seukuran aslinya sendiri (lihat StreamerEditor).
  */
 @Composable
 private fun WebPlaceholder(item: StreamerItem, maxWidthDp: Float) {
@@ -502,66 +493,6 @@ private fun TimerText(
         maxLines = 1,
         style = style
     )
-}
-
-/** Gagang kecil di tepi kiri layar; ketuk untuk membuka panel. */
-@Composable
-private fun StreamerHandle(ghost: Boolean, onOpen: () -> Unit, modifier: Modifier) {
-    val currentOnOpen by rememberUpdatedState(onOpen)
-    val shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp)
-    Box(
-        modifier = modifier
-            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Start))
-            .size(width = 34.dp, height = 96.dp)
-            .pointerInput(Unit) { detectTapGestures { currentOnOpen() } },
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Box(
-            modifier = Modifier
-                .size(width = 20.dp, height = 60.dp)
-                .then(if (ghost) Modifier.graphicsLayer { alpha = 0f } else Modifier)
-                .clip(shape)
-                .background(Color(0x99121217))
-                .border(1.dp, ChipEdge, shape),
-            contentAlignment = Alignment.Center
-        ) {
-            AmberIcon("chev_right", 12.dp, AmberUi.TextDim)
-        }
-    }
-}
-
-/**
- * Panel di sisi kiri: daftar item dengan saklar tampil/sembunyi, dan kontrol timer. Bukan dialog:
- * game tetap berjalan di belakangnya. Latarnya menelan sentuhan supaya jari yang menyentuh panel
- * tidak ikut menggerakkan kamera atau menekan kontrol di bawahnya.
- */
-@Composable
-private fun StreamerPanel(items: List<StreamerItem>, onClose: () -> Unit, modifier: Modifier) {
-    val shape = RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
-    Column(
-        modifier = modifier
-            .fillMaxHeight()
-            // Sempit supaya layar game tetap terlihat.
-            .fractionWidthCapped(PANEL_WIDTH_FRACTION, PANEL_MAX_WIDTH_DP.dp)
-            .clip(shape)
-            .background(AmberUi.MenuCard)
-            .border(1.dp, AmberUi.Border, shape)
-            .pointerInput(Unit) { detectTapGestures { } }
-            .windowInsetsPadding(
-                WindowInsets.displayCutout.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical)
-            )
-            .padding(horizontal = 12.dp, vertical = 12.dp)
-    ) {
-        PanelHeader(onClose = onClose)
-        Spacer(modifier = Modifier.height(10.dp))
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            PanelList(items)
-        }
-    }
 }
 
 /** Lebar panel samping overlay: sebagian layar, paling lebar [PANEL_MAX_WIDTH_DP]. Sempit, supaya layar game tetap terlihat. */

@@ -1,0 +1,48 @@
+[id]
++ Tombol menu di game kini berbentuk pil: ikon gerigi membuka menu, ikon mata menyembunyikan atau menampilkan UI. Menu tetap bisa dibuka walau UI sedang disembunyikan, jadi tidak perlu menampilkan UI dulu saat streaming. Ukuran dan letaknya diatur di editor kontrol.
++ Overlay web kini bisa digeser dan diubah ukurannya langsung di layar (Atur di layar), punya pilihan kotak cepat dan skala halaman di Pengaturan, sehingga alert yang terpotong bisa dikecilkan.
++ Semua overlay Streamer punya penggeser posisi mendatar dan tegak, serta tombol Gandakan.
+~ Mode streamer tidak lagi menaruh tombol ">" di tepi layar. Overlay dinyalakan dan disembunyikan lewat menu dalam game (ikon gerigi).
+! Tombol volume, daya, dan media tidak lagi menyembunyikan kontrol di layar seperti keyboard fisik.
+[en]
++ The in-game menu button is now a pill: the gear icon opens the menu and the eye icon hides or shows the UI. The menu can be opened even while the UI is hidden, so there is no need to show the UI first while streaming. Its size and position are set in the controls editor.
++ Web overlays can now be dragged and resized right on screen (Arrange on screen), with quick box presets and a page scale in Settings, so a cut-off alert can be shrunk to fit.
++ Every Streamer overlay has horizontal and vertical position sliders and a Duplicate button.
+~ Streamer mode no longer puts a ">" handle on the screen edge. Overlays are turned on and off from the in-game menu (gear icon).
+! Volume, power, and media keys no longer hide the on-screen controls the way a physical keyboard does.
+[es]
++ El botón de menú del juego ahora es una píldora: el icono de engranaje abre el menú y el icono de ojo oculta o muestra la interfaz. El menú se puede abrir aunque la interfaz esté oculta, así que no hace falta mostrarla antes al transmitir. Su tamaño y posición se ajustan en el editor de controles.
++ Los overlays web ahora se pueden mover y cambiar de tamaño directamente en pantalla (Organizar en pantalla), con cuadros rápidos y una escala de página en Ajustes, para reducir una alerta que se corta.
++ Todos los overlays de Streamer tienen controles deslizantes de posición horizontal y vertical, y un botón Duplicar.
+~ El modo streamer ya no pone un tirador ">" en el borde de la pantalla. Los overlays se activan y se ocultan desde el menú del juego (icono de engranaje).
+! Las teclas de volumen, encendido y multimedia ya no ocultan los controles en pantalla como lo hace un teclado físico.
+[fil]
++ Ang menu button sa loob ng laro ay pill na ngayon: ang gear icon ay nagbubukas ng menu at ang eye icon ay nagtatago o nagpapakita ng UI. Mabubuksan ang menu kahit nakatago ang UI, kaya hindi na kailangang ipakita muna ang UI habang nag-i-stream. Ang laki at posisyon nito ay inaayos sa controls editor.
++ Ang web overlay ay maaari nang i-drag at baguhin ang laki mismo sa screen (Ayusin sa screen), may mabilisang preset ng kahon at page scale sa Settings, para mapaliit ang alert na naputol.
++ Ang bawat Streamer overlay ay may slider ng pahalang at patayong posisyon, at button na Duplicate.
+~ Hindi na naglalagay ang streamer mode ng ">" na handle sa gilid ng screen. Ino-on at itinatago ang mga overlay mula sa menu sa loob ng laro (icon na gear).
+! Hindi na itinatago ng volume, power, at media keys ang mga kontrol sa screen gaya ng physical keyboard.
+[pt]
++ O botão de menu no jogo agora é uma pílula: o ícone de engrenagem abre o menu e o ícone de olho oculta ou mostra a interface. O menu abre mesmo com a interface oculta, então não é preciso mostrá-la antes ao transmitir. Tamanho e posição são ajustados no editor de controles.
++ Os overlays web agora podem ser movidos e redimensionados direto na tela (Organizar na tela), com caixas rápidas e escala da página em Configurações, para reduzir um alerta cortado.
++ Todos os overlays do Streamer têm controles de posição horizontal e vertical e um botão Duplicar.
+~ O modo streamer não coloca mais uma alça ">" na borda da tela. Os overlays são ligados e ocultados pelo menu do jogo (ícone de engrenagem).
+! As teclas de volume, energia e mídia não ocultam mais os controles na tela como um teclado físico faz.
+[th]
++ ปุ่มเมนูในเกมเป็นรูปแคปซูลแล้ว: ไอคอนเฟืองเปิดเมนู ไอคอนตาซ่อนหรือแสดง UI เปิดเมนูได้แม้ซ่อน UI อยู่ จึงไม่ต้องแสดง UI ก่อนตอนสตรีม ปรับขนาดและตำแหน่งได้ในตัวแก้ไขการควบคุม
++ โอเวอร์เลย์เว็บลากและปรับขนาดบนหน้าจอได้โดยตรง (จัดวางบนหน้าจอ) มีกรอบสำเร็จรูปและสเกลหน้าเว็บใน การตั้งค่า เพื่อย่อการแจ้งเตือนที่ถูกตัดให้พอดี
++ โอเวอร์เลย์ Streamer ทุกรายการมีแถบเลื่อนตำแหน่งแนวนอนและแนวตั้ง และปุ่มทำสำเนา
+~ โหมดสตรีมเมอร์ไม่วางที่จับ ">" ที่ขอบหน้าจออีกต่อไป เปิดและซ่อนโอเวอร์เลย์ได้จากเมนูในเกม (ไอคอนเฟือง)
+! ปุ่มเสียง ปุ่มเปิดปิด และปุ่มมีเดียจะไม่ซ่อนตัวควบคุมบนหน้าจอเหมือนคีย์บอร์ดจริงอีกต่อไป
+[vi]
++ Nút menu trong game nay có dạng viên: biểu tượng bánh răng mở menu, biểu tượng con mắt ẩn hoặc hiện giao diện. Có thể mở menu ngay cả khi giao diện đang bị ẩn nên không cần hiện giao diện trước khi phát trực tiếp. Kích thước và vị trí chỉnh trong trình chỉnh sửa điều khiển.
++ Overlay web nay có thể kéo và đổi kích thước ngay trên màn hình (Sắp xếp trên màn hình), có khung chọn nhanh và tỷ lệ trang trong Cài đặt để thu nhỏ thông báo bị cắt.
++ Mọi overlay Streamer đều có thanh trượt vị trí ngang và dọc, cùng nút Nhân đôi.
+~ Chế độ streamer không còn đặt tay nắm ">" ở mép màn hình. Bật và ẩn overlay từ menu trong game (biểu tượng bánh răng).
+! Phím âm lượng, nguồn và phương tiện không còn ẩn các nút điều khiển trên màn hình như bàn phím vật lý.
+[zh]
++ 游戏内的菜单按钮现在是胶囊形：齿轮图标打开菜单，眼睛图标隐藏或显示界面。即使界面被隐藏也能打开菜单，直播时无需先显示界面。大小和位置可在控制编辑器中调整。
++ 网页叠加层现在可以直接在屏幕上拖动和调整大小（在屏幕上调整），设置中提供快速选框和页面缩放，被截断的提醒可以缩小到合适大小。
++ 每个 Streamer 叠加层都有水平和垂直位置滑块，以及复制按钮。
+~ 直播模式不再在屏幕边缘放置“>”把手。叠加层通过游戏内菜单（齿轮图标）开启和隐藏。
+! 音量键、电源键和媒体键不再像实体键盘那样隐藏屏幕上的控制按钮。

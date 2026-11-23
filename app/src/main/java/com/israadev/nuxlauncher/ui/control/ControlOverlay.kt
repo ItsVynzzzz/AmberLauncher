@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -65,7 +66,8 @@ import kotlin.math.roundToInt
  * sendiri di kanvas ([ControlSkin]); posisi dihitung saat tata letak, bukan saat penyusunan.
  * Angka FPS dibaca lewat lambda di dalam teks FPS saja, jadi pembaruan 2x per detik tidak
  * menyusun ulang tombol lain. Tombol gerigi hanya membuka menu; keluar dari game lewat tombol
- * merah di dalam menu.
+ * merah di dalam menu. Pil menu (gerigi + mata, lihat [isMenuPill]) selalu tampil, juga saat UI disembunyikan, supaya
+ * menu tetap terbuka dengan satu ketukan tanpa memunculkan UI dulu.
  *
  * Tiap tombol punya lapisan gambar (RenderNode) sendiri. Tanpa itu, satu tombol yang berubah
  * (ditekan, angka FPS baru, kenop joystick bergeser) membuat thread utama merekam ulang gambar
@@ -105,6 +107,8 @@ fun GameControlsLayer(
     DisposableEffect(Unit) {
         onDispose { MacroRegistry.stopAll() }
     }
+    // Ada pil menu: tombol "sembunyikan GUI" yang berdiri sendiri tidak digambar (fungsinya sudah ada di pil).
+    val hasPill = buttons.any { it.isMenuPill() }
     buttons.forEach { source ->
         key(source.id) {
             // Tampilan FPS dan RAM lebih lebar dari tombol FPS lama; ukurannya diperlebar di sini saja,
@@ -119,7 +123,7 @@ fun GameControlsLayer(
                     source
                 }
             }
-            val widthPx = with(density) { btn.widthDp.dp.toPx() }
+            val widthPx = with(density) { btn.shownWidthDp().dp.toPx() }
             val heightPx = with(density) { btn.heightDp.dp.toPx() }
             val left = (screenWidth * (btn.xPercent / 100f) - widthPx / 2f)
                 .coerceIn(0f, (screenWidth - widthPx).coerceAtLeast(0f))
@@ -146,15 +150,24 @@ fun GameControlsLayer(
                             SystemIconButton(btn, place, active = keyboardActive, onTap = onToggleKeyboard)
                         }
                     }
-                    // Selalu tampil supaya tombol layar bisa dimunculkan lagi.
-                    "HIDE_GUI" -> PlacedAt(buttonsAsWindows, left, top) { place ->
-                        SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
-                    }
-                    // Gerigi: hanya membuka menu. "CLOSE" = nama lama tombol ini di tata letak tersimpan.
-                    "MENU", "CLOSE" -> if (controlsVisible) {
+                    // Mata sendiri: hanya bila tata letak tidak punya pil menu. Selalu tampil supaya tombol layar
+                    // bisa dimunculkan lagi.
+                    "HIDE_GUI" -> if (!hasPill) {
                         PlacedAt(buttonsAsWindows, left, top) { place ->
-                            SystemIconButton(btn, place, onTap = onOpenMenu)
+                            SystemIconButton(btn, place, slash = !controlsVisible, onTap = onToggleControls)
                         }
+                    }
+                    // Pil menu: gerigi buka menu, mata sembunyikan/munculkan UI. Selalu tampil (juga saat UI
+                    // disembunyikan, otomatis atau manual), jadi menu tidak perlu menunggu UI dimunculkan lagi.
+                    // "CLOSE" = nama lama tombol ini di tata letak tersimpan.
+                    "MENU", "CLOSE" -> PlacedAt(buttonsAsWindows, left, top) { place ->
+                        MenuPillButton(
+                            btn = btn,
+                            modifier = place,
+                            uiHidden = !controlsVisible,
+                            onMenu = onOpenMenu,
+                            onToggleUi = onToggleControls
+                        )
                     }
                 }
             } else if (controlsVisible && ControlShowMode.visible(btn.showMode, inMenu)) {
@@ -334,6 +347,42 @@ private fun DrawScope.drawFpsReadout(value: Int, pinned: Boolean, ram: String, r
             )
         }
     }
+}
+
+/**
+ * Pil menu di kontrol layar: separuh kiri (gerigi) membuka menu, separuh kanan (mata) menyembunyikan atau memunculkan
+ * UI. Bagian yang ditekan jadi kuning selama jari menahan. Hanya satu gambar kanvas; status tekan dibaca saat
+ * menggambar, jadi menekan tidak menyusun ulang apa pun.
+ */
+@Composable
+private fun MenuPillButton(
+    btn: CustomControlButton,
+    modifier: Modifier,
+    uiHidden: Boolean,
+    onMenu: () -> Unit,
+    onToggleUi: () -> Unit
+) {
+    // 0 = tidak ada yang ditekan, 1 = gerigi (kiri), 2 = mata (kanan)
+    var pressedSide by remember { mutableIntStateOf(0) }
+    val spec = remember(btn, uiHidden) { skinSpecFor(btn, slash = uiHidden) }
+    val openMenu by rememberUpdatedState(onMenu)
+    val toggleUi by rememberUpdatedState(onToggleUi)
+
+    Box(
+        modifier = modifier
+            .size(width = btn.shownWidthDp().dp, height = btn.heightDp.dp)
+            .drawBehind { drawControlButton(spec, false, pressedSide = pressedSide) }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = { at ->
+                        pressedSide = if (at.x < size.width / 2f) 1 else 2
+                        tryAwaitRelease()
+                        pressedSide = 0
+                    },
+                    onTap = { at -> if (at.x < size.width / 2f) openMenu() else toggleUi() }
+                )
+            }
+    )
 }
 
 /** Tombol sistem berbentuk ikon (keyboard, sembunyikan GUI, gerigi menu). */

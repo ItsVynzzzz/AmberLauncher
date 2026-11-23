@@ -1,0 +1,14 @@
+# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
+Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	Menu pill: ang gear ay nagbubukas ng menu, ang mata ay nagtatago/nagpapakita ng UI
+Ukuran pil (tinggi):	Laki ng pill (taas):
+Lebar	Lapad
+Tinggi	Taas
+Skala halaman	Scale ng page
+Posisi mendatar	Pahalang na posisyon
+Posisi tegak	Patayong posisyon
+Gandakan	I-duplicate
+Kotak overlay	Kahon ng overlay
+Penuh	Buo
+Tengah	Gitna
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Ibaba ang scale kung naputol ang alert: mas malapad ang pagkaayos ng page at saka paliliitin para magkasya sa kahon. Kapag mas mababa sa 100%, mas maraming RAM ang ginagamit.
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Ibaba ang scale kung naputol ang alert: mas malapad ang pagkaayos ng page at saka paliliitin para magkasya sa kahon. Kapag mas mababa sa 100%, mas maraming RAM ang ginagamit. I-drag at baguhin ang laki ng kahon mismo sa screen mula sa menu sa loob ng laro > Ayusin sa screen.

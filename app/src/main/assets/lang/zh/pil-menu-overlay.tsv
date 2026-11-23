@@ -1,0 +1,14 @@
+# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
+Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	菜单胶囊键：齿轮打开菜单，眼睛隐藏/显示界面
+Ukuran pil (tinggi):	胶囊大小（高度）：
+Lebar	宽度
+Tinggi	高度
+Skala halaman	页面缩放
+Posisi mendatar	水平位置
+Posisi tegak	垂直位置
+Gandakan	复制
+Kotak overlay	叠加层区域
+Penuh	全屏
+Tengah	居中
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	若提醒被截断，请调低缩放：页面会按更宽的版面排布，再缩小到框内。低于 100% 会占用更多内存。
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	若提醒被截断，请调低缩放：页面会按更宽的版面排布，再缩小到框内。低于 100% 会占用更多内存。可通过游戏内菜单 > 在屏幕上调整，直接在屏幕上拖动并调整框的大小。

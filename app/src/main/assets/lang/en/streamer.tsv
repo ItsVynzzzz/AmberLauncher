@@ -1,11 +1,11 @@
 # Mode streamer: overlay di dalam game
 Mode streamer	Streamer mode
-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	Shows a small handle on the left edge of the game screen. Tap it to open a panel that shows and hides overlays.
+Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	Shows overlays (text, images, links, timers, web overlays) on top of the game. Turn them on and off from the in-game menu (gear icon), with no extra button on screen.
 Atur overlay	Set up overlays
 Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	Text, images, links with a QR code, and timers shown on top of the game.
 Ketuk untuk menampilkan atau menyembunyikan.	Tap to show or hide.
 Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	No overlays yet. Add some in Settings > Game > Streamer mode > Set up overlays.
-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	Show text, images, links, or timers on top of the game. Show and hide them from the panel on the left edge of the screen while playing.
+Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	Show text, images, links, or timers on top of the game. Show and hide them from the in-game menu (gear icon) while playing.
 Belum ada overlay. Ketuk Tambah untuk membuatnya.	No overlays yet. Tap Add to create one.
 Overlay baru	New overlay
 Ubah overlay	Edit overlay
@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	Example: ko-fi.com/yourname
 Tampilkan kode QR	Show QR code
 Penonton bisa memindainya langsung dari layar.	Viewers can scan it right from the screen.
 Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	This address is too long for a QR code, so only the text is shown.
-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	The timer starts at 00:00. Start, pause, and reset it from the panel on the left edge of the screen while playing.
+Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	The timer starts at 00:00. Start, pause, and reset it from the in-game menu (gear icon) while playing.
 Kiri atas	Top left
 Atas	Top
 Kanan atas	Top right
@@ -30,7 +30,7 @@ Kanan bawah	Bottom right
 Kecil	Small
 Besar	Large
 Tampil saat game mulai	Show when the game starts
-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	If off, turn it on from the panel on the left edge of the screen while playing.
+Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	If off, turn it on from the in-game menu (gear icon) while playing.
 Memproses gambar...	Processing image...
 Foto atau logo. Dikecilkan otomatis supaya ringan.	A photo or logo. It is resized automatically to stay light.
 Mulai	Start

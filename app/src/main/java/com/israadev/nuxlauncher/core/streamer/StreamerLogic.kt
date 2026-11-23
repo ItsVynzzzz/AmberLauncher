@@ -36,7 +36,19 @@ data class StreamerItem(
      * Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan sejenisnya. Alamatnya sensitif, jadi tidak
      * pernah ditulis di layar, di panel, maupun (tanpa ketukan mata) di kolom isian.
      */
-    val web: Boolean = false
+    val web: Boolean = false,
+    /**
+     * Overlay web: lebar dan tinggi kotak tempatnya di layar, pecahan dari lebar dan tinggi layar
+     * ([StreamerLogic.WEB_BOX_MIN]..1). 0 = penuh. Letak kiri-atas kotak mengikuti [x] dan [y].
+     */
+    val boxW: Float = 0f,
+    val boxH: Float = 0f,
+    /**
+     * Overlay web: skala halaman ([StreamerLogic.ZOOM_MIN]..1, 0 = 100%). Di bawah 100% halaman ditata untuk layar
+     * yang lebih besar lalu dikecilkan ke kotaknya, seperti ukuran kanvas browser source di OBS: alert besar yang
+     * dirancang untuk 1080p jadi muat di layar HP. Makin kecil, makin besar RAM yang dipakai.
+     */
+    val zoom: Float = 0f
 )
 
 /**
@@ -92,6 +104,10 @@ object StreamerLogic {
 
     /** Paling banyak overlay web yang tampil bersamaan; tiap halaman memakan RAM. */
     const val MAX_WEB_SHOWN = 4
+
+    /** Kotak overlay web paling kecil (pecahan layar) dan skala halaman paling kecil. */
+    const val WEB_BOX_MIN = 0.1f
+    const val ZOOM_MIN = 0.5f
 
     /** Sisi terpanjang gambar yang disimpan. Cukup tajam untuk tampil di layar, tetap kecil di memori. */
     const val IMAGE_MAX_SIDE = 512
@@ -296,6 +312,7 @@ object StreamerLogic {
     /** Merapikan satu item. Id dibiarkan kosong bila tidak valid; [sanitize] yang memberi id. */
     fun sanitizeOne(src: StreamerItem): StreamerItem {
         val type = normalizeType(src.type)
+        val web = src.web && type == TYPE_LINK
         return StreamerItem(
             id = cleanId(src.id),
             type = type,
@@ -315,9 +332,16 @@ object StreamerLogic {
             y = if (src.x in 0f..1f && src.y in 0f..1f) src.y else -1f,
             scale = if (src.scale.isFinite() && src.scale > 0f) src.scale.coerceIn(SCALE_MIN, SCALE_MAX) else 0f,
             alpha = if (src.alpha.isFinite()) src.alpha.coerceIn(ALPHA_MIN, 1f) else 1f,
-            web = src.web && type == TYPE_LINK
+            web = web,
+            boxW = if (web) boxFractionOrZero(src.boxW) else 0f,
+            boxH = if (web) boxFractionOrZero(src.boxH) else 0f,
+            zoom = if (web && src.zoom.isFinite() && src.zoom > 0f) src.zoom.coerceIn(ZOOM_MIN, 1f) else 0f
         )
     }
+
+    /** Pecahan kotak yang valid, atau 0 (penuh) bila kosong atau tidak masuk akal. */
+    private fun boxFractionOrZero(v: Float): Float =
+        if (v.isFinite() && v > 0f) v.coerceIn(WEB_BOX_MIN, 1f) else 0f
 
     /** Daftar item yang aman dipakai: batas jumlah, jenis/posisi/ukuran valid, id unik dan tidak kosong. */
     fun sanitize(raw: List<StreamerItem?>?): List<StreamerItem> {
@@ -436,6 +460,56 @@ object StreamerLogic {
                 item.copy(x = ax, y = (if (ay < 0.5f) ay + dy else ay - dy).coerceIn(0f, 1f))
             }
         }
+    }
+
+    /** Lebar atau tinggi kotak overlay web sebagai pecahan layar: 0 atau tidak valid = penuh. */
+    fun webBoxFraction(v: Float): Float = if (!v.isFinite() || v <= 0f) 1f else v.coerceIn(WEB_BOX_MIN, 1f)
+
+    /** Skala halaman overlay web (1 = 100%). */
+    fun webZoomOf(item: StreamerItem): Float =
+        if (!item.zoom.isFinite() || item.zoom <= 0f) 1f else item.zoom.coerceIn(ZOOM_MIN, 1f)
+
+    /** Kotak overlay web di layar, dalam piksel. */
+    data class WebRect(val left: Int, val top: Int, val width: Int, val height: Int)
+
+    /**
+     * Kotak overlay web di wadah seluas [areaW] x [areaH] piksel. Ukurannya pecahan wadah ([boxW], [boxH]; 0 = penuh),
+     * letaknya mengikuti aturan posisi bebas ([x], [y]), jadi tidak pernah keluar wadah. Tanpa posisi bebas
+     * (bawaan -1) kotak rapat ke kiri atas.
+     */
+    fun webRect(areaW: Int, areaH: Int, x: Float, y: Float, boxW: Float, boxH: Float): WebRect {
+        val w = maxOf(1, Math.round(maxOf(areaW, 0) * webBoxFraction(boxW)))
+        val h = maxOf(1, Math.round(maxOf(areaH, 0) * webBoxFraction(boxH)))
+        val free = x in 0f..1f && y in 0f..1f
+        return WebRect(
+            left = placeAt(if (free) x else 0f, areaW - w),
+            top = placeAt(if (free) y else 0f, areaH - h),
+            width = w,
+            height = h
+        )
+    }
+
+    /**
+     * Mengubah ukuran kotak overlay web sebesar [dxPx], [dyPx] piksel dari sudut kanan bawahnya (seret pegangan sudut).
+     * Sudut kiri atas tetap di tempatnya: [StreamerItem.x] dan [StreamerItem.y] disesuaikan dengan ukuran barunya.
+     * Kotak tidak bisa lebih kecil dari [WEB_BOX_MIN] dan tidak melewati tepi kanan atau bawah wadah.
+     */
+    fun resizedWebBox(item: StreamerItem, areaW: Int, areaH: Int, dxPx: Float, dyPx: Float): StreamerItem {
+        if (areaW <= 0 || areaH <= 0 || !dxPx.isFinite() || !dyPx.isFinite()) return item
+        val r = webRect(areaW, areaH, item.x, item.y, item.boxW, item.boxH)
+        val minW = maxOf(1, Math.round(areaW * WEB_BOX_MIN))
+        val minH = maxOf(1, Math.round(areaH * WEB_BOX_MIN))
+        val nw = Math.round(r.width + dxPx).coerceIn(minOf(minW, areaW - r.left).coerceAtLeast(1), maxOf(areaW - r.left, 1))
+        val nh = Math.round(r.height + dyPx).coerceIn(minOf(minH, areaH - r.top).coerceAtLeast(1), maxOf(areaH - r.top, 1))
+        // Kiri atas tetap: x dan y baru dihitung dari ruang gerak yang baru (0 bila kotak memenuhi sisi itu).
+        val nx = if (areaW - nw > 0) r.left.toFloat() / (areaW - nw) else 0f
+        val ny = if (areaH - nh > 0) r.top.toFloat() / (areaH - nh) else 0f
+        return item.copy(
+            x = nx.coerceIn(0f, 1f),
+            y = ny.coerceIn(0f, 1f),
+            boxW = (nw.toFloat() / areaW).coerceIn(WEB_BOX_MIN, 1f),
+            boxH = (nh.toFloat() / areaH).coerceIn(WEB_BOX_MIN, 1f)
+        )
     }
 
     /** Titik piksel tempat item ditaruh: pecahan [fraction] dari ruang gerak [rangePx] (tidak pernah keluar wadah). */

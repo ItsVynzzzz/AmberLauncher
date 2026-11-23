@@ -1,0 +1,14 @@
+# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
+Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	P\u00edldora de men\u00fa: el engranaje abre el men\u00fa, el ojo oculta/muestra la interfaz
+Ukuran pil (tinggi):	Tama\u00f1o de la p\u00edldora (alto):
+Lebar	Ancho
+Tinggi	Alto
+Skala halaman	Escala de la p\u00e1gina
+Posisi mendatar	Posici\u00f3n horizontal
+Posisi tegak	Posici\u00f3n vertical
+Gandakan	Duplicar
+Kotak overlay	Cuadro del overlay
+Penuh	Completo
+Tengah	Centro
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Reduce la escala si la alerta se corta: la p\u00e1gina se maqueta m\u00e1s ancha y luego se reduce para caber en el cuadro. Por debajo del 100 % usa m\u00e1s RAM.
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Reduce la escala si la alerta se corta: la p\u00e1gina se maqueta m\u00e1s ancha y luego se reduce para caber en el cuadro. Por debajo del 100 % usa m\u00e1s RAM. Mueve y cambia el tama\u00f1o del cuadro directamente en pantalla desde el men\u00fa del juego > Organizar en pantalla.

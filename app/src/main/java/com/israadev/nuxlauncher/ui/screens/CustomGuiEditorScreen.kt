@@ -25,6 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import com.israadev.nuxlauncher.ui.control.drawControlButton
+import com.israadev.nuxlauncher.ui.control.isHideGuiButton
+import com.israadev.nuxlauncher.ui.control.isMenuPill
+import com.israadev.nuxlauncher.ui.control.shownWidthDp
 import com.israadev.nuxlauncher.ui.control.drawControlJoystick
 import com.israadev.nuxlauncher.ui.control.drawControlScroll
 import com.israadev.nuxlauncher.ui.control.skinSpecFor
@@ -72,6 +75,12 @@ private const val VIEW_ALL = "ALL"
 /** Tombol sistem selalu terlihat di semua tampilan; tombol biasa mengikuti mode tampilnya. */
 private fun editorShows(b: CustomControlButton, view: String): Boolean =
     view == VIEW_ALL || b.isSystem || ControlShowMode.visible(b.showMode, view == ControlShowMode.MENU)
+
+/**
+ * Mata yang berdiri sendiri tidak ditampilkan selama ada pil menu: di game Java dan Starling fungsinya sudah ada di
+ * pil (gerigi + mata), jadi tombolnya tidak digambar dan tidak perlu diatur.
+ */
+private fun editorHides(b: CustomControlButton, hasPill: Boolean): Boolean = hasPill && b.isHideGuiButton()
 
 @Composable
 fun CustomGuiEditorScreen(
@@ -153,9 +162,10 @@ fun CustomGuiEditorScreen(
         }
 
         // 2. Interactive Draggable Buttons on Screen
-        buttonsList.filter { editorShows(it, viewMode) }.forEach { btn ->
+        val hasPill = buttonsList.any { it.isMenuPill() }
+        buttonsList.filter { editorShows(it, viewMode) && !editorHides(it, hasPill) }.forEach { btn ->
             val isSelected = btn.id == selectedButtonId
-            val btnWidthPx = with(density) { btn.widthDp.dp.toPx() }
+            val btnWidthPx = with(density) { btn.shownWidthDp().dp.toPx() }
             val btnHeightPx = with(density) { btn.heightDp.dp.toPx() }
 
             // Convert percentage coordinates to pixel center
@@ -173,7 +183,7 @@ fun CustomGuiEditorScreen(
             Box(
                 modifier = Modifier
                     .offset(x = leftDp, y = topDp)
-                    .size(width = btn.widthDp.dp, height = btn.heightDp.dp)
+                    .size(width = btn.shownWidthDp().dp, height = btn.heightDp.dp)
                     // Gambar yang sama persis dengan di dalam game (ControlSkin).
                     .drawBehind {
                         when {
@@ -203,7 +213,7 @@ fun CustomGuiEditorScreen(
                                 // Ukuran dibaca dari tombol saat ini (bukan yang ditangkap saat composition),
                                 // supaya batas geser ikut berubah setelah slider ukuran digeser. Tombol yang
                                 // lebih besar dari layar dipusatkan dan tidak membuat galat.
-                                val halfW = with(density) { currentBtn.widthDp.dp.toPx() } / 2f
+                                val halfW = with(density) { currentBtn.shownWidthDp().dp.toPx() } / 2f
                                 val halfH = with(density) { currentBtn.heightDp.dp.toPx() } / 2f
                                 val newCenterX = (curCenterX + dragAmount.x).clampCenter(halfW, screenWidthPx - halfW)
                                 val newCenterY = (curCenterY + dragAmount.y).clampCenter(halfH, screenHeightPx - halfH)
@@ -607,7 +617,7 @@ fun CustomGuiEditorScreen(
                                         "FPS" -> "Indikator FPS In-Game"
                                         "KEYBOARD" -> "Toggle Keyboard Layar"
                                         "HIDE_GUI" -> "Sembunyikan/Tampilkan GUI"
-                                        "MENU", "CLOSE" -> "Buka Menu (pengaturan dan keluar)"
+                                        "MENU", "CLOSE" -> "Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI"
                                         else -> "Aksi Sistem Launcher"
                                     }
                                     Text(actionDesc, color = Color(0xFFFFE566), fontWeight = FontWeight.Bold, fontSize = 11.sp)
@@ -652,27 +662,29 @@ fun CustomGuiEditorScreen(
                                 }
                             }
 
-                            // 3. Width Slider
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text("Lebar (Width):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
-                                Text("${selectedButton.widthDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
-                            }
-                            Slider(
-                                value = selectedButton.widthDp.toFloat(),
-                                onValueChange = { newW ->
-                                    buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
-                                },
-                                valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
-                                colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFFFFD60A),
-                                    activeTrackColor = Color(0xFFFFD60A),
-                                    inactiveTrackColor = Color(0xFF2E2E2E)
+                            // 3. Width Slider (pil menu: lebarnya selalu dua kali tinggi, jadi cukup satu slider ukuran)
+                            if (!selectedButton.isMenuPill()) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("Lebar (Width):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
+                                    Text("${selectedButton.widthDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
+                                }
+                                Slider(
+                                    value = selectedButton.widthDp.toFloat(),
+                                    onValueChange = { newW ->
+                                        buttonsList = buttonsList.map { if (it.id == selectedButton.id) it.copy(widthDp = newW.roundToInt()) else it }
+                                    },
+                                    valueRange = ControlLimits.MIN_SIZE_DP.toFloat()..ControlLimits.MAX_WIDTH_DP.toFloat(),
+                                    colors = SliderDefaults.colors(
+                                        thumbColor = Color(0xFFFFD60A),
+                                        activeTrackColor = Color(0xFFFFD60A),
+                                        inactiveTrackColor = Color(0xFF2E2E2E)
+                                    )
                                 )
-                            )
+                            }
 
                             // 4. Height Slider
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text("Tinggi (Height):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
+                                Text(if (selectedButton.isMenuPill()) "Ukuran pil (tinggi):" else "Tinggi (Height):", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE9E4CC))
                                 Text("${selectedButton.heightDp} dp", fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFFFFE566))
                             }
                             Slider(

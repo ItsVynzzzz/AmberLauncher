@@ -188,7 +188,7 @@ private fun ListPane(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.",
+            text = "Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.",
             color = Amber.TextDim,
             fontSize = 12.sp,
             lineHeight = 17.sp
@@ -382,7 +382,7 @@ internal fun StreamerEditFields(
             }
             if (draft.web) {
                 Text(
-                    text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
+                    text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.",
                     color = Amber.TextDim,
                     fontSize = 12.sp,
                     lineHeight = 17.sp
@@ -422,7 +422,7 @@ internal fun StreamerEditFields(
         }
         else -> {
             Text(
-                text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.",
+                text = "Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.",
                 color = Amber.TextDim,
                 fontSize = 12.sp,
                 lineHeight = 17.sp
@@ -431,9 +431,31 @@ internal fun StreamerEditFields(
     }
 
     if (StreamerLogic.isWeb(draft)) {
-        // Overlay web memenuhi layar dan menata dirinya sendiri: posisi, ukuran, warna, dan latar tidak berlaku.
+        // Overlay web: kotaknya diatur di sini (pilihan cepat) atau lebih rinci di layar game. Warna dan latar tidak
+        // berlaku: tampilannya diatur oleh situs overlay-nya.
+        Spacer(modifier = Modifier.height(4.dp))
+        FieldLabel("Kotak overlay")
+        val box = Quad(draft.x, draft.y, StreamerLogic.webBoxFraction(draft.boxW), StreamerLogic.webBoxFraction(draft.boxH))
+        ChipRow {
+            for ((label, preset) in WEB_BOX_PRESETS.take(3)) {
+                SettingChip(label, sameBox(box, preset), { onChange(draft.copy(x = preset.a, y = preset.b, boxW = preset.c, boxH = preset.d)) })
+            }
+        }
+        ChipRow {
+            for ((label, preset) in WEB_BOX_PRESETS.drop(3)) {
+                SettingChip(label, sameBox(box, preset), { onChange(draft.copy(x = preset.a, y = preset.b, boxW = preset.c, boxH = preset.d)) })
+            }
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        FieldLabel("Skala halaman")
+        ChipRow {
+            val zoom = StreamerLogic.webZoomOf(draft)
+            for (z in listOf(1f, 0.75f, 0.5f)) {
+                SettingChip("${Math.round(z * 100f)}%", Math.abs(zoom - z) < 0.01f, { onChange(draft.copy(zoom = if (z >= 1f) 0f else z)) })
+            }
+        }
         Text(
-            text = "Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.",
+            text = "Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.",
             color = Amber.TextDim,
             fontSize = 12.sp,
             lineHeight = 17.sp
@@ -482,11 +504,33 @@ internal fun StreamerEditFields(
     MenuGroup {
         MenuToggleRow(
             title = "Tampil saat game mulai",
-            subtitle = "Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.",
+            subtitle = "Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.",
             checked = draft.on,
             onChange = { onChange(draft.copy(on = it)) }
         )
     }
+}
+
+/** Empat angka sekaligus (x, y, lebar, tinggi kotak overlay web) tanpa membuat kelas khusus. */
+private data class Quad(val a: Float, val b: Float, val c: Float, val d: Float)
+
+/** Pilihan kotak cepat untuk overlay web: penuh, atau separuh layar di salah satu pojok atau di tengah. */
+private val WEB_BOX_PRESETS: List<Pair<String, Quad>> = listOf(
+    "Penuh" to Quad(-1f, -1f, 0f, 0f),
+    "Kiri atas" to Quad(0f, 0f, 0.5f, 0.5f),
+    "Kanan atas" to Quad(1f, 0f, 0.5f, 0.5f),
+    "Tengah" to Quad(0.5f, 0.5f, 0.5f, 0.5f),
+    "Kiri bawah" to Quad(0f, 1f, 0.5f, 0.5f),
+    "Kanan bawah" to Quad(1f, 1f, 0.5f, 0.5f)
+)
+
+private fun sameBox(current: Quad, preset: Quad): Boolean {
+    // Penuh: letaknya tidak berpengaruh (tidak ada ruang gerak).
+    val presetW = if (preset.c <= 0f) 1f else preset.c
+    val presetH = if (preset.d <= 0f) 1f else preset.d
+    if (Math.abs(current.c - presetW) > 0.01f || Math.abs(current.d - presetH) > 0.01f) return false
+    if (presetW >= 1f && presetH >= 1f) return true
+    return Math.abs(current.a - preset.a) < 0.02f && Math.abs(current.b - preset.b) < 0.02f
 }
 
 @Composable

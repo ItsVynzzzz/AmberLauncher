@@ -2,7 +2,7 @@
 Overlay web	网页叠加层
 Jalankan link overlay dari Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs, dan lainnya langsung di atas game. Alert, Media Share, Song Share, Subathon, Wheel, dan yang lain didukung. Link tidak ditampilkan.	直接在游戏上运行来自 Saweria、Sociabuzz、Trakteer、StreamElements、Streamlabs 等平台的叠加层链接。支持 Alert、Media Share、Song Share、Subathon、Wheel 等类型。链接不会被显示。
 Tempel link overlay	粘贴叠加层链接
-Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.	网页叠加层会额外占用内存和网络流量。内存较小的手机请在需要时，通过屏幕左边缘的面板再开启。最多同时显示 4 个网页叠加层。
+Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.	网页叠加层会额外占用内存和网络流量。内存较小的手机请在需要时，通过游戏内菜单（齿轮图标）再开启。最多同时显示 4 个网页叠加层。
 Hanya alamat https yang bisa jadi overlay web.	只有 https 地址才能用作网页叠加层。
 Overlay web memenuhi layar, jadi tidak bisa digeser atau diubah ukurannya. Tata letaknya diatur di pengaturan overlay situsnya.	网页叠加层会铺满屏幕，因此不能移动或调整大小。布局请在该网站自己的叠加层设置中调整。
 Alamat tidak ditulis di bawah kode QR supaya tidak terbaca di layar.	二维码下方不会写出地址，以免在屏幕上被读到。

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Build
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -26,17 +27,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.israadev.nuxlauncher.core.streamer.StreamerLogic
 
-/** Satu overlay web yang harus tampil: id item, alamat https yang sudah divalidasi, dan kepekatannya. */
-internal data class StreamerWebSpec(val id: String, val url: String, val alpha: Float)
+/**
+ * Satu overlay web yang harus tampil: id item, alamat https yang sudah divalidasi, kepekatannya, dan kotaknya di layar
+ * (pecahan layar; lihat [StreamerLogic.webRect]) beserta skala halamannya (1 = 100%).
+ */
+internal data class StreamerWebSpec(
+    val id: String,
+    val url: String,
+    val alpha: Float,
+    val x: Float = -1f,
+    val y: Float = -1f,
+    val boxW: Float = 0f,
+    val boxH: Float = 0f,
+    val zoom: Float = 1f
+)
 
 /**
  * Lapisan overlay web: menjalankan link overlay donasi (Saweria, Sociabuzz, Trakteer, StreamElements, Streamlabs,
  * dll) sebagai browser source di atas game. Semua jenisnya (Alert, Media Share, Song Share, Subathon, Wheel, Goal,
  * Top 10, Poll, dan seterusnya) hanyalah halaman web, jadi satu mekanisme melayani semuanya.
  *
- * - Tiap overlay = satu WebView layar penuh dengan latar transparan, di dalam wadah yang menaruh sentuhan dan
- *   gerakan mouse ke game di bawahnya (WebView tidak pernah menerima sentuhan).
+ * - Tiap overlay = satu WebView dengan latar transparan (layar penuh atau kotak yang diatur pengguna), di dalam wadah
+ *   yang menaruh sentuhan dan gerakan mouse ke game di bawahnya (WebView tidak pernah menerima sentuhan).
+ * - Skala halaman di bawah 100%: WebView dibuat lebih besar dari kotaknya (halaman ditata untuk layar yang lebih
+ *   lebar) lalu dikecilkan ke kotak, seperti ukuran kanvas browser source di OBS.
  * - WebView hanya dibuat saat overlay tampil dan dibuang saat disembunyikan atau item dihapus, supaya tidak
  *   memakan RAM selama tidak dipakai. Wadah ditambahkan ke jendela di atas Compose, karena sentuhan melewati
  *   View biasa dengan benar, sedangkan AndroidView di dalam Compose ikut menelan sentuhan.
@@ -83,7 +99,7 @@ private class PassThroughFrame(context: Context) : FrameLayout(context) {
     override fun dispatchGenericMotionEvent(ev: MotionEvent): Boolean = false
 }
 
-private class WebEntry(val spec: StreamerWebSpec, val view: WebView) {
+private class WebEntry(var spec: StreamerWebSpec, val view: WebView) {
     var retries = 0
     var retry: Runnable? = null
 }
@@ -109,6 +125,42 @@ private class StreamerWebHost(private val activity: Activity) {
             container,
             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         )
+        // Ukuran layar berubah (mis. diputar): kotak tiap overlay dihitung ulang. Ditunda ke luar proses layout.
+        container.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            val sizeChanged = right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop
+            if (sizeChanged) container.post { if (!destroyed) layoutAll() }
+        }
+    }
+
+    /** Taruh dan ukur satu WebView sesuai [WebEntry.spec] dan ukuran wadah saat ini (belum ada ukuran: ditunda). */
+    private fun layoutEntry(entry: WebEntry) {
+        val cw = container.width
+        val ch = container.height
+        if (cw <= 0 || ch <= 0) return
+        val spec = entry.spec
+        val rect = StreamerLogic.webRect(cw, ch, spec.x, spec.y, spec.boxW, spec.boxH)
+        val zoom = spec.zoom.coerceIn(StreamerLogic.ZOOM_MIN, 1f)
+        // Halaman ditata seluas kotak / skala, lalu dikecilkan dari pojok kiri atas supaya pas di kotaknya.
+        val lw = Math.round(rect.width / zoom)
+        val lh = Math.round(rect.height / zoom)
+        val view = entry.view
+        val lp = (view.layoutParams as? FrameLayout.LayoutParams) ?: FrameLayout.LayoutParams(lw, lh)
+        if (lp.width != lw || lp.height != lh || lp.leftMargin != rect.left || lp.topMargin != rect.top) {
+            lp.width = lw
+            lp.height = lh
+            lp.leftMargin = rect.left
+            lp.topMargin = rect.top
+            lp.gravity = Gravity.TOP or Gravity.START
+            view.layoutParams = lp
+        }
+        view.pivotX = 0f
+        view.pivotY = 0f
+        view.scaleX = zoom
+        view.scaleY = zoom
+    }
+
+    private fun layoutAll() {
+        for (entry in entries.values) layoutEntry(entry)
     }
 
     fun update(specs: List<StreamerWebSpec>, visible: Boolean) {
@@ -130,6 +182,10 @@ private class StreamerWebHost(private val activity: Activity) {
             val existing = entries[spec.id]
             if (existing != null) {
                 existing.view.alpha = spec.alpha
+                if (existing.spec != spec) {
+                    existing.spec = spec
+                    layoutEntry(existing)
+                }
                 continue
             }
             val view = try {
@@ -144,6 +200,8 @@ private class StreamerWebHost(private val activity: Activity) {
                 view,
                 FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             )
+            // Ukuran wadah sudah diketahui: pasang kotaknya sekarang; kalau belum, dilakukan saat wadah selesai diukur.
+            layoutEntry(entry)
             if (paused) view.onPause()
             view.loadUrl(spec.url)
         }

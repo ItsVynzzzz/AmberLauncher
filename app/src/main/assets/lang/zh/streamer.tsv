@@ -1,11 +1,11 @@
 # Mode streamer: overlay di dalam game
 Mode streamer	主播模式
-Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.	在游戏画面左边缘显示一个小把手。点按即可打开面板，用来显示或隐藏叠加层。
+Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.	在游戏画面上显示叠加层（文字、图片、链接、计时器、网页叠加层）。游玩时通过游戏内菜单（齿轮图标）开启或隐藏，屏幕上不再多出按钮。
 Atur overlay	设置叠加层
 Teks, gambar, link dengan kode QR, dan timer yang tampil di atas game.	显示在游戏画面上的文字、图片、带二维码的链接和计时器。
 Ketuk untuk menampilkan atau menyembunyikan.	点按即可显示或隐藏。
 Belum ada overlay. Tambahkan di Pengaturan > Game > Mode streamer > Atur overlay.	还没有叠加层。请在 设置 > 游戏 > 主播模式 > 设置叠加层 中添加。
-Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat panel di tepi kiri layar saat bermain.	在游戏画面上显示文字、图片、链接或计时器。游玩时可通过屏幕左边缘的面板显示或隐藏。
+Tampilkan teks, gambar, link, atau timer di atas game. Buka dan sembunyikan lewat menu dalam game (ikon gerigi) saat bermain.	在游戏画面上显示文字、图片、链接或计时器。游玩时可通过游戏内菜单（齿轮图标）显示或隐藏。
 Belum ada overlay. Ketuk Tambah untuk membuatnya.	还没有叠加层。点按“添加”即可创建。
 Overlay baru	新建叠加层
 Ubah overlay	编辑叠加层
@@ -20,7 +20,7 @@ Contoh: ko-fi.com/namamu	例如：ko-fi.com/你的名字
 Tampilkan kode QR	显示二维码
 Penonton bisa memindainya langsung dari layar.	观众可以直接扫描屏幕上的二维码。
 Alamat ini terlalu panjang untuk kode QR, jadi hanya tulisannya yang tampil.	此地址过长，无法生成二维码，因此只显示文字。
-Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat panel di tepi kiri layar saat bermain.	计时器从 00:00 开始。游玩时可通过屏幕左边缘的面板开始、暂停和重置。
+Timer mulai dari 00:00. Mulai, jeda, dan reset-nya lewat menu dalam game (ikon gerigi) saat bermain.	计时器从 00:00 开始。游玩时可通过游戏内菜单（齿轮图标）开始、暂停和重置。
 Kiri atas	左上
 Atas	顶部
 Kanan atas	右上
@@ -30,7 +30,7 @@ Kanan bawah	右下
 Kecil	小
 Besar	大
 Tampil saat game mulai	游戏开始时显示
-Bila mati, nyalakan lewat panel di tepi kiri layar saat bermain.	若关闭，游玩时可通过屏幕左边缘的面板开启。
+Bila mati, nyalakan lewat menu dalam game (ikon gerigi) saat bermain.	若关闭，游玩时可通过游戏内菜单（齿轮图标）开启。
 Memproses gambar...	正在处理图片...
 Foto atau logo. Dikecilkan otomatis supaya ringan.	照片或徽标。会自动缩小以保持轻量。
 Mulai	开始

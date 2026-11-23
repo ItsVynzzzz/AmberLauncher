@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -50,9 +51,31 @@ class SkinSpec(
     val slash: Boolean = false
 )
 
+/** Nama "ikon" khusus untuk pil menu (gerigi + mata); digambar oleh [drawControlPill], bukan [drawControlIcon]. */
+const val PILL_ICON = "pill"
+
+/**
+ * Tombol sistem "MENU" (nama lama "CLOSE") ditampilkan sebagai satu pil: gerigi di kiri membuka menu, mata di kanan
+ * menyembunyikan atau memunculkan lagi UI. Tombol sistem "HIDE_GUI" lama tidak digambar lagi di game Java dan
+ * Starling selama ada pil ini (fungsinya sudah ada di pil), tapi tetap disimpan di tata letak untuk mesin lain.
+ */
+fun CustomControlButton.isMenuPill(): Boolean =
+    isSystem && (systemAction == "MENU" || systemAction == "CLOSE")
+
+/** Tombol sistem "HIDE_GUI" (mata sendiri). */
+fun CustomControlButton.isHideGuiButton(): Boolean = isSystem && systemAction == "HIDE_GUI"
+
+/**
+ * Lebar tombol yang digambar dan disentuh (dp). Pil menu minimal dua kali tingginya (dua bulatan berdampingan),
+ * berapa pun lebar yang tersimpan di tata letak lama; tombol lain memakai lebarnya sendiri.
+ */
+fun CustomControlButton.shownWidthDp(): Int =
+    if (isMenuPill()) maxOf(widthDp, heightDp * 2) else widthDp
+
 fun skinSpecFor(b: CustomControlButton, iconOverride: String? = null, slash: Boolean = false): SkinSpec {
     val icon = iconOverride ?: when {
-        b.isSystem && (b.systemAction == "CLOSE" || b.systemAction == "MENU") -> "gear"
+        // Tombol menu = pil dua bagian: gerigi (buka menu) di kiri, mata (sembunyikan UI) di kanan.
+        b.isMenuPill() -> PILL_ICON
         b.icon.isNotBlank() -> b.icon
         b.isSystem -> when (b.systemAction) {
             "KEYBOARD" -> "keyboard"
@@ -82,7 +105,11 @@ private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
 }
 
 /** Tombol biasa: isian kaca, garis putih; ditekan atau aktif = kuning penuh. */
-fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Boolean = false) {
+fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Boolean = false, pressedSide: Int = 0) {
+    if (spec.icon == PILL_ICON) {
+        drawControlPill(spec, pressedSide, selected)
+        return
+    }
     drawButtonBase(spec, pressed, selected)
 
     val w = size.width
@@ -98,6 +125,71 @@ fun DrawScope.drawControlButton(spec: SkinSpec, pressed: Boolean, selected: Bool
         drawControlIcon(spec.icon, w / 2f, h / 2f, s, glyph, spec.slash)
     } else {
         drawControlLabel(spec.label, w / 2f, h / 2f, w * 0.86f, h, glyph)
+    }
+}
+
+/**
+ * Pil menu: kapsul kaca gelap tipis berisi dua ikon yang dipisah garis halus. Kiri = gerigi (buka menu), kanan = mata
+ * (sembunyikan atau munculkan UI). [pressedSide]: 0 = tidak ada, 1 = gerigi, 2 = mata; bagian yang ditekan jadi kuning.
+ * Saat UI disembunyikan ([SkinSpec.slash]) mata dicoret kuning dan pil dibuat lebih redup, supaya tidak mengganggu
+ * layar (mis. saat siaran) tapi tetap bisa disentuh untuk membuka menu. Satu gambar kanvas, tanpa lapisan tambahan.
+ */
+fun DrawScope.drawControlPill(spec: SkinSpec, pressedSide: Int, selected: Boolean = false) {
+    val w = size.width
+    val h = size.height
+    val k = spec.opacity
+    val radius = min(spec.cornerDp.dp.toPx(), min(w, h) / 2f)
+    val corner = CornerRadius(radius)
+    val dim = if (spec.slash) 0.62f else 1f
+
+    drawRoundRect(color = Color.Black.copy(alpha = 0.30f * (0.4f + 0.6f * k) * dim), cornerRadius = corner)
+    val sw = 1f.dp.toPx()
+    drawRoundRect(
+        color = Color.White.copy(alpha = 0.14f * dim),
+        topLeft = Offset(sw / 2f, sw / 2f),
+        size = Size(w - sw, h - sw),
+        cornerRadius = CornerRadius(max(radius - sw / 2f, 0f)),
+        style = Stroke(width = sw)
+    )
+
+    // Bagian yang ditekan: isian kuning seluas separuh pil, dipotong mengikuti lengkung kapsul.
+    if (pressedSide == 1) {
+        clipRect(left = 0f, top = 0f, right = w / 2f, bottom = h) {
+            drawRoundRect(color = ControlSkin.Yellow.copy(alpha = 0.26f), cornerRadius = corner)
+        }
+    } else if (pressedSide == 2) {
+        clipRect(left = w / 2f, top = 0f, right = w, bottom = h) {
+            drawRoundRect(color = ControlSkin.Yellow.copy(alpha = 0.26f), cornerRadius = corner)
+        }
+    }
+
+    // Garis pemisah tipis di tengah.
+    drawLine(
+        color = Color.White.copy(alpha = 0.16f * dim),
+        start = Offset(w / 2f, h * 0.28f),
+        end = Offset(w / 2f, h * 0.72f),
+        strokeWidth = 1f.dp.toPx()
+    )
+
+    val rest = Color.White.copy(alpha = (0.58f + 0.32f * k) * dim)
+    val s = min(w / 2f, h) * 0.56f
+    drawControlIcon("gear", w * 0.25f, h / 2f, s, if (pressedSide == 1) ControlSkin.Yellow else rest)
+    val eyeColor = when {
+        pressedSide == 2 -> ControlSkin.Yellow
+        spec.slash -> ControlSkin.YellowSoft.copy(alpha = 0.85f)
+        else -> rest
+    }
+    drawControlIcon("eye", w * 0.75f, h / 2f, s, eyeColor, spec.slash)
+
+    if (selected) {
+        val ow = 1.6f.dp.toPx()
+        drawRoundRect(
+            color = ControlSkin.Yellow,
+            topLeft = Offset(ow / 2f, ow / 2f),
+            size = Size(w - ow, h - ow),
+            cornerRadius = CornerRadius(max(radius - ow / 2f, 0f)),
+            style = Stroke(width = ow)
+        )
     }
 }
 

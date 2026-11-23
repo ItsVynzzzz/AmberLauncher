@@ -3,6 +3,7 @@ package com.israadev.nuxlauncher.ui.streamer
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -41,12 +43,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Text as UserText
 import com.israadev.nuxlauncher.core.streamer.QrCode
 import com.israadev.nuxlauncher.core.streamer.StreamerItem
 import com.israadev.nuxlauncher.core.streamer.StreamerLogic
@@ -93,9 +98,19 @@ fun StreamerEditorLayer(
     // Pilihan manual sisi panel (null = otomatis di sisi yang berlawanan dengan item).
     var flip by remember { mutableStateOf<Boolean?>(null) }
     var area by remember { mutableStateOf(IntSize.Zero) }
+    // Seluruh layar (tanpa padding): tempat kotak overlay web, sama dengan lapisan WebView di game.
+    var full by remember { mutableStateOf(IntSize.Zero) }
     val maxWidthDp = LocalConfiguration.current.screenWidthDp * 0.42f
+    val readItem: (String) -> StreamerItem? = { id -> work.firstOrNull { it.id == id } }
+    val writeItem: (StreamerItem) -> Unit = { changed -> work = work.map { if (it.id == changed.id) changed else it } }
+    val selectItem: (String) -> Unit = { id ->
+        if (selectedId != id) {
+            selectedId = id
+            flip = null
+        }
+    }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().onSizeChanged { full = it }) {
         // Latar redup, titik-titik bantu, dan garis tengah. Isinya tidak berubah, jadi digambar sekali.
         // Mengetuk area kosong melepas pilihan; sentuhan tidak tembus ke game di bawahnya.
         Canvas(
@@ -118,6 +133,21 @@ fun StreamerEditorLayer(
             val guide = Color(0x26FFFFFF)
             drawLine(guide, Offset(size.width / 2f, 0f), Offset(size.width / 2f, size.height), 1.dp.toPx())
             drawLine(guide, Offset(0f, size.height / 2f), Offset(size.width, size.height / 2f), 1.dp.toPx())
+        }
+
+        // Overlay web: kotak seukuran aslinya di layar. Digambar di bawah item lain dan bar atas.
+        for (item in work) {
+            if (!StreamerLogic.isWeb(item)) continue
+            key(item.id) {
+                WebFrame(
+                    item = item,
+                    selected = item.id == selectedId,
+                    full = { full },
+                    read = readItem,
+                    write = writeItem,
+                    onSelect = selectItem
+                )
+            }
         }
 
         // Wadah yang sama persis dengan lapisan overlay di game (poni + 8dp), supaya letaknya identik.
@@ -158,6 +188,7 @@ fun StreamerEditorLayer(
             }
 
             for (item in work) {
+                if (StreamerLogic.isWeb(item)) continue
                 key(item.id) {
                     Box(modifier = Modifier.freePlaced(item.x, item.y)) {
                         EditableItem(
@@ -165,14 +196,9 @@ fun StreamerEditorLayer(
                             selected = item.id == selectedId,
                             maxWidthDp = maxWidthDp,
                             area = { area },
-                            read = { id -> work.firstOrNull { it.id == id } },
-                            write = { changed -> work = work.map { if (it.id == changed.id) changed else it } },
-                            onSelect = { id ->
-                                if (selectedId != id) {
-                                    selectedId = id
-                                    flip = null
-                                }
-                            }
+                            read = readItem,
+                            write = writeItem,
+                            onSelect = selectItem
                         )
                     }
                 }
@@ -185,8 +211,27 @@ fun StreamerEditorLayer(
                     item = sel,
                     dockLeft = dockLeft,
                     onFlip = { flip = !dockLeft },
+                    // Slider posisi mendatar menggeser overlay melewati tengah layar: panel tidak boleh ikut pindah
+                    // sisi di bawah jari, jadi sisinya dikunci begitu slider dipakai.
+                    onPinSide = { if (flip == null) flip = dockLeft },
                     onClose = { selectedId = null },
-                    onChange = { changed -> work = work.map { if (it.id == changed.id) changed else it } },
+                    onChange = writeItem,
+                    // Gambar tidak digandakan: berkasnya dipakai bersama dan terikat ke id item.
+                    onDuplicate = if (sel.type != StreamerLogic.TYPE_IMAGE && work.size < StreamerLogic.MAX_ITEMS) {
+                        {
+                            val id = StreamerLogic.newId(work.map { it.id }.toSet(), System.currentTimeMillis())
+                            val copy = sel.copy(
+                                id = id,
+                                x = (sel.x.coerceIn(0f, 1f) + 0.06f).coerceAtMost(1f),
+                                y = (sel.y.coerceIn(0f, 1f) + 0.08f).coerceAtMost(1f)
+                            )
+                            work = work + copy
+                            selectedId = id
+                            flip = null
+                        }
+                    } else {
+                        null
+                    },
                     onDelete = {
                         work = work.filter { it.id != sel.id }
                         selectedId = null
@@ -335,6 +380,101 @@ private fun EditableItem(
 }
 
 /**
+ * Kotak overlay web di editor: seukuran dan seletak dengan WebView di game. Hanya dua pegangan yang menerima
+ * sentuhan: kiri atas (seret untuk memindah, ketuk untuk memilih) dan sudut kanan bawah (seret untuk mengubah
+ * ukuran). Dengan begitu kotak yang memenuhi layar tidak menutupi overlay lain dan tidak menelan ketukan
+ * "lepas pilihan". Alamat tidak pernah ditulis di sini, hanya nama situsnya.
+ */
+@Composable
+private fun WebFrame(
+    item: StreamerItem,
+    selected: Boolean,
+    full: () -> IntSize,
+    read: (String) -> StreamerItem?,
+    write: (StreamerItem) -> Unit,
+    onSelect: (String) -> Unit
+) {
+    val area = full()
+    if (area.width <= 0 || area.height <= 0) return
+    val id = item.id
+    val rect = StreamerLogic.webRect(area.width, area.height, item.x, item.y, item.boxW, item.boxH)
+    val density = LocalDensity.current
+    val edge = if (selected) AmberUi.Accent else Color(0x66FFFFFF)
+    val host = StreamerLogic.hostOf(item.text)
+    Box(
+        modifier = Modifier
+            .offset { IntOffset(rect.left, rect.top) }
+            .size(with(density) { rect.width.toDp() }, with(density) { rect.height.toDp() })
+            .background(Color(0x14FFFFFF))
+            .border(if (selected) 1.5.dp else 1.dp, edge)
+    ) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(4.dp)
+                .clip(OutlineShape)
+                .background(Color(0xCC121217))
+                .pointerInput(id) { detectTapGestures { onSelect(id) } }
+                .pointerInput(id) {
+                    detectDragGestures(onDragStart = { onSelect(id) }) { change, drag ->
+                        change.consume()
+                        val cur = read(id) ?: return@detectDragGestures
+                        val a = full()
+                        val r = StreamerLogic.webRect(a.width, a.height, cur.x, cur.y, cur.boxW, cur.boxH)
+                        write(
+                            cur.copy(
+                                x = StreamerLogic.movedFraction(cur.x, drag.x, (a.width - r.width).toFloat()),
+                                y = StreamerLogic.movedFraction(cur.y, drag.y, (a.height - r.height).toFloat())
+                            )
+                        )
+                    }
+                }
+                .padding(horizontal = 8.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Overlay web",
+                color = AmberUi.Text,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1
+            )
+            if (host.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(6.dp))
+                UserText(
+                    text = host,
+                    color = AmberUi.TextDim,
+                    fontSize = 10.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.width(96.dp)
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(4.dp)
+                .size(28.dp)
+                .clip(CircleShape)
+                .background(Color(0xCC121217))
+                .border(1.dp, edge, CircleShape)
+                .pointerInput(id) {
+                    detectDragGestures(onDragStart = { onSelect(id) }) { change, drag ->
+                        change.consume()
+                        val cur = read(id) ?: return@detectDragGestures
+                        val a = full()
+                        write(StreamerLogic.resizedWebBox(cur, a.width, a.height, drag.x, drag.y))
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            AmberIcon("chev_right", 11.dp, AmberUi.Text, Modifier.graphicsLayer { rotationZ = 45f })
+        }
+    }
+}
+
+/**
  * Panel pengaturan overlay yang dipilih. Menempel di sisi yang berlawanan dengan overlay-nya (bisa dibalik
  * dengan panah), di bawah bar atas, dan bisa digulir. Perubahan langsung terlihat di layar.
  */
@@ -343,8 +483,10 @@ private fun Inspector(
     item: StreamerItem,
     dockLeft: Boolean,
     onFlip: () -> Unit,
+    onPinSide: () -> Unit,
     onClose: () -> Unit,
     onChange: (StreamerItem) -> Unit,
+    onDuplicate: (() -> Unit)?,
     onDelete: () -> Unit,
     modifier: Modifier
 ) {
@@ -417,7 +559,7 @@ private fun Inspector(
                 SwitchRow("Overlay web", item.web) { onChange(item.copy(web = it)) }
                 if (item.web) {
                     Text(
-                        text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat panel di tepi kiri layar. Maksimal 4 overlay web tampil bersamaan.",
+                        text = "Overlay web memakai RAM dan kuota internet tambahan. Di HP dengan RAM kecil, nyalakan hanya saat dibutuhkan lewat menu dalam game (ikon gerigi). Maksimal 4 overlay web tampil bersamaan.",
                         color = AmberUi.TextDim,
                         fontSize = 10.5.sp,
                         lineHeight = 14.sp
@@ -450,16 +592,53 @@ private fun Inspector(
             else -> Unit
         }
 
-        // Overlay web memenuhi layar dan menata dirinya sendiri: ukuran, warna, dan latar tidak berlaku.
-        if (!isWeb) MenuSliderRow(
-            label = "Ukuran",
-            value = Math.round(StreamerLogic.scaleOf(item) * 100f),
-            min = Math.round(StreamerLogic.SCALE_MIN * 100f),
-            max = Math.round(StreamerLogic.SCALE_MAX * 100f),
-            step = 5,
-            onCommit = {},
-            onLive = { onChange(item.copy(scale = it / 100f)) }
-        )
+        if (isWeb) {
+            // Overlay web: kotaknya sendiri (juga bisa digeser dan diseret sudutnya di layar). Warna dan latar tidak
+            // berlaku: tampilannya diatur oleh situs overlay-nya.
+            MenuSliderRow(
+                label = "Lebar",
+                value = Math.round(StreamerLogic.webBoxFraction(item.boxW) * 100f),
+                min = Math.round(StreamerLogic.WEB_BOX_MIN * 100f),
+                max = 100,
+                step = 5,
+                onCommit = {},
+                onLive = { onChange(item.copy(boxW = it / 100f)) }
+            )
+            MenuSliderRow(
+                label = "Tinggi",
+                value = Math.round(StreamerLogic.webBoxFraction(item.boxH) * 100f),
+                min = Math.round(StreamerLogic.WEB_BOX_MIN * 100f),
+                max = 100,
+                step = 5,
+                onCommit = {},
+                onLive = { onChange(item.copy(boxH = it / 100f)) }
+            )
+            MenuSliderRow(
+                label = "Skala halaman",
+                value = Math.round(StreamerLogic.webZoomOf(item) * 100f),
+                min = Math.round(StreamerLogic.ZOOM_MIN * 100f),
+                max = 100,
+                step = 10,
+                onCommit = {},
+                onLive = { onChange(item.copy(zoom = it / 100f)) }
+            )
+            Text(
+                text = "Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.",
+                color = AmberUi.TextDim,
+                fontSize = 10.5.sp,
+                lineHeight = 14.sp
+            )
+        } else {
+            MenuSliderRow(
+                label = "Ukuran",
+                value = Math.round(StreamerLogic.scaleOf(item) * 100f),
+                min = Math.round(StreamerLogic.SCALE_MIN * 100f),
+                max = Math.round(StreamerLogic.SCALE_MAX * 100f),
+                step = 5,
+                onCommit = {},
+                onLive = { onChange(item.copy(scale = it / 100f)) }
+            )
+        }
         MenuSliderRow(
             label = "Opasitas",
             value = Math.round(item.alpha * 100f),
@@ -468,6 +647,28 @@ private fun Inspector(
             step = 5,
             onCommit = {},
             onLive = { onChange(item.copy(alpha = it / 100f)) }
+        )
+        // Letak yang tepat tanpa menyeret: pecahan ruang gerak, 0% = rapat kiri atau atas, 100% = rapat kanan atau bawah.
+        MenuSliderRow(
+            label = "Posisi mendatar",
+            value = Math.round(item.x.coerceIn(0f, 1f) * 100f),
+            min = 0,
+            max = 100,
+            step = 1,
+            onCommit = {},
+            onLive = {
+                onPinSide()
+                onChange(item.copy(x = it / 100f, y = item.y.coerceIn(0f, 1f)))
+            }
+        )
+        MenuSliderRow(
+            label = "Posisi tegak",
+            value = Math.round(item.y.coerceIn(0f, 1f) * 100f),
+            min = 0,
+            max = 100,
+            step = 1,
+            onCommit = {},
+            onLive = { onChange(item.copy(x = item.x.coerceIn(0f, 1f), y = it / 100f)) }
         )
 
         if (!isImage && !isWeb) {
@@ -486,6 +687,15 @@ private fun Inspector(
         }
         SwitchRow("Tampil saat game mulai", item.on) { onChange(item.copy(on = it)) }
 
+        if (onDuplicate != null) {
+            AmberButton(
+                text = "Gandakan",
+                onClick = onDuplicate,
+                style = AmberButtonStyle.Ghost,
+                height = 36.dp,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         AmberButton(
             text = "Hapus",
             onClick = onDelete,

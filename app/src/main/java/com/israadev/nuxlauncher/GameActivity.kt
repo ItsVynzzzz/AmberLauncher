@@ -940,7 +940,37 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
     private fun isPhysicalKeyboardKey(event: KeyEvent): Boolean =
         event.deviceId >= 0 &&
             (event.flags and KeyEvent.FLAG_SOFT_KEYBOARD) == 0 &&
+            !isSystemHardwareKey(event.keyCode) &&
             !TouchCharInput.recentlyActive(SOFT_KEY_GRACE_MS)
+
+    /**
+     * Tombol bawaan HP (volume, daya, kamera) dan tombol media dari headset: datang dari "perangkat keyboard" milik
+     * HP sendiri, tapi bukan tanda pengguna memakai keyboard fisik. Dulu menekan volume saja menyembunyikan semua
+     * tombol layar.
+     */
+    private fun isSystemHardwareKey(keyCode: Int): Boolean = when (keyCode) {
+        KeyEvent.KEYCODE_VOLUME_UP,
+        KeyEvent.KEYCODE_VOLUME_DOWN,
+        KeyEvent.KEYCODE_VOLUME_MUTE,
+        KeyEvent.KEYCODE_POWER,
+        KeyEvent.KEYCODE_CAMERA,
+        KeyEvent.KEYCODE_HEADSETHOOK,
+        KeyEvent.KEYCODE_MEDIA_PLAY,
+        KeyEvent.KEYCODE_MEDIA_PAUSE,
+        KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+        KeyEvent.KEYCODE_MEDIA_STOP,
+        KeyEvent.KEYCODE_MEDIA_NEXT,
+        KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+        KeyEvent.KEYCODE_MEDIA_REWIND,
+        KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
+        KeyEvent.KEYCODE_BRIGHTNESS_UP,
+        KeyEvent.KEYCODE_BRIGHTNESS_DOWN,
+        KeyEvent.KEYCODE_SLEEP,
+        KeyEvent.KEYCODE_WAKEUP,
+        KeyEvent.KEYCODE_ASSIST,
+        KeyEvent.KEYCODE_VOICE_ASSIST -> true
+        else -> false
+    }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         // If soft keyboard IME input view is active, allow standard handling
@@ -1955,15 +1985,9 @@ fun GameScreen(
     var isConsoleVisible by remember { mutableStateOf(false) }
     var isConsoleExpanded by remember { mutableStateOf(false) }
     var showExitConfirmDialog by remember { mutableStateOf(false) }
-    // Panel mode streamer (sidebar kiri) terbuka. Bukan dialog, tapi menutupi sebagian game selama terbuka.
-    var showStreamerPanel by remember { mutableStateOf(false) }
-    // Menu pengaturan membawa panel overlay sendiri, jadi panel cepat di tepi kiri ditutup saat menu dibuka.
-    LaunchedEffect(showInGameSettingsDialog) {
-        if (showInGameSettingsDialog) showStreamerPanel = false
-    }
     // Lapisan launcher menutupi game: klik mouse di atasnya milik lapisan itu, bukan milik game.
     // MenuMouse (di GameActivity) membaca ini; tombol yang masih tertahan dilepas saat lapisan terbuka.
-    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || showStreamerPanel || streamerEditorOpen
+    val overlayCoversGame = showInGameSettingsDialog || showExitConfirmDialog || isCustomGuiEditorActive || showLoadingOverlay || streamerEditorOpen
     SideEffect { MenuMouse.overlayOpen = overlayCoversGame }
     LaunchedEffect(overlayCoversGame) {
         if (overlayCoversGame) MenuMouse.reset()
@@ -2316,15 +2340,12 @@ fun GameScreen(
             }
         }
 
-        // Overlay mode streamer: teks, gambar, link/QR, dan timer di atas game, plus sidebar kiri untuk
-        // menyalakan dan mematikannya. Di atas tombol layar (supaya gagangnya bisa disentuh), di bawah menu.
+        // Overlay mode streamer: teks, gambar, link/QR, timer, dan overlay web di atas game. Menyalakan dan
+        // mematikannya lewat panel kiri di menu dalam game (tidak ada gagang di tepi layar). Di bawah menu.
         // Saat editor terbuka, editor menggambar overlay sendiri, jadi lapisan ini disembunyikan.
         if (launcherSettings.streamerMode && controlsAllowed && !streamerEditorOpen) {
             StreamerLayer(
                 items = launcherSettings.streamerItems,
-                panelOpen = showStreamerPanel,
-                onPanelChange = { showStreamerPanel = it },
-                ghostHandle = ghostControls,
                 chromeVisible = !showInGameSettingsDialog
             )
         }
@@ -2367,7 +2388,6 @@ fun GameScreen(
                 items = launcherSettings.streamerItems,
                 onArrange = {
                     showInGameSettingsDialog = false
-                    showStreamerPanel = false
                     streamerEditorOpen = true
                 },
                 onClose = { showInGameSettingsDialog = false },

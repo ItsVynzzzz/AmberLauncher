@@ -1,0 +1,14 @@
+# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
+Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	ปุ่มแคปซูลเมนู: ไอคอนเฟืองเปิดเมนู ไอคอนตาซ่อน/แสดง UI
+Ukuran pil (tinggi):	ขนาดแคปซูล (ความสูง):
+Lebar	ความกว้าง
+Tinggi	ความสูง
+Skala halaman	สเกลหน้าเว็บ
+Posisi mendatar	ตำแหน่งแนวนอน
+Posisi tegak	ตำแหน่งแนวตั้ง
+Gandakan	ทำสำเนา
+Kotak overlay	กรอบโอเวอร์เลย์
+Penuh	เต็ม
+Tengah	กลาง
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	ลดสเกลหากการแจ้งเตือนถูกตัด: หน้าเว็บจะถูกจัดวางให้กว้างขึ้นแล้วย่อให้พอดีกรอบ ต่ำกว่า 100% จะใช้ RAM มากขึ้น
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	ลดสเกลหากการแจ้งเตือนถูกตัด: หน้าเว็บจะถูกจัดวางให้กว้างขึ้นแล้วย่อให้พอดีกรอบ ต่ำกว่า 100% จะใช้ RAM มากขึ้น ลากและปรับขนาดกรอบได้บนหน้าจอโดยตรงผ่านเมนูในเกม > จัดวางบนหน้าจอ

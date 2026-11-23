@@ -570,7 +570,7 @@ fun SettingsScreen(
                         SettingsGroup("Mode streamer") {
                             SettingSwitchRow(
                                 title = "Mode streamer",
-                                desc = "Menampilkan gagang kecil di tepi kiri layar game. Ketuk untuk membuka panel yang menampilkan dan menyembunyikan overlay.",
+                                desc = "Menampilkan overlay (teks, gambar, link, timer, overlay web) di atas game. Menyalakan dan menyembunyikannya lewat menu dalam game (ikon gerigi), tanpa tombol tambahan di layar.",
                                 checked = currentSettings.streamerMode,
                                 onCheckedChange = {
                                     SettingsManager.updateSettings(context, currentSettings.copy(streamerMode = it))

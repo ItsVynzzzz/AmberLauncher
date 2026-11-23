@@ -1,0 +1,14 @@
+# Patch 9: pil menu (gerigi + mata), overlay web bisa diatur kotak/skala/posisi, gandakan overlay.
+Pil menu: gerigi membuka menu, mata menyembunyikan/menampilkan UI	N\u00fat menu d\u1ea1ng vi\u00ean: b\u00e1nh r\u0103ng m\u1edf menu, con m\u1eaft \u1ea9n/hi\u1ec7n giao di\u1ec7n
+Ukuran pil (tinggi):	C\u1ee1 n\u00fat (chi\u1ec1u cao):
+Lebar	Chi\u1ec1u r\u1ed9ng
+Tinggi	Chi\u1ec1u cao
+Skala halaman	T\u1ef7 l\u1ec7 trang
+Posisi mendatar	V\u1ecb tr\u00ed ngang
+Posisi tegak	V\u1ecb tr\u00ed d\u1ecdc
+Gandakan	Nh\u00e2n \u0111\u00f4i
+Kotak overlay	Khung overlay
+Penuh	To\u00e0n b\u1ed9
+Tengah	Gi\u1eefa
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak.	Gi\u1ea3m t\u1ef7 l\u1ec7 n\u1ebfu th\u00f4ng b\u00e1o b\u1ecb c\u1eaft: trang \u0111\u01b0\u1ee3c d\u00e0n r\u1ed9ng h\u01a1n r\u1ed3i thu nh\u1ecf v\u1eeba khung. D\u01b0\u1edbi 100% s\u1ebd t\u1ed1n th\u00eam RAM.
+Kecilkan skala bila alert terpotong: halaman ditata lebih lebar lalu dikecilkan ke kotak. Di bawah 100% memakai RAM lebih banyak. Geser dan ubah ukuran kotaknya langsung di layar lewat menu dalam game > Atur di layar.	Gi\u1ea3m t\u1ef7 l\u1ec7 n\u1ebfu th\u00f4ng b\u00e1o b\u1ecb c\u1eaft: trang \u0111\u01b0\u1ee3c d\u00e0n r\u1ed9ng h\u01a1n r\u1ed3i thu nh\u1ecf v\u1eeba khung. D\u01b0\u1edbi 100% s\u1ebd t\u1ed1n th\u00eam RAM. K\u00e9o v\u00e0 \u0111\u1ed5i k\u00edch th\u01b0\u1edbc khung ngay tr\u00ean m\u00e0n h\u00ecnh qua menu trong game > S\u1eafp x\u1ebfp tr\u00ean m\u00e0n h\u00ecnh.

@@ -142,8 +142,8 @@ data class LauncherSettings(
     val uiScalePercent: Int = 100,
     val homeSkinScalePercent: Int = 100,
 
-    // Mode streamer: sidebar tersembunyi di tepi kiri layar game untuk menampilkan overlay (teks, gambar,
-    // link dengan kode QR, timer). Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
+    // Mode streamer: overlay (teks, gambar, link dengan kode QR, timer, overlay web) di atas game, dinyalakan dan
+    // dimatikan lewat panel kiri di menu dalam game. Bawaan mati. Daftar overlay diatur di Pengaturan > Game > Mode streamer.
     val streamerMode: Boolean = false,
     val streamerItems: List<StreamerItem> = emptyList(),
 

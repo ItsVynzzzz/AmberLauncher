@@ -1,0 +1,875 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+index d923b09..15fbd3c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/RustTouchLayout.kt
+@@ -112,22 +112,32 @@ object RustTouchLayout {
+      *
+      * [engineDir] = folder data mesin tujuan (null = folder Horizon); Starling memakai `files/starling`. [macros] = false
+      * untuk mesin tanpa pemutar makro Amber (Starling): tombol makro dilewati dan `amber-macros.json` tidak ditulis.
++     * [amberMenu] = true untuk mesin dengan sidebar Amber (Starling, patch amber5/0007): tombol MENU Amber mengirim token
++     * `amber.menu` (membuka sidebar di dalam mesin), bukan Esc.
+      */
+     fun sync(
+         context: Context,
+         enabled: Boolean,
+         layout: List<CustomControlButton>? = null,
+         engineDir: File? = null,
+-        macros: Boolean = true
++        macros: Boolean = true,
++        amberMenu: Boolean = false
+     ) {
+         try {
+-            apply(context.applicationContext, enabled, layout, engineDir, macros)
++            apply(context.applicationContext, enabled, layout, engineDir, macros, amberMenu)
+         } catch (e: Throwable) {
+             LauncherLog.w(TAG, "Tata letak kontrol Amber tidak bisa diterapkan ke mesin Rust: ${e.message}", e)
+         }
+     }
+ 
+-    private fun apply(context: Context, enabled: Boolean, layout: List<CustomControlButton>?, engineDir: File?, macros: Boolean) {
++    private fun apply(
++        context: Context,
++        enabled: Boolean,
++        layout: List<CustomControlButton>?,
++        engineDir: File?,
++        macros: Boolean,
++        amberMenu: Boolean
++    ) {
+         val home = engineDir ?: HorizonEngine.engineHome(context)
+         val config = readObject(File(home, CONFIG_FILE))
+         val profile = config?.optInt("profile", 0) ?: 0
+@@ -147,7 +157,7 @@ object RustTouchLayout {
+             ControlLayoutManager.buttons.value
+         }
+         val heightDp = surfaceHeightDp(context, config?.optString("orientation", "landscape"))
+-        val plan = plan(buttons, heightDp, SettingsManager.settings.value.buttonLookDrag, macros)
++        val plan = plan(buttons, heightDp, SettingsManager.settings.value.buttonLookDrag, macros, amberMenu)
+         // Tata letak tanpa joystick dan tanpa tombol apa pun jangan diterapkan: game jadi tidak bisa dikendalikan.
+         if (plan.joy == null && plan.buttons.isEmpty()) return
+ 
+@@ -190,7 +200,13 @@ object RustTouchLayout {
+ 
+     // ---- terjemahan tata letak ----
+ 
+-    private fun plan(buttons: List<CustomControlButton>, heightDp: Float, lookDrag: Boolean, macros: Boolean): Plan {
++    private fun plan(
++        buttons: List<CustomControlButton>,
++        heightDp: Float,
++        lookDrag: Boolean,
++        macros: Boolean,
++        amberMenu: Boolean
++    ): Plan {
+         val scale = ENGINE_UI_HEIGHT / heightDp
+         var joy: Joy? = null
+         val out = ArrayList<Btn>()
+@@ -226,22 +242,22 @@ object RustTouchLayout {
+                 system.add(b)
+                 continue
+             }
+-            buttonOf(b, heightDp, lookDrag, macros)?.let { add(it) }
++            buttonOf(b, heightDp, lookDrag, macros, amberMenu)?.let { add(it) }
+         }
+         for (b in system) {
+-            val btn = buttonOf(b, heightDp, lookDrag, macros) ?: continue
++            val btn = buttonOf(b, heightDp, lookDrag, macros, amberMenu) ?: continue
+             if (out.none { it.keys == btn.keys }) add(btn)
+         }
+         return Plan(joy, out, scale)
+     }
+ 
+     /** Tombol Amber biasa (keyboard, mouse, kombinasi, atau sistem yang punya padanan) sebagai tombol mesin. */
+-    private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean, macros: Boolean): Btn? {
++    private fun buttonOf(b: CustomControlButton, heightDp: Float, lookDrag: Boolean, macros: Boolean, amberMenu: Boolean): Btn? {
+         // Perintah, turbo, dan urutan aksi dijalankan pemutar makro mesin; tombolnya hanya memicu makro itu. Mesin tanpa
+         // pemutar makro (macros = false): makro non-kombo tidak punya padanan dan dilewati oleh baris di bawah.
+         val macro = if (macros && b.isMacro && b.macroType != "COMBO") RustMacros.defOf(b, { keyToken(it) }, { tokenOf(it) }) else null
+         if (b.isMacro && b.macroType != "COMBO" && macro == null) return null
+-        val keys = if (macro != null) listOf(RustMacros.tokenFor(b.id)) else keysOf(b)
++        val keys = if (macro != null) listOf(RustMacros.tokenFor(b.id)) else keysOf(b, amberMenu)
+         if (keys.isEmpty()) return null
+         return Btn(
+             label = labelOf(b),
+@@ -281,11 +297,13 @@ object RustTouchLayout {
+     }
+ 
+     /** Daftar token tombol mesin untuk tombol Amber ini (satu sampai tiga); kosong bila tidak punya padanan. */
+-    private fun keysOf(b: CustomControlButton): List<String> {
++    private fun keysOf(b: CustomControlButton, amberMenu: Boolean): List<String> {
+         if (b.isSystem) {
+             return when (b.systemAction) {
+                 "HIDE_GUI" -> listOf("key.keyboard.f1")
+-                "MENU", "CLOSE" -> listOf("key.keyboard.escape")
++                // MENU membuka sidebar Amber di dalam mesin bila mesin punya (token `amber.menu`); selain itu Esc.
++                "MENU" -> listOf(if (amberMenu) "amber.menu" else "key.keyboard.escape")
++                "CLOSE" -> listOf("key.keyboard.escape")
+                 else -> emptyList() // FPS dan keyboard layar milik launcher, tidak ada di mesin
+             }
+         }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+index eb42d85..c24a3cf 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/StarlingEngine.kt
+@@ -316,10 +316,12 @@ object StarlingEngine {
+                 amberControls(),
+                 ControlLayoutManager.presetButtons(context, instance.controlPresetId),
+                 engineDir = engineHome(context),
+-                macros = false
++                macros = false,
++                // Tombol MENU Amber membuka sidebar Amber yang digambar mesin (patch amber5/0007), bukan Esc.
++                amberMenu = amberControls()
+             )
+             beginLogSession(context, instance)
+-            writeLaunchFiles(context, account)
++            writeLaunchFiles(context, instance, account)
+             if (firstRun) {
+                 Toast.makeText(
+                     context,
+@@ -368,7 +370,7 @@ object StarlingEngine {
+     /** Tombol layar Starling mengikuti tata letak Amber: pengaturan yang sama dengan "Kontrol Amber" mesin Rust (bawaan mati). */
+     private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
+ 
+-    private fun writeLaunchFiles(context: Context, account: UserAccount) {
++    private fun writeLaunchFiles(context: Context, instance: Instance, account: UserAccount) {
+         val dir = engineHome(context)
+         if (!dir.isDirectory && !dir.mkdirs()) throw IOException("Folder data mesin tidak bisa dibuat")
+         val microsoft = account.safeAccountType == "microsoft"
+@@ -378,6 +380,13 @@ object StarlingEngine {
+         // AMBER_CONTROLS (patch amber5/0005, kontrol Amber di jendela terpisah di atas game) sengaja tidak ditulis lagi:
+         // jendela tambahan itu membebani GPU dan membuat tombol dibuat ulang tiap menu dibuka/ditutup. Tombol Amber kini
+         // digambar mesin sendiri lewat horizon-touch.json (lihat start).
++        // Sidebar Amber di dalam mesin (patch amber5/0007): menggantikan tombol tiga garis dan menu cepat mesin. Menyala
++        // bersama "Kontrol Amber". Nama instance dan versi tampil di bawah judul "Menu".
++        if (amberControls()) {
++            args.append("AMBER_SIDEBAR=1\n")
++            args.append("AMBER_INSTANCE=").append(instance.name.replace('\n', ' ').replace('\r', ' ').trim()).append('\n')
++            args.append("AMBER_MC_VERSION=").append(SUPPORTED_MC_VERSION).append('\n')
++        }
+         // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
+         if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
+         if (microsoft) {
+diff --git a/changelog/entries/20261123-starling-sidebar-di-mesin.txt b/changelog/entries/20261123-starling-sidebar-di-mesin.txt
+new file mode 100644
+index 0000000..b3c7f33
+--- /dev/null
++++ b/changelog/entries/20261123-starling-sidebar-di-mesin.txt
+@@ -0,0 +1,4 @@
++[id]
+++ Starling kini punya sidebar Amber yang digambar langsung oleh mesin, tanpa jendela atau lapisan tambahan di atas game. Tombol MENU Amber membuka panel di sisi kanan: aksi cepat (Keyboard, Pointer, Edit tombol, Log), resolusi 3D, sensitivitas kamera, ukuran tombol, beberapa saklar kontrol, pintasan tombol, dan tombol Keluar. Tombol tiga garis bawaan mesin tidak dipakai lagi saat Kontrol Amber menyala.
++[en]
+++ Starling now has an Amber sidebar drawn directly by the engine, with no extra window or layer on top of the game. Amber's MENU button opens a panel on the right: quick actions (Keyboard, Pointer, Edit buttons, Log), 3D resolution, camera sensitivity, button size, a few control switches, key shortcuts and an Exit button. The engine's own three-line button is no longer used while Amber controls are on.
+diff --git a/docs/rust-engine.md b/docs/rust-engine.md
+index 1ad957f..2d82163 100644
+--- a/docs/rust-engine.md
++++ b/docs/rust-engine.md
+@@ -326,5 +326,6 @@ Tombol layar Starling memakai **tata letak dan tampilan editor kontrol Amber**,
+ - **Amber** (`core/horizon/RustTouchLayout.kt`): saat PLAY dengan "Kontrol Amber" menyala, tata letak preset kontrol instance diterjemahkan ke `files/starling/horizon-touch.json` (gaya `goy-control`: joystick dan tombol kustom). Berkas lama disalin ke `horizon-touch.amber-backup.json` dan dikembalikan saat saklar dimatikan. Starling tidak punya pemutar makro Amber, jadi tombol makro (selain kombo tombol) dilewati.
+ - **Mesin**: tidak ada perubahan Rust untuk ini. Membuka atau menutup menu hanya mengubah tombol mana yang tampil (`visible_in_game` dan `visible_in_menu`), jadi tidak ada yang dibuat ulang. Geser kamera, hotbar, dan sentuhan di menu ditangani mesin langsung. Kecepatan putar kamera memakai setelan mesin, bukan setelan kursor Amber.
+ - **Jalur lama (tidak dipakai lagi)**: lapisan Amber di jendela terpisah (`starling/StarlingOverlay.kt`, `AMBER_CONTROLS=1`, patch `amber5/0005-amber-controls.diff`) dihentikan: jendela tambahan di atas permukaan Vulkan membebani GPU, tombol dibuat ulang tiap menu dibuka atau ditutup, dan Android menampilkan peringatan "menampilkan di atas aplikasi lainnya". Kodenya masih ada tetapi tidak dipasang, karena `AMBER_CONTROLS` tidak ditulis lagi ke `horizon-args.txt`.
+-- **Dimatikan**: Pengaturan > Rust > "Kontrol Amber" (bawaan mati). Mati = tombol bawaan mesin (tata letak Bedrock) kembali.
+-- **Belum / diketahui**: makro Amber, papan ketik Amber, rekam layar, FPS dan resolusi di menu belum tersambung ke Starling. Tombol menu cepat mesin (garis tiga) mengikuti "Menu garis tiga". Belum diuji di perangkat.
++- **Sidebar Amber di dalam mesin** (patch `amber5/0007-amber-sidebar.diff`, modul `android_amber_sidebar.rs`): bersama "Kontrol Amber", tombol tiga garis dan menu cepat mesin tidak dipakai lagi. Tombol MENU Amber mengirim token `amber.menu` (`RustTouchLayout`, `amberMenu = true`), yang membuka panel di sisi kanan layar. Panel digambar mesin dengan `Ui` dan tema Amber, jadi tidak ada jendela atau lapisan Android. Launcher menyalakannya lewat `AMBER_SIDEBAR=1`, `AMBER_INSTANCE`, dan `AMBER_MC_VERSION` di `horizon-args.txt`. Isi sekarang: aksi cepat (Keyboard, Pointer, Edit tombol, Log), Tampilan (resolusi 3D, animasi), Kontrol (sensitivitas kamera, ukuran tombol, balik sumbu Y, mode kidal, lompat otomatis, getar), Pintasan (F3, F5, Chat, Buang, Tukar, Jeda), dan Keluar (ketuk dua kali). Panel memakai ulang bendera buka hub (`TouchUi::floating_menu`) dan aksi `InGameMenuAction` yang sudah ada, jadi tombol Kembali, pemblokiran sentuhan, dan penerapan pengaturan tidak berubah.
++- **Dimatikan**: Pengaturan > Rust > "Kontrol Amber" (bawaan mati). Mati = tombol bawaan mesin (tata letak Bedrock) dan hub mesin kembali.
++- **Belum / diketahui**: makro Amber, rekam layar, FPS di sidebar, dan layar Minecraft bergaya Amber belum ada di Starling. Tombol "Buang" dan pintasan lain memakai tombol bawaan mesin. Belum diuji di perangkat; build mesin di GitHub Actions adalah satu-satunya uji kompilasi.
+diff --git a/third_party/horizon-patches/amber5/0007-amber-sidebar.diff b/third_party/horizon-patches/amber5/0007-amber-sidebar.diff
+new file mode 100644
+index 0000000..83665b2
+--- /dev/null
++++ b/third_party/horizon-patches/amber5/0007-amber-sidebar.diff
+@@ -0,0 +1,696 @@
++diff --git a/crates/horizon-client-render/src/android_controls/custom.rs b/crates/horizon-client-render/src/android_controls/custom.rs
++index b7f6c2b..134bb88 100644
++--- a/crates/horizon-client-render/src/android_controls/custom.rs
+++++ b/crates/horizon-client-render/src/android_controls/custom.rs
++@@ -39,7 +39,7 @@ impl CustomButton {
++             || crate::keybinds::mouse_button(token).is_some()
++             || matches!(
++                 token,
++-                "mouse.scroll.up" | "mouse.scroll.down" | "mouse.virtual.toggle" | "mouse.look"
+++                "mouse.scroll.up" | "mouse.scroll.down" | "mouse.virtual.toggle" | "mouse.look" | "amber.menu"
++             )
++             || token
++                 .strip_prefix("action:")
++diff --git a/crates/horizon-client/src/android_amber_sidebar.rs b/crates/horizon-client/src/android_amber_sidebar.rs
++new file mode 100644
++index 0000000..681242a
++--- /dev/null
+++++ b/crates/horizon-client/src/android_amber_sidebar.rs
++@@ -0,0 +1,574 @@
+++//! AmberLauncher: Amber's in-game menu (the "sidebar"), drawn by the engine itself.
+++//!
+++//! The launcher turns it on with `AMBER_SIDEBAR=1` in `horizon-args.txt` (patch amber5/0007). It replaces the
+++//! control hub: no three-line button, no tabbed modal. Amber's MENU button (custom token `amber.menu`) opens a
+++//! panel on the right of the screen. It reuses the hub's open flag (`TouchUi::floating_menu`), so the Back key,
+++//! the modal input rules and the draw order stay as they were, and it answers with the hub's own
+++//! `InGameMenuAction`s, so the game applies them with the code that already exists.
+++//!
+++//! The panel is drawn with the engine's own `Ui` and the active theme (the launcher already colors it like
+++//! Amber): nothing is drawn by Android, no extra window, no extra GPU work.
+++use crate::{
+++    android_control_theme::{Face, Icon, ResolvedTheme, Ui, color},
+++    android_control_ui::{InGameMenuAction, TouchUi},
+++    hud::{HudAtlas, HudBatch, rgba},
+++};
+++use std::sync::OnceLock;
+++use winit::{event::TouchPhase, keyboard::KeyCode};
+++
+++/// Whether the launcher asked for Amber's sidebar instead of the engine's control hub.
+++pub fn active() -> bool {
+++    static ACTIVE: OnceLock<bool> = OnceLock::new();
+++    *ACTIVE.get_or_init(|| std::env::var_os("AMBER_SIDEBAR").is_some_and(|value| value == "1"))
+++}
+++
+++/// "Instance · version" under the title, from `AMBER_INSTANCE` and `AMBER_MC_VERSION`.
+++fn subtitle() -> &'static str {
+++    static TEXT: OnceLock<String> = OnceLock::new();
+++    TEXT.get_or_init(|| {
+++        let name = std::env::var("AMBER_INSTANCE").unwrap_or_default();
+++        let version = std::env::var("AMBER_MC_VERSION").unwrap_or_default();
+++        match (name.is_empty(), version.is_empty()) {
+++            (false, false) => format!("{name} \u{b7} {version}"),
+++            (false, true) => name,
+++            (true, false) => version,
+++            (true, true) => String::new(),
+++        }
+++    })
+++}
+++
+++/// The sliders of the panel.
+++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+++pub enum Slider {
+++    Resolution,
+++    Sensitivity,
+++    ButtonScale,
+++}
+++
+++#[derive(Clone, Copy, PartialEq, Eq)]
+++enum Toggle {
+++    Animations,
+++    InvertY,
+++    LeftHanded,
+++    AutoJump,
+++    Vibrate,
+++}
+++
+++#[derive(Clone, Copy)]
+++enum Row {
+++    Quick,
+++    Section(&'static str),
+++    Slider(Slider),
+++    Toggle(Toggle),
+++    Keys(usize),
+++}
+++
+++const ROWS: [Row; 14] = [
+++    Row::Quick,
+++    Row::Section("Tampilan"),
+++    Row::Slider(Slider::Resolution),
+++    Row::Toggle(Toggle::Animations),
+++    Row::Section("Kontrol"),
+++    Row::Slider(Slider::Sensitivity),
+++    Row::Slider(Slider::ButtonScale),
+++    Row::Toggle(Toggle::InvertY),
+++    Row::Toggle(Toggle::LeftHanded),
+++    Row::Toggle(Toggle::AutoJump),
+++    Row::Toggle(Toggle::Vibrate),
+++    Row::Section("Pintasan"),
+++    Row::Keys(0),
+++    Row::Keys(1),
+++];
+++
+++/// Round buttons of the first row: icon and label (Keyboard, Pointer, Edit buttons, Log).
+++const QUICK: [(Icon, &str); 4] = [
+++    (Icon::Pencil, "Keyboard"),
+++    (Icon::Crosshair, "Pointer"),
+++    (Icon::Settings, "Edit tombol"),
+++    (Icon::Terminal, "Log"),
+++];
+++
+++const KEYS: [[(&str, KeyCode); 3]; 2] = [
+++    [("F3", KeyCode::F3), ("F5", KeyCode::F5), ("Chat", KeyCode::KeyT)],
+++    [("Buang", KeyCode::KeyQ), ("Tukar", KeyCode::KeyF), ("Jeda", KeyCode::Escape)],
+++];
+++
+++const HEAD_H: f32 = 48.0;
+++const FOOT_H: f32 = 56.0;
+++
+++fn row_h(row: &Row) -> f32 {
+++    match row {
+++        Row::Quick => 74.0,
+++        Row::Section(_) => 26.0,
+++        Row::Slider(_) => 46.0,
+++        Row::Toggle(_) => 38.0,
+++        Row::Keys(_) => 40.0,
+++    }
+++}
+++
+++fn content_h() -> f32 {
+++    ROWS.iter().map(row_h).sum::<f32>() + 12.0
+++}
+++
+++/// Where the panel is, in dp. `shift` slides it in from the right edge while it opens.
+++struct Geo {
+++    panel: [f32; 4],
+++    close: [f32; 4],
+++    view: [f32; 4],
+++    exit: [f32; 4],
+++}
+++
+++fn geo(w: f32, h: f32, shift: f32) -> Geo {
+++    let pw = (w * 0.5).clamp(300.0, 340.0).min((w - 12.0).max(200.0));
+++    let ph = (h - 12.0).max(200.0);
+++    let px = w - pw - 6.0 + shift;
+++    let py = 6.0;
+++    Geo {
+++        panel: [px, py, pw, ph],
+++        close: [px + pw - 42.0, py + 10.0, 28.0, 28.0],
+++        view: [px, py + HEAD_H, pw, ph - HEAD_H - FOOT_H],
+++        exit: [px + 12.0, py + ph - FOOT_H + 8.0, pw - 24.0, FOOT_H - 16.0],
+++    }
+++}
+++
+++/// Calls `visit` with every row and its rectangle (dp), scrolled by `scroll`.
+++fn walk(g: &Geo, scroll: f32, mut visit: impl FnMut(&Row, [f32; 4])) {
+++    let mut y = g.view[1] + 6.0 - scroll;
+++    for row in ROWS.iter() {
+++        let h = row_h(row);
+++        visit(row, [g.view[0] + 12.0, y, g.view[2] - 24.0, h - 4.0]);
+++        y += h;
+++    }
+++}
+++
+++fn contains(r: [f32; 4], p: [f32; 2]) -> bool {
+++    p[0] >= r[0] && p[0] <= r[0] + r[2] && p[1] >= r[1] && p[1] <= r[1] + r[3]
+++}
+++
+++fn slider_bounds(which: Slider) -> (f32, f32) {
+++    match which {
+++        Slider::Resolution => (25.0, 100.0),
+++        Slider::Sensitivity => (0.10, 3.00),
+++        Slider::ButtonScale => (0.50, 2.00),
+++    }
+++}
+++
+++fn slider_value(which: Slider, s: &crate::android_controls::Settings) -> f32 {
+++    match which {
+++        Slider::Resolution => s.resolution_scale_percent as f32,
+++        Slider::Sensitivity => s.sensitivity,
+++        Slider::ButtonScale => s.button_scale,
+++    }
+++}
+++
+++fn slider_text(which: Slider, v: f32) -> String {
+++    match which {
+++        Slider::Resolution => format!("{:.0}%", v),
+++        Slider::Sensitivity => format!("{:.2}", v),
+++        Slider::ButtonScale => format!("{:.0}%", v * 100.0),
+++    }
+++}
+++
+++fn slider_label(which: Slider) -> &'static str {
+++    match which {
+++        Slider::Resolution => "Resolusi 3D",
+++        Slider::Sensitivity => "Sensitivitas kamera",
+++        Slider::ButtonScale => "Ukuran tombol",
+++    }
+++}
+++
+++/// The action for dragging `which` to `frac` (0..1) of its track, or `None` when the value does not change.
+++fn slider_action(
+++    which: Slider,
+++    frac: f32,
+++    s: &crate::android_controls::Settings,
+++) -> Option<InGameMenuAction> {
+++    let (lo, hi) = slider_bounds(which);
+++    let raw = lo + frac.clamp(0.0, 1.0) * (hi - lo);
+++    match which {
+++        Slider::Resolution => {
+++            let pct = ((raw / 5.0).round() * 5.0) as u32;
+++            (pct != s.resolution_scale_percent).then_some(InGameMenuAction::SetResolutionScale(pct))
+++        }
+++        Slider::Sensitivity => {
+++            let v = ((raw / 0.05).round() * 0.05).clamp(lo, hi);
+++            ((v - s.sensitivity).abs() > 0.004).then_some(InGameMenuAction::SetTouchSensitivity(v))
+++        }
+++        Slider::ButtonScale => {
+++            let v = ((raw / 0.05).round() * 0.05).clamp(lo, hi);
+++            ((v - s.button_scale).abs() > 0.004).then_some(InGameMenuAction::SetButtonScale(v))
+++        }
+++    }
+++}
+++
+++fn toggle_label(t: Toggle) -> &'static str {
+++    match t {
+++        Toggle::Animations => "Animasi game",
+++        Toggle::InvertY => "Balik sumbu Y",
+++        Toggle::LeftHanded => "Mode kidal",
+++        Toggle::AutoJump => "Lompat otomatis",
+++        Toggle::Vibrate => "Getar",
+++    }
+++}
+++
+++fn toggle_on(t: Toggle, s: &crate::android_controls::Settings) -> bool {
+++    match t {
+++        Toggle::Animations => !s.disable_game_animations,
+++        Toggle::InvertY => s.invert_y,
+++        Toggle::LeftHanded => s.left_handed,
+++        Toggle::AutoJump => s.auto_jump,
+++        Toggle::Vibrate => s.vibrate,
+++    }
+++}
+++
+++fn toggle_action(t: Toggle) -> InGameMenuAction {
+++    match t {
+++        Toggle::Animations => InGameMenuAction::ToggleGameAnimations,
+++        Toggle::InvertY => InGameMenuAction::ToggleInvertY,
+++        Toggle::LeftHanded => InGameMenuAction::ToggleLeftHanded,
+++        Toggle::AutoJump => InGameMenuAction::ToggleAutoJump,
+++        Toggle::Vibrate => InGameMenuAction::ToggleVibrate,
+++    }
+++}
+++
+++fn draw_switch(ui: &mut Ui<'_>, x: f32, y: f32, on: bool, t: &ResolvedTheme) {
+++    let (tw, th) = (38.0, 22.0);
+++    if on {
+++        ui.rounded(x, y, tw, th, th / 2.0, t.accent);
+++        ui.rounded(x + tw - th + 3.0, y + 3.0, th - 6.0, th - 6.0, (th - 6.0) / 2.0, t.on_accent);
+++    } else {
+++        ui.rounded(x, y, tw, th, th / 2.0, t.surface_dim);
+++        ui.stroke_rounded(x, y, tw, th, th / 2.0, 1.2, t.border_strong);
+++        ui.rounded(x + 4.0, y + 4.0, th - 8.0, th - 8.0, (th - 8.0) / 2.0, t.text_muted);
+++    }
+++}
+++
+++fn draw_row(
+++    ui: &mut Ui<'_>,
+++    row: &Row,
+++    r: [f32; 4],
+++    s: &crate::android_controls::Settings,
+++    t: &ResolvedTheme,
+++) {
+++    match row {
+++        Row::Quick => {
+++            let cell = r[2] / 4.0;
+++            for (i, (icon, label)) in QUICK.iter().enumerate() {
+++                let cx = r[0] + cell * (i as f32 + 0.5);
+++                ui.rounded(cx - 19.0, r[1] + 2.0, 38.0, 38.0, 19.0, t.surface);
+++                ui.border(cx - 19.0, r[1] + 2.0, 38.0, 38.0, 19.0, t.border);
+++                ui.icon(*icon, cx - 9.0, r[1] + 11.0, 18.0, t.text_primary);
+++                ui.centered_fit(
+++                    Face::Regular,
+++                    10.0,
+++                    [cx - cell * 0.5, r[1] + 44.0, cell, 16.0],
+++                    t.text_muted,
+++                    label,
+++                );
+++            }
+++        }
+++        Row::Section(label) => {
+++            ui.text(
+++                Face::SemiBold,
+++                10.5,
+++                r[0] + 4.0,
+++                r[1] + 4.0,
+++                t.text_muted,
+++                &label.to_uppercase(),
+++            );
+++        }
+++        Row::Toggle(tg) => {
+++            ui.rounded(r[0], r[1], r[2], r[3], 12.0, t.surface);
+++            ui.text(
+++                Face::Medium,
+++                12.0,
+++                r[0] + 12.0,
+++                r[1] + (r[3] - 17.4) * 0.5,
+++                t.text_primary,
+++                toggle_label(*tg),
+++            );
+++            draw_switch(
+++                ui,
+++                r[0] + r[2] - 50.0,
+++                r[1] + (r[3] - 22.0) * 0.5,
+++                toggle_on(*tg, s),
+++                t,
+++            );
+++        }
+++        Row::Slider(which) => {
+++            let (lo, hi) = slider_bounds(*which);
+++            let value = slider_value(*which, s);
+++            let frac = ((value - lo) / (hi - lo)).clamp(0.0, 1.0);
+++            ui.rounded(r[0], r[1], r[2], r[3], 12.0, t.surface);
+++            ui.text(
+++                Face::Medium,
+++                12.0,
+++                r[0] + 12.0,
+++                r[1] + 5.0,
+++                t.text_primary,
+++                slider_label(*which),
+++            );
+++            let text = slider_text(*which, value);
+++            let tw = ui.measure(Face::Mono, 11.0, &text);
+++            ui.text(Face::Mono, 11.0, r[0] + r[2] - 12.0 - tw, r[1] + 6.0, t.text_muted, &text);
+++            let (tx, tl) = (r[0] + 14.0, r[2] - 28.0);
+++            let ty = r[1] + r[3] - 11.0;
+++            ui.rounded(tx, ty - 2.5, tl, 5.0, 2.5, t.surface_dim);
+++            ui.rounded(tx, ty - 2.5, (tl * frac).max(5.0), 5.0, 2.5, t.accent);
+++            ui.rounded(tx + tl * frac - 7.0, ty - 7.0, 14.0, 14.0, 7.0, t.text_primary);
+++            ui.border(tx + tl * frac - 7.0, ty - 7.0, 14.0, 14.0, 7.0, t.accent);
+++        }
+++        Row::Keys(line) => {
+++            let cell = (r[2] - 8.0) / 3.0;
+++            for (c, (label, _)) in KEYS[*line].iter().enumerate() {
+++                let x = r[0] + c as f32 * (cell + 4.0);
+++                ui.rounded(x, r[1], cell, r[3], 12.0, t.surface);
+++                ui.border(x, r[1], cell, r[3], 12.0, t.border);
+++                ui.centered_fit(Face::Medium, 11.5, [x, r[1], cell, r[3]], t.text_primary, label);
+++            }
+++        }
+++    }
+++}
+++
+++impl TouchUi {
+++    /// Opens the sidebar, or closes it when it is open (Amber's MENU button).
+++    pub fn amber_sidebar_toggle(&mut self) {
+++        if self.floating_menu {
+++            self.amber_sidebar_close();
+++            return;
+++        }
+++        self.floating_menu = true;
+++        self.open_anim.set(0.0);
+++        self.tab_anim.set(0.0);
+++        self.last_anim_tick.set(None);
+++        self.amber_scroll = 0.0;
+++        self.amber_drag = None;
+++        self.amber_slider = None;
+++        self.amber_exit_armed = false;
+++    }
+++
+++    pub fn amber_sidebar_close(&mut self) {
+++        self.floating_menu = false;
+++        self.amber_drag = None;
+++        self.amber_slider = None;
+++        self.amber_exit_armed = false;
+++    }
+++
+++    /// Draws the sidebar (and its fade while it closes). Called in place of the hub's own drawing.
+++    pub fn draw_amber_sidebar(
+++        &self,
+++        b: &mut HudBatch,
+++        a: &HudAtlas,
+++        settings: &crate::android_controls::Settings,
+++    ) {
+++        let (open_t, _) = self.step_animations();
+++        if !self.floating_menu && open_t <= 0.01 {
+++            return;
+++        }
+++        let mut ui = Ui::mobile(a, b, (0.0, 0.0));
+++        let (w, h) = (ui.w, ui.h);
+++        let ease = 1.0 - (1.0 - open_t.clamp(0.0, 1.0)).powi(3);
+++        let t = crate::android_control_theme::active_theme();
+++        let rest = geo(w, h, 0.0);
+++        let g = geo(w, h, (1.0 - ease) * (rest.panel[2] + 12.0));
+++        let [px, py, pw, ph] = g.panel;
+++
+++        ui.fill(0.0, 0.0, w, h, rgba(6, 5, 14, (150.0 * ease).round() as u8));
+++        ui.rounded(px + 2.0, py + 5.0, pw, ph, 18.0, rgba(0, 0, 0, 120));
+++        ui.rounded(px, py, pw, ph, 18.0, t.bg_solid);
+++        ui.stroke_rounded(px, py, pw, ph, 18.0, 1.2, t.border);
+++
+++        // Header: title, "instance · version", close.
+++        ui.text(Face::SemiBold, 16.0, px + 16.0, py + 7.0, t.text_primary, "Menu");
+++        let sub = subtitle();
+++        if !sub.is_empty() {
+++            let fitted = ui.fit_text(Face::Regular, 10.0, sub, pw - 74.0);
+++            ui.text(Face::Regular, 10.0, px + 16.0, py + 27.0, t.text_muted, &fitted);
+++        }
+++        let c = g.close;
+++        ui.rounded(c[0], c[1], c[2], c[3], c[3] / 2.0, t.surface);
+++        ui.icon(Icon::Close, c[0] + 6.0, c[1] + 6.0, 16.0, t.text_primary);
+++        ui.fill(px, py + HEAD_H, pw, 1.0, t.border);
+++
+++        // Scrolling content.
+++        let total = content_h();
+++        let max_scroll = (total - g.view[3]).max(0.0);
+++        let scroll = self.amber_scroll.clamp(0.0, max_scroll);
+++        let (view_top, view_bottom) = (g.view[1], g.view[1] + g.view[3]);
+++        ui.clipped(g.view, |ui| {
+++            walk(&g, scroll, |row, r| {
+++                if r[1] + r[3] < view_top || r[1] > view_bottom {
+++                    return;
+++                }
+++                draw_row(ui, row, r, settings, &t);
+++            });
+++        });
+++        if max_scroll > 0.0 {
+++            let track = g.view[3] - 8.0;
+++            let bar_h = (track * g.view[3] / total).max(18.0);
+++            let bar_y = view_top + 4.0 + (track - bar_h) * (scroll / max_scroll);
+++            ui.rounded(px + pw - 6.0, bar_y, 3.0, bar_h, 1.5, t.border_strong);
+++        }
+++
+++        // Footer: exit (a second tap confirms).
+++        ui.fill(px, view_bottom, pw, 1.0, t.border);
+++        let e = g.exit;
+++        let armed = self.amber_exit_armed;
+++        ui.rounded(
+++            e[0],
+++            e[1],
+++            e[2],
+++            e[3],
+++            e[3] / 2.0,
+++            color::with_alpha(t.danger, if armed { 0.40 } else { 0.20 }),
+++        );
+++        ui.stroke_rounded(e[0], e[1], e[2], e[3], e[3] / 2.0, 1.2, color::with_alpha(t.danger, 0.65));
+++        ui.centered_fit(
+++            Face::SemiBold,
+++            12.5,
+++            e,
+++            t.danger,
+++            if armed { "Ketuk lagi untuk keluar" } else { "Keluar dari game" },
+++        );
+++        ui.finish();
+++    }
+++
+++    /// Touches while the sidebar is open: every touch belongs to it (the game ignores them), a tap outside closes it.
+++    /// Returns the hub's `InGameMenuAction` for what was tapped; `Close` here only means "consumed".
+++    pub fn amber_sidebar_touch(
+++        &mut self,
+++        b: &mut HudBatch,
+++        a: &HudAtlas,
+++        id: u64,
+++        phase: TouchPhase,
+++        p_gui: [f32; 2],
+++        settings: &crate::android_controls::Settings,
+++    ) -> Option<InGameMenuAction> {
+++        if !self.floating_menu {
+++            return None;
+++        }
+++        let ui = Ui::mobile(a, b, (0.0, 0.0));
+++        let (w, h) = (ui.w, ui.h);
+++        let p = [
+++            p_gui[0] * ui.batch.scale / ui.density,
+++            p_gui[1] * ui.batch.scale / ui.density,
+++        ];
+++        let g = geo(w, h, 0.0);
+++        let max_scroll = (content_h() - g.view[3]).max(0.0);
+++        self.amber_scroll = self.amber_scroll.clamp(0.0, max_scroll);
+++
+++        // A slider is being dragged by this finger.
+++        if let Some((slider_id, which)) = self.amber_slider
+++            && slider_id == id
+++        {
+++            let mut track = None;
+++            walk(&g, self.amber_scroll, |row, r| {
+++                if let Row::Slider(found) = row
+++                    && *found == which
+++                {
+++                    track = Some([r[0] + 14.0, r[2] - 28.0]);
+++                }
+++            });
+++            if matches!(phase, TouchPhase::Ended | TouchPhase::Cancelled) {
+++                self.amber_slider = None;
+++            }
+++            let action = track
+++                .and_then(|[tx, tl]| slider_action(which, (p[0] - tx) / tl.max(1.0), settings));
+++            return Some(action.unwrap_or(InGameMenuAction::Close));
+++        }
+++
+++        // A finger scrolling the content, or tapping a row.
+++        if let Some((drag_id, start_y, last_y, moved)) = self.amber_drag
+++            && drag_id == id
+++        {
+++            match phase {
+++                TouchPhase::Moved => {
+++                    let moved = moved || (p[1] - start_y).abs() > 8.0;
+++                    if moved {
+++                        self.amber_scroll =
+++                            (self.amber_scroll - (p[1] - last_y)).clamp(0.0, max_scroll);
+++                    }
+++                    self.amber_drag = Some((drag_id, start_y, p[1], moved));
+++                    return Some(InGameMenuAction::Close);
+++                }
+++                TouchPhase::Ended | TouchPhase::Cancelled => {
+++                    self.amber_drag = None;
+++                    if phase == TouchPhase::Ended && !moved && contains(g.view, p) {
+++                        return Some(self.amber_tap(&g, p));
+++                    }
+++                    return Some(InGameMenuAction::Close);
+++                }
+++                TouchPhase::Started => {}
+++            }
+++        }
+++
+++        if phase == TouchPhase::Started {
+++            if !contains(g.panel, p) || contains(g.close, p) {
+++                self.amber_sidebar_close();
+++                return Some(InGameMenuAction::Close);
+++            }
+++            if contains(g.exit, p) {
+++                if self.amber_exit_armed {
+++                    return Some(InGameMenuAction::ForceKill);
+++                }
+++                self.amber_exit_armed = true;
+++                return Some(InGameMenuAction::Close);
+++            }
+++            self.amber_exit_armed = false;
+++            if contains(g.view, p) {
+++                let mut hit = None;
+++                walk(&g, self.amber_scroll, |row, r| {
+++                    if let Row::Slider(which) = row
+++                        && contains([r[0], r[1] + 18.0, r[2], r[3] - 18.0], p)
+++                    {
+++                        hit = Some((*which, [r[0] + 14.0, r[2] - 28.0]));
+++                    }
+++                });
+++                if let Some((which, [tx, tl])) = hit {
+++                    self.amber_slider = Some((id, which));
+++                    let action = slider_action(which, (p[0] - tx) / tl.max(1.0), settings);
+++                    return Some(action.unwrap_or(InGameMenuAction::Close));
+++                }
+++                self.amber_drag = Some((id, p[1], p[1], false));
+++            }
+++        }
+++        Some(InGameMenuAction::Close)
+++    }
+++
+++    /// The action of the row tapped at `p`.
+++    fn amber_tap(&mut self, g: &Geo, p: [f32; 2]) -> InGameMenuAction {
+++        let mut action = None;
+++        let mut close = false;
+++        walk(g, self.amber_scroll, |row, r| {
+++            if !contains(r, p) {
+++                return;
+++            }
+++            match row {
+++                Row::Quick => {
+++                    let cell = r[2] / 4.0;
+++                    let i = (((p[0] - r[0]) / cell) as usize).min(3);
+++                    action = Some(match i {
+++                        0 => InGameMenuAction::OpenKeyboard,
+++                        1 => InGameMenuAction::ToggleVirtualMouse,
+++                        2 => {
+++                            close = true;
+++                            InGameMenuAction::OpenControlEditor
+++                        }
+++                        _ => InGameMenuAction::OpenLogs,
+++                    });
+++                }
+++                Row::Toggle(tg) => action = Some(toggle_action(*tg)),
+++                Row::Keys(line) => {
+++                    let cell = (r[2] - 8.0) / 3.0;
+++                    let col = (((p[0] - r[0]) / (cell + 4.0)) as usize).min(2);
+++                    action = Some(InGameMenuAction::TriggerKey(KEYS[*line][col].1));
+++                }
+++                _ => {}
+++            }
+++        });
+++        if close {
+++            self.amber_sidebar_close();
+++        }
+++        action.unwrap_or(InGameMenuAction::Close)
+++    }
+++}
++diff --git a/crates/horizon-client/src/android_control_ui.rs b/crates/horizon-client/src/android_control_ui.rs
++index f275637..427a0fe 100644
++--- a/crates/horizon-client/src/android_control_ui.rs
+++++ b/crates/horizon-client/src/android_control_ui.rs
++@@ -80,6 +80,14 @@ pub struct TouchUi {
++     pointer_drag: Option<u64>,
++     held_keys: BTreeMap<u64, KeyCode>,
++     pub f3_latched: bool,
+++    /// AmberLauncher sidebar (android_amber_sidebar.rs): scroll offset of its content.
+++    pub amber_scroll: f32,
+++    /// The finger that scrolls or taps the sidebar: `(touch id, start y, last y, moved)`.
+++    pub amber_drag: Option<(u64, f32, f32, bool)>,
+++    /// The sidebar slider a finger is dragging.
+++    pub amber_slider: Option<(u64, crate::android_amber_sidebar::Slider)>,
+++    /// The sidebar's exit button was tapped once; a second tap exits.
+++    pub amber_exit_armed: bool,
++ }
++ 
++ impl Default for TouchUi {
++@@ -129,6 +137,10 @@ impl Default for TouchUi {
++             pointer_drag: None,
++             held_keys: BTreeMap::new(),
++             f3_latched: false,
+++            amber_scroll: 0.0,
+++            amber_drag: None,
+++            amber_slider: None,
+++            amber_exit_armed: false,
++         }
++     }
++ }
++@@ -1751,7 +1763,7 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
++ }
++ 
++ impl TouchUi {
++-    fn step_animations(&self) -> (f32, f32) {
+++    pub(crate) fn step_animations(&self) -> (f32, f32) {
++         let open_target = if self.floating_menu { 1.0 } else { 0.0 };
++         if crate::android_control_theme::motion::game_animations_disabled()
++             || crate::android_control_theme::motion::reduced_motion()
++@@ -1796,6 +1808,10 @@ impl TouchUi {
++         p_gui: [f32; 2],
++         settings: &mut crate::android_controls::Settings,
++     ) -> Option<InGameMenuAction> {
+++        // AmberLauncher: the sidebar answers the touches while it is open; nothing of the hub is reachable.
+++        if crate::android_amber_sidebar::active() {
+++            return self.amber_sidebar_touch(b, a, id, phase, p_gui, settings);
+++        }
++         use crate::android_controls::ControlStyle;
++         self.goy_mode = settings.control_style == ControlStyle::GoyControl;
++         if !settings.show_control_hub {
++@@ -2760,6 +2776,11 @@ impl TouchUi {
++         a: &HudAtlas,
++         settings: &crate::android_controls::Settings,
++     ) {
+++        // AmberLauncher: Amber's sidebar takes the place of the hub (no three-line button, no tabbed modal).
+++        if crate::android_amber_sidebar::active() {
+++            self.draw_amber_sidebar(b, a, settings);
+++            return;
+++        }
++         use crate::android_control_theme::{Face, Icon, Ui, color};
++         use crate::android_controls::ControlStyle;
++         if !settings.show_control_hub {
++diff --git a/crates/horizon-client/src/client_lib.rs b/crates/horizon-client/src/client_lib.rs
++index 29c08a4..3eb6a1c 100644
++--- a/crates/horizon-client/src/client_lib.rs
+++++ b/crates/horizon-client/src/client_lib.rs
++@@ -36,6 +36,8 @@ pub mod android_control_keyboard;
++ pub mod android_control_text;
++ pub mod android_control_theme;
++ pub mod android_control_ui;
+++// AmberLauncher: Amber's in-game menu, drawn by the engine (patch amber5/0007).
+++pub mod android_amber_sidebar;
++ pub mod beehive;
++ pub mod benchmark;
++ pub mod block_entity_item;
++diff --git a/crates/horizon-client/src/game/mobile_controls.rs b/crates/horizon-client/src/game/mobile_controls.rs
++index 08f8f1b..e0c4d5e 100644
++--- a/crates/horizon-client/src/game/mobile_controls.rs
+++++ b/crates/horizon-client/src/game/mobile_controls.rs
++@@ -210,7 +210,8 @@ impl Game<'_> {
++             self.amber_pump();
++             return;
++         }
++-        self.mobile.ui.hub_visible = self.mobile.controls.settings.show_control_hub;
+++        self.mobile.ui.hub_visible = self.mobile.controls.settings.show_control_hub
+++            && !horizon_client::android_amber_sidebar::active();
++         self.mobile.ui.utility_offset_y = if self.screen == Screen::Playing
++             && horizon_client::accounts::in_game()
++             && self
++@@ -900,6 +901,13 @@ impl Game<'_> {
++         if name == "mouse.look" {
++             return;
++         }
+++        // AmberLauncher: Amber's MENU button opens (or closes) the sidebar.
+++        if name == "amber.menu" {
+++            if down && horizon_client::android_amber_sidebar::active() {
+++                self.mobile.ui.amber_sidebar_toggle();
+++            }
+++            return;
+++        }
++         if name == "mouse.virtual.toggle" {
++             if down {
++                 if !self.mobile.controls.settings.virtual_mouse_enabled {
+# FIN part=1/1 files=5

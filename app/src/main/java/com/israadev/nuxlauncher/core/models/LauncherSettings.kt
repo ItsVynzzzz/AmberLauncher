@@ -37,6 +37,10 @@ data class LauncherSettings(
     val discordRpcLauncherEnabled: Boolean = false,
     // Alamat server multiplayer yang sedang dimainkan ikut tampil di Discord (loader Java). Bawaan MATI.
     val discordRpcShowServer: Boolean = false,
+    // Nama instance ikut tampil di Discord (bisa berisi nama pribadi, jadi bawaan MATI).
+    val discordRpcShowInstance: Boolean = false,
+    // Bila alamat server tampil: ikon server jadi gambar besar di profil Discord. Bawaan NYALA (tak berpengaruh bila server tak tampil).
+    val discordRpcServerIcon: Boolean = true,
     // Eksperimental, bawaan mati. Bila modnya terpasang dan tersambung, sentuhan juga diteruskan ke mod
     // sementara tombol dan mouse virtual launcher tetap aktif. Namanya sengaja baru supaya nilai "aktif"
     // dari versi sebelumnya tidak terbawa.

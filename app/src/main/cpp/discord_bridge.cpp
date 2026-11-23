@@ -110,20 +110,40 @@ Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeInit(JNIEnv*, jobject,
     return JNI_FALSE;
 }
 
-// details/state: teks UTF-8 (kosong = tidak diisi). startMs <= 0 = tanpa penghitung waktu.
+// Semua teks UTF-8 (kosong = tidak diisi). startMs <= 0 = tanpa penghitung waktu. Gambar berupa URL https atau
+// kunci aset di Developer Portal; teks gambar adalah tooltip-nya.
 JNIEXPORT jboolean JNICALL
 Java_com_israadev_nuxlauncher_discord_NativeDiscord_nativeUpdate(JNIEnv* env, jobject, jbyteArray details,
-                                                                 jbyteArray state, jlong startMs) {
+                                                                 jbyteArray state, jlong startMs,
+                                                                 jbyteArray largeImage, jbyteArray largeText,
+                                                                 jbyteArray smallImage, jbyteArray smallText) {
     if (!g_client) return JNI_FALSE;
     try {
         const std::string detailsText = BytesToString(env, details);
         const std::string stateText = BytesToString(env, state);
+        const std::string largeImageText = BytesToString(env, largeImage);
+        const std::string largeTextText = BytesToString(env, largeText);
+        const std::string smallImageText = BytesToString(env, smallImage);
+        const std::string smallTextText = BytesToString(env, smallText);
 
         discordpp::Activity activity;
         activity.SetType(discordpp::ActivityTypes::Playing);
         activity.SetName(kActivityName);
         if (!detailsText.empty()) activity.SetDetails(detailsText);
         if (!stateText.empty()) activity.SetState(stateText);
+
+        if (!largeImageText.empty() || !smallImageText.empty()) {
+            discordpp::ActivityAssets assets;
+            if (!largeImageText.empty()) {
+                assets.SetLargeImage(largeImageText);
+                if (!largeTextText.empty()) assets.SetLargeText(largeTextText);
+            }
+            if (!smallImageText.empty()) {
+                assets.SetSmallImage(smallImageText);
+                if (!smallTextText.empty()) assets.SetSmallText(smallTextText);
+            }
+            activity.SetAssets(assets);
+        }
 
         if (startMs > 0) {
             discordpp::ActivityTimestamps timestamps;

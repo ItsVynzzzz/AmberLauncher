@@ -151,6 +151,8 @@ fun SettingsScreen(
     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
     var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
     var discordRpcShowServer by remember(currentSettings.discordRpcShowServer) { mutableStateOf(currentSettings.discordRpcShowServer) }
+    var discordRpcShowInstance by remember(currentSettings.discordRpcShowInstance) { mutableStateOf(currentSettings.discordRpcShowInstance) }
+    var discordRpcServerIcon by remember(currentSettings.discordRpcServerIcon) { mutableStateOf(currentSettings.discordRpcServerIcon) }
     var touchControllerEnabled by remember(currentSettings.touchControllerEnabled) { mutableStateOf(currentSettings.touchControllerEnabled) }
     var mouseSizeDp by remember(currentSettings.mouseSizeDp) { mutableIntStateOf(currentSettings.mouseSizeDp) }
     var physicalSystemPointer by remember(currentSettings.physicalMouseSystemPointer) { mutableStateOf(currentSettings.physicalMouseSystemPointer) }
@@ -228,6 +230,8 @@ fun SettingsScreen(
             discordRpcEnabled = discordRpc,
             discordRpcLauncherEnabled = discordRpcLauncher,
             discordRpcShowServer = discordRpcShowServer,
+            discordRpcShowInstance = discordRpcShowInstance,
+            discordRpcServerIcon = discordRpcServerIcon,
             touchControllerEnabled = touchControllerEnabled,
             mouseSizeDp = mouseSizeDp,
             physicalMouseSystemPointer = physicalSystemPointer,
@@ -1268,6 +1272,26 @@ fun SettingsScreen(
                                 )
                                 SettingDivider()
                                 SettingSwitchRow(
+                                    title = "Tampilkan ikon server",
+                                    desc = "Saat alamat server tampil, gambar besar di profil Discord memakai ikon server itu, dan logo AmberLauncher menjadi gambar kecil. Ikonnya diambil Discord dari layanan pihak ketiga mcsrvstat.us memakai alamat servernya; server tanpa ikon bisa menampilkan gambar bawaan layanan itu. Tidak berlaku untuk server jaringan lokal. Berlaku mulai game berikutnya.",
+                                    checked = discordRpcServerIcon,
+                                    onCheckedChange = {
+                                        discordRpcServerIcon = it
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
+                                SettingSwitchRow(
+                                    title = "Tampilkan nama instance",
+                                    desc = "Menampilkan nama instance yang kamu mainkan di profil Discord. Nama instance bisa berisi nama pribadi, jadi bawaannya mati. Berlaku mulai game berikutnya.",
+                                    checked = discordRpcShowInstance,
+                                    onCheckedChange = {
+                                        discordRpcShowInstance = it
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
+                                SettingSwitchRow(
                                     title = "Perlihatkan aktivitas di launcher",
                                     desc = "Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.",
                                     checked = discordRpcLauncher,
@@ -1332,6 +1356,8 @@ fun SettingsScreen(
                     discordRpc = reset.discordRpcEnabled
                     discordRpcLauncher = reset.discordRpcLauncherEnabled
                     discordRpcShowServer = reset.discordRpcShowServer
+                    discordRpcShowInstance = reset.discordRpcShowInstance
+                    discordRpcServerIcon = reset.discordRpcServerIcon
                     touchControllerEnabled = reset.touchControllerEnabled
                     mouseSizeDp = reset.mouseSizeDp
                     physicalSystemPointer = reset.physicalMouseSystemPointer

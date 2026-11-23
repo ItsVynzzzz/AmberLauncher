@@ -8,6 +8,8 @@ import android.os.Process
 import android.os.SystemClock
 import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.crash.LauncherLog
+import com.israadev.nuxlauncher.ui.i18n.Tr
+import java.util.Locale
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -17,7 +19,10 @@ import java.util.concurrent.TimeUnit
  */
 object NativeDiscord {
     external fun nativeInit(appId: Long): Boolean
-    external fun nativeUpdate(details: ByteArray, state: ByteArray, startMs: Long): Boolean
+    external fun nativeUpdate(
+        details: ByteArray, state: ByteArray, startMs: Long,
+        largeImage: ByteArray, largeText: ByteArray, smallImage: ByteArray, smallText: ByteArray
+    ): Boolean
     external fun nativeClear()
     external fun nativeTick()
     external fun nativeShutdown()
@@ -38,8 +43,11 @@ private object NativeBackend : PresenceBackend {
         return NativeDiscord.nativeInit(appId)
     }
 
-    override fun update(details: String, state: String, startMs: Long): Boolean =
-        NativeDiscord.nativeUpdate(details.toByteArray(Charsets.UTF_8), state.toByteArray(Charsets.UTF_8), startMs)
+    override fun update(info: PresenceInfo): Boolean = NativeDiscord.nativeUpdate(
+        info.details.toByteArray(Charsets.UTF_8), info.state.toByteArray(Charsets.UTF_8), info.startMs,
+        info.largeImage.toByteArray(Charsets.UTF_8), info.largeText.toByteArray(Charsets.UTF_8),
+        info.smallImage.toByteArray(Charsets.UTF_8), info.smallText.toByteArray(Charsets.UTF_8)
+    )
 
     override fun clear() = NativeDiscord.nativeClear()
     override fun tick() = NativeDiscord.nativeTick()
@@ -94,13 +102,19 @@ object DiscordPresence {
     private var worker: Worker? = null
 
     /** Game Java yang sedang berjalan; dipakai untuk menyusun ulang presence saat server berubah. */
-    private class GameInfo(val mcVersion: String, val loader: String, val startMs: Long, val showServer: Boolean)
+    private class GameInfo(
+        val mcVersion: String,
+        val loader: String,
+        val instanceName: String,
+        val options: DiscordOptions,
+        val startMs: Long
+    )
 
     @Volatile
     private var game: GameInfo? = null
 
     // Hanya disentuh dari thread log game.
-    private var server: String? = null
+    private var serverState: ServerState = ServerState.None
 
     /**
      * Dipanggil dari activity yang menjalankan game. SDK perlu Activity untuk mengenali aplikasi ini, dan kelas
@@ -129,16 +143,22 @@ object DiscordPresence {
     }
 
     /**
-     * Dipanggil GameActivity (loader Java) saat game dibuka. [showServer] true bila pemain mengizinkan alamat
-     * server tampil; alamatnya dibaca dari log game lewat [onGameLogLine].
+     * Dipanggil GameActivity (loader Java) saat game dibuka. [options] adalah pilihan pemain (alamat server, nama
+     * instance, ikon server); alamat server dibaca dari log game lewat [onGameLogLine].
      */
-    fun startGame(activity: Activity, mcVersion: String, loader: String, showServer: Boolean) {
+    fun startGame(activity: Activity, mcVersion: String, loader: String, instanceName: String, options: DiscordOptions) {
         attach(activity)
-        val startMs = System.currentTimeMillis()
-        game = GameInfo(mcVersion, loader, startMs, showServer)
-        server = null
-        update(gamePresence(mcVersion, loader, startMs))
+        val g = GameInfo(mcVersion, loader, instanceName, options, System.currentTimeMillis())
+        game = g
+        serverState = ServerState.None
+        update(buildGame(g, ServerState.None))
     }
+
+    /** Bahasa teks presence: pilihan bahasa di aplikasi, atau bahasa HP bila "Ikuti sistem". */
+    internal fun languageNow(): String = PresenceText.resolve(Tr.choice, Locale.getDefault())
+
+    private fun buildGame(g: GameInfo, server: ServerState): PresenceInfo =
+        PresenceComposer.game(g.mcVersion, g.loader, g.instanceName, g.options, languageNow(), server, g.startMs)
 
     /**
      * Dipanggil untuk setiap baris log game (dari thread log). Hampir selalu langsung kembali: tanpa game aktif
@@ -146,16 +166,16 @@ object DiscordPresence {
      */
     fun onGameLogLine(text: String) {
         val g = game ?: return
-        if (!g.showServer) return
-        val label = when (val event = ServerLog.parse(text)) {
-            is ServerEvent.Joined -> event.label
-            ServerEvent.Left -> null
+        val next = when (val event = ServerLog.parse(text)) {
+            is ServerEvent.Joined -> if (g.options.showServer) ServerState.Server(event.display) else ServerState.None
+            ServerEvent.Singleplayer -> ServerState.Singleplayer
+            ServerEvent.Left -> ServerState.None
             null -> return
         }
-        if (label == server) return
-        server = label
-        LauncherLog.i(TAG, if (label != null) "Server terdeteksi dari log game" else "Server dilepas (singleplayer atau terputus)")
-        update(gamePresence(g.mcVersion, g.loader, g.startMs, label))
+        if (next == serverState) return
+        serverState = next
+        LauncherLog.i(TAG, "Keadaan game berubah: ${next.javaClass.simpleName}")
+        update(buildGame(g, next))
     }
 
     /** Menampilkan [info] di profil Discord. null = hapus presence. */
@@ -216,32 +236,10 @@ object DiscordPresence {
             }
             LauncherLog.i(TAG, "Mesin Rust: menyalakan presence")
             attach(activity)
-            update(gamePresence(mcVersion, "horizon", System.currentTimeMillis()))
+            update(PresenceComposer.game(mcVersion, "horizon", "", DiscordOptions(), languageNow(), ServerState.None, System.currentTimeMillis()))
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Mesin Rust: presence gagal dinyalakan: ${e.message}", e)
         }
-    }
-
-    /**
-     * Teks presence untuk game yang sedang berjalan, SELURUHNYA bahasa Inggris karena tampil di profil Discord
-     * orang lain. Nama instance dan akun pemain sengaja tidak ikut. Tanpa [server]: "Minecraft 1.21.11" dan
-     * loader. Dengan [server]: "Playing on mc.contoh.com" dan "Minecraft 1.21.11 · Fabric".
-     */
-    fun gamePresence(mcVersion: String, loader: String, startMs: Long, server: String? = null): PresenceInfo {
-        val version = mcVersion.trim().takeIf { it.isNotEmpty() && !it.equals("Unknown", ignoreCase = true) }
-        val minecraft = if (version != null) "Minecraft $version" else "Minecraft"
-        val loaderLabel = when (loader.trim().lowercase()) {
-            "", "vanilla" -> "Vanilla"
-            "fabric" -> "Fabric"
-            "forge" -> "Forge"
-            "neoforge", "neo_forge", "neo-forge" -> "NeoForge"
-            "quilt" -> "Quilt"
-            "horizon" -> "Horizon (Rust)"
-            "starling" -> "Starling (Rust)"
-            else -> loader.trim().replaceFirstChar { it.uppercase() }
-        }
-        if (server != null) return PresenceInfo("Playing on $server", "$minecraft · $loaderLabel", startMs)
-        return PresenceInfo(minecraft, loaderLabel, startMs)
     }
 
     private fun isDiscordInstalled(activity: Activity): Boolean = try {

@@ -1,12 +1,23 @@
 package com.israadev.nuxlauncher.discord
 
-/** Isi Rich Presence yang ditampilkan di profil Discord. [startMs] <= 0 berarti tanpa penghitung waktu. */
-data class PresenceInfo(val details: String, val state: String, val startMs: Long)
+/**
+ * Isi Rich Presence yang ditampilkan di profil Discord. [startMs] <= 0 berarti tanpa penghitung waktu.
+ * Teks kosong = tidak diisi. Gambar berupa URL (https) atau kunci aset di Developer Portal.
+ */
+data class PresenceInfo(
+    val details: String,
+    val state: String,
+    val startMs: Long,
+    val largeImage: String = "",
+    val largeText: String = "",
+    val smallImage: String = "",
+    val smallText: String = ""
+)
 
 /** Pemisah antara logika di bawah dan kode native, supaya logikanya bisa diuji tanpa HP. */
 internal interface PresenceBackend {
     fun init(appId: Long): Boolean
-    fun update(details: String, state: String, startMs: Long): Boolean
+    fun update(info: PresenceInfo): Boolean
     fun clear()
     fun tick()
     fun shutdown()
@@ -162,7 +173,7 @@ internal class PresenceEngine(
             if (info == null) {
                 backend.clear()
             } else {
-                val sent = backend.update(fit(info.details), fit(info.state), info.startMs)
+                val sent = backend.update(normalize(info))
                 if (!sent) warn("Presence tidak terkirim ke SDK", null)
             }
             lastSentAt = now
@@ -206,11 +217,23 @@ internal class PresenceEngine(
         }
     }
 
-    /** Discord menerima teks 2 sampai 128 karakter. */
+    /** Menyesuaikan isi dengan batas Discord: teks 2 sampai 128 karakter (kosong = tidak diisi), gambar paling panjang 300. */
+    private fun normalize(info: PresenceInfo): PresenceInfo = PresenceInfo(
+        details = fit(info.details).ifEmpty { "Minecraft" },
+        state = fit(info.state),
+        startMs = info.startMs,
+        largeImage = image(info.largeImage),
+        largeText = fit(info.largeText),
+        smallImage = image(info.smallImage),
+        smallText = fit(info.smallText)
+    )
+
     private fun fit(text: String): String {
         var t = text.replace('\n', ' ').trim()
         if (t.length > 100) t = t.take(100)
         if (t.isNotEmpty() && Character.isHighSurrogate(t.last())) t = t.dropLast(1)
-        return if (t.length < 2) "Minecraft" else t
+        return if (t.length < 2) "" else t
     }
+
+    private fun image(url: String): String = url.trim().takeIf { it.length in 1..300 } ?: ""
 }

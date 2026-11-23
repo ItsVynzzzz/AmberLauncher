@@ -36,18 +36,34 @@ depan (`discord/DiscordLauncherPresence.kt`, proses utama). Saat layar launcher 
 dibuka), presence dihapus dan klien SDK dilepas dengan segera, supaya tidak bentrok dengan presence game. Bila proses
 `:game` atau `:horizon` masih hidup di latar, presence launcher dilewati.
 
-## Bahasa dan server
+## Tampilan, bahasa, dan gambar
 
-Semua teks yang tampil di profil Discord memakai bahasa Inggris (orang lain yang melihatnya), mis. "Minecraft 1.21.11" /
-"Fabric", dan "Getting ready to play" / "In the launcher". Catatan di log launcher tetap bahasa Indonesia.
+Isi dan susunan teks dirakit di `discord/DiscordPresenceComposer.kt` (tanpa Android, jadi seluruh kombinasinya diuji):
 
-Toggle "Tampilkan server yang dimainkan" (mati bawaan, hanya loader Java) menambahkan alamat server multiplayer:
-"Playing on mc.contoh.com" / "Minecraft 1.21.11 · Fabric". Launcher tidak memilihkan server (pemain memilihnya di menu
-Minecraft), jadi alamatnya dibaca dari baris log game (`discord/DiscordServerLog.kt`): "Connecting to host, port" untuk
-masuk, serta "Starting integrated minecraft server" dan "Client disconnected with reason" untuk keluar. Minecraft tidak
-mencatat saat pemain keluar dari server ke menu dengan sengaja, jadi alamat terakhir bisa bertahan sampai pemain masuk
-server lain atau membuka dunia singleplayer. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan.
-Mesin Rust belum mendukung ini.
+- Baris atas: nama instance (hanya bila "Tampilkan nama instance" menyala) atau "Minecraft 1.21.11 · Fabric".
+- Baris bawah: "On server: mc.contoh.com" (bila "Tampilkan server yang dimainkan" menyala), "Singleplayer", atau, bila nama
+  instance tampil, "Minecraft 1.21.11 · Fabric".
+- Gambar besar: ikon server (bila alamat server tampil dan "Tampilkan ikon server" menyala), dengan logo AmberLauncher
+  sebagai gambar kecil. Selain itu logo AmberLauncher jadi gambar besar.
+- Waktu bermain dihitung Discord dari waktu mulai.
+
+**Bahasa.** Teks mengikuti bahasa pemain, karena tampil di profil Discord orang lain: bahasa yang dipilih di Pengaturan >
+Tampilan, atau bahasa HP bila "Ikuti sistem". Ada 21 bahasa di `discord/DiscordPresenceText.kt`; bahasa lain jatuh ke bahasa
+Inggris. Terjemahan ditulis oleh AI dan belum ditinjau penutur asli, jadi perbaiki langsung di tabel itu bila ada yang janggal.
+Nama game, versi, dan loader tidak diterjemahkan. Catatan di log launcher tetap bahasa Indonesia.
+
+**Gambar lewat URL, bukan aset.** SDK menerima URL gambar, jadi tidak ada yang perlu diunggah di Developer Portal:
+logo diambil dari repo publik (`PresenceComposer.LOGO_URL`, jangan pindahkan berkas ikonnya tanpa mengubah konstanta itu), dan ikon
+server dari layanan pihak ketiga mcsrvstat.us (`PresenceComposer.SERVER_ICON_URL`) memakai alamat servernya. Discord yang
+mengambil gambarnya, bukan launcher. Server tanpa ikon bisa menampilkan gambar bawaan layanan itu. Bila layanan itu mati atau
+berubah, gambar server tidak muncul tetapi teksnya tetap tampil.
+
+**Server.** Launcher tidak memilihkan server (pemain memilihnya di menu Minecraft), jadi alamatnya dibaca dari baris log game
+(`discord/DiscordServerLog.kt`): "Connecting to host, port" untuk masuk, "Starting integrated minecraft server" untuk
+singleplayer, serta "Client disconnected with reason" dan "Stopping singleplayer server" untuk keluar. Minecraft tidak
+mencatat saat pemain keluar dari server ke menu dengan sengaja, jadi alamat terakhir bisa bertahan sampai pemain masuk server
+lain atau membuka dunia singleplayer. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan atau dipakai untuk
+ikon. Mesin Rust belum mendukung server dan nama instance.
 
 ## Melacak presence yang tidak muncul
 

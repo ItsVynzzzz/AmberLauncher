@@ -2,10 +2,13 @@ package com.israadev.nuxlauncher.discord
 
 /** Hasil membaca satu baris log game untuk Rich Presence. */
 internal sealed class ServerEvent {
-    /** Pemain mulai tersambung ke server multiplayer; [label] siap ditampilkan. */
-    data class Joined(val label: String) : ServerEvent()
+    /** Pemain mulai tersambung ke server multiplayer. [display] null = alamatnya jaringan lokal (tidak ditampilkan). */
+    data class Joined(val display: String?) : ServerEvent()
 
-    /** Pemain di dunia singleplayer atau sudah terputus dari server. */
+    /** Pemain membuka dunia singleplayer. */
+    object Singleplayer : ServerEvent()
+
+    /** Pemain terputus dari server atau menutup dunia singleplayer. */
     object Left : ServerEvent()
 }
 
@@ -18,8 +21,6 @@ internal sealed class ServerEvent {
  * oleh server. Alamat jaringan lokal (LAN, localhost, IPv6) tidak pernah ditampilkan.
  */
 internal object ServerLog {
-    const val PRIVATE_LABEL = "a private server"
-
     private const val CONNECTING = "Connecting to "
     private const val DEFAULT_PORT = 25565
     private val connectPattern = Regex("""Connecting to ([A-Za-z0-9._\-\[\]:]{1,100}), (\d{1,5})\s*$""")
@@ -34,19 +35,17 @@ internal object ServerLog {
             if (port !in 1..65535) return null
             return ServerEvent.Joined(label(m.groupValues[1], port))
         }
-        if (text.contains("Starting integrated minecraft server") ||
-            text.contains("Client disconnected with reason") ||
-            text.contains("Stopping singleplayer server")
-        ) {
+        if (text.contains("Starting integrated minecraft server")) return ServerEvent.Singleplayer
+        if (text.contains("Client disconnected with reason") || text.contains("Stopping singleplayer server")) {
             return ServerEvent.Left
         }
         return null
     }
 
-    /** Alamat yang aman ditampilkan, atau [PRIVATE_LABEL] bila alamatnya jaringan lokal. Port bawaan disembunyikan. */
-    fun label(host: String, port: Int): String {
+    /** Alamat yang aman ditampilkan, atau null bila alamatnya jaringan lokal. Port bawaan disembunyikan. */
+    fun label(host: String, port: Int): String? {
         val h = host.lowercase()
-        if (isPrivate(h)) return PRIVATE_LABEL
+        if (isPrivate(h)) return null
         return if (port == DEFAULT_PORT) h else "$h:$port"
     }
 

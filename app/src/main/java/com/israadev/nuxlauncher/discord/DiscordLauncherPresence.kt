@@ -33,7 +33,7 @@ object DiscordLauncherPresence {
             }
             if (sessionStartMs == 0L) sessionStartMs = System.currentTimeMillis()
             DiscordPresence.attach(activity)
-            DiscordPresence.update(PresenceInfo("Getting ready to play", "In the launcher", sessionStartMs))
+            DiscordPresence.update(PresenceComposer.launcher(DiscordPresence.languageNow(), sessionStartMs))
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Presence launcher gagal: ${e.message}", e)
         }

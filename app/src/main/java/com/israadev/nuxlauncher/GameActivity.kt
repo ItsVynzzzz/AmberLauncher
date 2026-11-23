@@ -4,6 +4,7 @@ import android.content.Context
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.crash.GameLogArchive
 import com.israadev.nuxlauncher.core.renderer.NuxRendererRegistry
+import com.israadev.nuxlauncher.discord.DiscordOptions
 import com.israadev.nuxlauncher.discord.DiscordPresence
 import com.israadev.nuxlauncher.ui.activities.ErrorActivity
 import com.israadev.nuxlauncher.ui.components.GameLoadingOverlay
@@ -618,7 +619,11 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         // Discord Rich Presence (opsional): hanya pada build yang membawa SDK dan bila pemain menyalakannya.
         // Tanpa aplikasi Discord di HP ini, attach() langsung menyerah dan tidak ada yang berjalan.
         if (BuildConfig.HAS_DISCORD_SDK && SettingsManager.settings.value.discordRpcEnabled) {
-            DiscordPresence.startGame(this, mcVersion, loader, SettingsManager.settings.value.discordRpcShowServer)
+            val rpc = SettingsManager.settings.value
+            DiscordPresence.startGame(
+                this, mcVersion, loader, instanceName,
+                DiscordOptions(rpc.discordRpcShowServer, rpc.discordRpcShowInstance, rpc.discordRpcServerIcon)
+            )
         }
 
         // Setup real-time native LoggerBridge

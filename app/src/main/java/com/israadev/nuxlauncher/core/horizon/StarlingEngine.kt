@@ -316,10 +316,12 @@ object StarlingEngine {
                 amberControls(),
                 ControlLayoutManager.presetButtons(context, instance.controlPresetId),
                 engineDir = engineHome(context),
-                macros = false
+                macros = false,
+                // Tombol MENU Amber membuka sidebar Amber yang digambar mesin (patch amber5/0007), bukan Esc.
+                amberMenu = amberControls()
             )
             beginLogSession(context, instance)
-            writeLaunchFiles(context, account)
+            writeLaunchFiles(context, instance, account)
             if (firstRun) {
                 Toast.makeText(
                     context,
@@ -368,7 +370,7 @@ object StarlingEngine {
     /** Tombol layar Starling mengikuti tata letak Amber: pengaturan yang sama dengan "Kontrol Amber" mesin Rust (bawaan mati). */
     private fun amberControls(): Boolean = SettingsManager.settings.value.rustAmberControls
 
-    private fun writeLaunchFiles(context: Context, account: UserAccount) {
+    private fun writeLaunchFiles(context: Context, instance: Instance, account: UserAccount) {
         val dir = engineHome(context)
         if (!dir.isDirectory && !dir.mkdirs()) throw IOException("Folder data mesin tidak bisa dibuat")
         val microsoft = account.safeAccountType == "microsoft"
@@ -378,6 +380,13 @@ object StarlingEngine {
         // AMBER_CONTROLS (patch amber5/0005, kontrol Amber di jendela terpisah di atas game) sengaja tidak ditulis lagi:
         // jendela tambahan itu membebani GPU dan membuat tombol dibuat ulang tiap menu dibuka/ditutup. Tombol Amber kini
         // digambar mesin sendiri lewat horizon-touch.json (lihat start).
+        // Sidebar Amber di dalam mesin (patch amber5/0007): menggantikan tombol tiga garis dan menu cepat mesin. Menyala
+        // bersama "Kontrol Amber". Nama instance dan versi tampil di bawah judul "Menu".
+        if (amberControls()) {
+            args.append("AMBER_SIDEBAR=1\n")
+            args.append("AMBER_INSTANCE=").append(instance.name.replace('\n', ' ').replace('\r', ' ').trim()).append('\n')
+            args.append("AMBER_MC_VERSION=").append(SUPPORTED_MC_VERSION).append('\n')
+        }
         // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
         if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
         if (microsoft) {

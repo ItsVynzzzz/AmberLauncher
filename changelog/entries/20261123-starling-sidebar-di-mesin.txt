@@ -1,0 +1,4 @@
+[id]
++ Starling kini punya sidebar Amber yang digambar langsung oleh mesin, tanpa jendela atau lapisan tambahan di atas game. Tombol MENU Amber membuka panel di sisi kanan: aksi cepat (Keyboard, Pointer, Edit tombol, Log), resolusi 3D, sensitivitas kamera, ukuran tombol, beberapa saklar kontrol, pintasan tombol, dan tombol Keluar. Tombol tiga garis bawaan mesin tidak dipakai lagi saat Kontrol Amber menyala.
+[en]
++ Starling now has an Amber sidebar drawn directly by the engine, with no extra window or layer on top of the game. Amber's MENU button opens a panel on the right: quick actions (Keyboard, Pointer, Edit buttons, Log), 3D resolution, camera sensitivity, button size, a few control switches, key shortcuts and an Exit button. The engine's own three-line button is no longer used while Amber controls are on.

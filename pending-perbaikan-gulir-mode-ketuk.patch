@@ -1,0 +1,61 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+index c6c383d..920697f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/control/SwitchableMouseLayout.kt
+@@ -217,6 +217,11 @@ fun SwitchableMouseLayout(
+                     val forwarder = TouchForwarder()
+                     // Status kursor terkunci pada kejadian sebelumnya, untuk mendeteksi pergantian mode.
+                     var lastCaptured = currentCursorMode == CURSOR_DISABLED
++                    // Mode Ketuk di menu: geseran jari ke atas/bawah dikumpulkan di sini, lalu dikirim ke game sebagai
++                    // roda mouse (satu langkah tiap scrollStepPx). Tanpa ini daftar (mod, dunia, pengaturan) tidak bisa
++                    // digulir dengan jari, karena game hanya mengenal roda mouse dan tombol kiri yang ditahan.
++                    var scrollAccum = 0f
++                    val scrollStepPx = viewConfiguration.touchSlop * 3f
+ 
+                     awaitPointerEventScope {
+                         while (true) {
+@@ -323,6 +328,7 @@ fun SwitchableMouseLayout(
+                                     startPosition = downEvent.position
+                                     isDragging = false
+                                     longPressTriggered = false
++                                    scrollAccum = 0f
+ 
+                                     val capturedNow = currentCursorMode == CURSOR_DISABLED
+                                     hotbarSlot = if (capturedNow) {
+@@ -400,6 +406,25 @@ fun SwitchableMouseLayout(
+                                         } else {
+                                             currentOnCursorPositionChange(moveChange.position)
+                                             sendScaledCursor(moveChange.position.x, moveChange.position.y)
++                                            // Geser jari = gulir daftar (isi daftar mengikuti jari). Tidak berlaku saat jari
++                                            // menahan tombol kiri (tekan-tahan), supaya scrollbar putih dan slider tetap
++                                            // bisa diseret seperti biasa.
++                                            if (isDragging && !longPressTriggered) {
++                                                scrollAccum += if (crossedSlop) {
++                                                    moveChange.position.y - startPosition.y
++                                                } else {
++                                                    moveChange.positionChange().y
++                                                }
++                                                while (scrollAccum >= scrollStepPx) {
++                                                    // Jari turun: isi daftar turun, tampilkan yang di atas.
++                                                    CallbackBridge.sendScroll(0.0, 1.0)
++                                                    scrollAccum -= scrollStepPx
++                                                }
++                                                while (scrollAccum <= -scrollStepPx) {
++                                                    CallbackBridge.sendScroll(0.0, -1.0)
++                                                    scrollAccum += scrollStepPx
++                                                }
++                                            }
+                                         }
+                                     }
+                                     moveChange.consume()
+diff --git a/changelog/entries/20261123-gulir-mode-ketuk.txt b/changelog/entries/20261123-gulir-mode-ketuk.txt
+new file mode 100644
+index 0000000..e08dc45
+--- /dev/null
++++ b/changelog/entries/20261123-gulir-mode-ketuk.txt
+@@ -0,0 +1,4 @@
++[id]
++! Mode sentuh "Ketuk": daftar di menu game (mod, dunia, pengaturan) kini bisa digulir dengan menggeser jari ke atas atau bawah. Untuk menyeret scrollbar atau slider, tekan-tahan lalu geser.
++[en]
++! "Tap" touch mode: lists in game menus (mods, worlds, settings) can now be scrolled by swiping up or down. To drag a scrollbar or slider, press and hold, then drag.
+# FIN part=1/1 files=2

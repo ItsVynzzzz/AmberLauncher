@@ -270,3 +270,225 @@ Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang dis
 Respon Ely.by tidak berisi token akses.	การตอบกลับจาก Ely.by ไม่มีโทเค็นเข้าถึง
 Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	เซสชัน Ely.by ไม่ใช้งานได้แล้ว ลบบัญชีนี้แล้วเข้าสู่ระบบใหม่
 Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	เชื่อมต่อ Ely.by ไม่ได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
+\u25b7 [Kinerja] RAM HP hampir habis (tingkat {0} dari 15): Android meminta aplikasi melepas memori	▷ [ประสิทธิภาพ] RAM ของมือถือเกือบเต็ม (ระดับ {0} จาก 15): Android ขอให้แอปคืนหน่วยความจำ
+\u25b7 [In-Game Resolution] Dinamis diperbarui ke {0}% ({1}x{2})	▷ [In-Game Resolution] อัปเดตแบบไดนามิกเป็น {0}% ({1}x{2})
+\u25b7 [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai	▷ [TouchController] เกมแสดงแล้วแต่ Mod ยังไม่เชื่อมต่อ ใช้การควบคุมที่มากับเกมไปก่อน
+\u25b7 [Layar] Meminta {0} Hz (modeId={1})	▷ [หน้าจอ] กำลังขอ {0} Hz (modeId={1})
+\u25b7 [Layar] Gagal mengunci refresh rate: {0}	▷ [หน้าจอ] ล็อกอัตรารีเฟรชไม่สำเร็จ: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: {~0}	▷ [การควบคุม] ซ่อนปุ่มบนหน้าจออัตโนมัติ: {0}
+[AmberLauncher] Menyiapkan environment JVM...	[AmberLauncher] กำลังเตรียมสภาพแวดล้อม JVM...
+[Amber Runtime] Mempersiapkan OpenJDK ({0})...	[Amber Runtime] กำลังเตรียม OpenJDK ({0})...
+[ERROR] Gagal mengekstrak OpenJDK {0}: {1}	[ERROR] แตกไฟล์ OpenJDK {0} ไม่สำเร็จ: {1}
+[ERROR] Gagal mengekstrak OpenJDK: {0}	[ERROR] แตกไฟล์ OpenJDK ไม่สำเร็จ: {0}
+[Amber Runtime] OpenJDK ({0}) siap digunakan!	[Amber Runtime] OpenJDK ({0}) พร้อมใช้งานแล้ว!
+\u25b7 [Plugin Native] dilewati - {0}	▷ [Native Plugin] ข้าม - {0}
+\u25b7 [Renderer V2 Env Warning] Gagal menginjeksi V2 env: {0}	▷ [Renderer V2 Env Warning] ฉีด V2 env ไม่สำเร็จ: {0}
+\u25b7 [MobileGlues] Config launcher dipakai: {0}	▷ [MobileGlues] ใช้ config ของตัวเปิดเกม: {0}
+\u25b7 [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya	▷ [MobileGlues Warning] เตรียม config ของตัวเปิดเกมไม่ได้ MobileGlues จึงใช้ค่าเริ่มต้นของตัวเอง
+\u25b7 [MobileGlues Warning] Config launcher dilewati: {0}	▷ [MobileGlues Warning] ข้าม config ของตัวเปิดเกม: {0}
+\u25b7 [Renderer] Minecraft {0} memeriksa glGetError: LIBGL_NOERROR dimatikan	▷ [Renderer] Minecraft {0} ตรวจสอบ glGetError: ปิด LIBGL_NOERROR แล้ว
+\u25b7 [Plugin Dependency] {0} dimuat dari {1}	▷ [Plugin Dependency] โหลด {0} จาก {1} แล้ว
+\u25b7 [Plugin Dependency Warning] {0} gagal dimuat	▷ [Plugin Dependency Warning] โหลด {0} ไม่สำเร็จ
+\u25b7 [Plugin GL Warning] {0}: dlopen gagal (dependensi tidak ditemukan?)	▷ [Plugin GL Warning] {0}: dlopen ล้มเหลว (ไม่พบ dependency?)
+\u25b7 [TouchController] Mod tersambung ({0}s setelah dimulai): sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif	▷ [TouchController] Mod เชื่อมต่อแล้ว ({0} วินาทีหลังเริ่ม): การสัมผัสถูกส่งต่อไปยัง Mod ด้วย การควบคุมที่มากับเกมยังทำงานอยู่
+\u25b7 [JNA] Memakai libjnidispatch untuk JNA {0}	▷ [JNA] ใช้ libjnidispatch สำหรับ JNA {0}
+\u25b7 [JVM] Proses 32-bit: heap maksimum dibatasi {0} MB (diminta {1} MB)	▷ [JVM] โปรเซส 32 บิต: จำกัด heap สูงสุดที่ {0} MB (ขอ {1} MB)
+\u25b7 [JVM] RAM game diminta {0} MB, RAM HP {1} MB: heap dibatasi {2} MB	▷ [JVM] RAM เกมที่ขอ {0} MB, RAM มือถือ {1} MB: จำกัด heap ที่ {2} MB
+\u25b7 [JVM] Heap awal {0} MB, maksimum {1} MB | RAM HP total {2} MB, tersedia {3} MB	▷ [JVM] Heap เริ่มต้น {0} MB สูงสุด {1} MB | RAM มือถือรวม {2} MB ว่าง {3} MB
+[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...	[Amber Engine] เริ่มรัน VMLauncher.launchJVM()...
+[Amber Engine] JVM selesai dengan kode keluar: {0}	[Amber Engine] JVM จบการทำงานด้วยรหัสออก: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh	▷ [การควบคุม] ซ่อนปุ่มบนหน้าจออัตโนมัติ: ตรวจพบเมาส์ที่เลเยอร์สัมผัส
+(dibuat ulang oleh sistem)	(สร้างใหม่โดยระบบ)
+Android meminta aplikasi melepas memori (tingkat {0})	Android ขอให้แอปคืนหน่วยความจำ (ระดับ {0})
+PAKAI	ใช้
+(salinan {0})	(สำเนา {0})
+fungsi tak dikenal	ฟังก์ชันที่ไม่รู้จัก
+karakter tak dikenal	อักขระที่ไม่รู้จัก
+kurang {0}	ขาด {0}
+diteruskan ke mod (GLFW)	ส่งต่อไปยัง Mod (GLFW)
+diteruskan ke mod (SDL)	ส่งต่อไปยัง Mod (SDL)
+Bagikan Log Crash	แชร์ล็อกแครช
+Pemasangan {0} berhenti karena galat tak terduga	การติดตั้ง {0} หยุดเพราะข้อผิดพลาดที่ไม่คาดคิด
+Pemasangan berhenti: {0}	การติดตั้งหยุด: {0}
+Mulai mengunduh {0} (Minecraft {1}, loader={2})	เริ่มดาวน์โหลด {0} (Minecraft {1}, loader={2})
+Unduhan {0} selesai	ดาวน์โหลด {0} เสร็จแล้ว
+Unduhan {0} dibatalkan	ยกเลิกการดาวน์โหลด {0} แล้ว
+Unduhan {0} gagal: {1}	ดาวน์โหลด {0} ไม่สำเร็จ: {1}
+{0} library LWJGL Mojang dilewati ({1} KiB), Amber memakai LWJGL sendiri	ข้ามไลบรารี LWJGL ของ Mojang {0} รายการ ({1} KiB) Amber ใช้ LWJGL ของตัวเอง
+Library gagal: {0}: {1}	ไลบรารีล้มเหลว: {0}: {1}
+{0} dari {1} library gagal diunduh (game bisa gagal dimulai)	ดาวน์โหลดไลบรารีไม่สำเร็จ {0} จาก {1} รายการ (เกมอาจเริ่มไม่ขึ้น)
+Aset gagal: {0}: {1}	แอสเซ็ตล้มเหลว: {0}: {1}
+{0} dari {1} aset gagal diunduh (suara atau bahasa bisa hilang di game)	ดาวน์โหลดแอสเซ็ตไม่สำเร็จ {0} จาก {1} รายการ (เสียงหรือภาษาอาจหายไปในเกม)
+Daftar aset tidak bisa diproses: {0}	ประมวลผลรายการแอสเซ็ตไม่ได้: {0}
+Gagal mengunduh library Fabric: {0}	ดาวน์โหลดไลบรารี Fabric ไม่สำเร็จ: {0}
+{0} aset belum terunduh (di bawah batas toleransi {1}); instalasi tetap dianggap selesai	ยังไม่ได้ดาวน์โหลดแอสเซ็ต {0} รายการ (ต่ำกว่าเกณฑ์ที่ยอมรับได้ {1}) ถือว่าติดตั้งเสร็จสมบูรณ์
+[{0}] Proses pemasangan tidak bisa dimulai	[{0}] เริ่มกระบวนการติดตั้งไม่ได้
+[{0}] Proses installer berhenti mendadak (kemungkinan RAM HP habis)	[{0}] กระบวนการติดตั้งหยุดกะทันหัน (RAM ของมือถืออาจหมด)
+[{0}] Waktu pemasangan habis	[{0}] การติดตั้งหมดเวลา
+Memasang {0}	กำลังติดตั้ง {0}
+[{0}] JVM keluar dengan kode {1}	[{0}] JVM ออกด้วยรหัส {1}
+Pemasangan {0} gagal	การติดตั้ง {0} ล้มเหลว
+Mengunduh installer {0} {1}...	กำลังดาวน์โหลดตัวติดตั้ง {0} {1}...
+Memasang {0} {1}...	กำลังติดตั้ง {0} {1}...
+Memasang {0} {1} ({2}/{3})...	กำลังติดตั้ง {0} {1} ({2}/{3})...
+{0} {1} terpasang	ติดตั้ง {0} {1} แล้ว
+Mengunduh library {0} ({1}/{2})...	กำลังดาวน์โหลดไลบรารี {0} ({1}/{2})...
+Sesi ketik layar ditutup: jendela game kehilangan fokus	ปิดเซสชันพิมพ์บนหน้าจอแล้ว: หน้าต่างเกมเสียโฟกัส
+Sesi ketik layar ditutup: keyboard tidak terlihat lagi	ปิดเซสชันพิมพ์บนหน้าจอแล้ว: มองไม่เห็นคีย์บอร์ดแล้ว
+Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan	ไม่สนใจการแตะ PLAY: การเตรียมครั้งก่อนยังทำงานอยู่
+Sesi Microsoft diperbarui sebelum main	รีเฟรชเซสชัน Microsoft ก่อนเล่นแล้ว
+Pembaruan sesi Microsoft gagal	รีเฟรชเซสชัน Microsoft ไม่สำเร็จ
+Persiapan selesai dalam {0} ms	เตรียมเสร็จใน {0} ms
+Persiapan {0} gagal sebelum game dimulai	เตรียม {0} ไม่สำเร็จก่อนเกมเริ่ม
+Pemanasan LWJGL dilewati: {0}	ข้ามการวอร์มอัป LWJGL: {0}
+Berkas versi {0} tidak terbaca: {1}	อ่านไฟล์เวอร์ชัน {0} ไม่ได้: {1}
+Berkas versi tidak ada: {0} (instance belum diunduh?)	ไม่พบไฟล์เวอร์ชัน: {0} (instance ยังไม่ได้ดาวน์โหลด?)
+Forge {0} hanya jalan di Java 8; {1} diganti jre-8	Forge {0} รันได้เฉพาะบน Java 8 แทนที่ {1} ด้วย jre-8 แล้ว
+Client Minecraft tidak ada: {0}	ไม่พบ Minecraft client: {0}
+Mengaktifkan Offline Yggdrasil server pada port {0} untuk {1}	กำลังเปิดเซิร์ฟเวอร์ Offline Yggdrasil ที่พอร์ต {0} สำหรับ {1}
+Memulai game: runtime={0} (terpasang={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} berkas, mainClass={6}, mod={7}	กำลังเริ่มเกม: runtime={0} (ติดตั้งแล้ว={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} ไฟล์, mainClass={6}, mods={7}
+Pemeriksaan pembaruan mod gagal: {0}	ตรวจสอบการอัปเดต Mod ไม่สำเร็จ: {0}
+Gagal memperbarui {0}: {1}	อัปเดต {0} ไม่สำเร็จ: {1}
+Gagal memperbarui catatan modpack: {0}	อัปเดตบันทึกของ modpack ไม่สำเร็จ: {0}
+Gagal inspect ZIP: {0}	ตรวจสอบ ZIP ไม่สำเร็จ: {0}
+File modpack dilewati (path/alamat tidak aman): {0}	ข้ามไฟล์ modpack (พาธ/ที่อยู่ไม่ปลอดภัย): {0}
+Gagal unduh file modpack: {0}	ดาวน์โหลดไฟล์ modpack ไม่สำเร็จ: {0}
+Isi modpack dilewati (path tidak aman): {0}	ข้ามเนื้อหา modpack (พาธไม่ปลอดภัย): {0}
+Isi arsip dilewati (path tidak aman): {0}	ข้ามเนื้อหาในไฟล์บีบอัด (พาธไม่ปลอดภัย): {0}
+Gagal menyimpan metadata modpack: {0}	บันทึกเมทาดาทาของ modpack ไม่สำเร็จ: {0}
+Gagal membaca metadata modpack: {0}	อ่านเมทาดาทาของ modpack ไม่สำเร็จ: {0}
+hanya -D yang diizinkan: {0}	อนุญาตเฉพาะ -D: {0}
+properti dikelola launcher: {0}	พร็อพเพอร์ตีที่ตัวเปิดเกมจัดการ: {0}
+{0}: dimatikan di Pengaturan	{0}: ปิดอยู่ในการตั้งค่า
+{0}: di luar rentang versi Minecraft ({1})	{0}: อยู่นอกช่วงเวอร์ชัน Minecraft ({1})
+{0}: folder pustaka tidak ada	{0}: ไม่พบโฟลเดอร์ไลบรารี
+{0}: argumen ditolak - {~1}	{0}: อาร์กิวเมนต์ถูกปฏิเสธ - {1}
+Folder config MobileGlues tidak bisa dibuat: {0}	สร้างโฟลเดอร์ config ของ MobileGlues ไม่ได้: {0}
+Config MobileGlues gagal disiapkan: {0}	เตรียม config ของ MobileGlues ไม่สำเร็จ: {0}
+config.json MobileGlues tidak bisa disimpan: {0}	บันทึก config.json ของ MobileGlues ไม่ได้: {0}
+Gagal mengambil daftar aplikasi terpasang	ดึงรายการแอปที่ติดตั้งไม่สำเร็จ
+Berhasil memuat Renderer Plugin V2 dari {0} ({1})	โหลด Renderer Plugin V2 จาก {0} ({1}) แล้ว
+Gagal mengurai fclPlugin_V2 dari {0}	แยกวิเคราะห์ fclPlugin_V2 จาก {0} ไม่สำเร็จ
+Menerapkan profil konfigurasi V2 bawaan untuk MobileGL ({0})	ใช้โปรไฟล์การกำหนดค่า V2 เริ่มต้นสำหรับ MobileGL ({0})
+Mengekstrak Java {0} (arsitektur {1}) ke {2}	กำลังแตกไฟล์ Java {0} (สถาปัตยกรรม {1}) ไปที่ {2}
+Gagal unpack universal.tar.xz: {0}	แตกไฟล์ universal.tar.xz ไม่สำเร็จ: {0}
+Gagal unpack bin-{0}.tar.xz: {1}	แตกไฟล์ bin-{0}.tar.xz ไม่สำเร็จ: {1}
+Verifikasi Java {0} tidak lengkap setelah ekstraksi	การตรวจสอบ Java {0} ไม่สมบูรณ์หลังแตกไฟล์
+Java {0} siap dipakai	Java {0} พร้อมใช้งาน
+Ekstraksi Java {0} gagal: {1}	แตกไฟล์ Java {0} ไม่สำเร็จ: {1}
+Gagal unpack200 {0}: {1}	แตกไฟล์ unpack200 {0} ไม่สำเร็จ: {1}
+Penunjuk lokasi data gagal ditulis	เขียนตัวชี้ตำแหน่งข้อมูลไม่สำเร็จ
+Gagal menyiapkan tawaran: {0}	เตรียมข้อเสนอไม่สำเร็จ: {0}
+Galat tak terduga: {0}	ข้อผิดพลาดที่ไม่คาดคิด: {0}
+Muat ulang instance gagal: {0}	โหลด instance ใหม่ไม่สำเร็จ: {0}
+Dibatalkan pengguna	ผู้ใช้ยกเลิก
+Gagal: {0} {1}	ล้มเหลว: {0} {1}
+Ruang penyimpanan	พื้นที่เก็บข้อมูล
+Penyebab:	สาเหตุ:
+Proses pemeriksa Vulkan tidak bisa dimulai: {0}	เริ่มกระบวนการตรวจสอบ Vulkan ไม่ได้: {0}
+proses pemeriksa tidak bisa dimulai	เริ่มกระบวนการตรวจสอบไม่ได้
+proses pemeriksa berhenti sebelum selesai	กระบวนการตรวจสอบหยุดก่อนเสร็จ
+pemeriksa tidak menjawab dalam {0} detik	ตัวตรวจสอบไม่ตอบกลับภายใน {0} วินาที
+Pengecekan Vulkan tidak selesai: {0}	การตรวจสอบ Vulkan ไม่เสร็จสิ้น: {0}
+HP tidak punya driver Vulkan yang bisa dibuka	มือถือไม่มีไดรเวอร์ Vulkan ที่เปิดได้
+pemeriksa tidak ada di build ini ({0})	บิลด์นี้ไม่มีตัวตรวจสอบ ({0})
+tidak ada jawaban	ไม่มีการตอบกลับ
+Pengecekan Vulkan: {0}	การตรวจสอบ Vulkan: {0}
+Launcher: game masih berjalan, presence launcher dilewati	Launcher: เกมยังทำงานอยู่ ข้าม presence ของตัวเปิดเกม
+Presence launcher gagal: {0}	presence ของตัวเปิดเกมล้มเหลว: {0}
+Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai	ไม่พบแอป Discord บนมือถือเครื่องนี้ จึงไม่ใช้ presence
+SDK Discord siap ({0})	Discord SDK พร้อมแล้ว ({0})
+SDK Discord tidak ikut di build ini	บิลด์นี้ไม่มี Discord SDK
+SDK Discord tidak bisa disiapkan: {0}	เตรียม Discord SDK ไม่สำเร็จ: {0}
+Server terdeteksi dari log game	ตรวจพบเซิร์ฟเวอร์จากล็อกเกม
+Server dilepas (singleplayer atau terputus)	ปล่อยเซิร์ฟเวอร์แล้ว (เล่นคนเดียวหรือหลุดการเชื่อมต่อ)
+Presence dilewati: SDK atau aplikasi Discord tidak tersedia	ข้าม presence: ไม่มี SDK หรือแอป Discord
+Discord RPC gagal ditutup rapi: {0}	Discord RPC ปิดไม่เรียบร้อย: {0}
+Discord RPC berhenti: klien SDK gagal dibuat	Discord RPC หยุด: สร้างไคลเอนต์ SDK ไม่สำเร็จ
+Discord RPC berhenti: {0}	Discord RPC หยุด: {0}
+Klien SDK dibuat ({0})	สร้างไคลเอนต์ SDK แล้ว ({0})
+Koneksi ke Discord terputus, presence dikirim ulang	การเชื่อมต่อกับ Discord หลุด ส่ง presence ใหม่แล้ว
+Discord RPC dihentikan: {0}	Discord RPC ถูกหยุด: {0}
+Presence tidak terkirim ke SDK	ส่ง presence ไปยัง SDK ไม่สำเร็จ
+Discord belum tersambung dalam {0} detik; SDK dilepas, coba lagi {1} menit lagi	Discord ไม่เชื่อมต่อภายใน {0} วินาที ปล่อย SDK แล้ว จะลองใหม่ในอีก {1} นาที
+Lokasi:	ตำแหน่ง:
+Salin detail	คัดลอกรายละเอียด
+Detail disalin	คัดลอกรายละเอียดแล้ว
+Launcher terasa berat	ตัวเปิดเกมรู้สึกหนัก
+Cara memasang mod	วิธีติดตั้ง Mod
+MEMORI (RAM)	หน่วยความจำ (RAM)
+Ikuti global ({0})	ตามค่าส่วนกลาง ({0})
+SKALA RESOLUSI	สเกลความละเอียด
+Ikuti global ({0}%)	ตามค่าส่วนกลาง ({0}%)
+ARGUMEN JVM TAMBAHAN	อาร์กิวเมนต์ JVM เพิ่มเติม
+Login Microsoft berhasil	เข้าสู่ระบบ Microsoft สำเร็จ
+Autentikasi Minecraft gagal: {0}	การยืนยันตัวตน Minecraft ล้มเหลว: {0}
+Otorisasi Microsoft gagal: {0}	การให้สิทธิ์ Microsoft ล้มเหลว: {0}
+MEMUAT	กำลังโหลด
+.zip (Datapack)	.zip (Datapack)
+Datapack	Datapack
+Tampilkan server yang dimainkan	แสดงเซิร์ฟเวอร์ที่กำลังเล่น
+Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.	เมื่อเล่นบนเซิร์ฟเวอร์ผู้เล่นหลายคน (loader Java) โปรไฟล์ Discord ของคุณจะแสดงที่อยู่เซิร์ฟเวอร์ เช่น Playing on mc.example.com ใครก็ตามที่เห็นโปรไฟล์ของคุณจะเห็นที่อยู่นั้น ที่อยู่ในเครือข่ายภายในจะไม่ถูกแสดงเลย ที่อยู่อ่านจากล็อกเกม: หลังจากออกจากเซิร์ฟเวอร์ด้วยตัวเอง ที่อยู่อาจค้างอยู่จนกว่าคุณจะเข้าเซิร์ฟเวอร์อื่นหรือเปิดโลกเล่นคนเดียว ใช้ร่วมกับ Discord Rich Presence ขณะเล่น มีผลตั้งแต่เกมครั้งถัดไป
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	ขณะที่ตัวเปิดเกมเปิดอยู่และคุณยังไม่ได้เริ่มเล่น โปรไฟล์ Discord ของคุณจะแสดง AmberLauncher พร้อมสถานะ Getting ready to play มีผลเมื่อเปิดตัวเปิดเกมครั้งถัดไป ใช้ร่วมกับแอป Discord ที่คุณเข้าสู่ระบบอยู่แล้ว ไม่เหมาะกับผู้ใช้ที่อายุต่ำกว่า 13 ปี
+Perlihatkan aktivitas di launcher	แสดงกิจกรรมในตัวเปิดเกม
+Bantuan	ช่วยเหลือ
+Gagal mengunduh. {~0}	ดาวน์โหลดไม่สำเร็จ {0}
+tombol controller	ปุ่มคอนโทรลเลอร์
+keyboard fisik ({0}, device={1})	คีย์บอร์ดจริง ({0}, device={1})
+gerakan controller	การเคลื่อนไหวของคอนโทรลเลอร์
+mouse fisik (gerak/klik/gulir)	เมาส์จริง (เลื่อน/คลิก/เลื่อนหน้า)
+mouse fisik (sentuhan dari sumber mouse)	เมาส์จริง (การสัมผัสจากแหล่งเมาส์)
+kombinasi {0} aksi={1} tombol={2}	คอมโบ {0} การทำงาน={1} ปุ่ม={2}
+jalur={0} sumber=0x{1} alat={2} aksi={3} tombol={4}	พาธ={0} แหล่ง=0x{1} เครื่องมือ={2} การทำงาน={3} ปุ่ม={4}
+tidak ada mouse/touchpad/trackball/stylus terdeteksi	ไม่พบเมาส์/ทัชแพด/แทร็กบอล/สไตลัส
+perangkat: {0}	อุปกรณ์: {0}
+pointer-capture jendela={0}	pointer-capture ของหน้าต่าง={0}
+pointer-capture diminta mode={0} fokusJendela={1} fokusView={2}	ขอ pointer-capture โหมด={0} โฟกัสหน้าต่าง={1} โฟกัสวิว={2}
+akhir ungkapan	จุดสิ้นสุดนิพจน์
+Vulkan {0}, {1} ekstensi	Vulkan {0} ส่วนขยาย {1} รายการ
+tidak diketahui	ไม่ทราบ
+Presence diminta: {0} / {1}	ขอ presence: {0} / {1}
+Instalasi {0} belum lengkap: {~1}	การติดตั้ง {0} ไม่สมบูรณ์: {1}
+Dasar	พื้นฐาน
+Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.	แตะ S สั้นๆ กลางดวลเพื่อรีเซ็ตการวิ่งและควบคุมระยะห่าง
+Lempar Pearl / Potion + Balik	ขว้าง Pearl / Potion + สลับกลับ
+Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.	กระโดดแล้วตีตอนเริ่มตก (คริติคอลฮิต) ปรับ รอ หากจังหวะยังไม่พอดี
+Makan Gapple + Balik	กิน Gapple + สลับกลับ
+Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.	ยิงจรวดเป็นระยะขณะที่ยังถือ spear อยู่ แตะอีกครั้งเพื่อหยุด
+Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.	วางออบซิเดียน วาง end crystal ทับ แล้วทุบให้แตก แตะครั้งเดียว
+Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.	วาง respawn anchor เติม glowstone แล้วทำให้ระเบิด แตะครั้งเดียว
+Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.	ถือ end crystal แล้วเล็งไปที่ออบซิเดียน: วางและทุบสลับกัน
+Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.	สลับไปที่ ender pearl หรือ splash potion ขว้าง แล้วสลับกลับไปที่อาวุธ
+Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.	สลับไปที่ golden apple กินจนหมด แล้วสลับกลับไปที่อาวุธ
+Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.	สลับไปที่จรวด ยิง แล้วสลับกลับไปที่ spear แตะหนึ่งครั้ง = เร่งหนึ่งครั้ง
+Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.	สลับไปที่ totem ย้ายไปมือซ้าย (offhand) แล้วสลับกลับไปที่อาวุธ
+Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.	ตีด้วยขวานหนึ่งครั้งเพื่อทำให้โล่ของคู่ต่อสู้ล้ม แล้วสลับกลับไปที่ดาบ
+PvP Umum	PvP ทั่วไป
+Roket + Charge Spear	จรวด + Spear ชาร์จ
+Roket + Spear	จรวด + Spear
+Roket Otomatis + Spear	จรวดอัตโนมัติ + Spear
+Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.	จรวด แล้วใช้ spear โดยกดคลิกขวาค้างเพื่อโจมตีแบบชาร์จ ทำซ้ำไปเรื่อยๆ
+Slot end crystal	ช่อง end crystal
+Slot glowstone	ช่อง glowstone
+Slot golden apple	ช่อง golden apple
+Slot item lempar	ช่องไอเทมสำหรับขว้าง
+Slot kapak	ช่องขวาน
+Slot obsidian	ช่องออบซิเดียน
+Slot pedang	ช่องดาบ
+Slot respawn anchor	ช่อง respawn anchor
+Slot roket	ช่องจรวด
+Slot senjata	ช่องอาวุธ
+Slot spear	ช่อง spear
+Slot totem	ช่อง totem
+Totem Cepat	Totem ด่วน
+[TouchController] kelas klien tidak ditemukan; memakai kontrol bawaan	[TouchController] ไม่พบคลาสไคลเอนต์ ใช้การควบคุมที่มากับเกมแทน
+[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan	[TouchController] ไม่พบตัวสร้าง transport ใช้การควบคุมที่มากับเกมแทน
+[TouchController] transport kosong; memakai kontrol bawaan	[TouchController] transport ว่างเปล่า ใช้การควบคุมที่มากับเกมแทน
+[TouchController] jenis transport tidak dikenal ({0}); memakai kontrol bawaan	[TouchController] ไม่รู้จักชนิด transport ({0}) ใช้การควบคุมที่มากับเกมแทน
+[TouchController] konstruktor klien tidak cocok; memakai kontrol bawaan	[TouchController] constructor ของไคลเอนต์ไม่ตรงกัน ใช้การควบคุมที่มากับเกมแทน
+[TouchController] metode klien tidak cocok ({0}); memakai kontrol bawaan	[TouchController] เมธอดของไคลเอนต์ไม่ตรงกัน ({0}) ใช้การควบคุมที่มากับเกมแทน
+[TouchController] klien berhenti: {0}	[TouchController] ไคลเอนต์หยุด: {0}
+[TouchController] gagal memulai: {0}; memakai kontrol bawaan	[TouchController] เริ่มไม่สำเร็จ: {0} ใช้การควบคุมที่มากับเกมแทน
+[TouchController] {0} gagal ({1})	[TouchController] {0} ล้มเหลว ({1})
+[TouchController] {0} gagal ({1}); pengiriman dihentikan	[TouchController] {0} ล้มเหลว ({1}) หยุดการส่งแล้ว
+path mengandung '..': {0}	พาธมี '..': {0}

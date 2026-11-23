@@ -255,3 +255,193 @@ Ikuti global	Follow global
 Khusus	Custom
 Verifikasi & perbaiki	Verify & repair
 Gagal	Failed
+\u25b7 [Kinerja] RAM HP hampir habis (tingkat {0} dari 15): Android meminta aplikasi melepas memori	▷ [Performance] Phone RAM is almost full (level {0} of 15): Android asked the app to release memory
+\u25b7 [In-Game Resolution] Dinamis diperbarui ke {0}% ({1}x{2})	▷ [In-Game Resolution] Dynamically updated to {0}% ({1}x{2})
+\u25b7 [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai	▷ [TouchController] The game is showing but the mod is not connected yet; the built-in controls stay in use
+\u25b7 [Layar] Meminta {0} Hz (modeId={1})	▷ [Display] Requesting {0} Hz (modeId={1})
+\u25b7 [Layar] Gagal mengunci refresh rate: {0}	▷ [Display] Failed to lock the refresh rate: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: {~0}	▷ [Controls] On-screen buttons hidden automatically: {0}
+[AmberLauncher] Menyiapkan environment JVM...	[AmberLauncher] Preparing the JVM environment...
+[Amber Runtime] Mempersiapkan OpenJDK ({0})...	[Amber Runtime] Preparing OpenJDK ({0})...
+[ERROR] Gagal mengekstrak OpenJDK {0}: {1}	[ERROR] Failed to extract OpenJDK {0}: {1}
+[ERROR] Gagal mengekstrak OpenJDK: {0}	[ERROR] Failed to extract OpenJDK: {0}
+[Amber Runtime] OpenJDK ({0}) siap digunakan!	[Amber Runtime] OpenJDK ({0}) is ready to use!
+\u25b7 [Plugin Native] dilewati - {0}	▷ [Native Plugin] skipped - {0}
+\u25b7 [Renderer V2 Env Warning] Gagal menginjeksi V2 env: {0}	▷ [Renderer V2 Env Warning] Failed to inject the V2 env: {0}
+\u25b7 [MobileGlues] Config launcher dipakai: {0}	▷ [MobileGlues] Launcher config in use: {0}
+\u25b7 [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya	▷ [MobileGlues Warning] The launcher config could not be prepared, MobileGlues uses its defaults
+\u25b7 [MobileGlues Warning] Config launcher dilewati: {0}	▷ [MobileGlues Warning] Launcher config skipped: {0}
+\u25b7 [Renderer] Minecraft {0} memeriksa glGetError: LIBGL_NOERROR dimatikan	▷ [Renderer] Minecraft {0} checks glGetError: LIBGL_NOERROR turned off
+\u25b7 [Plugin Dependency] {0} dimuat dari {1}	▷ [Plugin Dependency] {0} loaded from {1}
+\u25b7 [Plugin Dependency Warning] {0} gagal dimuat	▷ [Plugin Dependency Warning] {0} failed to load
+\u25b7 [Plugin GL Warning] {0}: dlopen gagal (dependensi tidak ditemukan?)	▷ [Plugin GL Warning] {0}: dlopen failed (dependency not found?)
+\u25b7 [TouchController] Mod tersambung ({0}s setelah dimulai): sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif	▷ [TouchController] Mod connected ({0}s after start): touches are also forwarded to the mod, the built-in controls stay active
+\u25b7 [JNA] Memakai libjnidispatch untuk JNA {0}	▷ [JNA] Using libjnidispatch for JNA {0}
+\u25b7 [JVM] Proses 32-bit: heap maksimum dibatasi {0} MB (diminta {1} MB)	▷ [JVM] 32-bit process: maximum heap limited to {0} MB (requested {1} MB)
+\u25b7 [JVM] RAM game diminta {0} MB, RAM HP {1} MB: heap dibatasi {2} MB	▷ [JVM] Game RAM requested {0} MB, phone RAM {1} MB: heap limited to {2} MB
+\u25b7 [JVM] Heap awal {0} MB, maksimum {1} MB | RAM HP total {2} MB, tersedia {3} MB	▷ [JVM] Initial heap {0} MB, maximum {1} MB | total phone RAM {2} MB, available {3} MB
+[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...	[Amber Engine] Starting VMLauncher.launchJVM() execution...
+[Amber Engine] JVM selesai dengan kode keluar: {0}	[Amber Engine] JVM finished with exit code: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh	▷ [Controls] On-screen buttons hidden automatically: mouse detected on the touch layer
+(dibuat ulang oleh sistem)	(recreated by the system)
+Android meminta aplikasi melepas memori (tingkat {0})	Android asked the app to release memory (level {0})
+PAKAI	USE
+(salinan {0})	(copy {0})
+fungsi tak dikenal	unknown function
+karakter tak dikenal	unknown character
+kurang {0}	{0} missing
+diteruskan ke mod (GLFW)	forwarded to the mod (GLFW)
+diteruskan ke mod (SDL)	forwarded to the mod (SDL)
+Bagikan Log Crash	Share crash log
+Pemasangan {0} berhenti karena galat tak terduga	{0} installation stopped because of an unexpected error
+Pemasangan berhenti: {0}	Installation stopped: {0}
+Mulai mengunduh {0} (Minecraft {1}, loader={2})	Starting download of {0} (Minecraft {1}, loader={2})
+Unduhan {0} selesai	Download of {0} finished
+Unduhan {0} dibatalkan	Download of {0} was cancelled
+Unduhan {0} gagal: {1}	Download of {0} failed: {1}
+{0} library LWJGL Mojang dilewati ({1} KiB), Amber memakai LWJGL sendiri	{0} Mojang LWJGL libraries skipped ({1} KiB), Amber uses its own LWJGL
+Library gagal: {0}: {1}	Library failed: {0}: {1}
+{0} dari {1} library gagal diunduh (game bisa gagal dimulai)	{0} of {1} libraries failed to download (the game may fail to start)
+Aset gagal: {0}: {1}	Asset failed: {0}: {1}
+{0} dari {1} aset gagal diunduh (suara atau bahasa bisa hilang di game)	{0} of {1} assets failed to download (sound or language may be missing in the game)
+Daftar aset tidak bisa diproses: {0}	The asset list could not be processed: {0}
+Gagal mengunduh library Fabric: {0}	Failed to download the Fabric library: {0}
+{0} aset belum terunduh (di bawah batas toleransi {1}); instalasi tetap dianggap selesai	{0} assets not downloaded yet (below the tolerance limit of {1}); the installation is still considered complete
+[{0}] Proses pemasangan tidak bisa dimulai	[{0}] The installation process could not start
+[{0}] Proses installer berhenti mendadak (kemungkinan RAM HP habis)	[{0}] The installer process stopped suddenly (the phone probably ran out of RAM)
+[{0}] Waktu pemasangan habis	[{0}] Installation timed out
+Memasang {0}	Installing {0}
+[{0}] JVM keluar dengan kode {1}	[{0}] JVM exited with code {1}
+Pemasangan {0} gagal	{0} installation failed
+Mengunduh installer {0} {1}...	Downloading installer {0} {1}...
+Memasang {0} {1}...	Installing {0} {1}...
+Memasang {0} {1} ({2}/{3})...	Installing {0} {1} ({2}/{3})...
+{0} {1} terpasang	{0} {1} installed
+Mengunduh library {0} ({1}/{2})...	Downloading library {0} ({1}/{2})...
+Sesi ketik layar ditutup: jendela game kehilangan fokus	On-screen typing session closed: the game window lost focus
+Sesi ketik layar ditutup: keyboard tidak terlihat lagi	On-screen typing session closed: the keyboard is no longer visible
+Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan	PLAY tap ignored: the previous preparation is still running
+Sesi Microsoft diperbarui sebelum main	Microsoft session refreshed before playing
+Pembaruan sesi Microsoft gagal	Microsoft session refresh failed
+Persiapan selesai dalam {0} ms	Preparation finished in {0} ms
+Persiapan {0} gagal sebelum game dimulai	Preparation of {0} failed before the game started
+Pemanasan LWJGL dilewati: {0}	LWJGL warm-up skipped: {0}
+Berkas versi {0} tidak terbaca: {1}	Version file {0} could not be read: {1}
+Berkas versi tidak ada: {0} (instance belum diunduh?)	Version file missing: {0} (instance not downloaded yet?)
+Forge {0} hanya jalan di Java 8; {1} diganti jre-8	Forge {0} only runs on Java 8; {1} replaced with jre-8
+Client Minecraft tidak ada: {0}	Minecraft client missing: {0}
+Mengaktifkan Offline Yggdrasil server pada port {0} untuk {1}	Enabling the Offline Yggdrasil server on port {0} for {1}
+Memulai game: runtime={0} (terpasang={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} berkas, mainClass={6}, mod={7}	Starting game: runtime={0} (installed={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} files, mainClass={6}, mods={7}
+Pemeriksaan pembaruan mod gagal: {0}	Mod update check failed: {0}
+Gagal memperbarui {0}: {1}	Failed to update {0}: {1}
+Gagal memperbarui catatan modpack: {0}	Failed to update the modpack notes: {0}
+Gagal inspect ZIP: {0}	Failed to inspect ZIP: {0}
+File modpack dilewati (path/alamat tidak aman): {0}	Modpack file skipped (unsafe path/address): {0}
+Gagal unduh file modpack: {0}	Failed to download the modpack file: {0}
+Isi modpack dilewati (path tidak aman): {0}	Modpack contents skipped (unsafe path): {0}
+Isi arsip dilewati (path tidak aman): {0}	Archive contents skipped (unsafe path): {0}
+Gagal menyimpan metadata modpack: {0}	Failed to save the modpack metadata: {0}
+Gagal membaca metadata modpack: {0}	Failed to read the modpack metadata: {0}
+hanya -D yang diizinkan: {0}	only -D is allowed: {0}
+properti dikelola launcher: {0}	property managed by the launcher: {0}
+{0}: dimatikan di Pengaturan	{0}: turned off in Settings
+{0}: di luar rentang versi Minecraft ({1})	{0}: outside the Minecraft version range ({1})
+{0}: folder pustaka tidak ada	{0}: library folder missing
+{0}: argumen ditolak - {~1}	{0}: argument rejected - {1}
+Folder config MobileGlues tidak bisa dibuat: {0}	Could not create the MobileGlues config folder: {0}
+Config MobileGlues gagal disiapkan: {0}	The MobileGlues config could not be prepared: {0}
+config.json MobileGlues tidak bisa disimpan: {0}	MobileGlues config.json could not be saved: {0}
+Gagal mengambil daftar aplikasi terpasang	Failed to get the list of installed apps
+Berhasil memuat Renderer Plugin V2 dari {0} ({1})	Renderer Plugin V2 loaded from {0} ({1})
+Gagal mengurai fclPlugin_V2 dari {0}	Failed to parse fclPlugin_V2 from {0}
+Menerapkan profil konfigurasi V2 bawaan untuk MobileGL ({0})	Applying the default V2 configuration profile for MobileGL ({0})
+Mengekstrak Java {0} (arsitektur {1}) ke {2}	Extracting Java {0} (architecture {1}) to {2}
+Gagal unpack universal.tar.xz: {0}	Failed to unpack universal.tar.xz: {0}
+Gagal unpack bin-{0}.tar.xz: {1}	Failed to unpack bin-{0}.tar.xz: {1}
+Verifikasi Java {0} tidak lengkap setelah ekstraksi	Java {0} verification incomplete after extraction
+Java {0} siap dipakai	Java {0} is ready to use
+Ekstraksi Java {0} gagal: {1}	Java {0} extraction failed: {1}
+Gagal unpack200 {0}: {1}	Failed to unpack200 {0}: {1}
+Penunjuk lokasi data gagal ditulis	The data location pointer could not be written
+Gagal menyiapkan tawaran: {0}	Failed to prepare the offer: {0}
+Galat tak terduga: {0}	Unexpected error: {0}
+Muat ulang instance gagal: {0}	Reloading the instance failed: {0}
+Dibatalkan pengguna	Cancelled by the user
+Gagal: {0} {1}	Failed: {0} {1}
+Ruang penyimpanan	Storage space
+Penyebab:	Cause:
+Proses pemeriksa Vulkan tidak bisa dimulai: {0}	The Vulkan checker process could not start: {0}
+proses pemeriksa tidak bisa dimulai	the checker process could not start
+proses pemeriksa berhenti sebelum selesai	the checker process stopped before it finished
+pemeriksa tidak menjawab dalam {0} detik	the checker did not answer within {0} seconds
+Pengecekan Vulkan tidak selesai: {0}	The Vulkan check did not finish: {0}
+HP tidak punya driver Vulkan yang bisa dibuka	the phone has no Vulkan driver that can be opened
+pemeriksa tidak ada di build ini ({0})	the checker is not in this build ({0})
+tidak ada jawaban	no answer
+Pengecekan Vulkan: {0}	Vulkan check: {0}
+Launcher: game masih berjalan, presence launcher dilewati	Launcher: the game is still running, launcher presence skipped
+Presence launcher gagal: {0}	Launcher presence failed: {0}
+Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai	The Discord app was not found on this phone, presence is not used
+SDK Discord siap ({0})	Discord SDK ready ({0})
+SDK Discord tidak ikut di build ini	The Discord SDK is not included in this build
+SDK Discord tidak bisa disiapkan: {0}	The Discord SDK could not be prepared: {0}
+Server terdeteksi dari log game	Server detected from the game log
+Server dilepas (singleplayer atau terputus)	Server released (singleplayer or disconnected)
+Presence dilewati: SDK atau aplikasi Discord tidak tersedia	Presence skipped: the SDK or the Discord app is not available
+Discord RPC gagal ditutup rapi: {0}	Discord RPC did not close cleanly: {0}
+Discord RPC berhenti: klien SDK gagal dibuat	Discord RPC stopped: the SDK client could not be created
+Discord RPC berhenti: {0}	Discord RPC stopped: {0}
+Klien SDK dibuat ({0})	SDK client created ({0})
+Koneksi ke Discord terputus, presence dikirim ulang	Connection to Discord lost, presence resent
+Discord RPC dihentikan: {0}	Discord RPC halted: {0}
+Presence tidak terkirim ke SDK	Presence was not delivered to the SDK
+Discord belum tersambung dalam {0} detik; SDK dilepas, coba lagi {1} menit lagi	Discord did not connect within {0} seconds; SDK released, trying again in {1} minutes
+Lokasi:	Location:
+Salin detail	Copy details
+Detail disalin	Details copied
+Launcher terasa berat	The launcher feels heavy
+Cara memasang mod	How to install mods
+MEMORI (RAM)	MEMORY (RAM)
+Ikuti global ({0})	Follow global ({0})
+SKALA RESOLUSI	RESOLUTION SCALE
+Ikuti global ({0}%)	Follow global ({0}%)
+ARGUMEN JVM TAMBAHAN	EXTRA JVM ARGUMENTS
+Login Microsoft berhasil	Microsoft sign-in succeeded
+Autentikasi Minecraft gagal: {0}	Minecraft authentication failed: {0}
+Otorisasi Microsoft gagal: {0}	Microsoft authorization failed: {0}
+MEMUAT	LOADING
+.zip (Datapack)	.zip (Datapack)
+Datapack	Datapack
+Tampilkan server yang dimainkan	Show the server being played
+Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.	When playing on a multiplayer server (Java loader), your Discord profile shows the server address, for example Playing on mc.example.com. Anyone who can see your profile can see that address. Local network addresses are never shown. The address is read from the game log: after you deliberately leave a server, the address may stay until you join another server or open a singleplayer world. Used together with Discord Rich Presence while playing. Takes effect from the next game.
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	While the launcher is open and you have not started playing, your Discord profile shows AmberLauncher with the status Getting ready to play. Takes effect the next time the launcher is opened. Used together with the Discord app you are already signed in to; not for users under 13.
+Perlihatkan aktivitas di launcher	Show activity in the launcher
+Bantuan	Help
+Gagal mengunduh. {~0}	Download failed. {0}
+tombol controller	controller buttons
+keyboard fisik ({0}, device={1})	physical keyboard ({0}, device={1})
+gerakan controller	controller movement
+mouse fisik (gerak/klik/gulir)	physical mouse (move/click/scroll)
+mouse fisik (sentuhan dari sumber mouse)	physical mouse (touches from a mouse source)
+kombinasi {0} aksi={1} tombol={2}	combo {0} action={1} buttons={2}
+jalur={0} sumber=0x{1} alat={2} aksi={3} tombol={4}	path={0} source=0x{1} tool={2} action={3} buttons={4}
+tidak ada mouse/touchpad/trackball/stylus terdeteksi	no mouse/touchpad/trackball/stylus detected
+perangkat: {0}	device: {0}
+pointer-capture jendela={0}	window pointer-capture={0}
+pointer-capture diminta mode={0} fokusJendela={1} fokusView={2}	pointer-capture requested mode={0} windowFocus={1} viewFocus={2}
+akhir ungkapan	end of expression
+Vulkan {0}, {1} ekstensi	Vulkan {0}, {1} extensions
+tidak diketahui	unknown
+Presence diminta: {0} / {1}	Presence requested: {0} / {1}
+Instalasi {0} belum lengkap: {~1}	Installation of {0} is incomplete: {1}
+[TouchController] kelas klien tidak ditemukan; memakai kontrol bawaan	[TouchController] client class not found; using the built-in controls
+[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan	[TouchController] transport factory not found; using the built-in controls
+[TouchController] transport kosong; memakai kontrol bawaan	[TouchController] transport is empty; using the built-in controls
+[TouchController] jenis transport tidak dikenal ({0}); memakai kontrol bawaan	[TouchController] unknown transport type ({0}); using the built-in controls
+[TouchController] konstruktor klien tidak cocok; memakai kontrol bawaan	[TouchController] client constructor does not match; using the built-in controls
+[TouchController] metode klien tidak cocok ({0}); memakai kontrol bawaan	[TouchController] client method does not match ({0}); using the built-in controls
+[TouchController] klien berhenti: {0}	[TouchController] client stopped: {0}
+[TouchController] gagal memulai: {0}; memakai kontrol bawaan	[TouchController] failed to start: {0}; using the built-in controls
+[TouchController] {0} gagal ({1})	[TouchController] {0} failed ({1})
+[TouchController] {0} gagal ({1}); pengiriman dihentikan	[TouchController] {0} failed ({1}); sending stopped
+path mengandung '..': {0}	path contains '..': {0}

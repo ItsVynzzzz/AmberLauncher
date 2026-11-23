@@ -274,3 +274,225 @@ Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang dis
 Respon Ely.by tidak berisi token akses.	Ely.by 的响应中不包含访问令牌。
 Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Ely.by 会话已失效。请删除此账号后重新登录。
 Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	无法连接到 Ely.by。请检查网络连接。
+\u25b7 [Kinerja] RAM HP hampir habis (tingkat {0} dari 15): Android meminta aplikasi melepas memori	▷ [性能] 手机内存快满了（等级 {0}/15）：Android 要求应用释放内存
+\u25b7 [In-Game Resolution] Dinamis diperbarui ke {0}% ({1}x{2})	▷ [In-Game Resolution] 已动态更新为 {0}%（{1}x{2}）
+\u25b7 [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai	▷ [TouchController] 游戏已显示但模组尚未连接；继续使用内置控制
+\u25b7 [Layar] Meminta {0} Hz (modeId={1})	▷ [显示] 正在请求 {0} Hz（modeId={1}）
+\u25b7 [Layar] Gagal mengunci refresh rate: {0}	▷ [显示] 锁定刷新率失败：{0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: {~0}	▷ [控制] 已自动隐藏屏幕按钮：{0}
+[AmberLauncher] Menyiapkan environment JVM...	[AmberLauncher] 正在准备 JVM 环境...
+[Amber Runtime] Mempersiapkan OpenJDK ({0})...	[Amber Runtime] 正在准备 OpenJDK（{0}）...
+[ERROR] Gagal mengekstrak OpenJDK {0}: {1}	[ERROR] 解压 OpenJDK {0} 失败：{1}
+[ERROR] Gagal mengekstrak OpenJDK: {0}	[ERROR] 解压 OpenJDK 失败：{0}
+[Amber Runtime] OpenJDK ({0}) siap digunakan!	[Amber Runtime] OpenJDK（{0}）已就绪！
+\u25b7 [Plugin Native] dilewati - {0}	▷ [原生插件] 已跳过 - {0}
+\u25b7 [Renderer V2 Env Warning] Gagal menginjeksi V2 env: {0}	▷ [Renderer V2 Env Warning] 注入 V2 env 失败：{0}
+\u25b7 [MobileGlues] Config launcher dipakai: {0}	▷ [MobileGlues] 正在使用启动器配置：{0}
+\u25b7 [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya	▷ [MobileGlues Warning] 无法准备启动器配置，MobileGlues 使用自己的默认配置
+\u25b7 [MobileGlues Warning] Config launcher dilewati: {0}	▷ [MobileGlues Warning] 已跳过启动器配置：{0}
+\u25b7 [Renderer] Minecraft {0} memeriksa glGetError: LIBGL_NOERROR dimatikan	▷ [Renderer] Minecraft {0} 会检查 glGetError：已关闭 LIBGL_NOERROR
+\u25b7 [Plugin Dependency] {0} dimuat dari {1}	▷ [Plugin Dependency] 已从 {1} 加载 {0}
+\u25b7 [Plugin Dependency Warning] {0} gagal dimuat	▷ [Plugin Dependency Warning] {0} 加载失败
+\u25b7 [Plugin GL Warning] {0}: dlopen gagal (dependensi tidak ditemukan?)	▷ [Plugin GL Warning] {0}：dlopen 失败（找不到依赖？）
+\u25b7 [TouchController] Mod tersambung ({0}s setelah dimulai): sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif	▷ [TouchController] 模组已连接（启动后 {0} 秒）：触摸也会转发给模组，内置控制仍然有效
+\u25b7 [JNA] Memakai libjnidispatch untuk JNA {0}	▷ [JNA] 为 JNA {0} 使用 libjnidispatch
+\u25b7 [JVM] Proses 32-bit: heap maksimum dibatasi {0} MB (diminta {1} MB)	▷ [JVM] 32 位进程：最大堆限制为 {0} MB（请求 {1} MB）
+\u25b7 [JVM] RAM game diminta {0} MB, RAM HP {1} MB: heap dibatasi {2} MB	▷ [JVM] 游戏请求内存 {0} MB，手机内存 {1} MB：堆限制为 {2} MB
+\u25b7 [JVM] Heap awal {0} MB, maksimum {1} MB | RAM HP total {2} MB, tersedia {3} MB	▷ [JVM] 初始堆 {0} MB，最大 {1} MB | 手机总内存 {2} MB，可用 {3} MB
+[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...	[Amber Engine] 开始运行 VMLauncher.launchJVM()...
+[Amber Engine] JVM selesai dengan kode keluar: {0}	[Amber Engine] JVM 已结束，退出代码：{0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh	▷ [控制] 已自动隐藏屏幕按钮：在触摸层检测到鼠标
+(dibuat ulang oleh sistem)	（由系统重新创建）
+Android meminta aplikasi melepas memori (tingkat {0})	Android 要求应用释放内存（等级 {0}）
+PAKAI	使用
+(salinan {0})	（副本 {0}）
+fungsi tak dikenal	未知函数
+karakter tak dikenal	未知字符
+kurang {0}	缺少 {0}
+diteruskan ke mod (GLFW)	已转发给模组（GLFW）
+diteruskan ke mod (SDL)	已转发给模组（SDL）
+Bagikan Log Crash	分享崩溃日志
+Pemasangan {0} berhenti karena galat tak terduga	{0} 的安装因意外错误而停止
+Pemasangan berhenti: {0}	安装已停止：{0}
+Mulai mengunduh {0} (Minecraft {1}, loader={2})	开始下载 {0}（Minecraft {1}，loader={2}）
+Unduhan {0} selesai	{0} 下载完成
+Unduhan {0} dibatalkan	{0} 的下载已取消
+Unduhan {0} gagal: {1}	{0} 下载失败：{1}
+{0} library LWJGL Mojang dilewati ({1} KiB), Amber memakai LWJGL sendiri	已跳过 {0} 个 Mojang LWJGL 库（{1} KiB），Amber 使用自己的 LWJGL
+Library gagal: {0}: {1}	库失败：{0}：{1}
+{0} dari {1} library gagal diunduh (game bisa gagal dimulai)	{1} 个库中有 {0} 个下载失败（游戏可能无法启动）
+Aset gagal: {0}: {1}	资源失败：{0}：{1}
+{0} dari {1} aset gagal diunduh (suara atau bahasa bisa hilang di game)	{1} 个资源中有 {0} 个下载失败（游戏中可能缺少声音或语言）
+Daftar aset tidak bisa diproses: {0}	无法处理资源列表：{0}
+Gagal mengunduh library Fabric: {0}	下载 Fabric 库失败：{0}
+{0} aset belum terunduh (di bawah batas toleransi {1}); instalasi tetap dianggap selesai	有 {0} 个资源尚未下载（低于容许上限 {1}）；仍视为安装完成
+[{0}] Proses pemasangan tidak bisa dimulai	[{0}] 无法启动安装进程
+[{0}] Proses installer berhenti mendadak (kemungkinan RAM HP habis)	[{0}] 安装器进程突然停止（手机可能内存耗尽）
+[{0}] Waktu pemasangan habis	[{0}] 安装超时
+Memasang {0}	正在安装 {0}
+[{0}] JVM keluar dengan kode {1}	[{0}] JVM 以代码 {1} 退出
+Pemasangan {0} gagal	{0} 安装失败
+Mengunduh installer {0} {1}...	正在下载 {0} {1} 安装器...
+Memasang {0} {1}...	正在安装 {0} {1}...
+Memasang {0} {1} ({2}/{3})...	正在安装 {0} {1}（{2}/{3}）...
+{0} {1} terpasang	{0} {1} 已安装
+Mengunduh library {0} ({1}/{2})...	正在下载库 {0}（{1}/{2}）...
+Sesi ketik layar ditutup: jendela game kehilangan fokus	屏幕输入会话已关闭：游戏窗口失去焦点
+Sesi ketik layar ditutup: keyboard tidak terlihat lagi	屏幕输入会话已关闭：键盘不再可见
+Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan	已忽略 PLAY 点击：上一次准备仍在进行
+Sesi Microsoft diperbarui sebelum main	游玩前已刷新 Microsoft 会话
+Pembaruan sesi Microsoft gagal	刷新 Microsoft 会话失败
+Persiapan selesai dalam {0} ms	准备完成，用时 {0} 毫秒
+Persiapan {0} gagal sebelum game dimulai	游戏启动前 {0} 的准备失败
+Pemanasan LWJGL dilewati: {0}	已跳过 LWJGL 预热：{0}
+Berkas versi {0} tidak terbaca: {1}	无法读取版本文件 {0}：{1}
+Berkas versi tidak ada: {0} (instance belum diunduh?)	缺少版本文件：{0}（实例尚未下载？）
+Forge {0} hanya jalan di Java 8; {1} diganti jre-8	Forge {0} 只能在 Java 8 上运行；已将 {1} 替换为 jre-8
+Client Minecraft tidak ada: {0}	缺少 Minecraft 客户端：{0}
+Mengaktifkan Offline Yggdrasil server pada port {0} untuk {1}	正在为 {1} 在端口 {0} 上启用离线 Yggdrasil 服务器
+Memulai game: runtime={0} (terpasang={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} berkas, mainClass={6}, mod={7}	正在启动游戏：runtime={0}（已安装={1}），LWJGL={2}，lwjglx={3}，wrapper={4}，classpath={5} 个文件，mainClass={6}，mods={7}
+Pemeriksaan pembaruan mod gagal: {0}	检查模组更新失败：{0}
+Gagal memperbarui {0}: {1}	更新 {0} 失败：{1}
+Gagal memperbarui catatan modpack: {0}	更新整合包说明失败：{0}
+Gagal inspect ZIP: {0}	检查 ZIP 失败：{0}
+File modpack dilewati (path/alamat tidak aman): {0}	已跳过整合包文件（路径/地址不安全）：{0}
+Gagal unduh file modpack: {0}	下载整合包文件失败：{0}
+Isi modpack dilewati (path tidak aman): {0}	已跳过整合包内容（路径不安全）：{0}
+Isi arsip dilewati (path tidak aman): {0}	已跳过压缩包内容（路径不安全）：{0}
+Gagal menyimpan metadata modpack: {0}	保存整合包元数据失败：{0}
+Gagal membaca metadata modpack: {0}	读取整合包元数据失败：{0}
+hanya -D yang diizinkan: {0}	只允许 -D：{0}
+properti dikelola launcher: {0}	由启动器管理的属性：{0}
+{0}: dimatikan di Pengaturan	{0}：已在设置中关闭
+{0}: di luar rentang versi Minecraft ({1})	{0}：超出 Minecraft 版本范围（{1}）
+{0}: folder pustaka tidak ada	{0}：缺少库文件夹
+{0}: argumen ditolak - {~1}	{0}：参数被拒绝 - {1}
+Folder config MobileGlues tidak bisa dibuat: {0}	无法创建 MobileGlues 配置文件夹：{0}
+Config MobileGlues gagal disiapkan: {0}	无法准备 MobileGlues 配置：{0}
+config.json MobileGlues tidak bisa disimpan: {0}	无法保存 MobileGlues 的 config.json：{0}
+Gagal mengambil daftar aplikasi terpasang	获取已安装应用列表失败
+Berhasil memuat Renderer Plugin V2 dari {0} ({1})	已从 {0} 加载 Renderer Plugin V2（{1}）
+Gagal mengurai fclPlugin_V2 dari {0}	解析 {0} 中的 fclPlugin_V2 失败
+Menerapkan profil konfigurasi V2 bawaan untuk MobileGL ({0})	正在为 MobileGL 应用默认的 V2 配置档案（{0}）
+Mengekstrak Java {0} (arsitektur {1}) ke {2}	正在将 Java {0}（架构 {1}）解压到 {2}
+Gagal unpack universal.tar.xz: {0}	解压 universal.tar.xz 失败：{0}
+Gagal unpack bin-{0}.tar.xz: {1}	解压 bin-{0}.tar.xz 失败：{1}
+Verifikasi Java {0} tidak lengkap setelah ekstraksi	解压后 Java {0} 的验证不完整
+Java {0} siap dipakai	Java {0} 已就绪
+Ekstraksi Java {0} gagal: {1}	Java {0} 解压失败：{1}
+Gagal unpack200 {0}: {1}	解压 unpack200 {0} 失败：{1}
+Penunjuk lokasi data gagal ditulis	无法写入数据位置指针
+Gagal menyiapkan tawaran: {0}	准备提议失败：{0}
+Galat tak terduga: {0}	意外错误：{0}
+Muat ulang instance gagal: {0}	重新加载实例失败：{0}
+Dibatalkan pengguna	已被用户取消
+Gagal: {0} {1}	失败：{0} {1}
+Ruang penyimpanan	存储空间
+Penyebab:	原因：
+Proses pemeriksa Vulkan tidak bisa dimulai: {0}	无法启动 Vulkan 检查进程：{0}
+proses pemeriksa tidak bisa dimulai	无法启动检查进程
+proses pemeriksa berhenti sebelum selesai	检查进程在完成前停止了
+pemeriksa tidak menjawab dalam {0} detik	检查程序在 {0} 秒内没有响应
+Pengecekan Vulkan tidak selesai: {0}	Vulkan 检查未完成：{0}
+HP tidak punya driver Vulkan yang bisa dibuka	手机没有可打开的 Vulkan 驱动
+pemeriksa tidak ada di build ini ({0})	此构建中没有检查程序（{0}）
+tidak ada jawaban	无响应
+Pengecekan Vulkan: {0}	Vulkan 检查：{0}
+Launcher: game masih berjalan, presence launcher dilewati	启动器：游戏仍在运行，已跳过启动器状态显示
+Presence launcher gagal: {0}	启动器状态显示失败：{0}
+Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai	这台手机上没有找到 Discord 应用，不使用状态显示
+SDK Discord siap ({0})	Discord SDK 已就绪（{0}）
+SDK Discord tidak ikut di build ini	此构建不包含 Discord SDK
+SDK Discord tidak bisa disiapkan: {0}	无法准备 Discord SDK：{0}
+Server terdeteksi dari log game	已从游戏日志检测到服务器
+Server dilepas (singleplayer atau terputus)	已释放服务器（单人游戏或已断开）
+Presence dilewati: SDK atau aplikasi Discord tidak tersedia	已跳过状态显示：SDK 或 Discord 应用不可用
+Discord RPC gagal ditutup rapi: {0}	Discord RPC 未正常关闭：{0}
+Discord RPC berhenti: klien SDK gagal dibuat	Discord RPC 已停止：无法创建 SDK 客户端
+Discord RPC berhenti: {0}	Discord RPC 已停止：{0}
+Klien SDK dibuat ({0})	已创建 SDK 客户端（{0}）
+Koneksi ke Discord terputus, presence dikirim ulang	与 Discord 的连接已断开，已重新发送状态
+Discord RPC dihentikan: {0}	Discord RPC 已中止：{0}
+Presence tidak terkirim ke SDK	状态未能送达 SDK
+Discord belum tersambung dalam {0} detik; SDK dilepas, coba lagi {1} menit lagi	Discord 在 {0} 秒内未连接；已释放 SDK，{1} 分钟后重试
+Lokasi:	位置：
+Salin detail	复制详情
+Detail disalin	已复制详情
+Launcher terasa berat	启动器运行得很卡
+Cara memasang mod	如何安装模组
+MEMORI (RAM)	内存（RAM）
+Ikuti global ({0})	跟随全局（{0}）
+SKALA RESOLUSI	分辨率缩放
+Ikuti global ({0}%)	跟随全局（{0}%）
+ARGUMEN JVM TAMBAHAN	额外的 JVM 参数
+Login Microsoft berhasil	Microsoft 登录成功
+Autentikasi Minecraft gagal: {0}	Minecraft 验证失败：{0}
+Otorisasi Microsoft gagal: {0}	Microsoft 授权失败：{0}
+MEMUAT	加载中
+.zip (Datapack)	.zip（数据包）
+Datapack	数据包
+Tampilkan server yang dimainkan	显示正在游玩的服务器
+Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.	在多人服务器（Java 加载器）上游玩时，你的 Discord 个人资料会显示服务器地址，例如 Playing on mc.example.com。任何能看到你个人资料的人都能看到该地址。局域网地址永远不会显示。地址读取自游戏日志：你主动离开服务器后，地址可能会保留，直到你进入另一个服务器或打开单人世界。游玩时与 Discord Rich Presence 一起使用。从下一次游戏开始生效。
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	启动器打开而你还没开始游玩时，你的 Discord 个人资料会显示 AmberLauncher，状态为 Getting ready to play。下次打开启动器时生效。与你已登录的 Discord 应用配合使用；不适用于 13 岁以下用户。
+Perlihatkan aktivitas di launcher	在启动器中显示活动
+Bantuan	帮助
+Gagal mengunduh. {~0}	下载失败。{0}
+tombol controller	手柄按钮
+keyboard fisik ({0}, device={1})	物理键盘（{0}，device={1}）
+gerakan controller	手柄移动
+mouse fisik (gerak/klik/gulir)	物理鼠标（移动/点击/滚动）
+mouse fisik (sentuhan dari sumber mouse)	物理鼠标（来自鼠标来源的触摸）
+kombinasi {0} aksi={1} tombol={2}	组合 {0} 动作={1} 按钮={2}
+jalur={0} sumber=0x{1} alat={2} aksi={3} tombol={4}	路径={0} 来源=0x{1} 工具={2} 动作={3} 按钮={4}
+tidak ada mouse/touchpad/trackball/stylus terdeteksi	未检测到鼠标/触控板/轨迹球/手写笔
+perangkat: {0}	设备：{0}
+pointer-capture jendela={0}	窗口 pointer-capture={0}
+pointer-capture diminta mode={0} fokusJendela={1} fokusView={2}	请求 pointer-capture 模式={0} 窗口焦点={1} 视图焦点={2}
+akhir ungkapan	表达式结尾
+Vulkan {0}, {1} ekstensi	Vulkan {0}，{1} 个扩展
+tidak diketahui	未知
+Presence diminta: {0} / {1}	已请求状态显示：{0} / {1}
+Instalasi {0} belum lengkap: {~1}	{0} 的安装不完整：{1}
+Dasar	基础
+Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.	对决中短暂点按 S，重置疾跑并调整距离。
+Lempar Pearl / Potion + Balik	投掷珍珠 / 药水 + 切回
+Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.	跳起并在开始下落时攻击（暴击）。如果时机不对，请调整等待时间。
+Makan Gapple + Balik	吃 Gapple + 切回
+Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.	在持续手持 spear 的同时定期发射烟花火箭。再次点按即可停止。
+Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.	放置黑曜石，在上面放一个 end crystal，然后打碎它。一次点按。
+Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.	放置重生锚，用荧石充能，然后引爆。一次点按。
+Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.	手持 end crystal 并瞄准黑曜石：轮流放置和打碎。
+Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.	切换到末影珍珠或喷溅药水，投掷后切回武器。
+Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.	切换到金苹果，吃完后切回武器。
+Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.	切换到烟花火箭，发射后切回 spear。一次点按 = 一次加速。
+Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.	切换到图腾，移到左手（副手），然后切回武器。
+Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.	用斧头打一下击落对手的盾牌，然后切回剑。
+PvP Umum	通用 PvP
+Roket + Charge Spear	烟花火箭 + 蓄力 Spear
+Roket + Spear	烟花火箭 + Spear
+Roket Otomatis + Spear	自动烟花火箭 + Spear
+Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.	烟花火箭，然后按住右键用 spear 进行蓄力攻击，不断重复。
+Slot end crystal	end crystal 栏位
+Slot glowstone	荧石栏位
+Slot golden apple	金苹果栏位
+Slot item lempar	投掷物栏位
+Slot kapak	斧头栏位
+Slot obsidian	黑曜石栏位
+Slot pedang	剑栏位
+Slot respawn anchor	重生锚栏位
+Slot roket	烟花火箭栏位
+Slot senjata	武器栏位
+Slot spear	spear 栏位
+Slot totem	图腾栏位
+Totem Cepat	快速图腾
+[TouchController] kelas klien tidak ditemukan; memakai kontrol bawaan	[TouchController] 找不到客户端类；使用内置控制
+[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan	[TouchController] 找不到 transport 创建器；使用内置控制
+[TouchController] transport kosong; memakai kontrol bawaan	[TouchController] transport 为空；使用内置控制
+[TouchController] jenis transport tidak dikenal ({0}); memakai kontrol bawaan	[TouchController] 未知的 transport 类型（{0}）；使用内置控制
+[TouchController] konstruktor klien tidak cocok; memakai kontrol bawaan	[TouchController] 客户端构造函数不匹配；使用内置控制
+[TouchController] metode klien tidak cocok ({0}); memakai kontrol bawaan	[TouchController] 客户端方法不匹配（{0}）；使用内置控制
+[TouchController] klien berhenti: {0}	[TouchController] 客户端已停止：{0}
+[TouchController] gagal memulai: {0}; memakai kontrol bawaan	[TouchController] 启动失败：{0}；使用内置控制
+[TouchController] {0} gagal ({1})	[TouchController] {0} 失败（{1}）
+[TouchController] {0} gagal ({1}); pengiriman dihentikan	[TouchController] {0} 失败（{1}）；已停止发送
+path mengandung '..': {0}	路径包含 '..'：{0}

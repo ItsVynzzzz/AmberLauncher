@@ -270,3 +270,226 @@ Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang dis
 Respon Ely.by tidak berisi token akses.	Phản hồi từ Ely.by không chứa token truy cập.
 Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Phiên Ely.by không còn hiệu lực. Hãy xóa tài khoản này rồi đăng nhập lại.
 Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Không kết nối được tới Ely.by. Hãy kiểm tra kết nối internet.
+\u25b7 [Kinerja] RAM HP hampir habis (tingkat {0} dari 15): Android meminta aplikasi melepas memori	▷ [Hiệu năng] RAM điện thoại gần hết (mức {0}/15): Android yêu cầu ứng dụng giải phóng bộ nhớ
+\u25b7 [In-Game Resolution] Dinamis diperbarui ke {0}% ({1}x{2})	▷ [In-Game Resolution] Đã cập nhật động lên {0}% ({1}x{2})
+\u25b7 [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai	▷ [TouchController] Game đã hiện nhưng mod chưa kết nối; vẫn dùng điều khiển có sẵn
+\u25b7 [Layar] Meminta {0} Hz (modeId={1})	▷ [Màn hình] Đang yêu cầu {0} Hz (modeId={1})
+\u25b7 [Layar] Gagal mengunci refresh rate: {0}	▷ [Màn hình] Khóa tốc độ làm tươi thất bại: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: {~0}	▷ [Điều khiển] Đã tự động ẩn các nút trên màn hình: {0}
+[AmberLauncher] Menyiapkan environment JVM...	[AmberLauncher] Đang chuẩn bị môi trường JVM...
+[Amber Runtime] Mempersiapkan OpenJDK ({0})...	[Amber Runtime] Đang chuẩn bị OpenJDK ({0})...
+[ERROR] Gagal mengekstrak OpenJDK {0}: {1}	[ERROR] Giải nén OpenJDK {0} thất bại: {1}
+[ERROR] Gagal mengekstrak OpenJDK: {0}	[ERROR] Giải nén OpenJDK thất bại: {0}
+[Amber Runtime] OpenJDK ({0}) siap digunakan!	[Amber Runtime] OpenJDK ({0}) đã sẵn sàng!
+\u25b7 [Plugin Native] dilewati - {0}	▷ [Plugin native] bỏ qua - {0}
+\u25b7 [Renderer V2 Env Warning] Gagal menginjeksi V2 env: {0}	▷ [Renderer V2 Env Warning] Chèn V2 env thất bại: {0}
+\u25b7 [MobileGlues] Config launcher dipakai: {0}	▷ [MobileGlues] Đang dùng cấu hình của launcher: {0}
+\u25b7 [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya	▷ [MobileGlues Warning] Không chuẩn bị được cấu hình của launcher, MobileGlues dùng mặc định của nó
+\u25b7 [MobileGlues Warning] Config launcher dilewati: {0}	▷ [MobileGlues Warning] Bỏ qua cấu hình của launcher: {0}
+\u25b7 [Renderer] Minecraft {0} memeriksa glGetError: LIBGL_NOERROR dimatikan	▷ [Renderer] Minecraft {0} kiểm tra glGetError: đã tắt LIBGL_NOERROR
+\u25b7 [Plugin Dependency] {0} dimuat dari {1}	▷ [Plugin Dependency] Đã tải {0} từ {1}
+\u25b7 [Plugin Dependency Warning] {0} gagal dimuat	▷ [Plugin Dependency Warning] Không tải được {0}
+\u25b7 [Plugin GL Warning] {0}: dlopen gagal (dependensi tidak ditemukan?)	▷ [Plugin GL Warning] {0}: dlopen thất bại (không tìm thấy dependency?)
+\u25b7 [TouchController] Mod tersambung ({0}s setelah dimulai): sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif	▷ [TouchController] Mod đã kết nối ({0} giây sau khi khởi động): thao tác chạm cũng được chuyển tới mod, điều khiển có sẵn vẫn hoạt động
+\u25b7 [JNA] Memakai libjnidispatch untuk JNA {0}	▷ [JNA] Dùng libjnidispatch cho JNA {0}
+\u25b7 [JVM] Proses 32-bit: heap maksimum dibatasi {0} MB (diminta {1} MB)	▷ [JVM] Tiến trình 32-bit: heap tối đa bị giới hạn ở {0} MB (yêu cầu {1} MB)
+\u25b7 [JVM] RAM game diminta {0} MB, RAM HP {1} MB: heap dibatasi {2} MB	▷ [JVM] RAM game yêu cầu {0} MB, RAM điện thoại {1} MB: heap bị giới hạn ở {2} MB
+\u25b7 [JVM] Heap awal {0} MB, maksimum {1} MB | RAM HP total {2} MB, tersedia {3} MB	▷ [JVM] Heap ban đầu {0} MB, tối đa {1} MB | tổng RAM điện thoại {2} MB, còn trống {3} MB
+[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...	[Amber Engine] Bắt đầu chạy VMLauncher.launchJVM()...
+[Amber Engine] JVM selesai dengan kode keluar: {0}	[Amber Engine] JVM kết thúc với mã thoát: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh	▷ [Điều khiển] Đã tự động ẩn các nút trên màn hình: phát hiện chuột trên lớp cảm ứng
+(dibuat ulang oleh sistem)	(do hệ thống tạo lại)
+Android meminta aplikasi melepas memori (tingkat {0})	Android yêu cầu ứng dụng giải phóng bộ nhớ (mức {0})
+PAKAI	DÙNG
+(salinan {0})	(bản sao {0})
+fungsi tak dikenal	hàm không rõ
+karakter tak dikenal	ký tự không rõ
+kurang {0}	thiếu {0}
+diteruskan ke mod (GLFW)	chuyển tiếp tới mod (GLFW)
+diteruskan ke mod (SDL)	chuyển tiếp tới mod (SDL)
+Bagikan Log Crash	Chia sẻ nhật ký crash
+Pemasangan {0} berhenti karena galat tak terduga	Việc cài {0} dừng lại do lỗi bất ngờ
+Pemasangan berhenti: {0}	Việc cài đặt đã dừng: {0}
+Mulai mengunduh {0} (Minecraft {1}, loader={2})	Bắt đầu tải {0} (Minecraft {1}, loader={2})
+Unduhan {0} selesai	Đã tải xong {0}
+Unduhan {0} dibatalkan	Đã hủy việc tải {0}
+Unduhan {0} gagal: {1}	Tải {0} thất bại: {1}
+{0} library LWJGL Mojang dilewati ({1} KiB), Amber memakai LWJGL sendiri	Đã bỏ qua {0} thư viện LWJGL của Mojang ({1} KiB), Amber dùng LWJGL riêng
+Library gagal: {0}: {1}	Thư viện thất bại: {0}: {1}
+{0} dari {1} library gagal diunduh (game bisa gagal dimulai)	{0}/{1} thư viện tải thất bại (game có thể không khởi động được)
+Aset gagal: {0}: {1}	Tài nguyên thất bại: {0}: {1}
+{0} dari {1} aset gagal diunduh (suara atau bahasa bisa hilang di game)	{0}/{1} tài nguyên tải thất bại (có thể thiếu âm thanh hoặc ngôn ngữ trong game)
+Daftar aset tidak bisa diproses: {0}	Không xử lý được danh sách tài nguyên: {0}
+Gagal mengunduh library Fabric: {0}	Tải thư viện Fabric thất bại: {0}
+{0} aset belum terunduh (di bawah batas toleransi {1}); instalasi tetap dianggap selesai	{0} tài nguyên chưa được tải (dưới ngưỡng cho phép {1}); việc cài đặt vẫn được coi là hoàn tất
+[{0}] Proses pemasangan tidak bisa dimulai	[{0}] Không thể bắt đầu tiến trình cài đặt
+[{0}] Proses installer berhenti mendadak (kemungkinan RAM HP habis)	[{0}] Tiến trình trình cài đặt dừng đột ngột (có thể điện thoại hết RAM)
+[{0}] Waktu pemasangan habis	[{0}] Cài đặt bị quá thời gian
+Memasang {0}	Đang cài {0}
+[{0}] JVM keluar dengan kode {1}	[{0}] JVM thoát với mã {1}
+Pemasangan {0} gagal	Cài {0} thất bại
+Mengunduh installer {0} {1}...	Đang tải trình cài đặt {0} {1}...
+Memasang {0} {1}...	Đang cài {0} {1}...
+Memasang {0} {1} ({2}/{3})...	Đang cài {0} {1} ({2}/{3})...
+{0} {1} terpasang	Đã cài {0} {1}
+Mengunduh library {0} ({1}/{2})...	Đang tải thư viện {0} ({1}/{2})...
+Sesi ketik layar ditutup: jendela game kehilangan fokus	Đã đóng phiên gõ trên màn hình: cửa sổ game mất tiêu điểm
+Sesi ketik layar ditutup: keyboard tidak terlihat lagi	Đã đóng phiên gõ trên màn hình: bàn phím không còn hiển thị
+Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan	Bỏ qua thao tác chạm PLAY: bước chuẩn bị trước đó vẫn đang chạy
+Sesi Microsoft diperbarui sebelum main	Đã làm mới phiên Microsoft trước khi chơi
+Pembaruan sesi Microsoft gagal	Làm mới phiên Microsoft thất bại
+Persiapan selesai dalam {0} ms	Chuẩn bị xong trong {0} ms
+Persiapan {0} gagal sebelum game dimulai	Chuẩn bị {0} thất bại trước khi game bắt đầu
+Pemanasan LWJGL dilewati: {0}	Bỏ qua bước khởi động LWJGL: {0}
+Berkas versi {0} tidak terbaca: {1}	Không đọc được tệp phiên bản {0}: {1}
+Berkas versi tidak ada: {0} (instance belum diunduh?)	Thiếu tệp phiên bản: {0} (instance chưa được tải?)
+Forge {0} hanya jalan di Java 8; {1} diganti jre-8	Forge {0} chỉ chạy trên Java 8; đã thay {1} bằng jre-8
+Client Minecraft tidak ada: {0}	Thiếu client Minecraft: {0}
+Mengaktifkan Offline Yggdrasil server pada port {0} untuk {1}	Đang bật máy chủ Offline Yggdrasil ở cổng {0} cho {1}
+Memulai game: runtime={0} (terpasang={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} berkas, mainClass={6}, mod={7}	Đang khởi động game: runtime={0} (đã cài={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} tệp, mainClass={6}, mods={7}
+Pemeriksaan pembaruan mod gagal: {0}	Kiểm tra cập nhật mod thất bại: {0}
+Gagal memperbarui {0}: {1}	Cập nhật {0} thất bại: {1}
+Gagal memperbarui catatan modpack: {0}	Cập nhật ghi chú modpack thất bại: {0}
+Gagal inspect ZIP: {0}	Kiểm tra ZIP thất bại: {0}
+File modpack dilewati (path/alamat tidak aman): {0}	Đã bỏ qua tệp modpack (đường dẫn/địa chỉ không an toàn): {0}
+Gagal unduh file modpack: {0}	Tải tệp modpack thất bại: {0}
+Isi modpack dilewati (path tidak aman): {0}	Đã bỏ qua nội dung modpack (đường dẫn không an toàn): {0}
+Isi arsip dilewati (path tidak aman): {0}	Đã bỏ qua nội dung tệp nén (đường dẫn không an toàn): {0}
+Gagal menyimpan metadata modpack: {0}	Lưu siêu dữ liệu modpack thất bại: {0}
+Gagal membaca metadata modpack: {0}	Đọc siêu dữ liệu modpack thất bại: {0}
+hanya -D yang diizinkan: {0}	chỉ cho phép -D: {0}
+properti dikelola launcher: {0}	thuộc tính do launcher quản lý: {0}
+{0}: dimatikan di Pengaturan	{0}: đã tắt trong Cài đặt
+{0}: di luar rentang versi Minecraft ({1})	{0}: ngoài phạm vi phiên bản Minecraft ({1})
+{0}: folder pustaka tidak ada	{0}: thiếu thư mục thư viện
+{0}: argumen ditolak - {~1}	{0}: tham số bị từ chối - {1}
+Folder config MobileGlues tidak bisa dibuat: {0}	Không tạo được thư mục cấu hình MobileGlues: {0}
+Config MobileGlues gagal disiapkan: {0}	Không chuẩn bị được cấu hình MobileGlues: {0}
+config.json MobileGlues tidak bisa disimpan: {0}	Không lưu được config.json của MobileGlues: {0}
+Gagal mengambil daftar aplikasi terpasang	Lấy danh sách ứng dụng đã cài thất bại
+Berhasil memuat Renderer Plugin V2 dari {0} ({1})	Đã tải Renderer Plugin V2 từ {0} ({1})
+Gagal mengurai fclPlugin_V2 dari {0}	Phân tích fclPlugin_V2 từ {0} thất bại
+Menerapkan profil konfigurasi V2 bawaan untuk MobileGL ({0})	Đang áp dụng hồ sơ cấu hình V2 mặc định cho MobileGL ({0})
+Mengekstrak Java {0} (arsitektur {1}) ke {2}	Đang giải nén Java {0} (kiến trúc {1}) vào {2}
+Gagal unpack universal.tar.xz: {0}	Giải nén universal.tar.xz thất bại: {0}
+Gagal unpack bin-{0}.tar.xz: {1}	Giải nén bin-{0}.tar.xz thất bại: {1}
+Verifikasi Java {0} tidak lengkap setelah ekstraksi	Việc xác minh Java {0} chưa hoàn tất sau khi giải nén
+Java {0} siap dipakai	Java {0} đã sẵn sàng
+Ekstraksi Java {0} gagal: {1}	Giải nén Java {0} thất bại: {1}
+Gagal unpack200 {0}: {1}	Giải nén unpack200 {0} thất bại: {1}
+Penunjuk lokasi data gagal ditulis	Không ghi được con trỏ vị trí dữ liệu
+Gagal menyiapkan tawaran: {0}	Chuẩn bị đề nghị thất bại: {0}
+Galat tak terduga: {0}	Lỗi bất ngờ: {0}
+Muat ulang instance gagal: {0}	Tải lại instance thất bại: {0}
+Dibatalkan pengguna	Người dùng đã hủy
+Gagal: {0} {1}	Thất bại: {0} {1}
+Ruang penyimpanan	Dung lượng lưu trữ
+Penyebab:	Nguyên nhân:
+Proses pemeriksa Vulkan tidak bisa dimulai: {0}	Không khởi động được tiến trình kiểm tra Vulkan: {0}
+proses pemeriksa tidak bisa dimulai	không khởi động được tiến trình kiểm tra
+proses pemeriksa berhenti sebelum selesai	tiến trình kiểm tra dừng trước khi xong
+pemeriksa tidak menjawab dalam {0} detik	trình kiểm tra không phản hồi trong {0} giây
+Pengecekan Vulkan tidak selesai: {0}	Việc kiểm tra Vulkan chưa hoàn tất: {0}
+HP tidak punya driver Vulkan yang bisa dibuka	điện thoại không có driver Vulkan nào mở được
+pemeriksa tidak ada di build ini ({0})	bản build này không có trình kiểm tra ({0})
+tidak ada jawaban	không có phản hồi
+Pengecekan Vulkan: {0}	Kiểm tra Vulkan: {0}
+Launcher: game masih berjalan, presence launcher dilewati	Launcher: game vẫn đang chạy, bỏ qua presence của launcher
+Presence launcher gagal: {0}	Presence của launcher thất bại: {0}
+Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai	Không tìm thấy ứng dụng Discord trên điện thoại này, không dùng presence
+SDK Discord siap ({0})	Discord SDK đã sẵn sàng ({0})
+SDK Discord tidak ikut di build ini	Bản build này không có Discord SDK
+SDK Discord tidak bisa disiapkan: {0}	Không chuẩn bị được Discord SDK: {0}
+Server terdeteksi dari log game	Đã phát hiện máy chủ từ nhật ký game
+Server dilepas (singleplayer atau terputus)	Đã thả máy chủ (chơi đơn hoặc mất kết nối)
+Presence dilewati: SDK atau aplikasi Discord tidak tersedia	Bỏ qua presence: SDK hoặc ứng dụng Discord không khả dụng
+Discord RPC gagal ditutup rapi: {0}	Discord RPC không đóng gọn gàng: {0}
+Discord RPC berhenti: klien SDK gagal dibuat	Discord RPC đã dừng: không tạo được client SDK
+Discord RPC berhenti: {0}	Discord RPC đã dừng: {0}
+Klien SDK dibuat ({0})	Đã tạo client SDK ({0})
+Koneksi ke Discord terputus, presence dikirim ulang	Mất kết nối với Discord, đã gửi lại presence
+Discord RPC dihentikan: {0}	Discord RPC bị dừng: {0}
+Presence tidak terkirim ke SDK	Presence không được chuyển tới SDK
+Discord belum tersambung dalam {0} detik; SDK dilepas, coba lagi {1} menit lagi	Discord không kết nối trong {0} giây; đã thả SDK, thử lại sau {1} phút
+Lokasi:	Vị trí:
+Salin detail	Sao chép chi tiết
+Detail disalin	Đã sao chép chi tiết
+Launcher terasa berat	Launcher chạy nặng
+Cara memasang mod	Cách cài mod
+MEMORI (RAM)	BỘ NHỚ (RAM)
+Ikuti global ({0})	Theo cài đặt chung ({0})
+SKALA RESOLUSI	TỶ LỆ ĐỘ PHÂN GIẢI
+Ikuti global ({0}%)	Theo cài đặt chung ({0}%)
+ARGUMEN JVM TAMBAHAN	THAM SỐ JVM BỔ SUNG
+Login Microsoft berhasil	Đăng nhập Microsoft thành công
+Autentikasi Minecraft gagal: {0}	Xác thực Minecraft thất bại: {0}
+Otorisasi Microsoft gagal: {0}	Ủy quyền Microsoft thất bại: {0}
+MEMUAT	ĐANG TẢI
+.zip (Datapack)	.zip (Datapack)
+Datapack	Datapack
+Tampilkan server yang dimainkan	Hiện máy chủ đang chơi
+Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.	Khi chơi trên máy chủ nhiều người chơi (loader Java), hồ sơ Discord của bạn hiển thị địa chỉ máy chủ, ví dụ Playing on mc.example.com. Bất kỳ ai xem được hồ sơ của bạn đều thấy địa chỉ đó. Địa chỉ mạng cục bộ không bao giờ được hiển thị. Địa chỉ được đọc từ nhật ký game: sau khi bạn chủ động rời máy chủ, địa chỉ có thể còn lại cho đến khi bạn vào máy chủ khác hoặc mở thế giới chơi đơn. Dùng cùng Discord Rich Presence khi chơi. Có hiệu lực từ lần chơi tiếp theo.
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Khi launcher đang mở và bạn chưa bắt đầu chơi, hồ sơ Discord của bạn hiển thị AmberLauncher với trạng thái Getting ready to play. Có hiệu lực vào lần mở launcher tiếp theo. Dùng cùng ứng dụng Discord bạn đã đăng nhập; không dành cho người dùng dưới 13 tuổi.
+Perlihatkan aktivitas di launcher	Hiện hoạt động trong launcher
+Bantuan	Trợ giúp
+Gagal mengunduh. {~0}	Tải xuống thất bại. {0}
+tombol controller	nút tay cầm
+keyboard fisik ({0}, device={1})	bàn phím vật lý ({0}, device={1})
+gerakan controller	chuyển động tay cầm
+mouse fisik (gerak/klik/gulir)	chuột vật lý (di chuyển/nhấp/cuộn)
+mouse fisik (sentuhan dari sumber mouse)	chuột vật lý (chạm từ nguồn chuột)
+kombinasi {0} aksi={1} tombol={2}	tổ hợp {0} hành động={1} nút={2}
+jalur={0} sumber=0x{1} alat={2} aksi={3} tombol={4}	đường dẫn={0} nguồn=0x{1} công cụ={2} hành động={3} nút={4}
+tidak ada mouse/touchpad/trackball/stylus terdeteksi	không phát hiện chuột/bàn di chuột/trackball/bút cảm ứng
+perangkat: {0}	thiết bị: {0}
+pointer-capture jendela={0}	pointer-capture của cửa sổ={0}
+pointer-capture diminta mode={0} fokusJendela={1} fokusView={2}	yêu cầu pointer-capture chế độ={0} tiêuĐiểmCửaSổ={1} tiêuĐiểmView={2}
+akhir ungkapan	kết thúc biểu thức
+Vulkan {0}, {1} ekstensi	Vulkan {0}, {1} tiện ích mở rộng
+tidak diketahui	không rõ
+Presence diminta: {0} / {1}	Đã yêu cầu presence: {0} / {1}
+Instalasi {0} belum lengkap: {~1}	Việc cài {0} chưa hoàn tất: {1}
+Dasar	Cơ bản
+Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.	Nhấn S nhanh giữa trận đấu để đặt lại sprint và điều chỉnh khoảng cách.
+Lempar Pearl / Potion + Balik	Ném Pearl / Potion + Đổi lại
+Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.	Nhảy rồi đánh khi bắt đầu rơi (đòn chí mạng). Chỉnh Chờ nếu nhịp chưa khớp.
+Makan Gapple + Balik	Ăn Gapple + Đổi lại
+Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.	Bắn tên lửa định kỳ trong khi vẫn cầm spear. Nhấn lại để dừng.
+Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.	Đặt obsidian, đặt end crystal lên trên rồi phá vỡ. Một lần chạm.
+Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.	Đặt respawn anchor, nạp glowstone rồi cho nổ. Một lần chạm.
+Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.	Cầm end crystal và nhắm vào obsidian: lần lượt đặt rồi phá.
+Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.	Đổi sang ender pearl hoặc splash potion, ném rồi đổi lại vũ khí.
+Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.	Đổi sang golden apple, ăn hết rồi đổi lại vũ khí.
+Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.	Đổi sang tên lửa, bắn rồi đổi lại spear. Một lần chạm = một lần tăng tốc.
+Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.	Đổi sang totem, chuyển sang tay trái (offhand) rồi đổi lại vũ khí.
+Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.	Đánh một lần bằng rìu để hạ khiên đối thủ rồi đổi lại kiếm.
+PvP Umum	PvP chung
+Roket + Charge Spear	Tên lửa + Spear tích lực
+Roket + Spear	Tên lửa + Spear
+Roket Otomatis + Spear	Tên lửa tự động + Spear
+Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.	Tên lửa, rồi spear với chuột phải giữ để tấn công tích lực, lặp lại liên tục.
+Slot end crystal	Ô end crystal
+Slot glowstone	Ô glowstone
+Slot golden apple	Ô golden apple
+Slot item lempar	Ô vật phẩm ném
+Slot kapak	Ô rìu
+Slot obsidian	Ô obsidian
+Slot pedang	Ô kiếm
+Slot respawn anchor	Ô respawn anchor
+Slot roket	Ô tên lửa
+Slot senjata	Ô vũ khí
+Slot spear	Ô spear
+Slot totem	Ô totem
+Totem Cepat	Totem nhanh
+Renderer {~0}	Renderer {0}
+[TouchController] kelas klien tidak ditemukan; memakai kontrol bawaan	[TouchController] không tìm thấy lớp client; dùng điều khiển có sẵn
+[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan	[TouchController] không tìm thấy bộ tạo transport; dùng điều khiển có sẵn
+[TouchController] transport kosong; memakai kontrol bawaan	[TouchController] transport rỗng; dùng điều khiển có sẵn
+[TouchController] jenis transport tidak dikenal ({0}); memakai kontrol bawaan	[TouchController] loại transport không rõ ({0}); dùng điều khiển có sẵn
+[TouchController] konstruktor klien tidak cocok; memakai kontrol bawaan	[TouchController] constructor của client không khớp; dùng điều khiển có sẵn
+[TouchController] metode klien tidak cocok ({0}); memakai kontrol bawaan	[TouchController] phương thức của client không khớp ({0}); dùng điều khiển có sẵn
+[TouchController] klien berhenti: {0}	[TouchController] client đã dừng: {0}
+[TouchController] gagal memulai: {0}; memakai kontrol bawaan	[TouchController] khởi động thất bại: {0}; dùng điều khiển có sẵn
+[TouchController] {0} gagal ({1})	[TouchController] {0} thất bại ({1})
+[TouchController] {0} gagal ({1}); pengiriman dihentikan	[TouchController] {0} thất bại ({1}); đã dừng gửi
+path mengandung '..': {0}	đường dẫn chứa '..': {0}

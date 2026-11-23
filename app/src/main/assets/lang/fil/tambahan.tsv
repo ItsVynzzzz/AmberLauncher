@@ -272,3 +272,226 @@ Password hanya dikirim ke server Ely.by dan tidak disimpan di launcher. Yang dis
 Respon Ely.by tidak berisi token akses.	Walang access token ang tugon ng Ely.by.
 Sesi Ely.by sudah tidak berlaku. Hapus akun ini lalu masuk lagi.	Hindi na valid ang session ng Ely.by. Burahin ang account na ito at mag-sign in ulit.
 Tidak bisa terhubung ke Ely.by. Periksa koneksi internet.	Hindi makakonekta sa Ely.by. Suriin ang internet connection mo.
+\u25b7 [Kinerja] RAM HP hampir habis (tingkat {0} dari 15): Android meminta aplikasi melepas memori	▷ [Performance] Halos puno na ang RAM ng phone (level {0} sa 15): hiniling ng Android sa app na magbakante ng memory
+\u25b7 [In-Game Resolution] Dinamis diperbarui ke {0}% ({1}x{2})	▷ [In-Game Resolution] Dynamic na ina-update sa {0}% ({1}x{2})
+\u25b7 [TouchController] Game sudah tampil tetapi mod belum tersambung; kontrol bawaan tetap dipakai	▷ [TouchController] Nakikita na ang game pero hindi pa nakakonekta ang mod; ginagamit pa rin ang built-in na controls
+\u25b7 [Layar] Meminta {0} Hz (modeId={1})	▷ [Display] Hinihiling ang {0} Hz (modeId={1})
+\u25b7 [Layar] Gagal mengunci refresh rate: {0}	▷ [Display] Hindi na-lock ang refresh rate: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: {~0}	▷ [Controls] Awtomatikong itinago ang mga button sa screen: {0}
+[AmberLauncher] Menyiapkan environment JVM...	[AmberLauncher] Inihahanda ang JVM environment...
+[Amber Runtime] Mempersiapkan OpenJDK ({0})...	[Amber Runtime] Inihahanda ang OpenJDK ({0})...
+[ERROR] Gagal mengekstrak OpenJDK {0}: {1}	[ERROR] Hindi na-extract ang OpenJDK {0}: {1}
+[ERROR] Gagal mengekstrak OpenJDK: {0}	[ERROR] Hindi na-extract ang OpenJDK: {0}
+[Amber Runtime] OpenJDK ({0}) siap digunakan!	[Amber Runtime] Handa nang gamitin ang OpenJDK ({0})!
+\u25b7 [Plugin Native] dilewati - {0}	▷ [Native Plugin] nilaktawan - {0}
+\u25b7 [Renderer V2 Env Warning] Gagal menginjeksi V2 env: {0}	▷ [Renderer V2 Env Warning] Hindi na-inject ang V2 env: {0}
+\u25b7 [MobileGlues] Config launcher dipakai: {0}	▷ [MobileGlues] Ginagamit ang config ng launcher: {0}
+\u25b7 [MobileGlues Warning] Config launcher tidak bisa disiapkan, MobileGlues memakai bawaannya	▷ [MobileGlues Warning] Hindi maihanda ang config ng launcher, ginagamit ng MobileGlues ang default nito
+\u25b7 [MobileGlues Warning] Config launcher dilewati: {0}	▷ [MobileGlues Warning] Nilaktawan ang config ng launcher: {0}
+\u25b7 [Renderer] Minecraft {0} memeriksa glGetError: LIBGL_NOERROR dimatikan	▷ [Renderer] Sinusuri ng Minecraft {0} ang glGetError: pinatay ang LIBGL_NOERROR
+\u25b7 [Plugin Dependency] {0} dimuat dari {1}	▷ [Plugin Dependency] Na-load ang {0} mula sa {1}
+\u25b7 [Plugin Dependency Warning] {0} gagal dimuat	▷ [Plugin Dependency Warning] Hindi na-load ang {0}
+\u25b7 [Plugin GL Warning] {0}: dlopen gagal (dependensi tidak ditemukan?)	▷ [Plugin GL Warning] {0}: nabigo ang dlopen (hindi makita ang dependency?)
+\u25b7 [TouchController] Mod tersambung ({0}s setelah dimulai): sentuhan juga diteruskan ke mod, kontrol bawaan tetap aktif	▷ [TouchController] Nakakonekta ang mod ({0}s pagkatapos magsimula): ipinapasa rin sa mod ang mga touch, aktibo pa rin ang built-in na controls
+\u25b7 [JNA] Memakai libjnidispatch untuk JNA {0}	▷ [JNA] Ginagamit ang libjnidispatch para sa JNA {0}
+\u25b7 [JVM] Proses 32-bit: heap maksimum dibatasi {0} MB (diminta {1} MB)	▷ [JVM] 32-bit na process: nililimitahan ang maximum heap sa {0} MB (hiniling {1} MB)
+\u25b7 [JVM] RAM game diminta {0} MB, RAM HP {1} MB: heap dibatasi {2} MB	▷ [JVM] Hiniling na RAM ng game {0} MB, RAM ng phone {1} MB: nililimitahan ang heap sa {2} MB
+\u25b7 [JVM] Heap awal {0} MB, maksimum {1} MB | RAM HP total {2} MB, tersedia {3} MB	▷ [JVM] Initial heap {0} MB, maximum {1} MB | kabuuang RAM ng phone {2} MB, available {3} MB
+[Amber Engine] Memulai eksekusi VMLauncher.launchJVM()...	[Amber Engine] Sinisimulan ang pagpapatakbo ng VMLauncher.launchJVM()...
+[Amber Engine] JVM selesai dengan kode keluar: {0}	[Amber Engine] Natapos ang JVM sa exit code: {0}
+\u25b7 [Kontrol] Tombol layar disembunyikan otomatis: mouse terdeteksi di lapisan sentuh	▷ [Controls] Awtomatikong itinago ang mga button sa screen: may nakitang mouse sa touch layer
+(dibuat ulang oleh sistem)	(ginawang muli ng system)
+Android meminta aplikasi melepas memori (tingkat {0})	Hiniling ng Android sa app na magbakante ng memory (level {0})
+PAKAI	GAMITIN
+(salinan {0})	(kopya {0})
+fungsi tak dikenal	hindi kilalang function
+karakter tak dikenal	hindi kilalang character
+kurang {0}	kulang ang {0}
+diteruskan ke mod (GLFW)	ipinasa sa mod (GLFW)
+diteruskan ke mod (SDL)	ipinasa sa mod (SDL)
+Bagikan Log Crash	Ibahagi ang crash log
+Pemasangan {0} berhenti karena galat tak terduga	Huminto ang pag-install ng {0} dahil sa hindi inaasahang error
+Pemasangan berhenti: {0}	Huminto ang pag-install: {0}
+Mulai mengunduh {0} (Minecraft {1}, loader={2})	Sinisimulan ang pag-download ng {0} (Minecraft {1}, loader={2})
+Unduhan {0} selesai	Natapos ang pag-download ng {0}
+Unduhan {0} dibatalkan	Kinansela ang pag-download ng {0}
+Unduhan {0} gagal: {1}	Nabigo ang pag-download ng {0}: {1}
+{0} library LWJGL Mojang dilewati ({1} KiB), Amber memakai LWJGL sendiri	{0} LWJGL library ng Mojang ang nilaktawan ({1} KiB), gumagamit ang Amber ng sarili nitong LWJGL
+Library gagal: {0}: {1}	Nabigo ang library: {0}: {1}
+{0} dari {1} library gagal diunduh (game bisa gagal dimulai)	{0} sa {1} library ang hindi na-download (maaaring hindi magsimula ang game)
+Aset gagal: {0}: {1}	Nabigo ang asset: {0}: {1}
+{0} dari {1} aset gagal diunduh (suara atau bahasa bisa hilang di game)	{0} sa {1} asset ang hindi na-download (maaaring mawala ang tunog o wika sa game)
+Daftar aset tidak bisa diproses: {0}	Hindi maproseso ang listahan ng asset: {0}
+Gagal mengunduh library Fabric: {0}	Hindi na-download ang Fabric library: {0}
+{0} aset belum terunduh (di bawah batas toleransi {1}); instalasi tetap dianggap selesai	{0} asset ang hindi pa na-download (mas mababa sa tolerance limit na {1}); ituturing pa ring kumpleto ang pag-install
+[{0}] Proses pemasangan tidak bisa dimulai	[{0}] Hindi masimulan ang proseso ng pag-install
+[{0}] Proses installer berhenti mendadak (kemungkinan RAM HP habis)	[{0}] Biglang huminto ang proseso ng installer (malamang naubusan ng RAM ang phone)
+[{0}] Waktu pemasangan habis	[{0}] Nag-timeout ang pag-install
+Memasang {0}	Ini-install ang {0}
+[{0}] JVM keluar dengan kode {1}	[{0}] Lumabas ang JVM na may code {1}
+Pemasangan {0} gagal	Nabigo ang pag-install ng {0}
+Mengunduh installer {0} {1}...	Dina-download ang installer ng {0} {1}...
+Memasang {0} {1}...	Ini-install ang {0} {1}...
+Memasang {0} {1} ({2}/{3})...	Ini-install ang {0} {1} ({2}/{3})...
+{0} {1} terpasang	Na-install ang {0} {1}
+Mengunduh library {0} ({1}/{2})...	Dina-download ang library na {0} ({1}/{2})...
+Sesi ketik layar ditutup: jendela game kehilangan fokus	Isinara ang sesyon ng pag-type sa screen: nawalan ng focus ang window ng game
+Sesi ketik layar ditutup: keyboard tidak terlihat lagi	Isinara ang sesyon ng pag-type sa screen: hindi na nakikita ang keyboard
+Ketukan PLAY diabaikan: persiapan sebelumnya masih berjalan	Binalewala ang tap sa PLAY: tumatakbo pa ang naunang paghahanda
+Sesi Microsoft diperbarui sebelum main	Na-refresh ang Microsoft session bago maglaro
+Pembaruan sesi Microsoft gagal	Nabigo ang pag-refresh ng Microsoft session
+Persiapan selesai dalam {0} ms	Natapos ang paghahanda sa loob ng {0} ms
+Persiapan {0} gagal sebelum game dimulai	Nabigo ang paghahanda ng {0} bago nagsimula ang game
+Pemanasan LWJGL dilewati: {0}	Nilaktawan ang LWJGL warm-up: {0}
+Berkas versi {0} tidak terbaca: {1}	Hindi mabasa ang version file na {0}: {1}
+Berkas versi tidak ada: {0} (instance belum diunduh?)	Wala ang version file: {0} (hindi pa na-download ang instance?)
+Forge {0} hanya jalan di Java 8; {1} diganti jre-8	Sa Java 8 lang tumatakbo ang Forge {0}; pinalitan ang {1} ng jre-8
+Client Minecraft tidak ada: {0}	Wala ang Minecraft client: {0}
+Mengaktifkan Offline Yggdrasil server pada port {0} untuk {1}	Ina-enable ang Offline Yggdrasil server sa port {0} para sa {1}
+Memulai game: runtime={0} (terpasang={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} berkas, mainClass={6}, mod={7}	Sinisimulan ang game: runtime={0} (naka-install={1}), LWJGL={2}, lwjglx={3}, wrapper={4}, classpath={5} file, mainClass={6}, mods={7}
+Pemeriksaan pembaruan mod gagal: {0}	Nabigo ang pagsusuri ng update ng mod: {0}
+Gagal memperbarui {0}: {1}	Hindi na-update ang {0}: {1}
+Gagal memperbarui catatan modpack: {0}	Hindi na-update ang mga tala ng modpack: {0}
+Gagal inspect ZIP: {0}	Hindi nasuri ang ZIP: {0}
+File modpack dilewati (path/alamat tidak aman): {0}	Nilaktawan ang file ng modpack (hindi ligtas na path/address): {0}
+Gagal unduh file modpack: {0}	Hindi na-download ang file ng modpack: {0}
+Isi modpack dilewati (path tidak aman): {0}	Nilaktawan ang laman ng modpack (hindi ligtas na path): {0}
+Isi arsip dilewati (path tidak aman): {0}	Nilaktawan ang laman ng archive (hindi ligtas na path): {0}
+Gagal menyimpan metadata modpack: {0}	Hindi na-save ang metadata ng modpack: {0}
+Gagal membaca metadata modpack: {0}	Hindi nabasa ang metadata ng modpack: {0}
+hanya -D yang diizinkan: {0}	-D lang ang pinapayagan: {0}
+properti dikelola launcher: {0}	property na pinamamahalaan ng launcher: {0}
+{0}: dimatikan di Pengaturan	{0}: naka-off sa Mga Setting
+{0}: di luar rentang versi Minecraft ({1})	{0}: labas sa saklaw ng bersyon ng Minecraft ({1})
+{0}: folder pustaka tidak ada	{0}: wala ang folder ng library
+{0}: argumen ditolak - {~1}	{0}: tinanggihan ang argument - {1}
+Folder config MobileGlues tidak bisa dibuat: {0}	Hindi magawa ang config folder ng MobileGlues: {0}
+Config MobileGlues gagal disiapkan: {0}	Hindi maihanda ang config ng MobileGlues: {0}
+config.json MobileGlues tidak bisa disimpan: {0}	Hindi ma-save ang config.json ng MobileGlues: {0}
+Gagal mengambil daftar aplikasi terpasang	Hindi makuha ang listahan ng mga naka-install na app
+Berhasil memuat Renderer Plugin V2 dari {0} ({1})	Na-load ang Renderer Plugin V2 mula sa {0} ({1})
+Gagal mengurai fclPlugin_V2 dari {0}	Hindi ma-parse ang fclPlugin_V2 mula sa {0}
+Menerapkan profil konfigurasi V2 bawaan untuk MobileGL ({0})	Inilalapat ang default na V2 configuration profile para sa MobileGL ({0})
+Mengekstrak Java {0} (arsitektur {1}) ke {2}	Ine-extract ang Java {0} (architecture {1}) sa {2}
+Gagal unpack universal.tar.xz: {0}	Hindi na-unpack ang universal.tar.xz: {0}
+Gagal unpack bin-{0}.tar.xz: {1}	Hindi na-unpack ang bin-{0}.tar.xz: {1}
+Verifikasi Java {0} tidak lengkap setelah ekstraksi	Hindi kumpleto ang verification ng Java {0} pagkatapos mag-extract
+Java {0} siap dipakai	Handa nang gamitin ang Java {0}
+Ekstraksi Java {0} gagal: {1}	Nabigo ang pag-extract ng Java {0}: {1}
+Gagal unpack200 {0}: {1}	Hindi na-unpack ang unpack200 {0}: {1}
+Penunjuk lokasi data gagal ditulis	Hindi naisulat ang pointer ng lokasyon ng data
+Gagal menyiapkan tawaran: {0}	Hindi maihanda ang alok: {0}
+Galat tak terduga: {0}	Hindi inaasahang error: {0}
+Muat ulang instance gagal: {0}	Nabigo ang pag-reload ng instance: {0}
+Dibatalkan pengguna	Kinansela ng user
+Gagal: {0} {1}	Nabigo: {0} {1}
+Ruang penyimpanan	Espasyo ng storage
+Penyebab:	Sanhi:
+Proses pemeriksa Vulkan tidak bisa dimulai: {0}	Hindi masimulan ang proseso ng Vulkan checker: {0}
+proses pemeriksa tidak bisa dimulai	hindi masimulan ang proseso ng checker
+proses pemeriksa berhenti sebelum selesai	huminto ang proseso ng checker bago matapos
+pemeriksa tidak menjawab dalam {0} detik	hindi sumagot ang checker sa loob ng {0} segundo
+Pengecekan Vulkan tidak selesai: {0}	Hindi natapos ang pagsusuri ng Vulkan: {0}
+HP tidak punya driver Vulkan yang bisa dibuka	walang Vulkan driver ang phone na mabubuksan
+pemeriksa tidak ada di build ini ({0})	wala ang checker sa build na ito ({0})
+tidak ada jawaban	walang sagot
+Pengecekan Vulkan: {0}	Pagsusuri ng Vulkan: {0}
+Launcher: game masih berjalan, presence launcher dilewati	Launcher: tumatakbo pa ang game, nilaktawan ang presence ng launcher
+Presence launcher gagal: {0}	Nabigo ang presence ng launcher: {0}
+Aplikasi Discord tidak ditemukan di HP ini, presence tidak dipakai	Hindi makita ang Discord app sa phone na ito, hindi ginagamit ang presence
+SDK Discord siap ({0})	Handa na ang Discord SDK ({0})
+SDK Discord tidak ikut di build ini	Hindi kasama ang Discord SDK sa build na ito
+SDK Discord tidak bisa disiapkan: {0}	Hindi maihanda ang Discord SDK: {0}
+Server terdeteksi dari log game	Natukoy ang server mula sa game log
+Server dilepas (singleplayer atau terputus)	Binitawan ang server (singleplayer o nadiskonekta)
+Presence dilewati: SDK atau aplikasi Discord tidak tersedia	Nilaktawan ang presence: hindi available ang SDK o ang Discord app
+Discord RPC gagal ditutup rapi: {0}	Hindi maayos na nagsara ang Discord RPC: {0}
+Discord RPC berhenti: klien SDK gagal dibuat	Huminto ang Discord RPC: hindi magawa ang SDK client
+Discord RPC berhenti: {0}	Huminto ang Discord RPC: {0}
+Klien SDK dibuat ({0})	Nagawa ang SDK client ({0})
+Koneksi ke Discord terputus, presence dikirim ulang	Nawala ang koneksyon sa Discord, ipinadala ulit ang presence
+Discord RPC dihentikan: {0}	Itinigil ang Discord RPC: {0}
+Presence tidak terkirim ke SDK	Hindi naihatid sa SDK ang presence
+Discord belum tersambung dalam {0} detik; SDK dilepas, coba lagi {1} menit lagi	Hindi nakakonekta ang Discord sa loob ng {0} segundo; binitawan ang SDK, susubukan ulit sa {1} minuto
+Lokasi:	Lokasyon:
+Salin detail	Kopyahin ang mga detalye
+Detail disalin	Nakopya ang mga detalye
+Launcher terasa berat	Mabigat ang pakiramdam ng launcher
+Cara memasang mod	Paano mag-install ng mod
+MEMORI (RAM)	MEMORY (RAM)
+Ikuti global ({0})	Sundan ang global ({0})
+SKALA RESOLUSI	SCALE NG RESOLUTION
+Ikuti global ({0}%)	Sundan ang global ({0}%)
+ARGUMEN JVM TAMBAHAN	KARAGDAGANG JVM ARGUMENT
+Login Microsoft berhasil	Matagumpay ang Microsoft sign-in
+Autentikasi Minecraft gagal: {0}	Nabigo ang Minecraft authentication: {0}
+Otorisasi Microsoft gagal: {0}	Nabigo ang Microsoft authorization: {0}
+MEMUAT	NILO-LOAD
+.zip (Datapack)	.zip (Datapack)
+Datapack	Datapack
+Tampilkan server yang dimainkan	Ipakita ang server na nilalaro
+Saat bermain di server multiplayer (loader Java), profil Discord menampilkan alamat servernya, misalnya Playing on mc.contoh.com. Siapa pun yang bisa melihat profilmu bisa melihat alamat itu. Alamat jaringan lokal tidak pernah ditampilkan. Alamat dibaca dari log game: setelah keluar dari server dengan sengaja, alamatnya bisa bertahan sampai kamu masuk server lain atau membuka dunia singleplayer. Dipakai bersama Discord Rich Presence saat bermain. Berlaku mulai game berikutnya.	Kapag naglalaro sa multiplayer server (Java loader), ipinapakita ng Discord profile mo ang address ng server, halimbawa Playing on mc.halimbawa.com. Makikita ng sinumang nakakakita ng profile mo ang address na iyon. Hindi kailanman ipinapakita ang mga local network address. Binabasa ang address mula sa game log: pagkatapos mong sadyang umalis sa server, maaaring manatili ang address hanggang sa pumasok ka sa ibang server o magbukas ng singleplayer na mundo. Ginagamit kasama ng Discord Rich Presence habang naglalaro. Epektibo simula sa susunod na game.
+Saat launcher terbuka dan kamu belum bermain, profil Discord menampilkan AmberLauncher dengan keterangan Getting ready to play. Berlaku saat launcher dibuka lagi. Dipakai bersama aplikasi Discord yang sudah login; tidak untuk pengguna di bawah 13 tahun.	Kapag bukas ang launcher at hindi ka pa nagsisimulang maglaro, ipinapakita ng Discord profile mo ang AmberLauncher na may status na Getting ready to play. Epektibo sa susunod na pagbukas ng launcher. Ginagamit kasama ng Discord app na naka-sign in ka na; hindi para sa mga wala pang 13 taong gulang.
+Perlihatkan aktivitas di launcher	Ipakita ang aktibidad sa launcher
+Bantuan	Tulong
+Gagal mengunduh. {~0}	Nabigo ang pag-download. {0}
+tombol controller	mga button ng controller
+keyboard fisik ({0}, device={1})	pisikal na keyboard ({0}, device={1})
+gerakan controller	galaw ng controller
+mouse fisik (gerak/klik/gulir)	pisikal na mouse (galaw/click/scroll)
+mouse fisik (sentuhan dari sumber mouse)	pisikal na mouse (mga touch mula sa mouse source)
+kombinasi {0} aksi={1} tombol={2}	combo {0} action={1} mga button={2}
+jalur={0} sumber=0x{1} alat={2} aksi={3} tombol={4}	path={0} source=0x{1} tool={2} action={3} mga button={4}
+tidak ada mouse/touchpad/trackball/stylus terdeteksi	walang nakitang mouse/touchpad/trackball/stylus
+perangkat: {0}	device: {0}
+pointer-capture jendela={0}	pointer-capture ng window={0}
+pointer-capture diminta mode={0} fokusJendela={1} fokusView={2}	hiniling ang pointer-capture mode={0} windowFocus={1} viewFocus={2}
+akhir ungkapan	dulo ng expression
+Vulkan {0}, {1} ekstensi	Vulkan {0}, {1} extension
+tidak diketahui	hindi alam
+Presence diminta: {0} / {1}	Hiniling ang presence: {0} / {1}
+Instalasi {0} belum lengkap: {~1}	Hindi kumpleto ang pag-install ng {0}: {1}
+Dasar	Batayan
+Ketuk S sebentar di tengah duel untuk mereset sprint dan mengatur jarak.	Saglit na pindutin ang S sa gitna ng duel para i-reset ang sprint at kontrolin ang distansya.
+Lempar Pearl / Potion + Balik	Ihagis ang Pearl / Potion + Bumalik
+Lompat lalu memukul saat mulai jatuh (critical hit). Ubah Tunggu bila kurang pas.	Tumalon at tumama pagsimulang bumagsak (critical hit). Ayusin ang Hintay kung hindi tama ang timing.
+Makan Gapple + Balik	Kumain ng Gapple + Bumalik
+Menembak roket berkala sambil tetap memegang spear. Ketuk lagi untuk berhenti.	Regular na nagpapaputok ng rocket habang hawak pa rin ang spear. Pindutin ulit para huminto.
+Pasang obsidian, taruh end crystal di atasnya, lalu pecahkan. Satu ketukan.	Maglagay ng obsidian, ipatong ang end crystal, saka basagin. Isang tap.
+Pasang respawn anchor, isi dengan glowstone, lalu ledakkan. Satu ketukan.	Maglagay ng respawn anchor, lagyan ng glowstone, saka pasabugin. Isang tap.
+Pegang end crystal dan arahkan ke obsidian: memasang lalu memecahkan bergantian.	Hawakan ang end crystal at ituon sa obsidian: salitan ang paglalagay at pagbasag.
+Pindah ke ender pearl atau splash potion, lempar, lalu kembali ke senjata.	Lumipat sa ender pearl o splash potion, ihagis, saka bumalik sa sandata.
+Pindah ke golden apple, makan sampai habis, lalu kembali ke senjata.	Lumipat sa golden apple, kainin hanggang maubos, saka bumalik sa sandata.
+Pindah ke roket, tembakkan, lalu kembali ke spear. Satu ketukan = satu dorongan.	Lumipat sa rocket, paputukin, saka bumalik sa spear. Isang tap = isang boost.
+Pindah ke totem, taruh di tangan kiri (offhand), lalu kembali ke senjata.	Lumipat sa totem, ilagay sa kaliwang kamay (offhand), saka bumalik sa sandata.
+Pukul sekali dengan kapak untuk menjatuhkan shield lawan, lalu kembali ke pedang.	Isang hampas gamit ang palakol para ibagsak ang shield ng kalaban, saka bumalik sa espada.
+PvP Umum	Pangkalahatang PvP
+Roket + Charge Spear	Rocket + Charge Spear
+Roket + Spear	Rocket + Spear
+Roket Otomatis + Spear	Auto Rocket + Spear
+Roket, lalu spear dengan klik kanan ditahan untuk charge attack, diulang terus.	Rocket, saka ang spear na may hawak na right-click para sa charge attack, inuulit nang tuloy-tuloy.
+Slot end crystal	Slot ng end crystal
+Slot glowstone	Slot ng glowstone
+Slot golden apple	Slot ng golden apple
+Slot item lempar	Slot ng ihahagis na item
+Slot kapak	Slot ng palakol
+Slot obsidian	Slot ng obsidian
+Slot pedang	Slot ng espada
+Slot respawn anchor	Slot ng respawn anchor
+Slot roket	Slot ng rocket
+Slot senjata	Slot ng sandata
+Slot spear	Slot ng spear
+Slot totem	Slot ng totem
+Totem Cepat	Mabilis na Totem
+{0} / {1} file	{0} / {1} file
+[TouchController] kelas klien tidak ditemukan; memakai kontrol bawaan	[TouchController] hindi makita ang client class; ginagamit ang built-in na controls
+[TouchController] pembuat transport tidak ditemukan; memakai kontrol bawaan	[TouchController] hindi makita ang transport factory; ginagamit ang built-in na controls
+[TouchController] transport kosong; memakai kontrol bawaan	[TouchController] walang laman ang transport; ginagamit ang built-in na controls
+[TouchController] jenis transport tidak dikenal ({0}); memakai kontrol bawaan	[TouchController] hindi kilalang uri ng transport ({0}); ginagamit ang built-in na controls
+[TouchController] konstruktor klien tidak cocok; memakai kontrol bawaan	[TouchController] hindi tugma ang client constructor; ginagamit ang built-in na controls
+[TouchController] metode klien tidak cocok ({0}); memakai kontrol bawaan	[TouchController] hindi tugma ang client method ({0}); ginagamit ang built-in na controls
+[TouchController] klien berhenti: {0}	[TouchController] huminto ang client: {0}
+[TouchController] gagal memulai: {0}; memakai kontrol bawaan	[TouchController] hindi nagsimula: {0}; ginagamit ang built-in na controls
+[TouchController] {0} gagal ({1})	[TouchController] nabigo ang {0} ({1})
+[TouchController] {0} gagal ({1}); pengiriman dihentikan	[TouchController] nabigo ang {0} ({1}); huminto ang pagpapadala
+path mengandung '..': {0}	may '..' ang path: {0}

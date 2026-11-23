@@ -217,6 +217,11 @@ fun SwitchableMouseLayout(
                     val forwarder = TouchForwarder()
                     // Status kursor terkunci pada kejadian sebelumnya, untuk mendeteksi pergantian mode.
                     var lastCaptured = currentCursorMode == CURSOR_DISABLED
+                    // Mode Ketuk di menu: geseran jari ke atas/bawah dikumpulkan di sini, lalu dikirim ke game sebagai
+                    // roda mouse (satu langkah tiap scrollStepPx). Tanpa ini daftar (mod, dunia, pengaturan) tidak bisa
+                    // digulir dengan jari, karena game hanya mengenal roda mouse dan tombol kiri yang ditahan.
+                    var scrollAccum = 0f
+                    val scrollStepPx = viewConfiguration.touchSlop * 3f
 
                     awaitPointerEventScope {
                         while (true) {
@@ -323,6 +328,7 @@ fun SwitchableMouseLayout(
                                     startPosition = downEvent.position
                                     isDragging = false
                                     longPressTriggered = false
+                                    scrollAccum = 0f
 
                                     val capturedNow = currentCursorMode == CURSOR_DISABLED
                                     hotbarSlot = if (capturedNow) {
@@ -400,6 +406,25 @@ fun SwitchableMouseLayout(
                                         } else {
                                             currentOnCursorPositionChange(moveChange.position)
                                             sendScaledCursor(moveChange.position.x, moveChange.position.y)
+                                            // Geser jari = gulir daftar (isi daftar mengikuti jari). Tidak berlaku saat jari
+                                            // menahan tombol kiri (tekan-tahan), supaya scrollbar putih dan slider tetap
+                                            // bisa diseret seperti biasa.
+                                            if (isDragging && !longPressTriggered) {
+                                                scrollAccum += if (crossedSlop) {
+                                                    moveChange.position.y - startPosition.y
+                                                } else {
+                                                    moveChange.positionChange().y
+                                                }
+                                                while (scrollAccum >= scrollStepPx) {
+                                                    // Jari turun: isi daftar turun, tampilkan yang di atas.
+                                                    CallbackBridge.sendScroll(0.0, 1.0)
+                                                    scrollAccum -= scrollStepPx
+                                                }
+                                                while (scrollAccum <= -scrollStepPx) {
+                                                    CallbackBridge.sendScroll(0.0, -1.0)
+                                                    scrollAccum += scrollStepPx
+                                                }
+                                            }
                                         }
                                     }
                                     moveChange.consume()

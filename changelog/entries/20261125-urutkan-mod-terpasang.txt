@@ -1,0 +1,6 @@
+[id]
++ Manajemen Mod: tombol "Urutkan" baru di baris pembaruan mod. Pilihan: nama A-Z/Z-A, aktif di atas, nonaktif di atas, ukuran terbesar/terkecil. Mod aktif dan nonaktif bisa dikelompokkan, seperti di Zalith.
+! Bar pembaruan mod dipendekkan supaya muat bersama tombol urutan: tombol jadi "Periksa" dan "Perbarui (n)", dan teks "Pembaruan otomatis aktif" dihapus karena sudah terlihat dari sakelar "Otomatis".
+[en]
++ Mod management: new "Sort" button in the mod update row. Options: name A-Z/Z-A, enabled first, disabled first, largest/smallest size. Enabled and disabled mods can be grouped, like in Zalith.
+! The mod update bar is shorter so it fits next to the sort button: the buttons are now "Check" and "Update (n)", and the "Auto-update on" text is gone since the "Auto" switch already shows it.

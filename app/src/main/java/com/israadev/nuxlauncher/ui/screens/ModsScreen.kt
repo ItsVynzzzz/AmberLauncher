@@ -216,6 +216,9 @@ fun ModsScreen(
     var installedItems by remember { mutableStateOf<List<InstalledModItem>>(emptyList()) }
     var isInstalledLoading by remember { mutableStateOf(false) }
     var installedSearch by remember { mutableStateOf("") }
+    // Urutan daftar terpasang (lihat INSTALLED_SORT_OPTIONS); "name" = urutan bawaan, nama A-Z
+    var installedSort by remember { mutableStateOf("name") }
+    var showInstalledSortMenu by remember { mutableStateOf(false) }
     var itemToDelete by remember { mutableStateOf<InstalledModItem?>(null) }
 
     // Perbarui semua mod (hanya tab Mod di Manajemen Mod, bukan mesin Rust)
@@ -821,7 +824,10 @@ fun ModsScreen(
                     val rowMinWidth = maxWidth
                     // Bar "Perbarui semua mod" duduk sebaris dengan pil Instance bila cukup lebar, supaya daftar mod
                     // dapat ruang vertikal lebih. Di layar sempit ia jadi satu baris ringkas tepat di atas pil.
-                    val updateInline = modUpdateVisible && rowMinWidth >= 560.dp
+                    // Pil urutan ikut sebaris, jadi ambang lebarnya sedikit lebih besar dari sebelumnya (560dp).
+                    val updateInline = modUpdateVisible && rowMinWidth >= 600.dp
+                    // Bar hanya melebar bila punya judul/kabar; keadaan diam cukup selebar isinya.
+                    val barFills = modUpdate.hasStatus
                     val updateBar: @Composable (Modifier) -> Unit = { barModifier ->
                         ModUpdateBar(
                             state = modUpdate,
@@ -842,8 +848,7 @@ fun ModsScreen(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         if (modUpdateVisible && !updateInline) {
                             updateBar(
-                                Modifier
-                                    .fillMaxWidth()
+                                (if (barFills) Modifier.fillMaxWidth() else Modifier)
                                     .padding(bottom = 8.dp)
                             )
                         }
@@ -863,7 +868,20 @@ fun ModsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (updateInline) {
-                                updateBar(Modifier.weight(1f))
+                                if (barFills) {
+                                    updateBar(Modifier.weight(1f))
+                                } else {
+                                    updateBar(Modifier)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+                            if (mainMode == "installed" && !worldsTab) {
+                                AmberFilterPill(
+                                    // Sama seperti pil Instance: label dibuang pada lebar sedang agar bar tidak terdesak.
+                                    label = if (updateInline && rowMinWidth < 760.dp) "" else "Urutkan",
+                                    value = installedSortShortLabel(installedSort),
+                                    onClick = { showInstalledSortMenu = true }
+                                )
                             }
                             AmberFilterPill(
                                 // Sebaris dengan bar, label dibuang pada lebar sedang agar judul bar tidak terpotong.
@@ -924,12 +942,13 @@ fun ModsScreen(
                 // DAFTAR
                 // =====================================================================
                 if (mainMode == "installed") {
-                    val filteredInstalled = remember(installedItems, installedSearch) {
-                        if (installedSearch.isBlank()) installedItems
+                    val filteredInstalled = remember(installedItems, installedSearch, installedSort) {
+                        val searched = if (installedSearch.isBlank()) installedItems
                         else installedItems.filter {
                             it.name.contains(installedSearch, ignoreCase = true) ||
                                 it.filename.contains(installedSearch, ignoreCase = true)
                         }
+                        sortInstalledItems(searched, installedSort)
                     }
 
                     if (isInstalledLoading) {
@@ -1183,6 +1202,18 @@ fun ModsScreen(
                 showSortMenu = false
             },
             onDismiss = { showSortMenu = false }
+        )
+    }
+    if (showInstalledSortMenu) {
+        AmberPickerDialog(
+            title = "Urutkan",
+            options = INSTALLED_SORT_OPTIONS,
+            selectedId = installedSort,
+            onPick = { id ->
+                installedSort = id
+                showInstalledSortMenu = false
+            },
+            onDismiss = { showInstalledSortMenu = false }
         )
     }
     // --- KUNCI API CURSEFORGE ---
@@ -1527,6 +1558,39 @@ private val MODS_SORT_OPTIONS_CF = listOf(
     "follows" to "Populer",
     "updated" to "Diperbarui"
 )
+
+/** Pilihan urutan daftar item terpasang (Manajemen Mod). "name" sama dengan urutan bawaan pemuat daftar. */
+private val INSTALLED_SORT_OPTIONS = listOf(
+    "name" to "Nama A-Z",
+    "name_desc" to "Nama Z-A",
+    "enabled" to "Aktif di atas",
+    "disabled" to "Nonaktif di atas",
+    "size_desc" to "Ukuran terbesar",
+    "size_asc" to "Ukuran terkecil"
+)
+
+/** Nilai singkat untuk pil urutan di baris filter. */
+private fun installedSortShortLabel(id: String): String = when (id) {
+    "name_desc" -> "Nama Z-A"
+    "enabled" -> "Aktif"
+    "disabled" -> "Nonaktif"
+    "size_desc" -> "Terbesar"
+    "size_asc" -> "Terkecil"
+    else -> "Nama A-Z"
+}
+
+/** Mengurutkan daftar terpasang; yang setara (mis. sama-sama aktif) tetap urut nama A-Z. */
+private fun sortInstalledItems(items: List<InstalledModItem>, sort: String): List<InstalledModItem> {
+    val byName = compareBy<InstalledModItem> { it.name.lowercase() }
+    return when (sort) {
+        "name_desc" -> items.sortedWith(byName.reversed())
+        "enabled" -> items.sortedWith(compareBy<InstalledModItem> { !it.isEnabled }.then(byName))
+        "disabled" -> items.sortedWith(compareBy<InstalledModItem> { it.isEnabled }.then(byName))
+        "size_desc" -> items.sortedWith(compareByDescending<InstalledModItem> { it.sizeBytes }.then(byName))
+        "size_asc" -> items.sortedWith(compareBy<InstalledModItem> { it.sizeBytes }.then(byName))
+        else -> items
+    }
+}
 
 private val MODS_LOADER_IDS = setOf("fabric", "forge", "neoforge", "quilt")
 

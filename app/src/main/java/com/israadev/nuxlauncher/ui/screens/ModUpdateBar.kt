@@ -83,6 +83,12 @@ class ModUpdateState {
     private var job: Job? = null
 
     val busy: Boolean get() = phase != ModUpdatePhase.IDLE
+
+    /**
+     * Ada kabar yang ditampilkan di bar (sedang bekerja, ada pesan, atau ada hasil pemeriksaan). Bila tidak,
+     * bar hanya berisi sakelar dan tombol, jadi pemanggil tidak perlu memberinya lebar penuh.
+     */
+    val hasStatus: Boolean get() = phase != ModUpdatePhase.IDLE || note != null || check != null
     val pendingCount: Int get() = check?.updates?.size ?: 0
 
     /** Nama berkas (di disk) dari mod yang punya pembaruan, untuk lencana di daftar. */
@@ -192,8 +198,10 @@ class ModUpdateState {
  * Bar ringkas untuk daftar mod terpasang: periksa pembaruan, perbarui semua sekaligus, dan sakelar mode otomatis.
  *
  * Tingginya mengikuti pil filter (40dp) supaya bisa duduk sebaris dengan pil Instance dan tidak memakan ruang
- * daftar mod. Pemanggil yang menaruhnya di baris yang sama memberi `Modifier.weight(1f)`; di layar sempit
- * dipasang sendiri satu baris dengan `Modifier.fillMaxWidth()`.
+ * daftar mod. Pemanggil yang menaruhnya di baris yang sama memberi `Modifier.weight(1f)` hanya saat
+ * [ModUpdateState.hasStatus] (ada judul yang perlu ruang); di keadaan diam bar ringkas tanpa judul, cukup selebar
+ * isinya, supaya pil urutan dan pil Instance di sebelahnya tidak terdesak. Di layar sempit dipasang sendiri satu
+ * baris di atas pil-pil itu.
  */
 @Composable
 internal fun ModUpdateBar(
@@ -217,11 +225,11 @@ internal fun ModUpdateBar(
         state.note != null -> state.note.orEmpty()
         check != null && pending > 0 -> "$pending mod punya versi baru"
         check != null -> "Semua mod sudah terbaru"
-        autoEnabled -> "Pembaruan otomatis aktif"
-        else -> "Cek versi baru semua mod lewat Modrinth"
+        else -> ""
     }
-    // Keadaan diam tanpa kabar apa pun: judulnya dibuang agar bar tetap pendek, tombol "Periksa pembaruan" sudah jelas.
-    val showTitle = phase != ModUpdatePhase.IDLE || state.note != null || check != null || autoEnabled
+    // Keadaan diam tanpa kabar apa pun: judulnya dibuang agar bar tetap pendek. Status otomatis sudah terlihat
+    // dari sakelar "Otomatis", dan tombol "Periksa" sudah jelas.
+    val showTitle = state.hasStatus
     val detail: String? = if (phase == ModUpdatePhase.IDLE && check != null) {
         when {
             check.skipped.isNotEmpty() ->
@@ -255,8 +263,8 @@ internal fun ModUpdateBar(
             modifier = Modifier.size(18.dp)
         )
 
-        Column(modifier = Modifier.weight(1f)) {
-            if (showTitle) {
+        if (showTitle) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
                     color = AmberUi.Text,
@@ -265,32 +273,32 @@ internal fun ModUpdateBar(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-            if (detail != null) {
-                Text(
-                    text = detail,
-                    color = AmberUi.TextDim,
-                    fontSize = 11.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            if (phase == ModUpdatePhase.APPLYING && state.total > 0) {
-                Spacer(modifier = Modifier.height(4.dp))
-                val fraction = (state.done.toFloat() / state.total.toFloat()).coerceIn(0f, 1f)
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .clip(CircleShape)
-                        .background(AmberUi.Border)
-                ) {
+                if (detail != null) {
+                    Text(
+                        text = detail,
+                        color = AmberUi.TextDim,
+                        fontSize = 11.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (phase == ModUpdatePhase.APPLYING && state.total > 0) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    val fraction = (state.done.toFloat() / state.total.toFloat()).coerceIn(0f, 1f)
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(fraction)
-                            .fillMaxHeight()
-                            .background(AmberUi.AccentBrush)
-                    )
+                            .fillMaxWidth()
+                            .height(3.dp)
+                            .clip(CircleShape)
+                            .background(AmberUi.Border)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(fraction)
+                                .fillMaxHeight()
+                                .background(AmberUi.AccentBrush)
+                        )
+                    }
                 }
             }
         }
@@ -342,12 +350,12 @@ internal fun ModUpdateBar(
                 height = 32.dp
             )
             pending > 0 -> AmberActionButton(
-                text = "Perbarui semua ($pending)",
+                text = "Perbarui ($pending)",
                 onClick = onApplyAll,
                 height = 32.dp
             )
             else -> AmberActionButton(
-                text = "Periksa pembaruan",
+                text = "Periksa",
                 onClick = onCheck,
                 filled = false,
                 height = 32.dp

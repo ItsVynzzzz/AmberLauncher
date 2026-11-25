@@ -571,6 +571,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
         SettingsManager.settings.value.let {
             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
             com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setSimpleTint(it.simpleHue, it.simpleTone)
             com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
         }
         ControlLayoutManager.init(this)

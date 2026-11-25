@@ -1,5 +1,6 @@
 package com.israadev.nuxlauncher.ui.theme
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -67,14 +68,37 @@ val AMBER_ACCENTS = listOf(
     accentOf("ember", "Bara", Color(0xFFCC3F4A), Color(0xFFD9892A))
 )
 
-/** Gaya tampilan: DEFAULT = tema AmberLauncher sendiri, LIQUID = kaca buram (blur) ala liquid glass. */
+/**
+ * Gaya tampilan: DEFAULT = tema AmberLauncher sendiri, LIQUID = kaca buram (blur) ala liquid glass,
+ * SIMPLE = panel tipis tembus pandang yang berwarna sesuai satu warna pilihan pengguna (tanpa blur).
+ */
 enum class AmberStyle(val id: String, val label: String) {
     DEFAULT("default", "Default"),
-    LIQUID("liquid", "Liquid Glass");
+    LIQUID("liquid", "Liquid Glass"),
+    SIMPLE("simple", "Simple");
 
     companion object {
         fun fromId(id: String?): AmberStyle = entries.firstOrNull { it.id == id } ?: DEFAULT
     }
+}
+
+/**
+ * Warna gaya Simple, diturunkan dari satu warna pilihan: [hue] 0 - 359 dan [tone] 0 - 100 (kepekatan warna,
+ * 0 = abu-abu netral). Panel gelap tembus pandang yang diwarnai tipis, tepi tipis yang ikut berwarna, dan
+ * aksen dari warna yang sama, jadi seluruh launcher terlihat satu warna yang serasi dengan wallpaper pilihan.
+ */
+private class SimplePalette(hue: Int, tone: Int) {
+    private val h = hue.coerceIn(0, 359).toFloat()
+    private val t = tone.coerceIn(0, 100) / 100f
+
+    val surface = Color.hsv(h, 0.80f * t, 0.20f, 0.46f)
+    val surfaceRaised = Color.hsv(h, 0.35f * t, 1f, 0.10f)
+    val border = Color.hsv(h, 0.30f * t, 1f, 0.26f)
+    val borderStrong = Color.hsv(h, 0.30f * t, 1f, 0.44f)
+    val homeGlass = Color.hsv(h, 0.70f * t, 0.16f, 0.64f)
+    val homeGlassEdge = Color.hsv(h, 0.30f * t, 1f, 0.34f)
+    val menuCard = Color.hsv(h, 0.55f * t, 0.11f, 0.94f)
+    val accent = accentOf("simple", "Simple", Color.hsv(h, 0.80f * t, 0.50f + 0.10f * t))
 }
 
 /**
@@ -84,6 +108,13 @@ enum class AmberStyle(val id: String, val label: String) {
  */
 object AmberUi {
     private var accentPreset by mutableStateOf(AMBER_ACCENTS.first())
+    private var simpleHue by mutableStateOf(215)
+    private var simpleTone by mutableStateOf(55)
+    private val simple by derivedStateOf { SimplePalette(simpleHue, simpleTone) }
+
+    /** Aksen yang berlaku: turunan warna pilihan untuk gaya Simple, selain itu pilihan aksen biasa. */
+    private val activeAccent: AmberAccent
+        get() = if (style == AmberStyle.SIMPLE) simple.accent else accentPreset
 
     /** Gaya tampilan aktif. */
     var style by mutableStateOf(AmberStyle.DEFAULT)
@@ -105,28 +136,35 @@ object AmberUi {
         style = AmberStyle.fromId(id)
     }
 
-    val Accent: Color get() = accentPreset.base
+    /** Warna gaya Simple (rona 0 - 359, kepekatan 0 - 100). Tidak berpengaruh pada gaya lain. */
+    fun setSimpleTint(hue: Int, tone: Int) {
+        simpleHue = hue.coerceIn(0, 359)
+        simpleTone = tone.coerceIn(0, 100)
+    }
+
+    val Accent: Color get() = activeAccent.base
 
     /** Isian aksen untuk tombol dan penanda terpilih. Polos untuk aksen biasa, gradient halus untuk aksen gradient. */
-    val AccentBrush: Brush get() = accentPreset.brush
-    val AccentEdge: Color get() = accentPreset.edge
-    val AccentSoft: Color get() = accentPreset.soft
-    val AccentDeep: Color get() = accentPreset.deep
+    val AccentBrush: Brush get() = activeAccent.brush
+    val AccentEdge: Color get() = activeAccent.edge
+    val AccentSoft: Color get() = activeAccent.soft
+    val AccentDeep: Color get() = activeAccent.deep
 
-    val Surface = Color(0x85000000)
-    val SurfaceRaised = Color(0x14FFFFFF)
-    val Border = Color(0x24FFFFFF)
-    val BorderStrong = Color(0x40FFFFFF)
+    // Permukaan: tetap sama di Default dan Liquid Glass, ikut warna pilihan di gaya Simple.
+    val Surface: Color get() = if (style == AmberStyle.SIMPLE) simple.surface else Color(0x85000000)
+    val SurfaceRaised: Color get() = if (style == AmberStyle.SIMPLE) simple.surfaceRaised else Color(0x14FFFFFF)
+    val Border: Color get() = if (style == AmberStyle.SIMPLE) simple.border else Color(0x24FFFFFF)
+    val BorderStrong: Color get() = if (style == AmberStyle.SIMPLE) simple.borderStrong else Color(0x40FFFFFF)
     val Text = Color(0xFFF4F3EE)
     val TextDim = Color(0xFFB9B5BC)
     val ModrinthGreen = Color(0xFF2FDC7A)
 
     /** Kaca gelap untuk tombol/pil di atas foto latar yang terang (Home). */
-    val HomeGlass = Color(0xD11B1720)
-    val HomeGlassEdge = Color(0x3DFFFFFF)
+    val HomeGlass: Color get() = if (style == AmberStyle.SIMPLE) simple.homeGlass else Color(0xD11B1720)
+    val HomeGlassEdge: Color get() = if (style == AmberStyle.SIMPLE) simple.homeGlassEdge else Color(0x3DFFFFFF)
 
     /** Kartu menu akun cepat di Home. */
-    val MenuCard = Color(0xF2121217)
+    val MenuCard: Color get() = if (style == AmberStyle.SIMPLE) simple.menuCard else Color(0xF2121217)
 
     /** Merah untuk aksi hapus. */
     val Danger = Color(0xFFE5575A)

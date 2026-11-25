@@ -1,0 +1,32 @@
+[id]
++ Folder instance kini bernama sesuai nama instance, bukan kode acak, jadi mudah dicari di pengelola berkas. Instance lama dipindah otomatis tanpa menghapus isinya, dan mengganti nama instance juga mengganti nama foldernya.
+~ Layar Pilih Instance kini berupa daftar ke bawah, satu instance satu baris, lebih mudah dibaca dan digulir.
++ Gaya tampilan baru bernama Simple: panel tipis tembus pandang yang berwarna sesuai satu warna pilihanmu. Warna dan kepekatannya diatur di Pengaturan > Tampilan.
+[en]
++ Instance folders are now named after the instance instead of a random code, so they are easy to find in a file manager. Existing instances are moved automatically without touching their contents, and renaming an instance renames its folder too.
+~ The Select Instance screen is now a vertical list with one instance per row, easier to read and scroll.
++ New display style called Simple: thin see-through panels tinted with one color of your choice. Set the color and its intensity in Settings > Display.
+[es]
++ Las carpetas de las instancias ahora llevan el nombre de la instancia en lugar de un código aleatorio, así son fáciles de encontrar en el administrador de archivos. Las instancias existentes se mueven automáticamente sin tocar su contenido, y al renombrar una instancia también se renombra su carpeta.
+~ La pantalla Elegir instancia ahora es una lista vertical con una instancia por fila, más fácil de leer y desplazar.
++ Nuevo estilo de interfaz llamado Simple: paneles finos y translúcidos con el tinte de un color a tu elección. Ajusta el color y su intensidad en Ajustes > Apariencia.
+[fil]
++ Ang mga folder ng instance ay ipinapangalan na ngayon sa mismong instance sa halip na random na code, kaya madali na silang hanapin sa file manager. Awtomatikong inililipat ang mga dating instance nang hindi ginagalaw ang laman, at kapag pinalitan ang pangalan ng instance, napapalitan din ang pangalan ng folder nito.
+~ Ang screen na Pumili ng Instance ay isa nang patayong listahan na may isang instance bawat hilera, mas madaling basahin at i-scroll.
++ Bagong istilo ng display na tinatawag na Simple: manipis at transparent na mga panel na may kulay na pinili mo. Itakda ang kulay at tindi nito sa Settings > Display.
+[pt]
++ As pastas das instâncias agora têm o nome da instância em vez de um código aleatório, então são fáceis de achar no gerenciador de arquivos. As instâncias existentes são movidas automaticamente sem mexer no conteúdo, e renomear uma instância também renomeia a pasta dela.
+~ A tela Escolher instância agora é uma lista vertical com uma instância por linha, mais fácil de ler e rolar.
++ Novo estilo de exibição chamado Simple: painéis finos e translúcidos com o tom de uma cor de sua escolha. Ajuste a cor e a intensidade em Configurações > Aparência.
+[th]
++ โฟลเดอร์ของแต่ละอินสแตนซ์ตั้งชื่อตามชื่ออินสแตนซ์แทนรหัสสุ่ม หาได้ง่ายในตัวจัดการไฟล์ อินสแตนซ์เดิมจะถูกย้ายให้อัตโนมัติโดยไม่แตะข้อมูลข้างใน และการเปลี่ยนชื่ออินสแตนซ์จะเปลี่ยนชื่อโฟลเดอร์ด้วย
+~ หน้าเลือกอินสแตนซ์เป็นรายการแนวตั้ง อินสแตนซ์ละหนึ่งแถว อ่านและเลื่อนได้ง่ายขึ้น
++ สไตล์การแสดงผลใหม่ชื่อ Simple คือแผงบางโปร่งใสที่ใส่สีเดียวที่คุณเลือก ตั้งสีและความเข้มได้ในการตั้งค่า > การแสดงผล
+[vi]
++ Thư mục của mỗi instance nay được đặt theo tên instance thay vì mã ngẫu nhiên, nên dễ tìm trong trình quản lý tệp. Các instance cũ được tự động chuyển mà không đụng đến nội dung, và đổi tên instance cũng sẽ đổi tên thư mục của nó.
+~ Màn hình Chọn instance nay là danh sách dọc, mỗi dòng một instance, dễ đọc và cuộn hơn.
++ Kiểu giao diện mới tên Simple: các bảng mỏng, trong suốt được nhuộm theo một màu do bạn chọn. Chỉnh màu và độ đậm trong Cài đặt > Giao diện.
+[zh]
++ 实例文件夹现在以实例名称命名，不再是随机代码，在文件管理器中很容易找到。现有实例会自动迁移且不会动其内容，重命名实例时文件夹也会一起改名。
+~ “选择实例”界面现在是竖向列表，一行一个实例，更易阅读和滑动。
++ 新增名为 Simple 的界面风格：薄而透明的面板，带有你选择的颜色。在“设置 > 显示”中调整颜色和浓度。

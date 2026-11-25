@@ -13,17 +13,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Tune
@@ -56,15 +57,13 @@ import com.israadev.nuxlauncher.ui.theme.AmberUi
 import com.israadev.nuxlauncher.ui.theme.amberGlass
 
 /**
- * Pemilih instance berbentuk rak kartu (seperti perpustakaan game), bukan daftar di dalam kotak.
+ * Pemilih instance berbentuk daftar ke bawah: satu instance satu baris, mudah dibaca dan digulir dengan jempol.
  *
- * Tiap instance adalah kartu kaca: label loader, nama, versi, dan tiga tombol bulat (buka folder,
- * ubah, hapus). Yang aktif diberi isian aksen dan centang. Kartu putus-putus di ujung untuk menambah
- * instance, dan tombol + di bar atas supaya tetap terjangkau saat instance banyak.
- *
- * Rak hanya setinggi kartu dan digulir ke samping, jadi tinggi layar sekecil apa pun tidak memotong
- * isinya, dan tidak ada tombol di dasar layar yang bisa tertutup bar sistem. Ketuk area gelap di
- * luar rak untuk menutup.
+ * Tiap baris kaca berisi lingkaran pilihan, nama instance, loader + versi Minecraft, dan tiga tombol bulat
+ * (buka folder, ubah, hapus). Yang aktif diberi isian aksen. Baris putus-putus di ujung daftar untuk menambah
+ * instance, dan tombol + di bar atas supaya tetap terjangkau saat instance banyak. Daftar dibatasi lebarnya
+ * supaya nyaman dibaca di layar lebar, dan digulir ke bawah sehingga tinggi layar sekecil apa pun tidak
+ * memotong isinya. Ketuk area gelap di luar daftar untuk menutup.
  */
 @Composable
 fun NuxInstancePickerDialog(
@@ -78,7 +77,7 @@ fun NuxInstancePickerDialog(
     onDismiss: () -> Unit
 ) {
     val listState = rememberLazyListState()
-    // Buka dengan instance aktif sudah terlihat, bukan selalu dari kartu pertama.
+    // Buka dengan instance aktif sudah terlihat, bukan selalu dari baris pertama.
     LaunchedEffect(Unit) {
         val index = instances.indexOfFirst { it.id == selectedId }
         if (index > 0) listState.scrollToItem(index)
@@ -111,11 +110,14 @@ fun NuxInstancePickerDialog(
     ) { _ ->
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
             if (instances.isEmpty()) {
                 Column(
-                    modifier = Modifier.pointerInput(Unit) { detectTapGestures { } },
+                    modifier = Modifier
+                        .widthIn(max = 420.dp)
+                        .padding(horizontal = 16.dp, vertical = 24.dp)
+                        .pointerInput(Unit) { detectTapGestures { } },
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -125,20 +127,21 @@ fun NuxInstancePickerDialog(
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    AddInstanceCard(onClick = onAdd)
+                    AddInstanceRow(onClick = onAdd)
                 }
             } else {
-                LazyRow(
+                LazyColumn(
                     state = listState,
                     modifier = Modifier
+                        .widthIn(max = 720.dp)
                         .fillMaxWidth()
-                        // Celah di antara kartu tidak ikut menutup dialog
+                        // Celah di antara baris tidak ikut menutup dialog
                         .pointerInput(Unit) { detectTapGestures { } },
-                    contentPadding = PaddingValues(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(instances, key = { it.id }) { inst ->
-                        InstanceShelfCard(
+                        InstanceRow(
                             inst = inst,
                             selected = inst.id == selectedId,
                             onSelect = { onSelect(inst) },
@@ -147,8 +150,8 @@ fun NuxInstancePickerDialog(
                             onDelete = { onDelete(inst) }
                         )
                     }
-                    item(key = "__add_card__") {
-                        AddInstanceCard(onClick = onAdd)
+                    item(key = "__add_row__") {
+                        AddInstanceRow(onClick = onAdd)
                     }
                 }
             }
@@ -156,11 +159,11 @@ fun NuxInstancePickerDialog(
     }
 }
 
-private val ShelfCardShape = RoundedCornerShape(26.dp)
+private val RowShape = RoundedCornerShape(16.dp)
 
-/** Satu kartu instance. Tinggi tetap supaya semua kartu rata walau nama panjang. */
+/** Satu baris instance. Nama dan keterangan satu baris (dipotong bila panjang) supaya semua baris rata. */
 @Composable
-private fun InstanceShelfCard(
+private fun InstanceRow(
     inst: Instance,
     selected: Boolean,
     onSelect: () -> Unit,
@@ -168,88 +171,74 @@ private fun InstanceShelfCard(
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    Box(
+    Row(
         modifier = Modifier
-            .width(184.dp)
-            .height(176.dp)
-            .clip(ShelfCardShape)
+            .fillMaxWidth()
+            .heightIn(min = 64.dp)
+            .clip(RowShape)
             .then(
                 if (selected) {
                     Modifier
-                        .background(AmberUi.Accent.copy(alpha = 0.62f), ShelfCardShape)
-                        .border(1.5.dp, AmberUi.AccentEdge, ShelfCardShape)
+                        .background(AmberUi.Accent.copy(alpha = 0.40f), RowShape)
+                        .border(1.dp, AmberUi.AccentEdge, RowShape)
                 } else {
-                    Modifier.amberGlass(ShelfCardShape)
+                    Modifier.amberGlass(RowShape)
                 }
             )
             .clickable { onSelect() }
+            .padding(start = 16.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                // Label loader (ruang di kanan disisakan untuk tanda centang)
-                Box(
-                    modifier = Modifier
-                        .padding(end = 24.dp)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.12f))
-                        .padding(horizontal = 9.dp, vertical = 3.dp)
-                ) {
-                    Text(
-                        text = ForgeFlavor.label(inst.loader).uppercase(),
-                        color = AmberUi.AccentSoft,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.6.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = inst.name,
-                    color = AmberUi.Text,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Black,
-                    lineHeight = 21.sp,
-                    minLines = 2,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = inst.mcVersion,
-                    color = AmberUi.TextDim,
-                    fontSize = 12.sp,
-                    maxLines = 1
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ShelfRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder)
-                ShelfRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit)
-                ShelfRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete)
-            }
+        RadioDot(selected)
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = inst.name,
+                color = AmberUi.Text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = ForgeFlavor.label(inst.loader) + " \u00b7 " + inst.mcVersion,
+                color = AmberUi.TextDim,
+                fontSize = 12.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
+        Spacer(modifier = Modifier.width(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            RowRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder)
+            RowRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit)
+            RowRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete)
+        }
+    }
+}
+
+/** Lingkaran pilihan: cincin tipis, terisi titik bila instance ini yang aktif. */
+@Composable
+private fun RadioDot(selected: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(22.dp)
+            .border(2.dp, if (selected) AmberUi.Text else AmberUi.BorderStrong, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
         if (selected) {
-            Icon(
-                imageVector = Icons.Outlined.Check,
-                contentDescription = null,
-                tint = AmberUi.Text,
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 12.dp, end = 12.dp)
-                    .size(20.dp)
+                    .size(10.dp)
+                    .background(AmberUi.Text, CircleShape)
             )
         }
     }
 }
 
-/** Tombol bulat kecil di dasar kartu. */
+/** Tombol bulat kecil di ujung kanan baris. */
 @Composable
-private fun ShelfRoundButton(
+private fun RowRoundButton(
     icon: ImageVector,
     description: String,
     tint: Color,
@@ -257,7 +246,7 @@ private fun ShelfRoundButton(
 ) {
     Box(
         modifier = Modifier
-            .size(34.dp)
+            .size(36.dp)
             .clip(CircleShape)
             .background(Color.White.copy(alpha = 0.10f), CircleShape)
             .clickable { onClick() },
@@ -272,15 +261,15 @@ private fun ShelfRoundButton(
     }
 }
 
-/** Kartu putus-putus di ujung rak untuk menambah instance. */
+/** Baris putus-putus di ujung daftar untuk menambah instance. */
 @Composable
-private fun AddInstanceCard(onClick: () -> Unit) {
+private fun AddInstanceRow(onClick: () -> Unit) {
     val dash = AmberUi.BorderStrong
-    Column(
+    Row(
         modifier = Modifier
-            .width(150.dp)
-            .height(176.dp)
-            .clip(ShelfCardShape)
+            .fillMaxWidth()
+            .heightIn(min = 56.dp)
+            .clip(RowShape)
             .clickable { onClick() }
             .drawBehind {
                 val stroke = 1.5.dp.toPx()
@@ -288,20 +277,20 @@ private fun AddInstanceCard(onClick: () -> Unit) {
                     color = dash,
                     topLeft = Offset(stroke / 2f, stroke / 2f),
                     size = Size(size.width - stroke, size.height - stroke),
-                    cornerRadius = CornerRadius(26.dp.toPx()),
+                    cornerRadius = CornerRadius(16.dp.toPx()),
                     style = Stroke(
                         width = stroke,
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(18f, 12f))
                     )
                 )
             }
-            .padding(14.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(32.dp)
                 .clip(CircleShape)
                 .background(AmberUi.AccentBrush, CircleShape)
                 .border(1.dp, AmberUi.AccentEdge, CircleShape),
@@ -311,18 +300,17 @@ private fun AddInstanceCard(onClick: () -> Unit) {
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
                 tint = AmberUi.Text,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(18.dp)
             )
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = "TAMBAH INSTANCE",
             color = AmberUi.Text,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.4.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 2
+            maxLines = 1
         )
     }
 }

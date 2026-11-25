@@ -124,11 +124,15 @@ data class LauncherSettings(
     // Pembaruan aplikasi
     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
 
-    // Tampilan: warna aksen ("navy", "green", "purple", "teal"), gaya ("default" atau "liquid"),
+    // Tampilan: warna aksen ("navy", "green", "purple", "teal"), gaya ("default", "liquid", atau "simple"),
     // dan seberapa gelap latar di layar selain Home (0 - 100)
     val accentColor: String = "navy",
     val uiStyle: String = "default",
     val bgDim: Int = 50,
+    // Warna gaya Simple (hanya dipakai saat uiStyle = "simple"): rona 0 - 359 dan kepekatan warna 0 - 100
+    // (0 = abu-abu netral). Gaya lain memakai accentColor.
+    val simpleHue: Int = 215,
+    val simpleTone: Int = 55,
 
     // Efek salju (suasana Natal): bawaan mati. Di Beranda lebat; di layar lain lebih sedikit dan redup
     // seperti di dalam ruangan. Bisa dinyalakan di Pengaturan > Tampilan.

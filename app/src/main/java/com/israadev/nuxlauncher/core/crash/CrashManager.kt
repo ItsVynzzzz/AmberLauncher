@@ -360,7 +360,7 @@ object CrashManager {
             // Fallback: periksa file crash report terbaru di folder instance yang sedang dipilih (bukan seluruh instance)
             val inst = InstanceManager.selectedInstance.value
             if (inst != null) {
-                val instDir = File(InstanceManager.getInstancesDir(context), inst.id)
+                val instDir = InstanceManager.getInstanceDir(context, inst)
                 val instGameDir = File(instDir, "minecraft")
                 val crashReportsDir = File(instGameDir, "crash-reports")
                 if (crashReportsDir.exists()) {

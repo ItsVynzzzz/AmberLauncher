@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,15 +36,24 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.focus.focusProperties
 import com.israadev.nuxlauncher.ui.i18n.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
 import com.israadev.nuxlauncher.ui.theme.NuxColors
 import com.israadev.nuxlauncher.ui.theme.NuxSizes
 
@@ -267,6 +278,78 @@ fun SettingSliderRow(
             }
         }
     }
+}
+
+/**
+ * Baris pemilih warna: batang berwarna pelangi, ketuk atau geser untuk memilih rona (0 - 359).
+ * [onChange] dipanggil terus selama menggeser (hanya menggerakkan penanda), [onFinish] sekali saat jari diangkat
+ * (di situlah warna launcher benar-benar diganti, supaya seluruh layar tidak digambar ulang tiap geseran).
+ */
+@Composable
+fun SettingHueRow(
+    title: String,
+    desc: String?,
+    hue: Int,
+    onChange: (Int) -> Unit,
+    onFinish: () -> Unit
+) {
+    SettingFrame(title, desc) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)
+        ) {
+            SettingRowText(title = title, desc = desc)
+            Spacer(modifier = Modifier.height(14.dp))
+            HueBar(hue = hue, onChange = onChange, onFinish = onFinish)
+        }
+    }
+}
+
+/** Rona (0 - 359) dari posisi jari [x] pada batang selebar [width] dan setinggi [height]; ujung batang adalah setengah lingkaran penanda. */
+private fun hueAt(x: Float, width: Int, height: Int): Int {
+    val r = height / 2f
+    val span = (width - 2f * r).coerceAtLeast(1f)
+    return (((x - r) / span).coerceIn(0f, 1f) * 359f).roundToInt()
+}
+
+@Composable
+private fun HueBar(hue: Int, onChange: (Int) -> Unit, onFinish: () -> Unit) {
+    val rainbow = remember {
+        Brush.horizontalGradient(List(7) { i -> Color.hsv((i * 60f).coerceAtMost(359f), 0.85f, 0.95f) })
+    }
+    val change by rememberUpdatedState(onChange)
+    val finish by rememberUpdatedState(onFinish)
+    val shownHue = hue.coerceIn(0, 359)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(36.dp)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    change(hueAt(it.x, size.width, size.height))
+                    finish()
+                }
+            }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragStart = { change(hueAt(it.x, size.width, size.height)) },
+                    onDragEnd = { finish() },
+                    onDragCancel = { finish() },
+                    onHorizontalDrag = { pointer, _ ->
+                        pointer.consume()
+                        change(hueAt(pointer.position.x, size.width, size.height))
+                    }
+                )
+            }
+            .drawBehind {
+                val r = size.height / 2f
+                drawRoundRect(rainbow, cornerRadius = CornerRadius(r))
+                val x = r + (shownHue / 359f) * (size.width - 2f * r)
+                drawCircle(Color.White, radius = r - 1.dp.toPx(), center = Offset(x, r))
+                drawCircle(Color.hsv(shownHue.toFloat(), 0.85f, 0.95f), radius = r - 5.dp.toPx(), center = Offset(x, r))
+            }
+    )
 }
 
 /** Baris aksi: judul + keterangan di kiri, tombol pil di kanan. */

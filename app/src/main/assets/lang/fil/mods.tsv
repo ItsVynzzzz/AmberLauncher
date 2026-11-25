@@ -167,8 +167,6 @@ Tema	Tema
 Aksen warna	Accent color
 Warna tombol dan penanda terpilih di seluruh launcher.	Kulay ng mga button at napiling marker sa buong launcher.
 Gaya tampilan	Istilo ng display
-Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Gumagamit ang Default ng sariling tema ng AmberLauncher. Binablur ng Liquid Glass ang background sa likod ng mga panel at button.
-Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Kailangan ng Liquid Glass ang Android 12 pataas. Awtomatikong gagamitin ng phone na ito ang Default.
 Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Wika ng text sa launcher. Agad na ipinapatupad nang hindi nagre-restart.
 Pengaturan khusus untuk renderer yang sedang dipakai.	Mga partikular na setting para sa renderer na ginagamit.
 Atur	I-configure

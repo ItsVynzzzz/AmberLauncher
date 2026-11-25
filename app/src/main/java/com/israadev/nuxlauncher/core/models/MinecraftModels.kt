@@ -121,7 +121,10 @@ data class Instance(
     val overrideResolutionRatio: Int? = null,
     val overrideJvmArgs: String? = null,
     // Preset layout kontrol khusus instance ini (id dari ControlPresetManager). null = pakai layout kontrol global.
-    val controlPresetId: String? = null
+    val controlPresetId: String? = null,
+    // Nama folder instance ini di instances/ (dibuat dari nama instance supaya mudah dikenali di pengelola berkas).
+    // null = folder memakai id, seperti instance buatan versi lama; InstanceManager memindahkannya otomatis.
+    val dirName: String? = null
 ) {
     /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
     val hasOverrides: Boolean

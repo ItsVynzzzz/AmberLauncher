@@ -105,6 +105,7 @@ class MainActivity : ComponentActivity() {
         SettingsManager.settings.value.let {
             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
             com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
+            com.israadev.nuxlauncher.ui.theme.AmberUi.setSimpleTint(it.simpleHue, it.simpleTone)
             com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
         }
         com.israadev.nuxlauncher.core.device.PhysicalMouseChecker.initChecker(this)

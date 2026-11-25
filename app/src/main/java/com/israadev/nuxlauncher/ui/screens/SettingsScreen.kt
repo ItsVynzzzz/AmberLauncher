@@ -194,6 +194,8 @@ fun SettingsScreen(
     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
     var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
+    var simpleHue by remember(currentSettings.simpleHue) { mutableIntStateOf(currentSettings.simpleHue) }
+    var simpleTone by remember(currentSettings.simpleTone) { mutableIntStateOf(currentSettings.simpleTone) }
     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
     var homeEffect by remember(currentSettings.homeEffect) { mutableStateOf(normalizeHomeEffect(currentSettings.homeEffect)) }
@@ -259,6 +261,8 @@ fun SettingsScreen(
             homeAmbientIntensity = ambientIntensity,
             accentColor = accentId,
             uiStyle = uiStyleId,
+            simpleHue = simpleHue,
+            simpleTone = simpleTone,
             bgDim = bgDim,
             snowEnabled = snowOn,
             homeEffect = homeEffect,
@@ -1028,81 +1032,84 @@ fun SettingsScreen(
                         }
 
                         SettingsGroup("Tema") {
-                            SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 10.dp)
-                                ) {
-                                    SettingRowText(
-                                        title = "Aksen warna",
-                                        desc = "Warna tombol dan penanda terpilih di seluruh launcher."
-                                    )
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                    val solidAccents = AMBER_ACCENTS.filter { it.end == null }
-                                    val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
-                                    listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
-                                        if (groupIndex == 1) {
-                                            Text(
-                                                text = "Gradient halus",
-                                                color = AmberUi.TextDim,
-                                                fontSize = 12.sp,
-                                                modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
-                                            )
-                                        }
-                                        group.chunked(6).forEach { rowAccents ->
-                                            Row(
-                                                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                modifier = Modifier.padding(bottom = 10.dp)
-                                            ) {
-                                                rowAccents.forEach { accent ->
-                                                    val picked = accent.id == accentId
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(44.dp)
-                                                            .clip(CircleShape)
-                                                            .background(accent.brush, CircleShape)
-                                                            .border(
-                                                                if (picked) 2.5.dp else 1.dp,
-                                                                if (picked) Color.White else AmberUi.BorderStrong,
-                                                                CircleShape
-                                                            )
-                                                            .clickable {
-                                                                accentId = accent.id
-                                                                AmberUi.setAccent(accent.id)
-                                                                commitSettings()
-                                                            },
-                                                        contentAlignment = Alignment.Center
-                                                    ) {
-                                                        if (picked) {
-                                                            Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = accent.label,
-                                                                tint = Color.White,
-                                                                modifier = Modifier.size(22.dp)
-                                                            )
+                            // Gaya Simple punya pemilih warnanya sendiri (di bawah pilihan gaya); aksen bawaan dipakai gaya lain
+                            if (uiStyleId != AmberStyle.SIMPLE.id) {
+                                SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 10.dp)
+                                    ) {
+                                        SettingRowText(
+                                            title = "Aksen warna",
+                                            desc = "Warna tombol dan penanda terpilih di seluruh launcher."
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        val solidAccents = AMBER_ACCENTS.filter { it.end == null }
+                                        val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
+                                        listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
+                                            if (groupIndex == 1) {
+                                                Text(
+                                                    text = "Gradient halus",
+                                                    color = AmberUi.TextDim,
+                                                    fontSize = 12.sp,
+                                                    modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
+                                                )
+                                            }
+                                            group.chunked(6).forEach { rowAccents ->
+                                                Row(
+                                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    modifier = Modifier.padding(bottom = 10.dp)
+                                                ) {
+                                                    rowAccents.forEach { accent ->
+                                                        val picked = accent.id == accentId
+                                                        Box(
+                                                            modifier = Modifier
+                                                                .size(44.dp)
+                                                                .clip(CircleShape)
+                                                                .background(accent.brush, CircleShape)
+                                                                .border(
+                                                                    if (picked) 2.5.dp else 1.dp,
+                                                                    if (picked) Color.White else AmberUi.BorderStrong,
+                                                                    CircleShape
+                                                                )
+                                                                .clickable {
+                                                                    accentId = accent.id
+                                                                    AmberUi.setAccent(accent.id)
+                                                                    commitSettings()
+                                                                },
+                                                            contentAlignment = Alignment.Center
+                                                        ) {
+                                                            if (picked) {
+                                                                Icon(
+                                                                    imageVector = Icons.Outlined.Check,
+                                                                    contentDescription = accent.label,
+                                                                    tint = Color.White,
+                                                                    modifier = Modifier.size(22.dp)
+                                                                )
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                        Text(
+                                            text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
+                                            color = AmberUi.TextDim,
+                                            fontSize = 12.sp,
+                                            modifier = Modifier.padding(top = 6.dp)
+                                        )
                                     }
-                                    Text(
-                                        text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
-                                        color = AmberUi.TextDim,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.padding(top = 6.dp)
-                                    )
                                 }
+                                SettingDivider()
                             }
-                            SettingDivider()
                             SettingChoiceRow(
                                 title = "Gaya tampilan",
                                 desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol."
+                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu."
                                 } else {
-                                    "Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default."
+                                    "Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu."
                                 },
                                 options = AmberStyle.entries.map { it.id to it.label },
                                 selected = uiStyleId,
@@ -1112,6 +1119,33 @@ fun SettingsScreen(
                                     commitSettings()
                                 }
                             )
+                            if (uiStyleId == AmberStyle.SIMPLE.id) {
+                                SettingDivider()
+                                SettingHueRow(
+                                    title = "Warna UI",
+                                    desc = "Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.",
+                                    hue = simpleHue,
+                                    onChange = { simpleHue = it },
+                                    onFinish = {
+                                        AmberUi.setSimpleTint(simpleHue, simpleTone)
+                                        commitSettings()
+                                    }
+                                )
+                                SettingDivider()
+                                SettingSliderRow(
+                                    title = "Kepekatan warna",
+                                    desc = "Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.",
+                                    valueText = "$simpleTone%",
+                                    value = simpleTone.toFloat(),
+                                    valueRange = 0f..100f,
+                                    steps = 19,
+                                    onValueChange = { simpleTone = ((it / 5f).roundToInt() * 5).coerceIn(0, 100) },
+                                    onValueChangeFinished = {
+                                        AmberUi.setSimpleTint(simpleHue, simpleTone)
+                                        commitSettings()
+                                    }
+                                )
+                            }
                         }
 
                         SettingsGroup("Ukuran") {
@@ -1379,6 +1413,8 @@ fun SettingsScreen(
                     ambientIntensity = reset.homeAmbientIntensity
                     accentId = reset.accentColor
                     uiStyleId = reset.uiStyle
+                    simpleHue = reset.simpleHue
+                    simpleTone = reset.simpleTone
                     bgDim = reset.bgDim
                     snowOn = reset.snowEnabled
                     homeEffect = normalizeHomeEffect(reset.homeEffect)
@@ -1388,6 +1424,7 @@ fun SettingsScreen(
                     homeSkinScale = reset.homeSkinScalePercent
                     AmberUi.setAccent(reset.accentColor)
                     AmberUi.setStyle(reset.uiStyle)
+                    AmberUi.setSimpleTint(reset.simpleHue, reset.simpleTone)
                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
                                 }
                             )

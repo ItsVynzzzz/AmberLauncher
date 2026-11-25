@@ -1,0 +1,7 @@
+# Gaya tampilan Simple dan pemilih warnanya
+Warna UI	Interface color
+Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Pick one color for the whole launcher: panels, borders, and buttons all follow it. Applies when you lift your finger.
+Kepekatan warna	Color intensity
+Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	Slide left for neutral gray, right for a stronger color.
+Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	Default uses AmberLauncher's own theme. Liquid Glass blurs the background behind panels and buttons. Simple uses thin see-through panels in one color of your choice.
+Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Liquid Glass needs Android 12 or newer, so this phone uses Default automatically. Simple works on every phone: thin see-through panels in one color of your choice.

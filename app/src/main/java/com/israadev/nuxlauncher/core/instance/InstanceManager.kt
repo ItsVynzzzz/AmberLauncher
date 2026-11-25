@@ -51,12 +51,29 @@ object InstanceManager {
         return dir
     }
 
+    /**
+     * Nama folder instance di instances/: dirName dari daftar (sumber kebenaran), atau id bila instance belum
+     * punya dirName (buatan versi lama). Salinan Instance yang dipegang layar bisa basi (dibuat sebelum nama
+     * folder diganti), jadi daftar didahulukan; salinan yang diberikan hanya dipakai bila belum ada di daftar.
+     */
+    private fun folderNameOf(instance: Instance): String {
+        val current = _instances.value.firstOrNull { it.id == instance.id } ?: instance
+        return current.dirName?.takeIf { InstanceFolders.isSafe(it) } ?: instance.id
+    }
+
+    private fun folderNameById(instanceId: String): String {
+        val current = _instances.value.firstOrNull { it.id == instanceId }
+        return current?.dirName?.takeIf { InstanceFolders.isSafe(it) } ?: instanceId
+    }
+
     fun getInstanceDir(context: Context, instance: Instance): File {
-        return getInstanceDirById(context, instance.id)
+        val dir = File(getInstancesDir(context), folderNameOf(instance))
+        if (!dir.exists()) dir.mkdirs()
+        return dir
     }
 
     fun getInstanceDirById(context: Context, instanceId: String): File {
-        val dir = File(getInstancesDir(context), instanceId)
+        val dir = File(getInstancesDir(context), folderNameById(instanceId))
         if (!dir.exists()) dir.mkdirs()
         return dir
     }
@@ -320,12 +337,17 @@ object InstanceManager {
 
         // Scan instances directory for isolated instance.json (like Windows version)
         val instancesDir = getInstancesDir(context)
-        val knownIds = loadedList.mapTo(HashSet()) { it.id }
+        // Folder yang sudah dimiliki instance di daftar (lewat id atau dirName) bukan instance yang hilang dari daftar
+        val knownFolders = HashSet<String>()
+        for (inst in loadedList) {
+            knownFolders.add(inst.id)
+            inst.dirName?.let { knownFolders.add(it) }
+        }
         val folderInstances = mutableListOf<Pair<String, Instance>>()
         instancesDir.listFiles()?.forEach { instFolder ->
             if (instFolder.isDirectory) {
                 val configFile = File(instFolder, "instance.json")
-                if (configFile.exists() && instFolder.name !in knownIds) {
+                if (configFile.exists() && instFolder.name !in knownFolders) {
                     try {
                         val inst = gson.fromJson(configFile.readText(), Instance::class.java)
                         if (inst != null) {
@@ -339,9 +361,12 @@ object InstanceManager {
         // Id tidak boleh ganda (lihat mergeInstances): dua id sama membuat layar pemilih instance crash
         val mergedList = mergeInstances(loadedList, folderInstances)
 
+        // Nama folder mengikuti nama instance (instance lama berfolder "inst_<acak>" dipindah di sini)
+        val namedList = nameFolders(context, instancesDir, mergedList)
+
         // Check if downloaded client JAR and loader exist for each instance
-        val verifiedList = mergedList.map { inst ->
-            inst.copy(isDownloaded = isInstanceDownloaded(context, inst))
+        val verifiedList = namedList.map { inst ->
+            inst.copy(isDownloaded = isInstanceDownloadedIn(context, inst, File(instancesDir, folderOf(inst))))
         }
 
         _instances.value = verifiedList
@@ -361,7 +386,7 @@ object InstanceManager {
         // thread UI, padahal biasanya tidak ada yang berubah. Di HP kelas bawah itu bisa memakan ratusan milidetik di
         // setiap pembukaan. Sekarang hanya menulis bila daftarnya memang berubah atau ada instance.json yang hilang.
         val needsSave = rawLoaded == null || verifiedList != rawLoaded || folderInstances.isNotEmpty() ||
-            verifiedList.any { !File(getInstanceDir(context, it), "instance.json").exists() }
+            verifiedList.any { !File(File(instancesDir, folderOf(it)), "instance.json").exists() }
         if (needsSave) save(context)
         LauncherLog.i(
             "Mulai",
@@ -370,7 +395,73 @@ object InstanceManager {
         )
     }
 
-    fun isInstanceDownloaded(context: Context, inst: Instance): Boolean {
+    /** Nama folder menurut data instance itu sendiri (dipakai saat daftar belum dipasang, mis. di init). */
+    private fun folderOf(inst: Instance): String =
+        inst.dirName?.takeIf { InstanceFolders.isSafe(it) } ?: inst.id
+
+    /** Game, mesin, Forge, atau pemasangan sedang berjalan: folder instance sedang dipakai, jangan dipindah. */
+    private fun foldersBusy(context: Context): Boolean {
+        if (com.israadev.nuxlauncher.core.download.InstallSession.active) return true
+        return try {
+            val am = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            am.runningAppProcesses?.any {
+                it.processName.endsWith(":game") || it.processName.endsWith(":horizon") ||
+                    it.processName.endsWith(":forge") || it.processName.endsWith(":starling")
+            } == true
+        } catch (_: Throwable) {
+            // Tidak bisa memastikan: lebih aman tidak memindahkan apa pun
+            true
+        }
+    }
+
+    /** Memindah folder satu tingkat di dalam instances/. false bila gagal; isi folder tidak pernah disalin atau dihapus. */
+    private fun moveFolder(instancesDir: File, from: String, to: String): Boolean {
+        return try {
+            val src = File(instancesDir, from)
+            val dst = File(instancesDir, to)
+            if (!src.isDirectory || dst.exists()) false else src.renameTo(dst)
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Menyamakan nama folder dengan nama instance. Instance lama (folder berupa id acak "inst_...") dipindah satu
+     * kali di sini, begitu juga instance yang namanya sempat diganti saat game atau unduhan berjalan. Bila ada yang
+     * berjalan, atau pemindahan gagal, folder dibiarkan di tempatnya (tidak ada data yang hilang) dan dicoba lagi
+     * pada pembukaan berikutnya. Instance yang lebih tua mendapat nama polos lebih dulu; yang kembar diberi _2, _3.
+     */
+    private fun nameFolders(context: Context, instancesDir: File, list: List<Instance>): List<Instance> {
+        if (list.isEmpty()) return list
+        val taken = HashSet<String>()
+        instancesDir.list()?.forEach { taken.add(it.lowercase()) }
+        for (inst in list) taken.add(folderOf(inst).lowercase())
+
+        var busy: Boolean? = null
+        val changed = HashMap<String, Instance>()
+        for (inst in list.sortedBy { it.createdTime }) {
+            val current = folderOf(inst)
+            // Belum ada foldernya (instance yang isinya belum pernah dibuat): tidak ada yang perlu dipindah
+            if (!File(instancesDir, current).isDirectory) continue
+            val target = InstanceFolders.targetFolder(inst.name, current, taken) ?: continue
+            if (busy == null) busy = foldersBusy(context)
+            if (busy == true) break
+            if (moveFolder(instancesDir, current, target)) {
+                taken.remove(current.lowercase())
+                taken.add(target.lowercase())
+                changed[inst.id] = inst.copy(dirName = target)
+                LauncherLog.i("InstanceManager", "Folder instance dipindah: $current -> $target")
+            } else {
+                LauncherLog.w("InstanceManager", "Folder instance belum bisa dipindah: $current -> $target")
+            }
+        }
+        return if (changed.isEmpty()) list else list.map { changed[it.id] ?: it }
+    }
+
+    fun isInstanceDownloaded(context: Context, inst: Instance): Boolean =
+        isInstanceDownloadedIn(context, inst, getInstanceDir(context, inst))
+
+    private fun isInstanceDownloadedIn(context: Context, inst: Instance, instDir: File): Boolean {
         // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
         if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
         // Starling: berkas resmi game (±500 MiB) diunduh launcher lewat tombol UNDUH; tanpa patokan mesin mengunduh sendiri
@@ -378,7 +469,7 @@ object InstanceManager {
             return com.israadev.nuxlauncher.core.horizon.StarlingFiles.ready(context)
         }
         // Instance dari modpack yang isinya belum selesai dipasang belum siap main: UNDUH melanjutkannya
-        if (ModpackStaging.hasPending(getInstanceDir(context, inst))) return false
+        if (ModpackStaging.hasPending(instDir)) return false
         val versionsDir = getVersionsDir(context)
         val vDir = File(versionsDir, inst.mcVersion)
         val jarFile = File(vDir, "${inst.mcVersion}.jar")
@@ -412,10 +503,20 @@ object InstanceManager {
     }
 
 
-    fun createInstance(context: Context, instance: Instance) {
+    fun createInstance(context: Context, newInstance: Instance) {
+        // Folder baru diberi nama dari nama instance (mudah dicari di pengelola berkas), tanpa menimpa folder lain
+        val instance = synchronized(this) {
+            val taken = HashSet<String>()
+            getInstancesDir(context).list()?.forEach { taken.add(it.lowercase()) }
+            for (other in _instances.value) if (other.id != newInstance.id) taken.add(folderOf(other).lowercase())
+            val chosen = newInstance.dirName?.takeIf { InstanceFolders.isSafe(it) }
+                ?: InstanceFolders.unique(InstanceFolders.sanitize(newInstance.name), taken)
+            newInstance.copy(dirName = chosen)
+        }
+
         // Create isolated instance folder structure
-        val instDir = getInstanceDir(context, instance)
-        val gameDir = getInstanceGameDir(context, instance)
+        val instDir = File(getInstancesDir(context), folderOf(instance))
+        val gameDir = File(instDir, "minecraft")
         instDir.mkdirs()
         gameDir.mkdirs()
 
@@ -441,8 +542,17 @@ object InstanceManager {
         appContext?.let { saveSelectedInstanceId(it, instance.id) }
     }
 
-    fun updateInstance(context: Context, updated: Instance) {
+    fun updateInstance(context: Context, newValue: Instance) {
         // instance.json ikut ditulis oleh save() di bawah (atomik, dan dilewati bila tidak berubah)
+        val updated = synchronized(this) {
+            val current = _instances.value.firstOrNull { it.id == newValue.id }
+            // Nama folder hanya diatur di sini: salinan Instance dari layar bisa basi, jadi dirName-nya tidak dipercaya
+            var dirName = current?.dirName
+            if (current != null && newValue.name != current.name) {
+                renamedFolder(context, current, newValue.name)?.let { dirName = it }
+            }
+            newValue.copy(dirName = dirName)
+        }
         val list = _instances.value.map { if (it.id == updated.id) updated else it }
         _instances.value = list
         if (_selectedInstance.value?.id == updated.id) {
@@ -451,7 +561,24 @@ object InstanceManager {
         save(context)
     }
 
+    /** Memindah folder [current] mengikuti nama baru. Mengembalikan dirName baru, atau null bila folder tidak berubah. */
+    private fun renamedFolder(context: Context, current: Instance, newName: String): String? {
+        val instancesDir = getInstancesDir(context)
+        val from = folderOf(current)
+        val taken = HashSet<String>()
+        instancesDir.list()?.forEach { taken.add(it.lowercase()) }
+        for (other in _instances.value) taken.add(folderOf(other).lowercase())
+        val to = InstanceFolders.targetFolder(newName, from, taken) ?: return null
+        // Folder yang sedang dipakai tidak dipindah; init() menyusulkannya pada pembukaan berikutnya
+        if (foldersBusy(context)) return null
+        if (!moveFolder(instancesDir, from, to)) return null
+        LauncherLog.i("InstanceManager", "Folder instance dipindah: $from -> $to")
+        return to
+    }
+
     fun deleteInstance(context: Context, instanceId: String) {
+        // Nama folder dicari dulu, sebelum instance-nya keluar dari daftar
+        val instDir = File(getInstancesDir(context), folderNameById(instanceId))
         val list = _instances.value.filterNot { it.id == instanceId }
         _instances.value = list
         if (_selectedInstance.value?.id == instanceId) {
@@ -463,7 +590,6 @@ object InstanceManager {
 
         // Delete isolated instance directory and all contents from storage
         try {
-            val instDir = getInstanceDirById(context, instanceId)
             if (instDir.exists()) {
                 instDir.deleteRecursively()
             }

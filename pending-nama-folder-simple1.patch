@@ -1,0 +1,580 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
+index d7eab91..b6b2ebe 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/crash/CrashManager.kt
+@@ -360,7 +360,7 @@ object CrashManager {
+             // Fallback: periksa file crash report terbaru di folder instance yang sedang dipilih (bukan seluruh instance)
+             val inst = InstanceManager.selectedInstance.value
+             if (inst != null) {
+-                val instDir = File(InstanceManager.getInstancesDir(context), inst.id)
++                val instDir = InstanceManager.getInstanceDir(context, inst)
+                 val instGameDir = File(instDir, "minecraft")
+                 val crashReportsDir = File(instGameDir, "crash-reports")
+                 if (crashReportsDir.exists()) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceFolders.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceFolders.kt
+new file mode 100644
+index 0000000..2f54633
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceFolders.kt
+@@ -0,0 +1,87 @@
++package com.israadev.nuxlauncher.core.instance
++
++/**
++ * Aturan nama folder instance di `instances/`.
++ *
++ * Dulu folder bernama id acak ("inst_3f9c..."), sulit dicari di pengelola berkas. Sekarang foldernya
++ * mengikuti nama instance. Id tetap dipakai di dalam launcher (tidak pernah berubah); nama folder
++ * disimpan di Instance.dirName.
++ *
++ * Nama folder sengaja dibuat konservatif supaya aman di semua penyimpanan (termasuk kartu SD berformat
++ * FAT) dan di jalur yang dipakai game, JVM, dan mod: huruf (semua bahasa), angka, "-", "." dan "_".
++ * Karakter lain, termasuk spasi, diganti "_". Fungsi di sini murni (tanpa Android) supaya mudah diuji.
++ */
++internal object InstanceFolders {
++    const val FALLBACK = "Instance"
++    private const val MAX_CHARS = 40
++
++    /** Mengubah nama instance menjadi nama folder yang aman, mis. "Survival Seru (1.20.1)" -> "Survival_Seru_1.20.1". */
++    fun sanitize(name: String): String {
++        val src = name.trim()
++        val sb = StringBuilder()
++        var chars = 0
++        var lastUnderscore = false
++        var i = 0
++        while (i < src.length && chars < MAX_CHARS) {
++            val cp = src.codePointAt(i)
++            i += Character.charCount(cp)
++            if (isAllowed(cp)) {
++                sb.appendCodePoint(cp)
++                lastUnderscore = false
++                chars++
++            } else if (!lastUnderscore) {
++                sb.append('_')
++                lastUnderscore = true
++                chars++
++            }
++        }
++        val cleaned = sb.toString().trim { it == '_' || it == '.' || it == '-' }
++        return cleaned.ifEmpty { FALLBACK }
++    }
++
++    private fun isAllowed(cp: Int): Boolean {
++        if (Character.isLetterOrDigit(cp)) return true
++        if (cp == '-'.code || cp == '.'.code) return true
++        // Tanda baca yang menempel pada huruf (mis. vokal Thai dan tanda Vietnam) bukan huruf menurut Java
++        val type = Character.getType(cp)
++        return type == Character.NON_SPACING_MARK.toInt() || type == Character.COMBINING_SPACING_MARK.toInt()
++    }
++
++    /** Nama yang boleh dipakai sebagai satu folder: tidak kosong, tanpa pemisah jalur, bukan "." atau "..". */
++    fun isSafe(name: String?): Boolean {
++        if (name.isNullOrBlank()) return false
++        if (name == "." || name == "..") return false
++        return name.none { it == '/' || it == '\\' || it == '\u0000' }
++    }
++
++    /** [base] bila belum dipakai, selain itu [base]_2, [base]_3, dst. Perbandingan tidak membedakan huruf besar/kecil. */
++    fun unique(base: String, takenLower: Set<String>): String {
++        if (base.lowercase() !in takenLower) return base
++        var n = 2
++        while (true) {
++            val candidate = "${base}_$n"
++            if (candidate.lowercase() !in takenLower) return candidate
++            n++
++        }
++    }
++
++    /**
++     * Nama folder baru untuk instance bernama [name] yang sekarang berfolder [current], atau null bila
++     * folder sekarang sudah cocok dan tidak perlu dipindah. Folder yang cocok: sama dengan nama yang
++     * dibersihkan, atau nama itu diberi akhiran angka (_2, _3) karena ada instance lain yang sama namanya.
++     * [takenLower] berisi semua nama folder yang sudah dipakai (huruf kecil), termasuk [current].
++     */
++    fun targetFolder(name: String, current: String, takenLower: Set<String>): String? {
++        val base = sanitize(name)
++        if (matches(base, current)) return null
++        val target = unique(base, takenLower - current.lowercase())
++        return if (target.equals(current, ignoreCase = true)) null else target
++    }
++
++    private fun matches(base: String, current: String): Boolean {
++        if (current.equals(base, ignoreCase = true)) return true
++        if (!current.startsWith("${base}_", ignoreCase = true)) return false
++        val suffix = current.substring(base.length + 1)
++        return suffix.isNotEmpty() && suffix.all { it in '0'..'9' }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index 14a8add1f0a297b6c4832eee4a01f8ad777d4ad7..ea4f883da2939eeba737faa4b628f541f8e96063 100644
+GIT binary patch
+delta 6419
+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
+a6Pi6)(Ci*f>mb-&UjJlncWvXh2mc3i<x_6}
+
+delta 317
+zcmXYt&r8Bk9Ke}Bnz>B~NlYZ3H<w`%5f-h33blwb5)Z-1hwrg1-5lGq4if$a9me<2
+zy?YS6Q&8xwOaDVb(O(e}Vt>Ks$IqAW`yf0TBHSkRxKG)@hYKkWm3A6h(oNEK1BTrW
+z)d`H_Cwy1FFKt}m9_qUNYgZ=$(onCD2_;8%z{(Exn*HJd4y-fEimHl+$Yy1m@W}S2
+z5Y<TlVJQm@F9+>~7)-nbAMShzAZbR-p}q-S?HJx032_xoxhfQlMTnC$&+I8N2<0V#
+z@oKdtz-yz<pHJ^15X$+es;aPdp5cD8I0x&>GHe+&2;~Bdl==MB)x-|1+dk5eNtym1
+zw2vLIlmh=Y4x{40BbZSF6+D8JorSl~C#+aCp0p<dJXtBgQcjsk&1R_l<#H_k0V!N>
+ATmS$7
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt
+index c0c47d4..308248a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceMerge.kt
+@@ -13,15 +13,34 @@ import com.israadev.nuxlauncher.core.models.Instance
+  *
+  * - [fromIndex]: isi `instances.json`. Bila satu id muncul lagi, yang pertama dipakai.
+  * - [folders]: pasangan (nama folder, instance dari instance.json-nya). Folder yang namanya sudah menjadi
+- *   id instance di [fromIndex] dilewati. Selain itu folder dianggap instance sendiri, dan id-nya disamakan
+- *   dengan nama folder karena data game-nya memang ada di folder itu (getInstanceDir memakai id).
++ *   id atau nama folder instance di [fromIndex] dilewati. Selain itu folder dianggap instance yang hilang
++ *   dari daftar: id aslinya dipertahankan bila masih bebas (nama foldernya dicatat di dirName), kalau tidak
++ *   id-nya disamakan dengan nama folder, karena data game-nya memang ada di folder itu.
+  */
+ internal fun mergeInstances(fromIndex: List<Instance>, folders: List<Pair<String, Instance>>): List<Instance> {
+     val merged = LinkedHashMap<String, Instance>()
+     for (inst in fromIndex) merged.putIfAbsent(inst.id, inst)
++    val usedFolders = HashSet<String>()
++    for (inst in merged.values) {
++        usedFolders.add(inst.id)
++        inst.dirName?.let { usedFolders.add(it) }
++    }
++    val folderNames = folders.mapTo(HashSet()) { it.first }
+     for ((folderName, inst) in folders) {
+-        if (merged.containsKey(folderName)) continue
+-        merged[folderName] = if (inst.id == folderName) inst else inst.copy(id = folderName)
++        if (folderName in usedFolders || merged.containsKey(folderName)) continue
++        val keepId = inst.id == folderName ||
++            (inst.id.isNotBlank() && !merged.containsKey(inst.id) && inst.id !in folderNames && inst.id !in usedFolders)
++        val recovered = when {
++            // Folder gaya lama: namanya sama dengan id
++            inst.id == folderName -> inst.copy(dirName = null)
++            // Folder bernama dari nama instance: id aslinya masih bebas
++            keepId && InstanceFolders.isSafe(folderName) -> inst.copy(dirName = folderName)
++            // Salinan folder dengan id yang sudah dipakai: jadi instance sendiri berid nama folder
++            else -> inst.copy(id = folderName, dirName = null)
++        }
++        merged[recovered.id] = recovered
++        usedFolders.add(folderName)
++        usedFolders.add(recovered.id)
+     }
+     return merged.values.toList()
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+index d43ecd8..5a09d4e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+@@ -121,7 +121,10 @@ data class Instance(
+     val overrideResolutionRatio: Int? = null,
+     val overrideJvmArgs: String? = null,
+     // Preset layout kontrol khusus instance ini (id dari ControlPresetManager). null = pakai layout kontrol global.
+-    val controlPresetId: String? = null
++    val controlPresetId: String? = null,
++    // Nama folder instance ini di instances/ (dibuat dari nama instance supaya mudah dikenali di pengelola berkas).
++    // null = folder memakai id, seperti instance buatan versi lama; InstanceManager memindahkannya otomatis.
++    val dirName: String? = null
+ ) {
+     /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
+     val hasOverrides: Boolean
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+index 3cc1054..250a591 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+@@ -13,17 +13,18 @@ import androidx.compose.foundation.layout.Spacer
+ import androidx.compose.foundation.layout.fillMaxSize
+ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.heightIn
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
+-import androidx.compose.foundation.lazy.LazyRow
++import androidx.compose.foundation.layout.widthIn
++import androidx.compose.foundation.lazy.LazyColumn
+ import androidx.compose.foundation.lazy.items
+ import androidx.compose.foundation.lazy.rememberLazyListState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.Add
+-import androidx.compose.material.icons.outlined.Check
+ import androidx.compose.material.icons.outlined.DeleteOutline
+ import androidx.compose.material.icons.outlined.Folder
+ import androidx.compose.material.icons.outlined.Tune
+@@ -56,15 +57,13 @@ import com.israadev.nuxlauncher.ui.theme.AmberUi
+ import com.israadev.nuxlauncher.ui.theme.amberGlass
+ 
+ /**
+- * Pemilih instance berbentuk rak kartu (seperti perpustakaan game), bukan daftar di dalam kotak.
++ * Pemilih instance berbentuk daftar ke bawah: satu instance satu baris, mudah dibaca dan digulir dengan jempol.
+  *
+- * Tiap instance adalah kartu kaca: label loader, nama, versi, dan tiga tombol bulat (buka folder,
+- * ubah, hapus). Yang aktif diberi isian aksen dan centang. Kartu putus-putus di ujung untuk menambah
+- * instance, dan tombol + di bar atas supaya tetap terjangkau saat instance banyak.
+- *
+- * Rak hanya setinggi kartu dan digulir ke samping, jadi tinggi layar sekecil apa pun tidak memotong
+- * isinya, dan tidak ada tombol di dasar layar yang bisa tertutup bar sistem. Ketuk area gelap di
+- * luar rak untuk menutup.
++ * Tiap baris kaca berisi lingkaran pilihan, nama instance, loader + versi Minecraft, dan tiga tombol bulat
++ * (buka folder, ubah, hapus). Yang aktif diberi isian aksen. Baris putus-putus di ujung daftar untuk menambah
++ * instance, dan tombol + di bar atas supaya tetap terjangkau saat instance banyak. Daftar dibatasi lebarnya
++ * supaya nyaman dibaca di layar lebar, dan digulir ke bawah sehingga tinggi layar sekecil apa pun tidak
++ * memotong isinya. Ketuk area gelap di luar daftar untuk menutup.
+  */
+ @Composable
+ fun NuxInstancePickerDialog(
+@@ -78,7 +77,7 @@ fun NuxInstancePickerDialog(
+     onDismiss: () -> Unit
+ ) {
+     val listState = rememberLazyListState()
+-    // Buka dengan instance aktif sudah terlihat, bukan selalu dari kartu pertama.
++    // Buka dengan instance aktif sudah terlihat, bukan selalu dari baris pertama.
+     LaunchedEffect(Unit) {
+         val index = instances.indexOfFirst { it.id == selectedId }
+         if (index > 0) listState.scrollToItem(index)
+@@ -111,11 +110,14 @@ fun NuxInstancePickerDialog(
+     ) { _ ->
+         Box(
+             modifier = Modifier.fillMaxSize(),
+-            contentAlignment = Alignment.Center
++            contentAlignment = Alignment.TopCenter
+         ) {
+             if (instances.isEmpty()) {
+                 Column(
+-                    modifier = Modifier.pointerInput(Unit) { detectTapGestures { } },
++                    modifier = Modifier
++                        .widthIn(max = 420.dp)
++                        .padding(horizontal = 16.dp, vertical = 24.dp)
++                        .pointerInput(Unit) { detectTapGestures { } },
+                     horizontalAlignment = Alignment.CenterHorizontally
+                 ) {
+                     Text(
+@@ -125,20 +127,21 @@ fun NuxInstancePickerDialog(
+                         textAlign = TextAlign.Center
+                     )
+                     Spacer(modifier = Modifier.height(12.dp))
+-                    AddInstanceCard(onClick = onAdd)
++                    AddInstanceRow(onClick = onAdd)
+                 }
+             } else {
+-                LazyRow(
++                LazyColumn(
+                     state = listState,
+                     modifier = Modifier
++                        .widthIn(max = 720.dp)
+                         .fillMaxWidth()
+-                        // Celah di antara kartu tidak ikut menutup dialog
++                        // Celah di antara baris tidak ikut menutup dialog
+                         .pointerInput(Unit) { detectTapGestures { } },
+-                    contentPadding = PaddingValues(horizontal = 20.dp),
+-                    horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
++                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
++                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                 ) {
+                     items(instances, key = { it.id }) { inst ->
+-                        InstanceShelfCard(
++                        InstanceRow(
+                             inst = inst,
+                             selected = inst.id == selectedId,
+                             onSelect = { onSelect(inst) },
+@@ -147,8 +150,8 @@ fun NuxInstancePickerDialog(
+                             onDelete = { onDelete(inst) }
+                         )
+                     }
+-                    item(key = "__add_card__") {
+-                        AddInstanceCard(onClick = onAdd)
++                    item(key = "__add_row__") {
++                        AddInstanceRow(onClick = onAdd)
+                     }
+                 }
+             }
+@@ -156,11 +159,11 @@ fun NuxInstancePickerDialog(
+     }
+ }
+ 
+-private val ShelfCardShape = RoundedCornerShape(26.dp)
++private val RowShape = RoundedCornerShape(16.dp)
+ 
+-/** Satu kartu instance. Tinggi tetap supaya semua kartu rata walau nama panjang. */
++/** Satu baris instance. Nama dan keterangan satu baris (dipotong bila panjang) supaya semua baris rata. */
+ @Composable
+-private fun InstanceShelfCard(
++private fun InstanceRow(
+     inst: Instance,
+     selected: Boolean,
+     onSelect: () -> Unit,
+@@ -168,88 +171,74 @@ private fun InstanceShelfCard(
+     onEdit: () -> Unit,
+     onDelete: () -> Unit
+ ) {
+-    Box(
++    Row(
+         modifier = Modifier
+-            .width(184.dp)
+-            .height(176.dp)
+-            .clip(ShelfCardShape)
++            .fillMaxWidth()
++            .heightIn(min = 64.dp)
++            .clip(RowShape)
+             .then(
+                 if (selected) {
+                     Modifier
+-                        .background(AmberUi.Accent.copy(alpha = 0.62f), ShelfCardShape)
+-                        .border(1.5.dp, AmberUi.AccentEdge, ShelfCardShape)
++                        .background(AmberUi.Accent.copy(alpha = 0.40f), RowShape)
++                        .border(1.dp, AmberUi.AccentEdge, RowShape)
+                 } else {
+-                    Modifier.amberGlass(ShelfCardShape)
++                    Modifier.amberGlass(RowShape)
+                 }
+             )
+             .clickable { onSelect() }
++            .padding(start = 16.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
++        verticalAlignment = Alignment.CenterVertically
+     ) {
+-        Column(
+-            modifier = Modifier
+-                .fillMaxSize()
+-                .padding(14.dp),
+-            verticalArrangement = Arrangement.SpaceBetween
+-        ) {
+-            Column {
+-                // Label loader (ruang di kanan disisakan untuk tanda centang)
+-                Box(
+-                    modifier = Modifier
+-                        .padding(end = 24.dp)
+-                        .clip(CircleShape)
+-                        .background(Color.White.copy(alpha = 0.12f))
+-                        .padding(horizontal = 9.dp, vertical = 3.dp)
+-                ) {
+-                    Text(
+-                        text = ForgeFlavor.label(inst.loader).uppercase(),
+-                        color = AmberUi.AccentSoft,
+-                        fontSize = 10.sp,
+-                        fontWeight = FontWeight.Bold,
+-                        letterSpacing = 0.6.sp,
+-                        maxLines = 1,
+-                        overflow = TextOverflow.Ellipsis
+-                    )
+-                }
+-                Spacer(modifier = Modifier.height(10.dp))
+-                Text(
+-                    text = inst.name,
+-                    color = AmberUi.Text,
+-                    fontSize = 17.sp,
+-                    fontWeight = FontWeight.Black,
+-                    lineHeight = 21.sp,
+-                    minLines = 2,
+-                    maxLines = 2,
+-                    overflow = TextOverflow.Ellipsis
+-                )
+-                Text(
+-                    text = inst.mcVersion,
+-                    color = AmberUi.TextDim,
+-                    fontSize = 12.sp,
+-                    maxLines = 1
+-                )
+-            }
+-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+-                ShelfRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder)
+-                ShelfRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit)
+-                ShelfRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete)
+-            }
++        RadioDot(selected)
++        Spacer(modifier = Modifier.width(14.dp))
++        Column(modifier = Modifier.weight(1f)) {
++            Text(
++                text = inst.name,
++                color = AmberUi.Text,
++                fontSize = 15.sp,
++                fontWeight = FontWeight.Bold,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
++            Text(
++                text = ForgeFlavor.label(inst.loader) + " \u00b7 " + inst.mcVersion,
++                color = AmberUi.TextDim,
++                fontSize = 12.sp,
++                maxLines = 1,
++                overflow = TextOverflow.Ellipsis
++            )
+         }
++        Spacer(modifier = Modifier.width(8.dp))
++        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++            RowRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder)
++            RowRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit)
++            RowRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete)
++        }
++    }
++}
++
++/** Lingkaran pilihan: cincin tipis, terisi titik bila instance ini yang aktif. */
++@Composable
++private fun RadioDot(selected: Boolean) {
++    Box(
++        modifier = Modifier
++            .size(22.dp)
++            .border(2.dp, if (selected) AmberUi.Text else AmberUi.BorderStrong, CircleShape),
++        contentAlignment = Alignment.Center
++    ) {
+         if (selected) {
+-            Icon(
+-                imageVector = Icons.Outlined.Check,
+-                contentDescription = null,
+-                tint = AmberUi.Text,
++            Box(
+                 modifier = Modifier
+-                    .align(Alignment.TopEnd)
+-                    .padding(top = 12.dp, end = 12.dp)
+-                    .size(20.dp)
++                    .size(10.dp)
++                    .background(AmberUi.Text, CircleShape)
+             )
+         }
+     }
+ }
+ 
+-/** Tombol bulat kecil di dasar kartu. */
++/** Tombol bulat kecil di ujung kanan baris. */
+ @Composable
+-private fun ShelfRoundButton(
++private fun RowRoundButton(
+     icon: ImageVector,
+     description: String,
+     tint: Color,
+@@ -257,7 +246,7 @@ private fun ShelfRoundButton(
+ ) {
+     Box(
+         modifier = Modifier
+-            .size(34.dp)
++            .size(36.dp)
+             .clip(CircleShape)
+             .background(Color.White.copy(alpha = 0.10f), CircleShape)
+             .clickable { onClick() },
+@@ -272,15 +261,15 @@ private fun ShelfRoundButton(
+     }
+ }
+ 
+-/** Kartu putus-putus di ujung rak untuk menambah instance. */
++/** Baris putus-putus di ujung daftar untuk menambah instance. */
+ @Composable
+-private fun AddInstanceCard(onClick: () -> Unit) {
++private fun AddInstanceRow(onClick: () -> Unit) {
+     val dash = AmberUi.BorderStrong
+-    Column(
++    Row(
+         modifier = Modifier
+-            .width(150.dp)
+-            .height(176.dp)
+-            .clip(ShelfCardShape)
++            .fillMaxWidth()
++            .heightIn(min = 56.dp)
++            .clip(RowShape)
+             .clickable { onClick() }
+             .drawBehind {
+                 val stroke = 1.5.dp.toPx()
+@@ -288,20 +277,20 @@ private fun AddInstanceCard(onClick: () -> Unit) {
+                     color = dash,
+                     topLeft = Offset(stroke / 2f, stroke / 2f),
+                     size = Size(size.width - stroke, size.height - stroke),
+-                    cornerRadius = CornerRadius(26.dp.toPx()),
++                    cornerRadius = CornerRadius(16.dp.toPx()),
+                     style = Stroke(
+                         width = stroke,
+                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(18f, 12f))
+                     )
+                 )
+             }
+-            .padding(14.dp),
+-        horizontalAlignment = Alignment.CenterHorizontally,
+-        verticalArrangement = Arrangement.Center
++            .padding(horizontal = 16.dp, vertical = 10.dp),
++        horizontalArrangement = Arrangement.Center,
++        verticalAlignment = Alignment.CenterVertically
+     ) {
+         Box(
+             modifier = Modifier
+-                .size(48.dp)
++                .size(32.dp)
+                 .clip(CircleShape)
+                 .background(AmberUi.AccentBrush, CircleShape)
+                 .border(1.dp, AmberUi.AccentEdge, CircleShape),
+@@ -311,18 +300,17 @@ private fun AddInstanceCard(onClick: () -> Unit) {
+                 imageVector = Icons.Default.Add,
+                 contentDescription = null,
+                 tint = AmberUi.Text,
+-                modifier = Modifier.size(24.dp)
++                modifier = Modifier.size(18.dp)
+             )
+         }
+-        Spacer(modifier = Modifier.height(10.dp))
++        Spacer(modifier = Modifier.width(10.dp))
+         Text(
+             text = "TAMBAH INSTANCE",
+             color = AmberUi.Text,
+             fontSize = 12.sp,
+             fontWeight = FontWeight.SemiBold,
+             letterSpacing = 0.4.sp,
+-            textAlign = TextAlign.Center,
+-            maxLines = 2
++            maxLines = 1
+         )
+     }
+ }
+
+
+# FIN part=1/2 files=6

@@ -1,0 +1,748 @@
+diff --git a/app/src/main/assets/lang/en/gaya-simple.tsv b/app/src/main/assets/lang/en/gaya-simple.tsv
+new file mode 100644
+index 0000000..243f003
+--- /dev/null
++++ b/app/src/main/assets/lang/en/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	Interface color
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Pick one color for the whole launcher: panels, borders, and buttons all follow it. Applies when you lift your finger.
++Kepekatan warna	Color intensity
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	Slide left for neutral gray, right for a stronger color.
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	Default uses AmberLauncher's own theme. Liquid Glass blurs the background behind panels and buttons. Simple uses thin see-through panels in one color of your choice.
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Liquid Glass needs Android 12 or newer, so this phone uses Default automatically. Simple works on every phone: thin see-through panels in one color of your choice.
+diff --git a/app/src/main/assets/lang/en/mods.tsv b/app/src/main/assets/lang/en/mods.tsv
+index 5ec3087..dea299d 100644
+--- a/app/src/main/assets/lang/en/mods.tsv
++++ b/app/src/main/assets/lang/en/mods.tsv
+@@ -170,8 +170,6 @@ Tema	Theme
+ Aksen warna	Accent color
+ Warna tombol dan penanda terpilih di seluruh launcher.	Color of buttons and selected markers across the launcher.
+ Gaya tampilan	Display style
+-Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Default uses AmberLauncher's own theme. Liquid Glass blurs the background behind panels and buttons.
+-Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Liquid Glass needs Android 12 or newer. This phone uses Default automatically.
+ Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Language of the launcher text. Applies immediately without restarting.
+ Pengaturan khusus untuk renderer yang sedang dipakai.	Specific settings for the renderer in use.
+ Atur	Configure
+diff --git a/app/src/main/assets/lang/es/gaya-simple.tsv b/app/src/main/assets/lang/es/gaya-simple.tsv
+new file mode 100644
+index 0000000..d0df1c1
+--- /dev/null
++++ b/app/src/main/assets/lang/es/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	Color de la interfaz
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Elige un color para todo el launcher: los paneles, bordes y botones lo siguen. Se aplica al levantar el dedo.
++Kepekatan warna	Intensidad del color
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	Desliza a la izquierda para un gris neutro, a la derecha para un color m\u00e1s fuerte.
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	Predeterminado usa el tema propio de AmberLauncher. Liquid Glass difumina el fondo detr\u00e1s de paneles y botones. Simple usa paneles finos y transl\u00facidos en un color a tu elecci\u00f3n.
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Liquid Glass requiere Android 12 o superior, por eso este tel\u00e9fono usa Predeterminado autom\u00e1ticamente. Simple funciona en todos los tel\u00e9fonos: paneles finos y transl\u00facidos en un color a tu elecci\u00f3n.
+diff --git a/app/src/main/assets/lang/es/mods.tsv b/app/src/main/assets/lang/es/mods.tsv
+index 179bb2e32f5f23601b6323244ebda0f2bac0b789..4661b480778a18a30b014516102dee1c808d0de8 100644
+GIT binary patch
+delta 12
+TcmdmzwJv=Fht}pk?PZ(*CAI}I
+
+delta 405
+zcmZ9IF-`+P5ClVPUeU3Glgtk+8A0H{UzqdG*~9JboM&ePBEQ8EB0)&-1Ah$NL4f^$
+z>gw)~{rAh~Y;jt1M>RSUC+bPyoCvGbvTdm5-GL2-a}bjT8#z`9c#2fY2(;BG^^_6G
+z$q)oBN9rl>F;M1+KpC#7)!59p#(|wJNv5Evg}@P~$v2n|q6mC#zA*;r>PU}Vr#Xy(
+z+vQwFa1wICD_V8UT$=l<x^4A(z$yn*30OX$XOPpWG*}Csw~#DQ*F-MUxap0*cbfTC
+vmhrI)8~=|}lsd49T7$>p4Ci=x?==5Ty;)DyHC@gwvmGVQ&dt}|;%)u|<!h8g
+
+diff --git a/app/src/main/assets/lang/fil/gaya-simple.tsv b/app/src/main/assets/lang/fil/gaya-simple.tsv
+new file mode 100644
+index 0000000..9cbaa15
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	Kulay ng interface
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Pumili ng isang kulay para sa buong launcher: susunod dito ang mga panel, gilid, at button. Ilalapat kapag inalis mo ang daliri.
++Kepekatan warna	Tindi ng kulay
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	I-slide pakaliwa para sa neutral na gray, pakanan para sa mas matingkad na kulay.
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	Gumagamit ang Default ng sariling tema ng AmberLauncher. Binablur ng Liquid Glass ang background sa likod ng mga panel at button. Gumagamit ang Simple ng manipis at transparent na mga panel sa isang kulay na pipiliin mo.
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Kailangan ng Liquid Glass ang Android 12 pataas, kaya awtomatikong gagamitin ng phone na ito ang Default. Gumagana ang Simple sa lahat ng phone: manipis at transparent na mga panel sa isang kulay na pipiliin mo.
+diff --git a/app/src/main/assets/lang/fil/mods.tsv b/app/src/main/assets/lang/fil/mods.tsv
+index a027ce3..2a4e571 100644
+--- a/app/src/main/assets/lang/fil/mods.tsv
++++ b/app/src/main/assets/lang/fil/mods.tsv
+@@ -167,8 +167,6 @@ Tema	Tema
+ Aksen warna	Accent color
+ Warna tombol dan penanda terpilih di seluruh launcher.	Kulay ng mga button at napiling marker sa buong launcher.
+ Gaya tampilan	Istilo ng display
+-Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	Gumagamit ang Default ng sariling tema ng AmberLauncher. Binablur ng Liquid Glass ang background sa likod ng mga panel at button.
+-Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	Kailangan ng Liquid Glass ang Android 12 pataas. Awtomatikong gagamitin ng phone na ito ang Default.
+ Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Wika ng text sa launcher. Agad na ipinapatupad nang hindi nagre-restart.
+ Pengaturan khusus untuk renderer yang sedang dipakai.	Mga partikular na setting para sa renderer na ginagamit.
+ Atur	I-configure
+diff --git a/app/src/main/assets/lang/pt/gaya-simple.tsv b/app/src/main/assets/lang/pt/gaya-simple.tsv
+new file mode 100644
+index 0000000..9b45b2d
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	Cor da interface
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Escolha uma cor para todo o launcher: pain\u00e9is, bordas e bot\u00f5es seguem essa cor. Aplica ao soltar o dedo.
++Kepekatan warna	Intensidade da cor
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	Deslize para a esquerda para um cinza neutro, para a direita para uma cor mais forte.
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	O Padr\u00e3o usa o tema pr\u00f3prio do AmberLauncher. O Liquid Glass desfoca o plano de fundo atr\u00e1s dos pain\u00e9is e bot\u00f5es. O Simple usa pain\u00e9is finos e transl\u00facidos em uma cor de sua escolha.
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	O Liquid Glass exige o Android 12 ou superior, ent\u00e3o este celular usa o Padr\u00e3o automaticamente. O Simple funciona em qualquer celular: pain\u00e9is finos e transl\u00facidos em uma cor de sua escolha.
+diff --git a/app/src/main/assets/lang/pt/mods.tsv b/app/src/main/assets/lang/pt/mods.tsv
+index 7cfd02a..e8953d2 100644
+--- a/app/src/main/assets/lang/pt/mods.tsv
++++ b/app/src/main/assets/lang/pt/mods.tsv
+@@ -176,8 +176,6 @@ Seberapa gelap latar di layar selain Home.	O quanto o plano de fundo escurece na
+ Aksen warna	Cor de destaque
+ Warna tombol dan penanda terpilih di seluruh launcher.	Cor dos bot\u00f5es e dos marcadores selecionados em todo o launcher.
+ Gaya tampilan	Estilo visual
+-Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol.	O Padr\u00e3o usa o tema pr\u00f3prio do AmberLauncher. O Liquid Glass desfoca o plano de fundo atr\u00e1s dos pain\u00e9is e bot\u00f5es.
+-Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default.	O Liquid Glass exige o Android 12 ou superior. Neste celular, o Padr\u00e3o \u00e9 usado automaticamente.
+ Bahasa teks di launcher. Berlaku langsung tanpa memulai ulang.	Idioma dos textos do launcher. Vale na hora, sem reiniciar.
+ Pengaturan khusus untuk renderer yang sedang dipakai.	Configura\u00e7\u00f5es espec\u00edficas do renderizador em uso.
+ Atur	Ajustar
+diff --git a/app/src/main/assets/lang/th/gaya-simple.tsv b/app/src/main/assets/lang/th/gaya-simple.tsv
+new file mode 100644
+index 0000000..bef1cec
+--- /dev/null
++++ b/app/src/main/assets/lang/th/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	\u0e2a\u0e35\u0e02\u0e2d\u0e07 UI
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e2a\u0e35\u0e40\u0e14\u0e35\u0e22\u0e27\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e17\u0e31\u0e49\u0e07\u0e15\u0e31\u0e27\u0e40\u0e1b\u0e34\u0e14\u0e40\u0e01\u0e21 \u0e41\u0e1c\u0e07 \u0e02\u0e2d\u0e1a \u0e41\u0e25\u0e30\u0e1b\u0e38\u0e48\u0e21\u0e08\u0e30\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e15\u0e32\u0e21\u0e2a\u0e35\u0e19\u0e35\u0e49 \u0e2a\u0e35\u0e08\u0e30\u0e40\u0e1b\u0e25\u0e35\u0e48\u0e22\u0e19\u0e40\u0e21\u0e37\u0e48\u0e2d\u0e22\u0e01\u0e19\u0e34\u0e49\u0e27\u0e02\u0e36\u0e49\u0e19
++Kepekatan warna	\u0e04\u0e27\u0e32\u0e21\u0e40\u0e02\u0e49\u0e21\u0e02\u0e2d\u0e07\u0e2a\u0e35
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	\u0e40\u0e25\u0e37\u0e48\u0e2d\u0e19\u0e44\u0e1b\u0e17\u0e32\u0e07\u0e0b\u0e49\u0e32\u0e22\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e43\u0e2b\u0e49\u0e40\u0e1b\u0e47\u0e19\u0e2a\u0e35\u0e40\u0e17\u0e32\u0e01\u0e25\u0e32\u0e07 \u0e40\u0e25\u0e37\u0e48\u0e2d\u0e19\u0e44\u0e1b\u0e17\u0e32\u0e07\u0e02\u0e27\u0e32\u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e43\u0e2b\u0e49\u0e2a\u0e35\u0e40\u0e02\u0e49\u0e21\u0e02\u0e36\u0e49\u0e19
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	\u0e04\u0e48\u0e32\u0e40\u0e23\u0e34\u0e48\u0e21\u0e15\u0e49\u0e19\u0e43\u0e0a\u0e49\u0e18\u0e35\u0e21\u0e02\u0e2d\u0e07 AmberLauncher \u0e40\u0e2d\u0e07 Liquid Glass \u0e17\u0e33\u0e43\u0e2b\u0e49\u0e1e\u0e37\u0e49\u0e19\u0e2b\u0e25\u0e31\u0e07\u0e14\u0e49\u0e32\u0e19\u0e2b\u0e25\u0e31\u0e07\u0e41\u0e1c\u0e07\u0e41\u0e25\u0e30\u0e1b\u0e38\u0e48\u0e21\u0e40\u0e1a\u0e25\u0e2d \u0e2a\u0e48\u0e27\u0e19 Simple \u0e43\u0e0a\u0e49\u0e41\u0e1c\u0e07\u0e1a\u0e32\u0e07\u0e42\u0e1b\u0e23\u0e48\u0e07\u0e43\u0e2a\u0e43\u0e19\u0e2a\u0e35\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Liquid Glass \u0e15\u0e49\u0e2d\u0e07\u0e43\u0e0a\u0e49 Android 12 \u0e02\u0e36\u0e49\u0e19\u0e44\u0e1b \u0e21\u0e37\u0e2d\u0e16\u0e37\u0e2d\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e19\u0e35\u0e49\u0e08\u0e36\u0e07\u0e43\u0e0a\u0e49\u0e04\u0e48\u0e32\u0e40\u0e23\u0e34\u0e48\u0e21\u0e15\u0e49\u0e19\u0e42\u0e14\u0e22\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34 \u0e2a\u0e48\u0e27\u0e19 Simple \u0e43\u0e0a\u0e49\u0e44\u0e14\u0e49\u0e01\u0e31\u0e1a\u0e21\u0e37\u0e2d\u0e16\u0e37\u0e2d\u0e17\u0e38\u0e01\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07 \u0e40\u0e1b\u0e47\u0e19\u0e41\u0e1c\u0e07\u0e1a\u0e32\u0e07\u0e42\u0e1b\u0e23\u0e48\u0e07\u0e43\u0e2a\u0e43\u0e19\u0e2a\u0e35\u0e17\u0e35\u0e48\u0e04\u0e38\u0e13\u0e40\u0e25\u0e37\u0e2d\u0e01
+diff --git a/app/src/main/assets/lang/th/mods.tsv b/app/src/main/assets/lang/th/mods.tsv
+index bfca67e3b8aacbbce4fbfc4ba4892635e9fb8971..7ae59741d8d4701f2d2787d35c538c27ceabd1ad 100644
+GIT binary patch
+delta 14
+WcmX>!ld)qe<A!tAn>p-u@c{rZjRo}p
+
+delta 490
+zcmZ9IJud`N6o#W*5~V^EN2!^F(iS4wpiuY$6lcuE&Cc9mK5DE@c2_&T)@qQgHk)95
+zoKfoe4X=M9bCFoxxi{y$d7r0wI`Y;Yx%(*ZSJW1#enNo?xXPLm6)-IZu8LMUHJdvs
+zqF5PEN7|uPy_af_mVJ)n;=oNK4ytU(=Y%8jG`Y&>Dw}QEWutuZ*iaG%Zs<EDNF8|-
+z@__sRatnDZp4s}s*c$R9$T9L3<O1>pxrWpreMsY96?<#{hq^${Ap;xJL*B~D^OO5M
+zNEdPsX&^s@T>TDR$Q`5u5nJclMqb+G{^(Gun<nWFEgCNhwMVmaR8_<Y#|~9At*ntY
+zn!+RuIMG&z_4nh`87~cGWuG$>8-JoK;Il<;Bd<d`WU*f?_8Gp1!c^VLda-2-a!9*y
+eRLE);D8KHqrG@Dd@*3m>a+AGJP7OZFuj5~>fBs_t
+
+diff --git a/app/src/main/assets/lang/vi/gaya-simple.tsv b/app/src/main/assets/lang/vi/gaya-simple.tsv
+new file mode 100644
+index 0000000..0a28953
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	M\u00e0u giao di\u1ec7n
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	Ch\u1ecdn m\u1ed9t m\u00e0u cho to\u00e0n b\u1ed9 launcher: b\u1ea3ng, vi\u1ec1n v\u00e0 n\u00fat \u0111\u1ec1u \u0111\u1ed5i theo m\u00e0u n\u00e0y. \u00c1p d\u1ee5ng khi b\u1ea1n nh\u1ea5c ng\u00f3n tay.
++Kepekatan warna	\u0110\u1ed9 \u0111\u1eadm c\u1ee7a m\u00e0u
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	K\u00e9o sang tr\u00e1i \u0111\u1ec3 c\u00f3 m\u00e0u x\u00e1m trung t\u00ednh, sang ph\u1ea3i \u0111\u1ec3 m\u00e0u \u0111\u1eadm h\u01a1n.
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	M\u1eb7c \u0111\u1ecbnh d\u00f9ng giao di\u1ec7n ri\u00eang c\u1ee7a AmberLauncher. Liquid Glass l\u00e0m m\u1edd n\u1ec1n ph\u00eda sau c\u00e1c b\u1ea3ng v\u00e0 n\u00fat. Simple d\u00f9ng c\u00e1c b\u1ea3ng m\u1ecfng, trong su\u1ed1t v\u1edbi m\u1ed9t m\u00e0u do b\u1ea1n ch\u1ecdn.
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	Liquid Glass c\u1ea7n Android 12 tr\u1edf l\u00ean n\u00ean \u0111i\u1ec7n tho\u1ea1i n\u00e0y t\u1ef1 d\u00f9ng M\u1eb7c \u0111\u1ecbnh. Simple d\u00f9ng \u0111\u01b0\u1ee3c tr\u00ean m\u1ecdi \u0111i\u1ec7n tho\u1ea1i: c\u00e1c b\u1ea3ng m\u1ecfng, trong su\u1ed1t v\u1edbi m\u1ed9t m\u00e0u do b\u1ea1n ch\u1ecdn.
+diff --git a/app/src/main/assets/lang/vi/mods.tsv b/app/src/main/assets/lang/vi/mods.tsv
+index 02e476c1cc908bd11b0fcb5686afaee5bd432847..a26323f1a249a4e4c18c1b60e1c455b1e2f17549 100644
+GIT binary patch
+delta 12
+TcmbPPH@SMlPNU8CCbzf%DMJOz
+
+delta 405
+zcmZ9IJxT*X7=~MuQ@kfwaBmO@Xc56He7iI54m<O0oShLwFj!gGC{`9?f<+)8C>EOC
+za&il+xrvwrBsswQ^E{7NPuK6ubTX7@<h6s5hAL8U(hvqFlXgU&^HN$gl7+G=!APBZ
+zC2*vvY5oG4w`3|}XmVsB6f&u)A}%l{mKuT>t~Ob%lio>ezjCY|Vt2<SL|AfxLQSZK
+zP_esZSQQprAdlUA@4?=(4pRdYyJv9hZW!Y-yb&7m$ipm07TZ@Ya1o~9(7L3*b360S
+zml&|HwGud-q^KmwQIlY(aC{2I3bm^ZIkkpdTiIGldOKZtZ0G#nmBQKBy+DTrCs^HY
+euv}TkcBa5#dI=Z1k1hMg$H7)e^7)<q^nU@_8mGqq
+
+diff --git a/app/src/main/assets/lang/zh/gaya-simple.tsv b/app/src/main/assets/lang/zh/gaya-simple.tsv
+new file mode 100644
+index 0000000..784f307
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/gaya-simple.tsv
+@@ -0,0 +1,7 @@
++# Gaya tampilan Simple dan pemilih warnanya
++Warna UI	\u754c\u9762\u989c\u8272
++Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.	\u4e3a\u6574\u4e2a\u542f\u52a8\u5668\u9009\u62e9\u4e00\u79cd\u989c\u8272\uff0c\u9762\u677f\u3001\u8fb9\u6846\u548c\u6309\u94ae\u90fd\u4f1a\u8ddf\u968f\u5b83\u3002\u677e\u5f00\u624b\u6307\u540e\u751f\u6548\u3002
++Kepekatan warna	\u989c\u8272\u6d53\u5ea6
++Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.	\u5411\u5de6\u6ed1\u52a8\u4e3a\u4e2d\u6027\u7070\u8272\uff0c\u5411\u53f3\u6ed1\u52a8\u5219\u989c\u8272\u66f4\u6d53\u3002
++Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu.	\u9ed8\u8ba4\u98ce\u683c\u4f7f\u7528 AmberLauncher \u81ea\u5df1\u7684\u4e3b\u9898\u3002\u6db2\u6001\u73bb\u7483\u4f1a\u6a21\u7cca\u9762\u677f\u548c\u6309\u94ae\u540e\u9762\u7684\u80cc\u666f\u3002Simple \u4f7f\u7528\u8584\u800c\u900f\u660e\u7684\u9762\u677f\uff0c\u989c\u8272\u7531\u4f60\u9009\u62e9\u3002
++Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu.	\u6db2\u6001\u73bb\u7483\u9700\u8981 Android 12 \u6216\u66f4\u9ad8\u7248\u672c\uff0c\u6240\u4ee5\u8fd9\u90e8\u624b\u673a\u4f1a\u81ea\u52a8\u4f7f\u7528\u9ed8\u8ba4\u98ce\u683c\u3002Simple \u9002\u7528\u4e8e\u6240\u6709\u624b\u673a\uff1a\u8584\u800c\u900f\u660e\u7684\u9762\u677f\uff0c\u989c\u8272\u7531\u4f60\u9009\u62e9\u3002
+diff --git a/app/src/main/assets/lang/zh/mods.tsv b/app/src/main/assets/lang/zh/mods.tsv
+index abb3c28b093f18023a78fd3465dd80f223b62369..a510ad5977014670cd94d9f4c7d8c2f9b4248906 100644
+GIT binary patch
+delta 12
+TcmcZ`_au5lfy(BWswJENEO-U|
+
+delta 396
+zcmY+A%}&BV6h_zh6nDY8iM|1bL>DaFo0#0%Q6_Dt*iP4!pF}`H3^4{OB#Oo~YVZf6
+zMld{yE6TL<7N+Q;KES=-IVarx-g_!#%XxBuuED`1ChACm6B8k4s>Cj!%l3=J28S?>
+z+Ejr8J#wiATLwB#a-h04nmRHtkfRM61(g`6BRhl=GGc&+47g>gmZ4<iv=@(W<aI|}
+z&cd&GbQUBt<<w4me7Agmj{JJ~F_oj<!mEn67vWW+&NS-Q!kI6Et7y`a!;u)ym)*8#
+zH)VIcJnhKgDDvxZtu6YG3$MENk5hHITZA0bY>R5Jz5zM`<mf1nr?6e#0m>*?+%l2V
+zmDMW4Ult{kMvwz9zOAHxiN?9Oc$N3PsM!#MhlN*-=Y3fVMDs)pKEs)xIJJUb-*kZl
+Ma}$d=;n`B=2c8<p2mk;8
+
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index d225925..af79b1f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -571,6 +571,7 @@ class GameActivity : ComponentActivity(), SurfaceHolder.Callback {
+         SettingsManager.settings.value.let {
+             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
+             com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
++            com.israadev.nuxlauncher.ui.theme.AmberUi.setSimpleTint(it.simpleHue, it.simpleTone)
+             com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
+         }
+         ControlLayoutManager.init(this)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index 67b3be6..2749843 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -105,6 +105,7 @@ class MainActivity : ComponentActivity() {
+         SettingsManager.settings.value.let {
+             com.israadev.nuxlauncher.ui.theme.AmberUi.setAccent(it.accentColor)
+             com.israadev.nuxlauncher.ui.theme.AmberUi.setStyle(it.uiStyle)
++            com.israadev.nuxlauncher.ui.theme.AmberUi.setSimpleTint(it.simpleHue, it.simpleTone)
+             com.israadev.nuxlauncher.ui.theme.AmberUi.applyDim(it.bgDim / 100f)
+         }
+         com.israadev.nuxlauncher.core.device.PhysicalMouseChecker.initChecker(this)
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 48fa7c4..dc9a62f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -124,11 +124,15 @@ data class LauncherSettings(
+     // Pembaruan aplikasi
+     val autoCheckUpdates: Boolean = true, // cek rilis baru di GitHub setiap launcher dibuka
+ 
+-    // Tampilan: warna aksen ("navy", "green", "purple", "teal"), gaya ("default" atau "liquid"),
++    // Tampilan: warna aksen ("navy", "green", "purple", "teal"), gaya ("default", "liquid", atau "simple"),
+     // dan seberapa gelap latar di layar selain Home (0 - 100)
+     val accentColor: String = "navy",
+     val uiStyle: String = "default",
+     val bgDim: Int = 50,
++    // Warna gaya Simple (hanya dipakai saat uiStyle = "simple"): rona 0 - 359 dan kepekatan warna 0 - 100
++    // (0 = abu-abu netral). Gaya lain memakai accentColor.
++    val simpleHue: Int = 215,
++    val simpleTone: Int = 55,
+ 
+     // Efek salju (suasana Natal): bawaan mati. Di Beranda lebat; di layar lain lebih sedikit dan redup
+     // seperti di dalam ruangan. Bisa dinyalakan di Pengaturan > Tampilan.
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+index e097736..235b242 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/NuxSettingParts.kt
+@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.size
+ import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.gestures.detectHorizontalDragGestures
++import androidx.compose.foundation.gestures.detectTapGestures
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -34,15 +36,24 @@ import androidx.compose.material3.SwitchDefaults
+ import androidx.compose.ui.focus.focusProperties
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberUpdatedState
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
++import androidx.compose.ui.draw.drawBehind
++import androidx.compose.ui.geometry.CornerRadius
++import androidx.compose.ui.geometry.Offset
++import androidx.compose.ui.graphics.Brush
++import androidx.compose.ui.input.pointer.pointerInput
+ import androidx.compose.ui.graphics.SolidColor
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
++import kotlin.math.roundToInt
+ import com.israadev.nuxlauncher.ui.theme.NuxColors
+ import com.israadev.nuxlauncher.ui.theme.NuxSizes
+ 
+@@ -269,6 +280,78 @@ fun SettingSliderRow(
+     }
+ }
+ 
++/**
++ * Baris pemilih warna: batang berwarna pelangi, ketuk atau geser untuk memilih rona (0 - 359).
++ * [onChange] dipanggil terus selama menggeser (hanya menggerakkan penanda), [onFinish] sekali saat jari diangkat
++ * (di situlah warna launcher benar-benar diganti, supaya seluruh layar tidak digambar ulang tiap geseran).
++ */
++@Composable
++fun SettingHueRow(
++    title: String,
++    desc: String?,
++    hue: Int,
++    onChange: (Int) -> Unit,
++    onFinish: () -> Unit
++) {
++    SettingFrame(title, desc) {
++        Column(
++            modifier = Modifier
++                .fillMaxWidth()
++                .padding(vertical = 10.dp)
++        ) {
++            SettingRowText(title = title, desc = desc)
++            Spacer(modifier = Modifier.height(14.dp))
++            HueBar(hue = hue, onChange = onChange, onFinish = onFinish)
++        }
++    }
++}
++
++/** Rona (0 - 359) dari posisi jari [x] pada batang selebar [width] dan setinggi [height]; ujung batang adalah setengah lingkaran penanda. */
++private fun hueAt(x: Float, width: Int, height: Int): Int {
++    val r = height / 2f
++    val span = (width - 2f * r).coerceAtLeast(1f)
++    return (((x - r) / span).coerceIn(0f, 1f) * 359f).roundToInt()
++}
++
++@Composable
++private fun HueBar(hue: Int, onChange: (Int) -> Unit, onFinish: () -> Unit) {
++    val rainbow = remember {
++        Brush.horizontalGradient(List(7) { i -> Color.hsv((i * 60f).coerceAtMost(359f), 0.85f, 0.95f) })
++    }
++    val change by rememberUpdatedState(onChange)
++    val finish by rememberUpdatedState(onFinish)
++    val shownHue = hue.coerceIn(0, 359)
++    Box(
++        modifier = Modifier
++            .fillMaxWidth()
++            .height(36.dp)
++            .pointerInput(Unit) {
++                detectTapGestures {
++                    change(hueAt(it.x, size.width, size.height))
++                    finish()
++                }
++            }
++            .pointerInput(Unit) {
++                detectHorizontalDragGestures(
++                    onDragStart = { change(hueAt(it.x, size.width, size.height)) },
++                    onDragEnd = { finish() },
++                    onDragCancel = { finish() },
++                    onHorizontalDrag = { pointer, _ ->
++                        pointer.consume()
++                        change(hueAt(pointer.position.x, size.width, size.height))
++                    }
++                )
++            }
++            .drawBehind {
++                val r = size.height / 2f
++                drawRoundRect(rainbow, cornerRadius = CornerRadius(r))
++                val x = r + (shownHue / 359f) * (size.width - 2f * r)
++                drawCircle(Color.White, radius = r - 1.dp.toPx(), center = Offset(x, r))
++                drawCircle(Color.hsv(shownHue.toFloat(), 0.85f, 0.95f), radius = r - 5.dp.toPx(), center = Offset(x, r))
++            }
++    )
++}
++
+ /** Baris aksi: judul + keterangan di kiri, tombol pil di kanan. */
+ @Composable
+ fun SettingActionRow(
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 3242c20..48ff1a5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -194,6 +194,8 @@ fun SettingsScreen(
+     var bgAnimate by remember(currentSettings.homeBgAnimate) { mutableStateOf(currentSettings.homeBgAnimate) }
+     var accentId by remember(currentSettings.accentColor) { mutableStateOf(currentSettings.accentColor) }
+     var uiStyleId by remember(currentSettings.uiStyle) { mutableStateOf(currentSettings.uiStyle) }
++    var simpleHue by remember(currentSettings.simpleHue) { mutableIntStateOf(currentSettings.simpleHue) }
++    var simpleTone by remember(currentSettings.simpleTone) { mutableIntStateOf(currentSettings.simpleTone) }
+     var bgDim by remember(currentSettings.bgDim) { mutableIntStateOf(currentSettings.bgDim) }
+     var snowOn by remember(currentSettings.snowEnabled) { mutableStateOf(currentSettings.snowEnabled) }
+     var homeEffect by remember(currentSettings.homeEffect) { mutableStateOf(normalizeHomeEffect(currentSettings.homeEffect)) }
+@@ -259,6 +261,8 @@ fun SettingsScreen(
+             homeAmbientIntensity = ambientIntensity,
+             accentColor = accentId,
+             uiStyle = uiStyleId,
++            simpleHue = simpleHue,
++            simpleTone = simpleTone,
+             bgDim = bgDim,
+             snowEnabled = snowOn,
+             homeEffect = homeEffect,
+@@ -1028,81 +1032,84 @@ fun SettingsScreen(
+                         }
+ 
+                         SettingsGroup("Tema") {
+-                            SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
+-                                Column(
+-                                    modifier = Modifier
+-                                        .fillMaxWidth()
+-                                        .padding(vertical = 10.dp)
+-                                ) {
+-                                    SettingRowText(
+-                                        title = "Aksen warna",
+-                                        desc = "Warna tombol dan penanda terpilih di seluruh launcher."
+-                                    )
+-                                    Spacer(modifier = Modifier.height(12.dp))
+-                                    val solidAccents = AMBER_ACCENTS.filter { it.end == null }
+-                                    val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
+-                                    listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
+-                                        if (groupIndex == 1) {
+-                                            Text(
+-                                                text = "Gradient halus",
+-                                                color = AmberUi.TextDim,
+-                                                fontSize = 12.sp,
+-                                                modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
+-                                            )
+-                                        }
+-                                        group.chunked(6).forEach { rowAccents ->
+-                                            Row(
+-                                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+-                                                verticalAlignment = Alignment.CenterVertically,
+-                                                modifier = Modifier.padding(bottom = 10.dp)
+-                                            ) {
+-                                                rowAccents.forEach { accent ->
+-                                                    val picked = accent.id == accentId
+-                                                    Box(
+-                                                        modifier = Modifier
+-                                                            .size(44.dp)
+-                                                            .clip(CircleShape)
+-                                                            .background(accent.brush, CircleShape)
+-                                                            .border(
+-                                                                if (picked) 2.5.dp else 1.dp,
+-                                                                if (picked) Color.White else AmberUi.BorderStrong,
+-                                                                CircleShape
+-                                                            )
+-                                                            .clickable {
+-                                                                accentId = accent.id
+-                                                                AmberUi.setAccent(accent.id)
+-                                                                commitSettings()
+-                                                            },
+-                                                        contentAlignment = Alignment.Center
+-                                                    ) {
+-                                                        if (picked) {
+-                                                            Icon(
+-                                                                imageVector = Icons.Outlined.Check,
+-                                                                contentDescription = accent.label,
+-                                                                tint = Color.White,
+-                                                                modifier = Modifier.size(22.dp)
+-                                                            )
++                            // Gaya Simple punya pemilih warnanya sendiri (di bawah pilihan gaya); aksen bawaan dipakai gaya lain
++                            if (uiStyleId != AmberStyle.SIMPLE.id) {
++                                SettingFrame("Aksen warna", "Warna tombol dan penanda terpilih di seluruh launcher.") {
++                                    Column(
++                                        modifier = Modifier
++                                            .fillMaxWidth()
++                                            .padding(vertical = 10.dp)
++                                    ) {
++                                        SettingRowText(
++                                            title = "Aksen warna",
++                                            desc = "Warna tombol dan penanda terpilih di seluruh launcher."
++                                        )
++                                        Spacer(modifier = Modifier.height(12.dp))
++                                        val solidAccents = AMBER_ACCENTS.filter { it.end == null }
++                                        val gradientAccents = AMBER_ACCENTS.filter { it.end != null }
++                                        listOf(solidAccents, gradientAccents).forEachIndexed { groupIndex, group ->
++                                            if (groupIndex == 1) {
++                                                Text(
++                                                    text = "Gradient halus",
++                                                    color = AmberUi.TextDim,
++                                                    fontSize = 12.sp,
++                                                    modifier = Modifier.padding(top = 4.dp, bottom = 10.dp)
++                                                )
++                                            }
++                                            group.chunked(6).forEach { rowAccents ->
++                                                Row(
++                                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
++                                                    verticalAlignment = Alignment.CenterVertically,
++                                                    modifier = Modifier.padding(bottom = 10.dp)
++                                                ) {
++                                                    rowAccents.forEach { accent ->
++                                                        val picked = accent.id == accentId
++                                                        Box(
++                                                            modifier = Modifier
++                                                                .size(44.dp)
++                                                                .clip(CircleShape)
++                                                                .background(accent.brush, CircleShape)
++                                                                .border(
++                                                                    if (picked) 2.5.dp else 1.dp,
++                                                                    if (picked) Color.White else AmberUi.BorderStrong,
++                                                                    CircleShape
++                                                                )
++                                                                .clickable {
++                                                                    accentId = accent.id
++                                                                    AmberUi.setAccent(accent.id)
++                                                                    commitSettings()
++                                                                },
++                                                            contentAlignment = Alignment.Center
++                                                        ) {
++                                                            if (picked) {
++                                                                Icon(
++                                                                    imageVector = Icons.Outlined.Check,
++                                                                    contentDescription = accent.label,
++                                                                    tint = Color.White,
++                                                                    modifier = Modifier.size(22.dp)
++                                                                )
++                                                            }
+                                                         }
+                                                     }
+                                                 }
+                                             }
+                                         }
++                                        Text(
++                                            text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
++                                            color = AmberUi.TextDim,
++                                            fontSize = 12.sp,
++                                            modifier = Modifier.padding(top = 6.dp)
++                                        )
+                                     }
+-                                    Text(
+-                                        text = AMBER_ACCENTS.firstOrNull { it.id == accentId }?.label ?: "",
+-                                        color = AmberUi.TextDim,
+-                                        fontSize = 12.sp,
+-                                        modifier = Modifier.padding(top = 6.dp)
+-                                    )
+                                 }
++                                SettingDivider()
+                             }
+-                            SettingDivider()
+                             SettingChoiceRow(
+                                 title = "Gaya tampilan",
+                                 desc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+-                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol."
++                                    "Default memakai tema AmberLauncher sendiri. Liquid Glass memburamkan latar di belakang panel dan tombol. Simple memakai panel tipis tembus pandang dengan satu warna pilihanmu."
+                                 } else {
+-                                    "Liquid Glass butuh Android 12 ke atas. Di HP ini otomatis memakai Default."
++                                    "Liquid Glass butuh Android 12 ke atas, di HP ini otomatis memakai Default. Simple bisa dipakai di semua HP: panel tipis tembus pandang dengan satu warna pilihanmu."
+                                 },
+                                 options = AmberStyle.entries.map { it.id to it.label },
+                                 selected = uiStyleId,
+@@ -1112,6 +1119,33 @@ fun SettingsScreen(
+                                     commitSettings()
+                                 }
+                             )
++                            if (uiStyleId == AmberStyle.SIMPLE.id) {
++                                SettingDivider()
++                                SettingHueRow(
++                                    title = "Warna UI",
++                                    desc = "Pilih satu warna untuk seluruh launcher: panel, tepi, dan tombol ikut berwarna. Berlaku saat jari diangkat.",
++                                    hue = simpleHue,
++                                    onChange = { simpleHue = it },
++                                    onFinish = {
++                                        AmberUi.setSimpleTint(simpleHue, simpleTone)
++                                        commitSettings()
++                                    }
++                                )
++                                SettingDivider()
++                                SettingSliderRow(
++                                    title = "Kepekatan warna",
++                                    desc = "Geser ke kiri untuk abu-abu netral, ke kanan untuk warna yang lebih kuat.",
++                                    valueText = "$simpleTone%",
++                                    value = simpleTone.toFloat(),
++                                    valueRange = 0f..100f,
++                                    steps = 19,
++                                    onValueChange = { simpleTone = ((it / 5f).roundToInt() * 5).coerceIn(0, 100) },
++                                    onValueChangeFinished = {
++                                        AmberUi.setSimpleTint(simpleHue, simpleTone)
++                                        commitSettings()
++                                    }
++                                )
++                            }
+                         }
+ 
+                         SettingsGroup("Ukuran") {
+@@ -1379,6 +1413,8 @@ fun SettingsScreen(
+                     ambientIntensity = reset.homeAmbientIntensity
+                     accentId = reset.accentColor
+                     uiStyleId = reset.uiStyle
++                    simpleHue = reset.simpleHue
++                    simpleTone = reset.simpleTone
+                     bgDim = reset.bgDim
+                     snowOn = reset.snowEnabled
+                     homeEffect = normalizeHomeEffect(reset.homeEffect)
+@@ -1388,6 +1424,7 @@ fun SettingsScreen(
+                     homeSkinScale = reset.homeSkinScalePercent
+                     AmberUi.setAccent(reset.accentColor)
+                     AmberUi.setStyle(reset.uiStyle)
++                    AmberUi.setSimpleTint(reset.simpleHue, reset.simpleTone)
+                     Toast.makeText(context, "Pengaturan di-reset ke default!", Toast.LENGTH_SHORT).show()
+                                 }
+                             )
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
+index ffdf948..06dcba9 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/theme/AmberUi.kt
+@@ -1,5 +1,6 @@
+ package com.israadev.nuxlauncher.ui.theme
+ 
++import androidx.compose.runtime.derivedStateOf
+ import androidx.compose.runtime.getValue
+ import androidx.compose.runtime.mutableStateOf
+ import androidx.compose.runtime.setValue
+@@ -67,16 +68,39 @@ val AMBER_ACCENTS = listOf(
+     accentOf("ember", "Bara", Color(0xFFCC3F4A), Color(0xFFD9892A))
+ )
+ 
+-/** Gaya tampilan: DEFAULT = tema AmberLauncher sendiri, LIQUID = kaca buram (blur) ala liquid glass. */
++/**
++ * Gaya tampilan: DEFAULT = tema AmberLauncher sendiri, LIQUID = kaca buram (blur) ala liquid glass,
++ * SIMPLE = panel tipis tembus pandang yang berwarna sesuai satu warna pilihan pengguna (tanpa blur).
++ */
+ enum class AmberStyle(val id: String, val label: String) {
+     DEFAULT("default", "Default"),
+-    LIQUID("liquid", "Liquid Glass");
++    LIQUID("liquid", "Liquid Glass"),
++    SIMPLE("simple", "Simple");
+ 
+     companion object {
+         fun fromId(id: String?): AmberStyle = entries.firstOrNull { it.id == id } ?: DEFAULT
+     }
+ }
+ 
++/**
++ * Warna gaya Simple, diturunkan dari satu warna pilihan: [hue] 0 - 359 dan [tone] 0 - 100 (kepekatan warna,
++ * 0 = abu-abu netral). Panel gelap tembus pandang yang diwarnai tipis, tepi tipis yang ikut berwarna, dan
++ * aksen dari warna yang sama, jadi seluruh launcher terlihat satu warna yang serasi dengan wallpaper pilihan.
++ */
++private class SimplePalette(hue: Int, tone: Int) {
++    private val h = hue.coerceIn(0, 359).toFloat()
++    private val t = tone.coerceIn(0, 100) / 100f
++
++    val surface = Color.hsv(h, 0.80f * t, 0.20f, 0.46f)
++    val surfaceRaised = Color.hsv(h, 0.35f * t, 1f, 0.10f)
++    val border = Color.hsv(h, 0.30f * t, 1f, 0.26f)
++    val borderStrong = Color.hsv(h, 0.30f * t, 1f, 0.44f)
++    val homeGlass = Color.hsv(h, 0.70f * t, 0.16f, 0.64f)
++    val homeGlassEdge = Color.hsv(h, 0.30f * t, 1f, 0.34f)
++    val menuCard = Color.hsv(h, 0.55f * t, 0.11f, 0.94f)
++    val accent = accentOf("simple", "Simple", Color.hsv(h, 0.80f * t, 0.50f + 0.10f * t))
++}
++
+ /**
+  * Warna tampilan baru: kaca gelap dengan aksen. Dipakai Home, Mod, Akun, Pengaturan.
+  * Aksen dan gaya bisa diganti pengguna; karena disimpan sebagai state Compose, semua layar
+@@ -84,6 +108,13 @@ enum class AmberStyle(val id: String, val label: String) {
+  */
+ object AmberUi {
+     private var accentPreset by mutableStateOf(AMBER_ACCENTS.first())
++    private var simpleHue by mutableStateOf(215)
++    private var simpleTone by mutableStateOf(55)
++    private val simple by derivedStateOf { SimplePalette(simpleHue, simpleTone) }
++
++    /** Aksen yang berlaku: turunan warna pilihan untuk gaya Simple, selain itu pilihan aksen biasa. */
++    private val activeAccent: AmberAccent
++        get() = if (style == AmberStyle.SIMPLE) simple.accent else accentPreset
+ 
+     /** Gaya tampilan aktif. */
+     var style by mutableStateOf(AmberStyle.DEFAULT)
+@@ -105,28 +136,35 @@ object AmberUi {
+         style = AmberStyle.fromId(id)
+     }
+ 
+-    val Accent: Color get() = accentPreset.base
++    /** Warna gaya Simple (rona 0 - 359, kepekatan 0 - 100). Tidak berpengaruh pada gaya lain. */
++    fun setSimpleTint(hue: Int, tone: Int) {
++        simpleHue = hue.coerceIn(0, 359)
++        simpleTone = tone.coerceIn(0, 100)
++    }
++
++    val Accent: Color get() = activeAccent.base
+ 
+     /** Isian aksen untuk tombol dan penanda terpilih. Polos untuk aksen biasa, gradient halus untuk aksen gradient. */
+-    val AccentBrush: Brush get() = accentPreset.brush
+-    val AccentEdge: Color get() = accentPreset.edge
+-    val AccentSoft: Color get() = accentPreset.soft
+-    val AccentDeep: Color get() = accentPreset.deep
+-
+-    val Surface = Color(0x85000000)
+-    val SurfaceRaised = Color(0x14FFFFFF)
+-    val Border = Color(0x24FFFFFF)
+-    val BorderStrong = Color(0x40FFFFFF)
++    val AccentBrush: Brush get() = activeAccent.brush
++    val AccentEdge: Color get() = activeAccent.edge
++    val AccentSoft: Color get() = activeAccent.soft
++    val AccentDeep: Color get() = activeAccent.deep
++
++    // Permukaan: tetap sama di Default dan Liquid Glass, ikut warna pilihan di gaya Simple.
++    val Surface: Color get() = if (style == AmberStyle.SIMPLE) simple.surface else Color(0x85000000)
++    val SurfaceRaised: Color get() = if (style == AmberStyle.SIMPLE) simple.surfaceRaised else Color(0x14FFFFFF)
++    val Border: Color get() = if (style == AmberStyle.SIMPLE) simple.border else Color(0x24FFFFFF)
++    val BorderStrong: Color get() = if (style == AmberStyle.SIMPLE) simple.borderStrong else Color(0x40FFFFFF)
+     val Text = Color(0xFFF4F3EE)
+     val TextDim = Color(0xFFB9B5BC)
+     val ModrinthGreen = Color(0xFF2FDC7A)
+ 
+     /** Kaca gelap untuk tombol/pil di atas foto latar yang terang (Home). */
+-    val HomeGlass = Color(0xD11B1720)
+-    val HomeGlassEdge = Color(0x3DFFFFFF)
++    val HomeGlass: Color get() = if (style == AmberStyle.SIMPLE) simple.homeGlass else Color(0xD11B1720)
++    val HomeGlassEdge: Color get() = if (style == AmberStyle.SIMPLE) simple.homeGlassEdge else Color(0x3DFFFFFF)
+ 
+     /** Kartu menu akun cepat di Home. */
+-    val MenuCard = Color(0xF2121217)
++    val MenuCard: Color get() = if (style == AmberStyle.SIMPLE) simple.menuCard else Color(0xF2121217)
+ 
+     /** Merah untuk aksi hapus. */
+     val Danger = Color(0xFFE5575A)
+diff --git a/changelog/entries/20261126-nama-folder-daftar-instance-gaya-simple.txt b/changelog/entries/20261126-nama-folder-daftar-instance-gaya-simple.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..6c0d71a9dbf668765b1e096bcb6ab35fe551ed94
+GIT binary patch
+literal 5032
+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
+
+literal 0
+HcmV?d00001
+
+
+
+# FIN part=2/2 files=21

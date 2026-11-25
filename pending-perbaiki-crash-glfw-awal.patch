@@ -1,0 +1,26 @@
+diff --git a/app/src/main/jniLibs/arm64-v8a/libpojavexec.so b/app/src/main/jniLibs/arm64-v8a/libpojavexec.so
+index e00383ea2e184de22530d6b6dda9e5335f1842fd..a3f75c2e34740e164abb24ba16b0fef4cb8571fe 100644
+GIT binary patch
+delta 238
+zcmbQSUvS2L!3{jum{&B%Pv*a-%EH6IAhOxw+6&eMO-6^GkC_>?o-i|NY0h<+sKD#^
+zQ}L$5Po=XCKMyc4Y+1;_u%(HCVG9R?!%q%Vr=JXr_SgPaJFfiS%rNl)bNn@V1?H>x
+p@Z^R&A`wtaR-ssMl5z_sJFJvx=D6F=ahI{3<1W*7j=RhgngAH+SDOF;
+
+delta 214
+zcmbQSUvS2L!3{jum^m^tC-YxZW$9pK*t*%`+6&f@1&8H#JmhBBsln**liRuPk~hPG
+zPaK)qKR6g2esY*P{nTP~`00?D{R2dEn?d9qGqZnaGCKU^GVZ(N#jxO$QfAhV#fRf}
+zJmGfO$-roTZL+`|iOD^8I6NM(GyEjWU?YUVkJ%l5PQG(SqnYJyJIh_hc9y$L+ga{1
+HPiX=GXqH;A
+
+diff --git a/changelog/entries/20261125-perbaiki-crash-glfw-awal-game.txt b/changelog/entries/20261125-perbaiki-crash-glfw-awal-game.txt
+new file mode 100644
+index 0000000..2ac69fc
+--- /dev/null
++++ b/changelog/entries/20261125-perbaiki-crash-glfw-awal-game.txt
+@@ -0,0 +1,4 @@
++[id]
++! Memperbaiki game yang langsung tertutup (crash) saat baru dimulai di sebagian perangkat, misalnya Minecraft 26.1.2 dengan Fabric. Crash terjadi tepat saat grafis game mulai disiapkan.
++[en]
++! Fixed the game closing (crashing) right after it starts on some devices, for example Minecraft 26.1.2 with Fabric. The crash happened just as the game began setting up graphics.
+
+# FIN part=1/1 files=2

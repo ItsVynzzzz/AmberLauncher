@@ -1,0 +1,265 @@
+diff --git a/changelog/README.md b/changelog/README.md
+index fd0ee19..8e3dbd7 100644
+--- a/changelog/README.md
++++ b/changelog/README.md
+@@ -29,3 +29,15 @@ Nama berkas: `<tanggal>-<topik>.txt`, misalnya `20261118-catatan-rilis.txt`. Hur
+ - Bagian bahasa: `[id] [en] [es] [fil] [pt] [th] [vi] [zh]`. Minimal `[id]` dan `[en]`.
+ - Baris kosong dan baris berawalan `#` diabaikan.
+ - Patch yang hanya mengubah dokumen tidak perlu catatan.
++
++## Judul commit dan Discord
++
++Daftar commit GitHub dan saluran Discord yang memakai webhook GitHub hanya menampilkan judul commit. Karena itu commit bot yang menyimpan patch memakai judul dari catatan patch itu, bukan lagi tulisan tetap "Terapkan patch (build lolos)". Judulnya diambil dari baris `# judul: ...` di paling atas berkas catatan (boleh dikosongkan; bila kosong dipakai kalimat pertama butir pertama), lalu semua butir ikut di badan commit:
++
++```
++# judul: Perbaiki crash GLFW saat game dimulai
++[id]
++! ...
++```
++
++Untuk pesan yang lebih lengkap di Discord, buat webhook di saluran yang diinginkan (Pengaturan Saluran > Integrasi > Webhook > Webhook Baru > Salin URL Webhook), lalu simpan URL itu di repo sebagai Secrets bernama `DISCORD_CHANGELOG_WEBHOOK` (Settings > Secrets and variables > Actions). Setelah build lolos, workflow mengirim satu pesan berisi butir Baru, Peningkatan, dan Perbaikan: untuk build uji hanya catatan dari patch itu, untuk rilis semua catatan sejak rilis sebelumnya. Tanpa Secrets itu langkahnya dilewati, dan gagal kirim tidak pernah menggagalkan build. Skripnya `scripts/discord-notes.py` (bahasa pesan diubah dengan `--lang`, bawaannya `id`). Webhook GitHub yang lama boleh tetap dipakai berdampingan; matikan centang Pushes di webhook itu bila tidak ingin pesan ganda.
+diff --git a/docs/workflows/build-apk.yml b/docs/workflows/build-apk.yml
+index 5674381..e0d6f42 100644
+--- a/docs/workflows/build-apk.yml
++++ b/docs/workflows/build-apk.yml
+@@ -749,7 +749,14 @@ jobs:
+           # Nama patch sudah divalidasi di tahap 1 (tanpa spasi), jadi pemisahan kata di sini aman.
+           # shellcheck disable=SC2086
+           git rm -q -f $PATCHES
+-          git commit -m "Terapkan patch (build lolos)"
++          # Judul commit memuat ringkasan perubahan dari catatan changelog patch ini (Discord dan daftar commit
++          # GitHub hanya menampilkan judulnya). Tanpa catatan, atau bila skrip tidak ada atau gagal, judul bawaan.
++          MSG=""
++          if [ -f scripts/discord-notes.py ]; then
++            MSG="$(python3 scripts/discord-notes.py --staged --commit-message 2>/dev/null || true)"
++          fi
++          if [ -z "$MSG" ]; then MSG="Terapkan patch (build lolos)"; fi
++          git commit -m "$MSG"
+           for i in 1 2 3; do
+             if git push; then
+               exit 0
+@@ -778,7 +785,7 @@ jobs:
+           else
+             LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
+           fi
+-          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
++          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' | sed -E 's/^Terapkan patch: //; s/ \(build lolos\)$//' || true)"
+           APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
+           APK32="AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
+           BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
+@@ -842,6 +849,47 @@ jobs:
+             gh release upload "$RELEASE_TAG" dist/*.apk --clobber
+           fi
+ 
++      # Catatan perubahan ke Discord (opsional): bila Secrets DISCORD_CHANGELOG_WEBHOOK diisi (URL webhook sebuah
++      # saluran Discord), catatan changelog dikirim sebagai satu pesan rapi berisi butir baru/peningkatan/perbaikan.
++      # Build uji dengan patch: hanya catatan dari patch itu. Rilis: semua catatan sejak rilis sebelumnya. Gagal
++      # kirim tidak pernah menggagalkan build. Lihat changelog/README.md.
++      - name: Kirim catatan ke Discord (opsional)
++        if: success()
++        continue-on-error: true
++        env:
++          DISCORD_WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
++          APPLIED: ${{ steps.patch.outputs.applied }}
++        run: |
++          if [ -z "$DISCORD_WEBHOOK" ]; then
++            echo "Secrets DISCORD_CHANGELOG_WEBHOOK belum diisi: tidak ada kiriman ke Discord."
++            exit 0
++          fi
++          if [ ! -f scripts/discord-notes.py ]; then
++            echo "scripts/discord-notes.py tidak ada: tidak ada kiriman ke Discord."
++            exit 0
++          fi
++          if [ "$RILIS" = true ]; then
++            SRC=(--since "$PREV_TAG")
++            JENIS=rilis
++          elif [ "$APPLIED" = true ]; then
++            SRC=(--added-in HEAD)
++            JENIS=uji
++          else
++            echo "Build uji tanpa patch: tidak ada catatan baru untuk dikirim."
++            exit 0
++          fi
++          RC=0
++          python3 scripts/discord-notes.py "${SRC[@]}" --version "$VERSION_NAME" --jenis "$JENIS" \
++            --url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}" \
++            --commit "$(git rev-parse --short HEAD)" --out "$RUNNER_TEMP/discord.json" || RC=$?
++          if [ "$RC" != 0 ]; then
++            echo "Tidak ada catatan baru untuk dikirim (kode $RC)."
++            exit 0
++          fi
++          curl -sS --fail-with-body -X POST -H 'Content-Type: application/json' \
++            --data @"$RUNNER_TEMP/discord.json" "$DISCORD_WEBHOOK" \
++            || echo "::warning title=Discord::Catatan gagal dikirim ke Discord. Periksa Secrets DISCORD_CHANGELOG_WEBHOOK (URL webhook salah atau sudah dihapus?)."
++
+       - name: Ringkasan hasil
+         if: success()
+         env:
+diff --git a/scripts/discord-notes.py b/scripts/discord-notes.py
+new file mode 100755
+index 0000000..942d1d9
+--- /dev/null
++++ b/scripts/discord-notes.py
+@@ -0,0 +1,160 @@
++#!/usr/bin/env python3
++"""Catatan changelog untuk Discord: isi pesan webhook (embed) dan pesan commit.
++
++Sumbernya sama dengan catatan rilis: changelog/entries/*.txt (format di changelog/README.md).
++Pilih satu sumber catatan:
++
++  --staged        catatan yang baru ditambahkan di index git (patch yang baru diterapkan, belum di-commit)
++  --added-in REV  catatan yang ditambahkan oleh commit REV (mis. HEAD)
++  --since TAG     semua catatan yang belum ada di tag TAG (kosong = semuanya), seperti catatan rilis
++
++Pilih satu keluaran:
++
++  --out BERKAS       tulis JSON untuk webhook Discord (kirim dengan curl)
++  --commit-message   cetak pesan commit: judul satu baris yang informatif + daftar butir
++
++Hanya pustaka standar Python. Kode keluar 3 bila tidak ada catatan, supaya workflow bisa melewati
++langkahnya tanpa dianggap gagal.
++"""
++import argparse
++import datetime
++import importlib.util
++import json
++import os
++import re
++import subprocess
++import sys
++
++HERE = os.path.dirname(os.path.abspath(__file__))
++_spec = importlib.util.spec_from_file_location("release_notes", os.path.join(HERE, "release-notes.py"))
++rn = importlib.util.module_from_spec(_spec)
++_spec.loader.exec_module(rn)
++
++EMPTY = rn.EMPTY
++JUDUL = re.compile(r"^#\s*judul\s*:\s*(.+?)\s*$", re.I | re.M)
++KIND_TITLE = {
++    "id": {"new": "Baru", "improve": "Peningkatan", "fix": "Perbaikan"},
++    "en": {"new": "New", "improve": "Improved", "fix": "Fixed"},
++}
++MORE = {"id": "dan %d butir lain, selengkapnya di halaman Release.",
++        "en": "and %d more, see the release page."}
++DESC_LIMIT = 3600       # batas Discord untuk deskripsi embed 4096; sisakan ruang
++COLOR = 0xFFBF00        # kuning amber
++
++
++def git(*args):
++    r = subprocess.run(["git", *args], capture_output=True, text=True)
++    return r.stdout.splitlines() if r.returncode == 0 else []
++
++
++def files_for(args):
++    d = args.entries
++    if args.staged:
++        paths = git("diff", "--cached", "--name-only", "--diff-filter=A", "--", d)
++    elif args.added_in:
++        paths = git("diff-tree", "--no-commit-id", "--name-only", "-r", "--diff-filter=A", args.added_in, "--", d)
++    else:
++        return [os.path.join(d, n) for n in rn.entry_files(d, args.since)]
++    return sorted(p for p in paths if p.endswith(".txt") and os.path.isfile(p))
++
++
++def load(paths, lang):
++    """-> (butir [(jenis, teks)], judul pertama atau None). Bahasa kosong memakai Inggris, lalu Indonesia."""
++    items, title = [], None
++    for p in paths:
++        with open(p, encoding="utf-8") as f:
++            text = f.read()
++        if title is None:
++            m = JUDUL.search(text)
++            if m:
++                title = m.group(1)
++        entry = rn.parse_entry(text)
++        items += entry.get(lang) or entry.get("en") or entry.get("id") or []
++    return items, title
++
++
++def short(text, limit):
++    text = " ".join(text.split())
++    first = re.split(r"(?<=[.!?])\s", text, maxsplit=1)[0]
++    if len(first) <= limit:
++        return first.rstrip(".")
++    cut = first[:limit].rsplit(" ", 1)[0].rstrip(",;:- ")
++    return cut + "…"
++
++
++def commit_message(items, title):
++    head = title or short(items[0][1], 56)
++    return "Terapkan patch: %s (build lolos)\n\n%s\n" % (head, "\n".join("- " + t for _, t in items))
++
++
++def embed(items, lang, version, jenis, url, commit):
++    titles = KIND_TITLE.get(lang, KIND_TITLE["en"])
++    blocks, used, shown = [], 0, 0
++    total = len(items)
++    for kind in ("new", "improve", "fix"):
++        lines = []
++        for k, t in items:
++            if k != kind:
++                continue
++            line = "• " + t
++            if used + len(line) + len(titles[kind]) + 8 > DESC_LIMIT:
++                break
++            lines.append(line)
++            used += len(line) + 1
++            shown += 1
++        if lines:
++            blocks.append("**%s**\n%s" % (titles[kind], "\n".join(lines)))
++            used += len(titles[kind]) + 6
++    desc = "\n\n".join(blocks)
++    if shown < total:
++        desc += "\n\n" + (MORE.get(lang) or MORE["en"]) % (total - shown)
++    if jenis == "rilis":
++        name, foot = "AmberLauncher %s" % version, "Rilis"
++    else:
++        name, foot = "Build uji %s" % version, "Build uji, bukan rilis"
++    if commit:
++        foot += " · commit " + commit
++    card = {
++        "title": name[:256],
++        "description": desc,
++        "color": COLOR,
++        "footer": {"text": foot[:2048]},
++        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
++    }
++    if url:
++        card["url"] = url
++    return {"username": "AmberLauncher", "allowed_mentions": {"parse": []}, "embeds": [card]}
++
++
++def main(argv=None):
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    src = ap.add_mutually_exclusive_group(required=True)
++    src.add_argument("--staged", action="store_true")
++    src.add_argument("--added-in", metavar="REV")
++    src.add_argument("--since", metavar="TAG", help="kosong = semua catatan")
++    ap.add_argument("--entries", default="changelog/entries")
++    ap.add_argument("--lang", default="id")
++    ap.add_argument("--version", default="")
++    ap.add_argument("--jenis", choices=["rilis", "uji"], default="uji")
++    ap.add_argument("--url", default="")
++    ap.add_argument("--commit", default="")
++    out = ap.add_mutually_exclusive_group(required=True)
++    out.add_argument("--out", metavar="BERKAS")
++    out.add_argument("--commit-message", action="store_true")
++    a = ap.parse_args(argv)
++
++    items, title = load(files_for(a), a.lang)
++    if not items:
++        print("Tidak ada catatan baru.", file=sys.stderr)
++        return EMPTY
++    if a.commit_message:
++        sys.stdout.write(commit_message(items, title))
++    else:
++        data = embed(items, a.lang, a.version, a.jenis, a.url, a.commit)
++        rn.write_atomic(a.out, json.dumps(data, ensure_ascii=False) + "\n")
++        print("Pesan Discord: %d butir." % len(items), file=sys.stderr)
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+
+# FIN part=1/1 files=3

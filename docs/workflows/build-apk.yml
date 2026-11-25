@@ -749,7 +749,14 @@ jobs:
           # Nama patch sudah divalidasi di tahap 1 (tanpa spasi), jadi pemisahan kata di sini aman.
           # shellcheck disable=SC2086
           git rm -q -f $PATCHES
-          git commit -m "Terapkan patch (build lolos)"
+          # Judul commit memuat ringkasan perubahan dari catatan changelog patch ini (Discord dan daftar commit
+          # GitHub hanya menampilkan judulnya). Tanpa catatan, atau bila skrip tidak ada atau gagal, judul bawaan.
+          MSG=""
+          if [ -f scripts/discord-notes.py ]; then
+            MSG="$(python3 scripts/discord-notes.py --staged --commit-message 2>/dev/null || true)"
+          fi
+          if [ -z "$MSG" ]; then MSG="Terapkan patch (build lolos)"; fi
+          git commit -m "$MSG"
           for i in 1 2 3; do
             if git push; then
               exit 0
@@ -778,7 +785,7 @@ jobs:
           else
             LOG="$(git log --no-merges --pretty='%s' -n 15 || true)"
           fi
-          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' || true)"
+          LOG="$(printf '%s\n' "$LOG" | grep -v -E '^(Terapkan patch \([^)]*\)|Add files? via upload|Delete .+ via upload|(Create|Update|Delete|Rename) [^ ]+\.[A-Za-z0-9]+)$' | grep -v '^$' | sed -E 's/^Terapkan patch: //; s/ \(build lolos\)$//' || true)"
           APK64="AmberLauncher-${VERSION_NAME}-64bit-arm64-v8a-RECOMMENDED.apk"
           APK32="AmberLauncher-${VERSION_NAME}-32bit-armeabi-v7a-OLD-PHONES-ONLY.apk"
           BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
@@ -841,6 +848,47 @@ jobs:
             # Bila dijalankan ulang dan rilisnya sudah ada, cukup timpa berkas APK-nya
             gh release upload "$RELEASE_TAG" dist/*.apk --clobber
           fi
+
+      # Catatan perubahan ke Discord (opsional): bila Secrets DISCORD_CHANGELOG_WEBHOOK diisi (URL webhook sebuah
+      # saluran Discord), catatan changelog dikirim sebagai satu pesan rapi berisi butir baru/peningkatan/perbaikan.
+      # Build uji dengan patch: hanya catatan dari patch itu. Rilis: semua catatan sejak rilis sebelumnya. Gagal
+      # kirim tidak pernah menggagalkan build. Lihat changelog/README.md.
+      - name: Kirim catatan ke Discord (opsional)
+        if: success()
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK }}
+          APPLIED: ${{ steps.patch.outputs.applied }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            echo "Secrets DISCORD_CHANGELOG_WEBHOOK belum diisi: tidak ada kiriman ke Discord."
+            exit 0
+          fi
+          if [ ! -f scripts/discord-notes.py ]; then
+            echo "scripts/discord-notes.py tidak ada: tidak ada kiriman ke Discord."
+            exit 0
+          fi
+          if [ "$RILIS" = true ]; then
+            SRC=(--since "$PREV_TAG")
+            JENIS=rilis
+          elif [ "$APPLIED" = true ]; then
+            SRC=(--added-in HEAD)
+            JENIS=uji
+          else
+            echo "Build uji tanpa patch: tidak ada catatan baru untuk dikirim."
+            exit 0
+          fi
+          RC=0
+          python3 scripts/discord-notes.py "${SRC[@]}" --version "$VERSION_NAME" --jenis "$JENIS" \
+            --url "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${RELEASE_TAG}" \
+            --commit "$(git rev-parse --short HEAD)" --out "$RUNNER_TEMP/discord.json" || RC=$?
+          if [ "$RC" != 0 ]; then
+            echo "Tidak ada catatan baru untuk dikirim (kode $RC)."
+            exit 0
+          fi
+          curl -sS --fail-with-body -X POST -H 'Content-Type: application/json' \
+            --data @"$RUNNER_TEMP/discord.json" "$DISCORD_WEBHOOK" \
+            || echo "::warning title=Discord::Catatan gagal dikirim ke Discord. Periksa Secrets DISCORD_CHANGELOG_WEBHOOK (URL webhook salah atau sudah dihapus?)."
 
       - name: Ringkasan hasil
         if: success()

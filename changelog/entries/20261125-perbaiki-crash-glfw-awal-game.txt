@@ -1,0 +1,4 @@
+[id]
+! Memperbaiki game yang langsung tertutup (crash) saat baru dimulai di sebagian perangkat, misalnya Minecraft 26.1.2 dengan Fabric. Crash terjadi tepat saat grafis game mulai disiapkan.
+[en]
+! Fixed the game closing (crashing) right after it starts on some devices, for example Minecraft 26.1.2 with Fabric. The crash happened just as the game began setting up graphics.

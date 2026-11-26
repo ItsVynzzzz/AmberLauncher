@@ -9,6 +9,8 @@ import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.account.microsoft.MicrosoftAuthService
 import com.israadev.nuxlauncher.core.models.UserAccount
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -18,6 +20,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 data class MicrosoftCape(
@@ -48,13 +51,39 @@ sealed class SessionCape {
     object Failed : SessionCape()
 }
 
+/**
+ * Jawaban Session Server soal tekstur akun: skin (dengan model lengannya) dan jubah. [Found] bisa
+ * berisi skin atau jubah yang null (memang tidak ada), [None] = profil tanpa tekstur, [Failed] = belum
+ * bisa dipastikan (jaringan putus atau kena batas laju).
+ */
+sealed class SessionTextures {
+    class Found(val skinUrl: String?, val slim: Boolean, val capeUrl: String?) : SessionTextures()
+    object None : SessionTextures()
+    object Failed : SessionTextures()
+}
+
 object MicrosoftWardrobeService {
     private const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
     private const val MOJANG_SESSION_URL = "https://sessionserver.mojang.com"
 
+    // Session Server membatasi laju permintaan per pemain (HTTP 429). Beranda, Akun, dan Wardrobe
+    // bertanya soal akun yang sama, jadi satu jawaban dipakai bersama dan permintaan diserialkan.
+    private const val SESSION_TTL_MS = 5L * 60 * 1000 // jawaban yang pasti dipakai ulang sampai 5 menit
+    private const val SESSION_FAIL_MIN_MS = 8_000L // gagal: jangan langsung diulang
+    private const val SESSION_FAIL_MAX_MS = 120_000L // batas atas penundaan dari Retry-After
+    private class SessionEntry(val until: Long, val result: SessionTextures)
+    private val sessionCache = ConcurrentHashMap<String, SessionEntry>()
+    private val sessionLock = Mutex()
+
     private val httpClient = HttpClients.base.newBuilder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
+        .build()
+
+    // Pencarian tekstur ikut menahan layar yang menunggunya, jadi batas waktunya lebih pendek
+    private val sessionClient = httpClient.newBuilder()
+        .connectTimeout(8, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
         .build()
 
     private val gson = Gson()
@@ -87,46 +116,88 @@ object MicrosoftWardrobeService {
         }
     }
 
-    /**
-     * Mengambil tekstur jubah aktif langsung dari Session Server resmi Mojang tanpa perlu token OAuth.
-     * Sama seperti yang dibaca game saat dijalankan, jadi hasilnya adalah jubah yang akan terlihat di dalam game.
-     */
-    suspend fun lookupSessionCape(uuid: String): SessionCape = withContext(Dispatchers.IO) {
-        try {
-            val cleanUuid = uuid.replace("-", "")
+    private fun httpsOrNull(raw: String?): String? {
+        val url = raw?.trim().orEmpty()
+        if (url.isEmpty()) return null
+        return if (url.startsWith("http://")) "https://" + url.removePrefix("http://") else url
+    }
+
+    private fun parseSessionTextures(body: String): SessionTextures {
+        val json = JsonParser.parseString(body).asJsonObject
+        val props = json.getAsJsonArray("properties") ?: return SessionTextures.None
+        for (p in props) {
+            val pObj = p.asJsonObject
+            if (pObj.get("name")?.asString != "textures") continue
+            val base64Val = pObj.get("value")?.asString ?: continue
+            val decodedBytes = Base64.decode(base64Val, Base64.DEFAULT)
+            val decodedJson = JsonParser.parseString(String(decodedBytes, Charsets.UTF_8)).asJsonObject
+            val textures = decodedJson.getAsJsonObject("textures") ?: continue
+            val skin = textures.getAsJsonObject("SKIN")
+            val cape = textures.getAsJsonObject("CAPE")
+            return SessionTextures.Found(
+                skinUrl = httpsOrNull(skin?.get("url")?.asString),
+                slim = skin?.getAsJsonObject("metadata")?.get("model")?.asString.equals("slim", ignoreCase = true),
+                capeUrl = httpsOrNull(cape?.get("url")?.asString)
+            )
+        }
+        return SessionTextures.None
+    }
+
+    /** Satu permintaan ke Session Server. Angka kedua = berapa lama jawabannya boleh dipakai ulang. */
+    private fun fetchSessionTextures(cleanUuid: String): Pair<SessionTextures, Long> {
+        return try {
             val req = Request.Builder()
                 .url("$MOJANG_SESSION_URL/session/minecraft/profile/$cleanUuid")
                 .get()
                 .build()
 
-            httpClient.newCall(req).execute().use { resp ->
-                if (resp.code == 204 || resp.code == 404) return@withContext SessionCape.None
-                if (!resp.isSuccessful) return@withContext SessionCape.Failed
-                val body = resp.body?.string().orEmpty()
-                if (body.isBlank()) return@withContext SessionCape.Failed
-                val json = JsonParser.parseString(body).asJsonObject
-                val props = json.getAsJsonArray("properties") ?: return@withContext SessionCape.None
-                for (p in props) {
-                    val pObj = p.asJsonObject
-                    if (pObj.get("name")?.asString == "textures") {
-                        val base64Val = pObj.get("value")?.asString ?: continue
-                        val decodedBytes = Base64.decode(base64Val, Base64.DEFAULT)
-                        val decodedJson = JsonParser.parseString(String(decodedBytes)).asJsonObject
-                        val textures = decodedJson.getAsJsonObject("textures") ?: continue
-                        val cape = textures.getAsJsonObject("CAPE")
-                        val capeUrl = cape?.get("url")?.asString
-                        if (!capeUrl.isNullOrBlank()) {
-                            return@withContext SessionCape.Found(
-                                if (capeUrl.startsWith("http://")) capeUrl.replace("http://", "https://") else capeUrl
-                            )
-                        }
-                    }
+            sessionClient.newCall(req).execute().use { resp ->
+                if (resp.code == 204 || resp.code == 404) return Pair(SessionTextures.None, SESSION_TTL_MS)
+                if (!resp.isSuccessful) {
+                    // 429 (kena batas laju) menyertakan Retry-After bila server mau menyebut jedanya
+                    val waitMs = (resp.header("Retry-After")?.trim()?.toLongOrNull() ?: 0L) * 1000L
+                    return Pair(SessionTextures.Failed, waitMs.coerceIn(SESSION_FAIL_MIN_MS, SESSION_FAIL_MAX_MS))
                 }
-                SessionCape.None
+                val body = resp.body?.string().orEmpty()
+                if (body.isBlank()) return Pair(SessionTextures.Failed, SESSION_FAIL_MIN_MS)
+                Pair(parseSessionTextures(body), SESSION_TTL_MS)
             }
         } catch (_: Exception) {
-            SessionCape.Failed
+            Pair(SessionTextures.Failed, SESSION_FAIL_MIN_MS)
         }
+    }
+
+    /**
+     * Mengambil skin, model lengan, dan jubah aktif langsung dari Session Server resmi Mojang tanpa perlu
+     * token OAuth. Sama seperti yang dibaca game saat dijalankan, jadi hasilnya yang akan terlihat di dalam game.
+     * Jawaban dipakai bersama (Beranda, Akun, Wardrobe) dan gagal tidak langsung diulang, supaya tidak
+     * menabrak batas laju Mojang.
+     */
+    suspend fun lookupSessionTextures(uuid: String): SessionTextures {
+        val key = uuid.replace("-", "").lowercase()
+        if (key.isEmpty()) return SessionTextures.None
+        return sessionLock.withLock {
+            val now = System.currentTimeMillis()
+            val hit = sessionCache[key]
+            if (hit != null && now < hit.until) {
+                hit.result
+            } else {
+                val (result, reuseMs) = withContext(Dispatchers.IO) { fetchSessionTextures(key) }
+                sessionCache[key] = SessionEntry(System.currentTimeMillis() + reuseMs, result)
+                result
+            }
+        }
+    }
+
+    /** Lupakan jawaban tersimpan, dipakai setelah skin atau jubah diganti dari aplikasi ini. */
+    fun invalidateSessionTextures(uuid: String) {
+        sessionCache.remove(uuid.replace("-", "").lowercase())
+    }
+
+    suspend fun lookupSessionCape(uuid: String): SessionCape = when (val t = lookupSessionTextures(uuid)) {
+        is SessionTextures.Found -> t.capeUrl?.let { SessionCape.Found(it) } ?: SessionCape.None
+        is SessionTextures.None -> SessionCape.None
+        is SessionTextures.Failed -> SessionCape.Failed
     }
 
     suspend fun getSessionActiveCape(uuid: String): String? =
@@ -164,8 +235,10 @@ object MicrosoftWardrobeService {
             val baseProf = firstResult.getOrThrow()
             val capesList = baseProf.capes.toMutableList()
 
-            // Sinkronkan status ACTIVE dengan session cape
-            if (sessionCapeUrl != null) {
+            // Sinkronkan status ACTIVE dengan session cape. Hanya bila api.minecraftservices.com tidak menandai
+            // jubah aktif: Session Server bisa tertinggal beberapa menit, jadi ia tidak boleh menimpa jubah
+            // yang baru diganti (dulu dua jubah bisa sama-sama "aktif" dan yang terpilih bisa yang lama).
+            if (sessionCapeUrl != null && capesList.none { it.state.equals("ACTIVE", ignoreCase = true) }) {
                 var foundMatch = false
                 for (cape in capesList) {
                     val safeCapeUrl = if (cape.url.startsWith("http://")) cape.url.replace("http://", "https://") else cape.url
@@ -254,6 +327,7 @@ object MicrosoftWardrobeService {
         }
 
         if (res.isSuccess) {
+            invalidateSessionTextures(currentAcc.uuid)
             Result.success(currentAcc)
         } else {
             Result.failure(res.exceptionOrNull() ?: IOException("Gagal mengubah jubah."))
@@ -314,6 +388,7 @@ object MicrosoftWardrobeService {
         }
 
         if (res.isSuccess) {
+            invalidateSessionTextures(currentAcc.uuid)
             Result.success(currentAcc)
         } else {
             Result.failure(res.exceptionOrNull() ?: IOException("Gagal mengunggah skin."))

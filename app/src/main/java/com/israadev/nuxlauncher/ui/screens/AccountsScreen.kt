@@ -10,6 +10,7 @@ import okhttp3.Request
 import okhttp3.OkHttpClient
 import com.israadev.nuxlauncher.core.network.HttpClients
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import com.israadev.nuxlauncher.ui.theme.amberGlass
 import com.israadev.nuxlauncher.ui.theme.AmberUi
@@ -217,6 +218,7 @@ fun AccountsScreen(
                                 refreshResult
                                     .onSuccess { fresh ->
                                         AccountManager.updateAccount(context, fresh)
+                                        if (accType == "microsoft") SkinUtils.refreshMojangTextures(fresh.uuid)
                                         Toast.makeText(context, "Login berhasil disegarkan", Toast.LENGTH_SHORT).show()
                                     }
                                     .onFailure { e ->
@@ -522,6 +524,49 @@ private fun AccountInfoRow(
     }
 }
 
+/** Hasil memuat skin untuk pratinjau: gambar, model lengan dari server (bila diketahui), dan perlu dicoba lagi. */
+private class PreviewSkin(val image: ImageBitmap?, val slim: Boolean?, val retry: Boolean)
+
+// Jeda antar percobaan ulang selama pratinjau masih tampil (Session Server bisa menolak sementara)
+private val PREVIEW_RETRY_DELAYS_MS = longArrayOf(10_000L, 20_000L, 45_000L, 90_000L)
+
+private fun steveBitmap(context: android.content.Context): ImageBitmap? = runCatching {
+    context.assets.open("steve.png").use { BitmapFactory.decodeStream(it) }?.asImageBitmap()
+}.getOrNull()
+
+private suspend fun loadPreviewSkin(
+    context: android.content.Context,
+    account: UserAccount,
+    forHome: Boolean
+): PreviewSkin = withContext(Dispatchers.IO) {
+    var slim: Boolean? = null
+    var retry = false
+    val loaded = runCatching {
+        val updated = SkinUtils.ensureSkinAndCapeCached(context, account)
+        val local = SkinUtils.resolveSkinFile(context, updated)
+        var bmp: Bitmap? = if (local != null) BitmapFactory.decodeFile(local.absolutePath) else null
+        if (bmp == null && account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
+            // Skin resmi dari Mojang, disimpan di perangkat sehingga tidak hilang saat jaringan bermasalah
+            val textures = SkinUtils.ensureMojangTextures(context, account)
+            slim = textures.slim
+            retry = !textures.complete
+            bmp = textures.skin?.let { BitmapFactory.decodeFile(it.absolutePath) }
+            if (bmp == null) {
+                // Cadangan terakhir: layanan pihak ketiga
+                val req = Request.Builder().url("https://mc-heads.net/skin/${account.uuid}").build()
+                bmp = HttpClients.base.newCall(req).execute().use { resp ->
+                    if (resp.isSuccessful) {
+                        resp.body?.bytes()?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
+                    } else null
+                }
+            }
+        }
+        bmp?.asImageBitmap()
+    }.getOrNull()
+    // Di Home skin yang tidak ada (belum diunduh / tanpa jaringan) diganti Steve bawaan, supaya figurnya tetap tampil
+    PreviewSkin(loaded ?: if (forHome) steveBitmap(context) else null, slim, retry)
+}
+
 /**
  * Pratinjau skin 3D yang ringan: enam kotak (kepala, badan, dua tangan, dua kaki) digambar langsung
  * dari berkas skin di Canvas, lengkap dengan lapisan luarnya. Diam saja (tanpa putar otomatis dan
@@ -539,42 +584,45 @@ internal fun AccountSkinPreview(
     scale: Float = 1f
 ) {
     val context = LocalContext.current
+    // Naik revisi = jubah diganti di wardrobe atau login disegarkan: muat ulang dari server
+    val capeRevision by SkinUtils.capeRevision.collectAsState()
+    // Model lengan dari server Mojang (null = pakai model yang tersimpan di akun)
+    var remoteSlim by remember(account.id) { mutableStateOf<Boolean?>(null) }
     val skinState = produceState<ImageBitmap?>(
         initialValue = null,
         account.id,
         account.customSkinPath,
         account.skinModel,
-        account.safeAccountType
+        account.safeAccountType,
+        capeRevision
     ) {
-        value = withContext(Dispatchers.IO) {
-            val loaded = runCatching {
-                val updated = SkinUtils.ensureSkinAndCapeCached(context, account)
-                val local = SkinUtils.resolveSkinFile(context, updated)
-                val bmp = if (local != null) {
-                    BitmapFactory.decodeFile(local.absolutePath)
-                } else if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
-                    val req = Request.Builder().url("https://mc-heads.net/skin/${account.uuid}").build()
-                    HttpClients.base.newCall(req).execute().use { resp ->
-                        if (resp.isSuccessful) {
-                            resp.body?.bytes()?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
-                        } else null
-                    }
-                } else null
-                bmp?.asImageBitmap()
-            }.getOrNull()
-            // Di Home skin yang tidak ada (belum diunduh / tanpa jaringan) diganti Steve bawaan, supaya figurnya tetap tampil
-            loaded ?: if (forHome) {
-                runCatching {
-                    context.assets.open("steve.png").use { BitmapFactory.decodeStream(it) }?.asImageBitmap()
-                }.getOrNull()
-            } else null
+        // Skin Microsoft yang sudah tersimpan di perangkat tampil dulu tanpa menunggu jaringan
+        if (account.safeAccountType == "microsoft") {
+            val cached = withContext(Dispatchers.IO) {
+                if (SkinUtils.resolveSkinFile(context, account) != null) {
+                    null
+                } else {
+                    SkinUtils.cachedMojangSkin(context, account)
+                        ?.let { runCatching { BitmapFactory.decodeFile(it.absolutePath) }.getOrNull() }
+                        ?.asImageBitmap()
+                }
+            }
+            if (cached != null) value = cached
+        }
+        // Server Mojang bisa menolak sementara (batas laju) atau tidak terjangkau: coba lagi beberapa kali
+        var attempt = 0
+        while (true) {
+            val result = loadPreviewSkin(context, account, forHome)
+            remoteSlim = result.slim
+            if (result.image != null || value == null) value = result.image
+            if (!result.retry || attempt >= PREVIEW_RETRY_DELAYS_MS.size) break
+            delay(PREVIEW_RETRY_DELAYS_MS[attempt++])
         }
     }
     val skin = skinState.value
-    val slim = account.safeSkinModel == "slim"
+    val slim = remoteSlim ?: (account.safeSkinModel == "slim")
 
-    // Jubah dimuat terpisah dari skin supaya skin tampil duluan; naik revisi = jubah diganti di wardrobe
-    val capeRevision by SkinUtils.capeRevision.collectAsState()
+    // Jubah dimuat terpisah dari skin supaya skin tampil duluan
     val capeState = produceState<ImageBitmap?>(
         initialValue = null,
         account.id,
@@ -582,17 +630,33 @@ internal fun AccountSkinPreview(
         account.safeAccountType,
         capeRevision
     ) {
-        value = withContext(Dispatchers.IO) {
-            runCatching {
-                val file = if (account.safeAccountType == "microsoft") {
-                    SkinUtils.ensureMojangCape(context, account)
-                } else {
-                    SkinUtils.resolveCapeFile(context, account)
-                }
-                file?.takeIf { it.length() > 0 }
-                    ?.let { BitmapFactory.decodeFile(it.absolutePath) }
+        if (account.safeAccountType == "microsoft") {
+            val cached = withContext(Dispatchers.IO) {
+                SkinUtils.cachedMojangCape(context, account)
+                    ?.let { runCatching { BitmapFactory.decodeFile(it.absolutePath) }.getOrNull() }
                     ?.asImageBitmap()
-            }.getOrNull()
+            }
+            if (cached != null) value = cached
+        }
+        var attempt = 0
+        while (true) {
+            var retry = false
+            value = withContext(Dispatchers.IO) {
+                runCatching {
+                    val file = if (account.safeAccountType == "microsoft") {
+                        val textures = SkinUtils.ensureMojangTextures(context, account)
+                        retry = !textures.complete
+                        textures.cape
+                    } else {
+                        SkinUtils.resolveCapeFile(context, account)
+                    }
+                    file?.takeIf { it.length() > 0 }
+                        ?.let { BitmapFactory.decodeFile(it.absolutePath) }
+                        ?.asImageBitmap()
+                }.getOrNull()
+            }
+            if (!retry || attempt >= PREVIEW_RETRY_DELAYS_MS.size) break
+            delay(PREVIEW_RETRY_DELAYS_MS[attempt++])
         }
     }
     val cape = capeState.value

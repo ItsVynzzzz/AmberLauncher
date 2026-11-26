@@ -143,14 +143,21 @@ class PlayerSkin(
         }
     }
 
+    /**
+     * @param modelOverride model lengan yang dipakai (null = model yang tersimpan di akun).
+     * @param explicitCape true = pakai [customCapeFile] apa adanya, null berarti tanpa jubah (akun Microsoft:
+     * jubahnya dari server, bukan berkas lokal akun). false = bila null, pakai berkas jubah lokal akun.
+     */
     fun loadAccount(
         account: com.israadev.nuxlauncher.core.models.UserAccount,
         customSkinFile: File? = null,
-        customCapeFile: File? = null
+        customCapeFile: File? = null,
+        modelOverride: String? = null,
+        explicitCape: Boolean = false
     ) {
         val skinFile = customSkinFile ?: SkinUtils.resolveSkinFile(context, account)
-        val capeFile = customCapeFile ?: SkinUtils.resolveCapeFile(context, account)
-        val model = account.safeSkinModel
+        val capeFile = if (explicitCape) customCapeFile else customCapeFile ?: SkinUtils.resolveCapeFile(context, account)
+        val model = modelOverride ?: account.safeSkinModel
 
         if (skinFile != null && skinFile.exists() && skinFile.length() > 0) {
             loadSkin(skinFile, model)

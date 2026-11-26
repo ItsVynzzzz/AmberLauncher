@@ -1,0 +1,48 @@
+[id]
+! Skin dan jubah akun Microsoft tidak lagi hilang dari pratinjau di Beranda dan Wardrobe saat server Mojang menolak sementara atau internet putus. Skin dan jubah terakhir disimpan di perangkat dan tampil langsung, lalu diperbarui dari server dan dicoba lagi otomatis bila gagal.
+! Wardrobe: jubah yang sedang aktif kini selalu tampil di pratinjau 3D (sebelumnya bisa tertimpa kosong tergantung kecepatan pemuatan), dan jubah yang baru diganti tidak lagi tertimpa data lama dari server.
+! Skin Microsoft model Slim kini ditampilkan dengan lengan yang benar (sebelumnya selalu dianggap Klasik).
++ Bila daftar jubah gagal dimuat, Wardrobe kini menampilkan pesan yang jelas dan tombol Coba lagi, bukan menyebut akun belum punya jubah.
+~ Menyegarkan login akun Microsoft sekarang juga memuat ulang skin dan jubah di pratinjau.
+[en]
+! The skin and cape of a Microsoft account no longer vanish from the previews on Home and in the Wardrobe when Mojang's servers refuse temporarily or the internet drops. The last skin and cape are kept on the device and shown right away, then refreshed from the server and retried automatically if that fails.
+! Wardrobe: the active cape now always shows in the 3D preview (it could be overwritten with nothing depending on load timing), and a cape you just changed is no longer overwritten by stale data from the server.
+! Slim-model Microsoft skins now show with the correct arms (they were always treated as Classic).
++ If the cape list fails to load, the Wardrobe now shows a clear message and a Try again button instead of saying the account has no capes.
+~ Refreshing a Microsoft account's login now also reloads the skin and cape in the previews.
+[es]
+! La skin y la capa de una cuenta Microsoft ya no desaparecen de las vistas previas de Inicio y del Vestidor cuando los servidores de Mojang rechazan temporalmente o se corta internet. La última skin y capa se guardan en el dispositivo y se muestran al instante, y luego se actualizan desde el servidor y se reintentan automáticamente si falla.
+! Vestidor: la capa activa ahora siempre aparece en la vista previa 3D (podía quedar vacía según el momento de la carga), y una capa recién cambiada ya no se sobrescribe con datos antiguos del servidor.
+! Las skins Microsoft de modelo Slim ahora se ven con los brazos correctos (antes siempre se trataban como Clásico).
++ Si la lista de capas no se carga, el Vestidor ahora muestra un mensaje claro y un botón Reintentar, en lugar de decir que la cuenta no tiene capas.
+~ Actualizar el inicio de sesión de una cuenta Microsoft ahora también recarga la skin y la capa en las vistas previas.
+[fil]
+! Hindi na nawawala ang skin at cape ng Microsoft account sa mga preview sa Home at sa Wardrobe kapag pansamantalang tumanggi ang mga server ng Mojang o naputol ang internet. Ang huling skin at cape ay naka-save sa device at agad na ipinapakita, saka ina-update mula sa server at awtomatikong sinusubukan ulit kapag nabigo.
+! Wardrobe: palaging lalabas na ngayon ang aktibong cape sa 3D preview (dati ay maaaring mapalitan ng wala depende sa bilis ng pag-load), at ang bagong palit na cape ay hindi na natatapakan ng lumang data mula sa server.
+! Ang mga Microsoft skin na may Slim na model ay ipinapakita na ngayon na tama ang mga braso (dati ay laging itinuturing na Classic).
++ Kapag hindi na-load ang listahan ng cape, magpapakita na ang Wardrobe ng malinaw na mensahe at button na Subukan ulit, sa halip na sabihing walang cape ang account.
+~ Ang pag-refresh ng login ng Microsoft account ay nire-reload na rin ang skin at cape sa mga preview.
+[pt]
+! A skin e a capa de uma conta Microsoft não somem mais das prévias no Início e no Guarda-roupa quando os servidores da Mojang recusam temporariamente ou a internet cai. A última skin e capa ficam salvas no aparelho e aparecem na hora, depois são atualizadas pelo servidor e tentadas de novo automaticamente se falhar.
+! Guarda-roupa: a capa ativa agora sempre aparece na prévia 3D (podia ficar vazia dependendo do tempo de carregamento), e uma capa recém-trocada não é mais sobrescrita por dados antigos do servidor.
+! Skins Microsoft com modelo Slim agora aparecem com os braços corretos (antes eram sempre tratadas como Clássico).
++ Se a lista de capas não carregar, o Guarda-roupa agora mostra uma mensagem clara e um botão Tentar novamente, em vez de dizer que a conta não tem capas.
+~ Atualizar o login de uma conta Microsoft agora também recarrega a skin e a capa nas prévias.
+[th]
+! สกินและเคปของบัญชี Microsoft จะไม่หายจากตัวอย่างในหน้าหลักและตู้เสื้อผ้าอีกเมื่อเซิร์ฟเวอร์ Mojang ปฏิเสธชั่วคราวหรืออินเทอร์เน็ตหลุด สกินและเคปล่าสุดถูกเก็บไว้ในเครื่องและแสดงทันที จากนั้นอัปเดตจากเซิร์ฟเวอร์และลองใหม่อัตโนมัติหากล้มเหลว
+! ตู้เสื้อผ้า: เคปที่ใช้งานอยู่จะแสดงในตัวอย่าง 3D เสมอ (เดิมอาจถูกเขียนทับเป็นว่างตามจังหวะการโหลด) และเคปที่เพิ่งเปลี่ยนจะไม่ถูกเขียนทับด้วยข้อมูลเก่าจากเซิร์ฟเวอร์
+! สกิน Microsoft แบบ Slim แสดงแขนถูกต้องแล้ว (เดิมถูกมองเป็นแบบคลาสสิกเสมอ)
++ หากโหลดรายการเคปไม่สำเร็จ ตู้เสื้อผ้าจะแสดงข้อความที่ชัดเจนและปุ่มลองอีกครั้ง แทนที่จะบอกว่าบัญชีไม่มีเคป
+~ การรีเฟรชการเข้าสู่ระบบบัญชี Microsoft จะโหลดสกินและเคปในตัวอย่างใหม่ด้วย
+[vi]
+! Skin và áo choàng của tài khoản Microsoft không còn biến mất khỏi bản xem trước ở Trang chủ và Tủ đồ khi máy chủ Mojang tạm từ chối hoặc mất mạng. Skin và áo choàng gần nhất được lưu trên thiết bị và hiện ngay, sau đó được cập nhật từ máy chủ và tự thử lại nếu thất bại.
+! Tủ đồ: áo choàng đang dùng giờ luôn hiện trong bản xem trước 3D (trước đây có thể bị ghi đè thành trống tùy tốc độ tải), và áo choàng vừa đổi không còn bị dữ liệu cũ từ máy chủ ghi đè.
+! Skin Microsoft kiểu Slim giờ hiện đúng cánh tay (trước đây luôn bị coi là Cổ điển).
++ Nếu danh sách áo choàng không tải được, Tủ đồ giờ hiện thông báo rõ ràng và nút Thử lại, thay vì báo tài khoản chưa có áo choàng.
+~ Làm mới đăng nhập tài khoản Microsoft giờ cũng tải lại skin và áo choàng trong bản xem trước.
+[zh]
+! 当 Mojang 服务器暂时拒绝或网络中断时，Microsoft 账号的皮肤和披风不再从主页和衣柜的预览中消失。最近的皮肤和披风会保存在设备上并立即显示，随后从服务器更新，失败时自动重试。
+! 衣柜：当前启用的披风现在总会显示在 3D 预览中（此前可能因加载时机被覆盖为空），刚更换的披风也不再被服务器的旧数据覆盖。
+! Slim 模型的 Microsoft 皮肤现在会显示正确的手臂（此前总被当作经典模型）。
++ 披风列表加载失败时，衣柜现在会显示明确提示和“重试”按钮，而不是说账号没有披风。
+~ 刷新 Microsoft 账号登录现在也会重新加载预览中的皮肤和披风。

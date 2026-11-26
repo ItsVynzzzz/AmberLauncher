@@ -177,8 +177,18 @@ object SkinUtils {
             }
         }
 
-        // C. If Microsoft account, fetch head from mc-heads.net
+        // C. If Microsoft account: skin resmi Mojang yang sudah tersimpan di perangkat (tanpa jaringan),
+        // baru layanan pihak ketiga mc-heads.net bila belum ada
         if (account.safeAccountType == "microsoft" && account.uuid.isNotBlank()) {
+            cachedMojangSkin(context, account)?.let { mojangSkin ->
+                val skinBitmap = BitmapFactory.decodeFile(mojangSkin.absolutePath)
+                if (skinBitmap != null) {
+                    val head = extractHeadFromSkin(skinBitmap, targetSize)
+                    skinBitmap.recycle()
+                    headCache.put(cacheKey, head)
+                    return@withContext head
+                }
+            }
             runCatching {
                 val client = HttpClients.base
                 val req = Request.Builder().url("https://mc-heads.net/avatar/${account.uuid}/$targetSize").build()
@@ -415,12 +425,13 @@ object SkinUtils {
         updatedAccount
     }
 
-    // ---- Jubah akun Microsoft ----
-    // Game memuat jubah Microsoft sendiri dari server Mojang, jadi launcher hanya perlu menirunya untuk
-    // pratinjau: tanya Session Server (tanpa token) sekali tiap beberapa menit, lalu unduh PNG-nya bila berubah.
+    // ---- Skin & jubah akun Microsoft ----
+    // Game memuat skin dan jubah Microsoft sendiri dari server Mojang, jadi launcher hanya perlu menirunya untuk
+    // pratinjau: tanya Session Server (tanpa token; jawabannya dipakai bersama dan permintaannya diserialkan oleh
+    // MicrosoftWardrobeService), lalu unduh PNG-nya ke berkas lokal bila berubah. Berkas terakhir tetap dipakai
+    // bila Session Server sedang tidak terjangkau, jadi skin dan jubah tidak hilang begitu saja.
 
-    private const val MOJANG_CAPE_TTL_MS = 10L * 60 * 1000 // tanya ulang Session Server paling cepat tiap 10 menit
-    private const val MOJANG_CAPE_RETRY_MS = 60L * 1000 // bila Session Server gagal dijangkau, coba lagi semenit kemudian
+    private const val MOJANG_CAPE_TTL_MS = 10L * 60 * 1000 // jubah yang baru diganti dari aplikasi ini dipercaya selama ini
 
     private class CapeLookup(val validUntil: Long, val url: String?)
 
@@ -437,6 +448,13 @@ object SkinUtils {
     private fun mojangCapeMarker(context: Context, accountId: String) =
         File(getCapesDir(context), "${accountId}_mojang_cape.url")
 
+    private fun mojangSkinFile(context: Context, accountId: String) =
+        File(getSkinsDir(context), "${accountId}_mojang_skin.png")
+
+    // Baris pertama: alamat skin yang tersimpan. Baris kedua: model lengannya ("slim" atau "classic").
+    private fun mojangSkinMarker(context: Context, accountId: String) =
+        File(getSkinsDir(context), "${accountId}_mojang_skin.url")
+
     private fun isMojangTextureUrl(url: String): Boolean {
         val host = url.toHttpUrlOrNull()?.host ?: return false
         return host == "textures.minecraft.net" || host.endsWith(".minecraft.net") || host.endsWith(".mojang.com")
@@ -452,50 +470,112 @@ object SkinUtils {
     }
 
     /**
-     * Berkas PNG jubah yang sedang aktif untuk akun Microsoft (sama dengan yang tampil di game), atau null
-     * bila akun tidak punya jubah atau belum bisa diunduh. Tidak ada permintaan jaringan bila hasil terakhir
-     * masih segar dan berkasnya sudah ada.
+     * Skin, model lengan, dan jubah akun Microsoft untuk pratinjau. [complete] = false bila Session Server
+     * belum bisa dijangkau: berkas lama (bila ada) tetap dipakai dan pemanggil sebaiknya mencoba lagi nanti.
      */
-    suspend fun ensureMojangCape(context: Context, account: UserAccount): File? = withContext(Dispatchers.IO) {
-        if (account.uuid.isBlank()) return@withContext null
-        val file = mojangCapeFile(context, account.id)
-        val marker = mojangCapeMarker(context, account.id)
-        val now = System.currentTimeMillis()
+    class MojangTextures(val skin: File?, val slim: Boolean?, val cape: File?, val complete: Boolean)
 
-        val cached = mojangCapes[account.id]
-        val known: CapeLookup = if (cached != null && now < cached.validUntil) {
-            cached
-        } else {
-            val fresh = when (val found = MicrosoftWardrobeService.lookupSessionCape(account.uuid)) {
-                is SessionCape.Found -> CapeLookup(now + MOJANG_CAPE_TTL_MS, found.url)
-                is SessionCape.None -> CapeLookup(now + MOJANG_CAPE_TTL_MS, null)
-                // Tidak bisa dipastikan (offline, dibatasi server): pakai jubah terakhir yang tersimpan
-                is SessionCape.Failed -> CapeLookup(
-                    now + MOJANG_CAPE_RETRY_MS,
-                    if (file.exists()) runCatching { marker.readText().trim() }.getOrNull()?.takeIf { it.isNotEmpty() } else null
-                )
-            }
-            mojangCapes[account.id] = fresh
-            fresh
-        }
+    /** Paksa pratinjau memuat ulang skin dan jubah dari server (mis. setelah "Segarkan login"). */
+    fun refreshMojangTextures(uuid: String) {
+        MicrosoftWardrobeService.invalidateSessionTextures(uuid)
+        capeRevisionState.update { it + 1 }
+    }
 
-        val url = known.url
+    private fun cachedTexture(file: File): File? = file.takeIf { it.exists() && it.length() > 0 }
+
+    private fun cachedSlim(marker: File): Boolean? =
+        runCatching { marker.readLines().getOrNull(1)?.trim() }.getOrNull()
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { it == "slim" }
+
+    /**
+     * Menyamakan berkas tekstur lokal dengan [url] (null = pemain tidak punya tekstur itu). Alamat yang sama
+     * dengan yang tersimpan tidak memakai jaringan. Nilai kedua false bila unduhan gagal: berkas lama
+     * (bila ada) dikembalikan supaya pratinjau tidak kosong.
+     */
+    private fun syncTexture(url: String?, file: File, marker: File, extra: String? = null): Pair<File?, Boolean> {
         if (url == null) {
             if (file.exists()) file.delete()
             if (marker.exists()) marker.delete()
-            return@withContext null
+            return Pair(null, true)
         }
-
-        val stored = if (file.exists() && file.length() > 0) runCatching { marker.readText().trim() }.getOrNull() else null
-        if (stored == url) return@withContext file
-        if (!isMojangTextureUrl(url)) return@withContext null
-
-        if (downloadTexture(url, file) == TextureFetch.SAVED) {
-            runCatching { marker.writeText(url) }
-            file
+        val have = cachedTexture(file)
+        val stored = if (have != null) runCatching { marker.readLines().firstOrNull()?.trim() }.getOrNull() else null
+        if (stored == url) return Pair(have, true)
+        if (!isMojangTextureUrl(url)) return Pair(have, true)
+        return if (downloadTexture(url, file) == TextureFetch.SAVED) {
+            runCatching { marker.writeText(if (extra == null) url else "$url\n$extra") }
+            Pair(file, true)
         } else {
-            null
+            Pair(cachedTexture(file), false)
         }
+    }
+
+    /** Skin Microsoft yang sudah tersimpan di perangkat, tanpa menyentuh jaringan. */
+    fun cachedMojangSkin(context: Context, account: UserAccount): File? =
+        cachedTexture(mojangSkinFile(context, account.id))
+
+    /** Jubah Microsoft yang sudah tersimpan di perangkat, tanpa menyentuh jaringan. */
+    fun cachedMojangCape(context: Context, account: UserAccount): File? =
+        cachedTexture(mojangCapeFile(context, account.id))
+
+    /**
+     * Skin, model lengan, dan jubah aktif akun Microsoft (sama dengan yang tampil di game), sebagai berkas
+     * lokal. Tidak ada permintaan jaringan bila jawaban terakhir masih segar dan berkasnya sudah ada.
+     */
+    suspend fun ensureMojangTextures(context: Context, account: UserAccount): MojangTextures = withContext(Dispatchers.IO) {
+        if (account.uuid.isBlank()) return@withContext MojangTextures(null, null, null, true)
+        val skinFile = mojangSkinFile(context, account.id)
+        val skinMarker = mojangSkinMarker(context, account.id)
+        val capeFile = mojangCapeFile(context, account.id)
+        val capeMarker = mojangCapeMarker(context, account.id)
+
+        // Jubah yang baru saja diganti dari aplikasi ini lebih tepercaya daripada Session Server yang bisa tertinggal
+        val justChanged = mojangCapes[account.id]?.takeIf { System.currentTimeMillis() < it.validUntil }
+
+        when (val session = MicrosoftWardrobeService.lookupSessionTextures(account.uuid)) {
+            is SessionTextures.Found -> {
+                val skinResult = syncTexture(session.skinUrl, skinFile, skinMarker, if (session.slim) "slim" else "classic")
+                // url null pada justChanged berarti jubah baru saja dilepas (bukan "belum tahu")
+                val capeUrl = if (justChanged != null) justChanged.url else session.capeUrl
+                val capeResult = syncTexture(capeUrl, capeFile, capeMarker)
+                MojangTextures(
+                    skin = skinResult.first,
+                    slim = if (skinResult.first != null) session.slim else null,
+                    cape = capeResult.first,
+                    complete = skinResult.second && capeResult.second
+                )
+            }
+            is SessionTextures.None -> {
+                syncTexture(null, skinFile, skinMarker)
+                val capeResult = syncTexture(justChanged?.url, capeFile, capeMarker)
+                MojangTextures(null, null, capeResult.first, capeResult.second)
+            }
+            is SessionTextures.Failed -> {
+                // Tidak bisa dipastikan (offline, dibatasi server): pakai berkas terakhir yang tersimpan
+                val capeResult = if (justChanged != null) {
+                    syncTexture(justChanged.url, capeFile, capeMarker)
+                } else {
+                    Pair(cachedTexture(capeFile), true)
+                }
+                MojangTextures(cachedTexture(skinFile), cachedSlim(skinMarker), capeResult.first, false)
+            }
+        }
+    }
+
+    /**
+     * Mengunduh satu tekstur Mojang (mis. jubah yang dipilih di Wardrobe) ke berkas lokal, atau null bila gagal.
+     * WebView pratinjau tidak boleh memuat alamat jauh sendiri (terhalang CORS, jubah lalu hilang), jadi
+     * yang dikirim ke sana adalah berkas lokal.
+     */
+    suspend fun fetchMojangTexture(context: Context, url: String): File? = withContext(Dispatchers.IO) {
+        val secure = if (url.startsWith("http://")) "https://" + url.removePrefix("http://") else url
+        if (!isMojangTextureUrl(secure)) return@withContext null
+        val id = secure.substringAfterLast('/').filter { it.isLetterOrDigit() }.take(64)
+        if (id.isEmpty()) return@withContext null
+        val file = File(getCapesDir(context), "preview_$id.png")
+        if (file.exists() && file.length() > 0) return@withContext file
+        if (downloadTexture(secure, file) == TextureFetch.SAVED) file else null
     }
 
     suspend fun validateSkinFile(file: File): Boolean = withContext(Dispatchers.IO) {

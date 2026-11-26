@@ -106,26 +106,62 @@ fun NuxWardrobeDialog(
     var statusMessage by remember { mutableStateOf<String?>(null) }
     var selectedAnim by remember { mutableStateOf("Walking") }
 
-    // Load Microsoft Capes from Minecraft.net if Microsoft account
-    LaunchedEffect(account.id) {
-        if (isMicrosoft) {
-            isLoadingMicrosoftCapes = true
+    // Akun Microsoft: skin resmi dan jubah yang sedang dipratinjau, sebagai berkas lokal. Tampilan 3D (WebView)
+    // tidak bisa memuat alamat jauh sendiri (terhalang CORS, jubah lalu hilang), dan memuatnya sebelum
+    // halaman 3D siap juga membuat jubah tidak pernah tampil.
+    var mojangSkinFile by remember { mutableStateOf<File?>(null) }
+    var msCapePreviewFile by remember { mutableStateOf<File?>(null) }
+    var capesLoadFailed by remember { mutableStateOf(false) }
+    var capesReloadKey by remember { mutableIntStateOf(0) }
+
+    val previewSkin: () -> File? = { currentSkinFile ?: mojangSkinFile }
+    val previewCape: () -> File? = { if (isMicrosoft) msCapePreviewFile else currentCapeFile }
+
+    // Pratinjau jubah resmi: diunduh ke berkas lokal dulu, baru dikirim ke tampilan 3D
+    val previewMicrosoftCape: (MicrosoftCape?) -> Unit = { cape ->
+        if (cape == null) {
+            msCapePreviewFile = null
+        } else {
             scope.launch {
-                val profRes = MicrosoftWardrobeService.getProfile(context, activeAccount)
-                profRes.onSuccess { (updatedAcc, prof) ->
-                    activeAccount = updatedAcc
-                    microsoftCapes = prof.capes
-                    val activeCape = prof.capes.find { it.state.equals("ACTIVE", ignoreCase = true) }
-                    selectedMicrosoftCapeId = activeCape?.id
-                    if (activeCape != null) {
-                        playerSkin.loadCapeUrl(activeCape.url)
+                val file = SkinUtils.fetchMojangTexture(context, cape.url)
+                // Pemain bisa sudah memilih jubah lain selama unduhan berjalan
+                if (selectedMicrosoftCapeId == cape.id) {
+                    msCapePreviewFile = file
+                    if (file == null) {
+                        statusMessage = "Gagal memuat pratinjau jubah. Periksa koneksi internet."
                     }
                 }
-                profRes.onFailure { err ->
-                    statusMessage = "Gagal memuat jubah: ${err.message}"
-                }
-                isLoadingMicrosoftCapes = false
             }
+        }
+    }
+
+    // Load Microsoft skin and capes from Minecraft.net if Microsoft account
+    LaunchedEffect(account.id, capesReloadKey) {
+        if (isMicrosoft) {
+            // Skin resmi (disimpan di perangkat) untuk pratinjau; model lengannya ikut server
+            launch {
+                val textures = SkinUtils.ensureMojangTextures(context, account)
+                if (account.getSkinFile() == null && !isSkinFileChanged) {
+                    mojangSkinFile = textures.skin
+                    textures.slim?.let { selectedModel = if (it) "slim" else "classic" }
+                }
+            }
+
+            isLoadingMicrosoftCapes = true
+            capesLoadFailed = false
+            val profRes = MicrosoftWardrobeService.getProfile(context, activeAccount)
+            profRes.onSuccess { (updatedAcc, prof) ->
+                activeAccount = updatedAcc
+                microsoftCapes = prof.capes
+                val activeCape = prof.capes.find { it.state.equals("ACTIVE", ignoreCase = true) }
+                selectedMicrosoftCapeId = activeCape?.id
+                previewMicrosoftCape(activeCape)
+            }
+            profRes.onFailure { err ->
+                capesLoadFailed = true
+                statusMessage = "Gagal memuat jubah: ${err.message}"
+            }
+            isLoadingMicrosoftCapes = false
         }
     }
 
@@ -158,7 +194,13 @@ fun NuxWardrobeDialog(
                         isSkinFileChanged = true
                         val isSlim = SkinUtils.isSlimModel(file)
                         selectedModel = if (isSlim) "slim" else "classic"
-                        playerSkin.loadAccount(account, customSkinFile = file, customCapeFile = currentCapeFile)
+                        playerSkin.loadAccount(
+                            account,
+                            customSkinFile = file,
+                            customCapeFile = previewCape(),
+                            modelOverride = selectedModel,
+                            explicitCape = isMicrosoft
+                        )
                         playerSkin.loadSkin(file, selectedModel)
                         statusMessage = "Skin dimuat di preview (${if (isSlim) "Slim" else "Klasik"}) — Klik Simpan untuk menerapkan"
                     },
@@ -181,7 +223,7 @@ fun NuxWardrobeDialog(
                     onSuccess = { file ->
                         currentCapeFile = file
                         selectedPresetCapeId = null
-                        playerSkin.loadAccount(account, customSkinFile = currentSkinFile, customCapeFile = file)
+                        playerSkin.loadAccount(account, customSkinFile = previewSkin(), customCapeFile = file)
                         playerSkin.loadCape(file)
                         statusMessage = "Cape kustom dimuat di preview — Klik Simpan untuk menerapkan"
                     },
@@ -270,7 +312,7 @@ fun NuxWardrobeDialog(
                 factory = { ctx ->
                     playerSkin.loadWebView(ctx) {
                         isWebViewReady = true
-                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+                        playerSkin.loadAccount(account, previewSkin(), previewCape(), selectedModel, isMicrosoft)
                         playerSkin.startAnim(selectedAnim, 0.8f)
                         playerSkin.setAutoRotate(isAutoRotating, 0.7f)
                         playerSkin.setCamera(0, 10, 52)
@@ -278,7 +320,7 @@ fun NuxWardrobeDialog(
                 },
                 update = {
                     if (isWebViewReady) {
-                        playerSkin.loadAccount(account, currentSkinFile, currentCapeFile)
+                        playerSkin.loadAccount(account, previewSkin(), previewCape(), selectedModel, isMicrosoft)
                     }
                 },
                 modifier = Modifier.fillMaxSize()
@@ -448,7 +490,7 @@ fun NuxWardrobeDialog(
                             selected = selectedModel == "classic",
                             onClick = {
                                 selectedModel = "classic"
-                                playerSkin.loadSkin(currentSkinFile, "classic")
+                                playerSkin.loadSkin(previewSkin(), "classic")
                                 statusMessage = "Model Klasik dipilih (Preview) — Klik Simpan"
                             },
                             modifier = Modifier
@@ -461,7 +503,7 @@ fun NuxWardrobeDialog(
                             selected = selectedModel == "slim",
                             onClick = {
                                 selectedModel = "slim"
-                                playerSkin.loadSkin(currentSkinFile, "slim")
+                                playerSkin.loadSkin(previewSkin(), "slim")
                                 statusMessage = "Model Slim dipilih (Preview) — Klik Simpan"
                             },
                             modifier = Modifier
@@ -476,9 +518,10 @@ fun NuxWardrobeDialog(
                             .clip(CircleShape)
                             .clickable {
                                 currentSkinFile = null
+                                mojangSkinFile = null
                                 selectedModel = "classic"
                                 playerSkin.resetSkin()
-                                playerSkin.loadCape(currentCapeFile)
+                                playerSkin.loadCape(previewCape())
                                 statusMessage = "Skin direset ke default Steve (Preview) — Klik Simpan"
                             }
                             .padding(vertical = 10.dp),
@@ -520,6 +563,21 @@ fun NuxWardrobeDialog(
                                 fontSize = 12.sp
                             )
                         }
+                    } else if (capesLoadFailed && microsoftCapes.isEmpty()) {
+                        Text(
+                            text = "Gagal memuat daftar jubah dari Minecraft.net. Periksa koneksi internet, lalu coba lagi.",
+                            color = AmberUi.TextDim,
+                            fontSize = 12.sp,
+                            lineHeight = 17.sp
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        AmberActionButton(
+                            text = "COBA LAGI",
+                            onClick = { capesReloadKey++ },
+                            icon = Icons.Outlined.Refresh,
+                            filled = false,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     } else if (microsoftCapes.isEmpty()) {
                         Text(
                             text = "Akun Microsoft Anda belum memiliki jubah resmi di Minecraft.net.",
@@ -537,7 +595,7 @@ fun NuxWardrobeDialog(
                                 onClick = {
                                     selectedMicrosoftCapeId = null
                                     isCapeChanged = true
-                                    playerSkin.loadCapeUrl(null)
+                                    previewMicrosoftCape(null)
                                     statusMessage = "Jubah dilepas (Preview) — Klik Simpan"
                                 }
                             ) {
@@ -565,7 +623,7 @@ fun NuxWardrobeDialog(
                                     onClick = {
                                         selectedMicrosoftCapeId = cape.id
                                         isCapeChanged = true
-                                        playerSkin.loadCapeUrl(cape.url)
+                                        previewMicrosoftCape(cape)
                                         statusMessage = "Jubah ${cape.alias ?: "Mojang"} dipilih (Preview) — Klik Simpan"
                                     }
                                 ) {

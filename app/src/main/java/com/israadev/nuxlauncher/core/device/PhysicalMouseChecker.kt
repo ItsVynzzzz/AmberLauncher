@@ -17,6 +17,9 @@ object PhysicalMouseChecker {
 
     private var isInitialized = false
 
+    /** Membaca daftar perangkat input saat ini (bukan nilai tersimpan), jadi benar sejak awal layar dibuat. */
+    fun isMouseAttachedNow(): Boolean = isPhysicalMouseConnected()
+
     fun initChecker(activity: Activity) {
         if (isInitialized) {
             physicalMouseConnected = isPhysicalMouseConnected()

@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.content.Context
 import android.os.Bundle
+import android.hardware.input.InputManager
 import android.os.Environment
 import android.provider.Settings
 import android.view.View
@@ -33,6 +35,7 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
+import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.storage.DataLocation
 import com.israadev.nuxlauncher.core.storage.StorageMigrationRunner
 import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
@@ -74,7 +77,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        hideSystemBars()
+        applySystemBars()
         // Controller: A pilih, B kembali, stick/D-pad pindah sorotan, LB/RB ganti tab.
         navUninstall = com.israadev.nuxlauncher.core.controls.GamepadNav.install(window, allowBumper = true)
         // Folder data baru (Android/data) tidak butuh izin penyimpanan. Izinnya hanya diminta bila data masih di
@@ -201,7 +204,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        hideSystemBars()
+        applySystemBars()
         val appCtx = applicationContext
         // Game berjalan di proses lain dan bisa mengubah pengaturan (mis. overlay streamer yang diatur dari
         // menu di dalam game): baca ulang bila berkasnya berubah, supaya tidak tertimpa salinan lama di sini.
@@ -246,13 +249,17 @@ class MainActivity : ComponentActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-            hideSystemBars()
+            applySystemBars()
         }
     }
 
     override fun onDestroy() {
         navUninstall?.invoke()
         navUninstall = null
+        inputWatcher?.let { w ->
+            try { (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.unregisterInputDeviceListener(w) } catch (_: Throwable) {}
+        }
+        inputWatcher = null
         super.onDestroy()
         bgExecutor.shutdown()
         com.israadev.nuxlauncher.core.skin.OfflineSkinServerManager.stopServer()
@@ -281,6 +288,42 @@ class MainActivity : ComponentActivity() {
             or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             or View.SYSTEM_UI_FLAG_FULLSCREEN
         )
+    }
+
+    /**
+     * Dengan mouse fisik terhubung, bar status dan navigasi dibiarkan TAMPIL. Mode layar penuh (bar disembunyikan,
+     * muncul sementara bila digeser dari tepi) dibuat untuk jari: dengan mouse tak ada gesekan dari tepi, dan
+     * menyentuh tepi layar memunculkan bar atau taskbar sementara milik sistem (terutama di tablet dan mode desktop).
+     * Klik berikutnya lalu dipakai sistem untuk menutupnya (jendela kehilangan fokus sejenak), sehingga tampak
+     * seperti klik pertama yang tidak bereaksi. Tanpa mouse tampilan tidak berubah.
+     */
+    private fun applySystemBars() {
+        watchInputDevices()
+        if (PhysicalMouseChecker.isMouseAttachedNow()) showSystemBars() else hideSystemBars()
+    }
+
+    private fun showSystemBars() {
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
+        @Suppress("DEPRECATION")
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+    }
+
+    private var inputWatcher: InputManager.InputDeviceListener? = null
+
+    /** Mouse dicolok atau dicabut saat launcher terbuka: terapkan ulang kebijakan bar sistem. */
+    private fun watchInputDevices() {
+        if (inputWatcher != null) return
+        val listener = object : InputManager.InputDeviceListener {
+            override fun onInputDeviceAdded(deviceId: Int) { window.decorView.post { applySystemBars() } }
+            override fun onInputDeviceRemoved(deviceId: Int) { window.decorView.post { applySystemBars() } }
+            override fun onInputDeviceChanged(deviceId: Int) {}
+        }
+        try {
+            (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.registerInputDeviceListener(listener, null)
+            inputWatcher = listener
+        } catch (_: Throwable) {
+        }
     }
 
     private fun markStorageIntroDone() {

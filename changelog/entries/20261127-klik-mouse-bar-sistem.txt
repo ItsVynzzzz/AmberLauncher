@@ -1,0 +1,4 @@
+[id]
+~ Dengan mouse terhubung, bilah status dan navigasi kini tetap tampil di launcher (tidak disembunyikan lagi). Ini mencegah klik pertama "hilang" karena menyentuh tepi layar dengan mouse membuka bilah sementara milik sistem.
+[en]
+~ With a mouse connected, the status and navigation bars now stay visible in the launcher (they are no longer hidden). This prevents the first click from being "lost" when touching a screen edge with the mouse opens the system's temporary bars.

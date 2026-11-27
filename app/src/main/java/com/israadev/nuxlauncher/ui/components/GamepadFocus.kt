@@ -26,6 +26,7 @@ import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
+import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -133,7 +134,9 @@ fun ImmersiveWindowHook() {
         if (window == null) {
             return@DisposableEffect onDispose { }
         }
-        val hideBars: () -> Unit = {
+        val hideBars: () -> Unit = hide@{
+            // Dengan mouse fisik bar sistem dibiarkan tampil (lihat MainActivity.applySystemBars).
+            if (PhysicalMouseChecker.isMouseAttachedNow()) return@hide
             try {
                 val controller = WindowCompat.getInsetsController(window, window.decorView)
                 controller.systemBarsBehavior =

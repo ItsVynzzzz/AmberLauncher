@@ -7,6 +7,7 @@ import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.Window
+import com.israadev.nuxlauncher.core.crash.LauncherLog
 import kotlin.math.abs
 
 /**
@@ -71,6 +72,22 @@ object GamepadNav {
         fun stop() {
             handler.removeCallbacks(repeatTick)
             repeater.set(0, SystemClock.uptimeMillis())
+        }
+
+        // Klik mouse pertama per jendela dicatat (batas kecil): bila klik terasa hilang, log menunjukkan apakah
+        // klik sempat sampai ke aplikasi dan apakah jendela sedang tidak berfokus saat itu.
+        private var mouseLogBudget = 30
+
+        override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+            if (mouseLogBudget > 0 && event.getToolType(0) == MotionEvent.TOOL_TYPE_MOUSE) {
+                val action = event.actionMasked
+                if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_UP) {
+                    mouseLogBudget--
+                    val what = if (action == MotionEvent.ACTION_DOWN) "tekan" else "lepas"
+                    LauncherLog.i("Input", "Mouse $what x=${event.x.toInt()} y=${event.y.toInt()} tombol=${event.buttonState} fokusJendela=${window.decorView.hasWindowFocus()}")
+                }
+            }
+            return base.dispatchTouchEvent(event)
         }
 
         override fun dispatchKeyEvent(event: KeyEvent): Boolean {

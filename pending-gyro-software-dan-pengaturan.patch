@@ -1,0 +1,817 @@
+diff --git a/app/src/main/assets/lang/en/gyro-lanjutan.tsv b/app/src/main/assets/lang/en/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..e5d1961
+--- /dev/null
++++ b/app/src/main/assets/lang/en/gyro-lanjutan.tsv
+@@ -0,0 +1,10 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	Gyro smoothing
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	This phone has no real gyro, so its motion is calculated from other sensors and can feel slightly delayed. High smoothing calms the shakiness; lower it if it feels sluggish.
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	This phone has no gyro or motion sensor that can be used, so this feature is not available.
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Turn the camera by moving your phone. Only active while playing, not in menus. It can also be turned on from the in-game menu.
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	How far the camera turns for one phone movement. 100% is roughly 1:1.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Calms small shakes. Higher is smoother but slightly slower. Default is automatic: off for a real gyro.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Calms small shakes. Higher is smoother but slightly slower. This phone uses a software gyro (calculated from other sensors), so the default is smoother.
++Opasitas tombol layar	On-screen button opacity
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplies the opacity of all on-screen buttons on top of each button's own setting in the editor. The menu pill and FPS are not affected. It can also be set from the in-game menu.
+diff --git a/app/src/main/assets/lang/es/gyro-lanjutan.tsv b/app/src/main/assets/lang/es/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..65be5a9
+--- /dev/null
++++ b/app/src/main/assets/lang/es/gyro-lanjutan.tsv
+@@ -0,0 +1,11 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	Suavizado del giroscopio
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Este teléfono no tiene un giroscopio real, así que su movimiento se calcula con otros sensores y puede sentirse algo retrasado. Un suavizado alto calma los temblores; bájalo si se siente pesado.
++Gyro	Giroscopio
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Este teléfono no tiene giroscopio ni sensor de movimiento utilizable, así que esta función no está disponible.
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Gira la cámara moviendo el teléfono. Solo funciona al jugar, no en los menús. También se puede activar desde el menú del juego.
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Cuánto gira la cámara con un movimiento del teléfono. 100% es aproximadamente 1:1.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Calma los temblores pequeños. Más alto es más suave pero algo más lento. Por defecto es automático: desactivado para un giroscopio real.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Calma los temblores pequeños. Más alto es más suave pero algo más lento. Este teléfono usa un giroscopio por software (calculado con otros sensores), así que por defecto es más suave.
++Opasitas tombol layar	Opacidad de los botones en pantalla
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplica la opacidad de todos los botones en pantalla sobre el ajuste de cada botón en el editor. La píldora del menú y los FPS no se ven afectados. También se puede ajustar desde el menú del juego.
+diff --git a/app/src/main/assets/lang/fil/gyro-lanjutan.tsv b/app/src/main/assets/lang/fil/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..7b23ef2
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/gyro-lanjutan.tsv
+@@ -0,0 +1,10 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	Smoothness ng gyro
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Walang totoong gyro ang phone na ito, kaya kinukuwenta ang galaw mula sa ibang sensor at maaaring bahagyang maantala. Pinapakalma ng mataas na smoothness ang panginginig; ibaba kapag mabigat ang pakiramdam.
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Walang magagamit na gyro o motion sensor ang phone na ito, kaya hindi available ang feature na ito.
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Ikutin ang camera sa pamamagitan ng paggalaw ng phone. Gumagana lang habang naglalaro, hindi sa mga menu. Maaari ring i-on mula sa menu sa loob ng laro.
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Gaano kalayo ang pag-ikot ng camera sa isang galaw ng phone. Ang 100% ay halos 1:1.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Pinapakalma ang maliliit na panginginig. Mas mataas, mas smooth pero bahagyang mas mabagal. Awtomatiko ang default: naka-off para sa totoong gyro.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Pinapakalma ang maliliit na panginginig. Mas mataas, mas smooth pero bahagyang mas mabagal. Software gyro ang gamit ng phone na ito (kinukuwenta mula sa ibang sensor), kaya mas smooth ang default.
++Opasitas tombol layar	Opacity ng mga button sa screen
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Pinaparami ang opacity ng lahat ng button sa screen sa ibabaw ng setting ng bawat button sa editor. Hindi apektado ang menu pill at FPS. Maaari ring itakda mula sa menu sa loob ng laro.
+diff --git a/app/src/main/assets/lang/pt/gyro-lanjutan.tsv b/app/src/main/assets/lang/pt/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..7f3aa67
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/gyro-lanjutan.tsv
+@@ -0,0 +1,11 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	Suavização do giroscópio
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Este celular não tem um giroscópio real, então o movimento é calculado a partir de outros sensores e pode parecer um pouco atrasado. Suavização alta acalma a tremedeira; diminua se parecer pesado.
++Gyro	Giroscópio
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Este celular não tem giroscópio nem sensor de movimento utilizável, então este recurso não está disponível.
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Gire a câmera movendo o celular. Só funciona durante o jogo, não nos menus. Também pode ser ativado pelo menu do jogo.
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Quanto a câmera gira para um movimento do celular. 100% é aproximadamente 1:1.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Acalma pequenas tremidas. Quanto mais alto, mais suave porém um pouco mais lento. O padrão é automático: desligado para um giroscópio real.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Acalma pequenas tremidas. Quanto mais alto, mais suave porém um pouco mais lento. Este celular usa um giroscópio por software (calculado a partir de outros sensores), então o padrão é mais suave.
++Opasitas tombol layar	Opacidade dos botões na tela
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplica a opacidade de todos os botões na tela sobre a configuração de cada botão no editor. A pílula do menu e o FPS não são afetados. Também pode ser ajustada pelo menu do jogo.
+diff --git a/app/src/main/assets/lang/th/gyro-lanjutan.tsv b/app/src/main/assets/lang/th/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..8545656
+--- /dev/null
++++ b/app/src/main/assets/lang/th/gyro-lanjutan.tsv
+@@ -0,0 +1,11 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	ความนุ่มนวลของไจโร
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	โทรศัพท์เครื่องนี้ไม่มีไจโรจริง การเคลื่อนไหวจึงคำนวณจากเซนเซอร์อื่นและอาจรู้สึกช้าเล็กน้อย ค่าความนุ่มนวลสูงช่วยลดอาการสั่น หากรู้สึกอืดให้ลดลง
++Gyro	ไจโร
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	โทรศัพท์เครื่องนี้ไม่มีไจโรหรือเซนเซอร์การเคลื่อนไหวที่ใช้ได้ จึงไม่มีฟีเจอร์นี้
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	หมุนกล้องด้วยการขยับโทรศัพท์ ทำงานเฉพาะตอนเล่น ไม่ทำงานในเมนู เปิดจากเมนูในเกมได้ด้วย
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	กล้องหมุนไกลแค่ไหนต่อการขยับโทรศัพท์หนึ่งครั้ง 100% ประมาณ 1:1
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	ลดอาการสั่นเล็กน้อย ยิ่งสูงยิ่งนุ่มแต่ช้าลงเล็กน้อย ค่าเริ่มต้นเป็นอัตโนมัติ: ปิดสำหรับไจโรจริง
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	ลดอาการสั่นเล็กน้อย ยิ่งสูงยิ่งนุ่มแต่ช้าลงเล็กน้อย โทรศัพท์เครื่องนี้ใช้ไจโรซอฟต์แวร์ (คำนวณจากเซนเซอร์อื่น) ค่าเริ่มต้นจึงนุ่มกว่า
++Opasitas tombol layar	ความทึบของปุ่มบนหน้าจอ
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	คูณความทึบของปุ่มบนหน้าจอทั้งหมดทับค่าของแต่ละปุ่มในตัวแก้ไข ปุ่มเมนูและ FPS ไม่ได้รับผลกระทบ ตั้งค่าจากเมนูในเกมได้ด้วย
+diff --git a/app/src/main/assets/lang/vi/gyro-lanjutan.tsv b/app/src/main/assets/lang/vi/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..f63953e
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/gyro-lanjutan.tsv
+@@ -0,0 +1,11 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	Độ mượt con quay hồi chuyển
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Điện thoại này không có con quay hồi chuyển thật, nên chuyển động được tính từ các cảm biến khác và có thể hơi trễ. Độ mượt cao làm giảm rung; hãy giảm xuống nếu thấy nặng.
++Gyro	Con quay hồi chuyển
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Điện thoại này không có cảm biến con quay hồi chuyển hay cảm biến chuyển động dùng được, nên không có tính năng này.
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Xoay camera bằng cách di chuyển điện thoại. Chỉ hoạt động khi đang chơi, không dùng trong menu. Cũng có thể bật từ menu trong game.
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Camera xoay bao xa cho một chuyển động của điện thoại. 100% xấp xỉ 1:1.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Làm giảm rung nhỏ. Càng cao càng mượt nhưng hơi chậm hơn. Mặc định là tự động: tắt với con quay hồi chuyển thật.
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Làm giảm rung nhỏ. Càng cao càng mượt nhưng hơi chậm hơn. Điện thoại này dùng con quay hồi chuyển phần mềm (tính từ các cảm biến khác), nên mặc định mượt hơn.
++Opasitas tombol layar	Độ đục của nút trên màn hình
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Nhân độ đục của tất cả nút trên màn hình với cài đặt riêng của từng nút trong trình chỉnh sửa. Viên menu và FPS không bị ảnh hưởng. Cũng có thể chỉnh từ menu trong game.
+diff --git a/app/src/main/assets/lang/zh/gyro-lanjutan.tsv b/app/src/main/assets/lang/zh/gyro-lanjutan.tsv
+new file mode 100644
+index 0000000..6f6de4d
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/gyro-lanjutan.tsv
+@@ -0,0 +1,11 @@
++# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
++Kehalusan gyro	陀螺仪平滑度
++HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	此手机没有真正的陀螺仪，因此动作由其他传感器推算，可能会略有延迟。平滑度高可减轻抖动；觉得迟钝时请调低。
++Gyro	陀螺仪
++HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	此手机没有可用的陀螺仪或运动传感器，因此无法使用此功能。
++Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	通过移动手机来转动视角。仅在游戏中生效，菜单中不生效。也可以在游戏内菜单中开启。
++Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	手机移动一次时视角转动的幅度。100% 大约为 1:1。
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	减轻轻微抖动。数值越高越平滑，但稍慢一点。默认自动：真正的陀螺仪为关闭。
++Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	减轻轻微抖动。数值越高越平滑，但稍慢一点。此手机使用软件陀螺仪（由其他传感器推算），因此默认更平滑。
++Opasitas tombol layar	屏幕按键不透明度
++Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	在编辑器中每个按键自身设置的基础上，统一调整所有屏幕按键的不透明度。菜单胶囊和 FPS 不受影响。也可以在游戏内菜单中设置。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+index 4dc12fd..3c9865b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/GameActivity.kt
+@@ -2504,6 +2504,11 @@ fun GameScreen(
+             onGyroInvertYChange = { on ->
+                 SettingsManager.updateSettings(context, launcherSettings.copy(gyroInvertY = on))
+             },
++            gyroSmoothing = GyroLook.effectiveSmoothing(launcherSettings.gyroSmoothing, gyroLook.kind),
++            onGyroSmoothingChange = { value ->
++                SettingsManager.updateSettings(context, launcherSettings.copy(gyroSmoothing = value))
++            },
++            gyroSoftware = gyroLook.isSoftware,
+             showScreenControls = true,
+             controlOpacityPercent = launcherSettings.controlOpacityPercent,
+             onControlOpacityChange = { value ->
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/controls/GyroLook.kt b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GyroLook.kt
+index b3c1317..8e2559a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/controls/GyroLook.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/controls/GyroLook.kt
+@@ -7,28 +7,43 @@ import android.hardware.SensorEventListener
+ import android.hardware.SensorManager
+ import android.os.Build
+ import android.os.Handler
++import android.os.HandlerThread
+ import android.os.Looper
++import android.view.Choreographer
+ import android.view.Surface
+ import android.view.WindowManager
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import org.lwjgl.glfw.CallbackBridge
++import kotlin.math.PI
+ import kotlin.math.abs
++import kotlin.math.atan2
++import kotlin.math.max
++import kotlin.math.pow
+ import kotlin.math.sign
++import kotlin.math.sqrt
+ 
+ /**
+  * Kamera dengan gyro: gerakan memutar HP diubah menjadi geseran kamera, seperti HP adalah jendela ke dunia game
+  * (HP diputar ke kanan, pandangan ikut ke kanan; HP dimiringkan ke atas, pandangan ke atas).
+  *
+- * Ringan untuk HP kelas bawah:
+- * - Sensor hanya didaftarkan selama [start] dan dilepas lagi oleh [stop]. Pemanggil hanya memanggil [start] saat
+- *   gyro dinyalakan dan layar game sedang tampil, jadi tanpa gyro tidak ada pekerjaan sama sekali.
+- * - Sekitar 50 pembacaan per detik, masing-masing hanya beberapa perkalian. Pembacaan dikirim ke thread utama,
+- *   thread yang sama dengan sentuhan kamera, karena [CallbackBridge.sendCursorDelta] mengubah posisi kursor
+- *   tanpa kunci dan tidak boleh dipanggil dari dua thread sekaligus.
+- * - Pengaturan (sensitivitas, balik Y) dibaca langsung dari [SettingsManager] tiap pembacaan, jadi perubahan
+- *   dari menu dalam game langsung berlaku tanpa mendaftarkan ulang sensor.
++ * Tiga jenis sumber gerakan ([Kind]), dipilih otomatis:
++ * - [Kind.HARDWARE]: sensor gyroscope asli. Jalurnya sengaja tetap sederhana dan langsung (dibaca di thread utama,
++ *   langsung dikirim ke game), karena sudah akurat dan cepat.
++ * - [Kind.VIRTUAL_RATE]: sensor gyroscope yang ternyata buatan perangkat lunak (dihitung sistem dari sensor lain).
++ * - [Kind.ORIENTATION]: HP tanpa gyroscope sama sekali, tetapi punya vektor rotasi dari akselerometer + magnetometer
++ *   ("gyro software"). Gerakannya dihitung dari selisih arah HP antar dua pembacaan.
++ * Dua jenis software itu lebih berisik dan lebih lambat dari gyro asli (datangnya dari sensor lain yang disaring
++ * sistem), jadi dikerjakan dengan cara yang tidak menambah lambat dan tidak menambah getar:
++ * - Pembacaan diproses di thread sendiri, bukan di thread utama yang sibuk menggambar menu dan UI.
++ * - Hasilnya dikumpulkan dan dikirim ke game satu kali per frame layar (Choreographer), bukan sepotong-sepotong.
++ * - Disaring dengan filter adaptif (One Euro): saat HP nyaris diam gerakannya diredam kuat (tidak bergoyang),
++ *   saat HP digerakkan cepat peredamnya dilepas (tidak terasa tertinggal).
+  *
+- * [canLook] dipanggil tiap pembacaan: true hanya saat game sedang menangkap kursor (bermain di dunia) dan tidak ada
++ * Ringan untuk HP kelas bawah: sensor hanya didaftarkan selama [start] dan dilepas lagi oleh [stop]. Pemanggil hanya
++ * memanggil [start] saat gyro dinyalakan dan layar game sedang tampil. Pengaturan (sensitivitas, balik Y, kehalusan)
++ * dibaca langsung dari [SettingsManager] tiap pembacaan, jadi perubahan dari menu langsung berlaku.
++ *
++ * [canLook] dipanggil sebelum mengirim: true hanya saat game sedang menangkap kursor (bermain di dunia) dan tidak ada
+  * menu atau lapisan launcher yang menutupi game. Di menu game gerakan HP tidak menggeser kursor.
+  */
+ class GyroLook(
+@@ -36,95 +51,270 @@ class GyroLook(
+     private val canLook: () -> Boolean
+ ) : SensorEventListener {
+ 
++    enum class Kind { NONE, HARDWARE, VIRTUAL_RATE, ORIENTATION }
++
+     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+-    private val sensor: Sensor? = sensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+-    private val handler = Handler(Looper.getMainLooper())
++    private val gyro: Sensor? = sensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
++
++    // Vektor rotasi hanya dicari bila tidak ada gyroscope: HP bergyro selalu memakai gyroscope-nya.
++    private val rotationSensor: Sensor? = if (gyro != null) null else {
++        sensorManager?.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR)
++            ?: sensorManager?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
++    }
++
++    private val sensor: Sensor? = gyro ?: rotationSensor
++
++    val kind: Kind = when {
++        gyro != null -> if (looksVirtual(gyro)) Kind.VIRTUAL_RATE else Kind.HARDWARE
++        rotationSensor != null -> Kind.ORIENTATION
++        else -> Kind.NONE
++    }
++
++    /** HP ini punya sumber gerakan yang bisa dipakai. Tanpa itu, [start] tidak melakukan apa-apa. */
++    val supported: Boolean get() = kind != Kind.NONE
+ 
+-    /** HP ini punya sensor gyroscope. Tanpa sensor, [start] tidak melakukan apa-apa. */
+-    val supported: Boolean get() = sensor != null
++    /** Gyro buatan perangkat lunak (bukan gyroscope asli): lebih berisik dan lebih lambat. */
++    val isSoftware: Boolean get() = kind == Kind.VIRTUAL_RATE || kind == Kind.ORIENTATION
+ 
+-    private var running = false
++    /** Kehalusan bawaan (persen) untuk sumber ini, dipakai selama pengguna belum mengubahnya sendiri. */
++    val defaultSmoothing: Int get() = defaultSmoothingFor(kind)
++
++    @Volatile private var running = false
++    private var thread: HandlerThread? = null
++    private var choreographer: Choreographer? = null
++    private val mainHandler = Handler(Looper.getMainLooper())
++
++    // Keadaan hitungan. Dikunci karena jalur software mengisinya dari thread sensor, sedangkan start/stop dari thread utama.
++    private val lock = Any()
+     private var lastNs = 0L
+-    private var rotation = Surface.ROTATION_90
++    private var havePrevQuat = false
++    private var qw = 1f
++    private var qx = 0f
++    private var qy = 0f
++    private var qz = 0f
++    private var rawX = 0.0
++    private var rawY = 0.0
++    private var outX = 0.0
++    private var outY = 0.0
++    private val filterX = OneEuro()
++    private val filterY = OneEuro()
++    private var moveX = 0f
++    private var moveY = 0f
++    private var pendX = 0f
++    private var pendY = 0f
++
++    @Volatile private var rotation = Surface.ROTATION_90
+     private var rotationCheckedNs = 0L
+ 
+     /** Mulai membaca sensor. Aman dipanggil berulang. Panggil dari thread utama. */
+     fun start() {
+         val manager = sensorManager ?: return
+-        val gyro = sensor ?: return
++        val source = sensor ?: return
+         if (running) return
+-        lastNs = 0L
++        synchronized(lock) { resetLocked() }
+         rotationCheckedNs = 0L
+-        running = try {
+-            manager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME, handler)
++        rotation = readRotation()
++        try {
++            if (kind == Kind.HARDWARE) {
++                running = manager.registerListener(this, source, SensorManager.SENSOR_DELAY_GAME, mainHandler)
++            } else {
++                val worker = HandlerThread("amber-gyro", android.os.Process.THREAD_PRIORITY_DISPLAY)
++                worker.start()
++                // Disimpan sebelum mendaftar supaya stop() ikut menutupnya bila pendaftaran gagal di tengah jalan.
++                thread = worker
++                val ok = manager.registerListener(this, source, SOFTWARE_PERIOD_US, 0, Handler(worker.looper))
++                if (ok) {
++                    running = true
++                    val c = Choreographer.getInstance()
++                    choreographer = c
++                    c.postFrameCallback(frameCallback)
++                } else {
++                    stop()
++                }
++            }
+         } catch (_: Throwable) {
+-            false
++            stop()
+         }
+     }
+ 
+     /** Berhenti membaca sensor. Aman dipanggil berulang. */
+     fun stop() {
+-        if (!running) return
++        val wasRunning = running
+         running = false
+-        try {
+-            sensorManager?.unregisterListener(this)
+-        } catch (_: Throwable) {
++        if (wasRunning) {
++            try {
++                sensorManager?.unregisterListener(this)
++            } catch (_: Throwable) {
++            }
++        }
++        choreographer?.removeFrameCallback(frameCallback)
++        choreographer = null
++        thread?.quitSafely()
++        thread = null
++        synchronized(lock) {
++            pendX = 0f
++            pendY = 0f
+         }
+     }
+ 
+     override fun onAccuracyChanged(changed: Sensor?, accuracy: Int) = Unit
+ 
+     override fun onSensorChanged(event: SensorEvent) {
++        if (kind == Kind.HARDWARE) refreshRotationIfDue(event.timestamp)
++        var sendX = 0f
++        var sendY = 0f
++        var send = false
++        synchronized(lock) {
++            if (computeLocked(event)) {
++                if (kind == Kind.HARDWARE) {
++                    sendX = moveX
++                    sendY = moveY
++                    send = true
++                } else {
++                    pendX += moveX
++                    pendY += moveY
++                }
++            }
++        }
++        // Jalur gyro asli: langsung kirim (thread ini = thread utama). Jalur software dikirim oleh frameCallback.
++        if (send && canLook()) CallbackBridge.sendCursorDelta(sendX, sendY)
++    }
++
++    /** Sekali per frame layar di thread utama: kirim semua gerakan yang terkumpul sejak frame lalu. */
++    private val frameCallback = object : Choreographer.FrameCallback {
++        override fun doFrame(frameTimeNanos: Long) {
++            if (!running) return
++            refreshRotationIfDue(frameTimeNanos)
++            var x = 0f
++            var y = 0f
++            synchronized(lock) {
++                x = pendX
++                y = pendY
++                pendX = 0f
++                pendY = 0f
++            }
++            if ((x != 0f || y != 0f) && canLook()) CallbackBridge.sendCursorDelta(x, y)
++            choreographer?.postFrameCallback(this)
++        }
++    }
++
++    private fun resetLocked() {
++        lastNs = 0L
++        havePrevQuat = false
++        rawX = 0.0
++        rawY = 0.0
++        outX = 0.0
++        outY = 0.0
++        filterX.reset()
++        filterY.reset()
++        pendX = 0f
++        pendY = 0f
++    }
++
++    /**
++     * Menghitung geseran kursor ([moveX], [moveY], piksel) dari satu pembacaan. Mengembalikan false bila tidak ada
++     * yang perlu dikirim. Dipanggil dengan [lock] terpegang.
++     */
++    private fun computeLocked(event: SensorEvent): Boolean {
+         val now = event.timestamp
+         val prev = lastNs
+-        // Waktu terakhir selalu diperbarui, juga saat sedang tidak boleh menggeser: begitu boleh lagi
+-        // (menu ditutup, layar dibuka), selang waktunya kecil dan kamera tidak melompat.
+         lastNs = now
+-        if (prev == 0L) return
+-        val dt = ((now - prev) / 1_000_000_000f).coerceIn(0f, MAX_DT_SEC)
+-        if (dt <= 0f) return
+-        if (!canLook()) return
+-
+-        val s = SettingsManager.settings.value
+-        if (!s.gyroEnabled) return
++        val dt = if (prev == 0L) 0f else ((now - prev) / 1_000_000_000f)
++        val v = event.values
+ 
+-        // Arah layar bisa berubah di tengah game (HP dibalik ke landscape sebaliknya): diperiksa tiap setengah detik.
+-        if (now - rotationCheckedNs > ROTATION_CHECK_NS) {
+-            rotationCheckedNs = now
+-            rotation = readRotation()
++        // Putaran HP (radian) sejak pembacaan lalu, pada sumbu HP: x ke kanan, y ke atas (saat portrait).
++        val gx: Float
++        val gy: Float
++        if (kind == Kind.ORIENTATION) {
++            val x = v[0]
++            val y = v[1]
++            val z = v[2]
++            val w = if (v.size >= 4) v[3] else sqrt(max(0f, 1f - x * x - y * y - z * z))
++            if (!havePrevQuat) {
++                qw = w; qx = x; qy = y; qz = z
++                havePrevQuat = true
++                return false
++            }
++            // Selisih arah = konjugat(arah lalu) x arah sekarang, dinyatakan di kerangka HP.
++            val rw = qw * w + qx * x + qy * y + qz * z
++            val rx = qw * x - qx * w - qy * z + qz * y
++            val ry = qw * y + qx * z - qy * w - qz * x
++            val rz = qw * z - qx * y + qy * x - qz * w
++            qw = w; qx = x; qy = y; qz = z
++            // Jeda panjang (mis. kembali dari aplikasi lain): selisihnya bukan gerakan sungguhan.
++            if (dt <= 0f || dt > MAX_DT_SEC) return false
++            val flip = if (rw < 0f) -1f else 1f
++            val n = sqrt(rx * rx + ry * ry + rz * rz)
++            val k = if (n < 1e-6f) 2f * flip else flip * 2f * atan2(n, abs(rw)) / n
++            gx = rx * k
++            gy = ry * k
++        } else {
++            if (prev == 0L || dt <= 0f) return false
++            // Selang antar dua pembacaan yang masih dipercaya; lebih lama dari ini dianggap jeda.
++            if (dt > MAX_DT_SEC) return false
++            gx = deadZone(v[0]) * dt
++            gy = deadZone(v[1]) * dt
+         }
+ 
+-        // Kecepatan putar (rad/detik) pada sumbu HP: x ke kanan, y ke atas (saat portrait), z keluar layar.
+-        val gx = event.values[0]
+-        val gy = event.values[1]
++        val s = SettingsManager.settings.value
++        if (!s.gyroEnabled) return false
++
+         // Ke sumbu layar: pitch = putaran mengelilingi sumbu mendatar layar, yaw = mengelilingi sumbu tegak layar.
+-        val pitchRate: Float
+-        val yawRate: Float
++        val pitch: Float
++        val yaw: Float
+         when (rotation) {
+-            Surface.ROTATION_90 -> { pitchRate = -gy; yawRate = gx }
+-            Surface.ROTATION_180 -> { pitchRate = -gx; yawRate = -gy }
+-            Surface.ROTATION_270 -> { pitchRate = gy; yawRate = -gx }
+-            else -> { pitchRate = gx; yawRate = gy }
++            Surface.ROTATION_90 -> { pitch = -gy; yaw = gx }
++            Surface.ROTATION_180 -> { pitch = -gx; yaw = -gy }
++            Surface.ROTATION_270 -> { pitch = gy; yaw = -gx }
++            else -> { pitch = gx; yaw = gy }
++        }
++
++        // Putar ke kanan (yaw negatif) = kursor ke kanan (positif). Miring ke atas (pitch positif) = kursor ke atas
++        // (negatif); "Balik Y" membalik arah ini. Satuan masih radian.
++        var mx = -yaw.toDouble()
++        var my = -pitch.toDouble()
++
++        val smoothing = effectiveSmoothing(s.gyroSmoothing, kind)
++        if (smoothing > 0) {
++            // Disaring pada sudut yang sudah terkumpul (bukan pada selisihnya), lalu selisih sudut tersaring itu
++            // yang dikirim. Sudut hasil selisih arah tidak melayang, dan sisa tarikan setelah HP berhenti hanya
++            // sepersekian detik.
++            val cutoff = minCutoffHz(smoothing)
++            val step = dt.coerceIn(MIN_FILTER_DT_SEC, MAX_DT_SEC).toDouble()
++            rawX += mx
++            rawY += my
++            val fx = filterX.filter(rawX, step, cutoff)
++            val fy = filterY.filter(rawY, step, cutoff)
++            mx = fx - outX
++            my = fy - outY
++            outX = fx
++            outY = fy
+         }
+ 
+         val gain = BASE_PIXELS_PER_RADIAN * (s.gyroSensitivity.coerceIn(25, 400) / 100f)
+-        // Putar ke kanan (yawRate negatif) = kursor ke kanan (positif). Miring ke atas (pitchRate positif) =
+-        // kursor ke atas (negatif); "Balik Y" membalik arah ini.
+-        val moveX = -deadZone(yawRate) * dt * gain
+-        val moveY = -deadZone(pitchRate) * dt * gain * (if (s.gyroInvertY) -1f else 1f)
+-        if (moveX == 0f && moveY == 0f) return
+-        CallbackBridge.sendCursorDelta(moveX, moveY)
++        moveX = (mx * gain).toFloat()
++        moveY = (my * gain * (if (s.gyroInvertY) -1f else 1f)).toFloat()
++        return moveX != 0f || moveY != 0f
+     }
+ 
+     /**
+-     * Zona mati lembut: gyro HP yang diam masih melaporkan getaran kecil, yang tanpa ini membuat kamera
+-     * melayang pelan sendiri. Nilai di bawah batas dibuang, sisanya dikurangi batas supaya tidak ada loncatan.
++     * Zona mati lembut untuk kecepatan putar gyroscope: gyro HP yang diam masih melaporkan getaran kecil, yang tanpa ini
++     * membuat kamera melayang pelan sendiri. Nilai di bawah batas dibuang, sisanya dikurangi batas supaya tidak ada
++     * loncatan.
+      */
+     private fun deadZone(v: Float): Float {
+         val a = abs(v)
+         return if (a <= DEAD_ZONE_RAD_PER_SEC) 0f else (a - DEAD_ZONE_RAD_PER_SEC) * sign(v)
+     }
+ 
++    /** Arah layar bisa berubah di tengah game (HP dibalik ke landscape sebaliknya): diperiksa tiap setengah detik. */
++    private fun refreshRotationIfDue(nowNs: Long) {
++        if (nowNs - rotationCheckedNs > ROTATION_CHECK_NS) {
++            rotationCheckedNs = nowNs
++            rotation = readRotation()
++        }
++    }
++
+     @Suppress("DEPRECATION")
+     private fun readRotation(): Int = try {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+@@ -136,19 +326,96 @@ class GyroLook(
+         Surface.ROTATION_90
+     }
+ 
+-    private companion object {
++    /**
++     * Filter One Euro untuk satu sumbu: peredam lolos-rendah yang batas frekuensinya naik mengikuti kecepatan sinyal.
++     * Lambat = batas rendah = halus; cepat = batas tinggi = nyaris tanpa keterlambatan.
++     */
++    private class OneEuro {
++        private var ready = false
++        private var xPrev = 0.0
++        private var dxPrev = 0.0
++
++        fun reset() {
++            ready = false
++            xPrev = 0.0
++            dxPrev = 0.0
++        }
++
++        fun filter(x: Double, dt: Double, minCutoff: Double): Double {
++            if (!ready) {
++                ready = true
++                xPrev = x
++                dxPrev = 0.0
++                return x
++            }
++            val dx = (x - xPrev) / dt
++            val dxHat = dxPrev + alpha(dt, DERIVATIVE_CUTOFF_HZ) * (dx - dxPrev)
++            val cutoff = minCutoff + BETA * abs(dxHat)
++            val xHat = xPrev + alpha(dt, cutoff) * (x - xPrev)
++            xPrev = xHat
++            dxPrev = dxHat
++            return xHat
++        }
++
++        private fun alpha(dt: Double, cutoff: Double): Double {
++            val tau = 1.0 / (2.0 * PI * cutoff)
++            return 1.0 / (1.0 + tau / dt)
++        }
++    }
++
++    companion object {
++        /** Jenis sumber gerakan yang dipakai HP ini, tanpa mendaftarkan sensor apa pun. */
++        fun detect(context: Context): Kind = GyroLook(context) { false }.kind
++
++        /** Kehalusan bawaan (persen): gyro asli tanpa penyaring, gyro software cukup halus supaya tidak bergoyang. */
++        fun defaultSmoothingFor(kind: Kind): Int = when (kind) {
++            Kind.VIRTUAL_RATE, Kind.ORIENTATION -> 60
++            else -> 0
++        }
++
++        /** Kehalusan yang berlaku: nilai pilihan pengguna (0 - 100), atau bawaan sumbernya bila belum dipilih (-1). */
++        fun effectiveSmoothing(stored: Int, kind: Kind): Int =
++            if (stored in 0..100) stored else defaultSmoothingFor(kind)
++
++        /** Batas frekuensi terendah filter (Hz) untuk kehalusan 1 - 100: dari sekitar 6 Hz (tipis) turun ke sekitar 0,7 Hz (tebal). */
++        fun minCutoffHz(smoothing: Int): Double = 6.0 * 0.12.pow(smoothing.coerceIn(0, 100) / 100.0)
++
++        /**
++         * Gyroscope yang dilaporkan sistem tetapi sebenarnya buatan perangkat lunak. Tidak ada tanda resminya, jadi
++         * ditebak dari nama/pembuat sensor atau laju yang terlalu lambat untuk gyroscope asli.
++         * "Corrected Gyroscope" milik Android sengaja tidak dihitung: itu gyroscope asli yang dikoreksi biasnya.
++         */
++        private fun looksVirtual(sensor: Sensor): Boolean {
++            val label = (sensor.name.orEmpty() + " " + sensor.vendor.orEmpty()).lowercase()
++            if (VIRTUAL_WORDS.any { label.contains(it) }) return true
++            return sensor.minDelay > SLOW_MIN_DELAY_US
++        }
++
++        private val VIRTUAL_WORDS = listOf("software", "virtual", "emulat", "fake")
++
++        /** Laju minta (mikrodetik) untuk sensor software: sekitar 100 Hz, sistem membatasi sesuai kemampuan sensornya. */
++        private const val SOFTWARE_PERIOD_US = 10_000
++
++        /** Gyroscope yang paling cepatnya hanya sekitar 33 Hz dianggap bukan gyroscope asli. */
++        private const val SLOW_MIN_DELAY_US = 30_000
++
+         /**
+          * Piksel kursor per radian putaran pada sensitivitas 100%: satu derajat kamera Minecraft pada
+          * sensitivitas bawaan kira-kira 6,7 piksel (0,15 derajat per piksel), jadi 180 / pi / 0,15.
+          */
+-        const val BASE_PIXELS_PER_RADIAN = 382f
++        private const val BASE_PIXELS_PER_RADIAN = 382f
+ 
+         /** Batas zona mati, sekitar 0,7 derajat per detik. */
+-        const val DEAD_ZONE_RAD_PER_SEC = 0.012f
++        private const val DEAD_ZONE_RAD_PER_SEC = 0.012f
+ 
+         /** Selang antar dua pembacaan yang masih dipercaya; lebih lama dari ini dianggap jeda (mis. kembali dari aplikasi lain). */
+-        const val MAX_DT_SEC = 0.1f
++        private const val MAX_DT_SEC = 0.1f
++        private const val MIN_FILTER_DT_SEC = 0.002f
++
++        private const val ROTATION_CHECK_NS = 500_000_000L
+ 
+-        const val ROTATION_CHECK_NS = 500_000_000L
++        /** Filter One Euro: seberapa cepat batas frekuensi naik mengikuti kecepatan (per radian/detik), dan penyaring kecepatannya. */
++        private const val BETA = 4.0
++        private const val DERIVATIVE_CUTOFF_HZ = 5.0
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+index 8c7506f..667643a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/LauncherSettings.kt
+@@ -37,6 +37,9 @@ data class LauncherSettings(
+     val gyroEnabled: Boolean = false,
+     val gyroSensitivity: Int = 100, // 25 - 400
+     val gyroInvertY: Boolean = false,
++    // Kehalusan gyro (persen, 0 = tanpa penyaring). -1 = otomatis: gyro asli 0, gyro software (HP tanpa gyroscope asli)
++    // 60 supaya tidak bergoyang. Menjadi nilai pilihan pengguna begitu slider disentuh. Lihat GyroLook.
++    val gyroSmoothing: Int = -1, // -1 atau 0 - 100
+     // Pengali kepekatan semua tombol layar (persen) di atas kepekatan tiap tombol di editor. 100 = sesuai editor.
+     // Tombol sistem (pil menu, FPS) tidak ikut, supaya menunya selalu terlihat. Diatur dari menu dalam game.
+     val controlOpacityPercent: Int = 100, // 30 - 100
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+index 016a93e..4e9070c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/GameMenuSheet.kt
+@@ -111,6 +111,9 @@ fun GameMenuSheet(
+     onGyroSensitivityChange: (Int) -> Unit = {},
+     gyroInvertY: Boolean = false,
+     onGyroInvertYChange: (Boolean) -> Unit = {},
++    gyroSmoothing: Int = 0,
++    onGyroSmoothingChange: (Int) -> Unit = {},
++    gyroSoftware: Boolean = false,
+     showScreenControls: Boolean = false,
+     controlOpacityPercent: Int = 100,
+     onControlOpacityChange: (Int) -> Unit = {},
+@@ -459,6 +462,24 @@ fun GameMenuSheet(
+                                         onCommit = onGyroSensitivityChange
+                                     )
+                                     MenuDivider()
++                                    MenuSliderRow(
++                                        label = "Kehalusan gyro",
++                                        value = gyroSmoothing.coerceIn(0, 100),
++                                        min = 0,
++                                        max = 100,
++                                        step = 5,
++                                        onCommit = onGyroSmoothingChange
++                                    )
++                                    if (gyroSoftware) {
++                                        Text(
++                                            text = "HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.",
++                                            color = AmberUi.TextDim,
++                                            fontSize = 10.5.sp,
++                                            lineHeight = 14.sp,
++                                            modifier = Modifier.padding(bottom = 8.dp)
++                                        )
++                                    }
++                                    MenuDivider()
+                                     MenuToggleRow(
+                                         title = "Balik atas-bawah",
+                                         subtitle = "Condongkan HP ke atas untuk melihat ke bawah.",
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+index 0ed3a6f..59da0e0 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/SettingsScreen.kt
+@@ -54,6 +54,7 @@ import java.io.FileOutputStream
+ import com.israadev.nuxlauncher.core.account.AccountManager
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
++import com.israadev.nuxlauncher.core.controls.GyroLook
+ import com.israadev.nuxlauncher.core.device.DeviceProfiles
+ import com.israadev.nuxlauncher.BuildConfig
+ import com.israadev.nuxlauncher.core.models.LauncherSettings
+@@ -148,6 +149,14 @@ fun SettingsScreen(
+     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
+     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
+     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
++    var gyroEnabled by remember(currentSettings.gyroEnabled) { mutableStateOf(currentSettings.gyroEnabled) }
++    var gyroSensitivity by remember(currentSettings.gyroSensitivity) { mutableIntStateOf(currentSettings.gyroSensitivity) }
++    var gyroInvertY by remember(currentSettings.gyroInvertY) { mutableStateOf(currentSettings.gyroInvertY) }
++    // -1 = otomatis (lihat LauncherSettings.gyroSmoothing); slider menampilkan nilai yang berlaku.
++    var gyroSmoothing by remember(currentSettings.gyroSmoothing) { mutableIntStateOf(currentSettings.gyroSmoothing) }
++    var controlOpacity by remember(currentSettings.controlOpacityPercent) { mutableIntStateOf(currentSettings.controlOpacityPercent) }
++    // Jenis sumber gerakan HP ini (gyro asli, gyro software, atau tidak ada); hanya memeriksa, tanpa membaca sensor.
++    val gyroKind = remember { GyroLook.detect(context) }
+     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
+     var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
+     var discordRpcShowServer by remember(currentSettings.discordRpcShowServer) { mutableStateOf(currentSettings.discordRpcShowServer) }
+@@ -229,6 +238,11 @@ fun SettingsScreen(
+             hotbarTouchEnabled = hotbarTouch,
+             buttonLookDrag = buttonLookDrag,
+             buttonSlide = buttonSlide,
++            gyroEnabled = gyroEnabled,
++            gyroSensitivity = gyroSensitivity,
++            gyroInvertY = gyroInvertY,
++            gyroSmoothing = gyroSmoothing,
++            controlOpacityPercent = controlOpacity,
+             discordRpcEnabled = discordRpc,
+             discordRpcLauncherEnabled = discordRpcLauncher,
+             discordRpcShowServer = discordRpcShowServer,
+@@ -884,6 +898,19 @@ fun SettingsScreen(
+                             }
+                         )
+                         SettingDivider()
++                        SettingSliderRow(
++                            title = "Opasitas tombol layar",
++                            desc = "Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.",
++                            valueText = "${controlOpacity.coerceIn(30, 100)}%",
++                            value = controlOpacity.coerceIn(30, 100).toFloat(),
++                            valueRange = 30f..100f,
++                            steps = 13,
++                            onValueChange = {
++                                controlOpacity = it.roundToInt()
++                                commitSettings()
++                            }
++                        )
++                        SettingDivider()
+                         SettingSwitchRow(
+                             title = "Dukungan TouchController",
+                             desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
+@@ -952,6 +979,67 @@ fun SettingsScreen(
+                         )
+                         }
+ 
++                        SettingsGroup("Gyro") {
++                        SettingSwitchRow(
++                            title = "Kamera dengan gyro",
++                            desc = if (gyroKind == GyroLook.Kind.NONE) {
++                                "HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia."
++                            } else {
++                                "Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game."
++                            },
++                            checked = gyroEnabled && gyroKind != GyroLook.Kind.NONE,
++                            onCheckedChange = {
++                                if (gyroKind != GyroLook.Kind.NONE) {
++                                    gyroEnabled = it
++                                    commitSettings()
++                                }
++                            }
++                        )
++                        if (gyroKind != GyroLook.Kind.NONE) {
++                            SettingDivider()
++                            SettingSliderRow(
++                                title = "Sensitivitas gyro",
++                                desc = "Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.",
++                                valueText = "$gyroSensitivity%",
++                                value = gyroSensitivity.coerceIn(25, 400).toFloat(),
++                                valueRange = 25f..400f,
++                                steps = 74,
++                                onValueChange = {
++                                    gyroSensitivity = it.roundToInt()
++                                    commitSettings()
++                                }
++                            )
++                            SettingDivider()
++                            val shownSmoothing = GyroLook.effectiveSmoothing(gyroSmoothing, gyroKind)
++                            SettingSliderRow(
++                                title = "Kehalusan gyro",
++                                desc = if (gyroKind == GyroLook.Kind.HARDWARE) {
++                                    "Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli."
++                                } else {
++                                    "Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus."
++                                },
++                                valueText = "$shownSmoothing%",
++                                value = shownSmoothing.toFloat(),
++                                valueRange = 0f..100f,
++                                steps = 19,
++                                onValueChange = {
++                                    gyroSmoothing = it.roundToInt()
++                                    commitSettings()
++                                }
++                            )
++                            SettingDivider()
++                            SettingSwitchRow(
++                                title = "Balik atas-bawah",
++                                desc = "Condongkan HP ke atas untuk melihat ke bawah.",
++                                checked = gyroInvertY,
++                                onCheckedChange = {
++                                    gyroInvertY = it
++                                    commitSettings()
++                                }
++                            )
++                        }
++                        }
++
+                         // Gambar, hotspot, dan ukuran kursor launcher (dipakai di menu game oleh jari, controller,
+                         // dan mouse fisik). Gambar kustom didecode sekali dan disimpan; slider hanya menulis saat dilepas.
+                         SettingsGroup("Penunjuk kursor") {
+@@ -1388,6 +1476,11 @@ fun SettingsScreen(
+                     hotbarTouch = reset.hotbarTouchEnabled
+                     buttonLookDrag = reset.buttonLookDrag
+                     buttonSlide = reset.buttonSlide
++                    gyroEnabled = reset.gyroEnabled
++                    gyroSensitivity = reset.gyroSensitivity
++                    gyroInvertY = reset.gyroInvertY
++                    gyroSmoothing = reset.gyroSmoothing
++                    controlOpacity = reset.controlOpacityPercent
+                     discordRpc = reset.discordRpcEnabled
+                     discordRpcLauncher = reset.discordRpcLauncherEnabled
+                     discordRpcShowServer = reset.discordRpcShowServer
+diff --git a/changelog/entries/20261128-gyro-software-dan-pengaturan.txt b/changelog/entries/20261128-gyro-software-dan-pengaturan.txt
+new file mode 100644
+index 0000000..fdd40af
+--- /dev/null
++++ b/changelog/entries/20261128-gyro-software-dan-pengaturan.txt
+@@ -0,0 +1,9 @@
++# judul: Gyro lebih enak di HP tanpa gyro asli, dan pengaturan gyro di Pengaturan
++[id]
+++ HP tanpa sensor gyro asli kini bisa memakai kamera gyro: gerakannya dihitung dari sensor arah HP (gyro software). Dikerjakan di thread sendiri dan dikirim ke game sekali per frame, dengan penyaring adaptif yang meredam goyangan saat HP diam tetapi tidak terasa tertinggal saat digerakkan.
+++ Slider Kehalusan gyro di menu dalam game dan di Pengaturan. Bawaannya otomatis: mati untuk gyro asli (tidak berubah dari sebelumnya), cukup halus untuk gyro software.
+++ Pengaturan > Kontrol kini punya bagian Gyro (nyala, sensitivitas, kehalusan, balik atas-bawah) dan slider Opasitas tombol layar, sama seperti di menu dalam game.
++[en]
+++ Phones without a real gyro sensor can now use the gyro camera: motion is calculated from the phone's orientation sensor (software gyro). It runs on its own thread and is sent to the game once per frame, with an adaptive filter that calms shakiness when the phone is still but doesn't feel laggy when you move it.
+++ A Gyro smoothing slider in the in-game menu and in Settings. The default is automatic: off for a real gyro (unchanged from before), smooth enough for a software gyro.
+++ Settings > Controls now has a Gyro section (on/off, sensitivity, smoothing, invert up/down) and an On-screen button opacity slider, matching the in-game menu.
+
+# FIN part=1/1 files=13

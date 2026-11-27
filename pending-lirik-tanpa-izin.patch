@@ -1,0 +1,620 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index 659a87f..14e8395 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -276,21 +276,6 @@
+             android:exported="false"
+             android:foregroundServiceType="dataSync" />
+ 
+-        <!--
+-            Amber Lyrics: membaca judul, artis, dan posisi lagu dari pemutar musik HP (sesi media) lalu menulisnya ke
+-            config/amber_lyrics/now_playing.json untuk mod lirik Starling. Izin "Akses notifikasi" harus diberikan
+-            pengguna sendiri; layanan ini tidak membaca isi notifikasi (onNotificationPosted tidak dipakai).
+-        -->
+-        <service
+-            android:name=".core.horizon.NowPlayingListenerService"
+-            android:exported="true"
+-            android:label="@string/app_name"
+-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+-            <intent-filter>
+-                <action android:name="android.service.notification.NotificationListenerService" />
+-            </intent-filter>
+-        </service>
+-
+         <!--
+             Proses :vkcheck sendiri: pengecekan dukungan Vulkan memuat driver grafis HP, dan driver yang bermasalah
+             bisa menutup prosesnya. Dengan proses terpisah, yang mati hanya :vkcheck, bukan launcher. Hidup beberapa
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/NowPlayingBridge.kt b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/NowPlayingBridge.kt
+index c6237be..68f7cb1 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/horizon/NowPlayingBridge.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/horizon/NowPlayingBridge.kt
+@@ -1,202 +1,240 @@
+ package com.israadev.nuxlauncher.core.horizon
+ 
+-import android.content.ComponentName
++import android.content.BroadcastReceiver
+ import android.content.Context
+ import android.content.Intent
+-import android.media.MediaMetadata
+-import android.media.session.MediaController
+-import android.media.session.MediaSessionManager
+-import android.media.session.PlaybackState
+-import android.os.SystemClock
+-import android.provider.Settings
+-import android.service.notification.NotificationListenerService
+-import androidx.core.app.NotificationManagerCompat
++import android.content.IntentFilter
++import android.os.Bundle
++import androidx.core.content.ContextCompat
+ import org.json.JSONObject
+ import java.io.File
+ 
+ /**
+  * Jembatan "lagu yang sedang diputar" untuk mod Amber Lyrics di mesin Starling (docs/amber-lyrics.md).
+  *
+- * Android memberi daftar sesi media (Spotify, YouTube Music, pemutar bawaan, dan kawan-kawan) hanya kepada layanan
+- * pendengar notifikasi yang diizinkan pengguna. [NowPlayingListenerService] memakai izin itu untuk satu hal saja:
+- * membaca judul, artis, album, durasi, dan posisi lagu, lalu menulisnya ke `config/amber_lyrics/now_playing.json` di
+- * folder game Starling. Mod di dalam mesin membaca berkas itu dan mencari lirik. Layanan tidak membaca isi notifikasi,
+- * tidak menulis apa pun selain berkas itu, dan tidak punya pekerjaan terjadwal: ia bergerak hanya saat pemutar
+- * berganti lagu, jeda, atau memutar, jadi tidak membebani game.
++ * Tanpa izin khusus apa pun: tidak ada akses notifikasi, aksesibilitas, atau izin berbahaya lain. Yang dipakai hanya
++ * penerima siaran (BroadcastReceiver) biasa untuk siaran "lagu berganti / jeda / putar" yang dikirim sebagian pemutar
++ * musik (Spotify bila "Device Broadcast Status" menyala di pengaturannya, dan pemutar yang memakai siaran gaya
++ * `com.android.music.*`). Penerima hidup hanya di proses game Starling, selama game terbuka, dan hanya menulis bila mod
++ * Amber Lyrics dihidupkan pemain. Hasilnya satu berkas lokal, `config/amber_lyrics/now_playing.json` di folder game,
++ * yang dibaca mod. Tidak ada yang dikirim ke mana pun dari sini; pencarian lirik dilakukan mod ke lrclib.net.
++ *
++ * Batasnya: pemutar yang tidak menyiarkan apa-apa (misalnya YouTube Music) tidak terbaca, dan siaran baru datang
++ * saat ada kejadian (ganti lagu, jeda, putar), jadi lagu yang sudah berjalan saat game dibuka baru terbaca setelah
++ * pemain menjeda lalu memutar sekali atau mengganti lagu.
+  */
+ object NowPlayingBridge {
+     const val FOLDER = "amber_lyrics"
+     const val FILE = "now_playing.json"
+ 
++    private const val MOD_ID = "amber_lyrics"
++
++    // Siaran yang dikenal. Nama yang tidak pernah dikirim pemutar mana pun hanya tidak berbuat apa-apa.
++    private val ACTIONS = listOf(
++        "com.spotify.music.metadatachanged",
++        "com.spotify.music.playbackstatechanged",
++        "com.android.music.metachanged",
++        "com.android.music.playstatechanged",
++        "com.android.music.playbackcomplete",
++        "com.sec.android.app.music.metachanged",
++        "com.sec.android.app.music.playstatechanged",
++        "com.miui.player.metachanged",
++        "com.htc.music.metachanged",
++        "com.sonyericsson.music.metachanged"
++    )
++
++    // Keadaan terakhir: siaran jeda/putar sering tidak membawa judul, jadi judul sebelumnya dipakai ulang.
++    private var title = ""
++    private var artist = ""
++    private var album = ""
++    private var durationMs = 0L
++    private var positionMs = 0L
++    private var positionAtMs = 0L
++    private var playing = false
++
++    private var receiver: BroadcastReceiver? = null
++    private var registeredOn: Context? = null
++
+     /** Berkas yang dibaca mod. Folder game sama dengan yang dipakai mesin (profil terpilih ikut dihormati). */
+     fun file(context: Context): File =
+         File(HorizonContent.gameHome(StarlingEngine.engineHome(context)), "config/$FOLDER/$FILE")
+ 
+-    /** True bila pengguna sudah memberi Amber "Akses notifikasi" di pengaturan Android. */
+-    fun hasAccess(context: Context): Boolean =
++    /** Mulai mendengar siaran pemutar musik (dipanggil saat game Starling dibuka). */
++    @Synchronized
++    fun start(context: Context) {
++        if (receiver != null) return
++        val app = context.applicationContext ?: context
++        // Sisa sesi lalu: tidak diketahui lagi benar atau tidak, lebih baik kosong daripada lirik yang salah.
++        clearState(app)
++        val created = object : BroadcastReceiver() {
++            override fun onReceive(context: Context, intent: Intent) {
++                val action = intent.action ?: return
++                val extras = intent.extras ?: Bundle.EMPTY
++                handle(app, action, extras)
++            }
++        }
++        val filter = IntentFilter()
++        for (action in ACTIONS) filter.addAction(action)
+         try {
+-            NotificationManagerCompat.getEnabledListenerPackages(context).contains(context.packageName)
++            // Siaran datang dari aplikasi lain, jadi penerima harus "exported" (wajib dinyatakan di Android 14).
++            ContextCompat.registerReceiver(app, created, filter, ContextCompat.RECEIVER_EXPORTED)
++            receiver = created
++            registeredOn = app
+         } catch (_: Exception) {
+-            false
++            // Gagal mendaftar: lirik saja yang tidak muncul, game tidak terganggu.
+         }
++    }
+ 
+-    /** Membuka halaman "Akses notifikasi" milik Android; pengguna memilih Amber di sana. */
+-    fun openAccessSettings(context: Context) {
+-        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+-        try {
+-            context.startActivity(intent)
+-        } catch (_: Exception) {
+-            // HP yang tidak punya halaman itu: pengguna membukanya sendiri dari Pengaturan.
++    /** Berhenti mendengar dan menghapus berkas (game ditutup). */
++    @Synchronized
++    fun stop() {
++        val app = registeredOn
++        val current = receiver
++        if (app != null && current != null) {
++            try {
++                app.unregisterReceiver(current)
++            } catch (_: Exception) {
++            }
+         }
++        receiver = null
++        registeredOn = null
++        if (app != null) clearState(app)
+     }
+ 
+-    // Isi yang terakhir ditulis: lagu yang sama dengan posisi yang sama tidak perlu menulis ulang.
+-    private var lastWritten: String? = null
++    /** Mod hidup bila `mod.amber_lyrics:true` ada di horizon-mods.txt (dibaca tiap siaran; jarang dan kecil). */
++    private fun modEnabled(context: Context): Boolean =
++        try {
++            val game = HorizonContent.gameHome(StarlingEngine.engineHome(context))
++            val list = File(game, HorizonMods.LIST_FILE)
++            list.isFile && list.length() < 1_000_000L && HorizonMods.parseList(list.readText()).enabled.contains(MOD_ID)
++        } catch (_: Exception) {
++            false
++        }
+ 
+-    /** Menulis keadaan [controller] ke berkas, atau menghapus berkas bila tidak ada lagu. */
+     @Synchronized
+-    fun write(context: Context, controller: MediaController?) {
++    private fun handle(context: Context, action: String, extras: Bundle) {
+         try {
+-            // Starling belum pernah dipakai: tidak membuat folder datanya hanya demi berkas ini.
+-            if (!StarlingEngine.engineHome(context).isDirectory) return
+-            val target = file(context)
+-            val metadata = controller?.metadata
+-            val title = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE)?.trim().orEmpty()
+-            if (controller == null || metadata == null || title.isEmpty()) {
+-                clear(context)
++            if (!modEnabled(context)) return
++            if (action.endsWith(".playbackcomplete")) {
++                clearState(context)
+                 return
+             }
+-            val state = controller.playbackState
+-            val playing = state?.state == PlaybackState.STATE_PLAYING
+-            var position = (state?.position ?: 0L).coerceAtLeast(0L)
+-            if (playing && state != null && state.lastPositionUpdateTime > 0L) {
+-                // Posisi yang dilaporkan sudah beberapa saat lalu: majukan sebanyak waktu yang lewat.
+-                val elapsed = (SystemClock.elapsedRealtime() - state.lastPositionUpdateTime).coerceAtLeast(0L)
+-                position += (elapsed * state.playbackSpeed).toLong()
++            // Siaran tanpa judul hanya mengabarkan keadaan (jeda/putar): judul dan artis sebelumnya dipertahankan.
++            val eventTitle = text(extras, "track", "title")
++            val newTitle = eventTitle.ifBlank { title }
++            if (newTitle.isBlank()) return
++            val newArtist =
++                if (eventTitle.isBlank()) artist else text(extras, "artist").ifBlank { if (eventTitle == title) artist else "" }
++            val sameTrack = newTitle == title && newArtist == artist
++            val now = System.currentTimeMillis()
++
++            val reportedPlaying = flag(extras, "playing")
++            val nowPlaying = reportedPlaying ?: if (sameTrack) playing else true
++
++            // Posisi: yang dilaporkan pemutar bila ada; selain itu lagu baru mulai dari 0, dan lagu yang sama
++            // melanjutkan dari perkiraan terakhir.
++            val reported = number(extras, "playbackPosition", "position", "pos")
++            // Spotify membawa `timeSent`: posisi berlaku pada saat itu, bukan saat siaran sampai.
++            val sentAt = number(extras, "timeSent")
++            val at = if (sentAt > 0L && kotlin.math.abs(now - sentAt) < 10 * 60 * 1000L) sentAt else now
++            val position = when {
++                reported >= 0L -> reported
++                !sameTrack -> 0L
++                playing -> positionMs + (now - positionAtMs).coerceAtLeast(0L)
++                else -> positionMs
+             }
+-            val artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)
+-                ?: metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST)
+-                ?: ""
++
++            val newAlbum = text(extras, "album").ifBlank { if (sameTrack) album else "" }
++            val reportedLength = number(extras, "length", "duration", "dur")
++            val newDuration = if (reportedLength > 0L) reportedLength else if (sameTrack) durationMs else 0L
++
++            title = newTitle
++            artist = newArtist
++            album = newAlbum
++            durationMs = newDuration
++            positionMs = position
++            positionAtMs = at
++            playing = nowPlaying
++            writeState(context, at)
++        } catch (_: Exception) {
++            // Siaran aneh dari pemutar: diabaikan.
++        }
++    }
++
++    private fun writeState(context: Context, updatedAtMs: Long) {
++        try {
++            val target = file(context)
++            val dir = target.parentFile ?: return
++            dir.mkdirs()
+             val json = JSONObject()
+                 .put("title", title)
+-                .put("artist", artist.trim())
+-                .put("album", metadata.getString(MediaMetadata.METADATA_KEY_ALBUM)?.trim().orEmpty())
+-                .put("duration_ms", metadata.getLong(MediaMetadata.METADATA_KEY_DURATION).coerceAtLeast(0L))
+-                .put("position_ms", position)
++                .put("artist", artist)
++                .put("album", album)
++                .put("duration_ms", durationMs.coerceAtLeast(0L))
++                .put("position_ms", positionMs.coerceAtLeast(0L))
+                 .put("playing", playing)
+-                .put("updated_at_ms", System.currentTimeMillis())
+-            val text = json.toString()
+-            // Sama kecuali cap waktunya: tidak perlu menulis ulang.
+-            val comparable = text.replace(Regex("\"updated_at_ms\":\\d+"), "")
+-            if (comparable == lastWritten && target.isFile) return
+-            val dir = target.parentFile ?: return
+-            dir.mkdirs()
++                .put("updated_at_ms", updatedAtMs)
+             // Ditulis ke berkas sementara lalu dipindah, supaya mod tidak pernah membaca separuh isi.
+             val temp = File(dir, "$FILE.tmp")
+-            temp.writeText(text)
++            temp.writeText(json.toString())
+             if (!temp.renameTo(target)) {
+                 target.delete()
+                 temp.renameTo(target)
+             }
+-            lastWritten = comparable
+         } catch (_: Exception) {
+-            // Penyimpanan penuh atau folder tak bisa ditulis: lirik saja yang tidak muncul, game tidak terganggu.
++            // Penyimpanan penuh atau folder tak bisa ditulis: lirik saja yang tidak muncul.
+         }
+     }
+ 
+-    /** Menghapus berkas: tidak ada lagu yang diputar (atau akses dicabut). */
+-    @Synchronized
+-    fun clear(context: Context) {
+-        lastWritten = null
++    /** Melupakan lagu dan menghapus berkas: tidak ada lagu yang diketahui. */
++    private fun clearState(context: Context) {
++        title = ""
++        artist = ""
++        album = ""
++        durationMs = 0L
++        positionMs = 0L
++        positionAtMs = 0L
++        playing = false
+         try {
+             val target = file(context)
+             if (target.isFile) target.delete()
+         } catch (_: Exception) {
+         }
+     }
+-}
+-
+-/**
+- * Pendengar notifikasi yang hanya dipakai untuk sesi media (lihat [NowPlayingBridge]). Berjalan di proses utama
+- * Amber, hanya selama pengguna memberi aksesnya.
+- */
+-class NowPlayingListenerService : NotificationListenerService() {
+-    private val controllers = ArrayList<MediaController>()
+-
+-    private val sessionsListener =
+-        MediaSessionManager.OnActiveSessionsChangedListener { list -> track(list.orEmpty()) }
+-
+-    private val callback = object : MediaController.Callback() {
+-        override fun onPlaybackStateChanged(state: PlaybackState?) = publish()
+-        override fun onMetadataChanged(metadata: MediaMetadata?) = publish()
+-        override fun onSessionDestroyed() = publish()
+-    }
+-
+-    private var manager: MediaSessionManager? = null
+ 
+-    override fun onListenerConnected() {
+-        val sessions = getSystemService(Context.MEDIA_SESSION_SERVICE) as? MediaSessionManager ?: return
+-        manager = sessions
+-        val component = ComponentName(this, NowPlayingListenerService::class.java)
+-        try {
+-            sessions.addOnActiveSessionsChangedListener(sessionsListener, component)
+-            track(sessions.getActiveSessions(component))
+-        } catch (_: SecurityException) {
+-            // Akses dicabut di tengah jalan.
++    private fun text(extras: Bundle, vararg keys: String): String {
++        for (key in keys) {
++            val value = extras.getString(key)?.trim()
++            if (!value.isNullOrEmpty()) return value
+         }
++        return ""
+     }
+ 
+-    override fun onListenerDisconnected() {
+-        release()
+-        NowPlayingBridge.clear(this)
+-    }
+-
+-    override fun onDestroy() {
+-        release()
+-        super.onDestroy()
+-    }
+-
+-    private fun release() {
+-        for (controller in controllers) {
+-            try {
+-                controller.unregisterCallback(callback)
+-            } catch (_: Exception) {
++    // Pemutar berbeda mengirim angka sebagai Int, Long, atau teks; Bundle.getLong() menolak Int, jadi dibaca apa adanya.
++    @Suppress("DEPRECATION")
++    private fun number(extras: Bundle, vararg keys: String): Long {
++        for (key in keys) {
++            if (!extras.containsKey(key)) continue
++            when (val value = extras.get(key)) {
++                is Int -> return value.toLong()
++                is Long -> return value
++                is Float -> return value.toLong()
++                is Double -> return value.toLong()
++                is String -> value.trim().toLongOrNull()?.let { return it }
++                else -> {}
+             }
+         }
+-        controllers.clear()
+-        try {
+-            manager?.removeOnActiveSessionsChangedListener(sessionsListener)
+-        } catch (_: Exception) {
+-        }
+-        manager = null
+-    }
+-
+-    private fun track(list: List<MediaController>) {
+-        for (controller in controllers) {
+-            try {
+-                controller.unregisterCallback(callback)
+-            } catch (_: Exception) {
+-            }
+-        }
+-        controllers.clear()
+-        for (controller in list) {
+-            try {
+-                controller.registerCallback(callback)
+-                controllers.add(controller)
+-            } catch (_: Exception) {
+-            }
+-        }
+-        publish()
++        return -1L
+     }
+ 
+-    // Yang sedang diputar didahulukan; kalau tidak ada, sesi pertama yang punya judul (jeda).
+-    private fun publish() {
+-        val playing = controllers.firstOrNull {
+-            it.playbackState?.state == PlaybackState.STATE_PLAYING && it.metadata != null
+-        }
+-        val chosen = playing ?: controllers.firstOrNull {
+-            !it.metadata?.getString(MediaMetadata.METADATA_KEY_TITLE).isNullOrBlank()
++    @Suppress("DEPRECATION")
++    private fun flag(extras: Bundle, key: String): Boolean? {
++        if (!extras.containsKey(key)) return null
++        return when (val value = extras.get(key)) {
++            is Boolean -> value
++            is String -> value.equals("true", ignoreCase = true)
++            is Int -> value != 0
++            else -> null
+         }
+-        NowPlayingBridge.write(this, chosen)
+     }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+index 5d35ca9..a9b083c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/starling/StarlingOverlay.kt
+@@ -34,6 +34,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+ import com.israadev.nuxlauncher.FpsMode
+ import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+ import com.israadev.nuxlauncher.core.crash.LauncherLog
++import com.israadev.nuxlauncher.core.horizon.NowPlayingBridge
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.control.GameControlsLayer
+ import com.israadev.nuxlauncher.ui.control.MouseControlMode
+@@ -75,6 +76,11 @@ object StarlingOverlay {
+         }
+         StarlingInput.bridge = bridge
+         CallbackBridge.sink = StarlingInput
++        // Lagu yang diputar untuk mod Amber Lyrics: penerima siaran pemutar musik, tanpa izin khusus.
++        try {
++            NowPlayingBridge.start(activity)
++        } catch (_: Throwable) {
++        }
+         val host = OverlayOwner().also { it.start() }
+         val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
+         val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
+@@ -131,6 +137,10 @@ object StarlingOverlay {
+     fun detach() {
+         CallbackBridge.sink = null
+         StarlingInput.bridge = null
++        try {
++            NowPlayingBridge.stop()
++        } catch (_: Throwable) {
++        }
+         try {
+             dialog?.dismiss()
+         } catch (_: Throwable) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+index e4f6015..883760e 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/RustSettingsSection.kt
+@@ -24,14 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+-import com.israadev.nuxlauncher.core.horizon.NowPlayingBridge
+ import com.israadev.nuxlauncher.core.horizon.RustPerformanceReport
+ import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.i18n.Toast
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+-import kotlinx.coroutines.delay
+ import kotlin.math.roundToInt
+ 
+ /**
+@@ -414,31 +412,13 @@ fun RustGameRows() {
+     )
+ }
+ 
+-/** Lirik di game: izin untuk membaca lagu yang diputar (mod Amber Lyrics di mesin Starling). */
++/** Lirik di game (mod Amber Lyrics di mesin Starling): hanya keterangan, tidak ada izin khusus yang diminta. */
+ @Composable
+ fun RustLyricsRows() {
+-    val context = LocalContext.current
+-    var access by remember { mutableStateOf(NowPlayingBridge.hasAccess(context)) }
+-    // Pengguna kembali dari halaman izin Android: periksa ulang selama tab ini terbuka (murah, sekali per detik).
+-    LaunchedEffect(Unit) {
+-        while (true) {
+-            access = NowPlayingBridge.hasAccess(context)
+-            delay(1000)
+-        }
+-    }
+-
+     RustInfoRow(
+-        title = "Akses lagu yang diputar",
+-        desc = "Dipakai mod Amber Lyrics di Starling untuk membaca judul dan posisi lagu dari pemutar musik HP. Isi notifikasi tidak dibaca.",
+-        value = if (access) "Diberikan" else "Belum diberikan",
++        title = "Lirik di game (Amber Lyrics)",
++        desc = "Tanpa izin khusus: mod membaca lagu dari siaran pemutar musik. Di Spotify, hidupkan \"Device Broadcast Status\" di pengaturannya. Hidupkan mod di Mod (Starling); setelah masuk game, jeda lalu putar lagu sekali atau ganti lagu. Judul dan artis lagu dikirim ke lrclib.net untuk mencari lirik.",
++        value = "Tanpa izin",
+         warn = false
+     )
+-    SettingDivider()
+-    SettingActionRow(
+-        title = "Izin akses notifikasi",
+-        desc = "Buka pengaturan Android, lalu pilih AmberLauncher. Setelah itu hidupkan mod Amber Lyrics di Mod (Starling) dan putar lagu. Judul dan artis lagu dikirim ke lrclib.net untuk mencari liriknya.",
+-        actionLabel = if (access) "Kelola" else "Beri akses",
+-        onClick = { NowPlayingBridge.openAccessSettings(context) },
+-        filled = !access
+-    )
+ }
+diff --git a/changelog/entries/20261127-lirik-starling.txt b/changelog/entries/20261127-lirik-starling.txt
+index 115f2cf..60f3c59 100644
+--- a/changelog/entries/20261127-lirik-starling.txt
++++ b/changelog/entries/20261127-lirik-starling.txt
+@@ -1,7 +1,7 @@
+ # judul: Tambah mod Amber Lyrics: lirik lagu tersinkron di game Rust (Starling)
+ [id]
+-+ Mod baru Amber Lyrics untuk mesin Rust (Starling): lirik lagu yang sedang kamu putar di HP (Spotify, YouTube Music, dan pemutar lain) tampil bersinkron di layar game, lengkap dengan baris berikutnya dan pop-up judul lagu. Bawaan mati; hidupkan di Mod, lalu beri akses di Pengaturan > Rust > Lirik.
+-+ Pengaturan > Rust punya grup Lirik untuk memberi akses "lagu yang diputar". Amber hanya membaca judul, artis, dan posisi lagu, bukan isi notifikasi. Judul dan artis dikirim ke lrclib.net untuk mencari lirik.
+++ Mod baru Amber Lyrics untuk mesin Rust (Starling): lirik lagu yang sedang kamu putar di HP tampil bersinkron di layar game, lengkap dengan baris berikutnya dan pop-up judul lagu. Bawaan mati; hidupkan di Mod.
+++ Tanpa izin khusus: lagu dibaca dari siaran pemutar musik (Spotify perlu "Device Broadcast Status" menyala), jadi tidak ada akses notifikasi atau izin sensitif lain. Pemutar yang tidak menyiarkan lagunya, seperti YouTube Music, belum terbaca. Judul dan artis dikirim ke lrclib.net untuk mencari lirik.
+ [en]
+-+ New Amber Lyrics mod for the Rust (Starling) engine: lyrics for the song playing on your phone (Spotify, YouTube Music, and other players) show in sync on the game screen, with the next line and a song title popup. Off by default; turn it on in Mods, then grant access in Settings > Rust > Lyrics.
+-+ Settings > Rust has a new Lyrics group to grant "now playing" access. Amber only reads the title, artist, and position of the song, not notification contents. The title and artist are sent to lrclib.net to look up the lyrics.
+++ New Amber Lyrics mod for the Rust (Starling) engine: lyrics for the song playing on your phone show in sync on the game screen, with the next line and a song title popup. Off by default; turn it on in Mods.
+++ No special permission: the song is read from music player broadcasts (Spotify needs "Device Broadcast Status" turned on), so there is no notification access or other sensitive permission. Players that do not broadcast the song, such as YouTube Music, are not detected yet. The title and artist are sent to lrclib.net to look up the lyrics.
+diff --git a/docs/amber-lyrics.md b/docs/amber-lyrics.md
+index 7b51e29..64092cc 100644
+--- a/docs/amber-lyrics.md
++++ b/docs/amber-lyrics.md
+@@ -2,26 +2,47 @@
+ 
+ Mod native untuk mesin Rust (Starling) yang menampilkan **lirik tersinkron** dari lagu yang sedang diputar di HP, langsung di layar game. Mod ini **ditulis sendiri untuk proyek ini** dan tidak memakai kode mod Java mana pun. Mod Fabric seperti LyricsZymu tidak bisa dijalankan di mesin Rust (tidak ada JVM), dan lisensinya (All Rights Reserved) tidak mengizinkan kodenya dipindahkan tanpa izin penulisnya, jadi ini fitur baru yang terpisah, bukan port.
+ 
+-Status: **eksperimental.** Sisi mod (parser LRC, sinkronisasi, tata letak, pembacaan berkas) lolos 19 uji unit di mesin pembangun dan terpasang bersih di atas patch `amber5`. Yang belum pernah diuji di perangkat: pengambilan lirik langsung dari lrclib.net, jembatan Android, dan tampilan di layar game.
++Status: **eksperimental.** Sisi mod (parser LRC, sinkronisasi, tata letak, pembacaan berkas) lolos 19 uji unit dan terpasang bersih di atas patch `amber5`. Yang belum pernah diuji di perangkat: pengambilan lirik langsung dari lrclib.net, penerima siaran pemutar musik, dan tampilan di layar game.
++
++## Tanpa izin khusus (dan kenapa)
++
++APK ini **tidak meminta akses notifikasi, aksesibilitas, SMS, atau izin sensitif lain untuk lirik**. Versi awal fitur ini memakai layanan "Akses notifikasi" untuk membaca sesi media Android. Itu dibuang karena Google Play Protect **memblokir pemasangan** APK yang diunduh dari luar Play Store (browser, aplikasi pesan, pengelola berkas) dan mendeklarasikan izin pendengar notifikasi ("This app can request access to sensitive data"; lihat [panduan Google untuk peringatan Play Protect](https://developers.google.com/android/play-protect/warning-dev-guidance)), dan karena izin itu membuat pengguna wajar curiga. Sekarang tidak ada layanan, izin, atau entri manifest tambahan untuk fitur ini.
+ 
+ ## Cara kerja
+ 
+ ```
+-pemutar musik  ->  sesi media Android  ->  NowPlayingListenerService (Amber)
+-                                              |
+-                          <folder game>/config/amber_lyrics/now_playing.json
+-                                              |
+-                       mod amber_lyrics di mesin Starling (poll tiap 1 detik)
+-                                              |
+-                    lrclib.net (judul + artis + durasi) -> lirik LRC -> cache -> HUD
++pemutar musik --siaran "lagu berganti / jeda / putar"--> penerima siaran (NowPlayingBridge, proses game)
++                                                              |
++                                  <folder game>/config/amber_lyrics/now_playing.json
++                                                              |
++                                  mod amber_lyrics di mesin Starling (membaca tiap 1 detik)
++                                                              |
++                           lrclib.net (judul + artis + durasi) -> lirik LRC -> cache -> HUD
+ ```
+ 
+-1. **Amber** (`core/horizon/NowPlayingBridge.kt`) memakai izin "Akses notifikasi" Android **hanya** untuk membaca sesi media: judul, artis, album, durasi, posisi, dan status putar/jeda. Isi notifikasi tidak dibaca. Berkas ditulis hanya saat pemutar berganti lagu, jeda, atau memutar, tanpa pekerjaan terjadwal.
++1. **Amber** (`core/horizon/NowPlayingBridge.kt`) mendaftarkan penerima siaran biasa **hanya di proses game Starling dan hanya selama game terbuka**. Ia mendengar siaran yang dikirim sebagian pemutar musik: Spotify (`com.spotify.music.metadatachanged` dan `playbackstatechanged`, perlu "Device Broadcast Status" menyala di pengaturan Spotify) dan siaran gaya lama `com.android.music.*` beserta beberapa varian pabrikan. Ia **menulis hanya bila mod Amber Lyrics dihidupkan** (`mod.amber_lyrics:true` di `horizon-mods.txt`). Berkas dihapus saat game ditutup atau saat lagu selesai.
+ 2. **Mod** membaca berkas itu, mencari lirik tersinkron di **lrclib.net** (`/api/get`, lalu `/api/search` bila perlu; hasil dicocokkan dengan durasi lagu, selisih paling lama 10 detik), menyimpannya di `config/amber_lyrics/cache/`, dan menggambarnya di HUD. Lagu yang sama tidak diunduh dua kali.
+ 
++## Batas yang perlu diketahui
++
++- **Hanya pemutar yang menyiarkan lagunya.** Spotify (dengan Device Broadcast Status) dan pemutar yang memakai siaran gaya `com.android.music.*`. Pemutar yang tidak menyiarkan apa-apa, termasuk YouTube Music, **tidak terbaca**. Daftar pemutar yang cocok tidak diuji satu per satu.
++- **Siaran datang saat ada kejadian.** Lagu yang sudah berjalan sebelum game dibuka baru terbaca setelah kamu **menjeda lalu memutar sekali, atau mengganti lagu**.
++- Bila siaran tidak membawa posisi, lagu baru dianggap mulai dari 0 detik. Kalau liriknya terlalu cepat atau lambat, geser dengan pengaturan waktu mod.
++- Hanya lirik tersinkron yang ada di lrclib.net. Lagu yang tidak ada di sana hanya menampilkan pop-up judul dengan keterangan "(no synced lyrics)". Bila pencarian gagal karena jaringan (bukan karena lagunya tidak ada), mod mencoba lagi setelah 30 detik.
++- Pengaturan di dalam game berbahasa Inggris (label mesin).
++- Mod dikompilasi saat membangun mesin dengan `cargo install` dari sumber horizon-mixins. Jika sumber itu tidak terjangkau di CI, mesin dibangun **tanpa** mod native dan Amber Lyrics tidak muncul; periksa ringkasan build mesin untuk baris native mods.
++
++## Menyalakan
++
++1. Di Spotify: hidupkan **Device Broadcast Status** di pengaturannya (pemutar lain: tidak ada langkah khusus bila ia memang menyiarkan lagunya).
++2. Di layar **Mod** (atau Options > Mods di dalam game), hidupkan **Amber Lyrics**. Bawaannya mati.
++3. Masuk game, putar lagu (atau jeda lalu putar sekali, atau ganti lagu bila sudah berjalan).
++
++Pengaturan di halaman mod (di dalam game): posisi (atas/bawah), baris berikutnya, pop-up judul lagu, dan penyesuaian waktu (0, +250, +500, +1000, -1000, -500, -250 ms).
++
+ ## Format berkas `now_playing.json`
+ 
+-Ditulis Amber, boleh juga ditulis alat lain (misalnya saat menguji):
++Ditulis penerima siaran Amber, boleh juga ditulis alat lain (misalnya saat menguji):
+ 
+ ```json
+ {
+@@ -40,21 +61,11 @@ Ditulis Amber, boleh juga ditulis alat lain (misalnya saat menguji):
+ - Saat jeda, lirik tetap tampil sekitar 5 detik, lalu hilang. Berkas yang dihapus berarti tidak ada lagu.
+ - Berkas lebih dari 256 KiB diabaikan.
+ 
+-## Menyalakan
+-
+-1. Bangun APK lewat **Build APK** seperti biasa. Mesin akan ikut dibangun ulang karena patch `amber5/0008` dan `starling-engine.properties` berubah.
+-2. Di aplikasi: **Pengaturan > Rust > Lirik > Beri akses**, pilih AmberLauncher di daftar Akses notifikasi Android.
+-3. Di layar **Mod** (atau menu Options > Mods di dalam game), hidupkan **Amber Lyrics**. Bawaannya mati.
+-4. Putar lagu di pemutar musik mana pun, lalu masuk game.
+-
+-Pengaturan di halaman mod (di dalam game): posisi (atas/bawah), baris berikutnya, pop-up judul lagu, dan penyesuaian waktu (0, +250, +500, +1000, -1000, -500, -250 ms) untuk lagu yang liriknya terlalu cepat atau lambat.
+-
+ ## Privasi
+ 
+ - Judul, artis, dan durasi lagu dikirim ke **lrclib.net** (layanan lirik terbuka) untuk mencari lirik. Tidak ada data akun, perangkat, atau game yang dikirim.
+-- Amber tidak membaca isi notifikasi apa pun dan tidak menyimpan riwayat lagu. Satu-satunya berkas yang ditulis adalah `now_playing.json`, dan berkas itu dihapus saat tidak ada lagu atau akses dicabut.
+-- Mod berstatus mati sampai dihidupkan, dan tanpa akses notifikasi ia tidak menemukan lagu sehingga tidak mengirim apa pun.
+-- Pencabutan akses: Pengaturan Android > Akses notifikasi > AmberLauncher.
++- Amber tidak menyimpan riwayat lagu. Satu-satunya berkas yang ditulis adalah `now_playing.json`, dan hanya bila mod dihidupkan.
++- Tidak ada izin tambahan di APK untuk fitur ini.
+ 
+ ## Berkas yang terlibat
+ 
+@@ -62,12 +73,7 @@ Pengaturan di halaman mod (di dalam game): posisi (atas/bawah), baris berikutnya
+ | --- | --- |
+ | `third_party/horizon-patches/amber5/0008-amber-lyrics.diff` | Mod native Starling (bundel horizon-mixins) dan daftarnya di mesin |
+ | `starling-engine.properties` | `native_mods=` memuat `amber_lyrics` agar ikut dikompilasi |
+-| `core/horizon/NowPlayingBridge.kt` | Jembatan sesi media ke `now_playing.json` dan pendengar notifikasi |
++| `core/horizon/NowPlayingBridge.kt` | Penerima siaran pemutar musik yang menulis `now_playing.json` |
++| `starling/StarlingOverlay.kt` | Memulai dan menghentikan penerima bersama game |
+ | `core/horizon/HorizonMods.kt` | Nama mod di daftar Mod |
+-| `ui/components/RustSettingsSection.kt` | Grup Lirik di Pengaturan > Rust |
+-
+-## Batas yang perlu diketahui
+-
+-- Hanya lirik tersinkron yang ada di lrclib.net. Lagu yang tidak ada di sana hanya menampilkan pop-up judul dengan keterangan "(no synced lyrics)". Bila pencarian gagal karena jaringan (bukan karena lagunya tidak ada), mod mencoba lagi setelah 30 detik.
+-- Pengaturan di dalam game berbahasa Inggris (label mesin).
+-- Mod dikompilasi saat membangun mesin dengan `cargo install` dari sumber horizon-mixins. Jika sumber itu tidak terjangkau di CI, mesin dibangun **tanpa** mod native dan Amber Lyrics tidak muncul; periksa ringkasan build mesin untuk baris native mods.
++| `ui/components/RustSettingsSection.kt` | Keterangan di Pengaturan > Rust > Lirik |
+# FIN part=1/1 files=6

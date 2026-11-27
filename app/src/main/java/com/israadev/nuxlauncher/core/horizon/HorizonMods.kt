@@ -127,7 +127,8 @@ object HorizonMods {
         "liteminer" to "LiteMiner",
         "rightharvest" to "RightClickHarvest",
         "customhud" to "Beautiful Day Counter",
-        "carryblock" to "Carry Block"
+        "carryblock" to "Carry Block",
+        "amber_lyrics" to "Amber Lyrics"
     ).map { (id, title) ->
         Bundled(id, title, "Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.")
     }

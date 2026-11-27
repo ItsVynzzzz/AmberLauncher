@@ -1,0 +1,1578 @@
+diff --git a/crates/horizon-client-render/src/mod_list.rs b/crates/horizon-client-render/src/mod_list.rs
+index 21da879..5b3e504 100644
+--- a/crates/horizon-client-render/src/mod_list.rs
++++ b/crates/horizon-client-render/src/mod_list.rs
+@@ -31,7 +31,7 @@ pub fn is_android_bundled(_id: &str) -> bool {
+ }
+ 
+ #[cfg(target_os = "android")]
+-pub const ANDROID_BUNDLED: [&str; 20] = [
++pub const ANDROID_BUNDLED: [&str; 21] = [
+     "zoom",
+     "recipes",
+     "smartf3",
+@@ -52,6 +52,7 @@ pub const ANDROID_BUNDLED: [&str; 20] = [
+     "rightharvest",
+     "customhud",
+     "carryblock",
++    "amber_lyrics",
+ ];
+ /// Why a native mod installed in [`NATIVE_DIR`] doesn't run in this game.
+ #[cfg(not(target_os = "android"))]
+diff --git a/native-mods/amber_lyrics/horizon-native.json b/native-mods/amber_lyrics/horizon-native.json
+new file mode 100644
+index 0000000..5d48df2
+--- /dev/null
++++ b/native-mods/amber_lyrics/horizon-native.json
+@@ -0,0 +1,8 @@
++{
++  "game": "26.3",
++  "horizon": "0000000000000000000000000000000000000000",
++  "id": "amber_lyrics",
++  "mixins": "ddd9700b21997c95d95ac6ee5ecafe3830cf622a",
++  "schema": 1,
++  "version": "0.1.0"
++}
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/click.rs b/native-mods/amber_lyrics/mixins/amber_lyrics/click.rs
+new file mode 100644
+index 0000000..c30a313
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/click.rs
+@@ -0,0 +1,12 @@
++// A click on a settings button: change that setting and keep it.
++fn amber_lyrics_click(game: &mut crate::game::Game<'_>, mod_id: &str, button: usize) {
++    use crate::game::amber_lyrics as m;
++    if mod_id != m::ID {
++        return;
++    }
++    let settings = m::load_settings(&|key| game.native_setting(m::ID, key));
++    if let Some((key, value)) = m::click(&settings, button) {
++        game.native_set_setting(m::ID, key, &value);
++        m::invalidate_settings();
++    }
++}
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/horizon-mixin.toml b/native-mods/amber_lyrics/mixins/amber_lyrics/horizon-mixin.toml
+new file mode 100644
+index 0000000..8f736ba
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/horizon-mixin.toml
+@@ -0,0 +1,57 @@
++[mod]
++id = "amber_lyrics"
++version = "0.1.0"
++priority = 100
++
++# Uses only the native hook points (native_hud, native_mods, native_settings, native_settings_click),
++# so it builds on the commit the launcher pins. The revision below is replaced by the build.
++[compatibility]
++horizon_revision = "0000000000000000000000000000000000000000"
++
++[[module]]
++id = "runtime"
++file = "crates/horizon-client/src/game.rs"
++name = "amber_lyrics"
++source = "runtime.rs"
++
++[[injection]]
++id = "hud"
++kind = "HEAD"
++target = "horizon_client::game::native_hooks::Game<'_>::native_hud"
++helper = "hud.rs"
++bindings = [
++  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
++  { name = "batch", ty = "&mut horizon_client::hud::HudBatch", value = "&mut *batch" },
++  { name = "corners", ty = "&mut horizon_client::extras_hud::Corners", value = "&mut *corners" },
++]
++
++[[injection]]
++id = "list"
++kind = "HEAD"
++target = "horizon_client::game::native_hooks::Game<'_>::native_mods"
++helper = "list.rs"
++bindings = [
++  { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
++]
++
++[[injection]]
++id = "settings"
++kind = "HEAD"
++target = "horizon_client::game::native_hooks::Game<'_>::native_settings"
++helper = "settings.rs"
++bindings = [
++  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
++  { name = "mod_id", ty = "&str", value = "mod_id" },
++  { name = "buttons", ty = "&mut Vec<String>", value = "&mut *buttons" },
++]
++
++[[injection]]
++id = "click"
++kind = "HEAD"
++target = "horizon_client::game::native_hooks::Game<'_>::native_settings_click"
++helper = "click.rs"
++bindings = [
++  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
++  { name = "mod_id", ty = "&str", value = "mod_id" },
++  { name = "button", ty = "usize", value = "button" },
++]
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/hud.rs b/native-mods/amber_lyrics/mixins/amber_lyrics/hud.rs
+new file mode 100644
+index 0000000..e754755
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/hud.rs
+@@ -0,0 +1,74 @@
++// The lyrics box: the song's title for a few seconds when it changes, the line being sung, and the
++// next line dimmed. Nothing is drawn (and nothing is computed beyond a lock and a search) while no
++// song is playing.
++fn amber_lyrics_hud(
++    game: &mut crate::game::Game<'_>,
++    batch: &mut horizon_client::hud::HudBatch,
++    corners: &mut horizon_client::extras_hud::Corners,
++) {
++    use crate::game::amber_lyrics as m;
++    let _ = corners;
++    if !game.native_on(m::ID) {
++        return;
++    }
++    // The worker thread starts once; the config folder is asked only until it has.
++    m::ensure_started(|| crate::game::Game::native_config_dir().ok());
++    if game.player.is_none() {
++        return;
++    }
++    let settings = m::cached_settings(&|key| game.native_setting(m::ID, key));
++    let Some(frame) = m::frame(settings, m::now_ms()) else {
++        return;
++    };
++
++    let width = batch.width;
++    let height = batch.height;
++    let max_width = (width - 16.0).min(360.0).max(60.0) - 2.0 * m::PAD_X;
++    let text_width = |s: &str| game.native_text_width(s);
++
++    // (text, 0xRRGGBB, alpha 0..1): the title in the launcher's amber, the line in white, the next dimmed.
++    let mut rows: Vec<(String, u32, f32)> = Vec::new();
++    if let Some(toast) = &frame.toast {
++        rows.push((m::truncate(toast, max_width, &text_width), 0xFFC83D, frame.toast_alpha));
++    }
++    if let Some(main) = &frame.main {
++        for line in m::wrap(main, max_width, 2, &text_width) {
++            rows.push((line, 0xFFFFFF, frame.main_alpha));
++        }
++        if let Some(next) = &frame.next {
++            rows.push((m::truncate(next, max_width, &text_width), 0xB4B4B4, frame.main_alpha * 0.6));
++        }
++    }
++    if rows.is_empty() {
++        return;
++    }
++    let alpha = rows.iter().map(|r| r.2).fold(0.0_f32, f32::max);
++    if m::alpha_u8(alpha) == 0 {
++        return;
++    }
++
++    let widest = rows.iter().map(|r| text_width(&r.0)).fold(0.0_f32, f32::max);
++    let w = (widest + 2.0 * m::PAD_X).ceil();
++    let h = rows.len() as f32 * m::ROW_HEIGHT + 2.0 * m::PAD_Y - 2.0;
++    let (x, y) = m::box_origin(settings.position, width, height, w, h);
++
++    // A dark glass pill with a thin white outline, fading with the text.
++    let backdrop = (u32::from(m::alpha_u8(alpha * 0.45)) << 24) | 0x000000;
++    let outline = (u32::from(m::alpha_u8(alpha * 0.22)) << 24) | 0xFFFFFF;
++    game.native_fill(batch, [x, y, w, h], backdrop);
++    game.native_fill(batch, [x, y, w, 1.0], outline);
++    game.native_fill(batch, [x, y + h - 1.0, w, 1.0], outline);
++    game.native_fill(batch, [x, y + 1.0, 1.0, h - 2.0], outline);
++    game.native_fill(batch, [x + w - 1.0, y + 1.0, 1.0, h - 2.0], outline);
++
++    for (i, (text, rgb, a)) in rows.iter().enumerate() {
++        let a = m::alpha_u8(*a);
++        if a == 0 {
++            continue;
++        }
++        let tx = (x + (w - text_width(text)) / 2.0).floor();
++        let ty = y + m::PAD_Y + i as f32 * m::ROW_HEIGHT;
++        let color = horizon_client::hud::rgba((rgb >> 16) as u8, (rgb >> 8) as u8, *rgb as u8, a);
++        batch.text(&game.gui.atlas, text, tx, ty, color, true);
++    }
++}
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/list.rs b/native-mods/amber_lyrics/mixins/amber_lyrics/list.rs
+new file mode 100644
+index 0000000..b61e043
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/list.rs
+@@ -0,0 +1,10 @@
++// Amber Lyrics' row in Options > Mods.
++fn amber_lyrics_listed(mods: &mut Vec<crate::game::native_hooks::NativeMod>) {
++    use crate::game::amber_lyrics as m;
++    mods.push(crate::game::native_hooks::NativeMod {
++        id: m::ID.into(),
++        title: format!("Amber Lyrics {}", m::VERSION),
++        description: m::DESCRIPTION.into(),
++        keys: Vec::new(),
++    });
++}
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/runtime.rs b/native-mods/amber_lyrics/mixins/amber_lyrics/runtime.rs
+new file mode 100644
+index 0000000..5f459ee
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/runtime.rs
+@@ -0,0 +1,1333 @@
++// Amber Lyrics: synced lyrics on the HUD, for AmberLauncher's Starling engine.
++// Original code written for AmberLauncher (MIT, like the Starling bundles it sits beside); it is not
++// derived from any other lyrics mod.
++//
++// How it works:
++// - The launcher writes what the phone is playing to config/amber_lyrics/now_playing.json (title,
++//   artist, album, duration_ms, position_ms, playing, updated_at_ms). Any other app may write the
++//   same file.
++// - A worker thread (never the render thread) reads that file about once a second, looks the
++//   lyrics up on LRCLIB (https://lrclib.net) when the track changes, and keeps them in
++//   config/amber_lyrics/cache.
++// - The HUD hook only reads shared state: a lock, a binary search and a few rectangles per frame, and
++//   nothing at all while the mod is off or nothing is playing.
++//
++// This file is both the Cargo test library and the module the bundle adds to the game as
++// crate::game::amber_lyrics. Use ordinary comments only in bundle files: the bundle rules refuse the
++// crate-level (inner) attribute and doc-comment forms.
++
++use std::path::{Path, PathBuf};
++use std::sync::atomic::{AtomicBool, Ordering};
++use std::sync::{Mutex, MutexGuard};
++use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
++
++pub const ID: &str = "amber_lyrics";
++pub const VERSION: &str = "0.1.0";
++pub const DESCRIPTION: &str = "Synced lyrics of the song playing on your phone, on the game screen.";
++
++// The folder inside the game's config folder, and the file the launcher writes.
++pub const FOLDER: &str = "amber_lyrics";
++pub const NOW_PLAYING_FILE: &str = "now_playing.json";
++pub const CACHE_FOLDER: &str = "cache";
++
++const USER_AGENT: &str = "AmberLauncher-AmberLyrics/0.1 (https://github.com/ItsVynzzzz/AmberLauncher)";
++const LRCLIB: &str = "https://lrclib.net/api";
++const POLL_MS: u64 = 1000;
++const HTTP_TIMEOUT_SECS: u64 = 8;
++const RETRY_AFTER_SECS: u64 = 30;
++const MAX_LRC_BYTES: usize = 512 * 1024;
++const MAX_FILE_BYTES: u64 = 256 * 1024;
++
++fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
++    m.lock().unwrap_or_else(|e| e.into_inner())
++}
++
++pub fn now_ms() -> i64 {
++    SystemTime::now()
++        .duration_since(UNIX_EPOCH)
++        .map(|d| d.as_millis() as i64)
++        .unwrap_or(0)
++}
++
++// ---------------------------------------------------------------------------------------------
++// Settings: one small file per key (Game::native_setting), read at most twice a second.
++// ---------------------------------------------------------------------------------------------
++
++pub const KEY_POSITION: &str = "position";
++pub const KEY_NEXT: &str = "next";
++pub const KEY_TOAST: &str = "toast";
++pub const KEY_OFFSET: &str = "offset";
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub enum Position {
++    Top,
++    AboveHotbar,
++}
++
++impl Position {
++    pub fn stored(self) -> &'static str {
++        match self {
++            Position::Top => "top",
++            Position::AboveHotbar => "bottom",
++        }
++    }
++    pub fn label(self) -> &'static str {
++        match self {
++            Position::Top => "Top",
++            Position::AboveHotbar => "Above hotbar",
++        }
++    }
++    pub fn from_stored(value: Option<&str>) -> Position {
++        match value {
++            Some("bottom") => Position::AboveHotbar,
++            _ => Position::Top,
++        }
++    }
++    pub fn other(self) -> Position {
++        match self {
++            Position::Top => Position::AboveHotbar,
++            Position::AboveHotbar => Position::Top,
++        }
++    }
++}
++
++// Sync offsets the button steps through, in milliseconds added to the playback position: a positive
++// offset shows each line earlier (useful when the phone's audio runs behind its clock, as it does on
++// Bluetooth).
++pub const OFFSETS_MS: [i32; 7] = [0, 250, 500, 1000, -1000, -500, -250];
++
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct Settings {
++    pub position: Position,
++    pub next_line: bool,
++    pub toast: bool,
++    pub offset_ms: i32,
++}
++
++pub fn flag(stored: Option<&str>, default: bool) -> bool {
++    match stored {
++        Some("true") => true,
++        Some("false") => false,
++        _ => default,
++    }
++}
++
++pub fn flag_stored(on: bool) -> &'static str {
++    if on { "true" } else { "false" }
++}
++
++pub fn parse_offset(stored: Option<&str>) -> i32 {
++    stored
++        .and_then(|s| s.trim().parse::<i32>().ok())
++        .map(|v| v.clamp(-5000, 5000))
++        .unwrap_or(0)
++}
++
++pub fn next_offset(current: i32) -> i32 {
++    match OFFSETS_MS.iter().position(|&v| v == current) {
++        Some(i) => OFFSETS_MS[(i + 1) % OFFSETS_MS.len()],
++        None => 0,
++    }
++}
++
++pub fn offset_label(ms: i32) -> String {
++    format!("Sync: {:+.2} s", ms as f32 / 1000.0)
++}
++
++pub fn load_settings(read: &dyn Fn(&str) -> Option<String>) -> Settings {
++    Settings {
++        position: Position::from_stored(read(KEY_POSITION).as_deref()),
++        next_line: flag(read(KEY_NEXT).as_deref(), true),
++        toast: flag(read(KEY_TOAST).as_deref(), true),
++        offset_ms: parse_offset(read(KEY_OFFSET).as_deref()),
++    }
++}
++
++// The labels of the settings page, in the order of its buttons (click() uses the same order).
++pub fn button_labels(s: &Settings) -> Vec<String> {
++    vec![
++        format!("Position: {}", s.position.label()),
++        format!("Next line: {}", if s.next_line { "ON" } else { "OFF" }),
++        format!("Song title popup: {}", if s.toast { "ON" } else { "OFF" }),
++        offset_label(s.offset_ms),
++    ]
++}
++
++// What a click on button `button` stores: (key, value), or None for a button that does not exist.
++pub fn click(s: &Settings, button: usize) -> Option<(&'static str, String)> {
++    match button {
++        0 => Some((KEY_POSITION, s.position.other().stored().to_owned())),
++        1 => Some((KEY_NEXT, flag_stored(!s.next_line).to_owned())),
++        2 => Some((KEY_TOAST, flag_stored(!s.toast).to_owned())),
++        3 => Some((KEY_OFFSET, next_offset(s.offset_ms).to_string())),
++        _ => None,
++    }
++}
++
++static SETTINGS: Mutex<Option<(Instant, Settings)>> = Mutex::new(None);
++const SETTINGS_REFRESH: Duration = Duration::from_millis(500);
++
++pub fn cached_settings(read: &dyn Fn(&str) -> Option<String>) -> Settings {
++    let mut cache = lock(&SETTINGS);
++    if let Some((at, settings)) = *cache {
++        if at.elapsed() < SETTINGS_REFRESH {
++            return settings;
++        }
++    }
++    let settings = load_settings(read);
++    *cache = Some((Instant::now(), settings));
++    settings
++}
++
++pub fn invalidate_settings() {
++    *lock(&SETTINGS) = None;
++}
++
++// ---------------------------------------------------------------------------------------------
++// What is playing (now_playing.json)
++// ---------------------------------------------------------------------------------------------
++
++#[derive(Clone, Debug, PartialEq)]
++pub struct NowPlaying {
++    pub title: String,
++    pub artist: String,
++    pub album: String,
++    pub duration_ms: i64,
++    pub position_ms: i64,
++    pub playing: bool,
++    pub updated_at_ms: i64,
++}
++
++fn text_field(v: &serde_json::Value, key: &str) -> String {
++    v.get(key)
++        .and_then(|x| x.as_str())
++        .map(|s| s.trim().to_owned())
++        .unwrap_or_default()
++}
++
++fn number_field(v: &serde_json::Value, key: &str) -> i64 {
++    match v.get(key) {
++        Some(x) => x
++            .as_i64()
++            .or_else(|| x.as_f64().filter(|f| f.is_finite()).map(|f| f.round() as i64))
++            .unwrap_or(0),
++        None => 0,
++    }
++}
++
++// `seen_ms` stands in for updated_at_ms when the file has none (the time the file was read).
++pub fn parse_now_playing(json: &str, seen_ms: i64) -> Option<NowPlaying> {
++    let v: serde_json::Value = serde_json::from_str(json).ok()?;
++    if !v.is_object() {
++        return None;
++    }
++    let title = text_field(&v, "title");
++    if title.is_empty() {
++        return None;
++    }
++    let updated = number_field(&v, "updated_at_ms");
++    Some(NowPlaying {
++        title,
++        artist: text_field(&v, "artist"),
++        album: text_field(&v, "album"),
++        duration_ms: number_field(&v, "duration_ms").max(0),
++        position_ms: number_field(&v, "position_ms").max(0),
++        playing: v.get("playing").and_then(|x| x.as_bool()).unwrap_or(false),
++        updated_at_ms: if updated > 0 { updated } else { seen_ms },
++    })
++}
++
++// Where the song is now: the last reported position, moved on by the time since the report while it
++// plays (normal speed), kept inside the song, plus the player's sync offset.
++pub fn position_ms(np: &NowPlaying, now: i64, offset_ms: i32) -> i64 {
++    let mut p = np.position_ms;
++    if np.playing {
++        p += (now - np.updated_at_ms).max(0);
++    }
++    if np.duration_ms > 0 {
++        p = p.min(np.duration_ms);
++    }
++    (p + i64::from(offset_ms)).max(0)
++}
++
++// A paused song keeps its line for a few seconds; a report that stopped coming (the launcher's
++// service died) must not keep the lyrics running past the end of the song.
++pub const PAUSE_GRACE_MS: i64 = 5000;
++
++pub fn is_live(np: &NowPlaying, now: i64) -> bool {
++    let age = (now - np.updated_at_ms).max(0);
++    if np.playing {
++        np.duration_ms <= 0 || np.position_ms + age <= np.duration_ms + 3000
++    } else {
++        age <= PAUSE_GRACE_MS
++    }
++}
++
++// What identifies a track for the lyrics lookup: the same song reported again keeps its lyrics.
++pub fn track_key(np: &NowPlaying) -> String {
++    format!(
++        "{}|{}|{}",
++        np.artist.to_lowercase(),
++        np.title.to_lowercase(),
++        np.duration_ms / 1000
++    )
++}
++
++// ---------------------------------------------------------------------------------------------
++// Cleaning names for the lookup
++// ---------------------------------------------------------------------------------------------
++
++const JUNK_WORDS: [&str; 12] = [
++    "official", "video", "audio", "lyric", "lyrics", "visualizer", "visualiser", "hd", "4k", "mv",
++    "explicit", "clean",
++];
++
++fn is_junk_group(inner: &str) -> bool {
++    inner
++        .to_lowercase()
++        .split(|c: char| !c.is_alphanumeric())
++        .filter(|w| !w.is_empty())
++        .any(|w| JUNK_WORDS.contains(&w) || w.starts_with("remaster"))
++}
++
++// A title without "(Official Video)", "[Lyrics]", "(Remastered 2011)" and the like.
++pub fn clean_title(raw: &str) -> String {
++    let chars: Vec<char> = raw.chars().collect();
++    let mut out = String::new();
++    let mut i = 0;
++    while i < chars.len() {
++        let c = chars[i];
++        let close = match c {
++            '(' => Some(')'),
++            '[' => Some(']'),
++            _ => None,
++        };
++        if let Some(close) = close {
++            if let Some(len) = chars[i + 1..].iter().position(|&x| x == close) {
++                let inner: String = chars[i + 1..i + 1 + len].iter().collect();
++                if is_junk_group(&inner) {
++                    i += len + 2;
++                    continue;
++                }
++            }
++        }
++        out.push(c);
++        i += 1;
++    }
++    out.split_whitespace().collect::<Vec<_>>().join(" ")
++}
++
++// The lead artist: "A, B" and "A feat. B" give A; " - Topic" and "VEVO" are YouTube's, not the artist's.
++pub fn clean_artist(raw: &str) -> String {
++    let mut name = raw.trim().to_owned();
++    for suffix in [" - Topic", "VEVO", "Vevo"] {
++        if let Some(stripped) = name.strip_suffix(suffix) {
++            name = stripped.trim().to_owned();
++        }
++    }
++    let lower = name.to_ascii_lowercase();
++    let mut cut = name.len();
++    for sep in [",", ";", " feat.", " feat ", " ft.", " ft "] {
++        if let Some(at) = lower.find(sep) {
++            cut = cut.min(at);
++        }
++    }
++    name.truncate(cut);
++    name.trim().to_owned()
++}
++
++// ---------------------------------------------------------------------------------------------
++// LRC lyrics
++// ---------------------------------------------------------------------------------------------
++
++#[derive(Clone, Debug, PartialEq, Eq)]
++pub struct Line {
++    pub ms: i64,
++    pub text: String,
++}
++
++// Lyrics are drawn with the game's font: no control characters, and no section sign (the font's
++// colour code).
++pub fn sanitize(text: &str) -> String {
++    text.chars()
++        .filter(|c| !c.is_control() && *c != '\u{a7}')
++        .collect::<String>()
++        .split_whitespace()
++        .collect::<Vec<_>>()
++        .join(" ")
++}
++
++// "mm:ss", "mm:ss.x", "mm:ss.xx", "mm:ss.xxx" (also "mm:ss:xx"), as milliseconds.
++fn parse_stamp(s: &str) -> Option<i64> {
++    let (minutes, rest) = s.split_once(':')?;
++    let minutes: i64 = minutes.trim().parse().ok()?;
++    let (seconds, fraction) = match rest.split_once(['.', ':']) {
++        Some((sec, frac)) => (sec, frac),
++        None => (rest, ""),
++    };
++    let seconds: i64 = seconds.trim().parse().ok()?;
++    if !(0..60).contains(&seconds) || minutes < 0 {
++        return None;
++    }
++    let fraction = fraction.trim();
++    if fraction.len() > 3 || !fraction.chars().all(|c| c.is_ascii_digit()) {
++        return None;
++    }
++    let millis = match fraction.len() {
++        0 => 0,
++        1 => fraction.parse::<i64>().ok()? * 100,
++        2 => fraction.parse::<i64>().ok()? * 10,
++        _ => fraction.parse::<i64>().ok()?,
++    };
++    Some(minutes * 60_000 + seconds * 1000 + millis)
++}
++
++// Word-by-word tags (<mm:ss.xx>) inside a line are dropped: the line shows whole.
++fn strip_word_tags(text: &str) -> String {
++    let mut out = String::with_capacity(text.len());
++    let mut in_tag = false;
++    for c in text.chars() {
++        match c {
++            '<' => in_tag = true,
++            '>' if in_tag => in_tag = false,
++            _ if !in_tag => out.push(c),
++            _ => {}
++        }
++    }
++    out
++}
++
++pub fn parse_lrc(lrc: &str) -> Vec<Line> {
++    let mut lines: Vec<Line> = Vec::new();
++    let mut offset = 0i64;
++    for raw in lrc.lines() {
++        let mut rest = raw.trim_start_matches('\u{feff}').trim();
++        let mut stamps: Vec<i64> = Vec::new();
++        loop {
++            let Some(after) = rest.strip_prefix('[') else { break };
++            let Some(end) = after.find(']') else { break };
++            let tag = &after[..end];
++            if let Some(ms) = parse_stamp(tag) {
++                stamps.push(ms);
++                rest = after[end + 1..].trim_start();
++                continue;
++            }
++            if stamps.is_empty() {
++                // [offset:+300] shifts every line earlier by that many milliseconds (the LRC rule).
++                // Any other tag ([ar:Artist], [ti:Title]) makes the line metadata, not a lyric.
++                if let Some(value) = tag.strip_prefix("offset:") {
++                    offset = value.trim().parse::<i64>().unwrap_or(0).clamp(-60_000, 60_000);
++                }
++            }
++            break;
++        }
++        if stamps.is_empty() {
++            continue;
++        }
++        let text = sanitize(&strip_word_tags(rest));
++        for ms in stamps {
++            lines.push(Line { ms, text: text.clone() });
++        }
++    }
++    if offset != 0 {
++        for l in &mut lines {
++            l.ms = (l.ms - offset).max(0);
++        }
++    }
++    lines.sort_by_key(|l| l.ms);
++    lines
++}
++
++// The line playing at `pos`: the last one that has started. None before the first line.
++pub fn current_index(lines: &[Line], pos: i64) -> Option<usize> {
++    let started = lines.partition_point(|l| l.ms <= pos);
++    started.checked_sub(1)
++}
++
++// Whether line `idx` should still be on screen at `pos`. A blank line is the song's own "nothing is
++// sung now"; a long gap with no blank line (an instrumental break) ends the line after 8 seconds.
++pub fn line_visible(lines: &[Line], idx: usize, pos: i64) -> bool {
++    let Some(line) = lines.get(idx) else { return false };
++    if line.text.is_empty() {
++        return false;
++    }
++    let held = pos - line.ms;
++    match lines.get(idx + 1) {
++        Some(next) => !(next.ms - line.ms > 15_000 && held > 8000),
++        None => held <= 8000,
++    }
++}
++
++// ---------------------------------------------------------------------------------------------
++// Text layout (the font's width is the game's, so it comes in as a closure)
++// ---------------------------------------------------------------------------------------------
++
++// `text` cut to `max_width`, ending in an ellipsis when it had to be cut.
++pub fn truncate(text: &str, max_width: f32, width: &dyn Fn(&str) -> f32) -> String {
++    if width(text) <= max_width {
++        return text.to_owned();
++    }
++    let chars: Vec<char> = text.chars().collect();
++    let mut end = chars.len();
++    while end > 0 {
++        let candidate: String = chars[..end].iter().collect::<String>() + "...";
++        if width(&candidate) <= max_width {
++            return candidate;
++        }
++        end -= 1;
++    }
++    String::new()
++}
++
++// `text` in at most `max_lines` lines no wider than `max_width`: at word boundaries, or inside a
++// word that is wider than a line on its own (Chinese and Japanese have no spaces). What does not fit
++// ends the last line with an ellipsis.
++pub fn wrap(text: &str, max_width: f32, max_lines: usize, width: &dyn Fn(&str) -> f32) -> Vec<String> {
++    let mut lines: Vec<String> = Vec::new();
++    if text.is_empty() || max_lines == 0 {
++        return lines;
++    }
++    if width(text) <= max_width {
++        lines.push(text.to_owned());
++        return lines;
++    }
++    let mut current = String::new();
++    let mut overflow = false;
++    let push_piece = |piece: &str, current: &mut String, lines: &mut Vec<String>| -> bool {
++        // true when the piece was placed; false when the line limit stopped it.
++        let joined = if current.is_empty() {
++            piece.to_owned()
++        } else {
++            format!("{current} {piece}")
++        };
++        if width(&joined) <= max_width {
++            *current = joined;
++            return true;
++        }
++        if !current.is_empty() {
++            lines.push(std::mem::take(current));
++            if lines.len() >= max_lines {
++                return false;
++            }
++            if width(piece) <= max_width {
++                *current = piece.to_owned();
++                return true;
++            }
++        }
++        // A piece wider than a whole line: break it by characters.
++        let mut chunk = String::new();
++        for c in piece.chars() {
++            chunk.push(c);
++            if width(&chunk) > max_width && chunk.chars().count() > 1 {
++                let last = chunk.pop().unwrap_or(c);
++                lines.push(std::mem::take(&mut chunk));
++                if lines.len() >= max_lines {
++                    return false;
++                }
++                chunk.push(last);
++            }
++        }
++        *current = chunk;
++        true
++    };
++    for word in text.split(' ') {
++        if !push_piece(word, &mut current, &mut lines) {
++            overflow = true;
++            break;
++        }
++    }
++    if !overflow && !current.is_empty() {
++        if lines.len() < max_lines {
++            lines.push(current);
++        } else {
++            overflow = true;
++        }
++    }
++    if overflow {
++        if let Some(last) = lines.last_mut() {
++            *last = truncate(&(last.clone() + " ..."), max_width, width);
++        }
++    }
++    lines
++}
++
++// ---------------------------------------------------------------------------------------------
++// Shared state
++// ---------------------------------------------------------------------------------------------
++
++#[derive(Clone, Debug)]
++enum Lyrics {
++    // No track, or the track has no title.
++    Idle,
++    // The worker is fetching.
++    Loading,
++    // LRCLIB (or the cache) has no synced lyrics for this track.
++    Missing,
++    // The lookup failed for a reason that may pass (no network): try again at the instant.
++    Retry(Instant),
++    Ready(Vec<Line>),
++}
++
++struct State {
++    np: Option<NowPlaying>,
++    key: String,
++    lyrics: Lyrics,
++    toast_at: Option<Instant>,
++    shown_idx: Option<usize>,
++    shown_at: Option<Instant>,
++}
++
++impl State {
++    const fn new() -> State {
++        State {
++            np: None,
++            key: String::new(),
++            lyrics: Lyrics::Idle,
++            toast_at: None,
++            shown_idx: None,
++            shown_at: None,
++        }
++    }
++}
++
++static STATE: Mutex<State> = Mutex::new(State::new());
++static STARTED: AtomicBool = AtomicBool::new(false);
++
++#[derive(Clone, Debug, PartialEq, Eq)]
++pub struct Track {
++    pub key: String,
++    pub title: String,
++    pub artist: String,
++    pub album: String,
++    pub duration_secs: i64,
++}
++
++fn track_of(np: &NowPlaying) -> Track {
++    Track {
++        key: track_key(np),
++        title: clean_title(&np.title),
++        artist: clean_artist(&np.artist),
++        album: np.album.clone(),
++        duration_secs: np.duration_ms / 1000,
++    }
++}
++
++// A new report from the player: the lookup to start, if the track changed or a failed one may retry.
++fn apply_report(np: Option<NowPlaying>) -> Option<Track> {
++    let mut st = lock(&STATE);
++    let Some(np) = np else {
++        st.np = None;
++        return None;
++    };
++    let key = track_key(&np);
++    let changed = key != st.key;
++    st.np = Some(np);
++    if changed {
++        st.key = key;
++        st.lyrics = Lyrics::Loading;
++        st.toast_at = Some(Instant::now());
++        st.shown_idx = None;
++        st.shown_at = None;
++        return st.np.as_ref().map(track_of);
++    }
++    if let Lyrics::Retry(at) = st.lyrics {
++        if Instant::now() >= at {
++            st.lyrics = Lyrics::Loading;
++            return st.np.as_ref().map(track_of);
++        }
++    }
++    None
++}
++
++fn finish_lookup(key: &str, result: Result<Option<Vec<Line>>, String>) {
++    let mut st = lock(&STATE);
++    if st.key != key {
++        return;
++    }
++    st.lyrics = match result {
++        Ok(Some(lines)) if !lines.is_empty() => Lyrics::Ready(lines),
++        Ok(_) => Lyrics::Missing,
++        Err(_) => Lyrics::Retry(Instant::now() + Duration::from_secs(RETRY_AFTER_SECS)),
++    };
++}
++
++// ---------------------------------------------------------------------------------------------
++// What the HUD draws this frame
++// ---------------------------------------------------------------------------------------------
++
++#[derive(Clone, Debug, Default, PartialEq)]
++pub struct Frame {
++    pub main: Option<String>,
++    pub main_alpha: f32,
++    pub next: Option<String>,
++    pub toast: Option<String>,
++    pub toast_alpha: f32,
++}
++
++const FADE_IN: Duration = Duration::from_millis(220);
++const TOAST_FADE_IN: f32 = 0.25;
++const TOAST_HOLD: f32 = 3.5;
++const TOAST_FADE_OUT: f32 = 0.6;
++
++pub fn toast_alpha(seconds: f32) -> Option<f32> {
++    if seconds < 0.0 {
++        return None;
++    }
++    if seconds < TOAST_FADE_IN {
++        return Some(seconds / TOAST_FADE_IN);
++    }
++    if seconds < TOAST_HOLD {
++        return Some(1.0);
++    }
++    let out = seconds - TOAST_HOLD;
++    if out < TOAST_FADE_OUT {
++        return Some(1.0 - out / TOAST_FADE_OUT);
++    }
++    None
++}
++
++pub fn toast_text(np: &NowPlaying, lyrics_found: Option<bool>) -> String {
++    let title = clean_title(&np.title);
++    let artist = clean_artist(&np.artist);
++    let who = if artist.is_empty() {
++        title
++    } else {
++        format!("{artist} - {title}")
++    };
++    let who = sanitize(&who);
++    match lyrics_found {
++        Some(false) => format!("{who} (no synced lyrics)"),
++        _ => who,
++    }
++}
++
++pub fn frame(settings: Settings, now: i64) -> Option<Frame> {
++    let mut st = lock(&STATE);
++    let np = st.np.clone()?;
++    let mut out = Frame::default();
++
++    if settings.toast {
++        if let Some(at) = st.toast_at {
++            match toast_alpha(at.elapsed().as_secs_f32()) {
++                Some(alpha) => {
++                    let found = match st.lyrics {
++                        Lyrics::Ready(_) => Some(true),
++                        Lyrics::Missing => Some(false),
++                        _ => None,
++                    };
++                    out.toast = Some(toast_text(&np, found));
++                    out.toast_alpha = alpha;
++                }
++                None => st.toast_at = None,
++            }
++        }
++    }
++
++    if is_live(&np, now) {
++        let pos = position_ms(&np, now, settings.offset_ms);
++        let mut shown: Option<(usize, String, Option<String>)> = None;
++        if let Lyrics::Ready(lines) = &st.lyrics {
++            if let Some(idx) = current_index(lines, pos) {
++                if line_visible(lines, idx, pos) {
++                    let next = if settings.next_line {
++                        lines.get(idx + 1).map(|l| l.text.clone()).filter(|t| !t.is_empty())
++                    } else {
++                        None
++                    };
++                    shown = Some((idx, lines[idx].text.clone(), next));
++                }
++            }
++        }
++        match shown {
++            Some((idx, text, next)) => {
++                if st.shown_idx != Some(idx) {
++                    st.shown_idx = Some(idx);
++                    st.shown_at = Some(Instant::now());
++                }
++                let since = st.shown_at.map(|t| t.elapsed()).unwrap_or(FADE_IN);
++                out.main_alpha = (since.as_secs_f32() / FADE_IN.as_secs_f32()).clamp(0.0, 1.0);
++                out.main = Some(text);
++                out.next = next;
++            }
++            None => st.shown_idx = None,
++        }
++    }
++
++    if out.main.is_none() && out.toast.is_none() {
++        return None;
++    }
++    Some(out)
++}
++
++// ---------------------------------------------------------------------------------------------
++// The worker: file, cache, LRCLIB
++// ---------------------------------------------------------------------------------------------
++
++// FNV-1a: a stable file name for a track key, with no extra crate.
++pub fn cache_name(key: &str) -> String {
++    let mut hash: u64 = 0xcbf29ce484222325;
++    for b in key.as_bytes() {
++        hash ^= u64::from(*b);
++        hash = hash.wrapping_mul(0x100000001b3);
++    }
++    format!("{hash:016x}.lrc")
++}
++
++fn read_capped(path: &Path, cap: u64) -> Option<String> {
++    let meta = std::fs::metadata(path).ok()?;
++    if !meta.is_file() || meta.len() > cap {
++        return None;
++    }
++    std::fs::read_to_string(path).ok()
++}
++
++// The synced lyrics LRCLIB's answer holds, if any.
++pub fn synced_from_entry(entry: &serde_json::Value) -> Option<String> {
++    if entry.get("instrumental").and_then(|x| x.as_bool()) == Some(true) {
++        return None;
++    }
++    let lrc = entry.get("syncedLyrics")?.as_str()?;
++    if lrc.trim().is_empty() || lrc.len() > MAX_LRC_BYTES {
++        return None;
++    }
++    Some(lrc.to_owned())
++}
++
++// Of a search's results, the synced lyrics of the entry whose length is closest to the song's.
++pub fn best_search_result(results: &serde_json::Value, duration_secs: i64) -> Option<String> {
++    let mut best: Option<(i64, String)> = None;
++    for entry in results.as_array()? {
++        let Some(lrc) = synced_from_entry(entry) else { continue };
++        let length = entry.get("duration").and_then(|x| x.as_f64()).unwrap_or(0.0);
++        let distance = if duration_secs > 0 && length > 0.0 {
++            (length - duration_secs as f64).abs().round() as i64
++        } else {
++            0
++        };
++        // A song's other versions (live, a remix) are often minutes longer or shorter.
++        if duration_secs > 0 && length > 0.0 && distance > 10 {
++            continue;
++        }
++        if best.as_ref().is_none_or(|(d, _)| distance < *d) {
++            best = Some((distance, lrc));
++        }
++    }
++    best.map(|(_, lrc)| lrc)
++}
++
++enum Reply {
++    Json(serde_json::Value),
++    NotFound,
++}
++
++fn http_get(agent: &ureq::Agent, path: &str, query: &[(&str, &str)]) -> Result<Reply, String> {
++    let mut request = agent.get(&format!("{LRCLIB}/{path}"));
++    for (k, v) in query {
++        request = request.query(k, v);
++    }
++    match request.call() {
++        Ok(response) => {
++            let body = response.into_string().map_err(|e| e.to_string())?;
++            serde_json::from_str(&body).map(Reply::Json).map_err(|e| e.to_string())
++        }
++        Err(ureq::Error::Status(404, _)) => Ok(Reply::NotFound),
++        Err(ureq::Error::Status(429, _)) => Err("rate limited".to_owned()),
++        Err(ureq::Error::Status(code, _)) if (400..500).contains(&code) => Ok(Reply::NotFound),
++        Err(e) => Err(e.to_string()),
++    }
++}
++
++// Ok(None): LRCLIB has no synced lyrics for it. Err: could not ask (offline, a server error).
++fn lookup_online(track: &Track) -> Result<Option<String>, String> {
++    let agent = ureq::AgentBuilder::new()
++        .timeout(Duration::from_secs(HTTP_TIMEOUT_SECS))
++        .user_agent(USER_AGENT)
++        .build();
++    let duration = track.duration_secs.to_string();
++    if track.duration_secs > 0 && !track.artist.is_empty() {
++        let mut query = vec![
++            ("track_name", track.title.as_str()),
++            ("artist_name", track.artist.as_str()),
++            ("duration", duration.as_str()),
++        ];
++        if !track.album.is_empty() {
++            query.push(("album_name", track.album.as_str()));
++        }
++        if let Reply::Json(entry) = http_get(&agent, "get", &query)? {
++            if let Some(lrc) = synced_from_entry(&entry) {
++                return Ok(Some(lrc));
++            }
++        }
++    }
++    let mut query = vec![("track_name", track.title.as_str())];
++    if !track.artist.is_empty() {
++        query.push(("artist_name", track.artist.as_str()));
++    }
++    if let Reply::Json(results) = http_get(&agent, "search", &query)? {
++        if let Some(lrc) = best_search_result(&results, track.duration_secs) {
++            return Ok(Some(lrc));
++        }
++    }
++    Ok(None)
++}
++
++fn lookup(dir: &Path, track: &Track) -> Result<Option<Vec<Line>>, String> {
++    let cache_dir = dir.join(CACHE_FOLDER);
++    let cached = cache_dir.join(cache_name(&track.key));
++    if let Some(text) = read_capped(&cached, MAX_LRC_BYTES as u64) {
++        let lines = parse_lrc(&text);
++        if !lines.is_empty() {
++            return Ok(Some(lines));
++        }
++    }
++    match lookup_online(track)? {
++        Some(lrc) => {
++            let lines = parse_lrc(&lrc);
++            if lines.is_empty() {
++                return Ok(None);
++            }
++            let _ = std::fs::create_dir_all(&cache_dir).and_then(|()| std::fs::write(&cached, lrc));
++            Ok(Some(lines))
++        }
++        None => Ok(None),
++    }
++}
++
++fn start_lookup(dir: PathBuf, track: Track) {
++    let key = track.key.clone();
++    let spawned = std::thread::Builder::new()
++        .name("amber-lyrics-fetch".into())
++        .spawn(move || {
++            let result = lookup(&dir, &track);
++            finish_lookup(&track.key, result);
++        });
++    if spawned.is_err() {
++        finish_lookup(&key, Err("thread".into()));
++    }
++}
++
++fn poll_loop(dir: PathBuf) {
++    let file = dir.join(NOW_PLAYING_FILE);
++    let mut last: Option<(SystemTime, u64)> = None;
++    loop {
++        std::thread::sleep(Duration::from_millis(POLL_MS));
++        let stamp = std::fs::metadata(&file)
++            .ok()
++            .and_then(|m| m.modified().ok().map(|t| (t, m.len())));
++        let report = match stamp {
++            None => {
++                last = None;
++                apply_report(None)
++            }
++            Some(s) if Some(s) == last => apply_report_unchanged(),
++            Some(s) => {
++                last = Some(s);
++                let seen = now_ms();
++                apply_report(read_capped(&file, MAX_FILE_BYTES).and_then(|t| parse_now_playing(&t, seen)))
++            }
++        };
++        if let Some(track) = report {
++            start_lookup(dir.clone(), track);
++        }
++    }
++}
++
++// The file did not change since the last look: the same report stands, but a failed lookup may be
++// due for another try.
++fn apply_report_unchanged() -> Option<Track> {
++    let mut st = lock(&STATE);
++    if let Lyrics::Retry(at) = st.lyrics {
++        if Instant::now() >= at && st.np.is_some() {
++            st.lyrics = Lyrics::Loading;
++            return st.np.as_ref().map(track_of);
++        }
++    }
++    None
++}
++
++// Starts the worker once. `folder` gives the game's config folder; it is asked only until the
++// worker is up (the call makes the folder, so it must not run every frame).
++pub fn ensure_started(folder: impl FnOnce() -> Option<PathBuf>) {
++    if STARTED.load(Ordering::Acquire) {
++        return;
++    }
++    let Some(config) = folder() else { return };
++    let dir = config.join(FOLDER);
++    let _ = std::fs::create_dir_all(&dir);
++    if STARTED.swap(true, Ordering::AcqRel) {
++        return;
++    }
++    let spawned = std::thread::Builder::new()
++        .name("amber-lyrics".into())
++        .spawn(move || poll_loop(dir));
++    if spawned.is_err() {
++        STARTED.store(false, Ordering::Release);
++    }
++}
++
++// ---------------------------------------------------------------------------------------------
++// Box layout
++// ---------------------------------------------------------------------------------------------
++
++pub const ROW_HEIGHT: f32 = 10.0;
++pub const PAD_X: f32 = 6.0;
++pub const PAD_Y: f32 = 4.0;
++// Where the box ends above the screen's bottom edge when it sits above the hotbar: clear of the
++// action bar, the health rows and the held item's name.
++pub const ABOVE_HOTBAR: f32 = 92.0;
++pub const TOP_MARGIN: f32 = 8.0;
++
++// The top-left corner of a box `w` x `h` for the screen `width` x `height`.
++pub fn box_origin(position: Position, width: f32, height: f32, w: f32, h: f32) -> (f32, f32) {
++    let x = ((width - w) / 2.0).floor();
++    let y = match position {
++        Position::Top => TOP_MARGIN,
++        Position::AboveHotbar => height - ABOVE_HOTBAR - h,
++    };
++    (x, y.floor().max(0.0))
++}
++
++pub fn alpha_u8(alpha: f32) -> u8 {
++    (alpha.clamp(0.0, 1.0) * 255.0).round() as u8
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    fn np(position_ms: i64, playing: bool, updated: i64) -> NowPlaying {
++        NowPlaying {
++            title: "Song".into(),
++            artist: "Artist".into(),
++            album: String::new(),
++            duration_ms: 200_000,
++            position_ms,
++            playing,
++            updated_at_ms: updated,
++        }
++    }
++
++    // Every character is 6 wide, like a monospaced font.
++    fn mono(s: &str) -> f32 {
++        s.chars().count() as f32 * 6.0
++    }
++
++    #[test]
++    fn stamps_parse_in_every_form() {
++        assert_eq!(parse_stamp("01:02.5"), Some(62_500));
++        assert_eq!(parse_stamp("01:02.50"), Some(62_500));
++        assert_eq!(parse_stamp("01:02.500"), Some(62_500));
++        assert_eq!(parse_stamp("01:02:50"), Some(62_500));
++        assert_eq!(parse_stamp("00:07"), Some(7000));
++        assert_eq!(parse_stamp("120:00.00"), Some(7_200_000));
++        assert_eq!(parse_stamp("ar:Someone"), None);
++        assert_eq!(parse_stamp("01:75.00"), None);
++        assert_eq!(parse_stamp("01:02.5000"), None);
++    }
++
++    #[test]
++    fn lrc_lines_are_sorted_and_cleaned() {
++        let lrc = "[ar:Artist]\n[ti:Song]\n[00:10.00]Second line\n[00:05.00]First <00:05.50>line\n[00:20.00]\n";
++        let lines = parse_lrc(lrc);
++        assert_eq!(lines.len(), 3);
++        assert_eq!(lines[0], Line { ms: 5000, text: "First line".into() });
++        assert_eq!(lines[1].text, "Second line");
++        assert_eq!(lines[2], Line { ms: 20_000, text: String::new() });
++    }
++
++    #[test]
++    fn a_line_with_several_stamps_repeats() {
++        let lines = parse_lrc("[00:10.00][00:30.00]Chorus\n[00:20.00]Verse");
++        let texts: Vec<_> = lines.iter().map(|l| (l.ms, l.text.as_str())).collect();
++        assert_eq!(texts, vec![(10_000, "Chorus"), (20_000, "Verse"), (30_000, "Chorus")]);
++    }
++
++    #[test]
++    fn the_offset_tag_moves_every_line() {
++        let lines = parse_lrc("[offset:+500]\n[00:10.00]A\n[00:20.00]B");
++        assert_eq!(lines[0].ms, 9500);
++        assert_eq!(lines[1].ms, 19_500);
++    }
++
++    #[test]
++    fn junk_and_non_lyrics_are_ignored() {
++        assert!(parse_lrc("").is_empty());
++        assert!(parse_lrc("just words\nno stamps").is_empty());
++        assert!(parse_lrc("[ar:x]\n[by:y]").is_empty());
++        let lines = parse_lrc("\u{feff}[00:01.00]Hi \u{a7}cthere\u{7}");
++        assert_eq!(lines[0].text, "Hi cthere");
++    }
++
++    #[test]
++    fn the_current_line_is_the_last_one_started() {
++        let lines = parse_lrc("[00:05.00]A\n[00:10.00]B\n[00:15.00]C");
++        assert_eq!(current_index(&lines, 0), None);
++        assert_eq!(current_index(&lines, 4999), None);
++        assert_eq!(current_index(&lines, 5000), Some(0));
++        assert_eq!(current_index(&lines, 12_000), Some(1));
++        assert_eq!(current_index(&lines, 999_999), Some(2));
++        assert_eq!(current_index(&[], 1000), None);
++    }
++
++    #[test]
++    fn blank_lines_and_long_gaps_hide_the_line() {
++        let lines = parse_lrc("[00:05.00]A\n[00:10.00]\n[00:12.00]B\n[00:40.00]C");
++        assert!(line_visible(&lines, 0, 6000));
++        assert!(!line_visible(&lines, 1, 10_500));
++        // B lasts 28 s before C: shown for its first 8 s only.
++        assert!(line_visible(&lines, 2, 19_000));
++        assert!(!line_visible(&lines, 2, 21_000));
++        // The last line stays 8 s.
++        assert!(line_visible(&lines, 3, 47_000));
++        assert!(!line_visible(&lines, 3, 49_000));
++    }
++
++    #[test]
++    fn position_moves_on_while_playing() {
++        let p = np(10_000, true, 1_000_000);
++        assert_eq!(position_ms(&p, 1_000_000, 0), 10_000);
++        assert_eq!(position_ms(&p, 1_002_500, 0), 12_500);
++        assert_eq!(position_ms(&p, 1_002_500, 500), 13_000);
++        assert_eq!(position_ms(&p, 1_002_500, -20_000), 0);
++        // A clock that ran backwards does not move the song back.
++        assert_eq!(position_ms(&p, 999_000, 0), 10_000);
++        // Paused: it stays.
++        let paused = np(10_000, false, 1_000_000);
++        assert_eq!(position_ms(&paused, 1_009_000, 0), 10_000);
++        // Never past the end.
++        assert_eq!(position_ms(&np(199_000, true, 0), 9_999_999, 0), 200_000);
++    }
++
++    #[test]
++    fn a_stale_report_stops_the_lyrics() {
++        assert!(is_live(&np(10_000, true, 1_000_000), 1_060_000));
++        // Playing since 10 s in, 300 s ago: past the end of a 200 s song.
++        assert!(!is_live(&np(10_000, true, 1_000_000), 1_300_000));
++        assert!(is_live(&np(10_000, false, 1_000_000), 1_004_000));
++        assert!(!is_live(&np(10_000, false, 1_000_000), 1_006_000));
++    }
++
++    #[test]
++    fn now_playing_json_is_read_leniently() {
++        let json = r#"{"title":" Song ","artist":"A","album":"B","duration_ms":200000.0,"position_ms":1500,"playing":true,"updated_at_ms":42}"#;
++        let p = parse_now_playing(json, 7).unwrap();
++        assert_eq!(p.title, "Song");
++        assert_eq!(p.duration_ms, 200_000);
++        assert_eq!(p.position_ms, 1500);
++        assert!(p.playing);
++        assert_eq!(p.updated_at_ms, 42);
++        // No updated_at_ms: the time the file was seen.
++        let p = parse_now_playing(r#"{"title":"T","playing":false}"#, 7).unwrap();
++        assert_eq!(p.updated_at_ms, 7);
++        assert_eq!(p.duration_ms, 0);
++        // Nothing playing, or not a report at all.
++        assert!(parse_now_playing(r#"{"title":"","playing":true}"#, 7).is_none());
++        assert!(parse_now_playing("[]", 7).is_none());
++        assert!(parse_now_playing("{", 7).is_none());
++        assert!(parse_now_playing(r#"{"title":"T","position_ms":-5}"#, 7).unwrap().position_ms == 0);
++    }
++
++    #[test]
++    fn names_are_cleaned_for_the_lookup() {
++        assert_eq!(clean_title("Blinding Lights (Official Video)"), "Blinding Lights");
++        assert_eq!(clean_title("Song [Lyrics] (Remastered 2011)"), "Song");
++        assert_eq!(clean_title("Song (feat. Someone)"), "Song (feat. Someone)");
++        assert_eq!(clean_title("Song (Live at Wembley)"), "Song (Live at Wembley)");
++        assert_eq!(clean_title("Song (unclosed"), "Song (unclosed");
++        assert_eq!(clean_title("  Spaced   out  "), "Spaced out");
++        assert_eq!(clean_artist("Artist - Topic"), "Artist");
++        assert_eq!(clean_artist("ArtistVEVO"), "Artist");
++        assert_eq!(clean_artist("A, B"), "A");
++        assert_eq!(clean_artist("A feat. B"), "A");
++        assert_eq!(clean_artist("Simon & Garfunkel"), "Simon & Garfunkel");
++    }
++
++    #[test]
++    fn the_same_song_keeps_one_key() {
++        let a = np(0, true, 0);
++        let mut b = np(90_000, false, 5);
++        assert_eq!(track_key(&a), track_key(&b));
++        b.title = "Other".into();
++        assert_ne!(track_key(&a), track_key(&b));
++        assert_eq!(cache_name("x"), cache_name("x"));
++        assert_ne!(cache_name("x"), cache_name("y"));
++        assert_eq!(cache_name("x").len(), 20);
++    }
++
++    #[test]
++    fn lrclib_answers_are_read() {
++        let hit: serde_json::Value =
++            serde_json::from_str(r#"{"duration":200,"instrumental":false,"syncedLyrics":"[00:01.00]Hi"}"#).unwrap();
++        assert_eq!(synced_from_entry(&hit).as_deref(), Some("[00:01.00]Hi"));
++        let plain: serde_json::Value = serde_json::from_str(r#"{"plainLyrics":"Hi","syncedLyrics":null}"#).unwrap();
++        assert!(synced_from_entry(&plain).is_none());
++        let instrumental: serde_json::Value =
++            serde_json::from_str(r#"{"instrumental":true,"syncedLyrics":"[00:01.00]x"}"#).unwrap();
++        assert!(synced_from_entry(&instrumental).is_none());
++
++        let results: serde_json::Value = serde_json::from_str(
++            r#"[{"duration":260,"syncedLyrics":"[00:01.00]live"},
++                {"duration":203,"syncedLyrics":"[00:01.00]near"},
++                {"duration":200,"syncedLyrics":null},
++                {"duration":201,"syncedLyrics":"[00:01.00]closest"}]"#,
++        )
++        .unwrap();
++        assert_eq!(best_search_result(&results, 200).as_deref(), Some("[00:01.00]closest"));
++        // Only far-off versions: none is taken.
++        let far: serde_json::Value = serde_json::from_str(r#"[{"duration":400,"syncedLyrics":"[00:01.00]x"}]"#).unwrap();
++        assert!(best_search_result(&far, 200).is_none());
++        // Unknown length: the first with synced lyrics.
++        assert_eq!(best_search_result(&results, 0).as_deref(), Some("[00:01.00]live"));
++    }
++
++    #[test]
++    fn text_is_cut_and_wrapped_to_the_width() {
++        assert_eq!(truncate("short", 100.0, &mono), "short");
++        // 10 chars at 6 = 60; the limit 40 keeps 4 chars plus "..." (7 chars = 42 > 40 -> 3 + 3).
++        let cut = truncate("0123456789", 40.0, &mono);
++        assert!(mono(&cut) <= 40.0 && cut.ends_with("..."), "{cut}");
++
++        assert_eq!(wrap("hello world", 100.0, 2, &mono), vec!["hello world"]);
++        let lines = wrap("one two three four five", 66.0, 3, &mono);
++        assert!(lines.iter().all(|l| mono(l) <= 66.0), "{lines:?}");
++        assert_eq!(lines.join(" "), "one two three four five");
++        // Too long for the lines allowed: the last one ends in an ellipsis and still fits.
++        let lines = wrap("one two three four five six seven eight", 66.0, 2, &mono);
++        assert_eq!(lines.len(), 2);
++        assert!(lines.iter().all(|l| mono(l) <= 66.0), "{lines:?}");
++        assert!(lines[1].ends_with("..."), "{lines:?}");
++        // A word wider than a line breaks by characters.
++        let lines = wrap("abcdefghijklmnopqrstuvwxyz", 60.0, 3, &mono);
++        assert!(lines.len() >= 2 && lines.iter().all(|l| mono(l) <= 60.0), "{lines:?}");
++        assert!(wrap("", 60.0, 2, &mono).is_empty());
++        assert!(wrap("x", 60.0, 0, &mono).is_empty());
++    }
++
++    #[test]
++    fn settings_default_and_step() {
++        let none: &dyn Fn(&str) -> Option<String> = &|_| None;
++        let s = load_settings(none);
++        assert_eq!(s.position, Position::Top);
++        assert!(s.next_line && s.toast);
++        assert_eq!(s.offset_ms, 0);
++
++        let read: &dyn Fn(&str) -> Option<String> = &|k| match k {
++            KEY_POSITION => Some("bottom".into()),
++            KEY_NEXT => Some("false".into()),
++            KEY_OFFSET => Some("999999".into()),
++            _ => None,
++        };
++        let s = load_settings(read);
++        assert_eq!(s.position, Position::AboveHotbar);
++        assert!(!s.next_line);
++        assert_eq!(s.offset_ms, 5000);
++
++        // The offset visits every step and comes back to zero.
++        let mut v = 0;
++        let mut seen = vec![v];
++        for _ in 0..OFFSETS_MS.len() {
++            v = next_offset(v);
++            seen.push(v);
++        }
++        assert_eq!(seen.first(), seen.last());
++        assert_eq!(next_offset(123), 0);
++        assert_eq!(offset_label(250), "Sync: +0.25 s");
++        assert_eq!(offset_label(-1000), "Sync: -1.00 s");
++        assert_eq!(offset_label(0), "Sync: +0.00 s");
++    }
++
++    #[test]
++    fn buttons_and_clicks_agree() {
++        let s = load_settings(&|_| None);
++        let labels = button_labels(&s);
++        assert_eq!(labels.len(), 4);
++        assert_eq!(click(&s, 0), Some((KEY_POSITION, "bottom".to_owned())));
++        assert_eq!(click(&s, 1), Some((KEY_NEXT, "false".to_owned())));
++        assert_eq!(click(&s, 2), Some((KEY_TOAST, "false".to_owned())));
++        assert_eq!(click(&s, 3), Some((KEY_OFFSET, "250".to_owned())));
++        assert_eq!(click(&s, 4), None);
++    }
++
++    #[test]
++    fn the_toast_fades_in_and_out() {
++        assert_eq!(toast_alpha(-1.0), None);
++        assert_eq!(toast_alpha(0.0), Some(0.0));
++        assert_eq!(toast_alpha(1.0), Some(1.0));
++        let fading = toast_alpha(TOAST_HOLD + TOAST_FADE_OUT / 2.0).unwrap();
++        assert!(fading > 0.4 && fading < 0.6);
++        assert_eq!(toast_alpha(TOAST_HOLD + TOAST_FADE_OUT + 0.01), None);
++        let p = np(0, true, 0);
++        assert_eq!(toast_text(&p, None), "Artist - Song");
++        assert_eq!(toast_text(&p, Some(false)), "Artist - Song (no synced lyrics)");
++    }
++
++    #[test]
++    fn boxes_sit_where_the_setting_says() {
++        let (x, y) = box_origin(Position::Top, 300.0, 200.0, 100.0, 20.0);
++        assert_eq!((x, y), (100.0, TOP_MARGIN));
++        let (x, y) = box_origin(Position::AboveHotbar, 300.0, 200.0, 100.0, 20.0);
++        assert_eq!((x, y), (100.0, 200.0 - ABOVE_HOTBAR - 20.0));
++        // A screen too short for the box never puts it above the top.
++        assert_eq!(box_origin(Position::AboveHotbar, 300.0, 50.0, 100.0, 20.0).1, 0.0);
++        assert_eq!(alpha_u8(0.0), 0);
++        assert_eq!(alpha_u8(1.0), 255);
++        assert_eq!(alpha_u8(2.0), 255);
++    }
++
++    // The worker's shared state, end to end: a report starts a lookup, the lookup fills in the lyrics,
++    // and the frame follows the position. One test, because the state is process-wide.
++    #[test]
++    fn a_report_becomes_a_frame() {
++        let settings = load_settings(&|_| None);
++        assert!(frame(settings, 0).is_none());
++
++        let report = NowPlaying {
++            title: "Song (Official Video)".into(),
++            artist: "Artist - Topic".into(),
++            album: "Album".into(),
++            duration_ms: 100_000,
++            position_ms: 0,
++            playing: true,
++            updated_at_ms: 1_000_000,
++        };
++        let job = apply_report(Some(report.clone())).expect("a new track starts a lookup");
++        assert_eq!(job.title, "Song");
++        assert_eq!(job.artist, "Artist");
++        assert_eq!(job.duration_secs, 100);
++        // The same report again starts nothing.
++        assert!(apply_report(Some(report.clone())).is_none());
++
++        // While loading: only the toast.
++        let f = frame(settings, 1_000_000).unwrap();
++        assert!(f.main.is_none());
++        assert_eq!(f.toast.as_deref(), Some("Artist - Song"));
++
++        finish_lookup(&job.key, Ok(Some(parse_lrc("[00:01.00]First\n[00:05.00]Second\n[00:09.00]Third"))));
++        let f = frame(settings, 1_002_000).unwrap();
++        assert_eq!(f.main.as_deref(), Some("First"));
++        assert_eq!(f.next.as_deref(), Some("Second"));
++        let f = frame(settings, 1_006_000).unwrap();
++        assert_eq!(f.main.as_deref(), Some("Second"));
++        // Before the first line: no lyric.
++        assert!(frame(settings, 1_000_500).unwrap().main.is_none());
++        // The next line can be switched off, and the offset shifts the lines.
++        let no_next = Settings { next_line: false, ..settings };
++        assert!(frame(no_next, 1_006_000).unwrap().next.is_none());
++        let earlier = Settings { offset_ms: 1000, ..settings };
++        assert_eq!(frame(earlier, 1_004_500).unwrap().main.as_deref(), Some("Second"));
++
++        // A late answer for another track is ignored.
++        finish_lookup("some|other|1", Ok(None));
++        assert!(frame(settings, 1_006_000).unwrap().main.is_some());
++
++        // A new track resets the lyrics; a failed lookup retries later, not at once.
++        let other = NowPlaying { title: "Other".into(), ..report };
++        let job = apply_report(Some(other.clone())).unwrap();
++        finish_lookup(&job.key, Err("offline".into()));
++        assert!(apply_report(Some(other.clone())).is_none());
++        assert!(apply_report_unchanged().is_none());
++        // Nothing playing: no frame at all.
++        apply_report(None);
++        assert!(frame(settings, 1_006_000).is_none());
++    }
++}
+diff --git a/native-mods/amber_lyrics/mixins/amber_lyrics/settings.rs b/native-mods/amber_lyrics/mixins/amber_lyrics/settings.rs
+new file mode 100644
+index 0000000..051c9c9
+--- /dev/null
++++ b/native-mods/amber_lyrics/mixins/amber_lyrics/settings.rs
+@@ -0,0 +1,9 @@
++// The settings page: position, next line, song title popup and sync offset.
++fn amber_lyrics_page(game: &mut crate::game::Game<'_>, mod_id: &str, buttons: &mut Vec<String>) {
++    use crate::game::amber_lyrics as m;
++    if mod_id != m::ID {
++        return;
++    }
++    let settings = m::load_settings(&|key| game.native_setting(m::ID, key));
++    buttons.extend(m::button_labels(&settings));
++}
+diff --git a/packaging/android/build_apk.py b/packaging/android/build_apk.py
+index 5398e44..7b74094 100644
+--- a/packaging/android/build_apk.py
++++ b/packaging/android/build_apk.py
+@@ -98,6 +98,7 @@ BUILTIN_NATIVE_MODS = (
+     "rightharvest",
+     "customhud",
+     "carryblock",
++    "amber_lyrics",
+ )
+ 
+ 

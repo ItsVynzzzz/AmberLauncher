@@ -277,6 +277,21 @@
             android:foregroundServiceType="dataSync" />
 
         <!--
+            Amber Lyrics: membaca judul, artis, dan posisi lagu dari pemutar musik HP (sesi media) lalu menulisnya ke
+            config/amber_lyrics/now_playing.json untuk mod lirik Starling. Izin "Akses notifikasi" harus diberikan
+            pengguna sendiri; layanan ini tidak membaca isi notifikasi (onNotificationPosted tidak dipakai).
+        -->
+        <service
+            android:name=".core.horizon.NowPlayingListenerService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!--
             Proses :vkcheck sendiri: pengecekan dukungan Vulkan memuat driver grafis HP, dan driver yang bermasalah
             bisa menutup prosesnya. Dengan proses terpisah, yang mati hanya :vkcheck, bukan launcher. Hidup beberapa
             detik lalu mematikan dirinya sendiri.

@@ -717,6 +717,7 @@ fun SettingsScreen(
                         SettingsGroup("Kontrol") { RustControlRows() }
                         SettingsGroup("Diagnostik") { RustDiagnosticRows() }
                         SettingsGroup("Permainan") { RustGameRows() }
+                        SettingsGroup("Lirik") { RustLyricsRows() }
                     }
 
                     // ===================== KONTROL =====================

@@ -1,0 +1,11 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	Suavização do giroscópio
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Este celular não tem um giroscópio real, então o movimento é calculado a partir de outros sensores e pode parecer um pouco atrasado. Suavização alta acalma a tremedeira; diminua se parecer pesado.
+Gyro	Giroscópio
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Este celular não tem giroscópio nem sensor de movimento utilizável, então este recurso não está disponível.
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Gire a câmera movendo o celular. Só funciona durante o jogo, não nos menus. Também pode ser ativado pelo menu do jogo.
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Quanto a câmera gira para um movimento do celular. 100% é aproximadamente 1:1.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Acalma pequenas tremidas. Quanto mais alto, mais suave porém um pouco mais lento. O padrão é automático: desligado para um giroscópio real.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Acalma pequenas tremidas. Quanto mais alto, mais suave porém um pouco mais lento. Este celular usa um giroscópio por software (calculado a partir de outros sensores), então o padrão é mais suave.
+Opasitas tombol layar	Opacidade dos botões na tela
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplica a opacidade de todos os botões na tela sobre a configuração de cada botão no editor. A pílula do menu e o FPS não são afetados. Também pode ser ajustada pelo menu do jogo.

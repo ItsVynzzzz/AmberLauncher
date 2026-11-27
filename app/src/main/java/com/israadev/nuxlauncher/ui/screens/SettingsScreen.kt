@@ -54,6 +54,7 @@ import java.io.FileOutputStream
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.controls.ControlLayoutIO
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
+import com.israadev.nuxlauncher.core.controls.GyroLook
 import com.israadev.nuxlauncher.core.device.DeviceProfiles
 import com.israadev.nuxlauncher.BuildConfig
 import com.israadev.nuxlauncher.core.models.LauncherSettings
@@ -148,6 +149,14 @@ fun SettingsScreen(
     var hotbarTouch by remember(currentSettings.hotbarTouchEnabled) { mutableStateOf(currentSettings.hotbarTouchEnabled) }
     var buttonLookDrag by remember(currentSettings.buttonLookDrag) { mutableStateOf(currentSettings.buttonLookDrag) }
     var buttonSlide by remember(currentSettings.buttonSlide) { mutableStateOf(currentSettings.buttonSlide) }
+    var gyroEnabled by remember(currentSettings.gyroEnabled) { mutableStateOf(currentSettings.gyroEnabled) }
+    var gyroSensitivity by remember(currentSettings.gyroSensitivity) { mutableIntStateOf(currentSettings.gyroSensitivity) }
+    var gyroInvertY by remember(currentSettings.gyroInvertY) { mutableStateOf(currentSettings.gyroInvertY) }
+    // -1 = otomatis (lihat LauncherSettings.gyroSmoothing); slider menampilkan nilai yang berlaku.
+    var gyroSmoothing by remember(currentSettings.gyroSmoothing) { mutableIntStateOf(currentSettings.gyroSmoothing) }
+    var controlOpacity by remember(currentSettings.controlOpacityPercent) { mutableIntStateOf(currentSettings.controlOpacityPercent) }
+    // Jenis sumber gerakan HP ini (gyro asli, gyro software, atau tidak ada); hanya memeriksa, tanpa membaca sensor.
+    val gyroKind = remember { GyroLook.detect(context) }
     var discordRpc by remember(currentSettings.discordRpcEnabled) { mutableStateOf(currentSettings.discordRpcEnabled) }
     var discordRpcLauncher by remember(currentSettings.discordRpcLauncherEnabled) { mutableStateOf(currentSettings.discordRpcLauncherEnabled) }
     var discordRpcShowServer by remember(currentSettings.discordRpcShowServer) { mutableStateOf(currentSettings.discordRpcShowServer) }
@@ -229,6 +238,11 @@ fun SettingsScreen(
             hotbarTouchEnabled = hotbarTouch,
             buttonLookDrag = buttonLookDrag,
             buttonSlide = buttonSlide,
+            gyroEnabled = gyroEnabled,
+            gyroSensitivity = gyroSensitivity,
+            gyroInvertY = gyroInvertY,
+            gyroSmoothing = gyroSmoothing,
+            controlOpacityPercent = controlOpacity,
             discordRpcEnabled = discordRpc,
             discordRpcLauncherEnabled = discordRpcLauncher,
             discordRpcShowServer = discordRpcShowServer,
@@ -884,6 +898,19 @@ fun SettingsScreen(
                             }
                         )
                         SettingDivider()
+                        SettingSliderRow(
+                            title = "Opasitas tombol layar",
+                            desc = "Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.",
+                            valueText = "${controlOpacity.coerceIn(30, 100)}%",
+                            value = controlOpacity.coerceIn(30, 100).toFloat(),
+                            valueRange = 30f..100f,
+                            steps = 13,
+                            onValueChange = {
+                                controlOpacity = it.roundToInt()
+                                commitSettings()
+                            }
+                        )
+                        SettingDivider()
                         SettingSwitchRow(
                             title = "Dukungan TouchController",
                             desc = "Eksperimental. Bila mod TouchController terpasang dan tersambung, sentuhan saat bermain juga diteruskan ke mod. Tombol dan mouse virtual launcher tetap aktif, jadi keduanya bisa dipakai bersamaan.",
@@ -950,6 +977,67 @@ fun SettingsScreen(
                                 commitSettings()
                             }
                         )
+                        }
+
+                        SettingsGroup("Gyro") {
+                        SettingSwitchRow(
+                            title = "Kamera dengan gyro",
+                            desc = if (gyroKind == GyroLook.Kind.NONE) {
+                                "HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia."
+                            } else {
+                                "Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game."
+                            },
+                            checked = gyroEnabled && gyroKind != GyroLook.Kind.NONE,
+                            onCheckedChange = {
+                                if (gyroKind != GyroLook.Kind.NONE) {
+                                    gyroEnabled = it
+                                    commitSettings()
+                                }
+                            }
+                        )
+                        if (gyroKind != GyroLook.Kind.NONE) {
+                            SettingDivider()
+                            SettingSliderRow(
+                                title = "Sensitivitas gyro",
+                                desc = "Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.",
+                                valueText = "$gyroSensitivity%",
+                                value = gyroSensitivity.coerceIn(25, 400).toFloat(),
+                                valueRange = 25f..400f,
+                                steps = 74,
+                                onValueChange = {
+                                    gyroSensitivity = it.roundToInt()
+                                    commitSettings()
+                                }
+                            )
+                            SettingDivider()
+                            val shownSmoothing = GyroLook.effectiveSmoothing(gyroSmoothing, gyroKind)
+                            SettingSliderRow(
+                                title = "Kehalusan gyro",
+                                desc = if (gyroKind == GyroLook.Kind.HARDWARE) {
+                                    "Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli."
+                                } else {
+                                    "Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus."
+                                },
+                                valueText = "$shownSmoothing%",
+                                value = shownSmoothing.toFloat(),
+                                valueRange = 0f..100f,
+                                steps = 19,
+                                onValueChange = {
+                                    gyroSmoothing = it.roundToInt()
+                                    commitSettings()
+                                }
+                            )
+                            SettingDivider()
+                            SettingSwitchRow(
+                                title = "Balik atas-bawah",
+                                desc = "Condongkan HP ke atas untuk melihat ke bawah.",
+                                checked = gyroInvertY,
+                                onCheckedChange = {
+                                    gyroInvertY = it
+                                    commitSettings()
+                                }
+                            )
+                        }
                         }
 
                         // Gambar, hotspot, dan ukuran kursor launcher (dipakai di menu game oleh jari, controller,
@@ -1388,6 +1476,11 @@ fun SettingsScreen(
                     hotbarTouch = reset.hotbarTouchEnabled
                     buttonLookDrag = reset.buttonLookDrag
                     buttonSlide = reset.buttonSlide
+                    gyroEnabled = reset.gyroEnabled
+                    gyroSensitivity = reset.gyroSensitivity
+                    gyroInvertY = reset.gyroInvertY
+                    gyroSmoothing = reset.gyroSmoothing
+                    controlOpacity = reset.controlOpacityPercent
                     discordRpc = reset.discordRpcEnabled
                     discordRpcLauncher = reset.discordRpcLauncherEnabled
                     discordRpcShowServer = reset.discordRpcShowServer

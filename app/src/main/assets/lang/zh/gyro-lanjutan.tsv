@@ -1,0 +1,11 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	陀螺仪平滑度
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	此手机没有真正的陀螺仪，因此动作由其他传感器推算，可能会略有延迟。平滑度高可减轻抖动；觉得迟钝时请调低。
+Gyro	陀螺仪
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	此手机没有可用的陀螺仪或运动传感器，因此无法使用此功能。
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	通过移动手机来转动视角。仅在游戏中生效，菜单中不生效。也可以在游戏内菜单中开启。
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	手机移动一次时视角转动的幅度。100% 大约为 1:1。
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	减轻轻微抖动。数值越高越平滑，但稍慢一点。默认自动：真正的陀螺仪为关闭。
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	减轻轻微抖动。数值越高越平滑，但稍慢一点。此手机使用软件陀螺仪（由其他传感器推算），因此默认更平滑。
+Opasitas tombol layar	屏幕按键不透明度
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	在编辑器中每个按键自身设置的基础上，统一调整所有屏幕按键的不透明度。菜单胶囊和 FPS 不受影响。也可以在游戏内菜单中设置。

@@ -1,0 +1,10 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	Gyro smoothing
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	This phone has no real gyro, so its motion is calculated from other sensors and can feel slightly delayed. High smoothing calms the shakiness; lower it if it feels sluggish.
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	This phone has no gyro or motion sensor that can be used, so this feature is not available.
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Turn the camera by moving your phone. Only active while playing, not in menus. It can also be turned on from the in-game menu.
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	How far the camera turns for one phone movement. 100% is roughly 1:1.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Calms small shakes. Higher is smoother but slightly slower. Default is automatic: off for a real gyro.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Calms small shakes. Higher is smoother but slightly slower. This phone uses a software gyro (calculated from other sensors), so the default is smoother.
+Opasitas tombol layar	On-screen button opacity
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplies the opacity of all on-screen buttons on top of each button's own setting in the editor. The menu pill and FPS are not affected. It can also be set from the in-game menu.

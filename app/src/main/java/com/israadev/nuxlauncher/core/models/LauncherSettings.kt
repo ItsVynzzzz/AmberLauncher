@@ -37,6 +37,9 @@ data class LauncherSettings(
     val gyroEnabled: Boolean = false,
     val gyroSensitivity: Int = 100, // 25 - 400
     val gyroInvertY: Boolean = false,
+    // Kehalusan gyro (persen, 0 = tanpa penyaring). -1 = otomatis: gyro asli 0, gyro software (HP tanpa gyroscope asli)
+    // 60 supaya tidak bergoyang. Menjadi nilai pilihan pengguna begitu slider disentuh. Lihat GyroLook.
+    val gyroSmoothing: Int = -1, // -1 atau 0 - 100
     // Pengali kepekatan semua tombol layar (persen) di atas kepekatan tiap tombol di editor. 100 = sesuai editor.
     // Tombol sistem (pil menu, FPS) tidak ikut, supaya menunya selalu terlihat. Diatur dari menu dalam game.
     val controlOpacityPercent: Int = 100, // 30 - 100

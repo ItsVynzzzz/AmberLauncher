@@ -2504,6 +2504,11 @@ fun GameScreen(
             onGyroInvertYChange = { on ->
                 SettingsManager.updateSettings(context, launcherSettings.copy(gyroInvertY = on))
             },
+            gyroSmoothing = GyroLook.effectiveSmoothing(launcherSettings.gyroSmoothing, gyroLook.kind),
+            onGyroSmoothingChange = { value ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(gyroSmoothing = value))
+            },
+            gyroSoftware = gyroLook.isSoftware,
             showScreenControls = true,
             controlOpacityPercent = launcherSettings.controlOpacityPercent,
             onControlOpacityChange = { value ->

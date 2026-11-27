@@ -1,0 +1,10 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	Smoothness ng gyro
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Walang totoong gyro ang phone na ito, kaya kinukuwenta ang galaw mula sa ibang sensor at maaaring bahagyang maantala. Pinapakalma ng mataas na smoothness ang panginginig; ibaba kapag mabigat ang pakiramdam.
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Walang magagamit na gyro o motion sensor ang phone na ito, kaya hindi available ang feature na ito.
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Ikutin ang camera sa pamamagitan ng paggalaw ng phone. Gumagana lang habang naglalaro, hindi sa mga menu. Maaari ring i-on mula sa menu sa loob ng laro.
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Gaano kalayo ang pag-ikot ng camera sa isang galaw ng phone. Ang 100% ay halos 1:1.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Pinapakalma ang maliliit na panginginig. Mas mataas, mas smooth pero bahagyang mas mabagal. Awtomatiko ang default: naka-off para sa totoong gyro.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Pinapakalma ang maliliit na panginginig. Mas mataas, mas smooth pero bahagyang mas mabagal. Software gyro ang gamit ng phone na ito (kinukuwenta mula sa ibang sensor), kaya mas smooth ang default.
+Opasitas tombol layar	Opacity ng mga button sa screen
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Pinaparami ang opacity ng lahat ng button sa screen sa ibabaw ng setting ng bawat button sa editor. Hindi apektado ang menu pill at FPS. Maaari ring itakda mula sa menu sa loob ng laro.

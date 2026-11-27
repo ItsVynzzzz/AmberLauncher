@@ -111,6 +111,9 @@ fun GameMenuSheet(
     onGyroSensitivityChange: (Int) -> Unit = {},
     gyroInvertY: Boolean = false,
     onGyroInvertYChange: (Boolean) -> Unit = {},
+    gyroSmoothing: Int = 0,
+    onGyroSmoothingChange: (Int) -> Unit = {},
+    gyroSoftware: Boolean = false,
     showScreenControls: Boolean = false,
     controlOpacityPercent: Int = 100,
     onControlOpacityChange: (Int) -> Unit = {},
@@ -458,6 +461,24 @@ fun GameMenuSheet(
                                         step = 5,
                                         onCommit = onGyroSensitivityChange
                                     )
+                                    MenuDivider()
+                                    MenuSliderRow(
+                                        label = "Kehalusan gyro",
+                                        value = gyroSmoothing.coerceIn(0, 100),
+                                        min = 0,
+                                        max = 100,
+                                        step = 5,
+                                        onCommit = onGyroSmoothingChange
+                                    )
+                                    if (gyroSoftware) {
+                                        Text(
+                                            text = "HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.",
+                                            color = AmberUi.TextDim,
+                                            fontSize = 10.5.sp,
+                                            lineHeight = 14.sp,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                    }
                                     MenuDivider()
                                     MenuToggleRow(
                                         title = "Balik atas-bawah",

@@ -1,0 +1,11 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	ความนุ่มนวลของไจโร
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	โทรศัพท์เครื่องนี้ไม่มีไจโรจริง การเคลื่อนไหวจึงคำนวณจากเซนเซอร์อื่นและอาจรู้สึกช้าเล็กน้อย ค่าความนุ่มนวลสูงช่วยลดอาการสั่น หากรู้สึกอืดให้ลดลง
+Gyro	ไจโร
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	โทรศัพท์เครื่องนี้ไม่มีไจโรหรือเซนเซอร์การเคลื่อนไหวที่ใช้ได้ จึงไม่มีฟีเจอร์นี้
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	หมุนกล้องด้วยการขยับโทรศัพท์ ทำงานเฉพาะตอนเล่น ไม่ทำงานในเมนู เปิดจากเมนูในเกมได้ด้วย
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	กล้องหมุนไกลแค่ไหนต่อการขยับโทรศัพท์หนึ่งครั้ง 100% ประมาณ 1:1
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	ลดอาการสั่นเล็กน้อย ยิ่งสูงยิ่งนุ่มแต่ช้าลงเล็กน้อย ค่าเริ่มต้นเป็นอัตโนมัติ: ปิดสำหรับไจโรจริง
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	ลดอาการสั่นเล็กน้อย ยิ่งสูงยิ่งนุ่มแต่ช้าลงเล็กน้อย โทรศัพท์เครื่องนี้ใช้ไจโรซอฟต์แวร์ (คำนวณจากเซนเซอร์อื่น) ค่าเริ่มต้นจึงนุ่มกว่า
+Opasitas tombol layar	ความทึบของปุ่มบนหน้าจอ
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	คูณความทึบของปุ่มบนหน้าจอทั้งหมดทับค่าของแต่ละปุ่มในตัวแก้ไข ปุ่มเมนูและ FPS ไม่ได้รับผลกระทบ ตั้งค่าจากเมนูในเกมได้ด้วย

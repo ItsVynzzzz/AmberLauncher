@@ -1,0 +1,11 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	Suavizado del giroscopio
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Este teléfono no tiene un giroscopio real, así que su movimiento se calcula con otros sensores y puede sentirse algo retrasado. Un suavizado alto calma los temblores; bájalo si se siente pesado.
+Gyro	Giroscopio
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Este teléfono no tiene giroscopio ni sensor de movimiento utilizable, así que esta función no está disponible.
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Gira la cámara moviendo el teléfono. Solo funciona al jugar, no en los menús. También se puede activar desde el menú del juego.
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Cuánto gira la cámara con un movimiento del teléfono. 100% es aproximadamente 1:1.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Calma los temblores pequeños. Más alto es más suave pero algo más lento. Por defecto es automático: desactivado para un giroscopio real.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Calma los temblores pequeños. Más alto es más suave pero algo más lento. Este teléfono usa un giroscopio por software (calculado con otros sensores), así que por defecto es más suave.
+Opasitas tombol layar	Opacidad de los botones en pantalla
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Multiplica la opacidad de todos los botones en pantalla sobre el ajuste de cada botón en el editor. La píldora del menú y los FPS no se ven afectados. También se puede ajustar desde el menú del juego.

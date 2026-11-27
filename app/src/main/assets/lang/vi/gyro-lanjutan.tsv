@@ -1,0 +1,11 @@
+# Gyro software: kehalusan, dan gyro serta opasitas tombol di Pengaturan
+Kehalusan gyro	Độ mượt con quay hồi chuyển
+HP ini tidak punya gyro asli, jadi gerakannya dihitung dari sensor lain dan bisa terasa sedikit tertunda. Kehalusan tinggi meredam goyangan; turunkan bila terasa berat.	Điện thoại này không có con quay hồi chuyển thật, nên chuyển động được tính từ các cảm biến khác và có thể hơi trễ. Độ mượt cao làm giảm rung; hãy giảm xuống nếu thấy nặng.
+Gyro	Con quay hồi chuyển
+HP ini tidak punya sensor gyro atau sensor gerak yang bisa dipakai, jadi fitur ini tidak tersedia.	Điện thoại này không có cảm biến con quay hồi chuyển hay cảm biến chuyển động dùng được, nên không có tính năng này.
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu. Bisa juga dinyalakan dari menu dalam game.	Xoay camera bằng cách di chuyển điện thoại. Chỉ hoạt động khi đang chơi, không dùng trong menu. Cũng có thể bật từ menu trong game.
+Seberapa jauh kamera berputar untuk satu gerakan HP. 100% kira-kira searah 1:1.	Camera xoay bao xa cho một chuyển động của điện thoại. 100% xấp xỉ 1:1.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. Bawaan otomatis: mati untuk gyro asli.	Làm giảm rung nhỏ. Càng cao càng mượt nhưng hơi chậm hơn. Mặc định là tự động: tắt với con quay hồi chuyển thật.
+Meredam goyangan kecil. Makin tinggi makin halus tapi sedikit lebih lambat. HP ini memakai gyro software (dihitung dari sensor lain), jadi bawaannya dibuat lebih halus.	Làm giảm rung nhỏ. Càng cao càng mượt nhưng hơi chậm hơn. Điện thoại này dùng con quay hồi chuyển phần mềm (tính từ các cảm biến khác), nên mặc định mượt hơn.
+Opasitas tombol layar	Độ đục của nút trên màn hình
+Mengalikan kepekatan semua tombol layar di atas pengaturan tiap tombol di editor. Pil menu dan FPS tidak ikut. Bisa juga diatur dari menu dalam game.	Nhân độ đục của tất cả nút trên màn hình với cài đặt riêng của từng nút trong trình chỉnh sửa. Viên menu và FPS không bị ảnh hưởng. Cũng có thể chỉnh từ menu trong game.

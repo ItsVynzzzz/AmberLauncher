@@ -1,0 +1,9 @@
+# judul: Gyro lebih enak di HP tanpa gyro asli, dan pengaturan gyro di Pengaturan
+[id]
++ HP tanpa sensor gyro asli kini bisa memakai kamera gyro: gerakannya dihitung dari sensor arah HP (gyro software). Dikerjakan di thread sendiri dan dikirim ke game sekali per frame, dengan penyaring adaptif yang meredam goyangan saat HP diam tetapi tidak terasa tertinggal saat digerakkan.
++ Slider Kehalusan gyro di menu dalam game dan di Pengaturan. Bawaannya otomatis: mati untuk gyro asli (tidak berubah dari sebelumnya), cukup halus untuk gyro software.
++ Pengaturan > Kontrol kini punya bagian Gyro (nyala, sensitivitas, kehalusan, balik atas-bawah) dan slider Opasitas tombol layar, sama seperti di menu dalam game.
+[en]
++ Phones without a real gyro sensor can now use the gyro camera: motion is calculated from the phone's orientation sensor (software gyro). It runs on its own thread and is sent to the game once per frame, with an adaptive filter that calms shakiness when the phone is still but doesn't feel laggy when you move it.
++ A Gyro smoothing slider in the in-game menu and in Settings. The default is automatic: off for a real gyro (unchanged from before), smooth enough for a software gyro.
++ Settings > Controls now has a Gyro section (on/off, sensitivity, smoothing, invert up/down) and an On-screen button opacity slider, matching the in-game menu.

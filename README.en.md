@@ -64,6 +64,7 @@ Later updates can be installed from inside the launcher (**Settings > Updates**)
 - **Touch hotbar** (Bedrock style): tap the hotbar to select a slot, also with a second finger while the camera is being dragged. It can be turned off under **Settings > Controls**.
 - **Controller (gamepad) support**, including mods such as Controlify.
 - **Joystick auto-sprint** can be turned off, and on-screen Shift/Ctrl/Alt buttons are sent as modifiers (for example Shift + click in the inventory).
+- **Gyro camera**: turn the camera by moving your phone (needs a gyro sensor). Turned on from the in-game menu, with a sensitivity slider and an invert up/down option. Off by default, and the sensor is only used while it is on.
 
 **More**
 - **Accounts**: Microsoft, Ely.by, and offline.

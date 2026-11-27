@@ -67,6 +67,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,6 +99,7 @@ import com.israadev.nuxlauncher.core.renderer.GlErrorPolicy
 import com.israadev.nuxlauncher.core.renderer.MobileGluesConfig
 import com.israadev.nuxlauncher.core.renderer.ElfDeps
 import com.israadev.nuxlauncher.core.controls.DexClassScanner
+import com.israadev.nuxlauncher.core.controls.GyroLook
 import com.israadev.nuxlauncher.core.controls.GuiScaleReader
 import com.israadev.nuxlauncher.core.controls.TouchControllerBridge
 import com.israadev.nuxlauncher.core.controls.TouchControllerSupport
@@ -2068,6 +2071,34 @@ fun GameScreen(
     val customButtons by ControlLayoutManager.buttons.collectAsState()
     val mouseControlMode = if (launcherSettings.mouseControlMode == "CLICK") MouseControlMode.CLICK else MouseControlMode.SLIDE
 
+    // Kamera dengan gyro (lihat GyroLook). Sensor hanya hidup selama gyro dinyalakan dan game ada di depan layar;
+    // gerakannya hanya dipakai saat game menangkap kursor (bermain) dan tidak ada menu yang menutupi game.
+    val gyroLook = remember {
+        GyroLook(context) { ZLBridgeStates.cursorMode.value == CURSOR_DISABLED && !MenuMouse.overlayOpen }
+    }
+    val gyroActive = launcherSettings.gyroEnabled && gyroLook.supported
+    DisposableEffect(gyroActive) {
+        if (!gyroActive) return@DisposableEffect onDispose { }
+        val lifecycle = (context as? ComponentActivity)?.lifecycle
+        if (lifecycle == null) {
+            gyroLook.start()
+            return@DisposableEffect onDispose { gyroLook.stop() }
+        }
+        // addObserver mengulang kejadian sampai keadaan sekarang, jadi bila game sudah tampil, ON_RESUME langsung datang.
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> gyroLook.start()
+                Lifecycle.Event.ON_PAUSE -> gyroLook.stop()
+                else -> Unit
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+            gyroLook.stop()
+        }
+    }
+
     // Rekam mode "Game saja": perekam menangkap seluruh layar, jadi tombol layar dibuat transparan
     // selama merekam (tetap bisa disentuh, hanya tidak tergambar) supaya tidak ikut terekam.
     val recState by ScreenRecorder.state.collectAsState()
@@ -2458,6 +2489,33 @@ fun GameScreen(
                     context,
                     launcherSettings.copy(buttonSlide = on)
                 )
+            },
+            showGyro = true,
+            gyroSupported = gyroLook.supported,
+            gyroEnabled = launcherSettings.gyroEnabled,
+            onGyroEnabledChange = { on ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(gyroEnabled = on))
+            },
+            gyroSensitivity = launcherSettings.gyroSensitivity,
+            onGyroSensitivityChange = { value ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(gyroSensitivity = value))
+            },
+            gyroInvertY = launcherSettings.gyroInvertY,
+            onGyroInvertYChange = { on ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(gyroInvertY = on))
+            },
+            showScreenControls = true,
+            controlOpacityPercent = launcherSettings.controlOpacityPercent,
+            onControlOpacityChange = { value ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(controlOpacityPercent = value))
+            },
+            touchAttack = launcherSettings.touchAttackEnabled,
+            onTouchAttackChange = { on ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(touchAttackEnabled = on))
+            },
+            hotbarTouch = launcherSettings.hotbarTouchEnabled,
+            onHotbarTouchChange = { on ->
+                SettingsManager.updateSettings(context, launcherSettings.copy(hotbarTouchEnabled = on))
             },
             isControlVisible = isControlVisible,
             onToggleControlVisibility = {

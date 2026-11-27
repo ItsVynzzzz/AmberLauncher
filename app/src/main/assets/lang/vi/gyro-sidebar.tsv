@@ -1,0 +1,12 @@
+# Menu dalam game: gyro dan tombol layar
+GYRO	CON QUAY HỒI CHUYỂN
+HP ini tidak punya sensor gyro, jadi fitur ini tidak bisa dipakai.	Điện thoại này không có cảm biến con quay hồi chuyển nên không dùng được tính năng này.
+Kamera dengan gyro	Camera bằng con quay hồi chuyển
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu.	Xoay camera bằng cách di chuyển điện thoại. Chỉ hoạt động khi đang chơi, không dùng trong menu.
+Sensitivitas gyro	Độ nhạy con quay hồi chuyển
+Balik atas-bawah	Đảo chiều lên/xuống
+Condongkan HP ke atas untuk melihat ke bawah.	Nghiêng điện thoại lên để nhìn xuống.
+TOMBOL LAYAR	NÚT TRÊN MÀN HÌNH
+Opasitas tombol	Độ đục của nút
+Ketuk atau tahan area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul.	Chạm hoặc giữ vào vùng trống trên màn hình để tấn công. Tắt để việc kéo camera không tấn công theo.
+Ketuk hotbar di bagian bawah layar untuk memilih slot.	Chạm vào thanh nhanh ở cuối màn hình để chọn ô.

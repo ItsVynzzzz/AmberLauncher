@@ -64,6 +64,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Hotbar sentuh** gaya Bedrock: ketuk hotbar untuk memilih slot, juga dengan jari lain saat kamera sedang digeser. Bisa dimatikan di **Pengaturan > Kontrol**.
 - **Controller (gamepad)** didukung, termasuk mod seperti Controlify.
 - **Lari otomatis joystick** bisa dimatikan, dan tombol Shift/Ctrl/Alt di layar ikut terbaca sebagai modifier (misalnya Shift + klik di inventory).
+- **Kamera dengan gyro**: putar kamera dengan menggerakkan HP (butuh sensor gyro). Dinyalakan dari menu dalam game, lengkap dengan sensitivitas dan opsi balik atas-bawah. Bawaan mati, dan sensor baru dipakai saat dinyalakan.
 
 **Lainnya**
 - **Akun** Microsoft, Ely.by, dan offline.

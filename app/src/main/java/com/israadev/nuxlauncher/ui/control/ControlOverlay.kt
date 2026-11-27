@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,6 +42,7 @@ import androidx.compose.ui.window.PopupProperties
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.models.ControlShowMode
 import com.israadev.nuxlauncher.core.controls.models.CustomControlButton
+import com.israadev.nuxlauncher.core.controls.ControlLimits
 import com.israadev.nuxlauncher.core.controls.JoystickLogic
 import com.israadev.nuxlauncher.core.controls.MacroIO
 import com.israadev.nuxlauncher.core.controls.MacroRegistry
@@ -109,16 +112,25 @@ fun GameControlsLayer(
     }
     // Ada pil menu: tombol "sembunyikan GUI" yang berdiri sendiri tidak digambar (fungsinya sudah ada di pil).
     val hasPill = buttons.any { it.isMenuPill() }
+    // Pengali kepekatan tombol layar dari menu dalam game ("Opasitas tombol"). derivedStateOf: tombol hanya disusun
+    // ulang bila nilai ini berubah, bukan setiap kali pengaturan lain disimpan.
+    val settingsState = SettingsManager.settings.collectAsState()
+    val opacityScale by remember {
+        derivedStateOf { settingsState.value.controlOpacityPercent.coerceIn(30, 100) / 100f }
+    }
     buttons.forEach { source ->
         key(source.id) {
             // Tampilan FPS dan RAM lebih lebar dari tombol FPS lama; ukurannya diperlebar di sini saja,
-            // tata letak yang tersimpan tidak berubah.
-            val btn = remember(source) {
+            // tata letak yang tersimpan tidak berubah. Tombol biasa dan joystick mengalikan kepekatannya dengan
+            // opasitas dari menu dalam game; tombol sistem (pil menu, FPS) tidak, supaya menunya selalu terlihat.
+            val btn = remember(source, opacityScale) {
                 if (source.isSystem && source.systemAction == "FPS") {
                     source.copy(
                         widthDp = maxOf(source.widthDp, FPS_HUD_MIN_WIDTH_DP),
                         heightDp = maxOf(source.heightDp, FPS_HUD_MIN_HEIGHT_DP)
                     )
+                } else if (!source.isSystem && opacityScale < 1f) {
+                    source.copy(opacity = (source.opacity * opacityScale).coerceAtLeast(ControlLimits.MIN_OPACITY))
                 } else {
                     source
                 }

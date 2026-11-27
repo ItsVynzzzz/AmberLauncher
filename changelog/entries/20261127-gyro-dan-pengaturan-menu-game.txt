@@ -1,0 +1,7 @@
+# judul: Tambah kamera gyro dan pengaturan penting di menu dalam game
+[id]
++ Kamera dengan gyro: putar kamera dengan menggerakkan HP. Dinyalakan dari menu dalam game (bagian GYRO), lengkap dengan sensitivitas dan opsi balik atas-bawah. Bawaan mati, dan sensor baru dipakai saat dinyalakan, jadi tidak membebani HP yang tidak memakainya.
++ Menu dalam game kini punya bagian TOMBOL LAYAR: opasitas tombol, Pukul lewat layar, dan Hotbar sentuh bisa diubah langsung saat bermain tanpa keluar ke Pengaturan.
+[en]
++ Gyro camera: turn the camera by moving your phone. Turn it on from the in-game menu (GYRO section), with a sensitivity slider and an invert up/down option. Off by default, and the sensor is only used while it is on, so phones that don't use it pay nothing.
++ The in-game menu now has an ON-SCREEN BUTTONS section: button opacity, Attack by touching the screen, and Touch hotbar can be changed right while playing without going back to Settings.

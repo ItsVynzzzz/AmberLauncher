@@ -101,6 +101,23 @@ fun GameMenuSheet(
     onButtonLookDragChange: (Boolean) -> Unit = {},
     buttonSlide: Boolean = true,
     onButtonSlideChange: (Boolean) -> Unit = {},
+    // Gyro dan pengaturan tombol layar: hanya game Java yang menyambungkannya. Tanpa [showGyro] / [showScreenControls]
+    // (mis. menu di atas mesin Starling) bagiannya tidak tampil sama sekali.
+    showGyro: Boolean = false,
+    gyroSupported: Boolean = true,
+    gyroEnabled: Boolean = false,
+    onGyroEnabledChange: (Boolean) -> Unit = {},
+    gyroSensitivity: Int = 100,
+    onGyroSensitivityChange: (Int) -> Unit = {},
+    gyroInvertY: Boolean = false,
+    onGyroInvertYChange: (Boolean) -> Unit = {},
+    showScreenControls: Boolean = false,
+    controlOpacityPercent: Int = 100,
+    onControlOpacityChange: (Int) -> Unit = {},
+    touchAttack: Boolean = false,
+    onTouchAttackChange: (Boolean) -> Unit = {},
+    hotbarTouch: Boolean = true,
+    onHotbarTouchChange: (Boolean) -> Unit = {},
     isControlVisible: Boolean,
     onToggleControlVisibility: () -> Unit,
     onRequestKeyboard: () -> Unit,
@@ -410,6 +427,76 @@ fun GameMenuSheet(
                             checked = buttonSlide,
                             onChange = onButtonSlideChange
                         )
+                    }
+
+                    if (showGyro) {
+                        SectionGap()
+                        AmberPageLabel("GYRO")
+                        MenuGroup {
+                            if (!gyroSupported) {
+                                Text(
+                                    text = "HP ini tidak punya sensor gyro, jadi fitur ini tidak bisa dipakai.",
+                                    color = AmberUi.TextDim,
+                                    fontSize = 11.sp,
+                                    lineHeight = 15.sp,
+                                    modifier = Modifier.padding(vertical = 10.dp)
+                                )
+                            } else {
+                                MenuToggleRow(
+                                    title = "Kamera dengan gyro",
+                                    subtitle = "Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu.",
+                                    checked = gyroEnabled,
+                                    onChange = onGyroEnabledChange
+                                )
+                                if (gyroEnabled) {
+                                    MenuDivider()
+                                    MenuSliderRow(
+                                        label = "Sensitivitas gyro",
+                                        value = gyroSensitivity.coerceIn(25, 400),
+                                        min = 25,
+                                        max = 400,
+                                        step = 5,
+                                        onCommit = onGyroSensitivityChange
+                                    )
+                                    MenuDivider()
+                                    MenuToggleRow(
+                                        title = "Balik atas-bawah",
+                                        subtitle = "Condongkan HP ke atas untuk melihat ke bawah.",
+                                        checked = gyroInvertY,
+                                        onChange = onGyroInvertYChange
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (showScreenControls) {
+                        SectionGap()
+                        AmberPageLabel("TOMBOL LAYAR")
+                        MenuGroup {
+                            MenuSliderRow(
+                                label = "Opasitas tombol",
+                                value = controlOpacityPercent.coerceIn(30, 100),
+                                min = 30,
+                                max = 100,
+                                step = 5,
+                                onCommit = onControlOpacityChange
+                            )
+                            MenuDivider()
+                            MenuToggleRow(
+                                title = "Pukul lewat layar",
+                                subtitle = "Ketuk atau tahan area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul.",
+                                checked = touchAttack,
+                                onChange = onTouchAttackChange
+                            )
+                            MenuDivider()
+                            MenuToggleRow(
+                                title = "Hotbar sentuh",
+                                subtitle = "Ketuk hotbar di bagian bawah layar untuk memilih slot.",
+                                checked = hotbarTouch,
+                                onChange = onHotbarTouchChange
+                            )
+                        }
                     }
 
                     SectionGap()

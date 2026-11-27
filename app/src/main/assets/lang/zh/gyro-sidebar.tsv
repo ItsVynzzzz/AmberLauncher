@@ -1,0 +1,12 @@
+# Menu dalam game: gyro dan tombol layar
+GYRO	陀螺仪
+HP ini tidak punya sensor gyro, jadi fitur ini tidak bisa dipakai.	此手机没有陀螺仪传感器，因此无法使用此功能。
+Kamera dengan gyro	陀螺仪视角
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu.	通过移动手机来转动视角。仅在游戏中生效，菜单中不生效。
+Sensitivitas gyro	陀螺仪灵敏度
+Balik atas-bawah	上下反转
+Condongkan HP ke atas untuk melihat ke bawah.	手机向上倾斜时视角向下看。
+TOMBOL LAYAR	屏幕按键
+Opasitas tombol	按键不透明度
+Ketuk atau tahan area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul.	点击或按住屏幕空白区域进行攻击。关闭后拖动视角不会同时攻击。
+Ketuk hotbar di bagian bawah layar untuk memilih slot.	点击屏幕底部的快捷栏来选择栏位。

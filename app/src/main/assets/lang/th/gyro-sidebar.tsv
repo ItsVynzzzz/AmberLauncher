@@ -1,0 +1,12 @@
+# Menu dalam game: gyro dan tombol layar
+GYRO	ไจโร
+HP ini tidak punya sensor gyro, jadi fitur ini tidak bisa dipakai.	โทรศัพท์เครื่องนี้ไม่มีเซนเซอร์ไจโร จึงใช้ฟีเจอร์นี้ไม่ได้
+Kamera dengan gyro	กล้องด้วยไจโร
+Putar kamera dengan menggerakkan HP. Hanya aktif saat bermain, bukan di menu.	หมุนกล้องด้วยการขยับโทรศัพท์ ทำงานเฉพาะตอนเล่น ไม่ทำงานในเมนู
+Sensitivitas gyro	ความไวไจโร
+Balik atas-bawah	กลับด้านบน-ล่าง
+Condongkan HP ke atas untuk melihat ke bawah.	เอียงโทรศัพท์ขึ้นเพื่อมองลง
+TOMBOL LAYAR	ปุ่มบนหน้าจอ
+Opasitas tombol	ความทึบของปุ่ม
+Ketuk atau tahan area kosong layar untuk memukul. Matikan supaya menggeser kamera tidak ikut memukul.	แตะหรือกดค้างบริเวณว่างบนหน้าจอเพื่อโจมตี ปิดเพื่อไม่ให้การลากกล้องโจมตีไปด้วย
+Ketuk hotbar di bagian bawah layar untuk memilih slot.	แตะแถบด่วนที่ด้านล่างของหน้าจอเพื่อเลือกช่อง

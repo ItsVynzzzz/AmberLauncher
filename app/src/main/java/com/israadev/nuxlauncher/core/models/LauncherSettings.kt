@@ -30,6 +30,16 @@ data class LauncherSettings(
     // tombol yang dilewati tanpa mengangkat jari. Bawaan nyala. Nilai ini juga dipakai pengguna lama: tanpa kolom
     // ini di berkas pengaturan tersimpan, bawaan di sini yang berlaku.
     val buttonSlide: Boolean = true,
+    // Kamera dengan gyro: memutar kamera dengan menggerakkan HP (sensor gyroscope). Bawaan MATI dan sensor baru
+    // dihidupkan saat dinyalakan, jadi tidak membebani HP yang tidak memakainya. Sensitivitas 100 = gerak HP dan gerak
+    // kamera kira-kira searah 1:1 pada sensitivitas Minecraft bawaan; dinaikkan bila ingin cukup memiringkan sedikit.
+    // Balik Y: condongkan HP ke atas untuk melihat ke bawah. Diatur dari menu dalam game.
+    val gyroEnabled: Boolean = false,
+    val gyroSensitivity: Int = 100, // 25 - 400
+    val gyroInvertY: Boolean = false,
+    // Pengali kepekatan semua tombol layar (persen) di atas kepekatan tiap tombol di editor. 100 = sesuai editor.
+    // Tombol sistem (pil menu, FPS) tidak ikut, supaya menunya selalu terlihat. Diatur dari menu dalam game.
+    val controlOpacityPercent: Int = 100, // 30 - 100
     // Discord Rich Presence ("Bermain AmberLauncher" di profil Discord). Bawaan MATI: pemain memilih sendiri.
     // Hanya berarti pada build yang membawa SDK Discord (BuildConfig.HAS_DISCORD_SDK).
     val discordRpcEnabled: Boolean = false,

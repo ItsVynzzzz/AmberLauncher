@@ -1,7 +1,7 @@
 # judul: Tambah mod Amber Lyrics: lirik lagu tersinkron di game Rust (Starling)
 [id]
-+ Mod baru Amber Lyrics untuk mesin Rust (Starling): lirik lagu yang sedang kamu putar di HP (Spotify, YouTube Music, dan pemutar lain) tampil bersinkron di layar game, lengkap dengan baris berikutnya dan pop-up judul lagu. Bawaan mati; hidupkan di Mod, lalu beri akses di Pengaturan > Rust > Lirik.
-+ Pengaturan > Rust punya grup Lirik untuk memberi akses "lagu yang diputar". Amber hanya membaca judul, artis, dan posisi lagu, bukan isi notifikasi. Judul dan artis dikirim ke lrclib.net untuk mencari lirik.
++ Mod baru Amber Lyrics untuk mesin Rust (Starling): lirik lagu yang sedang kamu putar di HP tampil bersinkron di layar game, lengkap dengan baris berikutnya dan pop-up judul lagu. Bawaan mati; hidupkan di Mod.
++ Tanpa izin khusus: lagu dibaca dari siaran pemutar musik (Spotify perlu "Device Broadcast Status" menyala), jadi tidak ada akses notifikasi atau izin sensitif lain. Pemutar yang tidak menyiarkan lagunya, seperti YouTube Music, belum terbaca. Judul dan artis dikirim ke lrclib.net untuk mencari lirik.
 [en]
-+ New Amber Lyrics mod for the Rust (Starling) engine: lyrics for the song playing on your phone (Spotify, YouTube Music, and other players) show in sync on the game screen, with the next line and a song title popup. Off by default; turn it on in Mods, then grant access in Settings > Rust > Lyrics.
-+ Settings > Rust has a new Lyrics group to grant "now playing" access. Amber only reads the title, artist, and position of the song, not notification contents. The title and artist are sent to lrclib.net to look up the lyrics.
++ New Amber Lyrics mod for the Rust (Starling) engine: lyrics for the song playing on your phone show in sync on the game screen, with the next line and a song title popup. Off by default; turn it on in Mods.
++ No special permission: the song is read from music player broadcasts (Spotify needs "Device Broadcast Status" turned on), so there is no notification access or other sensitive permission. Players that do not broadcast the song, such as YouTube Music, are not detected yet. The title and artist are sent to lrclib.net to look up the lyrics.

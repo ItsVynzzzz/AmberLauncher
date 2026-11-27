@@ -24,14 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.horizon.HorizonEngine
-import com.israadev.nuxlauncher.core.horizon.NowPlayingBridge
 import com.israadev.nuxlauncher.core.horizon.RustPerformanceReport
 import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.i18n.Text
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import com.israadev.nuxlauncher.ui.theme.AmberUi
-import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 /**
@@ -414,31 +412,13 @@ fun RustGameRows() {
     )
 }
 
-/** Lirik di game: izin untuk membaca lagu yang diputar (mod Amber Lyrics di mesin Starling). */
+/** Lirik di game (mod Amber Lyrics di mesin Starling): hanya keterangan, tidak ada izin khusus yang diminta. */
 @Composable
 fun RustLyricsRows() {
-    val context = LocalContext.current
-    var access by remember { mutableStateOf(NowPlayingBridge.hasAccess(context)) }
-    // Pengguna kembali dari halaman izin Android: periksa ulang selama tab ini terbuka (murah, sekali per detik).
-    LaunchedEffect(Unit) {
-        while (true) {
-            access = NowPlayingBridge.hasAccess(context)
-            delay(1000)
-        }
-    }
-
     RustInfoRow(
-        title = "Akses lagu yang diputar",
-        desc = "Dipakai mod Amber Lyrics di Starling untuk membaca judul dan posisi lagu dari pemutar musik HP. Isi notifikasi tidak dibaca.",
-        value = if (access) "Diberikan" else "Belum diberikan",
+        title = "Lirik di game (Amber Lyrics)",
+        desc = "Tanpa izin khusus: mod membaca lagu dari siaran pemutar musik. Di Spotify, hidupkan \"Device Broadcast Status\" di pengaturannya. Hidupkan mod di Mod (Starling); setelah masuk game, jeda lalu putar lagu sekali atau ganti lagu. Judul dan artis lagu dikirim ke lrclib.net untuk mencari lirik.",
+        value = "Tanpa izin",
         warn = false
-    )
-    SettingDivider()
-    SettingActionRow(
-        title = "Izin akses notifikasi",
-        desc = "Buka pengaturan Android, lalu pilih AmberLauncher. Setelah itu hidupkan mod Amber Lyrics di Mod (Starling) dan putar lagu. Judul dan artis lagu dikirim ke lrclib.net untuk mencari liriknya.",
-        actionLabel = if (access) "Kelola" else "Beri akses",
-        onClick = { NowPlayingBridge.openAccessSettings(context) },
-        filled = !access
     )
 }

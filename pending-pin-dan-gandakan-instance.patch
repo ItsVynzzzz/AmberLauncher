@@ -1,0 +1,651 @@
+diff --git a/app/src/main/assets/lang/en/instance-pin.tsv b/app/src/main/assets/lang/en/instance-pin.tsv
+new file mode 100644
+index 0000000..71c0ba0
+--- /dev/null
++++ b/app/src/main/assets/lang/en/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	PINNED
++LAINNYA	OTHERS
++Sematkan instance	Pin instance
++Lepas sematan	Unpin
++Gandakan instance	Duplicate instance
++Menyalin...	Copying...
++Menyalin instance... bisa lama bila dunianya besar	Copying instance... this can take a while if the worlds are big
++Instance digandakan. Salinannya ada di Pilih instance.	Instance duplicated. The copy is in Choose instance.
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	Not enough storage space to duplicate this instance.
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	The game or an installation is running. Try again when it finishes.
++Gagal menggandakan instance.	Failed to duplicate the instance.
++Masih menggandakan instance lain. Tunggu sampai selesai.	Still duplicating another instance. Wait until it finishes.
+diff --git a/app/src/main/assets/lang/es/instance-pin.tsv b/app/src/main/assets/lang/es/instance-pin.tsv
+new file mode 100644
+index 0000000..baad8e1
+--- /dev/null
++++ b/app/src/main/assets/lang/es/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	FIJADAS
++LAINNYA	OTRAS
++Sematkan instance	Fijar instancia
++Lepas sematan	Quitar de fijadas
++Gandakan instance	Duplicar instancia
++Menyalin...	Copiando...
++Menyalin instance... bisa lama bila dunianya besar	Copiando instancia... puede tardar si los mundos son grandes
++Instance digandakan. Salinannya ada di Pilih instance.	Instancia duplicada. La copia está en Elegir instancia.
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	No hay espacio de almacenamiento suficiente para duplicar esta instancia.
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	El juego o una instalación está en curso. Inténtalo de nuevo cuando termine.
++Gagal menggandakan instance.	No se pudo duplicar la instancia.
++Masih menggandakan instance lain. Tunggu sampai selesai.	Aún se está duplicando otra instancia. Espera a que termine.
+diff --git a/app/src/main/assets/lang/fil/instance-pin.tsv b/app/src/main/assets/lang/fil/instance-pin.tsv
+new file mode 100644
+index 0000000..9e31847
+--- /dev/null
++++ b/app/src/main/assets/lang/fil/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	NAKA-PIN
++LAINNYA	IBA PA
++Sematkan instance	I-pin ang instance
++Lepas sematan	I-unpin
++Gandakan instance	I-duplicate ang instance
++Menyalin...	Kinokopya...
++Menyalin instance... bisa lama bila dunianya besar	Kinokopya ang instance... maaaring matagalan kung malalaki ang mga world
++Instance digandakan. Salinannya ada di Pilih instance.	Na-duplicate ang instance. Nasa Pumili ng instance ang kopya.
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	Kulang ang storage para i-duplicate ang instance na ito.
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	Tumatakbo ang laro o isang installation. Subukan ulit kapag tapos na.
++Gagal menggandakan instance.	Hindi na-duplicate ang instance.
++Masih menggandakan instance lain. Tunggu sampai selesai.	May dina-duplicate pang ibang instance. Hintayin munang matapos.
+diff --git a/app/src/main/assets/lang/pt/instance-pin.tsv b/app/src/main/assets/lang/pt/instance-pin.tsv
+new file mode 100644
+index 0000000..e9430ef
+--- /dev/null
++++ b/app/src/main/assets/lang/pt/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	FIXADAS
++LAINNYA	OUTRAS
++Sematkan instance	Fixar instância
++Lepas sematan	Desafixar
++Gandakan instance	Duplicar instância
++Menyalin...	Copiando...
++Menyalin instance... bisa lama bila dunianya besar	Copiando instância... pode demorar se os mundos forem grandes
++Instance digandakan. Salinannya ada di Pilih instance.	Instância duplicada. A cópia está em Escolher instância.
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	Não há espaço de armazenamento suficiente para duplicar esta instância.
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	O jogo ou uma instalação está em andamento. Tente novamente quando terminar.
++Gagal menggandakan instance.	Falha ao duplicar a instância.
++Masih menggandakan instance lain. Tunggu sampai selesai.	Ainda duplicando outra instância. Aguarde terminar.
+diff --git a/app/src/main/assets/lang/th/instance-pin.tsv b/app/src/main/assets/lang/th/instance-pin.tsv
+new file mode 100644
+index 0000000..f845f2d
+--- /dev/null
++++ b/app/src/main/assets/lang/th/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	ปักหมุดแล้ว
++LAINNYA	อื่น ๆ
++Sematkan instance	ปักหมุดอินสแตนซ์
++Lepas sematan	เลิกปักหมุด
++Gandakan instance	ทำสำเนาอินสแตนซ์
++Menyalin...	กำลังคัดลอก...
++Menyalin instance... bisa lama bila dunianya besar	กำลังคัดลอกอินสแตนซ์... อาจใช้เวลานานถ้าโลกมีขนาดใหญ่
++Instance digandakan. Salinannya ada di Pilih instance.	ทำสำเนาอินสแตนซ์แล้ว สำเนาอยู่ใน เลือกอินสแตนซ์
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	พื้นที่จัดเก็บไม่พอสำหรับทำสำเนาอินสแตนซ์นี้
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	เกมหรือการติดตั้งกำลังทำงานอยู่ ลองใหม่อีกครั้งเมื่อเสร็จ
++Gagal menggandakan instance.	ทำสำเนาอินสแตนซ์ไม่สำเร็จ
++Masih menggandakan instance lain. Tunggu sampai selesai.	กำลังทำสำเนาอินสแตนซ์อื่นอยู่ โปรดรอจนเสร็จ
+diff --git a/app/src/main/assets/lang/vi/instance-pin.tsv b/app/src/main/assets/lang/vi/instance-pin.tsv
+new file mode 100644
+index 0000000..66529ae
+--- /dev/null
++++ b/app/src/main/assets/lang/vi/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	ĐÃ GHIM
++LAINNYA	KHÁC
++Sematkan instance	Ghim instance
++Lepas sematan	Bỏ ghim
++Gandakan instance	Nhân đôi instance
++Menyalin...	Đang sao chép...
++Menyalin instance... bisa lama bila dunianya besar	Đang sao chép instance... có thể mất lâu nếu thế giới lớn
++Instance digandakan. Salinannya ada di Pilih instance.	Đã nhân đôi instance. Bản sao nằm trong Chọn instance.
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	Không đủ dung lượng lưu trữ để nhân đôi instance này.
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	Trò chơi hoặc quá trình cài đặt đang chạy. Hãy thử lại khi xong.
++Gagal menggandakan instance.	Không nhân đôi được instance.
++Masih menggandakan instance lain. Tunggu sampai selesai.	Đang nhân đôi một instance khác. Hãy đợi đến khi xong.
+diff --git a/app/src/main/assets/lang/zh/instance-pin.tsv b/app/src/main/assets/lang/zh/instance-pin.tsv
+new file mode 100644
+index 0000000..0136c9b
+--- /dev/null
++++ b/app/src/main/assets/lang/zh/instance-pin.tsv
+@@ -0,0 +1,13 @@
++# Pin instance dan gandakan instance
++DISEMATKAN	已固定
++LAINNYA	其他
++Sematkan instance	固定实例
++Lepas sematan	取消固定
++Gandakan instance	复制实例
++Menyalin...	正在复制...
++Menyalin instance... bisa lama bila dunianya besar	正在复制实例……如果存档很大可能需要较长时间
++Instance digandakan. Salinannya ada di Pilih instance.	实例已复制。副本在“选择实例”中。
++Ruang penyimpanan tidak cukup untuk menggandakan instance ini.	存储空间不足，无法复制此实例。
++Game atau pemasangan sedang berjalan. Coba lagi setelah selesai.	游戏或安装正在进行。请在完成后重试。
++Gagal menggandakan instance.	复制实例失败。
++Masih menggandakan instance lain. Tunggu sampai selesai.	仍在复制另一个实例。请等待完成。
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+index ea4f883..ae32001 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/instance/InstanceManager.kt
+@@ -15,6 +15,9 @@ import java.util.UUID
+ 
+ object InstanceManager {
+     private val gson = Gson()
++    private const val STAGING_PREFIX = ".copying-"
++    // Sisa ruang yang harus tersedia selain ukuran salinan, supaya HP tidak penuh sampai tidak bisa dipakai
++    private const val FREE_SPACE_MARGIN_BYTES = 256L * 1024 * 1024
+     private val _instances = MutableStateFlow<List<Instance>>(emptyList())
+     val instances: StateFlow<List<Instance>> = _instances.asStateFlow()
+ 
+@@ -537,6 +540,168 @@ object InstanceManager {
+         save(context)
+     }
+ 
++    /** Menyematkan atau melepas sematan instance. Yang disematkan tampil paling atas di pemilih instance. */
++    fun setPinned(context: Context, instanceId: String, pinned: Boolean) {
++        val current = _instances.value.firstOrNull { it.id == instanceId } ?: return
++        if (current.pinned == pinned) return
++        updateInstance(context, current.copy(pinned = pinned))
++    }
++
++    /** Urutan tampil di pemilih: yang disematkan dulu, sisanya tetap berurutan seperti di daftar (pengurutan stabil). */
++    fun pinnedFirst(list: List<Instance>): List<Instance> =
++        if (list.none { it.pinned }) list else list.sortedByDescending { it.pinned }
++
++    // ---- Menggandakan instance ------------------------------------------------------------------------
++
++    sealed class DuplicateResult {
++        data class Done(val instance: Instance) : DuplicateResult()
++        data class Failed(val message: String) : DuplicateResult()
++    }
++
++    // Hanya satu penggandaan sekaligus, dan nama folder sementaranya (agar tidak ikut tersapu).
++    @Volatile private var duplicating = false
++    private val stagingInUse = HashSet<String>()
++
++    /**
++     * Menggandakan [source] menjadi instance baru bernama "<nama> (salinan)": semua berkas instance (mod, dunia,
++     * resource pack, pengaturan, ...) disalin, kecuali log dan laporan crash. Berkas game bersama (versi, library,
++     * aset) tidak ikut karena memang dipakai bersama, jadi salinannya tidak memakan ruang sebesar instance
++     * pertamanya. Instance asli tidak disentuh dan pilihan instance aktif tidak berubah.
++     *
++     * Berjalan di thread sendiri (dunia besar bisa menyalin lama); [onResult] dipanggil di thread utama.
++     * Disalin dulu ke folder sementara dan baru dinamai dan didaftarkan setelah selesai, jadi instance setengah
++     * jadi tidak pernah muncul di daftar atau bisa dijalankan. Ditolak bila game atau pemasangan sedang berjalan
++     * (berkas bisa sedang ditulis) atau ruang penyimpanan tidak cukup.
++     */
++    fun duplicateInstance(context: Context, source: Instance, onResult: (DuplicateResult) -> Unit) {
++        val app = context.applicationContext
++        if (duplicating) {
++            onResult(DuplicateResult.Failed("Masih menggandakan instance lain. Tunggu sampai selesai."))
++            return
++        }
++        if (foldersBusy(app)) {
++            onResult(DuplicateResult.Failed("Game atau pemasangan sedang berjalan. Coba lagi setelah selesai."))
++            return
++        }
++        duplicating = true
++        val main = android.os.Handler(android.os.Looper.getMainLooper())
++        Thread({
++            var copy: Instance? = null
++            var failure = "Gagal menggandakan instance."
++            try {
++                val outcome = copyInstanceFiles(app, source)
++                copy = outcome.first
++                outcome.second?.let { failure = it }
++            } catch (e: Throwable) {
++                LauncherLog.w("InstanceManager", "Gagal menggandakan instance: ${e.message}")
++            }
++            main.post {
++                duplicating = false
++                val made = copy
++                if (made == null) {
++                    onResult(DuplicateResult.Failed(failure))
++                } else {
++                    // createInstance langsung memilih instance baru; pilihan semula dikembalikan
++                    val previous = _selectedInstance.value
++                    createInstance(app, made)
++                    previous?.let { prev ->
++                        _instances.value.firstOrNull { it.id == prev.id }?.let { selectInstance(it) }
++                    }
++                    onResult(DuplicateResult.Done(made))
++                }
++            }
++        }, "amber-duplicate").start()
++    }
++
++    /** Menyalin isi instance ke folder barunya. Mengembalikan instance baru, atau pesan kegagalan. */
++    private fun copyInstanceFiles(context: Context, source: Instance): Pair<Instance?, String?> {
++        val instancesDir = getInstancesDir(context)
++        val current = _instances.value.firstOrNull { it.id == source.id } ?: source
++        val srcDir = File(instancesDir, folderOf(current))
++
++        val usedNames = _instances.value.map { it.name.lowercase() }.toHashSet()
++        var newName = "${current.name} (salinan)"
++        var n = 2
++        while (newName.lowercase() in usedNames) {
++            newName = "${current.name} (salinan $n)"
++            n++
++        }
++        val newId = "inst_${UUID.randomUUID()}"
++        val taken = HashSet<String>()
++        instancesDir.list()?.forEach { taken.add(it.lowercase()) }
++        for (other in _instances.value) taken.add(folderOf(other).lowercase())
++        val dirName = InstanceFolders.unique(InstanceFolders.sanitize(newName), taken)
++
++        // Sisa folder sementara dari penyalinan yang terputus (aplikasi ditutup di tengah jalan) dibersihkan dulu
++        instancesDir.listFiles()?.forEach { f ->
++            if (f.isDirectory && f.name.startsWith(STAGING_PREFIX)) {
++                val inUse = synchronized(stagingInUse) { f.name in stagingInUse }
++                if (!inUse) f.deleteRecursively()
++            }
++        }
++
++        val staging = File(instancesDir, STAGING_PREFIX + newId)
++        synchronized(stagingInUse) { stagingInUse.add(staging.name) }
++        try {
++            if (srcDir.isDirectory) {
++                val needed = treeSize(srcDir, "")
++                val free = android.os.StatFs(instancesDir.path).availableBytes
++                if (free < needed + FREE_SPACE_MARGIN_BYTES) {
++                    return null to "Ruang penyimpanan tidak cukup untuk menggandakan instance ini."
++                }
++                copyTree(srcDir, staging, "")
++            } else {
++                staging.mkdirs()
++            }
++            val finalDir = File(instancesDir, dirName)
++            if (finalDir.exists() || !staging.renameTo(finalDir)) {
++                staging.deleteRecursively()
++                return null to "Gagal menggandakan instance."
++            }
++            val copy = current.copy(
++                id = newId,
++                name = newName,
++                dirName = dirName,
++                createdTime = System.currentTimeMillis(),
++                pinned = false
++            )
++            return copy to null
++        } catch (e: Throwable) {
++            staging.deleteRecursively()
++            LauncherLog.w("InstanceManager", "Gagal menyalin instance: ${e.message}")
++            return null to "Gagal menggandakan instance."
++        } finally {
++            synchronized(stagingInUse) { stagingInUse.remove(staging.name) }
++        }
++    }
++
++    /** Yang tidak ikut disalin: instance.json (dibuat ulang untuk instance baru), log, dan laporan crash. */
++    private fun skipOnDuplicate(rel: String): Boolean =
++        rel == "instance.json" || rel == "minecraft/logs" || rel == "minecraft/crash-reports"
++
++    private fun relOf(parentRel: String, name: String): String = if (parentRel.isEmpty()) name else "$parentRel/$name"
++
++    private fun treeSize(file: File, rel: String): Long {
++        if (rel.isNotEmpty() && skipOnDuplicate(rel)) return 0L
++        if (file.isFile) return file.length()
++        var total = 0L
++        file.listFiles()?.forEach { total += treeSize(it, relOf(rel, it.name)) }
++        return total
++    }
++
++    private fun copyTree(src: File, dst: File, rel: String) {
++        if (rel.isNotEmpty() && skipOnDuplicate(rel)) return
++        if (src.isDirectory) {
++            dst.mkdirs()
++            src.listFiles()?.forEach { copyTree(it, File(dst, it.name), relOf(rel, it.name)) }
++        } else {
++            src.inputStream().use { input ->
++                dst.outputStream().use { output -> input.copyTo(output, 64 * 1024) }
++            }
++            dst.setLastModified(src.lastModified())
++        }
++    }
++
+     fun selectInstance(instance: Instance) {
+         _selectedInstance.value = instance
+         appContext?.let { saveSelectedInstanceId(it, instance.id) }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+index 5a09d4e..4aa07d8 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/models/MinecraftModels.kt
+@@ -124,7 +124,10 @@ data class Instance(
+     val controlPresetId: String? = null,
+     // Nama folder instance ini di instances/ (dibuat dari nama instance supaya mudah dikenali di pengelola berkas).
+     // null = folder memakai id, seperti instance buatan versi lama; InstanceManager memindahkannya otomatis.
+-    val dirName: String? = null
++    val dirName: String? = null,
++    // Disematkan di pemilih instance: tampil paling atas daftar. Instance lama tidak punya field ini di JSON-nya dan
++    // terbaca false, jadi urutannya tidak berubah sampai pengguna menyematkan sesuatu.
++    val pinned: Boolean = false
+ ) {
+     /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
+     val hasOverrides: Boolean
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+index d2ffa8a..ff7d6c5 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxEditInstanceDialog.kt
+@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.outlined.Check
++import androidx.compose.material.icons.outlined.ContentCopy
+ import androidx.compose.material.icons.outlined.DeleteOutline
+ import androidx.compose.material.icons.outlined.Edit
+ import androidx.compose.material.icons.outlined.Extension
+@@ -88,6 +89,8 @@ fun NuxEditInstanceDialog(
+     var editName by remember { mutableStateOf(instance.name) }
+     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
+     var showDeleteConfirm by remember { mutableStateOf(false) }
++    // Penggandaan instance sedang berjalan (dunia besar bisa menyalin lama): tombolnya dikunci selama itu
++    var duplicating by remember { mutableStateOf(false) }
+     var showInstanceSettings by remember { mutableStateOf(false) }
+     var showControls by remember { mutableStateOf(false) }
+     var showStorage by remember { mutableStateOf(false) }
+@@ -221,6 +224,26 @@ fun NuxEditInstanceDialog(
+                 InstanceManager.openInstanceFolder(context, instance)
+             }
+         )
++        AmberActionPill(
++            icon = Icons.Outlined.ContentCopy,
++            label = "Gandakan instance",
++            trailing = if (duplicating) "Menyalin..." else null,
++            showChevron = !duplicating,
++            onClick = {
++                if (!duplicating) {
++                    duplicating = true
++                    Toast.makeText(context, "Menyalin instance... bisa lama bila dunianya besar", Toast.LENGTH_LONG).show()
++                    InstanceManager.duplicateInstance(context, instance) { result ->
++                        duplicating = false
++                        val message = when (result) {
++                            is InstanceManager.DuplicateResult.Done -> "Instance digandakan. Salinannya ada di Pilih instance."
++                            is InstanceManager.DuplicateResult.Failed -> result.message
++                        }
++                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
++                    }
++                }
++            }
++        )
+         if (onRepair != null) {
+             AmberActionPill(
+                 icon = Icons.Outlined.Refresh,
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+index 250a591..fc7412c 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/dialogs/NuxInstancePickerDialog.kt
+@@ -2,6 +2,7 @@ package com.israadev.nuxlauncher.ui.dialogs
+ 
+ import androidx.compose.foundation.background
+ import androidx.compose.foundation.border
++import androidx.compose.foundation.Canvas
+ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.gestures.detectTapGestures
+ import androidx.compose.foundation.layout.Arrangement
+@@ -31,6 +32,7 @@ import androidx.compose.material.icons.outlined.Tune
+ import androidx.compose.material3.Icon
+ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.remember
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.draw.clip
+@@ -40,6 +42,8 @@ import androidx.compose.ui.geometry.Offset
+ import androidx.compose.ui.geometry.Size
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.PathEffect
++import androidx.compose.ui.graphics.Path
++import androidx.compose.ui.graphics.StrokeJoin
+ import androidx.compose.ui.graphics.drawscope.Stroke
+ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.input.pointer.pointerInput
+@@ -47,10 +51,13 @@ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.sp
+ import com.israadev.nuxlauncher.core.forge.ForgeFlavor
++import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.models.Instance
+ import com.israadev.nuxlauncher.ui.components.AmberPage
++import com.israadev.nuxlauncher.ui.components.AmberPageLabel
+ import com.israadev.nuxlauncher.ui.i18n.Text
+ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import com.israadev.nuxlauncher.ui.theme.AmberUi
+@@ -74,13 +81,23 @@ fun NuxInstancePickerDialog(
+     onEdit: (Instance) -> Unit,
+     onDelete: (Instance) -> Unit,
+     onAdd: () -> Unit,
+-    onDismiss: () -> Unit
++    onDismiss: () -> Unit,
++    onTogglePin: (Instance) -> Unit = {}
+ ) {
+     val listState = rememberLazyListState()
++    // Yang disematkan di atas, sisanya tetap berurutan seperti di daftar. Judul DISEMATKAN / LAINNYA hanya tampil
++    // bila daftarnya memang terbagi dua (ada yang disematkan dan ada yang tidak).
++    val ordered = remember(instances) { InstanceManager.pinnedFirst(instances) }
++    val pinnedCount = ordered.count { it.pinned }
++    val showHeaders = pinnedCount > 0 && pinnedCount < ordered.size
+     // Buka dengan instance aktif sudah terlihat, bukan selalu dari baris pertama.
+     LaunchedEffect(Unit) {
+-        val index = instances.indexOfFirst { it.id == selectedId }
+-        if (index > 0) listState.scrollToItem(index)
++        val index = ordered.indexOfFirst { it.id == selectedId }
++        if (index > 0) {
++            // Judul juga memakai satu butir daftar: satu di atas yang disematkan, satu lagi di atas sisanya
++            val headers = if (showHeaders) (if (index >= pinnedCount) 2 else 1) else 0
++            listState.scrollToItem(index + headers)
++        }
+     }
+ 
+     AmberPage(
+@@ -107,7 +124,7 @@ fun NuxInstancePickerDialog(
+                 )
+             }
+         }
+-    ) { _ ->
++    ) { info ->
+         Box(
+             modifier = Modifier.fillMaxSize(),
+             contentAlignment = Alignment.TopCenter
+@@ -140,14 +157,34 @@ fun NuxInstancePickerDialog(
+                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                     verticalArrangement = Arrangement.spacedBy(8.dp)
+                 ) {
+-                    items(instances, key = { it.id }) { inst ->
++                    if (showHeaders) {
++                        item(key = "__pinned_header__") { AmberPageLabel("DISEMATKAN") }
++                    }
++                    items(ordered.take(pinnedCount), key = { it.id }) { inst ->
+                         InstanceRow(
+                             inst = inst,
+                             selected = inst.id == selectedId,
++                            compact = info.narrow,
+                             onSelect = { onSelect(inst) },
+                             onOpenFolder = { onOpenFolder(inst) },
+                             onEdit = { onEdit(inst) },
+-                            onDelete = { onDelete(inst) }
++                            onDelete = { onDelete(inst) },
++                            onTogglePin = { onTogglePin(inst) }
++                        )
++                    }
++                    if (showHeaders) {
++                        item(key = "__rest_header__") { AmberPageLabel("LAINNYA") }
++                    }
++                    items(ordered.drop(pinnedCount), key = { it.id }) { inst ->
++                        InstanceRow(
++                            inst = inst,
++                            selected = inst.id == selectedId,
++                            compact = info.narrow,
++                            onSelect = { onSelect(inst) },
++                            onOpenFolder = { onOpenFolder(inst) },
++                            onEdit = { onEdit(inst) },
++                            onDelete = { onDelete(inst) },
++                            onTogglePin = { onTogglePin(inst) }
+                         )
+                     }
+                     item(key = "__add_row__") {
+@@ -166,10 +203,12 @@ private val RowShape = RoundedCornerShape(16.dp)
+ private fun InstanceRow(
+     inst: Instance,
+     selected: Boolean,
++    compact: Boolean,
+     onSelect: () -> Unit,
+     onOpenFolder: () -> Unit,
+     onEdit: () -> Unit,
+-    onDelete: () -> Unit
++    onDelete: () -> Unit,
++    onTogglePin: () -> Unit
+ ) {
+     Row(
+         modifier = Modifier
+@@ -209,10 +248,12 @@ private fun InstanceRow(
+             )
+         }
+         Spacer(modifier = Modifier.width(8.dp))
+-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+-            RowRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder)
+-            RowRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit)
+-            RowRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete)
++        // Di layar sempit (HP portrait) tombolnya sedikit lebih kecil supaya nama instance tetap terbaca
++        Row(horizontalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 6.dp)) {
++            PinRoundButton(inst.pinned, compact, onTogglePin)
++            RowRoundButton(Icons.Outlined.Folder, "Buka folder", AmberUi.Text, onOpenFolder, compact)
++            RowRoundButton(Icons.Outlined.Tune, "Ubah instance", AmberUi.Text, onEdit, compact)
++            RowRoundButton(Icons.Outlined.DeleteOutline, "Hapus instance", AmberUi.Danger, onDelete, compact)
+         }
+     }
+ }
+@@ -242,11 +283,13 @@ private fun RowRoundButton(
+     icon: ImageVector,
+     description: String,
+     tint: Color,
+-    onClick: () -> Unit
++    onClick: () -> Unit,
++    compact: Boolean = false
+ ) {
++    val box: Dp = if (compact) 32.dp else 36.dp
+     Box(
+         modifier = Modifier
+-            .size(36.dp)
++            .size(box)
+             .clip(CircleShape)
+             .background(Color.White.copy(alpha = 0.10f), CircleShape)
+             .clickable { onClick() },
+@@ -256,11 +299,64 @@ private fun RowRoundButton(
+             imageVector = icon,
+             contentDescription = description,
+             tint = tint,
+-            modifier = Modifier.size(18.dp)
++            modifier = Modifier.size(if (compact) 16.dp else 18.dp)
+         )
+     }
+ }
+ 
++/**
++ * Tombol sematkan: peniti terisi terang bila instance disematkan, hanya garis tepi redup bila belum. Peniti
++ * digambar langsung dari garis (tanpa ikon tambahan), jadi tidak menambah ukuran aplikasi.
++ */
++@Composable
++private fun PinRoundButton(
++    pinned: Boolean,
++    compact: Boolean,
++    onClick: () -> Unit
++) {
++    val box: Dp = if (compact) 32.dp else 36.dp
++    val glyph = AmberUi.Text.copy(alpha = if (pinned) 1f else 0.62f)
++    val description = Tr.t(if (pinned) "Lepas sematan" else "Sematkan instance")
++    Box(
++        modifier = Modifier
++            .size(box)
++            .clip(CircleShape)
++            .background(if (pinned) AmberUi.Accent.copy(alpha = 0.55f) else Color.White.copy(alpha = 0.10f), CircleShape)
++            .clickable { onClick() },
++        contentAlignment = Alignment.Center
++    ) {
++        Canvas(modifier = Modifier.size(if (compact) 16.dp else 18.dp)) {
++            val u = size.minDimension / 24f
++            // Peniti tegak: kepala melebar di atas, badan, lalu jarum ke bawah
++            val path = Path().apply {
++                moveTo(7f * u, 2f * u)
++                lineTo(17f * u, 2f * u)
++                lineTo(17f * u, 4.5f * u)
++                lineTo(16f * u, 4.5f * u)
++                lineTo(16f * u, 9f * u)
++                lineTo(19f * u, 12f * u)
++                lineTo(19f * u, 14f * u)
++                lineTo(13f * u, 14f * u)
++                lineTo(13f * u, 20.5f * u)
++                lineTo(12f * u, 22.5f * u)
++                lineTo(11f * u, 20.5f * u)
++                lineTo(11f * u, 14f * u)
++                lineTo(5f * u, 14f * u)
++                lineTo(5f * u, 12f * u)
++                lineTo(8f * u, 9f * u)
++                lineTo(8f * u, 4.5f * u)
++                lineTo(7f * u, 4.5f * u)
++                close()
++            }
++            if (pinned) {
++                drawPath(path = path, color = glyph)
++            } else {
++                drawPath(path = path, color = glyph, style = Stroke(width = 1.8f * u, join = StrokeJoin.Round))
++            }
++        }
++    }
++}
++
+ /** Baris putus-putus di ujung daftar untuk menambah instance. */
+ @Composable
+ private fun AddInstanceRow(onClick: () -> Unit) {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+index 415a181..c1c5b3b 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/DashboardScreen.kt
+@@ -737,7 +737,8 @@ fun DashboardScreen() {
+                     showInstancePicker = false
+                     currentTab = "create_instance"
+                 },
+-                onDismiss = { showInstancePicker = false }
++                onDismiss = { showInstancePicker = false },
++                onTogglePin = { inst -> InstanceManager.setPinned(context, inst.id, !inst.pinned) }
+             )
+         }
+ 
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+index 4d589af..f3d881f 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/screens/ModsScreen.kt
+@@ -1119,7 +1119,7 @@ fun ModsScreen(
+     if (showInstanceMenu) {
+         AmberPickerDialog(
+             title = "Pilih instance",
+-            options = instances.map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
++            options = InstanceManager.pinnedFirst(instances).map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
+             selectedId = selectedInstance?.id,
+             onPick = { id ->
+                 instances.firstOrNull { it.id == id }?.let { InstanceManager.selectInstance(it) }
+diff --git a/changelog/entries/20261128-pin-dan-gandakan-instance.txt b/changelog/entries/20261128-pin-dan-gandakan-instance.txt
+new file mode 100644
+index 0000000..0f67578
+--- /dev/null
++++ b/changelog/entries/20261128-pin-dan-gandakan-instance.txt
+@@ -0,0 +1,7 @@
++# judul: Sematkan instance di pemilih instance, dan gandakan instance
++[id]
+++ Pemilih instance kini punya tombol peniti di tiap baris: instance yang disematkan tampil paling atas (di bawah judul DISEMATKAN), sisanya di bawah judul LAINNYA. Pemilih instance di halaman Mod juga mengurutkan yang disematkan lebih dulu.
+++ Ubah instance > Gandakan instance: membuat salinan lengkap (mod, dunia, resource pack, pengaturan) bernama "<nama> (salinan)", berguna untuk mencoba mod tanpa merusak dunia utama. Berkas game bersama (versi, library, aset) tidak ikut disalin, log dan laporan crash dilewati. Disalin ke folder sementara dulu dan baru muncul di daftar setelah selesai; ditolak bila game atau pemasangan sedang berjalan atau ruang penyimpanan tidak cukup.
++[en]
+++ The instance picker now has a pin button on every row: pinned instances show at the top (under a PINNED heading), the rest under OTHERS. The instance picker on the Mods page also lists pinned ones first.
+++ Edit instance > Duplicate instance: makes a full copy (mods, worlds, resource packs, settings) named "<name> (salinan)", handy for trying mods without risking your main world. Shared game files (versions, libraries, assets) are not copied, and logs and crash reports are skipped. It copies into a temporary folder first and only shows up in the list when finished; it is refused while the game or an installation is running, or when there isn't enough storage space.
+
+# FIN part=1/1 files=14

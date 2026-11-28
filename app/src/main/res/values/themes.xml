@@ -11,5 +11,7 @@
 
     <style name="Theme.NuxLauncher.Dialog" parent="android:Theme.Material.Light.Dialog">
         <item name="android:windowAnimationStyle">@null</item>
+        <!-- Bar status tidak sempat muncul saat dialog dibuka; bar navigasi disembunyikan lewat SystemBars. -->
+        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

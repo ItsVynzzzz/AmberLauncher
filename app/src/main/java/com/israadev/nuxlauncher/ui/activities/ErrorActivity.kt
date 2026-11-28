@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import com.israadev.nuxlauncher.MainActivity
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.crash.GameCrashInfo
+import com.israadev.nuxlauncher.core.device.SystemBars
 import com.israadev.nuxlauncher.ui.components.AmberCrashPanel
 import com.israadev.nuxlauncher.ui.i18n.Tr
 import com.israadev.nuxlauncher.ui.theme.Amber
@@ -123,6 +124,7 @@ class ErrorActivity : ComponentActivity() {
             exitReason = saved?.exitReason
         )
 
+        SystemBars.hide(window)
         setContent {
             MaterialTheme {
                 Surface(
@@ -150,5 +152,16 @@ class ErrorActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        SystemBars.hide(window)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // Bar bisa muncul lagi setelah dialog atau papan ketik; sembunyikan lagi tiap jendela mendapat fokus
+        if (hasFocus) SystemBars.hide(window)
     }
 }

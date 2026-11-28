@@ -1,0 +1,24 @@
+[id]
+! Bar status dan bar navigasi Android kini selalu tersembunyi selama launcher terbuka, dalam kondisi apa pun. Sebelumnya bar dimunculkan terus bila launcher mengira ada mouse fisik terhubung (termasuk perangkat Bluetooth yang dikenali sebagai mouse), di layar utama maupun di dialog.
+~ Layar crash dan dialog juga mengikuti mode layar penuh, jadi bar tidak sempat muncul sekilas saat dialog dibuka. Bar hanya muncul bila digeser dari tepi layar atau dimunculkan sistem Android sendiri, lalu hilang lagi.
+[en]
+! The Android status bar and navigation bar now stay hidden for as long as the launcher is open, in every situation. Before, the bars were kept on screen whenever the launcher thought a physical mouse was connected (including Bluetooth devices that identify as a mouse), on the main screens and in dialogs.
+~ The crash screen and dialogs also follow full-screen mode, so the bar no longer flashes briefly when a dialog opens. The bars appear only when swiped in from the screen edge or brought up by Android itself, and then hide again.
+[es]
+! La barra de estado y la barra de navegación de Android ahora permanecen ocultas mientras el launcher está abierto, en cualquier situación. Antes las barras se mantenían visibles siempre que el launcher creía que había un mouse físico conectado (incluidos dispositivos Bluetooth que se identifican como mouse), tanto en las pantallas principales como en los diálogos.
+~ La pantalla de crash y los diálogos también siguen el modo de pantalla completa, así que la barra ya no aparece un instante al abrir un diálogo. Las barras solo aparecen al deslizar desde el borde de la pantalla o cuando las muestra el propio Android, y luego se ocultan de nuevo.
+[fil]
+! Nananatiling nakatago ang status bar at navigation bar ng Android habang bukas ang launcher, sa anumang sitwasyon. Dati, laging ipinapakita ang mga bar kapag inakala ng launcher na may nakakonektang pisikal na mouse (kasama ang mga Bluetooth device na nagpapakilala bilang mouse), sa mga pangunahing screen at sa mga dialog.
+~ Sumusunod na rin sa full-screen mode ang crash screen at mga dialog, kaya hindi na sandaling lalabas ang bar kapag may bumukas na dialog. Lalabas lang ang mga bar kapag ini-swipe mula sa gilid ng screen o ipinakita mismo ng Android, at itatago ulit pagkatapos.
+[pt]
+! A barra de status e a barra de navegação do Android agora ficam sempre ocultas enquanto o launcher está aberto, em qualquer situação. Antes, as barras eram mantidas na tela sempre que o launcher achava que um mouse físico estava conectado (incluindo dispositivos Bluetooth que se identificam como mouse), nas telas principais e nos diálogos.
+~ A tela de crash e os diálogos também seguem o modo de tela cheia, então a barra não aparece mais por um instante ao abrir um diálogo. As barras só aparecem ao deslizar da borda da tela ou quando o próprio Android as mostra, e depois somem de novo.
+[th]
+! แถบสถานะและแถบนำทางของ Android จะซ่อนอยู่ตลอดที่เปิดตัวเปิดเกม ไม่ว่าสถานการณ์ใด ก่อนหน้านี้แถบจะค้างอยู่เมื่อตัวเปิดเกมคิดว่ามีเมาส์จริงเชื่อมต่ออยู่ (รวมถึงอุปกรณ์บลูทูธที่ระบุตัวเองเป็นเมาส์) ทั้งในหน้าหลักและในกล่องโต้ตอบ
+~ หน้าจอแครชและกล่องโต้ตอบก็ใช้โหมดเต็มจอเช่นกัน แถบจึงไม่แวบขึ้นมาตอนเปิดกล่องโต้ตอบ แถบจะปรากฏเฉพาะเมื่อปัดจากขอบจอหรือระบบ Android แสดงเอง แล้วซ่อนกลับไปเอง
+[vi]
+! Thanh trạng thái và thanh điều hướng của Android giờ luôn được ẩn khi launcher đang mở, trong mọi tình huống. Trước đây các thanh này bị giữ hiện mỗi khi launcher cho rằng có chuột vật lý đang kết nối (kể cả thiết bị Bluetooth tự nhận là chuột), ở cả màn hình chính lẫn hộp thoại.
+~ Màn hình crash và các hộp thoại cũng theo chế độ toàn màn hình, nên thanh không còn thoáng hiện khi mở hộp thoại. Các thanh chỉ hiện khi vuốt từ mép màn hình hoặc do chính Android hiện ra, rồi tự ẩn lại.
+[zh]
+! 只要启动器处于打开状态，Android 的状态栏和导航栏现在在任何情况下都会保持隐藏。此前，只要启动器认为连接了实体鼠标（包括自称是鼠标的蓝牙设备），主界面和对话框中就会一直显示这些栏。
+~ 崩溃界面和对话框也遵循全屏模式，因此打开对话框时状态栏不会再一闪而过。这些栏只会在从屏幕边缘滑入或由 Android 系统自行唤出时出现，随后会自动隐藏。

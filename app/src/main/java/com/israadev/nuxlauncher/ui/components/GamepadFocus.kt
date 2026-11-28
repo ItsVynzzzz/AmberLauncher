@@ -1,9 +1,6 @@
 package com.israadev.nuxlauncher.ui.components
 
-import android.os.Build
-import android.view.View
 import android.view.ViewTreeObserver
-import android.view.WindowManager
 import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.interaction.FocusInteraction
@@ -26,10 +23,7 @@ import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogWindowProvider
-import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import com.israadev.nuxlauncher.core.device.SystemBars
 import com.israadev.nuxlauncher.core.controls.GamepadNav
 import kotlinx.coroutines.launch
 
@@ -134,37 +128,7 @@ fun ImmersiveWindowHook() {
         if (window == null) {
             return@DisposableEffect onDispose { }
         }
-        val hideBars: () -> Unit = hide@{
-            // Dengan mouse fisik bar sistem dibiarkan tampil (lihat MainActivity.applySystemBars).
-            if (PhysicalMouseChecker.isMouseAttachedNow()) return@hide
-            try {
-                val controller = WindowCompat.getInsetsController(window, window.decorView)
-                controller.systemBarsBehavior =
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                controller.hide(WindowInsetsCompat.Type.systemBars())
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    val attrs = window.attributes
-                    if (attrs.layoutInDisplayCutoutMode !=
-                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                    ) {
-                        attrs.layoutInDisplayCutoutMode =
-                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                        window.attributes = attrs
-                    }
-                }
-                @Suppress("DEPRECATION")
-                window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    )
-            } catch (_: Throwable) {
-                // Bar sistem tetap tampil di perangkat yang menolak; tampilan tetap berfungsi.
-            }
-        }
+        val hideBars: () -> Unit = { SystemBars.hide(window) }
         hideBars()
         // Sekali lagi setelah jendela benar-benar tampil: panggilan pertama bisa terlalu awal.
         view.post { hideBars() }

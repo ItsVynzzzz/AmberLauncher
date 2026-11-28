@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.content.Context
 import android.os.Bundle
-import android.hardware.input.InputManager
 import android.os.Environment
 import android.provider.Settings
 import android.view.View
@@ -35,7 +34,6 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
 import com.israadev.nuxlauncher.core.mods.PendingAddonImport
 import com.israadev.nuxlauncher.core.settings.SettingsManager
-import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
 import com.israadev.nuxlauncher.core.storage.DataLocation
 import com.israadev.nuxlauncher.core.storage.StorageMigrationRunner
 import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
@@ -260,10 +258,6 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         navUninstall?.invoke()
         navUninstall = null
-        inputWatcher?.let { w ->
-            try { (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.unregisterInputDeviceListener(w) } catch (_: Throwable) {}
-        }
-        inputWatcher = null
         super.onDestroy()
         bgExecutor.shutdown()
         com.israadev.nuxlauncher.core.skin.OfflineSkinServerManager.stopServer()
@@ -295,39 +289,14 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * Dengan mouse fisik terhubung, bar status dan navigasi dibiarkan TAMPIL. Mode layar penuh (bar disembunyikan,
-     * muncul sementara bila digeser dari tepi) dibuat untuk jari: dengan mouse tak ada gesekan dari tepi, dan
-     * menyentuh tepi layar memunculkan bar atau taskbar sementara milik sistem (terutama di tablet dan mode desktop).
-     * Klik berikutnya lalu dipakai sistem untuk menutupnya (jendela kehilangan fokus sejenak), sehingga tampak
-     * seperti klik pertama yang tidak bereaksi. Tanpa mouse tampilan tidak berubah.
+     * Bar status dan navigasi Android selalu disembunyikan selama launcher terbuka, apa pun kondisinya
+     * (termasuk saat ada mouse, keyboard, atau gamepad terhubung). Bar hanya muncul sebentar bila pengguna
+     * menggesernya dari tepi layar atau dimunculkan sistem Android sendiri, lalu hilang lagi.
+     * Dipanggil ulang tiap layar dibuka, dilanjutkan, dan tiap jendela mendapat fokus (mis. setelah dialog
+     * atau papan ketik), karena sebagian HP memunculkan bar kembali saat itu.
      */
     private fun applySystemBars() {
-        watchInputDevices()
-        if (PhysicalMouseChecker.isMouseAttachedNow()) showSystemBars() else hideSystemBars()
-    }
-
-    private fun showSystemBars() {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-    }
-
-    private var inputWatcher: InputManager.InputDeviceListener? = null
-
-    /** Mouse dicolok atau dicabut saat launcher terbuka: terapkan ulang kebijakan bar sistem. */
-    private fun watchInputDevices() {
-        if (inputWatcher != null) return
-        val listener = object : InputManager.InputDeviceListener {
-            override fun onInputDeviceAdded(deviceId: Int) { window.decorView.post { applySystemBars() } }
-            override fun onInputDeviceRemoved(deviceId: Int) { window.decorView.post { applySystemBars() } }
-            override fun onInputDeviceChanged(deviceId: Int) {}
-        }
-        try {
-            (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.registerInputDeviceListener(listener, null)
-            inputWatcher = listener
-        } catch (_: Throwable) {
-        }
+        hideSystemBars()
     }
 
     private fun markStorageIntroDone() {

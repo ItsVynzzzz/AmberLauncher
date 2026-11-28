@@ -3,7 +3,7 @@ package com.israadev.nuxlauncher.ui.dialogs
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items

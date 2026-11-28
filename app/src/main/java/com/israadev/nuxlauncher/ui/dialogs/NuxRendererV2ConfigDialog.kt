@@ -4,7 +4,8 @@ import android.content.Intent
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
+import com.israadev.nuxlauncher.ui.components.textPointer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -585,7 +586,7 @@ private fun CustomizableEnvItemCard(unit: EnvSettingUnit.Customizable) {
             OutlinedTextField(
                 value = unit.state,
                 onValueChange = { unit.save(it) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().textPointer(),
                 singleLine = true,
                 textStyle = TextStyle(
                     color = NuxColors.DarkGray,

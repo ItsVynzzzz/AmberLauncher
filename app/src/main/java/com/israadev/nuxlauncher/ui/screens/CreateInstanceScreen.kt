@@ -7,7 +7,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
+import com.israadev.nuxlauncher.ui.components.textPointer
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -514,7 +515,7 @@ fun CreateInstanceScreen(
                             fontWeight = FontWeight.Medium
                         ),
                         cursorBrush = SolidColor(AmberUi.AccentSoft),
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().textPointer()
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))

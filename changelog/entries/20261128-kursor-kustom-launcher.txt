@@ -1,0 +1,9 @@
+# judul: Kursor mouse kustom di seluruh launcher
+[id]
++ Penunjuk kursor dari Pengaturan > Penunjuk kursor kini juga dipakai di seluruh launcher saat memakai mouse fisik: gambar kursor Default dipakai sebagai penunjuk biasa, ukuran mengikuti "Ukuran kursor virtual", dan hotspot mengikuti pengaturan tiap bentuk.
++ Penunjuk tangan tampil di atas tombol dan baris yang bisa diklik, dan kursor teks tampil di atas kolom ketik. Bila kamu memilih gambar kustom untuk bentuk Tangan atau Kursor Teks, gambar itu yang dipakai; tanpa gambar kustom dipakai bentuk bawaan Android.
++ Bila "Pakai kursor sistem Android" menyala, launcher memakai penunjuk bawaan Android tanpa gambar kustom.
+[en]
++ The pointers from Settings > Pointer cursors are now also used across the whole launcher with a physical mouse: the Default image is the normal pointer, the size follows "Virtual cursor size", and each shape uses its own hotspot.
++ A hand pointer shows over buttons and clickable rows, and a text cursor shows over text fields. If you chose a custom image for the Hand or Text Cursor shape, that image is used; otherwise Android's built-in shape is used.
++ When "Use Android system pointer" is on, the launcher uses Android's built-in pointers without custom images.

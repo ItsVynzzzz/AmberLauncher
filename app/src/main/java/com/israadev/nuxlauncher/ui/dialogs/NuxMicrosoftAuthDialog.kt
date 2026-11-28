@@ -9,7 +9,7 @@ import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.ui.i18n.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape

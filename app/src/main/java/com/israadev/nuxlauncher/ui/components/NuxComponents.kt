@@ -2,7 +2,7 @@ package com.israadev.nuxlauncher.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -227,7 +227,7 @@ fun NuxTextField(
                 cursorBrush = SolidColor(NuxColors.Yellow),
                 singleLine = true,
                 visualTransformation = visualTransformation,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().textPointer()
             )
         }
         if (trailingContent != null) {
@@ -296,6 +296,7 @@ fun NuxDialog(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .launcherPointer()
                     .background(Color.Black.copy(alpha = 0.62f))
                     .padding(horizontal = (12.dp).resp(), vertical = (8.dp).resp()),
                 contentAlignment = Alignment.Center

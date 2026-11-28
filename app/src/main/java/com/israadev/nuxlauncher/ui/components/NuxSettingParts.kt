@@ -8,7 +8,7 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

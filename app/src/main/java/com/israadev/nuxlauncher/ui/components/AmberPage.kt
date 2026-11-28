@@ -2,7 +2,7 @@ package com.israadev.nuxlauncher.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -115,6 +115,7 @@ fun AmberOverlay(
                 Box(
                     modifier = modifier
                         .fillMaxSize()
+                        .launcherPointer()
                         .background(Color(0xFF121115).copy(alpha = scrimAlpha))
                         .then(
                             if (dismissOnScrimTap) {
@@ -336,7 +337,7 @@ fun AmberField(
                 singleLine = true,
                 visualTransformation = if (password) PasswordVisualTransformation() else VisualTransformation.None,
                 keyboardOptions = KeyboardOptions(keyboardType = if (password) KeyboardType.Password else keyboardType),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().textPointer()
             )
         }
     }

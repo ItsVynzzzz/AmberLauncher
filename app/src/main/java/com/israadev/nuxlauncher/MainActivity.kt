@@ -40,6 +40,7 @@ import com.israadev.nuxlauncher.core.storage.DataLocation
 import com.israadev.nuxlauncher.core.storage.StorageMigrationRunner
 import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
 import com.israadev.nuxlauncher.core.update.UpdateManager
+import com.israadev.nuxlauncher.ui.components.launcherPointer
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageIntro
 import com.israadev.nuxlauncher.ui.dialogs.AmberStorageMigration
 import com.israadev.nuxlauncher.ui.dialogs.AmberUpdatePrompt
@@ -137,8 +138,10 @@ class MainActivity : ComponentActivity() {
                 NuxResponsiveTheme {
                     MaterialTheme {
                         com.israadev.nuxlauncher.ui.components.GamepadFocusProvider {
+                        // Penunjuk mouse fisik (gambar, ukuran, hotspot dari Pengaturan > Penunjuk kursor).
+                        com.israadev.nuxlauncher.ui.components.LauncherPointerHost {
                         Surface(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize().launcherPointer(),
                             color = NuxColors.Background
                         ) {
                             // Pop-up pembaruan menunggu sampai dialog izin penyimpanan selesai (pembukaan pertama)
@@ -181,6 +184,7 @@ class MainActivity : ComponentActivity() {
                             // Catatan "Yang baru" setelah pembaruan, menunggu dialog lain selesai dan tidak menumpuk di atas pop-up pembaruan
                             val updateOpen by com.israadev.nuxlauncher.core.update.UpdateManager.promptOpen.collectAsState()
                             AmberWhatsNewPrompt(enabled = introDone && migrationIdle && !updateOpen)
+                        }
                         }
                         }
                     }

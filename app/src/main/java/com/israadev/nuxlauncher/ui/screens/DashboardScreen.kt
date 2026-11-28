@@ -52,7 +52,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.clickable as scrimClickable
+import com.israadev.nuxlauncher.ui.components.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Box
@@ -1251,7 +1252,8 @@ private fun HomeScene(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clickable(
+                    // Tabir penutup seluruh layar: tanpa penunjuk tangan (clickable biasa dari foundation).
+                    .scrimClickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) { accountMenuOpen = false }

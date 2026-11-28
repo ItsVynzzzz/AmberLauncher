@@ -2,7 +2,8 @@ package com.israadev.nuxlauncher.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.israadev.nuxlauncher.ui.components.clickable
+import com.israadev.nuxlauncher.ui.components.textPointer
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -211,7 +212,7 @@ internal fun AmberSearchPill(
                 ),
                 cursorBrush = SolidColor(AmberUi.AccentSoft),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().textPointer()
             )
         }
         if (value.isNotEmpty()) {

@@ -17,7 +17,7 @@ import java.util.zip.ZipFile
  * langsung terlihat di mesin, dan sebaliknya.
  *
  * Semua fungsi di sini tidak butuh Android (hanya berkas dan JSON), jadi mudah diuji. [home] selalu folder data
- * mesin (HorizonEngine.engineHome); folder game yang sebenarnya dicari lewat [gameHome].
+ * mesin (StarlingEngine.engineHome); folder game yang sebenarnya dicari lewat [gameHome].
  *
  * Aturan mengikuti mesin (horizon-android: launcher/src/packs.rs dan crates/horizon-client/src/content_files.rs):
  * - Shader  : folder `shaderpacks`, satu pilihan aktif di `horizon-graphics.txt` (baris `pickedShaderPack:<berkas>`).

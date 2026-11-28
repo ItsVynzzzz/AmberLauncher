@@ -465,8 +465,6 @@ object InstanceManager {
         isInstanceDownloadedIn(context, inst, getInstanceDir(context, inst))
 
     private fun isInstanceDownloadedIn(context: Context, inst: Instance, instDir: File): Boolean {
-        // Mesin Rust tidak memakai client.jar maupun library Java: tidak ada yang perlu diunduh launcher
-        if (com.israadev.nuxlauncher.core.horizon.HorizonEngine.isEngine(inst.loader)) return true
         // Starling: berkas resmi game (±500 MiB) diunduh launcher lewat tombol UNDUH; tanpa patokan mesin mengunduh sendiri
         if (com.israadev.nuxlauncher.core.horizon.StarlingEngine.isEngine(inst.loader)) {
             return com.israadev.nuxlauncher.core.horizon.StarlingFiles.ready(context)

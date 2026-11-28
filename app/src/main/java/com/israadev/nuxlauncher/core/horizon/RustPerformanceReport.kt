@@ -48,7 +48,7 @@ object RustPerformanceReport {
      */
     fun latest(context: Context): File? =
         listOfNotNull(
-            latestIn(File(HorizonEngine.engineHome(context), FOLDER)),
+            latestIn(File(StarlingEngine.engineHome(context), FOLDER)),
             latestIn(File(StarlingEngine.engineHome(context), FOLDER))
         ).maxByOrNull { it.name }
 

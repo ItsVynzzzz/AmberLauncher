@@ -1,0 +1,15 @@
+# judul: Mesin Rust diperbarui ke Starling 0.9.0, slot Horizon dihapus
+[id]
+~ Mesin Rust kini Starling 0.9.0 resmi (penerus Horizon Android). Pilihan "Rust" (Horizon) di Buat Instance dihapus; instance lamanya otomatis dijalankan Starling.
++ Dunia, resource pack, shader, mod, dan options.txt dari mesin Horizon lama disalin sekali ke Starling saat PLAY pertama. Aslinya tidak dihapus. Dunia bernama sama disalin sebagai "nama (Horizon)".
++ Kontrol Amber di Starling: sidebar menu, editor kontrol, dan tombol makro.
+~ "Keluar dari game" di sidebar menyimpan dunia dulu. PLAY langsung masuk game.
+! Mod lirik (Amber Lyrics) dihapus.
+! Eksperimental: mesin baru ini belum diuji di perangkat. Sebagian mod native bawaan bisa tidak ada bila gagal dikompilasi; basic_hud, punchy, dan visuality_horizon belum tersedia di 0.9.0.
+[en]
+~ The Rust engine is now the official Starling 0.9.0 (successor of Horizon Android). The "Rust" (Horizon) choice in Create Instance is gone; its existing instances now run on Starling.
++ Worlds, resource packs, shaders, mods and options.txt from the old Horizon engine are copied to Starling once, on the first PLAY. The originals are not deleted. A world with a clashing name is copied as "name (Horizon)".
++ Amber Controls on Starling: menu sidebar, control editor and macro buttons.
+~ "Quit game" in the sidebar saves the world first. PLAY goes straight into the game.
+! The lyrics mod (Amber Lyrics) has been removed.
+! Experimental: this new engine has not been tested on a device. Some built-in native mods may be missing if they fail to compile; basic_hud, punchy and visuality_horizon are not available on 0.9.0 yet.

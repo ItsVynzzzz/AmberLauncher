@@ -7,9 +7,8 @@ import android.os.Environment
 import android.os.Looper
 import com.israadev.nuxlauncher.core.account.AccountManager
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
-import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
+import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.core.update.UpdateChecker
@@ -356,10 +355,10 @@ object GameLogArchive {
      */
     private fun writeEngineSection(context: Context, w: Writer) {
         try {
-            val home = HorizonEngine.engineHome(context)
+            val home = StarlingEngine.engineHome(context)
             if (!home.isDirectory) return
             val game = HorizonContent.gameHome(home)
-            w.section("Mesin Rust (Horizon)")
+            w.section("Mesin Rust (Starling)")
 
             val config = File(home, "android-launcher.json")
             val shown = ArrayList<String>()

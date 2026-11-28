@@ -29,22 +29,18 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Mesin Rust kedua: Starling (penerus Horizon Android, MIT), berdampingan dengan [HorizonEngine] yang tidak berubah.
- * Instance dengan loader [LOADER_ID] dijalankan mesin ini, bukan JVM dan bukan Horizon.
+ * Mesin Rust Amber: Starling (penerus Horizon Android, MIT), pengganti SELURUH client Java Minecraft. Slot "Horizon"
+ * yang lama sudah dihapus; instance lama dengan loader "horizon" dijalankan mesin ini, dan dunianya disalin sekali
+ * ([HorizonImport]).
  *
- * Bagian yang sengaja terpisah dari Horizon, supaya Starling bebas diubah tanpa mengusik Horizon:
- * - Pustaka `libstarling_android.so` dan kelas Java `dev.horizon.android.GameActivity` (proses :starling) dibangun
- *   dari sumber Starling oleh CI dan dipasang ke APK saat build (scripts/fetch-horizon-engine.sh, AMBER_ENGINE=starling).
- * - Folder data sendiri: files/starling (Horizon memakai files/horizon).
- * - Akun diteruskan lewat antarmuka peluncur yang sudah ada di Starling, tanpa patch Rust: PLAY menulis
- *   accounts/accounts.json (pemain offline yang dipilih), [SESSION_FILE] (sesi Microsoft, dibaca sekali oleh mesin lalu
- *   dihapus), dan [ARGS_FILE] (horizon-args.txt: --session-file dan AMBER_EMBEDDED=1 yang mematikan pemberitahuan
- *   pembaruan Starling).
- * - Unduhan berkas resmi Minecraft (sekitar 500 MiB) dikerjakan launcher dengan dialog unduhan Amber ([StarlingFiles]),
- *   bukan layar Starling; mesin hanya melihat penanda "berkas lengkap" yang sama dengan buatannya sendiri. Penyiapan game
- *   di HP sesudahnya (Java 25, horizon-prepare; sekali saja) masih memakai layar milik Starling.
- *   Menu, kontrol, dan pengaturan di dalam game juga masih milik Starling; pengaturan Rust di tab Pengaturan Amber
- *   hanya untuk Horizon. Menyatukannya dengan UI Amber adalah tahap berikutnya.
+ * - Pustaka `libhorizon_android.so` dan kelas Java `io.github.juanluci.starling.GameActivity` (proses :starling)
+ *   dibangun dari sumber resmi Starling oleh CI dan dipasang ke APK saat build (scripts/fetch-horizon-engine.sh).
+ * - Folder data: files/starling.
+ * - Akun diteruskan lewat antarmuka peluncur Starling: PLAY menulis accounts/accounts.json (pemain offline yang
+ *   dipilih), [SESSION_FILE] (sesi Microsoft, dibaca sekali oleh mesin lalu dihapus), dan [ARGS_FILE]
+ *   (horizon-args.txt). [PLAY_MARKER] membuat mesin langsung masuk game, tanpa layar peluncurnya sendiri.
+ * - Unduhan berkas resmi Minecraft (sekitar 500 MiB) dikerjakan launcher ([StarlingFiles]); penyiapan game di HP
+ *   sesudahnya (sekali saja) memakai layar milik Starling.
  */
 object StarlingEngine {
     /** Nilai `Instance.loader` untuk instance yang dijalankan Starling. */
@@ -57,20 +53,38 @@ object StarlingEngine {
     const val LABEL = "Starling (Rust)"
 
     /** Versi Minecraft yang dikerjakan Starling (sama dengan Horizon: dipatok di research-lock.json sumbernya). */
-    const val SUPPORTED_MC_VERSION = HorizonEngine.SUPPORTED_MC_VERSION
+    const val SUPPORTED_MC_VERSION = "26.3"
+
+    const val LOW_RAM_WARNING =
+        "RAM HP ini terbatas untuk mesin Rust (disarankan 4 GB ke atas). Game bisa tertutup sendiri."
+
+    /** Nilai `Instance.loader` milik slot Horizon yang sudah dihapus. */
+    private const val LEGACY_LOADER_ID = "horizon"
+
+    sealed interface Availability {
+        /** Siap dijalankan. [lowRam] = RAM HP di bawah yang disarankan: tetap boleh, hanya diberi peringatan. */
+        data class Ready(val lowRam: Boolean) : Availability
+
+        /** Tidak bisa dijalankan di build atau HP ini; [reason] ditampilkan apa adanya ke pengguna. */
+        data class Unavailable(val reason: String) : Availability
+    }
 
     /**
-     * Nama kelas WAJIB persis ini: fungsi JNI di libstarling_android.so terikat pada nama paket dan kelasnya. Kelasnya
-     * ada di sumber Starling (dev.horizon.android), bukan di repo ini; patch amber5 hanya mengubahnya sedikit.
+     * Nama kelas WAJIB persis ini: fungsi JNI di pustaka mesin terikat pada nama paket dan kelasnya. Kelasnya ada di
+     * sumber Starling, bukan di repo ini (diubah sedikit oleh third_party/horizon-patches/amber6).
      */
-    const val ACTIVITY_CLASS = "dev.horizon.android.GameActivity"
+    const val ACTIVITY_CLASS = "io.github.juanluci.starling.GameActivity"
 
-    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber5).
+    // Kunci Intent yang dibaca GameActivity (third_party/horizon-patches/amber6).
     private const val EXTRA_DISCORD_RPC = "amber_discord_rpc"
     private const val EXTRA_MC_VERSION = "amber_mc_version"
     private const val EXTRA_INSTANCE_NAME = "amber_instance"
 
-    private const val LIBRARY_FILE = "libstarling_android.so"
+    private const val LIBRARY_FILE = "libhorizon_android.so"
+
+    /** Penanda "tombol PLAY ditekan" yang dibaca mesin (ha_launcher): tanpanya mesin menampilkan peluncurnya sendiri. */
+    private const val PLAY_MARKER = "launcher-play"
+    private const val OPEN_MARKER = "launcher-open"
 
     /** Nama folder data mesin di filesDir; juga dipakai [HorizonMods] untuk mengenali mesin Starling dari folder datanya. */
     const val HOME_DIR = "starling"
@@ -89,27 +103,39 @@ object StarlingEngine {
     private val starting = AtomicBoolean(false)
     private val refreshing = AtomicBoolean(false)
 
-    /** True bila [loader] (nilai `Instance.loader`) adalah Starling. */
-    fun isEngine(loader: String?): Boolean = loader?.trim().equals(LOADER_ID, ignoreCase = true)
+    /** True bila [loader] (nilai `Instance.loader`) adalah mesin Rust, termasuk instance dari slot Horizon lama. */
+    fun isEngine(loader: String?): Boolean {
+        val id = loader?.trim() ?: return false
+        return id.equals(LOADER_ID, ignoreCase = true) || id.equals(LEGACY_LOADER_ID, ignoreCase = true)
+    }
+
+    fun isRust(loader: String?): Boolean = isEngine(loader)
+
+    /** Folder data mesin untuk instance dengan loader [loader]. Hanya ada satu mesin. */
+    fun homeFor(context: Context, @Suppress("UNUSED_PARAMETER") loader: String?): File = engineHome(context)
 
     /** True bila pustaka Starling ikut terpasang di APK ini (hanya cek satu berkas, aman dari komposisi UI). */
     fun isBundled(context: Context): Boolean =
         File(context.applicationInfo.nativeLibraryDir, LIBRARY_FILE).isFile
 
-    fun availability(context: Context): HorizonEngine.Availability {
+    fun availability(context: Context): Availability {
         if (Build.VERSION.SDK_INT < MIN_SDK) {
-            return HorizonEngine.Availability.Unavailable("Starling butuh Android 9 (API 28) ke atas.")
+            return Availability.Unavailable("Mesin Rust butuh Android 9 (API 28) ke atas.")
         }
-        // Starling hanya dibangun untuk arm64.
-        if (!android.os.Process.is64Bit() || "arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
-            return HorizonEngine.Availability.Unavailable("Starling hanya tersedia untuk HP 64-bit (arm64).")
+        // APK 64-bit membawa mesin arm64; APK 32-bit membawa mesin armeabi-v7a (eksperimental).
+        if (android.os.Process.is64Bit()) {
+            if ("arm64-v8a" !in Build.SUPPORTED_64_BIT_ABIS) {
+                return Availability.Unavailable("Mesin Rust hanya tersedia untuk HP 64-bit (arm64).")
+            }
+        } else if ("armeabi-v7a" !in Build.SUPPORTED_32_BIT_ABIS) {
+            return Availability.Unavailable("Mesin Rust 32-bit hanya tersedia untuk HP ARM (armeabi-v7a).")
         }
         if (!isBundled(context)) {
-            return HorizonEngine.Availability.Unavailable(
-                "Starling belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md."
+            return Availability.Unavailable(
+                "Mesin Rust belum disertakan di build ini. Cara menambahkannya ada di docs/rust-engine.md."
             )
         }
-        return HorizonEngine.Availability.Ready(lowRam = totalRamBytes(context) < LOW_RAM_BYTES)
+        return Availability.Ready(lowRam = totalRamBytes(context) < LOW_RAM_BYTES)
     }
 
     /** Folder data mesin: sama dengan getFilesDir() milik GameActivity di proses :starling. */
@@ -167,9 +193,8 @@ object StarlingEngine {
 
     /**
      * Id mod native yang BENAR-BENAR ada di dalam pustaka mesin yang terpasang di APK ini. Dibangun oleh
-     * scripts/build-horizon-engine.sh (native_mods di starling-engine.properties) dan dicatat di
-     * `assets/native-mods/compiled.txt`; mesin membacanya lewat StarlingActivity (STARLING_APK_NATIVE_MODS). Berkas itu
-     * tidak ada bila pustakanya tanpa mod, dan hasilnya himpunan kosong: modul bawaan yang tidak ada di pustaka tidak
+     * scripts/build-horizon-engine.sh (native_mods di horizon-engine.properties) dan dicatat di
+     * `assets/native-mods/compiled.txt`. Pustaka tanpa mod menghasilkan himpunan kosong: modul bawaan yang tidak ada di pustaka tidak
      * boleh tampil sebagai saklar yang tidak berbuat apa-apa.
      */
     fun compiledNativeMods(context: Context): Set<String> {
@@ -188,7 +213,7 @@ object StarlingEngine {
 
     /**
      * Mesin milik Amber tidak memuat pustaka game dari server pembangun pihak ketiga (Compile di dalam game, sekarang
-     * dimatikan oleh patch amber5): sisa pilihan dari mesin sebelumnya dibuang supaya yang jalan selalu pustaka bawaan
+     * dimatikan oleh patch amber6): sisa pilihan dari mesin sebelumnya dibuang supaya yang jalan selalu pustaka bawaan
      * APK, yang memuat mod native hasil build Amber.
      */
     private fun dropForeignGameLibrary(context: Context) {
@@ -208,7 +233,7 @@ object StarlingEngine {
      */
     fun launch(context: Context, instance: Instance, account: UserAccount): Boolean {
         val status = availability(context)
-        if (status is HorizonEngine.Availability.Unavailable) {
+        if (status is Availability.Unavailable) {
             Toast.makeText(context, status.reason, Toast.LENGTH_LONG).show()
             return false
         }
@@ -237,8 +262,8 @@ object StarlingEngine {
             ).show()
             return false
         }
-        if (status is HorizonEngine.Availability.Ready && status.lowRam) {
-            Toast.makeText(context, HorizonEngine.LOW_RAM_WARNING, Toast.LENGTH_LONG).show()
+        if (status is Availability.Ready && status.lowRam) {
+            Toast.makeText(context, LOW_RAM_WARNING, Toast.LENGTH_LONG).show()
         }
         // Ketukan ganda pada tombol main tidak boleh memulai dua peluncuran sekaligus.
         if (!starting.compareAndSet(false, true)) {
@@ -246,6 +271,19 @@ object StarlingEngine {
             return true
         }
         val appContext = context.applicationContext
+        if (HorizonImport.needed(appContext)) {
+            Toast.makeText(appContext, "Menyalin dunia dari mesin Horizon lama (sekali saja)...", Toast.LENGTH_LONG).show()
+            scope.launch {
+                withContext(Dispatchers.IO) { HorizonImport.run(appContext) }
+                continueLaunch(appContext, instance, account)
+            }
+            return true
+        }
+        return continueLaunch(appContext, instance, account)
+    }
+
+    /** Lanjutan [launch]: memperbarui sesi Microsoft bila perlu, lalu membuka mesin. */
+    private fun continueLaunch(appContext: Context, instance: Instance, account: UserAccount): Boolean {
         if (!MicrosoftAuthService.needsRefresh(account)) {
             return start(appContext, instance, account)
         }
@@ -310,16 +348,19 @@ object StarlingEngine {
             StarlingSettingsSync.sync(context)
             // Kontrol Amber: tata letak Amber ditulis ke horizon-touch.json milik mesin, jadi mesin sendiri yang menggambar
             // dan memproses tombolnya (tanpa jendela Android tambahan di atas game). Dimatikan di Pengaturan Rust: berkas
-            // mesin dikembalikan. Pemutar makro Amber tidak ada di Starling, jadi tombol makro dilewati.
+            // mesin dikembalikan.
             RustTouchLayout.sync(
                 context,
                 amberControls(),
                 ControlLayoutManager.presetButtons(context, instance.controlPresetId),
                 engineDir = engineHome(context),
-                macros = false,
-                // Tombol MENU Amber membuka sidebar Amber yang digambar mesin (patch amber5/0007), bukan Esc.
+                // Pemutar makro Amber ada di mesin (patch amber6/0008).
+                macros = true,
+                // Tombol MENU Amber membuka sidebar Amber yang digambar mesin (patch amber6/0007), bukan Esc.
                 amberMenu = amberControls()
             )
+            // Warna UI mesin mengikuti aksen Amber.
+            RustSettingsStore.syncTheme(context, SettingsManager.settings.value.accentColor)
             beginLogSession(context, instance)
             writeLaunchFiles(context, instance, account)
             if (firstRun) {
@@ -377,17 +418,14 @@ object StarlingEngine {
         writeAccountsFile(dir, if (microsoft) null else account.username)
         val session = File(dir, SESSION_FILE)
         val args = StringBuilder("AMBER_EMBEDDED=1\n")
-        // AMBER_CONTROLS (patch amber5/0005, kontrol Amber di jendela terpisah di atas game) sengaja tidak ditulis lagi:
-        // jendela tambahan itu membebani GPU dan membuat tombol dibuat ulang tiap menu dibuka/ditutup. Tombol Amber kini
-        // digambar mesin sendiri lewat horizon-touch.json (lihat start).
-        // Sidebar Amber di dalam mesin (patch amber5/0007): menggantikan tombol tiga garis dan menu cepat mesin. Menyala
+        // Sidebar Amber di dalam mesin (patch amber6/0007): menggantikan tombol tiga garis dan menu cepat mesin. Menyala
         // bersama "Kontrol Amber". Nama instance dan versi tampil di bawah judul "Menu".
         if (amberControls()) {
             args.append("AMBER_SIDEBAR=1\n")
             args.append("AMBER_INSTANCE=").append(instance.name.replace('\n', ' ').replace('\r', ' ').trim()).append('\n')
             args.append("AMBER_MC_VERSION=").append(SUPPORTED_MC_VERSION).append('\n')
         }
-        // "Rekam performa" di Pengaturan > Rust: patch amber5/0004 memulai perekaman di peluncuran (laporan di performance/).
+        // "Rekam performa" di Pengaturan > Rust: patch amber6/0004 memulai perekaman di peluncuran (laporan di performance/).
         if (RustSettingsStore.readNow(context).recordPerformance) args.append("AMBER_PERF_RECORD=1\n")
         if (microsoft) {
             val json = JSONObject()
@@ -401,7 +439,14 @@ object StarlingEngine {
         } else {
             session.delete()
         }
+        // "Langsung masuk server" di Pengaturan > Rust: mesin hanya menerimanya sebagai argumen.
+        val server = RustSettingsStore.readNow(context).server.trim()
+        if (server.isNotEmpty() && server.none { it.isWhitespace() || it.isISOControl() }) {
+            args.append("--server\n").append(server).append('\n')
+        }
         writePrivate(File(dir, ARGS_FILE), args.toString())
+        File(dir, OPEN_MARKER).delete()
+        File(dir, PLAY_MARKER).writeText("")
     }
 
     /** accounts/accounts.json milik mesin: memilih [offlineName] sebagai pemain, atau tidak memilih siapa pun (null). */

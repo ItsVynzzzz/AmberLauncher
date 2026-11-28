@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.utils.FriendlyError
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.instance.InstanceManager
@@ -196,7 +195,7 @@ fun ModsScreen(
     val mainMode = if (mode == ModsMode.MANAGE) "installed" else "browse"
 
     // Mesin Rust (Horizon) hanya memakai Shader dan Resource Pack, dan hanya dari Modrinth
-    val rustInstance = HorizonEngine.isRust(selectedInstance?.loader)
+    val rustInstance = StarlingEngine.isRust(selectedInstance?.loader)
     val starlingInstance = StarlingEngine.isEngine(selectedInstance?.loader)
 
     // Item Type: "mods" | "modpacks" | "resourcepacks" | "shaderpacks" | "datapacks"

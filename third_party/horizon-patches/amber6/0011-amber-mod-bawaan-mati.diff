@@ -1,0 +1,30 @@
+diff --git a/crates/horizon-mod-package/src/mod_list.rs b/crates/horizon-mod-package/src/mod_list.rs
+index d9a01df508..6100ec3fb8 100644
+--- a/crates/horizon-mod-package/src/mod_list.rs
++++ b/crates/horizon-mod-package/src/mod_list.rs
+@@ -389,9 +389,23 @@ impl ModList {
+     }
+ 
+     pub fn load(dir: &Path) -> Self {
+-        fs::read_to_string(dir.join(FILE))
++        let mut list = fs::read_to_string(dir.join(FILE))
+             .map(|t| Self::parse(&t))
+-            .unwrap_or_default()
++            .unwrap_or_default();
++        // AmberLauncher: the mods compiled into Amber's game start off, until the player turns one
++        // on (`mod.<id>:true`). The build script names them in AMBER_BUNDLED_MODS.
++        if let Some(bundled) = option_env!("AMBER_BUNDLED_MODS") {
++            list.rest_unless_enabled(bundled);
++        }
++        list
++    }
++    /// AmberLauncher: every id in `ids` (comma or space separated) that is not on rests.
++    fn rest_unless_enabled(&mut self, ids: &str) {
++        for id in ids.split([',', ' ']).filter(|id| !id.is_empty()) {
++            if !self.enabled.contains(id) {
++                self.disabled.insert(id.to_owned());
++            }
++        }
+     }
+     pub fn parse(text: &str) -> Self {
+         let ids = |value: &str| -> BTreeSet<String> {

@@ -1,0 +1,171 @@
+diff --git a/crates/horizon-client/src/game/runtime/resource_load.rs b/crates/horizon-client/src/game/runtime/resource_load.rs
+index 709035bd79..2784c7c969 100644
+--- a/crates/horizon-client/src/game/runtime/resource_load.rs
++++ b/crates/horizon-client/src/game/runtime/resource_load.rs
+@@ -773,9 +773,11 @@ pub(super) fn load_resources(
+         let entity_models = entity_models.clone();
+         let rest_progress = progress.clone();
+         let progress = progress.clone();
++        let running = super::resource_tables::RestLoaderRunning::start();
+         let handle = horizon_guest_stack::builder()
+             .name("world-rest-loader".into())
+             .spawn(move || {
++                let _running = running;
+                 let _step = startup::step("rest");
+                 let rest = world_rest::load_world_rest(
+                     &resource_root,
+diff --git a/crates/horizon-client/src/game/runtime/resource_tables.rs b/crates/horizon-client/src/game/runtime/resource_tables.rs
+index 028727298b..75919d26a0 100644
+--- a/crates/horizon-client/src/game/runtime/resource_tables.rs
++++ b/crates/horizon-client/src/game/runtime/resource_tables.rs
+@@ -21,8 +21,46 @@ pub(super) fn load_animate_tables(
+     Ok((animate, horizon_client::fog::FogTables::load(root, biomes)))
+ }
+ 
++/// AmberLauncher: how many world-resource loader threads are running (`Resources::wait_for_rest` waits for them).
++static REST_LOADERS_RUNNING: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
++
++/// One count of `REST_LOADERS_RUNNING`, held by the loader thread: it ends when the thread returns, fails or panics.
++pub(super) struct RestLoaderRunning;
++impl RestLoaderRunning {
++    pub(super) fn start() -> Self {
++        REST_LOADERS_RUNNING.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
++        Self
++    }
++}
++impl Drop for RestLoaderRunning {
++    fn drop(&mut self) {
++        REST_LOADERS_RUNNING.fetch_sub(1, std::sync::atomic::Ordering::SeqCst);
++    }
++}
++
+ impl Resources {
++    #[track_caller]
+     pub(super) fn rest(&self) -> &WorldRest {
++        match self.rest.get() {
++            Some(rest) => rest,
++            None => self.wait_for_rest(),
++        }
++    }
++    /// AmberLauncher: a slow phone (few workers) can show the title, and a frame can ask for the world's
++    /// resources, before the background loader has set them. Wait for the loader instead of ending the game with a
++    /// panic; the log names the caller. A loader that ended without setting them is still the panic it was.
++    #[cold]
++    #[track_caller]
++    fn wait_for_rest(&self) -> &WorldRest {
++        let caller = std::panic::Location::caller();
++        if std::thread::current().name() != Some("world-rest-loader") {
++            log::warn!("Amber: world resources asked for at {caller} before the loader finished; waiting for it");
++            while self.rest.get().is_none()
++                && REST_LOADERS_RUNNING.load(std::sync::atomic::Ordering::SeqCst) > 0
++            {
++                std::thread::sleep(std::time::Duration::from_millis(5));
++            }
++        }
+         self.rest
+             .get()
+             .expect("world resources joined before entry")
+@@ -31,12 +69,15 @@ impl Resources {
+     pub(super) fn rest_ready(&self) -> bool {
+         self.rest.get().is_some()
+     }
++    #[track_caller]
+     pub(super) fn kinetics(&self) -> &horizon_client::kinetics::KineticTable {
+         &self.rest().kinetics
+     }
++    #[track_caller]
+     pub(super) fn create_recipes(&self) -> &kinetic_machines::Recipes {
+         &self.rest().create_recipes
+     }
++    #[track_caller]
+     pub(super) fn basin_recipes(&self) -> &basins::BasinRecipes {
+         &self.rest().basin_recipes
+     }
+@@ -46,12 +87,15 @@ impl Resources {
+     pub(super) fn item_defaults(&self) -> &horizon_world::item_defaults::ItemDefaults {
+         self.core.item_data.defaults()
+     }
++    #[track_caller]
+     pub(super) fn items(&self) -> &Items {
+         &self.rest().items
+     }
++    #[track_caller]
+     pub(super) fn recipes(&self) -> &Recipes {
+         &self.rest().recipes
+     }
++    #[track_caller]
+     pub(super) fn transformers(&self) -> &horizon_client::block_transform::Transformers {
+         &self.rest().transformers
+     }
+@@ -69,36 +113,47 @@ impl Resources {
+             _ => self.environment(),
+         }
+     }
++    #[track_caller]
+     pub(super) fn mob_types(&self) -> &HashMap<String, Arc<MobType>> {
+         &self.rest().mob_types
+     }
++    #[track_caller]
+     pub(super) fn mob_data(&self) -> &horizon_client::mobs::MobData {
+         &self.rest().mob_data
+     }
++    #[track_caller]
+     pub(super) fn providers(&self) -> &Providers {
+         &self.rest().providers
+     }
++    #[track_caller]
+     pub(super) fn block_entity_render(&self) -> &BlockEntityRenderer {
+         &self.rest().block_entity_render
+     }
++    #[track_caller]
+     pub(super) fn animate(&self) -> &horizon_client::animate_tick::AnimateTables {
+         &self.rest().animate
+     }
++    #[track_caller]
+     pub(super) fn fog(&self) -> &horizon_client::fog::FogTables {
+         &self.rest().fog
+     }
++    #[track_caller]
+     pub(super) fn music(&self) -> &horizon_client::music::MusicTables {
+         &self.rest().music
+     }
++    #[track_caller]
+     pub(super) fn ambient(&self) -> &horizon_client::ambience::AmbientTables {
+         &self.rest().ambient
+     }
++    #[track_caller]
+     pub(super) fn nether_environment(&self) -> &Environment {
+         &self.rest().nether_environment
+     }
++    #[track_caller]
+     pub(super) fn end_environment(&self) -> &Environment {
+         &self.rest().end_environment
+     }
++    #[track_caller]
+     pub(super) fn behaviours(&self) -> &Behaviours {
+         &self.rest().behaviours
+     }
+@@ -119,6 +174,7 @@ impl Resources {
+     pub(super) fn threads(&self) -> usize {
+         self.core.threads
+     }
++    #[track_caller]
+     pub(super) fn player_arm(&self, slim: bool, left: bool) -> &Option<horizon_client::mobs::Part> {
+         let arms = if slim {
+             &self.rest().player_arm_slim
+@@ -127,12 +183,15 @@ impl Resources {
+         };
+         &arms[usize::from(left)]
+     }
++    #[track_caller]
+     pub(super) fn player_type(&self) -> &Option<Arc<horizon_client::mobs::MobType>> {
+         &self.rest().player_type
+     }
++    #[track_caller]
+     pub(super) fn spin_attack(&self) -> &Option<horizon_client::mobs::Part> {
+         &self.rest().spin_attack
+     }
++    #[track_caller]
+     pub(super) fn stations(&self) -> &horizon_client::stations::StationData {
+         &self.rest().stations
+     }

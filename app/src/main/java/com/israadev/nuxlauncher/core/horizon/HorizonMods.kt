@@ -21,14 +21,14 @@ import org.json.JSONObject
  * - Isi .hmod diperiksa seperti mesin: zip dengan manifest `horizon-mod.toml` di dasar arsip; kode `mod.wasm`
  *   wajib kecuali manifest memberi kemampuan `registries` (mod konten murni).
  *
- * Starling (mesin Rust kedua, files/starling) punya aturan sendiri, dikenali dari nama [home] ([StarlingEngine.HOME_DIR]):
+ * Starling (satu-satunya mesin Rust sekarang, files/starling) punya aturan sendiri, dikenali dari nama [home] ([StarlingEngine.HOME_DIR]):
  * - Modul bawaannya modul native ([BUNDLED_STARLING]), bukan empat modul Horizon. Yang tampil hanya yang benar-benar
- *   dikompilasi ke dalam pustaka mesin oleh build Amber (native_mods di starling-engine.properties, dicatat di
+ *   dikompilasi ke dalam pustaka mesin oleh build Amber (native_mods di horizon-engine.properties, dicatat di
  *   assets/native-mods/compiled.txt; lihat [StarlingEngine.compiledNativeMods]).
  * - Mod WebAssembly (`mod.wasm`) tidak jalan lagi di sana: `.hmod` berkode WASM ditolak, dan `.hmod` yang membawa kode
  *   native (`horizon-native.json`) diterima.
  * - Mod native `.hnmod` (zip berisi `horizon-native.json` dan mixin) dipasang di `horizon-native-mods/<id>.hnmod`.
- *   Mod native tidak bisa dikompilasi di HP (Compile di dalam game dimatikan oleh patch amber5): mod masuk ke game lewat
+ *   Mod native tidak bisa dikompilasi di HP (Compile di dalam game dimatikan oleh patch amber6): mod masuk ke game lewat
  *   build mesin Amber, jadi berkas .hnmod yang dipasang di sini hanya disimpan.
  *
  * Tanpa Android: hanya berkas dan teks, jadi mudah diuji. [home] selalu folder data mesin.
@@ -127,8 +127,7 @@ object HorizonMods {
         "liteminer" to "LiteMiner",
         "rightharvest" to "RightClickHarvest",
         "customhud" to "Beautiful Day Counter",
-        "carryblock" to "Carry Block",
-        "amber_lyrics" to "Amber Lyrics"
+        "carryblock" to "Carry Block"
     ).map { (id, title) ->
         Bundled(id, title, "Modul native bawaan Starling. Pengaturannya ada di Options > Mods dalam game.")
     }

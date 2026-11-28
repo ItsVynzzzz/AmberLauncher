@@ -1,19 +1,18 @@
 diff --git a/crates/horizon-client-render/src/android_controls/custom.rs b/crates/horizon-client-render/src/android_controls/custom.rs
-index b7f6c2b..134bb88 100644
+index e86488805a..e066e6d296 100644
 --- a/crates/horizon-client-render/src/android_controls/custom.rs
 +++ b/crates/horizon-client-render/src/android_controls/custom.rs
-@@ -39,7 +39,7 @@ impl CustomButton {
-             || crate::keybinds::mouse_button(token).is_some()
-             || matches!(
-                 token,
--                "mouse.scroll.up" | "mouse.scroll.down" | "mouse.virtual.toggle" | "mouse.look"
-+                "mouse.scroll.up" | "mouse.scroll.down" | "mouse.virtual.toggle" | "mouse.look" | "amber.menu"
+@@ -44,6 +44,7 @@ impl CustomButton {
+                     | "mouse.virtual.toggle"
+                     | "mouse.look"
+                     | "mouse.keyboard"
++                    | "amber.menu"
              )
              || token
                  .strip_prefix("action:")
 diff --git a/crates/horizon-client/src/android_amber_sidebar.rs b/crates/horizon-client/src/android_amber_sidebar.rs
 new file mode 100644
-index 0000000..681242a
+index 0000000000..681242a665
 --- /dev/null
 +++ b/crates/horizon-client/src/android_amber_sidebar.rs
 @@ -0,0 +1,574 @@
@@ -592,11 +591,11 @@ index 0000000..681242a
 +    }
 +}
 diff --git a/crates/horizon-client/src/android_control_ui.rs b/crates/horizon-client/src/android_control_ui.rs
-index f275637..427a0fe 100644
+index b70e0281aa..99fd660d61 100644
 --- a/crates/horizon-client/src/android_control_ui.rs
 +++ b/crates/horizon-client/src/android_control_ui.rs
-@@ -80,6 +80,14 @@ pub struct TouchUi {
-     pointer_drag: Option<u64>,
+@@ -94,6 +94,14 @@ pub struct TouchUi {
+     pub slider_slop: f32,
      held_keys: BTreeMap<u64, KeyCode>,
      pub f3_latched: bool,
 +    /// AmberLauncher sidebar (android_amber_sidebar.rs): scroll offset of its content.
@@ -610,8 +609,8 @@ index f275637..427a0fe 100644
  }
  
  impl Default for TouchUi {
-@@ -129,6 +137,10 @@ impl Default for TouchUi {
-             pointer_drag: None,
+@@ -149,6 +157,10 @@ impl Default for TouchUi {
+             slider_slop: 4.0,
              held_keys: BTreeMap::new(),
              f3_latched: false,
 +            amber_scroll: 0.0,
@@ -621,16 +620,16 @@ index f275637..427a0fe 100644
          }
      }
  }
-@@ -1751,7 +1763,7 @@ fn hub_metrics(w: f32, h: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32)
- }
+@@ -1732,7 +1744,7 @@ impl TouchUi {
+         )
+     }
  
- impl TouchUi {
 -    fn step_animations(&self) -> (f32, f32) {
 +    pub(crate) fn step_animations(&self) -> (f32, f32) {
          let open_target = if self.floating_menu { 1.0 } else { 0.0 };
          if crate::android_control_theme::motion::game_animations_disabled()
              || crate::android_control_theme::motion::reduced_motion()
-@@ -1796,6 +1808,10 @@ impl TouchUi {
+@@ -1777,6 +1789,10 @@ impl TouchUi {
          p_gui: [f32; 2],
          settings: &mut crate::android_controls::Settings,
      ) -> Option<InGameMenuAction> {
@@ -641,7 +640,7 @@ index f275637..427a0fe 100644
          use crate::android_controls::ControlStyle;
          self.goy_mode = settings.control_style == ControlStyle::GoyControl;
          if !settings.show_control_hub {
-@@ -2760,6 +2776,11 @@ impl TouchUi {
+@@ -2758,6 +2774,11 @@ impl TouchUi {
          a: &HudAtlas,
          settings: &crate::android_controls::Settings,
      ) {
@@ -654,33 +653,33 @@ index f275637..427a0fe 100644
          use crate::android_controls::ControlStyle;
          if !settings.show_control_hub {
 diff --git a/crates/horizon-client/src/client_lib.rs b/crates/horizon-client/src/client_lib.rs
-index 29c08a4..3eb6a1c 100644
+index 16eb010c36..d0abd21ce8 100644
 --- a/crates/horizon-client/src/client_lib.rs
 +++ b/crates/horizon-client/src/client_lib.rs
-@@ -36,6 +36,8 @@ pub mod android_control_keyboard;
+@@ -55,6 +55,8 @@ pub mod android_control_keyboard;
  pub mod android_control_text;
  pub mod android_control_theme;
  pub mod android_control_ui;
-+// AmberLauncher: Amber's in-game menu, drawn by the engine (patch amber5/0007).
++// AmberLauncher: Amber's in-game menu, drawn by the engine.
 +pub mod android_amber_sidebar;
  pub mod beehive;
  pub mod benchmark;
  pub mod block_entity_item;
-diff --git a/crates/horizon-client/src/game/mobile_controls.rs b/crates/horizon-client/src/game/mobile_controls.rs
-index 08f8f1b..e0c4d5e 100644
---- a/crates/horizon-client/src/game/mobile_controls.rs
-+++ b/crates/horizon-client/src/game/mobile_controls.rs
-@@ -210,7 +210,8 @@ impl Game<'_> {
-             self.amber_pump();
-             return;
-         }
+diff --git a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+index d57a5bb391..a7f389c791 100644
+--- a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
++++ b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+@@ -224,7 +224,8 @@ impl Game<'_> {
+     }
+     pub(in crate::game) fn mobile_frame(&mut self, events: &dyn super::event_loop::EventLoopCtl) {
+         self.mobile_init();
 -        self.mobile.ui.hub_visible = self.mobile.controls.settings.show_control_hub;
 +        self.mobile.ui.hub_visible = self.mobile.controls.settings.show_control_hub
 +            && !horizon_client::android_amber_sidebar::active();
+         self.mobile.ui.pause_in_background = self.settings.file.bool("pauseOnLostFocus");
          self.mobile.ui.utility_offset_y = if self.screen == Screen::Playing
              && horizon_client::accounts::in_game()
-             && self
-@@ -900,6 +901,13 @@ impl Game<'_> {
+@@ -957,6 +958,13 @@ impl Game<'_> {
          if name == "mouse.look" {
              return;
          }

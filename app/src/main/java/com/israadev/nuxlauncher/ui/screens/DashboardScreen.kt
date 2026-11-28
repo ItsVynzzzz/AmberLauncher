@@ -135,7 +135,6 @@ import com.israadev.nuxlauncher.core.background.BgImportResult
 import com.israadev.nuxlauncher.core.background.HomeVideo
 import com.israadev.nuxlauncher.core.crash.CrashManager
 import com.israadev.nuxlauncher.core.download.MinecraftDownloader
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingFiles
 import com.israadev.nuxlauncher.core.instance.InstanceManager
@@ -432,12 +431,7 @@ fun DashboardScreen() {
             return
         }
 
-        // Mesin Rust (Horizon): tanpa JVM dan tanpa unduhan lewat launcher; langsung masuk game dengan akun yang dipilih
-        if (HorizonEngine.isEngine(inst.loader)) {
-            HorizonEngine.launch(context, inst, account)
-            return
-        }
-        // Starling (mesin Rust kedua): tanpa JVM. Berkas resmi game diunduh launcher dulu (dialog Amber); sesudahnya
+        // Mesin Rust (Starling): tanpa JVM. Berkas resmi game diunduh launcher dulu (dialog Amber); sesudahnya
         // Starling dibuka dan menyiapkan game di HP.
         if (StarlingEngine.isEngine(inst.loader)) {
             if (StarlingFiles.needsDownload(context)) {
@@ -757,7 +751,7 @@ fun DashboardScreen() {
                         currentTab = "instance_content"
                     },
                     // Mesin Rust tidak memakai berkas game dari launcher: tidak ada yang perlu diverifikasi
-                    onRepair = if (HorizonEngine.isEngine(inst.loader) || StarlingEngine.isEngine(inst.loader)) null else {
+                    onRepair = if (StarlingEngine.isEngine(inst.loader)) null else {
                         {
                             showEditInstanceDialog = false
                             // Tandai belum lengkap lalu jalankan alur UNDUH: hanya berkas yang hilang atau salah ukuran
@@ -1054,7 +1048,7 @@ private fun HomeScene(
             Column(modifier = Modifier.fillMaxWidth()) {
                 if (instance != null) {
                     val javaLabel = remember(instance.id, instance.mcVersion, instance.javaRuntime, instance.loader) {
-                        if (HorizonEngine.isEngine(instance.loader) || StarlingEngine.isEngine(instance.loader)) {
+                        if (StarlingEngine.isEngine(instance.loader)) {
                             "Tanpa Java"
                         } else {
                             val rt = if (instance.javaRuntime != "auto") instance.javaRuntime

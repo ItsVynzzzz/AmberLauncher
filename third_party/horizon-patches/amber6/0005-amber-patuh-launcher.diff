@@ -1,0 +1,53 @@
+diff --git a/crates/horizon-client/src/game/starling/files_offer.rs b/crates/horizon-client/src/game/starling/files_offer.rs
+index 3d1d81ea14..c0c16ae6d0 100644
+--- a/crates/horizon-client/src/game/starling/files_offer.rs
++++ b/crates/horizon-client/src/game/starling/files_offer.rs
+@@ -122,6 +122,10 @@ fn density(w: f32, h: f32) -> f32 {
+ impl Game<'_> {
+     /// Once at start, then while the player is away in the setting.
+     pub(super) fn poll_files_offer(&mut self) {
++        // AmberLauncher: tanpa kartu tawaran folder bersama dan impor Horizon Android di atas layar judul.
++        if option_env!("AMBER_EMBEDDED").is_some() {
++            return;
++        }
+         let offer = &mut self.files_offer;
+         if !offer.started {
+             offer.started = true;
+@@ -154,6 +158,10 @@ impl Game<'_> {
+     /// A folder button while the game folder is still in the app's private files, which no file
+     /// manager opens: the offer again, turned down or not.
+     pub(super) fn ask_files_offer(&mut self) {
++        // AmberLauncher: tombol folder tidak memunculkan tawaran folder bersama (lihat poll_files_offer).
++        if option_env!("AMBER_EMBEDDED").is_some() {
++            return;
++        }
+         let _ = std::fs::remove_file(declined());
+         let offer = &mut self.files_offer;
+         offer.stage = Some(if crate::android::file_access_allowed() {
+diff --git a/crates/horizon-client/src/game/starling/setup/mod.rs b/crates/horizon-client/src/game/starling/setup/mod.rs
+index 973b2b06c0..d3e1066233 100644
+--- a/crates/horizon-client/src/game/starling/setup/mod.rs
++++ b/crates/horizon-client/src/game/starling/setup/mod.rs
+@@ -293,6 +293,11 @@ fn account_step(setup: &Setup, state: State) -> Step {
+ #[cfg(target_os = "android")]
+ fn folder_offer(setup: &Setup) -> Option<super::files_offer::Stage> {
+     use super::files_offer::{Stage, declined};
++    // AmberLauncher: folder game dikelola launcher dan tidak pernah dipindah ke penyimpanan bersama
++    // (StarlingActivity.sharedFolder selalu null).
++    if option_env!("AMBER_EMBEDDED").is_some() {
++        return None;
++    }
+     let private = horizon_client::logging::game_home() == horizon_client::logging::private_home();
+     if !private || setup.folder_later || declined().exists() {
+         return None;
+@@ -322,6 +327,10 @@ pub(super) static HORIZON_LATER: std::sync::atomic::AtomicBool =
+ /// Whether to offer Horizon Android's worlds and packs: it is installed, and not answered yet.
+ #[cfg(target_os = "android")]
+ fn horizon_offer(setup: &Setup) -> bool {
++    // AmberLauncher: memindahkan data game diurus launcher, bukan mesin.
++    if option_env!("AMBER_EMBEDDED").is_some() {
++        return false;
++    }
+     if horizon_answered().exists() || HORIZON_LATER.load(std::sync::atomic::Ordering::Relaxed) {
+         return false;
+     }

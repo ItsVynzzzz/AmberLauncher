@@ -223,7 +223,7 @@ object DiscordPresence {
     }
 
     /**
-     * Dipanggil HorizonActivity (proses :horizon, mesin Rust). [requested] datang dari Intent yang disusun
+     * Dipanggil GameActivity Starling (proses :starling, mesin Rust). [requested] datang dari Intent yang disusun
      * launcher: true bila pemain menyalakan Discord Rich Presence. Semua alasan melewati presence dicatat
      * di log launcher supaya mudah dilacak bila presence tidak muncul.
      */
@@ -236,7 +236,7 @@ object DiscordPresence {
             }
             LauncherLog.i(TAG, "Mesin Rust: menyalakan presence")
             attach(activity)
-            update(PresenceComposer.game(mcVersion, "horizon", "", DiscordOptions(), languageNow(), ServerState.None, System.currentTimeMillis()))
+            update(PresenceComposer.game(mcVersion, "starling", "", DiscordOptions(), languageNow(), ServerState.None, System.currentTimeMillis()))
         } catch (e: Throwable) {
             LauncherLog.w(TAG, "Mesin Rust: presence gagal dinyalakan: ${e.message}", e)
         }

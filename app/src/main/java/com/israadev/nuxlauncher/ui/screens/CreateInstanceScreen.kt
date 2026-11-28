@@ -72,7 +72,6 @@ import com.israadev.nuxlauncher.core.fabric.FabricService
 import com.israadev.nuxlauncher.core.fabric.LegacyFabric
 import com.israadev.nuxlauncher.core.forge.ForgeFlavor
 import com.israadev.nuxlauncher.core.forge.ForgeService
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingFiles
 import com.israadev.nuxlauncher.core.manifest.MojangManifestService
@@ -116,7 +115,6 @@ private val CI_LOADERS = listOf(
     CiLoader("fabric", "Fabric", Icons.Outlined.Layers),
     CiLoader("forge", "Forge", Icons.Outlined.Extension),
     CiLoader("neoforge", "NeoForge", Icons.Outlined.Memory),
-    CiLoader(HorizonEngine.LOADER_ID, HorizonEngine.DISPLAY_NAME, Icons.Outlined.ViewInAr),
     CiLoader(StarlingEngine.LOADER_ID, StarlingEngine.DISPLAY_NAME, Icons.Outlined.ViewInAr),
     CiLoader("vanilla", "Vanilla", Icons.Outlined.Public),
     CiLoader(CI_MODPACK, "Modpack", Icons.Outlined.Folder)
@@ -127,7 +125,7 @@ private val CI_LOADERS = listOf(
  * versi dan tidak butuh daftar itu. releaseTime kosong membuat kartu menampilkan nama mesin, bukan tanggal.
  */
 private val CI_ENGINE_VERSION = VersionItem(
-    id = HorizonEngine.SUPPORTED_MC_VERSION,
+    id = StarlingEngine.SUPPORTED_MC_VERSION,
     type = "release",
     url = "",
     time = "",
@@ -303,9 +301,7 @@ fun CreateInstanceScreen(
         loaderVersion = ""
         loaderLoadedKey = ""
         val mc = selectedVersion
-        if (mc == null || selectedLoader == "vanilla" || selectedLoader == HorizonEngine.LOADER_ID ||
-            selectedLoader == StarlingEngine.LOADER_ID
-        ) {
+        if (mc == null || selectedLoader == "vanilla" || selectedLoader == StarlingEngine.LOADER_ID) {
             return@LaunchedEffect
         }
         if (selectedLoader == "fabric") {
@@ -335,9 +331,8 @@ fun CreateInstanceScreen(
     }
 
     val isVanilla = selectedLoader == "vanilla"
-    // Dua mesin Rust: Horizon dan Starling. isEngine berlaku untuk keduanya (satu versi, tanpa daftar Mojang).
-    val isStarling = selectedLoader == StarlingEngine.LOADER_ID
-    val isEngine = selectedLoader == HorizonEngine.LOADER_ID || isStarling
+    // Mesin Rust: satu versi, tanpa daftar Mojang.
+    val isEngine = selectedLoader == StarlingEngine.LOADER_ID
     val isModpack = selectedLoader == CI_MODPACK
     // Vanilla, mesin Rust, dan modpack tidak punya versi loader untuk dipilih di daftar versi.
     val noLoaderVersions = isVanilla || isEngine || isModpack
@@ -380,7 +375,7 @@ fun CreateInstanceScreen(
     // Mesin Rust hanya mengerjakan satu versi dan tidak butuh daftar Mojang: kartunya tetap tampil walau daftar
     // itu belum atau gagal dimuat.
     val shownVersions = if (isEngine) {
-        listOf(versionsList.firstOrNull { it.id == HorizonEngine.SUPPORTED_MC_VERSION } ?: CI_ENGINE_VERSION)
+        listOf(versionsList.firstOrNull { it.id == StarlingEngine.SUPPORTED_MC_VERSION } ?: CI_ENGINE_VERSION)
     } else {
         visibleVersions
     }
@@ -398,12 +393,11 @@ fun CreateInstanceScreen(
     // Mesin Rust: build ini harus membawa mesinnya dan HP-nya harus mampu. Alasan bila tidak, tampil di CiEngineNotice.
     val engineStatus = remember(selectedLoader) {
         when {
-            isStarling -> StarlingEngine.availability(context)
-            isEngine -> HorizonEngine.availability(context)
+            isEngine -> StarlingEngine.availability(context)
             else -> null
         }
     }
-    val engineBlocked = engineStatus is HorizonEngine.Availability.Unavailable
+    val engineBlocked = engineStatus is StarlingEngine.Availability.Unavailable
     val packInfo = pack
     val packLoaderLabel = packInfo?.let { p -> CI_LOADERS.firstOrNull { it.id == p.loader }?.label ?: p.loader }.orEmpty()
     val packReady = packInfo != null && !packLoaderLoading && !packLoaderFailed &&
@@ -592,8 +586,8 @@ fun CreateInstanceScreen(
                                 selectedLoader = loader.id
                                 // Versi sebelumnya belum tentu didukung loader baru: pilih ulang. Mesin Rust
                                 // hanya punya satu versi, jadi langsung terpilih.
-                                selectedVersion = if (loader.id == HorizonEngine.LOADER_ID || loader.id == StarlingEngine.LOADER_ID) {
-                                    HorizonEngine.SUPPORTED_MC_VERSION
+                                selectedVersion = if (loader.id == StarlingEngine.LOADER_ID) {
+                                    StarlingEngine.SUPPORTED_MC_VERSION
                                 } else {
                                     null
                                 }
@@ -676,7 +670,7 @@ fun CreateInstanceScreen(
                         contentPadding = PaddingValues(bottom = 12.dp)
                     ) {
                         if (isEngine) {
-                            item(key = "engine-notice") { CiEngineNotice(status = engineStatus, starling = isStarling) }
+                            item(key = "engine-notice") { CiEngineNotice(status = engineStatus) }
                         } else if (hasYearVersions) {
                             item(key = "mc26-notice") { CiModernNotice(selectedMc = selectedVersion) }
                         }
@@ -824,7 +818,7 @@ private fun ColumnScope.CiNote(
  * assets/lang/<bahasa>/horizon.tsv supaya ikut diterjemahkan.
  */
 @Composable
-private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolean = false) {
+private fun CiEngineNotice(status: StarlingEngine.Availability?) {
     val shape = RoundedCornerShape(20.dp)
     Column(
         modifier = Modifier
@@ -835,7 +829,7 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
-            text = if (starling) "MESIN RUST (STARLING)" else "MESIN RUST (HORIZON)",
+            text = "MESIN RUST (STARLING)",
             color = AmberUi.TextDim,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
@@ -849,14 +843,10 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
             lineHeight = 18.sp
         )
         Text(
-            text = if (starling) {
-                if (StarlingFiles.pins(LocalContext.current) != null) {
-                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
-                } else {
-                    "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB). Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri."
-                }
+            text = if (StarlingFiles.pins(LocalContext.current) != null) {
+                "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja."
             } else {
-                "Hanya mendukung Minecraft ${HorizonEngine.SUPPORTED_MC_VERSION}. Sumber daya game (sekitar 500 MiB) diunduh mesinnya sendiri saat pertama dibuka."
+                "Hanya mendukung Minecraft ${StarlingEngine.SUPPORTED_MC_VERSION}. Pertama kali dibuka, layar Starling menyiapkan game (unduhan sekitar 500 MiB)."
             },
             color = AmberUi.TextDim,
             fontSize = 12.sp,
@@ -872,7 +862,7 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
             fontSize = 12.sp,
             lineHeight = 17.sp
         )
-        if (status is HorizonEngine.Availability.Unavailable) {
+        if (status is StarlingEngine.Availability.Unavailable) {
             Text(
                 text = status.reason,
                 color = AmberUi.Danger,
@@ -880,9 +870,9 @@ private fun CiEngineNotice(status: HorizonEngine.Availability?, starling: Boolea
                 fontWeight = FontWeight.SemiBold,
                 lineHeight = 18.sp
             )
-        } else if (status is HorizonEngine.Availability.Ready && status.lowRam) {
+        } else if (status is StarlingEngine.Availability.Ready && status.lowRam) {
             Text(
-                text = HorizonEngine.LOW_RAM_WARNING,
+                text = StarlingEngine.LOW_RAM_WARNING,
                 color = CI_SNAPSHOT_COLOR,
                 fontSize = 12.sp,
                 lineHeight = 17.sp

@@ -8,10 +8,9 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.israadev.nuxlauncher.core.crash.LauncherLog
 import com.israadev.nuxlauncher.core.horizon.HorizonContent
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.HorizonMods
 import com.israadev.nuxlauncher.core.horizon.HorizonRegistry
-import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.*
 import com.israadev.nuxlauncher.core.utils.SafePaths
@@ -146,13 +145,13 @@ object NuxModManager {
     ): List<InstalledModItem> = withContext(Dispatchers.IO) {
         // World: tiap folder di saves yang punya level.dat (mesin Rust belum mendukung world)
         if (itemType == WorldInstaller.ITEM_TYPE) {
-            return@withContext if (HorizonEngine.isRust(instance.loader)) emptyList() else listWorldItems(context, instance)
+            return@withContext if (StarlingEngine.isRust(instance.loader)) emptyList() else listWorldItems(context, instance)
         }
         // Mesin Rust: shader dan resource pack ada di folder mesin, bukan di folder instance Java
-        if (HorizonEngine.isRust(instance.loader)) {
+        if (StarlingEngine.isRust(instance.loader)) {
             // Starling: modul bawaan yang tampil hanya yang benar-benar ada di pustaka mesin yang dibangun Amber.
             val compiled = if (StarlingEngine.isEngine(instance.loader)) StarlingEngine.compiledNativeMods(context) else null
-            return@withContext HorizonContent.installed(HorizonEngine.homeFor(context, instance.loader), itemType, compiled)
+            return@withContext HorizonContent.installed(StarlingEngine.homeFor(context, instance.loader), itemType, compiled)
         }
         val targetDir = getTargetDir(context, instance, itemType, worldName)
         val gameDir = InstanceManager.getInstanceGameDir(context, instance)
@@ -322,8 +321,8 @@ object NuxModManager {
         item: InstalledModItem,
         worldName: String? = null
     ): Boolean = withContext(Dispatchers.IO) {
-        if (HorizonEngine.isRust(instance.loader)) {
-            return@withContext HorizonContent.delete(HorizonEngine.homeFor(context, instance.loader), itemType, item.originalFilename)
+        if (StarlingEngine.isRust(instance.loader)) {
+            return@withContext HorizonContent.delete(StarlingEngine.homeFor(context, instance.loader), itemType, item.originalFilename)
         }
         try {
             val targetDir = getTargetDir(context, instance, itemType, worldName)
@@ -411,7 +410,7 @@ object NuxModManager {
             }
 
             // Mesin Rust: diperiksa dengan aturan mesin lalu masuk ke folder mesin
-            if (HorizonEngine.isRust(instance.loader)) {
+            if (StarlingEngine.isRust(instance.loader)) {
                 return@withContext importEngineFile(context, uri, itemType, fileName, instance.loader)
             }
 
@@ -534,7 +533,7 @@ object NuxModManager {
         fileName: String,
         onProgress: ((statusText: String, current: Int, total: Int) -> Unit)?
     ): Result<String> {
-        if (HorizonEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        if (StarlingEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
         if (!fileName.lowercase().endsWith(".zip")) {
             return Result.failure(IllegalArgumentException("File world harus berformat .zip"))
         }
@@ -575,7 +574,7 @@ object NuxModManager {
         version: ModrinthVersion,
         onProgress: (statusText: String) -> Unit
     ): Result<List<String>> {
-        if (HorizonEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
+        if (StarlingEngine.isRust(instance.loader)) return Result.failure(WorldImportException(MSG_WORLD_NO_ENGINE))
         val file = version.files.firstOrNull { it.primary } ?: version.files.firstOrNull()
             ?: return Result.failure(WorldImportException("Versi ini tidak punya berkas untuk diunduh."))
         val fileName = SafePaths.fileName(file.filename)
@@ -651,7 +650,7 @@ object NuxModManager {
                     throw java.io.IOException(HorizonMods.MSG_NEED_64)
                 }
                 HorizonContent.setEnabled(
-                    HorizonEngine.homeFor(context, loader),
+                    StarlingEngine.homeFor(context, loader),
                     itemType,
                     item.originalFilename,
                     !item.isEnabled
@@ -687,7 +686,7 @@ object NuxModManager {
 
             // Nama berkas datang dari respons server: pastikan tidak berisi folder ("../")
             val name = SafePaths.fileName(picked.filename)
-            val home = HorizonEngine.homeFor(context, loader)
+            val home = StarlingEngine.homeFor(context, loader)
             if (HorizonContent.exists(home, itemType, name)) {
                 Result.success(emptyList())
             } else {
@@ -737,7 +736,7 @@ object NuxModManager {
                 throw java.io.IOException(if (kind == HorizonRegistry.KIND_MOD) HorizonMods.MSG_TOO_BIG else HorizonContent.MSG_TOO_BIG)
             }
 
-            val home = HorizonEngine.homeFor(context, loader)
+            val home = StarlingEngine.homeFor(context, loader)
             if (kind != HorizonRegistry.KIND_MOD && HorizonContent.exists(home, itemType, name)) {
                 Result.success(emptyList())
             } else {
@@ -812,7 +811,7 @@ object NuxModManager {
             val input = context.contentResolver.openInputStream(uri)
                 ?: throw java.io.IOException("Gagal membuka berkas yang dipilih")
             input.use { HorizonContent.copyBounded(it, target) }
-            HorizonContent.install(target, HorizonEngine.homeFor(context, loader), itemType, fileName)
+            HorizonContent.install(target, StarlingEngine.homeFor(context, loader), itemType, fileName)
         } catch (e: Exception) {
             Result.failure(e)
         } finally {
@@ -836,7 +835,7 @@ object NuxModManager {
         source: String = SOURCE_MODRINTH
     ): Result<ModrinthSearchResponse> = withContext(Dispatchers.IO) {
         // Mesin Rust: Modrinth atau katalog Horizon, tanpa CurseForge dan tanpa saringan versi Minecraft
-        val engineSearch = HorizonEngine.isRust(instance?.loader)
+        val engineSearch = StarlingEngine.isRust(instance?.loader)
         // Mod untuk mesin Rust selalu dari katalog Horizon; shader dan resource pack dari Horizon bila sumber itu dipilih
         val horizonKind = if (engineSearch && (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)) {
             HorizonRegistry.kindFor(itemType)
@@ -847,7 +846,7 @@ object NuxModManager {
             return@withContext try {
                 Result.success(
                     HorizonRegistry.search(
-                        horizonIndex(), horizonKind, query, HorizonEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
+                        horizonIndex(), horizonKind, query, StarlingEngine.SUPPORTED_MC_VERSION, sortIndex, page, limit
                     )
                 )
             } catch (e: Exception) {
@@ -942,7 +941,7 @@ object NuxModManager {
             return@withContext try {
                 val project = HorizonRegistry.find(horizonIndex(), projectId)
                     ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
-                Result.success(HorizonRegistry.toProject(project, HorizonEngine.SUPPORTED_MC_VERSION))
+                Result.success(HorizonRegistry.toProject(project, StarlingEngine.SUPPORTED_MC_VERSION))
             } catch (e: Exception) {
                 Result.failure(e)
             }
@@ -1007,7 +1006,7 @@ object NuxModManager {
     ): Result<List<ModrinthVersion>> = withContext(Dispatchers.IO) {
         // Mesin Rust: mod (dan shader/resource pack bila sumbernya Horizon) dari katalog Horizon, versi yang cocok
         // dengan versi game mesin
-        val horizonKind = if (HorizonEngine.isRust(instance?.loader) &&
+        val horizonKind = if (StarlingEngine.isRust(instance?.loader) &&
             (itemType == HorizonContent.TYPE_MODS || source == SOURCE_HORIZON)
         ) {
             HorizonRegistry.kindFor(itemType)
@@ -1019,16 +1018,16 @@ object NuxModManager {
                 val index = horizonIndex()
                 val project = HorizonRegistry.find(index, projectId, horizonKind)
                     ?: throw java.io.IOException(HorizonRegistry.MSG_INDEX)
-                val list = HorizonRegistry.toVersions(index, project, HorizonEngine.SUPPORTED_MC_VERSION)
+                val list = HorizonRegistry.toVersions(index, project, StarlingEngine.SUPPORTED_MC_VERSION)
                 if (list.isEmpty()) Result.failure(java.io.IOException(HorizonRegistry.MSG_NO_FILE)) else Result.success(list)
             } catch (e: Exception) {
                 Result.failure(e)
             }
         }
         // Mesin Rust: semua versi yang punya berkas .zip; yang mencantumkan versi game mesin diurutkan lebih dulu
-        if (HorizonEngine.isRust(instance?.loader)) {
+        if (StarlingEngine.isRust(instance?.loader)) {
             return@withContext getProjectVersions(projectId)
-                .map { HorizonContent.usableVersions(it, HorizonEngine.SUPPORTED_MC_VERSION) }
+                .map { HorizonContent.usableVersions(it, StarlingEngine.SUPPORTED_MC_VERSION) }
         }
         if (CurseForgeMapper.isCurseForgeId(projectId)) {
             return@withContext CurseForgeApi.compatibleVersions(projectId, instance, itemType, filterByGameVersion)
@@ -1133,7 +1132,7 @@ object NuxModManager {
         if (itemType == WorldInstaller.ITEM_TYPE) {
             return@withContext downloadWorld(context, instance, version, onProgress)
         }
-        if (HorizonEngine.isRust(instance.loader)) {
+        if (StarlingEngine.isRust(instance.loader)) {
             return@withContext downloadForEngine(context, version, itemType, instance.loader, onProgress)
         }
         val visitedProjects = mutableSetOf<String>()

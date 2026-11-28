@@ -138,7 +138,7 @@ object RustTouchLayout {
         macros: Boolean,
         amberMenu: Boolean
     ) {
-        val home = engineDir ?: HorizonEngine.engineHome(context)
+        val home = engineDir ?: StarlingEngine.engineHome(context)
         val config = readObject(File(home, CONFIG_FILE))
         val profile = config?.optInt("profile", 0) ?: 0
         val dir = if (profile > 0) File(home, "profiles/profile-$profile") else home

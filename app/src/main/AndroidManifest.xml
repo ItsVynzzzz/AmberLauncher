@@ -187,34 +187,13 @@
             android:theme="@style/Theme.NuxLauncher" />
 
         <!--
-            Mesin Rust (Horizon, MIT): NativeActivity yang memuat libhorizon_android.so. Pustakanya TIDAK ada di repo,
-            dipasang saat build oleh scripts/fetch-horizon-engine.sh (lihat docs/rust-engine.md); tanpanya activity ini
-            tidak pernah dibuka karena HorizonEngine.availability() menolaknya lebih dulu.
-            Proses :horizon sendiri karena mesinnya memanggil process::exit saat selesai, dan itu tidak boleh ikut
-            mematikan launcher. Nama kelas terikat pada fungsi JNI di pustaka native, jadi tidak boleh diganti.
+            Mesin Rust: Starling (MIT). GameActivity memuat libhorizon_android.so (NativeActivity). Kelas Java-nya TIDAK ada
+            di repo: dipasang saat build bersama pustakanya oleh scripts/fetch-horizon-engine.sh; tanpanya activity ini
+            tidak pernah dibuka karena StarlingEngine.availability() menolaknya lebih dulu. Proses :starling sendiri
+            karena mesinnya mengakhiri prosesnya saat selesai. Nama kelas terikat pada fungsi JNI: jangan diganti.
         -->
         <activity
-            android:name="dev.horizon.android.HorizonActivity"
-            android:exported="false"
-            android:process=":horizon"
-            android:screenOrientation="sensorLandscape"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|navigation|density|screenLayout"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/HorizonGameTheme">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="horizon_android" />
-        </activity>
-
-        <!--
-            Starling (mesin Rust kedua, MIT): GameActivity memuat libstarling_android.so (NativeActivity). Kelas Java-nya
-            TIDAK ada di repo: dipasang saat build bersama pustakanya oleh scripts/fetch-horizon-engine.sh
-            (AMBER_ENGINE=starling); tanpanya activity ini tidak pernah dibuka karena StarlingEngine.availability()
-            menolaknya lebih dulu. Proses :starling sendiri (terpisah dari :horizon milik Horizon) karena mesinnya
-            mengakhiri prosesnya saat selesai. Nama kelas terikat pada fungsi JNI di pustaka native: jangan diganti.
-        -->
-        <activity
-            android:name="dev.horizon.android.GameActivity"
+            android:name="io.github.juanluci.starling.GameActivity"
             android:exported="false"
             android:process=":starling"
             android:launchMode="singleTask"
@@ -225,7 +204,7 @@
             tools:ignore="MissingClass">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="starling_android" />
+                android:value="horizon_android" />
             <!-- Titik masuk native (android_lib.rs): sama dengan manifest Starling. -->
             <meta-data
                 android:name="android.app.func_name"
@@ -233,7 +212,7 @@
         </activity>
         <!-- Memulai ulang game di proses baru (mis. setelah penyiapan pertama): kelas ini menunggu proses game berakhir. -->
         <activity
-            android:name="dev.horizon.android.LauncherActivity"
+            android:name="io.github.juanluci.starling.LauncherActivity"
             android:exported="false"
             android:process=":launcher"
             android:taskAffinity="${applicationId}.launcher"
@@ -243,7 +222,7 @@
             tools:ignore="MissingClass" />
         <!-- Laporan diagnostik Starling (setelah crash berulang atau dari menu mesin). -->
         <activity
-            android:name="dev.horizon.android.DiagnosticsActivity"
+            android:name="io.github.juanluci.starling.DiagnosticsActivity"
             android:exported="false"
             android:process=":diagnostics"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
@@ -251,7 +230,7 @@
             tools:ignore="MissingClass" />
         <!-- Menjaga Starling tetap di latar depan saat unduhan sumber daya atau penyiapan berjalan. -->
         <service
-            android:name="dev.horizon.android.WorkService"
+            android:name="io.github.juanluci.starling.WorkService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             tools:ignore="MissingClass" />

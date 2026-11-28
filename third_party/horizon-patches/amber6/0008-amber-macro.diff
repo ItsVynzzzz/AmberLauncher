@@ -1,8 +1,8 @@
-diff --git a/crates/horizon-client-render/src/touch.rs b/crates/horizon-client-render/src/touch.rs
-index 2a8839bb2..a0573428f 100644
---- a/crates/horizon-client-render/src/touch.rs
-+++ b/crates/horizon-client-render/src/touch.rs
-@@ -28,6 +28,7 @@ pub fn set_current_hud_opacity_scale(scale: f32) {
+diff --git a/crates/horizon-client-render/src/android_controls.rs b/crates/horizon-client-render/src/android_controls.rs
+index e98a45bc18..f45970bebe 100644
+--- a/crates/horizon-client-render/src/android_controls.rs
++++ b/crates/horizon-client-render/src/android_controls.rs
+@@ -31,6 +31,7 @@ pub fn set_current_hud_opacity_scale(scale: f32) {
      LAST_HUD_OPACITY_BITS.store(clamped.to_bits(), Ordering::Relaxed);
  }
  
@@ -10,16 +10,16 @@ index 2a8839bb2..a0573428f 100644
  pub mod custom;
  pub mod editor;
  pub use custom::CustomButton;
-@@ -200,6 +201,8 @@ pub struct TouchControls {
+@@ -203,6 +204,8 @@ pub struct TouchControls {
      pub goy_rendered_by_ui: bool,
      pub inventory_shift: bool,
      pub editor: Option<editor::Editor>,
-+    /// AmberLauncher macro buttons (touch/amber_macro.rs).
++    /// AmberLauncher macro buttons (android_controls/amber_macro.rs).
 +    pub macros: amber_macro::Macros,
      fingers: BTreeMap<u64, (Role, [f32; 2])>,
      passthrough_fingers: BTreeSet<u64>,
      custom_fingers: BTreeMap<u64, String>,
-@@ -247,6 +250,7 @@ impl Default for TouchControls {
+@@ -252,6 +255,7 @@ impl Default for TouchControls {
              in_inventory: false,
              goy_rendered_by_ui: false,
              editor: None,
@@ -27,21 +27,21 @@ index 2a8839bb2..a0573428f 100644
              fingers: BTreeMap::new(),
              passthrough_fingers: BTreeSet::new(),
              custom_fingers: BTreeMap::new(),
-diff --git a/crates/horizon-client-render/src/touch/amber_macro.rs b/crates/horizon-client-render/src/touch/amber_macro.rs
+diff --git a/crates/horizon-client-render/src/android_controls/amber_macro.rs b/crates/horizon-client-render/src/android_controls/amber_macro.rs
 new file mode 100644
-index 000000000..d8cd3ca65
+index 0000000000..6d1b360e6e
 --- /dev/null
-+++ b/crates/horizon-client-render/src/touch/amber_macro.rs
++++ b/crates/horizon-client-render/src/android_controls/amber_macro.rs
 @@ -0,0 +1,640 @@
 +//! AmberLauncher macros: touch buttons that play a saved sequence of key, mouse and chat steps.
 +//!
 +//! The launcher writes `amber-macros.json` next to `horizon-touch.json` and gives each macro button the key
 +//! token `amber.macro:<id>`. Everything Amber-specific lives in this file, so updating the engine to a newer
-+//! Horizon Android never has to merge it; upstream files only carry the few lines that connect it
-+//! (`touch.rs`, `touch/custom.rs`, `touch_ui.rs`, `game/android_input.rs`).
++//! Starling never has to merge it; upstream files only carry the few lines that connect it
++//! (`android_controls.rs`, `android_controls/custom.rs`, `android_control_ui.rs`, `game/starling/mobile_controls/mod.rs`).
 +//!
 +//! This module is plain state and time: it never touches the game. `press` and `tick` return `Action`s and
-+//! the game (`android_input.rs`) carries them out, so the whole thing is tested without a device.
++//! the game (`mobile_controls/mod.rs`) carries them out, so the whole thing is tested without a device.
 +use serde::Deserialize;
 +use std::collections::HashMap;
 +use std::sync::Arc;
@@ -673,11 +673,11 @@ index 000000000..d8cd3ca65
 +        assert!(m.running("a"));
 +    }
 +}
-diff --git a/crates/horizon-client-render/src/touch/custom.rs b/crates/horizon-client-render/src/touch/custom.rs
-index 554187fce..13594b75c 100644
---- a/crates/horizon-client-render/src/touch/custom.rs
-+++ b/crates/horizon-client-render/src/touch/custom.rs
-@@ -41,6 +41,7 @@ impl CustomButton {
+diff --git a/crates/horizon-client-render/src/android_controls/custom.rs b/crates/horizon-client-render/src/android_controls/custom.rs
+index e066e6d296..1547b08662 100644
+--- a/crates/horizon-client-render/src/android_controls/custom.rs
++++ b/crates/horizon-client-render/src/android_controls/custom.rs
+@@ -49,6 +49,7 @@ impl CustomButton {
              || token
                  .strip_prefix("action:")
                  .is_some_and(|name| crate::keybinds::MAPPINGS.iter().any(|m| m.0 == name))
@@ -685,7 +685,7 @@ index 554187fce..13594b75c 100644
      }
      pub fn is_keyboard_binding(token: &str) -> bool {
          !token.is_empty()
-@@ -124,6 +125,9 @@ impl CustomButton {
+@@ -132,6 +133,9 @@ impl CustomButton {
  }
  
  pub fn friendly_token_name(token: &str) -> String {
@@ -695,7 +695,7 @@ index 554187fce..13594b75c 100644
      match token {
          "" | "key.keyboard.unknown" => "Unassigned".into(),
          "key.mouse.left" => "LMB (Attack)".into(),
-@@ -499,7 +503,8 @@ impl TouchControls {
+@@ -523,7 +527,8 @@ impl TouchControls {
              let [nx, ny, nw, nh] = p.rect(self.aspect());
              let rect = [nx * b.width, ny * b.height, nw * b.width, nh * b.height];
              let held = self.custom_fingers.values().any(|key| *key == button.key);
@@ -705,23 +705,36 @@ index 554187fce..13594b75c 100644
              let pressed = held || toggled;
              let base_opacity = if self.editor.is_some() {
                  p.opacity.max(0.25)
-diff --git a/crates/horizon-client/src/game/android_input.rs b/crates/horizon-client/src/game/android_input.rs
-index a6aa6336d..468b7e7fd 100644
---- a/crates/horizon-client/src/game/android_input.rs
-+++ b/crates/horizon-client/src/game/android_input.rs
-@@ -175,6 +175,63 @@ impl Game<'_> {
-         for (name, down) in self.pad.touch.key_events() {
+diff --git a/crates/horizon-client/src/android_control_ui.rs b/crates/horizon-client/src/android_control_ui.rs
+index 99fd660d61..be9e8385ee 100644
+--- a/crates/horizon-client/src/android_control_ui.rs
++++ b/crates/horizon-client/src/android_control_ui.rs
+@@ -1671,7 +1671,7 @@ pub fn draw_goy_hud(
+             tok == custom.key
+                 || (!custom.second_key.is_empty() && tok == custom.second_key)
+                 || (!custom.third_key.is_empty() && tok == custom.third_key)
+-        });
++        }) || tc.macros.running_token(&custom.key);
+         let is_vmouse_on = custom.key == "mouse.virtual.toggle" && virtual_mouse;
+         let held = is_active_token && !p.toggleable;
+         let toggled = (is_active_token && p.toggleable) || is_vmouse_on;
+diff --git a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+index a7f389c791..b794c9c9c8 100644
+--- a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
++++ b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+@@ -815,6 +815,67 @@ impl Game<'_> {
+         for (name, down) in self.mobile.controls.key_events() {
              self.android_custom_token_edge(&name, down);
          }
 +        self.android_macro_tick();
 +    }
 +
-+    /// AmberLauncher macro buttons (touch/amber_macro.rs): the launcher's definitions are read from
++    /// AmberLauncher macro buttons (android_controls/amber_macro.rs): the launcher's definitions are read from
 +    /// `amber-macros.json` (next to `horizon-touch.json`) again whenever the file changed.
 +    fn android_macro_reload(&mut self) {
-+        let path = std::path::Path::new(horizon_client::touch::amber_macro::FILE);
++        let path = std::path::Path::new(horizon_client::android_controls::amber_macro::FILE);
 +        let stamp = std::fs::metadata(path).and_then(|m| m.modified()).ok();
-+        let macros = &mut self.pad.touch.macros;
++        let macros = &mut self.mobile.controls.macros;
 +        if macros.stamp == stamp && (stamp.is_some() || !macros.has_defs()) {
 +            return;
 +        }
@@ -734,8 +747,8 @@ index a6aa6336d..468b7e7fd 100644
 +            self.android_macro_reload();
 +        }
 +        let mut out = Vec::new();
-+        self.pad
-+            .touch
++        self.mobile
++            .controls
 +            .macros
 +            .press(id, down, Instant::now(), &mut out);
 +        self.android_macro_apply(out);
@@ -743,21 +756,25 @@ index a6aa6336d..468b7e7fd 100644
 +
 +    /// Runs macros forward; they only play while a world is being played with the window in front.
 +    fn android_macro_tick(&mut self) {
-+        if self.pad.touch.macros.is_idle() {
++        if self.mobile.controls.macros.is_idle() {
 +            return;
 +        }
 +        let live = self.title.is_none()
 +            && self.screen == Screen::Playing
 +            && !self.pause
 +            && !self.pad_in_menu()
++            && !self.mobile.ui.floating_menu
 +            && self.focused;
 +        let mut out = Vec::new();
-+        self.pad.touch.macros.tick(Instant::now(), live, &mut out);
++        self.mobile
++            .controls
++            .macros
++            .tick(Instant::now(), live, &mut out);
 +        self.android_macro_apply(out);
 +    }
 +
-+    fn android_macro_apply(&mut self, actions: Vec<horizon_client::touch::amber_macro::Action>) {
-+        use horizon_client::touch::amber_macro::Action;
++    fn android_macro_apply(&mut self, actions: Vec<horizon_client::android_controls::amber_macro::Action>) {
++        use horizon_client::android_controls::amber_macro::Action;
 +        for action in actions {
 +            match action {
 +                Action::Down(token) => self.android_custom_token_edge(&token, true),
@@ -773,27 +790,14 @@ index a6aa6336d..468b7e7fd 100644
      }
  
      pub(super) fn android_custom_token_edge(&mut self, token: &str, down: bool) {
-@@ -242,6 +299,10 @@ impl Game<'_> {
+@@ -882,6 +943,10 @@ impl Game<'_> {
                  return;
              }
          }
-+        if let Some(id) = horizon_client::touch::amber_macro::token_id(name) {
++        if let Some(id) = horizon_client::android_controls::amber_macro::token_id(name) {
 +            self.android_macro_press(id, down);
 +            return;
 +        }
          if let Some(mapping) = name.strip_prefix("action:") {
              if mapping == "key.sneak" || mapping == "key.sprint" {
                  let slot = usize::from(mapping == "key.sprint");
-diff --git a/crates/horizon-client/src/touch_ui.rs b/crates/horizon-client/src/touch_ui.rs
-index 2a2625ed0..7e2e53174 100644
---- a/crates/horizon-client/src/touch_ui.rs
-+++ b/crates/horizon-client/src/touch_ui.rs
-@@ -1480,7 +1480,7 @@ pub fn draw_goy_hud(
-             tok == custom.key
-                 || (!custom.second_key.is_empty() && tok == custom.second_key)
-                 || (!custom.third_key.is_empty() && tok == custom.third_key)
--        });
-+        }) || tc.macros.running_token(&custom.key);
-         let is_vmouse_on = custom.key == "mouse.virtual.toggle" && virtual_mouse;
-         let held = is_active_token && !p.toggleable;
-         let toggled = (is_active_token && p.toggleable) || is_vmouse_on;

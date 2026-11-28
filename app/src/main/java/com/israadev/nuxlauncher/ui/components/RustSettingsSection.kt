@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.horizon.RustPerformanceReport
 import com.israadev.nuxlauncher.core.horizon.RustSettingsStore
 import com.israadev.nuxlauncher.core.settings.SettingsManager
@@ -73,16 +73,16 @@ private fun RustInfoRow(title: String, desc: String?, value: String, warn: Boole
 @Composable
 fun RustStatusRows() {
     val context = LocalContext.current
-    val availability = remember { HorizonEngine.availability(context) }
-    val installed = remember { HorizonEngine.gameInstalled(context) }
+    val availability = remember { StarlingEngine.availability(context) }
+    val installed = remember { StarlingEngine.gameInstalled(context) }
 
-    val unavailable = availability as? HorizonEngine.Availability.Unavailable
-    val lowRam = (availability as? HorizonEngine.Availability.Ready)?.lowRam == true
+    val unavailable = availability as? StarlingEngine.Availability.Unavailable
+    val lowRam = (availability as? StarlingEngine.Availability.Ready)?.lowRam == true
     RustInfoRow(
-        title = "Mesin Rust (Horizon)",
+        title = "Mesin Rust (Starling)",
         desc = when {
             unavailable != null -> unavailable.reason
-            lowRam -> HorizonEngine.LOW_RAM_WARNING
+            lowRam -> StarlingEngine.LOW_RAM_WARNING
             else -> "Pengganti seluruh client Java: tanpa JVM dan tanpa mod Java."
         },
         value = if (unavailable != null) "Tidak tersedia" else "Siap",
@@ -91,14 +91,14 @@ fun RustStatusRows() {
     SettingDivider()
     RustInfoRow(
         title = "Sumber daya game",
-        desc = "Diunduh otomatis saat PLAY pertama, sekitar 500 MiB.",
+        desc = "Diunduh lewat tombol UNDUH, sekitar 500 MiB.",
         value = if (installed) "Terpasang" else "Belum diunduh"
     )
     SettingDivider()
     RustInfoRow(
         title = "Versi Minecraft",
         desc = "Satu-satunya versi yang dikerjakan mesin ini.",
-        value = HorizonEngine.SUPPORTED_MC_VERSION
+        value = StarlingEngine.SUPPORTED_MC_VERSION
     )
     SettingDivider()
     SettingFrame(
@@ -108,19 +108,6 @@ fun RustStatusRows() {
         SettingRowText(
             title = "Berlaku untuk instance Rust",
             desc = "Pilihan di tab ini dipakai instance Rust saja dan berlaku pada PLAY berikutnya. Instance Vanilla, Fabric, dan Forge tidak terpengaruh.",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp)
-        )
-    }
-    SettingDivider()
-    SettingFrame(
-        "Starling memakai sebagian pilihan",
-        "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game."
-    ) {
-        SettingRowText(
-            title = "Starling memakai sebagian pilihan",
-            desc = "Instance Starling memakai Renderer, Skala resolusi, Batas pekerja chunk, Mode performa (hanya Hemat baterai), Kurangi animasi game, Sederhanakan daun, dan Rekam performa dari tab ini. Pilihan lain hanya untuk Horizon. Nilai yang diubah di dalam game Starling tetap dipakai sampai pilihannya diubah lagi di sini. Log dan diagnostik setiap sesi Starling tersimpan di Pengaturan > Log game.",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 10.dp)
@@ -409,16 +396,5 @@ fun RustGameRows() {
             Toast.makeText(context, "Pengaturan Rust dikembalikan ke bawaan.", Toast.LENGTH_SHORT).show()
         },
         danger = true
-    )
-}
-
-/** Lirik di game (mod Amber Lyrics di mesin Starling): hanya keterangan, tidak ada izin khusus yang diminta. */
-@Composable
-fun RustLyricsRows() {
-    RustInfoRow(
-        title = "Lirik di game (Amber Lyrics)",
-        desc = "Tanpa izin khusus: mod membaca lagu dari siaran pemutar musik. Di Spotify, hidupkan \"Device Broadcast Status\" di pengaturannya. Hidupkan mod di Mod (Starling); setelah masuk game, jeda lalu putar lagu sekali atau ganti lagu. Judul dan artis lagu dikirim ke lrclib.net untuk mencari lirik.",
-        value = "Tanpa izin",
-        warn = false
     )
 }

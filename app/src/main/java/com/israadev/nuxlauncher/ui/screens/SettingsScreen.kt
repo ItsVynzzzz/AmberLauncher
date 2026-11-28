@@ -721,7 +721,7 @@ fun SettingsScreen(
                     }
 
                     // ===================== RUST =====================
-                    // Pengaturan mesin Rust (Horizon). Disimpan di config mesin sendiri, tidak lewat LauncherSettings.
+                    // Pengaturan mesin Rust (Starling). Disimpan di config mesin sendiri, tidak lewat LauncherSettings.
                     if (searching || section == 4) {
                         RustSettingsLoader()
                         SettingsGroup("Mesin Rust") { RustStatusRows() }
@@ -731,7 +731,6 @@ fun SettingsScreen(
                         SettingsGroup("Kontrol") { RustControlRows() }
                         SettingsGroup("Diagnostik") { RustDiagnosticRows() }
                         SettingsGroup("Permainan") { RustGameRows() }
-                        SettingsGroup("Lirik") { RustLyricsRows() }
                     }
 
                     // ===================== KONTROL =====================

@@ -1,0 +1,147 @@
+diff --git a/packaging/android/java/io/github/juanluci/starling/AmberFolders.java b/packaging/android/java/io/github/juanluci/starling/AmberFolders.java
+new file mode 100644
+index 0000000000..a0a34199a5
+--- /dev/null
++++ b/packaging/android/java/io/github/juanluci/starling/AmberFolders.java
+@@ -0,0 +1,18 @@
++package io.github.juanluci.starling;
++
++import java.io.File;
++
++/**
++ * AmberLauncher: semua komponen mesin (game, peluncur ulang, diagnostik) memakai subfolder "starling" di folder
++ * privat aplikasi, supaya data mesin tidak bercampur dengan data launcher dan semua komponen melihat folder yang sama.
++ */
++final class AmberFolders {
++    private AmberFolders() {}
++
++    static File files(File base) {
++        File dir = new File(base, "starling");
++        //noinspection ResultOfMethodCallIgnored
++        dir.mkdirs();
++        return dir;
++    }
++}
+diff --git a/packaging/android/java/io/github/juanluci/starling/DiagnosticsActivity.java b/packaging/android/java/io/github/juanluci/starling/DiagnosticsActivity.java
+index a08a736b37..9e982fd100 100644
+--- a/packaging/android/java/io/github/juanluci/starling/DiagnosticsActivity.java
++++ b/packaging/android/java/io/github/juanluci/starling/DiagnosticsActivity.java
+@@ -1,5 +1,6 @@
+ package io.github.juanluci.starling;
+ 
++import com.israadev.nuxlauncher.R;
+ import android.app.Activity;
+ import android.app.Dialog;
+ import android.content.DialogInterface;
+@@ -49,6 +50,10 @@ public final class DiagnosticsActivity extends Activity {
+         R.string.diagnostics_api_auto, R.string.diagnostics_api_vulkan, R.string.diagnostics_api_opengl,
+     };
+     private final Button[] apiButtons = new Button[APIS.length];
++
++    // AmberLauncher: folder yang sama dengan GameActivity.
++    @Override public java.io.File getFilesDir() { return AmberFolders.files(super.getFilesDir()); }
++    @Override public java.io.File getCacheDir() { return AmberFolders.files(super.getCacheDir()); }
+     private TextView status;
+     private final ArrayList<Button> actions = new ArrayList<Button>();
+     private String latest;
+diff --git a/packaging/android/java/io/github/juanluci/starling/GameActivity.java b/packaging/android/java/io/github/juanluci/starling/GameActivity.java
+index 75a2b5ef05..1beca6998c 100644
+--- a/packaging/android/java/io/github/juanluci/starling/GameActivity.java
++++ b/packaging/android/java/io/github/juanluci/starling/GameActivity.java
+@@ -1,4 +1,58 @@
+ package io.github.juanluci.starling;
+ 
+-/** Native game component; StarlingActivity keeps the existing Java/JNI bridge API. */
+-public final class GameActivity extends StarlingActivity {}
++import android.content.Intent;
++import android.os.Bundle;
++import com.israadev.nuxlauncher.BuildConfig;
++import com.israadev.nuxlauncher.discord.DiscordPresence;
++import java.io.File;
++
++/**
++ * Native game component; StarlingActivity keeps the existing Java/JNI bridge API.
++ *
++ * Perubahan AmberLauncher: getFilesDir() dan getCacheDir() diarahkan ke subfolder "starling" (data mesin terpisah dari
++ * data launcher), dan Discord Rich Presence opsional yang diminta launcher lewat Intent.
++ */
++public final class GameActivity extends StarlingActivity {
++    /** Diisi launcher: true bila pemain menyalakan Discord Rich Presence. */
++    public static final String EXTRA_DISCORD_RPC = "amber_discord_rpc";
++    /** Versi Minecraft yang ditampilkan di Rich Presence. */
++    public static final String EXTRA_MC_VERSION = "amber_mc_version";
++
++    @Override protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        startDiscordPresence();
++    }
++
++    // singleTask: bila mesin masih berjalan di latar, membukanya lagi datang lewat sini, bukan onCreate.
++    @Override protected void onNewIntent(Intent intent) {
++        super.onNewIntent(intent);
++        setIntent(intent);
++        startDiscordPresence();
++    }
++
++    @Override protected void onDestroy() {
++        try {
++            if (BuildConfig.HAS_DISCORD_SDK) DiscordPresence.INSTANCE.stopBlocking(800L);
++        } catch (Throwable ignored) {
++            // Presence hanyalah pelengkap: apa pun yang terjadi, mesin harus tetap bisa ditutup.
++        }
++        super.onDestroy();
++    }
++
++    private void startDiscordPresence() {
++        try {
++            if (!BuildConfig.HAS_DISCORD_SDK) return;
++            Intent intent = getIntent();
++            boolean requested = intent != null && intent.getBooleanExtra(EXTRA_DISCORD_RPC, false);
++            String version = intent == null ? null : intent.getStringExtra(EXTRA_MC_VERSION);
++            DiscordPresence.INSTANCE.onEngineStart(this, requested, version == null ? "" : version);
++        } catch (Throwable ignored) {
++            // Gagal menyalakan presence tidak boleh mengganggu mesin.
++        }
++    }
++
++    // NativeActivity membaca getFilesDir() dan getCacheDir() saat dibuat, lalu mesin memakainya sebagai rumah datanya.
++    @Override public File getFilesDir() { return AmberFolders.files(super.getFilesDir()); }
++
++    @Override public File getCacheDir() { return AmberFolders.files(super.getCacheDir()); }
++}
+diff --git a/packaging/android/java/io/github/juanluci/starling/LauncherActivity.java b/packaging/android/java/io/github/juanluci/starling/LauncherActivity.java
+index ffdd5623c1..aa827a1f6a 100644
+--- a/packaging/android/java/io/github/juanluci/starling/LauncherActivity.java
++++ b/packaging/android/java/io/github/juanluci/starling/LauncherActivity.java
+@@ -37,6 +37,9 @@ public final class LauncherActivity extends Activity {
+     /** What the restart screen says while the game starts again (StarlingActivity.restart). */
+     static final String MESSAGE = "io.github.juanluci.starling.MESSAGE";
+ 
++    // AmberLauncher: folder yang sama dengan GameActivity.
++    @Override public File getFilesDir() { return AmberFolders.files(super.getFilesDir()); }
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+diff --git a/packaging/android/java/io/github/juanluci/starling/StarlingActivity.java b/packaging/android/java/io/github/juanluci/starling/StarlingActivity.java
+index b51c9fcc4a..1d2bbe03f8 100644
+--- a/packaging/android/java/io/github/juanluci/starling/StarlingActivity.java
++++ b/packaging/android/java/io/github/juanluci/starling/StarlingActivity.java
+@@ -1,6 +1,7 @@
+ package io.github.juanluci.starling;
+ 
+ import android.Manifest;
++import com.israadev.nuxlauncher.R;
+ import android.app.AlertDialog;
+ import android.app.NativeActivity;
+ import android.content.ActivityNotFoundException;
+@@ -164,6 +165,9 @@ public class StarlingActivity extends NativeActivity {
+      *  StarlingDev for Starling Dev (build_apk.py --dev) and StarlingPreview for Starling Preview
+      *  (--preview), which keep out of the release's. */
+     static String sharedFolder(Context context) {
++        // AmberLauncher: game selalu di folder privat aplikasi (files/starling), yang dikelola launcher.
++        // Tanpa ini mesin memindahkan datanya ke folder bersama bila aplikasi punya akses semua berkas.
++        if (true) return null;
+         boolean allowed = Build.VERSION.SDK_INT >= 30
+                 ? Environment.isExternalStorageManager()
+                 : context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

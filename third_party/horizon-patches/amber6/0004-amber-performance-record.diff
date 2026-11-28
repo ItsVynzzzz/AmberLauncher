@@ -1,0 +1,18 @@
+diff --git a/crates/horizon-client/src/android.rs b/crates/horizon-client/src/android.rs
+index 249293f8c3..23acad8a0f 100644
+--- a/crates/horizon-client/src/android.rs
++++ b/crates/horizon-client/src/android.rs
+@@ -1635,6 +1635,13 @@ pub fn main(
+         log::warn!("Could not initialize diagnostics: {error}");
+     }
+     crate::diagnostics::collect_exits(&private);
++    // AmberLauncher: its "Rekam performa" switch writes AMBER_PERF_RECORD=1 into horizon-args.txt, which starts the
++    // performance recording at launch, as the in-game diagnostics menu would (Options > Diagnostics > Record).
++    if std::env::var_os("AMBER_PERF_RECORD").is_some_and(|value| value == "1")
++        && let Err(error) = crate::performance::start(&private, serde_json::json!({"phase": "amber"}))
++    {
++        log::warn!("Cannot start performance recording: {error}");
++    }
+     // A chosen custom GPU driver replaces the system's libvulkan before anything loads Vulkan
+     // (#470). Its report waits for the log: none runs yet.
+     let _ = GPU_DRIVER_NOTES.set(load_custom_driver());

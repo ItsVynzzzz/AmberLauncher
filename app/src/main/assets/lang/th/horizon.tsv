@@ -73,3 +73,4 @@ Mengunduh sumber daya Starling: {0} dari {1} MB	กำลังดาวน์�
 Menyelesaikan unduhan Starling...	กำลังดาวน์โหลด Starling ให้เสร็จสิ้น...
 Unduhan Starling selesai. Tekan PLAY; pertama kali, Starling menyiapkan game di HP sekali saja.	ดาวน์โหลด Starling เสร็จแล้ว กด PLAY ครั้งแรก Starling จะเตรียมเกมบนมือถือ เพียงครั้งเดียว
 Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja. Mesin ini terpisah dari Horizon, dengan shader, mod, dan menu miliknya sendiri.	รองรับเฉพาะ Minecraft {0} ตัวเปิดเกมจะดาวน์โหลดทรัพยากรของเกม (ประมาณ 500 MiB) ด้วยปุ่มดาวน์โหลด หลังจากนั้น Starling จะเตรียมบนมือถือเพียงครั้งเดียว เอนจินนี้แยกจาก Horizon และมีเชเดอร์ ม็อด และเมนูของตัวเอง
+Hanya mendukung Minecraft {0}. Sumber daya game (sekitar 500 MiB) diunduh launcher lewat tombol UNDUH; sesudahnya Starling menyiapkannya di HP sekali saja.	

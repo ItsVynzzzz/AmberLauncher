@@ -15,7 +15,7 @@
 #       --repo URL --commit SHA40 --profile release|fast [--abi arm64-v8a|armeabi-v7a] [--patch-set NAMA --patch-hash HEX8] \
 #       [--rust VERSI] [--ndk VERSI] [--readelf ALAT]
 #
-# Hasil: FOLDER/horizon-engine-<abi>.zip dan FOLDER/horizon-engine-<abi>.zip.sha256 (abi bawaan arm64-v8a)
+# Hasil: FOLDER/starling-engine-<abi>.zip dan FOLDER/starling-engine-<abi>.zip.sha256 (abi bawaan arm64-v8a)
 
 set -euo pipefail
 
@@ -70,7 +70,7 @@ case "$ABI" in
   arm64-v8a | armeabi-v7a) ;;
   *) die "abi harus arm64-v8a atau armeabi-v7a." ;;
 esac
-BUNDLE_NAME="${AMBER_ENGINE:-horizon}-engine-$ABI.zip"
+BUNDLE_NAME="starling-engine-$ABI.zip"
 [ -f "$SO" ] || die "pustaka tidak ada: $SO"
 # schema 1 = dengan tabel data (--data); schema 2 = tanpa data, dengan pustaka pendamping (--extra).
 if [ -n "$DATA" ]; then

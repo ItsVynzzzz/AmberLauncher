@@ -1,0 +1,62 @@
+diff --git a/crates/horizon-client/src/android_amber_sidebar.rs b/crates/horizon-client/src/android_amber_sidebar.rs
+index 681242a665..9f9b9f165c 100644
+--- a/crates/horizon-client/src/android_amber_sidebar.rs
++++ b/crates/horizon-client/src/android_amber_sidebar.rs
+@@ -509,7 +509,7 @@ impl TouchUi {
+             }
+             if contains(g.exit, p) {
+                 if self.amber_exit_armed {
+-                    return Some(InGameMenuAction::ForceKill);
++                    return Some(InGameMenuAction::AmberExit);
+                 }
+                 self.amber_exit_armed = true;
+                 return Some(InGameMenuAction::Close);
+diff --git a/crates/horizon-client/src/android_control_ui.rs b/crates/horizon-client/src/android_control_ui.rs
+index 5041a49d69..5169e395e7 100644
+--- a/crates/horizon-client/src/android_control_ui.rs
++++ b/crates/horizon-client/src/android_control_ui.rs
+@@ -216,6 +216,9 @@ pub enum InGameMenuAction {
+     OpenKeyboard,
+     /// Kill the game process now (no save, no shutdown sequence).
+     ForceKill,
++    /// AmberLauncher: the sidebar's exit. The world is saved as Quit saves it, then the game closes
++    /// and Amber is on screen again.
++    AmberExit,
+     /// Open the game's log folder in the system file manager.
+     OpenLogs,
+     /// Back to Horizon Android's launcher (`ha_launcher`), a world saved first.
+diff --git a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+index b794c9c9c8..ba3e785906 100644
+--- a/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
++++ b/crates/horizon-client/src/game/starling/mobile_controls/mod.rs
+@@ -1749,6 +1749,15 @@ impl Game<'_> {
+                     let _ = self.mobile.controls.settings.save();
+                     std::process::exit(0);
+                 }
++                // AmberLauncher: save first, never kill the process with an unsaved world.
++                InGameMenuAction::AmberExit => {
++                    let _ = self.mobile.controls.settings.save();
++                    if self.title.is_some() || self.player.is_none() {
++                        events.exit();
++                    } else {
++                        self.begin_closing_save(true)?;
++                    }
++                }
+                 // As the pause menu's Launcher row: a world saves and the game ends as Quit does,
+                 // and the app starts again in the launcher (ha_launcher).
+                 InGameMenuAction::OpenLauncher => {
+diff --git a/crates/horizon-client/src/ha_launcher/mod.rs b/crates/horizon-client/src/ha_launcher/mod.rs
+index 563505cb37..63392898a5 100644
+--- a/crates/horizon-client/src/ha_launcher/mod.rs
++++ b/crates/horizon-client/src/ha_launcher/mod.rs
+@@ -334,6 +334,10 @@ static LAUNCHER_NEXT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicB
+ 
+ /// The title screen's and the pause menu's Launcher button, before the game quits.
+ pub fn back_to_launcher() {
++    // AmberLauncher: Amber is the launcher. The button then only ends the game, as Quit does.
++    if option_env!("AMBER_EMBEDDED").is_some() {
++        return;
++    }
+     let _ = std::fs::write(horizon_client::logging::private_home().join(OPEN), b"");
+     LAUNCHER_NEXT.store(true, std::sync::atomic::Ordering::Relaxed);
+ }

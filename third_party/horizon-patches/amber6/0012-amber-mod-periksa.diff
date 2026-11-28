@@ -1,0 +1,17 @@
+diff --git a/packaging/android/native_build.sh b/packaging/android/native_build.sh
+index 244c4381e6..95f01261ed 100755
+--- a/packaging/android/native_build.sh
++++ b/packaging/android/native_build.sh
+@@ -126,6 +126,12 @@ git -C "$source" show "HEAD:$manifest" > "$work/manifest"
+ cmp -s "$work/manifest" "$build/$manifest" || cp "$work/manifest" "$build/$manifest"
+ 
+ rm -f "$build"/target/android/starling-*.apk
++# Amber: NATIVE_CHECK_ONLY stops after a type check of the library with these mods in. Amber's engine build uses it to
++# find which mod of a set does not compile, without paying for code generation each time.
++if [ -n "${NATIVE_CHECK_ONLY:-}" ]; then
++  (cd "$build" && cargo ndk -t "$abi" --platform 26 check --profile "$profile" -p horizon-android)
++  exit 0
++fi
+ # NATIVE_LIBRARY_ONLY: the library is all the game downloads, and the APK takes time to make.
+ (cd "$build" && python3 packaging/android/build_apk.py --abi "$abi" --profile "$profile" $variant \
+   ${NATIVE_LIBRARY_ONLY:+--library-only})

@@ -114,8 +114,8 @@ object RustSettingsStore {
     // Baca-ubah-tulis android-launcher.json: tulisan pengaturan (di latar) dan tema (saat PLAY) tidak boleh saling menimpa.
     private val fileLock = Any()
 
-    /** Folder data mesin. Sama dengan [HorizonEngine.engineHome]; satu sumber agar tidak bisa berselisih. */
-    private fun configFile(context: Context): File = File(HorizonEngine.engineHome(context), CONFIG_FILE)
+    /** Folder data mesin. Sama dengan [StarlingEngine.engineHome]; satu sumber agar tidak bisa berselisih. */
+    private fun configFile(context: Context): File = File(StarlingEngine.engineHome(context), CONFIG_FILE)
 
     /** Membaca ulang dari berkas (dipanggil saat tab dibuka). Hasilnya masuk ke [settings]. */
     fun reload(context: Context) {

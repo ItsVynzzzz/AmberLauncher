@@ -176,8 +176,8 @@ android {
         prefab = buildArm32 || hasDiscordSdk
     }
 
-    // Starling (mesin Rust kedua): kelas Java, resource, dan aset dari paket mesinnya. scripts/fetch-horizon-engine.sh
-    // (AMBER_ENGINE=starling) mengisi src/starling sebelum build; folder itu tidak ada di repo, dan tanpa paketnya kosong.
+    // Mesin Rust (Starling): kelas Java, resource, dan aset dari paket mesinnya. scripts/fetch-horizon-engine.sh mengisi
+    // src/starling sebelum build; folder itu tidak ada di repo, dan tanpa paketnya kosong.
     sourceSets {
         getByName("main") {
             java.srcDir("src/starling/java")
@@ -293,15 +293,15 @@ tasks.configureEach {
     }
 }
 
-// ---- Mesin Rust (Horizon): dipasang otomatis sebelum build ----
+// ---- Mesin Rust (Starling): dipasang otomatis sebelum build ----
 // scripts/fetch-horizon-engine.sh mengambil mesin yang sudah dikompilasi dari Release repo ini dan menaruhnya di
-// jniLibs/assets (cara kerjanya ada di docs/rust-engine.md). Tanpa konfigurasi, tanpa Release-nya, atau tanpa
+// jniLibs dan src/starling (cara kerjanya ada di docs/rust-engine.md). Tanpa konfigurasi, tanpa Release-nya, atau tanpa
 // jaringan, skrip itu hanya memberi tahu alasannya, dan build berjalan seperti biasa tanpa mesin Rust. Dilewati di
 // build 32-bit (scripts/build-arm32.sh memasang mesin 32-bit sendiri), di Windows (butuh bash), dan bila
 // HORIZON_ENGINE=off.
 val fetchHorizonEngine by tasks.registering(Exec::class) {
     group = "amber"
-    description = "Memasang mesin Rust (Horizon) dari Release repo ini bila tersedia"
+    description = "Memasang mesin Rust (Starling) dari Release repo ini bila tersedia"
     workingDir = rootDir
     commandLine("bash", "scripts/fetch-horizon-engine.sh")
     isIgnoreExitValue = true
@@ -311,22 +311,7 @@ val fetchHorizonEngine by tasks.registering(Exec::class) {
         File(rootDir, "scripts/fetch-horizon-engine.sh").isFile
 }
 
-// Mesin Rust kedua (Starling): skrip yang sama, dengan AMBER_ENGINE=starling. Tanpa paketnya di Release, dilewati.
-val fetchStarlingEngine by tasks.registering(Exec::class) {
-    group = "amber"
-    description = "Memasang mesin Starling (mesin Rust kedua) dari Release repo ini bila tersedia"
-    workingDir = rootDir
-    environment("AMBER_ENGINE", "starling")
-    commandLine("bash", "scripts/fetch-horizon-engine.sh")
-    isIgnoreExitValue = true
-    outputs.upToDateWhen { false }
-    mustRunAfter(fetchHorizonEngine)
-    enabled = !buildArm32 &&
-        !System.getProperty("os.name").lowercase().contains("win") &&
-        File(rootDir, "scripts/fetch-horizon-engine.sh").isFile &&
-        File(rootDir, "starling-engine.properties").isFile
-}
-tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine, fetchStarlingEngine) }
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(fetchHorizonEngine) }
 
 dependencies {
     implementation(libs.androidx.core.ktx)

@@ -26,7 +26,7 @@
 -keep class top.fifthlight.touchcontroller.** { *; }
 
 # Mesin Rust (Horizon): pustaka native memanggil dan dipanggil lewat nama kelas dan metode ini (JNI).
--keep class dev.horizon.android.** { *; }
+-keep class io.github.juanluci.starling.** { *; }
 
 # Semua metode native tidak boleh dihapus atau diganti namanya.
 -keepclasseswithmembernames,includedescriptorclasses class * {

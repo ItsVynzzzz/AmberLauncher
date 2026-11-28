@@ -2,7 +2,6 @@ package com.israadev.nuxlauncher.core.mods
 
 import android.content.Context
 import com.israadev.nuxlauncher.core.crash.LauncherLog
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.instance.InstanceManager
 import com.israadev.nuxlauncher.core.models.Instance
@@ -80,7 +79,7 @@ object ModUpdater {
 
     /** Daftar mod tidak berlaku untuk instance dengan mesin Rust. */
     fun isSupported(instance: Instance?): Boolean =
-        instance != null && !HorizonEngine.isEngine(instance.loader) && !StarlingEngine.isEngine(instance.loader)
+        instance != null && !StarlingEngine.isEngine(instance.loader)
 
     /** True bila pemeriksaan otomatis untuk [instanceId] sudah waktunya dijalankan lagi. */
     fun isAutoCheckDue(context: Context, instanceId: String): Boolean {

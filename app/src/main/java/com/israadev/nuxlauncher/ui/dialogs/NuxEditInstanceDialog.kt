@@ -44,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
 import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.controls.ControlPresetManager
 import com.israadev.nuxlauncher.core.instance.InstanceManager
@@ -171,10 +170,9 @@ fun NuxEditInstanceDialog(
     }
 
     // Tiga kotak pintasan di bawah kartu kiri: pengaturan khusus instance ini.
-    // Mesin Rust tidak memakai JVM, RAM Java, maupun renderer launcher, jadi kotak Performa mati untuk keduanya;
-    // Starling juga tidak memakai tata letak kontrol Amber, jadi kotak Kontrol mati untuk Starling.
-    val rustEngine = HorizonEngine.isEngine(instance.loader) || StarlingEngine.isEngine(instance.loader)
-    val starling = StarlingEngine.isEngine(instance.loader)
+    // Mesin Rust tidak memakai JVM, RAM Java, maupun renderer launcher, jadi kotak Performa mati. Tata letak kontrol
+    // Amber tetap dipakai (lewat "Kontrol Amber"), jadi kotak Kontrol menyala.
+    val rustEngine = StarlingEngine.isEngine(instance.loader)
     val tiles: @Composable () -> Unit = {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -183,8 +181,7 @@ fun NuxEditInstanceDialog(
             AmberTile(
                 icon = Icons.Outlined.TouchApp,
                 label = "Kontrol",
-                status = if (starling) "Bawaan mesin" else controlName ?: "Ikuti global",
-                enabled = !starling,
+                status = controlName ?: "Ikuti global",
                 onClick = { showControls = true },
                 modifier = Modifier.weight(1f)
             )

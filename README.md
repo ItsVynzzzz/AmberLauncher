@@ -73,7 +73,7 @@ Pembaruan berikutnya bisa dipasang langsung dari dalam launcher (**Pengaturan > 
 - **Laporan crash** dengan opsi unggah log ke mclo.gs.
 - **Pembaruan dari dalam aplikasi**, dengan APK 32-bit/64-bit dipilih otomatis. Yang ditawarkan hanya rilis bernomor; build uji tiap patch dan perubahan dokumen tidak memunculkan pembaruan.
 - **Antarmuka multibahasa**: Indonesia, English, Español, Tiếng Việt, Português (Brasil), ภาษาไทย, 简体中文, dan Filipino.
-- **Eksperimental**: dukungan mod TouchController dan mesin Rust (Horizon).
+- **Eksperimental**: dukungan mod TouchController dan mesin Rust (Starling).
 
 **Belum didukung:** Forge untuk Minecraft 1.6.4 ke bawah, NeoForge untuk 1.20.1 ke bawah, dan Quilt.
 

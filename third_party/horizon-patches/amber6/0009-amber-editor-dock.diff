@@ -1,0 +1,65 @@
+diff --git a/crates/horizon-client/src/android_control_ui.rs b/crates/horizon-client/src/android_control_ui.rs
+index be9e8385ee..5041a49d69 100644
+--- a/crates/horizon-client/src/android_control_ui.rs
++++ b/crates/horizon-client/src/android_control_ui.rs
+@@ -4594,6 +4594,25 @@ fn draw_m3_swatch_chip(
+     }
+ }
+ 
++/// AmberLauncher: horizontal center (0..1) of the control being edited, written by the drawing so the touch code
++/// docks the inspector on the same side. `0x3F00_0000` is `0.5f32`.
++static INSPECTOR_SELECTED_X: std::sync::atomic::AtomicU32 =
++    std::sync::atomic::AtomicU32::new(0x3F00_0000);
++
++/// AmberLauncher: the inspector panel `(dw, dh, dx, dy)`, docked to the side opposite the selected control (like
++/// Amber's control editor) so the control being edited stays visible. Shared by drawing and touch.
++fn inspector_rect(w: f32, h: f32) -> (f32, f32, f32, f32) {
++    let sel_x = f32::from_bits(INSPECTOR_SELECTED_X.load(std::sync::atomic::Ordering::Relaxed));
++    let dw = (w * 0.52).clamp(350.0, 640.0);
++    let dh = (h - 12.0).clamp(256.0, 384.0);
++    let dx = if sel_x >= 0.5 {
++        8.0
++    } else {
++        (w - dw - 8.0).max(0.0)
++    };
++    (dw, dh, dx, (h - dh) * 0.5)
++}
++
+ pub fn draw_hud_editor(
+     tc: &crate::android_controls::TouchControls,
+     b: &mut HudBatch,
+@@ -5050,11 +5069,17 @@ pub fn draw_hud_editor(
+ 
+     // 8. Component Property Inspector Dialog — Studio Layout matching `90511.png` (when ed.props_open == true)
+     if ed.props_open {
+-        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 208));
+-        let dw = (w - 16.0).clamp(350.0, 640.0);
+-        let dh = (h - 12.0).clamp(256.0, 384.0);
+-        let dx = (w - dw) * 0.5;
+-        let dy = (h - dh) * 0.5;
++        // AmberLauncher: a light scrim, so the control being edited stays visible next to the docked panel.
++        ui.fill(0.0, 0.0, w, h, rgba(4, 7, 15, 70));
++        let sel_x = if let Some(index) = ed.selected_custom {
++            tc.custom_placement(index).center[0]
++        } else if let Some(control) = ed.selected {
++            tc.placement(control).center[0]
++        } else {
++            0.5
++        };
++        INSPECTOR_SELECTED_X.store(sel_x.to_bits(), std::sync::atomic::Ordering::Relaxed);
++        let (dw, dh, dx, dy) = inspector_rect(w, h);
+ 
+         // Material Design 3 Expressive Tonal Surface Palette synchronized with active theme
+         let st_outer = theme.bg_solid;
+@@ -7319,10 +7344,7 @@ pub fn touch_hud_editor(
+ 
+         // 3. If Component Property Inspector Dialog is open (Studio Layout matching `90511.png`):
+         if ed.props_open {
+-            let dw = (w - 16.0).clamp(350.0, 640.0);
+-            let dh = (h - 12.0).clamp(256.0, 384.0);
+-            let dx = (w - dw) * 0.5;
+-            let dy = (h - dh) * 0.5;
++            let (dw, dh, dx, dy) = inspector_rect(w, h);
+ 
+             // Close via top-left [X] button, top-right [✓ Done] button, or outside tap
+             if inside([dx + 12.0, dy + 9.0, 26.0, 26.0])

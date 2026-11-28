@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.controls.ControlPresetManager
-import com.israadev.nuxlauncher.core.horizon.HorizonEngine
+import com.israadev.nuxlauncher.core.horizon.StarlingEngine
 import com.israadev.nuxlauncher.core.models.Instance
 import com.israadev.nuxlauncher.ui.components.AmberChoicePill
 import com.israadev.nuxlauncher.ui.components.AmberPage
@@ -135,7 +135,7 @@ fun NuxInstanceControlsDialog(
                     fontSize = 12.sp,
                     lineHeight = 16.sp
                 )
-                if (HorizonEngine.isEngine(instance.loader)) {
+                if (StarlingEngine.isEngine(instance.loader)) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Mesin Rust memakai layout ini hanya bila \"Kontrol Amber\" menyala di Pengaturan.",

@@ -34,7 +34,6 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.israadev.nuxlauncher.FpsMode
 import com.israadev.nuxlauncher.core.controls.ControlLayoutManager
 import com.israadev.nuxlauncher.core.crash.LauncherLog
-import com.israadev.nuxlauncher.core.horizon.NowPlayingBridge
 import com.israadev.nuxlauncher.core.settings.SettingsManager
 import com.israadev.nuxlauncher.ui.control.GameControlsLayer
 import com.israadev.nuxlauncher.ui.control.MouseControlMode
@@ -76,11 +75,6 @@ object StarlingOverlay {
         }
         StarlingInput.bridge = bridge
         CallbackBridge.sink = StarlingInput
-        // Lagu yang diputar untuk mod Amber Lyrics: penerima siaran pemutar musik, tanpa izin khusus.
-        try {
-            NowPlayingBridge.start(activity)
-        } catch (_: Throwable) {
-        }
         val host = OverlayOwner().also { it.start() }
         val instanceName = activity.intent?.getStringExtra("amber_instance").orEmpty().ifBlank { "Starling" }
         val mcVersion = activity.intent?.getStringExtra("amber_mc_version").orEmpty()
@@ -137,10 +131,6 @@ object StarlingOverlay {
     fun detach() {
         CallbackBridge.sink = null
         StarlingInput.bridge = null
-        try {
-            NowPlayingBridge.stop()
-        } catch (_: Throwable) {
-        }
         try {
             dialog?.dismiss()
         } catch (_: Throwable) {

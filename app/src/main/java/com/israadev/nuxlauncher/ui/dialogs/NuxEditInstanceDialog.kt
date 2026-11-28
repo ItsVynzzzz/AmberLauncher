@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Extension
@@ -88,6 +89,8 @@ fun NuxEditInstanceDialog(
     var editName by remember { mutableStateOf(instance.name) }
     var selectedJavaRuntime by remember { mutableStateOf(instance.javaRuntime) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    // Penggandaan instance sedang berjalan (dunia besar bisa menyalin lama): tombolnya dikunci selama itu
+    var duplicating by remember { mutableStateOf(false) }
     var showInstanceSettings by remember { mutableStateOf(false) }
     var showControls by remember { mutableStateOf(false) }
     var showStorage by remember { mutableStateOf(false) }
@@ -219,6 +222,26 @@ fun NuxEditInstanceDialog(
             onClick = {
                 Toast.makeText(context, "Membuka folder instance...", Toast.LENGTH_SHORT).show()
                 InstanceManager.openInstanceFolder(context, instance)
+            }
+        )
+        AmberActionPill(
+            icon = Icons.Outlined.ContentCopy,
+            label = "Gandakan instance",
+            trailing = if (duplicating) "Menyalin..." else null,
+            showChevron = !duplicating,
+            onClick = {
+                if (!duplicating) {
+                    duplicating = true
+                    Toast.makeText(context, "Menyalin instance... bisa lama bila dunianya besar", Toast.LENGTH_LONG).show()
+                    InstanceManager.duplicateInstance(context, instance) { result ->
+                        duplicating = false
+                        val message = when (result) {
+                            is InstanceManager.DuplicateResult.Done -> "Instance digandakan. Salinannya ada di Pilih instance."
+                            is InstanceManager.DuplicateResult.Failed -> result.message
+                        }
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         )
         if (onRepair != null) {

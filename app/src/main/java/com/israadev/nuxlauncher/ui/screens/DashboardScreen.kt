@@ -737,7 +737,8 @@ fun DashboardScreen() {
                     showInstancePicker = false
                     currentTab = "create_instance"
                 },
-                onDismiss = { showInstancePicker = false }
+                onDismiss = { showInstancePicker = false },
+                onTogglePin = { inst -> InstanceManager.setPinned(context, inst.id, !inst.pinned) }
             )
         }
 

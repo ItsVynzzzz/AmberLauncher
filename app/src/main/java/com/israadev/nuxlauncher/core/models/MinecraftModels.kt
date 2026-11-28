@@ -124,7 +124,10 @@ data class Instance(
     val controlPresetId: String? = null,
     // Nama folder instance ini di instances/ (dibuat dari nama instance supaya mudah dikenali di pengelola berkas).
     // null = folder memakai id, seperti instance buatan versi lama; InstanceManager memindahkannya otomatis.
-    val dirName: String? = null
+    val dirName: String? = null,
+    // Disematkan di pemilih instance: tampil paling atas daftar. Instance lama tidak punya field ini di JSON-nya dan
+    // terbaca false, jadi urutannya tidak berubah sampai pengguna menyematkan sesuatu.
+    val pinned: Boolean = false
 ) {
     /** True bila ada pengaturan yang dikunci khusus untuk instance ini. */
     val hasOverrides: Boolean

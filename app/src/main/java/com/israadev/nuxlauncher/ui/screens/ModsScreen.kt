@@ -1119,7 +1119,7 @@ fun ModsScreen(
     if (showInstanceMenu) {
         AmberPickerDialog(
             title = "Pilih instance",
-            options = instances.map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
+            options = InstanceManager.pinnedFirst(instances).map { it.id to "${it.name} · ${it.mcVersion} · ${it.loader.uppercase()}" },
             selectedId = selectedInstance?.id,
             onPick = { id ->
                 instances.firstOrNull { it.id == id }?.let { InstanceManager.selectInstance(it) }

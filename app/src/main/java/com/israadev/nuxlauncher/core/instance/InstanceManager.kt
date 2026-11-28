@@ -15,6 +15,9 @@ import java.util.UUID
 
 object InstanceManager {
     private val gson = Gson()
+    private const val STAGING_PREFIX = ".copying-"
+    // Sisa ruang yang harus tersedia selain ukuran salinan, supaya HP tidak penuh sampai tidak bisa dipakai
+    private const val FREE_SPACE_MARGIN_BYTES = 256L * 1024 * 1024
     private val _instances = MutableStateFlow<List<Instance>>(emptyList())
     val instances: StateFlow<List<Instance>> = _instances.asStateFlow()
 
@@ -535,6 +538,168 @@ object InstanceManager {
         _selectedInstance.value = instance
         saveSelectedInstanceId(context, instance.id)
         save(context)
+    }
+
+    /** Menyematkan atau melepas sematan instance. Yang disematkan tampil paling atas di pemilih instance. */
+    fun setPinned(context: Context, instanceId: String, pinned: Boolean) {
+        val current = _instances.value.firstOrNull { it.id == instanceId } ?: return
+        if (current.pinned == pinned) return
+        updateInstance(context, current.copy(pinned = pinned))
+    }
+
+    /** Urutan tampil di pemilih: yang disematkan dulu, sisanya tetap berurutan seperti di daftar (pengurutan stabil). */
+    fun pinnedFirst(list: List<Instance>): List<Instance> =
+        if (list.none { it.pinned }) list else list.sortedByDescending { it.pinned }
+
+    // ---- Menggandakan instance ------------------------------------------------------------------------
+
+    sealed class DuplicateResult {
+        data class Done(val instance: Instance) : DuplicateResult()
+        data class Failed(val message: String) : DuplicateResult()
+    }
+
+    // Hanya satu penggandaan sekaligus, dan nama folder sementaranya (agar tidak ikut tersapu).
+    @Volatile private var duplicating = false
+    private val stagingInUse = HashSet<String>()
+
+    /**
+     * Menggandakan [source] menjadi instance baru bernama "<nama> (salinan)": semua berkas instance (mod, dunia,
+     * resource pack, pengaturan, ...) disalin, kecuali log dan laporan crash. Berkas game bersama (versi, library,
+     * aset) tidak ikut karena memang dipakai bersama, jadi salinannya tidak memakan ruang sebesar instance
+     * pertamanya. Instance asli tidak disentuh dan pilihan instance aktif tidak berubah.
+     *
+     * Berjalan di thread sendiri (dunia besar bisa menyalin lama); [onResult] dipanggil di thread utama.
+     * Disalin dulu ke folder sementara dan baru dinamai dan didaftarkan setelah selesai, jadi instance setengah
+     * jadi tidak pernah muncul di daftar atau bisa dijalankan. Ditolak bila game atau pemasangan sedang berjalan
+     * (berkas bisa sedang ditulis) atau ruang penyimpanan tidak cukup.
+     */
+    fun duplicateInstance(context: Context, source: Instance, onResult: (DuplicateResult) -> Unit) {
+        val app = context.applicationContext
+        if (duplicating) {
+            onResult(DuplicateResult.Failed("Masih menggandakan instance lain. Tunggu sampai selesai."))
+            return
+        }
+        if (foldersBusy(app)) {
+            onResult(DuplicateResult.Failed("Game atau pemasangan sedang berjalan. Coba lagi setelah selesai."))
+            return
+        }
+        duplicating = true
+        val main = android.os.Handler(android.os.Looper.getMainLooper())
+        Thread({
+            var copy: Instance? = null
+            var failure = "Gagal menggandakan instance."
+            try {
+                val outcome = copyInstanceFiles(app, source)
+                copy = outcome.first
+                outcome.second?.let { failure = it }
+            } catch (e: Throwable) {
+                LauncherLog.w("InstanceManager", "Gagal menggandakan instance: ${e.message}")
+            }
+            main.post {
+                duplicating = false
+                val made = copy
+                if (made == null) {
+                    onResult(DuplicateResult.Failed(failure))
+                } else {
+                    // createInstance langsung memilih instance baru; pilihan semula dikembalikan
+                    val previous = _selectedInstance.value
+                    createInstance(app, made)
+                    previous?.let { prev ->
+                        _instances.value.firstOrNull { it.id == prev.id }?.let { selectInstance(it) }
+                    }
+                    onResult(DuplicateResult.Done(made))
+                }
+            }
+        }, "amber-duplicate").start()
+    }
+
+    /** Menyalin isi instance ke folder barunya. Mengembalikan instance baru, atau pesan kegagalan. */
+    private fun copyInstanceFiles(context: Context, source: Instance): Pair<Instance?, String?> {
+        val instancesDir = getInstancesDir(context)
+        val current = _instances.value.firstOrNull { it.id == source.id } ?: source
+        val srcDir = File(instancesDir, folderOf(current))
+
+        val usedNames = _instances.value.map { it.name.lowercase() }.toHashSet()
+        var newName = "${current.name} (salinan)"
+        var n = 2
+        while (newName.lowercase() in usedNames) {
+            newName = "${current.name} (salinan $n)"
+            n++
+        }
+        val newId = "inst_${UUID.randomUUID()}"
+        val taken = HashSet<String>()
+        instancesDir.list()?.forEach { taken.add(it.lowercase()) }
+        for (other in _instances.value) taken.add(folderOf(other).lowercase())
+        val dirName = InstanceFolders.unique(InstanceFolders.sanitize(newName), taken)
+
+        // Sisa folder sementara dari penyalinan yang terputus (aplikasi ditutup di tengah jalan) dibersihkan dulu
+        instancesDir.listFiles()?.forEach { f ->
+            if (f.isDirectory && f.name.startsWith(STAGING_PREFIX)) {
+                val inUse = synchronized(stagingInUse) { f.name in stagingInUse }
+                if (!inUse) f.deleteRecursively()
+            }
+        }
+
+        val staging = File(instancesDir, STAGING_PREFIX + newId)
+        synchronized(stagingInUse) { stagingInUse.add(staging.name) }
+        try {
+            if (srcDir.isDirectory) {
+                val needed = treeSize(srcDir, "")
+                val free = android.os.StatFs(instancesDir.path).availableBytes
+                if (free < needed + FREE_SPACE_MARGIN_BYTES) {
+                    return null to "Ruang penyimpanan tidak cukup untuk menggandakan instance ini."
+                }
+                copyTree(srcDir, staging, "")
+            } else {
+                staging.mkdirs()
+            }
+            val finalDir = File(instancesDir, dirName)
+            if (finalDir.exists() || !staging.renameTo(finalDir)) {
+                staging.deleteRecursively()
+                return null to "Gagal menggandakan instance."
+            }
+            val copy = current.copy(
+                id = newId,
+                name = newName,
+                dirName = dirName,
+                createdTime = System.currentTimeMillis(),
+                pinned = false
+            )
+            return copy to null
+        } catch (e: Throwable) {
+            staging.deleteRecursively()
+            LauncherLog.w("InstanceManager", "Gagal menyalin instance: ${e.message}")
+            return null to "Gagal menggandakan instance."
+        } finally {
+            synchronized(stagingInUse) { stagingInUse.remove(staging.name) }
+        }
+    }
+
+    /** Yang tidak ikut disalin: instance.json (dibuat ulang untuk instance baru), log, dan laporan crash. */
+    private fun skipOnDuplicate(rel: String): Boolean =
+        rel == "instance.json" || rel == "minecraft/logs" || rel == "minecraft/crash-reports"
+
+    private fun relOf(parentRel: String, name: String): String = if (parentRel.isEmpty()) name else "$parentRel/$name"
+
+    private fun treeSize(file: File, rel: String): Long {
+        if (rel.isNotEmpty() && skipOnDuplicate(rel)) return 0L
+        if (file.isFile) return file.length()
+        var total = 0L
+        file.listFiles()?.forEach { total += treeSize(it, relOf(rel, it.name)) }
+        return total
+    }
+
+    private fun copyTree(src: File, dst: File, rel: String) {
+        if (rel.isNotEmpty() && skipOnDuplicate(rel)) return
+        if (src.isDirectory) {
+            dst.mkdirs()
+            src.listFiles()?.forEach { copyTree(it, File(dst, it.name), relOf(rel, it.name)) }
+        } else {
+            src.inputStream().use { input ->
+                dst.outputStream().use { output -> input.copyTo(output, 64 * 1024) }
+            }
+            dst.setLastModified(src.lastModified())
+        }
     }
 
     fun selectInstance(instance: Instance) {

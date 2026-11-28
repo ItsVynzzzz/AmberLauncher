@@ -1,0 +1,7 @@
+# judul: Sematkan instance di pemilih instance, dan gandakan instance
+[id]
++ Pemilih instance kini punya tombol peniti di tiap baris: instance yang disematkan tampil paling atas (di bawah judul DISEMATKAN), sisanya di bawah judul LAINNYA. Pemilih instance di halaman Mod juga mengurutkan yang disematkan lebih dulu.
++ Ubah instance > Gandakan instance: membuat salinan lengkap (mod, dunia, resource pack, pengaturan) bernama "<nama> (salinan)", berguna untuk mencoba mod tanpa merusak dunia utama. Berkas game bersama (versi, library, aset) tidak ikut disalin, log dan laporan crash dilewati. Disalin ke folder sementara dulu dan baru muncul di daftar setelah selesai; ditolak bila game atau pemasangan sedang berjalan atau ruang penyimpanan tidak cukup.
+[en]
++ The instance picker now has a pin button on every row: pinned instances show at the top (under a PINNED heading), the rest under OTHERS. The instance picker on the Mods page also lists pinned ones first.
++ Edit instance > Duplicate instance: makes a full copy (mods, worlds, resource packs, settings) named "<name> (salinan)", handy for trying mods without risking your main world. Shared game files (versions, libraries, assets) are not copied, and logs and crash reports are skipped. It copies into a temporary folder first and only shows up in the list when finished; it is refused while the game or an installation is running, or when there isn't enough storage space.

@@ -27,7 +27,13 @@ data class GameCrashInfo(
     /** Folder game (minecraft) instance yang crash; dipakai tombol pemulihan. Kosong di catatan lama. */
     val gameDirPath: String? = null,
     /** Ringkasan grafis saat crash: renderer, library, backend Minecraft 26.x, jenis permukaan. Kosong di catatan lama. */
-    val graphicsInfo: String? = null
+    val graphicsInfo: String? = null,
+    /**
+     * Alasan henti proses game menurut Android (LOW_MEMORY, SIGNALED, USER_REQUESTED, CRASH_NATIVE, ...).
+     * Hanya terisi bila proses hilang tanpa kabar dan Android 11 ke atas; satu-satunya bukti kuat bahwa HP
+     * benar-benar kehabisan RAM. Kosong di catatan lama.
+     */
+    val exitReason: String? = null
 ) {
     companion object {
         const val CRASH_TYPE_GAME = "GAME_CRASH"
@@ -303,7 +309,7 @@ object CrashManager {
                             recentHsErrFile.readLines().take(80).joinToString("\n")
                         }
                         tail.isNotBlank() -> tail
-                        else -> "Proses game terhenti mendadak (Kemungkinan dihentikan sistem karena kehabisan RAM atau crash driver native)."
+                        else -> "Proses game terhenti mendadak, penyebabnya tidak tercatat (bisa dihentikan sistem, ditutup dari luar, atau crash di kode native)."
                     }
 
                     var exitCode = when {
@@ -315,7 +321,7 @@ object CrashManager {
                         }
                         tail.contains("fatal signal 11", ignoreCase = true) || tail.contains("SIGSEGV", ignoreCase = true) -> 139
                         tail.contains("fatal signal 6", ignoreCase = true) || tail.contains("SIGABRT", ignoreCase = true) -> 134
-                        else -> 137 // SIGKILL / OOM default jika sesi terputus tanpa exit code
+                        else -> 137 // sesi terputus tanpa kode keluar: dianggap dimatikan paksa (SIGKILL), belum tentu karena RAM
                     }
 
                     val fullLogPath = when {
@@ -345,7 +351,8 @@ object CrashManager {
                         loaderVersion = session?.loaderVersion,
                         installedMods = resolvedSessionMods,
                         gameDirPath = session?.gameDirPath,
-                        graphicsInfo = session?.graphicsInfo
+                        graphicsInfo = session?.graphicsInfo,
+                        exitReason = androidExitReason(context, session?.startTime ?: 0L)
                     )
 
                     val cf = File(context.filesDir, CRASH_FILE_NAME)
@@ -396,6 +403,43 @@ object CrashManager {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    /**
+     * Alasan Android menghentikan proses game terakhir (Android 11 ke atas), atau null bila tidak diketahui.
+     * Satu-satunya cara memastikan HP kehabisan RAM: LOW_MEMORY berarti pembunuh memori sistem yang
+     * menghentikannya. Kode keluar 137 saja tidak membuktikan apa-apa, karena aplikasi yang ditutup dari
+     * daftar aplikasi terbaru atau dimatikan penghemat baterai juga berakhir dengan kode yang sama.
+     */
+    private fun androidExitReason(context: Context, sinceMs: Long): String? {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.R) return null
+        return try {
+            val am = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            val processName = context.packageName + ":game"
+            // Daftar terurut dari yang terbaru; ambil henti pertama yang terjadi setelah sesi dimulai
+            am.getHistoricalProcessExitReasons(context.packageName, 0, 10)
+                .firstOrNull { it.processName == processName && it.timestamp >= sinceMs }
+                ?.let { exitReasonName(it.reason) }
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private fun exitReasonName(reason: Int): String = when (reason) {
+        1 -> "EXIT_SELF"
+        2 -> "SIGNALED"
+        3 -> CrashAdvisor.EXIT_REASON_LOW_MEMORY
+        4 -> "CRASH"
+        5 -> CrashAdvisor.EXIT_REASON_CRASH_NATIVE
+        6 -> "ANR"
+        7 -> "INITIALIZATION_FAILURE"
+        8 -> "PERMISSION_CHANGE"
+        9 -> "EXCESSIVE_RESOURCE_USAGE"
+        10 -> "USER_REQUESTED"
+        11 -> "USER_STOPPED"
+        12 -> "DEPENDENCY_DIED"
+        14 -> "FREEZER"
+        else -> "OTHER"
     }
 
     /**

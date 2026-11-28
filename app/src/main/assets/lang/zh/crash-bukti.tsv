@@ -1,0 +1,11 @@
+# Penjelasan crash berdasarkan bukti: RAM hanya disalahkan bila ada buktinya.
+Crash tidak selalu berarti launcher-nya rusak, dan tidak selalu karena RAM. Penyebabnya bisa mod, versi Java, driver grafis, atau memori. Cari tahu dulu sebelum melapor ke pengembang.	崩溃并不一定意味着启动器坏了，也不一定是内存（RAM）的问题。原因可能是模组、Java 版本、显卡驱动或内存。先查明原因，再向开发者反馈。
+Game dihentikan karena HP kehabisan memori (tercatat oleh Android atau di log). Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), kurangi mod, dan tutup aplikasi lain.	游戏被停止，因为手机内存耗尽（由 Android 或日志记录）。这通常不是启动器的问题。可以尝试降低分配给游戏的 RAM（不超过手机 RAM 的一半）、移除部分模组，并关闭其他应用。
+Memori game (Java) habis	游戏（Java）内存耗尽
+Log menunjukkan memori yang dijatahkan untuk game sudah habis. Ini bukan berarti RAM HP kurang. Biasanya karena jarak render terlalu jauh, terlalu banyak mod, atau shader. Coba kurangi jarak render, kurangi mod, atau matikan shader. Kalau RAM HP masih lega, alokasi RAM game boleh dinaikkan sedikit di Pengaturan > Memori.	日志显示分配给游戏的内存已用完。这并不意味着手机 RAM 不足。通常是因为渲染距离过大、模组过多或使用了光影。可以尝试降低渲染距离、移除部分模组或关闭光影。如果手机 RAM 仍然充裕，可以在“设置 > 内存”中适当调高游戏的 RAM。
+Game dihentikan mendadak	游戏突然停止
+Proses game dimatikan paksa, dan log tidak menyebut sebabnya. Ini belum tentu karena RAM: bisa juga karena aplikasi ditutup dari daftar aplikasi terbaru, dimatikan penghemat baterai, atau sistem sedang kekurangan memori. Coba jalankan lagi tanpa membuka aplikasi lain. Kalau terus terulang, salin log untuk AI.	游戏进程被强制终止，日志中没有说明原因。这不一定是 RAM 的问题：也可能是应用被从最近任务列表中关闭、被省电模式终止，或系统内存不足。请尝试在不打开其他应用的情况下重新启动。如果反复出现，请复制日志发给 AI。
+Android mencatat: {0}	Android 记录：{0}
+Proses dimatikan paksa (SIGKILL 137)	进程被强制终止（SIGKILL 137）
+SIGKILL (Proses dimatikan paksa)	SIGKILL（进程被强制终止）
+Proses game terhenti mendadak, penyebabnya tidak tercatat (bisa dihentikan sistem, ditutup dari luar, atau crash di kode native).	游戏进程突然停止，且没有记录原因（可能被系统终止、被外部关闭，或在原生代码中崩溃）。

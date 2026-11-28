@@ -119,7 +119,8 @@ class ErrorActivity : ComponentActivity() {
             loaderVersion = saved?.loaderVersion,
             installedMods = saved?.installedMods.orEmpty(),
             gameDirPath = saved?.gameDirPath,
-            graphicsInfo = saved?.graphicsInfo
+            graphicsInfo = saved?.graphicsInfo,
+            exitReason = saved?.exitReason
         )
 
         setContent {

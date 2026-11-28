@@ -57,8 +57,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 private const val INTRO_GAME =
-    "Crash tidak selalu berarti launcher-nya rusak. Mod, RAM HP, dan driver grafis jauh lebih sering " +
-        "menjadi penyebabnya, jadi cari tahu dulu sebelum melapor ke pengembang."
+    "Crash tidak selalu berarti launcher-nya rusak, dan tidak selalu karena RAM. Penyebabnya bisa mod, " +
+        "versi Java, driver grafis, atau memori. Cari tahu dulu sebelum melapor ke pengembang."
 
 private const val INTRO_LAUNCHER =
     "Launcher berhenti mendadak karena kesalahan tak terduga. Kirim log-nya ke pengembang supaya bisa diperbaiki."
@@ -101,7 +101,7 @@ fun AmberCrashPanel(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val launcherCrash = info.isLauncherCrash
-    val source = remember(info) { CrashAdvisor.sourceOf(info) }
+    val source = remember(info, logText) { CrashAdvisor.sourceOf(info, logText) }
     val log = remember(logText) {
         if (logText.isBlank()) Tr.t("Tidak ada rincian log yang tersedia.") else logText
     }
@@ -404,6 +404,15 @@ private fun CrashExplainContent(info: GameCrashInfo, source: CrashSource, modifi
                     fontSize = 13.sp,
                     lineHeight = 18.sp
                 )
+                if (!info.exitReason.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "Android mencatat: ${info.exitReason}",
+                        color = Amber.TextDim,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp
+                    )
+                }
             }
         }
     }
@@ -626,6 +635,8 @@ private fun CrashRule() {
 private fun sourceLabel(source: CrashSource): String = when (source) {
     CrashSource.LAUNCHER -> "Kesalahan di dalam AmberLauncher"
     CrashSource.MEMORY -> "Memori (RAM) HP habis"
+    CrashSource.JAVA_MEMORY -> "Memori game (Java) habis"
+    CrashSource.KILLED -> "Game dihentikan mendadak"
     CrashSource.GRAPHICS -> "Renderer atau driver grafis"
     CrashSource.GAME_OR_MODS -> "Mod, versi Java, atau file game"
     CrashSource.UNKNOWN -> "Belum bisa dipastikan"
@@ -636,9 +647,19 @@ private fun sourceDetail(source: CrashSource): String = when (source) {
         "Kali ini launcher sendiri yang berhenti, bukan game atau mod. Laporan ke pengembang sangat " +
             "membantu supaya bisa diperbaiki."
     CrashSource.MEMORY ->
-        "Game dihentikan sistem karena RAM HP tidak cukup untuk game, mod, atau pengaturan grafis yang " +
-            "dipakai. Biasanya bukan kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari " +
-            "setengah RAM HP), kurangi mod, dan tutup aplikasi lain."
+        "Game dihentikan karena HP kehabisan memori (tercatat oleh Android atau di log). Biasanya bukan " +
+            "kerusakan launcher. Coba kurangi alokasi RAM game (jangan lebih dari setengah RAM HP), " +
+            "kurangi mod, dan tutup aplikasi lain."
+    CrashSource.JAVA_MEMORY ->
+        "Log menunjukkan memori yang dijatahkan untuk game sudah habis. Ini bukan berarti RAM HP kurang. " +
+            "Biasanya karena jarak render terlalu jauh, terlalu banyak mod, atau shader. Coba kurangi " +
+            "jarak render, kurangi mod, atau matikan shader. Kalau RAM HP masih lega, alokasi RAM game " +
+            "boleh dinaikkan sedikit di Pengaturan > Memori."
+    CrashSource.KILLED ->
+        "Proses game dimatikan paksa, dan log tidak menyebut sebabnya. Ini belum tentu karena RAM: bisa " +
+            "juga karena aplikasi ditutup dari daftar aplikasi terbaru, dimatikan penghemat baterai, " +
+            "atau sistem sedang kekurangan memori. Coba jalankan lagi tanpa membuka aplikasi lain. " +
+            "Kalau terus terulang, salin log untuk AI."
     CrashSource.GRAPHICS ->
         "Game berhenti di bagian grafis atau pustaka bawaan HP. Penyebab umumnya renderer yang kurang " +
             "cocok dengan HP ini. Coba ganti renderer di Pengaturan > Grafis. Kalau semua renderer gagal, " +

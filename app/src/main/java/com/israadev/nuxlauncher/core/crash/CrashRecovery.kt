@@ -199,7 +199,7 @@ object CrashRecovery {
             // Halaman Error bisa berjalan di proses yang baru dibuka: muat setelan dari berkas dulu.
             SettingsManager.init(context)
             val log = if (logText.isNotBlank()) logText else info.logSnippet
-            val source = CrashAdvisor.sourceOf(info)
+            val source = CrashAdvisor.sourceOf(info, log)
             val settings = SettingsManager.settings.value
             val gameDir = info.gameDirPath?.takeIf { it.isNotBlank() }?.let { File(it) }?.takeIf { it.isDirectory }
             // Bila instance yang crash punya pengaturan sendiri, itulah yang dipakai game: dasar tawaran dan tempat perbaikannya.
@@ -231,7 +231,7 @@ object CrashRecovery {
 
             // 3. Shader: bila masih menyala dan crash berkaitan dengan grafis, memori, atau log menyebut shader
             if (gameDir != null && shadersEnabled(gameDir) &&
-                (source == CrashSource.GRAPHICS || source == CrashSource.MEMORY || mentionsShaders(log))
+                (source == CrashSource.GRAPHICS || source == CrashSource.MEMORY || source == CrashSource.JAVA_MEMORY || mentionsShaders(log))
             ) {
                 options.add(
                     RecoveryOption(

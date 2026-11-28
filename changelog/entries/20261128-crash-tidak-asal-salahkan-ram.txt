@@ -1,0 +1,32 @@
+[id]
+! Layar crash tidak lagi asal menyalahkan RAM. "Memori (RAM) HP habis" kini hanya muncul bila ada buktinya (Android mencatat HP kehabisan memori, atau log menyebut gagal meminta memori ke sistem). Kode keluar 137 saja tidak lagi dianggap masalah RAM.
++ Penjelasan crash baru: "Memori game (Java) habis" (bukan berarti RAM HP kurang) dan "Game dihentikan mendadak" (misalnya ditutup dari luar atau dimatikan penghemat baterai).
+~ Tombol "Turunkan RAM" hanya ditawarkan saat HP benar-benar kehabisan memori. Detail teknis dan teks untuk AI kini memuat catatan Android tentang sebab proses game berhenti (Android 11 ke atas).
+[en]
+! The crash screen no longer blames RAM by default. "Phone memory (RAM) ran out" now appears only when there is evidence (Android recorded the phone running out of memory, or the log says a memory request to the system failed). Exit code 137 alone is no longer treated as a RAM problem.
++ New crash explanations: "Game (Java) memory ran out" (it does not mean the phone has too little RAM) and "Game stopped suddenly" (for example closed from outside or killed by battery saver).
+~ The "Lower RAM" button is offered only when the phone really ran out of memory. Technical details and the text for AI now include Android's note on why the game process stopped (Android 11 and up).
+[es]
+! La pantalla de crash ya no culpa a la RAM por defecto. "Se agotó la memoria (RAM) del teléfono" ahora solo aparece cuando hay pruebas (Android registró que el teléfono se quedó sin memoria, o el registro indica que falló una petición de memoria al sistema). El código de salida 137 por sí solo ya no se considera un problema de RAM.
++ Nuevas explicaciones de crash: "Se agotó la memoria del juego (Java)" (no significa que al teléfono le falte RAM) y "El juego se detuvo de repente" (por ejemplo, cerrado desde fuera o detenido por el ahorro de batería).
+~ El botón "Reducir RAM" solo se ofrece cuando el teléfono realmente se quedó sin memoria. Los detalles técnicos y el texto para la IA ahora incluyen la nota de Android sobre por qué se detuvo el proceso del juego (Android 11 y superior).
+[fil]
+! Hindi na basta sinisisi ng crash screen ang RAM. Lalabas na lang ang "Naubos ang memory (RAM) ng phone" kapag may ebidensya (naitala ng Android na naubusan ng memory ang phone, o sinasabi ng log na nabigo ang paghingi ng memory sa system). Ang exit code 137 lang ay hindi na itinuturing na problema sa RAM.
++ Mga bagong paliwanag sa crash: "Naubos ang memory ng game (Java)" (hindi ibig sabihin na kulang ang RAM ng phone) at "Biglang huminto ang game" (halimbawa, isinara mula sa labas o pinatay ng battery saver).
+~ Iaalok lang ang button na "Babaan ang RAM" kapag talagang naubusan ng memory ang phone. Kasama na sa mga teknikal na detalye at sa text para sa AI ang tala ng Android kung bakit huminto ang proseso ng game (Android 11 pataas).
+[pt]
+! A tela de crash não culpa mais a RAM por padrão. "A memória (RAM) do celular acabou" agora só aparece quando há evidência (o Android registrou que o celular ficou sem memória, ou o log mostra que um pedido de memória ao sistema falhou). O código de saída 137 sozinho não é mais tratado como problema de RAM.
++ Novas explicações de crash: "A memória do jogo (Java) acabou" (não significa que o celular tem pouca RAM) e "O jogo parou de repente" (por exemplo, fechado externamente ou encerrado pela economia de bateria).
+~ O botão "Reduzir RAM" só é oferecido quando o celular realmente ficou sem memória. Os detalhes técnicos e o texto para a IA agora incluem a nota do Android sobre por que o processo do jogo parou (Android 11 ou superior).
+[th]
+! หน้าจอแครชไม่โทษ RAM แบบเหมารวมอีกต่อไป ข้อความ "หน่วยความจำ (RAM) ของมือถือหมด" จะขึ้นเฉพาะเมื่อมีหลักฐาน (Android บันทึกว่ามือถือหน่วยความจำหมด หรือล็อกระบุว่าการขอหน่วยความจำจากระบบล้มเหลว) รหัสออก 137 เพียงอย่างเดียวไม่ถือว่าเป็นปัญหา RAM อีกแล้ว
++ คำอธิบายแครชใหม่: "หน่วยความจำของเกม (Java) หมด" (ไม่ได้หมายความว่ามือถือมี RAM น้อย) และ "เกมหยุดทำงานกะทันหัน" (เช่น ถูกปิดจากภายนอกหรือถูกตัวประหยัดแบตเตอรี่ปิด)
+~ ปุ่ม "ลด RAM" จะแสดงเฉพาะเมื่อมือถือหน่วยความจำหมดจริง รายละเอียดทางเทคนิคและข้อความสำหรับ AI มีบันทึกของ Android ว่าทำไมโปรเซสเกมหยุด (Android 11 ขึ้นไป)
+[vi]
+! Màn hình crash không còn mặc định đổ lỗi cho RAM. "Hết bộ nhớ (RAM) của điện thoại" giờ chỉ hiện khi có bằng chứng (Android ghi nhận điện thoại hết bộ nhớ, hoặc nhật ký cho thấy yêu cầu cấp bộ nhớ từ hệ thống thất bại). Riêng mã thoát 137 không còn bị coi là lỗi RAM.
++ Giải thích crash mới: "Bộ nhớ của game (Java) đã hết" (không có nghĩa là điện thoại thiếu RAM) và "Game dừng đột ngột" (ví dụ bị đóng từ bên ngoài hoặc bị trình tiết kiệm pin tắt).
+~ Nút "Giảm RAM" chỉ được đề xuất khi điện thoại thực sự hết bộ nhớ. Chi tiết kỹ thuật và văn bản gửi cho AI giờ kèm ghi chú của Android về lý do tiến trình game dừng (Android 11 trở lên).
+[zh]
+! 崩溃界面不再默认归咎于 RAM。只有在有证据时才会显示“手机内存（RAM）耗尽”（Android 记录到手机内存不足，或日志显示向系统申请内存失败）。单凭退出码 137 不再被视为 RAM 问题。
++ 新增崩溃说明：“游戏（Java）内存耗尽”（并不意味着手机 RAM 不足）和“游戏突然停止”（例如被外部关闭或被省电模式终止）。
+~ 只有在手机确实内存不足时才会提供“降低 RAM”按钮。技术详情和发给 AI 的文本现在包含 Android 对游戏进程停止原因的记录（Android 11 及以上）。

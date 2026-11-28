@@ -7,8 +7,12 @@ import com.israadev.nuxlauncher.AppLinks
 import com.israadev.nuxlauncher.ui.i18n.Tr
 import kotlin.math.roundToInt
 
-/** Dugaan awal tentang asal sebuah crash. Hanya petunjuk; penyebab pastinya tetap ada di log. */
-enum class CrashSource { LAUNCHER, MEMORY, GRAPHICS, GAME_OR_MODS, UNKNOWN }
+/**
+ * Dugaan awal tentang asal sebuah crash. Hanya petunjuk; penyebab pastinya tetap ada di log.
+ * MEMORY (HP kehabisan RAM) hanya dipilih bila ada buktinya; JAVA_MEMORY = memori yang dijatahkan untuk
+ * game habis (bukan RAM HP); KILLED = proses dimatikan paksa tanpa sebab yang tercatat.
+ */
+enum class CrashSource { LAUNCHER, MEMORY, JAVA_MEMORY, KILLED, GRAPHICS, GAME_OR_MODS, UNKNOWN }
 
 /**
  * Penjelasan crash untuk pemain awam: menebak asal crash dari kode keluar dan isi log, lalu menyusun
@@ -26,6 +30,29 @@ object CrashAdvisor {
     val reportUrl: String
         get() = "https://github.com/${AppLinks.GITHUB_REPO}/issues/new"
 
+    /** Nilai [GameCrashInfo.exitReason] yang dipakai logika di sini. */
+    const val EXIT_REASON_LOW_MEMORY = "LOW_MEMORY"
+    const val EXIT_REASON_CRASH_NATIVE = "CRASH_NATIVE"
+
+    // Pesan memori di log. Memori Java (heap, buffer langsung, metaspace) dibatasi pengaturan RAM game, jadi
+    // habisnya bukan berarti RAM HP kurang. Gagal meminta memori ke sistem berarti HP yang kehabisan.
+    private val JAVA_MEMORY_MARKERS = listOf(
+        "OutOfMemoryError: Java heap space",
+        "GC overhead limit exceeded",
+        "OutOfMemoryError: Direct buffer memory",
+        "OutOfMemoryError: Metaspace",
+        "OutOfMemoryError: Compressed class space"
+    )
+    private val PHONE_MEMORY_MARKERS = listOf(
+        "insufficient memory for the Java Runtime Environment",
+        "Native memory allocation (mmap) failed",
+        "Native memory allocation (malloc) failed",
+        "unable to create native thread",
+        "pthread_create failed",
+        "Cannot allocate memory"
+    )
+    private const val MAX_SCAN_CHARS = 120_000
+
     /** Batas panjang log yang disalin: awal log (pesan galat) dan akhir log (kejadian terakhir). */
     private const val MAX_LOG_CHARS = 14_000
     private const val LOG_HEAD_CHARS = 4_000
@@ -41,15 +68,30 @@ object CrashAdvisor {
             "Tolong jelaskan penyebabnya dengan bahasa sederhana (saya masih pemula) dan beri saran yang " +
             "bisa saya coba. Kalau menurutmu ini bug di launcher, tolong katakan."
 
-    /** Menebak dari mana crash berasal. Hanya dugaan: kode keluar dan kata kunci di log. */
-    fun sourceOf(info: GameCrashInfo): CrashSource {
+    /**
+     * Menebak dari mana crash berasal: kode keluar, catatan Android, dan kata kunci di log.
+     * RAM HP hanya disalahkan bila ada buktinya (Android mencatat LOW_MEMORY, atau log menyebut gagal
+     * meminta memori ke sistem). Kode 137 atau sinyal 9 saja tidak cukup: aplikasi yang ditutup dari daftar
+     * aplikasi terbaru atau dimatikan penghemat baterai juga berakhir seperti itu.
+     */
+    fun sourceOf(info: GameCrashInfo, logText: String = ""): CrashSource {
         if (info.isLauncherCrash) return CrashSource.LAUNCHER
         val code = info.exitCode
-        if (code == 137 || (info.isSignal && code == 9) || info.logSnippet.contains("OutOfMemoryError")) {
-            return CrashSource.MEMORY
-        }
-        if (code == 134 || code == 139 || (info.isSignal && (code == 4 || code == 6 || code == 7 || code == 8 || code == 11))) {
+        val reason = info.exitReason
+        val text = if (logText.isBlank()) info.logSnippet else info.logSnippet + "\n" + logText.takeLast(MAX_SCAN_CHARS)
+
+        if (reason == EXIT_REASON_LOW_MEMORY) return CrashSource.MEMORY
+        if (JAVA_MEMORY_MARKERS.any { text.contains(it, ignoreCase = true) }) return CrashSource.JAVA_MEMORY
+        if (PHONE_MEMORY_MARKERS.any { text.contains(it, ignoreCase = true) }) return CrashSource.MEMORY
+
+        if (reason == EXIT_REASON_CRASH_NATIVE || code == 134 || code == 139 ||
+            (info.isSignal && (code == 4 || code == 6 || code == 7 || code == 8 || code == 11))
+        ) {
             return CrashSource.GRAPHICS
+        }
+        if (code == 137 || (info.isSignal && code == 9)) {
+            // Android bilang prosesnya keluar sendiri atau crash: kode 137 hanya tebakan launcher, bukan kill
+            return if (reason == "EXIT_SELF" || reason == "CRASH") CrashSource.UNKNOWN else CrashSource.KILLED
         }
         if (!info.isSignal && code == 1) return CrashSource.GAME_OR_MODS
         return CrashSource.UNKNOWN
@@ -90,6 +132,9 @@ object CrashAdvisor {
                 sb.append(Tr.t("Daftar mod: ${modList(info.installedMods)}")).append('\n')
             }
             sb.append(Tr.t("Status keluar: ${describeExit(info)}")).append('\n')
+            if (!info.exitReason.isNullOrBlank()) {
+                sb.append(Tr.t("Android mencatat: ${info.exitReason}")).append('\n')
+            }
         }
         sb.append('\n')
         sb.append(Tr.t("Isi log crash:"))

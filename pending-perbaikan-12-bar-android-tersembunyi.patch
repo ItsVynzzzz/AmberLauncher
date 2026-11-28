@@ -1,0 +1,288 @@
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+index e84fc1a..3544b66 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/MainActivity.kt
+@@ -7,7 +7,6 @@ import android.net.Uri
+ import android.os.Build
+ import android.content.Context
+ import android.os.Bundle
+-import android.hardware.input.InputManager
+ import android.os.Environment
+ import android.provider.Settings
+ import android.view.View
+@@ -35,7 +34,6 @@ import com.israadev.nuxlauncher.core.instance.InstanceManager
+ import com.israadev.nuxlauncher.core.mods.NuxAddonImportManager
+ import com.israadev.nuxlauncher.core.mods.PendingAddonImport
+ import com.israadev.nuxlauncher.core.settings.SettingsManager
+-import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
+ import com.israadev.nuxlauncher.core.storage.DataLocation
+ import com.israadev.nuxlauncher.core.storage.StorageMigrationRunner
+ import com.israadev.nuxlauncher.discord.DiscordLauncherPresence
+@@ -260,10 +258,6 @@ class MainActivity : ComponentActivity() {
+     override fun onDestroy() {
+         navUninstall?.invoke()
+         navUninstall = null
+-        inputWatcher?.let { w ->
+-            try { (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.unregisterInputDeviceListener(w) } catch (_: Throwable) {}
+-        }
+-        inputWatcher = null
+         super.onDestroy()
+         bgExecutor.shutdown()
+         com.israadev.nuxlauncher.core.skin.OfflineSkinServerManager.stopServer()
+@@ -295,39 +289,14 @@ class MainActivity : ComponentActivity() {
+     }
+ 
+     /**
+-     * Dengan mouse fisik terhubung, bar status dan navigasi dibiarkan TAMPIL. Mode layar penuh (bar disembunyikan,
+-     * muncul sementara bila digeser dari tepi) dibuat untuk jari: dengan mouse tak ada gesekan dari tepi, dan
+-     * menyentuh tepi layar memunculkan bar atau taskbar sementara milik sistem (terutama di tablet dan mode desktop).
+-     * Klik berikutnya lalu dipakai sistem untuk menutupnya (jendela kehilangan fokus sejenak), sehingga tampak
+-     * seperti klik pertama yang tidak bereaksi. Tanpa mouse tampilan tidak berubah.
++     * Bar status dan navigasi Android selalu disembunyikan selama launcher terbuka, apa pun kondisinya
++     * (termasuk saat ada mouse, keyboard, atau gamepad terhubung). Bar hanya muncul sebentar bila pengguna
++     * menggesernya dari tepi layar atau dimunculkan sistem Android sendiri, lalu hilang lagi.
++     * Dipanggil ulang tiap layar dibuka, dilanjutkan, dan tiap jendela mendapat fokus (mis. setelah dialog
++     * atau papan ketik), karena sebagian HP memunculkan bar kembali saat itu.
+      */
+     private fun applySystemBars() {
+-        watchInputDevices()
+-        if (PhysicalMouseChecker.isMouseAttachedNow()) showSystemBars() else hideSystemBars()
+-    }
+-
+-    private fun showSystemBars() {
+-        WindowCompat.setDecorFitsSystemWindows(window, true)
+-        WindowCompat.getInsetsController(window, window.decorView).show(WindowInsetsCompat.Type.systemBars())
+-        @Suppress("DEPRECATION")
+-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+-    }
+-
+-    private var inputWatcher: InputManager.InputDeviceListener? = null
+-
+-    /** Mouse dicolok atau dicabut saat launcher terbuka: terapkan ulang kebijakan bar sistem. */
+-    private fun watchInputDevices() {
+-        if (inputWatcher != null) return
+-        val listener = object : InputManager.InputDeviceListener {
+-            override fun onInputDeviceAdded(deviceId: Int) { window.decorView.post { applySystemBars() } }
+-            override fun onInputDeviceRemoved(deviceId: Int) { window.decorView.post { applySystemBars() } }
+-            override fun onInputDeviceChanged(deviceId: Int) {}
+-        }
+-        try {
+-            (getSystemService(Context.INPUT_SERVICE) as? InputManager)?.registerInputDeviceListener(listener, null)
+-            inputWatcher = listener
+-        } catch (_: Throwable) {
+-        }
++        hideSystemBars()
+     }
+ 
+     private fun markStorageIntroDone() {
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/core/device/SystemBars.kt b/app/src/main/java/com/israadev/nuxlauncher/core/device/SystemBars.kt
+new file mode 100644
+index 0000000..1c898e9
+--- /dev/null
++++ b/app/src/main/java/com/israadev/nuxlauncher/core/device/SystemBars.kt
+@@ -0,0 +1,49 @@
++package com.israadev.nuxlauncher.core.device
++
++import android.os.Build
++import android.view.View
++import android.view.Window
++import android.view.WindowManager
++import androidx.core.view.WindowCompat
++import androidx.core.view.WindowInsetsCompat
++import androidx.core.view.WindowInsetsControllerCompat
++
++/**
++ * Bar status dan bar navigasi Android disembunyikan di seluruh launcher, dalam kondisi apa pun (juga saat
++ * mouse, keyboard, atau gamepad terhubung). Bar hanya muncul sebentar bila pengguna menggesernya dari tepi
++ * layar atau sistem Android sendiri yang memunculkannya, lalu hilang lagi sendiri.
++ *
++ * Dipakai oleh layar penuh (Activity) dan jendela dialog, karena dialog adalah jendela terpisah yang tidak
++ * ikut mode layar penuh milik Activity-nya.
++ */
++object SystemBars {
++    /** Meminta [window] menyembunyikan bar sistem. Aman dipanggil berulang; gagal diam-diam bila ditolak. */
++    fun hide(window: Window) {
++        try {
++            val controller = WindowCompat.getInsetsController(window, window.decorView)
++            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
++            controller.hide(WindowInsetsCompat.Type.systemBars())
++            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
++                val attrs = window.attributes
++                if (attrs.layoutInDisplayCutoutMode !=
++                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
++                ) {
++                    attrs.layoutInDisplayCutoutMode =
++                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
++                    window.attributes = attrs
++                }
++            }
++            @Suppress("DEPRECATION")
++            window.decorView.systemUiVisibility = (
++                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
++                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
++                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
++                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
++                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
++                    or View.SYSTEM_UI_FLAG_FULLSCREEN
++                )
++        } catch (_: Throwable) {
++            // Bar sistem tetap tampil di perangkat yang menolak; tampilan tetap berfungsi.
++        }
++    }
++}
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
+index 3cd47e4..399d49a 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/activities/ErrorActivity.kt
+@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
+ import com.israadev.nuxlauncher.MainActivity
+ import com.israadev.nuxlauncher.core.crash.CrashManager
+ import com.israadev.nuxlauncher.core.crash.GameCrashInfo
++import com.israadev.nuxlauncher.core.device.SystemBars
+ import com.israadev.nuxlauncher.ui.components.AmberCrashPanel
+ import com.israadev.nuxlauncher.ui.i18n.Tr
+ import com.israadev.nuxlauncher.ui.theme.Amber
+@@ -123,6 +124,7 @@ class ErrorActivity : ComponentActivity() {
+             exitReason = saved?.exitReason
+         )
+ 
++        SystemBars.hide(window)
+         setContent {
+             MaterialTheme {
+                 Surface(
+@@ -151,4 +153,15 @@ class ErrorActivity : ComponentActivity() {
+             }
+         }
+     }
++
++    override fun onResume() {
++        super.onResume()
++        SystemBars.hide(window)
++    }
++
++    override fun onWindowFocusChanged(hasFocus: Boolean) {
++        super.onWindowFocusChanged(hasFocus)
++        // Bar bisa muncul lagi setelah dialog atau papan ketik; sembunyikan lagi tiap jendela mendapat fokus
++        if (hasFocus) SystemBars.hide(window)
++    }
+ }
+diff --git a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt
+index 24e5e93..8fdd187 100644
+--- a/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt
++++ b/app/src/main/java/com/israadev/nuxlauncher/ui/components/GamepadFocus.kt
+@@ -1,9 +1,6 @@
+ package com.israadev.nuxlauncher.ui.components
+ 
+-import android.os.Build
+-import android.view.View
+ import android.view.ViewTreeObserver
+-import android.view.WindowManager
+ import androidx.compose.foundation.IndicationNodeFactory
+ import androidx.compose.foundation.LocalIndication
+ import androidx.compose.foundation.interaction.FocusInteraction
+@@ -26,10 +23,7 @@ import androidx.compose.ui.node.invalidateDraw
+ import androidx.compose.ui.platform.LocalView
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.window.DialogWindowProvider
+-import com.israadev.nuxlauncher.core.device.PhysicalMouseChecker
+-import androidx.core.view.WindowCompat
+-import androidx.core.view.WindowInsetsCompat
+-import androidx.core.view.WindowInsetsControllerCompat
++import com.israadev.nuxlauncher.core.device.SystemBars
+ import com.israadev.nuxlauncher.core.controls.GamepadNav
+ import kotlinx.coroutines.launch
+ 
+@@ -134,37 +128,7 @@ fun ImmersiveWindowHook() {
+         if (window == null) {
+             return@DisposableEffect onDispose { }
+         }
+-        val hideBars: () -> Unit = hide@{
+-            // Dengan mouse fisik bar sistem dibiarkan tampil (lihat MainActivity.applySystemBars).
+-            if (PhysicalMouseChecker.isMouseAttachedNow()) return@hide
+-            try {
+-                val controller = WindowCompat.getInsetsController(window, window.decorView)
+-                controller.systemBarsBehavior =
+-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+-                controller.hide(WindowInsetsCompat.Type.systemBars())
+-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+-                    val attrs = window.attributes
+-                    if (attrs.layoutInDisplayCutoutMode !=
+-                        WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+-                    ) {
+-                        attrs.layoutInDisplayCutoutMode =
+-                            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+-                        window.attributes = attrs
+-                    }
+-                }
+-                @Suppress("DEPRECATION")
+-                window.decorView.systemUiVisibility = (
+-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+-                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+-                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+-                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+-                    )
+-            } catch (_: Throwable) {
+-                // Bar sistem tetap tampil di perangkat yang menolak; tampilan tetap berfungsi.
+-            }
+-        }
++        val hideBars: () -> Unit = { SystemBars.hide(window) }
+         hideBars()
+         // Sekali lagi setelah jendela benar-benar tampil: panggilan pertama bisa terlalu awal.
+         view.post { hideBars() }
+diff --git a/app/src/main/res/values-v28/themes.xml b/app/src/main/res/values-v28/themes.xml
+index 43719fa..12af6d4 100644
+--- a/app/src/main/res/values-v28/themes.xml
++++ b/app/src/main/res/values-v28/themes.xml
+@@ -13,5 +13,7 @@
+ 
+     <style name="Theme.NuxLauncher.Dialog" parent="android:Theme.Material.Dialog">
+         <item name="android:windowAnimationStyle">@null</item>
++        <!-- Bar status tidak sempat muncul saat dialog dibuka; bar navigasi disembunyikan lewat SystemBars. -->
++        <item name="android:windowFullscreen">true</item>
+     </style>
+ </resources>
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+index 2c959f8..1e275cd 100644
+--- a/app/src/main/res/values/themes.xml
++++ b/app/src/main/res/values/themes.xml
+@@ -11,5 +11,7 @@
+ 
+     <style name="Theme.NuxLauncher.Dialog" parent="android:Theme.Material.Light.Dialog">
+         <item name="android:windowAnimationStyle">@null</item>
++        <!-- Bar status tidak sempat muncul saat dialog dibuka; bar navigasi disembunyikan lewat SystemBars. -->
++        <item name="android:windowFullscreen">true</item>
+     </style>
+ </resources>
+diff --git a/changelog/entries/20261128-bar-android-tersembunyi.txt b/changelog/entries/20261128-bar-android-tersembunyi.txt
+new file mode 100644
+index 0000000..97bd989
+--- /dev/null
++++ b/changelog/entries/20261128-bar-android-tersembunyi.txt
+@@ -0,0 +1,24 @@
++[id]
++! Bar status dan bar navigasi Android kini selalu tersembunyi selama launcher terbuka, dalam kondisi apa pun. Sebelumnya bar dimunculkan terus bila launcher mengira ada mouse fisik terhubung (termasuk perangkat Bluetooth yang dikenali sebagai mouse), di layar utama maupun di dialog.
++~ Layar crash dan dialog juga mengikuti mode layar penuh, jadi bar tidak sempat muncul sekilas saat dialog dibuka. Bar hanya muncul bila digeser dari tepi layar atau dimunculkan sistem Android sendiri, lalu hilang lagi.
++[en]
++! The Android status bar and navigation bar now stay hidden for as long as the launcher is open, in every situation. Before, the bars were kept on screen whenever the launcher thought a physical mouse was connected (including Bluetooth devices that identify as a mouse), on the main screens and in dialogs.
++~ The crash screen and dialogs also follow full-screen mode, so the bar no longer flashes briefly when a dialog opens. The bars appear only when swiped in from the screen edge or brought up by Android itself, and then hide again.
++[es]
++! La barra de estado y la barra de navegación de Android ahora permanecen ocultas mientras el launcher está abierto, en cualquier situación. Antes las barras se mantenían visibles siempre que el launcher creía que había un mouse físico conectado (incluidos dispositivos Bluetooth que se identifican como mouse), tanto en las pantallas principales como en los diálogos.
++~ La pantalla de crash y los diálogos también siguen el modo de pantalla completa, así que la barra ya no aparece un instante al abrir un diálogo. Las barras solo aparecen al deslizar desde el borde de la pantalla o cuando las muestra el propio Android, y luego se ocultan de nuevo.
++[fil]
++! Nananatiling nakatago ang status bar at navigation bar ng Android habang bukas ang launcher, sa anumang sitwasyon. Dati, laging ipinapakita ang mga bar kapag inakala ng launcher na may nakakonektang pisikal na mouse (kasama ang mga Bluetooth device na nagpapakilala bilang mouse), sa mga pangunahing screen at sa mga dialog.
++~ Sumusunod na rin sa full-screen mode ang crash screen at mga dialog, kaya hindi na sandaling lalabas ang bar kapag may bumukas na dialog. Lalabas lang ang mga bar kapag ini-swipe mula sa gilid ng screen o ipinakita mismo ng Android, at itatago ulit pagkatapos.
++[pt]
++! A barra de status e a barra de navegação do Android agora ficam sempre ocultas enquanto o launcher está aberto, em qualquer situação. Antes, as barras eram mantidas na tela sempre que o launcher achava que um mouse físico estava conectado (incluindo dispositivos Bluetooth que se identificam como mouse), nas telas principais e nos diálogos.
++~ A tela de crash e os diálogos também seguem o modo de tela cheia, então a barra não aparece mais por um instante ao abrir um diálogo. As barras só aparecem ao deslizar da borda da tela ou quando o próprio Android as mostra, e depois somem de novo.
++[th]
++! แถบสถานะและแถบนำทางของ Android จะซ่อนอยู่ตลอดที่เปิดตัวเปิดเกม ไม่ว่าสถานการณ์ใด ก่อนหน้านี้แถบจะค้างอยู่เมื่อตัวเปิดเกมคิดว่ามีเมาส์จริงเชื่อมต่ออยู่ (รวมถึงอุปกรณ์บลูทูธที่ระบุตัวเองเป็นเมาส์) ทั้งในหน้าหลักและในกล่องโต้ตอบ
++~ หน้าจอแครชและกล่องโต้ตอบก็ใช้โหมดเต็มจอเช่นกัน แถบจึงไม่แวบขึ้นมาตอนเปิดกล่องโต้ตอบ แถบจะปรากฏเฉพาะเมื่อปัดจากขอบจอหรือระบบ Android แสดงเอง แล้วซ่อนกลับไปเอง
++[vi]
++! Thanh trạng thái và thanh điều hướng của Android giờ luôn được ẩn khi launcher đang mở, trong mọi tình huống. Trước đây các thanh này bị giữ hiện mỗi khi launcher cho rằng có chuột vật lý đang kết nối (kể cả thiết bị Bluetooth tự nhận là chuột), ở cả màn hình chính lẫn hộp thoại.
++~ Màn hình crash và các hộp thoại cũng theo chế độ toàn màn hình, nên thanh không còn thoáng hiện khi mở hộp thoại. Các thanh chỉ hiện khi vuốt từ mép màn hình hoặc do chính Android hiện ra, rồi tự ẩn lại.
++[zh]
++! 只要启动器处于打开状态，Android 的状态栏和导航栏现在在任何情况下都会保持隐藏。此前，只要启动器认为连接了实体鼠标（包括自称是鼠标的蓝牙设备），主界面和对话框中就会一直显示这些栏。
++~ 崩溃界面和对话框也遵循全屏模式，因此打开对话框时状态栏不会再一闪而过。这些栏只会在从屏幕边缘滑入或由 Android 系统自行唤出时出现，随后会自动隐藏。
+# FIN part=1/1 files=7
